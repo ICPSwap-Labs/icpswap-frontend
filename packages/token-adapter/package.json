@@ -1,0 +1,31 @@
+{
+  "name": "@icpswap/token-adapter",
+  "version": "0.0.1",
+  "sideEffects": [
+    "*.css.ts"
+  ],
+  "private": true,
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --pretty --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build",
+    "dev": "tsc --watch",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "idb": "8.0.0",
+    "numbro": "^2.3.6",
+    "dayjs": "^1.11.9",
+    "@icpswap/types": "workspace:*",
+    "@icpswap/actor": "workspace:*",
+    "@icpswap/utils": "workspace:*",
+    "@icpswap/candid": "workspace:*",
+    "big.js": "^6.1.1",
+    "decimal.js-light": "^2.5.1",
+    "toformat": "^2.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": ["plugin:prettier/recommended"],
+  "rules": {
+    "react-hooks/rules-of-hooks": 0,
+    "react-hooks/exhaustive-deps": 0,
+    "no-restricted-globals": 0,
+    "no-undef": 0,
+    "import/no-anonymous-default-export": 0,
+    "react/self-closing-comp": ["error", {
+      "component": true,
+      "html": true
+    }]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@icpswap/swap-sdk",
+  "version": "0.0.1",
+  "sideEffects": [
+    "*.css.ts"
+  ],
+  "private": true,
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --pretty --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build",
+    "dev": "tsc --watch",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@icpswap/utils": "workspace:*",
+    "big.js": "^6.1.1",
+    "decimal.js-light": "^2.5.1"
+  }
+}

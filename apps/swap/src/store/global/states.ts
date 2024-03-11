@@ -1,0 +1,31 @@
+import { drawerWidth } from "constants/theme";
+import { DEFAULT_LOCALE, SupportedLocale } from "constants/locales";
+import { ICPPriceInfo, TokenMetadata } from "types/token";
+import { TokenListMetadata } from "types/token-list";
+import { type TokenRoots } from "types/token";
+
+export interface GlobalState {
+  drawerWidth: number;
+  xdr_usdt: number;
+  ICPPriceList: ICPPriceInfo[];
+  tokenList: TokenListMetadata[];
+  hasBeenClaimTestToken: boolean;
+  requestTokenList: TokenMetadata[];
+  swapTokenList: [];
+  userLocale: SupportedLocale;
+  poolStandardUpdated: boolean;
+  snsTokenRoots: { [key: string]: TokenRoots };
+}
+
+export const initialState: GlobalState = {
+  drawerWidth,
+  xdr_usdt: 1.33,
+  ICPPriceList: [],
+  tokenList: [],
+  hasBeenClaimTestToken: false,
+  requestTokenList: [],
+  swapTokenList: [],
+  userLocale: DEFAULT_LOCALE,
+  poolStandardUpdated: false,
+  snsTokenRoots: {},
+};

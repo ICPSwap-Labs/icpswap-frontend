@@ -1,0 +1,28 @@
+{
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", ".turbo"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES6", "DOM", "es2020"],
+    "module": "esnext",
+    "target": "es6",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "composite": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "strict": false
+  }
+}

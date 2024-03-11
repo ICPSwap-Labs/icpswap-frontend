@@ -1,0 +1,242 @@
+import { Typography, Box, Grid, Avatar, Button } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Wrapper, Breadcrumbs, TextButton } from "ui-component/index";
+import { Trans } from "@lingui/macro";
+import { formatDollarAmount, mockALinkToOpen } from "@icpswap/utils";
+import { MainCard } from "ui-component/index";
+import { useTokenLatestTVL } from "@icpswap/hooks";
+import { useToken } from "hooks/info/useToken";
+import { useTokenInfo } from "hooks/token/index";
+import { GridAutoRows } from "ui-component/Grid/index";
+import PercentageChangeLabel from "ui-component/PercentageChange";
+import TokenPools from "ui-component/analytic/TokenPools";
+import TokenTransactions from "ui-component/analytic/TokenTransactions";
+import { Copy } from "react-feather";
+import copyToClipboard from "copy-to-clipboard";
+import { swapLink, addLiquidityLink } from "utils/index";
+import { useTips, TIP_SUCCESS } from "hooks/useTips";
+import { useHistory } from "react-router-dom";
+
+import { TokenPrices } from "./components/TokenPrice";
+import { TokenCharts } from "./components/Charts";
+
+export default function TokenDetails() {
+  const { canisterId } = useParams<{ canisterId: string }>();
+
+  const token = useToken(canisterId);
+  const { result: tokenInfo } = useTokenInfo(token?.address);
+  const { result: tokenTVL } = useTokenLatestTVL(canisterId);
+
+  const history = useHistory();
+  const [openTips] = useTips();
+
+  const handleCopy = () => {
+    copyToClipboard(canisterId);
+    openTips("Copy Successfully", TIP_SUCCESS);
+  };
+
+  const handleToSwap = () => {
+    mockALinkToOpen(swapLink(canisterId), "to_swap");
+  };
+
+  const handleToAddLiquidity = () => {
+    mockALinkToOpen(addLiquidityLink(canisterId), "to_liquidity");
+  };
+
+  const handleToTokenDetails = () => {
+    history.push(`/token/details/${canisterId}`);
+  };
+
+  return (
+    <Wrapper>
+      <Box>
+        <Breadcrumbs prevLink="/swap" prevLabel={<Trans>Tokens</Trans>} currentLabel={<Trans>Details</Trans>} />
+      </Box>
+
+      <Box mt="20px">
+        <Grid container alignItems="center">
+          <Avatar src={tokenInfo?.logo} sx={{ width: "24px", height: "24px" }}>
+            &nbsp;
+          </Avatar>
+
+          <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
+            {token?.name}
+          </Typography>
+
+          <Typography fontSize="20px" fontWeight="500" sx={{ margin: "0 0 0 6px" }}>
+            ({token?.symbol})
+          </Typography>
+
+          <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
+            <Grid container alignItems="center">
+              <TextButton
+                to={`/token/details/${canisterId}`}
+                sx={{
+                  margin: "0 0 0 6px",
+                }}
+              >
+                {canisterId}
+              </TextButton>
+
+              <Box sx={{ width: "4px" }} />
+              <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
+            </Grid>
+          </Box>
+        </Grid>
+      </Box>
+
+      <Grid
+        container
+        alignItems="flex-end"
+        mt="16px"
+        sx={{
+          "@media (max-width: 640px)": {
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "10px 0",
+          },
+        }}
+      >
+        <Box>
+          <Grid container alignItems="center">
+            <Typography
+              color="text.primary"
+              sx={{
+                fontSize: "36px",
+                fontWeight: 500,
+                margin: "0 10px 0 0",
+                lineHeight: "0.8",
+              }}
+            >
+              {formatDollarAmount(token?.priceUSD, 4)}
+            </Typography>
+
+            <Typography component="div" sx={{ display: "flex" }}>
+              (<PercentageChangeLabel value={token?.priceUSDChange} />)
+            </Typography>
+          </Grid>
+        </Box>
+
+        <Grid item xs>
+          <Grid container justifyContent="flex-end" sx={{ gap: "0 10px" }}>
+            <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
+              Token Details
+            </Button>
+            <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
+              Add Liquidity
+            </Button>
+            <Button variant="contained" onClick={handleToSwap}>
+              Swap
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "300px 1fr",
+          gap: "1em",
+          marginTop: "32px",
+
+          "@media screen and (max-width: 840px)": {
+            gridTemplateColumns: "1fr",
+            gap: "1em",
+          },
+        }}
+      >
+        <MainCard level={2} border={false}>
+          <GridAutoRows gap="24px">
+            <GridAutoRows gap="4px">
+              <Typography>
+                <Trans>TVL</Trans>
+              </Typography>
+              <Typography
+                color="text.primary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "24px",
+                }}
+              >
+                {formatDollarAmount(tokenTVL?.tvlUSD)}
+              </Typography>
+
+              <PercentageChangeLabel value={tokenTVL?.tvlUSDChange} />
+            </GridAutoRows>
+
+            <GridAutoRows gap="4px">
+              <Typography>
+                <Trans>Volume 24H</Trans>
+              </Typography>
+              <Typography
+                color="text.primary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "24px",
+                }}
+              >
+                {formatDollarAmount(token?.volumeUSD)}
+              </Typography>
+            </GridAutoRows>
+
+            <GridAutoRows gap="4px">
+              <Typography>
+                <Trans>Volume 7D</Trans>
+              </Typography>
+              <Typography
+                color="text.primary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "24px",
+                }}
+              >
+                {formatDollarAmount(token?.volumeUSD7d)}
+              </Typography>
+            </GridAutoRows>
+
+            <GridAutoRows gap="4px">
+              <Typography>
+                <Trans>Fee 24H</Trans>
+              </Typography>
+              <Typography
+                color="text.primary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: "24px",
+                }}
+              >
+                {token?.volumeUSD ? formatDollarAmount((token.volumeUSD * 3) / 1000) : "--"}
+              </Typography>
+            </GridAutoRows>
+          </GridAutoRows>
+
+          <Box sx={{ margin: "40px 0 0 0" }}>
+            <TokenPrices tokenInfo={tokenInfo} />
+          </Box>
+        </MainCard>
+
+        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} />
+      </Box>
+
+      <Box sx={{ marginTop: "20px" }}>
+        <MainCard level={2} border={false}>
+          <Box sx={{ width: "100%", overflow: "auto" }}>
+            <TokenPools canisterId={canisterId} />
+          </Box>
+        </MainCard>
+      </Box>
+
+      <Box sx={{ marginTop: "20px" }}>
+        <MainCard level={2} border={false}>
+          <Typography variant="h3">
+            <Trans>Transactions</Trans>
+          </Typography>
+
+          <Box mt="20px">
+            <TokenTransactions canisterId={canisterId} />
+          </Box>
+        </MainCard>
+      </Box>
+    </Wrapper>
+  );
+}

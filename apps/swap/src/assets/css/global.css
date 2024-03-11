@@ -1,0 +1,36 @@
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body #root {
+  width: 100%;
+  height: 100%;
+}
+
+body iframe {
+  border-width: 0px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #29314f;
+}
+
+a {
+  text-decoration-color: #5669dc;
+}

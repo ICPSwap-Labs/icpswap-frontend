@@ -1,0 +1,21 @@
+{
+  "name": "@icpswap/candid",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --pretty --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build",
+    "dev": "tsc --watch",
+    "test": "jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.5",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@icpswap/types",
+  "version": "0.0.1",
+  "sideEffects": [
+    "*.css.ts"
+  ],
+  "private": true,
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --pretty --noEmit",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build",
+    "dev": "tsc --watch",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "idb": "8.0.0",
+    "numbro": "^2.3.6",
+    "dayjs": "^1.11.9",
+    "@icpswap/candid": "workspace:*"
+  }
+}

@@ -1,0 +1,4 @@
+{
+    "presets": ["babel-preset-react-app"],
+    "plugins": ["@babel/plugin-transform-exponentiation-operator"]
+}
