@@ -384,6 +384,14 @@
     "symbol": "PLAT"
   },
   {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "kz5t3-pyaaa-aaaap-ab2qq-cai",
+    "name": "VishnuAI",
+    "standard": "ICRC1",
+    "symbol": "iVishnu"
+  },
+  {
     "fee": 25,
     "decimals": 2,
     "canisterId": "6qfxa-ryaaa-aaaai-qbhsq-cai",
@@ -464,7 +472,7 @@
     "symbol": "EMC"
   },
   {
-    "fee": 1000,
+    "fee": 100000,
     "decimals": 8,
     "canisterId": "zfcdd-tqaaa-aaaaq-aaaga-cai",
     "name": "SNS-1",
