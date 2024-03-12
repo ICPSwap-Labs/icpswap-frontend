@@ -127,7 +127,9 @@ export function useSwapCalls() {
 
             // Amount that user input
             const userInputAmount = !!actualSwapAmount
-              ? new BigNumber(actualSwapAmount).plus(tokenIn.transFee).toString()
+              ? isUseTransfer(tokenIn)
+                ? new BigNumber(actualSwapAmount).plus(tokenIn.transFee).toString()
+                : actualSwapAmount
               : undefined;
 
             const step0 = async () => {

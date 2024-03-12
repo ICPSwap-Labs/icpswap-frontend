@@ -82,6 +82,7 @@ export default function Swap() {
     inputError: swapInputError,
     parsedAmount,
     trade,
+    tradePoolId,
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
@@ -168,10 +169,10 @@ export default function Swap() {
 
   const { result: subAccountTokenBalance } = useTokenBalance({
     canisterId: inputTokenAddress,
-    address: tradePool?.id,
+    address: tradePoolId,
     sub,
   });
-  const { result: unusedBalance } = useUserUnusedBalance(tradePool?.id, principal);
+  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal);
   const swapTokenUnusedBalance = useMemo(() => {
     if (!tradePool || !unusedBalance || !inputCurrency) return undefined;
     return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
@@ -221,7 +222,7 @@ export default function Swap() {
 
   const maxInputAmount = useMaxAmountSpend({
     currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
-    poolId: tradePool?.id,
+    poolId: tradePoolId,
   });
 
   const showMaxButton = Boolean(

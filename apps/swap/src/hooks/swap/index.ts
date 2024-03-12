@@ -13,12 +13,10 @@ import type { SwapNFTTokenMetadata } from "@icpswap/types";
 import { getActorIdentity } from "components/Identity";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
-import { useApprove } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isUseTransfer } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
-import { useMultipleApproveManager } from "store/swap/cache/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 
 export function useActualSwapAmount(
@@ -32,7 +30,10 @@ export function useActualSwapAmount(
     const fee = currency.transFee;
 
     if (typedValue.isGreaterThan(currency.transFee)) {
-      return parseTokenAmount(typedValue.minus(fee), currency.decimals).toString();
+      // When token use transfer, 1 trans fee will be subtracted by endpoint
+      return isUseTransfer(currency.wrapped)
+        ? parseTokenAmount(typedValue.minus(fee), currency.decimals).toString()
+        : parseTokenAmount(typedValue, currency.decimals).toString();
     }
 
     return "0";
@@ -258,30 +259,5 @@ export function useSwapWithdraw() {
   }, []);
 }
 
-export function useSwapApprove() {
-  const principal = useAccountPrincipal();
-  const approve = useApprove();
-  const [openErrorTip] = useErrorTip();
-  const { multipleApprove } = useMultipleApproveManager();
-
-  return useCallback(
-    async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
-      const { status, message } = await approve({
-        canisterId: token.address,
-        spender: poolId,
-        value: (BigInt(amount) * BigInt(multipleApprove)).toString(),
-        account: principal,
-      });
-
-      if (status === "err") {
-        openErrorTip(`Failed to approve ${token.symbol}: ${message}`, options);
-        return false;
-      }
-
-      return true;
-    },
-    [approve, principal, multipleApprove],
-  );
-}
-
 export * from "./useReclaimCallback";
+export * from "./useSwapApprove";

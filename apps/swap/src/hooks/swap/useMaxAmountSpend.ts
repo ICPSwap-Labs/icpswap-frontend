@@ -44,9 +44,6 @@ export function useMaxAmountSpend({ currencyAmount, poolId }: UseMaxAmountSpendA
       );
     }
 
-    console.log("allowance: ", allowance);
-    console.log("currencyAmount.toExact():", currencyAmount.quotient.toString());
-
     // Need call token approve, would cost one transfer fee
     if (new BigNumber(allowance.toString()).isLessThan(currencyAmount.quotient.toString())) {
       return currencyAmount.subtract(
