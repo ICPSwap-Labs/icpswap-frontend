@@ -27,7 +27,7 @@ export async function allowance({ canisterId, owner, spender, spenderSub, ownerS
 }
 
 export interface useAllowanceArgs {
-  canisterId: string;
+  canisterId: string | undefined;
   spender: string | undefined;
   spenderSub?: number[];
   owner: string | undefined;
@@ -37,7 +37,7 @@ export interface useAllowanceArgs {
 export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub }: useAllowanceArgs) {
   return useCallsData(
     useCallback(async () => {
-      if (!spender || !owner) return undefined;
+      if (!spender || !owner || canisterId === undefined) return undefined;
       return await allowance({
         spender: spender,
         spenderSub,

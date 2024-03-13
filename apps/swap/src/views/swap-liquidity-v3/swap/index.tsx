@@ -12,7 +12,7 @@ import { SWAP_FIELD } from "constants/swap";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
-import { maxAmountSpend, maxAmountFormat } from "utils/swap/index";
+import { maxAmountFormat } from "utils/swap/index";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { ExternalTipArgs } from "types/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
@@ -34,6 +34,7 @@ import { ReclaimTips } from "components/ReclaimTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
+import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -81,6 +82,7 @@ export default function Swap() {
     inputError: swapInputError,
     parsedAmount,
     trade,
+    tradePoolId,
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
@@ -152,17 +154,6 @@ export default function Swap() {
   const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
   const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
-  const maxInputAmount = maxAmountSpend(currencyBalances[SWAP_FIELD.INPUT]);
-  const showMaxButton = Boolean(
-    maxInputAmount?.greaterThan(0) && !parsedAmounts[SWAP_FIELD.INPUT]?.equalTo(maxInputAmount),
-  );
-
-  const handleMaxInput = useCallback(() => {
-    if (maxInputAmount) {
-      onUserInput(SWAP_FIELD.INPUT, maxAmountFormat(maxInputAmount.toExact(), maxInputAmount.currency.decimals));
-    }
-  }, [maxInputAmount, onUserInput]);
-
   const swapCallback = useSwapCallback();
 
   const [swapLoading, setSwapLoading] = useState(false);
@@ -178,10 +169,10 @@ export default function Swap() {
 
   const { result: subAccountTokenBalance } = useTokenBalance({
     canisterId: inputTokenAddress,
-    address: tradePool?.id,
+    address: tradePoolId,
     sub,
   });
-  const { result: unusedBalance } = useUserUnusedBalance(tradePool?.id, principal);
+  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal);
   const swapTokenUnusedBalance = useMemo(() => {
     if (!tradePool || !unusedBalance || !inputCurrency) return undefined;
     return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
@@ -228,6 +219,21 @@ export default function Swap() {
       }, 1000);
     }
   }, [swapCallback, swapLoading, setSwapLoading, trade, subAccountTokenBalance, swapTokenUnusedBalance]);
+
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
+    poolId: tradePoolId,
+  });
+
+  const showMaxButton = Boolean(
+    maxInputAmount?.greaterThan(0) && !parsedAmounts[SWAP_FIELD.INPUT]?.equalTo(maxInputAmount),
+  );
+
+  const handleMaxInput = useCallback(() => {
+    if (maxInputAmount) {
+      onUserInput(SWAP_FIELD.INPUT, maxAmountFormat(maxInputAmount.toExact(), maxInputAmount.currency.decimals));
+    }
+  }, [maxInputAmount, onUserInput]);
 
   // const fiatValueInput = useUSDValue(parsedAmounts[SWAP_FIELD.INPUT]);
   // const fiatValueOutput = useUSDValue(parsedAmounts[SWAP_FIELD.OUTPUT]);
