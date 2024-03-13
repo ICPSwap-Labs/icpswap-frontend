@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Typography, Box } from "@mui/material";
 import { t } from "@lingui/macro";
-import { toSignificant } from "@icpswap/utils";
+import { BigNumber, toSignificant } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
 import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
@@ -103,7 +103,20 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
   const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-  const { priceChartData, loading: priceChartLoading } = useTokenPriceChart(canisterId);
+  const { priceChartData: _priceChartData, loading: priceChartLoading } = useTokenPriceChart(canisterId);
+
+  const priceChartData = useMemo(() => {
+    if (!_priceChartData) return undefined;
+
+    if (canisterId === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
+      return _priceChartData.filter((e) => {
+        const time = new Date("2024-03-12").getTime();
+        return !new BigNumber(e.time).multipliedBy(1000).isLessThan(time);
+      });
+    }
+
+    return _priceChartData;
+  }, [_priceChartData]);
 
   const { result: tvlChartData } = useTokenTvlChart(canisterId);
 
