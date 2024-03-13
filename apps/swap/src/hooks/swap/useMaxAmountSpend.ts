@@ -1,9 +1,9 @@
-import { TOKEN_STANDARD } from "@icpswap/constants";
 import { Currency, CurrencyAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { useAllowance } from "hooks/token";
 import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { isUseTransfer } from "utils/token";
 
 export interface UseMaxAmountSpendArgs {
   currencyAmount: CurrencyAmount<Currency> | undefined;
@@ -20,9 +20,7 @@ export function useMaxAmountSpend({ currencyAmount, poolId }: UseMaxAmountSpendA
 
   const allowanceCanisterId = useMemo(() => {
     if (!token) return undefined;
-    return token.standard === TOKEN_STANDARD.ICRC2 || token.standard === TOKEN_STANDARD.DIP20
-      ? token.address
-      : undefined;
+    return isUseTransfer(token) ? undefined : token.address;
   }, [token]);
 
   const { result: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
