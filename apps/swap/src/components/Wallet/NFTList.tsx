@@ -174,8 +174,6 @@ export default function NFTList() {
   const { nfts } = useEXTManager();
   const { result: extAllCollections } = useEXTAllCollections();
 
-  console.log("extAllCollections:", extAllCollections);
-
   const importedNFTs = useMemo(() => {
     if (!extAllCollections) return [];
 
@@ -185,8 +183,6 @@ export default function NFTList() {
   }, [nfts, extAllCollections]);
 
   const { result: userAllExtNfts } = useExtUserNFTs(account);
-
-  console.log("userAllExtNfts:", userAllExtNfts);
 
   return (
     <Grid container flexDirection="column" spacing={gridSpacing}>

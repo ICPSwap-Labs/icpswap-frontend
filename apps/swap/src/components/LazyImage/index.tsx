@@ -14,10 +14,6 @@ const useStyle = makeStyles(() => ({
     maxHeight: "100%",
     width: "auto",
     height: "auto",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
   },
   defaultImage: {
     marginTop: "-100%",
@@ -130,20 +126,31 @@ export default function LazyImage(props: LazyImageProps) {
         }}
         onClick={onClick}
       >
-        {imageProps.src && !showDefault && !CustomImage && (
-          <img
-            {...imageProps}
-            ref={image}
-            style={{
-              ...imageTransition,
-              display: imageLoaded ? "block" : "none",
-            }}
-            className={classes.image}
-            onLoad={handleLoadImage}
-            onError={handleImageError}
-            alt=""
-          />
-        )}
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          {imageProps.src && !showDefault && !CustomImage && (
+            <img
+              {...imageProps}
+              ref={image}
+              style={{
+                ...imageTransition,
+                display: imageLoaded ? "block" : "none",
+              }}
+              className={classes.image}
+              onLoad={handleLoadImage}
+              onError={handleImageError}
+              alt=""
+            />
+          )}
+        </Box>
       </Box>
       {!imageLoaded &&
         !showDefault &&
