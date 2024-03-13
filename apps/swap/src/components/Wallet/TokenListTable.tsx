@@ -1,15 +1,14 @@
 import { useState, useContext, useMemo, useEffect } from "react";
-import { Button, Grid, Typography, Box } from "@mui/material";
+import { Typography, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { formatDollarAmount, parseTokenAmount, mockALinkToOpen } from "@icpswap/utils";
-import { SendIcon, ReceiveIcon, TransferDetailIcon } from "assets/images/icons";
+import { formatDollarAmount, parseTokenAmount, mockALinkToOpen, BigNumber } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import AddressClipboard from "components/AddressClipboard";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, NO_HIDDEN_TOKENS, Connector } from "constants/index";
+import { ICP, Connector } from "constants/index";
 import { useAccount } from "store/global/hooks";
-import { Trans } from "@lingui/macro";
+import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
@@ -18,7 +17,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, WRAPPED_ICP } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
-import { useUSDPrice } from "hooks/useUSDPrice";
+import { useInfoToken } from "hooks/uesInfoToken";
 import { useCurrency } from "hooks/useCurrency";
 import { INFO_URL } from "constants/index";
 import { useConnectorType } from "store/auth/hooks";
@@ -27,38 +26,9 @@ import { useHistory } from "react-router-dom";
 import { ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
-import { Header, HeaderCell, Row, BodyCell } from "components/Table/index";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    gridTemplateColumns: "420px repeat(3, 180px) 1fr",
-    "@media(max-width: 640px)": {
-      minWidth: "1340px",
-      gridTemplateColumns: "240px repeat(3, 180px) 1fr",
-    },
-  },
-  greenButton: {
-    "& .MuiButton-root": {
-      color: "#54C081",
-      borderColor: "#54C081",
-      "&:hover": {
-        background: "rgba(84, 192, 129, 0.1)",
-      },
-    },
-  },
-  redButton: {
-    "& .MuiButton-root": {
-      color: "#D3625B",
-      borderColor: "#D3625B",
-      "&:hover": {
-        background: "rgba(211, 98, 91, 0.1)",
-      },
-    },
-  },
-  actionButton: {
-    width: "100%",
-  },
+const useStyles = makeStyles(() => ({
   tokenAssets: {
     fontSize: "0.6rem",
   },
@@ -69,6 +39,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
+
+interface ActionButtonProps {
+  label: string;
+  onClick?: () => void;
+}
+
+function ActionButton({ label, onClick }: ActionButtonProps) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        padding: "7px 16px",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#4F5A84",
+        borderRadius: "8px",
+        cursor: "pointer",
+      }}
+      onClick={onClick}
+    >
+      <Typography color="text.primary">{label}</Typography>
+    </Box>
+  );
+}
 
 export const XTCTopUpIcon = () => {
   return (
@@ -89,44 +83,6 @@ export const XTCTopUpIcon = () => {
   );
 };
 
-export const MintIcon = () => {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M8 7.50313C10.6516 7.50313 13.4688 6.63281 13.4688 5.01719C13.4688 3.40156 10.6516 2.53125 8 2.53125C5.34844 2.53125 2.53125 3.40156 2.53125 5.01719C2.53125 6.63281 5.34844 7.50313 8 7.50313ZM8 3.525C10.7312 3.525 12.475 4.40781 12.475 5.01719C12.475 5.62656 10.7312 6.50781 8 6.50781C5.26875 6.50781 3.525 5.625 3.525 5.01719C3.525 4.40938 5.26875 3.525 8 3.525Z"
-        fill="#5669DC"
-        stroke="#5669DC"
-        strokeWidth="0.4"
-      />
-      <path
-        d="M3.52215 7.10553C3.30028 6.94303 2.98934 6.99303 2.8284 7.2149C2.62528 7.49303 2.52528 7.7899 2.53153 8.09615C2.54403 8.84459 3.18465 9.49615 4.33153 9.93209C5.27996 10.293 6.50965 10.4868 7.81434 10.4868C7.88934 10.4868 7.9659 10.4852 8.04246 10.4852C10.694 10.4383 13.4956 9.51803 13.4675 7.90553C13.4643 7.67115 13.3987 7.44303 13.2706 7.22584C13.1315 6.98834 12.8237 6.91022 12.5909 7.04928C12.3534 7.18834 12.2737 7.49303 12.4143 7.73053C12.4534 7.79772 12.4722 7.85865 12.4737 7.92115C12.4847 8.52897 10.7565 9.44147 8.02528 9.49147C6.7534 9.50709 5.57371 9.3399 4.68621 9.0024C3.98621 8.73678 3.53153 8.37428 3.52684 8.0774C3.52528 7.99303 3.56121 7.89928 3.63153 7.80084C3.79246 7.5774 3.74403 7.26647 3.52215 7.10553Z"
-        fill="#5669DC"
-        stroke="#5669DC"
-        strokeWidth="0.4"
-      />
-      <path
-        d="M12.5219 10.0498C12.2953 10.2029 12.2328 10.5123 12.3875 10.7404C12.4469 10.8279 12.475 10.9076 12.475 10.9826C12.475 11.5904 10.7312 12.4748 8 12.4748C5.26875 12.4748 3.525 11.5904 3.525 10.9826C3.525 10.9091 3.55156 10.8326 3.60469 10.7513C3.75469 10.5216 3.69219 10.2138 3.4625 10.0623C3.23281 9.91227 2.925 9.97633 2.77344 10.2045C2.6125 10.4498 2.53125 10.7107 2.53125 10.981C2.53125 12.5982 5.34844 13.4685 8 13.4685C10.6516 13.4685 13.4688 12.5982 13.4688 10.9826C13.4688 10.706 13.3828 10.4373 13.2125 10.1841C13.0594 9.95602 12.75 9.89664 12.5219 10.0498Z"
-        fill="#5669DC"
-        stroke="#5669DC"
-        strokeWidth="0.4"
-      />
-    </svg>
-  );
-};
-
-export function DissolveIcon() {
-  return (
-    <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M12.3493 14.7192H4.01922C3.50503 14.7182 3.0123 14.5291 2.64913 14.1934C2.28595 13.8578 2.08201 13.403 2.08203 12.9289V2.36834C2.08201 2.05873 2.21518 1.76176 2.45233 1.54258C2.68948 1.3234 3.01123 1.19992 3.347 1.19922H14.4263C14.5883 1.1995 14.7475 1.23875 14.888 1.31311C15.0285 1.38746 15.1455 1.49434 15.2275 1.62318C15.3095 1.75203 15.3536 1.89837 15.3555 2.04774C15.3573 2.19712 15.3169 2.34435 15.2381 2.4749L14.2864 4.05738V12.9289C14.2864 13.403 14.0824 13.8577 13.7193 14.1934C13.3561 14.529 12.8634 14.7181 12.3493 14.7192ZM3.347 2.29522C3.32594 2.29526 3.30576 2.30301 3.29089 2.31677C3.27602 2.33052 3.26768 2.34916 3.2677 2.36858V12.9289C3.2677 13.1128 3.34682 13.2893 3.48771 13.4195C3.6286 13.5497 3.81975 13.623 4.01922 13.6235H12.3493C12.5487 13.623 12.7398 13.5496 12.8806 13.4194C13.0215 13.2892 13.1006 13.1128 13.1006 12.9289V3.77322L13.9901 2.29522H3.347Z"
-        fill="#D3625B"
-      />
-      <path d="M7.34584 6.5122H3.00781V5.4082H7.34584V6.5122Z" fill="#D3625B" />
-      <path d="M13.8547 9.5122H7.34766V8.4082H13.8547V9.5122Z" fill="#D3625B" />
-    </svg>
-  );
-}
-
 function usePrincipalStandard(standard: string) {
   return standard.includes("DIP20") || standard.includes("ICRC");
 }
@@ -143,7 +99,6 @@ const ckTokens: ckTOKEN[] = [
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
-  const classes = useStyles();
   const history = useHistory();
 
   const handleCKTokenMint = (path: string) => {
@@ -156,26 +111,8 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
 
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        className={classes.actionButton}
-        startIcon={<MintIcon />}
-        onClick={() => handleCKTokenMint(ckToken.mintPath)}
-      >
-        <Trans>Mint</Trans>
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        className={classes.actionButton}
-        startIcon={<DissolveIcon />}
-        onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)}
-      >
-        <Trans>Dissolve</Trans>
-      </Button>
+      <ActionButton label={t`Mint`} onClick={() => handleCKTokenMint(ckToken.mintPath)} />
+      <ActionButton label={t`Dissolve`} onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)} />
     </>
   );
 }
@@ -189,6 +126,7 @@ export interface TokenListItemProps {
 export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: TokenListItemProps) {
   const classes = useStyles();
   const account = useAccount();
+  const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
 
   const walletType = useConnectorType();
@@ -196,7 +134,11 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const history = useHistory();
 
   const [, currency] = useCurrency(canisterId);
-  const tokenUSDPrice = useUSDPrice(currency);
+  const { result: infoToken } = useInfoToken(currency?.address);
+
+  const tokenUSDPrice = useMemo(() => {
+    return infoToken?.priceUSD;
+  }, [infoToken]);
 
   const { result: tokenInfo } = useTokenInfo(canisterId);
   const [XTCTopUpShow, setXTCTopUpShow] = useState(false);
@@ -207,7 +149,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
   const [addressModalOpen, setAddressModalOpen] = useState(false);
 
-  const { refreshCounter, setTotalValue } = useContext(WalletContext);
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
 
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;
@@ -221,14 +163,23 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       tokenInfo.decimals !== undefined &&
       tokenInfo.transFee !== undefined &&
       tokenBalance &&
-      tokenUSDPrice
+      infoToken
     ) {
       setTotalValue(
         tokenInfo.canisterId,
-        parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice),
+        parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(infoToken.priceUSD),
+      );
+
+      const usdBeforeChange = new BigNumber(infoToken.priceUSD).div(
+        new BigNumber(infoToken.priceUSDChange).dividedBy(100).plus(1),
+      );
+
+      setTotalUSDBeforeChange(
+        tokenInfo.canisterId,
+        parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(usdBeforeChange),
       );
     }
-  }, [tokenBalance, tokenUSDPrice, tokenInfo]);
+  }, [tokenBalance, infoToken, tokenInfo]);
 
   const handleTransferSuccess = () => {
     setRefreshInnerCounter(refreshInnerCounter + 1);
@@ -286,28 +237,6 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     setXTCTopUpShow(true);
   };
 
-  const isHidden = useMemo(() => {
-    const hiddenBySmallBalance = isHideSmallBalances && !!tokenBalance && !tokenBalance?.isGreaterThan(0);
-
-    const hiddenBySearchValue = !!searchValue
-      ? !tokenInfo?.symbol
-        ? true
-        : !tokenInfo?.symbol.toLowerCase().includes(searchValue.toLowerCase())
-      : false;
-
-    if (NO_HIDDEN_TOKENS.includes(canisterId)) return false;
-
-    return hiddenBySmallBalance || hiddenBySearchValue;
-  }, [isHideSmallBalances, tokenBalance, canisterId, searchValue, tokenInfo]);
-
-  const handleCKTokenMint = (path: string) => {
-    history.push(path);
-  };
-
-  const handleCKTokenDissolve = (path: string) => {
-    history.push(path);
-  };
-
   const handleWrappedICP = (value: "wrap" | "unwrap") => {
     if (value === "wrap") {
       history.push("/swap/v2/wrap?input=icp");
@@ -318,157 +247,87 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   };
 
   return (
-    <>
-      <Row className={classes.wrapper} sx={{ ...(isHidden ? { display: "none" } : {}) }}>
-        <BodyCell>
-          <Box sx={{ display: "flex", flexWrap: "nowrap", alignItems: "center", gap: "0 8px" }}>
-            <TokenImage width="40px" height="40px" src={tokenInfo?.logo} />
-            <Box>
-              <Typography
-                color="textPrimary"
-                className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
-                onClick={() => handleLoadToDetail(tokenInfo)}
-              >
-                {tokenInfo?.symbol}
-              </Typography>
-              <Typography>{tokenInfo?.name}</Typography>
-            </Box>
-          </Box>
-        </BodyCell>
-        <BodyCell>
-          <TokenStandardLabel standard={tokenInfo?.standardType} />
-        </BodyCell>
-        <BodyCell>
-          <Grid item xs={12}>
-            <Typography color="textPrimary">
-              {parseTokenAmount(tokenBalance, tokenInfo?.decimals).toFormat()}
+    <Box
+      sx={{
+        borderRadius: "12px",
+        background: theme.palette.background.level4,
+        padding: "20px",
+        maxWidth: "100%",
+        overflow: "hidden",
+        "@media(max-width: 640px)": {
+          padding: "10px",
+        },
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", gap: "0 10px" }}>
+          <TokenImage width="40px" height="40px" src={tokenInfo?.logo} />
+          <Box>
+            <Typography
+              color="textPrimary"
+              className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
+              onClick={() => handleLoadToDetail(tokenInfo)}
+            >
+              {tokenInfo?.symbol}
             </Typography>
-            <Typography className={classes.tokenAssets}>
-              {tokenUSDPrice && tokenBalance
-                ? `≈
+            <Typography>{tokenInfo?.name}</Typography>
+          </Box>
+        </Box>
+        <TokenStandardLabel standard={tokenInfo?.standardType} />
+      </Box>
+
+      <Box sx={{ display: "flex", margin: "12px 0 0 0" }}>
+        <Box sx={{ width: "50%" }}>
+          <Typography fontSize="12px">Balance</Typography>
+          <Typography color="textPrimary" sx={{ margin: "4px 0 0 0" }}>
+            {parseTokenAmount(tokenBalance, tokenInfo?.decimals).toFormat()}
+          </Typography>
+          <Typography className={classes.tokenAssets}>
+            {tokenUSDPrice && tokenBalance
+              ? `≈
               ${formatDollarAmount(
                 parseTokenAmount(tokenBalance, tokenInfo?.decimals)
                   .multipliedBy(tokenUSDPrice)
                   .toString(),
                 4,
               )}`
-                : "--"}
-            </Typography>
-          </Grid>
-        </BodyCell>
-        <BodyCell>{tokenUSDPrice ? formatDollarAmount(tokenUSDPrice) : "--"}</BodyCell>
-        <BodyCell>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gridTemplateRows:
-                canisterId === XTC.address || (canisterId === ICP.address && walletType === Connector.NFID)
-                  ? "1fr 1fr"
-                  : "1fr",
-              gap: "10px 10px",
-            }}
-          >
-            <Box className={classes.greenButton}>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                className={classes.actionButton}
-                startIcon={<ReceiveIcon />}
-                onClick={() => setAddressModalOpen(true)}
-              >
-                <Trans>Receive</Trans>
-              </Button>
-            </Box>
+              : "--"}
+          </Typography>
+        </Box>
+        <Box sx={{ width: "50%" }}>
+          <Typography fontSize="12px">Price</Typography>
+          <Typography color="textPrimary" sx={{ margin: "4px 0 0 0" }}>
+            {tokenUSDPrice ? formatDollarAmount(tokenUSDPrice) : "--"}
+          </Typography>
+        </Box>
+      </Box>
 
-            <Box className={classes.redButton}>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                className={classes.actionButton}
-                startIcon={<SendIcon />}
-                onClick={handleTransfer}
-              >
-                <Trans>Transfer</Trans>
-              </Button>
-            </Box>
+      <Box
+        sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
+      >
+        <ActionButton label="Receive" onClick={() => setAddressModalOpen(true)} />
+        <ActionButton label="Send" onClick={handleTransfer} />
+        <ActionButton label="Transactions" onClick={handleToTransactions} />
 
-            <Box>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                className={classes.actionButton}
-                startIcon={<TransferDetailIcon />}
-                onClick={handleToTransactions}
-              >
-                <Trans>Transactions</Trans>
-              </Button>
-            </Box>
+        {canisterId === ICP.address && walletType === Connector.NFID ? (
+          <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
+        ) : null}
 
-            {canisterId === ICP.address && walletType === Connector.NFID ? (
-              <Box className={classes.redButton}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  className={classes.actionButton}
-                  startIcon={<SendIcon />}
-                  onClick={() => setNFIDTransferOpen(true)}
-                >
-                  <Trans>NFID Transfer</Trans>
-                </Button>
-              </Box>
-            ) : null}
+        {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
 
-            {tokenInfo?.canisterId === XTC.address ? (
-              <Box>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  className={classes.actionButton}
-                  startIcon={<XTCTopUpIcon />}
-                  onClick={handleXTCTopUp}
-                >
-                  <Trans>Top-up</Trans>
-                </Button>
-              </Box>
-            ) : null}
+        {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
+          <>
+            <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
+            <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
+          </>
+        ) : null}
 
-            {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
-              <>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  className={classes.actionButton}
-                  onClick={() => handleWrappedICP("unwrap")}
-                >
-                  <Trans>Unwrap</Trans>
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  className={classes.actionButton}
-                  onClick={() => handleWrappedICP("wrap")}
-                >
-                  <Trans>Wrap</Trans>
-                </Button>
-              </>
-            ) : null}
-
-            {ckTokens
-              .filter((ele) => ele.id === tokenInfo?.canisterId)
-              .map((ele) => (
-                <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
-              ))}
-          </Box>
-        </BodyCell>
-      </Row>
+        {ckTokens
+          .filter((ele) => ele.id === tokenInfo?.canisterId)
+          .map((ele) => (
+            <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
+          ))}
+      </Box>
 
       {open && !!tokenInfo ? (
         <TransferModal
@@ -501,7 +360,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       {XTCTopUpShow ? (
         <XTCTopUpModal open={XTCTopUpShow} onClose={() => setXTCTopUpShow(false)} onTopUpSuccess={handleTopUpSuccess} />
       ) : null}
-    </>
+    </Box>
   );
 }
 
@@ -513,32 +372,21 @@ export interface TokenListProps {
 }
 
 export default function TokenList({ list, loading, isHideSmallBalances, searchValue }: TokenListProps) {
-  const classes = useStyles();
-
   return (
-    <Box sx={{ width: "100%" }}>
-      <Header className={classes.wrapper}>
-        <HeaderCell>
-          <Trans>Token</Trans>
-        </HeaderCell>
-
-        <HeaderCell>
-          <Trans>Standard</Trans>
-        </HeaderCell>
-
-        <HeaderCell>
-          <Trans>Balance</Trans>
-        </HeaderCell>
-
-        <HeaderCell>
-          <Trans>Price</Trans>
-        </HeaderCell>
-
-        <HeaderCell>
-          <Trans>Action</Trans>
-        </HeaderCell>
-      </Header>
-
+    <Box
+      sx={{
+        width: "100%",
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        gap: "20px",
+        "@media(max-width: 1088px)": {
+          gridTemplateColumns: "1fr 1fr",
+        },
+        "@media(max-width: 640px)": {
+          gridTemplateColumns: "1fr",
+        },
+      }}
+    >
       {list.map((canisterId) => {
         return (
           <TokenListItem

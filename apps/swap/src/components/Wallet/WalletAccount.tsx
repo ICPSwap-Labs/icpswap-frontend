@@ -1,94 +1,101 @@
-import { useState, useContext, useMemo } from "react";
-import { makeStyles } from "@mui/styles";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import ReplayIcon from "@mui/icons-material/Replay";
-import MainCard from "../cards/MainCard";
-import UserAvatar from "components/UserWalletAvatar";
-import { formatDollarAmount } from "@icpswap/utils";
-import AddressClipboard from "../AddressClipboard";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import Bg0Dark from "assets/images/wallet/background0-dark.svg";
-import Bg0Light from "assets/images/wallet/background0-light.svg";
-import { useAccount } from "store/global/hooks";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { useContext, useMemo, useRef } from "react";
+import { Box, Typography } from "@mui/material";
+import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
+import { Trans, t } from "@lingui/macro";
 import WalletContext from "./context";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { useAccountPrincipal } from "store/auth/hooks";
+import Copy, { CopyRef } from "components/Copy";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  avatar: {
-    [theme.breakpoints.down("sm")]: {
-      transform: "scale(0.7)",
-    },
-  },
-  leftEmptyBox: {
-    width: "80px",
-    height: "80px",
-  },
-  userTopContent: {
-    padding: "12px",
-    position: "relative",
-    paddingBottom: "12px !important",
-    ...(theme.customization.mode === "light" ? { backgroundColor: theme.colors.lightPrimaryMain } : {}),
-  },
-  userAvatar: {
-    margin: "-70px 0 0 auto",
-    borderRadius: "16px",
-    [theme.breakpoints.down("md")]: {
-      margin: "-70px auto 0",
-    },
-    [theme.breakpoints.down("sm")]: {
-      margin: "-60px auto 0",
-    },
-  },
+export interface AddressWrapperProps {
+  address: string | undefined;
+  label: string;
+}
 
-  copyButton: {
-    width: "0.6em",
-    cursor: "pointer",
-    ...(theme.customization.mode === "light" ? { color: "#ffffff" } : {}),
-  },
-  mainCardBg: {
-    background: "transparent",
-    position: "absolute",
-    top: "-86px",
-    right: "146px",
-    width: "283px",
-    height: "283px",
-    backgroundImage: `url(${theme.customization.mode === "dark" ? Bg0Dark : Bg0Light})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "100% 100%",
-  },
-  lightFontColor: {
-    ...(theme.customization.mode === "light" ? { color: "#ffffff" } : {}),
-  },
-  refresh: {
-    ...(theme.customization.mode === "light" ? { color: "#ffffff", border: "1px solid #ffffff" } : {}),
-    "&:hover": {
-      ...(theme.customization.mode === "light" ? { color: "#ffffff", border: "1px solid #ffffff" } : {}),
-    },
-  },
-}));
+export function AddressWrapper({ address, label }: AddressWrapperProps) {
+  const copyRef = useRef<CopyRef>(null);
+
+  const handleCopy = () => {
+    if (copyRef) {
+      copyRef?.current?.copy();
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        maxWidth: "286px",
+        borderRadius: "8px",
+        padding: "12px",
+        border: "1px solid #29314F",
+        height: "fit-content",
+        "@media(max-width: 640px)": {
+          maxWidth: "100%",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: "70px",
+          height: "20px",
+          borderRadius: "30px",
+          background: "#29314F",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography sx={{ fontSize: "12px", transform: "scale(0.9)" }}>{label}</Typography>
+      </Box>
+
+      <Box sx={{ margin: "8px 0 0 0", wordBreak: "break-all" }}>
+        <Typography
+          sx={{ fontSize: "12px", whiteSpace: "break-spaces", cursor: "pointer", userSelect: "none" }}
+          component="span"
+          onClick={handleCopy}
+        >
+          {address}
+        </Typography>
+        <Box component="span" sx={{ cursor: "pointer" }} onClick={handleCopy}>
+          <CopyIcon />
+        </Box>
+      </Box>
+
+      <Copy content={address ?? ""} hide ref={copyRef} />
+    </Box>
+  );
+}
 
 export default function WalletAccount() {
-  const [addressClipboardVisible, setAddressClipboardVisible] = useState(false);
-  const classes = useStyles();
-  const account = useAccount();
   const icpPrice = useICPPrice();
 
+  const principal = useAccountPrincipal();
   const [openSuccessTip] = useSuccessTip();
 
-  const { refreshTotalBalance, setRefreshTotalBalance, refreshCounter, setRefreshCounter, totalValue } =
-    useContext(WalletContext);
+  const {
+    refreshTotalBalance,
+    setRefreshTotalBalance,
+    refreshCounter,
+    setRefreshCounter,
+    totalValue,
+    totalUSDBeforeChange,
+  } = useContext(WalletContext);
 
   const useTotalICPValue = useMemo(() => {
     if (icpPrice) return totalValue.dividedBy(icpPrice);
     return undefined;
   }, [totalValue, icpPrice]);
 
-  const onAddressClipboardClose = () => {
-    setAddressClipboardVisible(false);
-  };
+  const usdChange = useMemo(() => {
+    if (totalValue.isEqualTo(0) || totalUSDBeforeChange.isEqualTo(0)) return undefined;
+    return `${totalValue.minus(totalUSDBeforeChange).dividedBy(totalUSDBeforeChange).multipliedBy(100).toFixed(2)}%`;
+  }, [totalUSDBeforeChange, totalValue]);
+
+  const usdChangeType = new BigNumber(usdChange ?? 0).isLessThan(0) ? "down" : "up";
+  const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {
     if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
@@ -97,138 +104,79 @@ export default function WalletAccount() {
   };
 
   return (
-    <>
-      <MainCard contentClass={classes.userTopContent} level={4}>
-        <Grid container>
-          <Grid item container xs={12} lg={8} sm={12} direction="column" spacing={1}>
-            <Grid item container>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridGap: "0 14px",
-                  gridTemplateColumns: "auto 1fr",
-                  zIndex: 10,
-                }}
-              >
-                <Box className={classes.avatar}>
-                  <Grid container justifyContent="center" alignItems="center">
-                    <UserAvatar size="70" value={account} />
-                  </Grid>
-                </Box>
-                <Box
-                  sx={{
-                    alignSelf: "center",
-                  }}
-                >
-                  <Grid container item xs alignItems="flex-start" direction="column" justifyContent="center">
-                    <Grid item xs={4}>
-                      <Typography className={classes.lightFontColor} variant="h2" color="primary">
-                        <Trans>Account Address</Trans>
-                      </Typography>
-                    </Grid>
-                    <Grid container alignItems="center" flexWrap="nowrap">
-                      <Grid container alignItems="center" flexWrap="nowrap">
-                        <Typography
-                          className={classes.lightFontColor}
-                          variant="subtitle2"
-                          sx={{
-                            wordBreak: "break-all",
-                          }}
-                        >
-                          {account}
-                        </Typography>
-                        &nbsp;
-                        <DashboardOutlinedIcon
-                          className={classes.copyButton}
-                          onClick={() => setAddressClipboardVisible(true)}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item container>
-              <Grid
-                item
-                sx={{ display: { xs: "none", sm: "block" } }}
-                className={`${classes.leftEmptyBox} ${classes.avatar}`}
-              >
-                &nbsp;
-              </Grid>
-              <Grid
-                container
-                item
-                xs={9}
-                flexDirection="column"
-                sx={{
-                  alignItems: { xs: "flex-start" },
-                  justifyContent: { sm: "flex-start", xs: "center" },
-                  zIndex: 10,
-                }}
-              >
-                <Grid item>
-                  <Typography className={classes.lightFontColor} color="textSecondary">
-                    <Trans>Estimated Balance</Trans>
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography className={classes.lightFontColor} color="textPrimary" variant="h1">
-                    ≈{useTotalICPValue ? useTotalICPValue.toFormat(4) : 0}&nbsp;ICP
-                    <Box display={{ xs: "block", md: "inline" }} ml={{ xs: 0, md: 2 }} mt={{ xs: -2, md: 0 }}>
-                      <Typography
-                        className={classes.lightFontColor}
-                        color="textSecondary"
-                        variant="h4"
-                        display="inline"
-                      >
-                        ≈{formatDollarAmount(totalValue.toString(), 2)}
-                      </Typography>
-                    </Box>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            item
-            lg={4}
-            xs={12}
-            sm={12}
-            md={12}
-            direction="column"
-            spacing={1}
-            sx={{
-              zIndex: 1,
-            }}
-          >
-            <Grid container item xs={4} justifyContent="flex-end">
-              <Box>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  className={classes.refresh}
-                  startIcon={<ReplayIcon />}
-                  onClick={handleRefreshBalance}
-                >
-                  <Trans>Refresh Balance</Trans>
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        justifyContent: "space-between",
+        padding: "0 0 30px 0",
+        borderBottom: "1px solid #29314F",
+        "@media(max-width: 640px)": {
+          flexDirection: "column",
+          gap: "20px 0",
+        },
+      }}
+    >
+      <Box>
+        <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
+          <Typography>
+            <Trans>Estimated Balance</Trans>
+          </Typography>
+
+          <RefreshIcon style={{ cursor: "pointer" }} onClick={handleRefreshBalance} />
+        </Box>
+
+        <Box sx={{ margin: "10px 0 0 0" }}>
+          <Typography sx={{ fontSize: "32px", fontWeight: 600 }} color="text.primary">
+            ≈{useTotalICPValue ? useTotalICPValue.toFormat(4) : 0}&nbsp;
+            <Typography component="span" sx={{ fontSize: "24px" }} color="text.primary">
+              ICP
+            </Typography>
+          </Typography>
+        </Box>
+
+        <Box sx={{ margin: "6px 0 0 0" }}>
+          <Typography component="span">≈{formatDollarAmount(totalValue.toString(), 2)}</Typography>
+          <Typography sx={{ margin: "0 0 0 10px", color: USDChangeColor }} component="span">
+            {usdChange ? `${usdChangeType === "down" ? "-" : "+"}${usdChange}` : "--"}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          gap: "0 12px",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "20px 0",
+          },
+        }}
+      >
         <Box
           sx={{
-            display: {
-              sm: "none",
-              md: "block",
+            minWidth: "286px",
+            "@media(max-width: 640px)": {
+              minWidth: "100%",
             },
           }}
-          className={classes.mainCardBg}
-        />
-      </MainCard>
-      <AddressClipboard address={account} open={addressClipboardVisible} onClose={onAddressClipboardClose} />
-    </>
+        >
+          <AddressWrapper
+            address={principal ? principalToAccount(principal?.toString()) : "--"}
+            label={t`Account ID`}
+          />
+        </Box>
+        <Box
+          sx={{
+            minWidth: "286px",
+            "@media(max-width: 640px)": {
+              minWidth: "100%",
+            },
+          }}
+        >
+          <AddressWrapper address={principal ? principal.toString() : "--"} label={t`Principal ID`} />
+        </Box>
+      </Box>
+    </Box>
   );
 }
