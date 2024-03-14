@@ -5,8 +5,6 @@ import type { TokenApproveArgs, CandidTokenTransaction } from "@icpswap/types";
 
 export type { Metadata as DIP20Metadata } from "candid/dip20/dip20";
 
-export type { TokenRoots } from "@icpswap/hooks";
-
 export type BalanceRequest = { token: string; user: { [key: string]: string | Principal } };
 
 export type TokenAllowanceRequest = {
