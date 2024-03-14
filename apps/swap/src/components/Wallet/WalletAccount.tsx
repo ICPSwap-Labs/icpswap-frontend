@@ -94,7 +94,7 @@ export default function WalletAccount() {
     return `${totalValue.minus(totalUSDBeforeChange).dividedBy(totalUSDBeforeChange).multipliedBy(100).toFixed(2)}%`;
   }, [totalUSDBeforeChange, totalValue]);
 
-  const usdChangeType = new BigNumber(usdChange ?? 0).isLessThan(0) ? "down" : "up";
+  const usdChangeType = usdChange && usdChange.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {
@@ -138,7 +138,7 @@ export default function WalletAccount() {
         <Box sx={{ margin: "6px 0 0 0" }}>
           <Typography component="span">≈{formatDollarAmount(totalValue.toString(), 2)}</Typography>
           <Typography sx={{ margin: "0 0 0 10px", color: USDChangeColor }} component="span">
-            {usdChange ? `${usdChangeType === "down" ? "-" : "+"}${usdChange}` : "--"}
+            {usdChange ? `${usdChangeType === "down" ? "" : "+"}${usdChange}` : "--"}
           </Typography>
         </Box>
       </Box>
