@@ -12,7 +12,7 @@ import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
 import { use100ICPPriceInfo, useXDR2USD } from "@icpswap/hooks";
-import { useTokensFromList, useSNSTokensRootIds, getListSNSCanisters, useListDeployedSNSs } from "@icpswap/hooks";
+import { useTokensFromList, useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);

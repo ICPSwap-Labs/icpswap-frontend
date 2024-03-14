@@ -1,14 +1,6 @@
 import { useCallback } from "react";
 import { useCallsData } from "../useCallData";
-
-export interface TokenRoots {
-  description: string;
-  enabled: boolean;
-  logo: string;
-  root_canister_id: string;
-  url: string;
-  swap_lifecycle: [];
-}
+import type { TokenRoots } from "@icpswap/types";
 
 export function useSNSTokensRootIds() {
   const call = async () => {
