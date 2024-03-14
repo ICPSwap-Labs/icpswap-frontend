@@ -2,7 +2,6 @@ import { drawerWidth } from "constants/theme";
 import { DEFAULT_LOCALE, SupportedLocale } from "constants/locales";
 import { ICPPriceInfo, TokenMetadata } from "types/token";
 import { TokenListMetadata } from "types/token-list";
-import { type TokenRoots } from "types/token";
 
 export interface GlobalState {
   drawerWidth: number;
@@ -14,7 +13,7 @@ export interface GlobalState {
   swapTokenList: [];
   userLocale: SupportedLocale;
   poolStandardUpdated: boolean;
-  snsTokenRoots: { [key: string]: TokenRoots };
+  snsTokenRootIds: { [key: string]: string };
 }
 
 export const initialState: GlobalState = {
@@ -27,5 +26,5 @@ export const initialState: GlobalState = {
   swapTokenList: [],
   userLocale: DEFAULT_LOCALE,
   poolStandardUpdated: false,
-  snsTokenRoots: {},
+  snsTokenRootIds: {},
 };

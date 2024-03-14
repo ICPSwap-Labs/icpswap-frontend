@@ -80,8 +80,6 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
         }),
       );
 
-      console.log("result:", result);
-
       closeLoading();
 
       if (result.status === "ok") {

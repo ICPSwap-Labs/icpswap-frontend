@@ -17,4 +17,4 @@ export const updateTokenList = createAction<TokenListMetadata[]>("global/updateT
 
 export const updatePoolStandardInitialed = createAction<boolean>("global/updatePoolStandardInitialed");
 
-export const updateSNSTokenRoots = createAction<{ root: TokenRoots; id: string }>("global/updateSNSTokenRoots");
+export const updateTokenSNSRootId = createAction<{ root_id: string; id: string }>("global/updateTokenSNSRootId");

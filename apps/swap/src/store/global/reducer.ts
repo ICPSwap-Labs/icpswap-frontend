@@ -6,7 +6,7 @@ import {
   updateUserLocale,
   updateTokenList,
   updatePoolStandardInitialed,
-  updateSNSTokenRoots,
+  updateTokenSNSRootId,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -35,7 +35,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(updatePoolStandardInitialed, (state, { payload }) => {
       state.poolStandardUpdated = payload;
     })
-    .addCase(updateSNSTokenRoots, (state, { payload }) => {
-      state.snsTokenRoots[payload.id] = payload.root;
+    .addCase(updateTokenSNSRootId, (state, { payload }) => {
+      state.snsTokenRootIds[payload.id] = payload.root_id;
     });
 });

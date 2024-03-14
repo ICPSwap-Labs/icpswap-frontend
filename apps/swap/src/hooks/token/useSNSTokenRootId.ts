@@ -1,15 +1,11 @@
 import { useMemo } from "react";
-import { useSNSTokenRoots } from "store/global/hooks";
+import { useTokenSNSRootIds } from "store/global/hooks";
 
 export function useSNSTokenRootId(tokenId: string | undefined) {
-  const tokenRoots = useSNSTokenRoots();
+  const tokenRootIds = useTokenSNSRootIds();
 
   return useMemo(() => {
-    if (!tokenId || !tokenRoots) return undefined;
-
-    const sns_root = tokenRoots[tokenId];
-    if (!sns_root) return undefined;
-
-    return sns_root.root_canister_id;
-  }, [tokenRoots, tokenId]);
+    if (!tokenId || !tokenRootIds) return undefined;
+    return tokenRootIds[tokenId];
+  }, [tokenRootIds, tokenId]);
 }

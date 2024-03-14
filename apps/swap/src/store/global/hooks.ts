@@ -4,7 +4,7 @@ import {
   updateICPPriceList,
   updateTokenList,
   updatePoolStandardInitialed,
-  updateSNSTokenRoots,
+  updateTokenSNSRootId,
 } from "./actions";
 import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD, ICP_TOKEN_INFO } from "constants/tokens";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
@@ -12,7 +12,7 @@ import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
 import { use100ICPPriceInfo, useXDR2USD } from "@icpswap/hooks";
-import { useTokensFromList, useSNSTokensRootIds, getListSNSCanisters } from "@icpswap/hooks";
+import { useTokensFromList, useSNSTokensRootIds, getListSNSCanisters, useListDeployedSNSs } from "@icpswap/hooks";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -181,25 +181,34 @@ export function useGlobalTokenList() {
 export function useFetchSNSTokenRootIds() {
   const dispatch = useAppDispatch();
   const { result: snsTokenRootIds, loading } = useSNSTokensRootIds();
+  const { result: list_deployed_sns } = useListDeployedSNSs();
 
   useEffect(() => {
     async function call() {
-      if (snsTokenRootIds && snsTokenRootIds.data.length > 0) {
-        await Promise.all(
-          snsTokenRootIds.data.map(async (snsRoot) => {
-            const result = await getListSNSCanisters(snsRoot.root_canister_id);
-            const id = result.ledger[0];
+      if (snsTokenRootIds && list_deployed_sns && snsTokenRootIds.data.length > 0) {
+        snsTokenRootIds.data.forEach((sns_root) => {
+          const deployed_sns = list_deployed_sns.instances.find((e) => {
+            const root_id = e.root_canister_id[0];
+            if (root_id) return root_id.toString() === sns_root.root_canister_id;
+          });
 
-            if (id) {
-              dispatch(updateSNSTokenRoots({ id: id.toString(), root: snsRoot }));
+          if (deployed_sns) {
+            const ledger_canister_id = deployed_sns.ledger_canister_id[0];
+            if (ledger_canister_id) {
+              dispatch(
+                updateTokenSNSRootId({
+                  id: deployed_sns.ledger_canister_id.toString(),
+                  root_id: sns_root.root_canister_id,
+                }),
+              );
             }
-          }),
-        );
+          }
+        });
       }
     }
 
     call();
-  }, [snsTokenRootIds, dispatch]);
+  }, [snsTokenRootIds, dispatch, list_deployed_sns]);
 
   return {
     loading,
@@ -207,8 +216,8 @@ export function useFetchSNSTokenRootIds() {
   };
 }
 
-export function useSNSTokenRoots() {
-  return useAppSelector((state: AppState) => state.global.snsTokenRoots);
+export function useTokenSNSRootIds() {
+  return useAppSelector((state: AppState) => state.global.snsTokenRootIds);
 }
 
 export function usePoolStandardManager(): [boolean, (value: boolean) => void] {
