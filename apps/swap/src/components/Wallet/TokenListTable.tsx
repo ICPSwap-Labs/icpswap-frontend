@@ -6,7 +6,7 @@ import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import AddressClipboard from "components/AddressClipboard";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, Connector } from "constants/index";
+import { ICP, Connector, NO_HIDDEN_TOKENS } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -246,6 +246,20 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     history.push("/swap/v2/wrap?input=wicp");
   };
 
+  const isHidden = useMemo(() => {
+    const hiddenBySmallBalance = isHideSmallBalances && !!tokenBalance && !tokenBalance?.isGreaterThan(0);
+
+    const hiddenBySearchValue = !!searchValue
+      ? !tokenInfo?.symbol
+        ? true
+        : !tokenInfo?.symbol.toLowerCase().includes(searchValue.toLowerCase())
+      : false;
+
+    if (NO_HIDDEN_TOKENS.includes(canisterId)) return false;
+
+    return hiddenBySmallBalance || hiddenBySearchValue;
+  }, [isHideSmallBalances, tokenBalance, canisterId, searchValue, tokenInfo]);
+
   return (
     <Box
       sx={{
@@ -254,6 +268,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         padding: "20px",
         maxWidth: "100%",
         overflow: "hidden",
+        ...(isHidden ? { display: "none" } : {}),
         "@media(max-width: 640px)": {
           padding: "10px",
         },
