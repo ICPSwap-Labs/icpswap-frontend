@@ -2,25 +2,16 @@ import { Box, Typography } from "@mui/material";
 import { useSNSTokensRootIds, useSwapSaleParameters, useSNSCanisters, useSNSSwapInitArgs } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { LoadingRow, TextButton } from "components/index";
-import type { TokenRoots, ListDeployedSnsesResponse, SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import AvatarImage from "components/Image/Avatar";
-import dayjs from "dayjs";
-import { Link as ReactLink, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 import { useTokenInfo } from "hooks/token";
-import { TokenInfo } from "types/index";
-import { useTokenSupply } from "hooks/token/calls";
-import { parseTokenAmount } from "@icpswap/utils";
-import { ICP } from "constants/tokens";
 import { LaunchDetail } from "./components/LaunchDetails";
 import { LaunchStatus } from "./components/LaunchStatus";
 
 export default function Launch() {
   const history = useHistory();
   const { root_id } = useParams<{ root_id: string }>();
-
-  console.log("root_id:", root_id);
 
   const { result: snsTokens } = useSNSTokensRootIds();
 
@@ -41,11 +32,10 @@ export default function Launch() {
   }, [snsCanisterIds]);
 
   const { result: tokenInfo } = useTokenInfo(ledger_id);
-
-  console.log("tokenInfo:", tokenInfo);
-
   const { result: saleParameters } = useSwapSaleParameters(swap_id);
   const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
+
+  console.log("saleParameters:", saleParameters);
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -70,7 +60,17 @@ export default function Launch() {
               </Typography>
             </Box>
 
-            <Box sx={{ display: "flex", gap: "0 20px", margin: "20px 0 0 0" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "0 20px",
+                margin: "20px 0 0 0",
+                "@media(max-width: 980px)": {
+                  flexDirection: "column",
+                  gap: "20px 0",
+                },
+              }}
+            >
               <LaunchDetail
                 ledger_id={ledger_id}
                 swap_id={swap_id}

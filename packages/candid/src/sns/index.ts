@@ -19,5 +19,8 @@ export type {
   GetSaleParametersResponse,
   GetInitResponse,
   Init as SNSSwapInitArgs,
+  GetBuyerStateResponse,
+  BuyerState,
+  RefreshBuyerTokensResponse,
 } from "./swap";
 export { idlFactory as SNS_SWAP_INTERFACE_FACTORY } from "./swap.did";

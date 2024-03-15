@@ -108,7 +108,7 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
       <ItemDisplay
         label={t`Swap End`}
         value={
-          !!saleParameters && !!tokenInfo
+          !!saleParameters
             ? `${dayjs(Number(saleParameters.swap_due_timestamp_seconds * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss")}`
             : "--"
         }

@@ -7,3 +7,8 @@ export function isOkSubAccount(
   if (sub && sub instanceof Error) return false;
   return true;
 }
+
+export function isSubAccount(sub: any): sub is SubAccount {
+  if (sub && sub instanceof SubAccount) return true;
+  return false;
+}
