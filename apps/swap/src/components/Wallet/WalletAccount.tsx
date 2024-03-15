@@ -1,6 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
-import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
+import { formatDollarAmount, principalToAccount } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import WalletContext from "./context";
 import { useSuccessTip } from "hooks/useTips";
@@ -59,7 +59,7 @@ export function AddressWrapper({ address, label }: AddressWrapperProps) {
         >
           {address}
         </Typography>
-        <Box component="span" sx={{ cursor: "pointer" }} onClick={handleCopy}>
+        <Box component="span" sx={{ cursor: "pointer", margin: "0 0 0 4px" }} onClick={handleCopy}>
           <CopyIcon />
         </Box>
       </Box>
@@ -127,17 +127,14 @@ export default function WalletAccount() {
         </Box>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
-          <Typography sx={{ fontSize: "32px", fontWeight: 600 }} color="text.primary">
-            ≈{useTotalICPValue ? useTotalICPValue.toFormat(4) : 0}&nbsp;
-            <Typography component="span" sx={{ fontSize: "24px" }} color="text.primary">
-              ICP
-            </Typography>
+          <Typography component="span" sx={{ fontSize: "32px", fontWeight: 600 }} color="text.primary">
+            ≈{formatDollarAmount(totalValue.toString(), 2)}
           </Typography>
         </Box>
 
-        <Box sx={{ margin: "6px 0 0 0" }}>
-          <Typography component="span">≈{formatDollarAmount(totalValue.toString(), 2)}</Typography>
-          <Typography sx={{ margin: "0 0 0 10px", color: USDChangeColor }} component="span">
+        <Box sx={{ margin: "6px 0 0 0", display: "flex", gap: "0 8px" }}>
+          <Typography>≈{useTotalICPValue ? useTotalICPValue.toFormat(4) : 0}&nbsp;ICP</Typography>
+          <Typography sx={{ color: USDChangeColor }} component="span">
             {usdChange ? `${usdChangeType === "down" ? "" : "+"}${usdChange}` : "--"}
           </Typography>
         </Box>
