@@ -1,10 +1,7 @@
-import { useContext } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { Trans } from "@lingui/macro";
-import { ReactComponent as RefreshCircleIcon } from "assets/icons/refresh-circle.svg";
-import WalletContext from "./context";
 
 export interface TokenHeaderProps {
   onHideSmallBalances: (checked: boolean) => void;
@@ -13,12 +10,6 @@ export interface TokenHeaderProps {
 }
 
 export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalances }: TokenHeaderProps) {
-  const { refreshCounter, setRefreshCounter } = useContext(WalletContext);
-
-  const handleRefresh = () => {
-    setRefreshCounter(refreshCounter + 1);
-  };
-
   return (
     <Box
       sx={{
@@ -42,8 +33,6 @@ export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalanc
             <Trans>Hide Zero Balance</Trans>
           </Typography>
         </Box>
-
-        <RefreshCircleIcon style={{ cursor: "pointer" }} onClick={handleRefresh} />
 
         <AddToken />
       </Box>
