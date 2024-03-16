@@ -101,6 +101,11 @@ export default function LaunchpadList() {
     return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_COMMITTED");
   }, [snsTokens]);
 
+  const upcomingLaunches = useMemo(() => {
+    if (!snsTokens) return undefined;
+    return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_ADOPTED");
+  }, [snsTokens]);
+
   const updateTokenStandard = useUpdateTokenStandard();
 
   useEffect(() => {
@@ -149,6 +154,43 @@ export default function LaunchpadList() {
             <div />
           </LoadingRow>
         )}
+
+        <Box sx={{ margin: "30px 0 0 0" }}>
+          <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
+            <Trans>Upcoming Launches</Trans>
+          </Typography>
+
+          {!loading ? (
+            <Box
+              sx={{
+                display: "grid",
+                gap: "20px",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                "@media (max-width:1088px)": {
+                  gridTemplateColumns: "1fr 1fr",
+                },
+                "@media (max-width:640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              {upcomingLaunches?.map((e) => (
+                <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />
+              ))}
+            </Box>
+          ) : (
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          )}
+        </Box>
 
         <Box sx={{ margin: "30px 0 0 0" }}>
           <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
