@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import { formatDollarAmount, parseTokenAmount, mockALinkToOpen, BigNumber } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
-import AddressClipboard from "components/AddressClipboard";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { ICP, Connector, NO_HIDDEN_TOKENS } from "constants/index";
 import { useAccount } from "store/global/hooks";
@@ -147,7 +146,6 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const [open, setOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
-  const [addressModalOpen, setAddressModalOpen] = useState(false);
 
   const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
 
@@ -320,7 +318,6 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       <Box
         sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
       >
-        <ActionButton label="Receive" onClick={() => setAddressModalOpen(true)} />
         <ActionButton label="Send" onClick={handleTransfer} />
         <ActionButton label="Transactions" onClick={handleToTransactions} />
 
@@ -361,16 +358,6 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
           onTransferSuccess={handleTransferSuccess}
         />
       ) : null}
-
-      <AddressClipboard
-        open={addressModalOpen}
-        onClose={() => setAddressModalOpen(false)}
-        address={
-          !!tokenInfo?.standardType && usePrincipalStandard(tokenInfo.standardType as string)
-            ? principal?.toString() ?? ""
-            : account
-        }
-      />
 
       {XTCTopUpShow ? (
         <XTCTopUpModal open={XTCTopUpShow} onClose={() => setXTCTopUpShow(false)} onTopUpSuccess={handleTopUpSuccess} />
