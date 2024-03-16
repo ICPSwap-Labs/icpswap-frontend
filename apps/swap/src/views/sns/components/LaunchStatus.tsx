@@ -169,16 +169,18 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
           Status
         </Typography>
 
-        <Box
-          sx={{
-            padding: "3px 10px",
-            borderRadius: "12px",
-            background:
-              swap_life_cycle === SnsSwapLifecycle.Open ? theme.colors.successDark : theme.palette.background.level4,
-          }}
-        >
-          <Typography color="text.primary">{swap_life_cycle ? statusTextMapper[swap_life_cycle] : "--"}</Typography>
-        </Box>
+        {swap_life_cycle ? (
+          <Box
+            sx={{
+              padding: "3px 10px",
+              borderRadius: "12px",
+              background:
+                swap_life_cycle === SnsSwapLifecycle.Open ? theme.colors.successDark : theme.palette.background.level1,
+            }}
+          >
+            <Typography color="text.primary">{swap_life_cycle ? statusTextMapper[swap_life_cycle] : "--"}</Typography>
+          </Box>
+        ) : null}
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
