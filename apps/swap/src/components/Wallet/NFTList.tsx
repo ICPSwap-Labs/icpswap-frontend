@@ -1,14 +1,10 @@
-import { useCallback, useMemo, useContext } from "react";
+import { useMemo, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { gridSpacing } from "constants/theme";
+import { Grid, Box, Typography, Avatar, useTheme } from "@mui/material";
 import NFTListHeader from "components/Wallet/NFTListHeader";
 import { useAccount } from "store/global/hooks";
 import NoData from "components/no-data";
 import { isICPSwapOfficial } from "utils/index";
-import MainCard from "components/cards/MainCard";
-import VerifyImage from "assets/images/nft/verify.svg";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import { Theme } from "@mui/material/styles";
@@ -24,16 +20,74 @@ const ICPSwapPositionNFTs = [
   "4lnl6-hqaaa-aaaag-qblla-cai",
 ];
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    introduction: {
-      maxWidth: "800px",
-      [theme.breakpoints.down("md")]: {
-        ...theme.mixins.overflowEllipsis2,
-      },
-    },
-  };
-});
+export interface NFTCardUIProps {
+  number: number | string | undefined;
+  name: string | undefined;
+  src: string | undefined;
+  onClick?: () => void;
+}
+
+function NFTCardUI({ number, name, src, onClick }: NFTCardUIProps) {
+  const theme = useTheme() as Theme;
+
+  return (
+    <Box
+      sx={{
+        background: theme.palette.background.level4,
+        borderRadius: "12px",
+        padding: "20px",
+        "@media(max-width: 640px)": {
+          padding: "15px",
+        },
+      }}
+      onClick={onClick}
+    >
+      <Grid
+        container
+        alignItems="center"
+        sx={{
+          cursor: "pointer",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: "0 16px", overflow: "hidden" }}>
+          <Avatar style={{ width: "60px", height: "60px" }} src={src ?? ""}>
+            &nbsp;
+          </Avatar>
+
+          <Box sx={{ overflow: "hidden" }}>
+            <Typography
+              color="textPrimary"
+              fontSize="16px"
+              fontWeight={600}
+              sx={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {name}
+            </Typography>
+            <Typography
+              sx={{
+                margin: "10px 0 0 0",
+                display: "inline-flex",
+                padding: "0px 12px",
+                alignItems: "center",
+                gap: "10px",
+                borderRadius: "40px",
+                background: "#4F5A84",
+                color: "#ffffff",
+                fontWeight: 500,
+              }}
+            >
+              {number === undefined ? "--" : number}
+            </Typography>
+          </Box>
+        </Box>
+      </Grid>
+    </Box>
+  );
+}
 
 export interface NFTCardProps {
   canister: NFTControllerInfo;
@@ -41,7 +95,6 @@ export interface NFTCardProps {
 
 export function NFTCanisterCard({ canister }: NFTCardProps) {
   const account = useAccount();
-  const classes = useStyles();
   const history = useHistory();
 
   const { refreshCounter } = useContext(WalletContext);
@@ -52,47 +105,7 @@ export function NFTCanisterCard({ canister }: NFTCardProps) {
     history.push(`/wallet/nft/canister/details/${canister.cid}`);
   };
 
-  return (
-    <MainCard level={1} onClick={handleCardClick}>
-      <Grid
-        container
-        alignItems="center"
-        sx={{
-          cursor: "pointer",
-        }}
-      >
-        <Grid item xs container mr="20px">
-          <Grid item mr={2}>
-            <Grid
-              container
-              alignItems="center"
-              sx={{
-                height: "100%",
-              }}
-            >
-              <Avatar src={logo ?? ""}>&nbsp;</Avatar>
-            </Grid>
-          </Grid>
-          <Grid item xs>
-            <Grid item xs container alignItems="center">
-              <Typography color="textPrimary" variant="h4" component="span" mr={1}>
-                {canister.name}
-              </Typography>
-              {isICPSwapOfficial(canister.owner) && <img width="24px" height="24px" src={VerifyImage} alt="" />}
-            </Grid>
-            <Typography fontSize={12} mt={2} className={classes.introduction}>
-              {canister.introduction}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2" color="textPrimary" align="right">
-            {String(count ?? 0)}
-          </Typography>
-        </Grid>
-      </Grid>
-    </MainCard>
-  );
+  return <NFTCardUI onClick={handleCardClick} src={logo} name={canister.name} number={count?.toString()} />;
 }
 
 export interface ExtNFTCardProps {
@@ -101,11 +114,10 @@ export interface ExtNFTCardProps {
 }
 
 export function ExtNFTCard({ collection, userAllExtNfts }: ExtNFTCardProps) {
-  const classes = useStyles();
   const history = useHistory();
 
   const count = useMemo(() => {
-    if (!userAllExtNfts || !collection) return "--";
+    if (!userAllExtNfts || !collection) return undefined;
     return userAllExtNfts.filter((e) => e.canister === collection.id).length;
   }, [userAllExtNfts, collection]);
 
@@ -113,46 +125,7 @@ export function ExtNFTCard({ collection, userAllExtNfts }: ExtNFTCardProps) {
     history.push(`/wallet/nft/canister/details/${collection.id}`);
   };
 
-  return (
-    <MainCard level={1} onClick={handleClick}>
-      <Grid
-        container
-        alignItems="center"
-        sx={{
-          cursor: "pointer",
-        }}
-      >
-        <Grid item xs container mr="20px">
-          <Grid item mr={2}>
-            <Grid
-              container
-              alignItems="center"
-              sx={{
-                height: "100%",
-              }}
-            >
-              <Avatar src={collection.avatar ?? ""}>&nbsp;</Avatar>
-            </Grid>
-          </Grid>
-          <Grid item xs>
-            <Grid item xs container alignItems="center">
-              <Typography color="textPrimary" variant="h4" component="span" mr={1}>
-                {collection.name}
-              </Typography>
-            </Grid>
-            <Typography fontSize={12} mt={2} className={classes.introduction}>
-              {collection.description}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2" color="textPrimary" align="right">
-            {count}
-          </Typography>
-        </Grid>
-      </Grid>
-    </MainCard>
-  );
+  return <NFTCardUI name={collection.name} src={collection.avatar} onClick={handleClick} number={count} />;
 }
 
 export default function NFTList() {
@@ -185,28 +158,43 @@ export default function NFTList() {
   const { result: userAllExtNfts } = useExtUserNFTs(account);
 
   return (
-    <Grid container flexDirection="column" spacing={gridSpacing}>
-      <Grid item container>
-        <Grid item xs={12} container justifyContent="flex-end">
-          <NFTListHeader />
-        </Grid>
-      </Grid>
-      <Grid item container xs={12} spacing="12px">
-        {importedNFTs?.map((collection) => (
-          <Grid key={collection.id} item xs={12}>
-            <ExtNFTCard collection={collection} userAllExtNfts={userAllExtNfts} />
-          </Grid>
-        ))}
+    <Box>
+      <NFTListHeader />
 
-        {list?.map((canister) => (
-          <Grid key={canister.cid} item xs={12}>
-            <NFTCanisterCard canister={canister} />
-          </Grid>
-        ))}
+      <Box sx={{ overflow: "hidden", width: "100%", margin: "30px 0" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "20px",
+            "@media(max-width: 1088px)": {
+              gridTemplateColumns: "1fr 1fr",
+            },
+            "@media(max-width: 640px)": {
+              gridTemplateColumns: "100%",
+              gap: "20px 0",
+            },
+          }}
+        >
+          {!loading &&
+            importedNFTs?.map((collection) => (
+              <Grid key={collection.id} item xs={12}>
+                <ExtNFTCard collection={collection} userAllExtNfts={userAllExtNfts} />
+              </Grid>
+            ))}
 
-        {loading ? <Loading loading /> : null}
-        {list && list.length === 0 && !loading ? <NoData /> : null}
-      </Grid>
-    </Grid>
+          {list?.map((canister) => (
+            <Grid key={canister.cid} item xs={12}>
+              <NFTCanisterCard canister={canister} />
+            </Grid>
+          ))}
+        </Box>
+      </Box>
+
+      {loading ? <Loading loading /> : null}
+
+      {list && list.length === 0 && !!importedNFTs && importedNFTs.length === 0 && !loading ? <NoData /> : null}
+    </Box>
   );
 }

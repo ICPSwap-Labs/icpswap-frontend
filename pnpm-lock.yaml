@@ -526,9 +526,6 @@ importers:
       react-is:
         specifier: ^17.0.2
         version: 17.0.2
-      react-jdenticon:
-        specifier: ^0.0.9
-        version: 0.0.9(react@17.0.2)
       react-markdown:
         specifier: ^6.0.0
         version: 6.0.3(@types/react@17.0.2)(react@17.0.2)
@@ -7797,10 +7794,6 @@ packages:
   /caniuse-lite@1.0.30001570:
     resolution: {integrity: sha512-+3e0ASu4sw1SWaoCtvPeyXp+5PsjigkSt8OXZbF9StH5pQWbxEjLAZE3n8Aup5udop1uRiKA7a4utUk/uoSpUw==}
 
-  /canvas-renderer@2.1.1:
-    resolution: {integrity: sha512-/V0XetN7s1Mk3NO7x2wxPZYv0pLMQtGAhecuOuKR88beiYCUle1AbCcFZNLu+4NVzi9RVHS0rXtIgzPEaKidLw==}
-    dev: false
-
   /capture-exit@2.0.0:
     resolution: {integrity: sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g==}
     engines: {node: 6.* || 8.* || >= 10.*}
@@ -12370,14 +12363,6 @@ packages:
       minimatch: 3.1.2
     dev: false
 
-  /jdenticon@2.2.0:
-    resolution: {integrity: sha512-WGqwpjN9pab/Sah9pGnFH5tQc3HF3WbLV/tPVbykvk5nuAkxG/zhzQYWC2owvpnS+/A0HmlSx35rtY8kyN+x7Q==}
-    hasBin: true
-    dependencies:
-      '@types/node': 13.13.52
-      canvas-renderer: 2.1.1
-    dev: false
-
   /jest-changed-files@26.6.2:
     resolution: {integrity: sha512-fDS7szLcY9sCtIip8Fjry9oGf3I2ht/QT21bAHm5Dmf0mD4X3ReNUf17y+bO6fR8WgbIZTlbyG1ak/53cbRzKQ==}
     engines: {node: '>= 10.14.2'}
@@ -16779,16 +16764,6 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
-
-  /react-jdenticon@0.0.9(react@17.0.2):
-    resolution: {integrity: sha512-NuAoIjNBoL5VpPgRXl52b8IwF5nOEK+imn/9usCslaJlg5qgiUjXw0lVLLI1w19cjPaJo952kjnpC2CtokcTXA==}
-    peerDependencies:
-      react: ^16.8.0
-    dependencies:
-      jdenticon: 2.2.0
-      prop-types: 15.8.1
-      react: 17.0.2
-    dev: false
 
   /react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}

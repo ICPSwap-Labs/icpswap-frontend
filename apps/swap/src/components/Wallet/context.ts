@@ -18,6 +18,8 @@ export interface WalletContextProps {
   setTransferAmount: (transferAmount: BigNumber) => void;
   page: Page;
   setPage: (page: Page) => void;
+  totalUSDBeforeChange: BigNumber;
+  setTotalUSDBeforeChange: (tokenId: string, value: BigNumber) => void;
 }
 
 export default createContext<WalletContextProps>({} as WalletContextProps);

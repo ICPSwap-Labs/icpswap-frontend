@@ -1,12 +1,9 @@
-import { Grid, useTheme, useMediaQuery, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import AddNFTCanister from "./AddNFTCanister";
 import { ImportEXTNft } from "./ImportEXTNFT";
 
 export default function NFTListHeader() {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
   return (
     <Box
       sx={{
@@ -24,7 +21,7 @@ export default function NFTListHeader() {
       <Box
         sx={{
           display: "flex",
-          gap: "0 20px",
+          gap: "0 10px",
           "@media(max-width: 640px)": {
             justifyContent: "flex-end",
           },
