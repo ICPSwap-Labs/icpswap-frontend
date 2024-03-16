@@ -22,6 +22,6 @@ export interface TokenRoots {
   url: string;
   swap_lifecycle: {
     decentralization_sale_open_timestamp_seconds: number;
-    lifecycle: "LIFECYCLE_COMMITTED" | "LIFECYCLE_OPEN";
+    lifecycle: "LIFECYCLE_COMMITTED" | "LIFECYCLE_OPEN" | "LIFECYCLE_ADOPTED";
   };
 }
