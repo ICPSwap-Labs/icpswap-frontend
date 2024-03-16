@@ -160,6 +160,14 @@
     "symbol": "BITCORN"
   },
   {
+    "fee": 100000,
+    "decimals": 8,
+    "canisterId": "gemj7-oyaaa-aaaaq-aacnq-cai",
+    "name": "ELNA",
+    "standard": "ICRC1",
+    "symbol": "ELNA"
+  },
+  {
     "fee": 100000000,
     "decimals": 12,
     "canisterId": "r7cp6-6aaaa-aaaag-qco5q-cai",
@@ -246,14 +254,6 @@
     "name": "BABY AROF",
     "standard": "DIP20",
     "symbol": "BABY AROF token"
-  },
-  {
-    "fee": 0,
-    "decimals": 8,
-    "canisterId": "ilmem-diaaa-aaaak-actma-cai",
-    "name": "IC Drip Token",
-    "standard": "DIP20",
-    "symbol": "ICD"
   },
   {
     "fee": 0,
@@ -454,6 +454,14 @@
     "name": "ICPI",
     "standard": "ICRC1",
     "symbol": "ICPI"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "hhaaz-2aaaa-aaaaq-aacla-cai",
+    "name": "ICLighthouse DAO",
+    "standard": "ICRC1",
+    "symbol": "ICL"
   },
   {
     "fee": 50000000,
@@ -664,7 +672,7 @@
     "symbol": "TAL"
   },
   {
-    "fee": 0,
+    "fee": 10000000,
     "decimals": 8,
     "canisterId": "ek3ei-xyaaa-aaaak-afkma-cai",
     "name": "DIZNI",
