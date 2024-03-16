@@ -187,7 +187,7 @@ export function Participate({
           }}
         />
 
-        <Typography sx={{ cursor: "pointer", userSelect: "none" }} onClick={() => setRisk(!risk)}>
+        <Typography sx={{ cursor: "pointer", userSelect: "none", fontSize: "12px" }} onClick={() => setRisk(!risk)}>
           <Trans>
             I confirm my understanding of the responsibilities and risks associated with participation in this token
             swap.
