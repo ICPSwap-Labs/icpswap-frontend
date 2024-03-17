@@ -127,21 +127,25 @@ export default function LaunchpadList() {
         </Typography>
 
         {!loading ? (
-          <Box
-            sx={{
-              display: "grid",
-              gap: "20px",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              "@media (max-width:1088px)": {
-                gridTemplateColumns: "1fr 1fr",
-              },
-              "@media (max-width:640px)": {
-                gridTemplateColumns: "1fr",
-              },
-            }}
-          >
-            {openedLaunches?.map((e) => <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />)}
-          </Box>
+          openedLaunches && openedLaunches?.length > 0 ? (
+            <Box
+              sx={{
+                display: "grid",
+                gap: "20px",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                "@media (max-width:1088px)": {
+                  gridTemplateColumns: "1fr 1fr",
+                },
+                "@media (max-width:640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              {openedLaunches?.map((e) => <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />)}
+            </Box>
+          ) : (
+            <Typography>No Launches</Typography>
+          )
         ) : (
           <LoadingRow>
             <div />
@@ -161,23 +165,27 @@ export default function LaunchpadList() {
           </Typography>
 
           {!loading ? (
-            <Box
-              sx={{
-                display: "grid",
-                gap: "20px",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                "@media (max-width:1088px)": {
-                  gridTemplateColumns: "1fr 1fr",
-                },
-                "@media (max-width:640px)": {
-                  gridTemplateColumns: "1fr",
-                },
-              }}
-            >
-              {upcomingLaunches?.map((e) => (
-                <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />
-              ))}
-            </Box>
+            upcomingLaunches && upcomingLaunches.length > 0 ? (
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: "20px",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  "@media (max-width:1088px)": {
+                    gridTemplateColumns: "1fr 1fr",
+                  },
+                  "@media (max-width:640px)": {
+                    gridTemplateColumns: "1fr",
+                  },
+                }}
+              >
+                {upcomingLaunches?.map((e) => (
+                  <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />
+                ))}
+              </Box>
+            ) : (
+              <Typography>No Upcoming Launches</Typography>
+            )
           ) : (
             <LoadingRow>
               <div />
