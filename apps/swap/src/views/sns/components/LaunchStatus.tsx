@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState } from "@icpswap/hooks";
+import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import { TextButton } from "components/index";
@@ -11,8 +11,9 @@ import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ICP } from "constants/tokens";
 import Button from "components/authentication/ButtonConnector";
 import { Participate } from "./Participate";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
+import { Connector } from "constants/wallet";
 
 export interface LaunchStatusProps {
   ledger_id: string | undefined;
@@ -145,9 +146,18 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
     };
   }, [swap_derived_state, saleParameters]);
 
+  const { result: location_code } = useIpLocationCode();
+  const connector = useConnectorType();
+
   const handleParticipate = async () => {
     setParticipateOpen(true);
   };
+
+  let error: string | undefined = undefined;
+
+  if (location_code && restricted_countries && restricted_countries.includes(location_code))
+    error = t`Participation is not allowed in your region`;
+  if (!!connector && connector !== Connector.PLUG) error = t`Only Plug wallet can participate`;
 
   return (
     <Box
@@ -389,8 +399,12 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
 
       {swap_life_cycle && swap_life_cycle === SnsSwapLifecycle.Open ? (
         <Box sx={{ margin: "20px 0 0 0" }}>
-          <Button variant="contained" onClick={handleParticipate}>
-            <Trans>Participate</Trans>
+          <Button
+            variant="contained"
+            onClick={handleParticipate}
+            disabled={!!error || restricted_countries === undefined || location_code === undefined}
+          >
+            {error ?? <Trans>Participate</Trans>}
           </Button>
         </Box>
       ) : null}
