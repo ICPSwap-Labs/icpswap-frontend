@@ -74,7 +74,7 @@ export function Participate({
       from: principal.toString(),
       canisterId: ICP.address,
       to,
-      amount: formatTokenAmount(amount, ICP.decimals).minus(ICP.transFee.toString()),
+      amount: formatTokenAmount(amount, ICP.decimals),
       identity: true,
     });
 
@@ -102,14 +102,14 @@ export function Participate({
 
   const handleMAX = () => {
     if (!balance) return;
-    setAmount(parseTokenAmount(balance, ICP.decimals).toString());
+    setAmount(parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).toString());
   };
 
   let error: boolean | string = false;
 
   if (!risk) error = t`Read the risk statement`;
   if (!amount) error = t`Enter the amount`;
-  if (!!balance && !!amount && parseTokenAmount(balance, ICP.decimals).isLessThan(amount))
+  if (!!balance && !!amount && parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).isLessThan(amount))
     error = t`Insufficient Balance`;
   if (!!amount && !formatTokenAmount(amount, ICP.decimals).isGreaterThan(ICP.transFee))
     error = t`Amount must be greater than 0.0001 ICP`;
@@ -142,7 +142,7 @@ export function Participate({
             </Typography>
             <Typography color="text.primary">
               {balance
-                ? toSignificant(parseTokenAmount(balance, ICP.decimals).toString(), 6, { groupSeparator: "," })
+                ? toSignificant(parseTokenAmount(balance, ICP.decimals).toString(), 8, { groupSeparator: "," })
                 : "--"}
             </Typography>
           </Box>
