@@ -35,8 +35,6 @@ export default function Launch() {
   const { result: saleParameters } = useSwapSaleParameters(swap_id);
   const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
 
-  console.log("saleParameters:", saleParameters);
-
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
