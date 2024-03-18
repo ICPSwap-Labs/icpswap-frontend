@@ -4,7 +4,7 @@ import { useMemo, useEffect, useState } from "react";
 import { getSwapPool, getSwapPoolMetadata } from "@icpswap/hooks";
 import type { PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
 import { useToken, getTokensFromInfo } from "hooks/useToken";
-import { getTokenInfo } from "hooks/token/useTokenInfo";
+import { getTokenInfo } from "hooks/token/info-calls";
 import { TokenInfo } from "types";
 
 export enum PoolState {
