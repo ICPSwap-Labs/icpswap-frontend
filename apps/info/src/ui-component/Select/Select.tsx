@@ -26,14 +26,15 @@ const useStyles = (contained: boolean, fullHeight?: boolean) => {
   });
 };
 
-export type SelectMenuItemProps = {
+export type MenuProps = {
   label: ReactNode;
   value: any;
   selectLabel?: ReactNode;
+  additional?: string;
 };
 
 export type CustomLabelProps = {
-  menu: SelectMenuItemProps;
+  menu: MenuProps;
 };
 
 export interface SelectProps {
@@ -42,7 +43,7 @@ export interface SelectProps {
   width?: number | string;
   onChange?: (value: any) => void;
   required?: boolean;
-  menus?: SelectMenuItemProps[];
+  menus?: MenuProps[];
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
@@ -55,6 +56,7 @@ export interface SelectProps {
   search?: boolean;
   onSearch?: (search: string | undefined) => void;
   customLabel?: boolean;
+  menuFilter?: (menu: MenuProps) => boolean;
 }
 
 export function Select({
@@ -75,6 +77,7 @@ export function Select({
   onSearch,
   search: hasSearch,
   customLabel,
+  menuFilter,
   ...props
 }: SelectProps) {
   const classes = useStyles(contained, fullHeight)();
@@ -102,7 +105,7 @@ export function Select({
     setMenuWidth(width ?? undefined);
   }, []);
 
-  const handleMenuItemClick = (menu: SelectMenuItemProps) => {
+  const handleMenuItemClick = (menu: MenuProps) => {
     if (!multiple) {
       setSearch(undefined);
       if (onSearch) onSearch(undefined);
@@ -253,8 +256,16 @@ export function Select({
 
               <Box sx={{ maxHeight: menuMaxHeight ?? "540px", overflow: "hidden auto" }}>
                 {menus.map((menu, index) => {
+                  const isFiltered = menuFilter && menuFilter(menu);
+
                   return customLabel ? (
-                    <Box key={menu.value + index} onClick={() => handleMenuItemClick(menu)}>
+                    <Box
+                      key={menu.value + index}
+                      onClick={() => handleMenuItemClick(menu)}
+                      sx={{
+                        ...(isFiltered ? { display: "none" } : {}),
+                      }}
+                    >
                       {menu.label}
                     </Box>
                   ) : (
@@ -263,6 +274,7 @@ export function Select({
                       sx={{
                         padding: "10px 10px",
                         cursor: "pointer",
+                        ...(isFiltered ? { display: "none" } : {}),
                         "&:hover": {
                           background: "#313D67",
                         },

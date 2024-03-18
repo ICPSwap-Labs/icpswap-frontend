@@ -1,7 +1,7 @@
 import { Token } from "@icpswap/swap-sdk";
 import { useMemo, useEffect, useState } from "react";
 import { getTokensFromInfo } from "hooks/useToken";
-import { getTokenInfo } from "hooks/token/useTokenInfo";
+import { getTokenInfo } from "hooks/token/info-calls";
 import { TokenInfo } from "types";
 
 export function useTokens(tokenIds: string[] | undefined): { [key: string]: Token | undefined } | undefined {
