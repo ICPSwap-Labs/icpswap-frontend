@@ -131,7 +131,7 @@ export interface PoolsProps {
 
 export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
   const [page, setPage] = useState(1);
-  const [sortField, setSortField] = useState<string>("totalVolumeUSD");
+  const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
@@ -180,7 +180,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
 
   return (
     <>
-      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="totalVolumeUSD" />
+      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
 
       {(sortedPools ?? []).map((pool, index) => (
         <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} />
