@@ -27,7 +27,6 @@ export interface ParticipateProps {
 export function Participate({
   open,
   onClose,
-  tokenInfo,
   swap_id,
   swapInitArgs,
   min_participant,
@@ -94,6 +93,7 @@ export function Participate({
     console.log("fresh result:", result);
 
     setParticipateLoading(false);
+    onClose();
   };
 
   const handleAmountChange = (amount: number) => {
