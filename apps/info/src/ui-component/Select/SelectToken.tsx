@@ -1,18 +1,31 @@
 import { Box, Avatar, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { Select } from "ui-component/index";
-import { useTokensFromList, useSwapPools } from "@icpswap/hooks";
-import { useTokenInfo } from "hooks/token";
-import { ICP } from "constants/tokens";
+import { Select, type MenuProps } from "ui-component/index";
+import { useSwapPools } from "@icpswap/hooks";
+import { isValidPrincipal } from "@icpswap/utils";
+import { useTokensInfo, TokenInfoState } from "hooks/token/index";
+import { ICP, ICP_TOKEN_INFO } from "constants/tokens";
+import { TokenInfo } from "types/index";
 
 interface TokenMenuItemProps {
-  canisterId: string;
+  tokenInfo: TokenInfo;
   symbol?: string;
+  search?: string;
 }
 
-function TokenMenuItem({ canisterId, symbol }: TokenMenuItemProps) {
-  const { result: tokenInfo } = useTokenInfo(canisterId);
+function isTokenHide(tokenInfo: TokenInfo, search: string | undefined) {
+  if (!!search && isValidPrincipal(search) && tokenInfo.canisterId !== search) return true;
+  if (
+    !!search &&
+    !!tokenInfo &&
+    !tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
+    !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  )
+    return true;
+  return false;
+}
 
+function TokenMenuItem({ tokenInfo, symbol }: TokenMenuItemProps) {
   return (
     <Box sx={{ display: "flex", gap: "0 8px" }}>
       <Avatar sx={{ width: "20px", height: "20px" }} src={tokenInfo?.logo}>
@@ -26,13 +39,21 @@ function TokenMenuItem({ canisterId, symbol }: TokenMenuItemProps) {
 export interface SelectTokenProps {
   value?: string;
   onTokenChange?: (tokenId: string) => void;
+  filter?: (tokenInfo: TokenInfo) => boolean;
 }
 
-export function SelectToken({ value: tokenId, onTokenChange }: SelectTokenProps) {
+export function SelectToken({ value: tokenId, onTokenChange, filter }: SelectTokenProps) {
   const [value, setValue] = useState<string | null>(null);
-
-  const { result: tokens } = useTokensFromList();
   const { result: swapPools } = useSwapPools();
+  const [search, setSearch] = useState<string | undefined>(undefined);
+
+  const allSwapTokenIds = useMemo(() => {
+    return swapPools?.reduce((prev, curr) => {
+      return [...new Set(prev.concat([curr.token0.address, curr.token1.address]))];
+    }, [] as string[]);
+  }, [swapPools]);
+
+  const allSwapTokenInfos = useTokensInfo(allSwapTokenIds);
 
   useEffect(() => {
     if (tokenId) {
@@ -41,37 +62,21 @@ export function SelectToken({ value: tokenId, onTokenChange }: SelectTokenProps)
   }, [tokenId]);
 
   const menus = useMemo(() => {
-    let contents = tokens?.map((ele) => ({
-      value: ele.canisterId,
-      label: <TokenMenuItem symbol={ele.symbol} canisterId={ele.canisterId} />,
-    }));
+    let contents = allSwapTokenInfos.filter(
+      (ele) => ele[0] === TokenInfoState.EXISTS && ele[1]?.canisterId !== ICP.address,
+    ) as [TokenInfoState, TokenInfo][];
 
-    if (contents) {
-      contents.unshift({
-        value: ICP.address,
-        label: <TokenMenuItem symbol={ICP.symbol ?? "ICP"} canisterId={ICP.address} />,
-      });
-    }
+    contents.unshift([TokenInfoState.EXISTS, ICP_TOKEN_INFO]);
 
-    if (swapPools && contents) {
-      const poolTokens = swapPools.reduce((prev, curr) => {
-        return [...new Set(prev.concat([curr.token0.address, curr.token1.address]))];
-      }, [] as string[]);
-
-      const poolTokensContent = poolTokens
-        .filter((ele) => !contents?.find((e) => e.value === ele))
-        .map((ele) => ({
-          value: ele,
-          label: <TokenMenuItem canisterId={ele} />,
-        }));
-
-      if (contents) {
-        contents = contents.concat(poolTokensContent);
-      }
-    }
-
-    return contents;
-  }, [tokens, swapPools]);
+    return contents.map((ele) => {
+      const tokenInfo = ele[1];
+      return {
+        value: tokenInfo.canisterId,
+        label: <TokenMenuItem tokenInfo={tokenInfo} />,
+        additional: JSON.stringify(tokenInfo),
+      };
+    });
+  }, [allSwapTokenInfos]);
 
   const handleValueChange = (value: string) => {
     setValue(value);
@@ -81,6 +86,18 @@ export function SelectToken({ value: tokenId, onTokenChange }: SelectTokenProps)
     }
   };
 
+  const handleSearchChange = (value: string | undefined) => {
+    setSearch(value);
+  };
+
+  const handleFilterMenu = (menu: MenuProps) => {
+    if (!menu.additional) return false;
+
+    const tokenInfo = JSON.parse(menu.additional) as TokenInfo;
+
+    return isTokenHide(tokenInfo, search) || (!!filter && filter(tokenInfo));
+  };
+
   return (
     <Select
       placeholder="Select a token"
@@ -88,6 +105,9 @@ export function SelectToken({ value: tokenId, onTokenChange }: SelectTokenProps)
       menuMaxHeight="240px"
       onChange={handleValueChange}
       value={value}
+      search
+      onSearch={handleSearchChange}
+      menuFilter={handleFilterMenu}
     />
   );
 }

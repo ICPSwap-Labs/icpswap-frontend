@@ -1,5 +1,4 @@
 import { Principal } from "@dfinity/principal";
-import { Override } from "@icpswap/types";
 
 export type BalanceRequest = { token: string; user: { [key: string]: string | Principal } };
 
@@ -11,7 +10,6 @@ export type TokenAllowanceRequest = {
 
 export interface TokenMetadata {
   decimals: number;
-  metadata: [] | [Array<number>];
   name: string;
   standardType: string;
   symbol: string;
@@ -29,31 +27,16 @@ export type fungibleMetadata = {
   fungible: Metadata;
 };
 
-export type TokenInfo = Override<
-  TokenMetadata,
-  {
-    logo: string;
-    timestamp: bigint | null | undefined;
-    totalSupply: bigint;
-    transFee: bigint;
-    canisterId: string;
-    _canisterId: Principal;
-    totalHolders: bigint;
-  }
->;
-
-export type CacheTokenInfo = Override<
-  TokenMetadata,
-  {
-    logo: undefined | string;
-    timestamp: bigint | null | undefined;
-    totalSupply: bigint;
-    transFee: bigint;
-    canisterId: string;
-    _canisterId: Principal;
-    totalHolders: bigint;
-  }
->;
+export type TokenInfo = {
+  decimals: number;
+  name: string;
+  standardType: string;
+  symbol: string;
+  canisterId: string;
+  logo: string;
+  totalSupply: bigint;
+  transFee: bigint;
+};
 
 export interface TokenCanisterInfo {
   cycleAvailable: bigint;
