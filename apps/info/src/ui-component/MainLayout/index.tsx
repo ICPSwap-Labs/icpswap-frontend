@@ -4,7 +4,7 @@ import { CssBaseline } from "@mui/material";
 import Header from "./Header";
 import NavBar from "./NavBar/index";
 import { Theme } from "@mui/material/styles";
-import UpgradeEvent from "ui-component/UpgradeEvent";
+import GlobalTips from "ui-component/GlobalTips";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function MainLayout({ children }: { children: ReactNode }) {
   const classes = useStyles();
 
-  const [upgradeShow, setUpgradeShow] = useState(false);
+  const [globalTipsOpen, setGlobalTipsOpen] = useState(true);
 
   return (
     <div>
@@ -34,7 +34,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
       <Header />
 
-      {upgradeShow ? <UpgradeEvent onClick={() => setUpgradeShow(false)} /> : null}
+      {globalTipsOpen ? <GlobalTips onClose={() => setGlobalTipsOpen(false)} /> : null}
 
       <NavBar />
 

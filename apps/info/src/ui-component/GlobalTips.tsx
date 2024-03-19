@@ -1,5 +1,4 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { useHistory } from "react-router-dom";
 import TextButton from "./TextButton";
 
 function CloseIcon() {
@@ -20,16 +19,14 @@ function CloseIcon() {
   );
 }
 
-export default function UpgradeEvent({ onClick }: { onClick: () => void }) {
-  const history = useHistory();
+export interface GlobalTipsProps {
+  onClose: () => void;
+}
 
-  const handleToTwitter = () => {
-    history.push("/swap");
-  };
-
+export default function GlobalTips({ onClose }: GlobalTipsProps) {
   return (
     <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
-      <Grid item xs onClick={handleToTwitter}>
+      <Grid item xs>
         <Typography
           sx={{
             color: "#ffffff",
@@ -37,13 +34,15 @@ export default function UpgradeEvent({ onClick }: { onClick: () => void }) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Info System Upgrade in Progress: Some data updates may be delayed. Normal data refresh will resume after the
-          upgrade is complete. Follow <TextButton link="https://twitter.com/ICPSwap">ICPSwap</TextButton> on Twitter for
-          updates.
+          Hey guys, ICPSwap SNS creation proposal is now up for voting.&nbsp;
+          <TextButton link="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128358">
+            Please click to vote YES.
+          </TextButton>
+          &nbsp;Thanks a lot for your support!&nbsp;
         </Typography>
       </Grid>
 
-      <Box sx={{ cursor: "pointer" }} onClick={onClick}>
+      <Box sx={{ cursor: "pointer" }} onClick={onClose}>
         <CloseIcon />
       </Box>
     </Grid>
