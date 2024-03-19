@@ -41,9 +41,11 @@ export default function UpgradeEvent({ onClick }: GlobalTipProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          ICPSwap wallet preparing for an upgrade to a web-based wallet. Please securely store your seed phrases as
-          re-importing will be needed post-upgrade. Click for details.&nbsp;
-          <TextButton link="https://twitter.com/ICPSwap/status/1732442068444987708">here</TextButton>
+          Hey guys, ICPSwap SNS creation proposal is now up for voting. Please click to vote YES. Thanks a lot for your
+          support!&nbsp;
+          <TextButton link="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128358">
+            Please click to vote YES
+          </TextButton>
         </Typography>
       </Grid>
 
