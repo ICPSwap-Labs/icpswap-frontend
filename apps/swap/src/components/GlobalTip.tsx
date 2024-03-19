@@ -41,11 +41,11 @@ export default function UpgradeEvent({ onClick }: GlobalTipProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Hey guys, ICPSwap SNS creation proposal is now up for voting. Please click to vote YES. Thanks a lot for your
-          support!&nbsp;
+          Hey guys, ICPSwap SNS creation proposal is now up for voting.&nbsp;
           <TextButton link="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128358">
-            Please click to vote YES
+            Please click to vote YES.
           </TextButton>
+          &nbsp;Thanks a lot for your support!
         </Typography>
       </Grid>
 
