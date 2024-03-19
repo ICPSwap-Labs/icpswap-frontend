@@ -49,7 +49,7 @@ function ActionButton({ label, onClick }: ActionButtonProps) {
     <Box
       sx={{
         display: "flex",
-        padding: "7px 16px",
+        padding: "7px 12px",
         justifyContent: "center",
         alignItems: "center",
         background: "#4F5A84",
@@ -115,6 +115,8 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
     </>
   );
 }
+
+const SWAP_BUTTON_EXCLUDE = [ICP_TOKEN_INFO.canisterId, WRAPPED_ICP.address];
 
 export interface TokenListItemProps {
   isHideSmallBalances: boolean;
@@ -258,6 +260,10 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     return hiddenBySmallBalance || hiddenBySearchValue;
   }, [isHideSmallBalances, tokenBalance, canisterId, searchValue, tokenInfo]);
 
+  const handleToSwap = () => {
+    history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
+  };
+
   return (
     <Box
       sx={{
@@ -280,10 +286,11 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
               color="textPrimary"
               className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
               onClick={() => handleLoadToDetail(tokenInfo)}
+              fontWeight={500}
             >
               {tokenInfo?.symbol}
             </Typography>
-            <Typography>{tokenInfo?.name}</Typography>
+            <Typography sx={{ fontSize: "12px" }}>{tokenInfo?.name}</Typography>
           </Box>
         </Box>
         <TokenStandardLabel standard={tokenInfo?.standardType} />
@@ -318,6 +325,8 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       <Box
         sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
       >
+        {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
+
         <ActionButton label="Send" onClick={handleTransfer} />
         <ActionButton label="Transactions" onClick={handleToTransactions} />
 
@@ -383,9 +392,11 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         gap: "20px",
         "@media(max-width: 1088px)": {
           gridTemplateColumns: "1fr 1fr",
+          gap: "12px 0",
         },
         "@media(max-width: 640px)": {
           gridTemplateColumns: "1fr",
+          gap: "12px 0",
         },
       }}
     >
