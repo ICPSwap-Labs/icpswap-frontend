@@ -252,42 +252,39 @@ export default function Selector({
   const originList = useSwapTokenList(version);
   const isDark = isDarkTheme(theme);
 
-  const selectedTokenList = useMemo(() => {
-    const taggedTokens: SwapToken[] = [];
-    const untaggedTokens: SwapToken[] = [];
-
-    originList.forEach((token) => {
-      if (taggedTokenIds.includes(token.canisterId)) {
-        taggedTokens.push(token);
-      } else {
-        untaggedTokens.push(token);
-      }
-    });
-
-    return [...taggedTokens, ...untaggedTokens];
-  }, [originList, taggedTokenIds]);
-
   const list = useMemo(() => {
-    let list = [];
+    let list: SwapToken[] = [];
 
     if (searchKeyword) {
-      list = selectedTokenList.filter(
+      list = originList.filter(
         (item) =>
           item.symbol?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
           item.name?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
       );
     } else {
-      list = [...selectedTokenList];
+      list = [...originList];
     }
 
-    return list.sort((a, b) => {
-      const tokenABalance = tokenAdditionalData[a.canisterId]?.balance ?? "0";
-      const tokenBBalance = tokenAdditionalData[b.canisterId]?.balance ?? "0";
-      return parseTokenAmount(tokenABalance, a.decimals).isGreaterThan(parseTokenAmount(tokenBBalance, b.decimals))
-        ? -1
-        : 1;
+    const new_list_tagged: SwapToken[] = [];
+    const new_list_has_balance: SwapToken[] = [];
+    const new_list_no_balance: SwapToken[] = [];
+
+    list.forEach((e) => {
+      const tokenBalance = tokenAdditionalData[e.canisterId]?.balance ?? "0";
+
+      if (taggedTokenIds.includes(e.canisterId)) {
+        new_list_tagged.push(e);
+      } else {
+        if (tokenBalance !== "0") {
+          new_list_has_balance.push(e);
+        } else {
+          new_list_no_balance.push(e);
+        }
+      }
     });
-  }, [selectedTokenList, searchKeyword, JSON.stringify(tokenAdditionalData)]);
+
+    return new_list_tagged.concat(new_list_has_balance.concat(new_list_no_balance));
+  }, [originList, searchKeyword, JSON.stringify(tokenAdditionalData)]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
