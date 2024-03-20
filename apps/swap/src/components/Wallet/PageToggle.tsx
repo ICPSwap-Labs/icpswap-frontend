@@ -31,7 +31,7 @@ export default function WalletPageToggle() {
   };
 
   return (
-    <Box sx={{ display: "flex", gap: "0 24px" }}>
+    <Box sx={{ display: "flex", gap: "0 24px", alignItems: "center" }}>
       {DISPLAY_ITEMS.map((item) => (
         <Typography
           key={item.pageName}
