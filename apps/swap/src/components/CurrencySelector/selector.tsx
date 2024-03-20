@@ -284,7 +284,7 @@ export default function Selector({
     });
 
     return new_list_tagged.concat(new_list_has_balance.concat(new_list_no_balance));
-  }, [originList, searchKeyword, JSON.stringify(tokenAdditionalData)]);
+  }, [originList, taggedTokenIds, searchKeyword, JSON.stringify(tokenAdditionalData)]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
