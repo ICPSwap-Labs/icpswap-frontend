@@ -1,41 +1,20 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Typography, Box } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { MainCard, Wrapper, FilledTextField } from "ui-component/index";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import { GridAutoRows } from "ui-component/Grid/index";
 import { isValidPrincipal } from "@icpswap/utils";
 import isFunction from "lodash/isFunction";
 import useParsedQueryString from "hooks/useParsedQueryString";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tabPanel: {
-    fontSize: "18px",
-    fontWeight: 500,
-    color: theme.typography.secondary,
-    cursor: "pointer",
-    "&.active": {
-      color: "#ffffff",
-    },
-    "@media(max-width: 640px)": {
-      fontSize: "16px",
-    },
-  },
-}));
+import { SwapScanTabPanels } from "./components/TabPanels";
 
 enum TabPanelValue {
   TRANSACTIONS = "transactions",
   POSITIONS = "positions",
   RECLAIM = "reclaims",
+  VALUATION = "valuation",
 }
-
-const TabPanels = [
-  { label: t`Transactions`, value: TabPanelValue.TRANSACTIONS, link: "/swap-scan/transactions" },
-  { label: t`Positions`, value: TabPanelValue.POSITIONS, link: "/swap-scan/positions" },
-  { label: t`Reclaim`, value: TabPanelValue.RECLAIM, link: "/swap-scan/reclaims" },
-];
 
 export interface SwapScanWrapperProps {
   children: ReactNode;
@@ -46,8 +25,6 @@ export interface ScanChildrenProps {
 }
 
 export default function SwapScan({ children }: SwapScanWrapperProps) {
-  const classes = useStyles();
-  const history = useHistory();
   const location = useLocation();
 
   const [search, setSearch] = useState<null | string>(null);
@@ -93,27 +70,7 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
             },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "0 30px",
-              "@media(max-width: 640px)": {
-                gap: "0 15px",
-              },
-            }}
-          >
-            {TabPanels.map((ele) => (
-              <Typography
-                key={ele.value}
-                className={`${classes.tabPanel}${activeTab === ele.value ? " active" : ""}`}
-                onClick={() => {
-                  history.push(ele.link);
-                }}
-              >
-                {ele.label}
-              </Typography>
-            ))}
-          </Box>
+          <SwapScanTabPanels />
 
           <Box
             sx={{
@@ -134,7 +91,9 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
                     ? "swap transactions"
                     : activeTab === TabPanelValue.POSITIONS
                     ? "swap positions"
-                    : "reclaims"
+                    : activeTab === TabPanelValue.RECLAIM
+                    ? "reclaims"
+                    : "valuation"
                 }`,
               }}
               onChange={(value: string) => setSearch(value)}

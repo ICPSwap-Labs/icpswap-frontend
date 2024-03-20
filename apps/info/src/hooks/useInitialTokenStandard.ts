@@ -6,7 +6,6 @@ import { useSwapPools } from "@icpswap/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useSwapPools as useV2SwapPools } from "hooks/swap/v2/calls";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
-import { useAllFarmPools } from "hooks/staking-farm";
 import { updateTokens } from "store/allTokens";
 import { useTokensFromList } from "@icpswap/hooks";
 
@@ -25,10 +24,7 @@ export function useInitialTokenStandard() {
   const updatePoolTokenStandard = useUpdatePoolTokenStandardCallback();
   const tokenStandards = useTokenStandards();
 
-  const [farmLoading, setFarmLoading] = useState(true);
-
   const { result: v2Pools } = useV2SwapPools();
-  const { result: farms, loading: fetchFarmLoading } = useAllFarmPools();
 
   useEffect(() => {
     if (network === NETWORK.IC) {
@@ -41,14 +37,18 @@ export function useInitialTokenStandard() {
   useEffect(() => {
     const call = async () => {
       if (pools && pools.length) {
+        let allTokenIds: string[] = [];
+
         for (let i = 0; i < pools.length; i++) {
           const pool = pools[i];
 
           updateTokenStandard({ canisterId: pool.token0.address, standard: pool.token0.standard as TOKEN_STANDARD });
           updateTokenStandard({ canisterId: pool.token1.address, standard: pool.token1.standard as TOKEN_STANDARD });
 
-          updateTokens([pool.token0.address, pool.token1.address]);
+          allTokenIds = allTokenIds.concat([pool.token0.address, pool.token1.address]);
         }
+
+        updateTokens(allTokenIds);
       }
     };
 
@@ -98,39 +98,10 @@ export function useInitialTokenStandard() {
   }, [tokenList, setTokenListLoading, fetchListLoading]);
 
   useEffect(() => {
-    if (farms) {
-      farms.forEach((farm) => {
-        updateTokenStandard({
-          canisterId: farm.poolToken0.address,
-          standard: farm.poolToken0.standard as TOKEN_STANDARD,
-        });
-
-        updateTokenStandard({
-          canisterId: farm.poolToken0.address,
-          standard: farm.poolToken0.standard as TOKEN_STANDARD,
-        });
-
-        updateTokenStandard({
-          canisterId: farm.rewardToken.address,
-          standard: farm.rewardToken.standard as TOKEN_STANDARD,
-        });
-
-        updateTokens([farm.poolToken0.address, farm.rewardToken.address]);
-      });
-
-      setFarmLoading(false);
-    } else {
-      if (!fetchFarmLoading) {
-        setFarmLoading(false);
-      }
-    }
-  }, [farms, fetchFarmLoading]);
-
-  useEffect(() => {
-    if (!tokenListLoading && !farmLoading) {
+    if (!tokenListLoading) {
       setLoading(false);
     }
-  }, [tokenListLoading, farmLoading]);
+  }, [tokenListLoading]);
 
   return {
     loading,
