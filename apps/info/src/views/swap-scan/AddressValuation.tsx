@@ -68,6 +68,8 @@ function UserTokenBalance({
         <Box sx={{ display: "flex", gap: "0 10px", alignItems: "center" }}>
           <TokenImage logo={tokenInfo.logo} />
 
+          <Typography color="text.primary">{tokenInfo.symbol}</Typography>
+
           <Typography color="text.primary">
             {balance
               ? toSignificant(parseTokenAmount(balance, tokenInfo.decimals).toString(), 8, { groupSeparator: "," })
@@ -188,6 +190,22 @@ export default function SwapScanValuation() {
     }, new BigNumber(0));
   }, [usdValues]);
 
+  const sortedUserTokenBalances = useMemo(() => {
+    const values = Object.values(userTokenBalances).filter((e) => !!e.balance) as {
+      balance: bigint;
+      tokenInfo: TokenInfo;
+    }[];
+
+    return values.sort((a, b) => {
+      const usdValueA = usdValues[a.tokenInfo.canisterId];
+      const usdValueB = usdValues[b.tokenInfo.canisterId];
+
+      if (usdValueA && usdValueB) return new BigNumber(usdValueA).isGreaterThan(usdValueB) ? -1 : 1;
+      if (!usdValueA) return 1;
+      return -1;
+    });
+  }, [userTokenBalances, usdValues]);
+
   return (
     <Wrapper>
       <MainCard>
@@ -257,34 +275,32 @@ export default function SwapScanValuation() {
           <Header className={classes.wrapper} sx={{ display: "grid" }}>
             <HeaderCell>Token</HeaderCell>
 
-            <HeaderCell field="amountUSD" isSort>
+            <HeaderCell field="usdValue">
               <Trans>Value</Trans>
             </HeaderCell>
 
-            <HeaderCell field="amountToken0" isSort>
+            <HeaderCell field="price">
               <Trans>Price</Trans>
             </HeaderCell>
 
-            <HeaderCell field="amountToken1" isSort>
+            <HeaderCell field="amountToken1">
               <Trans>Canister ID</Trans>
             </HeaderCell>
           </Header>
 
-          {!address || Object.values(userTokenBalances).filter((e) => !!e.balance).length === 0 ? (
+          {!address || sortedUserTokenBalances.length === 0 ? (
             <NoData />
           ) : (
-            Object.values(userTokenBalances)
-              .filter((e) => !!e.balance)
-              ?.map((e) => (
-                <UserTokenBalance
-                  key={e.tokenInfo.canisterId}
-                  tokenInfo={e.tokenInfo}
-                  balance={e.balance}
-                  displayTokenInList={checked}
-                  tokenList={tokenList}
-                  onUpdateUSDValues={handleUpdateUSDValues}
-                />
-              ))
+            sortedUserTokenBalances.map((e) => (
+              <UserTokenBalance
+                key={e.tokenInfo.canisterId}
+                tokenInfo={e.tokenInfo}
+                balance={e.balance}
+                displayTokenInList={checked}
+                tokenList={tokenList}
+                onUpdateUSDValues={handleUpdateUSDValues}
+              />
+            ))
           )}
         </GridAutoRows>
       </MainCard>
