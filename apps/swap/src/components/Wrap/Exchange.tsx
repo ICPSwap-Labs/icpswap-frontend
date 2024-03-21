@@ -198,6 +198,7 @@ export default function Exchange() {
           amount: formatTokenAmount(new BigNumber(formattedAmounts[SWAP_FIELD.INPUT]).minus(ICPFee), ICP.decimals),
           identity,
           from: account,
+          decimals: ICP.decimals,
         });
 
         if (status === "err" || !data) {
