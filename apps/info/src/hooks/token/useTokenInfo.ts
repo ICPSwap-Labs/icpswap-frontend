@@ -167,7 +167,7 @@ export function useTokensInfo(
         }));
       }
     } catch (err) {
-      console.log(err);
+      console.log("UseTokenInfo set storage info error:", err);
       getStorageInfoErrored = true;
     }
 
