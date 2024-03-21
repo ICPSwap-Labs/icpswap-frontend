@@ -34,6 +34,7 @@ export function useTokenSubAccountTransfer() {
         from: principal.toString() ?? "",
         subaccount: [...subAccount.toUint8Array()],
         fee: token.transFee,
+        decimals: token.decimals,
       });
 
       if (status === "err") {
