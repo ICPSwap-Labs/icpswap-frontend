@@ -34,11 +34,10 @@ export default function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Hey guys, ICPSwap SNS creation proposal is now up for voting.&nbsp;
-          <TextButton link="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128358">
-            Please click to vote YES.
+          Get ready! ICPSwap SNS Launchpad starts on Mar 23, 2:15 PM (UTC).&nbsp;
+          <TextButton link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai">
+            Click here to join the excitement!
           </TextButton>
-          &nbsp;Thanks a lot for your support!&nbsp;
         </Typography>
       </Grid>
 
