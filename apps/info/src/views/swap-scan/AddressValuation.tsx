@@ -185,10 +185,20 @@ export default function SwapScanValuation() {
   };
 
   const totalUSDValues = useMemo(() => {
-    return Object.values(usdValues).reduce((prev, curr) => {
-      return prev.plus(curr);
+    return Object.keys(usdValues).reduce((prev, curr) => {
+      const usdValue = usdValues[curr];
+      const inTokenList = !!tokenList.find((e) => e === curr);
+
+      if (checked) {
+        if (inTokenList) {
+          return prev.plus(usdValue);
+        }
+        return prev.plus(0);
+      }
+
+      return prev.plus(usdValue);
     }, new BigNumber(0));
-  }, [usdValues]);
+  }, [usdValues, checked, tokenList]);
 
   const sortedUserTokenBalances = useMemo(() => {
     const values = Object.values(userTokenBalances).filter((e) => !!e.balance) as {
