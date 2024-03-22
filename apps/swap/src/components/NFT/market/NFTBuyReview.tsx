@@ -27,7 +27,7 @@ import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import Button from "components/authentication/ButtonConnector";
 
 export default function NFTBuyReview({

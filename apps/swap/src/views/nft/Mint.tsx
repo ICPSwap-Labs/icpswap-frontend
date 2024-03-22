@@ -25,7 +25,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
 import BigNumber from "bignumber.js";
 import { getLocaleMessage } from "locales/services";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import Button from "components/authentication/ButtonConnector";
 import useParsedQueryString from "hooks/useParsedQueryString";
 

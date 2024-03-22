@@ -5,7 +5,7 @@ import Header from "./Header";
 import { Theme } from "@mui/material/styles";
 import Background from "components/Background";
 import V3Event from "./V3Event";
-import GlobalTip from "./GlobalTip";
+import { GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -76,7 +76,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       <Box className={classes.mainContent}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
-        {globalTipShow ? <GlobalTip onClick={() => setGlobalTipShow(false)} /> : null}
+        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
 
         <main className={classes.content}>{children}</main>
       </Box>

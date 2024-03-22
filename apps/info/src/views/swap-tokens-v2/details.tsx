@@ -4,7 +4,7 @@ import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton } from "ui-component/index";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkToOpen, toSignificant } from "@icpswap/utils";
+import { mockALinkAndOpen, toSignificant } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
@@ -292,7 +292,7 @@ export default function TokenDetails() {
   };
 
   const handleToSwap = () => {
-    mockALinkToOpen(swapLink(canisterId), "to_swap");
+    mockALinkAndOpen(swapLink(canisterId), "to_swap");
   };
 
   return (

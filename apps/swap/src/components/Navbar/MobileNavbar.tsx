@@ -5,7 +5,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { useState } from "react";
 import { ClickAwayListener } from "@mui/base";
 import { Theme } from "@mui/material/styles";
-import { mockALinkToOpen } from "utils/index";
+import { mockALinkAndOpen } from "utils/index";
 import { routes, Route } from "./config";
 import LogoSection from "../LogoSection";
 
@@ -99,7 +99,7 @@ export default function MobileNavbar({ onPageLoad }: { onPageLoad?: () => void }
     if (!route.path && !route.link) return;
     handleClose();
     if (route.link) {
-      mockALinkToOpen(route.link ?? "", "nav-bar-menu");
+      mockALinkAndOpen(route.link ?? "", "nav-bar-menu");
     } else {
       history.push(route.path ?? "");
     }

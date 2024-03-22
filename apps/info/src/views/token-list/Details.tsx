@@ -19,7 +19,7 @@ import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
 import { useTokenListTokenInfo } from "@icpswap/hooks";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import TextButton from "ui-component/TextButton";
+import { TextButton } from "@icpswap/ui";
 // import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import useParsedQueryString from "hooks/useParsedQueryString";

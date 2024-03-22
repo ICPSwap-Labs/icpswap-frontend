@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 import { useAccount } from "store/global/hooks";
 import { useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import { Trans } from "@lingui/macro";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo } from "@icpswap/types";
 import Wrapper from "components/Wrapper";

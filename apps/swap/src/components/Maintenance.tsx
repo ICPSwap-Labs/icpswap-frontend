@@ -1,7 +1,7 @@
 import { Grid, Box, Typography } from "@mui/material";
 import MaintenanceSVG from "assets/images/Maintenance.svg";
 import { Trans } from "@lingui/macro";
-import TextButton from "./TextButton";
+import { TextButton } from "@icpswap/ui";
 
 export function Maintenance() {
   return (

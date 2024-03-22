@@ -2,7 +2,7 @@ import { memo, useState, ReactNode } from "react";
 import { Grid, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory, useLocation } from "react-router-dom";
-import { isDarkTheme, mockALinkToOpen } from "utils";
+import { isDarkTheme, mockALinkAndOpen } from "utils";
 import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -59,7 +59,7 @@ export default memo(
 
     const loadPage = (button: ToggleButton) => {
       if (button.link) {
-        mockALinkToOpen(button.link, "toggle_link");
+        mockALinkAndOpen(button.link, "toggle_link");
         return;
       }
 

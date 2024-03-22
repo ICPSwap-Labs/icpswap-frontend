@@ -9,7 +9,7 @@ import BigNumber from "bignumber.js";
 import { useSwapPools, useSwapProtocolData, useNFTTradeData } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
-import { mockALinkToOpen } from "utils/index";
+import { mockALinkAndOpen } from "utils/index";
 import { useStakingGlobalData, useStakingTokenAllPools } from "hooks/staking-token/index";
 import { useAllFarmPools, useFarmGlobalData } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
@@ -106,7 +106,7 @@ function LinkArrow({ link, to }: LinkArrowProps) {
     }
 
     if (link) {
-      mockALinkToOpen(link, "overview-link");
+      mockALinkAndOpen(link, "overview-link");
     }
   };
 

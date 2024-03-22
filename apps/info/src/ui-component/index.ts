@@ -6,7 +6,7 @@ export { default as ListLoading } from "./Loading/List";
 export { default as StaticLoading } from "./Loading/Static";
 export { default as Loading } from "./Loading/index";
 export { default as DotLoading } from "./Loading/Dot";
-export { default as TextButton } from "./TextButton";
+export { TextButton } from "@icpswap/ui";
 export { default as NumberFormat } from "./number-format";
 export { default as Wrapper } from "./Wrapper";
 export { default as Modal } from "./modal/index";

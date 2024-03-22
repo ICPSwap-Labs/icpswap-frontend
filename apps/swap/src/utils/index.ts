@@ -34,7 +34,7 @@ export function isICPSwapOfficial(account: string | undefined): boolean {
   );
 }
 
-export function mockALinkToOpen(url: string, id: string): void {
+export function mockALinkAndOpen(url: string, id: string): void {
   let a = document.createElement("a");
   a.setAttribute("href", url);
   a.setAttribute("target", "_blank");

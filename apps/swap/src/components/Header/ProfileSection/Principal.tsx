@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { Box, Typography, SvgIcon } from "@mui/material";
 import Copy, { CopyRef } from "components/Copy";
-import { mockALinkToOpen, principalToAccount } from "@icpswap/utils";
+import { mockALinkAndOpen, principalToAccount } from "@icpswap/utils";
 import { getExplorerAccountLink } from "utils/index";
 import { Trans } from "@lingui/macro";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -53,7 +53,7 @@ export default function ProfileSection() {
 
   const handleToExplorer = () => {
     if (!principal) return;
-    mockALinkToOpen(getExplorerAccountLink(principalToAccount(principal)), "explorers_account");
+    mockALinkAndOpen(getExplorerAccountLink(principalToAccount(principal)), "explorers_account");
   };
 
   return (
