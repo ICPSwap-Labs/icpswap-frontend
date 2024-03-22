@@ -1,6 +1,6 @@
 {
   "name": "@icpswap/frontend",
-  "version": "4.2.12",
+  "version": "4.2.13",
   "description": "Frontend of ICPSwap",
   "scripts": {
     "dev": "node ./scripts/prepare.js && turbo run dev --concurrency 100",
