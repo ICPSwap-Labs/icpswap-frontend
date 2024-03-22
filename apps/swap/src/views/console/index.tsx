@@ -4,7 +4,7 @@ import { useState } from "react";
 import MainCard from "components/cards/MainCard";
 import { t, Trans } from "@lingui/macro";
 import NFTIcon from "assets/images/console/NFT.svg";
-import { mockALinkToOpen } from "@icpswap/utils";
+import { mockALinkAndOpen } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
 import ConnectWallet from "../../components/ConnectWallet";
 import { useConnectorStateConnected } from "store/auth/hooks";
@@ -61,7 +61,7 @@ export function ConsoleItem({ label, Icon, comingSoon, path, link, title, demo, 
     }
 
     if (link) {
-      mockALinkToOpen(link, "console_link");
+      mockALinkAndOpen(link, "console_link");
       return;
     }
 
@@ -72,7 +72,7 @@ export function ConsoleItem({ label, Icon, comingSoon, path, link, title, demo, 
     if (comingSoon) return;
 
     if (route.link) {
-      mockALinkToOpen(route.link, "console_link");
+      mockALinkAndOpen(route.link, "console_link");
       return;
     }
     if (!route.path) return;

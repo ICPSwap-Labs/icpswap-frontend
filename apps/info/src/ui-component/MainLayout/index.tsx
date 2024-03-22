@@ -4,7 +4,7 @@ import { CssBaseline } from "@mui/material";
 import Header from "./Header";
 import NavBar from "./NavBar/index";
 import { Theme } from "@mui/material/styles";
-import GlobalTips from "ui-component/GlobalTips";
+import { GlobalTips } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

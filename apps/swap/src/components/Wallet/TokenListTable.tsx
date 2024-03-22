@@ -1,7 +1,7 @@
 import { useState, useContext, useMemo, useEffect } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { formatDollarAmount, parseTokenAmount, mockALinkToOpen, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -207,17 +207,17 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     const { canisterId, standardType, symbol } = tokenInfo;
 
     if (symbol === ICP_TOKEN_INFO.symbol) {
-      mockALinkToOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
+      mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
     } else if (!!root_canister_id) {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`,
         "TOKEN_TRANSACTIONS",
       );
     } else if (tokenInfo.standardType === TOKEN_STANDARD.ICRC1 || tokenInfo.standardType === TOKEN_STANDARD.ICRC2) {
       const url = isHouseUserTokenTransactions(tokenInfo.canisterId, principal?.toString());
-      mockALinkToOpen(url, "TOKEN_TRANSACTIONS");
+      mockALinkAndOpen(url, "TOKEN_TRANSACTIONS");
     } else {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `${INFO_URL}/token/transactions/${canisterId}/${principal?.toString()}?standard=${standardType}`,
         "TOKEN_TRANSACTIONS",
       );
@@ -226,7 +226,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP_TOKEN_INFO.symbol) {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
       );

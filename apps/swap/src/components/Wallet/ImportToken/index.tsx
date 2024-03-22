@@ -10,7 +10,7 @@ import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateImportedToken, useUpdateTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";

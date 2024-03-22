@@ -3,7 +3,7 @@ import { Grid, Box, MenuList, MenuItem, Popper, useMediaQuery } from "@mui/mater
 import { ClickAwayListener } from "@mui/base";
 import { makeStyles, useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { mockALinkToOpen } from "@icpswap/utils";
+import { mockALinkAndOpen } from "@icpswap/utils";
 import DiscordIcon from "./Discord";
 import TwitterIcon from "./Twitter";
 import TelegramIcon from "./Telegram";
@@ -164,7 +164,7 @@ export default function MediaLinks({ links }: { links: Link[] | undefined }) {
   };
 
   const handleLoadLink = (link: string) => {
-    mockALinkToOpen(link, "NFT_LINK");
+    mockALinkAndOpen(link, "NFT_LINK");
   };
 
   return (links ?? []).length > 0 ? (

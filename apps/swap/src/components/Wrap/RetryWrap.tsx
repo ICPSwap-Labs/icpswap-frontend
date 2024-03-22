@@ -9,7 +9,7 @@ import { Identity as AuthIdentity, ResultStatus } from "types";
 import { wrapICP } from "hooks/useWICPCalls";
 import { useSuccessTip, useErrorTip, useFullscreenLoading } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { useAccount } from "store/global/hooks";
 import { TextFieldNumberComponent } from "components/index";
 import isNumber from "lodash/isNumber";

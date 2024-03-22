@@ -9,7 +9,7 @@ import { TxRecord, ResultStatus } from "types/index";
 import dayjs from "dayjs";
 import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { checkPayment } from "hooks/nft/trade";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import upperFirst from "lodash/upperFirst";

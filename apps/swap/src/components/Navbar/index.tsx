@@ -5,7 +5,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { useState } from "react";
 import { ClickAwayListener } from "@mui/base";
 import { Theme } from "@mui/material/styles";
-import { mockALinkToOpen } from "utils/index";
+import { mockALinkAndOpen } from "utils/index";
 import { routes, Route, MAX_NUMBER } from "./config";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -100,7 +100,7 @@ export default function NavBar() {
 
     handleClose();
     if (route.link) {
-      mockALinkToOpen(route.link ?? "", "nav-bar-menu");
+      mockALinkAndOpen(route.link ?? "", "nav-bar-menu");
     } else {
       history.push(route.path ?? "");
     }
