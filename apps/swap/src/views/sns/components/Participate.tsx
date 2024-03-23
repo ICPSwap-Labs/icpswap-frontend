@@ -13,6 +13,7 @@ import { useTokenBalance } from "hooks/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { SnsSwapLifecycle } from "@icpswap/constants";
+import { useFullscreenLoading } from "hooks/useTips";
 
 export interface ParticipateProps {
   swap_id: string | undefined;
@@ -43,11 +44,10 @@ export function Participate({
   const { result: balance } = useTokenBalance(ICP.address, principal);
 
   const [openTip] = useTips();
+  const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
 
   const handleParticipate = async () => {
     if (participateLoading || !principal || !amount || !swap_id || !swapInitArgs) return;
-
-    setParticipateLoading(true);
 
     const swap_life_cycle_result = await getSwapLifeCycle(swap_id);
 
@@ -63,15 +63,12 @@ export function Participate({
       return undefined;
     }
 
+    setParticipateLoading(true);
+    openFullscreenLoading();
+
     const to = principalToAccount(swap_id, principal.toString());
 
-    console.log("to:", to);
-
-    const {
-      data: block_height,
-      status,
-      message,
-    } = await tokenTransfer({
+    const { status, message } = await tokenTransfer({
       from: principal.toString(),
       canisterId: ICP.address,
       to,
@@ -81,20 +78,19 @@ export function Participate({
 
     if (status === ResultStatus.ERROR) {
       openTip(message, TIP_ERROR);
+      setParticipateLoading(false);
+      closeFullscreenLoading();
       return;
     }
 
-    console.log("block_height:", block_height);
-
     const confirmation_text = swapInitArgs.confirmation_text[0];
 
-    const result = await refreshSNSBuyerTokens(swap_id, principal.toString(), confirmation_text);
+    await refreshSNSBuyerTokens(swap_id, principal.toString(), confirmation_text);
 
     openTip("Participate successfully", TIP_SUCCESS);
 
-    console.log("fresh result:", result);
-
     setParticipateLoading(false);
+    closeFullscreenLoading();
     onClose();
     onParticipateSuccessfully();
   };
