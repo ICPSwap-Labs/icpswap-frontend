@@ -185,6 +185,7 @@ export default function SwapScanValuation() {
   };
 
   const totalUSDValues = useMemo(() => {
+    if (!search) return new BigNumber(0);
     return Object.keys(usdValues).reduce((prev, curr) => {
       const usdValue = usdValues[curr];
       const inTokenList = !!tokenList.find((e) => e === curr);
@@ -198,7 +199,7 @@ export default function SwapScanValuation() {
 
       return prev.plus(usdValue);
     }, new BigNumber(0));
-  }, [usdValues, checked, tokenList]);
+  }, [usdValues, checked, tokenList, search]);
 
   const sortedUserTokenBalances = useMemo(() => {
     const values = Object.values(userTokenBalances).filter((e) => !!e.balance) as {
@@ -258,6 +259,12 @@ export default function SwapScanValuation() {
               }}
               onChange={(value: string) => setSearch(value)}
             />
+
+            {search && !isValidPrincipal(search) ? (
+              <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
+                <Trans>Invalid principal</Trans>
+              </Typography>
+            ) : null}
           </Box>
         </Box>
 
