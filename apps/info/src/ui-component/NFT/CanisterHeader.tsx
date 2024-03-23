@@ -1,6 +1,6 @@
 import { Box, Grid, Avatar, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { cycleValueFormat, mockALinkToOpen } from "utils";
+import { cycleValueFormat, mockALinkAndOpen } from "utils";
 import { Trans } from "@lingui/macro";
 import type { NFTCanisterInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
@@ -73,7 +73,7 @@ export default function CanisterHeader({
 
   const handleToMarketplace = () => {
     if (!details.cid) return;
-    mockALinkToOpen(`${APP_LINK}/marketplace/NFT/${details.cid}`, "NFT_Marketplace_load");
+    mockALinkAndOpen(`${APP_LINK}/marketplace/NFT/${details.cid}`, "NFT_Marketplace_load");
   };
 
   return (

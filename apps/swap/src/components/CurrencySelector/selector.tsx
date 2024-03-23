@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import SwapModal from "components/modal/swap";
 import { OutlinedInput, InputAdornment, useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
 import { Search as SearchIcon, Edit as EditIcon } from "@mui/icons-material";
@@ -16,13 +16,13 @@ import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
 // import { useUSDPriceById } from "hooks/useUSDPrice";
 import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
-// import BigNumber from "bignumber.js";
 import { TokenImage } from "@icpswap/ui";
 
 export interface SwapToken {
   canisterId: string;
   name: string;
   symbol: string;
+  decimals: number;
 }
 
 export function SelectedIcon() {
@@ -55,6 +55,7 @@ export interface TokenItemInfoProps {
   onClick: (token: TokenInfo) => void;
   disabledCurrencyIds: string[];
   activeCurrencyIds: string[];
+  onUpdateTokenAdditional: (tokenId: string, balance: string) => void;
 }
 
 export function TokenItemInfo({
@@ -62,6 +63,7 @@ export function TokenItemInfo({
   onClick,
   disabledCurrencyIds,
   activeCurrencyIds,
+  onUpdateTokenAdditional,
 }: TokenItemInfoProps) {
   const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
@@ -82,6 +84,12 @@ export function TokenItemInfo({
     if (!tokenInfo) return;
     onClick(tokenInfo);
   };
+
+  useEffect(() => {
+    if (_tokenInfo && balance) {
+      onUpdateTokenAdditional(_tokenInfo.canisterId, balance.toString());
+    }
+  }, [_tokenInfo, balance]);
 
   const isTagged = taggedTokens.includes(_tokenInfo.canisterId);
 
@@ -147,11 +155,9 @@ export function TokenItemInfo({
         </Grid>
       </Box>
 
-      <Grid item>
-        <Box ml="12px">
-          <TokenStandardLabel standard={tokenInfo?.standardType} />
-        </Box>
-      </Grid>
+      <Box ml="12px">
+        <TokenStandardLabel standard={tokenInfo?.standardType} />
+      </Box>
 
       <Grid item xs>
         <Grid container justifyContent="flex-end" alignItems="center">
@@ -221,6 +227,12 @@ export interface SelectorProps {
   version?: "v2" | "v3";
 }
 
+type TokenAdditionalData = {
+  [tokenId: string]: {
+    balance: string;
+  };
+};
+
 export default function Selector({
   open,
   onChange,
@@ -234,40 +246,45 @@ export default function Selector({
   const [searchKeyword, setSearchKeyword] = useState("");
   const [importTokenShow, setImportTokenShow] = useState(false);
 
+  const [tokenAdditionalData, setTokenAdditionalData] = useState({} as TokenAdditionalData);
+
   const [taggedTokenIds] = useTaggedTokenManager();
   const originList = useSwapTokenList(version);
   const isDark = isDarkTheme(theme);
 
-  const selectedTokenList = useMemo(() => {
-    const taggedTokens: SwapToken[] = [];
-    const untaggedTokens: SwapToken[] = [];
-
-    originList.forEach((token) => {
-      if (taggedTokenIds.includes(token.canisterId)) {
-        taggedTokens.push(token);
-      } else {
-        untaggedTokens.push(token);
-      }
-    });
-
-    return [...taggedTokens, ...untaggedTokens];
-  }, [originList, taggedTokenIds]);
-
   const list = useMemo(() => {
-    let displayedList = [];
+    let list: SwapToken[] = [];
 
     if (searchKeyword) {
-      displayedList = selectedTokenList.filter(
+      list = originList.filter(
         (item) =>
           item.symbol?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
           item.name?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
       );
     } else {
-      displayedList = [...selectedTokenList];
+      list = [...originList];
     }
 
-    return displayedList;
-  }, [selectedTokenList, searchKeyword]);
+    const new_list_tagged: SwapToken[] = [];
+    const new_list_has_balance: SwapToken[] = [];
+    const new_list_no_balance: SwapToken[] = [];
+
+    list.forEach((e) => {
+      const tokenBalance = tokenAdditionalData[e.canisterId]?.balance ?? "0";
+
+      if (taggedTokenIds.includes(e.canisterId)) {
+        new_list_tagged.push(e);
+      } else {
+        if (tokenBalance !== "0") {
+          new_list_has_balance.push(e);
+        } else {
+          new_list_no_balance.push(e);
+        }
+      }
+    });
+
+    return new_list_tagged.concat(new_list_has_balance.concat(new_list_no_balance));
+  }, [originList, taggedTokenIds, searchKeyword, JSON.stringify(tokenAdditionalData)]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
@@ -280,6 +297,15 @@ export default function Selector({
   const handleSearchToken = useCallback(({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(value);
   }, []);
+
+  const handleUpdateTokenAdditionalData = (tokenId: string, balance: string) => {
+    setTokenAdditionalData((prevState) => ({
+      ...prevState,
+      [tokenId]: {
+        balance,
+      },
+    }));
+  };
 
   return (
     <>
@@ -354,6 +380,7 @@ export default function Selector({
                   disabledCurrencyIds={disabledCurrencyIds}
                   activeCurrencyIds={activeCurrencyIds}
                   onClick={handleTokenClick}
+                  onUpdateTokenAdditional={handleUpdateTokenAdditionalData}
                 />
               ))}
               {list.length === 0 && <NoData />}

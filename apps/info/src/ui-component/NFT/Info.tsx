@@ -7,14 +7,14 @@ import LazyImage from "ui-component/LazyImage";
 import { isICPSwapOfficial } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useTradeOrder } from "@icpswap/hooks";
-import { openBase64ImageInNewWindow, mockALinkToOpen } from "@icpswap/utils";
+import { openBase64ImageInNewWindow, mockALinkAndOpen } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
 import { useUSDValueFromICPAmount } from "store/global/hooks";
 import WICPPriceFormat from "ui-component/NFT/WICPPriceFormat";
 import FileImage from "./FileImage";
-import TextButton from "ui-component/TextButton";
+import { TextButton } from "@icpswap/ui";
 import DetailsToggle from "./DetailsToggle";
 import { encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import type { NFTTokenMetadata } from "@icpswap/types";
@@ -194,7 +194,7 @@ export default function NFTInfo({
       return;
     }
 
-    mockALinkToOpen(metadata.filePath, "file_path");
+    mockALinkAndOpen(metadata.filePath, "file_path");
   };
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));

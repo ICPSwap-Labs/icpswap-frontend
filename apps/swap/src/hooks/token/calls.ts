@@ -1,5 +1,12 @@
 import { useCallback } from "react";
-import { numberToString, BigNumber, isValidPrincipal, resultFormat, isAvailablePageArgs } from "@icpswap/utils";
+import {
+  numberToString,
+  BigNumber,
+  isValidPrincipal,
+  resultFormat,
+  isAvailablePageArgs,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { ICP } from "constants/tokens";
 import { Principal } from "@dfinity/principal";
 import { Identity } from "types/index";
@@ -10,6 +17,7 @@ import { getTokenStandard } from "store/token/cache/hooks";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import { useCallsData } from "@icpswap/hooks";
+import { ResultStatus, StatusResult } from "@icpswap/types";
 
 export async function getTokenTotalHolder(canisterId: string | undefined) {
   if (!canisterId) return undefined;
@@ -57,6 +65,7 @@ export interface TokenTransferProps {
   subaccount?: number[];
   memo?: number[] | bigint;
   fee?: number | string | bigint;
+  decimals?: number;
 }
 
 export async function tokenTransfer({
@@ -68,9 +77,12 @@ export async function tokenTransfer({
   subaccount,
   memo,
   fee,
+  decimals,
 }: TokenTransferProps) {
+  let result: StatusResult<bigint> = { data: undefined, message: "", status: ResultStatus.ERROR };
+
   if (canisterId === ICP.address) {
-    return await icpAdapter.transfer({
+    result = await icpAdapter.transfer({
       canisterId,
       identity,
       params: {
@@ -81,20 +93,38 @@ export async function tokenTransfer({
         memo,
       },
     });
+  } else {
+    result = await tokenAdapter.transfer({
+      identity,
+      canisterId: canisterId,
+      params: {
+        from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
+        to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
+        amount: BigInt(numberToString(amount)),
+        subaccount,
+        memo,
+        fee: fee !== undefined ? BigInt(fee) : undefined,
+      },
+    });
   }
 
-  return await tokenAdapter.transfer({
-    identity,
-    canisterId: canisterId,
-    params: {
-      from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
-      to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
-      amount: BigInt(numberToString(amount)),
-      subaccount,
-      memo,
-      fee: fee !== undefined ? BigInt(fee) : undefined,
-    },
-  });
+  const { data, message, status } = result;
+
+  let new_message = message;
+
+  if (new_message.includes("InsufficientFunds")) {
+    const balance = new_message.replace(/\D/g, "");
+
+    if (balance) {
+      new_message = `InsufficientFunds: ${decimals ? parseTokenAmount(balance, decimals).toFormat() : balance}`;
+    }
+  }
+
+  return {
+    status,
+    message: new_message,
+    data,
+  } as StatusResult<bigint>;
 }
 
 export function useTokenTransactions(canisterId: string, account: string | undefined, offset: number, limit: number) {

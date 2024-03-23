@@ -22,6 +22,7 @@ export interface SwapToken {
   canisterId: string;
   symbol: string;
   name: string;
+  decimals: number;
 }
 
 export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
@@ -35,6 +36,7 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
         name: token.name,
         symbol: token.symbol,
         standard: token.standard as TOKEN_STANDARD,
+        decimals: Number(token.decimals),
       }))
       .filter((token) => {
         if (version === "v2") {
@@ -54,6 +56,7 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
         // If the token support multiple standards, and user import token before the pool is created
         // So use the standard cached in storage firstly.
         standard: (getTokenStandard(tokenId) ?? importedTokens[tokenId].standardType) as TOKEN_STANDARD,
+        decimals: importedTokens[tokenId].decimals,
       }));
 
     const ICPToken = {
@@ -61,6 +64,7 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
       symbol: ICP_TOKEN_INFO.symbol,
       name: ICP_TOKEN_INFO.name,
       standard: ICP_TOKEN_INFO.standardType,
+      decimals: ICP_TOKEN_INFO.decimals,
     } as SwapToken;
 
     return [...(version === "v2" ? [] : [ICPToken]), ...iTokens, ...globalTokens];

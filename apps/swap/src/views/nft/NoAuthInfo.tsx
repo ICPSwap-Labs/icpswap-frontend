@@ -5,13 +5,13 @@ import { useTheme, makeStyles } from "@mui/styles";
 import Copy from "components/Copy";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import LazyImage from "components/LazyImage";
-import { BigNumber, mockALinkToOpen, openBase64ImageInNewWindow } from "@icpswap/utils";
+import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow } from "@icpswap/utils";
 import { isICPSwapOfficial } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
 import FileImage from "components/NFT/FileImage";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import DetailsToggle from "components/NFT/DetailsToggle";
 import { encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { type NFTTokenMetadata } from "@icpswap/types";
@@ -181,7 +181,7 @@ export default function NoAuthNFTInfo() {
       return;
     }
 
-    mockALinkToOpen(metadata.filePath, "file_path");
+    mockALinkAndOpen(metadata.filePath, "file_path");
   };
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));

@@ -876,12 +876,15 @@ importers:
 
   packages/ui:
     dependencies:
-      bignumber.js:
-        specifier: ^9.0.1
-        version: 9.1.2
+      '@icpswap/utils':
+        specifier: 'workspace: *'
+        version: link:../utils
       react:
         specifier: 17.0.2
         version: 17.0.2
+      react-router-dom:
+        specifier: 5.2.0
+        version: 5.2.0(react@17.0.2)
     devDependencies:
       '@types/node':
         specifier: ^13.13.5

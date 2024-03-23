@@ -113,6 +113,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         identity,
         from: account,
         fee: token.transFee,
+        decimals: token.decimals,
       });
 
       if (status === "ok") {

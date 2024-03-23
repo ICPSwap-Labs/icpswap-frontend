@@ -5,7 +5,7 @@ import MainCard from "components/cards/MainCard";
 import Exchange from "components/Wrap/Exchange";
 import Record from "components/Wrap/Record";
 import RetryWrap from "components/Wrap/RetryWrap";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { SwapV2Wrapper } from "components/swap/SwapWrapper";
 import { t, Trans } from "@lingui/macro";
 import { INFO_URL } from "constants/index";

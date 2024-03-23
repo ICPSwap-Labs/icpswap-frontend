@@ -10,10 +10,6 @@ export default function NFTListHeader() {
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        "@media(max-width: 640px)": {
-          flexDirection: "column",
-          gap: "20px 0",
-        },
       }}
     >
       <WalletPageToggle />
@@ -22,9 +18,6 @@ export default function NFTListHeader() {
         sx={{
           display: "flex",
           gap: "0 10px",
-          "@media(max-width: 640px)": {
-            justifyContent: "flex-end",
-          },
         }}
       >
         <ImportEXTNft />

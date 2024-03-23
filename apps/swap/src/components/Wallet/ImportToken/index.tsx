@@ -10,12 +10,13 @@ import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateImportedToken, useUpdateTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
 import { getTokenStandard } from "store/token/cache/hooks";
+import { useSaveCacheTokenCallback } from "store/wallet/hooks";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -50,7 +51,13 @@ export function WarningIcon() {
   );
 }
 
-export default function ImportTokenModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export interface ImportTokenModalProps {
+  open: boolean;
+  onClose: () => void;
+  onImportSuccessfully?: () => void;
+}
+
+export default function ImportTokenModal({ open, onClose, onImportSuccessfully }: ImportTokenModalProps) {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<{ [key: string]: any }>({ standard: TOKEN_STANDARD.ICRC1 });
@@ -60,6 +67,7 @@ export default function ImportTokenModal({ open, onClose }: { open: boolean; onC
 
   const updateTokenStandard = useUpdateTokenStandard();
   const updateImportedToken = useUpdateImportedToken();
+  const saveTokenToWallet = useSaveCacheTokenCallback();
   const [openSuccessTip] = useSuccessTip();
 
   const tokens = useGlobalTokenList();
@@ -107,6 +115,8 @@ export default function ImportTokenModal({ open, onClose }: { open: boolean; onC
     updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
     registerTokens({ canisterIds: [values.id], standard: values.standard as TOKEN_STANDARD });
     openSuccessTip(t`Imported successfully`);
+    saveTokenToWallet([values.id]);
+    if (onImportSuccessfully) onImportSuccessfully();
     onClose();
   };
 

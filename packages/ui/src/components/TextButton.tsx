@@ -1,9 +1,14 @@
 import { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Box } from "@mui/material";
-import { mockALinkToOpen } from "utils/index";
+import { mockALinkAndOpen } from "@icpswap/utils";
 
-export function ALink({ children, link }: { children: ReactNode; link?: string }) {
+export interface ALinkProps {
+  children: ReactNode;
+  link: string | undefined;
+}
+
+export function ALink({ children, link }: ALinkProps) {
   return (
     <a
       href={link}
@@ -27,7 +32,13 @@ export function ALink({ children, link }: { children: ReactNode; link?: string }
 
 function ArrowIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -46,14 +57,26 @@ export interface TextButtonProps {
   to?: string;
   sx?: any;
   arrow?: boolean;
+  color?: "primary" | "write" | "secondary";
+  textDecoration?: "underline" | "none";
 }
 
-export default function TextButton({ children, onClick = () => {}, disabled, link, to, sx, arrow }: TextButtonProps) {
+export function TextButton({
+  children,
+  onClick = () => {},
+  disabled,
+  link,
+  to,
+  sx,
+  arrow,
+  color = "secondary",
+  textDecoration = "none",
+}: TextButtonProps) {
   const history = useHistory();
 
   const handleClick = () => {
     if (link) {
-      mockALinkToOpen(link, "text-button-open-new-window");
+      mockALinkAndOpen(link, "text-button-open-new-window");
       return;
     }
 
@@ -67,10 +90,17 @@ export default function TextButton({ children, onClick = () => {}, disabled, lin
 
   return (
     <Typography
-      color="secondary"
+      color={
+        color === "primary"
+          ? "primary"
+          : color === "write"
+          ? "#ffffff"
+          : "secondary"
+      }
       sx={{
         cursor: "pointer",
         userSelect: "none",
+        textDecoration: textDecoration,
         "&:hover": {
           textDecoration: "underline",
         },
