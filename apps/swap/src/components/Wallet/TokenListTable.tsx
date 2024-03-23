@@ -1,7 +1,7 @@
 import { useState, useContext, useMemo, useEffect } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -26,6 +26,7 @@ import { ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+import { ReceiveModal } from "./Receive";
 
 const useStyles = makeStyles(() => ({
   tokenAssets: {
@@ -147,6 +148,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
 
   const [open, setOpen] = useState(false);
+  const [receiveOpen, setReceiveOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
 
   const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
@@ -264,6 +266,10 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
   };
 
+  const handleReceive = () => {
+    setReceiveOpen(true);
+  };
+
   return (
     <Box
       sx={{
@@ -328,6 +334,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
 
         <ActionButton label="Send" onClick={handleTransfer} />
+        <ActionButton label="Receive" onClick={handleReceive} />
         <ActionButton label="Transactions" onClick={handleToTransactions} />
 
         {canisterId === ICP.address && walletType === Connector.NFID ? (
@@ -370,6 +377,20 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
       {XTCTopUpShow ? (
         <XTCTopUpModal open={XTCTopUpShow} onClose={() => setXTCTopUpShow(false)} onTopUpSuccess={handleTopUpSuccess} />
+      ) : null}
+
+      {receiveOpen ? (
+        <ReceiveModal
+          open={receiveOpen}
+          onClose={() => setReceiveOpen(false)}
+          address={
+            !principal
+              ? ""
+              : tokenInfo?.standardType === TOKEN_STANDARD.EXT || tokenInfo?.canisterId === ICP.address
+              ? principalToAccount(principal.toString())
+              : principal.toString()
+          }
+        />
       ) : null}
     </Box>
   );
