@@ -44,8 +44,8 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Get ready! ICPSwap SNS Launchpad starts on Mar 23, 2:15 PM
-          (UTC).&nbsp;
+          ICPSwap SNS Launchpad is live! Don't miss out! Click here to join the
+          excitement!&nbsp;
           <TextButton
             link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai"
             color="write"
