@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { TextButton } from "components/index";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
@@ -14,6 +14,7 @@ import { Participate } from "./Participate";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
+import { LaunchContext } from "./context";
 
 export interface LaunchStatusProps {
   ledger_id: string | undefined;
@@ -32,15 +33,17 @@ const statusTextMapper: { [status: string]: string } = {
   [SnsSwapLifecycle.Adopted]: t`Starting Soon`,
 };
 
-export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {
+export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {
   const theme = useTheme() as Theme;
 
   const principal = useAccountPrincipal();
   const [participateOpen, setParticipateOpen] = useState(false);
 
+  const { reload, setReload } = useContext(LaunchContext);
+
   const { result: swap_life_cycle_result } = useSwapLifeCycle(swap_id);
-  const { result: swap_derived_state } = useSNSSwapDerivedState(swap_id);
-  const { result: buyer_state_result } = useSNSBuyerState(swap_id, principal?.toString());
+  const { result: swap_derived_state } = useSNSSwapDerivedState(swap_id, reload);
+  const { result: buyer_state_result } = useSNSBuyerState(swap_id, principal?.toString(), reload);
 
   const bought_amount = useMemo(() => {
     if (!buyer_state_result) return undefined;
@@ -153,11 +156,15 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
     setParticipateOpen(true);
   };
 
+  const handleParticipateSuccessfully = () => {
+    setReload(reload + 1);
+  };
+
   let error: string | undefined = undefined;
 
-  if (location_code && restricted_countries && restricted_countries.includes(location_code))
+  if (!location_code || (location_code && restricted_countries && restricted_countries.includes(location_code)))
     error = t`Participation is not allowed in your region`;
-  if (!!connector && connector !== Connector.PLUG) error = t`Only Plug wallet can participate`;
+  if (!connector || connector !== Connector.PLUG) error = t`Only Plug wallet can participate`;
 
   return (
     <Box
@@ -399,11 +406,7 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
 
       {swap_life_cycle && swap_life_cycle === SnsSwapLifecycle.Open ? (
         <Box sx={{ margin: "20px 0 0 0" }}>
-          <Button
-            variant="contained"
-            onClick={handleParticipate}
-            disabled={!!error || restricted_countries === undefined || location_code === undefined}
-          >
+          <Button variant="contained" onClick={handleParticipate} disabled={!!error || location_code === undefined}>
             {error ?? <Trans>Participate</Trans>}
           </Button>
         </Box>
@@ -418,6 +421,7 @@ export function LaunchStatus({ ledger_id, tokenInfo, swap_id, swapInitArgs, sale
           swap_id={swap_id}
           min_participant={min_participant}
           max_participant={max_participant}
+          onParticipateSuccessfully={handleParticipateSuccessfully}
         />
       ) : null}
     </Box>

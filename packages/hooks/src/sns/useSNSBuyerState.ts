@@ -21,7 +21,7 @@ export async function getSNSBuyerState(swap_id: string, principal: string) {
 export function useSNSBuyerState(
   swap_id: string | undefined,
   principal: string | undefined,
-  reload?: boolean
+  reload?: boolean | number
 ) {
   return useCallsData(
     useCallback(async () => {

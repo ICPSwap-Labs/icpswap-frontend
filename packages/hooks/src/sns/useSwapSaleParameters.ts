@@ -12,11 +12,15 @@ export async function getSwapSaleParameters(swap_id: string) {
   return result ? result.params[0] : undefined;
 }
 
-export function useSwapSaleParameters(swap_id: string | undefined) {
+export function useSwapSaleParameters(
+  swap_id: string | undefined,
+  reload?: number | boolean
+) {
   return useCallsData(
     useCallback(async () => {
       if (!swap_id) return undefined;
       return await getSwapSaleParameters(swap_id);
-    }, [swap_id])
+    }, [swap_id]),
+    reload
   );
 }

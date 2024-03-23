@@ -22,6 +22,7 @@ export interface ParticipateProps {
   onClose: () => void;
   min_participant: bigint | undefined;
   max_participant: bigint | undefined;
+  onParticipateSuccessfully: () => void;
 }
 
 export function Participate({
@@ -31,6 +32,7 @@ export function Participate({
   swapInitArgs,
   min_participant,
   max_participant,
+  onParticipateSuccessfully,
 }: ParticipateProps) {
   const principal = useAccountPrincipal();
 
@@ -94,6 +96,7 @@ export function Participate({
 
     setParticipateLoading(false);
     onClose();
+    onParticipateSuccessfully();
   };
 
   const handleAmountChange = (amount: number) => {
