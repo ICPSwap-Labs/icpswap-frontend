@@ -10,11 +10,15 @@ export async function getSNSSwapDerivedState(swap_id: string) {
   ).data;
 }
 
-export function useSNSSwapDerivedState(swap_id: string | undefined) {
+export function useSNSSwapDerivedState(
+  swap_id: string | undefined,
+  reload?: boolean | number
+) {
   return useCallsData(
     useCallback(async () => {
       if (!swap_id) return undefined;
       return await getSNSSwapDerivedState(swap_id);
-    }, [swap_id])
+    }, [swap_id]),
+    reload
   );
 }
