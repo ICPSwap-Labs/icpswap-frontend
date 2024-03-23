@@ -158,9 +158,9 @@ export default function LiquidityInfo({ position, positionId, version }: Liquidi
     <Grid container flexDirection="column">
       <Grid container justifyContent="space-between" alignItems="center">
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <TokenImage src={token0?.logo} />
+          <TokenImage logo={token0?.logo} tokenId={token0?.address} />
           <Box sx={{ width: "32px", height: "32px", position: "relative", left: "-10px" }}>
-            <TokenImage src={token1?.logo} />
+            <TokenImage logo={token1?.logo} tokenId={token1?.address} />
           </Box>
 
           <Typography

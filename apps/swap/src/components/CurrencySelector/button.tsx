@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Grid, Avatar, Typography, Box } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { isDarkTheme } from "utils";
@@ -8,6 +8,7 @@ import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
+import { TokenImage } from "components/index";
 
 const useStyle = (bgGray: boolean) =>
   makeStyles((theme: Theme) => {
@@ -43,21 +44,22 @@ const useStyle = (bgGray: boolean) =>
     };
   });
 
+export interface CurrencySelectorButtonProps {
+  currency: undefined | null | Token;
+  onClick?: () => void;
+  bgGray?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+}
+
 export default function CurrencySelectorButton({
   currency,
   onClick,
   bgGray = false,
   loading,
   disabled,
-}: {
-  currency: TokenInfo | undefined | null | Token;
-  onClick?: () => void;
-  bgGray?: boolean;
-  loading?: boolean;
-  disabled?: boolean;
-}) {
+}: CurrencySelectorButtonProps) {
   const classes = useStyle(bgGray)();
-  const theme = useTheme() as Theme;
 
   const handleButtonClick = useCallback(() => {
     if (loading) return;
@@ -67,20 +69,8 @@ export default function CurrencySelectorButton({
   return currency ? (
     <Grid container className={classes.selectButton} alignItems="center" onClick={handleButtonClick}>
       <Grid item mr={1} xs>
-        <Grid container alignItems="center">
-          <Avatar
-            sx={{
-              ...theme.palette.avatar.gray200BgColor,
-              display: "inline-block",
-              marginRight: "8px",
-              width: "28px",
-              height: "28px",
-            }}
-            alt=""
-            src={currency?.logo}
-          >
-            &nbsp;
-          </Avatar>
+        <Grid container alignItems="center" gap="0 8px">
+          <TokenImage logo={currency.logo} size="28px" tokenId={currency.address} />
           <Typography component="span">{currency.symbol}</Typography>
         </Grid>
       </Grid>

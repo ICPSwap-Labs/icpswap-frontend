@@ -6,6 +6,7 @@ import { TokenInfoState, useTokensInfo } from "hooks/token/useTokenInfo";
 import { ICP, ICP_TOKEN_INFO } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TokenInfo } from "types/token";
+import { TokenImage } from "components/index";
 
 interface TokenMenuItemProps {
   tokenInfo: TokenInfo;
@@ -32,9 +33,7 @@ function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
 
   return hide ? null : (
     <Box sx={{ display: "flex", gap: "0 8px" }}>
-      <Avatar sx={{ width: "20px", height: "20px" }} src={tokenInfo?.logo}>
-        &nbsp;
-      </Avatar>
+      <TokenImage logo={tokenInfo?.logo} size="20px" tokenId={tokenInfo.canisterId} />
       <Typography component="span">{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
     </Box>
   );

@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
 import { toSignificant, numberToString } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
+import { TokenImage } from "components/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -41,9 +42,9 @@ export default function Unclaimed({ position, feeAmount0, feeAmount1 }: Unclaime
       <Typography color="text.primary">Unclaimed fees</Typography>
       <Box mt="12px" className={classes.wrapper}>
         <Grid container alignItems="center">
-          <Avatar sx={{ width: "32px", height: "32px", marginRight: "12px", bgcolor: "#273155" }} src={token0?.logo}>
-            &nbsp;
-          </Avatar>
+          <Box sx={{ width: "32px", height: "32px", marginRight: "12px" }}>
+            <TokenImage size="32px" logo={token0?.logo} tokenId={token0?.address} />
+          </Box>
           <Typography color="text.primary">{token0?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">
@@ -52,9 +53,9 @@ export default function Unclaimed({ position, feeAmount0, feeAmount1 }: Unclaime
           </Grid>
         </Grid>
         <Grid mt="10px" container alignItems="center">
-          <Avatar sx={{ width: "32px", height: "32px", marginRight: "12px", bgcolor: "#273155" }} src={token1?.logo}>
-            &nbsp;
-          </Avatar>
+          <Box sx={{ width: "32px", height: "32px", marginRight: "12px" }}>
+            <TokenImage size="32px" logo={token1?.logo} tokenId={token1?.address} />
+          </Box>
           <Typography color="text.primary">{token1?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">

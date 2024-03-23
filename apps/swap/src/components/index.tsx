@@ -22,3 +22,4 @@ export { default as FilledTextField } from "./FilledTextField";
 export * from "./NumberFilledTextField";
 export * from "./ReclaimTips";
 export { default as SwapTooltip } from "./Tooltip";
+export { TokenImage } from "./Image/Token";

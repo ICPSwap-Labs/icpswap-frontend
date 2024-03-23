@@ -16,7 +16,7 @@ import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
 // import { useUSDPriceById } from "hooks/useUSDPrice";
 import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
-import { TokenImage } from "@icpswap/ui";
+import { TokenImage } from "components/index";
 
 export interface SwapToken {
   canisterId: string;
@@ -135,7 +135,7 @@ export function TokenItemInfo({
         }}
       >
         <Grid container alignItems="center">
-          <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} />
+          <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
 
           <Grid item xs ml="6px" sx={{ overflow: "hidden" }}>
             <Grid container alignItems="center">

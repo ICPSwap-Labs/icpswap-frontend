@@ -3,7 +3,7 @@ import CurrencySelectButton from "./button";
 import Selector from "./selector";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/useCurrency";
 
 export interface CurrencySelectorProps {
   currencyId: string | undefined;
@@ -33,7 +33,7 @@ export default function CurrencySelector({
     setSelectorShow(false);
   };
 
-  const { result: tokenInfo } = useTokenInfo(currencyId);
+  const [, token] = useToken(currencyId);
 
   const disabledCurrencyIds = useMemo(() => {
     if (disabledCurrency && disabledCurrency.length) {
@@ -52,7 +52,7 @@ export default function CurrencySelector({
   return (
     <React.Fragment>
       <CurrencySelectButton
-        currency={tokenInfo}
+        currency={token}
         onClick={() => {
           if (disabled) return;
           setSelectorShow(true);

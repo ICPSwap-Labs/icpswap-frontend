@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
-import { Grid, CardActions, CardContent, Collapse, Typography, Link, AvatarGroup, Box } from "@mui/material";
+import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { MainCard } from "components/index";
 import {
@@ -24,7 +24,7 @@ import { STATE } from "types/staking-farm";
 import type { StakingFarmInfo } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import FarmContext from "../context";
-import { TokenImage } from "@icpswap/ui";
+import { TokenImage } from "components/index";
 import { shorten, timestampFormat } from "@icpswap/utils";
 
 const useStyle = makeStyles(() => ({
@@ -178,13 +178,13 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
             </Typography>
 
             <Grid item className={classes.headerImage}>
-              <TokenImage size="80px" logo={rewardToken?.logo} />
+              <TokenImage size="80px" logo={rewardToken?.logo} tokenId={rewardToken?.address} />
 
               <Grid container className="poolImageBox">
-                <AvatarGroup>
-                  <TokenImage size="44px" logo={token0?.logo} />
-                  <TokenImage size="44px" logo={token1?.logo} />
-                </AvatarGroup>
+                <Box sx={{ display: "flex" }}>
+                  <TokenImage size="44px" logo={token0?.logo} tokenId={token0?.address} />
+                  <TokenImage size="44px" logo={token1?.logo} tokenId={token1?.address} />
+                </Box>
               </Grid>
             </Grid>
 

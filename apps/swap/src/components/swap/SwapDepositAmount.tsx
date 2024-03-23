@@ -1,8 +1,8 @@
-import { Box, Grid, Typography, Chip, Avatar } from "@mui/material";
+import { Box, Grid, Typography, Chip } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import LockIcon from "assets/images/swap/Lock";
-import { NumberTextField } from "components/index";
+import { NumberTextField, TokenImage } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { isDarkTheme } from "utils";
@@ -123,7 +123,6 @@ export default function SwapDepositAmount({
   onMax,
 }: SwapDepositAmountProps) {
   const classes = useStyle();
-  const theme = useTheme() as Theme;
 
   const decimals = currency?.decimals ?? SAFE_DECIMALS_LENGTH;
 
@@ -133,11 +132,7 @@ export default function SwapDepositAmount({
         <Chip
           className={classes.chip}
           label={currency?.symbol}
-          avatar={
-            <Avatar sx={{ ...theme.palette.avatar.gray200BgColor }} src={currency?.logo}>
-              &nbsp;
-            </Avatar>
-          }
+          avatar={<TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} />}
         />
         <Grid item xs>
           <NumberTextField
