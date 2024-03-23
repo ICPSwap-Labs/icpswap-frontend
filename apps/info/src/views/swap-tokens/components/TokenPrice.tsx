@@ -1,4 +1,4 @@
-import { Typography, Box, Avatar } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { toSignificant } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
@@ -8,6 +8,7 @@ import { ICP_TOKEN_INFO } from "constants/tokens";
 import { usePoolIdWithICP } from "hooks/swap/usePoolIdWithICP";
 import { usePool } from "hooks/info/usePool";
 import { useMemo } from "react";
+import { TokenImage } from "ui-component/index";
 
 export interface TokenPriceProps {
   token0: TokenInfo | undefined;
@@ -28,9 +29,7 @@ export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
         padding: "8px 10px",
       }}
     >
-      <Avatar src={token0?.logo} sx={{ width: "18px", height: "18px", marginRight: "6px" }}>
-        &nbsp;
-      </Avatar>
+      <TokenImage size="18px" sx={{ margin: "0 6px 0 0" }} logo={token0.logo} tokenId={token0.canisterId} />
       <Typography color="text.primary" fontWeight={500}>
         1 {token0?.symbol} = {toSignificant(price, 4)} {token1Symbol}
       </Typography>

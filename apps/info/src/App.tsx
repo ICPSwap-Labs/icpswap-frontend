@@ -6,7 +6,7 @@ import Routes from "./routes";
 import theme from "./themes";
 import NavigationScroll from "./ui-component/NavigationScroll";
 import Snackbar from "./ui-component/Snackbar";
-import { useICPPrices } from "./store/global/hooks";
+import { useICPPrices, useFetchSNSTokenRootIds } from "./store/global/hooks";
 import { useInitialXDR2USD } from "hooks/useXDR2USD";
 
 export default function App() {
@@ -14,6 +14,7 @@ export default function App() {
 
   useICPPrices();
   useInitialXDR2USD();
+  useFetchSNSTokenRootIds();
 
   return (
     <StyledEngineProvider injectFirst>

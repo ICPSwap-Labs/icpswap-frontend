@@ -1,4 +1,11 @@
-import { updateICPBlocks, updateICPPriceList, updateUserLocale, storeTokenList, updateXDR2USD } from "./actions";
+import {
+  updateICPBlocks,
+  updateICPPriceList,
+  updateUserLocale,
+  storeTokenList,
+  updateXDR2USD,
+  updateTokenSNSRootId,
+} from "./actions";
 import { initialState } from "./states";
 
 import { createReducer } from "@reduxjs/toolkit";
@@ -20,5 +27,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateXDR2USD, (state, { payload }) => {
       state.xdr_usdt = payload;
+    })
+    .addCase(updateTokenSNSRootId, (state, { payload }) => {
+      state.snsTokenRootIds[payload.id] = payload.root_id;
     });
 });

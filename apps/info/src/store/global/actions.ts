@@ -14,3 +14,5 @@ export const updateICPPriceList = createAction<ICPPriceInfo[]>("global/updateICP
 export const updateUserLocale = createAction<SupportedLocale>("global/updateUserLocale");
 
 export const updateXDR2USD = createAction<number>("global/updateXDR2USD");
+
+export const updateTokenSNSRootId = createAction<{ root_id: string; id: string }>("global/updateTokenSNSRootId");

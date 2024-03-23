@@ -8,6 +8,7 @@ export interface GlobalState {
   userLocale: SupportedLocale;
   secondBlocks: string | number;
   blocks: string | number;
+  snsTokenRootIds: { [key: string]: string };
 }
 
 export const initialState: GlobalState = {
@@ -17,4 +18,5 @@ export const initialState: GlobalState = {
   userLocale: DEFAULT_LOCALE,
   secondBlocks: "0",
   blocks: "0",
+  snsTokenRootIds: {},
 };

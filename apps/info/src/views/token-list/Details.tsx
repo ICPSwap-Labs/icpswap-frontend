@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Link, Avatar } from "@mui/material";
+import { Grid, Typography, Box, Link } from "@mui/material";
 import { BoxItem } from "ui-component/token-list/BoxItem";
 import { makeStyles } from "@mui/styles";
 import { useEffect, useMemo } from "react";
@@ -23,6 +23,7 @@ import { TextButton } from "@icpswap/ui";
 // import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import useParsedQueryString from "hooks/useParsedQueryString";
+import { TokenImage } from "ui-component/index";
 
 const useStyles = makeStyles({
   box: {
@@ -114,17 +115,7 @@ export function TokenDetail() {
                       sx={{ gap: "0 8px", "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
                     >
                       {tokenInfo?.logo ? (
-                        <Avatar
-                          src={tokenInfo.logo}
-                          sx={{
-                            width: "28px",
-                            height: "28px",
-                            "@media screen and (max-width: 640px)": { width: "20px", height: "20px" },
-                            background: "transparent",
-                          }}
-                        >
-                          &nbsp;
-                        </Avatar>
+                        <TokenImage logo={tokenInfo.logo} size="22px" tokenId={tokenInfo.canisterId} />
                       ) : null}
                       {tokenInfo?.symbol}
                       <TokenStandardLabel standard={tokenInfo?.standardType as TOKEN_STANDARD} />

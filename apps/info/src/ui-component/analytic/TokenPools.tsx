@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { makeStyles } from "@mui/styles";
-import { Typography, Box, Grid, Avatar } from "@mui/material";
+import { Typography, Box, Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { NoData, StaticLoading } from "ui-component/index";
+import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
 import FeeTierLabel from "ui-component/FeeTierLabel";
@@ -63,24 +63,6 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
   );
 }
 
-export function TokenAvatar({ logo }: { logo?: string }) {
-  return (
-    <Avatar
-      src={logo}
-      sx={{
-        width: "20px",
-        height: "20px",
-        "@media screen and (max-width: 500px)": {
-          width: "16px",
-          height: "16px",
-        },
-      }}
-    >
-      &nbsp;
-    </Avatar>
-  );
-}
-
 export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
   const classes = useStyles();
   const history = useHistory();
@@ -97,8 +79,8 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center">
-          <TokenAvatar logo={token0?.logo} />
-          <TokenAvatar logo={token1?.logo} />
+          <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
+          <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
 
           <Typography
             sx={{

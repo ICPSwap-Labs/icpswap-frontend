@@ -39,6 +39,8 @@ function PairMenuItem({ token0, token1, search, select }: PairItemProps) {
         token1Logo={token1Info?.logo}
         token0Symbol={token0Info?.symbol}
         token1Symbol={token1Info?.symbol}
+        token0Id={token0Info?.canisterId}
+        token1Id={token1Info?.canisterId}
       />
     </Box>
   );

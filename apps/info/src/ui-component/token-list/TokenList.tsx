@@ -14,7 +14,7 @@ import { useICPPrice } from "store/global/hooks";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { TokenImage } from "@icpswap/ui";
+import { TokenImage } from "ui-component/index";
 import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table/index";
 
 const useStyles = makeStyles(() => {
@@ -57,7 +57,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
           gap: "0 8px",
         }}
       >
-        <TokenImage logo={tokenInfo?.logo} size="40px" />
+        <TokenImage logo={tokenInfo?.logo} size="40px" tokenId={tokenInfo?.canisterId} />
         <Typography fontSize="16px" color="text.primary">
           {token?.symbol}
         </Typography>
