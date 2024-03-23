@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import { DAYJS_FORMAT, INFO_URL } from "constants/index";
 import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { mockALinkToOpen } from "utils/index";
+import { mockALinkAndOpen } from "utils/index";
 import { t } from "@lingui/macro";
 
 function ArrowIcon() {
@@ -100,7 +100,7 @@ export default function SwapTransactions() {
   const list = !principal ? undefined : result?.content;
 
   const handleViewMore = () => {
-    mockALinkToOpen(`${INFO_URL}/swap-scan/transactions?principal=${principal}`, "SWAP_TRANSACTIONS_VIEW_MORE");
+    mockALinkAndOpen(`${INFO_URL}/swap-scan/transactions?principal=${principal}`, "SWAP_TRANSACTIONS_VIEW_MORE");
   };
 
   return (

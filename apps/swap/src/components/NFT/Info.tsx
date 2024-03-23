@@ -5,7 +5,7 @@ import Copy from "components/Copy";
 import { useAccount } from "store/global/hooks";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import { isICPSwapOfficial } from "utils/index";
-import { formatDollarAmount, mockALinkToOpen } from "@icpswap/utils";
+import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Trans, t } from "@lingui/macro";
 import { useNFTOrderInfo } from "hooks/nft/trade";
@@ -17,7 +17,7 @@ import { useICPAmountUSDValue } from "store/global/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import NFTRevoke from "components/NFT/market/NFTRevoke";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import DetailsToggle from "./DetailsToggle";
 import { encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { type NFTTokenMetadata } from "@icpswap/types";
@@ -228,7 +228,7 @@ export default function NFTInfo({
       isOwner ? "my" : "this"
     } NFT "${metadata.name}" on ICPSwap (The Hub of Future Decentralized Finance)! &via=ICPSwap`;
 
-    mockALinkToOpen(twitterLink, "NFT_share_to_Twitter");
+    mockALinkAndOpen(twitterLink, "NFT_share_to_Twitter");
   };
 
   return (

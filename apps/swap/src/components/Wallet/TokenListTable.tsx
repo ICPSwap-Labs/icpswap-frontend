@@ -1,7 +1,7 @@
 import { useState, useContext, useMemo, useEffect } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { formatDollarAmount, parseTokenAmount, mockALinkToOpen, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -26,6 +26,7 @@ import { ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+import { ReceiveModal } from "./Receive";
 
 const useStyles = makeStyles(() => ({
   tokenAssets: {
@@ -49,7 +50,7 @@ function ActionButton({ label, onClick }: ActionButtonProps) {
     <Box
       sx={{
         display: "flex",
-        padding: "7px 16px",
+        padding: "7px 12px",
         justifyContent: "center",
         alignItems: "center",
         background: "#4F5A84",
@@ -116,6 +117,8 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
   );
 }
 
+const SWAP_BUTTON_EXCLUDE = [ICP_TOKEN_INFO.canisterId, WRAPPED_ICP.address];
+
 export interface TokenListItemProps {
   isHideSmallBalances: boolean;
   searchValue: string;
@@ -145,6 +148,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
 
   const [open, setOpen] = useState(false);
+  const [receiveOpen, setReceiveOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
 
   const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
@@ -205,17 +209,17 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     const { canisterId, standardType, symbol } = tokenInfo;
 
     if (symbol === ICP_TOKEN_INFO.symbol) {
-      mockALinkToOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
+      mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
     } else if (!!root_canister_id) {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`,
         "TOKEN_TRANSACTIONS",
       );
     } else if (tokenInfo.standardType === TOKEN_STANDARD.ICRC1 || tokenInfo.standardType === TOKEN_STANDARD.ICRC2) {
       const url = isHouseUserTokenTransactions(tokenInfo.canisterId, principal?.toString());
-      mockALinkToOpen(url, "TOKEN_TRANSACTIONS");
+      mockALinkAndOpen(url, "TOKEN_TRANSACTIONS");
     } else {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `${INFO_URL}/token/transactions/${canisterId}/${principal?.toString()}?standard=${standardType}`,
         "TOKEN_TRANSACTIONS",
       );
@@ -224,7 +228,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP_TOKEN_INFO.symbol) {
-      mockALinkToOpen(
+      mockALinkAndOpen(
         `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
       );
@@ -258,6 +262,14 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     return hiddenBySmallBalance || hiddenBySearchValue;
   }, [isHideSmallBalances, tokenBalance, canisterId, searchValue, tokenInfo]);
 
+  const handleToSwap = () => {
+    history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
+  };
+
+  const handleReceive = () => {
+    setReceiveOpen(true);
+  };
+
   return (
     <Box
       sx={{
@@ -280,10 +292,11 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
               color="textPrimary"
               className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
               onClick={() => handleLoadToDetail(tokenInfo)}
+              fontWeight={500}
             >
               {tokenInfo?.symbol}
             </Typography>
-            <Typography>{tokenInfo?.name}</Typography>
+            <Typography sx={{ fontSize: "12px" }}>{tokenInfo?.name}</Typography>
           </Box>
         </Box>
         <TokenStandardLabel standard={tokenInfo?.standardType} />
@@ -318,7 +331,10 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       <Box
         sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
       >
+        {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
+
         <ActionButton label="Send" onClick={handleTransfer} />
+        <ActionButton label="Receive" onClick={handleReceive} />
         <ActionButton label="Transactions" onClick={handleToTransactions} />
 
         {canisterId === ICP.address && walletType === Connector.NFID ? (
@@ -362,6 +378,20 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
       {XTCTopUpShow ? (
         <XTCTopUpModal open={XTCTopUpShow} onClose={() => setXTCTopUpShow(false)} onTopUpSuccess={handleTopUpSuccess} />
       ) : null}
+
+      {receiveOpen ? (
+        <ReceiveModal
+          open={receiveOpen}
+          onClose={() => setReceiveOpen(false)}
+          address={
+            !principal
+              ? ""
+              : tokenInfo?.standardType === TOKEN_STANDARD.EXT || tokenInfo?.canisterId === ICP.address
+              ? principalToAccount(principal.toString())
+              : principal.toString()
+          }
+        />
+      ) : null}
     </Box>
   );
 }
@@ -383,9 +413,11 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         gap: "20px",
         "@media(max-width: 1088px)": {
           gridTemplateColumns: "1fr 1fr",
+          gap: "12px 0",
         },
         "@media(max-width: 640px)": {
           gridTemplateColumns: "1fr",
+          gap: "12px 0",
         },
       }}
     >

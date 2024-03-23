@@ -4,7 +4,7 @@ import { useTheme } from "@mui/styles";
 import { useParams, useHistory } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkToOpen } from "@icpswap/utils";
+import { mockALinkAndOpen } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { MainCard, TextButton } from "ui-component/index";
@@ -259,7 +259,7 @@ export default function SwapPoolDetails() {
     if (!token0 || !token1) return;
     const canisterId = token0.canisterId === ICP_TOKEN_INFO.canisterId ? token1.canisterId : token0.canisterId;
 
-    mockALinkToOpen(swapLink(canisterId), "to_swap");
+    mockALinkAndOpen(swapLink(canisterId), "to_swap");
   };
 
   const [openTips] = useTips();

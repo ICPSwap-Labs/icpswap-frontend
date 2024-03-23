@@ -11,7 +11,7 @@ import NFIDLogo from "./icons/NFID.svg";
 import InfinityWalletLogo from "./icons/Infinity.svg";
 import AstroXLogo from "./icons/AstroX.svg";
 
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import { Connector } from "constants/wallet";
 import { useWalletConnectorManager } from "store/auth/hooks";
 import { ConnectorComponent } from "./connector";

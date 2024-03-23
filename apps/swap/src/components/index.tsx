@@ -7,7 +7,7 @@ export { default as StaticLoading } from "./Loading/Static";
 export { default as Loading } from "./Loading/index";
 export { default as DotLoading } from "./Loading/Dot";
 export { default as FullscreenLoading } from "./Loading/Fullscreen";
-export { default as TextButton, ALink } from "./TextButton";
+export { TextButton, ALink } from "@icpswap/ui";
 export { default as Wrapper } from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as LoadingRow } from "./Loading/LoadingRow";

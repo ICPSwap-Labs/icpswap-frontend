@@ -2,7 +2,7 @@ import { Typography, Box, Grid, Avatar, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton } from "ui-component/index";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, mockALinkToOpen } from "@icpswap/utils";
+import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
 import { useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
@@ -36,11 +36,11 @@ export default function TokenDetails() {
   };
 
   const handleToSwap = () => {
-    mockALinkToOpen(swapLink(canisterId), "to_swap");
+    mockALinkAndOpen(swapLink(canisterId), "to_swap");
   };
 
   const handleToAddLiquidity = () => {
-    mockALinkToOpen(addLiquidityLink(canisterId), "to_liquidity");
+    mockALinkAndOpen(addLiquidityLink(canisterId), "to_liquidity");
   };
 
   const handleToTokenDetails = () => {

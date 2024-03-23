@@ -69,6 +69,7 @@ export default function TopUpCanister({
             formatTokenAmount(0.0002, ICP_TOKEN_INFO.decimals),
           ),
           identity,
+          decimals: ICP_TOKEN_INFO.decimals,
         });
 
         if (blockHeight) {

@@ -78,7 +78,7 @@ export function useSaveCacheTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens) => {
+    (cacheTokens: string[]) => {
       dispatch(saveWalletCacheToken(cacheTokens));
     },
     [dispatch],
@@ -89,7 +89,7 @@ export function useDeleteCacheTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens) => {
+    (cacheTokens: string[]) => {
       dispatch(deleteWalletCatchToken(cacheTokens));
     },
     [dispatch],

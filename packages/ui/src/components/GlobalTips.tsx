@@ -1,9 +1,15 @@
 import { Grid, Box, Typography } from "@mui/material";
-import TextButton from "./TextButton";
+import { TextButton } from "./TextButton";
 
 function CloseIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g clipPath="url(#clip0_30361_79133)">
         <path
           d="M15.8332 5.34102L14.6582 4.16602L9.99984 8.82435L5.3415 4.16602L4.1665 5.34102L8.82484 9.99935L4.1665 14.6577L5.3415 15.8327L9.99984 11.1743L14.6582 15.8327L15.8332 14.6577L11.1748 9.99935L15.8332 5.34102Z"
@@ -23,9 +29,13 @@ export interface GlobalTipsProps {
   onClose: () => void;
 }
 
-export default function GlobalTips({ onClose }: GlobalTipsProps) {
+export function GlobalTips({ onClose }: GlobalTipsProps) {
   return (
-    <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
+    <Grid
+      container
+      alignItems="center"
+      sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}
+    >
       <Grid item xs>
         <Typography
           sx={{
@@ -34,11 +44,15 @@ export default function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Hey guys, ICPSwap SNS creation proposal is now up for voting.&nbsp;
-          <TextButton link="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128358">
-            Please click to vote YES.
+          ICPSwap SNS Launchpad is live! Don't miss out! Click here to join the
+          excitement!&nbsp;
+          <TextButton
+            link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai"
+            color="write"
+            textDecoration="underline"
+          >
+            Click here to join the excitement!
           </TextButton>
-          &nbsp;Thanks a lot for your support!&nbsp;
         </Typography>
       </Grid>
 

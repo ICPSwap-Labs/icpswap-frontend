@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import Modal from "components/modal/index";
 import { Trans, t } from "@lingui/macro";
-import TextButton from "components/TextButton";
+import { TextButton } from "components/index";
 import storage from "redux-persist/lib/storage";
 
 const useStyles = makeStyles((theme: Theme) => {

@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { ICPPriceInfo, TokenMetadata, TokenRoots } from "types/token";
+import { ICPPriceInfo, TokenMetadata } from "types/token";
 import { SupportedLocale } from "constants/locales";
 import { TokenListMetadata } from "types/token-list";
 

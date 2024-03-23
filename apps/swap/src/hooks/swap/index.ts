@@ -222,6 +222,7 @@ export function useSwapTransfer() {
         from: principal?.toString() ?? "",
         subaccount: [...SubAccount.fromPrincipal(principal).toUint8Array()],
         fee: token.transFee,
+        decimals: token.decimals,
       });
 
       if (status === "err") {

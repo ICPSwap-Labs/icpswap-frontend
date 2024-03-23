@@ -1,6 +1,6 @@
 import { Box, Grid, Typography, ButtonBase } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { mockALinkToOpen } from "utils";
+import { mockALinkAndOpen } from "utils";
 import { useICPPrice } from "store/global/hooks";
 import { APP_LINK } from "constants/index";
 import { Theme } from "@mui/material/styles";
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export function APP() {
   const handleLoadToApp = () => {
-    mockALinkToOpen(APP_LINK, "link_app");
+    mockALinkAndOpen(APP_LINK, "link_app");
   };
 
   return (

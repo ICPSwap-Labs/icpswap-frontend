@@ -1,7 +1,26 @@
-import { Typography, Box, Checkbox } from "@mui/material";
+import { Typography, Box, Checkbox, useMediaQuery, useTheme } from "@mui/material";
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { Trans } from "@lingui/macro";
+
+interface HideSmallBalanceProps {
+  onHideSmallBalances: (checked: boolean) => void;
+  isHideSmallBalances: boolean;
+}
+
+function HideSmallBalance({ isHideSmallBalances, onHideSmallBalances }: HideSmallBalanceProps) {
+  return (
+    <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
+      <Checkbox
+        checked={isHideSmallBalances}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onHideSmallBalances(event.target.checked)}
+      />
+      <Typography sx={{ cursor: "pointer" }} onClick={() => onHideSmallBalances(!isHideSmallBalances)}>
+        <Trans>Hide Zero Balance</Trans>
+      </Typography>
+    </Box>
+  );
+}
 
 export interface TokenHeaderProps {
   onHideSmallBalances: (checked: boolean) => void;
@@ -10,32 +29,32 @@ export interface TokenHeaderProps {
 }
 
 export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalances }: TokenHeaderProps) {
+  const theme = useTheme();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        "@media(max-width: 640px)": {
-          flexDirection: "column",
-          gap: "20px 0",
-        },
-      }}
-    >
-      <WalletPageToggle />
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <WalletPageToggle />
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
-        <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Checkbox
-            checked={isHideSmallBalances}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => onHideSmallBalances(event.target.checked)}
-          />
-          <Typography sx={{ cursor: "pointer" }} onClick={() => onHideSmallBalances(!isHideSmallBalances)}>
-            <Trans>Hide Zero Balance</Trans>
-          </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
+          {!matchDownSM ? (
+            <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
+          ) : null}
+
+          <AddToken />
         </Box>
-
-        <AddToken />
       </Box>
+      {matchDownSM ? (
+        <Box sx={{ margin: "10px 0 0 0" }}>
+          <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
+        </Box>
+      ) : null}
     </Box>
   );
 }

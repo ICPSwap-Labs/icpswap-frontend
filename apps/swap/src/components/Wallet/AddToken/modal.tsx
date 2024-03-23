@@ -224,7 +224,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
 
           <Box
             sx={{
-              maxHeight: "410px",
+              maxHeight: "260px",
               overflow: "auto",
               "@media (max-width: 540px)": { maxHeight: "290px" },
             }}
@@ -256,7 +256,13 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         </Grid>
       </Modal>
 
-      {importTokenShow ? <ImportToken open={importTokenShow} onClose={() => setImportTokenShow(false)} /> : null}
+      {importTokenShow ? (
+        <ImportToken
+          open={importTokenShow}
+          onClose={() => setImportTokenShow(false)}
+          onImportSuccessfully={() => onClose()}
+        />
+      ) : null}
     </>
   );
 }

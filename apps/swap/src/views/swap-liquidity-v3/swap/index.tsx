@@ -192,10 +192,11 @@ export default function Swap() {
 
     setSwapLoading(true);
 
+    const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+    const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
+
     const loadingKey = openLoadingTip(
-      t`Swap ${toFormat(formattedAmounts[SWAP_FIELD.INPUT])} ${inputCurrency?.symbol} to ${toFormat(
-        formattedAmounts[SWAP_FIELD.OUTPUT],
-      )} ${outputCurrency?.symbol}`,
+      t`Swap ${amount0} ${inputCurrency?.symbol} to ${amount1} ${outputCurrency?.symbol}`,
       {
         extraContent: <StepViewButton step={key} />,
       },
