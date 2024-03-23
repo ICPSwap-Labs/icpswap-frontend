@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
 import { Box, Checkbox, Typography, Tooltip } from "@mui/material";
@@ -46,6 +45,7 @@ export default function InTokenListCheck({ checked: _checked, onChange }: InToke
       <Tooltip
         enterTouchDelay={0}
         PopperProps={{
+          // @ts-ignore
           sx: {
             "& .MuiTooltip-tooltip": {
               background: "#ffffff",

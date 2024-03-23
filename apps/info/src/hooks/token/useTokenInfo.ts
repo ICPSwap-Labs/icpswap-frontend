@@ -81,6 +81,8 @@ function isStorageInfoValid(storageInfo: TokenInfo | undefined): storageInfo is 
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
 }
 
+let get_tokens_info_index = 0;
+
 export enum TokenInfoState {
   LOADING = "LOADING",
   NOT_EXISTS = "NOT_EXISTS",
@@ -96,8 +98,13 @@ export function useTokensInfo(
 
   const localTokens = useLocalTokens();
 
-  const fetch_token_info = async (tokenId: string | undefined | null) => {
+  const fetch_token_info = async (tokenId: string | undefined | null, call_index: number) => {
     if (!tokenId) return;
+
+    if (call_index !== get_tokens_info_index) {
+      console.log("abort");
+      return;
+    }
 
     let tokeInfo: undefined | TokenInfo = undefined;
 
@@ -203,8 +210,10 @@ export function useTokensInfo(
   useEffect(() => {
     async function call() {
       if (tokenIds) {
-        const calls = tokenIds.map(async (tokenId) => await fetch_token_info(tokenId));
-        getPromisesAwait(calls, 20);
+        get_tokens_info_index++;
+        let new_call_index = get_tokens_info_index;
+        const calls = tokenIds.map(async (tokenId) => await fetch_token_info(tokenId, new_call_index));
+        getPromisesAwait(calls, 10);
       }
     }
 

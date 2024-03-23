@@ -38,6 +38,7 @@ const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/
 const SwapScanTransactions = Loadable(lazy(() => import("../views/swap-scan/SwapTransactions")));
 const SwapScanPositions = Loadable(lazy(() => import("../views/swap-scan/Positions")));
 const SwapScanReclaims = Loadable(lazy(() => import("../views/swap-scan/Reclaim")));
+const SwapScanValuation = Loadable(lazy(() => import("../views/swap-scan/AddressValuation")));
 
 export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/": Overview,
@@ -75,4 +76,5 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/swap-scan/transactions": SwapScanTransactions,
   "/swap-scan/positions": SwapScanPositions,
   "/swap-scan/reclaims": SwapScanReclaims,
+  "/swap-scan/valuation": SwapScanValuation,
 };

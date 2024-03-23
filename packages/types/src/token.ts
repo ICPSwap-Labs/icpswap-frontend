@@ -34,3 +34,14 @@ export type {
   TokenTransferResult,
   TokenTransaction as CandidTokenTransaction,
 } from "@icpswap/candid";
+
+export type TokenInfo = {
+  decimals: number;
+  name: string;
+  standardType: string;
+  symbol: string;
+  canisterId: string;
+  logo: string;
+  totalSupply: bigint;
+  transFee: bigint;
+};
