@@ -29,6 +29,7 @@ import {
   CollectParams,
   VolumeResult,
   SwapPoolRecord,
+  QueryPositionResult,
 } from "types/swapv2";
 import { Identity, PaginationResult } from "types/global";
 import { Principal } from "@dfinity/principal";
@@ -104,7 +105,7 @@ export function usePoolList() {
 export function usePosition(positionId: string | number | bigint, invalid?: boolean) {
   return useCallsData(
     useCallback(async () => {
-      let result = undefined;
+      let result: QueryPositionResult | undefined = undefined;
 
       if (!!invalid) {
         result = resultFormat<PositionResult>(
@@ -323,7 +324,7 @@ export function usePositionFeesCall(
     useCallback(async () => {
       if (!positionId) return undefined;
 
-      let result = undefined;
+      let result: { amount0: bigint; amount1: bigint } | undefined = undefined;
 
       if (invalid) {
         result = resultFormat<CollectResult>(

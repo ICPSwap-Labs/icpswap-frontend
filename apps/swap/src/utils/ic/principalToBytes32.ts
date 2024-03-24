@@ -21,6 +21,7 @@ export function principalToBytes32(text: string) {
       acc = (acc << 5) + b;
       width += 5;
       if (width >= 8) {
+        // @ts-ignore
         bytes.push(acc >> (width - 8));
         acc &= (1 << (width - 8)) - 1;
         width -= 8;

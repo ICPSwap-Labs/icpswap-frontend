@@ -46,7 +46,7 @@ export function useSwapArguments(
 
     const sampleTrade = trades[0];
 
-    let callData = null;
+    let callData: ((identity: Identity) => Promise<StatusResult<bigint> | undefined>) | null | undefined = null;
 
     const ZERO_IN = CurrencyAmount.fromRawAmount(trades[0].inputAmount.currency, 0);
 

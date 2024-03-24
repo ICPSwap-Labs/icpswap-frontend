@@ -55,9 +55,3 @@ export function toHexString(byteArray: number[]) {
     return ("0" + (byte & 0xff).toString(16)).slice(-2);
   }).join("");
 }
-
-export function fromHexString(hex: string) {
-  if (hex.substr(0, 2) === "0x") hex = hex.substr(2);
-  for (var bytes = [], c = 0; c < hex.length; c += 2) bytes.push(parseInt(hex.substr(c, 2), 16));
-  return bytes;
-}

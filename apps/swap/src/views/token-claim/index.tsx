@@ -107,7 +107,7 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
 export default function TokenClaim() {
   const principalString = useAccountPrincipalString();
 
-  let pageSize = 5;
+  const pageSize = 5;
 
   const [page, setPage] = useState(1);
   const [offset] = pageArgsFormat(1, pageSize);

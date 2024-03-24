@@ -117,7 +117,7 @@ export interface SwapConfirmModalProps {
   loading: boolean;
   onConfirm: () => void;
   onClose: () => void;
-  slippageTolerance: Percent;
+  slippageTolerance: Percent | null;
   trade: Trade<Currency, Currency, TradeType> | null;
 }
 
@@ -190,7 +190,7 @@ export default ({
           />
           <DetailItem
             label={t`Slippage tolerance`}
-            value={`${slippageTolerance.toFixed(2)}%`}
+            value={`${slippageTolerance?.toFixed(2)}%`}
             tooltip={
               <Tooltip
                 background="#ffffff"
@@ -201,8 +201,8 @@ export default ({
           />
           <DetailItem
             label="Minimum received"
-            value={`${trade?.minimumAmountOut(slippageTolerance).toSignificant(6)} ${trade?.outputAmount.currency
-              .symbol}`}
+            value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${trade
+              ?.outputAmount.currency.symbol}`}
             tooltip={
               <Tooltip
                 background="#ffffff"

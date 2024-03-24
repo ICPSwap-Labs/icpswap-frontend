@@ -21,7 +21,7 @@ export function useDensityChartData({
 
     const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
 
-    const newData = [];
+    const newData: { activeLiquidity: number; price0: number }[] = [];
 
     for (let i = 0; i < data.length; i++) {
       const t = data[i];

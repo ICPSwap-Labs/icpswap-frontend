@@ -11,17 +11,12 @@ import { useCacheTokenList } from "store/global/hooks";
 import { useImportedTokens } from "store/token/cache/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
+import { TokenMetadata } from "types/token";
 
 export function toHexString(byteArray: number[]) {
   return Array.from(byteArray, function (byte) {
     return ("0" + (byte & 0xff).toString(16)).slice(-2);
   }).join("");
-}
-
-export function fromHexString(hex: string) {
-  if (hex.substr(0, 2) === "0x") hex = hex.substr(2);
-  for (var bytes = [], c = 0; c < hex.length; c += 2) bytes.push(parseInt(hex.substr(c, 2), 16));
-  return bytes;
 }
 
 export function useWalletCatchTokenIds() {
@@ -33,7 +28,7 @@ export function useWalletTokens() {
   const importedTokens = useImportedTokens();
   const cacheTokenIds = useWalletCatchTokenIds() ?? [];
 
-  let tokens = [];
+  let tokens: TokenMetadata[] = [];
 
   for (let i = 0; i < cacheTokenIds.length; i++) {
     const tokenId = cacheTokenIds[i];
@@ -56,7 +51,7 @@ export function useWalletTokenCanisterIds() {
   const importedTokens = useImportedTokens();
   const cacheTokenIds = useWalletCatchTokenIds() ?? [];
 
-  let tokens = [];
+  let tokens: TokenMetadata[] = [];
 
   for (let i = 0; i < cacheTokenIds.length; i++) {
     const tokenId = cacheTokenIds[i];

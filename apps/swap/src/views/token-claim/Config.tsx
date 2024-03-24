@@ -6,7 +6,7 @@ import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { ResultStatus, type ActorIdentity } from "@icpswap/types";
+import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
 import Button from "components/authentication/ButtonConnector";
 import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } from "@icpswap/hooks";
 import { read, utils } from "xlsx";
@@ -128,7 +128,7 @@ export default function EventConfig() {
       ),
     }));
 
-    const promises = [];
+    const promises: Promise<StatusResult<boolean>>[] = [];
 
     for (let i = 0; i < _userClaims.length; i += 20000) {
       const userClaims = _userClaims.slice(i, i + 20000);

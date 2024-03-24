@@ -25,6 +25,7 @@ import { Theme } from "@mui/material/styles";
 import { WICPCanisterId } from "constants/canister";
 import { useICPPrice } from "hooks/useUSDPrice";
 import useParsedQueryString from "hooks/useParsedQueryString";
+import { StatusResult } from "@icpswap/types";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -187,7 +188,7 @@ export default function Exchange() {
         TIP_LOADING,
       );
 
-      let result = null;
+      let result: StatusResult<boolean> | null = null;
 
       if (isWrap) {
         const WICPAccount = principalToAccount(WICPCanisterId);

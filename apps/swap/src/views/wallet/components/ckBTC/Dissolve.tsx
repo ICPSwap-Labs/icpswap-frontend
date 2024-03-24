@@ -12,7 +12,7 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import Identity, { CallbackProps } from "components/Identity";
-import { type ActorIdentity, ResultStatus } from "@icpswap/types";
+import { ResultStatus } from "@icpswap/types";
 import { validate } from "bitcoin-address-validation";
 import { MessageTypes, useTips } from "hooks/useTips";
 import Links from "./Links";
@@ -69,7 +69,7 @@ export default function DissolveBTC({
 
   const approve = useApprove();
 
-  const handleSubmit = async (identity: ActorIdentity) => {
+  const handleSubmit = async () => {
     if (!amount || !principal || !token || !address || !btc_withdraw_address) return;
 
     const approveAmount = BigInt(numberToString(formatTokenAmount(amount, token.decimals)));

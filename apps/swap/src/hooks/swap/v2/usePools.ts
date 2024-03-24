@@ -51,7 +51,7 @@ export function usePools(
             poolAddress = (await (await swapFactory()).getPool(key!)) as string;
           }
 
-          let poolInfo = null;
+          let poolInfo: SwapPoolInfo | null = null;
           let ticks: TickLiquidityInfo[] = [];
 
           if (poolAddress) {

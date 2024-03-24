@@ -13,7 +13,7 @@ import { Theme } from "@mui/material/styles";
 import { Wrapper } from "components/index";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { ResultStatus, type ActorIdentity } from "@icpswap/types";
+import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
 import Button from "components/authentication/ButtonConnector";
 import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/constants";
@@ -215,7 +215,7 @@ export default function CreateTokenClaim() {
         ),
       }));
 
-      const promises = [];
+      const promises: Promise<StatusResult<boolean>>[] = [];
 
       for (let i = 0; i < _userClaims.length; i += 20000) {
         const userClaims = _userClaims.slice(i, i + 20000);

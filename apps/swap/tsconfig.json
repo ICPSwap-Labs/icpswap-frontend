@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"
-    ],
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,9 +15,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "downlevelIteration": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "noImplicitAny":false,
   },
   "exclude": ["node_modules", "src/abis/types/**/*"],
   "include": ["src/**/*"]

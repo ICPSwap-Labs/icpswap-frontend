@@ -29,7 +29,7 @@ export function usePosition({
 
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount ? feeAmount : undefined);
 
-  let position = undefined;
+  let position: Position | undefined = undefined;
   if (pool && liquidity && (tickLower || tickLower === 0) && (tickUpper || tickUpper === 0)) {
     position = new Position({
       pool,

@@ -14,7 +14,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton } from "components/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as CallIdentity } from "types/global";
+import { type StatusResult, type ActorIdentity } from "@icpswap/types";
 import { Trans, t } from "@lingui/macro";
 import { FilledTextField, NumberFilledTextField } from "components/index";
 import { timeParser } from "utils/index";
@@ -121,7 +121,7 @@ export default function VotingCreateProposal() {
     });
   };
 
-  const handleCreateVote = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
+  const handleCreateVote = async (identity: ActorIdentity, { loading }: SubmitLoadingProps) => {
     if (loading || !principal || !account) return;
 
     const { status, message, data } = await createVotingProposal(identity, canisterId, {
@@ -143,7 +143,7 @@ export default function VotingCreateProposal() {
         usedPowers: BigInt(0),
       }));
 
-      const promises = [];
+      const promises: Promise<StatusResult<boolean>>[] = [];
 
       for (let i = 0; i < powers.length; i += 20000) {
         const _powers = powers.slice(i, i + 20000);

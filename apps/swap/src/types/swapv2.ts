@@ -14,6 +14,7 @@ export type {
   ResultAmount as CollectResult,
   CollectParams,
   VolumeMapType as VolumeResult,
+  QueryPositionResult,
 } from "candid/swap-v2/SwapPositionManager";
 export type { PoolInfo } from "candid/swap-v2/SwapFactory";
 

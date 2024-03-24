@@ -113,7 +113,7 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
     !actualSwapValue || actualSwapValue === "0" ? undefined : debouncedTypedValue,
   );
 
-  let inputError = null;
+  let inputError: null | string = null;
 
   if (inputNumberCheck(typedValue) === false) {
     inputError = inputError ?? t`Amount exceeds limit`;
@@ -129,7 +129,7 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
 
   const [balanceIn, amountIn] = [
     currencyBalances[SWAP_FIELD.INPUT],
-    Trade?.trade?.maximumAmountIn(userSlippageTolerance),
+    userSlippageTolerance ? Trade?.trade?.maximumAmountIn(userSlippageTolerance) : undefined,
   ];
 
   if (

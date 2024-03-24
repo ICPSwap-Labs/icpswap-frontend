@@ -60,7 +60,7 @@ export function usePools(
 
           const poolData = await getSwapPool(args);
 
-          let poolInfo = undefined;
+          let poolInfo: PoolMetadata | undefined = undefined;
           let ticks = [] as TickLiquidityInfo[];
 
           if (poolData) {

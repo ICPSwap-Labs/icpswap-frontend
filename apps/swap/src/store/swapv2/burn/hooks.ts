@@ -97,7 +97,7 @@ export function useBurnInfo(position: PositionResult | undefined | null) {
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false;
 
-  let error = undefined;
+  let error: string | undefined = undefined;
 
   if (
     !parsedAmounts[BURN_FIELD.LIQUIDITY_PERCENT] ||

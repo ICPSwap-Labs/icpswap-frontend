@@ -101,7 +101,7 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false;
 
-  let error = undefined;
+  let error: string | undefined = undefined;
 
   if (inputNumberCheck(typedValue) === false) error = error ?? t`Amount exceeds limit`;
 

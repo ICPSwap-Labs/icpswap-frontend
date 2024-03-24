@@ -15,6 +15,7 @@ import {
 } from "./actions";
 import { slippageToPercent, getDefaultSlippageTolerance } from "constants/swap";
 import { useAccount } from "store/auth/hooks";
+import { Percent } from "@icpswap/swap-sdk";
 
 export function useIsExpertMode() {
   return useAppSelector((state) => state.swapCache.userExpertMode);
@@ -106,7 +107,7 @@ export function useSlippageToleranceToPercent(type: string) {
     if (slippageToPercent && slippageTolerance) {
       return slippageToPercent(slippageTolerance);
     } else {
-      let percentSlippage = null;
+      let percentSlippage: Percent | null = null;
       // input change will case error when value is 0.
       try {
         percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));

@@ -9,7 +9,6 @@ import { useTips, MessageTypes } from "hooks/useTips";
 import { DISSOLVE_FEE } from "constants/ckBTC";
 import FilledTextField from "components/FilledTextField";
 import { retrieveBTCv1 } from "hooks/ck-btc/useRetrieve";
-import { type ActorIdentity } from "@icpswap/types";
 import { useUpdateUserTx } from "store/wallet/hooks";
 import { TokenInfo } from "types/token";
 import { validate } from "bitcoin-address-validation";
@@ -32,7 +31,7 @@ export default function RetryDissolve({ open, onClose = () => {}, unDissolveBala
 
   const updateUserTx = useUpdateUserTx();
 
-  const handleSubmit = async (identity: ActorIdentity) => {
+  const handleSubmit = async () => {
     if (!unDissolveBalance || !token || !address || !principal) return;
 
     const _amount = unDissolveBalance;

@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "bignumber.js": "^9.0.1",
-    "react": "17.0.2",
     "@icpswap/actor": "workspace:*",
     "@icpswap/candid": "workspace:*",
     "@icpswap/types": "workspace: *",

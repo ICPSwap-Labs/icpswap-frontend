@@ -14,13 +14,23 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount) =>
     ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount]
     : undefined;
 
+type Tick = {
+  liquidityGross: bigint;
+  liquidityNet: bigint;
+  price0: bigint;
+  price1: bigint;
+  tickIndex: bigint;
+  price0Decimal: number;
+  price1Decimal: number;
+};
+
 export function useAllTicks(token0: Token | undefined, token1: Token | undefined, feeAmount: FeeAmount) {
   const poolId = usePoolCanisterId(token0?.address, token1?.address, feeAmount);
 
   const { result: allTicks, loading } = useSwapAllTicks(poolId);
 
   const ticks = useMemo(() => {
-    let ticks = [];
+    let ticks: Tick[] = [];
 
     if (allTicks) {
       for (let i = 0; i < allTicks.length; i++) {

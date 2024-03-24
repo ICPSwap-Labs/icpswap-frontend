@@ -578,7 +578,7 @@ export function useMintInfo(
     {},
   );
 
-  let errorMessage = undefined;
+  let errorMessage: string | undefined = undefined;
 
   if (poolState === PoolState.INVALID) {
     errorMessage = errorMessage ?? t`Invalid pair`;

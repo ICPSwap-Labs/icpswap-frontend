@@ -55,7 +55,7 @@ export default function useFileUpload({ canisterId, fileType }: { canisterId: st
 
     const { batch_id } = await actor.create_batch();
 
-    const promises = [];
+    const promises: Promise<{ chunk_id: bigint }>[] = [];
 
     const chunkSize = 700000;
 

@@ -257,6 +257,7 @@ export function Select({
           }}
         >
           <ClickAwayListener onClickAway={handleClose}>
+            {/* @ts-ignore */}
             <Box>
               {hasSearch ? (
                 <Box
@@ -306,7 +307,7 @@ export function Select({
                       }}
                       onClick={() => handleMenuItemClick(menu)}
                     >
-                      {multiple && (
+                      {multiple ? (
                         <Box sx={{ margin: "0 5px 0 0" }}>
                           <Checkbox
                             sx={{ padding: 0 }}
@@ -317,7 +318,7 @@ export function Select({
                             checked={value?.includes(menu.value)}
                           />
                         </Box>
-                      )}
+                      ) : null}
                       {menu.label}
                     </Box>
                   );

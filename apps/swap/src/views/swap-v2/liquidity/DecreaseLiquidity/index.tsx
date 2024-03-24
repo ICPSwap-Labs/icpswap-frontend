@@ -24,7 +24,7 @@ import { CurrencyAmountFormatDecimals } from "constants/index";
 import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Identity as TypeIdentity } from "types/global";
+import { type StatusResult, type ActorIdentity } from "@icpswap/types";
 import LiquidityInfo from "components/swap/LiquidityInfo";
 import Unclaimed from "./Unclaimed";
 import Loading from "components/Loading/Static";
@@ -151,7 +151,7 @@ export default memo(() => {
   }, [history, resetBurnState]);
 
   const handleConfirm = useCallback(
-    async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
+    async (identity: ActorIdentity, { loading }: SubmitLoadingProps) => {
       if (!positionSDK || !liquidityToRemove || loading || !principal) {
         return;
       }
@@ -170,7 +170,12 @@ export default memo(() => {
         slippageToPercent(slippageTolerance),
       );
 
-      let result = undefined;
+      let result:
+        | undefined
+        | StatusResult<{
+            amount0: bigint;
+            amount1: bigint;
+          }> = undefined;
 
       if (isInvalid) {
         result = await decreaseInvalidLiquidity(identity, {

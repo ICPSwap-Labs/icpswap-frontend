@@ -45,7 +45,7 @@ export function usePools(
         transformedPoolKeys.map(async (key) => {
           const poolAddress = (await (await v2SwapFactory()).getPool(key ?? "")) as string;
 
-          let poolInfo = null;
+          let poolInfo: SwapPoolInfo | null = null;
           let ticks = [] as TickLiquidityInfo[];
 
           if (poolAddress) {

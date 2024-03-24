@@ -119,6 +119,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
+      {/* @ts-ignore */}
       <div
         ref={ref}
         {...SnackbarProps}

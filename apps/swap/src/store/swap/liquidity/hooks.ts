@@ -385,7 +385,7 @@ export function useMintInfo(
     {},
   );
 
-  let errorMessage = undefined;
+  let errorMessage: string | undefined = undefined;
 
   if (hasPairWithBaseToken !== true) errorMessage = errorMessage ?? t`No pair with icp`;
 

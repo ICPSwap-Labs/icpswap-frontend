@@ -68,7 +68,7 @@ export default function useVotingImageUpload(): [
 
     const { batch_id } = batchResult;
 
-    const promises = [];
+    const promises: Promise<{ chunk_id: bigint } | undefined>[] = [];
 
     const chunkSize = 700000;
 

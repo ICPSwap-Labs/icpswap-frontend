@@ -39,7 +39,7 @@ export const idlFactory = ({ IDL }: any) => {
     filterAllowancesArray: IDL.Func(
       [IDL.Int],
       [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Tuple(IDL.Nat, IDL.Int)))))],
-      []
+      [],
     ),
     getASize: IDL.Func([], [IDL.Nat], ["query"]),
     getAgeAllowanceLimit: IDL.Func([], [IDL.Int], []),
@@ -47,7 +47,7 @@ export const idlFactory = ({ IDL }: any) => {
     getAllowancesArray: IDL.Func(
       [],
       [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Tuple(IDL.Nat, IDL.Int)))))],
-      []
+      [],
     ),
     getMaxAllowances: IDL.Func([], [IDL.Int], []),
     getMetadata: IDL.Func([], [Metadata], ["query"]),

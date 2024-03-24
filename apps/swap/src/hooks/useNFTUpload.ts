@@ -66,7 +66,7 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
       return;
     }
 
-    const promises = [];
+    const promises: Promise<{ chunk_id: bigint }>[] = [];
 
     const chunkSize = 700000;
 
