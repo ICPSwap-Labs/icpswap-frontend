@@ -51,8 +51,8 @@ export const routes: Route[] = [
     path: `/wallet`,
   },
   {
-    key: "sns-launchpad",
-    name: `Sns-launchpad`,
+    key: "sns",
+    name: `SNS Launchpad`,
     path: `/sns/launch/csyra-haaaa-aaaaq-aacva-cai`,
   },
   {

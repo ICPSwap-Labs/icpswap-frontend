@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Sentry from "@sentry/react";
 import { Grid, Box, Typography } from "@mui/material";
 import ErrorImage from "assets/images/Error";
@@ -15,6 +15,15 @@ function Fallback({ error, eventId }: FallbackProps) {
   const handleCopyError = () => {
     copy(`${error?.toString() ?? ""}_${eventId}`);
   };
+
+  useEffect(() => {
+    if (error) {
+      const errorString = error.toString();
+      if (/Loading chunk *.{1,} failed./.test(errorString) || /Unexpected token '<'/.test(errorString)) {
+        window.location.reload();
+      }
+    }
+  }, [error]);
 
   return (
     <MainLayout>

@@ -44,8 +44,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          ICPSwap SNS Launchpad is live! Don't miss out! Click here to join the
-          excitement!&nbsp;
+          ICPSwap SNS Launchpad is live! Don't miss out!&nbsp;
           <TextButton
             link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai"
             color="write"
