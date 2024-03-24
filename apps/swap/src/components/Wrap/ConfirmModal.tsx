@@ -2,11 +2,11 @@ import SwapModal from "components/modal/swap";
 import { Typography, Box, Grid, Button, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ArrowRightAlt } from "@mui/icons-material";
-import CurrencyAvatar from "components/CurrencyAvatar";
 import { t } from "@lingui/macro";
 import { SWAP_FIELD } from "constants/swap";
 import { Currency } from "@icpswap/swap-sdk";
 import { Theme } from "@mui/material/styles";
+import { TokenImage } from "components/index";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -24,19 +24,18 @@ const useStyle = makeStyles((theme: Theme) => {
   };
 });
 
-const SwapCurrency = ({
-  currency,
-  currencyAmount,
-}: {
+interface SwapCurrencyProps {
   currency: Currency | undefined | null;
   currencyAmount: number | string;
-}) => {
+}
+
+const SwapCurrency = ({ currency, currencyAmount }: SwapCurrencyProps) => {
   return (
     <Grid container alignItems="center">
       <Box>
         <Grid container alignItems="center">
           <Grid sx={{ mr: 1 }}>
-            <CurrencyAvatar currency={currency} bgColor="#497BF7" borderColor="transparent" />
+            <TokenImage tokenId={currency?.wrapped.address} logo={currency?.wrapped.logo} />
           </Grid>
           <Grid item>
             <Typography color="textPrimary">{currency?.symbol}</Typography>

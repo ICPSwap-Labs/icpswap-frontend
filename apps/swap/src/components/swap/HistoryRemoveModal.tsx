@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import SwapModal from "components/modal/swap";
-import CurrencyAvatar from "components/CurrencyAvatar";
 import { BURN_FIELD } from "constants/swap";
 import { Trans } from "@lingui/macro";
 import { Currency } from "@icpswap/swap-sdk";
+import { TokenImage } from "components/index";
 
 export default memo(
   ({
@@ -29,7 +29,7 @@ export default memo(
             <Grid container mt={1} alignItems="center">
               <Grid item xs container alignItems="center">
                 <Grid item mr={1}>
-                  <CurrencyAvatar currency={currencyA} />
+                  <TokenImage tokenId={currencyA?.wrapped.address} logo={currencyA?.wrapped.logo} />
                 </Grid>
                 <Grid item>
                   <Typography>{currencyA?.symbol}</Typography>
@@ -42,7 +42,7 @@ export default memo(
             <Grid container mt={2} alignItems="center">
               <Grid item xs container alignItems="center">
                 <Grid item mr={1}>
-                  <CurrencyAvatar currency={currencyB} />
+                  <TokenImage tokenId={currencyB?.wrapped.address} logo={currencyB?.wrapped.logo} />
                 </Grid>
                 <Grid item>
                   <Typography>{currencyB?.symbol}</Typography>

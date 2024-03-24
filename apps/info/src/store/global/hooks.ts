@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { updateICPBlocks, updateUserLocale, updateICPPriceList, updateXDR2USD } from "./actions";
+import { updateICPBlocks, updateUserLocale, updateICPPriceList, updateXDR2USD, updateTokenSNSRootId } from "./actions";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
 import { useICPBlocksCall } from "hooks/useICPCalls";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -7,6 +7,7 @@ import { use100ICPPriceInfo } from "@icpswap/hooks";
 import { useDispatch } from "react-redux";
 import { timestampFormat, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
+import { useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";
 
 export function useICPBlocksManager() {
   const dispatch = useAppDispatch();
@@ -104,4 +105,46 @@ export function useICPPrices() {
       dispatch(updateICPPriceList(prices.slice(prices.length - 120, prices.length - 1)));
     }
   }, [xdr_usdt, icpPrices]);
+}
+
+export function useFetchSNSTokenRootIds() {
+  const dispatch = useAppDispatch();
+  const { result: snsTokenRootIds, loading } = useSNSTokensRootIds();
+  const { result: list_deployed_sns } = useListDeployedSNSs();
+
+  useEffect(() => {
+    async function call() {
+      if (snsTokenRootIds && list_deployed_sns && snsTokenRootIds.data.length > 0) {
+        snsTokenRootIds.data.forEach((sns_root) => {
+          const deployed_sns = list_deployed_sns.instances.find((e) => {
+            const root_id = e.root_canister_id[0];
+            if (root_id) return root_id.toString() === sns_root.root_canister_id;
+          });
+
+          if (deployed_sns) {
+            const ledger_canister_id = deployed_sns.ledger_canister_id[0];
+            if (ledger_canister_id) {
+              dispatch(
+                updateTokenSNSRootId({
+                  id: deployed_sns.ledger_canister_id.toString(),
+                  root_id: sns_root.root_canister_id,
+                }),
+              );
+            }
+          }
+        });
+      }
+    }
+
+    call();
+  }, [snsTokenRootIds, dispatch, list_deployed_sns]);
+
+  return {
+    loading,
+    result: snsTokenRootIds,
+  };
+}
+
+export function useTokenSNSRootIds() {
+  return useAppSelector((state) => state.global.snsTokenRootIds);
 }

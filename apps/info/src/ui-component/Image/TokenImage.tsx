@@ -1,16 +1,16 @@
-import { Avatar, SxProps } from "@mui/material";
+import { SxProps } from "@mui/material";
+import { TokenImage as UITokenImage } from "@icpswap/ui";
+import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 
 interface TokenImageProps {
-  src: string | undefined;
-  width?: string;
-  height?: string;
+  logo: string | undefined;
+  size?: string;
   sx?: SxProps;
+  tokenId?: string;
 }
 
-export function TokenImage({ src, width = "20px", height = "20px", sx }: TokenImageProps) {
-  return (
-    <Avatar sx={{ width, height, ...(sx ?? {}) }} src={src}>
-      &nbsp;
-    </Avatar>
-  );
+export function TokenImage({ tokenId, logo, size = "20px", sx }: TokenImageProps) {
+  const root_canister_id = useSNSTokenRootId(tokenId);
+
+  return <UITokenImage size={size} logo={logo} sx={sx} sns={!!root_canister_id} />;
 }

@@ -286,7 +286,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", gap: "0 10px" }}>
-          <TokenImage width="40px" height="40px" src={tokenInfo?.logo} />
+          <TokenImage size="40px" logo={tokenInfo?.logo} tokenId={tokenInfo?.canisterId} />
           <Box>
             <Typography
               color="textPrimary"

@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
-import { NoData, StaticLoading } from "ui-component/index";
+import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
 import { PublicTokenOverview } from "@icpswap/types";
@@ -49,9 +49,7 @@ export function TokenItem({ token, index }: { token: TokenData; index: number })
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center" gap="0 8px">
-          <Avatar src={tokenInfo?.logo} sx={{ width: "24px", height: "24px" }}>
-            &nbsp;
-          </Avatar>
+          <TokenImage logo={tokenInfo?.logo} tokenId={tokenInfo?.canisterId} size="24px" />
           <BodyCell>{token.symbol}</BodyCell>
           {!!tokenInfo ? <BodyCell sub>({tokenInfo.name})</BodyCell> : null}
         </Grid>

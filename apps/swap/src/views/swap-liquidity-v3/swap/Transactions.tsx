@@ -3,7 +3,7 @@ import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { enumToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { LoadingRow, NoData } from "components/index";
+import { LoadingRow, NoData, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT, INFO_URL } from "constants/index";
@@ -67,12 +67,8 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
       }}
     >
       <Box sx={{ display: "flex" }}>
-        <Avatar src={token0?.logo} sx={{ width: "24px", height: "24px" }}>
-          &nbsp;
-        </Avatar>
-        <Avatar src={token1?.logo} sx={{ width: "24px", height: "24px", margin: "0 0 0 -6px" }}>
-          &nbsp;
-        </Avatar>
+        <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.canisterId} />
+        <TokenImage logo={token1?.logo} size="24px" sx={{ margin: "0 0 0 -6px" }} />
       </Box>
 
       <Box sx={{ flex: 1 }}>

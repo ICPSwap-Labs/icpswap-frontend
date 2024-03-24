@@ -13,19 +13,21 @@ const useStyles = ({ borderColor, size }: { borderColor: string; size?: string |
     };
   });
 
+export interface CurrencyAvatarProps {
+  currency: Currency | undefined | null;
+  borderColor?: string;
+  bgColor?: string;
+  className?: string;
+  size?: string;
+}
+
 export default function CurrencyAvatar({
   currency,
   borderColor = "#ffffff",
   bgColor = "#97a4ef",
   className,
   size,
-}: {
-  currency: Currency | undefined | null;
-  borderColor?: string;
-  bgColor?: string;
-  className?: string;
-  size?: string;
-}) {
+}: CurrencyAvatarProps) {
   const classes = useStyles({ borderColor, size })();
 
   return (

@@ -1,13 +1,13 @@
 import { Box, Grid, Typography, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SwapModal from "components/modal/swap";
-import CurrencyAvatar from "components/CurrencyAvatar";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { BigNumber } from "@icpswap/utils";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import Button from "components/authentication/ButtonConnector";
 import { toFormat } from "utils/index";
+import { TokenImage } from "components/index";
 
 const useStyles = makeStyles((theme: Theme) => ({
   feeBox: {
@@ -47,7 +47,7 @@ export default function CollectFeesModal({
           <Grid container alignItems="center">
             <Grid item xs container alignItems="center">
               <Grid item mr={1}>
-                <CurrencyAvatar currency={token0} />
+                <TokenImage logo={token0?.logo} tokenId={token0?.address} />
               </Grid>
               <Grid item>
                 <Typography color="text.primary">{token0?.symbol}</Typography>
@@ -62,7 +62,7 @@ export default function CollectFeesModal({
           <Grid container mt={2} alignItems="center">
             <Grid item xs container alignItems="center">
               <Grid item mr={1}>
-                <CurrencyAvatar currency={token1} />
+                <TokenImage logo={token1?.logo} tokenId={token1?.address} />
               </Grid>
               <Grid item>
                 <Typography color="text.primary">{token1?.symbol}</Typography>

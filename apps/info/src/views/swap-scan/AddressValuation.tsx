@@ -6,7 +6,7 @@ import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
-import { NoData } from "ui-component/index";
+import { NoData, TokenImage } from "ui-component/index";
 import { GridAutoRows } from "ui-component/Grid/index";
 import { SwapScanTabPanels } from "./components/TabPanels";
 import InTokenListCheck from "ui-component/InTokenListCheck";
@@ -14,7 +14,6 @@ import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
 import { useTokensBalance, useTokensFromList } from "@icpswap/hooks";
-import { TokenImage } from "@icpswap/ui";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP } from "constants/tokens";
 import { getExplorerPrincipalLink } from "utils/index";
@@ -66,7 +65,7 @@ function UserTokenBalance({
     >
       <BodyCell>
         <Box sx={{ display: "flex", gap: "0 10px", alignItems: "center" }}>
-          <TokenImage logo={tokenInfo.logo} />
+          <TokenImage logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} />
 
           <Typography color="text.primary">{tokenInfo.symbol}</Typography>
 

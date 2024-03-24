@@ -5,6 +5,7 @@ import { formatAmount, toSignificant } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import BigNumber from "bignumber.js";
+import { TokenImage } from "ui-component/index";
 
 export interface TokenPoolPriceProps {
   token0: TokenInfo | undefined;
@@ -33,9 +34,8 @@ export default function TokenPoolPrice({ token0, token1, price0, price1 }: Token
       }}
       onClick={handleClick}
     >
-      <Avatar src={token0?.logo} sx={{ width: "18px", height: "18px", marginRight: "6px" }}>
-        &nbsp;
-      </Avatar>
+      <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} size="18px" sx={{ margin: "0 6px 0 0" }} />
+
       <Typography color="text.primary" fontWeight={500}>
         1 {token0?.symbol} = {formatAmount(new BigNumber(price0).dividedBy(price1).toNumber(), 4)} {token1?.symbol}
       </Typography>

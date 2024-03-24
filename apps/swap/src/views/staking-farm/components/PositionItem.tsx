@@ -216,9 +216,9 @@ export function PositionItem({ positionInfo, selectedPositionId, setSelectedPosi
                 />
 
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <TokenImage src={position.pool.token0.logo} width="24px" height="24px" />
+                  <TokenImage logo={position.pool.token0.logo} size="24px" tokenId={position.pool.token0.address} />
                   <Box sx={{ position: "relative", left: "-5px" }}>
-                    <TokenImage src={position.pool.token1.logo} width="24px" height="24px" />
+                    <TokenImage logo={position.pool.token1.logo} size="24px" tokenId={position.pool.token1.address} />
                   </Box>
                 </Box>
 

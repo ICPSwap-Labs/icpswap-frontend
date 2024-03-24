@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount } from "@icpswap/utils";
-import { MainCard, TextButton } from "ui-component/index";
+import { MainCard, TextButton, TokenImage } from "ui-component/index";
 import { usePoolLatestTVL } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
@@ -80,17 +80,11 @@ export default function SwapPoolDetails() {
         >
           <Box>
             <Grid container alignItems="center">
-              <Avatar src={token0?.logo} sx={{ width: "24px", height: "24px" }}>
-                &nbsp;
-              </Avatar>
-              <Avatar src={token1?.logo} sx={{ width: "24px", height: "24px" }}>
-                &nbsp;
-              </Avatar>
-
+              <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.canisterId} />
+              <TokenImage logo={token1?.logo} size="24px" tokenId={token1?.canisterId} />
               <Typography color="text.primary" sx={{ margin: "0 8px 0 8px" }} fontWeight={500}>
                 {pool?.token0Symbol} / {pool?.token1Symbol}
               </Typography>
-
               <FeeTierLabel feeTier={pool?.feeTier} />
             </Grid>
           </Box>
@@ -188,9 +182,7 @@ export default function SwapPoolDetails() {
                 <Grid container alignItems="center">
                   <Grid item xs>
                     <Grid container alignItems="center">
-                      <Avatar src={token0?.logo} sx={{ width: "20px", height: "20px" }}>
-                        &nbsp;
-                      </Avatar>
+                      <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
 
                       <Typography
                         sx={{
@@ -217,9 +209,7 @@ export default function SwapPoolDetails() {
                 <Grid container alignItems="center">
                   <Grid item xs>
                     <Grid container alignItems="center">
-                      <Avatar src={token1?.logo} sx={{ width: "20px", height: "20px" }}>
-                        &nbsp;
-                      </Avatar>
+                      <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
 
                       <Typography
                         sx={{

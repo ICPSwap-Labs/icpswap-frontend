@@ -1,6 +1,6 @@
-import { Typography, Box, Grid, Avatar, Button } from "@mui/material";
+import { Typography, Box, Grid, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton } from "ui-component/index";
+import { Wrapper, Breadcrumbs, TextButton, TokenImage } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
@@ -55,9 +55,7 @@ export default function TokenDetails() {
 
       <Box mt="20px">
         <Grid container alignItems="center">
-          <Avatar src={tokenInfo?.logo} sx={{ width: "24px", height: "24px" }}>
-            &nbsp;
-          </Avatar>
+          <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={tokenInfo?.canisterId} />
 
           <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
             {token?.name}

@@ -1,7 +1,7 @@
 import React from "react";
-import { Grid, Box, Typography, Avatar } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { NumberTextField } from "components/index";
+import { Grid, Box, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { NumberTextField, TokenImage } from "components/index";
 import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -48,7 +48,6 @@ export default function DecreaseLiquidityInput({
   totalAmount,
 }: DecreaseLiquidityInputProps) {
   const classes = useStyle();
-  const theme = useTheme() as Theme;
 
   const decimals = currency?.decimals ?? SAFE_DECIMALS_LENGTH;
 
@@ -56,20 +55,8 @@ export default function DecreaseLiquidityInput({
     <Box className={classes.inputBox}>
       <Grid container>
         <Box className={classes.tokenButton}>
-          <Grid item xs container alignItems="center">
-            <Avatar
-              sx={{
-                ...theme.palette.avatar.bgcolor,
-                display: "inline-block",
-                marginRight: "8px",
-                width: "24px",
-                height: "24px",
-              }}
-              alt=""
-              src={currency?.logo}
-            >
-              &nbsp;
-            </Avatar>
+          <Grid item xs container alignItems="center" gap="0 8px">
+            <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} size="24px" />
             <Typography component="span">{currency?.symbol}</Typography>
           </Grid>
         </Box>
