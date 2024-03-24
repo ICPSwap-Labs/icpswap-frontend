@@ -37,12 +37,12 @@ async function fetch_and_write_file() {
 
     fs.writeFileSync(
       path.resolve(__dirname, "../apps/swap/src/.tokens.json"),
-      JSON.stringify(allTokenMetadata)
+      JSON.stringify(allTokenMetadata, null, 2),
     );
 
     fs.writeFileSync(
       path.resolve(__dirname, "../apps/info/src/.tokens.json"),
-      JSON.stringify(allTokenMetadata)
+      JSON.stringify(allTokenMetadata, null, 2),
     );
   } else {
     console.log("fetch tokens error");
