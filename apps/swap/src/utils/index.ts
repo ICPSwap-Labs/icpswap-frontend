@@ -114,10 +114,6 @@ export function counter(time: string | number | Date): CountingTime {
   };
 }
 
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function toFormat(value: string | number | BigNumber | undefined) {
   if (value === undefined) return "";
   return new BigNumber(value).toFormat();
@@ -137,6 +133,5 @@ export function timeParser(time: any): Date {
   return new Date(date.getTime() - seconds * 1000);
 }
 
-export * from "./numbers";
 export * from "./type";
 export * from "./nft";

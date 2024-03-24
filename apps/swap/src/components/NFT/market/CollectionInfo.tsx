@@ -10,7 +10,7 @@ import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
-import { formatAmount } from "utils/numbers";
+import { formatAmount } from "@icpswap/utils";
 import CollectionLinks from "../collectionsIcon/index";
 import LoadingRow from "components/Loading/LoadingRow";
 

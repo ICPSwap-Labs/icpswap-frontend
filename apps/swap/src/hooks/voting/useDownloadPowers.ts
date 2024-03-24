@@ -1,9 +1,8 @@
 import { useState, useMemo, useCallback } from "react";
 import { UserVotePowersInfo } from "@icpswap/types";
 import { usePaginationAllDataCallback } from "hooks/usePaginationAllData";
-import { writeFileOneSheet } from "utils/xlsx";
 import { getUserVotingPowers } from "@icpswap/hooks";
-import { valueofUser } from "@icpswap/utils";
+import { valueofUser, writeFileOneSheet } from "@icpswap/utils";
 
 export function useDownloadPowers(canisterId: string | undefined, id: string, limit?: number): [boolean, () => void] {
   const [loading, setLoading] = useState(false);

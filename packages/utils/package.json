@@ -17,12 +17,13 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "idb": "8.0.0",
-    "numbro": "^2.3.6",
-    "dayjs": "^1.11.9",
     "@icpswap/types": "workspace:*",
     "big.js": "^6.1.1",
+    "dayjs": "^1.11.9",
     "decimal.js-light": "^2.5.1",
-    "toformat": "^2.0.0"
+    "idb": "8.0.0",
+    "numbro": "^2.3.6",
+    "toformat": "^2.0.0",
+    "xlsx": "^0.18.5"
   }
 }

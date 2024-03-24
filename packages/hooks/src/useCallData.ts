@@ -1,10 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import type { ApiResult, CallResult, PaginationResult } from "@icpswap/types";
-import { pageArgsFormat } from "@icpswap/utils";
-
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { pageArgsFormat, sleep } from "@icpswap/utils";
 
 export type Call<T> = () => Promise<ApiResult<T>>;
 

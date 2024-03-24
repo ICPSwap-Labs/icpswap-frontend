@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
 import { Wrapper, MainCard, Breadcrumbs, TextButton } from "components/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
@@ -29,7 +28,7 @@ import { createVotingProposal, setVotingProposalPowers } from "@icpswap/hooks";
 import { VotingFileCanisterId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import Preview from "components/vote/Preview";
-import { writeFileOneSheet } from "utils/xlsx";
+import { writeFileOneSheet } from "@icpswap/utils";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";

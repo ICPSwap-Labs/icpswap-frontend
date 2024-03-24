@@ -15,10 +15,9 @@ import {
   WRAPPED_ICP_TOKEN_INFO,
   NFTTradeFee,
 } from "constants/index";
-import { parseTokenAmount, numberToString } from "@icpswap/utils";
+import { parseTokenAmount, numberToString, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useICPAmountUSDValue, useAccount } from "store/global/hooks";
-import { formatDollarAmount } from "utils/numbers";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import LazyImage from "components/LazyImage";
 import FileImage from "../FileImage";

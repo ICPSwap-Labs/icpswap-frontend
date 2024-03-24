@@ -102,10 +102,6 @@ export function addLiquidityLink(canisterId: string) {
   return `${APP_LINK}/swap/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
 }
 
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function toFormat(value: string | number | undefined) {
   if (value === undefined) return "";
   return new BigNumber(value).toFormat();
