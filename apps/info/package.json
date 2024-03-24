@@ -119,8 +119,5 @@
   },
   "lint-staged": {
     "*.{js,ts,css,tsx,md,jsx}": "eslint --cache --fix"
-  },
-  "engines": {
-    "node": "18.x"
   }
 }
