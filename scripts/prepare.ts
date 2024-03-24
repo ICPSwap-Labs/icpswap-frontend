@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 const packageJSON = fs.readFileSync(
   path.resolve(__dirname, "../package.json"),
   {
     encoding: "utf8",
-  }
+  },
 );
 const json = JSON.parse(packageJSON);
 const version = json.version;
@@ -21,7 +21,7 @@ fs.writeFile(
   content,
   (err) => {
     console.log(err);
-  }
+  },
 );
 
 fs.writeFile(
@@ -29,5 +29,5 @@ fs.writeFile(
   content,
   (err) => {
     console.log(err);
-  }
+  },
 );

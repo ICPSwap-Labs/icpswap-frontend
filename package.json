@@ -17,14 +17,16 @@
     "deploy:info:test": "node ./scripts/prepare.js && turbo run deploy:test --filter=info",
     "clean": "turbo run clean && rm -rf node_modules",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "node ./scripts/prepare.js",
+    "prepare": "husky install && ts-node-esm ./scripts/prepare.ts",
     "fetch-tokens": "ts-node-esm ./scripts/pre-fetch-tokens.ts"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.202",
     "@types/node": "^13.13.5",
+    "husky": "^6.0.0",
     "jest": "26.6.0",
+    "lint-staged": ">=10",
     "turbo": "1.10.15"
   },
   "dependencies": {
