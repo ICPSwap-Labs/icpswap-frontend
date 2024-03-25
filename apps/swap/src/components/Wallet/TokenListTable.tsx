@@ -5,16 +5,16 @@ import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, prin
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, Connector, NO_HIDDEN_TOKENS , INFO_URL } from "constants/index";
+import { ICP, Connector, NO_HIDDEN_TOKENS, INFO_URL } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
-import { useAccountPrincipal , useConnectorType } from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { XTC, ckETH, ckBTC, WRAPPED_ICP , ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
+import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/uesInfoToken";
 import { useCurrency } from "hooks/useCurrency";
@@ -79,10 +79,6 @@ export const XTCTopUpIcon = () => {
     </svg>
   );
 };
-
-function usePrincipalStandard(standard: string) {
-  return standard.includes("DIP20") || standard.includes("ICRC");
-}
 
 type ckTOKEN = {
   id: string;
@@ -180,6 +176,10 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     }
   }, [tokenBalance, infoToken, tokenInfo]);
 
+  const handleCloseModal = async () => {
+    setOpen(false);
+  };
+
   const handleTransferSuccess = () => {
     setRefreshInnerCounter(refreshInnerCounter + 1);
     handleCloseModal();
@@ -188,10 +188,6 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const handleTopUpSuccess = () => {
     setRefreshInnerCounter(refreshInnerCounter + 1);
-  };
-
-  const handleCloseModal = async () => {
-    setOpen(false);
   };
 
   const handleTransfer = async () => {

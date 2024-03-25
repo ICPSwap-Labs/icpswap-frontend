@@ -5,11 +5,11 @@ import CurrenciesAvatar from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
+import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { numberToString, BigNumber, resultFormat , formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
+import { numberToString, BigNumber, resultFormat, formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import { ResultStatus } from "@icpswap/types";
 import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
@@ -89,6 +89,23 @@ export function PositionDetailItem({ label, value, convert, onConvertClick }: Po
     </Grid>
   );
 }
+
+interface useInverterProps {
+  priceLower: Price<Token, Token> | undefined;
+  priceUpper: Price<Token, Token> | undefined;
+  quote: Token | undefined;
+  base: Token | undefined;
+  invert: boolean;
+}
+
+export const useInverter = ({ priceLower, priceUpper, quote, base, invert }: useInverterProps) => {
+  return {
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
+  };
+};
 
 export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
   if (!position) return {};
@@ -292,23 +309,6 @@ export function PositionDetails({
     </>
   );
 }
-
-interface useInverterProps {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}
-
-export const useInverter = ({ priceLower, priceUpper, quote, base, invert }: useInverterProps) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
 
 export interface TransferPositionProps {
   positionId: bigint;

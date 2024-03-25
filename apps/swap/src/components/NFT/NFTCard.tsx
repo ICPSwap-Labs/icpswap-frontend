@@ -31,17 +31,14 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default function NFTCard({
-  canisterId,
-  nft,
-  onCardClick,
-  showDetails = true,
-}: {
+export interface NFTCardProps {
   canisterId: string;
   nft: NFTTokenMetadata;
   onCardClick: (nft: NFTTokenMetadata) => void;
   showDetails?: boolean;
-}) {
+}
+
+export default function NFTCard({ nft, onCardClick, showDetails = true }: NFTCardProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const isDarkTheme = theme.customization.mode === "dark";

@@ -2,9 +2,8 @@ import { Box, Grid, Avatar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import type { NFTControllerInfo } from "@icpswap/types";
 import VerifyNFT from "components/NFT/VerifyNFT";
-import { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     avatarWrapper: {
       borderRadius: "12px",

@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard , TokenImage } from "components/index";
+import { MainCard, TokenImage } from "components/index";
 import {
   useIntervalUserRewardInfo,
   useIntervalUserFarmInfo,
@@ -14,7 +14,7 @@ import { useCurrency } from "hooks/useCurrency";
 import { INFO_URL, AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, toSignificant, cycleValueFormat , shorten, timestampFormat } from "@icpswap/utils";
+import { parseTokenAmount, toSignificant, cycleValueFormat, shorten, timestampFormat } from "@icpswap/utils";
 import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Header/ProfileSection";
@@ -106,14 +106,14 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
   const [, rewardToken] = useCurrency(farm.rewardToken.address) ?? undefined;
 
-  const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue(
+  const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
     rewardToken,
     farm,
     userRewardAmount,
     userFarmInfo,
-  );
+  });
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -230,13 +230,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
               <Grid item>
                 <Grid container direction="column" justifyContent="flex-end">
-                  <CountUp
-                    preserveValue
-                    end={parsedUserRewardAmount ?? 0}
-                    decimals={6}
-                    duration={1}
-                    separator=","
-                  />
+                  <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
                   <CountUp
                     style={{ fontSize: 14, textAlign: "right", display: "block" }}
                     preserveValue

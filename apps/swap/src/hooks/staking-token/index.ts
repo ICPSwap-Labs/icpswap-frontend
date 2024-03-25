@@ -9,7 +9,15 @@ import {
   useCallsData,
   getStakingTokenCycles,
   getV1StakingTokenCycles,
- stakingV1TokenWithdraw, stakingTokenWithdraw , stakingV1TokenHarvest, stakingTokenHarvest , getV1StakingTokenUserInfo, getStakingTokenUserInfo , getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
+  stakingV1TokenWithdraw,
+  stakingTokenWithdraw,
+  stakingV1TokenHarvest,
+  stakingTokenHarvest,
+  getV1StakingTokenUserInfo,
+  getStakingTokenUserInfo,
+  getStakingTokenPool,
+  getV1StakingTokenPool,
+} from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import { ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -164,8 +172,8 @@ export function usePoolCycles(canisterId: string | undefined, version: string | 
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      if (version === "1.0") return await getV1StakingTokenCycles(canisterId!);
-      return (await getStakingTokenCycles(canisterId!))?.balance;
+      if (version === "1.0") return await getV1StakingTokenCycles(canisterId);
+      return (await getStakingTokenCycles(canisterId))?.balance;
     }, [canisterId, version]),
   );
 }
@@ -253,7 +261,9 @@ export function useUserStakingInfo(
 
   useEffect(() => {
     const call = async () => {
-      const result = await getStakingTokenUserInfo(poolId!, account!);
+      if (!poolId || !account) return;
+
+      const result = await getStakingTokenUserInfo(poolId, account);
 
       if (result) {
         setUserInfo({
@@ -264,7 +274,9 @@ export function useUserStakingInfo(
     };
 
     const v1Call = async () => {
-      const result = await getV1StakingTokenUserInfo(poolId!, account!);
+      if (!poolId || !account) return;
+
+      const result = await getV1StakingTokenUserInfo(poolId, account);
 
       if (result) {
         setUserInfo({
@@ -299,12 +311,14 @@ export function useStakingPoolData(
 
   useEffect(() => {
     const call = async () => {
-      const data = await getStakingTokenPool(poolId!);
+      if (!poolId) return;
+      const data = await getStakingTokenPool(poolId);
       setPoolData(data);
     };
 
     const v1Call = async () => {
-      const data = await getV1StakingTokenPool(poolId!);
+      if (!poolId) return;
+      const data = await getV1StakingTokenPool(poolId);
       setPoolData(data);
     };
 

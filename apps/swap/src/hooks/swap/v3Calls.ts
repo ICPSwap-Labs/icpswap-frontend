@@ -272,7 +272,7 @@ export function useUserSwapTransactions(principal: string | undefined, offset: n
 
 export async function getSwapPoolAvailable(canisterId: string) {
   const result = resultFormat<{ whitelist: string[]; available: boolean }>(
-    await (await swapPool(canisterId!)).getAvailabilityState(),
+    await (await swapPool(canisterId)).getAvailabilityState(),
   ).data;
 
   return result?.available;

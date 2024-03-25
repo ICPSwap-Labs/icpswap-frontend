@@ -202,6 +202,7 @@ export default function NFTCanisterCreate() {
     if (fileError) return t`File error`;
     if (!file) return t`Upload collection avatar`;
     if (!values.royalties && String(values.royalties) !== "0") return t`Select the creator royalties`;
+    return undefined;
   };
 
   const errorMsg = getErrorMsg(values);

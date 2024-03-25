@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { parseTokenAmount, formatTokenAmount, isValidAccount , isValidPrincipal } from "@icpswap/utils";
+import { parseTokenAmount, formatTokenAmount, isValidAccount, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -94,6 +94,8 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
       return t`Insufficient balance`;
     if (!new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0))
       return t`Must be greater than trans fee`;
+
+    return undefined;
   };
 
   const handleSubmit = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
@@ -254,11 +256,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
                 disabled={loading || !!errorMessage}
                 onClick={submit}
               >
-                {errorMessage || (!loading ? (
-                  <Trans>Confirm</Trans>
-                ) : (
-                  <CircularProgress size={26} color="inherit" />
-                ))}
+                {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
               </Button>
             )}
           </Identity>

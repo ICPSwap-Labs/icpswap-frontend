@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/useCurrency";

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import { useEffect, useMemo } from "react";
 import { Remarkable } from "remarkable";
 import { linkify } from "remarkable/linkify";

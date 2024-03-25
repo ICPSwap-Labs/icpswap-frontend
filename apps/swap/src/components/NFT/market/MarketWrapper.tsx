@@ -14,7 +14,7 @@ import NFTMarketplace from "./NFTMarket";
 import NFTMarketSaleRecords from "./NFTMarketSaleRecords";
 import NFTUserSaleRecords from "./NFTUserSaleRecords";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     toolbarWrapper: {
       display: "grid",

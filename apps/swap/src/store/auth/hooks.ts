@@ -10,6 +10,10 @@ import store from "../index";
 import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
 
+export function useIsUnLocked() {
+  return useAppSelector((state) => state.session.isUnLocked);
+}
+
 export function getConnectorType() {
   let connectorType = store.getState().auth.walletType;
   if (isMeWebview()) connectorType = Connector.ME;
@@ -51,6 +55,64 @@ export function getStoreWalletConnected() {
 export function getStoreWalletUnlocked() {
   const { session } = store.getState();
   return session.isUnLocked;
+}
+
+export interface UpdateAuthProps {
+  walletType: Connector;
+}
+
+export async function updateAuth({ walletType }: UpdateAuthProps) {
+  const state = store.getState();
+
+  const principal = await getConnectorPrincipal();
+
+  if (!principal) return;
+
+  const account = principalToAccount(principal);
+
+  const mnemonic =
+    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.mnemonic : "";
+  const password =
+    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.password : "";
+
+  store.dispatch(
+    login({
+      name: walletType,
+      mnemonic,
+      account,
+      principal,
+      walletType,
+      password,
+    }),
+  );
+
+  store.dispatch(updateConnected({ isConnected: true }));
+  store.dispatch(_updateLockStatus(false));
+}
+
+export function setActorHttpAgent() {
+  const { auth } = store.getState();
+  const { walletType } = auth;
+
+  if (!walletType) return;
+
+  actor.setConnector(walletType);
+}
+
+export function updateLockStatus(locked: boolean) {
+  store.dispatch(_updateLockStatus(locked));
+}
+
+export function useUserLogout() {
+  const dispatch = useAppDispatch();
+  const walletType = useConnectorType();
+
+  return useCallback(async () => {
+    await dispatch(logout());
+    if (walletType && window.icConnector) window.icConnector.disconnect();
+    await updateLockStatus(true);
+    dispatch(updateConnected({ isConnected: false }));
+  }, [dispatch, updateLockStatus]);
 }
 
 export function useConnectManager() {
@@ -98,10 +160,6 @@ export function useConnectManager() {
   return useMemo(() => ({ isConnected: connectorStateConnected, loading }), [connectorStateConnected, loading]);
 }
 
-export function useIsUnLocked() {
-  return useAppSelector((state) => state.session.isUnLocked);
-}
-
 export function useAccountPrincipal(): Principal | undefined {
   const principal = useAppSelector((state) => state.auth.principal);
   const walletType = useAppSelector((state) => state.auth.walletType);
@@ -124,70 +182,12 @@ export function useAccount() {
   }, [principal]);
 }
 
-export function updateLockStatus(locked: boolean) {
-  store.dispatch(_updateLockStatus(locked));
-}
-
-export interface UpdateAuthProps {
-  walletType: Connector;
-}
-
-export async function updateAuth({ walletType }: UpdateAuthProps) {
-  const state = store.getState();
-
-  const principal = await getConnectorPrincipal();
-
-  if (!principal) return;
-
-  const account = principalToAccount(principal);
-
-  const mnemonic =
-    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.mnemonic : "";
-  const password =
-    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.password : "";
-
-  store.dispatch(
-    login({
-      name: walletType,
-      mnemonic,
-      account,
-      principal,
-      walletType,
-      password,
-    }),
-  );
-
-  store.dispatch(updateConnected({ isConnected: true }));
-  store.dispatch(_updateLockStatus(false));
-}
-
-export function useUserLogout() {
-  const dispatch = useAppDispatch();
-  const walletType = useConnectorType();
-
-  return useCallback(async () => {
-    await dispatch(logout());
-    if (walletType && window.icConnector) window.icConnector.disconnect();
-    await updateLockStatus(true);
-    dispatch(updateConnected({ isConnected: false }));
-  }, [dispatch, updateLockStatus]);
-}
-
 export function useAccountPrincipalString() {
   const principal = useAccountPrincipal();
 
   return useMemo(() => {
     return principal?.toString();
   }, [principal]);
-}
-
-export function setActorHttpAgent() {
-  const { auth } = store.getState();
-  const { walletType } = auth;
-
-  if (!walletType) return;
-
-  actor.setConnector(walletType);
 }
 
 export function useWalletConnectorManager(): [boolean, (open: boolean) => void] {

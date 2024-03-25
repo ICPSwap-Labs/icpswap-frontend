@@ -110,7 +110,7 @@ function hasLiquidity(position: Position | undefined) {
   return position?.liquidity?.toString() !== "0";
 }
 
-export default function LiquidityInfo({ position, positionId, version }: LiquidityInfoProps) {
+export default function LiquidityInfo({ position }: LiquidityInfoProps) {
   const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};

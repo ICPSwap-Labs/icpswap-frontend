@@ -15,7 +15,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
 // import { useUSDPriceById } from "hooks/useUSDPrice";
-import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount } from "@icpswap/utils";
 
 export interface SwapToken {
   canisterId: string;

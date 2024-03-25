@@ -61,12 +61,12 @@
     ],
     "no-return-await": 0,
     "no-await-in-loop": 0,
-    "consistent-return": 1,
+    "consistent-return": 0,
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": 1,
     "@typescript-eslint/no-shadow": 0,
     "no-console": ["warn", { "allow": ["info", "warn", "error"] }],
-    "prefer-destructuring": ["warn", { "object": true, "array": false }],
+    "prefer-destructuring": 0,
     "no-underscore-dangle": 0,
     // React
     "react/prop-types": 0,
@@ -105,5 +105,6 @@
     "sourceType": "module",
     "ecmaVersion": 2020
   },
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["**/*.did.ts", "**/*.did.js"]
 }

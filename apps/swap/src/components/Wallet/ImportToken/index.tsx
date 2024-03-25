@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
-import { Modal , TextButton } from "components/index";
+import { Modal, TextButton } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import FilledTextField from "components/FilledTextField";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";
-import { useUpdateImportedToken, useUpdateTokenStandard , getTokenStandard } from "store/token/cache/hooks";
+import { useUpdateImportedToken, useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
 import { INFO_URL } from "constants/index";
@@ -124,6 +124,8 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
     if (id && tokens && tokens.length) {
       if (tokens.find((token) => token.canisterId.toString() === id)) return true;
     }
+
+    return false;
   };
 
   let error = "";

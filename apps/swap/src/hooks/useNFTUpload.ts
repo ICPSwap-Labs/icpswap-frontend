@@ -84,7 +84,7 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
     }
 
     const chunkIds = await Promise.all(promises).catch((err) => {
-      console.log(err);
+      console.error(err);
       setFileError(t`Failed to upload, please try again`);
       setUploading(false);
     });

@@ -23,6 +23,18 @@ export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
 }
 
+export function useGlobalTokenList() {
+  return useAppSelector((state: AppState) => state.global.tokenList);
+}
+
+export function useICPPriceList() {
+  return useAppSelector((state: AppState) => state.global.ICPPriceList);
+}
+
+export function useCacheTokenList() {
+  return useAppSelector((state: AppState) => state.global.requestTokenList);
+}
+
 export interface SwapToken {
   canisterId: string;
   symbol: string;
@@ -127,14 +139,6 @@ export function useFetchXDR2USD() {
   }, [xdr_usd]);
 }
 
-export function useICPPriceList() {
-  return useAppSelector((state: AppState) => state.global.ICPPriceList);
-}
-
-export function useCacheTokenList() {
-  return useAppSelector((state: AppState) => state.global.requestTokenList);
-}
-
 export function useFetchICPPrices() {
   const dispatch = useAppDispatch();
   const xdr_usdt = useStateXDR2USD();
@@ -178,10 +182,6 @@ export function useFetchGlobalTokenList() {
     loading,
     result: tokens,
   };
-}
-
-export function useGlobalTokenList() {
-  return useAppSelector((state: AppState) => state.global.tokenList);
 }
 
 export function useFetchSNSTokenRootIds() {

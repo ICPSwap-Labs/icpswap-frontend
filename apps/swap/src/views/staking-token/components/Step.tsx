@@ -11,7 +11,7 @@ export interface GetSteps {
   retry?: () => void;
 }
 
-export function getSteps({ token, amount, retry }: GetSteps) {
+export function getSteps({ token, amount }: GetSteps) {
   const amount0 = toFormat(parseTokenAmount(actualAmountToPool(token, String(amount)), token.decimals).toString());
 
   const amount0Value = (

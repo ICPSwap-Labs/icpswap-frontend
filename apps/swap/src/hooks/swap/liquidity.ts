@@ -16,6 +16,38 @@ import { Principal } from "@dfinity/principal";
 import { BURN_FIELD } from "constants/swap";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 
+type updateStepsArgs = {
+  formattedAmounts: { [key in BURN_FIELD]?: string };
+  currencyA: Token | undefined;
+  currencyB: Token | undefined;
+  positionId: bigint;
+  retry?: () => Promise<boolean>;
+  principal: Principal | undefined;
+  key: string;
+};
+
+function useUpdateStepContent() {
+  const updateStep = useStepContentManager();
+  const handleReclaim = useReclaimCallback();
+
+  return useCallback(({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
+    const content = getDecreaseLiquiditySteps({
+      formattedAmounts,
+      currencyA,
+      currencyB,
+      positionId,
+      principal,
+      key,
+      handleReclaim,
+    });
+
+    updateStep(String(key), {
+      content,
+      title: t`Decrease Liquidity Details`,
+    });
+  }, []);
+}
+
 interface DecreaseLiquidityCallsArgs {
   position: Position | undefined;
   currencyA: Token | undefined;
@@ -113,38 +145,6 @@ function useDecreaseLiquidityCalls() {
     },
     [],
   );
-}
-
-type updateStepsArgs = {
-  formattedAmounts: { [key in BURN_FIELD]?: string };
-  currencyA: Token | undefined;
-  currencyB: Token | undefined;
-  positionId: bigint;
-  retry?: () => Promise<boolean>;
-  principal: Principal | undefined;
-  key: string;
-};
-
-function useUpdateStepContent() {
-  const updateStep = useStepContentManager();
-  const handleReclaim = useReclaimCallback();
-
-  return useCallback(({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
-    const content = getDecreaseLiquiditySteps({
-      formattedAmounts,
-      currencyA,
-      currencyB,
-      positionId,
-      principal,
-      key,
-      handleReclaim,
-    });
-
-    updateStep(String(key), {
-      content,
-      title: t`Decrease Liquidity Details`,
-    });
-  }, []);
 }
 
 export interface DecreaseLiquidityCallbackProps {

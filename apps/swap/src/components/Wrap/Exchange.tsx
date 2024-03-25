@@ -251,7 +251,7 @@ export default function Exchange() {
         !new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]).isGreaterThan(0.0001)) ||
       (outputCurrency.equals(WICP) &&
         independentField === SWAP_FIELD.OUTPUT &&
-        !new BigNumber(parsedAmounts[SWAP_FIELD.OUTPUT]!).isGreaterThan(0.0001))
+        !new BigNumber(parsedAmounts[SWAP_FIELD.OUTPUT] ?? 0).isGreaterThan(0.0001))
     )
       errorMessage = t`Amount must be greater than 0.0001`;
     if (inputCurrency.equals(ICP) && !typedValueMinFee.isGreaterThan(0))

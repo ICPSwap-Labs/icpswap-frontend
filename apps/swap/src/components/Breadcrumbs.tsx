@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Typography, Breadcrumbs } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     breadcrumbs: {
       "& a": {

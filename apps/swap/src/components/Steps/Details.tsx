@@ -15,7 +15,7 @@ interface ActionIconProps {
   showErrorHint: boolean;
 }
 
-function ActionIcon({ ele, errorStep, activeStep, showErrorHint }: ActionIconProps) {
+function ActionIcon({ ele, activeStep, showErrorHint }: ActionIconProps) {
   const theme = useTheme() as Theme;
 
   return (

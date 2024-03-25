@@ -10,7 +10,7 @@ import Loading from "components/Loading/Static";
 import { TradeOrder } from "types/nft";
 import { Trans } from "@lingui/macro";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     collectionContainer: {
       position: "relative",

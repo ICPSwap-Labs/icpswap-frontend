@@ -87,7 +87,7 @@ export function usePools(
 
         // Use update call to verify the pool.
         transformedPoolKeys.map(async (element) => {
-          if (!element) return null;
+          if (!element) return;
 
           const pool = await getPool_update_call(element.token0, element.token1, element.fee);
 

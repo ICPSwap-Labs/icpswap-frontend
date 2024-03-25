@@ -36,9 +36,7 @@ export interface SelectProps {
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
-  alignCenter?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
   type?: string;
@@ -92,17 +90,13 @@ export function Value({ value, menus = [], helperText }: { helperText?: string; 
 }
 
 export default function Select({
-  label,
   value,
   onChange,
-  required,
   menus = [],
   maxWidth,
   fullHeight,
   disabled,
-  InputProps,
   contained = true,
-  alignCenter = false,
   width,
   CustomNoData,
   menuDisabled,

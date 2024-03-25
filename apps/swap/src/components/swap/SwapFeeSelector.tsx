@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, memo } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
@@ -133,17 +133,18 @@ export const FeeItemComponent = memo(
   },
 );
 
-export default function SwapFeeSelector({
-  currencyA,
-  currencyB,
-  defaultActiveFee = FeeAmount.MEDIUM,
-  onSelect,
-}: {
+export interface SwapFeeSelectorProps {
   currencyA: Token | undefined;
   currencyB: Token | undefined;
   defaultActiveFee?: FeeAmount;
   onSelect: (value: FeeAmount) => void;
-}) {
+}
+
+export default function SwapFeeSelector({
+  currencyA,
+  currencyB,
+  defaultActiveFee = FeeAmount.MEDIUM,
+}: SwapFeeSelectorProps) {
   const classes = useStyle();
 
   const [activeFee] = useState<FeeAmount>(defaultActiveFee);

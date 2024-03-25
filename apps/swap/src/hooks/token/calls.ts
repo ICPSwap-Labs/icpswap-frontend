@@ -177,7 +177,7 @@ export function useTokenMetadata(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return (await getTokenMetadata(canisterId!)).data;
+      return (await getTokenMetadata(canisterId)).data;
     }, [canisterId]),
   );
 }

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 export default function useEagerlyConnect() {
   useEffect(() => {
     metamask.connectEagerly()?.catch(() => {
-      console.debug("Failed to connect eagerly to metamask");
+      console.error("Failed to connect eagerly to metamask");
     });
     // The dependency list is empty so this is only run once on mount
   }, []);

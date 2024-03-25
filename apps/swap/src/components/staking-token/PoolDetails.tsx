@@ -55,7 +55,6 @@ export default function StakingPoolDetails({
   state,
   poolData,
   rewardToken,
-  stakingToken,
   rewardTokenPrice,
   stakingTokenPrice,
 }: StakingPoolDetailsProps) {

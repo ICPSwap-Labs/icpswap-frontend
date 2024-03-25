@@ -26,18 +26,7 @@ const useStyles = makeStyles({
 const collapsedSize = "0px";
 
 const Collapse = React.forwardRef<HTMLDivElement | null, TransitionProps>((props, ref) => {
-  const {
-    children,
-    style,
-    timeout = 300,
-    in: inProp,
-    onEnter,
-    onEntered,
-    onExit,
-    onExited,
-    direction, // Take this out since this is a Slide-only prop
-    ...other
-  } = props;
+  const { children, style, timeout = 300, in: inProp, onEnter, onEntered, onExit, onExited, ...other } = props;
 
   const classes = useStyles();
 

@@ -1,10 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { Chip, List, Paper, Popper, ButtonBase, Box, Typography, useMediaQuery, SvgIcon, Fade } from "@mui/material";
 import { shorten } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { useAccountPrincipal, useConnectorStateConnected , useUserLogout , useWalletConnectorManager } from "store/auth/hooks";
+import {
+  useAccountPrincipal,
+  useConnectorStateConnected,
+  useUserLogout,
+  useWalletConnectorManager,
+} from "store/auth/hooks";
 import { Theme } from "@mui/material/styles";
 import Account from "./Account";
 import Principal from "./Principal";
@@ -36,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.mode === "dark" ? theme.palette.dark.main : theme.palette.primary.light,
     '&[aria-controls="menu-list-grow"], &:hover': {
       borderColor: theme.palette.primary.main,
-      background: `${theme.palette.primary.main  }!important`,
+      background: `${theme.palette.primary.main}!important`,
       color: theme.palette.primary.light,
       "& svg": {
         stroke: theme.palette.primary.light,

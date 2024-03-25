@@ -30,7 +30,7 @@ try {
     }
   });
 } catch (error) {
-  console.log(error);
+  console.error(error);
 }
 
 const canisterIds: { [key: string]: string } = {};

@@ -152,7 +152,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
         }));
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       getStorageInfoErrored = true;
     }
 

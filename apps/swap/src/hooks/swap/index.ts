@@ -1,7 +1,7 @@
 import { useMemo, useCallback, useEffect, useState } from "react";
-import { NumberType , ResultStatus } from "@icpswap/types";
+import { NumberType, ResultStatus } from "@icpswap/types";
 import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
-import { Token, Currency , FeeAmount } from "@icpswap/swap-sdk";
+import { Token, Currency, FeeAmount } from "@icpswap/swap-sdk";
 import { getPoolCanisterId } from "hooks/swap/v3Calls";
 import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
@@ -68,7 +68,7 @@ export function usePoolCanisterId(
 }
 
 export async function getPositionFromNFT(metadata: SwapNFTTokenMetadata) {
-  const {attributes} = metadata;
+  const { attributes } = metadata;
 
   const positionDetail: { [key: string]: string } = {
     pool: "",
@@ -134,7 +134,7 @@ export function usePositionsFromNFTs(data: SwapNFTTokenMetadata[] | undefined) {
 
       Promise.all<PositionDetail | undefined>(
         data.map(async (ele) => {
-          return await getPositionFromNFT(ele!);
+          return await getPositionFromNFT(ele);
         }),
       ).then((result) => {
         const positions = result.filter((ele) => ele !== undefined) as PositionDetail[];

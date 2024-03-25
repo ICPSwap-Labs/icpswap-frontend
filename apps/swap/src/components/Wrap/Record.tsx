@@ -1,4 +1,4 @@
-import { useMemo, useState, Fragment, useCallback, useContext } from "react";
+import { useMemo, useState, useCallback, useContext } from "react";
 import { TableContainer, Table, TableCell, TableRow, TableHead, TableBody, Typography } from "@mui/material";
 import NoData from "components/no-data";
 import { useAccount } from "store/global/hooks";
@@ -6,7 +6,7 @@ import Pagination from "components/pagination";
 import ListLoading from "components/Loading/List";
 import { Trans } from "@lingui/macro";
 import { useUserExchangeRecord } from "hooks/useWICPCalls";
-import { enumToString, pageArgsFormat, parseTokenAmount , timestampFormat } from "@icpswap/utils";
+import { enumToString, pageArgsFormat, parseTokenAmount, timestampFormat } from "@icpswap/utils";
 import { ICP } from "constants/index";
 import WrapContext from "components/Wrap/context";
 

@@ -1,7 +1,7 @@
 import { Principal } from "@dfinity/principal";
 import { Override } from "@icpswap/types";
 import { TOKEN_STANDARD } from "constants/tokens";
-import type { TokenApproveArgs, CandidTokenTransaction } from "@icpswap/types";
+import type { TokenApproveArgs } from "@icpswap/types";
 
 export type { Metadata as DIP20Metadata } from "candid/dip20/dip20";
 

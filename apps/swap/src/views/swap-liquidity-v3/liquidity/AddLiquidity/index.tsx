@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
@@ -269,7 +270,7 @@ export default function AddLiquidity() {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${  feeAmount}` : ""}`);
+    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
   };
 
   const handleCurrencyAMax = () => {

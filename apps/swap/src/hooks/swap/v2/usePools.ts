@@ -41,14 +41,16 @@ export function usePools(
     if (transformedPoolKeys && transformedPoolKeys.length && !transformedPoolKeys.includes(null)) {
       setLoading(true);
 
-      Promise.all<TypePoolsState>(
+      Promise.all<TypePoolsState | undefined>(
         transformedPoolKeys.map(async (key) => {
+          if (!key) return undefined;
+
           let poolAddress = "";
 
           if (version === "v1") {
-            poolAddress = (await (await swapFactoryV1()).getPool(key!)) as string;
+            poolAddress = (await (await swapFactoryV1()).getPool(key)) as string;
           } else {
-            poolAddress = (await (await swapFactory()).getPool(key!)) as string;
+            poolAddress = (await (await swapFactory()).getPool(key)) as string;
           }
 
           let poolInfo: SwapPoolInfo | null = null;
@@ -65,7 +67,7 @@ export function usePools(
           };
         }),
       ).then((result) => {
-        setPools(result);
+        setPools(result.filter((e) => !!e) as TypePoolsState[]);
         setLoading(false);
       });
     }

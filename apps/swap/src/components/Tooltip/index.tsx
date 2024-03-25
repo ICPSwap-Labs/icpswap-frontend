@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Tooltip, Box } from "@mui/material";
+import { Typography, Tooltip } from "@mui/material";
 import { ReactComponent as TooltipIcon } from "assets/icons/tooltip.svg";
 
 export interface TooltipProps {

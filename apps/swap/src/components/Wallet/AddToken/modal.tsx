@@ -1,15 +1,5 @@
 import { useState, useMemo } from "react";
-import {
-  Button,
-  Grid,
-  Box,
-  TextField,
-  Typography,
-  Avatar,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Grid, Box, TextField, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useWalletCatchTokenIds, useSaveCacheTokenCallback, useDeleteCacheTokenCallback } from "store/wallet/hooks";
 import { IconSearch } from "@tabler/icons";

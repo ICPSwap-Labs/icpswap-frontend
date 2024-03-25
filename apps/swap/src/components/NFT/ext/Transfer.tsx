@@ -99,6 +99,8 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
           <Trans>Be careful, you are transferring tokens to your own address!</Trans>
         </span>
       );
+
+    return undefined;
   }, [account, to]);
 
   const handleClose = useCallback(() => {

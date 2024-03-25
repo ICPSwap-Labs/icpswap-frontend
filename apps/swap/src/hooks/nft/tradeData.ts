@@ -31,7 +31,7 @@ export function useCollectionData(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      const result = await (await NFTTradeStat()).getCanisterStat(canisterId!);
+      const result = await (await NFTTradeStat()).getCanisterStat(canisterId);
       return resultFormat<TradeStateResult>(result).data;
     }, [canisterId]),
   );

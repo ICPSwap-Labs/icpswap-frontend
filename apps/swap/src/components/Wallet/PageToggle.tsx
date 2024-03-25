@@ -1,5 +1,5 @@
 import { useMemo, useContext } from "react";
-import { Grid, Typography, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import walletContext from "./context";
 

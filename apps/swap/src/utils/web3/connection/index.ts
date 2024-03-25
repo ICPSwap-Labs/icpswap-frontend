@@ -17,7 +17,7 @@ export interface Connection {
 }
 
 function onError(error: Error) {
-  console.debug(`web3-react error: ${error}`);
+  console.error(`web3-react error: ${error}`);
 }
 
 const [metamask, hooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }));

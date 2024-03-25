@@ -4,7 +4,7 @@ import { CurrencyAmount, Trade, Currency, Route } from "@icpswap/swap-sdk";
 import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { useQuoteExactInput , useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { useActualSwapAmount } from "hooks/swap/index";
 import { useAllRoutes } from "./useAllRoutes";
 
@@ -106,7 +106,8 @@ export function useBestTrade(
             bestRoute: routes[i],
             amountOut,
           };
-        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        }
+        if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
             amountOut,
@@ -121,7 +122,9 @@ export function useBestTrade(
       },
     );
 
-    if (!bestRoute || !amountOut) {
+    const inputAmount = tryParseAmount(actualSwapValue, inputCurrency);
+
+    if (!bestRoute || !amountOut || !inputAmount) {
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -135,7 +138,7 @@ export function useBestTrade(
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
-        inputAmount: tryParseAmount(actualSwapValue, inputCurrency)!,
+        inputAmount,
         outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, amountOut.toString()),
       }),
       tradePoolId,

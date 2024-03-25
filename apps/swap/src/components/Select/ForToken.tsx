@@ -39,14 +39,12 @@ export type CustomLabelProps = {
 export interface SelectProps {
   label?: string;
   value?: any;
-  width?: number | string;
   onChange?: (value: any) => void;
   required?: boolean;
   menus?: MenuProps[];
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
@@ -68,16 +66,13 @@ export function Select({
   maxWidth,
   fullHeight,
   disabled,
-  InputProps,
   contained = true,
-  width,
   CustomNoData,
   multiple = false,
   menuMaxHeight,
   onSearch,
   search: hasSearch,
   customLabel,
-  border,
   menuFilter,
   ...props
 }: SelectProps) {

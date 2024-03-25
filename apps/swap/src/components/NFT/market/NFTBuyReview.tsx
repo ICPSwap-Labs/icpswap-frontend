@@ -54,6 +54,10 @@ export default function NFTBuyReview({
 
   const nft = useNFTByMetadata(_metadata);
 
+  const userPay = new BigNumber(order?.price ? String(order.price) : 0)
+    .plus(new BigNumber(String(WRAPPED_ICP_TOKEN_INFO.transFee)).multipliedBy(3))
+    .toNumber();
+
   const handleBuyNFT = async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
     if (loading) return;
 
@@ -90,10 +94,6 @@ export default function NFTBuyReview({
   const userTransFee = parseTokenAmount(WRAPPED_ICP_TOKEN_INFO.transFee, WRAPPED_ICP_TOKEN_INFO.decimals).multipliedBy(
     3,
   );
-
-  const userPay = new BigNumber(order?.price ? String(order.price) : 0)
-    .plus(new BigNumber(String(WRAPPED_ICP_TOKEN_INFO.transFee)).multipliedBy(3))
-    .toNumber();
 
   const { result: tradeTokenBalance } = useTokenBalance(NFTTradeTokenCanisterId, account);
 

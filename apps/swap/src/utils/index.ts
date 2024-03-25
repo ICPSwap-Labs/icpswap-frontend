@@ -5,7 +5,7 @@ import { toSignificant } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 
 // @ts-ignore  hijack bigint
-BigInt.prototype.toJSON = function () {
+BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 

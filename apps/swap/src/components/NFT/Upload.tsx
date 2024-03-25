@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export interface UploadProps {
   onUploaded?: (uploadParams: { batch_id: bigint; file_path: string; file_type: string }) => void;
-  label: string;
   maxSize?: number;
   accept?: string;
   types?: string[];
@@ -55,7 +54,6 @@ const Upload = forwardRef(
   (
     {
       onUploaded,
-      label,
       maxSize = 10 * 1024 * 1024,
       accept,
       types = [],
@@ -150,7 +148,7 @@ const Upload = forwardRef(
 
     const handleIdentityFileUpload = async (
       identity: CallIdentity,
-      { loading, closeLoading }: SubmitLoadingProps,
+      { loading }: SubmitLoadingProps,
       { file, canisterId }: any,
     ) => {
       if (loading || !file) return;
@@ -182,16 +180,14 @@ const Upload = forwardRef(
       if (types.length && !types.includes(fileType)) {
         setFileError(t`Not allowed this file type`);
         return;
-      } 
-        setFileError("");
-      
+      }
+      setFileError("");
 
       if (maxSize && targetFile.size > maxSize) {
         setFileError(t`File is large than ${maxSize} bytes`);
         return;
-      } 
-        setFileError("");
-      
+      }
+      setFileError("");
 
       setFileType(fileType);
       setFileName(targetFile.name);
@@ -207,27 +203,27 @@ const Upload = forwardRef(
         if (fileType === "image") {
           const reader = new FileReader();
           reader.readAsDataURL(targetFile);
-          reader.onload = function (event) {
+          reader.onload = function onload(event) {
             if (event.type === "load") {
               setFilePath(reader.result as string);
             }
           };
         }
       } else if (uploadImmediately) {
-          if (uploadWithIdentity) {
-            identityRef?.current?.submit({ file: targetFile, canisterId });
-          } else {
-            uploadCallback({ file: targetFile, canisterId });
+        if (uploadWithIdentity) {
+          identityRef?.current?.submit({ file: targetFile, canisterId });
+        } else {
+          uploadCallback({ file: targetFile, canisterId });
+        }
+      } else if (fileType === "image") {
+        const reader = new FileReader();
+        reader.readAsDataURL(targetFile);
+        reader.onload = function onload(event) {
+          if (event.type === "load") {
+            setImagePreview(reader.result as string);
           }
-        } else if (fileType === "image") {
-            const reader = new FileReader();
-            reader.readAsDataURL(targetFile);
-            reader.onload = function (event) {
-              if (event.type === "load") {
-                setImagePreview(reader.result as string);
-              }
-            };
-          }
+        };
+      }
     };
 
     return (

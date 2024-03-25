@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box } from "@mui/material";
-import { pageArgsFormat , shortenString } from "@icpswap/utils";
+import { pageArgsFormat, shortenString } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { ProposalInfo, ProjectInfo } from "@icpswap/types";
 import { Pagination, PaginationType, NoData, StaticLoading, MainCard } from "components/index";
@@ -17,7 +17,7 @@ export interface VoteItemProps {
   name: string | undefined;
 }
 
-export function VoteItem({ proposal, logo, name }: VoteItemProps) {
+export function VoteItem({ proposal, logo }: VoteItemProps) {
   const proposalState = useVoteState(proposal);
 
   return (

@@ -20,7 +20,8 @@ export function usePositionNFTSvg(
         if (version === "v2") {
           image = await getV2SwapNFTTokenURI(BigInt(tokenId));
         } else {
-          image = ((await getSwapNFTTokenURI(BigInt(tokenId))) as PositionSVG).image;
+          const result = (await getSwapNFTTokenURI(BigInt(tokenId))) as PositionSVG;
+          image = result.image;
         }
 
         setPositionSVG(image);

@@ -1,4 +1,4 @@
-import React, { Ref } from "react";
+import React from "react";
 import { useTheme } from "@mui/styles";
 import { Card, CardContent } from "@mui/material";
 import { Theme } from "@mui/material/styles";
@@ -12,11 +12,8 @@ export interface MainCardProps {
   content?: boolean;
   contentClass?: string;
   contentSX?: any;
-  darkTitle?: boolean;
-  secondary?: any;
   shadow?: string;
   sx?: any;
-  title?: string;
   level?: number;
   onClick?: (event: any) => void;
   className?: any;
@@ -30,11 +27,8 @@ const MainCard = React.forwardRef(
     content = true,
     contentClass,
     contentSX,
-    darkTitle,
-    secondary,
     shadow,
     sx = {},
-    title,
     level,
     onClick,
     className,

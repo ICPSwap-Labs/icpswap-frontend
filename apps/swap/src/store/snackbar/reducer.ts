@@ -18,7 +18,7 @@ export default createReducer(initialState, (builder) => {
         actionButton: payload.actionButton ? payload.actionButton : initialState.actionButton,
       };
     })
-    .addCase(closeSnackbar, (state, { payload }) => {
+    .addCase(closeSnackbar, (state) => {
       return {
         ...state,
         action: !state.action,

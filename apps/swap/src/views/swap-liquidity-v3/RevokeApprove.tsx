@@ -36,6 +36,8 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
     return tokenId === token0?.canisterId ? token0 : token1;
   }, [tokenId, token0, token1]);
 
+  const name = token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--";
+
   const handleRevoke = async () => {
     if (loading || !allowance || !token || !principal) return;
 
@@ -61,8 +63,6 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
 
     setLoading(false);
   };
-
-  const name = token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--";
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 

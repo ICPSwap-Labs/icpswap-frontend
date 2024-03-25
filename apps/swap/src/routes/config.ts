@@ -27,7 +27,7 @@ const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList"))
 const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 
-const NFTMarket = Loadable(lazy(() => import("../views/nft")));
+// const NFTMarket = Loadable(lazy(() => import("../views/nft")));
 const NFTCollectMarket = Loadable(lazy(() => import("../views/nft/Collection")));
 const NFTMarketCollections = Loadable(lazy(() => import("../views/nft/MarketplaceCollections")));
 

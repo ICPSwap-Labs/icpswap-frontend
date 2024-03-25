@@ -14,7 +14,7 @@ export function useUserPositionIds(canisterId: string | undefined, principal: st
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
-      return await getUserPositionIds(canisterId!, principal!);
+      return await getUserPositionIds(canisterId, principal);
     }, [canisterId, principal]),
   );
 }

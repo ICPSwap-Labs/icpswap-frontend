@@ -7,10 +7,9 @@ import NFTTransactions from "components/NFT/NFTTransactions";
 import NFTActivity from "components/NFT/NFTActivity";
 import NFTInfo from "components/NFT/Info";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import Wrapper from "components/Wrapper";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     breadcrumbs: {
       padding: "0 0 25px 16px",

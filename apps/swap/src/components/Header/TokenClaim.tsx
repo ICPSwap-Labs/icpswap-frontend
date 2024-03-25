@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
 import { Chip, ButtonBase, Box } from "@mui/material";

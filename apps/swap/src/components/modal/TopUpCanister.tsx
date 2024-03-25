@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useICP2CyclesManager } from "store/global/hooks";
 import { t, Trans } from "@lingui/macro";
-import { CYCLES_MINTING_CANISTER_ID, ICP, ICP_TOKEN_INFO } from "constants/index";
+import { CYCLES_MINTING_CANISTER_ID, ICP_TOKEN_INFO } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import Identity, { Submit } from "components/Identity";
 import { Identity as CallIdentity } from "types/index";
@@ -91,7 +91,7 @@ export default function TopUpCanister({
         }
       } catch (err) {
         openErrorTip(t`Failed to top-up`);
-        console.log(err);
+        console.error(err);
       }
     } else {
       console.error("No http agent founded");

@@ -1,4 +1,4 @@
-import type { NFTTransferArgs, NFTAllowanceArgs, NFTApproveArgs } from "@icpswap/types";
+import { type NFTTransferArgs, type NFTAllowanceArgs, type NFTApproveArgs, ResultStatus } from "@icpswap/types";
 import { Identity } from "types/global";
 import { BaseNFTAdapter } from "./BaseNFTAdapter";
 import { ICPSwapAdapter } from "./ICPSwapNFTAdapter";
@@ -41,7 +41,10 @@ export class NFT {
     canisterId: string;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.transfer({ canisterId, params, identity });
+
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "No adapter" };
+
+    return await adapter.transfer({ canisterId, params, identity });
   }
 
   public async allowance({
@@ -54,7 +57,8 @@ export class NFT {
     params: NFTAllowanceArgs;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.allowance({
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "No adapter" };
+    return await adapter.allowance({
       canisterId,
       params,
     });
@@ -72,7 +76,8 @@ export class NFT {
     identity: Identity;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.approve({
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "No adapter" };
+    return await adapter.approve({
       canisterId,
       identity,
       params,

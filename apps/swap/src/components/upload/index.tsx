@@ -59,7 +59,6 @@ export type UploadType = {
 export default function Upload({
   onChange,
   defaultValue,
-  fullWidth,
   ...props
 }: {
   onChange: (values: any) => void;

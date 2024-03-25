@@ -111,7 +111,7 @@ export default function CreateStakingTokenPool() {
     if (!rewardTokenValid) {
       openTip("reward token standard is incorrect", MessageTypes.error);
       setLoading(false);
-      return false;
+      return;
     }
 
     updateTokenStandard({
@@ -124,7 +124,7 @@ export default function CreateStakingTokenPool() {
     if (!rewardTokenInfo) {
       openTip("can't got reward token info, please try again", MessageTypes.error);
       setLoading(false);
-      return false;
+      return;
     }
 
     const { valid: stakingTokenValid } = await standardCheck(
@@ -135,7 +135,7 @@ export default function CreateStakingTokenPool() {
     if (!stakingTokenValid) {
       openTip("staking token standard is incorrect", MessageTypes.error);
       setLoading(false);
-      return false;
+      return;
     }
 
     updateTokenStandard({
@@ -148,7 +148,7 @@ export default function CreateStakingTokenPool() {
     if (!stakingTokenInfo) {
       openTip("can't got staking token info, please try again", MessageTypes.error);
       setLoading(false);
-      return false;
+      return;
     }
 
     const amount = new BigNumber(values.outputPerSecond)
@@ -158,7 +158,7 @@ export default function CreateStakingTokenPool() {
     if (amount.isLessThan(1) || amount.toString().includes(".")) {
       openTip("Wrong amount per second", MessageTypes.error);
       setLoading(false);
-      return false;
+      return;
     }
 
     const { status, message } = await createStakingTokenPool(

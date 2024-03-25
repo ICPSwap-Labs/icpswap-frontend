@@ -10,7 +10,9 @@ import {
   useUpdateUserBTCDepositAddress,
   useUserBTCWithdrawAddress,
   useUpdateUserBTCWithdrawAddress,
- useUserTxs , useUpdateUserTx } from "store/wallet/hooks";
+  useUserTxs,
+  useUpdateUserTx,
+} from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { TxState } from "types/ckBTC";
 import { useIntervalFetch } from "../useIntervalFetch";
@@ -34,7 +36,7 @@ export function useBTCDepositAddress(principal: string | undefined, subaccount?:
         await (
           await ckBTCMinterActor(identity)
         ).get_btc_address({
-          owner: availableArgsNull(Principal.fromText(principal!)),
+          owner: availableArgsNull(Principal.fromText(principal)),
           subaccount: availableArgsNull<Uint8Array>(subaccount),
         }),
       ).data;
@@ -49,14 +51,14 @@ export function useBTCDepositAddress(principal: string | undefined, subaccount?:
 }
 
 export function useUpdateBalanceCallback() {
-  return useCallback(async (principal: string | undefined, subaccount?: Uint8Array) => {
+  return useCallback(async (principal: string, subaccount?: Uint8Array) => {
     const identity = await getActorIdentity();
 
     return resultFormat<Array<UtxoStatus>>(
       await (
         await ckBTCMinterActor(identity)
       ).update_balance({
-        owner: availableArgsNull<Principal>(Principal.fromText(principal!)),
+        owner: availableArgsNull<Principal>(Principal.fromText(principal)),
         subaccount: availableArgsNull<Uint8Array>(subaccount),
       }),
     );
@@ -79,7 +81,7 @@ export function useBTCWithdrawAddress() {
       ).data;
 
       if (address) {
-        updateUserWithdrawAddress(principal!, address.owner, address.subaccount);
+        updateUserWithdrawAddress(principal, address.owner, address.subaccount);
       }
 
       return address;
@@ -169,7 +171,7 @@ export function useFetchUserTxStates() {
       if (txs && txs.length && !!principal) {
         for (let i = 0; i < txs.length; i++) {
           const block_index = BigInt(txs[i].block_index);
-          const {state} = txs[i];
+          const { state } = txs[i];
           if (!isEndedState(state)) {
             const res = await (await ckBTCMinterActor()).retrieve_btc_status({ block_index });
             updateUserTx(principal, block_index, res, undefined);

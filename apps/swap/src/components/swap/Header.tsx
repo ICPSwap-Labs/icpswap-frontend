@@ -12,13 +12,7 @@ export interface HeaderTabProps {
   onBack?: () => void;
 }
 
-export default function SwapHeader({
-  showArrow = false,
-  showUserSetting,
-  title,
-  slippageType,
-  onBack,
-}: HeaderTabProps) {
+export default function SwapHeader({ showArrow = false, title, onBack }: HeaderTabProps) {
   const history = useHistory();
 
   const handleBack = useCallback(() => {

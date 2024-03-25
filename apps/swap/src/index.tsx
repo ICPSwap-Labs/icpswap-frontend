@@ -12,7 +12,7 @@ import "./assets/css/global.css";
 
 window.onerror = (msg, url, row, col, error) => {
   const _error = error ? error.toString() : "";
-  console.log(msg, url, row, col, error, "msg, row, col, error");
+  console.error(msg, url, row, col, error, "msg, row, col, error");
   // update users not reload error debug
   if (/Loading chunk *.{1,} failed./.test(_error) || /Unexpected token '<'/.test(_error)) {
     window.location.reload();

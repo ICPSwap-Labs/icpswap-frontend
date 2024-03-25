@@ -2,15 +2,15 @@ import React, { useState, memo, useCallback, useMemo } from "react";
 import { Typography, Grid, Chip, Button, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp , SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound , BURN_FIELD, slippageToPercent } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
+import { Bound, BURN_FIELD, slippageToPercent } from "constants/swap";
+import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import Loading from "components/Loading";
 import CollectFeesModal from "components/swap/CollectFeesModal";
-import { useCollectFeesCall , decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
+import { useCollectFeesCall, decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccount } from "store/global/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -120,6 +120,22 @@ export function getPriceOrderingFromPositionForUI(position: Position | undefined
     console.error(error);
   }
 }
+export interface useInverterArgs {
+  priceLower: Price<Token, Token> | undefined;
+  priceUpper: Price<Token, Token> | undefined;
+  quote: Token | undefined;
+  base: Token | undefined;
+  invert: boolean;
+}
+
+const useInverter = ({ priceLower, priceUpper, quote, base, invert }: useInverterArgs) => {
+  return {
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
+  };
+};
 
 export interface PositionDetailsProps {
   positionId: bigint | undefined;
@@ -433,27 +449,6 @@ export function PositionDetails({
     </>
   );
 }
-
-const useInverter = ({
-  priceLower,
-  priceUpper,
-  quote,
-  base,
-  invert,
-}: {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
 
 export interface PositionItemProps {
   positionId: bigint | undefined;

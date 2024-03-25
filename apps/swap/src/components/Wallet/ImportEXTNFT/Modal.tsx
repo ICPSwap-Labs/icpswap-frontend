@@ -5,7 +5,7 @@ import type { EXTCollection } from "@icpswap/types";
 import { NFT_STANDARDS } from "@icpswap/constants";
 import FilledTextField from "components/FilledTextField";
 import { useEXTAllCollections } from "@icpswap/hooks";
-import { Button, Box, CircularProgress } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useEXTManager } from "store/nft/hooks";
 
@@ -44,7 +44,6 @@ export function WarningIcon() {
 
 export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [step, setStep] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [metadata, setMetadata] = useState<null | undefined | EXTCollection>(null);
   const [values, setValues] = useState<Value>({ standard: NFT_STANDARDS.EXT } as Value);
   const [riskWarning, setRiskWarning] = useState(false);
@@ -208,9 +207,9 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
           variant="contained"
           size="large"
           fullWidth
-          disabled={!!error || loading || (!riskWarning && step === 1)}
+          disabled={!!error || (!riskWarning && step === 1)}
           onClick={handleImport}
-          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+          // startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
           {error || (step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>)}
         </Button>

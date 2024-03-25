@@ -140,14 +140,16 @@ export function useV3StakingCycles(canisterId: string | undefined) {
   );
 }
 
-export function useFarmUSDValue(
-  token0: Token | undefined,
-  token1: Token | undefined,
-  rewardToken: Token | undefined,
-  farm: StakingFarmInfo,
-  userRewardAmount: bigint | undefined,
-  userFarmInfo: StakingFarmInfo | undefined,
-) {
+export interface useFarmUSDValueArgs {
+  token0?: Token | undefined;
+  token1?: Token | undefined;
+  rewardToken: Token | undefined;
+  farm: StakingFarmInfo;
+  userRewardAmount: bigint | undefined;
+  userFarmInfo?: StakingFarmInfo | undefined;
+}
+
+export function useFarmUSDValue({ rewardToken, farm, userRewardAmount }: useFarmUSDValueArgs) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const icpPrice = useICPPrice();
 

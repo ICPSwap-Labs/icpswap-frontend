@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { memo, useState, useCallback, useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
