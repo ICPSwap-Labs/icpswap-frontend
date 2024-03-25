@@ -2,7 +2,7 @@ import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import store from "store/index";
 
 export function getSwapTokenArgs(token: string) {
-  const standards = store.getState().tokenCache.standards;
+  const {standards} = store.getState().tokenCache;
   let standard = standards[token];
   if (token === WRAPPED_ICP_TOKEN_INFO.canisterId) standard = WRAPPED_ICP_TOKEN_INFO.standardType;
   if (token === ICP_TOKEN_INFO.canisterId) standard = ICP_TOKEN_INFO.standardType;

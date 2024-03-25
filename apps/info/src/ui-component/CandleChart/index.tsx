@@ -67,11 +67,11 @@ const CandleChart = ({
   useEffect(() => {
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
-        height: height,
+        height,
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: "transparent",
-          textColor: textColor,
+          textColor,
           fontFamily: "Inter var",
         },
         rightPriceScale: {
@@ -147,7 +147,7 @@ const CandleChart = ({
       });
 
       // update the title when hovering on the chart
-      chartCreated.subscribeCrosshairMove(function (param) {
+      chartCreated.subscribeCrosshairMove((param) => {
         if (
           chartRef?.current &&
           (param === undefined ||
@@ -158,16 +158,16 @@ const CandleChart = ({
             (param && param.point && param.point.y > height))
         ) {
           // reset values
-          setValue && setValue(undefined);
-          setLabel && setLabel(undefined);
-          onHoverChange && onHoverChange(undefined);
+          if (setValue) setValue(undefined);
+          if (setLabel) setLabel(undefined);
+          if (onHoverChange) onHoverChange(undefined);
         } else if (series && param) {
           const timestamp = param.time as number;
           const time = dayjs.unix(timestamp).format("MMM D, YYYY h:mm A");
           const parsed = param.seriesPrices.get(series) as { open: number } | undefined;
-          setValue && setValue(parsed?.open);
-          setLabel && setLabel(time);
-          onHoverChange && onHoverChange(parsed);
+          if (setValue) setValue(parsed?.open);
+          if (setLabel) setLabel(time);
+          if (onHoverChange) onHoverChange(parsed);
         }
       });
     }
@@ -190,7 +190,7 @@ const CandleChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
-      <div ref={chartRef} id={"candle-chart"} {...rest} />
+      <div ref={chartRef} id="candle-chart" {...rest} />
       <RowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}

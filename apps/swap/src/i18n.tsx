@@ -8,7 +8,7 @@ import "./locales/services";
 
 async function dynamicActivate(locale: SupportedLocale) {
   const { messages } = await import(`./locales/${locale}.js`);
-  //@ts-ignore
+  // @ts-ignore
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] });
   i18n.load(locale, messages);
   i18n.activate(locale);

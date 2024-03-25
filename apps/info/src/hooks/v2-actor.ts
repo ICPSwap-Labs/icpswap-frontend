@@ -26,7 +26,7 @@ import v2Ids from "constants/v2/swap-v2-ids.json";
 export const v2SwapPool = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<SwapPool>({
     identity,
-    canisterId: canisterId,
+    canisterId,
     idlFactory: SwapPoolIdl,
   });
 

@@ -77,7 +77,7 @@ function SelectedToken({ selectedTokenIds, onTokenChange }: SelectedTokenProps) 
         }}
         onClick={handleSelectToken}
       >
-        {!!token ? (
+        {token ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: "0 8px" }}>
             <Avatar sx={{ width: "24px", height: "24px" }} src={token?.logo}>
               &nbsp;
@@ -213,7 +213,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
           disabled={!!error}
           startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
         >
-          {error ? error : <Trans>Import</Trans>}
+          {error || <Trans>Import</Trans>}
         </Button>
       </Box>
     </Modal>

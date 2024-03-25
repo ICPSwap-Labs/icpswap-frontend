@@ -1,6 +1,6 @@
 import defaultIconVariants from "../utils/defaultIconVariants";
 import { InternalSnack } from "../types";
-import Slide from "../transitions/Slide";
+import { Slide } from "../transitions/Slide";
 
 export const defaults = {
   maxSnack: 3,

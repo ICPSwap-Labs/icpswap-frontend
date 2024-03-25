@@ -1,18 +1,109 @@
 {
-  "extends": ["plugin:prettier/recommended"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts", ".jsx", ".tsx"]
+      }
+    },
+    "import/extensions": [".js", ".ts", ".jsx", ".tsx"]
+  },
+  "plugins": ["lodash"],
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/jsx-runtime"
+  ],
   "rules": {
+    "class-methods-use-this": 0,
+    "no-bitwise": 0,
+    "no-plusplus": 0,
+    "no-shadow": "off",
+    "import/prefer-default-export": 0,
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": 0,
+    "lodash/import-scope": [2, "method"],
     "react-hooks/rules-of-hooks": 0,
     "react-hooks/exhaustive-deps": 0,
     "no-restricted-globals": 0,
     "no-undef": 0,
+    "arrow-body-style": 0,
     "import/no-anonymous-default-export": 0,
-    "react/self-closing-comp": ["error", {
-      "component": true,
-      "html": true
-    }]
+    "react/self-closing-comp": [
+      "error",
+      {
+        "component": true,
+        "html": true
+      }
+    ],
+    "no-nested-ternary": 0,
+    "camelcase": 0,
+
+    "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+    "react/jsx-props-no-spreading": 0,
+    "react/no-array-index-key": 0,
+    "react/no-unescaped-entities": 0,
+    "react/destructuring-assignment": 0,
+    "no-buffer-constructor": 0,
+    "prefer-const": 1,
+    "react/jsx-no-bind": 0,
+    "react/no-unused-prop-types": 0,
+    // Typescript
+    "@typescript-eslint/ban-ts-comment": [1, { "ts-ignore": false, "ts-nocheck": false }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "no-return-await": 0,
+    "no-await-in-loop": 0,
+    "consistent-return": 1,
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": 1,
+    "@typescript-eslint/no-shadow": 0,
+    "no-console": ["warn", { "allow": ["info", "warn", "error"] }],
+    "prefer-destructuring": ["warn", { "object": true, "array": false }],
+    "no-underscore-dangle": 0,
+    // React
+    "react/prop-types": 0,
+    "react/no-multi-comp": 0,
+    "prefer-arrow-callback": 0,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "mjs": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+
+    "no-restricted-syntax": 0,
+    "no-continue": 0,
+    "@next/next/no-img-element": 0,
+    "no-sparse-arrays": 0,
+    // Start temporary rules
+    // These rules are here just to keep the lint error to 0 during the migration to the new rule set
+    // They need to be removed and fixed as soon as possible
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "radix": 0,
+    "jsx-a11y/media-has-caption": 0,
+    // Exchange
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state", "memo"] }],
+    "react/require-default-props": 0,
+    "max-classes-per-file": 0
+    // End temporary rules
   },
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020
-  }
+  },
+  "parser": "@typescript-eslint/parser"
 }

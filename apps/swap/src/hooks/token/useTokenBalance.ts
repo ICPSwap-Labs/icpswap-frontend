@@ -1,4 +1,3 @@
-import { useLatestDataCall } from "../useCallsData";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { Principal } from "@dfinity/principal";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
@@ -9,6 +8,7 @@ import { isPrincipal, isValidPrincipal, isOkSubAccount, principalToAccount, BigN
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter } from "@icpswap/token-adapter";
 import { TOKEN_STANDARD } from "@icpswap/constants";
+import { useLatestDataCall } from "../useCallsData";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -110,10 +110,12 @@ export function useCurrencyBalances(
       setLoading(true);
 
       const queryPromise = currencies.map((currency) => {
-        if (currency)
-          return getTokenBalance(currency!.address, account).then(
+        if (currency) {
+          return getTokenBalance(currency.address, account).then(
             (result) => new BigNumber(result ? result.toString() : "0"),
           );
+        }
+
         return new Promise<BigNumber>((resolve) => resolve(new BigNumber(0)));
       });
 
@@ -121,9 +123,11 @@ export function useCurrencyBalances(
         const balances = {} as Balances;
 
         result.forEach((balance: BigNumber, index: number) => {
-          if (currencies[index]) {
-            balances[currencies[index]!.address] = CurrencyAmount.fromRawAmount<Token>(
-              currencies[index]!,
+          const currency = currencies[index];
+
+          if (currency) {
+            balances[currency.address] = CurrencyAmount.fromRawAmount<Token>(
+              currency,
               balance ? balance.toString() : 0,
             );
           }

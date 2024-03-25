@@ -39,7 +39,7 @@ export default function TokenClaim() {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Box component="span" className={classes.box}>
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <Chip
@@ -51,6 +51,6 @@ export default function TokenClaim() {
           />
         </ButtonBase>
       </Box>
-    </React.Fragment>
+    </>
   );
 }

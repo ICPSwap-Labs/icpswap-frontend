@@ -4,24 +4,22 @@ import { useTheme, makeStyles } from "@mui/styles";
 import Copy from "ui-component/copy/copy";
 import NFTVerifyLabel from "ui-component/NFT/VerifyLabel";
 import LazyImage from "ui-component/LazyImage";
-import { isICPSwapOfficial } from "utils/index";
+import { isICPSwapOfficial , encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useTradeOrder } from "@icpswap/hooks";
-import { openBase64ImageInNewWindow, mockALinkAndOpen } from "@icpswap/utils";
+import { openBase64ImageInNewWindow, mockALinkAndOpen , shorten, timestampFormat, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
 import { useUSDValueFromICPAmount } from "store/global/hooks";
 import WICPPriceFormat from "ui-component/NFT/WICPPriceFormat";
-import FileImage from "./FileImage";
 import { TextButton } from "@icpswap/ui";
-import DetailsToggle from "./DetailsToggle";
-import { encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { useNFTCanisterMetadata } from "hooks/nft/calls";
-import CollectionIcons from "./collectionsIcon";
 import ExplorerLink from "ui-component/ExternalLink/ExplorerLink";
-import { shorten, timestampFormat, formatDollarAmount } from "@icpswap/utils";
+import DetailsToggle from "./DetailsToggle";
+import FileImage from "./FileImage";
+import CollectionIcons from "./collectionsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -100,7 +98,7 @@ export function metadataFormat(metadata: NFTTokenMetadata): NFTMetadata[] {
 }
 
 export function isMetadata1(metadata: any): metadata is NFTMetadata1 {
-  if (!!metadata.label) return true;
+  if (metadata.label) return true;
   return false;
 }
 

@@ -1,14 +1,14 @@
 import { AuthClient, LocalStorage } from "@dfinity/auth-client";
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
 import type { Identity } from "@dfinity/agent";
-import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
 import { requestTransfer } from "@nfid/wallet";
 import { defaultWindowFeatures } from "@nfid/core";
+import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
 
 const APPLICATION_NAME = "ICPSwap";
 const APPLICATION_LOGO_URL = "https://r7ftp-xaaaa-aaaag-qbbsq-cai.raw.ic0.app/ICPSwap_96x96.png";
 const APP_META = `applicationName=${APPLICATION_NAME}&applicationLogo=${APPLICATION_LOGO_URL}`;
-const AUTH_PATH = "/authenticate/?" + APP_META + "#authorize";
+const AUTH_PATH = `/authenticate/?${  APP_META  }#authorize`;
 const NFID_ORIGIN = "https://nfid.one";
 const NF_ID_AUTH_URL = NFID_ORIGIN + AUTH_PATH;
 
@@ -28,8 +28,11 @@ export class NF_IDConnector implements IConnector {
     providerUrl: string;
     dev: boolean;
   };
+
   private identity?: Identity;
+
   private principal?: string;
+
   private client?: AuthClient;
 
   public type = ConnectorType.NFID;

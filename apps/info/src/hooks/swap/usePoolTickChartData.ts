@@ -2,8 +2,8 @@ import keyBy from "lodash/keyBy";
 import { TickMath, tickToPrice } from "@icpswap/swap-sdk";
 import type { PoolMetadata } from "@icpswap/types";
 import { useToken } from "hooks/useToken";
-import { useAllTicks } from "./usePoolTickData";
 import JSBI from "jsbi";
+import { useAllTicks } from "./usePoolTickData";
 
 const PRICE_FIXED_DIGITS = 18;
 const DEFAULT_SURROUNDING_TICKS = 300;

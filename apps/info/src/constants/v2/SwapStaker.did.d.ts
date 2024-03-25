@@ -1,4 +1,5 @@
 import type { Principal } from '@dfinity/principal';
+
 export type AccountIdentifier = string;
 export interface Deposit {
   'tokenId' : bigint,
@@ -149,4 +150,4 @@ export interface TokenMetadata__1 {
 }
 export type User = { 'principal' : Principal } |
   { 'address' : AccountIdentifier };
-export interface _SERVICE extends SwapStaker {}
+export type _SERVICE = SwapStaker

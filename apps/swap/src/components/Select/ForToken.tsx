@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef, ReactNode, useMemo } from "react";
-import { Typography, Box, Checkbox, Popper, InputAdornment, TextField } from "@mui/material";
+import { Typography, Box, Checkbox, Popper, TextField } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseIcon from "@mui/icons-material/Close";
 import { Theme } from "@mui/material/styles";
 import { NoData } from "components/index";
-import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { ClickAwayListener } from "@mui/base";
 
 const useStyles = (contained: boolean, fullHeight?: boolean) => {
@@ -200,7 +199,7 @@ export function Select({
 
         <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
-            {!!value ? (
+            {value ? (
               <Typography color="textPrimary" component="div">
                 {selectedMenu?.selectLabel ?? selectedMenu?.label}
               </Typography>
@@ -214,14 +213,14 @@ export function Select({
               <CloseIcon sx={{ cursor: "pointer" }} onClick={handleEmptyValue} />
             ) : (
               <KeyboardArrowDownIcon
-                sx={{ transition: "all 300ms", rotate: Boolean(anchorEl) ? "180deg" : "0deg", cursor: "pointer" }}
+                sx={{ transition: "all 300ms", rotate: anchorEl ? "180deg" : "0deg", cursor: "pointer" }}
               />
             )}
           </Box>
         </Box>
       </Box>
 
-      {Boolean(anchorEl) ? (
+      {anchorEl ? (
         <Popper
           id="Select-popper"
           open={Boolean(anchorEl)}
@@ -318,7 +317,7 @@ export function Select({
                   );
                 })}
 
-                {menus.length === 0 ? !!CustomNoData ? CustomNoData : <NoData /> : null}
+                {menus.length === 0 ? CustomNoData || <NoData /> : null}
               </Box>
             </Box>
           </ClickAwayListener>

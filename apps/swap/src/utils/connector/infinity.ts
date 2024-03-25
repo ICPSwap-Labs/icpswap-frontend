@@ -1,15 +1,17 @@
 import { ActorSubclass } from "@dfinity/agent";
-import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
+import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
 
 export class InfinityConnector implements IConnector {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;
     host: string;
-    dev: Boolean;
+    dev: boolean;
   };
+
   private principal?: string;
+
   public type = ConnectorType.INFINITY;
 
   public get getPrincipal() {

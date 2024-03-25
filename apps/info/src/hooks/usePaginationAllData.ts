@@ -37,7 +37,7 @@ export function usePaginationAllDataCallback<T>(
       const num = Number(totalElements) % limit;
       const totalPage = num === 0 ? Number(totalElements) / limit : parseInt(String(Number(totalElements) / limit)) + 1;
 
-      let _list: { [k: string]: T[] } = {
+      const _list: { [k: string]: T[] } = {
         0: initialList,
       };
 
@@ -121,7 +121,7 @@ export function usePaginationAllData<T>(
 
         setLoading(true);
 
-        let _list: { [k: string]: T[] } = {};
+        const _list: { [k: string]: T[] } = {};
 
         for (let i = 0; i < totalPage; i++) {
           const [offset] = pageArgsFormat(i + 1, limit);
@@ -167,7 +167,7 @@ export function useAllDataCallback<T>(
   onSuccess: (data: T[]) => void,
 ) {
   return useCallback(async () => {
-    let limit = 1500;
+    const limit = 1500;
 
     const fetch = async (offset: number, limit: number) => {
       return await callback(offset, limit).then((data) => {
@@ -186,7 +186,7 @@ export function useAllDataCallback<T>(
     };
 
     let page = 1;
-    let _list: { [k: string]: T[] } = {};
+    const _list: { [k: string]: T[] } = {};
 
     const _fetch = async () => {
       const [offset] = pageArgsFormat(page, limit);

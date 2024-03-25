@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { NFTCard } from "./NFTCard";
 import { NoData, StaticLoading as Loading } from "components/index";
 import { EXTCollection, type ExtNft } from "@icpswap/types";
+import { NFTCard } from "./NFTCard";
 
 export interface NFTListProps {
   nfts: ExtNft[] | undefined;
@@ -72,7 +72,7 @@ export default function NFTList({ nfts, collection, loading, setReload }: NFTLis
             height: "100%",
           }}
         >
-          <Loading loading={loading} mask={true} />
+          <Loading loading={loading} mask />
         </Box>
       ) : null}
     </Box>

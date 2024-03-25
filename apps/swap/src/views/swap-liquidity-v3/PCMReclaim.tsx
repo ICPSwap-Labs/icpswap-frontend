@@ -74,7 +74,7 @@ export function BalanceItem({
       MessageTypes.loading,
     );
 
-    let amount = balance;
+    const amount = balance;
 
     if (!!amount && amount !== BigInt(0)) {
       if (type === "code" && !!code) {
@@ -98,7 +98,7 @@ export function BalanceItem({
           openTip(`Withdrew ${name} successfully`, MessageTypes.success);
           updateClaimedKey(claimedKey);
         } else {
-          openTip(!!result.message ? result.message : `Failed to Withdraw ${name}`, MessageTypes.error);
+          openTip(result.message ? result.message : `Failed to Withdraw ${name}`, MessageTypes.error);
         }
       }
     }
@@ -204,8 +204,8 @@ export function BalancesItem({
       claimedKey={claimedKey}
       token={token}
       name={name}
-      balance={!!code ? metadata?.passcodePrice : balance}
-      type={!!code ? "code" : "unUsed"}
+      balance={code ? metadata?.passcodePrice : balance}
+      type={code ? "code" : "unUsed"}
       updateUnavailableKeys={updateUnavailableKeys}
       updateClaimedKey={updateClaimedKey}
       claimedKeys={claimedKeys}
@@ -238,7 +238,7 @@ export default function PCMBalanceReclaim() {
   const { result: pcmMetadata, loading: metadataLoading } = usePCMMetadata();
 
   const totalClaimedNumbers = useMemo(() => {
-    return (passCodes?.length ?? 0) + (!!unusedBalance ? 1 : 0);
+    return (passCodes?.length ?? 0) + (unusedBalance ? 1 : 0);
   }, [unusedBalance, passCodes]);
 
   const no_data = useMemo(() => {
@@ -307,7 +307,7 @@ export default function PCMBalanceReclaim() {
                   margin: "-16px 0 0 0",
                 }}
               >
-                {!!unusedBalance ? (
+                {unusedBalance ? (
                   <BalancesItem
                     key="unusedBalance"
                     balance={unusedBalance}

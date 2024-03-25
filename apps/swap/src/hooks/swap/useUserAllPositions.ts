@@ -2,8 +2,8 @@ import { getSwapPosition } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { UserPosition } from "types/swap";
 import { useStoreUserPositionPools } from "store/hooks";
-import { getUserPositionIds } from "./useUserPositionIds";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { getUserPositionIds } from "./useUserPositionIds";
 
 type UserPositions = {
   positions: bigint[];
@@ -33,7 +33,7 @@ export function useUserAllPositions(counter?: number) {
             )
           )
             .map((positions, index) =>
-              positions ? { positions: positions, poolId: userPositionPools[index] } : undefined,
+              positions ? { positions, poolId: userPositionPools[index] } : undefined,
             )
             .filter((ele) => !!ele) as UserPositions[];
 

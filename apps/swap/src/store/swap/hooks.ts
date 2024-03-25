@@ -1,15 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import {
-  selectCurrency,
-  switchCurrencies,
-  typeInput,
-  clearSwapState,
-  updatePoolCanisterIds,
-  PoolCanisterRecord,
-  updateSwapOutAmount,
-  updateDecreaseLiquidityAmount,
-} from "./actions";
 import { SWAP_FIELD } from "constants/swap";
 import { useCurrency } from "hooks/useCurrency";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
@@ -22,7 +12,17 @@ import { useActualSwapAmount } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import { useParsedQueryString } from "@icpswap/hooks";
+import {
+  selectCurrency,
+  switchCurrencies,
+  typeInput,
+  clearSwapState,
+  updatePoolCanisterIds,
+  PoolCanisterRecord,
+  updateSwapOutAmount,
+  updateDecreaseLiquidityAmount,
+} from "./actions";
 
 export function useSwapHandlers() {
   const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ export function useSwapHandlers() {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currencyId,
+          currencyId,
         }),
       );
     },
@@ -158,7 +158,7 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
     tradePoolId: Trade?.tradePoolId,
-    currencyBalances: currencyBalances,
+    currencyBalances,
     userSlippageTolerance,
     inputCurrency,
     outputCurrency,

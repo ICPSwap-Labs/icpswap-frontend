@@ -1,16 +1,15 @@
 import { useMemo, useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { NoData, StaticLoading, MainCard } from "components/index";
-import { Page, Pages } from "./components/PageToggle";
-import GlobalData from "./components/GlobalData";
-import StakingPoolItem from "./components/StakingPoolItem";
 import Switch from "components/switch";
 import { Trans } from "@lingui/macro";
 import { STATE } from "types/staking-farm";
 import type { StakingFarmInfo } from "@icpswap/types";
-import { useV3StakingFarms } from "@icpswap/hooks";
+import { useV3StakingFarms, useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import StakingPoolItem from "./components/StakingPoolItem";
+import GlobalData from "./components/GlobalData";
+import { Page, Pages } from "./components/PageToggle";
 import FarmContext from "./context";
 
 function MainContent() {
@@ -89,7 +88,7 @@ function MainContent() {
             </Box>
           </Grid>
           <Grid item style={{ marginLeft: "auto" }}>
-            <Grid container alignItems={"center"}>
+            <Grid container alignItems="center">
               <Typography display="inline">
                 <Trans>Staked only</Trans>
               </Typography>

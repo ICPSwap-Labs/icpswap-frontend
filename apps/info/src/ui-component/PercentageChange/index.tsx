@@ -41,7 +41,7 @@ const colors = {
 
 export default function PercentageChangeLabel({ value, brackets, ...props }: PercentageChangeLabelProps) {
   const item = isUp(value) ? colors.upper : isDown(value) ? colors.lower : colors.equal;
-  const _v = isZero(value) ? "0.00%" : !!value ? `${new BigNumber(Number(value)).toFixed(2)}%` : undefined;
+  const _v = isZero(value) ? "0.00%" : value ? `${new BigNumber(Number(value)).toFixed(2)}%` : undefined;
 
   const Icon = () => {
     return item.icon;

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback, useMemo, Fragment } from "react";
+import React, { memo, useState, useEffect, useCallback, useMemo } from "react";
 import { Box, Grid, Typography, TextField, Chip, Button, ButtonBase } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
@@ -6,12 +6,12 @@ import { Token, Price } from "@icpswap/swap-sdk";
 import WarningIcon from "assets/images/swap/warning";
 import { Bound, FeeAmount } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import PriceRangeChart from "./PriceRangeChart";
 import TokenToggle from "components/TokenToggle";
 import { isDarkTheme, toSignificantFormatted } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { NumberTextField } from "components/index";
+import PriceRangeChart from "./PriceRangeChart";
 
 const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
   return {
@@ -298,9 +298,9 @@ export default memo(
     };
 
     return (
-      <Fragment>
+      <>
         {noLiquidity && (
-          <Fragment>
+          <>
             <Typography variant="h4" color="textPrimary">
               <Trans>Set Starting Price</Trans>
             </Typography>
@@ -371,7 +371,7 @@ export default memo(
                 </Grid>
               </Grid>
             </Box>
-          </Fragment>
+          </>
         )}
         <Box
           sx={
@@ -496,7 +496,7 @@ export default memo(
             )}
           </Box>
         </Box>
-      </Fragment>
+      </>
     );
   },
 );

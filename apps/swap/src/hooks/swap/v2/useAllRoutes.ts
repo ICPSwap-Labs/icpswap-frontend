@@ -1,7 +1,7 @@
 import { Route, Currency } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
-import { useSwapPools } from "./useSwapPools";
 import { useIsSingleHop } from "store/swapv2/cache/hooks";
+import { useSwapPools } from "./useSwapPools";
 import { computeAllRoutes } from "../useAllRoutes";
 
 export function useAllRoutes(

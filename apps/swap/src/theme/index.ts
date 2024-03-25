@@ -1,8 +1,8 @@
 import { createTheme } from "@mui/material/styles";
+import { DynamicObject } from "types/index";
 import { componentStyleOverrides } from "./compStyleOverride";
 import { themePalette } from "./palette";
 import { themeTypography } from "./typography";
-import { DynamicObject } from "types/index";
 import colors from "./colors";
 
 const fontSize = {
@@ -19,7 +19,7 @@ export interface ThemeOption {
 }
 
 export function theme(customization: DynamicObject) {
-  let themeOption: ThemeOption = {
+  const themeOption: ThemeOption = {
     colors,
     fontSize,
     heading: "",
@@ -33,7 +33,7 @@ export function theme(customization: DynamicObject) {
     menuSelected: "",
     menuSelectedBack: "",
     divider: "",
-    customization: customization,
+    customization,
     defaultGradient: `linear-gradient(89.44deg, ${colors.defaultGradientStart} -0.31%, ${colors.defaultGradientEnd} 91.14%)`,
     borderRadius: 12,
   };
@@ -99,5 +99,3 @@ export function theme(customization: DynamicObject) {
     radius: Radius,
   });
 }
-
-export default theme;

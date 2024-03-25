@@ -5,7 +5,7 @@ import { t } from "@lingui/macro";
 
 const INTERVAL = 30; // 30 seconds
 
-let timeOfMessages: { [message: string]: number } = {};
+const timeOfMessages: { [message: string]: number } = {};
 
 function isNewMessage(message: string) {
   const last_time = timeOfMessages[message];
@@ -25,7 +25,7 @@ function isNewMessage(message: string) {
   return false;
 }
 
-function isWithoutCyclesError(message: string) {
+export function isWithoutCyclesError(message: string) {
   return (
     message.includes("Please top up the canister with cycles and try again") ||
     message.includes("is out of cycles") ||
@@ -33,7 +33,7 @@ function isWithoutCyclesError(message: string) {
   );
 }
 
-function isOutOfTimeRange(message: string) {
+export function isOutOfTimeRange(message: string) {
   return message.includes("Specified ingress_expiry not within expected range: Minimum allowed expiry");
 }
 

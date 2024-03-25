@@ -1,8 +1,8 @@
 import { Route, Switch, useLocation } from "react-router-dom";
 import MainLayout from "components/MainLayout";
 import PageNotFound from "components/404";
-import { routeConfigs } from "./config";
 import { Maintenance } from "components/Maintenance";
+import { routeConfigs } from "./config";
 
 const maintenancePages: string[] = [
   // "/swap",

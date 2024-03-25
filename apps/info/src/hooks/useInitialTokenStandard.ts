@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandards, useTokenStandards } from "store/token/cache/hooks";
-import { useSwapPools } from "@icpswap/hooks";
+import { useSwapPools , useTokensFromList } from "@icpswap/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useSwapPools as useV2SwapPools } from "hooks/swap/v2/calls";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { updateTokens } from "store/allTokens";
-import { useTokensFromList } from "@icpswap/hooks";
 
 export const TOKENS = [
   { canisterId: "utozz-siaaa-aaaam-qaaxq-cai", standard: TOKEN_STANDARD.DIP20_WICP },
@@ -90,11 +89,9 @@ export function useInitialTokenStandard() {
       });
 
       setTokenListLoading(false);
-    } else {
-      if (!fetchListLoading) {
+    } else if (!fetchListLoading) {
         setTokenListLoading(false);
       }
-    }
   }, [tokenList, setTokenListLoading, fetchListLoading]);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable no-param-reassign */
 
 import * as React from "react";
 import TransitionComponent, { TransitionStatus } from "../Transition";
@@ -80,7 +81,7 @@ function setTranslateValue(direction: SlideTransitionDirection, node: HTMLElemen
   }
 }
 
-const Slide = React.forwardRef<unknown, TransitionProps>((props, ref) => {
+export const Slide = React.forwardRef<unknown, TransitionProps>((props, ref) => {
   const {
     children,
     direction = "down",
@@ -211,5 +212,3 @@ const Slide = React.forwardRef<unknown, TransitionProps>((props, ref) => {
     </TransitionComponent>
   );
 });
-
-export default Slide;

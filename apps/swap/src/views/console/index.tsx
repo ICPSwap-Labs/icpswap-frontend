@@ -6,8 +6,8 @@ import { t, Trans } from "@lingui/macro";
 import NFTIcon from "assets/images/console/NFT.svg";
 import { mockALinkAndOpen } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
-import ConnectWallet from "../../components/ConnectWallet";
 import { useConnectorStateConnected } from "store/auth/hooks";
+import ConnectWallet from "../../components/ConnectWallet";
 
 export type Route = {
   label: string;

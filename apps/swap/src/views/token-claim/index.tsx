@@ -5,15 +5,13 @@ import { t, Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { TextButton, Wrapper, LoadingRow, ViewMore, NoData } from "components/index";
 import { useUserClaimEvents, getUserClaimEvents, claimToken, useUserClaimEventTransactions } from "@icpswap/hooks";
-import { type ActorIdentity, ResultStatus } from "@icpswap/types";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { type ActorIdentity, ResultStatus, type ClaimEventInfo } from "@icpswap/types";
+import { useAccountPrincipalString, useConnectorStateConnected } from "store/auth/hooks";
 import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
-import { type ClaimEventInfo } from "@icpswap/types";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import Identity, { SubmitLoadingProps, CallbackProps } from "components/Identity";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import { useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/ConnectWallet";
 
 export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
@@ -126,10 +124,10 @@ export default function TokenClaim() {
     if (!principalString) return;
 
     setPage(page + 1);
-    const [offset] = pageArgsFormat(page + 1, pageSize);
+    const [start] = pageArgsFormat(page + 1, pageSize);
 
     setLoadingMore(true);
-    const _userClaimEvents = await getUserClaimEvents(principalString, offset, pageSize);
+    const _userClaimEvents = await getUserClaimEvents(principalString, start, pageSize);
 
     if (_userClaimEvents?.content) {
       setUserClaimEvents([...userClaimEvents, ..._userClaimEvents.content]);

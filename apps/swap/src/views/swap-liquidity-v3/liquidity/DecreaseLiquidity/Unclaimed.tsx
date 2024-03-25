@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Typography, Grid, Box, Avatar } from "@mui/material";
+import { Typography, Grid, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
@@ -48,7 +48,7 @@ export default function Unclaimed({ position, feeAmount0, feeAmount1 }: Unclaime
           <Typography color="text.primary">{token0?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">
-              {!!currencyFeeAmount0 ? toSignificant(new BigNumber(currencyFeeAmount0.toExact()).toString(), 6) : 0}
+              {currencyFeeAmount0 ? toSignificant(new BigNumber(currencyFeeAmount0.toExact()).toString(), 6) : 0}
             </Typography>
           </Grid>
         </Grid>
@@ -59,7 +59,7 @@ export default function Unclaimed({ position, feeAmount0, feeAmount1 }: Unclaime
           <Typography color="text.primary">{token1?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">
-              {!!currencyFeeAmount1 ? toSignificant(new BigNumber(currencyFeeAmount1.toExact()).toString(), 6) : 0}
+              {currencyFeeAmount1 ? toSignificant(new BigNumber(currencyFeeAmount1.toExact()).toString(), 6) : 0}
             </Typography>
           </Grid>
         </Grid>

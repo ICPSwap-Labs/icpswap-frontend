@@ -1,7 +1,7 @@
+import { createReducer } from "@reduxjs/toolkit";
 import { updateCallResult, updateCallIndex, updateCallKeys } from "./actions";
 import { initialState } from "./states";
 
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -12,7 +12,7 @@ export default createReducer(initialState, (builder) => {
       };
     })
     .addCase(updateCallIndex, (state) => {
-      state.callIndex = state.callIndex + 1;
+      state.callIndex += 1;
     })
     .addCase(updateCallKeys, (state, { payload }) => {
       state.callKeys = {

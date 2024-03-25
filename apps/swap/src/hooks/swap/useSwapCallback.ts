@@ -9,7 +9,7 @@ import { slippageToPercent } from "constants/index";
 import { swap } from "hooks/swap/v3Calls";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
-import { StepCallback, useStepCalls, newStepKey } from "hooks/useStepCall";
+import { StepCallback, useStepCalls, newStepKey , useCloseAllSteps } from "hooks/useStepCall";
 import { getActorIdentity } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
 import { useErrorTip } from "hooks/useTips";
@@ -19,7 +19,6 @@ import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
-import { useCloseAllSteps } from "hooks/useStepCall";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -101,7 +100,7 @@ export function useSwapCalls() {
     }: SwapCallsCallbackArgs) => {
       if (!trade || !principal) return undefined;
 
-      let stepKey = _stepKey.toString();
+      const stepKey = _stepKey.toString();
 
       let trades: Trade<Currency, Currency, TradeType>[] = [];
 
@@ -109,7 +108,7 @@ export function useSwapCalls() {
         trades = [trade];
       }
 
-      let calls: undefined | StepCallback[] = undefined;
+      let calls: undefined | StepCallback[];
 
       for (const trade of trades) {
         for (const { route, inputAmount, outputAmount } of trade.swaps) {
@@ -126,7 +125,7 @@ export function useSwapCalls() {
             updateSwapOutAmount(stepKey, undefined);
 
             // Amount that user input
-            const userInputAmount = !!actualSwapAmount
+            const userInputAmount = actualSwapAmount
               ? isUseTransfer(tokenIn)
                 ? new BigNumber(actualSwapAmount).plus(tokenIn.transFee).toString()
                 : actualSwapAmount

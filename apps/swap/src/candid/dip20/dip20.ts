@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export interface Metadata {
   fee: bigint;
   decimals: number;

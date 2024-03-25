@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
 import {
   Grid,
@@ -11,12 +13,11 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useParams, useHistory } from "react-router-dom";
-import { isValidAccount, isValidPrincipal } from "@icpswap/utils";
-import { Wrapper, MainCard, Breadcrumbs, TextButton } from "components/index";
+import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
+import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { type StatusResult, type ActorIdentity } from "@icpswap/types";
 import { Trans, t } from "@lingui/macro";
-import { FilledTextField, NumberFilledTextField } from "components/index";
 import { timeParser } from "utils/index";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -28,12 +29,10 @@ import { createVotingProposal, setVotingProposalPowers } from "@icpswap/hooks";
 import { VotingFileCanisterId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import Preview from "components/vote/Preview";
-import { writeFileOneSheet } from "@icpswap/utils";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
-import { millisecond2Nanosecond } from "@icpswap/utils";
 
 export type ExcelPower = {
   "Address(Account ID or Principal ID)": string;
@@ -122,12 +121,12 @@ export default function VotingCreateProposal() {
   };
 
   const handleCreateVote = async (identity: ActorIdentity, { loading }: SubmitLoadingProps) => {
-    if (loading || !principal || !account) return;
+    if (loading || !principal || !account || !values.startDateTime || !values.endDateTime) return;
 
     const { status, message, data } = await createVotingProposal(identity, canisterId, {
       title: values.title,
-      beginTime: BigInt(millisecond2Nanosecond(values.startDateTime!.getTime())),
-      endTime: BigInt(millisecond2Nanosecond(values.endDateTime!.getTime())),
+      beginTime: BigInt(millisecond2Nanosecond(values.startDateTime.getTime())),
+      endTime: BigInt(millisecond2Nanosecond(values.endDateTime.getTime())),
       createUser: account,
       content: values.content,
       options: values.options.map((option) => ({ k: option, v: BigInt(0) })),
@@ -151,7 +150,7 @@ export default function VotingCreateProposal() {
       }
 
       await Promise.all(promises).catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       openSuccessTip(t`Created successfully`);
@@ -180,8 +179,8 @@ export default function VotingCreateProposal() {
         type: "binary",
       });
 
-      let validPowers: Power[] = [];
-      let invalidPowers: Power[] = [];
+      const validPowers: Power[] = [];
+      const invalidPowers: Power[] = [];
 
       const isValidPower = (power: string | number): boolean => {
         const num = Number(power);
@@ -486,11 +485,11 @@ export default function VotingCreateProposal() {
                     <Typography fontSize="12px">
                       <Trans>{values.powers.length} valid voters</Trans>
                     </Typography>
-                    {!!values.invalidPowers?.length ? (
+                    {values.invalidPowers?.length ? (
                       <Typography fontSize="12px">
                         <Trans>{values.invalidPowers.length} invalid voters</Trans> (
                         {values.invalidPowers.reduce((prev, curr) => {
-                          return `${!!prev ? `${prev}, ` : ""}row ${curr.__rowNum__ + 1}`;
+                          return `${prev ? `${prev}, ` : ""}row ${curr.__rowNum__ + 1}`;
                         }, "")}
                         )
                       </Typography>
@@ -510,7 +509,7 @@ export default function VotingCreateProposal() {
                       size="large"
                       startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
                     >
-                      {errorMessage ? errorMessage : t`Create proposal`}
+                      {errorMessage || t`Create proposal`}
                     </Button>
                   )}
                 </Identity>

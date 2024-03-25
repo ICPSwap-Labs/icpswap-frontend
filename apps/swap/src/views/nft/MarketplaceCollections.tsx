@@ -6,7 +6,6 @@ import MainCard from "components/cards/MainCard";
 import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { Theme } from "@mui/material/styles";
 import Wrapper from "components/Wrapper";
-import Breadcrumbs from "components/Breadcrumbs";
 import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
 import Loading from "components/Loading/Static";

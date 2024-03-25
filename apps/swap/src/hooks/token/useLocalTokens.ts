@@ -14,7 +14,9 @@ let tokens: Token[] = [];
 async function loadTokens() {
   try {
     tokens = (await import("../../.tokens.json")).default;
-  } catch (err) {}
+  } catch (err) {
+    console.warn(err);
+  }
 }
 
 loadTokens();

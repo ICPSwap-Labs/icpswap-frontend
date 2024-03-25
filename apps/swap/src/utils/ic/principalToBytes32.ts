@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * Converts a principal into a fixed 32-byte representation suitable for calling Ethereum smart contracts.
  * @param {string} text The textual representation of a principal.
@@ -13,11 +14,11 @@ export function principalToBytes32(text: string) {
     const ALPHABET = "abcdefghijklmnopqrstuvwxyz234567";
     let width = 0;
     let acc = 0;
-    let bytes = [];
+    const bytes = [];
     for (let i = 0; i < text.length; i++) {
-      let c = text.charAt(i);
-      let b = ALPHABET.indexOf(c);
-      if (b === -1) throw Error("Invalid principal: unexpected lowercase base32 character: " + c);
+      const c = text.charAt(i);
+      const b = ALPHABET.indexOf(c);
+      if (b === -1) throw Error(`Invalid principal: unexpected lowercase base32 character: ${c}`);
       acc = (acc << 5) + b;
       width += 5;
       if (width >= 8) {
@@ -51,7 +52,7 @@ export function principalToBytes32(text: string) {
    * @return {string} A hex string.
    */
   function bytes32Encode(bytes: number[]) {
-    let n = bytes.length;
+    const n = bytes.length;
     let s = "0x";
     s = appendHexByte(s, n);
     for (let i = 0; i < bytes.length; i++) {
@@ -63,8 +64,8 @@ export function principalToBytes32(text: string) {
     return s;
   }
 
-  let ungroup = text.replace(/-/g, "");
-  let rawBytes = base32Decode(ungroup);
+  const ungroup = text.replace(/-/g, "");
+  const rawBytes = base32Decode(ungroup);
   if (rawBytes.length < 4) {
     throw Error("Invalid principal: too short");
   }

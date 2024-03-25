@@ -25,7 +25,7 @@ const Copy = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        copy: copy,
+        copy,
       }),
       [copy],
     );

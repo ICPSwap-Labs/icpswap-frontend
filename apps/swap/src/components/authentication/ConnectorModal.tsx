@@ -3,6 +3,9 @@ import { Box, Grid, Typography } from "@mui/material";
 import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import { TextButton } from "components/index";
+import { Connector } from "constants/wallet";
+import { useWalletConnectorManager } from "store/auth/hooks";
 import PlugWalletLogo from "./icons/Plug.svg";
 import ICPSwapWalletLogo from "./icons/icpswap.svg";
 import StoicWalletLogo from "./icons/stoic.svg";
@@ -11,9 +14,6 @@ import NFIDLogo from "./icons/NFID.svg";
 import InfinityWalletLogo from "./icons/Infinity.svg";
 import AstroXLogo from "./icons/AstroX.svg";
 
-import { TextButton } from "components/index";
-import { Connector } from "constants/wallet";
-import { useWalletConnectorManager } from "store/auth/hooks";
 import { ConnectorComponent } from "./connector";
 
 const useStyles = makeStyles((theme: Theme) => {

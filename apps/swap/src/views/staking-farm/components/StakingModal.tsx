@@ -6,14 +6,13 @@ import { stake } from "hooks/staking-farm";
 import { getLocaleMessage } from "locales/services";
 import Identity, { CallbackProps } from "components/Identity";
 import { NoData, ListLoading, Modal } from "components/index";
-import { Identity as CallIdentity } from "types/global";
+import { Identity as CallIdentity, ResultStatus } from "types/global";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapUserPositions, approvePosition } from "@icpswap/hooks";
 import type { StakingFarmInfo } from "@icpswap/types";
-import { PositionItem } from "./PositionItem";
 import { collectPositionFee } from "hooks/swap/useClaimFees";
 import { Theme } from "@mui/material/styles";
-import { ResultStatus } from "types/global";
+import { PositionItem } from "./PositionItem";
 
 export interface StakingModalProps {
   open: boolean;
@@ -65,8 +64,8 @@ export default function StakingModal({ open, onClose, resetData, farm }: Staking
 
     setConfirmLoading(false);
 
-    resetData && resetData();
-    onClose && onClose();
+    if (resetData) resetData();
+    if (onClose) onClose();
   };
 
   const theme = useTheme() as Theme;

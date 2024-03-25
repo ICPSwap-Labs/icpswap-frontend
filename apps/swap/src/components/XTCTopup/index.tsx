@@ -147,7 +147,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
         <Identity onSubmit={handleTopUp}>
           {({ submit }: CallbackProps) => (
             <Button size="large" fullWidth variant="contained" onClick={submit} disabled={!!errorMessage}>
-              {errorMessage ? errorMessage : <Trans>Submit</Trans>}
+              {errorMessage || <Trans>Submit</Trans>}
             </Button>
           )}
         </Identity>

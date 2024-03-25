@@ -1,10 +1,10 @@
 import { useCallback, useContext } from "react";
 import { Typography } from "@mui/material";
-import HeaderContext from "./headerContext";
-import { SortDirection } from "./types";
 import { Theme } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 import { UpArrow, DownArrow } from "ui-component/Arrow";
+import { SortDirection } from "./types";
+import HeaderContext from "./headerContext";
 
 export type HeaderCellProps = {
   isSort?: boolean;

@@ -1,11 +1,11 @@
 import { tickToPrice, TICK_SPACINGS, Currency, FeeAmount, Token, TickMath } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { JSBI } from "utils/index";
-import { PoolState, usePool } from "./usePools";
 import { useMemo } from "react";
 import computeSurroundingTicks from "utils/computeSurroundingTicks";
 import { useSwapAllTicks } from "@icpswap/hooks";
 import { usePoolCanisterId } from "hooks/swap/index";
+import { PoolState, usePool } from "./usePools";
 
 const PRICE_FIXED_DIGITS = 8;
 
@@ -30,7 +30,7 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
   const { result: allTicks, loading } = useSwapAllTicks(poolId);
 
   const ticks = useMemo(() => {
-    let ticks: Tick[] = [];
+    const ticks: Tick[] = [];
 
     if (allTicks) {
       for (let i = 0; i < allTicks.length; i++) {

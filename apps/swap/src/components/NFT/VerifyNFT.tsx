@@ -43,21 +43,21 @@ export default function VerifyNFT({
   textSX?: any;
 }) {
   return isICPSwapOfficial(minter) ? (
-    <Grid container alignItems="center" justifyContent={justifyContent ? justifyContent : "flex-start"}>
+    <Grid container alignItems="center" justifyContent={justifyContent || "flex-start"}>
       <Label fontSize={fontSize} secondaryColor={secondaryColor} minter={minter} textSX={textSX} />
       <Box
         sx={{
           width: "14px",
           height: "14px",
           marginLeft: "4px",
-          ...(sx ? sx : {}),
+          ...(sx || {}),
         }}
       >
         <img width="100%" height="100%" src={VerifyImage} alt="" />
       </Box>
     </Grid>
   ) : (
-    <Grid container alignItems="center" justifyContent={justifyContent ? justifyContent : "flex-start"}>
+    <Grid container alignItems="center" justifyContent={justifyContent || "flex-start"}>
       <Label fontSize={fontSize} secondaryColor={secondaryColor} minter={minter} textSX={textSX} />
     </Grid>
   );

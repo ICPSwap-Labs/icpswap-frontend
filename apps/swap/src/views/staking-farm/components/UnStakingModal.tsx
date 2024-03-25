@@ -10,29 +10,21 @@ import { unStake } from "hooks/staking-farm";
 import { Theme } from "@mui/material/styles";
 import { PositionItem } from "./PositionItem";
 
-export default function UnStakingModal({
-  open,
-  onClose,
-  resetData,
-  farm,
-  userAllPositions,
-}: {
+export interface UnStakingModalProps {
   open: boolean;
   onClose: () => void;
   resetData?: () => void;
   farm: StakingFarmInfo;
   userAllPositions: StakingFarmDepositArgs[];
-}) {
+}
+
+export default function UnStakingModal({ open, onClose, resetData, farm, userAllPositions }: UnStakingModalProps) {
+  const theme = useTheme() as Theme;
   const [openTip] = useTips();
 
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [selectedPositionId, setSelectedPositionId] = useState<number | undefined>(undefined);
-
-  const handleSubmit = async (identity: ActorIdentity) => {
-    if (!identity) return;
-    handelUnStakeToken(identity);
-  };
 
   const handelUnStakeToken = async (identity: ActorIdentity) => {
     if (!identity || !selectedPositionId) return;
@@ -41,11 +33,14 @@ export default function UnStakingModal({
     const { status, message } = await unStake(identity, farm.farmCid, BigInt(selectedPositionId));
     openTip(getLocaleMessage(message), status);
     setConfirmLoading(false);
-    resetData && resetData();
-    onClose && onClose();
+    if (resetData) resetData();
+    if (onClose) onClose();
   };
 
-  const theme = useTheme() as Theme;
+  const handleSubmit = async (identity: ActorIdentity) => {
+    if (!identity) return;
+    handelUnStakeToken(identity);
+  };
 
   return (
     <Modal

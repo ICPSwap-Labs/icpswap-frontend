@@ -20,7 +20,6 @@ import BigNumber from "bignumber.js";
 import { useICPAmountUSDValue, useAccount } from "store/global/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import LazyImage from "components/LazyImage";
-import FileImage from "../FileImage";
 import { getLocaleMessage } from "locales/services";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
@@ -28,6 +27,7 @@ import VerifyNFT from "components/NFT/VerifyNFT";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TextButton } from "components/index";
 import Button from "components/authentication/ButtonConnector";
+import FileImage from "../FileImage";
 
 export default function NFTBuyReview({
   order,

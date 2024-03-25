@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Grid, Box } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import ErrorImage from "@mui/icons-material/BrokenImage";
+import { Theme } from "@mui/material/styles";
 import { LoadingDarkImage } from "./LoadingDarkImage";
 import { LoadingLightImage } from "./LoadingLightImage";
 import { DefaultDarkImage } from "./DefaultDarkImage";
 import { DefaultLightImage } from "./DefaultLightImage";
-import { Theme } from "@mui/material/styles";
 
 const useStyle = makeStyles(() => ({
   image: {
@@ -94,7 +94,7 @@ export default function LazyImage(props: LazyImageProps) {
     disableTransition = false,
     iconContainerStyle,
     imageStyle,
-    onClick = () => {},
+    onClick,
     style,
     showDefault = false,
     height,
@@ -132,7 +132,7 @@ export default function LazyImage(props: LazyImageProps) {
         sx={{
           position: "relative",
           width: "100%",
-          ...(!!height ? { height } : { height: "0px", paddingTop: "100%" }),
+          ...(height ? { height } : { height: "0px", paddingTop: "100%" }),
           display: imageLoaded ? "block" : "none",
           ...(boxSX || {}),
         }}
@@ -169,7 +169,7 @@ export default function LazyImage(props: LazyImageProps) {
         ) : (
           <DefaultLightImage height={height} sx={imageLoaded ? { marginTop: "-100%" } : {}} />
         ))}
-      {!!CustomImage ? (
+      {CustomImage ? (
         <Box
           sx={{
             position: "relative",

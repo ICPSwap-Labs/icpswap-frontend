@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, Breadcrumbs, CircularProgress, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
-import { valueofUser } from "@icpswap/utils";
+import { valueofUser , isPrincipal, shorten, principalToAccount } from "@icpswap/utils";
 import { Wrapper, MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
@@ -14,7 +14,6 @@ import { useDownloadPowers } from "hooks/voting/useDownloadPowers";
 import { useVotingProposal } from "@icpswap/hooks";
 import DeleteProposalModal from "components/vote/DeleteProposal";
 import { useAccount } from "store/auth/hooks";
-import { isPrincipal, shorten, principalToAccount } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => ({
   breadcrumbs: {
@@ -60,7 +59,7 @@ export default function VotingProposal() {
   };
 
   const markdownBodyHeight = proposalRef.current?.clientHeight ? proposalRef.current?.clientHeight : 0;
-  const truncateMarkdownBody = markdownBodyHeight > 400 ? true : false;
+  const truncateMarkdownBody = markdownBodyHeight > 400;
 
   const handleToggleTruncateBody = () => {
     setShowMore(!showMore);
@@ -167,7 +166,7 @@ export default function VotingProposal() {
             </Grid>
           </Box>
 
-          {!!proposal?.content ? (
+          {proposal?.content ? (
             <>
               <Box
                 mt="20px"
@@ -214,14 +213,14 @@ export default function VotingProposal() {
           <Typography color="text.primary" fontWeight="500" sx={{ marginBottom: "20px" }}>
             <Trans>Cast your vote</Trans>
           </Typography>
-          {!!proposal ? <CastVotes proposal={proposal} onVoteSuccess={handleVoteSuccess} /> : null}
+          {proposal ? <CastVotes proposal={proposal} onVoteSuccess={handleVoteSuccess} /> : null}
         </MainCard>
 
         <MainCard>
           <Typography color="text.primary" fontWeight="500" sx={{ marginBottom: "20px" }}>
             <Trans>Current Results</Trans>
           </Typography>
-          {!!proposal ? <VotesResult proposal={proposal} /> : null}
+          {proposal ? <VotesResult proposal={proposal} /> : null}
         </MainCard>
       </Box>
 

@@ -135,12 +135,10 @@ export default function CreateVotingProject() {
                       onChange={(result) => {
                         if ((typeof result).toLowerCase() === "string") {
                           onFiledChange(result, "logo");
-                          return;
-                        } else {
-                          if (!result.status && result.message) {
+                          
+                        } else if (!result.status && result.message) {
                             openErrorTip(result.message);
                           }
-                        }
                       }}
                       fullWidth
                     />
@@ -185,7 +183,7 @@ export default function CreateVotingProject() {
                       size="large"
                       startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
                     >
-                      {errorMessage ? errorMessage : t`Create voting project`}
+                      {errorMessage || t`Create voting project`}
                     </Button>
                   )}
                 </Identity>

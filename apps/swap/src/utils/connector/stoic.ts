@@ -1,18 +1,21 @@
 // @ts-ignore
 import { StoicIdentity } from "ic-stoic-identity";
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import { type CreateActorArgs, IConnector, ConnectorType, type WalletConnectorConfig } from "./connectors";
 import { Connector } from "@icpswap/actor";
+import { type CreateActorArgs, IConnector, ConnectorType, type WalletConnectorConfig } from "./connectors";
 
 export class StoicConnector implements IConnector {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;
     host: string;
-    dev: Boolean;
+    dev: boolean;
   };
+
   private identity?: any;
+
   private principal?: string;
+
   public type = ConnectorType.STOIC;
 
   public get getPrincipal() {

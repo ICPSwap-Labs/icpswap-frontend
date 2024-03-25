@@ -1,8 +1,7 @@
-import { getInfoPool, getInfoPoolStorageIds } from "@icpswap/hooks";
+import { getInfoPool, getInfoPoolStorageIds , usePoolsForToken } from "@icpswap/hooks";
 import { useState, useMemo, useEffect } from "react";
 import { Override } from "@icpswap/types";
 import type { PublicPoolOverView } from "types/analytic";
-import { usePoolsForToken } from "@icpswap/hooks";
 
 export type PoolData = Override<
   PublicPoolOverView,

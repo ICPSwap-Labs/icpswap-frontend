@@ -46,8 +46,8 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
 
     openTip(getLocaleMessage(message), status);
 
-    onStakingSuccess && onStakingSuccess();
-    onClose && onClose();
+    if (onStakingSuccess) onStakingSuccess();
+    if (onClose) onClose();
 
     setLoading(false);
   };
@@ -86,7 +86,7 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
 
         <Grid container alignItems="center" sx={{ margin: "10px 0" }}>
           <Typography>
-            <Trans>{"Staked"}</Trans>: {tokenAmount.toFormat()} {pool.stakingTokenSymbol}
+            <Trans>Staked</Trans>: {tokenAmount.toFormat()} {pool.stakingTokenSymbol}
           </Typography>
 
           <MaxButton
@@ -110,7 +110,7 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
                 size="large"
                 startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
               >
-                {errorMessage ? errorMessage : t`Confirm`}
+                {errorMessage || t`Confirm`}
               </Button>
             )}
           </Identity>

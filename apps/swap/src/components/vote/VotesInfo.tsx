@@ -1,20 +1,19 @@
 import { useState, useMemo } from "react";
 import { Grid, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { ResultStatus } from "@icpswap/types";
+import { ResultStatus , ProposalInfo } from "@icpswap/types";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
 import { Trans, t } from "@lingui/macro";
-import { ProposalInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import Button from "components/authentication/ButtonConnector";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import VoteConfirm from "./VoteConfirm";
 import { useUserVotePower } from "hooks/voting/useUserVotePower";
 import { useAccount } from "store/auth/hooks";
 import { voting, useVotingProposal } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
+import VoteConfirm from "./VoteConfirm";
 
 export interface CastVotesProps {
   proposal: ProposalInfo;

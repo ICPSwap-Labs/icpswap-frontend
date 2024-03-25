@@ -32,9 +32,9 @@ export const chartViews = [
 function volumeDataFormatter(data: ChartData[]) {
   const oldData = [...data];
 
-  let newData: ChartData[] = [];
+  const newData: ChartData[] = [];
 
-  //Fill the empty data between origin data
+  // Fill the empty data between origin data
   for (let i = 0; i < oldData.length; i++) {
     const curr = oldData[i];
     const next = oldData[i + 1];
@@ -130,9 +130,9 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
             value: data.tvlUSD,
           };
         });
-    } else {
+    } 
       return [];
-    }
+    
   }, [poolChartTVl]);
 
   const volumeData = useMemo(() => {
@@ -212,7 +212,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
           }}
           fontSize="12px"
         >
-          {valueLabel ? valueLabel : ""}
+          {valueLabel || ""}
         </Typography>
       </Box>
 

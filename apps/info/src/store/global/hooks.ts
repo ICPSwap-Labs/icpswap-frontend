@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { updateICPBlocks, updateUserLocale, updateICPPriceList, updateXDR2USD, updateTokenSNSRootId } from "./actions";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
 import { useICPBlocksCall } from "hooks/useICPCalls";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { use100ICPPriceInfo } from "@icpswap/hooks";
+import { use100ICPPriceInfo, useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";
 import { useDispatch } from "react-redux";
 import { timestampFormat, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";
+import { updateICPBlocks, updateUserLocale, updateICPPriceList, updateXDR2USD, updateTokenSNSRootId } from "./actions";
 
 export function useICPBlocksManager() {
   const dispatch = useAppDispatch();
@@ -32,7 +31,7 @@ export function useICPPrice() {
 
   return useMemo(() => {
     if (ICPPriceList && ICPPriceList.length) {
-      const price = ICPPriceList[ICPPriceList.length - 1]["usd"];
+      const price = ICPPriceList[ICPPriceList.length - 1].usd;
       return price;
     }
     return undefined;
@@ -119,6 +118,7 @@ export function useFetchSNSTokenRootIds() {
           const deployed_sns = list_deployed_sns.instances.find((e) => {
             const root_id = e.root_canister_id[0];
             if (root_id) return root_id.toString() === sns_root.root_canister_id;
+            return false;
           });
 
           if (deployed_sns) {

@@ -1,6 +1,6 @@
+import { createReducer } from "@reduxjs/toolkit";
 import { updateTX, updateWithdrawTX } from "./actions";
 import { initialState } from "./states";
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -23,7 +23,7 @@ export default createReducer(initialState, (builder) => {
         state: payload.tx.state,
         hash: payload.tx.hash ?? old_state?.hash,
         block_index: String(payload.tx.block_index),
-        value: !!payload.tx.value ? payload.tx.value : !!old_state ? old_state.value : "",
+        value: payload.tx.value ? payload.tx.value : old_state ? old_state.value : "",
       });
 
       const newStates = otherStates.sort((a, b) => {

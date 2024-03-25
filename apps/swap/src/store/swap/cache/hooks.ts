@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserPositionPools } from "@icpswap/hooks";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import { slippageToPercent, getDefaultSlippageTolerance } from "constants/swap";
+import { useAccount } from "store/auth/hooks";
+import { Percent } from "@icpswap/swap-sdk";
 import {
   updateUserExpertMode,
   updateUserSingleHop,
@@ -13,9 +16,6 @@ import {
   updateUserPositionPools,
   updateUserMultipleApprove,
 } from "./actions";
-import { slippageToPercent, getDefaultSlippageTolerance } from "constants/swap";
-import { useAccount } from "store/auth/hooks";
-import { Percent } from "@icpswap/swap-sdk";
 
 export function useIsExpertMode() {
   return useAppSelector((state) => state.swapCache.userExpertMode);
@@ -75,7 +75,7 @@ export function useMultipleApproveManager() {
 
 export function useSelectedTokenManage(): [string[], (tokenIds: string[]) => void] {
   const dispatch = useAppDispatch();
-  let userSelectedToken = useUserSelectedToken();
+  const userSelectedToken = useUserSelectedToken();
 
   const setUserSelectedToken = useCallback(
     (checkedToken: string[]) => {
@@ -106,7 +106,7 @@ export function useSlippageToleranceToPercent(type: string) {
   return useMemo(() => {
     if (slippageToPercent && slippageTolerance) {
       return slippageToPercent(slippageTolerance);
-    } else {
+    } 
       let percentSlippage: Percent | null = null;
       // input change will case error when value is 0.
       try {
@@ -115,7 +115,7 @@ export function useSlippageToleranceToPercent(type: string) {
         percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
       }
       return percentSlippage;
-    }
+    
   }, [slippageTolerance, slippageToPercent]);
 }
 
@@ -203,11 +203,9 @@ export function useInitialUserPositionPools() {
       const allPoolIds = [...new Set([...storeUserPositionPools, ...positionPools])];
       updateStoreUserPositionPools(allPoolIds);
       setInitialLoading(false);
-    } else {
-      if (loading === false) {
+    } else if (loading === false) {
         setInitialLoading(false);
       }
-    }
   }, [JSON.stringify(storeUserPositionPools), positionPools, updateStoreUserPositionPools, loading]);
 
   return {

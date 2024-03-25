@@ -2,13 +2,13 @@ import { useContext, useMemo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import { formatDollarAmount, principalToAccount } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import WalletContext from "./context";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { useAccountPrincipal } from "store/auth/hooks";
 import Copy, { CopyRef } from "components/Copy";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import WalletContext from "./context";
 
 export interface AddressWrapperProps {
   address: string | undefined;

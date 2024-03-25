@@ -10,10 +10,8 @@ import {
   useUpdateUserBTCDepositAddress,
   useUserBTCWithdrawAddress,
   useUpdateUserBTCWithdrawAddress,
-} from "store/wallet/hooks";
+ useUserTxs , useUpdateUserTx } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { useUserTxs } from "store/wallet/hooks";
-import { useUpdateUserTx } from "store/wallet/hooks";
 import { TxState } from "types/ckBTC";
 import { useIntervalFetch } from "../useIntervalFetch";
 
@@ -171,16 +169,16 @@ export function useFetchUserTxStates() {
       if (txs && txs.length && !!principal) {
         for (let i = 0; i < txs.length; i++) {
           const block_index = BigInt(txs[i].block_index);
-          const state = txs[i].state;
+          const {state} = txs[i];
           if (!isEndedState(state)) {
-            const res = await (await ckBTCMinterActor()).retrieve_btc_status({ block_index: block_index });
+            const res = await (await ckBTCMinterActor()).retrieve_btc_status({ block_index });
             updateUserTx(principal, block_index, res, undefined);
           }
         }
       }
     }
 
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
       call();
     }, 10000);
 

@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback } from "react";
-import { updateCallIndex, updateCallKeys } from "./actions";
 import store from "store/index";
+import { updateCallIndex, updateCallKeys } from "./actions";
 
 export function useCallIndex() {
   return useAppSelector((state) => state.call.callIndex);

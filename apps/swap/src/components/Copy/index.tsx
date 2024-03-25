@@ -31,12 +31,12 @@ export default forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        copy: copy,
+        copy,
       }),
       [copy],
     );
 
-    return Boolean(hide) ? null : (
+    return hide ? null : (
       <Box className={classes.copy} onClick={copy}>
         {children}
       </Box>

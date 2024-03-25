@@ -200,7 +200,7 @@ export default function NFTMarketOrders({
             height: "100%",
           }}
         >
-          <Loading loading={firstLoading} mask={true} />
+          <Loading loading={firstLoading} mask />
         </Box>
       ) : null}
     </Box>

@@ -1,5 +1,4 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import Logo from "./Logo";
 import { Trans, t } from "@lingui/macro";
 import { useBTCWithdrawAddress, useFetchUserTxStates } from "hooks/ck-btc/useBTCCalls";
 import { retrieveBTC, useApprove } from "hooks/ck-btc";
@@ -7,7 +6,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { ckBTC_ID, DISSOLVE_FEE } from "constants/ckBTC";
 import { useState, useMemo } from "react";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { FilledTextField, NumberFilledTextField } from "components/index";
+import { FilledTextField, NumberFilledTextField , MainCard } from "components/index";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
@@ -15,10 +14,10 @@ import Identity, { CallbackProps } from "components/Identity";
 import { ResultStatus } from "@icpswap/types";
 import { validate } from "bitcoin-address-validation";
 import { MessageTypes, useTips } from "hooks/useTips";
-import Links from "./Links";
-import { MainCard } from "components/index";
 import Toggle, { ToggleButton } from "components/SwitchToggle";
 import { useUpdateUserTx } from "store/wallet/hooks";
+import Links from "./Links";
+import Logo from "./Logo";
 import DissolveRecords from "./DissolveRecords";
 import RetryDissolve from "./Retry";
 
@@ -221,7 +220,7 @@ export default function DissolveBTC({
                   {({ submit }: CallbackProps) => (
                     <Button variant="contained" fullWidth size="large" onClick={submit} disabled={!!error || loading}>
                       {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-                      {error ? error : <Trans>Dissolve ckBTC</Trans>}
+                      {error || <Trans>Dissolve ckBTC</Trans>}
                     </Button>
                   )}
                 </Identity>

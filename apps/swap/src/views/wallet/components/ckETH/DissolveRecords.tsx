@@ -1,7 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography , Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
-import { Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { useUserWithdrawTxs } from "store/web3/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { StoredWithdrawTxValue } from "types/ckETH";
@@ -19,7 +18,7 @@ function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
         <Typography>{tx.state ?? "--"}</Typography>
       </TableCell>
       <TableCell>
-        {!!tx.hash ? (
+        {tx.hash ? (
           <Typography
             sx={{
               maxWidth: "400px",
@@ -35,7 +34,7 @@ function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
         )}
       </TableCell>
       <TableCell>
-        {!!tx.value ? (
+        {tx.value ? (
           <Typography>{parseTokenAmount(tx.value, ckETH.decimals).toFormat()}</Typography>
         ) : (
           <Typography>--</Typography>

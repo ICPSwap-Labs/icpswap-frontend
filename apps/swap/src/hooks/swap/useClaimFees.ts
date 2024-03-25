@@ -8,10 +8,9 @@ import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { useSwapWithdraw } from "hooks/swap/index";
+import { useSwapWithdraw , useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
-import { useReclaimCallback } from "hooks/swap/index";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
@@ -45,10 +44,10 @@ function useCollectFeeCalls() {
 
         if (status === "ok") {
           return true;
-        } else {
+        } 
           openErrorTip(getLocaleMessage(message) ?? t`Failed to claim`);
           return false;
-        }
+        
       };
 
       const withdrawCurrencyA = async () => {

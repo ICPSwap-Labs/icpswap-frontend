@@ -8,7 +8,7 @@ import { parseTokenAmount } from "@icpswap/utils";
 export default ({
   open,
   onConfirm,
-  onClose = () => {},
+  onClose,
   details,
   mintInfo,
 }: {

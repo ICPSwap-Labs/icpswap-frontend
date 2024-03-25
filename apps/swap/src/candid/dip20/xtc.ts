@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type BurnError =
   | { InsufficientBalance: null }
   | { InvalidTokenContract: null }

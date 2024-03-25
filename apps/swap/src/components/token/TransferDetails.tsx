@@ -1,10 +1,9 @@
 import { Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Modal from "components/modal/index";
-import { parseTokenAmount, enumToString } from "@icpswap/utils";
+import { parseTokenAmount, enumToString , timestampFormat } from "@icpswap/utils";
 import { t } from "@lingui/macro";
 import upperFirst from "lodash/upperFirst";
-import { timestampFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => ({
   titleContainer: {

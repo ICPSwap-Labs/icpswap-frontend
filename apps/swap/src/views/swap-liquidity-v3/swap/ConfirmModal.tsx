@@ -5,7 +5,6 @@ import { makeStyles, useTheme } from "@mui/styles";
 import { ArrowRightAlt } from "@mui/icons-material";
 import CurrencyAvatar from "components/CurrencyAvatar";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
-import FormattedPriceImpact from "./FormattedPriceImpact";
 import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
 import Tooltip from "components/Tooltip";
 import { numberToString } from "@icpswap/utils";
@@ -15,6 +14,7 @@ import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { isElement } from "react-is";
 import { useSwapFeeTip } from "hooks/swap/useSwapFeeTip";
+import FormattedPriceImpact from "./FormattedPriceImpact";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -121,14 +121,7 @@ export interface SwapConfirmModalProps {
   trade: Trade<Currency, Currency, TradeType> | null;
 }
 
-export default ({
-  slippageTolerance,
-  open,
-  trade,
-  loading,
-  onConfirm = () => {},
-  onClose = () => {},
-}: SwapConfirmModalProps) => {
+export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }: SwapConfirmModalProps) => {
   const classes = useStyle();
 
   const { realizedLPFee, priceImpact } = useMemo(() => {

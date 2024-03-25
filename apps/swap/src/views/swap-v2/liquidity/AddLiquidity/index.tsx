@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo, Fragment } from "react";
+import { memo, useState, useCallback, useMemo } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -157,19 +157,15 @@ export default memo(() => {
         } else {
           history.push(`/swap/v2/liquidity/add/${tokenId}`);
         }
-      } else {
-        if (tokenId !== WICPCanisterId) {
-          history.push(`/swap/v2/liquidity/add/${tokenId}/${WICPCanisterId}`);
-        } else {
-          history.push(`/swap/v2/liquidity/add/${WICPCanisterId}/${tokenId}`);
-        }
-      }
-    } else {
-      if (tokenId === WICPCanisterId) {
-        history.push(`/swap/v2/liquidity/add/${tokenId}`);
+      } else if (tokenId !== WICPCanisterId) {
+        history.push(`/swap/v2/liquidity/add/${tokenId}/${WICPCanisterId}`);
       } else {
         history.push(`/swap/v2/liquidity/add/${WICPCanisterId}/${tokenId}`);
       }
+    } else if (tokenId === WICPCanisterId) {
+      history.push(`/swap/v2/liquidity/add/${tokenId}`);
+    } else {
+      history.push(`/swap/v2/liquidity/add/${WICPCanisterId}/${tokenId}`);
     }
   };
 
@@ -183,19 +179,15 @@ export default memo(() => {
         } else {
           history.push(`/swap/v2/liquidity/add/${tokenId}`);
         }
-      } else {
-        if (currencyIdA !== tokenId && tokenId !== WICPCanisterId) {
-          history.push(`/swap/v2/liquidity/add/${WICPCanisterId}/${tokenId}`);
-        } else {
-          history.push(`/swap/v2/liquidity/add/${tokenId}/${WICPCanisterId}`);
-        }
-      }
-    } else {
-      if (tokenId === WICPCanisterId) {
-        history.push(`/swap/v2/liquidity/add/${tokenId}`);
+      } else if (currencyIdA !== tokenId && tokenId !== WICPCanisterId) {
+        history.push(`/swap/v2/liquidity/add/${WICPCanisterId}/${tokenId}`);
       } else {
         history.push(`/swap/v2/liquidity/add/${tokenId}/${WICPCanisterId}`);
       }
+    } else if (tokenId === WICPCanisterId) {
+      history.push(`/swap/v2/liquidity/add/${tokenId}`);
+    } else {
+      history.push(`/swap/v2/liquidity/add/${tokenId}/${WICPCanisterId}`);
     }
   };
 
@@ -235,7 +227,7 @@ export default memo(() => {
 
   // request submit
   const handleOnConfirm = useCallback(
-    async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
+    async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
       if (!identity || loading || !position || !principal) return;
 
       const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`);
@@ -328,13 +320,13 @@ export default memo(() => {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/swap/v2/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? "/" + feeAmount : ""}`);
+    history.push(`/swap/v2/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
   };
 
   return (
     <Identity onSubmit={handleOnConfirm}>
       {({ submit, loading }: CallbackProps) => (
-        <Fragment>
+        <>
           <SwapV2Wrapper>
             <Grid container justifyContent="center">
               <Grid item className={classes.container}>
@@ -496,7 +488,7 @@ export default memo(() => {
               position={position}
             />
           )}
-        </Fragment>
+        </>
       )}
     </Identity>
   );

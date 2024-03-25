@@ -2,16 +2,15 @@ import { useCallback, useMemo, ReactNode } from "react";
 import { saturate } from "polished";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { batch } from "react-redux";
-import { Chart } from "./Chart";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
-import { Bound } from "constants/swap";
+import { Bound, FeeAmount } from "constants/swap";
 import { Price, Currency, Token } from "@icpswap/swap-sdk";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { t } from "@lingui/macro";
-import { ZoomLevels } from "./types";
 import { Theme } from "@mui/material/styles";
-import { FeeAmount } from "constants/swap";
+import { ZoomLevels } from "./types";
+import { Chart } from "./Chart";
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.LOW]: {
@@ -53,6 +52,19 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
   );
 }
 
+export interface LiquidityChartRangeInputProps {
+  currencyA: Currency | undefined;
+  currencyB: Currency | undefined;
+  feeAmount?: FeeAmount;
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined };
+  price: number | undefined | string;
+  priceLower?: Price<Token, Token>;
+  priceUpper?: Price<Token, Token>;
+  onLeftRangeInput: (typedValue: string) => void;
+  onRightRangeInput: (typedValue: string) => void;
+  interactive: boolean;
+}
+
 export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
@@ -64,18 +76,7 @@ export default function LiquidityChartRangeInput({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
-}: {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
-  feeAmount?: FeeAmount;
-  ticksAtLimit: { [bound in Bound]?: boolean | undefined };
-  price: number | undefined | string;
-  priceLower?: Price<Token, Token>;
-  priceUpper?: Price<Token, Token>;
-  onLeftRangeInput: (typedValue: string) => void;
-  onRightRangeInput: (typedValue: string) => void;
-  interactive: boolean;
-}) {
+}: LiquidityChartRangeInputProps) {
   const theme = useTheme() as Theme;
 
   const tokenAColor = "#788686";
@@ -117,7 +118,7 @@ export default function LiquidityChartRangeInput({
     [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   );
 
-  interactive = interactive && Boolean(formattedData?.length);
+  const _interactive = interactive && Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     const leftPrice = isSorted ? priceLower : priceUpper?.invert();
@@ -189,7 +190,7 @@ export default function LiquidityChartRangeInput({
                 },
               },
             }}
-            interactive={interactive}
+            interactive={_interactive}
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}

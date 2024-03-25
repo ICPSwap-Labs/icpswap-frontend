@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { makeStyles } from "@mui/styles";
-import { Box, Grid, Avatar } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override } from "@icpswap/types";
@@ -147,9 +147,8 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } else {
-              return 0;
             }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

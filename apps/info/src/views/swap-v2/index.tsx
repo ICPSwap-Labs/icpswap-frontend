@@ -10,11 +10,11 @@ import { Theme } from "@mui/material/styles";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
 import { GridAutoRows } from "ui-component/Grid/index";
-import TopTokens from "./TopTokens";
-import TopPools from "./TopPools";
 import dayjs from "dayjs";
 import SwapAnalyticLoading from "ui-component/analytic-v2/Loading";
 import { useHistory } from "react-router-dom";
+import TopPools from "./TopPools";
+import TopTokens from "./TopTokens";
 
 export enum VolumeWindow {
   daily,
@@ -76,7 +76,7 @@ export default function SwapOverview() {
   const [leftLabel, setLeftLabel] = useState<string | undefined>();
   const [rightLabel, setRightLabel] = useState<string | undefined>();
 
-  //if hover value undefined, reset to current day value
+  // if hover value undefined, reset to current day value
   useEffect(() => {
     if (volumeHover === undefined && protocolData) {
       setVolumeHover(protocolData.volumeUSD);
@@ -181,7 +181,7 @@ export default function SwapOverview() {
                     {formatDollarAmount(liquidityHover, 2, true)}
                   </Typography>
                   <Typography fontSize="12px" sx={{ height: "14px" }}>
-                    {leftLabel ? leftLabel : null}
+                    {leftLabel || null}
                   </Typography>
                 </GridAutoRows>
               }
@@ -250,7 +250,7 @@ export default function SwapOverview() {
                     {formatDollarAmount(volumeHover, 2)}
                   </Typography>
                   <Typography fontSize="12px" height="14px">
-                    {rightLabel ? rightLabel : null}
+                    {rightLabel || null}
                   </Typography>
                 </GridAutoRows>
               }

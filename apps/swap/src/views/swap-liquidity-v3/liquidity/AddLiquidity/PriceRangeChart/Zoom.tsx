@@ -7,8 +7,8 @@ import { Replay as ReplayIcon } from "@mui/icons-material";
 import ZoomInIcon from "assets/images/swap/zoomIn";
 import ZoomOutIcon from "assets/images/swap/zoomOut";
 import { isDarkTheme } from "utils";
-import { ZoomLevels } from "./types";
 import { Theme } from "@mui/material/styles";
+import { ZoomLevels } from "./types";
 
 export const ZoomOverlay = styled.rect`
   fill: transparent;

@@ -3,11 +3,18 @@ import { useICPPrice, useUSDPrice } from "hooks/useUSDPrice";
 import { resultFormat, parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
-import { getV3StakingFarms, usePaginationAllData, getPaginationAllData, useCallsData } from "@icpswap/hooks";
-import { v3FarmController } from "@icpswap/actor";
+import {
+  getV3StakingFarms,
+  usePaginationAllData,
+  getPaginationAllData,
+  useCallsData,
+  getV3UserFarmInfo,
+  getV3UserFarmRewardInfo,
+  getFarmTVL,
+  getFarmUserTVL,
+} from "@icpswap/hooks";
+import { v3FarmController, v3Farm } from "@icpswap/actor";
 import { type StakingFarmInfo, type ActorIdentity } from "@icpswap/types";
-import { v3Farm } from "@icpswap/actor";
-import { getV3UserFarmInfo, getV3UserFarmRewardInfo, getFarmTVL, getFarmUserTVL } from "@icpswap/hooks";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 import { useAccountPrincipalString } from "store/auth/hooks";
 
@@ -25,9 +32,9 @@ export function useGetGlobalData(): [GlobalData, () => void] {
 
   useMemo(async () => {
     if (_ICPPrice) {
-      const data = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
+      const { data } = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
         await (await v3FarmController()).getGlobalTVL(),
-      ).data;
+      );
 
       if (data) {
         setData({
@@ -86,7 +93,7 @@ export function userIntervalFarmUserTVL(
 ) {
   const call = useCallback(async () => {
     if (!canisterId || !principal) return undefined;
-    return await getFarmUserTVL(canisterId!, principal!);
+    return await getFarmUserTVL(canisterId, principal);
   }, [canisterId, principal]);
 
   return useIntervalFetch(call, force);
@@ -111,7 +118,7 @@ export async function stake(identity: ActorIdentity, farmId: string, positionInd
 }
 
 export async function unStake(identity: ActorIdentity, farmId: string, tokenId: bigint) {
-  let result = await (await v3Farm(farmId, identity)).unstake(tokenId);
+  const result = await (await v3Farm(farmId, identity)).unstake(tokenId);
   return resultFormat<string>(result);
 }
 
@@ -119,7 +126,7 @@ export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint }>(await (await v3Farm(canisterId!)).getCycleInfo()).data?.balance;
+      return resultFormat<{ balance: bigint }>(await (await v3Farm(canisterId)).getCycleInfo()).data?.balance;
     }, [canisterId]),
   );
 }
@@ -128,8 +135,7 @@ export function useV3StakingCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint; available: bigint }>(await (await v3Farm(canisterId!)).getCycleInfo())
-        .data;
+      return resultFormat<{ balance: bigint; available: bigint }>(await (await v3Farm(canisterId)).getCycleInfo()).data;
     }, [canisterId]),
   );
 }

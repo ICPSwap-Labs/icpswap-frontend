@@ -6,11 +6,10 @@ import {
   availableArgsNull,
   isAvailablePageArgs,
 } from "@icpswap/utils";
-import type { PaginationResult, NumberType } from "@icpswap/types";
+import type { PaginationResult, NumberType , Ticket } from "@icpswap/types";
 import { Currency } from "@icpswap/swap-sdk";
 import { swapPool, swapTicket } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
-import type { Ticket } from "@icpswap/types";
 import { v2SwapPool } from "hooks/v2-actor";
 
 export function useActualSwapAmount(
@@ -25,9 +24,9 @@ export function useActualSwapAmount(
 
     if (typedValue.isGreaterThan(currency.transFee)) {
       return parseTokenAmount(typedValue.minus(fee), currency.decimals).toString();
-    } else {
+    } 
       return "0";
-    }
+    
   }, [amount, currency]);
 }
 

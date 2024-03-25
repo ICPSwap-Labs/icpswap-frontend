@@ -1,13 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import {
-  updateFiled,
-  updateLeftRange,
-  updateRightRange,
-  updateStartPrice,
-  updateFullRange,
-  resetMintState,
-} from "./actions";
 import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import {
@@ -29,15 +21,22 @@ import {
 import { tryParseTick } from "utils/swap/mint";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { getTickToPrice } from "utils/swap/getTickToPrice";
-import { usePool, PoolState } from "hooks/swap/usePools";
+import { usePool, PoolState , useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { JSBI } from "utils/index";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { maxAmountSpend } from "utils/swap/maxAmountSpend";
 import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
-import { useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { getTokenStandard } from "store/token/cache/hooks";
+import {
+  updateFiled,
+  updateLeftRange,
+  updateRightRange,
+  updateStartPrice,
+  updateFullRange,
+  resetMintState,
+} from "./actions";
 
 export function useMintState() {
   return useAppSelector((state) => state.swapLiquidity);
@@ -130,9 +129,9 @@ export function useMintInfo(
         return (invertPrice ? price?.invert() : price) ?? undefined;
       }
       return undefined;
-    } else {
+    } 
       return pool && token0 ? pool.priceOf(token0) : undefined;
-    }
+    
   }, [noLiquidity, startPrice, invertPrice, token1, token0, pool]);
 
   const invalidPrice = useMemo(() => {
@@ -385,7 +384,7 @@ export function useMintInfo(
     {},
   );
 
-  let errorMessage: string | undefined = undefined;
+  let errorMessage: string | undefined;
 
   if (hasPairWithBaseToken !== true) errorMessage = errorMessage ?? t`No pair with icp`;
 

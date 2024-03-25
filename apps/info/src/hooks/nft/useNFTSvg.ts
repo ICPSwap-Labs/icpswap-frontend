@@ -34,8 +34,8 @@ export function usePositionNFTSvg(metadata: NFTTokenMetadata): {
       if (metadata.tokenId && (isV2PositionNFT || isV3PositionNFT)) {
         let poolId = String(metadata.tokenId);
         if (metadata.attributes && Boolean(metadata.attributes.length)) {
-          let newPoolId = (metadata.attributes ?? []).find((item) => item.k === "poolId")?.v;
-          if (!!newPoolId) {
+          const newPoolId = (metadata.attributes ?? []).find((item) => item.k === "poolId")?.v;
+          if (newPoolId) {
             poolId = newPoolId;
           }
         }

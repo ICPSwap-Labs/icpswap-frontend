@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/react";
 import { ClientOptions, ErrorEvent, EventHint } from "@sentry/types";
-import { isSentryEnabled } from "utils/env";
-import { getEnvName } from "utils/env";
+import { isSentryEnabled , getEnvName } from "utils/env";
 
 /**
  * Filters known (ignorable) errors out before sending them to Sentry. Also, adds tags to the event.

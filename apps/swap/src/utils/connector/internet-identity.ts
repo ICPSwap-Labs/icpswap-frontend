@@ -12,8 +12,11 @@ export class InternetIdentityConnector implements IConnector {
     providerUrl: string;
     dev: boolean;
   };
+
   private identity?: Identity;
+
   private principal?: string;
+
   private client?: AuthClient;
 
   public type = ConnectorType.IC;

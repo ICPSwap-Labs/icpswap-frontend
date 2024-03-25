@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Grid, Box, useMediaQuery, Drawer } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import LogoSection from "../LogoSection";
 import ProfileSection from "./ProfileSection";
-import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import Navbar from "../Navbar";
 import MobileNavbar from "../Navbar/MobileNavbar";
 import TokenClaim from "./TokenClaim";

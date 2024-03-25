@@ -56,8 +56,8 @@ export function useLatestDataCall<T>(fn: Call<T>, reload?: number | string | boo
     if (fn) {
       setLoading(true);
 
-      indexRef.current = indexRef.current + 1;
-      let index = indexRef.current;
+      indexRef.current += 1;
+      const index = indexRef.current;
 
       fn().then((result) => {
         resultsRef.current = {

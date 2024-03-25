@@ -22,8 +22,8 @@ export function Row({ children, width, align, justify, padding, border, borderRa
         alignItems: align ?? "center",
         justifyContent: justify ?? "flex-start",
         padding: padding ?? 0,
-        border: border,
-        borderRadius: borderRadius,
+        border,
+        borderRadius,
         margin: margin ?? 0,
       }}
     >

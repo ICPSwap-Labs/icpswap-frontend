@@ -5,7 +5,7 @@ import { makeStyles } from "@mui/styles";
 import MainCard from "components/cards/MainCard";
 import HeaderTab from "components/swap/Header";
 import DepositAmount from "components/swap/SwapDepositAmount";
-import { FIELD, slippageToPercent } from "constants/swap";
+import { FIELD, slippageToPercent } from "constants/mint";
 import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "store/swapv2/liquidity/hooks";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
 import {

@@ -1,4 +1,4 @@
-import { Typography, Box, useTheme, Avatar } from "@mui/material";
+import { Typography, Box, useTheme } from "@mui/material";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { enumToString } from "@icpswap/utils";

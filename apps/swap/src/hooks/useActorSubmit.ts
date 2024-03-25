@@ -4,7 +4,7 @@ import store from "store/index";
 import { t } from "@lingui/macro";
 
 async function isCurrentAccount() {
-  const principal = store.getState().auth.principal;
+  const {principal} = store.getState().auth;
 
   if (window.ic && window.ic.plug && !!principal) {
     const plugPrincipal = await window.ic.plug.getPrincipal();

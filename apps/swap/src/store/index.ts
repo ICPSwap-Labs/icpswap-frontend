@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { AnyAction, combineReducers } from "redux";
-import allReducer, { sessionReducer } from "./reducer";
-
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import sessionStorage from "redux-persist/lib/storage/session";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import { PersistState } from "redux-persist/es/types";
+import allReducer, { sessionReducer } from "./reducer";
+
 
 import { AuthState } from "./auth/states";
 import { SessionState } from "./session/states";
@@ -29,7 +30,6 @@ import { SwapBurnState as SwapV2BurnState } from "./swapv2/burn/state";
 import { SwapLiquidityState as SwapV2LiquidityState } from "./swapv2/liquidity/state";
 import { SwapCacheState as SwapV2CacheState } from "./swapv2/cache/state";
 
-import { PersistState } from "redux-persist/es/types";
 
 interface PersistPartial {
   _persist: PersistState;
@@ -59,7 +59,7 @@ export interface AllState {
 }
 
 const defaultStorageConfig = {
-  storage: storage,
+  storage,
   stateReconciler: autoMergeLevel2,
   version: 0,
 };

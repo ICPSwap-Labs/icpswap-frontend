@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { TradeType } from "@icpswap/constants";
-import { useAllRoutes } from "./useAllRoutes";
 import { useQuotePrice } from "hooks/swap/useQuotePrice";
 import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
-import { CurrencyAmount, Currency } from "@icpswap/swap-sdk";
-import { Route, Trade } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Currency , Route, Trade } from "@icpswap/swap-sdk";
+import { useAllRoutes } from "./useAllRoutes";
 
 export enum TradeState {
   LOADING = "LOADING",
@@ -84,12 +83,12 @@ export function useUnitPrice(
         if (currentBest.amountOut === null) {
           return {
             bestRoute: routes[i],
-            amountOut: amountOut,
+            amountOut,
           };
-        } else if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
-            amountOut: amountOut,
+            amountOut,
           };
         }
 

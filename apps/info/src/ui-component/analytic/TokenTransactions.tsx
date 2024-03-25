@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import Transaction from "./Transactions";
 import { useTokenTransactions } from "hooks/info/useTokenTransactions";
+import Transaction from "./Transactions";
 
 export default function TokenTransactions({ canisterId }: { canisterId: string }) {
   const { result: transactions, loading } = useTokenTransactions(canisterId, 0, 300);

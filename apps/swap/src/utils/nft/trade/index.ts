@@ -1,7 +1,7 @@
-import { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
-import type { NFTBuyArgs, NFTRevokeArgs, NFTSaleArgs } from "@icpswap/types";
-import { ICPSwapTradeAdapter } from "./ICPSwapNFTTradeAdapter";
+import { ResultStatus, type NFTBuyArgs, type NFTRevokeArgs, type NFTSaleArgs } from "@icpswap/types";
 import { Identity } from "types/global";
+import { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
+import { ICPSwapTradeAdapter } from "./ICPSwapNFTTradeAdapter";
 
 export enum TradeAdapterName {
   ICPSwap = "ICPSwap",
@@ -9,6 +9,7 @@ export enum TradeAdapterName {
 
 export class NFTsTradeAdapter {
   public canisterAdapters = new Map<string, TradeAdapterName>();
+
   public adapters = new Map<TradeAdapterName, BaseNFTsTradeAdapter>();
 
   public initialAdapter(name: TradeAdapterName, adapter: BaseNFTsTradeAdapter) {
@@ -42,7 +43,8 @@ export class NFTsTradeAdapter {
     params: NFTSaleArgs;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.sale({ params, identity });
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "" };
+    return await adapter.sale({ params, identity });
   }
 
   public async revoke({
@@ -55,7 +57,8 @@ export class NFTsTradeAdapter {
     params: NFTRevokeArgs;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.revoke({ params, identity });
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "" };
+    return await adapter.revoke({ params, identity });
   }
 
   public async buy({
@@ -68,7 +71,8 @@ export class NFTsTradeAdapter {
     params: NFTBuyArgs;
   }) {
     const adapter = this.getAdapterByName(adapterName);
-    return await adapter!.buy({ params, identity });
+    if (!adapter) return { status: ResultStatus.ERROR, data: undefined, message: "" };
+    return await adapter.buy({ params, identity });
   }
 }
 

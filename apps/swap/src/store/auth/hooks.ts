@@ -1,16 +1,14 @@
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { updateLockStatus as _updateLockStatus } from "../session/actions";
-import { principalToAccount } from "@icpswap/utils";
-import { login, logout, updateConnected, updateWalletConnector } from "./actions";
-import store from "../index";
-import { useAppSelector } from "store/hooks";
+import { principalToAccount, isPrincipal } from "@icpswap/utils";
 import { Connector } from "constants/wallet";
 import { Principal } from "@dfinity/principal";
 import { getConnectorIsConnected, getConnectorPrincipal, connector, WalletConnector } from "utils/connector";
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
-import { isPrincipal } from "@icpswap/utils";
+import store from "../index";
+import { login, logout, updateConnected, updateWalletConnector } from "./actions";
+import { updateLockStatus as _updateLockStatus } from "../session/actions";
 
 export function getConnectorType() {
   let connectorType = store.getState().auth.walletType;
@@ -28,10 +26,8 @@ export async function connectToConnector(connectorType: Connector) {
 
   if (!(await connector.isConnected())) {
     await connector.connect();
-  } else {
-    if (connector.connector) {
-      window.icConnector = connector.connector;
-    }
+  } else if (connector.connector) {
+    window.icConnector = connector.connector;
   }
 
   return await getConnectorIsConnected();
@@ -106,6 +102,19 @@ export function useIsUnLocked() {
   return useAppSelector((state) => state.session.isUnLocked);
 }
 
+export function useAccountPrincipal(): Principal | undefined {
+  const principal = useAppSelector((state) => state.auth.principal);
+  const walletType = useAppSelector((state) => state.auth.walletType);
+  const isUnLocked = useAppSelector((state) => state.session.isUnLocked);
+
+  return useMemo(() => {
+    if (!principal) return undefined;
+    if (walletType === Connector.PLUG && !isUnLocked) return undefined;
+    if (isPrincipal(principal)) return principal as Principal;
+    return Principal.fromText(principal);
+  }, [principal, walletType, isUnLocked]);
+}
+
 export function useAccount() {
   const principal = useAccountPrincipal();
 
@@ -143,7 +152,7 @@ export async function updateAuth({ walletType }: UpdateAuthProps) {
       mnemonic,
       account,
       principal,
-      walletType: walletType,
+      walletType,
       password,
     }),
   );
@@ -164,19 +173,6 @@ export function useUserLogout() {
   }, [dispatch, updateLockStatus]);
 }
 
-export function useAccountPrincipal(): Principal | undefined {
-  const principal = useAppSelector((state) => state.auth.principal);
-  const walletType = useAppSelector((state) => state.auth.walletType);
-  const isUnLocked = useAppSelector((state) => state.session.isUnLocked);
-
-  return useMemo(() => {
-    if (!principal) return undefined;
-    if (walletType === Connector.PLUG && !isUnLocked) return undefined;
-    if (isPrincipal(principal)) return principal as Principal;
-    return Principal.fromText(principal);
-  }, [principal, walletType, isUnLocked]);
-}
-
 export function useAccountPrincipalString() {
   const principal = useAccountPrincipal();
 
@@ -187,7 +183,7 @@ export function useAccountPrincipalString() {
 
 export function setActorHttpAgent() {
   const { auth } = store.getState();
-  const walletType = auth.walletType;
+  const { walletType } = auth;
 
   if (!walletType) return;
 

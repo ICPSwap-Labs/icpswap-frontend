@@ -96,7 +96,7 @@ export default memo(({ onClose, type }: { onClose: () => void; type: string }) =
 
   const handleSlippageToleranceInput = useCallback(
     (event) => {
-      let value = event.target.value;
+      let {value} = event.target;
       if (!value) value = 0;
       setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
     },
@@ -105,7 +105,7 @@ export default memo(({ onClose, type }: { onClose: () => void; type: string }) =
 
   const handleSlippageToleranceBlur = useCallback(
     (event) => {
-      let value = event.target.value;
+      let {value} = event.target;
 
       const defaultSlippageTolerance = getDefaultSlippageTolerance(type);
 
@@ -124,7 +124,7 @@ export default memo(({ onClose, type }: { onClose: () => void; type: string }) =
   };
 
   const handleMultipleApproveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const {value} = event.target;
     if (!value) return;
     updateMultipleApprove(Number(value));
   };

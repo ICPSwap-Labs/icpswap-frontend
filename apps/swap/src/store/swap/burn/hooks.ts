@@ -1,6 +1,5 @@
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { useCallback, useMemo } from "react";
-import { updateTypedInput, resetBurnState } from "./actions";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
 import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
@@ -11,6 +10,7 @@ import { usePool } from "hooks/swap/usePools";
 import { t } from "@lingui/macro";
 import { UserPosition } from "types/swap";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { updateTypedInput, resetBurnState } from "./actions";
 
 export function useBurnState() {
   return useAppSelector((state) => state.swapBurn);
@@ -72,8 +72,7 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
 
   if (independentField === BURN_FIELD.LIQUIDITY_PERCENT) {
     percentToRemove = new Percent(typedValue, "100");
-  } else {
-    if (tokens[independentField]) {
+  } else if (tokens[independentField]) {
       const independentAmount = tryParseAmount(typedValue, tokens[independentField]);
       const liquidityValue = liquidityValues[independentField];
 
@@ -81,7 +80,6 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
         percentToRemove = new Percent(independentAmount.quotient, liquidityValue.quotient);
       }
     }
-  }
 
   const discountedAmount0 = positionSDK ? percentToRemove.multiply(positionSDK.amount0.quotient).quotient : undefined;
   const discountedAmount1 = positionSDK ? percentToRemove.multiply(positionSDK.amount1.quotient).quotient : undefined;
@@ -101,7 +99,7 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false;
 
-  let error: string | undefined = undefined;
+  let error: string | undefined;
 
   if (inputNumberCheck(typedValue) === false) error = error ?? t`Amount exceeds limit`;
 

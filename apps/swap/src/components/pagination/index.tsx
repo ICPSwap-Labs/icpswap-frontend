@@ -21,8 +21,8 @@ export interface PaginationProps {
 
 export default ({
   count,
-  onPageChange = () => {},
-  onPageSizeChange = () => {},
+  onPageChange,
+  onPageSizeChange,
   defaultPageSize = 10,
   flexEnd,
   showPageSize = false,

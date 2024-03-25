@@ -74,7 +74,7 @@ export async function getTradeOrders(
   offset: number,
   limit: number,
   sort: string,
-  desc: boolean = false,
+  desc = false,
 ) {
   return resultFormat<PaginationResult<TradeOrder>>(
     await (
@@ -100,7 +100,7 @@ export function useNFTTradeOrder(
   offset: number,
   limit: number,
   sort: string,
-  desc: boolean = false,
+  desc = false,
 ) {
   return useCallsData(
     useCallback(async () => {

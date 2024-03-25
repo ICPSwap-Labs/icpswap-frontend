@@ -2,10 +2,10 @@ import { useState, memo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import MainCard from "components/cards/MainCard";
-import Exchange from "./Exchange";
-import Record from "./Record";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import Exchange from "./Exchange";
+import Record from "./Record";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

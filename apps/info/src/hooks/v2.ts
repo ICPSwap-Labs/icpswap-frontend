@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { isAvailablePageArgs, availableArgsNull, resultFormat } from "@icpswap/utils";
 import type { CallResult } from "@icpswap/types";

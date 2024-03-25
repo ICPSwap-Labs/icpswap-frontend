@@ -17,7 +17,7 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
     try {
       await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
     } catch (error) {
-      console.debug(`web3-react connection error: ${error}`);
+      console.error(`web3-react connection error: ${error}`);
     }
   }, []);
 

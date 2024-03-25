@@ -2,14 +2,13 @@ import { useState, useMemo } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
-import { enumToString } from "@icpswap/utils";
+import { enumToString , shorten, formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
 import dayjs from "dayjs";
 import { StaticLoading, Copy, NoData } from "ui-component/index";
 import { Theme } from "@mui/material/styles";
-import { shorten, formatDollarAmount, formatAmount } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -109,9 +108,9 @@ export default function Transactions({
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } else {
+            } 
               return 0;
-            }
+            
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

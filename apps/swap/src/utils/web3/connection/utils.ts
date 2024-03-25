@@ -10,7 +10,7 @@ export function getConnection(c: Connector | ConnectionType) {
       throw Error("unsupported connector");
     }
     return connection;
-  } else {
+  } 
     return injectedConnection;
-  }
+  
 }

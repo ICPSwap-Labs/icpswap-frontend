@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { parseTokenAmount, formatTokenAmount, isValidAccount } from "@icpswap/utils";
+import { parseTokenAmount, formatTokenAmount, isValidAccount , isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -19,7 +19,6 @@ import WalletContext from "components/Wallet/context";
 import { Modal, NumberTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
 import MaxButton from "components/MaxButton";
-import { isValidPrincipal } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -85,9 +84,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
       } catch (error) {
         return t`Invalid principal ID`;
       }
-    } else {
-      if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;
-    }
+    } else if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;
 
     if (!values.amount) return t`Enter an amount`;
     if (
@@ -257,13 +254,11 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
                 disabled={loading || !!errorMessage}
                 onClick={submit}
               >
-                {errorMessage ? (
-                  errorMessage
-                ) : !loading ? (
+                {errorMessage || (!loading ? (
                   <Trans>Confirm</Trans>
                 ) : (
                   <CircularProgress size={26} color="inherit" />
-                )}
+                ))}
               </Button>
             )}
           </Identity>

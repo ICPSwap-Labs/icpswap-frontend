@@ -29,21 +29,21 @@ import ids from "constants/swap-v2-ids.json";
 export const swapPositionManager = (identity?: Identity) =>
   actor.create<SWAP_POSITION_SERVICE>({
     canisterId: ids.SwapPositionManager.ic,
-    identity: identity,
+    identity,
     idlFactory: SwapPositionInterface,
   });
 
 export const swapFactory = (identity?: Identity) =>
   actor.create<SWAP_FACTORY_SERVICE>({
     canisterId: ids.SwapFactory.ic,
-    identity: identity,
+    identity,
     idlFactory: SwapFactoryInterface,
   });
 
 export const swapRouter = (identity?: Identity) =>
   actor.create<SWAP_ROUTER_SERVICE>({
     canisterId: ids.SwapRouter.ic,
-    identity: identity,
+    identity,
     idlFactory: SwapRouterInterface,
   });
 
@@ -57,14 +57,14 @@ export const v2SwapNFT = (identity?: Identity) =>
 export const swapRecord = (identity?: Identity) =>
   actor.create<BaseDataStructure>({
     canisterId: ids.BaseDataStructure.ic,
-    identity: identity,
+    identity,
     idlFactory: BaseDataStructureIdl,
   });
 
 export const swapPool = (canisterId: string, identity?: Identity) =>
   actor.create<SWAP_POOL_SERVICE>({
     identity,
-    canisterId: canisterId,
+    canisterId,
     idlFactory: SwapPoolInterface,
   });
 
@@ -77,7 +77,7 @@ export const swapGraphPool = () =>
 export const swapPositionManagerV1 = (identity?: Identity) =>
   actor.create<V1SWAP_POSITION_SERVICE>({
     canisterId: "eknb4-raaaa-aaaan-qanpa-cai",
-    identity: identity,
+    identity,
     idlFactory: V1SwapPositionInterface,
   });
 

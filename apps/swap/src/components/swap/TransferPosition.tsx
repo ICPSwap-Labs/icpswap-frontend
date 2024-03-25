@@ -5,28 +5,26 @@ import CurrenciesAvatar from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { CurrencyAmountFormatDecimals } from "constants/index";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { numberToString, BigNumber, resultFormat } from "@icpswap/utils";
+import { numberToString, BigNumber, resultFormat , formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import { ResultStatus } from "@icpswap/types";
 import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
-import { formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
 import { isDarkTheme, toFormat } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import PositionStatus from "./PositionRangeState";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";
 import SwapModal from "components/modal/swap";
 import { Principal } from "@dfinity/principal";
 import PositionContext from "components/swap/PositionContext";
+import PositionStatus from "./PositionRangeState";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -189,7 +187,7 @@ export function PositionDetails({
 
   return (
     <>
-      <Grid mt={1} className={classes.detailContainer} sx={{ display: !!show ? "block" : "none" }}>
+      <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
         <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
         <PositionDetailItem
           label={t`${currencyQuote?.symbol} Amount`}
@@ -417,7 +415,7 @@ export default function TransferPosition({
     closeLoadingTip(loadingKey);
   };
 
-  let error: string | undefined = undefined;
+  let error: string | undefined;
   if (principal && !isValidPrincipal(principal)) error = "Invalid principal ID";
   if (!principal) error = "Enter the principal ID";
 
@@ -479,7 +477,7 @@ export default function TransferPosition({
         showButtons={showButtons}
         manuallyInverted={manuallyInverted}
         setManuallyInverted={setManuallyInverted}
-        show={true}
+        show
         token0USDPrice={token0USDPrice}
         token1USDPrice={token1USDPrice}
         onPrincipalChange={handlePrincipalChange}
@@ -487,7 +485,7 @@ export default function TransferPosition({
 
       <Box mt="20px">
         <Button fullWidth size="medium" variant="contained" disabled={!!error || loading} onClick={handleTransfer}>
-          {error ? error : <Trans>Transfer</Trans>}
+          {error || <Trans>Transfer</Trans>}
         </Button>
       </Box>
     </SwapModal>

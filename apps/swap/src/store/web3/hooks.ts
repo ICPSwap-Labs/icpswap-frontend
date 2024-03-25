@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { updateTX, updateWithdrawTX } from "./actions";
 import { TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
+import { updateTX, updateWithdrawTX } from "./actions";
 
 export function useUpdateTX() {
   const dispatch = useAppDispatch();

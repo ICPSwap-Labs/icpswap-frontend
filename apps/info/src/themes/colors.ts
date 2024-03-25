@@ -56,7 +56,7 @@ export default {
   grey700: "#616161",
   grey900: "#212121",
 
-  //-----------------------|| DARK THEME VARIANTS ||-----------------------//
+  // -----------------------|| DARK THEME VARIANTS ||-----------------------//
 
   // paper & background
   darkPaper: "#111936",

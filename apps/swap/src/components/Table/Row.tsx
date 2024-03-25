@@ -1,9 +1,6 @@
 import { Box, BoxProps } from "@mui/material";
-import { Override } from "@icpswap/types";
 
-export type RowProps = Override<BoxProps, {}>;
-
-export default function Row(props: RowProps) {
+export default function Row(props: BoxProps) {
   return (
     <Box
       {...props}
@@ -12,7 +9,7 @@ export default function Row(props: RowProps) {
         borderBottom: "1px solid rgba(189, 200, 240, 0.082)",
         display: "grid",
         alignItems: "center",
-        ...(props.sx ?? {}),
+        ...props.sx,
       }}
     >
       {props.children}

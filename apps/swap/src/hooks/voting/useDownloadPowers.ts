@@ -9,7 +9,8 @@ export function useDownloadPowers(canisterId: string | undefined, id: string, li
 
   const fetchRecords = useCallback(
     async (offset: number, limit: number) => {
-      return await getUserVotingPowers(canisterId!, id, undefined, offset, limit);
+      if (!canisterId) return undefined;
+      return await getUserVotingPowers(canisterId, id, undefined, offset, limit);
     },
     [canisterId],
   );
@@ -18,7 +19,7 @@ export function useDownloadPowers(canisterId: string | undefined, id: string, li
     fetchRecords,
     limit ?? 1000,
     (content: UserVotePowersInfo[]) => {
-      let data = content.map((d) => {
+      const data = content.map((d) => {
         return {
           Address: valueofUser(d.address).toString(),
           Votes: String(d.availablePowers),

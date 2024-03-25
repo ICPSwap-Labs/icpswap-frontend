@@ -1,4 +1,4 @@
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { Select, type MenuProps } from "components/Select/ForToken";
 import { useAllTokenIds } from "hooks/useAllTokens";
@@ -61,7 +61,7 @@ export function SelectToken({ value: tokenId, onTokenChange, border, filter, sea
   }, [tokenId]);
 
   const menus = useMemo(() => {
-    let contents = allTokenInfos.filter(
+    const contents = allTokenInfos.filter(
       (ele) => ele[0] === TokenInfoState.EXISTS && ele[1]?.canisterId !== ICP.address,
     ) as [TokenInfoState, TokenInfo][];
 

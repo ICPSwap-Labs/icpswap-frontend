@@ -8,6 +8,5 @@ export { default as BodyCell } from "./BodyCell";
 export type { BodyCellProps } from "./BodyCell";
 
 export { default as Row } from "./Row";
-export type { RowProps } from "./Row";
 
 export { SortDirection } from "./types";

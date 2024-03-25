@@ -24,7 +24,7 @@ export async function getTokenTotalHolder(canisterId: string | undefined) {
 
   return (
     await tokenAdapter.totalHolders({
-      canisterId: canisterId!,
+      canisterId,
     })
   ).data;
 }
@@ -96,7 +96,7 @@ export async function tokenTransfer({
   } else {
     result = await tokenAdapter.transfer({
       identity,
-      canisterId: canisterId,
+      canisterId,
       params: {
         from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
         to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
@@ -127,15 +127,6 @@ export async function tokenTransfer({
   } as StatusResult<bigint>;
 }
 
-export function useTokenTransactions(canisterId: string, account: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return getTokenTransaction(canisterId, account, offset, limit);
-    }, [offset, limit, canisterId]),
-  );
-}
-
 export async function getTokenTransaction(
   canisterId: string,
   account: string | undefined,
@@ -147,16 +138,25 @@ export async function getTokenTransaction(
       canisterId,
       params: {
         user: account ? { address: account } : undefined,
-        offset: offset,
-        limit: limit,
+        offset,
+        limit,
       },
     })
   ).data;
 }
 
+export function useTokenTransactions(canisterId: string, account: string | undefined, offset: number, limit: number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
+      return getTokenTransaction(canisterId, account, offset, limit);
+    }, [offset, limit, canisterId]),
+  );
+}
+
 export async function getTokenSupply(canisterId: string | undefined) {
   if (!canisterId) return undefined;
-  return (await tokenAdapter.supply({ canisterId: canisterId! })).data;
+  return (await tokenAdapter.supply({ canisterId })).data;
 }
 
 export function useTokenSupply(canisterId: string | undefined, reload?: boolean) {
@@ -202,19 +202,19 @@ export async function getTokenInfo(canisterId: string | undefined) {
     if (!result) return undefined;
 
     const metadata = result.data;
-    const _logo = isICRCToken(canisterId) ? (!!logo ? logo : metadata.logo) : metadata.logo;
+    const _logo = isICRCToken(canisterId) ? logo || metadata.logo : metadata.logo;
 
     if (!metadata || metadata.decimals === undefined || metadata.fee === undefined || metadata.symbol === undefined)
       return undefined;
 
     return {
-      logo: !!_logo ? _logo : TokenDefaultLogo,
+      logo: _logo || TokenDefaultLogo,
       transFee: metadata.fee,
       decimals: metadata.decimals,
       metadata: [],
       name: metadata.name,
       symbol: metadata.symbol,
-      canisterId: canisterId,
+      canisterId,
       standardType: getTokenStandard(canisterId) ?? TOKEN_STANDARD.ICRC1,
     } as TokenInfo;
   });

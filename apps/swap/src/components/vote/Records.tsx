@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Grid, Typography, Box, CircularProgress } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { valueofUser } from "@icpswap/utils";
-import { timestampFormat, pageArgsFormat } from "@icpswap/utils";
+import { valueofUser , timestampFormat, pageArgsFormat } from "@icpswap/utils";
 import { getVotingTransactions } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { UserVoteRecord } from "@icpswap/types";

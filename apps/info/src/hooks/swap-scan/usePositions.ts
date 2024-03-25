@@ -14,7 +14,7 @@ export function usePositions(poolId: string | undefined, principal: string | und
     if (principal) {
       return {
         loading: userAllPositionsLoading,
-        result: !!userSwapPoolAllPositions
+        result: userSwapPoolAllPositions
           ? {
               offset: 0,
               limit: 10,
@@ -27,7 +27,7 @@ export function usePositions(poolId: string | undefined, principal: string | und
 
     return {
       loading: allPositionsLoading,
-      result: !!swapPoolPositions
+      result: swapPoolPositions
         ? {
             offset: swapPoolPositions.offset,
             limit: swapPoolPositions.limit,

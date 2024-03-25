@@ -1,3 +1,4 @@
+import { createReducer } from "@reduxjs/toolkit";
 import {
   updateXDR2USD,
   updateDrawerWidth,
@@ -10,7 +11,6 @@ import {
 } from "./actions";
 import { initialState } from "./states";
 
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -24,7 +24,7 @@ export default createReducer(initialState, (builder) => {
       state.ICPPriceList = payload;
     })
     .addCase(addCatchToken, (state, { payload }) => {
-      state.requestTokenList = [...state.requestTokenList, ...(payload ? payload : [])];
+      state.requestTokenList = [...state.requestTokenList, ...(payload || [])];
     })
     .addCase(updateUserLocale, (state, { payload }) => {
       state.userLocale = payload;

@@ -7,5 +7,5 @@ export const v1StakingToken = (canisterId: string, identity?: Identity) =>
   actor.create<_SERVICE>({
     canisterId,
     identity,
-    idlFactory: idlFactory,
+    idlFactory,
   });

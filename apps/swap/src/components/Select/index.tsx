@@ -75,7 +75,7 @@ export function Value({ value, menus = [], helperText }: { helperText?: string; 
       >
         {menus.filter((menu) => menu.value === value)[0]?.label ?? value}
       </Typography>
-      {!!helperText ? (
+      {helperText ? (
         <Typography
           sx={{
             overflow: "hidden",
@@ -160,7 +160,7 @@ export default function Select({
           <>
             <Grid container alignItems="center">
               <Grid item xs sx={{ marginRight: "10px" }}>
-                {!!value ? (
+                {value ? (
                   <Value menus={menus} value={value} helperText={helperText} />
                 ) : (
                   <Typography
@@ -212,7 +212,7 @@ export default function Select({
               {menu.label}
             </MenuItem>
           ))}
-          {menus.length === 0 ? !!CustomNoData ? CustomNoData : <NoData /> : null}
+          {menus.length === 0 ? CustomNoData || <NoData /> : null}
         </Menu>
       )}
     </>

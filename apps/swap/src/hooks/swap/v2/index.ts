@@ -17,9 +17,9 @@ export function useActualSwapAmount(
 
     if (typedValue.isGreaterThan(currency.transFee)) {
       return numberToString(parseTokenAmount(typedValue.minus(fee), currency.decimals));
-    } else {
+    } 
       return "0";
-    }
+    
   }, [amount, currency]);
 }
 

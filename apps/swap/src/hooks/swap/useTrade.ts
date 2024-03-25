@@ -1,13 +1,12 @@
 import { useMemo } from "react";
 import { TradeType } from "@icpswap/constants";
 import { CurrencyAmount, Trade, Currency, Route } from "@icpswap/swap-sdk";
-import { useAllRoutes } from "./useAllRoutes";
 import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { useQuoteExactInput } from "hooks/swap/v3Calls";
-import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useQuoteExactInput , useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { useActualSwapAmount } from "hooks/swap/index";
+import { useAllRoutes } from "./useAllRoutes";
 
 export enum TradeState {
   LOADING = "LOADING",
@@ -86,7 +85,7 @@ export function useBestTrade(
       return {
         state: TradeState.INVALID,
         trade: null,
-        tradePoolId: tradePoolId,
+        tradePoolId,
       };
     }
 
@@ -94,7 +93,7 @@ export function useBestTrade(
       return {
         state: TradeState.LOADING,
         trade: null,
-        tradePoolId: tradePoolId,
+        tradePoolId,
       };
     }
 
@@ -105,12 +104,12 @@ export function useBestTrade(
         if (currentBest.amountOut === null) {
           return {
             bestRoute: routes[i],
-            amountOut: amountOut,
+            amountOut,
           };
-        } else if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
-            amountOut: amountOut,
+            amountOut,
           };
         }
 
@@ -126,7 +125,7 @@ export function useBestTrade(
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: null,
-        tradePoolId: tradePoolId,
+        tradePoolId,
       };
     }
 
@@ -139,7 +138,7 @@ export function useBestTrade(
         inputAmount: tryParseAmount(actualSwapValue, inputCurrency)!,
         outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, amountOut.toString()),
       }),
-      tradePoolId: tradePoolId,
+      tradePoolId,
     };
   }, [
     inputCurrency,

@@ -1,11 +1,10 @@
 import { Currency, CurrencyAmount, FeeAmount } from "@icpswap/swap-sdk";
-import { formatTokenAmount } from "@icpswap/utils";
+import { formatTokenAmount , resultFormat } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useMemo, useEffect, useState } from "react";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
 import { usePool } from "hooks/swap/usePools";
 import { useICPPrice } from "store/global/hooks";
-import { resultFormat } from "@icpswap/utils";
 import { analyticToken } from "@icpswap/actor";
 import { useToken } from "hooks/info/useToken";
 import { PublicTokenOverview } from "@icpswap/types";

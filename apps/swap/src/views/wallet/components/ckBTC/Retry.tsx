@@ -22,7 +22,7 @@ export interface RetryDissolveProps {
   token: TokenInfo | undefined;
 }
 
-export default function RetryDissolve({ open, onClose = () => {}, unDissolveBalance, token }: RetryDissolveProps) {
+export default function RetryDissolve({ open, onClose, unDissolveBalance, token }: RetryDissolveProps) {
   const principal = useAccountPrincipal();
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -115,7 +115,7 @@ export default function RetryDissolve({ open, onClose = () => {}, unDissolveBala
                   disabled={!!error || loading || !unDissolveBalance}
                 >
                   {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-                  {error ? error : <Trans>Dissolve ckBTC</Trans>}
+                  {error || <Trans>Dissolve ckBTC</Trans>}
                 </Button>
               )}
             </Identity>

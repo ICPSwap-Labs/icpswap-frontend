@@ -14,10 +14,10 @@ import type { NFTTokenMetadata, ActorIdentity } from "@icpswap/types";
 import { NFTTradeFee } from "constants/nft";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import LazyImage from "components/LazyImage";
-import FileImage from "../FileImage";
 import { encodeTokenIdentifier } from "utils/nft/index";
 import { getLocaleMessage } from "locales/services";
 import { useAccount } from "store/global/hooks";
+import FileImage from "../FileImage";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -246,7 +246,7 @@ export default function NFTSell({
                 onClick={submit}
                 startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
               >
-                {errorMsg ? errorMsg : loading ? "" : t`Confirm`}
+                {errorMsg || (loading ? "" : t`Confirm`)}
               </Button>
             )}
           </Identity>

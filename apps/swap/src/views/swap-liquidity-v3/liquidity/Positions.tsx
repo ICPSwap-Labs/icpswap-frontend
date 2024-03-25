@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import PositionItemComponent from "components/swap/PositionItem";
 import { usePosition } from "hooks/swap/usePosition";
 import { Trans } from "@lingui/macro";

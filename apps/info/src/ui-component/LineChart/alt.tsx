@@ -77,8 +77,8 @@ export default function Chart({
             bottom: 5,
           }}
           onMouseLeave={() => {
-            setLabel && setLabel(undefined);
-            setValue && setValue(undefined);
+            if (setLabel) setLabel(undefined);
+            if (setValue) setValue(undefined);
           }}
         >
           <defs>

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { Grid } from "@mui/material";
 import { SwapV2Wrapper } from "components/swap/SwapWrapper";
-import PoolList from "./PoolList";
-import Positions from "./Positions";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { usePoolList } from "hooks/swap/v2/useSwapCalls";
 import { usePoolStandardManager } from "store/global/hooks";
 import LoadingRow from "components/Loading/LoadingRow";
 import LiquidityPoolIntro from "components/swap/LiquidityPoolIntro";
+import Positions from "./Positions";
+import PoolList from "./PoolList";
 
 export default function Liquidity() {
   const [isInitialed, updatePoolStandardInitialed] = usePoolStandardManager();
@@ -17,7 +17,7 @@ export default function Liquidity() {
   useEffect(() => {
     const call = async () => {
       if (pools && pools.length && !isInitialed) {
-        let calls: Promise<void>[] = [];
+        const calls: Promise<void>[] = [];
 
         for (let i = 0; i < pools.length; i++) {
           const pool = pools[i];

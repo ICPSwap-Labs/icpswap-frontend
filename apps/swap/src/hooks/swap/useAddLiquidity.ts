@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { updateUserPositionPoolId } from "@icpswap/hooks";
+import { updateUserPositionPoolId , getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
 import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import { useStepCalls, newStepKey , useCloseAllSteps } from "hooks/useStepCall";
 import { getAddLiquidityStepDetails } from "components/swap/AddLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer } from "hooks/swap/index";
@@ -14,14 +14,12 @@ import { createPool, mint as _mint } from "hooks/swap/v3Calls";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { useHistory } from "react-router-dom";
-import { useCloseAllSteps } from "hooks/useStepCall";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import type { PCMMetadata } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
-import { getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 
-let SwapPoolId: undefined | string = undefined;
+let SwapPoolId: undefined | string;
 
 interface AddLiquidityCallsArgs {
   noLiquidity: boolean;
@@ -183,8 +181,8 @@ function useAddLiquidityCalls() {
 
         const poolId = getPoolId();
         const identity = await getActorIdentity();
-        const token0 = position.pool.token0;
-        const token1 = position.pool.token1;
+        const {token0} = position.pool;
+        const {token1} = position.pool;
         const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
         const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());
 
@@ -205,7 +203,7 @@ function useAddLiquidityCalls() {
           updateStoreUserPositionPool([poolId]);
 
           return true;
-        } else if (status === "err") {
+        } if (status === "err") {
           openExternalTip({ message: getLocaleMessage(message), tipKey: stepKey });
           return false;
         }

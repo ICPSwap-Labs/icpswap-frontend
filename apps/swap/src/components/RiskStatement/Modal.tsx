@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => {
 export const RISK_STORAGE_NAME = "ICPSwap_Risk";
 
 export async function getRiskStorage() {
-  let storageRisk = await storage.getItem(RISK_STORAGE_NAME);
-  let isRead = !storageRisk ? "" : JSON.parse(storageRisk);
+  const storageRisk = await storage.getItem(RISK_STORAGE_NAME);
+  const isRead = !storageRisk ? "" : JSON.parse(storageRisk);
   return isRead;
 }
 

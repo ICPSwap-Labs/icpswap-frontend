@@ -1,12 +1,11 @@
 import { useCallback } from "react";
 import { Grid, Typography, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { isDarkTheme } from "utils";
 import Loading from "components/Loading";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
 
@@ -63,7 +62,7 @@ export default function CurrencySelectorButton({
 
   const handleButtonClick = useCallback(() => {
     if (loading) return;
-    onClick && onClick();
+    if (onClick) onClick();
   }, [loading, onClick]);
 
   return currency ? (

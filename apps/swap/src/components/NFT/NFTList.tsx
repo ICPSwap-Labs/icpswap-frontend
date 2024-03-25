@@ -113,7 +113,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
             height: "100%",
           }}
         >
-          <Loading loading={loading} mask={true} />
+          <Loading loading={loading} mask />
         </Box>
       ) : null}
     </Box>

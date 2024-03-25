@@ -15,7 +15,7 @@ export async function allowance({ spender, spenderSub, owner, ownerSub }: Allowa
   const result = await (
     await ckBTCActor(true)
   ).icrc2_allowance({
-    account: { owner: owner, subaccount: availableArgsNull<number[]>(ownerSub) },
+    account: { owner, subaccount: availableArgsNull<number[]>(ownerSub) },
     spender: { owner: spender, subaccount: availableArgsNull<number[]>(spenderSub) },
   });
 

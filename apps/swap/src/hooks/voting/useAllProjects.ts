@@ -5,7 +5,7 @@ import { getVotingProjects, usePaginationAllData, getPaginationAllData } from "@
 export async function getAllProjects() {
   const fetchRecords = async (offset: number, limit: number) => {
     return await getVotingProjects(offset, limit).catch((err) => {
-      console.log(err);
+      console.error(err);
       return undefined;
     });
   };
@@ -16,7 +16,7 @@ export async function getAllProjects() {
 export function useAllProjects() {
   const fetchRecords = useCallback(async (offset: number, limit: number) => {
     return await getVotingProjects(offset, limit).catch((err) => {
-      console.log(err);
+      console.error(err);
       return undefined;
     });
   }, []);

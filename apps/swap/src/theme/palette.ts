@@ -1,7 +1,6 @@
 import { isDarkTheme } from "utils";
-import { ThemeOption } from "./index";
 
-export function themePalette(theme: ThemeOption) {
+export function themePalette(theme: { [key: string]: any }) {
   const isDark = isDarkTheme(theme);
 
   return {

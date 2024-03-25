@@ -7,7 +7,6 @@ import FeeSelector from "components/swap/SwapFeeSelector";
 import CurrencySelector from "components/CurrencySelector";
 import DepositAmount from "components/swap/SwapDepositAmount";
 import SwapWrapper from "components/swap/SwapWrapper";
-import SetPriceRange from "./SetPriceRange";
 import {
   useMintState,
   useMintHandlers,
@@ -36,6 +35,7 @@ import AddLiquidityButton from "components/swap/AddLiquidityButton";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
 import { usePCMMetadata, useUserPCMBalance } from "@icpswap/hooks";
+import SetPriceRange from "./SetPriceRange";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -269,7 +269,7 @@ export default function AddLiquidity() {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? "/" + feeAmount : ""}`);
+    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${  feeAmount}` : ""}`);
   };
 
   const handleCurrencyAMax = () => {

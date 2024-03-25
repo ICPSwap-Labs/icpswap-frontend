@@ -28,7 +28,7 @@ export default function TokenStandardLabel({ standard }: { standard: TOKEN_STAND
         sx={{
           width: "44px",
           padding: "3px 0",
-          backgroundColor: !!standard ? StandardLabelBg[standard] : "",
+          backgroundColor: standard ? StandardLabelBg[standard] : "",
           borderRadius: "4px",
         }}
       >

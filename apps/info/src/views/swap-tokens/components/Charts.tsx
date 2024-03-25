@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import { Typography, Box } from "@mui/material";
 import { t } from "@lingui/macro";
-import { BigNumber, toSignificant } from "@icpswap/utils";
+import { BigNumber, toSignificant , formatDollarAmount } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
-import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -37,11 +36,11 @@ export interface TokenChartsProps {
 
 function volumeDataFormatter(data: PublicTokenChartDayData[]) {
   const oldData = [...data];
-  let newData: PublicTokenChartDayData[] = [];
+  const newData: PublicTokenChartDayData[] = [];
 
   if (data.length === 0) return [] as PublicTokenChartDayData[];
 
-  //Fill the empty data between origin data
+  // Fill the empty data between origin data
   for (let i = 0; i < oldData.length; i++) {
     const curr = oldData[i];
     const next = oldData[i + 1];
@@ -128,9 +127,9 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           value: data.tvlUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [tvlChartData]);
 
   const volumeData = useMemo(() => {
@@ -141,9 +140,9 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           volumeUSD: data.volumeUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   const dailyVolumeData = useMemo(() => {
@@ -154,9 +153,9 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           value: ele.volumeUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [volumeData]);
 
   const handlePriceHoverChange = (data: any) => {
@@ -216,7 +215,7 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           }}
           fontSize="12px"
         >
-          {valueLabel ? valueLabel : ""}
+          {valueLabel || ""}
         </Typography>
 
         {priceData ? (

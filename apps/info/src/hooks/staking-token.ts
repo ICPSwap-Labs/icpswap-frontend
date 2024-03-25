@@ -1,8 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import { useCallsData } from "@icpswap/hooks";
-import { getV1StakingTokenUserInfo, getStakingTokenUserInfo } from "@icpswap/hooks";
-import { getStakingTokenCycles, getV1StakingTokenCycles } from "@icpswap/hooks";
-import { getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
+import { useCallsData , getV1StakingTokenUserInfo, getStakingTokenUserInfo , getStakingTokenCycles, getV1StakingTokenCycles , getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
 import { PoolData, UserStakingInfo, V1PoolData } from "types/staking-token";
 
 export function useUserStakingInfo(

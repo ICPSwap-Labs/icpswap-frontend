@@ -4,6 +4,10 @@ import { open, close, updateStepDetails, updateKey, closeAll } from "./actions";
 import { StepDetails } from "./state";
 import store from "../index";
 
+export function getStepDetails(key: string) {
+  return store.getState().step.steps[key];
+}
+
 export function useCurrKey() {
   return useAppSelector((state) => state.step.key);
 }
@@ -93,8 +97,4 @@ export function useOpenedSteps() {
 
 export function useStepDetails(key: string) {
   return useAppSelector((state) => state.step.steps[key]);
-}
-
-export function getStepDetails(key: string) {
-  return store.getState().step.steps[key];
 }

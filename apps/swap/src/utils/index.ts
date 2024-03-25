@@ -1,3 +1,5 @@
+/* eslint-disable no-extend-native */
+
 import JSBI from "jsbi";
 import { toSignificant } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
@@ -35,7 +37,7 @@ export function isICPSwapOfficial(account: string | undefined): boolean {
 }
 
 export function mockALinkAndOpen(url: string, id: string): void {
-  let a = document.createElement("a");
+  const a = document.createElement("a");
   a.setAttribute("href", url);
   a.setAttribute("target", "_blank");
   a.setAttribute("id", id);
@@ -48,9 +50,8 @@ export function mockALinkAndOpen(url: string, id: string): void {
 export function getExplorerPrincipalLink(principalId: string): string {
   if ((principalId ?? "").length > 27) {
     return `https://icscan.io/principal/${principalId}`;
-  } else {
-    return `https://icscan.io/canister/${principalId}`;
   }
+  return `https://icscan.io/canister/${principalId}`;
 }
 
 export function getExplorerAccountLink(account: string): string {
@@ -58,10 +59,10 @@ export function getExplorerAccountLink(account: string): string {
 }
 
 export function openBase64ImageInNewWindow(base64String: string) {
-  var image = new Image();
+  const image = new Image();
   image.src = base64String;
 
-  var win = window.open("");
+  const win = window.open("");
   win?.document.write(image.outerHTML);
 }
 
@@ -119,7 +120,7 @@ export function toFormat(value: string | number | BigNumber | undefined) {
   return new BigNumber(value).toFormat();
 }
 
-export function toSignificantFormatted(val: number | string, dig: number = 8) {
+export function toSignificantFormatted(val: number | string, dig = 8) {
   return toSignificant(val, dig, { groupSeparator: "," });
 }
 

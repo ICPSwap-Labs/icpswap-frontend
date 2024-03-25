@@ -24,7 +24,7 @@ const [metamask, hooks] = initializeConnector<MetaMask>((actions) => new MetaMas
 
 export const injectedConnection: Connection = {
   connector: metamask,
-  hooks: hooks,
+  hooks,
   type: ConnectionType.INJECTED,
 };
 

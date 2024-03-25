@@ -1,8 +1,9 @@
+/* eslint-disable no-extend-native */
 import _BigNumber from "bignumber.js";
-import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "../constants/tokens";
 import { APP_LINK } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import JSBI from "jsbi";
+import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "../constants/tokens";
 
 // @ts-ignore hijack bigint
 BigInt.prototype.toJSON = function () {
@@ -57,7 +58,7 @@ export function isAvailablePageArgs(offset: number, limit: number): boolean {
 }
 
 export function mockALinkAndOpen(url: string, id: string): void {
-  let a = document.createElement("a");
+  const a = document.createElement("a");
   a.setAttribute("href", url);
   a.setAttribute("target", "_blank");
   a.setAttribute("id", id);
@@ -70,9 +71,8 @@ export function mockALinkAndOpen(url: string, id: string): void {
 export function getExplorerPrincipalLink(principalId: string): string {
   if ((principalId ?? "").length > 27) {
     return `https://icscan.io/principal/${principalId}`;
-  } else {
-    return `https://icscan.io/canister/${principalId}`;
   }
+  return `https://icscan.io/canister/${principalId}`;
 }
 
 export function getExplorerAccountLink(account: string): string {
@@ -83,7 +83,7 @@ export function arrayBufferToString(arrayBuffer: Uint8Array): string {
   return new TextDecoder("utf-8").decode(arrayBuffer);
 }
 
-export function percentageFormat(num: bigint | number | string | undefined | null, digits: number = 2) {
+export function percentageFormat(num: bigint | number | string | undefined | null, digits = 2) {
   if (num || num === 0 || num === BigInt(0)) {
     return `${new BigNumber(String(num)).div(100).toFixed(digits)}%`;
   }

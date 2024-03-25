@@ -1,6 +1,4 @@
-/**
- * Credit to MUI team @ https://mui.com
- */
+/* eslint-disable no-param-reassign */
 import * as React from "react";
 
 /**

@@ -2,9 +2,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { brushX, select, ScaleLinear, BrushBehavior } from "d3";
 import styled from "styled-components/macro";
-import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 import usePrevious from "hooks/usePrevious";
 import { useTheme } from "@mui/material";
+import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 
 const Handle = styled.path<{ color: string; d: string }>`
   cursor: ew-resize;
@@ -210,7 +210,7 @@ export const Brush = ({
                   visible={showLabels || hovering}
                 >
                   <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" theme={theme} />
-                  <Tooltip transform={`scale(-1, 1)`} y="15" dominantBaseline="middle" theme={theme}>
+                  <Tooltip transform="scale(-1, 1)" y="15" dominantBaseline="middle" theme={theme}>
                     {brushLabelValue("w", localBrushExtent[0])}
                   </Tooltip>
                 </LabelGroup>

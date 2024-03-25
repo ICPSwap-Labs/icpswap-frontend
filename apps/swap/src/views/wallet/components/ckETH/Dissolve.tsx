@@ -3,7 +3,7 @@ import { Trans, t } from "@lingui/macro";
 import { withdraw_eth, useFetchUserTxStates } from "hooks/ck-eth";
 import { useApprove, useTokenInfo, useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
+import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT , chain } from "constants/ckETH";
 import { ckETH } from "constants/tokens";
 import { useState, useEffect } from "react";
 import { FilledTextField, NumberFilledTextField, MainCard } from "components/index";
@@ -15,7 +15,6 @@ import Toggle, { ToggleButton } from "components/SwitchToggle";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
-import { chain } from "constants/ckETH";
 import { chainIdToNetwork } from "constants/web3";
 
 import Logo from "./Logo";
@@ -206,7 +205,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
               <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
                 <Button variant="contained" fullWidth size="large" onClick={handleSubmit} disabled={!!error || loading}>
                   {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-                  {error ? error : <Trans>Dissolve ckETH</Trans>}
+                  {error || <Trans>Dissolve ckETH</Trans>}
                 </Button>
               </Box>
             </Box>

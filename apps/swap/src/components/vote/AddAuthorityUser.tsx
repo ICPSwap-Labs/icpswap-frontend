@@ -63,7 +63,7 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
           onCancel={onClose}
           onConfirm={submit}
           confirmDisabled={!!error || loading}
-          confirmText={error ? error : <Trans>Confirm</Trans>}
+          confirmText={error || <Trans>Confirm</Trans>}
         >
           <FilledTextField placeholder={t`Enter the user's principal id`} onChange={handleChange} />
           <Box sx={{ height: "40px" }} />

@@ -3,10 +3,9 @@ import { useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { pageArgsFormat } from "@icpswap/utils";
-import { Wrapper, MainCard } from "components/index";
+import { Wrapper, MainCard , Pagination, PaginationType, NoData, StaticLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import { ProjectInfo } from "@icpswap/types";
-import { Pagination, PaginationType, NoData, StaticLoading } from "components/index";
 import { useVotingProjects } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
-import Header from "./Header";
 import { Theme } from "@mui/material/styles";
 import Background from "components/Background";
-import V3Event from "./V3Event";
 import { GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
+import V3Event from "./V3Event";
+import Header from "./Header";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => {
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
       padding: "20px",
-      borderRadius: theme.customization.borderRadius + "px",
+      borderRadius: `${theme.customization.borderRadius  }px`,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       transition: theme.transitions.create("margin", {

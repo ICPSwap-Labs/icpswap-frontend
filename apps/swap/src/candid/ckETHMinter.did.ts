@@ -25,8 +25,8 @@ export const idlFactory = ({ IDL }: any) => {
     ethereum_block_height: BlockTag,
   });
   const MinterArg = IDL.Variant({
-    UpgradeArg: UpgradeArg,
-    InitArg: InitArg,
+    UpgradeArg,
+    InitArg,
   });
   const Eip1559TransactionPrice = IDL.Record({
     max_priority_fee_per_gas: IDL.Nat,

@@ -159,7 +159,7 @@ export function PositionItem({ positionInfo, selectedPositionId, setSelectedPosi
 
   return (
     <Box className={classes.selectNFTBox}>
-      {!!position ? (
+      {position ? (
         <>
           <Box
             sx={{
@@ -265,15 +265,15 @@ export function PositionItem({ positionInfo, selectedPositionId, setSelectedPosi
               }}
             >
               <DetailsItem
-                label={!!token0 ? `${token0?.symbol} Amount` : "--"}
-                value={!!token0 ? `${token0Amount} ${token0.symbol}` : "--"}
+                label={token0 ? `${token0?.symbol} Amount` : "--"}
+                value={token0 ? `${token0Amount} ${token0.symbol}` : "--"}
               />
               <DetailsItem
-                label={!!token1 ? `${token1?.symbol} Amount` : "--"}
-                value={!!token1 ? `${token1Amount} ${token1.symbol}` : "--"}
+                label={token1 ? `${token1?.symbol} Amount` : "--"}
+                value={token1 ? `${token1Amount} ${token1.symbol}` : "--"}
               />
               <DetailsItem
-                label={`Current Price`}
+                label="Current Price"
                 value={
                   !!token1 && !!token0
                     ? inverted
@@ -287,7 +287,7 @@ export function PositionItem({ positionInfo, selectedPositionId, setSelectedPosi
                 }
               />
               <DetailsItem
-                label={`Price Range`}
+                label="Price Range"
                 value={`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
                   priceUpper,
                   tickAtLimit,

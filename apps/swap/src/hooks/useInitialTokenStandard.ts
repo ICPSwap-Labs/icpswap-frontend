@@ -134,11 +134,9 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
       setTokensLoading(false);
 
       updateCanisters(globalTokenList.map((ele) => ele.canisterId));
-    } else {
-      if (!fetchGlobalTokensLoading) {
+    } else if (!fetchGlobalTokensLoading) {
         setTokensLoading(false);
       }
-    }
   }, [globalTokenList, fetchGlobalTokensLoading]);
 
   useEffect(() => {

@@ -3,12 +3,11 @@ import { useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { ToggleButton } from "components/SwitchToggle";
-import { Wrapper } from "components/index";
-import useParsedQueryString from "hooks/useParsedQueryString";
-import { Breadcrumbs } from "components/index";
+import { Wrapper, Breadcrumbs } from "components/index";
+import { useParsedQueryString } from "@icpswap/hooks";
+import { useBTCCurrentBlock } from "hooks/ck-btc/useBTCCalls";
 import MintBTC from "./components/ckBTC/Mint";
 import DissolveBTC from "./components/ckBTC/Dissolve";
-import { useBTCCurrentBlock } from "hooks/ck-btc/useBTCCalls";
 
 export const Buttons = [
   {

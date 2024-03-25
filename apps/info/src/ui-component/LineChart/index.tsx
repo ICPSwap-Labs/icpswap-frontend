@@ -10,6 +10,7 @@ import { formatDollarAmount } from "@icpswap/utils";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+
 dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
@@ -82,7 +83,7 @@ const LineChart = ({
   useEffect(() => {
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
-        height: height,
+        height,
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: "transparent",
@@ -152,7 +153,7 @@ const LineChart = ({
       });
 
       // update the title when hovering on the chart
-      chartCreated.subscribeCrosshairMove(function (param) {
+      chartCreated.subscribeCrosshairMove((param) => {
         if (
           chartRef?.current &&
           (param === undefined ||
@@ -162,14 +163,14 @@ const LineChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
-          setValue && setValue(undefined);
-          setLabel && setLabel(undefined);
+          if (setValue) setValue(undefined);
+          if (setLabel) setLabel(undefined);
         } else if (series && param) {
           const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
           const time = param?.time as { day: number; year: number; month: number };
-          const timeString = dayjs(time.year + "-" + time.month + "-" + time.day).format("MMM D, YYYY");
-          setValue && setValue(price);
-          setLabel && timeString && setLabel(timeString);
+          const timeString = dayjs(`${time.year}-${time.month}-${time.day}`).format("MMM D, YYYY");
+          if (setValue) setValue(price);
+          if (setLabel && timeString) setLabel(timeString);
         }
       });
     }
@@ -183,7 +184,7 @@ const LineChart = ({
         display: "flex",
         // backgroundColor: theme.palette.background.
         flexDirection: "column",
-        minHeight: minHeight,
+        minHeight,
         "& > *": {
           fontSize: "1rem",
         },
@@ -193,7 +194,7 @@ const LineChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
-      <div ref={chartRef} id={"line-chart"} {...rest} />
+      <div ref={chartRef} id="line-chart" {...rest} />
       <RowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}

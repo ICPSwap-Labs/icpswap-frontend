@@ -31,7 +31,7 @@ export function usePoolTVLAndTotalVolume(
   balance0: bigint | number,
   balance1: bigint | number,
   fee: FeeAmount,
-  format: boolean = true,
+  format = true,
 ) {
   const token0USDPrice = useUSDPrice(token0);
   const token1USDPrice = useUSDPrice(token1);
@@ -52,9 +52,9 @@ export function usePoolTVLAndTotalVolume(
     if (!token0 || !token1 || !token0USDPrice || !token1USDPrice || !balance0 || !balance1) {
       if (format) {
         return formatDollarAmount(0);
-      } else {
+      } 
         return 0;
-      }
+      
     }
 
     const token0TVLValue = new BigNumber(token0USDPrice).multipliedBy(balance0.toString());
@@ -62,18 +62,18 @@ export function usePoolTVLAndTotalVolume(
 
     if (format) {
       return formatDollarAmount(token0TVLValue.plus(token1TVLValue).toNumber());
-    } else {
+    } 
       return token0TVLValue.plus(token1TVLValue).toNumber();
-    }
+    
   }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1]);
 
   const poolTotalVolumeValue = useMemo(() => {
     if (!token0 || !totalVolume || !token0USDPrice) {
       if (format) {
         return formatDollarAmount(0);
-      } else {
+      } 
         return 0;
-      }
+      
     }
 
     const token0TotalVolume = new BigNumber(token0USDPrice).multipliedBy(totalVolume.tokenA.toString());
@@ -85,14 +85,14 @@ export function usePoolTVLAndTotalVolume(
     // return formatDollarAmount(new BigNumber(token0TotalVolume.toExact()).plus(token1TotalVolume.toExact()).toNumber());
     if (format) {
       return formatDollarAmount(token0TotalVolume.toNumber());
-    } else {
+    } 
       return token0TotalVolume.toNumber();
-    }
+    
   }, [totalVolume, token0USDPrice, token0]);
 
   return useMemo(() => {
     return {
-      poolTVL: poolTVL,
+      poolTVL,
       poolTotalVolume: poolTotalVolumeValue,
     };
   }, [poolTVL, poolTotalVolumeValue]);
@@ -123,7 +123,7 @@ export function useV3PoolTVLAndTotalVolume(
   balance0: bigint | number,
   balance1: bigint | number,
   fee: FeeAmount,
-  format: boolean = true,
+  format = true,
 ) {
   const token0USDPrice = useUSDPrice(token0);
   const token1USDPrice = useUSDPrice(token1);
@@ -133,7 +133,7 @@ export function useV3PoolTVLAndTotalVolume(
       ? {
           token0: token0.address,
           token1: token1.address,
-          fee: fee,
+          fee,
         }
       : undefined;
   }, [token0, token1, fee]);
@@ -144,9 +144,9 @@ export function useV3PoolTVLAndTotalVolume(
     if (!token0 || !token1 || !token0USDPrice || !token1USDPrice || !balance0 || !balance1) {
       if (format) {
         return formatDollarAmount(0);
-      } else {
+      } 
         return 0;
-      }
+      
     }
 
     const token0TVLValue = new BigNumber(token0USDPrice).multipliedBy(balance0.toString());
@@ -154,18 +154,18 @@ export function useV3PoolTVLAndTotalVolume(
 
     if (format) {
       return formatDollarAmount(new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber());
-    } else {
+    } 
       return new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber();
-    }
+    
   }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1]);
 
   const poolTotalVolumeValue = useMemo(() => {
     if (!token0 || !totalVolume || !token0USDPrice) {
       if (format) {
         return formatDollarAmount(0);
-      } else {
+      } 
         return 0;
-      }
+      
     }
 
     const token0TotalVolume = new BigNumber(token0USDPrice).multipliedBy(totalVolume.balance0);
@@ -177,14 +177,14 @@ export function useV3PoolTVLAndTotalVolume(
     // return formatDollarAmount(new BigNumber(token0TotalVolume.toExact()).plus(token1TotalVolume.toExact()).toNumber());
     if (format) {
       return formatDollarAmount(token0TotalVolume.toNumber());
-    } else {
+    } 
       return new BigNumber(token0TotalVolume).toNumber();
-    }
+    
   }, [totalVolume, token0USDPrice, token0]);
 
   return useMemo(() => {
     return {
-      poolTVL: poolTVL,
+      poolTVL,
       poolTotalVolume: poolTotalVolumeValue,
     };
   }, [poolTVL, poolTotalVolumeValue]);

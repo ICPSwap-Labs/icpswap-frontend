@@ -4,8 +4,8 @@ import { useTheme } from "@mui/styles";
 import { Modal } from "components/index";
 import { Theme } from "@mui/material/styles";
 import GreenCircleLoading from "components/Loading/GreenCircle";
-import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
 import { Trans } from "@lingui/macro";
+import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
 import { StepDetails, StepDetailsProps } from "./types";
 
 interface ActionIconProps {
@@ -112,20 +112,20 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           background: theme.palette.background.level1,
                           borderTopLeftRadius: "12px",
                           borderTopRightRadius: "12px",
-                          borderBottomLeftRadius: !!ele.children ? "0" : "12px",
-                          borderBottomRightRadius: !!ele.children ? "0" : "12px",
+                          borderBottomLeftRadius: ele.children ? "0" : "12px",
+                          borderBottomRightRadius: ele.children ? "0" : "12px",
                         }
                       : {}),
                   }}
                   onClick={() => {
-                    if (!!ele.children) handleStepClick(ele.step);
+                    if (ele.children) handleStepClick(ele.step);
                   }}
                 >
                   <Typography color="text.primary" fontWeight={500}>
                     {ele.step + 1}. {ele.title}
                   </Typography>
 
-                  {!!ele.children ? (
+                  {ele.children ? (
                     <Box
                       sx={{
                         width: "16px",
@@ -177,7 +177,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           <Typography component="div">{ele1.value}</Typography>
                         </Box>
                       ))}
-                      {!!ele.skipError ? (
+                      {ele.skipError ? (
                         <Box
                           key={`${ele.step}_skip_error_children`}
                           sx={{

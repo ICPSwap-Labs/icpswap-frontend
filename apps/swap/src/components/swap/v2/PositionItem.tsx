@@ -3,14 +3,13 @@ import { useHistory } from "react-router-dom";
 import { Typography, Grid, Chip, Button, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp , SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import Loading from "components/Loading";
-import { CurrencyAmountFormatDecimals } from "constants/index";
 import CollectFeesModal from "components/swap/CollectFeesModal";
 import { useCollectFeesCall } from "hooks/swap/v2/useSwapCalls";
 import { usePositionFees } from "hooks/swap/v2/usePositionFees";
@@ -22,7 +21,6 @@ import BigNumber from "bignumber.js";
 import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils";
 import { useErrorTip, useSuccessTip, useLoadingTip } from "hooks/useTips";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
@@ -271,7 +269,7 @@ export function PositionDetails({
 
   return (
     <>
-      <Grid mt={1} className={classes.detailContainer} sx={{ display: !!show ? "block" : "none" }}>
+      <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
         <DetailItem
           label={t`${currencyQuote?.symbol} Amount`}
           value={

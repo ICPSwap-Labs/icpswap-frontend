@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type AccountIdentifier = string;
 export type AccountIdentifier__1 = string;
 export interface AllowanceRequest {

@@ -64,8 +64,7 @@ export function getTokenPoolStatus(pool: StakingPoolControllerPoolInfo | undefin
     statusText = t`Upcoming`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
-  } else {
-    if (new BigNumber(Number(pool.bonusEndTime)).multipliedBy(1000).isLessThan(new Date().getTime())) {
+  } else if (new BigNumber(Number(pool.bonusEndTime)).multipliedBy(1000).isLessThan(new Date().getTime())) {
       statusText = t`Finished`;
       statusClassName = "finished";
       status = POOL_STATUS.FINISHED;
@@ -74,7 +73,6 @@ export function getTokenPoolStatus(pool: StakingPoolControllerPoolInfo | undefin
       statusClassName = "ongoing";
       status = POOL_STATUS.ONGOING;
     }
-  }
 
   return {
     statusText,

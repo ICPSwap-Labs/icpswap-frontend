@@ -66,7 +66,7 @@ export function usePoolList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let pools: PoolInfo[] = [];
+    const pools: PoolInfo[] = [];
     let errorNum = 0;
 
     function trigger() {
@@ -77,8 +77,8 @@ export function usePoolList() {
     }
 
     const fetch = async (poolId: string) => {
-      let pool = await getPoolInfoWithNoBalance(poolId).catch((err) => {
-        console.log(err);
+      const pool = await getPoolInfoWithNoBalance(poolId).catch((err) => {
+        console.error(err);
         return null;
       });
 
@@ -105,9 +105,9 @@ export function usePoolList() {
 export function usePosition(positionId: string | number | bigint, invalid?: boolean) {
   return useCallsData(
     useCallback(async () => {
-      let result: QueryPositionResult | undefined = undefined;
+      let result: QueryPositionResult | undefined;
 
-      if (!!invalid) {
+      if (invalid) {
         result = resultFormat<PositionResult>(
           await (await swapPositionManager()).invalidPositions(BigInt(positionId)),
         ).data;
@@ -130,7 +130,8 @@ export async function decreaseLiquidity(identity: Identity, params: DecreaseLiqu
 
 export function useQuoteExactInput(args: string | undefined) {
   const call = useCallback(async () => {
-    const { path, amountIn } = JSON.parse(args!) as { path: string; amountIn: string };
+    if (!args) return undefined;
+    const { path, amountIn } = JSON.parse(args) as { path: string; amountIn: string };
     return resultFormat<bigint>(await (await swapRouter()).quoteExactInput(path, amountIn)).data;
   }, [args]);
 
@@ -141,14 +142,15 @@ export function useQuoteUnitPrice(path: string | undefined, amountIn: string | n
   return useCallsData(
     useCallback(async () => {
       if (!path || !amountIn || amountIn === "0") return undefined;
-      return resultFormat<bigint>(await (await swapRouter()).getUnitPrice(path!, String(amountIn!))).data;
+      return resultFormat<bigint>(await (await swapRouter()).getUnitPrice(path, String(amountIn))).data;
     }, [path, amountIn]),
   );
 }
 
 export function useQuoteExactOutput(path: string | undefined, amountOut: string | undefined) {
   const call = useCallback(async () => {
-    return resultFormat<bigint>(await (await swapRouter()).quoteExactOutput(path!, String(amountOut!))).data;
+    if (!path || !amountOut || amountOut === "0") return undefined;
+    return resultFormat<bigint>(await (await swapRouter()).quoteExactOutput(path, String(amountOut))).data;
   }, [path, amountOut]);
 
   return useStateCallsData(call, "quoteExactOutputV2", !!path && !!amountOut);
@@ -275,7 +277,7 @@ export function useLiquidityTicks(poolId: string | undefined | null) {
   return useCallsData(
     useCallback(async () => {
       if (!poolId) return undefined;
-      return resultFormat<TickLiquidityInfo[]>(await (await swapPool(poolId!)).getTickInfos()).data;
+      return resultFormat<TickLiquidityInfo[]>(await (await swapPool(poolId)).getTickInfos()).data;
     }, [poolId]),
   );
 }
@@ -310,7 +312,7 @@ export function usePoolTotalVolumeCall(poolKey: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!poolKey) return undefined;
-      return resultFormat<VolumeResult>(await (await swapPositionManager()).getTotalVolume(poolKey!)).data;
+      return resultFormat<VolumeResult>(await (await swapPositionManager()).getTotalVolume(poolKey)).data;
     }, [poolKey]),
   );
 }
@@ -324,15 +326,15 @@ export function usePositionFeesCall(
     useCallback(async () => {
       if (!positionId) return undefined;
 
-      let result: { amount0: bigint; amount1: bigint } | undefined = undefined;
+      let result: { amount0: bigint; amount1: bigint } | undefined;
 
       if (invalid) {
         result = resultFormat<CollectResult>(
-          await (await swapPositionManager()).refreshInvalidIncome(BigInt(positionId!)),
+          await (await swapPositionManager()).refreshInvalidIncome(BigInt(positionId)),
         ).data;
       } else {
         result = resultFormat<CollectResult>(
-          await (await swapPositionManager()).refreshIncome(BigInt(positionId!)),
+          await (await swapPositionManager()).refreshIncome(BigInt(positionId)),
         ).data;
       }
 
@@ -346,7 +348,7 @@ export async function getV2SwapNFTTokenURI(tokenId: bigint | number) {
   const result = resultFormat<string>(await (await swapPositionManager()).tokenURI(BigInt(tokenId))).data;
   const data = JSON.parse(result ?? '""') as { image: string } | "";
 
-  return !!data ? data.image : "";
+  return data ? data.image : "";
 }
 
 export function useFourListedPools() {

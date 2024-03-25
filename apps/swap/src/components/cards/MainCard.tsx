@@ -1,11 +1,7 @@
 import React, { Ref } from "react";
 import { useTheme } from "@mui/styles";
-import { Card, CardContent, CardHeader, Divider, Typography } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { Theme } from "@mui/material/styles";
-
-const headerSX = {
-  "& .MuiCardHeader-action": { mr: 0 },
-};
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
 
@@ -26,29 +22,24 @@ export interface MainCardProps {
   className?: any;
 }
 
-export interface MainCardRef {}
-
 const MainCard = React.forwardRef(
-  (
-    {
-      border,
-      boxShadow,
-      children,
-      content = true,
-      contentClass,
-      contentSX,
-      darkTitle,
-      secondary,
-      shadow,
-      sx = {},
-      title,
-      level,
-      onClick,
-      className,
-      ...others
-    }: MainCardProps,
-    ref: Ref<MainCardRef>,
-  ) => {
+  ({
+    border,
+    boxShadow,
+    children,
+    content = true,
+    contentClass,
+    contentSX,
+    darkTitle,
+    secondary,
+    shadow,
+    sx = {},
+    title,
+    level,
+    onClick,
+    className,
+    ...others
+  }: MainCardProps) => {
     const theme = useTheme() as Theme;
 
     const getCardStyle = ({
@@ -75,7 +66,7 @@ const MainCard = React.forwardRef(
         case 1:
           return {
             background: theme.palette.background.level1,
-            ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+            ...(_border ? { border: `1px solid ${_border}` } : {}),
           };
         case 2:
           return {
@@ -85,12 +76,12 @@ const MainCard = React.forwardRef(
         case 3:
           return {
             background: theme.palette.background.level3,
-            ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+            ...(_border ? { border: `1px solid ${_border}` } : {}),
           };
         case 4:
           return {
             background: theme.palette.background.level4,
-            ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+            ...(_border ? { border: `1px solid ${_border}` } : {}),
           };
         case 5:
           return {
@@ -100,12 +91,12 @@ const MainCard = React.forwardRef(
         default:
           return {
             background: theme.palette.background.level3,
-            ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+            ...(_border ? { border: `1px solid ${_border}` } : {}),
           };
       }
     };
 
-    const cardStyles = getCardStyle({ theme, level: level ? level : 0, border });
+    const cardStyles = getCardStyle({ theme, level: level || 0, border });
 
     return (
       <Card
@@ -114,11 +105,10 @@ const MainCard = React.forwardRef(
         sx={{
           ":hover": {
             boxShadow: boxShadow
-              ? shadow
-                ? shadow
-                : theme.palette.mode === "dark"
-                ? "0 2px 14px 0 rgb(33 150 243 / 10%)"
-                : "0 2px 14px 0 rgb(32 40 45 / 8%)"
+              ? shadow ||
+                (theme.palette.mode === "dark"
+                  ? "0 2px 14px 0 rgb(33 150 243 / 10%)"
+                  : "0 2px 14px 0 rgb(32 40 45 / 8%)")
               : "inherit",
           },
           backgroundColor: cardStyles.background,

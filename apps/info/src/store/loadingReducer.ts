@@ -1,5 +1,4 @@
-import { createAction } from "@reduxjs/toolkit";
-import { createReducer } from "@reduxjs/toolkit";
+import { createAction , createReducer } from "@reduxjs/toolkit";
 
 export const openLoading = createAction<void>("loading/open");
 export const closeLoading = createAction<void>("loading/close");

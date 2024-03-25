@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type NatResult = { ok: bigint } | { err: string };
 export interface PublicPoolOverView {
   id: bigint;

@@ -9,8 +9,7 @@ import { Trans } from "@lingui/macro";
 import type { PaginationResult, NFTTransaction } from "@icpswap/types";
 import { useAccount } from "store/global/hooks";
 import upperFirst from "lodash/upperFirst";
-import { pageArgsFormat, enumToString, arrayBufferToString } from "@icpswap/utils";
-import { shorten, timestampFormat } from "@icpswap/utils";
+import { pageArgsFormat, enumToString, arrayBufferToString , shorten, timestampFormat } from "@icpswap/utils";
 
 export default function CollectionUserTransactions({ canisterId }: { canisterId: string }) {
   const [pageNum, setPageNum] = useState(1);

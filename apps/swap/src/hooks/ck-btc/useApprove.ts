@@ -2,10 +2,10 @@ import { resultFormat, availableArgsNull } from "@icpswap/utils";
 import { StatusResult } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { ckBTCActor } from "actor/ckBTC";
-import { useAllowance } from "./useAllowance";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback } from "react";
 import { ckBTC_MINTER_ID } from "constants/ckBTC";
+import { useAllowance } from "./useAllowance";
 
 export interface ApproveArgs {
   spender: Principal;

@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type Address = string;
 export interface Page {
   content: Array<PoolInfo>;

@@ -1,9 +1,10 @@
 import { createContext } from "react";
 
-export default createContext<{
+export interface WrapContextProps {
   retryTrigger: boolean;
   setRetryTrigger: (retryTrigger: boolean) => void;
-}>({
+}
+
+export default createContext<WrapContextProps>({
   retryTrigger: false,
-  setRetryTrigger: (retryTrigger: boolean) => {},
-});
+} as WrapContextProps);

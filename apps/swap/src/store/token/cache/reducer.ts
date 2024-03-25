@@ -1,6 +1,6 @@
+import { createReducer } from "@reduxjs/toolkit";
 import { updateTokenStandard, updateImportedToken } from "./actions";
 import { initialState } from "./states";
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder

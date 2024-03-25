@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
-import { Modal } from "components/index";
+import { Modal , TextButton } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import FilledTextField from "components/FilledTextField";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";
-import { useUpdateImportedToken, useUpdateTokenStandard } from "store/token/cache/hooks";
+import { useUpdateImportedToken, useUpdateTokenStandard , getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
-import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
-import { getTokenStandard } from "store/token/cache/hooks";
 import { useSaveCacheTokenCallback } from "store/wallet/hooks";
 
 export const TokenStandards = [
@@ -124,7 +122,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
     if (!id) return false;
 
     if (id && tokens && tokens.length) {
-      if (!!tokens.find((token) => token.canisterId.toString() === id)) return true;
+      if (tokens.find((token) => token.canisterId.toString() === id)) return true;
     }
   };
 
@@ -261,7 +259,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
           onClick={step === 1 ? handleConfirm : handleStandardCheck}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {!!error ? error : step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>}
+          {error || (step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>)}
         </Button>
       </Box>
     </Modal>

@@ -29,6 +29,16 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
     }
   }, [_page]);
 
+  const handlePageChange = (type: "prev" | "next") => {
+    if (type === "prev") {
+      setPage(page === 1 ? page : page - 1);
+      onPageChange(page === 1 ? page : page - 1);
+    } else {
+      setPage(page === maxPage ? page : page + 1);
+      onPageChange(page === maxPage ? page : page + 1);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -43,15 +53,13 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
         },
       }}
     >
-      <div
+      <Box
         onClick={() => {
-          setPage(page === 1 ? page : page - 1);
-          onPageChange(page === 1 ? page : page - 1);
+          handlePageChange("prev");
         }}
       >
         <Box
           sx={{
-            // color: theme.colors.darkSecondaryMain,
             color: "#fff",
             opacity: page === 1 ? 0.5 : 1,
             padding: "0 16px",
@@ -66,19 +74,17 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
         >
           <LeftArrow />
         </Box>
-      </div>
+      </Box>
       <Typography color="text.primary" fontWeight={500}>
-        {"Page " + page + " of " + maxPage}
+        {`Page ${page} of ${maxPage}`}
       </Typography>
-      <div
+      <Box
         onClick={() => {
-          setPage(page === maxPage ? page : page + 1);
-          onPageChange(page === maxPage ? page : page + 1);
+          handlePageChange("next");
         }}
       >
         <Box
           sx={{
-            // color: theme.colors.darkSecondaryMain,
             color: "#fff",
             opacity: page === maxPage ? 0.5 : 1,
             padding: "0 16px",
@@ -93,7 +99,7 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
         >
           <RightArrow />
         </Box>
-      </div>
+      </Box>
     </Box>
   );
 }

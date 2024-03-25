@@ -1,11 +1,10 @@
+/* eslint-disable @typescript-eslint/no-loss-of-precision */
 import { useEffect, useMemo, useState } from "react";
 import { BarChart, Bar, LabelList, XAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/material";
 import { Pool, TickMath, TICK_SPACINGS, FeeAmount, Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
-import { CurrentPriceLabel } from "./CurrentPriceLabel";
-import CustomToolTip from "./CustomToolTip";
 import { useToken } from "hooks/useToken";
 import LoadingImage from "assets/images/loading.png";
 import { Theme } from "@mui/material/styles";
@@ -13,22 +12,15 @@ import { useTicksSurroundingPrice, TickProcessed } from "hooks/swap/usePoolTickC
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
 import JSBI from "jsbi";
+import { CustomToolTip } from "./CustomToolTip";
+import { CurrentPriceLabel } from "./CurrentPriceLabel";
+import { ChartEntry } from "./type";
 
 const MAX_UINT128 = new BigNumber(340282366920938463463374607431768211455);
 
 interface DensityChartProps {
   address: string;
   token0Price: number | undefined;
-}
-
-export interface ChartEntry {
-  index: number;
-  isCurrent: boolean;
-  activeLiquidity: number;
-  price0: number;
-  price1: number;
-  tvlToken0: number;
-  tvlToken1: number;
 }
 
 interface ZoomStateProps {
@@ -159,8 +151,6 @@ export default function DensityChart({ address, token0Price }: DensityChartProps
           setLoading(false);
           setFormattedData(newData);
         }
-
-        return;
       } else {
         return [];
       }
@@ -261,7 +251,7 @@ export default function DensityChart({ address, token0Price }: DensityChartProps
                 <CustomToolTip chartProps={props} token0={token0} token1={token1} currentPrice={token0Price} />
               )}
             />
-            <XAxis reversed={true} tick={false} />
+            <XAxis reversed tick={false} />
             <Bar
               dataKey="activeLiquidity"
               fill={theme.colors.secondaryMain}

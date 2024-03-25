@@ -51,7 +51,7 @@ export function TradePriceNoInfo({
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
   const text = `${
-    "1 " + labelInverted + " = " + (!!formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-")
+    `1 ${  labelInverted  } = ${  formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`
   } ${label}`;
 
   return (
@@ -116,7 +116,7 @@ export default function TradePrice({
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
   const text = `${
-    "1 " + labelInverted + " = " + (!!formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-")
+    `1 ${  labelInverted  } = ${  formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`
   } ${label}`;
 
   return (

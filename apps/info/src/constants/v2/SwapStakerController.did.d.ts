@@ -1,4 +1,5 @@
 import type { Principal } from '@dfinity/principal';
+
 export interface GlobalDataResult {
   'count' : bigint,
   'globalTVL' : number,

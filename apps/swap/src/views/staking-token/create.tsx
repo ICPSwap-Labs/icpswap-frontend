@@ -82,7 +82,7 @@ export default function CreateStakingTokenPool() {
         if (!rewardTokenValid) {
           openTip("reward token standard is incorrect", MessageTypes.error);
           setLoading(false);
-          return false;
+          return;
         }
 
         updateTokenStandard({
@@ -391,7 +391,7 @@ export default function CreateStakingTokenPool() {
                     disabled={Boolean(errorMsg) || loading}
                     loading={loading}
                   >
-                    {errorMsg ? errorMsg : t`Create token pool`}
+                    {errorMsg || t`Create token pool`}
                   </Button>
                 )}
               </Identity>

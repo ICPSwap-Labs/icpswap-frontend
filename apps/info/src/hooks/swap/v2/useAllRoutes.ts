@@ -16,7 +16,7 @@ function computeAllRoutes(
   currentPath: Pool[],
   allPaths: Route<Currency, Currency>[],
   startCurrencyIn: Currency = currencyIn,
-  maxHops: number = 2,
+  maxHops = 2,
 ) {
   const tokenIn = currencyIn?.wrapped;
   const tokenOut = currencyOut?.wrapped;

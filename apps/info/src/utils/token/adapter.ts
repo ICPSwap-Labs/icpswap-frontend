@@ -22,9 +22,9 @@ export async function balanceAdapter(canisterId: string, account: string | Princ
         const principal = account.toString();
 
         return resultFormat<bigint>(await (await ogy()).balanceOf(Principal.fromText(principal)));
-      } else {
+      } 
         throw Error("not support address");
-      }
+      
     default:
       throw Error("no canister id");
   }

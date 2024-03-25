@@ -1,10 +1,10 @@
 import { ReactNode, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { CssBaseline } from "@mui/material";
-import Header from "./Header";
-import NavBar from "./NavBar/index";
 import { Theme } from "@mui/material/styles";
 import { GlobalTips } from "@icpswap/ui";
+import Header from "./Header";
+import NavBar from "./NavBar/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

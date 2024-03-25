@@ -1,8 +1,11 @@
+/* eslint-disable no-param-reassign */
+
 /**
  * Credit to MUI team @ https://mui.com
  */
 import * as React from "react";
 import clsx from "clsx";
+import { makeStyles } from "@mui/styles";
 import TransitionComponent, { TransitionStatus } from "../Transition";
 import useForkRef from "../useForkRef";
 import { TransitionHandlerProps, TransitionProps } from "../../types";
@@ -10,7 +13,6 @@ import getAutoHeightDuration from "../getAutoHeightDuration";
 import getTransitionProps from "../getTransitionProps";
 import createTransition from "../createTransition";
 import { ComponentClasses } from "../../utils/styles";
-import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
   root: {

@@ -46,7 +46,7 @@ export default function Launch() {
             <ArrowLeft style={{ cursor: "pointer" }} onClick={() => history.push("/sns/launches")} />
           </Typography>
 
-          {!!sns ? (
+          {sns ? (
             <Box>
               <Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>

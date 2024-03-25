@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useState } from "react";
 import { Typography, Box, Input } from "@mui/material";
 import FilledTextField from "components/FilledTextField";
@@ -11,8 +12,8 @@ import Button from "components/authentication/ButtonConnector";
 import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } from "@icpswap/hooks";
 import { read, utils } from "xlsx";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import EventSelector from "./EventSelector";
 import { Principal } from "@dfinity/principal";
+import EventSelector from "./EventSelector";
 
 type UserClaimItem = {
   address: string;
@@ -55,15 +56,15 @@ export default function EventConfig() {
         type: "binary",
       });
 
-      let userClaims: UserClaimItem[] = [];
-      let inValidUserClaims: ExcelClaimItem[] = [];
+      const userClaims: UserClaimItem[] = [];
+      const inValidUserClaims: ExcelClaimItem[] = [];
 
       for (let i = 0; i < xlsx.SheetNames.length; i++) {
         const sheetData = utils.sheet_to_json<ExcelClaimItem>(xlsx.Sheets[xlsx.SheetNames[i]]);
 
         for (let i = 0; i < sheetData.length; i++) {
-          const address = sheetData[i].address;
-          const amount = sheetData[i].amount;
+          const { address } = sheetData[i];
+          const { amount } = sheetData[i];
 
           if (!address || amount === undefined) {
             openTip(t`Incorrect file content`, MessageTypes.error);
@@ -142,7 +143,7 @@ export default function EventConfig() {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -247,7 +248,7 @@ export default function EventConfig() {
                 {userClaims.length} valid accounts (TotalAmount: {ExcelTotalAmount.toFormat()})
               </Typography>
 
-              {!!inValidUserClaims?.length ? (
+              {inValidUserClaims?.length ? (
                 <Typography
                   component="span"
                   fontSize="12px"

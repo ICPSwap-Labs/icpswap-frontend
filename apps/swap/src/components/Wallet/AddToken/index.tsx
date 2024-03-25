@@ -1,6 +1,6 @@
 import { useState } from "react";
-import AddTokenModal from "./modal";
 import { ReactComponent as AddIcon } from "assets/icons/add.svg";
+import AddTokenModal from "./modal";
 
 export default function AddToken() {
   const [modalVisible, setModalVisible] = useState(false);

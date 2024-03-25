@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@mui/material";
+import { Breadcrumbs , Box, Grid, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import NFTList from "components/NFT/ext/NFTList";
 import MainCard from "components/cards/MainCard";
@@ -6,7 +6,6 @@ import { Trans } from "@lingui/macro";
 import Wrapper from "components/Wrapper";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAccount } from "store/global/hooks";
 import type { EXTCollection } from "@icpswap/types";
@@ -196,7 +195,7 @@ export function ExtNftCollectionDetail() {
               <Typography
                 fontWeight="700"
                 fontSize="20px"
-                color={"text.primary"}
+                color="text.primary"
                 component="span"
                 sx={{ marginRight: "20px", cursor: "pointer" }}
               >

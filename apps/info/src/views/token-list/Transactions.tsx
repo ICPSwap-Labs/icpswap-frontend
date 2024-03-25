@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Typography, Box, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Pagination, Copy, LoadingRow, NoData, PaginationType, MainCard } from "ui-component/index";
-import { parseTokenAmount, pageArgsFormat, transactionsTypeFormat } from "@icpswap/utils";
-import { useTokenTransactions } from "@icpswap/hooks";
+import { parseTokenAmount, pageArgsFormat, transactionsTypeFormat, shorten, timestampFormat } from "@icpswap/utils";
+import { useTokenTransactions, useParsedQueryString } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
@@ -13,9 +13,7 @@ import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useStateTokenCapId, useTokenStandardIsRegistered, useUpdateTokenStandards } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "constants/tokens";
 import upperFirst from "lodash/upperFirst";
-import useParsedQueryString from "hooks/useParsedQueryString";
 import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
-import { shorten, timestampFormat } from "@icpswap/utils";
 
 export interface Transaction {
   fee: bigint | undefined;

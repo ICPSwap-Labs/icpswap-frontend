@@ -35,9 +35,9 @@ export default function TopTokens() {
 
         if (isValidPrincipal(search)) {
           return token.address === search;
-        } else {
+        } 
           return token.symbol.toLocaleUpperCase().includes(search.toLocaleUpperCase());
-        }
+        
       });
   }, [allTokens, onlyTokenList, tokenList, search]);
 

@@ -1,8 +1,7 @@
 import { GridAutoRows, RowBetween } from "ui-component/Grid/index";
 import { Typography, Box } from "@mui/material";
 import { Token } from "@icpswap/swap-sdk";
-import { toSignificant } from "@icpswap/utils";
-import { formatAmount } from "@icpswap/utils";
+import { toSignificant, formatAmount } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 
@@ -78,5 +77,3 @@ export function CustomToolTip({ chartProps, token0, token1, currentPrice }: Cust
     </Box>
   );
 }
-
-export default CustomToolTip;

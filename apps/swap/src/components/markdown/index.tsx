@@ -75,7 +75,7 @@ export default function Markdown({
     if (uploadResult.loading) return;
 
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
-      let item = e.dataTransfer.files[i];
+      const item = e.dataTransfer.files[i];
       if (item.type.startsWith("image/")) {
         if (!fileSizeCheck(maxFileSize, item)) {
           openErrorTip(t`File size limit is 2M`);
@@ -94,7 +94,7 @@ export default function Markdown({
   const handlePaste = (e: React.ClipboardEvent) => {
     if (uploadResult.loading) return;
     for (let i = 0; i < e.clipboardData.items.length; ++i) {
-      let item = e.clipboardData.items[i];
+      const item = e.clipboardData.items[i];
       if (item.kind === "file" && item.type.startsWith("image/")) {
         const file = item.getAsFile();
 
@@ -126,7 +126,7 @@ export default function Markdown({
     event.preventDefault();
 
     const targetFile = event.target.files?.[0];
-    let fileType = getFileType(targetFile?.type ?? "");
+    const fileType = getFileType(targetFile?.type ?? "");
 
     if (targetFile && !fileSizeCheck(maxFileSize, targetFile)) {
       openErrorTip(t`File size limit is 2M`);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable no-param-reassign */
+import { useState, useEffect } from "react";
 import { TextField, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -78,8 +79,8 @@ export default function Upload({
   }, [defaultValue]);
 
   const _handleReaderLoaded = (binaryString: string, type: string) => {
-    let _base64 = btoa(binaryString);
-    onChange && onChange(type + _base64);
+    const _base64 = btoa(binaryString);
+    if (onChange) onChange(type + _base64);
   };
 
   const photoUpload = (e: any) => {
@@ -88,12 +89,13 @@ export default function Upload({
     const file = e.target.files[0];
 
     if (file && file.size / 1024 > 100) {
-      onChange &&
+      if (onChange) {
         onChange({
           status: false,
           result: 10400,
           message: "no more than 100K",
         });
+      }
 
       // reset input value
       e.target.value = null;

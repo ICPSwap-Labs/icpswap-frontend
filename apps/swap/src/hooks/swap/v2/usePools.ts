@@ -52,7 +52,7 @@ export function usePools(
           }
 
           let poolInfo: SwapPoolInfo | null = null;
-          let ticks: TickLiquidityInfo[] = [];
+          const ticks: TickLiquidityInfo[] = [];
 
           if (poolAddress) {
             poolInfo = await (await swapPool(poolAddress)).infoWithNoBalance();
@@ -61,7 +61,7 @@ export function usePools(
           return {
             address: poolAddress,
             info: poolInfo,
-            ticks: ticks,
+            ticks,
           };
         }),
       ).then((result) => {
@@ -85,12 +85,14 @@ export function usePools(
         const { fee, sqrtRatioX96, liquidity, tickCurrent } = pool;
         const [token0, token1] = poolKeys[index];
 
+        if (!token0 || !token1) return [PoolState.NOT_EXISTS, null];
+
         return [
           PoolState.EXISTS,
           new Pool(
             poolAddress,
-            token0?.wrapped!,
-            token1?.wrapped!,
+            token0.wrapped,
+            token1.wrapped,
             Number(fee),
             numberToString(sqrtRatioX96),
             numberToString(liquidity),

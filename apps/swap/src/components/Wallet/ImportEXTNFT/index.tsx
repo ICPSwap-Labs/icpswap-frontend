@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ImportNFTCanisterModal } from "./Modal";
 import { ReactComponent as ImportIcon } from "assets/icons/import.svg";
+import { ImportNFTCanisterModal } from "./Modal";
 
 export function ImportEXTNft() {
   const [modalVisible, setModalVisible] = useState<boolean>(false);

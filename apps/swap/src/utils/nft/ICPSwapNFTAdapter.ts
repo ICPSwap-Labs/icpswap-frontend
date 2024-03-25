@@ -1,8 +1,8 @@
-import { BaseNFTAdapter } from "./BaseNFTAdapter";
 import type { NFTTransferArgs, NFTTransferResult, NFTAllowanceArgs, NFTApproveArgs } from "@icpswap/types";
 import { resultFormat } from "@icpswap/utils";
 import { NFTCanister } from "@icpswap/actor";
 import { Identity } from "types/global";
+import { BaseNFTAdapter } from "./BaseNFTAdapter";
 
 export class ICPSwapNFT extends BaseNFTAdapter {
   public async transfer({

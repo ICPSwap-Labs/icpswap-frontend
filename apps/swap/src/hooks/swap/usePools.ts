@@ -74,7 +74,7 @@ export function usePools(
           }),
         );
 
-        let pools: { [id: string]: TypePoolsState } = {};
+        const pools: { [id: string]: TypePoolsState } = {};
 
         result.forEach((ele) => {
           if (ele) {
@@ -202,7 +202,7 @@ export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
 
     if (network === NETWORK.LOCAL) return true;
 
-    if (!!tokens.find((token) => token === ICP.address)) return true;
+    if (tokens.find((token) => token === ICP.address)) return true;
 
     return tokens.reduce((prev, curr, index) => {
       const hasPairWithBaseToken = !!tokenPools[index].find(

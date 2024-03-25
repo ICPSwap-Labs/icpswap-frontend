@@ -82,7 +82,7 @@ export function useSwapArguments(
         if (singleHop) {
           const tokenIn = route.tokenPath[0].address;
           const tokenOut = route.tokenPath[1].address;
-          const fee = route.pools[0].fee;
+          const {fee} = route.pools[0];
 
           const poolId = route.pools[0].id;
 
@@ -143,7 +143,7 @@ export function useSwapArguments(
           if (trade.tradeType === TradeType.EXACT_INPUT) {
             const exactInputParams = {
               path,
-              recipient: recipient,
+              recipient,
               deadline,
               amountIn,
               amountOutMinimum: amountOut,
@@ -151,7 +151,7 @@ export function useSwapArguments(
           } else {
             const exactOutputParams = {
               path,
-              recipient: recipient,
+              recipient,
               deadline,
               amountOut,
               amountInMaximum: amountIn,
@@ -162,7 +162,7 @@ export function useSwapArguments(
     }
 
     return {
-      callData: callData,
+      callData,
       value: toHex(totalValue.quotient),
     };
   }, [trade, recipient, deadline, principal]);
@@ -203,13 +203,13 @@ export function useSwapCallback(
           callback: null,
           error: "Invalid recipient",
         };
-      } else {
+      } 
         return {
           state: SwapCallbackState.LOADING,
           callback: null,
           error: null,
         };
-      }
+      
     }
 
     return {

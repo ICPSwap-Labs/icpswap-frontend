@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { useMemo } from "react";
 import { ChartDayVolumeData, GenericChartEntry } from "types/analytic";
 import { unixToDate } from "utils/date";
@@ -15,6 +16,8 @@ function unixToType(unix: number, type: "month" | "week") {
         week = `0${week}`;
       }
       return `${date.year()}-${week}`;
+    default:
+      break;
   }
 }
 
@@ -25,6 +28,9 @@ export function useTransformedVolumeData(chartData: ChartDayVolumeData[] | undef
 
       chartData.forEach(({ date, volumeUSD }: { date: number; volumeUSD: number }) => {
         const group = unixToType(date, type);
+
+        if (group === undefined) return;
+
         if (data[group]) {
           data[group].value += volumeUSD;
         } else {
@@ -36,8 +42,7 @@ export function useTransformedVolumeData(chartData: ChartDayVolumeData[] | undef
       });
 
       return Object.values(data);
-    } else {
-      return [];
     }
+    return [];
   }, [chartData, type]);
 }

@@ -24,7 +24,7 @@ export default function Snackbar() {
   }, [snackbarInitial.action, snackbarInitial.open]);
 
   return (
-    <React.Fragment>
+    <>
       {/* default snackbar */}
       {snackbarInitial.variant === "default" && (
         <MuiSnackbar
@@ -50,7 +50,7 @@ export default function Snackbar() {
             variant="filled"
             severity={snackbarInitial.alertSeverity}
             sx={{
-              bgcolor: snackbarInitial.alertSeverity + ".dark",
+              bgcolor: `${snackbarInitial.alertSeverity  }.dark`,
               color: snackbarInitial.alertSeverity === "warning" ? "grey.800" : "",
             }}
             action={
@@ -65,6 +65,6 @@ export default function Snackbar() {
           </Alert>
         </MuiSnackbar>
       )}
-    </React.Fragment>
+    </>
   );
 }

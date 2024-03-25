@@ -6,7 +6,7 @@ import { MainCard, Wrapper, FilledTextField } from "ui-component/index";
 import { GridAutoRows } from "ui-component/Grid/index";
 import { isValidPrincipal } from "@icpswap/utils";
 import isFunction from "lodash/isFunction";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import { useParsedQueryString } from "@icpswap/hooks";
 import { SwapScanTabPanels } from "./components/TabPanels";
 
 enum TabPanelValue {

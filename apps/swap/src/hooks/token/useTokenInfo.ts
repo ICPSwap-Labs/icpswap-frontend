@@ -1,13 +1,13 @@
 import { useMemo, useEffect, useState } from "react";
 import { ICP_TOKEN_INFO, TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { TokenInfo } from "types/token";
-import { getTokenInfo } from "./calls";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
-import { useLocalTokens } from "./useLocalTokens";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getPromisesAwait } from "@icpswap/hooks";
+import { useLocalTokens } from "./useLocalTokens";
+import { getTokenInfo } from "./calls";
 
 const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
 const STORAGE_EXPIRE_TIME = 24 * 60 * 60 * 1000; // millisecond
@@ -50,6 +50,10 @@ function isNeedUpdateTokenInfo(tokenId: string) {
   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
 }
 
+function isStorageInfoValid(storageInfo: TokenInfo | undefined): storageInfo is TokenInfo {
+  return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
+}
+
 export async function _getTokenInfo(tokenId: string) {
   const storageInfo = await getStorageTokenInfo(tokenId);
 
@@ -64,10 +68,6 @@ export async function _getTokenInfo(tokenId: string) {
     updateTokenStorageTime(tokenId);
     return baseTokenInfo as TokenInfo;
   }
-}
-
-function isStorageInfoValid(storageInfo: TokenInfo | undefined): storageInfo is TokenInfo {
-  return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
 }
 
 export enum TokenInfoState {
@@ -86,7 +86,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
   const fetch_token_info = async (tokenId: string | undefined | null) => {
     if (!tokenId) return;
 
-    let tokeInfo: undefined | TokenInfo = undefined;
+    let tokeInfo: undefined | TokenInfo;
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
     if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;

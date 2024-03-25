@@ -17,7 +17,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
-  let nowTime = parseInt(String(Date.now() / 1000));
+  const nowTime = parseInt(String(Date.now() / 1000));
   let expand = false;
   let date = startTime;
 
@@ -209,7 +209,7 @@ export default function StakingPoolDetails({
               </Grid>
               <Grid item>
                 <Typography color="text.primary">
-                  {!!pool?.startTime ? timestampFormat(Number(pool.startTime) * 1000) : "--"}
+                  {pool?.startTime ? timestampFormat(Number(pool.startTime) * 1000) : "--"}
                 </Typography>
               </Grid>
             </Grid>

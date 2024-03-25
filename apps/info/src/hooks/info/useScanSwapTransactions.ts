@@ -20,13 +20,13 @@ export function useSwapTransactions({ principal, pair, offset, limit }: useUserA
 
   useEffect(() => {
     async function call() {
-      if (!!principal) {
+      if (principal) {
         if (storageIds && storageIds.length > 0) {
           setTransactions(null);
           setLoading(true);
 
           const storageId = storageIds[0];
-          const transactions = await getInfoUserTransactions(storageId, principal, offset, limit, !!pair ? [pair] : []);
+          const transactions = await getInfoUserTransactions(storageId, principal, offset, limit, pair ? [pair] : []);
 
           setLoading(false);
 
@@ -59,7 +59,7 @@ export function useSwapTransactions({ principal, pair, offset, limit }: useUserA
   return useMemo(
     () => ({
       loading: loading || getStorageIdsLoading,
-      result: !!principal ? transactions : baseTransactions,
+      result: principal ? transactions : baseTransactions,
     }),
     [loading, transactions, getStorageIdsLoading, principal, baseTransactions],
   );

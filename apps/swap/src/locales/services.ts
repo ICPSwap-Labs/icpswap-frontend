@@ -168,5 +168,5 @@ export const getLocaleMessage = (message: string): string => {
   const id = MessageMaps[message];
   const msg = t({ id });
 
-  return !!msg ? msg : message;
+  return msg || message;
 };

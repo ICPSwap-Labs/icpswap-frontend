@@ -8,7 +8,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { isDarkTheme } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { NoData, DotLoading } from "components/index";
+import { NoData, DotLoading, TokenImage } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -16,7 +16,6 @@ import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
 // import { useUSDPriceById } from "hooks/useUSDPrice";
 import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
-import { TokenImage } from "components/index";
 
 export interface SwapToken {
   canisterId: string;
@@ -274,12 +273,10 @@ export default function Selector({
 
       if (taggedTokenIds.includes(e.canisterId)) {
         new_list_tagged.push(e);
+      } else if (tokenBalance !== "0") {
+        new_list_has_balance.push(e);
       } else {
-        if (tokenBalance !== "0") {
-          new_list_has_balance.push(e);
-        } else {
-          new_list_no_balance.push(e);
-        }
+        new_list_no_balance.push(e);
       }
     });
 
@@ -289,7 +286,7 @@ export default function Selector({
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
       if (disabledCurrencyIds.includes(token?.canisterId.toString())) return;
-      onChange && onChange(token);
+      if (onChange) onChange(token);
     },
     [disabledCurrencyIds],
   );

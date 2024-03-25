@@ -1,14 +1,6 @@
+/* eslint-disable no-inner-declarations */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import {
-  updateUserPositions,
-  updateFiled,
-  updateLeftRange,
-  updateRightRange,
-  updateStartPrice,
-  updateFullRange,
-  resetMintState,
-} from "./actions";
 import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
 import { resultFormat } from "@icpswap/utils";
 import {
@@ -41,6 +33,15 @@ import { PositionResult, UserPosition } from "types/swapv2";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { DISABLE_ADD_LIQUIDITY_IDS } from "constants/v2";
+import {
+  updateUserPositions,
+  updateFiled,
+  updateLeftRange,
+  updateRightRange,
+  updateStartPrice,
+  updateFullRange,
+  resetMintState,
+} from "./actions";
 
 export function useUserV1Positions() {
   const [loading, setLoading] = useState(true);
@@ -53,13 +54,13 @@ export function useUserV1Positions() {
     setLoading(true);
 
     if (tokenIds && tokenIds.length > 0) {
-      let positions: (PositionResult | undefined)[] = [];
+      const positions: (PositionResult | undefined)[] = [];
       let done = 0;
 
       // @ts-ignore
       function trigger() {
         if (done === tokenIds?.length) {
-          let positionsWithTokenIds: (UserPosition | undefined)[] = [];
+          const positionsWithTokenIds: (UserPosition | undefined)[] = [];
 
           positions.forEach((position, index) => {
             if (position) {
@@ -107,7 +108,7 @@ export function useUserV1Positions() {
 
   return useMemo(
     () => ({
-      loading: loading,
+      loading,
       result: positions,
     }),
     [loading, positions],
@@ -124,13 +125,13 @@ export function useQueryUserPositions() {
     setLoading(true);
 
     if (tokenIds && tokenIds.length > 0) {
-      let positions: (PositionResult | undefined)[] = [];
+      const positions: (PositionResult | undefined)[] = [];
       let done = 0;
 
       // @ts-ignore
       function trigger() {
         if (done === tokenIds?.length) {
-          let positionsWithTokenIds: (UserPosition | undefined)[] = [];
+          const positionsWithTokenIds: (UserPosition | undefined)[] = [];
 
           positions.forEach((position, index) => {
             if (position) {
@@ -191,13 +192,13 @@ export function useUserInvalidPositions() {
     if (tokenIds?.length) {
       setLoading(true);
 
-      let positions: (PositionResult | undefined)[] = [];
+      const positions: (PositionResult | undefined)[] = [];
       let done = 0;
 
       // @ts-ignore
       function trigger() {
         if (done === tokenIds?.length) {
-          let positionsWithTokenIds: (UserPosition | undefined)[] = [];
+          const positionsWithTokenIds: (UserPosition | undefined)[] = [];
 
           positions.forEach((position, index) => {
             if (position) {
@@ -328,10 +329,9 @@ export function useMintInfo(
         return (invertPrice ? price?.invert() : price) ?? undefined;
       }
       return undefined;
-    } else {
-      // get the amount of quote currency
-      return pool && token0 ? pool.priceOf(token0) : undefined;
     }
+    // get the amount of quote currency
+    return pool && token0 ? pool.priceOf(token0) : undefined;
   }, [noLiquidity, startPrice, invertPrice, token1, token0, pool]);
 
   const invalidPrice = useMemo(() => {
@@ -352,9 +352,8 @@ export function useMintInfo(
       const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick);
 
       return new Pool("", tokenA, tokenB, feeAmount, currentSqrt, JSBI.BigInt(0), currentTick, []);
-    } else {
-      return undefined;
     }
+    return undefined;
   }, [feeAmount, invalidPrice, price, tokenA, tokenB]);
 
   const poolForPosition = pool ?? mockPool;
@@ -543,9 +542,8 @@ export function useMintInfo(
         amount1,
         useFullPrecision: true, // we want full precision for the theoretical position
       });
-    } else {
-      return undefined;
     }
+    return undefined;
   }, [
     parsedAmounts,
     poolForPosition,
@@ -578,7 +576,7 @@ export function useMintInfo(
     {},
   );
 
-  let errorMessage: string | undefined = undefined;
+  let errorMessage: string | undefined;
 
   if (poolState === PoolState.INVALID) {
     errorMessage = errorMessage ?? t`Invalid pair`;

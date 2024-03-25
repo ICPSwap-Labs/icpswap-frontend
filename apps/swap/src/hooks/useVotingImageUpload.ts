@@ -87,10 +87,10 @@ export default function useVotingImageUpload(): [
 
     const chunkIds = await Promise.all(promises)
       .then((result) => {
-        return result.filter((ele) => !!ele?.chunk_id).map((ele) => ele!.chunk_id);
+        return (result.filter((ele) => !!ele?.chunk_id) as { chunk_id: bigint }[]).map((ele) => ele.chunk_id);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setFileError(t`Failed to upload, please try again`);
         setUploading(false);
         return undefined;

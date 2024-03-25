@@ -64,7 +64,7 @@ export default function ThemeSelector() {
   }, [open]);
 
   return (
-    <React.Fragment>
+    <>
       <Box component="span" className={classes.box}>
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <Avatar
@@ -82,6 +82,6 @@ export default function ThemeSelector() {
           </Avatar>
         </ButtonBase>
       </Box>
-    </React.Fragment>
+    </>
   );
 }

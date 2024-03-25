@@ -198,7 +198,7 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
                 onClick={submit}
                 startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
               >
-                {errorMsg ? errorMsg : loading ? "" : t`Confirm`}
+                {errorMsg || (loading ? "" : t`Confirm`)}
               </Button>
             )}
           </Identity>

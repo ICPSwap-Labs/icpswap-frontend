@@ -72,8 +72,8 @@ export default function ConfirmModal({
   outputCurrency,
   formattedAmounts,
   isWrap,
-  onConfirm = () => {},
-  onClose = () => {},
+  onConfirm,
+  onClose,
 }: ConfirmModalProps) {
   const classes = useStyle();
 

@@ -3,15 +3,13 @@ import { makeStyles, useTheme } from "@mui/styles";
 import { Chip, List, Paper, Popper, ButtonBase, Box, Typography, useMediaQuery, SvgIcon, Fade } from "@mui/material";
 import { shorten } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import LogOutSection from "../LogOutSection";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected , useUserLogout , useWalletConnectorManager } from "store/auth/hooks";
 import { Theme } from "@mui/material/styles";
-import { useUserLogout } from "store/auth/hooks";
 import Account from "./Account";
 import Principal from "./Principal";
 import LogoutIcon from "./LogoutIcon";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import LogOutSection from "../LogOutSection";
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -38,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.mode === "dark" ? theme.palette.dark.main : theme.palette.primary.light,
     '&[aria-controls="menu-list-grow"], &:hover': {
       borderColor: theme.palette.primary.main,
-      background: theme.palette.primary.main + "!important",
+      background: `${theme.palette.primary.main  }!important`,
       color: theme.palette.primary.light,
       "& svg": {
         stroke: theme.palette.primary.light,
@@ -132,7 +130,7 @@ export default function ProfileSection() {
   }, [open]);
 
   return (
-    <React.Fragment>
+    <>
       <Box component="span" className={classes.box}>
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <Chip
@@ -195,6 +193,6 @@ export default function ProfileSection() {
           </Fade>
         )}
       </Popper>
-    </React.Fragment>
+    </>
   );
 }

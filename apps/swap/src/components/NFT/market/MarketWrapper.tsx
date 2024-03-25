@@ -9,10 +9,10 @@ import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";
 import debounce from "lodash/debounce";
 import { Theme } from "@mui/material/styles";
 import Wrapper from "components/Wrapper";
+import { useParsedQueryString } from "@icpswap/hooks";
 import NFTMarketplace from "./NFTMarket";
 import NFTMarketSaleRecords from "./NFTMarketSaleRecords";
 import NFTUserSaleRecords from "./NFTUserSaleRecords";
-import useParsedQueryString from "hooks/useParsedQueryString";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -71,21 +71,23 @@ const SortBy = [
   { label: t`Oldest`, value: "time-desc" },
 ];
 
-export default function MarketWrapper({
-  children,
-  onSearchValueChange = () => {},
-  onSortByChange = () => {},
-  onPageChange,
-  defaultSortBy = "time",
-  title,
-}: {
+export interface MarketWrapperProps {
   children: React.ReactNode;
   onSearchValueChange?: (value: string) => void;
   onSortByChange?: (sortBy: string) => void;
   onPageChange: (page: MarketPageConfig) => void;
   defaultSortBy: string | null | undefined;
   title: React.ReactNode;
-}) {
+}
+
+export default function MarketWrapper({
+  children,
+  onSearchValueChange,
+  onSortByChange,
+  onPageChange,
+  defaultSortBy = "time",
+  title,
+}: MarketWrapperProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
 
@@ -122,7 +124,7 @@ export default function MarketWrapper({
       {/* <Box>{!!canisterId ? <CollectionInfo canisterId={canisterId} /> : <MarketCarousel />}</Box> */}
       <Box>{title}</Box>
 
-      <Box mt={!!canisterId ? (matchDown1120 ? "40px" : "97px") : matchDown1120 ? "40px" : "20px"}>
+      <Box mt={canisterId ? (matchDown1120 ? "40px" : "97px") : matchDown1120 ? "40px" : "20px"}>
         <MainCard>
           <Grid container flexDirection={matchDown1120 ? "column" : "row"}>
             <Grid item xs>

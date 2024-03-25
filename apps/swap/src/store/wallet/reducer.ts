@@ -1,3 +1,4 @@
+import { createReducer } from "@reduxjs/toolkit";
 import {
   deleteWalletCatchToken,
   saveWalletCacheToken,
@@ -6,7 +7,6 @@ import {
   updateRetrieveState,
 } from "./actions";
 import { initialState } from "./states";
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -50,7 +50,7 @@ export default createReducer(initialState, (builder) => {
         state: payload.state,
         txid: payload.txid,
         block_index: String(payload.block_index),
-        value: !!payload.value ? payload.value : !!old_state ? old_state.value : "",
+        value: payload.value ? payload.value : old_state ? old_state.value : "",
       });
 
       const _states = states.sort((a, b) => {

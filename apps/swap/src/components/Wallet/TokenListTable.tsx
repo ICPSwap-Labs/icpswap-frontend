@@ -5,24 +5,21 @@ import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, prin
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, Connector, NO_HIDDEN_TOKENS } from "constants/index";
+import { ICP, Connector, NO_HIDDEN_TOKENS , INFO_URL } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccountPrincipal , useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { XTC, ckETH, ckBTC, WRAPPED_ICP } from "constants/tokens";
+import { XTC, ckETH, ckBTC, WRAPPED_ICP , ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/uesInfoToken";
 import { useCurrency } from "hooks/useCurrency";
-import { INFO_URL } from "constants/index";
-import { useConnectorType } from "store/auth/hooks";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
-import { ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
@@ -210,7 +207,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
     if (symbol === ICP_TOKEN_INFO.symbol) {
       mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
-    } else if (!!root_canister_id) {
+    } else if (root_canister_id) {
       mockALinkAndOpen(
         `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`,
         "TOKEN_TRANSACTIONS",
@@ -251,7 +248,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const isHidden = useMemo(() => {
     const hiddenBySmallBalance = isHideSmallBalances && !!tokenBalance && !tokenBalance?.isGreaterThan(0);
 
-    const hiddenBySearchValue = !!searchValue
+    const hiddenBySearchValue = searchValue
       ? !tokenInfo?.symbol
         ? true
         : !tokenInfo?.symbol.toLowerCase().includes(searchValue.toLowerCase())

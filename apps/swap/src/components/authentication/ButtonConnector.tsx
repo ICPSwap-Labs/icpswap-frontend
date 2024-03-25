@@ -14,9 +14,7 @@ export default function ButtonConnector(props: ButtonConnectorProps) {
   const handleConnect = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (!isConnected) {
       manager(true);
-    } else {
-      if (props.onClick) props.onClick(event);
-    }
+    } else if (props.onClick) props.onClick(event);
   };
 
   return (

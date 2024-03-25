@@ -3,10 +3,9 @@ import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard } from "components/index";
+import { MainCard, NumberFilledTextField } from "components/index";
 import Toggle, { ToggleButton } from "components/SwitchToggle";
 import { principalToBytes32 } from "utils/ic/index";
-import { NumberFilledTextField } from "components/index";
 import { useETHContract } from "hooks/web3/useETHContract";
 import { useWeb3React } from "@web3-react/core";
 import { toHexString } from "utils/web3/index";
@@ -40,7 +39,7 @@ function DeadContent({ content }: DeadContentProps) {
       }}
     >
       <Typography color="text.primary" sx={{ wordBreak: "break-all" }}>
-        {!!content ? content : <Typography height="10px" width="2px" />}
+        {content || <Typography height="10px" width="2px" />}
       </Typography>
     </Box>
   );
@@ -96,8 +95,7 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
       .getSigner()
       .sendTransaction(tx)
       .catch((err) => {
-        console.log(err);
-
+        console.error(err);
         openTip("Transaction for minting ckETH failed to submit", MessageTypes.error);
       });
 
@@ -186,7 +184,7 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
               <Box sx={{ margin: "16px 0 0 0" }}>
                 <Typography>Your wallet of Metamask</Typography>
                 <Box sx={{ margin: "16px 0 0 0" }}>
-                  {!!account ? <DeadContent content={account} /> : <Web3ButtonConnector chainId={chain} />}
+                  {account ? <DeadContent content={account} /> : <Web3ButtonConnector chainId={chain} />}
                 </Box>
               </Box>
 
@@ -216,7 +214,7 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
                   disabled={loading || !account || !amount || !!error}
                   loading={loading}
                 >
-                  {!!error ? error : t`Mint ckETH`}
+                  {error || t`Mint ckETH`}
                 </ButtonConnector>
               </Box>
             </Box>

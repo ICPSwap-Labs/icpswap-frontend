@@ -1,22 +1,20 @@
-import { MainCard, Wrapper, FilledTextField } from "ui-component/index";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import { MainCard, Wrapper, FilledTextField, NoData, TokenImage } from "ui-component/index";
 import { useState, useMemo, useEffect } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
-import { NoData, TokenImage } from "ui-component/index";
 import { GridAutoRows } from "ui-component/Grid/index";
-import { SwapScanTabPanels } from "./components/TabPanels";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
-import { useTokensBalance, useTokensFromList } from "@icpswap/hooks";
+import { useTokensBalance, useTokensFromList, useParsedQueryString } from "@icpswap/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP } from "constants/tokens";
 import { getExplorerPrincipalLink } from "utils/index";
+import { SwapScanTabPanels } from "./components/TabPanels";
 
 const useStyles = makeStyles(() => {
   return {
@@ -174,7 +172,7 @@ export default function SwapScanValuation() {
 
   const { result: allTokensInList } = useTokensFromList();
   const tokenList = useMemo(() => {
-    let tokenIds = allTokensInList?.map((e) => e.canisterId) ?? [];
+    const tokenIds = allTokensInList?.map((e) => e.canisterId) ?? [];
     tokenIds.push(ICP.address);
     return tokenIds;
   }, [allTokensInList]);

@@ -4,7 +4,7 @@ import { resultFormat } from "@icpswap/utils";
 
 export function useSwapNFTSvg() {
   return useCallback(async (tokenId: bigint | number) => {
-    const data = resultFormat<string>(await (await swapNFT()).tokenURI(BigInt(tokenId))).data;
+    const {data} = resultFormat<string>(await (await swapNFT()).tokenURI(BigInt(tokenId)));
     return JSON.parse(data ?? "") as { image: string; [key: string]: any };
   }, []);
 }

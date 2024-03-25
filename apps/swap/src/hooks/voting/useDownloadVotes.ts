@@ -16,7 +16,7 @@ export function useDownloadVotes(canisterId: string, id: string, limit?: number)
     fetchRecords,
     limit ?? 1000,
     (content: UserVoteRecord[]) => {
-      let data = content.map((d) => {
+      const data = content.map((d) => {
         return {
           Timestamp: dayjs(nanosecond2Millisecond(d.voteTime)).format("YYYY-MM-DD HH:mm:ss"),
           Address: valueofUser(d.address).toString(),

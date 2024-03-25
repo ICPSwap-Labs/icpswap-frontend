@@ -62,7 +62,7 @@ export function SelectToken({ value: tokenId, onTokenChange, filter }: SelectTok
   }, [tokenId]);
 
   const menus = useMemo(() => {
-    let contents = allSwapTokenInfos.filter(
+    const contents = allSwapTokenInfos.filter(
       (ele) => ele[0] === TokenInfoState.EXISTS && ele[1]?.canisterId !== ICP.address,
     ) as [TokenInfoState, TokenInfo][];
 

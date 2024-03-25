@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Grid, Typography, Button } from "@mui/material";
-import { Table, TableContainer, TableCell, TableRow, TableHead, TableBody } from "@mui/material";
+import { Grid, Typography, Button , Table, TableContainer, TableCell, TableRow, TableHead, TableBody } from "@mui/material";
 import { pageArgsFormat } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { Pagination, PaginationType, NoData, MainCard, ListLoading } from "components/index";
@@ -87,7 +86,7 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
         />
       ) : null}
 
-      {!!deletedUser ? (
+      {deletedUser ? (
         <DeleteAuthorityUser
           open={!!deletedUser}
           onClose={() => setDeletedUser(undefined)}

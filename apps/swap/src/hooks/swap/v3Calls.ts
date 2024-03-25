@@ -13,16 +13,14 @@ import {
 } from "@icpswap/hooks";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
-import type { PaginationResult } from "@icpswap/types";
+import type { PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
 import { Identity } from "types/global";
 import { Principal } from "@dfinity/principal";
 import { useStateCallsData } from "hooks/useCallsData";
-import type { SwapPoolData } from "@icpswap/types";
 import { sortToken } from "utils/swap";
-import type { UserStorageTransaction } from "@icpswap/types";
 
 export async function getPool(token0: string, token1: string, fee: FeeAmount = FeeAmount.MEDIUM) {
   const sortedToken = sortToken(token0, token1);
@@ -67,7 +65,7 @@ export async function createPool(
     fee: BigInt(fee),
     token0: getSwapTokenArgs(_token0),
     token1: getSwapTokenArgs(_token1),
-    sqrtPriceX96: sqrtPriceX96,
+    sqrtPriceX96,
   });
 }
 
@@ -101,18 +99,20 @@ export function usePositionDetailsFromId(poolId: string | undefined, positionId:
   return useCallsData(
     useCallback(async () => {
       if (poolId === undefined || positionId === undefined) return undefined;
-      return await getPositionDetailsFromId(poolId!, positionId!);
+      return await getPositionDetailsFromId(poolId, positionId);
     }, [poolId, positionId]),
   );
 }
 
 export function useQuoteExactInput(args: string | undefined) {
   const call = useCallback(async () => {
-    const _args = JSON.parse(args!) as { amountIn: string; zeroForOne: boolean; poolId: string };
+    if (!args) return undefined;
 
-    return await quote(_args!.poolId, {
-      amountIn: _args!.amountIn,
-      zeroForOne: _args!.zeroForOne,
+    const _args = JSON.parse(args) as { amountIn: string; zeroForOne: boolean; poolId: string };
+
+    return await quote(_args.poolId, {
+      amountIn: _args.amountIn,
+      zeroForOne: _args.zeroForOne,
       amountOutMinimum: "0",
     });
   }, [args]);
@@ -128,9 +128,9 @@ export function useQuoteUnitPrice(
   return useCallsData(
     useCallback(async () => {
       if (!amountIn || amountIn === "0" || !poolId || zeroForOne === undefined) return undefined;
-      return await quote(poolId!, {
-        amountIn: amountIn!,
-        zeroForOne: zeroForOne!,
+      return await quote(poolId, {
+        amountIn,
+        zeroForOne,
         amountOutMinimum: "0",
       });
     }, [amountIn, poolId, zeroForOne]),
@@ -150,7 +150,7 @@ export function usePoolCanisterId(
   return useCallsData(
     useCallback(async () => {
       if (!token0Id || !token1Id || !fee) return undefined;
-      return await getPoolCanisterId(token0Id!, token1Id!, fee!);
+      return await getPoolCanisterId(token0Id, token1Id, fee);
     }, [token0Id, token1Id, fee]),
   );
 }
@@ -179,7 +179,7 @@ export function usePoolTokenAmounts(poolId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!poolId) return undefined;
-      return await getPoolTokenAmounts(poolId!);
+      return await getPoolTokenAmounts(poolId);
     }, [poolId]),
   );
 }

@@ -69,7 +69,7 @@ export interface WithdrawTokensModalProps {
   onClose: () => void;
 }
 
-export default function WithdrawUnusedTokens({ open, onClose = () => {} }: WithdrawTokensModalProps) {
+export default function WithdrawUnusedTokens({ open, onClose }: WithdrawTokensModalProps) {
   const theme = useTheme() as Theme;
 
   const [keys, setKeys] = useState<string[]>([]);
@@ -101,7 +101,7 @@ export default function WithdrawUnusedTokens({ open, onClose = () => {} }: Withd
       const balance = _balances.filter((balance) => balance.canisterId.toString() === pool)[0];
 
       if (balance) {
-        let amount = balance.balance;
+        const amount = balance.balance;
 
         if (amount !== BigInt(0)) {
           calls.push(

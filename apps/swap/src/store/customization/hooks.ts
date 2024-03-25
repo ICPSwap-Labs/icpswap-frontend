@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { updateHideUnavailableClaim } from "./actions";
 import { useCallback, useMemo } from "react";
+import { updateHideUnavailableClaim } from "./actions";
 
 export function useHideUnavailableClaimManager() {
   const dispatch = useAppDispatch();

@@ -1,5 +1,10 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useCacheTokenList } from "store/global/hooks";
+import { useImportedTokens } from "store/token/cache/hooks";
+import { RetrieveBtcStatus, TxState } from "types/ckBTC";
+import { Principal } from "@dfinity/principal";
+import { TokenMetadata } from "types/token";
 import {
   saveWalletCacheToken,
   deleteWalletCatchToken,
@@ -7,15 +12,10 @@ import {
   updateCK_BTCAddresses,
   updateRetrieveState,
 } from "./actions";
-import { useCacheTokenList } from "store/global/hooks";
-import { useImportedTokens } from "store/token/cache/hooks";
-import { RetrieveBtcStatus, TxState } from "types/ckBTC";
-import { Principal } from "@dfinity/principal";
-import { TokenMetadata } from "types/token";
 
 export function toHexString(byteArray: number[]) {
-  return Array.from(byteArray, function (byte) {
-    return ("0" + (byte & 0xff).toString(16)).slice(-2);
+  return Array.from(byteArray, (byte) => {
+    return (`0${  (byte & 0xff).toString(16)}`).slice(-2);
   }).join("");
 }
 
@@ -28,7 +28,7 @@ export function useWalletTokens() {
   const importedTokens = useImportedTokens();
   const cacheTokenIds = useWalletCatchTokenIds() ?? [];
 
-  let tokens: TokenMetadata[] = [];
+  const tokens: TokenMetadata[] = [];
 
   for (let i = 0; i < cacheTokenIds.length; i++) {
     const tokenId = cacheTokenIds[i];
@@ -36,11 +36,9 @@ export function useWalletTokens() {
 
     if (token) {
       tokens.push(token);
-    } else {
-      if (!!importedTokens[tokenId]) {
+    } else if (importedTokens[tokenId]) {
         tokens.push(importedTokens[tokenId]);
       }
-    }
   }
 
   return tokens;
@@ -51,7 +49,7 @@ export function useWalletTokenCanisterIds() {
   const importedTokens = useImportedTokens();
   const cacheTokenIds = useWalletCatchTokenIds() ?? [];
 
-  let tokens: TokenMetadata[] = [];
+  const tokens: TokenMetadata[] = [];
 
   for (let i = 0; i < cacheTokenIds.length; i++) {
     const tokenId = cacheTokenIds[i];
@@ -59,11 +57,9 @@ export function useWalletTokenCanisterIds() {
 
     if (token) {
       tokens.push(token);
-    } else {
-      if (!!importedTokens[tokenId]) {
+    } else if (importedTokens[tokenId]) {
         tokens.push(importedTokens[tokenId]);
       }
-    }
   }
 
   return tokens;
@@ -118,7 +114,7 @@ export function useUserBTCWithdrawAddress(principal: string | undefined) {
   const { owner, subaccount } = JSON.parse(address) as { owner: string; subaccount: number[] | undefined };
 
   return {
-    owner: owner,
+    owner,
     subaccount: subaccount && subaccount.length > 0 ? [Uint8Array.from(subaccount)] : [],
   };
 }
@@ -152,7 +148,7 @@ export function useUpdateUserTx() {
   return useCallback(
     (principal: string, block_index: bigint, status: undefined | RetrieveBtcStatus, value: string | undefined) => {
       const txid = status ? Object.values(status)[0]?.txid : undefined;
-      const txIdString = !!txid ? toHexString([...txid].reverse()) : "";
+      const txIdString = txid ? toHexString([...txid].reverse()) : "";
 
       dispatch(
         updateRetrieveState({

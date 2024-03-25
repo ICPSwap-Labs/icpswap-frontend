@@ -2,10 +2,10 @@ import { ReactElement, useState } from "react";
 import { Typography, Grid, Button, Box, Link, useMediaQuery } from "@mui/material";
 import { useTheme, makeStyles } from "@mui/styles";
 import Copy from "components/Copy";
-import { useAccount } from "store/global/hooks";
+import { useAccount , useICPAmountUSDValue } from "store/global/hooks";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
-import { isICPSwapOfficial } from "utils/index";
-import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
+import { isICPSwapOfficial , encodeTokenIdentifier, arrayBufferToString } from "utils/index";
+import { formatDollarAmount, mockALinkAndOpen , shorten, timestampFormat } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Trans, t } from "@lingui/macro";
 import { useNFTOrderInfo } from "hooks/nft/trade";
@@ -13,21 +13,18 @@ import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
 import NFTTransfer from "components/NFT/Transfer";
 import NFTSell from "components/NFT/market/Sell";
-import { useICPAmountUSDValue } from "store/global/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import NFTRevoke from "components/NFT/market/NFTRevoke";
 import { TextButton } from "components/index";
-import DetailsToggle from "./DetailsToggle";
-import { encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { type NFTTokenMetadata } from "@icpswap/types";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import CollectionIcons from "./collectionsIcon";
 import NFTCanisterLink from "components/info/NFTCanisterLink";
 import { TwitterIcon } from "assets/images/Twitter";
 import { APP_URL } from "constants/index";
 import NFTAvatar from "./NFTAvatar";
-import { shorten, timestampFormat } from "@icpswap/utils";
+import CollectionIcons from "./collectionsIcon";
+import DetailsToggle from "./DetailsToggle";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -130,7 +127,7 @@ export const DetailsItem = ({ label, value }: { label: string; value: undefined 
 };
 
 export function isMetadata1(metadata: any): metadata is NFTMetadata1 {
-  if (!!metadata.label) return true;
+  if (metadata.label) return true;
   return false;
 }
 
@@ -270,7 +267,7 @@ export default function NFTInfo({
                   <NFTVerifyLabel />
                 </Grid>
               ) : null}
-              {!!metadata?.owner ? (
+              {metadata?.owner ? (
                 <Grid item xs>
                   <Grid container justifyContent="flex-end">
                     <Box sx={{ width: "24px", height: "24px", cursor: "pointer" }} onClick={handleToTwitter}>

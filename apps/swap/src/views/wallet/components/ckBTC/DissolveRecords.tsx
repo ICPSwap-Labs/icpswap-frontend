@@ -1,7 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography , Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
-import { Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { useUserTxs } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { StoredTxValue } from "types/ckBTC";
@@ -17,7 +16,7 @@ function ListItem({ tx }: { tx: StoredTxValue }) {
         <Typography>{tx.state ?? "--"}</Typography>
       </TableCell>
       <TableCell>
-        {!!tx.txid ? (
+        {tx.txid ? (
           <Typography
             sx={{
               maxWidth: "400px",
@@ -33,7 +32,7 @@ function ListItem({ tx }: { tx: StoredTxValue }) {
         )}
       </TableCell>
       <TableCell>
-        {!!tx.value ? <Typography>{parseTokenAmount(tx.value, 8).toFormat()}</Typography> : <Typography>--</Typography>}
+        {tx.value ? <Typography>{parseTokenAmount(tx.value, 8).toFormat()}</Typography> : <Typography>--</Typography>}
       </TableCell>
     </TableRow>
   );

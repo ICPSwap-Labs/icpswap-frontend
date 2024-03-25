@@ -158,4 +158,4 @@ export type Uint128 = bigint;
 export type Uint16 = bigint;
 export type Uint160 = bigint;
 export interface VolumeMapType { 'tokenA' : bigint, 'tokenB' : bigint }
-export interface _SERVICE extends SwapPool {}
+export type _SERVICE = SwapPool

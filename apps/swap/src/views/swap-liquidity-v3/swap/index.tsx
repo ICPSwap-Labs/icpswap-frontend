@@ -3,9 +3,7 @@ import { Grid, Box, Typography, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SwitchIcon from "assets/images/swap/switch";
 import CurrencySelector from "components/CurrencySelector";
-import SwapInput from "./SwapInput";
-import ConfirmModal from "./ConfirmModal";
-import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState } from "store/swap/hooks";
+import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount, toSignificant, isNullArgs } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
@@ -25,9 +23,7 @@ import { ICP } from "constants/index";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import Button from "components/authentication/ButtonConnector";
-import { useLoadDefaultParams } from "store/swap/hooks";
 import { MainCard } from "components/index";
-import { toFormat } from "utils/index";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -35,6 +31,8 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
+import ConfirmModal from "./ConfirmModal";
+import SwapInput from "./SwapInput";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -246,7 +244,7 @@ export default function Swap() {
 
     return warningSeverity(
       executionPriceImpact && !!priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact!)
+        ? executionPriceImpact.greaterThan(priceImpact)
           ? executionPriceImpact
           : priceImpact
         : executionPriceImpact ?? priceImpact,
@@ -315,11 +313,11 @@ export default function Swap() {
             </Grid>
           </Grid>
           {inputCurrency ? (
-            <Grid container alignItems="center" mt={"12px"}>
+            <Grid container alignItems="center" mt="12px">
               <Typography>
                 <Trans>
                   Balance:{" "}
-                  {!!currencyBalances[SWAP_FIELD.INPUT]
+                  {currencyBalances[SWAP_FIELD.INPUT]
                     ? formatCurrencyAmount(currencyBalances[SWAP_FIELD.INPUT], inputCurrency?.decimals)
                     : "--"}
                 </Trans>
@@ -388,7 +386,7 @@ export default function Swap() {
               />
             </Grid>
           </Grid>
-          {!!currencyBalances[SWAP_FIELD.OUTPUT] ? (
+          {currencyBalances[SWAP_FIELD.OUTPUT] ? (
             <Grid container mt="12px">
               <Typography>
                 <Trans>
@@ -424,7 +422,7 @@ export default function Swap() {
                   <CircularProgress size={14} color="inherit" />
                   <Typography sx={{ margin: "0 0 0 4px" }}>Fetching price...</Typography>
                 </Grid>
-              ) : !!trade ? (
+              ) : trade ? (
                 <Box>
                   <TradePrice
                     poolId={trade.swaps[0].route.pools[0].id}
@@ -449,21 +447,20 @@ export default function Swap() {
           onClick={handleSwap}
           disabled={!isValid || priceImpactTooHigh || isPoolNotChecked}
         >
-          {swapInputError ? (
-            swapInputError
-          ) : isLoadingRoute ? (
-            <Trans>Swap</Trans>
-          ) : isNoRouteFound ? (
-            <Trans>Insufficient liquidity for this trade.</Trans>
-          ) : isPoolNotChecked ? (
-            <Trans>Waiting for verifying the pool...</Trans>
-          ) : priceImpactTooHigh ? (
-            <Trans>High Price Impact</Trans>
-          ) : priceImpactSeverity > 2 ? (
-            <Trans>Swap Anyway</Trans>
-          ) : (
-            <Trans>Swap</Trans>
-          )}
+          {swapInputError ||
+            (isLoadingRoute ? (
+              <Trans>Swap</Trans>
+            ) : isNoRouteFound ? (
+              <Trans>Insufficient liquidity for this trade.</Trans>
+            ) : isPoolNotChecked ? (
+              <Trans>Waiting for verifying the pool...</Trans>
+            ) : priceImpactTooHigh ? (
+              <Trans>High Price Impact</Trans>
+            ) : priceImpactSeverity > 2 ? (
+              <Trans>Swap Anyway</Trans>
+            ) : (
+              <Trans>Swap</Trans>
+            ))}
         </Button>
       </Box>
 

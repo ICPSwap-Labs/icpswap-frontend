@@ -1,6 +1,4 @@
-/**
- * @link https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/utils/createChainedFunction.js
- */
+/* eslint-disable @typescript-eslint/no-empty-function */
 // @ts-nocheck
 export default function createChainedFunction(funcs) {
   return funcs.reduce(

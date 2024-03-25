@@ -137,7 +137,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         const token = importedTokens[canisterId];
 
         return {
-          canisterId: canisterId,
+          canisterId,
           name: token.name,
           symbol: token.symbol,
         };
@@ -151,7 +151,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
 
     const tokens = [...iTokens, ..._tokens];
 
-    if (!!queryValue) {
+    if (queryValue) {
       return tokens.filter(
         (token) =>
           token.name.toLowerCase().includes(queryValue.toLowerCase()) ||

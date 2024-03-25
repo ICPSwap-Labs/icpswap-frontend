@@ -1,11 +1,11 @@
 import { tickToPrice, TICK_SPACINGS, Currency, FeeAmount, Token } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
-import { PoolState, usePool } from "./usePools";
 import { useMemo } from "react";
 import computeSurroundingTicks from "utils/computeSurroundingTicks";
 import { useLiquidityTicks, useSwapPoolIdByKey } from "hooks/swap/v2/calls";
 import JSBI from "jsbi";
 import BigNumber from "bignumber.js";
+import { PoolState, usePool } from "./usePools";
 
 const PRICE_FIXED_DIGITS = 8;
 

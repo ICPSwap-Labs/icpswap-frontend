@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from "react";
-import CurrencySelectButton from "./button";
-import Selector from "./selector";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/useCurrency";
+import Selector from "./selector";
+import CurrencySelectButton from "./button";
 
 export interface CurrencySelectorProps {
   currencyId: string | undefined;
@@ -29,7 +29,7 @@ export default function CurrencySelector({
   const [selectorShow, setSelectorShow] = useState(false);
 
   const onTokenChange = (token: TokenInfo) => {
-    onChange && onChange(token);
+    if (onChange) onChange(token);
     setSelectorShow(false);
   };
 
@@ -50,7 +50,7 @@ export default function CurrencySelector({
   }, [activeCurrencies]);
 
   return (
-    <React.Fragment>
+    <>
       <CurrencySelectButton
         currency={token}
         onClick={() => {
@@ -71,6 +71,6 @@ export default function CurrencySelector({
           version={version}
         />
       )}
-    </React.Fragment>
+    </>
   );
 }

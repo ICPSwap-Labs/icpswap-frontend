@@ -3,27 +3,23 @@ import { useHistory } from "react-router-dom";
 import { Typography, Grid, Chip, Button, useMediaQuery, Box, Popper } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp , SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { CurrencyAmountFormatDecimals } from "constants/index";
 import CollectFeesModal from "components/swap/CollectFeesModal";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { numberToString, BigNumber } from "@icpswap/utils";
+import { numberToString, BigNumber , formatDollarAmount } from "@icpswap/utils";
 import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
-import { formatDollarAmount } from "@icpswap/utils";
 import { isDarkTheme, toFormat } from "utils";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { Identity as TypeIdentity } from "types/global";
-import PositionStatus from "./PositionRangeState";
 import { Loading } from "components/index";
 import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
 import StepViewButton from "components/Steps/View";
@@ -34,6 +30,7 @@ import { ReclaimTips } from "components/ReclaimTips";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
+import PositionStatus from "./PositionRangeState";
 import TransferPosition from "./TransferPosition";
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -281,7 +278,7 @@ export function PositionDetails({
 
   return (
     <>
-      <Grid mt={1} className={classes.detailContainer} sx={{ display: !!show ? "block" : "none" }}>
+      <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
         <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
         <PositionDetailItem
           label={t`${currencyQuote?.symbol} Amount`}

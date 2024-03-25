@@ -84,7 +84,7 @@ export function Value({ select, value, menus = [], helperText }: ValueProps) {
       >
         {select ? menus.filter((menu) => menu.value === value)[0]?.label ?? value : value}
       </Typography>
-      {!!helperText ? (
+      {helperText ? (
         <Typography
           sx={{
             overflow: "hidden",
@@ -193,7 +193,7 @@ export default function FilledTextField({
                       disabled={disabled}
                       helperText={helperText}
                     />
-                  ) : !!value ? (
+                  ) : value ? (
                     <Value menus={menus} value={value} helperText={helperText} select={select} />
                   ) : (
                     <Typography
@@ -247,7 +247,7 @@ export default function FilledTextField({
                     disabled={disabled}
                     helperText={helperText}
                   />
-                ) : !!value ? (
+                ) : value ? (
                   <Value menus={menus} value={value} helperText={helperText} select={select} />
                 ) : (
                   <Typography
@@ -297,7 +297,7 @@ export default function FilledTextField({
               {menu.label}
             </MenuItem>
           ))}
-          {menus.length === 0 ? !!CustomNoData ? CustomNoData : <NoData /> : null}
+          {menus.length === 0 ? CustomNoData || <NoData /> : null}
         </Menu>
       )}
     </>

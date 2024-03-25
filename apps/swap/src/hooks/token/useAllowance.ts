@@ -39,9 +39,9 @@ export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub 
     useCallback(async () => {
       if (!spender || !owner || canisterId === undefined) return undefined;
       return await allowance({
-        spender: spender,
+        spender,
         spenderSub,
-        owner: owner,
+        owner,
         ownerSub,
         canisterId,
       });

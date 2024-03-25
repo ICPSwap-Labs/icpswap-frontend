@@ -5,8 +5,7 @@ import { transactionsTypeFormat } from "utils";
 import { t } from "@lingui/macro";
 import React from "react";
 import upperFirst from "lodash/upperFirst";
-import { parseTokenAmount } from "@icpswap/utils";
-import { timestampFormat } from "@icpswap/utils";
+import { parseTokenAmount , timestampFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => ({
   titleContainer: {

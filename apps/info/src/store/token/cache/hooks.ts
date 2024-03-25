@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { updateTokenStandard, updateTokenCapId } from "./actions";
 import store from "store/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { tokenAdapter } from "@icpswap/token-adapter";
+import { updateTokenStandard, updateTokenCapId } from "./actions";
 
 export function useUpdateTokenStandards() {
   const dispatch = useAppDispatch();

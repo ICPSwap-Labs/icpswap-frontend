@@ -24,7 +24,7 @@ import Button from "components/authentication/ButtonConnector";
 import { Theme } from "@mui/material/styles";
 import { WICPCanisterId } from "constants/canister";
 import { useICPPrice } from "hooks/useUSDPrice";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import { useParsedQueryString } from "@icpswap/hooks";
 import { StatusResult } from "@icpswap/types";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -166,7 +166,7 @@ export default function Exchange() {
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0));
 
   const handleMaxInput = useCallback(() => {
-    maxInputAmount && handleTypeInput(maxInputAmount.toExact());
+    if (maxInputAmount) handleTypeInput(maxInputAmount.toExact());
   }, [maxInputAmount, handleTypeInput]);
 
   const [openTip, closeTip] = useTips();
@@ -242,15 +242,15 @@ export default function Exchange() {
     if (
       inputCurrencyBalance &&
       parsedAmounts[SWAP_FIELD.INPUT] &&
-      new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]!).isGreaterThan(inputCurrencyBalance.toExact())
+      new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]).isGreaterThan(inputCurrencyBalance.toExact())
     )
       errorMessage = `Insufficient ${inputCurrencyBalance.currency.symbol} balance`;
     if (
       (inputCurrency.equals(WICP) &&
         parsedAmounts[SWAP_FIELD.INPUT] &&
-        !new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]!).isGreaterThan(0.0001)) ||
-      (independentField === SWAP_FIELD.OUTPUT &&
-        outputCurrency.equals(WICP) &&
+        !new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]).isGreaterThan(0.0001)) ||
+      (outputCurrency.equals(WICP) &&
+        independentField === SWAP_FIELD.OUTPUT &&
         !new BigNumber(parsedAmounts[SWAP_FIELD.OUTPUT]!).isGreaterThan(0.0001))
     )
       errorMessage = t`Amount must be greater than 0.0001`;
@@ -300,10 +300,10 @@ export default function Exchange() {
             </Grid>
           </Grid>
 
-          {!!inputCurrencyBalance ? (
-            <Grid container alignItems="center" mt={"12px"}>
+          {inputCurrencyBalance ? (
+            <Grid container alignItems="center" mt="12px">
               <Typography>
-                <Trans>Balance: {!!inputCurrencyBalance ? formatCurrencyAmount(inputCurrencyBalance, 4) : "--"}</Trans>
+                <Trans>Balance: {inputCurrencyBalance ? formatCurrencyAmount(inputCurrencyBalance, 4) : "--"}</Trans>
               </Typography>
 
               {showMaxButton && (
@@ -359,12 +359,10 @@ export default function Exchange() {
             </Grid>
           </Grid>
 
-          {!!outputCurrencyBalance ? (
+          {outputCurrencyBalance ? (
             <Grid container mt="12px">
               <Typography>
-                <Trans>
-                  Balance: {!!outputCurrencyBalance ? formatCurrencyAmount(outputCurrencyBalance, 4) : "--"}
-                </Trans>
+                <Trans>Balance: {outputCurrencyBalance ? formatCurrencyAmount(outputCurrencyBalance, 4) : "--"}</Trans>
               </Typography>
 
               {outputBalanceUSDValue ? (
@@ -385,7 +383,7 @@ export default function Exchange() {
       </Box>
       <Box mt={4}>
         <Button fullWidth variant="contained" size="large" onClick={handleExchange} disabled={!!errorMessage}>
-          {errorMessage ? errorMessage : isWrap ? <Trans>Wrap</Trans> : <Trans>Unwrap</Trans>}
+          {errorMessage || (isWrap ? <Trans>Wrap</Trans> : <Trans>Unwrap</Trans>)}
         </Button>
       </Box>
       {confirmModalShow && (

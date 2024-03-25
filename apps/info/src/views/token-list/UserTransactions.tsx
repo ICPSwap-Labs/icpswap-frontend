@@ -15,22 +15,26 @@ import {
 import { makeStyles } from "@mui/styles";
 import TransferDetail from "ui-component/transfer-detail";
 import { Pagination, Copy, Loading, NoData, PaginationType, MainCard } from "ui-component/index";
-import { parseTokenAmount, pageArgsFormat, transactionsTypeFormat, principalToAccount } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  pageArgsFormat,
+  transactionsTypeFormat,
+  principalToAccount,
+  shorten,
+  timestampFormat,
+} from "@icpswap/utils";
 import { TransferDetailIcon } from "assets/images/icons";
-import { useTokenTransactions } from "@icpswap/hooks";
+import { useTokenTransactions, useParsedQueryString } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import MainContainer from "ui-component/MainContainer";
 import Breadcrumbs from "ui-component/Breadcrumbs";
-import { useStateTokenCapId } from "store/token/cache/hooks";
+import { useStateTokenCapId, useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "constants/tokens";
-import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { useICPTransactions } from "hooks/useICPCalls";
 import upperFirst from "lodash/upperFirst";
-import useParsedQueryString from "hooks/useParsedQueryString";
-import { shorten, timestampFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => ({
   address: {

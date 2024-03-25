@@ -14,10 +14,15 @@ export function useTokens(tokenIds: string[] | undefined): { [key: string]: Toke
       if (tokenIds) {
         setLoading(true);
 
-        const tokenInfos = await Promise.all(tokenIds.map(async (id) => await getTokenInfo(id)));
+        const tokenInfos = await Promise.all(
+          tokenIds.map(async (id) => {
+            const tokenInfo = await getTokenInfo(id);
+            return tokenInfo;
+          }),
+        );
         const tokens = getTokensFromInfo(tokenInfos.filter((info) => !!info) as TokenInfo[]);
 
-        let _tokens: { [key: string]: Token } = {};
+        const _tokens: { [key: string]: Token } = {};
 
         tokens?.forEach((token) => {
           if (token) {

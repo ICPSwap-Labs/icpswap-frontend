@@ -11,14 +11,11 @@ import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
 import { BURN_FIELD } from "constants/swap";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
-import ConfirmRemoveLiquidityModal from "./Confirm";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
-import DecreaseLiquidityInput from "./Input";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { t, Trans } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
-import Unclaimed from "./Unclaimed";
 import { PoolState } from "hooks/swap/usePools";
 import Button from "components/authentication/ButtonConnector";
 import { usePositionFees } from "hooks/swap/usePositionFees";
@@ -26,6 +23,9 @@ import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips, LoadingRow } from "components/index";
+import Unclaimed from "./Unclaimed";
+import DecreaseLiquidityInput from "./Input";
+import ConfirmRemoveLiquidityModal from "./Confirm";
 
 const useStyle = makeStyles(() => {
   return {
@@ -144,7 +144,7 @@ export default function DecreaseLiquidity() {
 
   const getDecreaseLiquidityCall = useDecreaseLiquidityCallback({
     position: positionSDK,
-    poolId: poolId,
+    poolId,
     positionId: BigInt(positionId),
     liquidityToRemove,
     currencyA,

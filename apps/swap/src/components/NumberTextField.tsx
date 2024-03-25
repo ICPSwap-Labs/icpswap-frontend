@@ -19,7 +19,7 @@ type InputProps = {
 };
 
 export const TextFieldNumberComponent = forwardRef<NumericFormatProps, InputProps>(
-  function NumericFormatCustom(props, ref) {
+  (props, ref) => {
     const { onChange, ...other } = props;
 
     return (

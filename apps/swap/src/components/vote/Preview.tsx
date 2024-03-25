@@ -8,7 +8,7 @@ export default function Preview({ title, content }: { title: string | undefined;
         {title}
       </Typography>
 
-      {!!content ? (
+      {content ? (
         <>
           <Box mt="20px">
             <BaseMarkdown content={content} />

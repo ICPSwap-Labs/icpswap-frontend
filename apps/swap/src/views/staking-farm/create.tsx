@@ -146,7 +146,7 @@ export default function CreateProject() {
       rewardPool: values.rewardPool,
       token0AmountLimit: BigInt(numberToString(formatTokenAmount(values.token0AmountLimit, poolToken0?.decimals)) || 0),
       token1AmountLimit: BigInt(numberToString(formatTokenAmount(values.token1AmountLimit, poolToken1?.decimals)) || 0),
-      priceInsideLimit: values.priceInsideLimit === "true" ? true : false,
+      priceInsideLimit: values.priceInsideLimit === "true",
     });
 
     openTip(status === ResultStatus.OK ? "Created successfully" : message, status);
@@ -305,7 +305,7 @@ export default function CreateProject() {
               />
 
               <NumberFilledTextField
-                label={`SecondPerCycle`}
+                label="SecondPerCycle"
                 placeholder={t`Enter the secondPerCycle`}
                 onChange={(value: number) => handleFieldChange(value, "secondPerCycle")}
                 value={values.secondPerCycle}
@@ -319,7 +319,7 @@ export default function CreateProject() {
 
               <FilledTextField
                 select
-                label={`PriceInsideLimit`}
+                label="PriceInsideLimit"
                 placeholder={t`Select the PriceInsideLimit`}
                 onChange={(value) => handleFieldChange(value, "priceInsideLimit")}
                 value={values.priceInsideLimit}
@@ -341,7 +341,7 @@ export default function CreateProject() {
                     disabled={Boolean(errorMsg) || loading}
                     loading={loading}
                   >
-                    {errorMsg ? errorMsg : t`Create farm`}
+                    {errorMsg || t`Create farm`}
                   </Button>
                 )}
               </Identity>

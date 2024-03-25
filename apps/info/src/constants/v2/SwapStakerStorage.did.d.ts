@@ -1,4 +1,5 @@
 import type { Principal } from '@dfinity/principal';
+
 export interface Page {
   'content' : Array<Record>,
   'offset' : bigint,
@@ -43,4 +44,4 @@ export type TransType = { 'withdraw' : null } |
   { 'deposit' : null } |
   { 'stakeTokenids' : null } |
   { 'createIncentive' : null };
-export interface _SERVICE extends SwapStakerStorage {}
+export type _SERVICE = SwapStakerStorage

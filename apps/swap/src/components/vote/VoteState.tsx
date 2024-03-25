@@ -112,7 +112,7 @@ export function VoteStateCount({ proposal }: VoteItemProps) {
     ).v;
   }, [proposal]);
 
-  return !!count ? (
+  return count ? (
     <Box
       component="span"
       sx={{

@@ -3,12 +3,11 @@ import { makeStyles } from "@mui/styles";
 import { Box, Grid, Avatar } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
-import { Override } from "@icpswap/types";
+import { Override , PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
-import { PublicTokenOverview } from "@icpswap/types";
 import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 import { useAllTokensTVL } from "@icpswap/hooks";
@@ -51,7 +50,7 @@ export function TokenItem({ token, index }: { token: TokenData; index: number })
         <Grid container alignItems="center" gap="0 8px">
           <TokenImage logo={tokenInfo?.logo} tokenId={tokenInfo?.canisterId} size="24px" />
           <BodyCell>{token.symbol}</BodyCell>
-          {!!tokenInfo ? <BodyCell sub>({tokenInfo.name})</BodyCell> : null}
+          {tokenInfo ? <BodyCell sub>({tokenInfo.name})</BodyCell> : null}
         </Grid>
       </BodyCell>
       <BodyCell color="text.primary" align="right">
@@ -125,9 +124,9 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } else {
+            } 
               return 0;
-            }
+            
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

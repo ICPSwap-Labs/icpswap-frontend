@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { Grid, Typography } from "@mui/material";
+import { t } from "@lingui/macro";
 import QRCode from "../qrcode";
 import Modal from "../modal/index";
 import Copy, { CopyRef } from "../Copy";
-import { t } from "@lingui/macro";
 
 export interface AddressClipboardProps {
   open: boolean;

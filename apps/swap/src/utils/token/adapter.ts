@@ -14,14 +14,14 @@ const BALANCE_ADAPTER_IDS = [ORG_ID];
 
 export const isNeedBalanceAdapter = (canisterId: string) => BALANCE_ADAPTER_IDS.includes(canisterId);
 
-export async function balanceAdapter(canisterId: string, account: string | Principal, subaccount?: number[]) {
+export async function balanceAdapter(canisterId: string, account: string | Principal) {
   switch (canisterId) {
     case ORG_ID:
       if (isPrincipal(account)) {
         return resultFormat<bigint>(await (await ogy()).balanceOf(account));
-      } else {
-        throw Error("not support address");
       }
+      throw Error("not support address");
+
     default:
       throw Error("no canister id");
   }

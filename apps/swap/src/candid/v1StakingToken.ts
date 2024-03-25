@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type AccountIdentifier = string;
 export interface ChangePoolInfo {
   stakingTokenSymbol: string;
@@ -87,4 +88,4 @@ export interface SingleSmartChef {
   withdraw: (arg_0: bigint) => Promise<Result>;
 }
 export type User = { principal: Principal } | { address: AccountIdentifier };
-export interface _SERVICE extends SingleSmartChef {}
+export type _SERVICE = SingleSmartChef

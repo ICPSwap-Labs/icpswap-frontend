@@ -3,16 +3,13 @@ import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { UserPosition } from "types/swap";
 import { usePositions } from "hooks/swap-scan/index";
-import { pageArgsFormat, toSignificant, numberToString } from "@icpswap/utils";
-import { useSwapPositionOwner } from "@icpswap/hooks";
-import { Pool } from "@icpswap/swap-sdk";
+import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shorten } from "@icpswap/utils";
+import { useSwapPositionOwner, useParsedQueryString } from "@icpswap/hooks";
+import { Pool, Position, Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
 import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
-import { LoadingRow, NoData, SelectPair, Pagination, PaginationType } from "ui-component/index";
+import { LoadingRow, NoData, SelectPair, Pagination, PaginationType, Copy } from "ui-component/index";
 import BigNumber from "bignumber.js";
-import { Position } from "@icpswap/swap-sdk";
-import { Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { formatDollarAmount } from "@icpswap/utils";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
@@ -20,12 +17,9 @@ import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { toFormat } from "utils/index";
-import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
-import useParsedQueryString from "hooks/useParsedQueryString";
 import { useHistory } from "react-router-dom";
-import { Copy } from "ui-component/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { shorten } from "@icpswap/utils";
+import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
   return {
@@ -167,7 +161,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         <Row className={classes.wrapper}>
           <BodyCell>
             <Copy content={owner}>
-              <Typography>{!!owner ? shorten(owner) : "--"}</Typography>
+              <Typography>{owner ? shorten(owner) : "--"}</Typography>
             </Copy>
           </BodyCell>
 
@@ -177,13 +171,13 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 
           <BodyCell>
             <Typography>
-              {!!position
+              {position
                 ? `${toSignificant(position.amount0.toExact(), 12, { groupSeparator: "," })} ${pool.token0.symbol}`
                 : "--"}
             </Typography>
 
             <Typography sx={{ margin: "10px 0 0 0" }}>
-              {!!position
+              {position
                 ? `${toSignificant(position.amount1.toExact(), 12, { groupSeparator: "," })} ${pool.token1.symbol}`
                 : "--"}
             </Typography>

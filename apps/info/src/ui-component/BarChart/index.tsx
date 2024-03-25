@@ -8,6 +8,7 @@ import usePrevious from "hooks/usePrevious";
 import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+
 dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
@@ -78,7 +79,7 @@ const BarChart = ({
   useEffect(() => {
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
-        height: height,
+        height,
         width: chartRef.current.parentElement.clientWidth - 62,
         layout: {
           backgroundColor: "transparent",
@@ -133,7 +134,7 @@ const BarChart = ({
   useEffect(() => {
     if (chartCreated && data) {
       const series = chartCreated.addHistogramSeries({
-        color: color,
+        color,
       });
 
       series.setData(data);
@@ -148,7 +149,7 @@ const BarChart = ({
       });
 
       // update the title when hovering on the chart
-      chartCreated.subscribeCrosshairMove(function (param) {
+      chartCreated.subscribeCrosshairMove((param) => {
         if (
           chartRef?.current &&
           (param === undefined ||
@@ -158,14 +159,14 @@ const BarChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
-          setValue && setValue(undefined);
-          setLabel && setLabel(undefined);
+          if (setValue) setValue(undefined);
+          if (setLabel) setLabel(undefined);
         } else if (series && param) {
           const time = param?.time as { day: number; year: number; month: number };
-          const timeString = dayjs(time.year + "-" + time.month + "-" + time.day).format("MMM D, YYYY");
+          const timeString = dayjs(`${time.year}-${time.month}-${time.day}`).format("MMM D, YYYY");
           const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
-          setValue && setValue(price);
-          setLabel && timeString && setLabel(timeString);
+          if (setValue) setValue(price);
+          if (setLabel && timeString) setLabel(timeString);
         }
       });
     }
@@ -190,7 +191,7 @@ const BarChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
-      <div ref={chartRef} id={"bar-chart"} {...rest} />
+      <div ref={chartRef} id="bar-chart" {...rest} />
       <RowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}

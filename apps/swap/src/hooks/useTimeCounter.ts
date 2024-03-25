@@ -8,7 +8,7 @@ export function useCounter(time: string | number | undefined | bigint) {
   useEffect(() => {
     if (!time || new BigNumber(String(time)).isLessThan(0)) return;
 
-    let timer: number | undefined = undefined;
+    let timer: number | undefined;
 
     timer = window.setInterval(() => {
       setCount(counter(Number(time)));
@@ -17,6 +17,7 @@ export function useCounter(time: string | number | undefined | bigint) {
     return () => {
       clearInterval(timer);
       timer = undefined;
+      return undefined;
     };
   }, [time]);
 

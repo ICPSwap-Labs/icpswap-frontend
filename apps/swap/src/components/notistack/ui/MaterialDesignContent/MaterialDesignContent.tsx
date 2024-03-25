@@ -2,11 +2,11 @@ import { memo, forwardRef, useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import clsx from "clsx";
+import DialogCloseIcon from "assets/images/icons/dialog-close";
+import { Theme } from "@mui/material/styles";
 import SnackbarContent from "../../SnackbarContent";
 import { CustomContentProps } from "../../types";
 import { ComponentClasses } from "../../utils/styles";
-import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -115,7 +115,7 @@ const MaterialDesignContent = forwardRef<HTMLDivElement, CustomContentProps>((pr
         {!isLoading ? <DialogCloseIcon className={`${classes.close}`} onClick={props.onClose} /> : ""}
       </div>
 
-      {!!props.extraContent ? <div className={`${classes.extraContent}`}>{props.extraContent}</div> : null}
+      {props.extraContent ? <div className={`${classes.extraContent}`}>{props.extraContent}</div> : null}
 
       {action && <div className={classes.action}>{action}</div>}
 

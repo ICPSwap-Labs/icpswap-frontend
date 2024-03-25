@@ -1,6 +1,5 @@
 import { useEffect, useState, useImperativeHandle, forwardRef, Ref, useRef } from "react";
 import { Grid, TextField, Typography, useTheme } from "@mui/material";
-import CloudUploadIcon from "./UploadCloudIcon";
 import Loading from "components/Loading";
 import { isMobile } from "react-device-detect";
 import useFileUpload from "hooks/useNFTUpload";
@@ -10,6 +9,7 @@ import { makeStyles } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import { Identity as CallIdentity } from "types/index";
 import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
+import CloudUploadIcon from "./UploadCloudIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -182,16 +182,16 @@ const Upload = forwardRef(
       if (types.length && !types.includes(fileType)) {
         setFileError(t`Not allowed this file type`);
         return;
-      } else {
+      } 
         setFileError("");
-      }
+      
 
       if (maxSize && targetFile.size > maxSize) {
         setFileError(t`File is large than ${maxSize} bytes`);
         return;
-      } else {
+      } 
         setFileError("");
-      }
+      
 
       setFileType(fileType);
       setFileName(targetFile.name);
@@ -205,7 +205,7 @@ const Upload = forwardRef(
 
       if (base64) {
         if (fileType === "image") {
-          let reader = new FileReader();
+          const reader = new FileReader();
           reader.readAsDataURL(targetFile);
           reader.onload = function (event) {
             if (event.type === "load") {
@@ -213,16 +213,14 @@ const Upload = forwardRef(
             }
           };
         }
-      } else {
-        if (uploadImmediately) {
+      } else if (uploadImmediately) {
           if (uploadWithIdentity) {
             identityRef?.current?.submit({ file: targetFile, canisterId });
           } else {
             uploadCallback({ file: targetFile, canisterId });
           }
-        } else {
-          if (fileType === "image") {
-            let reader = new FileReader();
+        } else if (fileType === "image") {
+            const reader = new FileReader();
             reader.readAsDataURL(targetFile);
             reader.onload = function (event) {
               if (event.type === "load") {
@@ -230,8 +228,6 @@ const Upload = forwardRef(
               }
             };
           }
-        }
-      }
     };
 
     return (

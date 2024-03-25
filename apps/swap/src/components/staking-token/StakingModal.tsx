@@ -51,8 +51,8 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
 
     setLoading(false);
 
-    onStakingSuccess && onStakingSuccess();
-    onClose && onClose();
+    if (onStakingSuccess) onStakingSuccess();
+    if (onClose) onClose();
   };
 
   let errorMessage = "";
@@ -123,7 +123,7 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
                 size="large"
                 startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
               >
-                {errorMessage ? errorMessage : t`Confirm`}
+                {errorMessage || t`Confirm`}
               </Button>
             )}
           </Identity>

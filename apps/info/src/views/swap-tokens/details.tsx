@@ -1,9 +1,8 @@
 import { Typography, Box, Grid, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton, TokenImage } from "ui-component/index";
+import { useParams , useHistory } from "react-router-dom";
+import { Wrapper, Breadcrumbs, TextButton, TokenImage , MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
-import { MainCard } from "ui-component/index";
 import { useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
@@ -15,7 +14,6 @@ import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { swapLink, addLiquidityLink } from "utils/index";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { useHistory } from "react-router-dom";
 
 import { TokenPrices } from "./components/TokenPrice";
 import { TokenCharts } from "./components/Charts";

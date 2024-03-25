@@ -15,12 +15,12 @@ export default function NFTVideo({
 
   useEffect(() => {
     if (src) {
-      var video = document.getElementById("NFT_Video") as HTMLVideoElement;
+      const video = document.getElementById("NFT_Video") as HTMLVideoElement;
 
       if (video) {
         video.addEventListener(
           "loadeddata",
-          function () {
+          () => {
             setLoading(false);
             if (autoPlay) video.play();
           },
@@ -45,7 +45,7 @@ export default function NFTVideo({
           id="NFT_Video"
           controls
           loop
-          muted={autoPlay ? true : false}
+          muted={!!autoPlay}
           style={{ display: loading ? "none" : "block", width: "100%", height: "100%" }}
         >
           <source src={src} type="video/mp4" />

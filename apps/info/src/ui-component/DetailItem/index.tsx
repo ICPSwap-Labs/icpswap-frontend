@@ -62,9 +62,7 @@ export default function DetailItem({ title, value, CustomChild, isAddress, borde
             },
           }}
         >
-          {CustomChild ? (
-            CustomChild
-          ) : (
+          {CustomChild || (
             <Grid item>
               {isAddress ? (
                 // @ts-ignore

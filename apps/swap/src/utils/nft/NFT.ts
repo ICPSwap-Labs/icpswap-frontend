@@ -1,10 +1,11 @@
-import { BaseNFTAdapter } from "./BaseNFTAdapter";
 import type { NFTTransferArgs, NFTAllowanceArgs, NFTApproveArgs } from "@icpswap/types";
-import { ICPSwapAdapter } from "./ICPSwapNFTAdapter";
 import { Identity } from "types/global";
+import { BaseNFTAdapter } from "./BaseNFTAdapter";
+import { ICPSwapAdapter } from "./ICPSwapNFTAdapter";
 
 export class NFT {
   public canisterAdapters = new Map<string, AdapterName>();
+
   public adapters = new Map<AdapterName, BaseNFTAdapter>();
 
   public initialAdapter(name: AdapterName, adapter: BaseNFTAdapter) {

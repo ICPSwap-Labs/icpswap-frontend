@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, Input } from "@mui/material";
@@ -6,11 +7,10 @@ import MainCard from "components/cards/MainCard";
 import { useAccountPrincipal } from "store/auth/hooks";
 import FilledTextField from "components/FilledTextField";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { TextFieldNumberComponent } from "components/index";
+import { TextFieldNumberComponent, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
-import { Wrapper } from "components/index";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
@@ -20,9 +20,9 @@ import { TOKEN_STANDARD } from "@icpswap/constants";
 import { read, utils } from "xlsx";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { Principal } from "@dfinity/principal";
-import Config from "./Config";
 import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import Config from "./Config";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -97,18 +97,18 @@ export default function CreateTokenClaim() {
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    const call = async () => {
+    async function call() {
       const { valid } = await standardCheck(values.id, values.standard as TOKEN_STANDARD);
 
       if (!valid) {
         openTip("Token standard is not correct", MessageTypes.error);
-        return undefined;
+        return;
       }
 
       updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
 
       setTokenId(values.id);
-    };
+    }
 
     if (values.standard && values.id) {
       call();
@@ -139,15 +139,15 @@ export default function CreateTokenClaim() {
         type: "binary",
       });
 
-      let userClaims: UserClaimItem[] = [];
-      let inValidUserClaims: ExcelClaimItem[] = [];
+      const userClaims: UserClaimItem[] = [];
+      const inValidUserClaims: ExcelClaimItem[] = [];
 
       for (let i = 0; i < xlsx.SheetNames.length; i++) {
         const sheetData = utils.sheet_to_json<ExcelClaimItem>(xlsx.Sheets[xlsx.SheetNames[i]]);
 
         for (let i = 0; i < sheetData.length; i++) {
-          const address = sheetData[i].address;
-          const amount = sheetData[i].amount;
+          const { address } = sheetData[i];
+          const { amount } = sheetData[i];
 
           if (!address || amount === undefined) {
             openTip(t`Incorrect file content`, MessageTypes.error);
@@ -229,7 +229,7 @@ export default function CreateTokenClaim() {
           });
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
 
       const { status: status2, message: message2 } = await setClaimEventReady(data, identity);
@@ -354,7 +354,7 @@ export default function CreateTokenClaim() {
                       {userClaims.length} valid accounts (TotalAmount: {ExcelTotalAmount.toFormat()})
                     </Typography>
 
-                    {!!inValidUserClaims?.length ? (
+                    {inValidUserClaims?.length ? (
                       <Typography
                         component="span"
                         fontSize="12px"
@@ -381,7 +381,7 @@ export default function CreateTokenClaim() {
                     disabled={Boolean(errorMsg) || loading}
                     loading={loading}
                   >
-                    {errorMsg ? errorMsg : t`Create claim event`}
+                    {errorMsg || t`Create claim event`}
                   </Button>
                 )}
               </Identity>

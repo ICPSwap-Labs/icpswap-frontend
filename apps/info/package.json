@@ -35,7 +35,6 @@
     "@types/testing-library__cypress": "^5.0.5",
     "@types/webpack-env": "^1.16.3",
     "file-saver": "^2.0.5",
-    "prettier": "3.0.3",
     "serve": "^11.3.2"
   },
   "dependencies": {

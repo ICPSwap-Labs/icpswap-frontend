@@ -1,10 +1,10 @@
-import { ChartEntry } from "./index";
 import { GridAutoRows, RowFixed } from "ui-component/Grid/index";
 import { Typography, Box } from "@mui/material";
 import { Token } from "@icpswap/swap-sdk";
 import { Theme } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 import { toSignificant } from "@icpswap/utils";
+import { ChartEntry } from "./type";
 
 interface LabelProps {
   x: number;
@@ -25,12 +25,12 @@ export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentP
   const entryData = data?.[labelData.index];
 
   if (entryData?.isCurrent) {
-    const price0 = entryData.price0;
-    const price1 = entryData.price1;
+    const { price0 } = entryData;
+    const { price1 } = entryData;
 
     return (
       <g>
-        <foreignObject x={labelData.x - 80} y={318} width={"100%"} height={100}>
+        <foreignObject x={labelData.x - 80} y={318} width="100%" height={100}>
           <Box
             sx={{
               borderRadius: "8px",

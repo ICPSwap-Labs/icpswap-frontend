@@ -1,6 +1,4 @@
-/**
- * Credit to MUI team @ https://mui.com
- */
+/* eslint-disable no-param-reassign */
 export const defaultEasing = {
   // This is the most common easing curve.
   easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",

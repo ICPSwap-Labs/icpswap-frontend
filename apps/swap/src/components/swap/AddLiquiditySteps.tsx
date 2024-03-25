@@ -34,8 +34,8 @@ export function getAddLiquidityStepDetails({
 }: GetAddLiquidityStepDetails) {
   if (!position) return [];
 
-  const token0 = position.pool.token0;
-  const token1 = position.pool.token1;
+  const {token0} = position.pool;
+  const {token1} = position.pool;
 
   const symbol0 = position.pool.token0.symbol;
   const symbol1 = position.pool.token1.symbol;

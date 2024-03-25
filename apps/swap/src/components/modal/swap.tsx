@@ -1,8 +1,8 @@
 import React from "react";
-import Modal from "./index";
 import { useTheme } from "@mui/material";
 import { isDarkTheme } from "utils";
 import { Theme } from "@mui/material/styles";
+import Modal from "./index";
 
 export default ({
   width = "570px",

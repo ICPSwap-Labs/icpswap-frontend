@@ -5,7 +5,7 @@ import { Trans, t } from "@lingui/macro";
 import DetailItem from "ui-component/DetailItem";
 import { WICPCanisterId } from "constants/canister";
 import { cycleValueFormat, getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
+import { parseTokenAmount, enumToString, pageArgsFormat , shorten, timestampFormat } from "@icpswap/utils";
 import { useWrapOverview } from "hooks/useWICPCalls";
 import { useWrapTransactions } from "@icpswap/hooks";
 import { NoData, Pagination, Copy, LoadingRow, PaginationType, MainCard, MainContainer } from "ui-component/index";
@@ -13,7 +13,6 @@ import { ICP, WRAPPED_ICP } from "constants/tokens";
 import { Theme } from "@mui/material/styles";
 import upperFirst from "lodash/upperFirst";
 import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table";
-import { shorten, timestampFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   box: {

@@ -15,9 +15,10 @@ export function useStepCalls() {
   const updateCallStep = useUpdateCallStep();
 
   return useCallback(
-    (calls: StepCallback[] | undefined, key: string) => {
+    (_calls: StepCallback[] | undefined, key: string) => {
       let curr = 0;
-      let err: number | undefined = undefined;
+      let err: number | undefined;
+      let calls: StepCallback[] | undefined = _calls;
 
       const fn = async (step: number) => {
         if (!calls) calls = [];
@@ -37,6 +38,11 @@ export function useStepCalls() {
         return true;
       };
 
+      const reset = () => {
+        curr = 0;
+        err = undefined;
+      };
+
       const call = async () => {
         reset();
 
@@ -47,11 +53,6 @@ export function useStepCalls() {
 
       const retry = async () => {
         return await fn(err ?? 0);
-      };
-
-      const reset = () => {
-        curr = 0;
-        err = undefined;
       };
 
       return { call, reset, retry, currentStep: curr, errorStep: err };

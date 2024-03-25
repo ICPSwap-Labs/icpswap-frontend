@@ -2,12 +2,10 @@ import { useState, useMemo } from "react";
 import { Typography, Box, Grid, Avatar, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton } from "ui-component/index";
+import { Wrapper, Breadcrumbs, TextButton , MainCard } from "ui-component/index";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkAndOpen, toSignificant } from "@icpswap/utils";
+import { mockALinkAndOpen, toSignificant , formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount } from "@icpswap/utils";
-import { MainCard } from "ui-component/index";
 import { useGraphToken, useGraphTokenTVLChartData, useGraphTokenPriceChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
 import { GridAutoRows } from "ui-component/Grid/index";
@@ -86,9 +84,9 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: data.tvlUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   const formattedVolumeData = useMemo(() => {
@@ -99,9 +97,9 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: data.volumeUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   const formattedTransactionData = useMemo(() => {
@@ -112,9 +110,9 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: Number(data.txCount),
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   return (
@@ -161,7 +159,7 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           }}
           fontSize="12px"
         >
-          {valueLabel ? valueLabel : ""}
+          {valueLabel || ""}
         </Typography>
       </Box>
 

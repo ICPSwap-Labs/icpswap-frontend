@@ -1,5 +1,4 @@
 import { Box, Button, CircularProgress, Typography, useTheme } from "@mui/material";
-import Logo from "./Logo";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import QRCode from "components/qrcode";
@@ -7,16 +6,17 @@ import { useBTCDepositAddress, useUpdateBalanceCallback } from "hooks/ck-btc/use
 import { useAccountPrincipalString } from "store/auth/hooks";
 import Copy from "components/Copy";
 import { useState } from "react";
-import Links from "./Links";
 import { ckBTC_ID } from "constants/ckBTC";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { useTips, MessageTypes } from "hooks/useTips";
-import Transaction from "./Transaction";
 import { MainCard } from "components/index";
 import Toggle, { ToggleButton } from "components/SwitchToggle";
+import Transaction from "./Transaction";
+import Links from "./Links";
+import Logo from "./Logo";
 
 function CopyIcon() {
   return (

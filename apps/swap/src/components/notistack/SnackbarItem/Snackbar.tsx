@@ -3,10 +3,10 @@
  */
 import * as React from "react";
 import clsx from "clsx";
+import { ClickAwayListener } from "@mui/base";
 import useEventCallback from "../utils/useEventCallback";
 import { CloseReason, SharedProps, SnackbarKey } from "../types";
 import { ComponentClasses } from "../utils/styles";
-import { ClickAwayListener } from "@mui/base";
 
 interface SnackbarProps extends Required<Pick<SharedProps, "disableWindowBlurListener" | "onClose">> {
   open: boolean;

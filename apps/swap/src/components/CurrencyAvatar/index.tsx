@@ -6,8 +6,8 @@ const useStyles = ({ borderColor, size }: { borderColor: string; size?: string |
   makeStyles(() => {
     return {
       avatar: {
-        width: size ? size : "24px",
-        height: size ? size : "24px",
+        width: size || "24px",
+        height: size || "24px",
         border: `1px solid ${borderColor}`,
       },
     };
@@ -32,7 +32,7 @@ export default function CurrencyAvatar({
 
   return (
     <Avatar
-      className={`${classes.avatar} ${className ? className : ""}`}
+      className={`${classes.avatar} ${className || ""}`}
       sx={{ bgcolor: bgColor }}
       src={currency?.logo}
     >

@@ -1,19 +1,16 @@
 import { useSwapTransactions } from "hooks/info/useScanSwapTransactions";
-import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
-import useParsedQueryString from "hooks/useParsedQueryString";
-import { LoadingRow, SelectPair } from "ui-component/index";
+import { useParsedQueryString } from "@icpswap/hooks";
+import { LoadingRow, SelectPair, Pagination, PaginationType, Copy, NoData } from "ui-component/index";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
 import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
 import { PoolStorageTransaction } from "@icpswap/types";
-import { Pagination, PaginationType } from "ui-component/index";
 import dayjs from "dayjs";
-import { Copy, NoData } from "ui-component/index";
-import { shorten } from "@icpswap/utils";
+import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
   return {

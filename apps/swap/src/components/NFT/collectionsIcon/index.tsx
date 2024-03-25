@@ -184,7 +184,7 @@ export default function CollectionIcons({ links: _links, width = "50px" }: Colle
               key={link.k}
               className={classes.icon}
               sx={{
-                width: width,
+                width,
               }}
               container
               justifyContent="center"
@@ -205,7 +205,7 @@ export default function CollectionIcons({ links: _links, width = "50px" }: Colle
             onMouseLeave={handleMouseLeave}
             className={classes.icon}
             sx={{
-              width: width,
+              width,
             }}
           >
             <Grid container item justifyContent="center" alignItems="center" className={classes.more}>

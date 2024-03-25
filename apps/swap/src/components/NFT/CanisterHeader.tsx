@@ -122,7 +122,7 @@ function UploadImageModal({ canisterId, open, onClose }: UploadImageModalProps) 
           uploadImmediately={false}
           onFileSelected={handleFileChange}
           onFileError={handleFileError}
-          uploadWithIdentity={true}
+          uploadWithIdentity
           minHeight="220px"
         />
         <Typography sx={{ marginTop: "5px" }}>

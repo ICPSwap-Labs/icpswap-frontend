@@ -1,12 +1,12 @@
-import { network, NETWORK, host } from "./server";
 import { actor, Actor } from "@icpswap/actor";
+import { network, NETWORK, host } from "./server";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  var context = require.context("../canister-ids", true, /\.json$/);
+  const context = require.context("../canister-ids", true, /\.json$/);
 
-  context.keys().forEach(function (key: string) {
+  context.keys().forEach((key: string) => {
     let canister_ids = context(key);
 
     if (key.includes("icpswap-v2")) {
@@ -23,8 +23,8 @@ try {
       CanisterIdsJson = {
         ...CanisterIdsJson,
         ...canister_ids,
-        ...(key.includes("voting") && !!canister_ids["FileCanister"]
-          ? { VotingFileCanister: canister_ids["FileCanister"] }
+        ...(key.includes("voting") && !!canister_ids.FileCanister
+          ? { VotingFileCanister: canister_ids.FileCanister }
           : {}),
       };
     }
@@ -34,10 +34,9 @@ try {
 }
 
 const canisterIds: { [key: string]: string } = {};
-
-for (const canister in CanisterIdsJson) {
+Object.keys(CanisterIdsJson).forEach((canister) => {
   canisterIds[canister] = CanisterIdsJson[canister][network];
-}
+});
 
 export const getCanisterId = (canisterName: string): string => {
   return canisterIds[canisterName];

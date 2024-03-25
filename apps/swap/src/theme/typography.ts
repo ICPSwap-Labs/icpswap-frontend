@@ -1,6 +1,4 @@
-import { ThemeOption } from "./index";
-
-export function themeTypography(theme: ThemeOption) {
+export function themeTypography(theme: { [key: string]: any }) {
   return {
     fontFamily: theme.customization.fontFamily,
     h6: {

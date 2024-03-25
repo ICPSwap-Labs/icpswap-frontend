@@ -1,5 +1,5 @@
-import Pools from "./Pools";
 import { useGraphTokenPoolsDetails } from "hooks/v2";
+import Pools from "./Pools";
 
 export interface TokenPoolsProps {
   canisterId: string;

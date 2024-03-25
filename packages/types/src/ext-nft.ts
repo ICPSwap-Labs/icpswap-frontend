@@ -38,11 +38,11 @@ export interface EXTCollection {
   web: string;
 }
 
-export interface ExtNft {
+export type ExtNft = {
   id: string;
   owner: string;
   canister: string;
   price: number;
   time: number;
   metadata: string;
-}
+};

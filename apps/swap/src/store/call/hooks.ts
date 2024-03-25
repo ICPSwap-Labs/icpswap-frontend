@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useMemo } from "react";
-import { updateCallKeys, updateCallResult } from "./actions";
 import store from "store/index";
+import { updateCallKeys, updateCallResult } from "./actions";
 
 export function useCallResult(callKey: string) {
   return useAppSelector((state) => state.call.callResults)[callKey];

@@ -15,7 +15,7 @@ export default function SwapTooltip({ tips, background, iconSize = "16px" }: Too
         // @ts-ignore
         sx: {
           "& .MuiTooltip-tooltip": {
-            background: background,
+            background,
             borderRadius: "8px",
             padding: "12px 16px",
             "& .MuiTooltip-arrow": {

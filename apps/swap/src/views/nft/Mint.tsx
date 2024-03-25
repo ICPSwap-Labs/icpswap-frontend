@@ -6,11 +6,10 @@ import MainCard from "components/cards/MainCard";
 import { useAccount } from "store/global/hooks";
 import FilledTextField from "components/FilledTextField";
 import Upload, { UploadRef } from "components/NFT/Upload";
-import { useMintNFTCallback, useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR } from "hooks/useTips";
-import { Wrapper, TextFieldNumberComponent } from "components/index";
+import { Wrapper, TextFieldNumberComponent, TextButton } from "components/index";
 import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
-import { useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { Trans, t } from "@lingui/macro";
 import NoData from "components/no-data";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
@@ -25,9 +24,8 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
 import BigNumber from "bignumber.js";
 import { getLocaleMessage } from "locales/services";
-import { TextButton } from "components/index";
 import Button from "components/authentication/ButtonConnector";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import { useParsedQueryString } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -78,16 +76,19 @@ export default function NFTMint() {
   const { result: canisterMetadata } = useCanisterMetadata(mintTokenInfo.nftCanister);
 
   useEffect(() => {
-    if (!!NFTCanisterId) {
+    if (NFTCanisterId) {
       setMintTokenInfo({ ...mintTokenInfo, nftCanister: NFTCanisterId });
     }
   }, [NFTCanisterId]);
 
   const handleFieldChange = (value: string, field: string) => {
-    if (field === "fee" && new BigNumber(value).isGreaterThan(100)) {
-      value = "100";
+    let new_value = value;
+
+    if (field === "fee" && new BigNumber(new_value).isGreaterThan(100)) {
+      new_value = "100";
     }
-    setMintTokenInfo({ ...mintTokenInfo, [field]: value });
+
+    setMintTokenInfo({ ...mintTokenInfo, [field]: new_value });
   };
 
   const mintNFTCallback = useMintNFTCallback();
@@ -111,7 +112,7 @@ export default function NFTMint() {
       name: mintTokenInfo.name,
       link: mintTokenInfo.link ?? "",
       image: filePath,
-      filePath: filePath,
+      filePath,
       owner: { address: account },
       attributes: [{ k: "", v: "" }],
       count: !mintTokenInfo.supply ? BigInt(1) : BigInt(new BigNumber(mintTokenInfo.supply).toString()),
@@ -171,7 +172,7 @@ export default function NFTMint() {
   };
 
   const handleMetadataLabelInput = (value: string, index: number) => {
-    let metadata = [...(mintTokenInfo.metadata ?? [])];
+    const metadata = [...(mintTokenInfo.metadata ?? [])];
 
     if (metadata[index]) {
       metadata.splice(index, 1, { ...metadata[index], label: value });
@@ -181,17 +182,17 @@ export default function NFTMint() {
   };
 
   const handleMetadataValueInput = (value: string, index: number) => {
-    let metadata = [...(mintTokenInfo.metadata ?? [])];
+    const metadata = [...(mintTokenInfo.metadata ?? [])];
 
     if (metadata[index]) {
-      metadata.splice(index, 1, { ...metadata[index], value: value });
+      metadata.splice(index, 1, { ...metadata[index], value });
     }
 
     setMintTokenInfo({ ...mintTokenInfo, metadata });
   };
 
   const handleMetadataDelete = (index: number) => {
-    let metadata = [...(mintTokenInfo.metadata ?? [])];
+    const metadata = [...(mintTokenInfo.metadata ?? [])];
 
     if (metadata[index]) metadata.splice(index, 1);
 
@@ -200,7 +201,7 @@ export default function NFTMint() {
 
   let errorMsg = "";
   if (!agree) errorMsg = t`Agree the statement`;
-  if (!!fileError) errorMsg = t`File error`;
+  if (fileError) errorMsg = t`File error`;
   if (!file) errorMsg = t`Selected the file`;
   if (!mintTokenInfo.name) errorMsg = t`Enter the name`;
   if (!mintTokenInfo.nftCanister) errorMsg = t`Select the NFT canister`;
@@ -480,7 +481,7 @@ export default function NFTMint() {
                       disabled={Boolean(errorMsg) || loading}
                       startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
                     >
-                      {errorMsg ? errorMsg : t`Mint`}
+                      {errorMsg || t`Mint`}
                     </Button>
                   )}
                 </Identity>
@@ -491,7 +492,7 @@ export default function NFTMint() {
                       sx={{ padding: "0" }}
                       icon={<RadioButtonUncheckedOutlinedIcon sx={{ fontSize: "20px" }} />}
                       checkedIcon={<RadioButtonCheckedOutlined sx={{ fontSize: "20px" }} />}
-                      onChange={(value: React.ChangeEvent<HTMLInputElement>) => setAgree(!agree)}
+                      onChange={() => setAgree(!agree)}
                     />
                   </Box>
                   <Grid item xs>

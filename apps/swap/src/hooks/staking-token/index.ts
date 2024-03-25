@@ -9,7 +9,7 @@ import {
   useCallsData,
   getStakingTokenCycles,
   getV1StakingTokenCycles,
-} from "@icpswap/hooks";
+ stakingV1TokenWithdraw, stakingTokenWithdraw , stakingV1TokenHarvest, stakingTokenHarvest , getV1StakingTokenUserInfo, getStakingTokenUserInfo , getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import { ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -26,10 +26,6 @@ import { getSteps } from "views/staking-token/components/Step";
 import { useStepContentManager } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import { Identity as CallIdentity } from "types/global";
-import { stakingV1TokenWithdraw, stakingTokenWithdraw } from "@icpswap/hooks";
-import { stakingV1TokenHarvest, stakingTokenHarvest } from "@icpswap/hooks";
-import { getV1StakingTokenUserInfo, getStakingTokenUserInfo } from "@icpswap/hooks";
-import { getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
 import { StakingPoolInfo as V1PoolData } from "types/staking";
 import type { UserStakingInfo } from "types/staking-token";
 import type { StakingPoolGlobalData, StakingTokenPoolInfo } from "@icpswap/types";
@@ -67,7 +63,7 @@ export function useStakingTokenDeposit() {
     const useTransfer = isUseTransfer(token);
 
     let status: ResultStatus = ResultStatus.ERROR;
-    let message: string = "";
+    let message = "";
 
     if (useTransfer) {
       const { status: _status, message: _message } = await stakingTokenDeposit(poolId, identity);

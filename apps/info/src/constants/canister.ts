@@ -1,12 +1,12 @@
+import { actor, Actor } from "@icpswap/actor";
 import { network, NETWORK, host } from "./server";
-import { actor as actor, Actor as Actor } from "@icpswap/actor";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  var context = require.context("../canister_ids_json", true, /\.json$/);
+  const context = require.context("../canister_ids_json", true, /\.json$/);
 
-  context.keys().forEach(function (key: string) {
+  context.keys().forEach((key: string) => {
     const canister_ids = context(key);
 
     if (
@@ -24,9 +24,10 @@ try {
 }
 
 const canisterIds: any = {};
-for (const canister in CanisterIdsJson) {
-  canisterIds[canister] = CanisterIdsJson[canister][network];
-}
+
+Object.keys(CanisterIdsJson).forEach((key) => {
+  canisterIds[key] = CanisterIdsJson[key][network];
+});
 
 export const getCanisterId = (canisterName: string): string => canisterIds[canisterName];
 

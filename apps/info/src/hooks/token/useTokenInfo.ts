@@ -1,14 +1,13 @@
 import { useMemo, useEffect, useState } from "react";
 import { WRAPPED_ICP_TOKEN_INFO, ICP_TOKEN_INFO } from "constants/tokens";
 import { TokenInfo } from "types/token";
-import { getTokenBaseInfo } from "./info-calls";
 import { getTokenStandard } from "store/token/cache/hooks";
-import store from "store/index";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { IdbStorage } from "@icpswap/utils";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
+import { getTokenBaseInfo } from "./info-calls";
 import { useLocalTokens } from "./useLocalTokens";
 
 const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
@@ -50,14 +49,6 @@ function isNeedUpdateTokenInfo(tokenId: string) {
   const storage_time = getTokenStorageTime(tokenId);
   if (!storage_time) return true;
   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
-}
-
-export function getSwapTokenArgs(address: string) {
-  const standards = store.getState().tokenCache.standards;
-  let standard = standards[address] as string;
-  if (address === WRAPPED_ICP_TOKEN_INFO.canisterId) standard = WRAPPED_ICP_TOKEN_INFO.standardType;
-  if (!standard) throw Error(`No token standard: ${address}`);
-  return { address: address, standard: standard as string };
 }
 
 export function useStorageInfo(tokenId: string | undefined) {
@@ -106,7 +97,7 @@ export function useTokensInfo(
       return;
     }
 
-    let tokeInfo: undefined | TokenInfo = undefined;
+    let tokeInfo: undefined | TokenInfo;
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
     if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;
@@ -211,7 +202,7 @@ export function useTokensInfo(
     async function call() {
       if (tokenIds) {
         get_tokens_info_index++;
-        let new_call_index = get_tokens_info_index;
+        const new_call_index = get_tokens_info_index;
         const calls = tokenIds.map(async (tokenId) => await fetch_token_info(tokenId, new_call_index));
         getPromisesAwait(calls, 10);
       }

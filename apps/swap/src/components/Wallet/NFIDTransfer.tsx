@@ -73,9 +73,7 @@ export default function NFIDTransferModal({
       } catch (error) {
         return t`Invalid principal ID`;
       }
-    } else {
-      if (!isValidAccount(values.to)) return t`Invalid account ID`;
-    }
+    } else if (!isValidAccount(values.to)) return t`Invalid account ID`;
 
     if (!values.amount) return t`Enter an amount`;
     if (!new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0))
@@ -196,13 +194,11 @@ export default function NFIDTransferModal({
                 disabled={loading || !!errorMessage}
                 onClick={submit}
               >
-                {errorMessage ? (
-                  errorMessage
-                ) : !loading ? (
+                {errorMessage || (!loading ? (
                   <Trans>Approve by NFID</Trans>
                 ) : (
                   <CircularProgress size={26} color="inherit" />
-                )}
+                ))}
               </Button>
             )}
           </Identity>

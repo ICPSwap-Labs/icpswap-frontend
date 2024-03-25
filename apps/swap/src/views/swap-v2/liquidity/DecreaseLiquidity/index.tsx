@@ -9,28 +9,28 @@ import HeaderTab from "components/swap/Header";
 import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swapv2/burn/hooks";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
-import { BURN_FIELD, slippageToPercent } from "constants/swap";
+import { BURN_FIELD, slippageToPercent } from "constants/mint";
 import {
   usePosition as usePositionRequest,
   decreaseLiquidity as decreaseLiquidityRequest,
   decreaseInvalidLiquidity,
 } from "hooks/swap/v2/useSwapCalls";
 import BigNumber from "bignumber.js";
-import ConfirmRemoveLiquidityModal from "./Confirm";
 import { useErrorTip, useSuccessTip, useLoadingTip } from "hooks/useTips";
 import { useAccount } from "store/global/hooks";
-import DecreaseLiquidityInput from "./Input";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { type StatusResult, type ActorIdentity } from "@icpswap/types";
 import LiquidityInfo from "components/swap/LiquidityInfo";
-import Unclaimed from "./Unclaimed";
 import Loading from "components/Loading/Static";
 import { PoolState } from "hooks/swap/v2/usePools";
 import { getLocaleMessage } from "locales/services";
 import Button from "components/authentication/ButtonConnector";
+import Unclaimed from "./Unclaimed";
+import DecreaseLiquidityInput from "./Input";
+import ConfirmRemoveLiquidityModal from "./Confirm";
 
 const useStyle = makeStyles(() => {
   return {
@@ -175,7 +175,7 @@ export default memo(() => {
         | StatusResult<{
             amount0: bigint;
             amount1: bigint;
-          }> = undefined;
+          }>;
 
       if (isInvalid) {
         result = await decreaseInvalidLiquidity(identity, {

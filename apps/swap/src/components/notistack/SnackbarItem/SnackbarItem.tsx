@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import clsx from "clsx";
+import { makeStyles } from "@mui/styles";
 import Collapse from "../transitions/Collapse";
 import { getSlideDirection, toSnackbarAnchorOrigin, keepSnackbarClassKeys } from "./utils";
 import {
@@ -11,7 +12,6 @@ import {
 } from "../types";
 import createChainedFunction from "../utils/createChainedFunction";
 import Snackbar from "./Snackbar";
-import { makeStyles } from "@mui/styles";
 import MaterialDesignContent from "../ui/MaterialDesignContent";
 
 const useStyles = makeStyles({
@@ -76,12 +76,6 @@ export default function SnackbarItem(props: SnackbarItemProps) {
     transitionDuration,
     disableWindowBlurListener,
     content: componentOrFunctionContent,
-    entered: ignoredEntered,
-    requestClose: ignoredRequestClose,
-    onEnter: ignoreOnEnter,
-    onEntered: ignoreOnEntered,
-    onExit: ignoreOnExit,
-    onExited: ignoreOnExited,
     ...otherSnack
   } = snack;
 

@@ -1,18 +1,17 @@
 import { ReactNode, useMemo } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { Breadcrumbs, Typography, Grid, Box, useMediaQuery, Avatar } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
+import { createTheme , Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
 import { useCollectionData } from "hooks/nft/tradeData";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import { formatAmount } from "@icpswap/utils";
-import CollectionLinks from "../collectionsIcon/index";
 import LoadingRow from "components/Loading/LoadingRow";
+import CollectionLinks from "../collectionsIcon/index";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -105,7 +104,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
 
   const links = useMemo(() => {
     if (canisterId === "xzcnc-myaaa-aaaak-abk7a-cai") {
-      let _links = [...(canister?.linkMap ?? [])].filter((e) => e.k !== "Twitter");
+      const _links = [...(canister?.linkMap ?? [])].filter((e) => e.k !== "Twitter");
       _links.push({ k: "Twitter", v: "https://twitter.com/ghost_icp" });
       return _links;
     }
@@ -152,7 +151,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                   {canister?.name}
                 </Typography>
                 <Box mt="20px">
-                  <VerifyNFT minter={canister?.creator} secondaryColor={true} fontSize="14px" />
+                  <VerifyNFT minter={canister?.creator} secondaryColor fontSize="14px" />
                 </Box>
 
                 <Box mt="20px">

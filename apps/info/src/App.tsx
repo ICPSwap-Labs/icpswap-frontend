@@ -2,12 +2,12 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import Loader from "ui-component/Loading/LinearLoader";
+import { useInitialXDR2USD } from "hooks/useXDR2USD";
 import Routes from "./routes";
-import theme from "./themes";
+import { theme } from "./themes";
 import NavigationScroll from "./ui-component/NavigationScroll";
 import Snackbar from "./ui-component/Snackbar";
 import { useICPPrices, useFetchSNSTokenRootIds } from "./store/global/hooks";
-import { useInitialXDR2USD } from "hooks/useXDR2USD";
 
 export default function App() {
   const { loading: initialTokenStandardLoading } = useInitialTokenStandard();

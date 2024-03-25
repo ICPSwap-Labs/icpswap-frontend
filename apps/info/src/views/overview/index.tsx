@@ -2,9 +2,8 @@ import { ReactNode } from "react";
 import { Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { t } from "@lingui/macro";
-import ICPPriceChart from "./ICPPriceChart";
 import { WRAPPED_ICP } from "constants/tokens";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount , formatAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useSwapPools, useSwapProtocolData, useNFTTradeData } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
@@ -14,7 +13,7 @@ import { useStakingGlobalData, useStakingTokenAllPools } from "hooks/staking-tok
 import { useAllFarmPools, useFarmGlobalData } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
-import { formatAmount, formatDollarAmount } from "@icpswap/utils";
+import ICPPriceChart from "./ICPPriceChart";
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {

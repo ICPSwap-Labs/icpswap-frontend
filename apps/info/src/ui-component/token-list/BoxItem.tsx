@@ -49,9 +49,7 @@ export function BoxItem({ title, value, CustomChild, isAddress, border }: BoxIte
             "@media screen and (max-width: 640px)": { paddingLeft: "10px" },
           }}
         >
-          {CustomChild ? (
-            CustomChild
-          ) : (
+          {CustomChild || (
             <Grid item>
               {isAddress && !!value ? (
                 <Copy content={value}>

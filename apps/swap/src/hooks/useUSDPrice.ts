@@ -13,7 +13,7 @@ export function useICPPrice(): number | undefined {
 
   return useMemo(() => {
     if (ICPPriceList.length) {
-      return ICPPriceList[ICPPriceList.length - 1]["value"];
+      return ICPPriceList[ICPPriceList.length - 1].value;
     }
 
     return undefined;

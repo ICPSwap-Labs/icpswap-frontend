@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { AnyAction, combineReducers } from "redux";
-import allReducer from "./reducer";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import allReducer from "./reducer";
 
 import { GlobalState } from "./global/states";
 import { TokenCacheState } from "./token/cache/states";
@@ -21,7 +21,7 @@ export interface AllState {
 
 const rootPersistConfig = {
   key: "root",
-  storage: storage,
+  storage,
   stateReconciler: autoMergeLevel2,
   blacklist: ["global", "loading", "snackbar", "swap", "token"],
   migrate: (state: any) => {

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { ApiResult, CallResult, PaginationResult, Identity } from "types/index";
+import { PaginationResult, Identity } from "types/index";
 import type {
   NFTTokenMetadata,
   NFTTransaction,
@@ -8,12 +8,12 @@ import type {
   NFTControllerArgs,
   NFTBatchMintArgs,
   NFTControllerInfo,
+  StatusResult,
 } from "@icpswap/types";
 import { OLD_CANISTER_IDS } from "constants/nft";
 import { resultFormat, principalToAccount, isAvailablePageArgs } from "@icpswap/utils";
 import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
-import type { StatusResult } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { v2SwapNFT } from "actor/swapV2";
 
@@ -51,7 +51,7 @@ export function useUserNFTs(user: Principal | undefined, offset: number, limit: 
       if (!user || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<NFTTokenMetadata>>(
-        await (await swapNFT()).findTokenList({ principal: user! }, BigInt(offset), BigInt(limit)),
+        await (await swapNFT()).findTokenList({ principal: user }, BigInt(offset), BigInt(limit)),
       ).data;
     }, [user]),
   );
@@ -69,7 +69,7 @@ export async function findV2TokenListByPool(
 }
 
 export async function getSwapNFTTokenURI(tokenId: bigint | number) {
-  const data = resultFormat<string>(await (await swapNFT()).tokenURI(BigInt(tokenId))).data;
+  const { data } = resultFormat<string>(await (await swapNFT()).tokenURI(BigInt(tokenId)));
   return JSON.parse(data ?? "") as { image: string; [key: string]: any };
 }
 
@@ -101,7 +101,7 @@ export function useNFTMetadata(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || (!tokenId && tokenId !== 0)) return undefined;
-      return resultFormat<NFTTokenMetadata>(await (await NFTCanister(canisterId!)).icsMetadata(Number(tokenId!))).data;
+      return resultFormat<NFTTokenMetadata>(await (await NFTCanister(canisterId)).icsMetadata(Number(tokenId))).data;
     }, [tokenId]),
     reload,
   );
@@ -118,7 +118,7 @@ export function useNFTTransaction(
     useCallback(async () => {
       if (!canisterId || !tokenIdentifier || !isAvailablePageArgs(offset, limit)) return undefined;
       return resultFormat<PaginationResult<NFTTransaction>>(
-        await (await NFTCanister(canisterId)).findTxRecord(tokenIdentifier!, BigInt(offset), BigInt(limit)),
+        await (await NFTCanister(canisterId)).findTxRecord(tokenIdentifier, BigInt(offset), BigInt(limit)),
       ).data;
     }, [canisterId, tokenIdentifier, offset, limit]),
     reload,

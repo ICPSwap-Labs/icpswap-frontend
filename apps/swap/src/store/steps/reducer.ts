@@ -24,6 +24,6 @@ export default createReducer(initialState, (builder) => {
       };
     })
     .addCase(updateKey, (state) => {
-      state.key = state.key + 1;
+      state.key += 1;
     });
 });

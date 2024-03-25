@@ -1,13 +1,11 @@
 import { useMemo, useCallback, useEffect, useState } from "react";
-import { NumberType } from "@icpswap/types";
+import { NumberType , ResultStatus } from "@icpswap/types";
 import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
-import { Token, Currency } from "@icpswap/swap-sdk";
+import { Token, Currency , FeeAmount } from "@icpswap/swap-sdk";
 import { getPoolCanisterId } from "hooks/swap/v3Calls";
 import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
-import { FeeAmount } from "@icpswap/swap-sdk";
 import { PositionDetail } from "types/swap";
 import type { SwapNFTTokenMetadata } from "@icpswap/types";
 import { getActorIdentity } from "components/Identity";
@@ -70,7 +68,7 @@ export function usePoolCanisterId(
 }
 
 export async function getPositionFromNFT(metadata: SwapNFTTokenMetadata) {
-  const attributes = metadata.attributes;
+  const {attributes} = metadata;
 
   const positionDetail: { [key: string]: string } = {
     pool: "",
@@ -160,7 +158,7 @@ export function useSwapDeposit() {
     const useTransfer = isUseTransfer(token);
 
     let status: ResultStatus = ResultStatus.ERROR;
-    let message: string = "";
+    let message = "";
 
     if (useTransfer) {
       const { status: _status, message: _message } = await deposit(

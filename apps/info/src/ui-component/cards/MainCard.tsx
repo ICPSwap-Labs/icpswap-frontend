@@ -1,4 +1,4 @@
-import React, { Ref } from "react";
+import React from "react";
 import { useTheme } from "@mui/styles";
 import { Card, CardHeader, Divider, Typography, Box } from "@mui/material";
 import { Theme } from "@mui/material/styles";
@@ -25,30 +25,25 @@ export interface MainCardProps {
   borderRadius?: "string";
 }
 
-export interface MainCardRef {}
-
 const MainCard = React.forwardRef(
-  (
-    {
-      border = true,
-      boxShadow,
-      children,
-      content = true,
-      contentClass,
-      contentSX,
-      darkTitle,
-      secondary,
-      shadow,
-      sx = {},
-      title,
-      level,
-      onClick,
-      className,
-      borderRadius,
-      ...others
-    }: MainCardProps,
-    ref: Ref<MainCardRef>,
-  ) => {
+  ({
+    border = true,
+    boxShadow,
+    children,
+    content = true,
+    contentClass,
+    contentSX,
+    darkTitle,
+    secondary,
+    shadow,
+    sx = {},
+    title,
+    level,
+    onClick,
+    className,
+    borderRadius,
+    ...others
+  }: MainCardProps) => {
     const theme = useTheme() as Theme;
 
     const getCardStyle = ({ theme, level }: { theme: Theme; level: number }) => {
@@ -82,7 +77,7 @@ const MainCard = React.forwardRef(
       }
     };
 
-    const cardStyles = getCardStyle({ theme, level: level ? level : 0 });
+    const cardStyles = getCardStyle({ theme, level: level || 0 });
 
     return (
       <Card
@@ -91,11 +86,10 @@ const MainCard = React.forwardRef(
         sx={{
           ":hover": {
             boxShadow: boxShadow
-              ? shadow
-                ? shadow
-                : theme.palette.mode === "dark"
-                ? "0 2px 14px 0 rgb(33 150 243 / 10%)"
-                : "0 2px 14px 0 rgb(32 40 45 / 8%)"
+              ? shadow ||
+                (theme.palette.mode === "dark"
+                  ? "0 2px 14px 0 rgb(33 150 243 / 10%)"
+                  : "0 2px 14px 0 rgb(32 40 45 / 8%)")
               : "inherit",
           },
           borderRadius: borderRadius ?? "16px",
@@ -119,7 +113,7 @@ const MainCard = React.forwardRef(
           <Box
             sx={{
               padding: "16px",
-              ...(contentSX ?? {}),
+              ...contentSX,
             }}
             className={contentClass}
           >

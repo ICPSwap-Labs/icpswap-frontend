@@ -60,8 +60,8 @@ export function usePools(
 
           const poolData = await getSwapPool(args);
 
-          let poolInfo: PoolMetadata | undefined = undefined;
-          let ticks = [] as TickLiquidityInfo[];
+          let poolInfo: PoolMetadata | undefined;
+          const ticks = [] as TickLiquidityInfo[];
 
           if (poolData) {
             poolInfo = await getSwapPoolMetadata(poolData.canisterId.toString());
@@ -93,14 +93,14 @@ export function usePools(
 
       try {
         const { fee, sqrtPriceX96, liquidity, tick } = pool;
-        const [token0, token1] = poolKeys[index];
+        const [token0, token1] = poolKey;
 
         return [
           PoolState.EXISTS,
           new Pool(
             poolAddress,
-            token0?.wrapped!,
-            token1?.wrapped!,
+            token0.wrapped,
+            token1.wrapped,
             Number(fee),
             numberToString(sqrtPriceX96),
             numberToString(liquidity),
@@ -160,8 +160,8 @@ export function usePoolByPoolId(canisterId: string | undefined): [PoolState, Poo
         PoolState.EXISTS,
         new Pool(
           canisterId,
-          token0?.wrapped!,
-          token1?.wrapped!,
+          token0.wrapped,
+          token1.wrapped,
           Number(fee),
           numberToString(sqrtPriceX96),
           numberToString(liquidity),
@@ -221,7 +221,7 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
         const tokenInfos = await Promise.all(tokenIds.map(async (id) => await getTokenInfo(id)));
         const tokens = getTokensFromInfo(tokenInfos.filter((info) => !!info) as TokenInfo[]);
 
-        let _tokens: { [key: string]: Token } = {};
+        const _tokens: { [key: string]: Token } = {};
 
         tokens?.forEach((token) => {
           if (token) {
@@ -241,7 +241,7 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
 
     if (!pools || Object.keys(tokens).length === 0) return { Pools: [] as [PoolState, null][], tokens: {} };
 
-    let Pools: [PoolState, null | Pool][] = [];
+    const Pools: [PoolState, null | Pool][] = [];
 
     pools.forEach((pool, index) => {
       if (!pool || !canisterIds) return [PoolState.NOT_EXISTS, null];
@@ -256,8 +256,8 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
           PoolState.EXISTS,
           new Pool(
             canisterIds[index],
-            token0?.wrapped!,
-            token1?.wrapped!,
+            token0.wrapped,
+            token1.wrapped,
             Number(fee),
             numberToString(sqrtPriceX96),
             numberToString(liquidity),

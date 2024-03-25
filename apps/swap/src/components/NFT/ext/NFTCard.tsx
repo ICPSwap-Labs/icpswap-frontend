@@ -1,13 +1,12 @@
 import MainCard from "components/cards/MainCard";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import type { EXTCollection } from "@icpswap/types";
+import { type EXTCollection, type ExtNft } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
-import { NFTAvatar } from "./NFTAvatar";
-import { type ExtNft } from "@icpswap/types";
 import { decodeTokenId } from "utils/nft/index";
 import { extNFTImage } from "utils/nft/ext";
 import { useState } from "react";
+import { NFTAvatar } from "./NFTAvatar";
 import { NFTTransfer } from "./Transfer";
 
 export interface NFTCardProps {

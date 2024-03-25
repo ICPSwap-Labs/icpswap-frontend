@@ -2,16 +2,15 @@ import React, { useState, memo, useCallback, useMemo } from "react";
 import { Typography, Grid, Chip, Button, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp , SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { Bound , BURN_FIELD, slippageToPercent } from "constants/swap";
+import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import Loading from "components/Loading";
-import { CurrencyAmountFormatDecimals } from "constants/index";
 import CollectFeesModal from "components/swap/CollectFeesModal";
-import { useCollectFeesCall } from "hooks/swap/v2/useSwapCalls";
+import { useCollectFeesCall , decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
 import { usePositionFees } from "hooks/swap/v2/usePositionFees";
 import { useAccount } from "store/global/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -20,17 +19,14 @@ import { numberToString } from "@icpswap/utils";
 import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils";
 import { useErrorTip, useSuccessTip, useLoadingTip } from "hooks/useTips";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { Identity as TypeIdentity } from "types/global";
 import PositionStatus from "components/swap/PositionRangeState";
 import { getLocaleMessage } from "locales/services";
-import ConfirmRemoveLiquidityModal from "./HistoryRemoveModal";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
-import { decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
-import { BURN_FIELD, slippageToPercent } from "constants/swap";
+import ConfirmRemoveLiquidityModal from "./HistoryRemoveModal";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -324,7 +320,7 @@ export function PositionDetails({
 
   return (
     <>
-      <Grid mt={1} className={classes.detailContainer} sx={{ display: !!show ? "block" : "none" }}>
+      <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
         <DetailItem
           label={t`${currencyQuote?.symbol} Amount`}
           value={

@@ -1,27 +1,26 @@
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import Routes from "./routes";
-import theme from "./theme";
-import NavigationScroll from "./components/NavigationScroll";
-import Snackbar from "./components/Snackbar";
-import { FullscreenLoading } from "./components/index";
 import { useFetchXDR2USD, useFetchGlobalTokenList, useFetchSNSTokenRootIds } from "store/global/hooks";
-import { useFetchICPPrices } from "./store/global/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
-import { useConnectManager } from "store/auth/hooks";
+import { useConnectManager, useWalletConnectorManager } from "store/auth/hooks";
 import RiskStatement from "components/RiskStatement";
 import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
 import WalletConnector from "components/authentication/ConnectorModal";
-import { useWalletConnectorManager } from "store/auth/hooks";
 import Loader from "components/Loading/LinearLoader";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
-import Web3Provider from "./components/Web3Injector";
 import { GlobalContext } from "hooks/useGlobalContext";
+import Web3Provider from "./components/Web3Injector";
+import { useFetchICPPrices } from "./store/global/hooks";
+import { FullscreenLoading } from "./components/index";
+import Snackbar from "./components/Snackbar";
+import NavigationScroll from "./components/NavigationScroll";
+import { theme } from "./theme";
+import Routes from "./routes";
 
 initGoogleAnalytics();
 

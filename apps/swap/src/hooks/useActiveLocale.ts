@@ -1,9 +1,8 @@
 import { useCallback } from "react";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "constants/locales";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES , SupportedLocale } from "constants/locales";
 // import useParsedQueryString from "./useParsedQueryString";
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { updateUserLocale } from "store/global/actions";
-import { SupportedLocale } from "constants/locales";
 
 function parseLocale(maybeSupportedLocale: string) {
   const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase();

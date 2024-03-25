@@ -81,7 +81,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
     if (!id) return false;
 
     if (id && nfts && nfts.length > 0) {
-      if (!!nfts.find((ele) => ele.canisterId === id)) return true;
+      if (nfts.find((ele) => ele.canisterId === id)) return true;
     }
 
     return false;
@@ -212,7 +212,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
           onClick={handleImport}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {!!error ? error : step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>}
+          {error || (step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>)}
         </Button>
       </Box>
     </Modal>

@@ -9,9 +9,6 @@ import { Theme } from "@mui/material/styles";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
 import { GridAutoRows } from "ui-component/Grid/index";
-import TopTokens from "./TopTokens";
-import TopPools from "./TopPools";
-import Transactions from "./Transactions";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -22,6 +19,9 @@ import { useChartData } from "hooks/info/useSwapChartData";
 import { useTransformedVolumeData } from "hooks/chart";
 import ChartDateButton from "ui-component/ChartDateButton";
 import { VolumeWindow } from "types/analytic";
+import Transactions from "./Transactions";
+import TopPools from "./TopPools";
+import TopTokens from "./TopTokens";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -146,7 +146,7 @@ export default function SwapOverview() {
             level={2}
             border={false}
           >
-            {!!formattedTvlData ? null : (
+            {formattedTvlData ? null : (
               <Box sx={{ width: "100%", height: "332px" }}>
                 <SwapAnalyticLoading loading={!formattedTvlData} />
               </Box>
@@ -199,7 +199,7 @@ export default function SwapOverview() {
                       {formatDollarAmount(liquidityHover, 2, true)}
                     </Typography>
                     <Typography fontSize="12px" sx={{ height: "14px" }}>
-                      {leftLabel ? leftLabel : null}
+                      {leftLabel || null}
                     </Typography>
                   </GridAutoRows>
                 }
@@ -290,7 +290,7 @@ export default function SwapOverview() {
                     </Typography>
                     {rightLabel || protocolData?.volumeUSD ? (
                       <Typography fontSize="12px" height="14px">
-                        {rightLabel ? rightLabel : "The last 24H"}
+                        {rightLabel || "The last 24H"}
                       </Typography>
                     ) : null}
                   </GridAutoRows>

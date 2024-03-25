@@ -1,9 +1,8 @@
 import { createContext } from "react";
 
-export default createContext<{
+export interface CheckboxContextProps {
   checked: string[];
   onChange: (checked: string[]) => void;
-}>({
-  checked: [],
-  onChange: (checked: string[]) => {},
-});
+}
+
+export default createContext<CheckboxContextProps>({} as CheckboxContextProps);

@@ -17,7 +17,7 @@ export function usePositionInfo(positionDetails: PositionResult | UserPosition |
     positionDetails?.fee ? Number(positionDetails.fee) : undefined,
   );
 
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
   if (pool && positionDetails) {
     position = new Position({
       pool,
@@ -48,7 +48,7 @@ export function usePositionInfoV1(positionDetails: PositionResult | UserPosition
     positionDetails?.fee ? Number(positionDetails.fee) : undefined,
   );
 
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
   if (pool && positionDetails) {
     position = new Position({
       pool,

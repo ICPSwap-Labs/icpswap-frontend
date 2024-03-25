@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type Address = string;
 export type Address__1 = string;
 export interface AmountAndCycleResult {
@@ -156,4 +157,4 @@ export interface VolumeMapType {
   tokenA: bigint;
   tokenB: bigint;
 }
-export interface _SERVICE extends SwapPool {}
+export type _SERVICE = SwapPool

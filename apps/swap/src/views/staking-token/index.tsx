@@ -2,15 +2,14 @@ import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography } from "@mui/material";
 import { NoData, MainCard, StaticLoading, TextButton } from "components/index";
-import GlobalData from "./components/GlobalData";
-import Pool from "./components/Pool";
 import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
-import { useStakingTokenPools, useStakingPoolInfoFromController } from "@icpswap/hooks";
-import UnusedTokens from "./components/UnusedTokens";
+import { useStakingTokenPools, useStakingPoolInfoFromController, useParsedQueryString } from "@icpswap/hooks";
 import { STATE } from "types/staking-token";
 import { getStakingTokenPoolState } from "utils/staking";
-import useParsedQueryString from "hooks/useParsedQueryString";
+import UnusedTokens from "./components/UnusedTokens";
+import Pool from "./components/Pool";
+import GlobalData from "./components/GlobalData";
 
 export type Page = {
   name: string;
@@ -108,8 +107,8 @@ function Pools() {
     setStakedOnly(checked);
 
     if (checked) {
-      let poolItems = document.querySelectorAll(".staking-token-pool-item");
-      var showNoData = true;
+      const poolItems = document.querySelectorAll(".staking-token-pool-item");
+      let showNoData = true;
 
       setTimeout(() => {
         poolItems.forEach((item) => {
@@ -119,12 +118,10 @@ function Pools() {
         });
         setShowNoData(showNoData);
       }, 50);
+    } else if (pools?.length) {
+      setShowNoData(false);
     } else {
-      if (!!pools?.length) {
-        setShowNoData(false);
-      } else {
-        setShowNoData(true);
-      }
+      setShowNoData(true);
     }
   };
 
@@ -161,7 +158,7 @@ function Pools() {
               ))}
             </Box>
           </Grid>
-          <Grid item alignItems={"center"} style={{ marginLeft: "auto" }}>
+          <Grid item alignItems="center" style={{ marginLeft: "auto" }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <TextButton onClick={handleWithdrawUnusedTokens}>
                 <Trans>Unused tokens</Trans>
@@ -210,7 +207,7 @@ export default function StakingTokens() {
   return (
     <>
       <GlobalData />
-      <Box mt="16px">{!!poolId ? <SinglePool /> : <Pools />}</Box>
+      <Box mt="16px">{poolId ? <SinglePool /> : <Pools />}</Box>
     </>
   );
 }

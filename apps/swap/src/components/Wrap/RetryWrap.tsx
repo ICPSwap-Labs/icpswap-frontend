@@ -9,19 +9,12 @@ import { Identity as AuthIdentity, ResultStatus } from "types";
 import { wrapICP } from "hooks/useWICPCalls";
 import { useSuccessTip, useErrorTip, useFullscreenLoading } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import { TextButton } from "components/index";
+import { TextButton, TextFieldNumberComponent } from "components/index";
 import { useAccount } from "store/global/hooks";
-import { TextFieldNumberComponent } from "components/index";
 import isNumber from "lodash/isNumber";
 import Button from "components/authentication/ButtonConnector";
 
-export default function RetryWrap({
-  children,
-  onRetrySuccess = () => {},
-}: {
-  children: ReactNode;
-  onRetrySuccess: () => void;
-}) {
+export default function RetryWrap({ children, onRetrySuccess }: { children: ReactNode; onRetrySuccess: () => void }) {
   const [open, setOpen] = useState(false);
   const [blockHeight, setBlockHeight] = useState<null | bigint>(null);
   const account = useAccount();
@@ -105,7 +98,7 @@ export default function RetryWrap({
                   size="large"
                   onClick={submit}
                 >
-                  {errorMessage ? errorMessage : <Trans>Retry</Trans>}
+                  {errorMessage || <Trans>Retry</Trans>}
                 </Button>
               )}
             </Identity>

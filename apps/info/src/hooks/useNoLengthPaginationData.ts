@@ -7,7 +7,7 @@ export type Call<T> = () => Promise<ApiResult<T>>;
 export function useNoLengthPaginationAllData<T>(
   callback: (offset: number, limit: number) => Promise<T[] | undefined>,
   limit: number,
-  reload: boolean = false,
+  reload = false,
 ) {
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState<T[]>([]);
@@ -40,7 +40,7 @@ export function useNoLengthPaginationAllData<T>(
 export async function getNoLengthPaginationAllData<T>(
   callback: (offset: number, limit: number) => Promise<T[] | undefined>,
   limit: number,
-  times: number = 5,
+  times = 5,
 ) {
   let promise: Promise<T[] | undefined>[] = [];
   let data: T[] = [];

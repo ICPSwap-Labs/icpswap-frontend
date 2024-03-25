@@ -1,6 +1,5 @@
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { useCallback, useMemo } from "react";
-import { updateTypedInput, resetBurnState } from "./actions";
 import { numberToString } from "@icpswap/utils";
 import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
@@ -9,6 +8,7 @@ import { useCurrency } from "hooks/useCurrency";
 import { usePool } from "hooks/swap/v2/usePools";
 import { t } from "@lingui/macro";
 import { PositionResult } from "types/swapv2";
+import { updateTypedInput, resetBurnState } from "./actions";
 
 export function useBurnState() {
   return useAppSelector((state) => state.swapV2Burn);
@@ -68,8 +68,7 @@ export function useBurnInfo(position: PositionResult | undefined | null) {
 
   if (independentField === BURN_FIELD.LIQUIDITY_PERCENT) {
     percentToRemove = new Percent(typedValue, "100");
-  } else {
-    if (tokens[independentField]) {
+  } else if (tokens[independentField]) {
       const independentAmount = tryParseAmount(typedValue, tokens[independentField]);
       const liquidityValue = liquidityValues[independentField];
 
@@ -77,7 +76,6 @@ export function useBurnInfo(position: PositionResult | undefined | null) {
         percentToRemove = new Percent(independentAmount.quotient, liquidityValue.quotient);
       }
     }
-  }
 
   const discountedAmount0 = positionSDK ? percentToRemove.multiply(positionSDK.amount0.quotient).quotient : undefined;
   const discountedAmount1 = positionSDK ? percentToRemove.multiply(positionSDK.amount1.quotient).quotient : undefined;
@@ -97,7 +95,7 @@ export function useBurnInfo(position: PositionResult | undefined | null) {
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false;
 
-  let error: string | undefined = undefined;
+  let error: string | undefined;
 
   if (
     !parsedAmounts[BURN_FIELD.LIQUIDITY_PERCENT] ||

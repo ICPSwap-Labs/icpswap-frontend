@@ -1,4 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
+import { SWAP_FIELD } from "constants/swap";
 import {
   typeInput,
   clearSwapState,
@@ -9,7 +10,6 @@ import {
   updateDecreaseLiquidityAmount,
 } from "./actions";
 import { initialState } from "./state";
-import { SWAP_FIELD } from "constants/swap";
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -27,16 +27,16 @@ export default createReducer(initialState, (builder) => {
         return {
           ...state,
           independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
           [otherField]: { currencyId: state[field].currencyId },
         };
-      } else {
+      } 
         // the normal case
         return {
           ...state,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
         };
-      }
+      
     })
     .addCase(switchCurrencies, (state) => {
       return {

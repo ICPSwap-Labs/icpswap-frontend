@@ -4,12 +4,12 @@ import { makeStyles, useTheme } from "@mui/styles";
 // import NFTVerifyLabel from "./VerifyLabel";
 import { isDarkTheme } from "utils";
 import { useNFTOrderInfo } from "hooks/nft/trade";
-import OnSaleLabel from "./OnSaleLabel";
-import WICPPriceFormat from "./WICPPriceFormat";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import NFTAvatar from "components/NFT/NFTAvatar";
+import WICPPriceFormat from "./WICPPriceFormat";
+import OnSaleLabel from "./OnSaleLabel";
 
 const useStyles = makeStyles((theme: Theme) => {
   const isDark = isDarkTheme(theme);

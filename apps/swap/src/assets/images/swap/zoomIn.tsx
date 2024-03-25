@@ -1,4 +1,3 @@
-import React from "react";
 import { SvgIcon } from "@mui/material";
 
 export default ({ fillColor = "#BDC8F0", ...props }) => {

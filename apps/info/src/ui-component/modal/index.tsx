@@ -82,8 +82,8 @@ export default function Modal({
   children,
   open,
   confirmText = "Ok",
-  onClose = () => {},
-  onConfirm = () => {},
+  onClose,
+  onConfirm,
   showConfirm = false,
   showClose = true,
   confirmDisabled,
@@ -130,11 +130,11 @@ export default function Modal({
         ) : (
           <DialogTitle>
             <Typography className={classes.titleContainer} component="div">
-              <Typography className={`${classes.title} ${type ? type : ""}`} component="span" color="textPrimary">
+              <Typography className={`${classes.title} ${type || ""}`} component="span" color="textPrimary">
                 {title}
               </Typography>
               {showClose ? (
-                <DialogCloseIcon onClick={onClose} className={`${classes.closeButton} ${type ? type : ""}`} />
+                <DialogCloseIcon onClick={onClose} className={`${classes.closeButton} ${type || ""}`} />
               ) : null}
             </Typography>
           </DialogTitle>
@@ -142,7 +142,7 @@ export default function Modal({
       ) : null}
       <DialogContent>
         {showClose && !title ? (
-          <DialogCloseIcon onClick={onClose} className={`${classes.closeButton1} ${type ? type : ""} `} />
+          <DialogCloseIcon onClick={onClose} className={`${classes.closeButton1} ${type || ""} `} />
         ) : null}
         {children}
         {showConfirm ? (

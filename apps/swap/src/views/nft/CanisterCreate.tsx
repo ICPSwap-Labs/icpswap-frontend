@@ -67,9 +67,9 @@ export default function NFTCanisterCreate() {
   };
 
   const onSocialMediaLinkChange = (value: string, index: number) => {
-    let socialMediaLinks = [...(values.socialMediaLinks ?? [])];
+    const socialMediaLinks = [...(values.socialMediaLinks ?? [])];
 
-    if (!!socialMediaLinks.find((media) => media.label === value)) return;
+    if (socialMediaLinks.find((media) => media.label === value)) return;
 
     if (socialMediaLinks[index]) {
       socialMediaLinks.splice(index, 1, { label: value, value: socialMediaLinks[index].value });
@@ -98,7 +98,7 @@ export default function NFTCanisterCreate() {
     const { status: approveStatus } = await approve({
       canisterId: NFTTradeTokenCanisterId,
       spender: NFTCanisterController,
-      account: account,
+      account,
       value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals)),
     });
 
@@ -153,7 +153,7 @@ export default function NFTCanisterCreate() {
   };
 
   const handleMediaDelete = (index: number) => {
-    let socialMediaLinks = [...(values.socialMediaLinks ?? [])];
+    const socialMediaLinks = [...(values.socialMediaLinks ?? [])];
 
     if (socialMediaLinks[index]) {
       socialMediaLinks.splice(index, 1);
@@ -166,7 +166,7 @@ export default function NFTCanisterCreate() {
   };
 
   const handleMediaInput = (value: string, index: number) => {
-    let socialMediaLinks = [...(values.socialMediaLinks ?? [])];
+    const socialMediaLinks = [...(values.socialMediaLinks ?? [])];
 
     if (socialMediaLinks[index]) {
       socialMediaLinks.splice(index, 1, { label: socialMediaLinks[index].label, value });
@@ -199,7 +199,7 @@ export default function NFTCanisterCreate() {
         }
       }
     }
-    if (!!fileError) return t`File error`;
+    if (fileError) return t`File error`;
     if (!file) return t`Upload collection avatar`;
     if (!values.royalties && String(values.royalties) !== "0") return t`Select the creator royalties`;
   };
@@ -346,7 +346,7 @@ export default function NFTCanisterCreate() {
                       {(values.socialMediaLinks ?? []).map((socialMediaLink, index) => (
                         <Grid
                           container
-                          key={!!socialMediaLink.label ? socialMediaLink.label : index}
+                          key={socialMediaLink.label ? socialMediaLink.label : index}
                           sx={{
                             marginBottom: "10px",
                             "&:last-child": {
@@ -477,7 +477,7 @@ export default function NFTCanisterCreate() {
                       disabled={!!errorMsg}
                       onClick={() => setConfirmModal(true)}
                     >
-                      {errorMsg ? errorMsg : t`Create`}
+                      {errorMsg || t`Create`}
                     </Button>
                   </Box>
                 </Box>

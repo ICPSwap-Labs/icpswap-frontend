@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Grid, Typography, Box, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
-import RiskStatementModal, { getRiskStorage } from "./Modal";
 import { Theme } from "@mui/material/styles";
+import RiskStatementModal, { getRiskStorage } from "./Modal";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

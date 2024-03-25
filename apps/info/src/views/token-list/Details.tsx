@@ -7,23 +7,20 @@ import { useTokenInfo } from "hooks/token/index";
 import { useToken } from "hooks/useToken";
 import { getExplorerPrincipalLink } from "utils";
 import { Trans, t } from "@lingui/macro";
-import { MainContainer, MainCard } from "ui-component/index";
+import { MainContainer, MainCard, TokenImage } from "ui-component/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount } from "@icpswap/utils";
-import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
+import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
-import { useTokenListTokenInfo } from "@icpswap/hooks";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { TextButton } from "@icpswap/ui";
 // import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
-import useParsedQueryString from "hooks/useParsedQueryString";
-import { TokenImage } from "ui-component/index";
 
 const useStyles = makeStyles({
   box: {

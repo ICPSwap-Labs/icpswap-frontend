@@ -123,9 +123,9 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } else {
+            } 
               return 0;
-            }
+            
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

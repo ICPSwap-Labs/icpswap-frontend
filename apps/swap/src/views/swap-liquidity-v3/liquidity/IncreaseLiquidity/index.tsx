@@ -15,7 +15,7 @@ import Loading from "components/Loading/Static";
 import { parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
+import { isDarkTheme , toSignificantFormatted } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -26,7 +26,6 @@ import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import { actualAmountToPool } from "utils/token/index";
 import { useIncreaseLiquidityCall } from "hooks/swap/useIncreaseLiquidity";
 import StepViewButton from "components/Steps/View";
-import { toSignificantFormatted } from "utils/index";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
 import { maxAmountFormat } from "utils/swap";
@@ -192,8 +191,8 @@ export default function IncreaseLiquidity() {
 
       setConfirmModalShow(false);
 
-      const token0 = position.pool.token0;
-      const token1 = position.pool.token1;
+      const {token0} = position.pool;
+      const {token1} = position.pool;
 
       const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
       const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());

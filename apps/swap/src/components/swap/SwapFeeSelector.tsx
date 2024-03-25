@@ -220,7 +220,7 @@ export default function SwapFeeSelector({
   const currentLiquidityPercentage = getPercentage(activeFeeObject);
 
   return (
-    <React.Fragment>
+    <>
       <Grid container sx={{ p: 2 }} className={classes.activeFee}>
         <Grid item xs={8}>
           <Typography variant="h4" color="textPrimary">
@@ -258,6 +258,6 @@ export default function SwapFeeSelector({
           ))}
         </Grid>
       )} */}
-    </React.Fragment>
+    </>
   );
 }

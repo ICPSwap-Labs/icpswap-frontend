@@ -7,7 +7,7 @@ function StepItem({ step }: { step: string }) {
   return (
     <StepDetails
       title={title}
-      open={true}
+      open
       activeStep={activeStep}
       errorStep={errorStep}
       content={content}

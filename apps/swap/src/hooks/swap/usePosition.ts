@@ -22,7 +22,7 @@ export function usePosition(userPosition: usePositionProps | undefined) {
     poolMetadata?.fee ? Number(poolMetadata.fee) : undefined,
   );
 
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
 
   if (
     pool &&

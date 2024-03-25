@@ -1,4 +1,4 @@
-import { Typography, Box, Avatar } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useHistory } from "react-router-dom";
 import { formatAmount, toSignificant } from "@icpswap/utils";

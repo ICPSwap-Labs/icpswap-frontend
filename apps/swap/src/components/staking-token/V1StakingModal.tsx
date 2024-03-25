@@ -32,8 +32,8 @@ export default function V1StakingModal({ open, onClose, onStakingSuccess, pool }
     if (status === "ok") {
       const { status, message } = await stakingV1TokenDeposit(pool.canisterId, identity, BigInt(amount));
       openTip(getLocaleMessage(message), status);
-      onStakingSuccess && onStakingSuccess();
-      onClose && onClose();
+      if (onStakingSuccess) onStakingSuccess();
+      if (onClose) onClose();
     } else {
       openTip(getLocaleMessage(message), MessageTypes.error);
     }

@@ -67,7 +67,6 @@ export const MAX_SWAP_INPUT_LENGTH = 25;
 export * from "./canister";
 export * from "./server";
 export * from "./tokens";
-export * from "./mint";
 export * from "./swap";
 export * from "./nft";
 export * from "./types";

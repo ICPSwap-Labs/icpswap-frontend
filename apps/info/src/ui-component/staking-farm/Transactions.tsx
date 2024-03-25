@@ -19,7 +19,7 @@ export function PoolItem({
 }) {
   const { result: token } = useTokenInfo(rewardTokenId);
 
-  const isStaking = enumToString(transactions.transType) === "stake" ? true : false;
+  const isStaking = enumToString(transactions.transType) === "stake";
 
   return (
     <TableRow>

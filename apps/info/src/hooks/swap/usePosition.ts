@@ -27,15 +27,15 @@ export function usePosition({
   const [, currency0] = useToken(token0Address);
   const [, currency1] = useToken(token1Address);
 
-  const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount ? feeAmount : undefined);
+  const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount || undefined);
 
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
   if (pool && liquidity && (tickLower || tickLower === 0) && (tickUpper || tickUpper === 0)) {
     position = new Position({
       pool,
-      liquidity: liquidity,
-      tickLower: tickLower,
-      tickUpper: tickUpper,
+      liquidity,
+      tickLower,
+      tickUpper,
     });
   }
 
@@ -54,12 +54,12 @@ export interface usePositionWithPoolProps {
 }
 
 export function usePositionWithPool({ tickLower, tickUpper, liquidity, pool }: usePositionWithPoolProps) {
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
 
   if (pool && liquidity && (tickLower || tickLower === 0) && (tickUpper || tickUpper === 0)) {
     position = new Position({
       pool,
-      liquidity: liquidity,
+      liquidity,
       tickLower: Number(tickLower),
       tickUpper: Number(tickUpper),
     });

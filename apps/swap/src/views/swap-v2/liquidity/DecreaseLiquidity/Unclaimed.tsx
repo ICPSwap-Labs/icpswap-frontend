@@ -49,7 +49,7 @@ export default function Unclaimed({ position, positionId, invalid = false }: Unc
           <Typography color="text.primary">{token0?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">
-              {!!currencyFeeAmount0
+              {currencyFeeAmount0
                 ? toSignificant(new BigNumber(currencyFeeAmount0.toExact()).multipliedBy(0.8).toString(), 6)
                 : 0}
             </Typography>
@@ -62,7 +62,7 @@ export default function Unclaimed({ position, positionId, invalid = false }: Unc
           <Typography color="text.primary">{token1?.symbol}</Typography>
           <Grid item xs>
             <Typography align="right" color="text.primary">
-              {!!currencyFeeAmount1
+              {currencyFeeAmount1
                 ? toSignificant(new BigNumber(currencyFeeAmount1.toExact()).multipliedBy(0.8).toString(), 6)
                 : 0}
             </Typography>

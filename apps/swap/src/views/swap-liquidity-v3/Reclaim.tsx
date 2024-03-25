@@ -69,7 +69,7 @@ export function BalanceItem({
       MessageTypes.loading,
     );
 
-    let amount = balance;
+    const amount = balance;
 
     if (amount !== BigInt(0)) {
       if (type === "unDeposit") {
@@ -93,7 +93,7 @@ export function BalanceItem({
           openTip(`Withdrew ${name} ${token?.symbol} successfully`, MessageTypes.success);
           updateClaimedKey(claimedKey);
         } else {
-          openTip(!!result.message ? result.message : `Failed to Withdraw ${name} ${token.symbol}`, MessageTypes.error);
+          openTip(result.message ? result.message : `Failed to Withdraw ${name} ${token.symbol}`, MessageTypes.error);
         }
       }
     }

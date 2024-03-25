@@ -4,12 +4,11 @@ import { Box, Typography } from "@mui/material";
 import BigNumber from "bignumber.js";
 import ApexCharts from "apexcharts";
 import Chart from "react-apexcharts";
-import defaultChartConfig from "./chart.config";
 import { Trans } from "@lingui/macro";
 import { isDarkTheme } from "utils/index";
 import { Theme } from "@mui/material/styles";
-import { useICPPrice } from "store/global/hooks";
-import { useICPPriceList, useICPBlocksManager } from "store/global/hooks";
+import { useICPPrice , useICPPriceList, useICPBlocksManager } from "store/global/hooks";
+import defaultChartConfig from "./chart.config";
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {

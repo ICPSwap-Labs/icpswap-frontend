@@ -11,7 +11,7 @@ export interface VerifyNFTProps {
 
 export default function VerifyNFT({ minter, sx, justifyContent }: VerifyNFTProps) {
   return isICPSwapOfficial(minter) ? (
-    <Grid container alignItems="center" justifyContent={justifyContent ? justifyContent : "flex-start"}>
+    <Grid container alignItems="center" justifyContent={justifyContent || "flex-start"}>
       <Typography color="text.primary" fontSize="12px">
         By ICPSwap
       </Typography>
@@ -20,14 +20,14 @@ export default function VerifyNFT({ minter, sx, justifyContent }: VerifyNFTProps
           width: "14px",
           height: "14px",
           marginLeft: "4px",
-          ...(sx ? sx : {}),
+          ...(sx || {}),
         }}
       >
         <img width="100%" height="100%" src={VerifyImage} alt="" />
       </Box>
     </Grid>
   ) : (
-    <Grid container alignItems="center" justifyContent={justifyContent ? justifyContent : "flex-start"}>
+    <Grid container alignItems="center" justifyContent={justifyContent || "flex-start"}>
       <Typography color="text.primary" fontSize="12px">
         By {shorten(minter ?? "", 3)}
       </Typography>

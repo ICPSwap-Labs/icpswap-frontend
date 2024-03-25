@@ -52,4 +52,4 @@ export interface Token {
   address: string;
   standard: string;
 }
-export interface _SERVICE extends SwapFactory {}
+export type _SERVICE = SwapFactory

@@ -15,10 +15,11 @@ const StyledGroup = styled.g`
 
 const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
   const axisRef = (axis: SVGGElement) => {
-    axis &&
+    if (axis) {
       select(axis)
         .call(axisGenerator)
         .call((g) => g.select(".domain").remove());
+    }
   };
 
   return <g ref={axisRef} />;

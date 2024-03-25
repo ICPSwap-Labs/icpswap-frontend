@@ -2,15 +2,15 @@ import { useState, useEffect, useMemo } from "react";
 
 export function useIntervalFetch<T>(
   call: (() => Promise<T | undefined>) | undefined,
-  force: boolean = false,
-  interval: number = 5000,
+  force = false,
+  interval = 5000,
 ) {
   const [data, setData] = useState<T | undefined>(undefined);
   const [tick, setTick] = useState<number>(0);
 
   useEffect(() => {
     async function _call() {
-      if (!!call) {
+      if (call) {
         const result = await call();
         setData(result);
       }
@@ -21,7 +21,7 @@ export function useIntervalFetch<T>(
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!!call) {
+      if (call) {
         setTick((prevState) => prevState + 1);
       }
     }, interval);

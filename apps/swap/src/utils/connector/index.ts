@@ -1,17 +1,17 @@
-import { InternetIdentityConnector } from "./internet-identity";
-import { StoicConnector } from "./stoic";
-import { NF_IDConnector } from "./NF_ID";
-import type { IConnector } from "./connectors";
 import { IDL } from "@dfinity/candid";
 import { ActorSubclass } from "@dfinity/agent";
 import { Connector } from "constants/wallet";
 import { host } from "constants/server";
 import { updateAuth } from "store/auth/hooks";
+import { getDelegationIds } from "constants/connector";
+import { InternetIdentityConnector } from "./internet-identity";
+import { StoicConnector } from "./stoic";
+import { NF_IDConnector } from "./NF_ID";
+import type { IConnector } from "./connectors";
 import { PlugConnector } from "./plug";
 import { ICPSwapConnector } from "./icpswap";
 import { InfinityConnector } from "./infinity";
 import { MeConnector } from "./me";
-import { getDelegationIds } from "constants/connector";
 
 type ConnectorClass = { new (...args: any[]): IConnector };
 
@@ -36,6 +36,7 @@ export type ConnectConfig = {
 
 export class WalletConnector {
   public connector: IConnector | null = null;
+
   public connectorType: Connector = Connector.ICPSwap;
 
   // initial connect instance

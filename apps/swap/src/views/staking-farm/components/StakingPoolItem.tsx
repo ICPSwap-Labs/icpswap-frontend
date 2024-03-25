@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard } from "components/index";
+import { MainCard , TokenImage } from "components/index";
 import {
   useIntervalUserRewardInfo,
   useIntervalUserFarmInfo,
@@ -14,8 +14,7 @@ import { useCurrency } from "hooks/useCurrency";
 import { INFO_URL, AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import OptionStaking from "./OptionStaking";
-import { parseTokenAmount, toSignificant, cycleValueFormat } from "@icpswap/utils";
+import { parseTokenAmount, toSignificant, cycleValueFormat , shorten, timestampFormat } from "@icpswap/utils";
 import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Header/ProfileSection";
@@ -24,8 +23,7 @@ import { STATE } from "types/staking-farm";
 import type { StakingFarmInfo } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import FarmContext from "../context";
-import { TokenImage } from "components/index";
-import { shorten, timestampFormat } from "@icpswap/utils";
+import OptionStaking from "./OptionStaking";
 
 const useStyle = makeStyles(() => ({
   cardHeader: {
@@ -58,7 +56,7 @@ const useStyle = makeStyles(() => ({
 }));
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
-  let nowTime = parseInt(String(Date.now() / 1000));
+  const nowTime = parseInt(String(Date.now() / 1000));
   let expand = false;
   let date = startTime;
   if (nowTime > endTime) {
@@ -204,7 +202,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
               </Typography>
               <Box sx={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
                 <CountUp
-                  preserveValue={true}
+                  preserveValue
                   end={parseTokenAmount(
                     farm?.totalReward ?? farm.totalRewardUnclaimed,
                     rewardToken?.decimals,
@@ -233,7 +231,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
               <Grid item>
                 <Grid container direction="column" justifyContent="flex-end">
                   <CountUp
-                    preserveValue={true}
+                    preserveValue
                     end={parsedUserRewardAmount ?? 0}
                     decimals={6}
                     duration={1}
@@ -241,7 +239,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                   />
                   <CountUp
                     style={{ fontSize: 14, textAlign: "right", display: "block" }}
-                    preserveValue={true}
+                    preserveValue
                     end={userRewardUSD ?? 0}
                     decimals={2}
                     duration={1}

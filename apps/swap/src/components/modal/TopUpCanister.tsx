@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Grid, InputAdornment, Typography, Box } from "@mui/material";
 import { NumberTextField } from "components/index";
-import Modal from "./index";
 import { cycleValueFormat, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
@@ -18,6 +17,7 @@ import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { useTokenBalance } from "@icpswap/hooks";
+import Modal from "./index";
 
 export interface TopUpCanisterProps {
   canisterId: string;
@@ -174,7 +174,7 @@ export default function TopUpCanister({
               disabled={!!ErrorMessage}
               onClick={submit}
             >
-              {ErrorMessage ? ErrorMessage : <Trans>Top up</Trans>}
+              {ErrorMessage || <Trans>Top up</Trans>}
             </Button>
           )}
         </Identity>

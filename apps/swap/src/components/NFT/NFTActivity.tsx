@@ -4,13 +4,12 @@ import NoData from "components/no-data";
 import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
 import { useTradeTxList } from "hooks/nft/trade";
-import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { pageArgsFormat, parseTokenAmount , shorten, timestampFormat } from "@icpswap/utils";
 import Pagination from "components/pagination";
 import { Trans } from "@lingui/macro";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { TxRecord } from "types/index";
 import upperFirst from "lodash/upperFirst";
-import { shorten, timestampFormat } from "@icpswap/utils";
 
 export default function NFTActivity({
   canisterId,

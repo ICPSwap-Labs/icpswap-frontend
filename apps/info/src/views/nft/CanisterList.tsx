@@ -1,4 +1,4 @@
-import { pageArgsFormat } from "@icpswap/utils";
+import { pageArgsFormat , timestampFormat } from "@icpswap/utils";
 import { cycleValueFormat } from "utils/index";
 import { useState } from "react";
 import { Typography, Box, Avatar, Grid } from "@mui/material";
@@ -10,7 +10,6 @@ import { MainContainer, Pagination, NoData, LoadingRow, MainCard, TextButton } f
 import { NFTCanisterInfo } from "@icpswap/types";
 import { useNFTCanisters } from "@icpswap/hooks";
 import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
-import { timestampFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {

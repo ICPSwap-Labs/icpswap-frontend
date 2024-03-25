@@ -14,7 +14,7 @@ const remarkable = new Remarkable({
 
 export default function BaseMarkdown({ content }: { content: string }) {
   const html = useMemo(() => {
-    let body = content;
+    const body = content;
 
     // // Add the ipfs gateway to markdown images that start with ipfs://
     // function replaceIpfsUrl(match, p1) {
@@ -30,7 +30,7 @@ export default function BaseMarkdown({ content }: { content: string }) {
     document
       ?.querySelector(".markdown-body")
       ?.querySelectorAll("pre>code")
-      .forEach(function (code) {
+      .forEach((code) => {
         code.parentElement?.classList.add("rounded-lg");
         const copyButton = document.createElement("a");
         const icon = document.createElement("i");
@@ -39,7 +39,7 @@ export default function BaseMarkdown({ content }: { content: string }) {
         icon.classList.add("iconcopy");
         icon.classList.add("iconfont");
         copyButton.appendChild(icon);
-        copyButton.addEventListener("click", function () {
+        copyButton.addEventListener("click", () => {
           const codeText = (code as HTMLElement).innerText.trim();
           copyToClipboard(codeText);
         });

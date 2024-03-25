@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
-import { parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { parseTokenAmount, toSignificant, formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
-import { NoData, LoadingRow, TextButton } from "ui-component/index";
+import { NoData, LoadingRow, TextButton, TokenImage } from "ui-component/index";
 import { TokenListMetadata } from "@icpswap/candid";
 import { TOKEN_STANDARD } from "constants/tokens";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
@@ -13,8 +13,6 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { TokenImage } from "ui-component/index";
 import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table/index";
 
 const useStyles = makeStyles(() => {

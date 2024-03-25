@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, ListLoading, NoData, ALink } from "components/index";
-import { Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { useBTCTransactions, BTCTx } from "hooks/ck-btc/useBTCCalls";
 import { parseTokenAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
@@ -16,6 +15,40 @@ function RefreshIcon() {
       />
     </svg>
   );
+}
+
+function getTransactionAmountOut(transaction: BTCTx | undefined, address: string | undefined | null) {
+  if (!transaction || !address) return "--";
+
+  let amount: number | string = "--";
+
+  for (let i = 0; i < transaction.vout.length; i++) {
+    const trans = transaction.vout[i];
+
+    if (trans.scriptpubkey_address === address) {
+      amount = trans.value;
+      break;
+    }
+  }
+
+  return amount;
+}
+
+function isTransactionContainedFrom(transaction: BTCTx, address: string) {
+  if (!transaction || !address) return false;
+
+  let contained = false;
+
+  for (let i = 0; i < transaction.vin.length; i++) {
+    const trans = transaction.vin[i];
+
+    if (trans.prevout.scriptpubkey_address === address) {
+      contained = true;
+      break;
+    }
+  }
+
+  return contained;
 }
 
 export interface ListItemProps {
@@ -96,47 +129,12 @@ function ListItem({ transaction, block, address }: ListItemProps) {
   );
 }
 
-function getTransactionAmountOut(transaction: BTCTx | undefined, address: string | undefined | null) {
-  if (!transaction || !address) return "--";
-
-  let amount: number | string = "--";
-
-  for (let i = 0; i < transaction.vout.length; i++) {
-    const trans = transaction.vout[i];
-
-    if (trans.scriptpubkey_address === address) {
-      amount = trans.value;
-      break;
-    }
-  }
-
-  return amount;
-}
-
-function isTransactionContainedFrom(transaction: BTCTx, address: string) {
-  if (!transaction || !address) return false;
-
-  let contained = false;
-
-  for (let i = 0; i < transaction.vin.length; i++) {
-    const trans = transaction.vin[i];
-
-    if (trans.prevout.scriptpubkey_address === address) {
-      contained = true;
-      break;
-    }
-  }
-
-  return contained;
-}
-
-export default function Transactions({
-  address,
-  block,
-}: {
+export interface TransactionsProps {
   block: number | undefined;
   address: string | undefined | null;
-}) {
+}
+
+export default function Transactions({ address, block }: TransactionsProps) {
   const [reload, setReload] = useState(false);
 
   const { result: list, loading } = useBTCTransactions(address, reload);

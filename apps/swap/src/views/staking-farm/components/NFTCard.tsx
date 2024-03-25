@@ -50,7 +50,7 @@ export default function StakingNFTCard({ nft, selectedNFTId, setSelectedNFTId }:
 
   return (
     <Box className={classes.selectNFTBox}>
-      {!!svg ? (
+      {svg ? (
         <>
           <img
             className={`${

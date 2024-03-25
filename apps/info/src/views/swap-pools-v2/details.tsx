@@ -4,9 +4,8 @@ import { useTheme } from "@mui/styles";
 import { useParams, useHistory } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkAndOpen } from "@icpswap/utils";
+import { mockALinkAndOpen , formatDollarAmount, formatAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { MainCard, TextButton } from "ui-component/index";
 import { useGraphPool, useGraphPoolTVLChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
@@ -23,13 +22,12 @@ import PoolTransactions from "ui-component/analytic-v2/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import { TokenInfo } from "types/token";
 import LoadingImage from "assets/images/loading.png";
-import { swapLink, getExplorerPrincipalLink } from "utils/index";
+import { swapLink, getExplorerPrincipalLink , cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "constants/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 import { useV2SwapPoolCycles } from "hooks/swap/index";
-import { cycleValueFormat } from "utils/index";
 
 export const chartViews = [
   { label: t`Volume`, key: ChartView.VOL },
@@ -69,9 +67,9 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
           value: data.tvlUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   const formattedVolumeData = useMemo(() => {
@@ -82,9 +80,9 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
           value: data.volumeUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   const formattedFeesUSD = useMemo(() => {
@@ -95,9 +93,9 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
           value: data.feesUSD,
         };
       });
-    } else {
+    } 
       return [];
-    }
+    
   }, [chartData]);
 
   return (
@@ -136,7 +134,7 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
           }}
           fontSize="12px"
         >
-          {valueLabel ? valueLabel : ""}
+          {valueLabel || ""}
         </Typography>
       </Box>
 

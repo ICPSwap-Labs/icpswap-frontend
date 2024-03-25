@@ -1,4 +1,16 @@
 import { useEffect, useMemo, useCallback } from "react";
+import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD, ICP_TOKEN_INFO } from "constants/tokens";
+import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { AppState } from "store/index";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
+import {
+  use100ICPPriceInfo,
+  useXDR2USD,
+  useTokensFromList,
+  useSNSTokensRootIds,
+  useListDeployedSNSs,
+} from "@icpswap/hooks";
 import {
   updateXDR2USD,
   updateICPPriceList,
@@ -6,13 +18,6 @@ import {
   updatePoolStandardInitialed,
   updateTokenSNSRootId,
 } from "./actions";
-import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD, ICP_TOKEN_INFO } from "constants/tokens";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { AppState } from "store/index";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
-import { use100ICPPriceInfo, useXDR2USD } from "@icpswap/hooks";
-import { useTokensFromList, useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -41,9 +46,8 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
       .filter((token) => {
         if (version === "v2") {
           return token.canisterId.toString() !== ICP_TOKEN_INFO.canisterId;
-        } else {
-          return token.canisterId.toString() !== WRAPPED_ICP_TOKEN_INFO.canisterId;
         }
+        return token.canisterId.toString() !== WRAPPED_ICP_TOKEN_INFO.canisterId;
       });
 
     const iTokens = Object.keys(importedTokens ?? [])
@@ -76,7 +80,7 @@ export function useICPPrice() {
 
   return useMemo(() => {
     if (ICPPriceList && ICPPriceList.length) {
-      const price = ICPPriceList[ICPPriceList.length - 1]["value"];
+      const price = ICPPriceList[ICPPriceList.length - 1].value;
       return price;
     }
     return undefined;
@@ -148,8 +152,6 @@ export function useFetchICPPrices() {
 
     dispatch(updateICPPriceList(priceList));
   }, [xdr_usdt, icpPrices]);
-
-  return;
 }
 
 export function useFetchGlobalTokenList() {
@@ -194,6 +196,7 @@ export function useFetchSNSTokenRootIds() {
           const deployed_sns = list_deployed_sns.instances.find((e) => {
             const root_id = e.root_canister_id[0];
             if (root_id) return root_id.toString() === sns_root.root_canister_id;
+            return false;
           });
 
           if (deployed_sns) {

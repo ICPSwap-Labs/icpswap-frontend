@@ -1,8 +1,8 @@
-import { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
 import type { NFTBuyArgs, NFTSaleArgs, NFTRevokeArgs } from "@icpswap/types";
 import { resultFormat } from "@icpswap/utils";
 import { Identity } from "types/global";
 import { NFTTradeCanister } from "@icpswap/actor";
+import { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
 
 export class ICPSwapNFTsTradeAdapter extends BaseNFTsTradeAdapter {
   public async buy({ params, identity }: { params: NFTBuyArgs; identity: Identity }) {

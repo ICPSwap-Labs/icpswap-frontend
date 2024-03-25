@@ -4,13 +4,12 @@ import NoData from "components/no-data";
 import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
 import { useNFTTransaction } from "hooks/nft/useNFTCalls";
-import { pageArgsFormat, enumToString, arrayBufferToString } from "@icpswap/utils";
+import { pageArgsFormat, enumToString, arrayBufferToString , shorten, timestampFormat } from "@icpswap/utils";
 import { encodeTokenIdentifier } from "utils/index";
 import Pagination from "components/pagination";
 import { Trans } from "@lingui/macro";
 import type { NFTTransaction, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
-import { shorten, timestampFormat } from "@icpswap/utils";
 
 export default function NFTTransaction({
   canisterId,

@@ -4,8 +4,8 @@ import { TokenInfo } from "types/token";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { useCallsData, getTokenMetadata, getTokenSupply } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/constants";
-import { getTokenListLogo } from "./useTokenListLogo";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
+import { getTokenListLogo } from "./useTokenListLogo";
 
 function isICRCToken(canisterId: string) {
   const tokenStandard = getTokenStandard(canisterId);
@@ -24,18 +24,18 @@ export async function getTokenBaseInfo(canisterId: string | undefined) {
 
     if (metadata.decimals === undefined || metadata.fee === undefined || !metadata.symbol) return undefined;
 
-    const _logo = isICRCToken(canisterId) ? (!!logo ? logo : metadata.logo) : metadata.logo;
+    const _logo = isICRCToken(canisterId) ? (logo || metadata.logo) : metadata.logo;
 
     return {
       timestamp: undefined,
       totalSupply: supply ?? BigInt(0),
-      logo: !!_logo ? _logo : TokenDefaultLogo,
+      logo: _logo || TokenDefaultLogo,
       transFee: metadata.fee,
       decimals: metadata.decimals,
       metadata: [],
       name: metadata?.name,
       symbol: metadata?.symbol,
-      canisterId: canisterId,
+      canisterId,
       _canisterId: Principal.fromText(canisterId),
       standardType: getTokenStandard(canisterId) ?? TOKEN_STANDARD.EXT,
     } as TokenInfo;
@@ -57,7 +57,7 @@ export async function getTokenInfo(canisterId: string | undefined) {
       metadata: [],
       name: baseInfo.name,
       symbol: baseInfo.symbol,
-      canisterId: canisterId,
+      canisterId,
       _canisterId: Principal.fromText(canisterId),
       standardType: getTokenStandard(canisterId) ?? TOKEN_STANDARD.EXT,
     } as TokenInfo;

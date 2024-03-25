@@ -1,10 +1,10 @@
 import { Token } from "@icpswap/swap-sdk";
 import { WICPCanisterId } from "constants/canister";
-import ICPAvatar from "../assets/images/icons/tokens/icp.svg";
 import { TokenInfo, TokenMetadata } from "types/token";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "@icpswap/constants";
 import { LEDGER_CANISTER_ID } from "constants/icp";
+import ICPAvatar from "../assets/images/icons/tokens/icp.svg";
 import { ckETH_LEDGER_ID } from "./ckETH";
 import { ckBTC_ID } from "./ckBTC";
 import ckETHSVG from "../assets/images/token/ckETH.svg";

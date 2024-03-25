@@ -33,8 +33,8 @@ export default function ClaimRecords({ id }: { id: string | undefined }) {
   const { result, loading } = useV1StakingTokenClaimTransactions(id, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (value: PaginationType) => {
+    setPagination(value);
   };
 
   return (

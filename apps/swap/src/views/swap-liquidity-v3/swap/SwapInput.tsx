@@ -30,7 +30,7 @@ export interface SwapInputProps {
   disabled?: boolean;
 }
 
-export default memo(function SwapInput({ value, currency, onUserInput, disabled }: SwapInputProps) {
+export default memo(({ value, currency, onUserInput, disabled }: SwapInputProps) => {
   const classes = useStyles();
 
   const decimal = currency?.decimals ?? SAFE_DECIMALS_LENGTH;

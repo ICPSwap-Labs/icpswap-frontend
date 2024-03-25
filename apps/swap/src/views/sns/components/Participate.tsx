@@ -8,12 +8,11 @@ import { TokenInfo } from "types/index";
 import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount } from "@icpswap/utils";
 import { ICP } from "constants/tokens";
 import Button from "components/authentication/ButtonConnector";
-import { useTips, TIP_ERROR, TIP_SUCCESS } from "hooks/useTips";
+import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { SnsSwapLifecycle } from "@icpswap/constants";
-import { useFullscreenLoading } from "hooks/useTips";
 
 export interface ParticipateProps {
   swap_id: string | undefined;
@@ -53,14 +52,14 @@ export function Participate({
 
     if (!swap_life_cycle_result) {
       openTip(t`Get swap life cycle error.`, TIP_ERROR);
-      return undefined;
+      return;
     }
 
     const life_cycle = swap_life_cycle_result.lifecycle[0];
 
     if (life_cycle !== SnsSwapLifecycle.Open) {
       openTip(t`Wrong swap life cycle.`, TIP_ERROR);
-      return undefined;
+      return;
     }
 
     setParticipateLoading(true);
@@ -197,7 +196,7 @@ export function Participate({
       <Box sx={{ margin: "20px 0 0 0" }}>
         <Button variant="contained" onClick={handleParticipate} disabled={participateLoading || !!error} fullWidth>
           {participateLoading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-          {error ? error : <Trans>Participate</Trans>}
+          {error || <Trans>Participate</Trans>}
         </Button>
       </Box>
     </Modal>

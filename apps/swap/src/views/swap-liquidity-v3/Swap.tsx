@@ -4,11 +4,11 @@ import { Grid, Box, Typography, Tooltip } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MainCard } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
-import Swap from "./swap/index";
-import SwapTransactions from "./swap/Transactions";
 import SwapWrapper from "components/swap/SwapWrapper";
 import { t, Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import SwapTransactions from "./swap/Transactions";
+import Swap from "./swap/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

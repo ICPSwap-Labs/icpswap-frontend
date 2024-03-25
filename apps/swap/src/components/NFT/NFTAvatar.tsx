@@ -1,6 +1,6 @@
 import LazyImage from "components/LazyImage";
-import FileImage from "./FileImage";
 import { type NFTTokenMetadata } from "@icpswap/types";
+import FileImage from "./FileImage";
 import NFTVideo from "./NFTVideo";
 
 export default function NFTAvatar({

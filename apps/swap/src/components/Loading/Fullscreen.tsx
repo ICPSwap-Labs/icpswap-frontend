@@ -39,7 +39,8 @@ export default function FullscreenLoading({
     if (maskClosable) {
       dispatch(closeLoading());
     }
-    onMaskClick && onMaskClick();
+
+    if (onMaskClick) onMaskClick();
   };
 
   useEffect(() => {

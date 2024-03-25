@@ -66,8 +66,8 @@ export default function VotingProject() {
     history.push(`/voting/proposal/create/${canisterId}`);
   };
 
-  const handleTogglePage = (page: string) => {
-    setPage(page);
+  const handleTogglePage = (value: string) => {
+    setPage(value);
   };
 
   const matchDown1440 = useMediaQuery("(max-width:1440px)");

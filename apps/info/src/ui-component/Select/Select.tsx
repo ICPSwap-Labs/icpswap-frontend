@@ -198,7 +198,7 @@ export function Select({
 
         <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
-            {!!value ? (
+            {value ? (
               <Typography color="textPrimary" component="div">
                 {selectedMenu?.selectLabel ?? selectedMenu?.label}
               </Typography>
@@ -212,14 +212,14 @@ export function Select({
               <CloseIcon sx={{ cursor: "pointer" }} onClick={handleEmptyValue} />
             ) : (
               <KeyboardArrowDownIcon
-                sx={{ transition: "all 300ms", rotate: Boolean(anchorEl) ? "180deg" : "0deg", cursor: "pointer" }}
+                sx={{ transition: "all 300ms", rotate: anchorEl ? "180deg" : "0deg", cursor: "pointer" }}
               />
             )}
           </Box>
         </Box>
       </Box>
 
-      {Boolean(anchorEl) ? (
+      {anchorEl ? (
         <Popper
           id="Select-popper"
           open={Boolean(anchorEl)}
@@ -296,7 +296,7 @@ export function Select({
                     </Box>
                   );
                 })}
-                {menus.length === 0 ? !!CustomNoData ? CustomNoData : <NoData /> : null}
+                {menus.length === 0 ? CustomNoData || <NoData /> : null}
               </Box>
             </Box>
           </ClickAwayListener>

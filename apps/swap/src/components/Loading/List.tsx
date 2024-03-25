@@ -40,7 +40,7 @@ export default function ListLoading({ loading, mask = true, maskBackground }: Li
     <Grid className={classes.loadingContainer} container justifyContent="center" alignContent="center">
       <Box
         className={mask ? classes.mask : ""}
-        sx={{ background: maskBackground ? maskBackground : theme.palette.loading.background }}
+        sx={{ background: maskBackground || theme.palette.loading.background }}
       />
       <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
     </Grid>

@@ -1,5 +1,5 @@
 import { isDarkTheme } from "utils";
-import { ThemeOption } from "./index";
+import { type ThemeOption } from "./types";
 
 export function themePalette(theme: ThemeOption) {
   const isDark = isDarkTheme(theme);

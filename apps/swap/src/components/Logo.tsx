@@ -1,7 +1,7 @@
 import { useTheme } from "@mui/material/";
+import { Theme } from "@mui/material/styles";
 import logoDark from "../assets/images/logo-dark.svg";
 import logo from "../assets/images/logo-white.svg";
-import { Theme } from "@mui/material/styles";
 
 export default function Logo() {
   const theme = useTheme() as Theme;

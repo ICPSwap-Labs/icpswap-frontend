@@ -8,14 +8,13 @@ import MainCard from "ui-component/cards/MainCard";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t } from "@lingui/macro";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount , shorten } from "@icpswap/utils";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
 import { getExplorerPrincipalLink } from "utils";
 import { useStakingPoolData } from "hooks/staking-token";
 import { Theme } from "@mui/material/styles";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

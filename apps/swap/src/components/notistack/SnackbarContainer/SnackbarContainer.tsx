@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 import clsx from "clsx";
+import { makeStyles } from "@mui/styles";
 import createTransition from "../transitions/createTransition";
 import { ComponentClasses } from "../utils/styles";
 import { breakpoints, originKeyExtractor } from "../utils";
 import { ContainerClassKey, SnackbarProviderProps } from "../types";
-import { makeStyles } from "@mui/styles";
 
 const indents = {
   view: { default: 20, dense: 4 },

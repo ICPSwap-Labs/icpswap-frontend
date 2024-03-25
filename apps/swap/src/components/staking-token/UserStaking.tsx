@@ -8,11 +8,9 @@ import { Trans } from "@lingui/macro";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useICPPrice } from "store/global/hooks";
-import { PoolData } from "types/staking-token";
-import { UserStakingInfo } from "types/staking-token";
+import { PoolData , UserStakingInfo , STATE } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import Harvest from "components/staking-token/Harvest";
-import { STATE } from "types/staking-token";
 
 export interface UserStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
@@ -45,7 +43,7 @@ export default function UserStaking({
       const totalDeposit = parseTokenAmount(poolData.totalDeposit, stakingToken.decimals).toNumber();
       if (ICPPrice && rewardTokenPrice && stakingTokenPrice && rewardToken.decimals && poolInfoPerSecond > 0) {
         const perSecond = parseTokenAmount(poolInfoPerSecond, rewardToken.decimals).toNumber();
-        //apr={(perSecond*3600*24*365)/ totalDeposit} * 100
+        // apr={(perSecond*3600*24*365)/ totalDeposit} * 100
         // const a = ((ICPPrice * rewardTokenPrice ? new BigNumber(rewardTokenPrice).toNumber() : 1 * perSecond * 31536000) / (ICPPrice * totalDeposit * 2)) * 100;
         // const a = ((perSecond * 3600 * 24 * 365) / totalDeposit) * 100;
         const a =
@@ -91,11 +89,11 @@ export default function UserStaking({
               </Box>
             </Grid>
             <Grid item xs={6}>
-              <Grid container justifyContent={"flex-end"}>
+              <Grid container justifyContent="flex-end">
                 {state === STATE.FINISHED ? (
                   "--"
                 ) : (
-                  <CountUp preserveValue={true} end={apr} decimals={2} duration={1} suffix="%" separator="," />
+                  <CountUp preserveValue end={apr} decimals={2} duration={1} suffix="%" separator="," />
                 )}
               </Grid>
             </Grid>
@@ -122,7 +120,7 @@ export default function UserStaking({
               <Box>
                 <CountUp
                   style={{ fontSize: 24 }}
-                  preserveValue={true}
+                  preserveValue
                   end={pendingReward}
                   decimals={4}
                   duration={1}
@@ -132,7 +130,7 @@ export default function UserStaking({
               <Box>
                 <CountUp
                   style={{ fontSize: 14 }}
-                  preserveValue={true}
+                  preserveValue
                   end={pendingRewardEquet}
                   decimals={2}
                   duration={1}
@@ -158,7 +156,7 @@ export default function UserStaking({
                 <Box>
                   <CountUp
                     style={{ fontSize: 24 }}
-                    preserveValue={true}
+                    preserveValue
                     end={stakingAmount}
                     decimals={4}
                     duration={1}
@@ -168,7 +166,7 @@ export default function UserStaking({
                 <Box>
                   <CountUp
                     style={{ fontSize: 14 }}
-                    preserveValue={true}
+                    preserveValue
                     end={stakingAmountEquet}
                     decimals={2}
                     duration={1}
@@ -178,7 +176,7 @@ export default function UserStaking({
                 </Box>
               </Grid>
               <Grid item xs={6}>
-                <Grid container justifyContent={"flex-end"}>
+                <Grid container justifyContent="flex-end">
                   {walletIsConnected ? StakingAndClaim : <ConnectWallet />}
                 </Grid>
               </Grid>

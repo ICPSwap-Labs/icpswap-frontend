@@ -6,10 +6,9 @@ import Pagination from "components/pagination";
 import ListLoading from "components/Loading/List";
 import { Trans } from "@lingui/macro";
 import { useUserExchangeRecord } from "hooks/useWICPCalls";
-import { enumToString, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { enumToString, pageArgsFormat, parseTokenAmount , timestampFormat } from "@icpswap/utils";
 import { ICP } from "constants/index";
 import WrapContext from "components/Wrap/context";
-import { timestampFormat } from "@icpswap/utils";
 
 const pageSize = 5;
 
@@ -33,7 +32,7 @@ export default function WICPRecord() {
   }, []);
 
   return (
-    <Fragment>
+    <>
       <TableContainer className={loading ? "with-loading" : ""}>
         <Table>
           <TableHead>
@@ -77,6 +76,6 @@ export default function WICPRecord() {
       {Number(totalElements ?? 0) > 0 ? (
         <Pagination count={Number(totalElements || 0)} onPageChange={onPageChange} defaultPageSize={pageSize} flexEnd />
       ) : null}
-    </Fragment>
+    </>
   );
 }

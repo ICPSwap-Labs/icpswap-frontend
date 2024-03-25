@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Grid, Box, MenuList, MenuItem, Popper, useMediaQuery } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
 import { makeStyles, useTheme } from "@mui/styles";
@@ -215,7 +215,7 @@ export default function CollectionIcons({ links }: { links: Link[] | undefined }
                   {(links ?? ([] as Link[])).map((link, index) => {
                     if (index >= LINKS_MAX_NUMBER) {
                       return (
-                        <MenuItem key={`${link.k}-${index}`} onClick={() => handleLoadLink(link.v)}>
+                        <MenuItem key={`${link.k}`} onClick={() => handleLoadLink(link.v)}>
                           <LinkIcon k={link.k} />
                         </MenuItem>
                       );

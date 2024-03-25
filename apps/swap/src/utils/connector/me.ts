@@ -1,8 +1,8 @@
 import type { ActorSubclass } from "@dfinity/agent";
-import type { IConnector, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 import { AstroXWebViewHandler } from "@astrox/sdk-webview";
 import { IC as AuthClient } from "@astrox/sdk-web";
 import { Connector } from "@icpswap/actor";
+import type { IConnector, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
 const MeExpireTime = 7 * 24 * 3600; // seconds
 const MAX_DELEGATION_TARGETS = 900;
@@ -18,11 +18,15 @@ export class MeConnector implements IConnector {
     whitelist: Array<string>;
     providerUrl: string;
     host: string;
-    dev: Boolean;
+    dev: boolean;
   };
+
   private identity?: any;
+
   private principal?: string;
+
   private client?: AuthClient;
+
   public type = Connector.ME;
 
   public get getPrincipal() {
@@ -53,10 +57,9 @@ export class MeConnector implements IConnector {
         this.identity = astrox.identity;
 
         return boolean;
-      } else {
-        this.principal = astrox.identity?.getPrincipal().toString();
-        this.identity = astrox.identity;
       }
+      this.principal = astrox.identity?.getPrincipal().toString();
+      this.identity = astrox.identity;
     } else {
       this.client = this.client
         ? this.client
@@ -65,7 +68,6 @@ export class MeConnector implements IConnector {
             signerProviderUrl: "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/signer",
             identityProvider: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/login#authorize`,
             walletProviderUrl: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/transaction`,
-            onAuthenticated: async (icInstance: AuthClient) => {},
             host: this.config.host,
           });
 
@@ -83,9 +85,8 @@ export class MeConnector implements IConnector {
   async isConnected() {
     if (isMeWebview()) {
       return await astrox.isConnected();
-    } else {
-      return this.client ? await this.client?.isAuthenticated() : false;
     }
+    return this.client ? await this.client?.isAuthenticated() : false;
   }
 
   async connect() {
@@ -94,42 +95,40 @@ export class MeConnector implements IConnector {
     } else {
       if (isMeWebview()) {
         const boolean = await astrox.connect({
-          //Max delegation targets is 1000 in Me Wallet
+          // Max delegation targets is 1000 in Me Wallet
           delegationTargets: this.config.whitelist,
           host: this.config.host,
           customDomain: "https://app.icpswap.com",
         });
 
-        const identity = astrox.identity;
+        const { identity } = astrox;
 
         this.principal = identity?.getPrincipal().toString();
 
         return boolean;
-      } else {
-        const delegationTargets = this.config.whitelist;
-
-        const client = await this.client?.connect({
-          useFrame: !(window.innerWidth < 768),
-          signerProviderUrl: "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/signer",
-          identityProvider: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/login#authorize`,
-          walletProviderUrl: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/transaction`,
-          delegationTargets:
-            delegationTargets.length > MAX_DELEGATION_TARGETS
-              ? delegationTargets.slice(0, MAX_DELEGATION_TARGETS)
-              : delegationTargets,
-          customDomain: "https://app.icpswap.com",
-          maxTimeToLive: BigInt(MeExpireTime * 1000 * 1000 * 1000),
-          onAuthenticated: async (client: AuthClient) => {},
-        });
-
-        if (!!client) {
-          window.localStorage.setItem("me-expire-time", (new Date().getTime() + MeExpireTime * 1000).toString());
-          this.identity = client.identity;
-          this.principal = this.identity?.getPrincipal().toString();
-        }
-
-        return !!client;
       }
+      const delegationTargets = this.config.whitelist;
+
+      const client = await this.client?.connect({
+        useFrame: !(window.innerWidth < 768),
+        signerProviderUrl: "https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/signer",
+        identityProvider: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/login#authorize`,
+        walletProviderUrl: `https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/transaction`,
+        delegationTargets:
+          delegationTargets.length > MAX_DELEGATION_TARGETS
+            ? delegationTargets.slice(0, MAX_DELEGATION_TARGETS)
+            : delegationTargets,
+        customDomain: "https://app.icpswap.com",
+        maxTimeToLive: BigInt(MeExpireTime * 1000 * 1000 * 1000),
+      });
+
+      if (client) {
+        window.localStorage.setItem("me-expire-time", (new Date().getTime() + MeExpireTime * 1000).toString());
+        this.identity = client.identity;
+        this.principal = this.identity?.getPrincipal().toString();
+      }
+
+      return !!client;
     }
 
     return true;
@@ -147,10 +146,9 @@ export class MeConnector implements IConnector {
     if (isMeWebview()) {
       // @ts-ignore
       return await astrox.createActor<Service>(canisterId, interfaceFactory);
-    } else {
-      // @ts-ignore
-      return await this.client?.createActor<Service>(interfaceFactory, canisterId);
     }
+    // @ts-ignore
+    return await this.client?.createActor<Service>(interfaceFactory, canisterId);
   }
 
   async expired() {

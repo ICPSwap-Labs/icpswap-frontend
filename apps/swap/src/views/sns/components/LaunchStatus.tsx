@@ -10,10 +10,10 @@ import { TokenInfo } from "types/index";
 import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ICP } from "constants/tokens";
 import Button from "components/authentication/ButtonConnector";
-import { Participate } from "./Participate";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
+import { Participate } from "./Participate";
 import { LaunchContext } from "./context";
 
 export interface LaunchStatusProps {
@@ -160,7 +160,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
     setReload(reload + 1);
   };
 
-  let error: string | undefined = undefined;
+  let error: string | undefined;
 
   if (!location_code || (location_code && restricted_countries && restricted_countries.includes(location_code)))
     error = t`Participation is not allowed in your region`;
@@ -205,7 +205,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
           <Trans>Current Total Participants</Trans>
         </Typography>
         <Typography color="text.primary" align="right" sx={{ wordBreak: "break-all" }}>
-          {total_participants ? total_participants : "--"}
+          {total_participants || "--"}
         </Typography>
       </Box>
 
@@ -232,7 +232,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
           <Box
             sx={{
               background: theme.colors.secondaryMain,
-              width: direct_commitment_percent ? direct_commitment_percent : "0%",
+              width: direct_commitment_percent || "0%",
               height: "8px",
               borderRadius: "8px",
             }}
@@ -245,7 +245,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
               background: theme.colors.secondaryMain,
               position: "absolute",
               top: "50%",
-              left: min_direct_percent ? min_direct_percent : "0%",
+              left: min_direct_percent || "0%",
               transform: "translate(-50%, -50%)",
             }}
           />
@@ -259,7 +259,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
               borderRight: "7px solid transparent",
               borderTop: `8px solid ${theme.colors.secondaryMain}`,
               top: "-10px",
-              left: min_direct_percent ? min_direct_percent : "0%",
+              left: min_direct_percent || "0%",
               transform: "translate(-50%, -50%)",
               display: min_direct_percent ? "block" : "none",
             }}
@@ -331,7 +331,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
           <Box
             sx={{
               background: theme.colors.primaryMain,
-              width: neurons_fund_percent ? neurons_fund_percent : "0px",
+              width: neurons_fund_percent || "0px",
               height: "8px",
               borderRadius: "8px",
             }}
@@ -395,7 +395,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
 
         <Typography color="text.primary">
           {buyer_total_icp
-            ? !!saleParameters
+            ? saleParameters
               ? `${dayjs(Number(saleParameters.swap_due_timestamp_seconds * BigInt(1000))).format(
                   "YYYY-MM-DD HH:mm:ss",
                 )}`

@@ -1,5 +1,4 @@
-import { Currency } from "@icpswap/swap-sdk";
-import { Route, Pool } from "@icpswap/swap-sdk";
+import { Currency , Route, Pool } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useSwapPools } from "./useSwapPools";
 
@@ -17,7 +16,7 @@ function computeAllRoutes(
   currentPath: Pool[],
   allPaths: Route<Currency, Currency>[],
   startCurrencyIn: Currency = currencyIn,
-  maxHops: number = 2,
+  maxHops = 2,
 ) {
   const tokenIn = currencyIn?.wrapped;
   const tokenOut = currencyOut?.wrapped;

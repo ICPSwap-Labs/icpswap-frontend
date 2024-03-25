@@ -26,7 +26,7 @@ export function useFetchUserTxStates() {
       }
     }
 
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
       call();
     }, 10000);
 

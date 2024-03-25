@@ -32,7 +32,11 @@ export function useDensityChartData({
 
       if (chartEntry.activeLiquidity > 0) {
         // when is not sorted, should converse the data array, but there use unshift to achieve it
-        isSorted ? newData.push(chartEntry) : newData.unshift(chartEntry);
+        if (isSorted) {
+          newData.push(chartEntry);
+        } else {
+          newData.unshift(chartEntry);
+        }
       }
     }
 

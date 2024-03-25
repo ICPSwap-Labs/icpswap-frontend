@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Principal } from "@dfinity/principal";
 import { tokenAdapter } from "@icpswap/token-adapter";
-import { allowance } from "./useAllowance";
 import { StatusResult } from "@icpswap/types";
+import { allowance } from "./useAllowance";
 
 export interface ApproveArgs {
   canisterId: string;
@@ -35,7 +35,7 @@ export function useApprove(): (approveParams: ApproveArgs) => Promise<StatusResu
     const allowedBalance = await allowance({
       canisterId,
       owner: account.toString(),
-      spender: spender,
+      spender,
     });
 
     if (!allowedBalance || allowedBalance === BigInt(0) || BigInt(value) > allowedBalance) {
@@ -45,12 +45,12 @@ export function useApprove(): (approveParams: ApproveArgs) => Promise<StatusResu
         value,
         account,
       });
-    } else {
+    } 
       return await Promise.resolve({
         status: "ok",
         data: true,
         message: "You have approved successfully",
       } as StatusResult<boolean>);
-    }
+    
   }, []);
 }

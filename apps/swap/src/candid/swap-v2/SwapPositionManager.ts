@@ -1,4 +1,5 @@
 import type { Principal } from "@dfinity/principal";
+
 export type Address = string;
 export type Address__1 = string;
 export type BoolResult = { ok: boolean } | { err: string };

@@ -8,8 +8,8 @@ import { Position, Price, Token } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans } from "@lingui/macro";
 import { Theme, createTheme } from "@mui/material/styles";
-import PositionRangeState from "./PositionRangeState";
 import { TokenImage } from "components/Image/Token";
+import PositionRangeState from "./PositionRangeState";
 
 export const customizeTheme = createTheme({
   breakpoints: {

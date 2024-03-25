@@ -18,9 +18,9 @@ export function useFarmGlobalData(): [GlobalData, () => void] {
 
   useMemo(async () => {
     if (icpPrice) {
-      const data = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
+      const {data} = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
         await (await v3FarmController()).getGlobalTVL(),
-      ).data;
+      );
 
       if (data) {
         setData({

@@ -1,4 +1,4 @@
-import { ThemeOption } from "./index";
+import { type ThemeOption } from "./types";
 
 export function themeTypography(theme: ThemeOption) {
   return {

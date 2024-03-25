@@ -41,66 +41,61 @@ export interface ToggleButton {
   link?: string;
 }
 
-export default memo(
-  ({
-    buttons,
-    onChange = () => {},
-    active,
-  }: {
-    active?: string;
-    buttons: ToggleButton[];
-    onChange?: (button: ToggleButton) => void;
-  }) => {
-    const classes = useStyles();
-    const history = useHistory();
-    const location = useLocation();
+export interface SwitchToggleProps {
+  active?: string;
+  buttons: ToggleButton[];
+  onChange?: (button: ToggleButton) => void;
+}
 
-    const [activeButtonKey, setActiveButtonKey] = useState<null | string>(null);
+export default memo(({ buttons, onChange, active }: SwitchToggleProps) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const location = useLocation();
 
-    const loadPage = (button: ToggleButton) => {
-      if (button.link) {
-        mockALinkAndOpen(button.link, "toggle_link");
-        return;
+  const [activeButtonKey, setActiveButtonKey] = useState<null | string>(null);
+
+  const loadPage = (button: ToggleButton) => {
+    if (button.link) {
+      mockALinkAndOpen(button.link, "toggle_link");
+      return;
+    }
+
+    if (!button.path) {
+      setActiveButtonKey(button.key);
+      if (onChange) onChange(button);
+      return;
+    }
+    history.push(button.path);
+  };
+
+  const isActive = (button: ToggleButton) => {
+    if (button.path) {
+      if (button.key === "/swap" || button.key === "/swap/v2") {
+        if (button.key === location.pathname || `${button.key}/` === location.pathname) return "active";
+        return "";
       }
+      return location.pathname.includes(button.key);
+    }
+    if (active) return active === button.key;
+    if (!activeButtonKey) return buttons[0].key === button.key;
+    return activeButtonKey === button.key;
+  };
 
-      if (!button.path) {
-        setActiveButtonKey(button.key);
-        if (onChange) onChange(button);
-        return;
-      }
-      history.push(button.path);
-    };
-
-    const isActive = (button: ToggleButton) => {
-      if (button.path) {
-        if (button.key === "/swap" || button.key === "/swap/v2") {
-          if (button.key === location.pathname || `${button.key}/` === location.pathname) return "active";
-          return "";
-        }
-        return location.pathname.includes(button.key);
-      } else {
-        if (!!active) return active === button["key"];
-        if (!activeButtonKey) return buttons[0]["key"] === button.key;
-        return activeButtonKey === button.key;
-      }
-    };
-
-    return (
-      <Grid container justifyContent="center">
-        <Grid className={classes.switchBox} container>
-          {buttons.map((item) => (
-            <Box
-              key={item.key}
-              className={`${classes.switchButton} ${isActive(item) ? "active" : ""}`}
-              onClick={() => loadPage(item)}
-            >
-              <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
-                {item.value}
-              </Grid>
-            </Box>
-          ))}
-        </Grid>
+  return (
+    <Grid container justifyContent="center">
+      <Grid className={classes.switchBox} container>
+        {buttons.map((item) => (
+          <Box
+            key={item.key}
+            className={`${classes.switchButton} ${isActive(item) ? "active" : ""}`}
+            onClick={() => loadPage(item)}
+          >
+            <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
+              {item.value}
+            </Grid>
+          </Box>
+        ))}
       </Grid>
-    );
-  },
-);
+    </Grid>
+  );
+});

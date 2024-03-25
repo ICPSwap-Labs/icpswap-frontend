@@ -5,13 +5,12 @@ import NFTListHeader from "components/Wallet/NFTListHeader";
 import { useAccount } from "store/global/hooks";
 import NoData from "components/no-data";
 import { isICPSwapOfficial } from "utils/index";
-import { useSelectedCanistersManager } from "store/nft/hooks";
+import { useSelectedCanistersManager , useEXTManager } from "store/nft/hooks";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
 import Loading from "components/Loading/Static";
 import WalletContext from "components/Wallet/context";
-import { useEXTManager } from "store/nft/hooks";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 
 const ICPSwapPositionNFTs = [

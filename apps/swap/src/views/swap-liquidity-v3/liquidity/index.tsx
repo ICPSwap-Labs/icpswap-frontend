@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { Box } from "@mui/material";
 import SwapWrapper from "components/swap/SwapWrapper";
-import PoolList from "./PoolList";
-import Positions from "./Positions";
 import { useSwapPools } from "@icpswap/hooks";
 import { usePoolStandardManager } from "store/global/hooks";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
@@ -10,6 +8,8 @@ import { TOKEN_STANDARD } from "constants/tokens";
 import LiquidityPoolIntro from "components/swap/LiquidityPoolIntro";
 import { TextButton, LoadingRow } from "components/index";
 import { Trans } from "@lingui/macro";
+import Positions from "./Positions";
+import PoolList from "./PoolList";
 
 export default function Liquidity() {
   const [isInitialed, updatePoolStandardInitialed] = usePoolStandardManager();
@@ -36,11 +36,9 @@ export default function Liquidity() {
           updatedNum++;
           trigger(updatedNum);
         }
-      } else {
-        if (pools && pools.length === 0) {
+      } else if (pools && pools.length === 0) {
           updatePoolStandardInitialed(true);
         }
-      }
     };
 
     call();

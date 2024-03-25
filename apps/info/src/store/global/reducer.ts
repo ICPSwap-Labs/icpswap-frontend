@@ -1,3 +1,4 @@
+import { createReducer } from "@reduxjs/toolkit";
 import {
   updateICPBlocks,
   updateICPPriceList,
@@ -8,7 +9,6 @@ import {
 } from "./actions";
 import { initialState } from "./states";
 
-import { createReducer } from "@reduxjs/toolkit";
 
 export default createReducer(initialState, (builder) => {
   builder

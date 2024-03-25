@@ -19,15 +19,15 @@ export default createReducer(initialState, (builder) => {
         return {
           ...state,
           independentField: field,
-          typedValue: typedValue,
+          typedValue,
         };
-      } else {
+      } 
         return {
           ...state,
           independentField: field,
-          typedValue: typedValue,
+          typedValue,
         };
-      }
+      
     })
     .addCase(updateFullRange, (state) => {
       state.leftRangeValue = true;
