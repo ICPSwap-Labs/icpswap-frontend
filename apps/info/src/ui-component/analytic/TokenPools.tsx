@@ -145,9 +145,8 @@ export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } 
-              return 0;
-            
+            }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

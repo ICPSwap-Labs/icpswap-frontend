@@ -1,6 +1,6 @@
 import { Typography, Box, Grid, Button } from "@mui/material";
-import { useParams , useHistory } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton, TokenImage , MainCard } from "ui-component/index";
+import { useParams, useHistory } from "react-router-dom";
+import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useTokenLatestTVL } from "@icpswap/hooks";

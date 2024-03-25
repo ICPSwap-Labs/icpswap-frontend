@@ -1,4 +1,4 @@
-import { getInfoPool, getInfoPoolStorageIds , usePoolsForToken } from "@icpswap/hooks";
+import { getInfoPool, getInfoPoolStorageIds, usePoolsForToken, getPromisesAwait } from "@icpswap/hooks";
 import { useState, useMemo, useEffect } from "react";
 import { Override } from "@icpswap/types";
 import type { PublicPoolOverView } from "types/analytic";
@@ -14,6 +14,16 @@ export function usePoolsOfToken(canisterId: string | undefined) {
 
   const { result: poolsOfToken, loading: poolsOfTokenLoading } = usePoolsForToken(canisterId);
 
+  const fetch_info_of_pool = async (pool: PublicPoolOverView) => {
+    const storageIds = await getInfoPoolStorageIds(pool.pool);
+
+    if (storageIds && storageIds.length > 0) {
+      return await getInfoPool(storageIds[0], pool.pool);
+    }
+
+    return undefined;
+  };
+
   useEffect(() => {
     async function call() {
       if (poolsOfTokenLoading || !poolsOfToken) return;
@@ -23,16 +33,9 @@ export function usePoolsOfToken(canisterId: string | undefined) {
         return;
       }
 
-      const poolsInfo = await Promise.all(
-        poolsOfToken!.map(async (pool) => {
-          const storageIds = await getInfoPoolStorageIds(pool.pool);
-
-          if (storageIds && storageIds.length > 0) {
-            return await getInfoPool(storageIds[0], pool.pool);
-          }
-
-          return undefined;
-        }),
+      const poolsInfo = await getPromisesAwait(
+        poolsOfToken.map(async (pool) => await fetch_info_of_pool(pool)),
+        20,
       );
 
       const pools = poolsOfToken
