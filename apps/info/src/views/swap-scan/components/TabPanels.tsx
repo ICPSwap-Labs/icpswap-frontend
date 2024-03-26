@@ -46,41 +46,44 @@ export function SwapScanTabPanels() {
   }, [location]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        gap: "0 30px",
-        "@media(max-width: 640px)": {
-          gap: "0 15px",
-        },
-      }}
-    >
-      {TabPanels.map((ele) => (
-        <Typography
-          key={ele.value}
-          className={`${classes.tabPanel}${activeTab === ele.value ? " active" : ""}`}
-          onClick={() => {
-            history.push(ele.link);
-          }}
-          sx={{ position: "relative" }}
-          component="div"
-        >
-          {ele.label}
-
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: "-10px",
-              left: "50%",
-              transform: "translate(-50%, 0)",
-              width: "28px",
-              height: "4px",
-              background: theme.colors.secondaryMain,
-              display: activeTab === ele.value ? "block" : "none",
+    <Box sx={{ width: "100%", overflow: "auto hidden" }}>
+      <Box
+        sx={{
+          width: "fit-content",
+          display: "flex",
+          gap: "0 30px",
+          "@media(max-width: 640px)": {
+            gap: "0 15px",
+          },
+        }}
+      >
+        {TabPanels.map((ele) => (
+          <Typography
+            key={ele.value}
+            className={`${classes.tabPanel}${activeTab === ele.value ? " active" : ""}`}
+            onClick={() => {
+              history.push(ele.link);
             }}
-          />
-        </Typography>
-      ))}
+            sx={{ position: "relative", textWrap: "nowrap", padding: "0 0 20px 0" }}
+            component="div"
+          >
+            {ele.label}
+
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: "0px",
+                left: "50%",
+                transform: "translate(-50%, 0)",
+                width: "28px",
+                height: "4px",
+                background: theme.colors.secondaryMain,
+                display: activeTab === ele.value ? "block" : "none",
+              }}
+            />
+          </Typography>
+        ))}
+      </Box>
     </Box>
   );
 }

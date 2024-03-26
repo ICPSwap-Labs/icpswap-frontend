@@ -4,7 +4,7 @@ import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell , GridAutoRows } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, GridAutoRows } from "@icpswap/ui";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
@@ -105,6 +105,9 @@ export default function SwapScanValuation() {
   const [allTokenIds, setAllTokenIds] = useState<string[]>([]);
   const [search, setSearch] = useState<null | string>(null);
   const [usdValues, setUSDValues] = useState<{ [tokenId: string]: string }>({});
+  const [userTokenBalances, setUserTokensBalance] = useState(
+    {} as { [tokenId: string]: { balance: bigint | undefined; tokenInfo: TokenInfo } },
+  );
 
   const { principal } = useParsedQueryString() as { principal: string };
 
@@ -125,6 +128,8 @@ export default function SwapScanValuation() {
   const address = useMemo(() => {
     if (!search) return undefined;
     if (!isValidPrincipal(search)) return undefined;
+    setUserTokensBalance({});
+    setUSDValues({});
     return search;
   }, [search]);
 
@@ -143,16 +148,13 @@ export default function SwapScanValuation() {
 
   const allTokensBalance = useTokensBalance({ tokenIds: allTokenIds, address });
 
-  const [userTokenBalances, setUserTokensBalance] = useState(
-    {} as { [tokenId: string]: { balance: bigint | undefined; tokenInfo: TokenInfo } },
-  );
-
   useEffect(() => {
     if (!allTokensInfo || !allTokensBalance) return;
 
     allTokensInfo.forEach((e) => {
       const balance_index = allTokenIds.indexOf(e.canisterId);
-      const balance = allTokensBalance[balance_index] ? allTokensBalance[balance_index].balance : undefined;
+      const balanceResult = allTokensBalance[balance_index] ? allTokensBalance[balance_index] : undefined;
+      const balance = balanceResult?.balance;
 
       if (balance) {
         setUserTokensBalance((prevState) => ({
