@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, Wrapper, FilledTextField } from "ui-component/index";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows } from "@icpswap/ui";
 import { isValidPrincipal } from "@icpswap/utils";
 import isFunction from "lodash/isFunction";
 import { useParsedQueryString } from "@icpswap/hooks";

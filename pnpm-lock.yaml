@@ -860,6 +860,9 @@ importers:
 
   packages/ui:
     dependencies:
+      "@icpswap/types":
+        specifier: "workspace: *"
+        version: link:../types
       "@icpswap/utils":
         specifier: "workspace: *"
         version: link:../utils

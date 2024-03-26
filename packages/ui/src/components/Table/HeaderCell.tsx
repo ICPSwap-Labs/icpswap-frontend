@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 import { Typography } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
-import { UpArrow, DownArrow } from "ui-component/Arrow";
+import { UpArrow, DownArrow } from "../Arrow";
 import { SortDirection } from "./types";
 import HeaderContext from "./headerContext";
 

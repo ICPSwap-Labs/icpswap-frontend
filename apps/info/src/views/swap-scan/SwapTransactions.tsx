@@ -7,7 +7,7 @@ import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
-import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
@@ -132,7 +132,7 @@ function Transactions({ address }: TransactionsProps) {
           </Header>
 
           {(transactions ?? []).map((transaction, index) => (
-            <Row key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
+            <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
               <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
               <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
@@ -152,7 +152,7 @@ function Transactions({ address }: TransactionsProps) {
               </BodyCell>
 
               <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-            </Row>
+            </TableRow>
           ))}
 
           {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}

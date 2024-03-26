@@ -2,11 +2,11 @@ import { Box, Typography } from "@mui/material";
 import { useState, useMemo } from "react";
 import { useBaseTransactions } from "hooks/info/useBaseTransactions";
 import Transaction from "ui-component/analytic/Transactions";
-import { MainCard } from "ui-component/index";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { Trans } from "@lingui/macro";
 import { useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "constants/index";
+import { MainCard } from "@icpswap/ui";
 
 export default function AllTransactions() {
   const [checked, setChecked] = useState(true);

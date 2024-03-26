@@ -4,8 +4,7 @@ import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { Header, HeaderCell, TableRow, BodyCell , GridAutoRows } from "@icpswap/ui";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
@@ -57,7 +56,7 @@ function UserTokenBalance({
   }, [tokenInfo, tokenUSDPrice, balance]);
 
   return (
-    <Row
+    <TableRow
       className={classes.wrapper}
       sx={{ display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid" }}
     >
@@ -96,7 +95,7 @@ function UserTokenBalance({
           {tokenInfo.canisterId}
         </Link>
       </BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

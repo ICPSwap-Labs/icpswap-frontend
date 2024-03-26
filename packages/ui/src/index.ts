@@ -6,3 +6,8 @@ export * from "./components/NoData";
 export * from "./components/FilledTextField";
 export * from "./components/TextButton";
 export * from "./components/GlobalTips";
+export * from "./components/Loading/index";
+export * from "./components/Breadcrumbs";
+export * from "./components/Arrow";
+export * from "./components/Table";
+export * from "./components/Grid";

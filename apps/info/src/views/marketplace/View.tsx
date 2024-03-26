@@ -2,7 +2,7 @@ import { useCallback, FC, useState } from "react";
 import { Link as ReactLink, useParams, useHistory } from "react-router-dom";
 import { Breadcrumbs, Typography, Grid, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "ui-component/cards/MainCard";
+import { MainCard } from "@icpswap/ui";
 import NFTTransactions from "ui-component/NFT/NFTTransactions";
 import NFTActivity from "ui-component/NFT/NFTActivity";
 import NFTInfo from "ui-component/NFT/Info";

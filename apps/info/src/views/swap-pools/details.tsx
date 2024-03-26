@@ -4,12 +4,11 @@ import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount } from "@icpswap/utils";
-import { MainCard, TextButton, TokenImage } from "ui-component/index";
+import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
 import { usePoolLatestTVL } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
-import Breadcrumbs from "ui-component/Breadcrumbs";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
@@ -170,7 +169,7 @@ export default function SwapPoolDetails() {
           },
         }}
       >
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <GridAutoRows gap="24px">
             <MainCard level={4}>
               <GridAutoRows gap="12px">
@@ -302,7 +301,7 @@ export default function SwapPoolDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Typography variant="h3">
             <Trans>Transactions</Trans>
           </Typography>

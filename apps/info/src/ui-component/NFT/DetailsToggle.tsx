@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography, Grid, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import MainCard from "ui-component/cards/MainCard";
+import { MainCard } from "@icpswap/ui";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Theme } from "@mui/material/styles";
 
@@ -15,14 +15,7 @@ export default function DetailsToggle({ title, children }: { title: React.ReactN
   };
 
   return (
-    <MainCard
-      level={2}
-      contentSX={{
-        padding: 0,
-        paddingBottom: "0px!important",
-        [theme.breakpoints.down("md")]: { padding: 0, paddingBottom: "0px!important" },
-      }}
-    >
+    <MainCard level={2}>
       <Grid
         container
         alignItems="center"

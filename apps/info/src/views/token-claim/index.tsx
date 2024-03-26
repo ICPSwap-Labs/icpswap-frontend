@@ -16,7 +16,7 @@ import { Trans } from "@lingui/macro";
 import { useClaimEvents } from "@icpswap/hooks";
 import type { ClaimEventInfo } from "@icpswap/types";
 import { getEventState } from "utils/token-claim";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -39,7 +39,7 @@ function ClaimEventItem({ ele }: ClaimEventItemProps) {
   const state = getEventState(ele);
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>{ele.claimEventName}</BodyCell>
       <BodyCell>{ele.claimCanisterId}</BodyCell>
       <BodyCell>{ele.tokenSymbol}</BodyCell>
@@ -56,7 +56,7 @@ function ClaimEventItem({ ele }: ClaimEventItemProps) {
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

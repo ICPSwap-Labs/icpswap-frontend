@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
-import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL, useTokensFromList } from "@icpswap/hooks";
@@ -75,7 +75,7 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
   };
 
   return (
-    <Row className={classes.wrapper} onClick={handlePoolClick}>
+    <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center">
@@ -101,7 +101,7 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
       <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volume7D)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

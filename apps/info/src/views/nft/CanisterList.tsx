@@ -5,10 +5,10 @@ import { Typography, Box, Avatar, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useCanisterCycles, useCanisterNFTCount } from "hooks/nft/calls";
 import { Trans } from "@lingui/macro";
-import { MainContainer, Pagination, NoData, LoadingRow, MainCard, TextButton } from "ui-component/index";
+import { MainCard, MainContainer, Pagination, NoData, LoadingRow, TextButton } from "ui-component/index";
 import { NFTCanisterInfo } from "@icpswap/types";
 import { useNFTCanisters } from "@icpswap/hooks";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -32,7 +32,7 @@ export function NFTItem({ canister }: NFTItemProps) {
   const { result: count } = useCanisterNFTCount(canister.cid);
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>
         <Grid container alignItems="center" gap="0 6px">
           <Avatar src={canister?.image}>&nbsp;</Avatar>
@@ -48,7 +48,7 @@ export function NFTItem({ canister }: NFTItemProps) {
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

@@ -2,18 +2,25 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, Box, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Pagination, Copy, LoadingRow, NoData, PaginationType, MainCard } from "ui-component/index";
+import {
+  Pagination,
+  Copy,
+  LoadingRow,
+  NoData,
+  PaginationType,
+  MainCard,
+  Breadcrumbs,
+  MainContainer,
+} from "ui-component/index";
 import { parseTokenAmount, pageArgsFormat, transactionsTypeFormat, shorten, timestampFormat } from "@icpswap/utils";
 import { useTokenTransactions, useParsedQueryString } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
-import MainContainer from "ui-component/MainContainer";
-import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useStateTokenCapId, useTokenStandardIsRegistered, useUpdateTokenStandards } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "constants/tokens";
 import upperFirst from "lodash/upperFirst";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 export interface Transaction {
   fee: bigint | undefined;
@@ -46,7 +53,7 @@ export function TransactionItem({ transaction, token }: { transaction: Transacti
   const classes = useStyles();
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>{upperFirst(transactionsTypeFormat(transaction.transType))}</BodyCell>
       <BodyCell>{timestampFormat(transaction.timestamp)}</BodyCell>
       <BodyCell>
@@ -65,7 +72,7 @@ export function TransactionItem({ transaction, token }: { transaction: Transacti
           : parseTokenAmount(transaction.amount, token?.decimals).toFormat()}
       </BodyCell>
       <BodyCell>{parseTokenAmount(transaction.fee, token?.decimals).toFormat()}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

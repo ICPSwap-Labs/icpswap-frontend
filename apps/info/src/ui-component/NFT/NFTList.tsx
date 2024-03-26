@@ -5,7 +5,7 @@ import { Trans } from "@lingui/macro";
 import { LoadingRow, Pagination, PaginationType, NoData, TextButton } from "ui-component/index";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { useNFTs } from "@icpswap/hooks";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { shorten, pageArgsFormat } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
@@ -79,7 +79,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
         </Header>
 
         {(loading ? [] : NFTList).map((nft) => (
-          <Row key={`${Number(nft.tokenId)}-${nft.cId}`} className={classes.wrapper}>
+          <TableRow key={`${Number(nft.tokenId)}-${nft.cId}`} className={classes.wrapper}>
             <BodyCell>
               <NFTAvatar nft={nft} />
             </BodyCell>
@@ -92,7 +92,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
                 <Trans>Details</Trans>
               </TextButton>
             </BodyCell>
-          </Row>
+          </TableRow>
         ))}
 
         {NFTList.length === 0 && !loading ? <NoData /> : null}

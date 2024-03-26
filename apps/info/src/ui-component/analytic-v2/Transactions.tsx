@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
-import { enumToString , shorten, formatAmount, formatDollarAmount } from "@icpswap/utils";
-import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
+import { enumToString, shorten, formatAmount, formatDollarAmount } from "@icpswap/utils";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import { Transaction } from "types/analytic-v2";
 import Pagination from "ui-component/pagination/cus";
 import dayjs from "dayjs";
@@ -77,9 +77,8 @@ export default function Transactions({ transactions, maxItems = 10, loading }: T
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } 
-              return 0;
-            
+            }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];
@@ -119,7 +118,7 @@ export default function Transactions({ transactions, maxItems = 10, loading }: T
       </Header>
 
       {(sortedTransactions ?? []).map((transaction, index) => (
-        <Row key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
+        <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
           <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
           <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
@@ -137,7 +136,7 @@ export default function Transactions({ transactions, maxItems = 10, loading }: T
           </BodyCell>
 
           <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-        </Row>
+        </TableRow>
       ))}
 
       {loading ? <StaticLoading loading={loading} /> : null}

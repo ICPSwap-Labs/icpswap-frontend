@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, ReactNode } from "react";
 import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from "recharts";
 import { Box } from "@mui/material";
-import { RowBetween } from "ui-component/Row";
+import { GridRowBetween } from "ui-component/index";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useTheme } from "@mui/styles";
@@ -84,10 +84,10 @@ export default function Chart({
       }}
       {...rest}
     >
-      <RowBetween alignItems="flex-start">
+      <GridRowBetween align="flex-start">
         {topLeft ?? null}
         {topRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           width={500}
@@ -147,10 +147,10 @@ export default function Chart({
           />
         </BarChart>
       </ResponsiveContainer>
-      <RowBetween>
+      <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
     </Box>
   );
 }

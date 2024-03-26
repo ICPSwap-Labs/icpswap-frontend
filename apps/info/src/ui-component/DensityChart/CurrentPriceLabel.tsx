@@ -1,4 +1,4 @@
-import { GridAutoRows, RowFixed } from "ui-component/Grid/index";
+import { GridAutoRows, GridRowFixed } from "@icpswap/ui";
 import { Typography, Box } from "@mui/material";
 import { Token } from "@icpswap/swap-sdk";
 import { Theme } from "@mui/material/styles";
@@ -41,7 +41,7 @@ export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentP
             }}
           >
             <GridAutoRows gap="6px">
-              <RowFixed align="center">
+              <GridRowFixed align="center">
                 <Typography color="text.primary" mr="6px">
                   Current Price
                 </Typography>
@@ -54,7 +54,7 @@ export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentP
                     backgroundColor: theme.colors.primaryMain,
                   }}
                 />
-              </RowFixed>
+              </GridRowFixed>
               <Typography color="text.primary">{`1 ${token0?.symbol} = ${toSignificant(price0, undefined, {
                 groupSeparator: ",",
               })} ${token1?.symbol}`}</Typography>

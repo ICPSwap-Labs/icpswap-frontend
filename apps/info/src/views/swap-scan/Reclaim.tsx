@@ -5,7 +5,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { UserSwapPoolsBalance } from "hooks/useUserAllReclaims";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { StaticLoading, NoData, SelectToken } from "ui-component/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "constants/index";
@@ -39,7 +39,7 @@ function ClaimItem({ claim }: ClaimItemProps) {
   return (
     <>
       {claim.balance0 !== BigInt(0) && !!token0 ? (
-        <Row className={classes.wrapper}>
+        <TableRow className={classes.wrapper}>
           <BodyCell>
             <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
               <Avatar src={token0.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
@@ -54,11 +54,11 @@ function ClaimItem({ claim }: ClaimItemProps) {
               <BodyCell sub>{`${claim.canisterId.toString()}`}</BodyCell>
             </Box>
           </BodyCell>
-        </Row>
+        </TableRow>
       ) : null}
 
       {claim.balance1 !== BigInt(0) && !!token1 ? (
-        <Row className={classes.wrapper}>
+        <TableRow className={classes.wrapper}>
           <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
             <Avatar src={token1.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
               &nbsp;
@@ -72,7 +72,7 @@ function ClaimItem({ claim }: ClaimItemProps) {
               <BodyCell sub>{`${claim.canisterId.toString()}`}</BodyCell>
             </Box>
           </BodyCell>
-        </Row>
+        </TableRow>
       ) : null}
     </>
   );

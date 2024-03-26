@@ -53,7 +53,7 @@ export function LoadingSingleRow() {
   );
 }
 
-export default function LoadingRow({ children }: { children: ReactNode }) {
+export function LoadingRow({ children }: { children: ReactNode }) {
   const theme = useTheme() as Theme;
 
   return (

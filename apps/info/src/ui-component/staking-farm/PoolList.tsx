@@ -12,7 +12,7 @@ import { NoData, LoadingRow, Pagination, TextButton, PaginationType } from "ui-c
 import type { StakingFarmInfo } from "@icpswap/types";
 import { useSwapPoolMetadata, useV3StakingFarms } from "@icpswap/hooks";
 import { useFarmUSDValue } from "hooks/staking-farm";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -37,7 +37,7 @@ export function PoolItem({ farm }: { farm: StakingFarmInfo }) {
   const { poolTVL } = useFarmUSDValue(farm);
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>
         {token0 && token1 ? (
           <TextButton link={getExplorerPrincipalLink(farm.pool)}>{`${token0.symbol}/${
@@ -81,7 +81,7 @@ export function PoolItem({ farm }: { farm: StakingFarmInfo }) {
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import MainCard from "ui-component/cards/MainCard";
+import { MainCard } from "@icpswap/ui";
 import { t } from "@lingui/macro";
-import { parseTokenAmount , formatAmount } from "@icpswap/utils";
+import { parseTokenAmount, formatAmount } from "@icpswap/utils";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
 import { useNFTTradeData } from "@icpswap/hooks";
 

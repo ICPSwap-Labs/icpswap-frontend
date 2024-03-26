@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { SortDirection } from "ui-component/Table/types";
+import { SortDirection } from "./types";
 
 export interface HeaderContextProps {
   sortField: string;

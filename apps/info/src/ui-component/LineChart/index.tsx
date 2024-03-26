@@ -3,7 +3,7 @@ import { createChart, IChartApi } from "lightweight-charts";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { darken } from "polished";
-import { RowBetween } from "ui-component/Row";
+import { GridRowBetween } from "ui-component/index";
 import usePrevious from "hooks/usePrevious";
 import { Theme } from "@mui/material/styles";
 import { formatDollarAmount } from "@icpswap/utils";
@@ -190,15 +190,15 @@ const LineChart = ({
         },
       }}
     >
-      <RowBetween>
+      <GridRowBetween>
         {topLeft ?? null}
         {topRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
       <div ref={chartRef} id="line-chart" {...rest} />
-      <RowBetween>
+      <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
     </Box>
   );
 };

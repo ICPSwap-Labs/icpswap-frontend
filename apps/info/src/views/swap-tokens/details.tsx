@@ -6,7 +6,7 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows } from "@icpswap/ui";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
@@ -141,7 +141,7 @@ export default function TokenDetails() {
           },
         }}
       >
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <GridAutoRows gap="24px">
             <GridAutoRows gap="4px">
               <Typography>
@@ -215,7 +215,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Box sx={{ width: "100%", overflow: "auto" }}>
             <TokenPools canisterId={canisterId} />
           </Box>
@@ -223,7 +223,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Typography variant="h3">
             <Trans>Transactions</Trans>
           </Typography>

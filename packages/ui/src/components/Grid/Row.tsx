@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
-export interface RowProps {
+export interface GridRowProps {
   width?: string;
   align?: string;
   justify?: string;
@@ -12,7 +12,7 @@ export interface RowProps {
   margin?: string;
 }
 
-export function Row({ children, width, align, justify, padding, border, borderRadius, margin }: RowProps) {
+export function GridRow({ children, width, align, justify, padding, border, borderRadius, margin }: GridRowProps) {
   return (
     <Box
       sx={{
@@ -32,23 +32,25 @@ export function Row({ children, width, align, justify, padding, border, borderRa
   );
 }
 
-export function RowBetween({ children }: { children: ReactNode }) {
-  return <Row justify="space-between">{children}</Row>;
+export function GridRowBetween(props: GridRowProps) {
+  return (
+    <GridRow {...props} justify="space-between">
+      {props.children}
+    </GridRow>
+  );
 }
 
-export function RowFixed({
-  gap,
-  children,
-  align,
-}: {
+export interface GridRowFixedProps {
   children: ReactNode;
   gap?: string;
   justify?: string;
   align?: string;
-}) {
+}
+
+export function GridRowFixed({ gap, children, align }: GridRowFixedProps) {
   return (
-    <Row justify="space-between" width="fit-content" margin={gap && `-${gap}`} align={align}>
+    <GridRow justify="space-between" width="fit-content" margin={gap && `-${gap}`} align={align}>
       {children}
-    </Row>
+    </GridRow>
   );
 }

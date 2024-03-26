@@ -2,13 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { Typography, Box, Grid, Button, Tooltip } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount } from "@icpswap/utils";
-import { MainCard, Wrapper } from "ui-component/index";
+import { Wrapper } from "ui-component/index";
 import { useSwapProtocolData } from "@icpswap/hooks";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows , MainCard } from "@icpswap/ui";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -19,6 +19,7 @@ import { useChartData } from "hooks/info/useSwapChartData";
 import { useTransformedVolumeData } from "hooks/chart";
 import ChartDateButton from "ui-component/ChartDateButton";
 import { VolumeWindow } from "types/analytic";
+
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
 import TopTokens from "./TopTokens";
@@ -144,7 +145,6 @@ export default function SwapOverview() {
               width: "100%",
             }}
             level={2}
-            border={false}
           >
             {formattedTvlData ? null : (
               <Box sx={{ width: "100%", height: "332px" }}>
@@ -213,7 +213,6 @@ export default function SwapOverview() {
               width: "100%",
             }}
             level={2}
-            border={false}
           >
             {!formattedVolumeData ? (
               <Box sx={{ width: "100%", height: "332px" }}>

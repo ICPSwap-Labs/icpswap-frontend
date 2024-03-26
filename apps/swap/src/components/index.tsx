@@ -12,7 +12,7 @@ export { default as Wrapper } from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as LoadingRow } from "./Loading/LoadingRow";
 export { default as ViewMore } from "./ViewMore/index";
-export { default as Breadcrumbs } from "./Breadcrumbs";
+export { Breadcrumbs } from "@icpswap/ui";
 export { default as StepViewButton } from "./Steps/View";
 export * from "./Maintenance";
 export { default as FindPositionsModal } from "./swap/FindPositions";

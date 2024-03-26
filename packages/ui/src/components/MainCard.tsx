@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTheme } from "@mui/styles";
-import { Box } from "@mui/material";
+import { Box, type SxProps } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
@@ -11,15 +11,10 @@ export interface MainCardProps {
   level?: number;
   onClick?: (event: any) => void;
   padding?: string;
+  sx?: SxProps;
 }
 
-export function MainCard({
-  border,
-  level,
-  onClick,
-  padding,
-  children,
-}: MainCardProps) {
+export function MainCard({ border, level, onClick, padding, children, sx }: MainCardProps) {
   const theme = useTheme() as Theme;
 
   const cardStyles = useMemo(() => {
@@ -38,7 +33,7 @@ export function MainCard({
       case 1:
         return {
           background: theme.palette.background.level1,
-          ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
       case 2:
         return {
@@ -48,12 +43,12 @@ export function MainCard({
       case 3:
         return {
           background: theme.palette.background.level3,
-          ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
       case 4:
         return {
           background: theme.palette.background.level4,
-          ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
       case 5:
         return {
@@ -63,7 +58,7 @@ export function MainCard({
       default:
         return {
           background: theme.palette.background.level3,
-          ...(!!_border ? { border: `1px solid ${_border}` } : {}),
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
     }
   }, [level, border]);
@@ -75,6 +70,7 @@ export function MainCard({
         ...(cardStyles.border ? { border: cardStyles.border } : {}),
         borderRadius: "16px",
         padding: padding ?? "16px",
+        ...sx,
       }}
       onClick={onClick}
     >

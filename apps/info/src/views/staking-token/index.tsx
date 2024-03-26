@@ -1,5 +1,6 @@
 import PoolList from "ui-component/staking-token/PoolList";
-import { Wrapper, MainCard } from "ui-component/index";
+import { Wrapper } from "ui-component/index";
+import { MainCard } from "@icpswap/ui";
 
 export default function Pools() {
   return (

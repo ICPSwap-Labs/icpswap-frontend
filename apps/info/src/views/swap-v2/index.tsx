@@ -9,7 +9,7 @@ import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows } from "@icpswap/ui";
 import dayjs from "dayjs";
 import SwapAnalyticLoading from "ui-component/analytic-v2/Loading";
 import { useHistory } from "react-router-dom";
@@ -162,7 +162,6 @@ export default function SwapOverview() {
               width: "100%",
             }}
             level={2}
-            border={false}
           >
             <SwapAnalyticLoading loading={chartDataLoading} />
 
@@ -194,7 +193,6 @@ export default function SwapOverview() {
               width: "100%",
             }}
             level={2}
-            border={false}
           >
             <SwapAnalyticLoading loading={chartDataLoading} />
 
@@ -258,7 +256,7 @@ export default function SwapOverview() {
           </MainCard>
         </Box>
 
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Box
             sx={{
               display: "grid",

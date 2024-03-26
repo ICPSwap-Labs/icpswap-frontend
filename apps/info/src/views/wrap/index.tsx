@@ -5,14 +5,14 @@ import { Trans, t } from "@lingui/macro";
 import DetailItem from "ui-component/DetailItem";
 import { WICPCanisterId } from "constants/canister";
 import { cycleValueFormat, getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, enumToString, pageArgsFormat , shorten, timestampFormat } from "@icpswap/utils";
+import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
 import { useWrapOverview } from "hooks/useWICPCalls";
 import { useWrapTransactions } from "@icpswap/hooks";
 import { NoData, Pagination, Copy, LoadingRow, PaginationType, MainCard, MainContainer } from "ui-component/index";
 import { ICP, WRAPPED_ICP } from "constants/tokens";
 import { Theme } from "@mui/material/styles";
 import upperFirst from "lodash/upperFirst";
-import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   box: {
@@ -131,7 +131,7 @@ export default function Wrap() {
               </Header>
 
               {(loading ? [] : content).map((row, index) => (
-                <Row key={index} className={classes.wrapper}>
+                <TableRow key={index} className={classes.wrapper}>
                   <BodyCell>{timestampFormat(row.date)}</BodyCell>
                   <Copy content={row.from}>
                     <BodyCell color="primary.main">{shorten(row.from, 10)}</BodyCell>
@@ -143,7 +143,7 @@ export default function Wrap() {
                     {upperFirst(ExchangeTypes[enumToString(row.wrapType)] ?? enumToString(row.wrapType))}
                   </BodyCell>
                   <BodyCell>{parseTokenAmount(row.amount, WRAPPED_ICP.decimals).toFormat()}</BodyCell>
-                </Row>
+                </TableRow>
               ))}
 
               {content.length === 0 && !loading ? <NoData /> : null}

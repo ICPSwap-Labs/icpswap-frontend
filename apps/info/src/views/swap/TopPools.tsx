@@ -1,11 +1,12 @@
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
-import { MainCard, SelectPair } from "ui-component/index";
+import { SelectPair } from "ui-component/index";
 import { useInfoAllPools, useTokensFromList } from "@icpswap/hooks";
 import Pools from "ui-component/analytic/Pools";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo } from "react";
 import { ICP } from "constants/tokens";
+import { MainCard } from "@icpswap/ui";
 
 export default function TopPools() {
   const [onlyTokenList, setOnlyTokenList] = useState(true);

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import MainContainer from "ui-component/MainContainer";
 import TradeData from "ui-component/NFT/market/TradeData";
-import { ListLoading, NoData, Pagination, PaginationType, MainCard } from "ui-component/index";
+import { ListLoading, NoData, Pagination, PaginationType } from "ui-component/index";
+import { MainCard } from "@icpswap/ui";
 import {
   Typography,
   Box,

@@ -4,11 +4,10 @@ import { makeStyles } from "@mui/styles";
 import Transactions from "ui-component/staking-farm/Transactions";
 import ClaimRecords from "ui-component/staking-farm/ClaimRecords";
 import MainContainer from "ui-component/MainContainer";
-import MainCard from "ui-component/cards/MainCard";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount , shorten } from "@icpswap/utils";
+import { parseTokenAmount, shorten } from "@icpswap/utils";
 import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
@@ -16,6 +15,7 @@ import { getExplorerPrincipalLink } from "utils";
 import { useV3UserFarmInfo } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "constants/index";
+import { MainCard } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

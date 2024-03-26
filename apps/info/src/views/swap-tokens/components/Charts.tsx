@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Typography, Box } from "@mui/material";
 import { t } from "@lingui/macro";
-import { BigNumber, toSignificant , formatDollarAmount } from "@icpswap/utils";
+import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { MainCard } from "ui-component/index";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -127,9 +127,8 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           value: data.tvlUSD,
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [tvlChartData]);
 
   const volumeData = useMemo(() => {
@@ -140,9 +139,8 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           volumeUSD: data.volumeUSD,
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [chartData]);
 
   const dailyVolumeData = useMemo(() => {
@@ -153,9 +151,8 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           value: ele.volumeUSD,
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [volumeData]);
 
   const handlePriceHoverChange = (data: any) => {
@@ -174,8 +171,7 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
   return (
     <MainCard
       level={2}
-      border={false}
-      contentSX={{
+      sx={{
         position: "relative",
       }}
     >

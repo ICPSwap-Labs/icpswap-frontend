@@ -8,7 +8,7 @@ import { NoData, StaticLoading } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
 import { Token } from "types/analytic-v2";
-import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 
 const useStyles = makeStyles(() => {
@@ -43,7 +43,7 @@ export function TokenItem({ token, index }: { token: Token; index: number }) {
   };
 
   return (
-    <Row className={classes.wrapper} onClick={handleTokenClick}>
+    <TableRow className={classes.wrapper} onClick={handleTokenClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center">
@@ -77,7 +77,7 @@ export function TokenItem({ token, index }: { token: Token; index: number }) {
       </BodyCell>
       <BodyCell>{formatDollarAmount(token.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(token.tvlUSD)}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 
@@ -123,9 +123,8 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } 
-              return 0;
-            
+            }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

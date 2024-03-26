@@ -7,6 +7,6 @@ export type { HeaderCellProps } from "./HeaderCell";
 export { default as BodyCell } from "./BodyCell";
 export type { BodyCellProps } from "./BodyCell";
 
-export { default as Row } from "./Row";
+export { default as TableRow } from "./Row";
 
 export { SortDirection } from "./types";

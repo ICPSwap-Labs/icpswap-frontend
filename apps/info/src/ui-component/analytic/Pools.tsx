@@ -7,7 +7,7 @@ import { Override } from "@icpswap/types";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { PublicPoolOverView } from "types/analytic";
-import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL } from "@icpswap/hooks";
@@ -79,7 +79,7 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
   };
 
   return (
-    <Row className={classes.wrapper} onClick={handlePoolClick}>
+    <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center" gap="0 8px">
@@ -99,7 +99,7 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
       <BodyCell align="right">{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell align="right">{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell align="right">{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

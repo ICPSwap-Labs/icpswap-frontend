@@ -2,13 +2,13 @@ import { useState, useMemo } from "react";
 import { Typography, Box, Grid, Avatar, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton , MainCard } from "ui-component/index";
+import { Wrapper, Breadcrumbs, TextButton, MainCard } from "ui-component/index";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkAndOpen, toSignificant , formatDollarAmount } from "@icpswap/utils";
+import { mockALinkAndOpen, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useGraphToken, useGraphTokenTVLChartData, useGraphTokenPriceChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "ui-component/Grid/index";
+import { GridAutoRows } from "@icpswap/ui";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 import dayjs from "dayjs";
 import LineChart from "ui-component/LineChart/alt";
@@ -84,9 +84,8 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: data.tvlUSD,
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [chartData]);
 
   const formattedVolumeData = useMemo(() => {
@@ -97,9 +96,8 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: data.volumeUSD,
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [chartData]);
 
   const formattedTransactionData = useMemo(() => {
@@ -110,16 +108,14 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
           value: Number(data.txCount),
         };
       });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [chartData]);
 
   return (
     <MainCard
       level={2}
-      border={false}
-      contentSX={{
+      sx={{
         position: "relative",
       }}
     >
@@ -387,7 +383,7 @@ export default function TokenDetails() {
           },
         }}
       >
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <GridAutoRows gap="24px">
             <GridAutoRows gap="4px">
               <Typography>
@@ -461,7 +457,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Box sx={{ width: "100%", overflow: "auto" }}>
             <Box sx={{ minWidth: "1200px" }}>
               <Typography variant="h3">
@@ -477,7 +473,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2} border={false}>
+        <MainCard level={2}>
           <Typography variant="h3">
             <Trans>Transactions</Trans>
           </Typography>

@@ -1,20 +1,26 @@
-export { Pagination } from "@icpswap/ui";
-export type { PaginationProps, PaginationType } from "@icpswap/ui";
-export { default as MainCard } from "./cards/MainCard";
-export { default as NoData } from "./no-data";
+export {
+  Pagination,
+  MainCard,
+  DotLoading,
+  LoadingRow,
+  StaticLoading,
+  NoData,
+  TextButton,
+  Breadcrumbs,
+  GridAutoRows,
+  GridRow,
+  GridRowBetween,
+  GridRowFixed,
+} from "@icpswap/ui";
+export type { PaginationProps, PaginationType, MainCardProps } from "@icpswap/ui";
+
 export { default as ListLoading } from "./Loading/List";
-export { default as StaticLoading } from "./Loading/Static";
-export { default as Loading } from "./Loading/index";
-export { default as DotLoading } from "./Loading/Dot";
-export { TextButton } from "@icpswap/ui";
 export { default as NumberFormat } from "./number-format";
 export { default as Wrapper } from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as Copy } from "./copy/copy";
 export { default as MainContainer } from "./MainContainer";
 export { default as AddressFormat } from "./AddressFormat/index";
-export { default as Breadcrumbs } from "./Breadcrumbs";
-export { default as LoadingRow } from "./Loading/LoadingRow";
 export { default as FilledTextField } from "./FilledTextField/index";
 export * from "./Select/index";
 export * from "./Image/index";

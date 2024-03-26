@@ -130,9 +130,8 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
             value: data.tvlUSD,
           };
         });
-    } 
-      return [];
-    
+    }
+    return [];
   }, [poolChartTVl]);
 
   const volumeData = useMemo(() => {
@@ -177,8 +176,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
   return (
     <MainCard
       level={2}
-      border={false}
-      contentSX={{
+      sx={{
         position: "relative",
       }}
     >

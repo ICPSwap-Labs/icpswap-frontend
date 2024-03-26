@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import { LeftArrow, RightArrow } from "ui-component/Arrow";
+import { LeftArrow, RightArrow } from "@icpswap/ui";
 
 export interface PaginationProps {
   onPageChange: (page: number) => void;

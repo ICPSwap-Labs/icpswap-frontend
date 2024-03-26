@@ -31,7 +31,7 @@ export interface StaticLoadingProps {
   mask?: boolean;
 }
 
-export default ({ loading, mask = false }: StaticLoadingProps) => {
+export function StaticLoading({ loading, mask = false }: StaticLoadingProps) {
   const classes = useStyles();
 
   return loading ? (
@@ -40,4 +40,4 @@ export default ({ loading, mask = false }: StaticLoadingProps) => {
       <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
     </Grid>
   ) : null;
-};
+}

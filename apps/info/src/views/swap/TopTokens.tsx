@@ -1,12 +1,13 @@
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
-import { MainCard, FilledTextField } from "ui-component/index";
+import { FilledTextField } from "ui-component/index";
 import { useInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
 import TokenTable from "ui-component/analytic/TokenTable";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo, useEffect } from "react";
 import { isValidPrincipal } from "@icpswap/utils";
 import { ICP } from "constants/index";
+import { MainCard } from "@icpswap/ui";
 
 export default function TopTokens() {
   const [search, setSearch] = useState<null | string>(null);
@@ -35,9 +36,8 @@ export default function TopTokens() {
 
         if (isValidPrincipal(search)) {
           return token.address === search;
-        } 
-          return token.symbol.toLocaleUpperCase().includes(search.toLocaleUpperCase());
-        
+        }
+        return token.symbol.toLocaleUpperCase().includes(search.toLocaleUpperCase());
       });
   }, [allTokens, onlyTokenList, tokenList, search]);
 

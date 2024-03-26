@@ -1,10 +1,8 @@
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { isDarkTheme } from "utils";
 import { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles((theme: Theme) => {
-  const isDark = isDarkTheme(theme);
+const useStyles = makeStyles(() => {
   const translateLength = 5;
 
   return {
@@ -12,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => {
       display: "inline-block",
       width: "5px",
       height: "5px",
-      backgroundColor: isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(17, 25, 54, 0.4)",
+      backgroundColor: "rgba(255, 255, 255, 0.4)",
       borderRadius: "50%",
       animationDuration: "800ms",
       animationIterationCount: "infinite",
@@ -58,7 +56,11 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default ({ loading }: { loading: boolean }) => {
+export interface DotLoadingProps {
+  loading: boolean;
+}
+
+export function DotLoading({ loading }: DotLoadingProps) {
   const classes = useStyles();
 
   return loading ? (
@@ -74,4 +76,4 @@ export default ({ loading }: { loading: boolean }) => {
       <span className={`${classes.dot} ${classes.dot3}`} />
     </Box>
   ) : null;
-};
+}

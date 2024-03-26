@@ -2,13 +2,20 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow, Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Pagination, ListLoading, NoData, Copy, PaginationType, MainCard } from "ui-component/index";
-import { parseTokenAmount, pageArgsFormat , shorten } from "@icpswap/utils";
+import {
+  Pagination,
+  ListLoading,
+  NoData,
+  Copy,
+  PaginationType,
+  MainCard,
+  Breadcrumbs,
+  MainContainer,
+} from "ui-component/index";
+import { parseTokenAmount, pageArgsFormat, shorten } from "@icpswap/utils";
 import { useTokenHolders, useTokenSupply } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/index";
-import MainContainer from "ui-component/MainContainer";
-import Breadcrumbs from "ui-component/Breadcrumbs";
 import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles(() => ({

@@ -6,7 +6,8 @@ import CanisterHeader from "ui-component/NFT/CanisterHeader";
 import { useNFTCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/calls";
 import { t, Trans } from "@lingui/macro";
 import { type NFTCanisterInfo } from "@icpswap/types";
-import { Wrapper, LoadingRow, MainCard, Breadcrumbs } from "ui-component/index";
+import { Wrapper, LoadingRow, Breadcrumbs } from "ui-component/index";
+import { MainCard } from "@icpswap/ui";
 
 type PageType = {
   component: React.FC<{ canisterId: string }>;

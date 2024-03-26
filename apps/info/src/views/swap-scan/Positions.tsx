@@ -7,7 +7,7 @@ import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shor
 import { useSwapPositionOwner, useParsedQueryString } from "@icpswap/hooks";
 import { Pool, Position, Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
-import { Header, HeaderCell, BodyCell, Row } from "ui-component/Table/index";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { LoadingRow, NoData, SelectPair, Pagination, PaginationType, Copy } from "ui-component/index";
 import BigNumber from "bignumber.js";
 import { usePoolByPoolId } from "hooks/swap/usePools";
@@ -158,7 +158,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   return (
     <>
       {pool ? (
-        <Row className={classes.wrapper}>
+        <TableRow className={classes.wrapper}>
           <BodyCell>
             <Copy content={owner}>
               <Typography>{owner ? shorten(owner) : "--"}</Typography>
@@ -238,16 +238,16 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                 : "--"}
             </Typography>
           </BodyCell>
-        </Row>
+        </TableRow>
       ) : (
-        <Row>
+        <TableRow>
           <LoadingRow>
             <div />
             <div />
             <div />
             <div />
           </LoadingRow>
-        </Row>
+        </TableRow>
       )}
     </>
   );

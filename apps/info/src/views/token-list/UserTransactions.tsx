@@ -14,7 +14,16 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import TransferDetail from "ui-component/transfer-detail";
-import { Pagination, Copy, Loading, NoData, PaginationType, MainCard } from "ui-component/index";
+import {
+  Pagination,
+  Copy,
+  StaticLoading,
+  NoData,
+  PaginationType,
+  MainCard,
+  Breadcrumbs,
+  MainContainer,
+} from "ui-component/index";
 import {
   parseTokenAmount,
   pageArgsFormat,
@@ -28,8 +37,6 @@ import { useTokenTransactions, useParsedQueryString } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
-import MainContainer from "ui-component/MainContainer";
-import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useStateTokenCapId, useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "constants/tokens";
@@ -182,7 +189,7 @@ export function TransactionsMain({
           </Table>
           {list.length === 0 && !loading ? <NoData /> : null}
         </TableContainer>
-        <Loading loading={loading} />
+        <StaticLoading loading={loading} />
       </Box>
       {list.length ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />

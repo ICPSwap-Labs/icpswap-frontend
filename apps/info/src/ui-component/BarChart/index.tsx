@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { RowBetween } from "ui-component/Row";
+import { GridRowBetween } from "ui-component/index";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
@@ -187,15 +187,15 @@ const BarChart = ({
         },
       }}
     >
-      <RowBetween>
+      <GridRowBetween>
         {topLeft ?? null}
         {topRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
       <div ref={chartRef} id="bar-chart" {...rest} />
-      <RowBetween>
+      <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
-      </RowBetween>
+      </GridRowBetween>
     </Box>
   );
 };

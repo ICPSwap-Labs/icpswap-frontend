@@ -1,7 +1,12 @@
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 
-export default function GridAutoRows({ gap, children }: { gap: string; children: ReactNode | ReactNode[] }) {
+export interface GridAutoRowsProps {
+  gap: string;
+  children: ReactNode | ReactNode[];
+}
+
+export function GridAutoRows({ gap, children }: GridAutoRowsProps) {
   return (
     <Box
       sx={{

@@ -16,7 +16,7 @@ import { Trans, t } from "@lingui/macro";
 import { useClaimEventTransactions } from "@icpswap/hooks";
 import { type ClaimTransaction } from "@icpswap/types";
 import { getClaimEventState } from "utils/token-claim";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount, isPrincipalUser } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
@@ -37,7 +37,7 @@ function ClaimEventTransaction({ ele }: { ele: ClaimTransaction }) {
   const address = isPrincipalUser(ele.claimUser) ? ele.claimUser.principal.toString() : ele.claimUser.address;
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>
         <Copy content={address}>
           <BodyCell color="primary.main">{shorten(address, 12)}</BodyCell>
@@ -48,7 +48,7 @@ function ClaimEventTransaction({ ele }: { ele: ClaimTransaction }) {
       </BodyCell>
       <BodyCell>{ele.claimTime[0] ? timestampFormat(ele.claimTime[0]) : "--"}</BodyCell>
       <BodyCell>{state}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

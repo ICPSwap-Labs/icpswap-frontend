@@ -1,4 +1,4 @@
-import { GridAutoRows, RowBetween } from "ui-component/Grid/index";
+import { GridAutoRows, GridRowBetween } from "@icpswap/ui";
 import { Typography, Box } from "@mui/material";
 import { Token } from "@icpswap/swap-sdk";
 import { toSignificant, formatAmount } from "@icpswap/utils";
@@ -37,41 +37,41 @@ export function CustomToolTip({ chartProps, token0, token1, currentPrice }: Cust
           Tick stats
         </Typography>
 
-        <RowBetween>
+        <GridRowBetween>
           <Typography color="text.primary" fontSize="12px">
             {token0?.symbol} Price:{" "}
           </Typography>
           <Typography color="text.primary" fontSize="12px">
             {price0 ? toSignificant(price0, undefined, { groupSeparator: "," }) : ""} {token1?.symbol}
           </Typography>
-        </RowBetween>
+        </GridRowBetween>
 
-        <RowBetween>
+        <GridRowBetween>
           <Typography color="text.primary" fontSize="12px">
             {token1?.symbol} Price:{" "}
           </Typography>
           <Typography color="text.primary" fontSize="12px">
             {price1 ? toSignificant(price1, undefined, { groupSeparator: "," }) : ""} {token0?.symbol}
           </Typography>
-        </RowBetween>
+        </GridRowBetween>
         {currentPrice && price0 && currentPrice > price1 ? (
-          <RowBetween>
+          <GridRowBetween>
             <Typography color="text.primary" fontSize="12px">
               {token0?.symbol} Locked:{" "}
             </Typography>
             <Typography color="text.primary" fontSize="12px">
               {tvlToken0 ? formatAmount(tvlToken0) : ""} {token0?.symbol}
             </Typography>
-          </RowBetween>
+          </GridRowBetween>
         ) : (
-          <RowBetween>
+          <GridRowBetween>
             <Typography color="text.primary" fontSize="12px">
               {token1?.symbol} Locked:{" "}
             </Typography>
             <Typography color="text.primary" fontSize="12px">
               {tvlToken1 ? formatAmount(tvlToken1) : ""} {token1?.symbol}
             </Typography>
-          </RowBetween>
+          </GridRowBetween>
         )}
       </GridAutoRows>
     </Box>

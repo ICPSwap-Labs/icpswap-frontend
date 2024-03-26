@@ -7,7 +7,7 @@ import { formatDollarAmount } from "@icpswap/utils";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { Pool } from "types/analytic-v2";
-import { Header, HeaderCell, BodyCell, Row, SortDirection } from "ui-component/Table/index";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
 
@@ -72,7 +72,7 @@ export function PoolItem({ pool, index }: { pool: Pool; index: number }) {
   };
 
   return (
-    <Row className={classes.wrapper} onClick={handlePoolClick}>
+    <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center">
@@ -97,7 +97,7 @@ export function PoolItem({ pool, index }: { pool: Pool; index: number }) {
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 
@@ -132,9 +132,8 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } 
-              return 0;
-            
+            }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

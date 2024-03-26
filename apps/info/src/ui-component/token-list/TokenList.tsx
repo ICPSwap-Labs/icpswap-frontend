@@ -13,7 +13,7 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
-import { Header, HeaderCell, Row, BodyCell } from "ui-component/Table/index";
+import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -45,7 +45,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
   // sx={{ borderTop: "1px solid rgba(189, 200, 240, 0.082)" }}
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>{index + 1}</BodyCell>
       <Grid
         container
@@ -98,7 +98,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
       <TextButton onClick={loadTokenDetail}>
         <Trans>Details</Trans>
       </TextButton>
-    </Row>
+    </TableRow>
   );
 }
 
