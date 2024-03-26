@@ -70,11 +70,13 @@ export function MainCard({ border, level, onClick, padding, children, sx }: Main
         ...(cardStyles.border ? { border: cardStyles.border } : {}),
         borderRadius: "16px",
         padding: padding ?? "16px",
+        width: "100%",
+        overflow: "hidden",
         ...sx,
       }}
       onClick={onClick}
     >
-      {children}
+      <Box>{children}</Box>
     </Box>
   );
 }
