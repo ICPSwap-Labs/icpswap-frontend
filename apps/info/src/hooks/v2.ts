@@ -28,7 +28,7 @@ export function useGraphPool(canisterId: string | undefined | null) {
   return useCallsData<Pool>(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await (await analyticPool()).getPool(canisterId!);
+      return await (await analyticPool()).getPool(canisterId);
     }, [canisterId]),
   );
 }
@@ -41,7 +41,7 @@ export function useGraphPoolTransactions(canisterId: string | undefined | null, 
   return useCallsData<Transaction[]>(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getGraphPoolTransactions(canisterId!, offset, limit);
+      return await getGraphPoolTransactions(canisterId, offset, limit);
     }, [canisterId, offset, limit]),
   );
 }
@@ -50,7 +50,7 @@ export function useGraphPoolTVLChartData(canisterId: string | undefined | null, 
   return useCallsData<ChartData[]>(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await (await analyticPool()).getPoolChartData(canisterId!, BigInt(offset), BigInt(limit));
+      return await (await analyticPool()).getPoolChartData(canisterId, BigInt(offset), BigInt(limit));
     }, [canisterId, offset, limit]),
   );
 }
@@ -75,7 +75,7 @@ export function useGraphToken(canisterId: string | undefined | null) {
   return useCallsData<Token>(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await (await analyticToken()).getToken(canisterId!);
+      return await (await analyticToken()).getToken(canisterId);
     }, [canisterId]),
   );
 }
@@ -84,7 +84,7 @@ export function useGraphTokenTransactions(canisterId: string | undefined | null,
   return useCallsData<Transaction[]>(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await (await analyticToken()).getTokenTransactions(canisterId!, BigInt(offset), BigInt(limit));
+      return await (await analyticToken()).getTokenTransactions(canisterId, BigInt(offset), BigInt(limit));
     }, [canisterId, offset, limit]),
   );
 }
@@ -93,7 +93,7 @@ export function useGraphTokenPools(canisterId: string | undefined | null) {
   return useCallsData<PoolInfo[]>(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await (await analyticToken()).getPoolsForToken(canisterId!);
+      return await (await analyticToken()).getPoolsForToken(canisterId);
     }, [canisterId]),
   );
 }
@@ -108,10 +108,12 @@ export function useGraphTokenPoolsDetails(canisterId: string | undefined | null)
     if (poolsLoading) setLoading(true);
 
     const call = async () => {
+      if (!tokenPools || tokenPools.length === 0) return;
+
       setLoading(true);
 
       Promise.all(
-        tokenPools!.map(async (tokenPool) => {
+        tokenPools.map(async (tokenPool) => {
           const poolInfo = (await (await analyticPool()).getPool(tokenPool.pool)) as Pool;
           return poolInfo;
         }),
@@ -126,9 +128,7 @@ export function useGraphTokenPoolsDetails(canisterId: string | undefined | null)
       });
     };
 
-    if (tokenPools?.length) {
-      call();
-    }
+    call();
   }, [tokenPools, poolsLoading]);
 
   return useMemo(
@@ -144,7 +144,7 @@ export function useGraphTokenTVLChartData(canisterId: string | undefined | null,
   return useCallsData<PublicTokenChartDayData[]>(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await (await analyticToken()).getTokenChartData(canisterId!, BigInt(offset), BigInt(limit));
+      return await (await analyticToken()).getTokenChartData(canisterId, BigInt(offset), BigInt(limit));
     }, [canisterId, offset, limit]),
   );
 }
@@ -249,7 +249,7 @@ export function useSwapPoolInfo(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getSwapPoolInfo(canisterId!);
+      return await getSwapPoolInfo(canisterId);
     }, [canisterId]),
   );
 }

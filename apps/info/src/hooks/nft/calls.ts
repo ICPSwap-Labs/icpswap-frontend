@@ -60,8 +60,8 @@ export function useNFTOtherStat(canisterId: string | undefined) {
       if (!canisterId) return undefined;
 
       try {
-        if (OLD_CANISTER_IDS.includes(canisterId!)) return await getV1NFTStat(canisterId!);
-        return await getNFTStat(canisterId!);
+        if (OLD_CANISTER_IDS.includes(canisterId)) return await getV1NFTStat(canisterId);
+        return await getNFTStat(canisterId);
       } catch (error) {
         console.error(error);
       }

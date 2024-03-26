@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export default ({
   loading,
-  circularSize = 40,
   maskBorderRadius,
 }: {
   loading: boolean;

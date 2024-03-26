@@ -7,10 +7,10 @@ import Chart from "react-apexcharts";
 import { Trans } from "@lingui/macro";
 import { isDarkTheme } from "utils/index";
 import { Theme } from "@mui/material/styles";
-import { useICPPrice , useICPPriceList, useICPBlocksManager } from "store/global/hooks";
+import { useICPPrice, useICPPriceList, useICPBlocksManager } from "store/global/hooks";
 import defaultChartConfig from "./chart.config";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
     // color: theme.palette.mode === "dark" ? theme.textDark : theme.lightDark,
     "& .apexcharts-tooltip": {

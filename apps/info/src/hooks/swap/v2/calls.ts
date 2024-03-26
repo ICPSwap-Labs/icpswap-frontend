@@ -9,6 +9,19 @@ export async function getSwapPoolIds() {
   return resultFormat<string[]>(await (await v2SwapFactory()).getPoolIds()).data;
 }
 
+export async function getSwapPoolInfo(canisterId: string) {
+  return resultFormat<PoolInfo>(await (await v2SwapPool(canisterId)).infoWithNoBalance()).data;
+}
+
+export function useSwapPoolInfo(canisterId: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getSwapPoolInfo(canisterId);
+    }, [canisterId]),
+  );
+}
+
 export async function getSwapPools() {
   const poolIds = await getSwapPoolIds();
 
@@ -35,19 +48,6 @@ export function useSwapPools() {
   );
 }
 
-export async function getSwapPoolInfo(canisterId: string) {
-  return resultFormat<PoolInfo>(await (await v2SwapPool(canisterId)).infoWithNoBalance()).data;
-}
-
-export function useSwapPoolInfo(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return await getSwapPoolInfo(canisterId!);
-    }, [canisterId]),
-  );
-}
-
 export async function getSwapPoolTokenStandard(canisterId: string, tokenId: string) {
   return (await (await v2SwapPool(canisterId)).getStandard(tokenId)) as TOKEN_STANDARD;
 }
@@ -56,7 +56,7 @@ export function useSwapPoolTokenStandard(canisterId: string | undefined, tokenId
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !tokenId) return undefined;
-      return await getSwapPoolTokenStandard(canisterId!, tokenId!);
+      return await getSwapPoolTokenStandard(canisterId, tokenId);
     }, [canisterId, tokenId]),
   );
 }
@@ -69,7 +69,7 @@ export function useSwapPoolIdByKey(key: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!key) return undefined;
-      return await getSwapPoolIdByKey(key!);
+      return await getSwapPoolIdByKey(key);
     }, [key]),
   );
 }
@@ -82,7 +82,7 @@ export function useLiquidityTicks(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getSwapPoolTicks(canisterId!);
+      return await getSwapPoolTicks(canisterId);
     }, [canisterId]),
   );
 }

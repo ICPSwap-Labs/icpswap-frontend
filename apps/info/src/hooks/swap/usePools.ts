@@ -205,7 +205,7 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
 
   const tokenIds = useMemo(() => {
     if (pools) {
-      const ids = pools.reduce((prev, curr, index) => {
+      const ids = pools.reduce((prev, curr) => {
         return prev.concat(curr ? [curr.token0.address, curr.token1.address] : []);
       }, [] as string[]);
 

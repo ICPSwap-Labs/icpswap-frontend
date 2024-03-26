@@ -59,7 +59,7 @@ export default function FilledTextField({
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);
 
-  const handleOuterBoxClick = (event: any) => {
+  const handleOuterBoxClick = () => {
     if (disabled) return;
     inputRef?.current?.focus();
   };

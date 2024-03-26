@@ -9,15 +9,13 @@ import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, enumToString, pageArgsFormat, arrayBufferToString } from "@icpswap/utils";
 import type { PaginationResult } from "@icpswap/types";
 
-export default function _NFTTransaction({
-  canisterId,
-  tokenId,
-  reload,
-}: {
+export interface NFTTransactionProps {
   canisterId: string;
   tokenId: number;
   reload?: boolean;
-}) {
+}
+
+export default function _NFTTransaction({ canisterId, tokenId }: NFTTransactionProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset, limit] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 

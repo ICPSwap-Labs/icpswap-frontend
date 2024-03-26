@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { actor } from "@icpswap/actor";
 import { type ActorIdentity } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -22,9 +23,9 @@ export async function balanceAdapter(canisterId: string, account: string | Princ
         const principal = account.toString();
 
         return resultFormat<bigint>(await (await ogy()).balanceOf(Principal.fromText(principal)));
-      } 
-        throw Error("not support address");
-      
+      }
+      throw Error("not support address");
+
     default:
       throw Error("no canister id");
   }

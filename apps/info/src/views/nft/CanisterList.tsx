@@ -1,9 +1,8 @@
-import { pageArgsFormat , timestampFormat } from "@icpswap/utils";
+import { pageArgsFormat, timestampFormat } from "@icpswap/utils";
 import { cycleValueFormat } from "utils/index";
 import { useState } from "react";
 import { Typography, Box, Avatar, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useHistory } from "react-router-dom";
 import { useCanisterCycles, useCanisterNFTCount } from "hooks/nft/calls";
 import { Trans } from "@lingui/macro";
 import { MainContainer, Pagination, NoData, LoadingRow, MainCard, TextButton } from "ui-component/index";
@@ -55,7 +54,6 @@ export function NFTItem({ canister }: NFTItemProps) {
 
 export default function NFTCanisterList() {
   const classes = useStyles();
-  const history = useHistory();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 

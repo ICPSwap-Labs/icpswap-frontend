@@ -38,7 +38,6 @@ export function RowBetween({ children }: { children: ReactNode }) {
 
 export function RowFixed({
   gap,
-  justify,
   children,
   align,
 }: {

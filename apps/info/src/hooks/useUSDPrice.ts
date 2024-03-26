@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, FeeAmount } from "@icpswap/swap-sdk";
-import { formatTokenAmount , resultFormat } from "@icpswap/utils";
+import { formatTokenAmount, resultFormat } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useMemo, useEffect, useState } from "react";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
@@ -96,10 +96,10 @@ export function useCurrenciesUSDPrice(currencies: (string | undefined)[]): Price
     async function call() {
       const prices = await Promise.all(
         currencies?.map(async (currency) => {
-          if (!currency) return undefined;
+          if (!currency || !icpPrice) return undefined;
 
           if (currency === ICP.address || currency === WRAPPED_ICP.address) {
-            return Number(icpPrice!.toString());
+            return Number(icpPrice.toString());
           }
 
           const graphToken = resultFormat<PublicTokenOverview>(await (await analyticToken()).getToken(currency)).data;

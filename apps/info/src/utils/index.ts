@@ -6,7 +6,7 @@ import JSBI from "jsbi";
 import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "../constants/tokens";
 
 // @ts-ignore hijack bigint
-BigInt.prototype.toJSON = function () {
+BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 

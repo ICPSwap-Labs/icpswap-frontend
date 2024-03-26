@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { makeStyles } from "@mui/styles";
-import { Box, Grid, Avatar } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
-import { Override , PublicTokenOverview } from "@icpswap/types";
+import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
@@ -124,9 +124,8 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
                   : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
-            } 
-              return 0;
-            
+            }
+            return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
       : [];

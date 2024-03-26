@@ -93,7 +93,6 @@ export function useTokensInfo(
     if (!tokenId) return;
 
     if (call_index !== get_tokens_info_index) {
-      console.log("abort");
       return;
     }
 
@@ -165,7 +164,7 @@ export function useTokensInfo(
         }));
       }
     } catch (err) {
-      console.log("UseTokenInfo set storage info error:", err);
+      console.error("UseTokenInfo set storage info error:", err);
       getStorageInfoErrored = true;
     }
 

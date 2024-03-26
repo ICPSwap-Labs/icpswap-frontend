@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function CanisterHeader({
   details,
   cycles,
-  count,
 }: {
   details: NFTCanisterInfo;
   cycles: number | bigint;

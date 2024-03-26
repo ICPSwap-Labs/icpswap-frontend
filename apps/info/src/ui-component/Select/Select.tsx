@@ -47,7 +47,6 @@ export interface SelectProps {
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
@@ -68,9 +67,7 @@ export function Select({
   maxWidth,
   fullHeight,
   disabled,
-  InputProps,
   contained = true,
-  width,
   CustomNoData,
   multiple = false,
   menuMaxHeight,

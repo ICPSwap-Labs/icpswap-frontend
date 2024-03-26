@@ -8,6 +8,14 @@ import { timestampFormat, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { updateICPBlocks, updateUserLocale, updateICPPriceList, updateXDR2USD, updateTokenSNSRootId } from "./actions";
 
+export function useICPPriceList() {
+  return useAppSelector((state) => state.global.ICPPriceList);
+}
+
+export function useUserLocale() {
+  return useAppSelector((state) => state.global.userLocale);
+}
+
 export function useICPBlocksManager() {
   const dispatch = useAppDispatch();
   const { result } = useICPBlocksCall();
@@ -61,14 +69,6 @@ export function useUpdateXDR2USD() {
     },
     [dispatch],
   );
-}
-
-export function useICPPriceList() {
-  return useAppSelector((state) => state.global.ICPPriceList);
-}
-
-export function useUserLocale() {
-  return useAppSelector((state) => state.global.userLocale);
 }
 
 export function useUserLocaleManager() {

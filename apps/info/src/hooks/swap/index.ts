@@ -6,7 +6,7 @@ import {
   availableArgsNull,
   isAvailablePageArgs,
 } from "@icpswap/utils";
-import type { PaginationResult, NumberType , Ticket } from "@icpswap/types";
+import type { PaginationResult, NumberType, Ticket } from "@icpswap/types";
 import { Currency } from "@icpswap/swap-sdk";
 import { swapPool, swapTicket } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
@@ -24,9 +24,8 @@ export function useActualSwapAmount(
 
     if (typedValue.isGreaterThan(currency.transFee)) {
       return parseTokenAmount(typedValue.minus(fee), currency.decimals).toString();
-    } 
-      return "0";
-    
+    }
+    return "0";
   }, [amount, currency]);
 }
 
@@ -34,7 +33,7 @@ export function useSwapPoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint; available: bigint }>(await (await swapPool(canisterId!)).getCycleInfo())
+      return resultFormat<{ balance: bigint; available: bigint }>(await (await swapPool(canisterId)).getCycleInfo())
         .data;
     }, [canisterId]),
   );
@@ -44,7 +43,7 @@ export function useV2SwapPoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<bigint>(await (await v2SwapPool(canisterId!)).cycleBalance()).data;
+      return resultFormat<bigint>(await (await v2SwapPool(canisterId)).cycleBalance()).data;
     }, [canisterId]),
   );
 }
@@ -55,14 +54,14 @@ export async function getSwapTokenAmountState(canisterId: string) {
     token0Amount: bigint;
     token1Amount: bigint;
     swapFee1Repurchase: bigint;
-  }>(await (await swapPool(canisterId!)).getTokenAmountState()).data;
+  }>(await (await swapPool(canisterId)).getTokenAmountState()).data;
 }
 
 export function useSwapTokenAmountState(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getSwapTokenAmountState(canisterId!);
+      return await getSwapTokenAmountState(canisterId);
     }, [canisterId]),
   );
 }

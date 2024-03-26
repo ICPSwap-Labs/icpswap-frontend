@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, Avatar, useMediaQuery, Button } from "@mui/material";
+import { Typography, Box, Grid, useMediaQuery, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
@@ -14,7 +14,7 @@ import { Theme } from "@mui/material/styles";
 import PercentageChangeLabel from "ui-component/PercentageChange";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
-import { swapLink, addLiquidityLink, getExplorerPrincipalLink , cycleValueFormat } from "utils/index";
+import { swapLink, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "constants/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";

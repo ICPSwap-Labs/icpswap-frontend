@@ -34,7 +34,7 @@ export function useTokenBalance(
     useCallback(async () => {
       if (!canisterId || !account) return undefined;
 
-      const balance = await getTokenBalance(canisterId!, account!);
+      const balance = await getTokenBalance(canisterId, account);
       return balance ? new BigNumber(balance.toString()) : undefined;
     }, [account, canisterId]),
 

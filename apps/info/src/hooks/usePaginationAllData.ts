@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
 import type { PaginationResult } from "@icpswap/types";
@@ -65,7 +66,7 @@ export function usePaginationAllDataCallback<T>(
               }
             })
             .catch((error) => {
-              console.log(`%cRetry download page ${i}`, "color: #F2994A");
+              console.error(`%cRetry download page ${i}: ${error}`, "color: #F2994A");
               _fetch();
             });
         };

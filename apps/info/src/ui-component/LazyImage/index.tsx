@@ -35,10 +35,6 @@ export interface LazyImageProps {
   disableSpinner?: boolean;
   /** Disables the transition after load if set to true. */
   disableTransition?: boolean;
-  /** Override the error icon. */
-  // errorIcon: PropTypes.node,
-  /** Override the inline-styles of the container that contains the loading spinner and the error icon. */
-  iconContainerStyle?: { [key: string]: any };
   /** Override the inline-styles of the image. */
   imageStyle?: { [key: string]: any };
   /** Override the loading component. */
@@ -51,8 +47,6 @@ export interface LazyImageProps {
   onLoad?: (event: any) => void;
   /** Specifies the URL of an image. */
   src: string;
-  /** Override the inline-styles of the root element. */
-  style?: { [key: string]: any };
   /** always show default image */
   showDefault?: boolean;
 
@@ -92,10 +86,7 @@ export default function LazyImage(props: LazyImageProps) {
   const {
     animationDuration = 3000,
     disableTransition = false,
-    iconContainerStyle,
-    imageStyle,
     onClick,
-    style,
     showDefault = false,
     height,
     boxSX,

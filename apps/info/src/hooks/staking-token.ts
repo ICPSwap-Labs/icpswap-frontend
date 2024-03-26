@@ -1,5 +1,13 @@
 import { useCallback, useState, useEffect } from "react";
-import { useCallsData , getV1StakingTokenUserInfo, getStakingTokenUserInfo , getStakingTokenCycles, getV1StakingTokenCycles , getStakingTokenPool, getV1StakingTokenPool } from "@icpswap/hooks";
+import {
+  useCallsData,
+  getV1StakingTokenUserInfo,
+  getStakingTokenUserInfo,
+  getStakingTokenCycles,
+  getV1StakingTokenCycles,
+  getStakingTokenPool,
+  getV1StakingTokenPool,
+} from "@icpswap/hooks";
 import { PoolData, UserStakingInfo, V1PoolData } from "types/staking-token";
 
 export function useUserStakingInfo(
@@ -16,7 +24,9 @@ export function useUserStakingInfo(
 
   useEffect(() => {
     const call = async () => {
-      const result = await getStakingTokenUserInfo(poolId!, account!);
+      if (!poolId || !account) return;
+
+      const result = await getStakingTokenUserInfo(poolId, account);
 
       if (result) {
         setUserInfo({
@@ -27,7 +37,9 @@ export function useUserStakingInfo(
     };
 
     const v1Call = async () => {
-      const result = await getV1StakingTokenUserInfo(poolId!, account!);
+      if (!poolId || !account) return;
+
+      const result = await getV1StakingTokenUserInfo(poolId, account);
 
       if (result) {
         setUserInfo({
@@ -62,12 +74,14 @@ export function useStakingPoolData(
 
   useEffect(() => {
     const call = async () => {
-      const data = await getStakingTokenPool(poolId!);
+      if (!poolId) return;
+      const data = await getStakingTokenPool(poolId);
       setPoolData(data);
     };
 
     const v1Call = async () => {
-      const data = await getV1StakingTokenPool(poolId!);
+      if (!poolId) return;
+      const data = await getV1StakingTokenPool(poolId);
       if (data) {
         setPoolData({
           ...data,
@@ -100,8 +114,8 @@ export function usePoolCycles(canisterId: string | undefined, version: string | 
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      if (version === "1.0") return await getV1StakingTokenCycles(canisterId!);
-      return (await getStakingTokenCycles(canisterId!))?.balance;
+      if (version === "1.0") return await getV1StakingTokenCycles(canisterId);
+      return (await getStakingTokenCycles(canisterId))?.balance;
     }, [canisterId, version]),
   );
 }
