@@ -6,9 +6,8 @@
 
 Ensure you have
 
-- [Node.js](https://nodejs.org) 18 or later installed
+- [Node.js](https://nodejs.org) 18.x installed
 - [Pnpm](https://pnpm.io/) v8 installed
-- ts-node installed(npm i -g ts-node)
 
 You need a **personal access token** to install some of our npm packages.
 
@@ -24,6 +23,8 @@ npm login --registry=https://npm.pkg.github.com --scope=@honopu
 
 Then run the following:
 
+- `npm i -g ts-node` to install ts-node.
+- `npm i -g typescript` to install typescript.
 - `pnpm i` to install dependencies.
 - `pnpm run dev` to start the development server
 - `pnpm run build` to build
