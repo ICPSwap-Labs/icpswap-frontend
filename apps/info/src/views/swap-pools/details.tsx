@@ -8,9 +8,8 @@ import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/inde
 import { usePoolLatestTVL } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "@icpswap/ui";
+import { GridAutoRows, Proportion } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
-import PercentageChangeLabel from "ui-component/PercentageChange";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import { swapLink, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
@@ -247,7 +246,7 @@ export default function SwapPoolDetails() {
                 {formatDollarAmount(latestTVL?.tvlUSD)}
               </Typography>
 
-              <PercentageChangeLabel value={latestTVL?.tvlUSDChange} />
+              <Proportion value={latestTVL?.tvlUSDChange} />
             </GridAutoRows>
 
             <GridAutoRows gap="4px">

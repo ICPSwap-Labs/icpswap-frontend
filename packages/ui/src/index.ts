@@ -11,3 +11,4 @@ export * from "./components/Breadcrumbs";
 export * from "./components/Arrow";
 export * from "./components/Table";
 export * from "./components/Grid";
+export * from "./components/Proportion";

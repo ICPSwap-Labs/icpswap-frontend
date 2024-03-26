@@ -8,8 +8,7 @@ import { formatDollarAmount } from "@icpswap/utils";
 import { NoData, StaticLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
-import PercentageChangeLabel from "ui-component/PercentageChange";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion } from "@icpswap/ui";
 import { useAllTokensTVL } from "@icpswap/hooks";
 
 const useStyles = makeStyles(() => {
@@ -57,7 +56,7 @@ export function TokenItem({ token, index }: { token: TokenData; index: number })
         {formatDollarAmount(token.priceUSD, 3)}
       </BodyCell>
       <BodyCell align="right">
-        <PercentageChangeLabel align="right" value={token.priceUSDChange} />
+        <Proportion align="right" value={token.priceUSDChange} />
       </BodyCell>
       <BodyCell color="text.primary" align="right">
         {formatDollarAmount(token.volumeUSD)}

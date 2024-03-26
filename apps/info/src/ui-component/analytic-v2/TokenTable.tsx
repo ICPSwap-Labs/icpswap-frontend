@@ -8,8 +8,7 @@ import { NoData, StaticLoading } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
 import { Token } from "types/analytic-v2";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
-import PercentageChangeLabel from "ui-component/PercentageChange";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -73,7 +72,7 @@ export function TokenItem({ token, index }: { token: Token; index: number }) {
       </BodyCell>
       <BodyCell>{formatDollarAmount(token.priceUSD, 3)}</BodyCell>
       <BodyCell>
-        <PercentageChangeLabel value={token.priceUSDChange} />
+        <Proportion value={token.priceUSDChange} />
       </BodyCell>
       <BodyCell>{formatDollarAmount(token.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(token.tvlUSD)}</BodyCell>

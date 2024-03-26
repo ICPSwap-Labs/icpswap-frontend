@@ -8,8 +8,7 @@ import { mockALinkAndOpen, toSignificant, formatDollarAmount } from "@icpswap/ut
 import BigNumber from "bignumber.js";
 import { useGraphToken, useGraphTokenTVLChartData, useGraphTokenPriceChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "@icpswap/ui";
-import PercentageChangeLabel from "ui-component/PercentageChange";
+import { GridAutoRows, Proportion } from "@icpswap/ui";
 import dayjs from "dayjs";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
@@ -354,7 +353,7 @@ export default function TokenDetails() {
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
-              (<PercentageChangeLabel value={token?.priceUSDChange} />)
+              (<Proportion value={token?.priceUSDChange} />)
             </Typography>
           </Grid>
         </Box>
@@ -399,7 +398,7 @@ export default function TokenDetails() {
                 {formatDollarAmount(token?.tvlUSD)}
               </Typography>
 
-              <PercentageChangeLabel value={token?.tvlUSDChange} />
+              <Proportion value={token?.tvlUSDChange} />
             </GridAutoRows>
 
             <GridAutoRows gap="4px">

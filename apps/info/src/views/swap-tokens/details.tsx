@@ -6,8 +6,7 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "@icpswap/ui";
-import PercentageChangeLabel from "ui-component/PercentageChange";
+import { GridAutoRows, Proportion } from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
@@ -108,7 +107,7 @@ export default function TokenDetails() {
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
-              (<PercentageChangeLabel value={token?.priceUSDChange} />)
+              (<Proportion value={token?.priceUSDChange} />)
             </Typography>
           </Grid>
         </Box>
@@ -157,7 +156,7 @@ export default function TokenDetails() {
                 {formatDollarAmount(tokenTVL?.tvlUSD)}
               </Typography>
 
-              <PercentageChangeLabel value={tokenTVL?.tvlUSDChange} />
+              <Proportion value={tokenTVL?.tvlUSDChange} />
             </GridAutoRows>
 
             <GridAutoRows gap="4px">

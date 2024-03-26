@@ -9,9 +9,8 @@ import BigNumber from "bignumber.js";
 import { MainCard, TextButton, Breadcrumbs } from "ui-component/index";
 import { useGraphPool, useGraphPoolTVLChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows } from "@icpswap/ui";
+import { GridAutoRows, Proportion } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
-import PercentageChangeLabel from "ui-component/PercentageChange";
 import dayjs from "dayjs";
 import LineChart from "ui-component/LineChart/alt";
 import BarChart from "ui-component/BarChart/alt";
@@ -457,7 +456,7 @@ export default function SwapPoolDetails() {
                 {formatDollarAmount(pool?.tvlUSD)}
               </Typography>
 
-              <PercentageChangeLabel value={pool?.tvlUSDChange} />
+              <Proportion value={pool?.tvlUSDChange} />
             </GridAutoRows>
 
             <GridAutoRows gap="4px">
@@ -474,7 +473,7 @@ export default function SwapPoolDetails() {
                 {formatDollarAmount(pool?.volumeUSD)}
               </Typography>
 
-              {/* <PercentageChangeLabel value={pool?.volumeUSDChange}></PercentageChangeLabel> */}
+              {/* <Proportion value={pool?.volumeUSDChange}></Proportion> */}
             </GridAutoRows>
           </GridAutoRows>
         </MainCard>
