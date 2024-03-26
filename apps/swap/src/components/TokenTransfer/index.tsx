@@ -1,7 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import React, { useState, useContext, useMemo } from "react";
+import { Button, Grid, TextField, Typography, Box, InputAdornment } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { parseTokenAmount, formatTokenAmount, isValidAccount, isValidPrincipal } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatTokenAmount,
+  isValidAccount,
+  isValidPrincipal,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -19,6 +25,7 @@ import WalletContext from "components/Wallet/context";
 import { Modal, NumberTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
 import MaxButton from "components/MaxButton";
+import { useUSDPriceById } from "hooks/useUSDPrice";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -60,6 +67,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   const { refreshTotalBalance, setRefreshTotalBalance } = useContext(WalletContext);
 
   const { result: balance } = useTokenBalance(token.canisterId, principal);
+  const tokenUSDPrice = useUSDPriceById(token.canisterId);
 
   const initialValues = {
     to: transferTo ?? "",
@@ -133,10 +141,10 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
     }
   };
 
-  const balanceActuallyToAccount = () => {
+  const actualTransferAmount = useMemo(() => {
     const amount = new BigNumber(values.amount ?? 0).minus(parseTokenAmount(token.transFee, token.decimals));
     return amount.isGreaterThan(0) ? amount.toFormat() : 0;
-  };
+  }, [values, token]);
 
   const addressHelpText = () => {
     if (
@@ -166,102 +174,110 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
 
   return (
     <Modal open={open} onClose={onClose} title={t`Transfer`}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField label={t`Token Symbol`} value={token.symbol} fullWidth disabled />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label={t`To`}
-            value={values.to}
-            placeholder={
-              usePrincipalStandard(token.canisterId, token.standardType)
-                ? t`Enter the principal ID`
-                : t`Enter the account ID or principal ID`
-            }
-            onChange={({ target: { value } }) => handleFieldChange(value, "to")}
-            helperText={addressHelpText()}
-            fullWidth
-            autoComplete="To"
-            multiline
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
+        <TextField label={t`Token Symbol`} value={token.symbol} fullWidth disabled />
+        <TextField
+          label={t`To`}
+          value={values.to}
+          placeholder={
+            usePrincipalStandard(token.canisterId, token.standardType)
+              ? t`Enter the principal ID`
+              : t`Enter the account ID or principal ID`
+          }
+          onChange={({ target: { value } }) => handleFieldChange(value, "to")}
+          helperText={addressHelpText()}
+          fullWidth
+          autoComplete="To"
+          multiline
+        />
+
+        <NumberTextField
+          label={t`Amount`}
+          type="text"
+          value={values.amount}
+          onChange={({ target: { value } }) => handleFieldChange(value, "amount")}
+          fullWidth
+          numericProps={{
+            allowNegative: false,
+            decimalScale: token.decimals,
+          }}
+          autoComplete="off"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Typography color="text.primary">
+                  {tokenUSDPrice && values.amount
+                    ? `~$${toSignificantWithGroupSeparator(
+                        new BigNumber(values.amount).multipliedBy(tokenUSDPrice).toString(),
+                        4,
+                      )}`
+                    : "--"}
+                </Typography>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <Grid container alignItems="center">
+          <Typography>
+            <Trans>
+              Balance:{" "}
+              {`${
+                balance
+                  ? new BigNumber(
+                      parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
+                    ).toFormat()
+                  : "--"
+              }`}
+            </Trans>
+          </Typography>
+          <MaxButton
+            sx={{
+              marginLeft: "6px",
+            }}
+            onClick={handleMax}
           />
         </Grid>
-        <Grid item xs={12}>
-          <NumberTextField
-            label={t`Amount`}
-            type="text"
-            value={values.amount}
-            onChange={({ target: { value } }) => handleFieldChange(value, "amount")}
-            fullWidth
-            inputProps={{
-              autocomplete: "new-password",
-              form: {
-                autocomplete: "off",
-              },
-            }}
-            numericProps={{
-              allowNegative: false,
-              decimalScale: token.decimals,
-            }}
-            autoComplete="off"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container alignItems="center">
-            <Typography>
-              <Trans>
-                Balance:{" "}
-                {`${
-                  balance
-                    ? new BigNumber(
-                        parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                      ).toFormat()
-                    : "--"
-                }`}
-              </Trans>
-            </Typography>
-            <MaxButton
-              sx={{
-                marginLeft: "6px",
-              }}
-              onClick={handleMax}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography>
-            <Trans>Fee:</Trans> {parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()}
-            &nbsp;{token.symbol}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography>
-            <Trans>Actually:</Trans> {balanceActuallyToAccount()}
-            &nbsp;{token.symbol}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography color="text.warning">
-            <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Identity onSubmit={handleSubmit} fullScreenLoading>
-            {({ submit, loading }: CallbackProps) => (
-              <Button
-                variant="contained"
-                fullWidth
-                color="primary"
-                size="large"
-                disabled={loading || !!errorMessage}
-                onClick={submit}
-              >
-                {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
-              </Button>
-            )}
-          </Identity>
-        </Grid>
-      </Grid>
+        <Typography>
+          <Trans>Fee:</Trans> {parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()}
+          &nbsp;{token.symbol}&nbsp;(
+          {tokenUSDPrice && token
+            ? `$${toSignificantWithGroupSeparator(
+                parseTokenAmount(token.transFee.toString(), token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                4,
+              )}`
+            : "--"}
+          )
+        </Typography>
+        <Typography>
+          <Trans>Actually:</Trans> {actualTransferAmount}
+          &nbsp;{token.symbol}&nbsp;(
+          {tokenUSDPrice && token
+            ? `$${toSignificantWithGroupSeparator(
+                new BigNumber(actualTransferAmount).multipliedBy(tokenUSDPrice).toString(),
+                4,
+              )}`
+            : "--"}
+          )
+        </Typography>
+        <Typography color="text.warning">
+          <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
+        </Typography>
+        <Identity onSubmit={handleSubmit} fullScreenLoading>
+          {({ submit, loading }: CallbackProps) => (
+            <Button
+              variant="contained"
+              fullWidth
+              color="primary"
+              size="large"
+              disabled={loading || !!errorMessage}
+              onClick={submit}
+            >
+              {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
+            </Button>
+          )}
+        </Identity>
+      </Box>
     </Modal>
   );
 }

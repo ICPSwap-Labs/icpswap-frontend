@@ -406,7 +406,7 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         gap: "20px",
         "@media(max-width: 1088px)": {
           gridTemplateColumns: "1fr 1fr",
-          gap: "12px 0",
+          gap: "12px 12px",
         },
         "@media(max-width: 640px)": {
           gridTemplateColumns: "1fr",
