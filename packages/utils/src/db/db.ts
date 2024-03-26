@@ -1,13 +1,10 @@
+/* eslint-disable no-useless-constructor */
 import { openDB, IDBPDatabase, deleteDB } from "idb";
 
 type Database = IDBPDatabase<unknown>;
 type IDBValidKey = string | number | Date | BufferSource | IDBValidKey[];
 
-const _openDbStore = async (
-  dbName: string,
-  storeName: string,
-  version: number
-) => {
+const _openDbStore = async (dbName: string, storeName: string, version: number) => {
   return await openDB(dbName, version, {
     upgrade: (database, oldVersion, newVersion, transaction) => {
       if (oldVersion === 0) {
@@ -33,28 +30,15 @@ const _openDbStore = async (
   });
 };
 
-async function _getValue<T>(
-  db: Database,
-  storeName: string,
-  key: IDBValidKey
-): Promise<T | undefined> {
+async function _getValue<T>(db: Database, storeName: string, key: IDBValidKey): Promise<T | undefined> {
   return await db.get(storeName, key);
 }
 
-async function _setValue<T>(
-  db: Database,
-  storeName: string,
-  key: IDBValidKey,
-  value: T
-): Promise<IDBValidKey> {
+async function _setValue<T>(db: Database, storeName: string, key: IDBValidKey, value: T): Promise<IDBValidKey> {
   return await db.put(storeName, value, key);
 }
 
-async function _removeValue(
-  db: Database,
-  storeName: string,
-  key: IDBValidKey
-): Promise<void> {
+async function _removeValue(db: Database, storeName: string, key: IDBValidKey): Promise<void> {
   return await db.delete(storeName, key);
 }
 
@@ -72,9 +56,9 @@ export class IdbKeyVal {
   /**
    *
    * @param {DBCreateOptions} options {@link DbCreateOptions}
-   * @param {DBCreateOptions['dbName']} options.dbName name for the indexeddb database
+   * @param {DBCreateOptions['dbName']} options.dbName name for the indexDB database
    * @default
-   * @param {DBCreateOptions['storeName']} options.storeName name for the indexeddb Data Store
+   * @param {DBCreateOptions['storeName']} options.storeName name for the indexDB Data Store
    * @default
    * @param {DBCreateOptions['version']} options.version version of the database. Increment to safely upgrade
    * @constructs an {@link IdbKeyVal}
@@ -88,7 +72,7 @@ export class IdbKeyVal {
   // Do not use - instead prefer create
   private constructor(
     private _db: Database,
-    private _storeName: string
+    private _storeName: string,
   ) {}
 
   /**
@@ -100,6 +84,7 @@ export class IdbKeyVal {
   public async set<T>(key: IDBValidKey, value: T) {
     return await _setValue<T>(this._db, this._storeName, key, value);
   }
+
   /**
    * Basic getter
    * Pass in a type T for type safety if you know the type the value will have if it is found
