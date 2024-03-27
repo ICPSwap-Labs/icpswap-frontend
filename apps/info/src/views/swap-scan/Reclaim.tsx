@@ -59,12 +59,14 @@ function ClaimItem({ claim }: ClaimItemProps) {
 
       {claim.balance1 !== BigInt(0) && !!token1 ? (
         <TableRow className={classes.wrapper}>
-          <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
-            <Avatar src={token1.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
-              &nbsp;
-            </Avatar>
-            {parseTokenAmount(claim.balance1, token1.decimals).toFormat()}
-          </Box>
+          <BodyCell>
+            <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
+              <Avatar src={token1.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
+                &nbsp;
+              </Avatar>
+              {parseTokenAmount(claim.balance1, token1.decimals).toFormat()}
+            </Box>
+          </BodyCell>
 
           <BodyCell>
             <Box>
