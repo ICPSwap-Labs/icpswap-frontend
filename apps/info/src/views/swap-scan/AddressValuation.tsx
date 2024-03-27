@@ -20,9 +20,9 @@ const useStyles = makeStyles(() => {
     wrapper: {
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "1.5fr repeat(3, 1fr)",
+      gridTemplateColumns: "1fr repeat(3, 1fr)",
       "@media screen and (max-width: 780px)": {
-        gridTemplateColumns: "1.5fr repeat(3, 1fr)",
+        gridTemplateColumns: "1fr repeat(3, 1fr)",
       },
     },
   };
@@ -286,38 +286,42 @@ export default function SwapScanValuation() {
           </Box>
         </Box>
 
-        <GridAutoRows gap="20px">
-          <Header className={classes.wrapper} sx={{ display: "grid" }}>
-            <HeaderCell>Token</HeaderCell>
+        <Box sx={{ width: "100%", overflow: "auto hidden" }}>
+          <Box sx={{ minWidth: "840px" }}>
+            <GridAutoRows gap="20px">
+              <Header className={classes.wrapper} sx={{ display: "grid" }}>
+                <HeaderCell>Token</HeaderCell>
 
-            <HeaderCell field="usdValue">
-              <Trans>Value</Trans>
-            </HeaderCell>
+                <HeaderCell field="usdValue">
+                  <Trans>Value</Trans>
+                </HeaderCell>
 
-            <HeaderCell field="price">
-              <Trans>Price</Trans>
-            </HeaderCell>
+                <HeaderCell field="price">
+                  <Trans>Price</Trans>
+                </HeaderCell>
 
-            <HeaderCell field="amountToken1">
-              <Trans>Canister ID</Trans>
-            </HeaderCell>
-          </Header>
+                <HeaderCell field="amountToken1">
+                  <Trans>Canister ID</Trans>
+                </HeaderCell>
+              </Header>
 
-          {!address || sortedUserTokenBalances.length === 0 ? (
-            <NoData />
-          ) : (
-            sortedUserTokenBalances.map((e) => (
-              <UserTokenBalance
-                key={e.tokenInfo.canisterId}
-                tokenInfo={e.tokenInfo}
-                balance={e.balance}
-                displayTokenInList={checked}
-                tokenList={tokenList}
-                onUpdateUSDValues={handleUpdateUSDValues}
-              />
-            ))
-          )}
-        </GridAutoRows>
+              {!address || sortedUserTokenBalances.length === 0 ? (
+                <NoData />
+              ) : (
+                sortedUserTokenBalances.map((e) => (
+                  <UserTokenBalance
+                    key={e.tokenInfo.canisterId}
+                    tokenInfo={e.tokenInfo}
+                    balance={e.balance}
+                    displayTokenInList={checked}
+                    tokenList={tokenList}
+                    onUpdateUSDValues={handleUpdateUSDValues}
+                  />
+                ))
+              )}
+            </GridAutoRows>
+          </Box>
+        </Box>
       </MainCard>
     </Wrapper>
   );
