@@ -24,7 +24,7 @@
     "symbol": "ICX"
   },
   {
-    "fee": 0,
+    "fee": 100000000,
     "decimals": 8,
     "canisterId": "b2pon-6aaaa-aaaag-abp6q-cai",
     "name": "Wojakic Meme Coin",
@@ -88,7 +88,7 @@
     "symbol": "XP"
   },
   {
-    "fee": 0,
+    "fee": 10000000000,
     "decimals": 8,
     "canisterId": "jncxy-2qaaa-aaaak-aflhq-cai",
     "name": "ALPACALB",
@@ -104,7 +104,7 @@
     "symbol": "SNEED"
   },
   {
-    "fee": 0,
+    "fee": 1000000,
     "decimals": 8,
     "canisterId": "dikjh-xaaaa-aaaak-afnba-cai",
     "name": "MacOS",
@@ -136,14 +136,6 @@
     "symbol": "ckSepoliaETH"
   },
   {
-    "fee": 0,
-    "decimals": 8,
-    "canisterId": "es3he-kyaaa-aaaah-abzna-cai",
-    "name": "ICYPEE",
-    "standard": "DIP20",
-    "symbol": "ICYPEES"
-  },
-  {
     "fee": 100000,
     "decimals": 8,
     "canisterId": "rxdbk-dyaaa-aaaaq-aabtq-cai",
@@ -160,7 +152,7 @@
     "symbol": "PANDA"
   },
   {
-    "fee": 0,
+    "fee": 4200,
     "decimals": 8,
     "canisterId": "edypu-bqaaa-aaaak-afknq-cai",
     "name": "BITCORN",
@@ -198,6 +190,14 @@
     "name": "CATDOG",
     "standard": "ICRC1",
     "symbol": "CATDOG"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 6,
+    "canisterId": "iczfn-iiaaa-aaaan-qltcq-cai",
+    "name": "motokowifhat",
+    "standard": "ICRC1",
+    "symbol": "MIF"
   },
   {
     "fee": 1000000,
@@ -256,7 +256,7 @@
     "symbol": "NDP"
   },
   {
-    "fee": 0,
+    "fee": 1000,
     "decimals": 8,
     "canisterId": "2tlvc-vqaaa-aaaah-adwxa-cai",
     "name": "Motoko",
@@ -304,7 +304,7 @@
     "symbol": "STAR"
   },
   {
-    "fee": 0,
+    "fee": 10000,
     "decimals": 8,
     "canisterId": "pmlt4-pqaaa-aaaak-aewmq-cai",
     "name": "COE",
@@ -344,7 +344,7 @@
     "symbol": "ckBTC"
   },
   {
-    "fee": 0,
+    "fee": 1000000,
     "decimals": 8,
     "canisterId": "czaxy-piaaa-aaaak-afneq-cai",
     "name": "UNIX",
@@ -368,7 +368,7 @@
     "symbol": "INSANE"
   },
   {
-    "fee": 1000000,
+    "fee": 100000,
     "decimals": 8,
     "canisterId": "rh2pm-ryaaa-aaaan-qeniq-cai",
     "name": "Windoge98",
@@ -416,7 +416,7 @@
     "symbol": "iVishnu"
   },
   {
-    "fee": 0,
+    "fee": 10000,
     "decimals": 8,
     "canisterId": "mwgzv-jqaaa-aaaam-acfha-cai",
     "name": "ChubbyGhost",
@@ -440,7 +440,7 @@
     "symbol": "SLI"
   },
   {
-    "fee": 0,
+    "fee": 100000,
     "decimals": 8,
     "canisterId": "ghvlc-vqaaa-aaaan-qlsca-cai",
     "name": "SpaceDoge",
@@ -640,7 +640,7 @@
     "symbol": "TENDY"
   },
   {
-    "fee": 0,
+    "fee": 10000000,
     "decimals": 8,
     "canisterId": "nattc-jqaaa-aaaak-afl5q-cai",
     "name": "TempleOS",
@@ -664,7 +664,7 @@
     "symbol": "Cat "
   },
   {
-    "fee": 0,
+    "fee": 10000,
     "decimals": 8,
     "canisterId": "67mu5-maaaa-aaaar-qadca-cai",
     "name": "Magic Conch Shell",
@@ -720,7 +720,7 @@
     "symbol": "AVOCADO"
   },
   {
-    "fee": 0,
+    "fee": 100000000,
     "decimals": 8,
     "canisterId": "kttqw-5aaaa-aaaak-afloq-cai",
     "name": "RENEGADE",
