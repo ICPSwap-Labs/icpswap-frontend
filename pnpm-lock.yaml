@@ -861,10 +861,10 @@ importers:
   packages/ui:
     dependencies:
       "@icpswap/types":
-        specifier: "workspace: *"
+        specifier: workspace:*
         version: link:../types
       "@icpswap/utils":
-        specifier: "workspace: *"
+        specifier: workspace:*
         version: link:../utils
       react-router-dom:
         specifier: 5.2.0
