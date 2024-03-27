@@ -882,10 +882,10 @@ importers:
 
   packages/ui:
     dependencies:
-      '@icpswap/types':
+      "@icpswap/types":
         specifier: workspace:*
         version: link:../types
-      '@icpswap/utils':
+      "@icpswap/utils":
         specifier: workspace:*
         version: link:../utils
       react-router-dom:
