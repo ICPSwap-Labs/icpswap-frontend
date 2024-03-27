@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { StaticLoading, NoData, SelectToken } from "ui-component/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { ICP } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {

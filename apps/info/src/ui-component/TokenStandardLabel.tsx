@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { TOKEN_STANDARD } from "constants/tokens";
+import { TOKEN_STANDARD } from "@icpswap/constants";
 
 export const StandardText = {
   [TOKEN_STANDARD.DIP20]: "DIP20",

@@ -21,7 +21,7 @@ import FeeTierLabel from "ui-component/FeeTierLabel";
 import { TokenInfo } from "types/token";
 import LoadingImage from "assets/images/loading.png";
 import { swapLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
-import { ICP_TOKEN_INFO } from "constants/tokens";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";

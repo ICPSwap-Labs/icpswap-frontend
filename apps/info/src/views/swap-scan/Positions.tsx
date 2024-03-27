@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 import { UserPosition } from "types/swap";
 import { usePositions } from "hooks/swap-scan/index";
 import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shorten } from "@icpswap/utils";
-import { useSwapPositionOwner, useParsedQueryString } from "@icpswap/hooks";
+import { useSwapPositionOwner, useParsedQueryString, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, Position, Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
@@ -13,7 +13,6 @@ import BigNumber from "bignumber.js";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { toFormat } from "utils/index";
@@ -99,7 +98,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const { tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
 
-  const _tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper);
+  const _tickAtLimit = useTickAtLimit(feeAmount, tickLower, tickUpper);
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
 
   // handle manual inversion

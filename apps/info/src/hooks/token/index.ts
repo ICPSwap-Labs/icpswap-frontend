@@ -1,4 +1,4 @@
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import store from "store/index";
 
 export function getSwapTokenArgs(address: string) {

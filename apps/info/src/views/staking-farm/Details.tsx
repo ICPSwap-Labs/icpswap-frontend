@@ -14,7 +14,7 @@ import Copy from "ui-component/copy/copy";
 import { getExplorerPrincipalLink } from "utils";
 import { useV3UserFarmInfo } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
-import { AnonymousPrincipal } from "constants/index";
+import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {

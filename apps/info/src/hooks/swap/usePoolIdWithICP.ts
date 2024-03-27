@@ -1,5 +1,5 @@
 import { getSwapPool } from "@icpswap/hooks";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { useEffect, useMemo, useState } from "react";
 import { getTokenStandard } from "store/token/cache/hooks";
 

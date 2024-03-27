@@ -11,7 +11,7 @@ import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL, useTokensFromList } from "@icpswap/hooks";
 import { PoolData, usePoolsOfToken } from "hooks/info/usePoolsOfToken";
 import InTokenListCheck from "ui-component/InTokenListCheck";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {

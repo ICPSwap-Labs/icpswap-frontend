@@ -13,7 +13,7 @@ import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import { swapLink, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
-import { ICP_TOKEN_INFO } from "constants/tokens";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";

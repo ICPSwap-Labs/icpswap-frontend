@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { useICPBlocksCall } from "hooks/useICPCalls";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { use100ICPPriceInfo, useSNSTokensRootIds, useListDeployedSNSs } from "@icpswap/hooks";

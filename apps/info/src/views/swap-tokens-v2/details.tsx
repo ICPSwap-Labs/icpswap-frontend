@@ -23,7 +23,7 @@ import { swapLink } from "utils/index";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { Token } from "types/analytic-v2";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 
 export const chartViews = [

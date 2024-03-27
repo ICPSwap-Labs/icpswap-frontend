@@ -15,11 +15,7 @@ export interface TokenTransaction {
   amount: bigint;
 }
 
-export type TokenTransType =
-  | { burn: null }
-  | { mint: null }
-  | { approve: null }
-  | { transfer: null };
+export type TokenTransType = { burn: null } | { mint: null } | { approve: null } | { transfer: null };
 
 export type {
   WrapUser,

@@ -9,7 +9,7 @@ import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampForma
 import { useWrapOverview } from "hooks/useWICPCalls";
 import { useWrapTransactions } from "@icpswap/hooks";
 import { NoData, Pagination, Copy, LoadingRow, PaginationType, MainCard, MainContainer } from "ui-component/index";
-import { ICP, WRAPPED_ICP } from "constants/tokens";
+import { WRAPPED_ICP, ICP } from "@icpswap/tokens";
 import { Theme } from "@mui/material/styles";
 import upperFirst from "lodash/upperFirst";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";

@@ -26,8 +26,10 @@
     "bignumber.js": "^9.0.1",
     "@icpswap/actor": "workspace:*",
     "@icpswap/candid": "workspace:*",
-    "@icpswap/types": "workspace: *",
-    "@icpswap/utils": "workspace: *",
-    "@icpswap/token-adapter": "workspace: *"
+    "@icpswap/types": "workspace:*",
+    "@icpswap/utils": "workspace:*",
+    "@icpswap/token-adapter": "workspace:*",
+    "@icpswap/constants": "workspace:*",
+    "@icpswap/swap-sdk": "workspace:*"
   }
 }

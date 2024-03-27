@@ -6,7 +6,7 @@ import TokenTable from "ui-component/analytic/TokenTable";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo, useEffect } from "react";
 import { isValidPrincipal } from "@icpswap/utils";
-import { ICP } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
 
 export default function TopTokens() {

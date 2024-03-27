@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
 import { Trans } from "@lingui/macro";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { TradeTransaction } from "@icpswap/types";
 import { Pagination, PaginationType, NoData, Copy, ListLoading } from "ui-component/index";
 import { useNFTTradeTransactions } from "@icpswap/hooks";

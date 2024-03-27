@@ -5,7 +5,7 @@ import Transaction from "ui-component/analytic/Transactions";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { Trans } from "@lingui/macro";
 import { useTokensFromList } from "@icpswap/hooks";
-import { ICP } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
 
 export default function AllTransactions() {

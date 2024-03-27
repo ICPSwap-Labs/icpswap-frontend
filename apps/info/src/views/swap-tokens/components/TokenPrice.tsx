@@ -4,7 +4,7 @@ import { toSignificant } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
-import { ICP_TOKEN_INFO } from "constants/tokens";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { usePoolIdWithICP } from "hooks/swap/usePoolIdWithICP";
 import { usePool } from "hooks/info/usePool";
 import { useMemo } from "react";

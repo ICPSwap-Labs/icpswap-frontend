@@ -3,7 +3,7 @@ import _BigNumber from "bignumber.js";
 import { APP_LINK } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import JSBI from "jsbi";
-import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "../constants/tokens";
+import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 
 // @ts-ignore hijack bigint
 BigInt.prototype.toJSON = function toJSON() {

@@ -11,7 +11,7 @@ import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
 import { useTokensBalance, useTokensFromList, useParsedQueryString } from "@icpswap/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { getExplorerPrincipalLink } from "utils/index";
 import { SwapScanTabPanels } from "./components/TabPanels";
 

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, FeeAmount } from "@icpswap/swap-sdk";
 import { formatTokenAmount, resultFormat } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useMemo, useEffect, useState } from "react";
-import { WRAPPED_ICP, ICP } from "constants/tokens";
+import { WRAPPED_ICP, ICP } from "@icpswap/tokens";
 import { usePool } from "hooks/swap/usePools";
 import { useICPPrice } from "store/global/hooks";
 import { analyticToken } from "@icpswap/actor";

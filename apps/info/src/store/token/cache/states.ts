@@ -1,4 +1,4 @@
-import { TOKEN_STANDARD } from "constants/tokens";
+import { TOKEN_STANDARD } from "@icpswap/constants";
 
 export interface TokenCacheState {
   standards: { [canisterId: string]: TOKEN_STANDARD };

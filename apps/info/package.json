@@ -49,6 +49,7 @@
     "@icpswap/types": "workspace:*",
     "@icpswap/ui": "workspace:*",
     "@icpswap/utils": "workspace:*",
+    "@icpswap/tokens": "workspace:*",
     "@lingui/cli": "4.6.0",
     "@lingui/core": "4.6.0",
     "@lingui/format-json": "4.6.0",

@@ -5,7 +5,7 @@ import { useInfoAllPools, useTokensFromList } from "@icpswap/hooks";
 import Pools from "ui-component/analytic/Pools";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo } from "react";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
 
 export default function TopPools() {

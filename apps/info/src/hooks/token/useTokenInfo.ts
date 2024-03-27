@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState } from "react";
-import { WRAPPED_ICP_TOKEN_INFO, ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO, ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { TokenInfo } from "types/token";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { getPromisesAwait } from "@icpswap/hooks";

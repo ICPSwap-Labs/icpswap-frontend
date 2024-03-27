@@ -2,11 +2,11 @@ import { useCallback, useMemo } from "react";
 import { resultFormat } from "@icpswap/utils";
 import { useWrapTransactions, useCallsData, useTokenBalance } from "@icpswap/hooks";
 import { wrapICP } from "@icpswap/actor";
-import { WICPCanisterId, ICPCanisterId } from "constants/index";
+import { WICP_CANISTER_ID, LEDGER_CANISTER_ID } from "@icpswap/constants";
 import BigNumber from "bignumber.js";
 
 export function useWrapOverview() {
-  const { result: icpBalance } = useTokenBalance({ canisterId: ICPCanisterId, address: WICPCanisterId });
+  const { result: icpBalance } = useTokenBalance({ canisterId: LEDGER_CANISTER_ID, address: WICP_CANISTER_ID });
 
   const { result: wicpSupply } = useCallsData(
     useCallback(async () => {

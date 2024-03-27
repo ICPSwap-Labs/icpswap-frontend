@@ -4,7 +4,7 @@ import { Select, type MenuProps } from "ui-component/index";
 import { useSwapPools } from "@icpswap/hooks";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useTokensInfo, TokenInfoState } from "hooks/token/index";
-import { ICP, ICP_TOKEN_INFO } from "constants/tokens";
+import { ICP, ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { TokenInfo } from "types/index";
 
 interface TokenMenuItemProps {

@@ -3,7 +3,7 @@ import { Grid, Box, Typography } from "@mui/material";
 import { MainCard } from "@icpswap/ui";
 import { t } from "@lingui/macro";
 import { parseTokenAmount, formatAmount } from "@icpswap/utils";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { useNFTTradeData } from "@icpswap/hooks";
 
 export function DataItem({ label, value }: { label: string; value: React.ReactNode }) {

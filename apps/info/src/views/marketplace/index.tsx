@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useNFTCanisterMetadata, useNFTOtherStat } from "hooks/nft/calls";
 import { formatAmount, parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
-import { WRAPPED_ICP } from "constants/tokens";
+import { WRAPPED_ICP } from "@icpswap/tokens";
 import { TradeStateResult } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useNFTsStat } from "@icpswap/hooks";

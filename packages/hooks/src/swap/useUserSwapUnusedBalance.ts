@@ -1,13 +1,10 @@
+/* eslint-disable no-console */
 import { useEffect, useMemo, useState } from "react";
-import { getTokenBalance } from "../token/index";
-import {
-  useSwapPools,
-  getUserUnusedBalance,
-  _getSwapPoolAllBalance,
-} from "../swap/index";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { Principal } from "@dfinity/principal";
+import { useSwapPools, getUserUnusedBalance, _getSwapPoolAllBalance } from "./calls";
+import { getTokenBalance } from "../token/index";
 
 const CALL_LIMITED = 20;
 
@@ -17,20 +14,14 @@ export function useUserUnDepositBalance(
   principal: string,
   _pools: SwapPoolData[] | undefined,
   selectedTokenId?: string,
-  reload?: boolean
+  reload?: boolean,
 ) {
   const [loading, setLoading] = useState(false);
-  const [balances, setBalances] = useState<
-    (UserSwapPoolsBalance | undefined)[]
-  >([]);
+  const [balances, setBalances] = useState<(UserSwapPoolsBalance | undefined)[]>([]);
 
   const pools = useMemo(() => {
     if (!selectedTokenId) return _pools;
-    return _pools?.filter(
-      (pool) =>
-        pool.token0.address === selectedTokenId ||
-        pool.token1.address === selectedTokenId
-    );
+    return _pools?.filter((pool) => pool.token0.address === selectedTokenId || pool.token1.address === selectedTokenId);
   }, [_pools, selectedTokenId]);
 
   useEffect(() => {
@@ -40,15 +31,14 @@ export function useUserUnDepositBalance(
   const _fetch = async (pool: SwapPoolData, fetch_index: number) => {
     if (!principal) return undefined;
 
-    const sub = SubAccount.fromPrincipal(
-      Principal.fromText(principal)
-    ).toUint8Array();
+    const sub = SubAccount.fromPrincipal(Principal.fromText(principal)).toUint8Array();
 
     const call = async (token: { address: string; standard: string }) => {
-      let result: bigint | undefined = undefined;
+      let result: bigint | undefined;
 
       try {
         if (fetch_index !== un_deposit_fetch_index) {
+          console.log("abort");
         } else {
           const _result = token.standard.includes("DIP20")
             ? BigInt(0)
@@ -59,7 +49,9 @@ export function useUserUnDepositBalance(
               });
           result = _result;
         }
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
 
       return result;
     };
@@ -78,7 +70,7 @@ export function useUserUnDepositBalance(
     const call = async (new_index: number) => {
       if (!pools) return;
 
-      let calls: (() => Promise<UserSwapPoolsBalance | undefined>)[][] = [[]];
+      const calls: (() => Promise<UserSwapPoolsBalance | undefined>)[][] = [[]];
 
       for (let i = 0; i < pools.length; i++) {
         if (i % CALL_LIMITED === 0 && i !== 0) {
@@ -105,7 +97,7 @@ export function useUserUnDepositBalance(
     };
 
     if (pools && principal) {
-      let new_index = un_deposit_fetch_index;
+      const new_index = un_deposit_fetch_index;
       setBalances([]);
       setLoading(true);
       call(new_index);
@@ -118,10 +110,8 @@ export function useUserUnDepositBalance(
       : (balances.filter((e) => !!e) as UserSwapPoolsBalance[]).map((e) => {
           return {
             ...e,
-            balance0:
-              e.token0.address === selectedTokenId ? e.balance0 : BigInt(0),
-            balance1:
-              e.token1.address === selectedTokenId ? e.balance1 : BigInt(0),
+            balance0: e.token0.address === selectedTokenId ? e.balance0 : BigInt(0),
+            balance1: e.token1.address === selectedTokenId ? e.balance1 : BigInt(0),
           };
         });
 
@@ -135,20 +125,14 @@ export function useUserUnUsedBalance(
   principal: string | undefined,
   _pools: SwapPoolData[] | undefined,
   selectedTokenId?: string,
-  reload?: boolean
+  reload?: boolean,
 ) {
   const [loading, setLoading] = useState(false);
-  const [balances, setBalances] = useState<
-    (UserSwapPoolsBalance | undefined)[]
-  >([]);
+  const [balances, setBalances] = useState<(UserSwapPoolsBalance | undefined)[]>([]);
 
   const pools = useMemo(() => {
     if (!selectedTokenId) return _pools;
-    return _pools?.filter(
-      (pool) =>
-        pool.token0.address === selectedTokenId ||
-        pool.token1.address === selectedTokenId
-    );
+    return _pools?.filter((pool) => pool.token0.address === selectedTokenId || pool.token1.address === selectedTokenId);
   }, [_pools, selectedTokenId]);
 
   const poolIds = useMemo(() => {
@@ -164,23 +148,20 @@ export function useUserUnUsedBalance(
 
     try {
       if (fetch_index !== unused_fetch_index) {
-        console.log("abort..");
+        console.log("abort");
         return undefined;
       }
 
-      const _result = await getUserUnusedBalance(
-        poolId,
-        Principal.fromText(principal)
-      );
+      const _result = await getUserUnusedBalance(poolId, Principal.fromText(principal));
       if (!_result) return undefined;
 
-      const pool = pools?.filter(
-        (pool) => pool.canisterId.toString() === poolId
-      )[0];
+      const pool = pools?.filter((pool) => pool.canisterId.toString() === poolId)[0];
       if (!pool) return undefined;
 
       return { ...pool, type: "unUsed", ..._result } as UserSwapPoolsBalance;
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
 
     return undefined;
   };
@@ -189,7 +170,7 @@ export function useUserUnUsedBalance(
     const call = async (new_index: number) => {
       if (!poolIds) return;
 
-      let calls: (() => Promise<UserSwapPoolsBalance | undefined>)[][] = [[]];
+      const calls: (() => Promise<UserSwapPoolsBalance | undefined>)[][] = [[]];
 
       for (let i = 0; i < poolIds.length; i++) {
         if (i % CALL_LIMITED === 0 && i !== 0) {
@@ -216,7 +197,7 @@ export function useUserUnUsedBalance(
     };
 
     if (poolIds && principal) {
-      let new_index = unused_fetch_index;
+      const new_index = unused_fetch_index;
 
       setBalances([]);
       setLoading(true);
@@ -230,10 +211,8 @@ export function useUserUnUsedBalance(
       : (balances.filter((e) => !!e) as UserSwapPoolsBalance[]).map((e) => {
           return {
             ...e,
-            balance0:
-              e.token0.address === selectedTokenId ? e.balance0 : BigInt(0),
-            balance1:
-              e.token1.address === selectedTokenId ? e.balance1 : BigInt(0),
+            balance0: e.token0.address === selectedTokenId ? e.balance0 : BigInt(0),
+            balance1: e.token1.address === selectedTokenId ? e.balance1 : BigInt(0),
           };
         });
 
@@ -241,33 +220,28 @@ export function useUserUnUsedBalance(
   }, [loading, balances, selectedTokenId]);
 }
 
-export function useUserSwapPoolBalances(
-  principal: string | undefined,
-  selectedTokenId?: string,
-  reload?: boolean
-) {
+export function useUserSwapPoolBalances(principal: string | undefined, selectedTokenId?: string, reload?: boolean) {
   const { result: pools, loading: poolsLoading } = useSwapPools();
 
-  const { loading: unDepositBalanceLoading, balances: unDepositBalances } =
-    useUserUnDepositBalance(principal, pools, selectedTokenId, reload);
-  const { loading: unUsedBalanceLoading, balances: unUsedBalances } =
-    useUserUnUsedBalance(principal, pools, selectedTokenId, reload);
+  const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
+    principal,
+    pools,
+    selectedTokenId,
+    reload,
+  );
+  const { loading: unUsedBalanceLoading, balances: unUsedBalances } = useUserUnUsedBalance(
+    principal,
+    pools,
+    selectedTokenId,
+    reload,
+  );
 
   return useMemo(
     () => ({
       loading: unUsedBalanceLoading || poolsLoading || unDepositBalanceLoading,
       pools,
-      balances: unUsedBalances
-        .concat(unDepositBalances)
-        .filter((balances) => !!balances) as UserSwapPoolsBalance[],
+      balances: unUsedBalances.concat(unDepositBalances).filter((balances) => !!balances) as UserSwapPoolsBalance[],
     }),
-    [
-      pools,
-      poolsLoading,
-      unUsedBalanceLoading,
-      unUsedBalances,
-      unDepositBalanceLoading,
-      unDepositBalances,
-    ]
+    [pools, poolsLoading, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
   );
 }

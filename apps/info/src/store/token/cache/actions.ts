@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { TOKEN_STANDARD } from "constants/tokens";
+import { TOKEN_STANDARD } from "@icpswap/constants";
 
 export const updateTokenStandard = createAction<{ canisterId: string; standard: TOKEN_STANDARD }>(
   "tokenCache/updateTokenStandard",
