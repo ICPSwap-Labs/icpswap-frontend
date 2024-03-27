@@ -32,13 +32,7 @@ export function ALink({ children, link }: ALinkProps) {
 
 function ArrowIcon() {
   return (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -63,7 +57,7 @@ export interface TextButtonProps {
 
 export function TextButton({
   children,
-  onClick = () => {},
+  onClick,
   disabled,
   link,
   to,
@@ -90,29 +84,23 @@ export function TextButton({
 
   return (
     <Typography
-      color={
-        color === "primary"
-          ? "primary"
-          : color === "write"
-          ? "#ffffff"
-          : "secondary"
-      }
+      color={color === "primary" ? "primary" : color === "write" ? "#ffffff" : "secondary"}
       sx={{
         cursor: "pointer",
         userSelect: "none",
-        textDecoration: textDecoration,
+        textDecoration,
         "&:hover": {
           textDecoration: "underline",
         },
         "& +.custom-text-button": {
           marginLeft: "18px",
         },
-        ...(sx ?? {}),
+        ...sx,
       }}
       className="custom-text-button"
       component="span"
       onClick={() => {
-        if (Boolean(disabled)) return;
+        if (disabled) return;
         handleClick();
       }}
     >
