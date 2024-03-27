@@ -143,7 +143,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
 
   const actualTransferAmount = useMemo(() => {
     const amount = new BigNumber(values.amount ?? 0).minus(parseTokenAmount(token.transFee, token.decimals));
-    return amount.isGreaterThan(0) ? amount.toFormat() : 0;
+    return amount.isGreaterThan(0) ? amount.toString() : 0;
   }, [values, token]);
 
   const addressHelpText = () => {
@@ -250,7 +250,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
           )
         </Typography>
         <Typography>
-          <Trans>Actually:</Trans> {actualTransferAmount}
+          <Trans>Actually:</Trans> {toSignificantWithGroupSeparator(actualTransferAmount, 18)}
           &nbsp;{token.symbol}&nbsp;(
           {tokenUSDPrice && token
             ? `$${toSignificantWithGroupSeparator(
