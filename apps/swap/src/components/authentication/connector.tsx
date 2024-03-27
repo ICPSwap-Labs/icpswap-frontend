@@ -76,12 +76,15 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
       }
 
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       setLoading(false);
 
       openErrorTip(`Failed to connect to ${label}: ${error}`);
-      sendSentryError(`connect to ${label}: ${error}`);
+
+      if (!error.toString().includes("UserInterrupt")) {
+        sendSentryError(`connect to ${label}: ${error}`);
+      }
     }
   };
 
