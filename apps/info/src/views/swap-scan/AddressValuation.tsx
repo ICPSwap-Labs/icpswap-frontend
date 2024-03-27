@@ -4,12 +4,12 @@ import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, GridAutoRows } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, GridAutoRows, LoadingRow } from "@icpswap/ui";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
-import { useTokensBalance, useTokensFromList, useParsedQueryString } from "@icpswap/hooks";
+import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP } from "@icpswap/tokens";
 import { getExplorerPrincipalLink } from "utils/index";
@@ -101,15 +101,15 @@ function UserTokenBalance({
 
 export default function SwapScanValuation() {
   const classes = useStyles();
+  const { principal } = useParsedQueryString() as { principal: string };
 
+  const [checked, setChecked] = useState(false);
   const [allTokenIds, setAllTokenIds] = useState<string[]>([]);
   const [search, setSearch] = useState<null | string>(null);
   const [usdValues, setUSDValues] = useState<{ [tokenId: string]: string }>({});
   const [userTokenBalances, setUserTokensBalance] = useState(
     {} as { [tokenId: string]: { balance: bigint | undefined; tokenInfo: TokenInfo } },
   );
-
-  const { principal } = useParsedQueryString() as { principal: string };
 
   useEffect(() => {
     if (principal && isValidPrincipal(principal)) {
@@ -148,6 +148,10 @@ export default function SwapScanValuation() {
 
   const allTokensBalance = useTokensBalance({ tokenIds: allTokenIds, address });
 
+  const loading = useMemo(() => {
+    return !!allTokensBalance.find((e) => e.state === TokenBalanceState.LOADING);
+  }, [allTokensBalance, allTokenIds]);
+
   useEffect(() => {
     if (!allTokensInfo || !allTokensBalance) return;
 
@@ -164,8 +168,6 @@ export default function SwapScanValuation() {
       }
     });
   }, [address, allTokensBalance, allTokensInfo]);
-
-  const [checked, setChecked] = useState(false);
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
@@ -200,7 +202,7 @@ export default function SwapScanValuation() {
   }, [usdValues, checked, tokenList, search]);
 
   const sortedUserTokenBalances = useMemo(() => {
-    const values = Object.values(userTokenBalances).filter((e) => !!e.balance) as {
+    const values = Object.values(userTokenBalances).filter((e) => e.balance !== undefined) as {
       balance: bigint;
       tokenInfo: TokenInfo;
     }[];
@@ -305,19 +307,32 @@ export default function SwapScanValuation() {
                 </HeaderCell>
               </Header>
 
-              {!address || sortedUserTokenBalances.length === 0 ? (
+              {loading ? (
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              ) : !address || sortedUserTokenBalances.filter((e) => e.balance !== BigInt(0)).length === 0 ? (
                 <NoData />
               ) : (
-                sortedUserTokenBalances.map((e) => (
-                  <UserTokenBalance
-                    key={e.tokenInfo.canisterId}
-                    tokenInfo={e.tokenInfo}
-                    balance={e.balance}
-                    displayTokenInList={checked}
-                    tokenList={tokenList}
-                    onUpdateUSDValues={handleUpdateUSDValues}
-                  />
-                ))
+                sortedUserTokenBalances
+                  .filter((e) => e.balance !== BigInt(0))
+                  .map((e) => (
+                    <UserTokenBalance
+                      key={e.tokenInfo.canisterId}
+                      tokenInfo={e.tokenInfo}
+                      balance={e.balance}
+                      displayTokenInList={checked}
+                      tokenList={tokenList}
+                      onUpdateUSDValues={handleUpdateUSDValues}
+                    />
+                  ))
               )}
             </GridAutoRows>
           </Box>
