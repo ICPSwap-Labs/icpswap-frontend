@@ -6,6 +6,9 @@ export function shouldRejectError(error: ErrorEvent) {
   // User reject plug connect
   if (error.message?.includes("The agent creation was rejected")) return true;
 
+  // Http call failed
+  if (error.message?.includes("Failed to fetch")) return true;
+
   return false;
 }
 
