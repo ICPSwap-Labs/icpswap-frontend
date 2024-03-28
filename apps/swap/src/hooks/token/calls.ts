@@ -202,10 +202,11 @@ export async function getTokenInfo(canisterId: string | undefined) {
     if (!result) return undefined;
 
     const metadata = result.data;
-    const _logo = isICRCToken(canisterId) ? logo || metadata.logo : metadata.logo;
 
     if (!metadata || metadata.decimals === undefined || metadata.fee === undefined || metadata.symbol === undefined)
       return undefined;
+
+    const _logo = isICRCToken(canisterId) ? logo || metadata.logo : metadata.logo;
 
     return {
       logo: _logo || TokenDefaultLogo,
