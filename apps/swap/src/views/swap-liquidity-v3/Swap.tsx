@@ -4,11 +4,13 @@ import { Grid, Box, Typography, Tooltip } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MainCard } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
-import SwapWrapper from "components/swap/SwapWrapper";
+import SwapUIWrapper from "components/swap/SwapUIWrapper";
 import { t, Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import { SwapWrapper } from "components/swap/SwapWrapper";
+import { ReclaimLink } from "components/swap/ReclaimLink";
+
 import SwapTransactions from "./swap/Transactions";
-import Swap from "./swap/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const SWITCH_BUTTONS = [
-  { id: 1, value: t`Swap`, component: Swap },
+  { id: 1, value: t`Swap`, component: SwapWrapper },
   { id: 2, value: t`Transactions`, component: SwapTransactions },
 ];
 
@@ -64,7 +66,7 @@ export function SwapMain() {
   };
 
   return (
-    <SwapWrapper>
+    <SwapUIWrapper>
       <Grid container justifyContent="center">
         <Grid item className={classes.outerBox}>
           <MainCard
@@ -118,51 +120,13 @@ export function SwapMain() {
               background: "#111936",
               padding: "16px",
               borderRadius: "12px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
             }}
-            onClick={() => history.push("/swap/reclaim")}
           >
-            <Typography color="secondary" mr="5px">
-              <Trans>Unreceived tokens after swap? Reclaim here</Trans>
-            </Typography>
-
-            <Tooltip
-              PopperProps={{
-                // @ts-ignore
-                sx: {
-                  "& .MuiTooltip-tooltip": {
-                    background: "#ffffff",
-                    borderRadius: "8px",
-                    padding: "12px 16px",
-                    "& .MuiTooltip-arrow": {
-                      color: "#ffffff",
-                    },
-                  },
-                },
-              }}
-              title={
-                <Box>
-                  <Typography color="text.400" fontSize="14px">
-                    <Trans>
-                      For your funds' safety on ICPSwap, we've implemented the 'Reclaim Your Tokens' feature. If issues
-                      arise with the token canister during swaps, liquidity withdrawals, or fee claims, or if
-                      significant slippage causes swap failures, utilize this feature to directly reclaim your tokens.
-                    </Trans>
-                  </Typography>
-                </Box>
-              }
-              arrow
-            >
-              <Box sx={{ width: "16px", height: "16px" }}>
-                <QuestionMark />
-              </Box>
-            </Tooltip>
+            <ReclaimLink />
           </Box>
         </Grid>
       </Grid>
-    </SwapWrapper>
+    </SwapUIWrapper>
   );
 }
 

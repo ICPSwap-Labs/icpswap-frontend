@@ -1,4 +1,4 @@
-import { ICP, WRAPPED_ICP } from "constants/tokens";
+import { ICP, WRAPPED_ICP, ICS, GHOST } from "@icpswap/tokens";
 import { isIC } from "./server";
 
 export enum SWAP_FIELD {
@@ -6,6 +6,7 @@ export enum SWAP_FIELD {
   OUTPUT = "OUTPUT",
 }
 
-export const DEFAULT_SWAP_ID = isIC ? ICP.address : WRAPPED_ICP.address;
+export const DEFAULT_SWAP_INPUT_ID = isIC ? ICP.address : WRAPPED_ICP.address;
+export const DEFAULT_SWAP_OUTPUT_ID = isIC ? GHOST.address : GHOST.address;
 
 export * from "./mint";

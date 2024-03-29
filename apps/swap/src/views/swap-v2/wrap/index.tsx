@@ -6,7 +6,7 @@ import Exchange from "components/Wrap/Exchange";
 import Record from "components/Wrap/Record";
 import RetryWrap from "components/Wrap/RetryWrap";
 import { TextButton } from "components/index";
-import { SwapV2Wrapper } from "components/swap/SwapWrapper";
+import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
 import { t, Trans } from "@lingui/macro";
 import { INFO_URL } from "constants/index";
 import WrapContext from "components/Wrap/context";

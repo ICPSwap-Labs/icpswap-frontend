@@ -26,7 +26,7 @@ function TokenItem({ tokenInfo }: TokenItemProps) {
     <Box sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }}>
       <Typography color="text.primary">#</Typography>
       <TokenImage logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} size="16px" />
-      <Typography color="text.primary" sx={{ width: "fit-content", textWrap: "nowrap" }}>
+      <Typography color="text.primary" sx={{ width: "fit-content", textWrap: "nowrap", userSelect: "none" }}>
         {tokenInfo.name}
       </Typography>
     </Box>

@@ -7,7 +7,7 @@ import BackIcon from "assets/images/swap/back";
 import FeeSelector from "components/swap/SwapFeeSelector";
 import CurrencySelector from "components/CurrencySelector";
 import DepositAmount from "components/swap/SwapDepositAmount";
-import SwapWrapper from "components/swap/SwapWrapper";
+import SwapWrapper from "components/swap/SwapUIWrapper";
 import {
   useMintState,
   useMintHandlers,
@@ -17,7 +17,7 @@ import {
 } from "store/swap/liquidity/hooks";
 import { useSlippageManager } from "store/swap/cache/hooks";
 import { useCurrency, UseCurrencyState, useToken } from "hooks/useCurrency";
-import { Bound, DEFAULT_FEE, DEFAULT_SWAP_ID, FIELD } from "constants/swap";
+import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useAccount } from "store/global/hooks";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
@@ -93,7 +93,7 @@ export default function AddLiquidity() {
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
 
-  if (!currencyIdA) currencyIdA = DEFAULT_SWAP_ID;
+  if (!currencyIdA) currencyIdA = DEFAULT_SWAP_INPUT_ID;
 
   const [confirmModalShow, setConfirmModalShow] = useState(false);
 

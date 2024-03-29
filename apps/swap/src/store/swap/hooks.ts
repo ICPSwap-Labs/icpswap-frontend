@@ -171,22 +171,26 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
 export function useLoadDefaultParams() {
   const dispatch = useAppDispatch();
 
-  const { input, output } = useParsedQueryString() as { input: string; output: string };
+  const { input, output } = useParsedQueryString() as { input: string | undefined; output: string | undefined };
 
   useEffect(() => {
-    dispatch(
-      selectCurrency({
-        field: SWAP_FIELD.INPUT,
-        currencyId: input,
-      }),
-    );
+    if (input !== undefined) {
+      dispatch(
+        selectCurrency({
+          field: SWAP_FIELD.INPUT,
+          currencyId: input,
+        }),
+      );
+    }
 
-    dispatch(
-      selectCurrency({
-        field: SWAP_FIELD.OUTPUT,
-        currencyId: output,
-      }),
-    );
+    if (output !== undefined) {
+      dispatch(
+        selectCurrency({
+          field: SWAP_FIELD.OUTPUT,
+          currencyId: output,
+        }),
+      );
+    }
   }, [input, output, dispatch]);
 }
 

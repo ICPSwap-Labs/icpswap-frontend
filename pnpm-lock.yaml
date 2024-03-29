@@ -406,6 +406,9 @@ importers:
       '@icpswap/token-adapter':
         specifier: 'workspace: *'
         version: link:../../packages/token-adapter
+      '@icpswap/tokens':
+        specifier: workspace:*
+        version: link:../../packages/tokens
       '@icpswap/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -882,10 +885,10 @@ importers:
 
   packages/ui:
     dependencies:
-      "@icpswap/types":
+      '@icpswap/types':
         specifier: workspace:*
         version: link:../types
-      "@icpswap/utils":
+      '@icpswap/utils':
         specifier: workspace:*
         version: link:../utils
       react-router-dom:

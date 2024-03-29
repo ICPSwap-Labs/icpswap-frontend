@@ -1,5 +1,5 @@
 import { SWAP_FIELD } from "constants/index";
-import { DEFAULT_SWAP_ID } from "constants/swap";
+import { DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
 
 export interface SwapState {
   [SWAP_FIELD.INPUT]: { currencyId: string | undefined };
@@ -12,8 +12,8 @@ export interface SwapState {
 }
 
 export const initialState: SwapState = {
-  [SWAP_FIELD.INPUT]: { currencyId: DEFAULT_SWAP_ID },
-  [SWAP_FIELD.OUTPUT]: { currencyId: undefined },
+  [SWAP_FIELD.INPUT]: { currencyId: DEFAULT_SWAP_INPUT_ID },
+  [SWAP_FIELD.OUTPUT]: { currencyId: DEFAULT_SWAP_OUTPUT_ID },
   typedValue: "",
   independentField: SWAP_FIELD.INPUT,
   poolCanisterIds: {},

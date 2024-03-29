@@ -7,7 +7,7 @@ import BackIcon from "assets/images/swap/back";
 import FeeSelector from "components/swap/SwapFeeSelector";
 import CurrencySelector from "components/CurrencySelector";
 import DepositAmount from "components/swap/SwapDepositAmount";
-import { SwapV2Wrapper } from "components/swap/SwapWrapper";
+import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
 import SetPriceRange from "views/swap-liquidity-v3/liquidity/AddLiquidity/SetPriceRange";
 import {
   useMintState,

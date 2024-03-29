@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Box } from "@mui/material";
-import SwapWrapper from "components/swap/SwapWrapper";
+import SwapWrapper from "components/swap/SwapUIWrapper";
 import { useSwapPools } from "@icpswap/hooks";
 import { usePoolStandardManager } from "store/global/hooks";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
@@ -37,8 +37,8 @@ export default function Liquidity() {
           trigger(updatedNum);
         }
       } else if (pools && pools.length === 0) {
-          updatePoolStandardInitialed(true);
-        }
+        updatePoolStandardInitialed(true);
+      }
     };
 
     call();

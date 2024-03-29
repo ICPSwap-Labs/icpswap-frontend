@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useContext, useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SwitchIcon from "assets/images/swap/switch";
-import SwapInput from "views/swap-liquidity-v3/swap/SwapInput";
+import { SwapInput } from "components/swap/SwapInput";
 import { SWAP_FIELD, ICP, WRAPPED_ICP as WICP, ICP_TOKEN_INFO } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";

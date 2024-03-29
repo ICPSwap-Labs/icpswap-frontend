@@ -12,9 +12,10 @@ export interface MainCardProps {
   onClick?: (event: any) => void;
   padding?: string;
   sx?: SxProps;
+  borderRadius?: string;
 }
 
-export function MainCard({ border, level, onClick, padding, children, sx }: MainCardProps) {
+export function MainCard({ border, level, onClick, padding, children, sx, borderRadius }: MainCardProps) {
   const theme = useTheme() as Theme;
 
   const cardStyles = useMemo(() => {
@@ -68,7 +69,7 @@ export function MainCard({ border, level, onClick, padding, children, sx }: Main
       sx={{
         backgroundColor: cardStyles.background,
         ...(cardStyles.border ? { border: cardStyles.border } : {}),
-        borderRadius: "16px",
+        borderRadius: borderRadius ?? "16px",
         padding: padding ?? "16px",
         width: "100%",
         overflow: "hidden",

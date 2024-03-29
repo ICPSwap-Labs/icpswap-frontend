@@ -1,15 +1,11 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Grid, Box, Typography, CircularProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import SwitchIcon from "assets/images/swap/switch";
-import CurrencySelector from "components/CurrencySelector";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount, toSignificant, isNullArgs } from "@icpswap/utils";
+import { toSignificant, isNullArgs } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
-import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { maxAmountFormat } from "utils/swap/index";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { ExternalTipArgs } from "types/index";
@@ -17,11 +13,8 @@ import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import TradePrice from "components/swap/TradePrice";
-import { UseCurrencyState } from "hooks/useCurrency";
 import { Trans, t } from "@lingui/macro";
-import { ICP } from "constants/index";
 import Identity, { CallbackProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import Button from "components/authentication/ButtonConnector";
 import { MainCard } from "components/index";
 import StepViewButton from "components/Steps/View";
@@ -31,33 +24,10 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
-import ConfirmModal from "./ConfirmModal";
-import SwapInput from "./SwapInput";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    maxButton: {
-      padding: "1px 3px",
-      cursor: "pointer",
-      borderRadius: "2px",
-      backgroundColor: theme.colors.secondaryMain,
-      color: "#ffffff",
-      marginLeft: "4px",
-    },
-    inputBox: {
-      backgroundColor: theme.palette.background.level3,
-      border: `1px solid ${theme.palette.background.level4}`,
-      borderRadius: "16px",
-      padding: "16px",
-      [theme.breakpoints.down("sm")]: {
-        padding: "16px 12px",
-      },
-    },
-  };
-});
+import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
+import SwapConfirm from "components/swap/SwapConfirm";
 
 export default function Swap() {
-  const classes = useStyles();
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [refreshBalance, setRefreshBalance] = useState(false);
 
@@ -66,14 +36,9 @@ export default function Swap() {
 
   useLoadDefaultParams();
 
-  const {
-    [SWAP_FIELD.INPUT]: currencyA,
-    [SWAP_FIELD.OUTPUT]: currencyB,
-    independentField,
-    typedValue,
-  } = useSwapState();
+  const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
 
-  const { onCurrencySelection, onSwitchTokens, onUserInput } = useSwapHandlers();
+  const { onCurrencySelection, onUserInput } = useSwapHandlers();
   const handleClearSwapState = useCleanSwapState();
 
   const {
@@ -90,8 +55,6 @@ export default function Swap() {
     outputCurrencyState,
   } = useSwapInfo({ refreshBalance });
 
-  const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
-
   const parsedAmounts = useMemo(
     () => ({
       [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
@@ -99,11 +62,6 @@ export default function Swap() {
     }),
     [independentField, parsedAmount],
   );
-
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? "",
-  };
 
   const handleSwap = () => {
     setConfirmModalShow(true);
@@ -133,19 +91,13 @@ export default function Swap() {
     [onCurrencySelection, currencyB],
   );
 
-  const handleTypeInput = useCallback(
-    (value) => {
+  const handleInput = (value: string, type: "input" | "output") => {
+    if (type === "input") {
       onUserInput(SWAP_FIELD.INPUT, value);
-    },
-    [onUserInput],
-  );
-
-  const handleTypeOutput = useCallback(
-    (value) => {
+    } else {
       onUserInput(SWAP_FIELD.OUTPUT, value);
-    },
-    [onUserInput],
-  );
+    }
+  };
 
   const isLoadingRoute = swapState === TradeState.LOADING;
   const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -203,8 +155,8 @@ export default function Swap() {
     setConfirmModalShow(false);
     setSwapLoading(false);
 
-    handleTypeInput("");
-    handleTypeOutput("");
+    handleInput("", "input");
+    handleInput("", "output");
 
     const result = await call();
 
@@ -223,10 +175,6 @@ export default function Swap() {
     currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
     poolId: tradePoolId,
   });
-
-  const showMaxButton = Boolean(
-    maxInputAmount?.greaterThan(0) && !parsedAmounts[SWAP_FIELD.INPUT]?.equalTo(maxInputAmount),
-  );
 
   const handleMaxInput = useCallback(() => {
     if (maxInputAmount) {
@@ -263,155 +211,23 @@ export default function Swap() {
   const inputCurrencyInterfacePrice = useUSDPrice(inputCurrency);
   const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
 
-  const inputBalanceUSDValue = useMemo(() => {
-    const amount = formattedAmounts[SWAP_FIELD.INPUT];
-    if (!inputCurrencyInterfacePrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(inputCurrencyInterfacePrice).toNumber();
-  }, [inputCurrencyInterfacePrice, formattedAmounts]);
-
-  const outputBalanceUSDValue = useMemo(() => {
-    const amount = formattedAmounts[SWAP_FIELD.OUTPUT];
-    if (!outputCurrencyInterfacePrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(outputCurrencyInterfacePrice).toNumber();
-  }, [outputCurrencyInterfacePrice, formattedAmounts]);
-
-  const USDChange =
-    !!outputBalanceUSDValue && !!inputBalanceUSDValue
-      ? new BigNumber(outputBalanceUSDValue)
-          .minus(inputBalanceUSDValue)
-          .dividedBy(inputBalanceUSDValue)
-          .multipliedBy(100)
-          .toFixed(2)
-      : null;
-
-  const USDChangeColor = !new BigNumber(USDChange ?? 0).isLessThan(0) ? "#54C081" : "#D3625B";
-
   return (
     <Box>
-      <Box sx={{ position: "relative" }}>
-        <Box className={classes.inputBox}>
-          <Grid container>
-            <Box>
-              <Grid container alignItems="center">
-                <Grid mr={1}>
-                  <CurrencySelector
-                    currencyId={currencyA?.currencyId}
-                    onChange={handleTokenAChange}
-                    disabledCurrency={inputCurrency ? [inputCurrency] : []}
-                    bgGray
-                    loading={inputCurrencyState === UseCurrencyState.LOADING}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-            <Grid item xs container alignItems="center">
-              <SwapInput
-                value={formattedAmounts[SWAP_FIELD.INPUT]}
-                currency={inputCurrency}
-                onUserInput={handleTypeInput}
-              />
-            </Grid>
-          </Grid>
-          {inputCurrency ? (
-            <Grid container alignItems="center" mt="12px">
-              <Typography>
-                <Trans>
-                  Balance:{" "}
-                  {currencyBalances[SWAP_FIELD.INPUT]
-                    ? formatCurrencyAmount(currencyBalances[SWAP_FIELD.INPUT], inputCurrency?.decimals)
-                    : "--"}
-                </Trans>
-              </Typography>
-
-              {showMaxButton && (
-                <Typography fontSize="12px" className={classes.maxButton} onClick={handleMaxInput}>
-                  <Trans>MAX</Trans>
-                </Typography>
-              )}
-
-              {inputBalanceUSDValue ? (
-                <Grid item xs>
-                  <Grid container alignItems="center" justifyContent="flex-end">
-                    <Typography>~{formatDollarAmount(inputBalanceUSDValue)}</Typography>
-                  </Grid>
-                </Grid>
-              ) : null}
-            </Grid>
-          ) : null}
-        </Box>
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "-17px",
-            left: "50%",
-            transform: "translate(-50%, 0)",
-            width: "30px",
-            height: "31px",
-            cursor: "pointer",
-            overflow: "hidden",
-          }}
-          onClick={onSwitchTokens}
-        >
-          <SwitchIcon />
-        </Box>
-      </Box>
-
-      <Box sx={{ marginTop: "8px" }}>
-        <Box className={classes.inputBox}>
-          <Grid container>
-            <Box>
-              <Grid container alignItems="center">
-                <Grid mr={1}>
-                  <CurrencySelector
-                    currencyId={currencyB?.currencyId}
-                    onChange={handleTokenBChange}
-                    disabledCurrency={
-                      outputCurrency
-                        ? [outputCurrency, ...(!currencyA.currencyId ? [ICP] : [])]
-                        : [...(!currencyA.currencyId ? [ICP] : [])]
-                    }
-                    bgGray
-                    loading={outputCurrencyState === UseCurrencyState.LOADING}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-            <Grid item xs container alignItems="center">
-              <SwapInput
-                value={formattedAmounts[SWAP_FIELD.OUTPUT]}
-                currency={outputCurrency}
-                onUserInput={handleTypeOutput}
-                disabled
-              />
-            </Grid>
-          </Grid>
-          {currencyBalances[SWAP_FIELD.OUTPUT] ? (
-            <Grid container mt="12px">
-              <Typography>
-                <Trans>
-                  Balance: {formatCurrencyAmount(currencyBalances[SWAP_FIELD.OUTPUT], outputCurrency?.decimals)}
-                </Trans>
-              </Typography>
-
-              {outputBalanceUSDValue ? (
-                <Grid item xs>
-                  <Grid container alignItems="center" justifyContent="flex-end">
-                    <Typography>
-                      ~{formatDollarAmount(outputBalanceUSDValue)}
-                      {USDChange ? (
-                        <Typography component="span" sx={{ color: USDChangeColor }}>
-                          ({USDChange}%)
-                        </Typography>
-                      ) : null}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              ) : null}
-            </Grid>
-          ) : null}
-        </Box>
-      </Box>
+      <SwapInputWrapper
+        onMaxInput={handleMaxInput}
+        onInput={handleInput}
+        onTokenAChange={handleTokenAChange}
+        onTokenBChange={handleTokenBChange}
+        tokenAPrice={inputCurrencyInterfacePrice}
+        tokenBPrice={outputCurrencyInterfacePrice}
+        inputCurrency={inputCurrency}
+        outputCurrency={outputCurrency}
+        inputCurrencyState={inputCurrencyState}
+        outputCurrencyState={outputCurrencyState}
+        currencyBalances={currencyBalances}
+        parsedAmounts={parsedAmounts}
+        tradePoolId={tradePoolId}
+      />
 
       {isLoadingRoute || (!isLoadingRoute && !!trade) ? (
         <Box mt="22px">
@@ -467,7 +283,7 @@ export default function Swap() {
       {confirmModalShow && trade && (
         <Identity onSubmit={handleSwapConfirm}>
           {({ submit }: CallbackProps) => (
-            <ConfirmModal
+            <SwapConfirm
               trade={trade}
               open={confirmModalShow}
               onClose={() => setConfirmModalShow(false)}

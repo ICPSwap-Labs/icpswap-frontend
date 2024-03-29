@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Grid } from "@mui/material";
-import { SwapV2Wrapper } from "components/swap/SwapWrapper";
+import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { usePoolList } from "hooks/swap/v2/useSwapCalls";
 import { usePoolStandardManager } from "store/global/hooks";
