@@ -1,7 +1,7 @@
-import { getInfoTokenChartData, useInfoTokenStorageIds } from "@icpswap/hooks";
 import { useState, useEffect, useMemo } from "react";
-import { PublicTokenChartDayData } from "types/info";
-import { getNoLengthPaginationAllData } from "hooks/useNoLengthPaginationData";
+import { PublicTokenChartDayData } from "@icpswap/types";
+import { getInfoTokenChartData, useInfoTokenStorageIds } from "./info";
+import { getLimitedInfinityCall } from "./useLimitedInfinityCall";
 
 export function useTokenVolChart(canisterId: string | undefined) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export function useTokenVolChart(canisterId: string | undefined) {
                 return await getInfoTokenChartData(storageId, canisterId, offset, limit);
               };
 
-              return await getNoLengthPaginationAllData<PublicTokenChartDayData>(callback, 1400, 4);
+              return await getLimitedInfinityCall<PublicTokenChartDayData>(callback, 1400, 4);
             }),
           )
         )
@@ -32,14 +32,6 @@ export function useTokenVolChart(canisterId: string | undefined) {
             if (a.timestamp > b.timestamp) return 1;
             return 0;
           });
-
-        // if (chartData) {
-        //   if (chartData.length > 1000) {
-        //     setChartData(chartData.slice(0, 1000));
-        //   } else {
-        //     setChartData(chartData);
-        //   }
-        // }
 
         setChartData(chartData);
         setLoading(false);

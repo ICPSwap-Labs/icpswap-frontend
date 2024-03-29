@@ -1,9 +1,9 @@
-import { BigintIsh, Currency, CurrencyAmount } from "@icpswap/swap-sdk";
+import { BigintIsh, Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { JSBI } from "utils/index";
 import { SAFE_INTEGER_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
 import BigNumber from "bignumber.js";
 
-export function tryParseAmount<T extends Currency>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
+export function tryParseAmount<T extends Token>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
   if (!value || !currency) {
     return undefined;
   }

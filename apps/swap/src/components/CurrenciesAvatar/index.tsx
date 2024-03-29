@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CurrencyAvatar from "components/CurrencyAvatar";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyles = makeStyles(() => {
   return {
@@ -23,8 +23,8 @@ const useStyles = makeStyles(() => {
 });
 
 export interface CurrenciesAvatarProps {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+  currencyA: Token | undefined;
+  currencyB: Token | undefined;
   borderColor: string;
   bgColor: string;
   className?: any;

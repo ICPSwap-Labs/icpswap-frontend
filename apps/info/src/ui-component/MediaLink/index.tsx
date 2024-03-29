@@ -1,20 +1,10 @@
-import { FC, useRef, useState } from "react";
-import { Grid, Box, MenuList, MenuItem, Popper, useMediaQuery } from "@mui/material";
+import { useRef, useState } from "react";
+import { Grid, Box, MenuList, MenuItem, Popper } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
-import { makeStyles, useTheme } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import { mockALinkAndOpen } from "@icpswap/utils";
-import DiscordIcon from "./Discord";
-import TwitterIcon from "./Twitter";
-import TelegramIcon from "./Telegram";
-import DistriktIcon from "./Distrikt";
-import DscvrIcon from "./Dscvr";
-import InstagramIcon from "./Instagram";
-import MediumIcon from "./Medium";
-import WebsiteIcon from "./Website";
-import OtherIcon from "./Other";
-import GithubIcon from "./Github";
-import OpenChatIcon from "./OpenChat";
+import { MediaLinkIcon } from "@icpswap/ui";
 
 const LINKS_MAX_NUMBER = 5;
 
@@ -108,30 +98,7 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export const Icons: { [key: string]: FC<{ width?: number }> } = {
-  Website: WebsiteIcon,
-  Discord: DiscordIcon,
-  Twitter: TwitterIcon,
-  Dscvr: DscvrIcon,
-  Distrikt: DistriktIcon,
-  Telegram: TelegramIcon,
-  Instagram: InstagramIcon,
-  Medium: MediumIcon,
-  Other: OtherIcon,
-  Github: GithubIcon,
-  OpenChat: OpenChatIcon,
-};
-
 export type Link = { k: string; v: string };
-
-export function LinkIcon({ k }: { k: string }) {
-  const Icon = Icons[k];
-  const theme = useTheme() as Theme;
-
-  const matchDownMd = useMediaQuery(theme.breakpoints.down("md"));
-
-  return Icon ? <Icon width={matchDownMd ? 24 : 28} /> : null;
-}
 
 export function LinkItem({ link, onClick }: { link: Link; onClick: (link: string) => void }) {
   const handleIconClick = () => {
@@ -140,7 +107,7 @@ export function LinkItem({ link, onClick }: { link: Link; onClick: (link: string
 
   return (
     <Grid container item justifyContent="center" alignItems="center" onClick={handleIconClick}>
-      <LinkIcon k={link.k} />
+      <MediaLinkIcon k={link.k} />
     </Grid>
   );
 }
@@ -218,7 +185,7 @@ export default function MediaLinks({ links }: { links: Link[] | undefined }) {
                     if (index >= LINKS_MAX_NUMBER) {
                       return (
                         <MenuItem key={`${link.k}-${index}`} onClick={() => handleLoadLink(link.v)}>
-                          <LinkIcon k={link.k} />
+                          <MediaLinkIcon k={link.k} />
                         </MenuItem>
                       );
                     }

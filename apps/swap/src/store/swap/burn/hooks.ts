@@ -5,7 +5,7 @@ import { numberToString } from "@icpswap/utils";
 import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { usePool } from "hooks/swap/usePools";
 import { t } from "@lingui/macro";
 import { UserPosition } from "types/swap";
@@ -31,8 +31,8 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const token1Address = poolMeta?.token1.address;
   const fee = poolMeta?.fee;
 
-  const [, token0] = useCurrency(token0Address) ?? undefined;
-  const [, token1] = useCurrency(token1Address) ?? undefined;
+  const [, token0] = useToken(token0Address) ?? undefined;
+  const [, token1] = useToken(token1Address) ?? undefined;
 
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, fee ? Number(fee) : undefined);
 
@@ -73,13 +73,13 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   if (independentField === BURN_FIELD.LIQUIDITY_PERCENT) {
     percentToRemove = new Percent(typedValue, "100");
   } else if (tokens[independentField]) {
-      const independentAmount = tryParseAmount(typedValue, tokens[independentField]);
-      const liquidityValue = liquidityValues[independentField];
+    const independentAmount = tryParseAmount(typedValue, tokens[independentField]);
+    const liquidityValue = liquidityValues[independentField];
 
-      if (independentAmount && liquidityValue && !independentAmount.greaterThan(liquidityValue)) {
-        percentToRemove = new Percent(independentAmount.quotient, liquidityValue.quotient);
-      }
+    if (independentAmount && liquidityValue && !independentAmount.greaterThan(liquidityValue)) {
+      percentToRemove = new Percent(independentAmount.quotient, liquidityValue.quotient);
     }
+  }
 
   const discountedAmount0 = positionSDK ? percentToRemove.multiply(positionSDK.amount0.quotient).quotient : undefined;
   const discountedAmount1 = positionSDK ? percentToRemove.multiply(positionSDK.amount1.quotient).quotient : undefined;

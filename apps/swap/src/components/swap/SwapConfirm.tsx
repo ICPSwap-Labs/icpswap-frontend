@@ -8,7 +8,7 @@ import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
 import Tooltip from "components/Tooltip";
 import { numberToString } from "@icpswap/utils";
-import { Currency, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -30,8 +30,8 @@ const useStyle = makeStyles((theme: Theme) => {
 });
 
 export interface SwapCurrencyProps {
-  currency: Currency | undefined;
-  currencyAmount: CurrencyAmount<Currency> | undefined;
+  currency: Token | undefined;
+  currencyAmount: CurrencyAmount<Token> | undefined;
   inputCurrency?: boolean;
 }
 
@@ -118,7 +118,7 @@ export interface SwapConfirmModalProps {
   onConfirm: () => void;
   onClose: () => void;
   slippageTolerance: Percent | null;
-  trade: Trade<Currency, Currency, TradeType> | null;
+  trade: Trade<Token, Token, TradeType> | null;
 }
 
 export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }: SwapConfirmModalProps) => {

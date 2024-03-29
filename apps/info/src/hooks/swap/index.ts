@@ -7,15 +7,12 @@ import {
   isAvailablePageArgs,
 } from "@icpswap/utils";
 import type { PaginationResult, NumberType, Ticket } from "@icpswap/types";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 import { swapPool, swapTicket } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
 import { v2SwapPool } from "hooks/v2-actor";
 
-export function useActualSwapAmount(
-  amount: NumberType | undefined,
-  currency: Currency | undefined,
-): string | undefined {
+export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
   return useMemo(() => {
     if (!amount || !currency) return undefined;
 

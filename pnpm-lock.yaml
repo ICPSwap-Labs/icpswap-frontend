@@ -37,7 +37,7 @@ importers:
         version: 5.5.0(@mui/material@5.5.0)(react@17.0.2)
       '@mui/lab':
         specifier: 5.0.0-alpha.72
-        version: 5.0.0-alpha.72(@mui/material@5.5.0)(react-dom@17.0.2)(react@17.0.2)
+        version: 5.0.0-alpha.72(@mui/material@5.5.0)(dayjs@1.11.10)(react-dom@17.0.2)(react@17.0.2)
       '@mui/material':
         specifier: 5.5.0
         version: 5.5.0(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@17.0.2)(react-dom@17.0.2)(react@17.0.2)
@@ -50,6 +50,9 @@ importers:
       copy-to-clipboard:
         specifier: ^3.2.0
         version: 3.3.3
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       jsbi:
         specifier: ^4.3.0
         version: 4.3.0
@@ -201,9 +204,6 @@ importers:
       d3:
         specifier: 7.0.0
         version: 7.0.0
-      dayjs:
-        specifier: ^1.10.4
-        version: 1.11.10
       decimal.js-light:
         specifier: ^2.5.0
         version: 2.5.1
@@ -484,9 +484,6 @@ importers:
       d3:
         specifier: 7.0.0
         version: 7.0.0
-      dayjs:
-        specifier: ^1.10.5
-        version: 1.11.10
       ethers:
         specifier: ^5.1.4
         version: 5.7.2
@@ -755,9 +752,6 @@ importers:
       big.js:
         specifier: ^6.1.1
         version: 6.2.1
-      dayjs:
-        specifier: ^1.11.9
-        version: 1.11.10
       decimal.js-light:
         specifier: ^2.5.1
         version: 2.5.1
@@ -840,9 +834,6 @@ importers:
       big.js:
         specifier: ^6.1.1
         version: 6.2.1
-      dayjs:
-        specifier: ^1.11.9
-        version: 1.11.10
       decimal.js-light:
         specifier: ^2.5.1
         version: 2.5.1
@@ -873,9 +864,6 @@ importers:
       '@icpswap/candid':
         specifier: workspace:*
         version: link:../candid
-      dayjs:
-        specifier: ^1.11.9
-        version: 1.11.10
       idb:
         specifier: 8.0.0
         version: 8.0.0
@@ -885,15 +873,30 @@ importers:
 
   packages/ui:
     dependencies:
+      '@icpswap/constants':
+        specifier: workspace:*
+        version: link:../constants
+      '@icpswap/hooks':
+        specifier: workspace:*
+        version: link:../hooks
       '@icpswap/types':
         specifier: workspace:*
         version: link:../types
       '@icpswap/utils':
         specifier: workspace:*
         version: link:../utils
+      lightweight-charts:
+        specifier: 3.8.0
+        version: 3.8.0
+      polished:
+        specifier: ^3.3.2
+        version: 3.7.2
       react-router-dom:
         specifier: 5.2.0
         version: 5.2.0(react@17.0.2)
+      recharts:
+        specifier: ^2.1.12
+        version: 2.10.3(prop-types@15.8.1)(react-dom@17.0.2)(react@17.0.2)
     devDependencies:
       '@types/node':
         specifier: ^13.13.5
@@ -913,9 +916,6 @@ importers:
       big.js:
         specifier: ^6.1.1
         version: 6.2.1
-      dayjs:
-        specifier: ^1.11.9
-        version: 1.11.10
       decimal.js-light:
         specifier: ^2.5.1
         version: 2.5.1
@@ -5107,7 +5107,7 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@mui/lab@5.0.0-alpha.72(@mui/material@5.5.0)(react-dom@17.0.2)(react@17.0.2):
+  /@mui/lab@5.0.0-alpha.72(@mui/material@5.5.0)(dayjs@1.11.10)(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-opml6yNpDvJzrCM9XzbckZMtfah+jFrYB8nB6kzORaQ3ixcMt+7RbFTPXG7NvQxW8VdxlGgfeBAMSWLDiFVMWA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -5141,6 +5141,7 @@ packages:
       '@mui/system': 5.15.1(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@17.0.2)(react@17.0.2)
       '@mui/utils': 5.15.1(@types/react@17.0.2)(react@17.0.2)
       clsx: 1.2.1
+      dayjs: 1.11.10
       prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)

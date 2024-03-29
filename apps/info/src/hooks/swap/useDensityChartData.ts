@@ -1,17 +1,15 @@
 import { useCallback, useMemo } from "react";
 import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
-import { Currency, FeeAmount } from "@icpswap/swap-sdk";
+import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 
-export function useDensityChartData({
-  currencyA,
-  currencyB,
-  feeAmount,
-}: {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+export interface useDensityChartDataProps {
+  currencyA: Token | undefined;
+  currencyB: Token | undefined;
   feeAmount: FeeAmount;
-}) {
+}
+
+export function useDensityChartData({ currencyA, currencyB, feeAmount }: useDensityChartDataProps) {
   const { isLoading, isUninitialized, isError, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount);
 
   const formatData = useCallback(() => {
@@ -34,7 +32,11 @@ export function useDensityChartData({
 
       if (chartEntry.activeLiquidity > 0) {
         // when is not sorted, should converse the data array, but there use unshift to achieve it
-        isSorted ? newData.push(chartEntry) : newData.unshift(chartEntry);
+        if (isSorted) {
+          newData.push(chartEntry);
+        } else {
+          newData.unshift(chartEntry);
+        }
       }
     }
 

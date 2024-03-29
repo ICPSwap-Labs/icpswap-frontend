@@ -1,10 +1,10 @@
-import { Percent, CurrencyAmount, Currency } from "@icpswap/swap-sdk";
+import { Percent, CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import JSBI from "jsbi";
 import { ONE_HUNDRED_PERCENT } from "constants/misc";
 
 export function computeFiatValuePriceImpact(
-  fiatValueInput: CurrencyAmount<Currency> | undefined | null,
-  fiatValueOutput: CurrencyAmount<Currency> | undefined | null,
+  fiatValueInput: CurrencyAmount<Token> | undefined | null,
+  fiatValueOutput: CurrencyAmount<Token> | undefined | null,
 ): Percent | undefined {
   if (!fiatValueOutput || !fiatValueInput) return undefined;
   if (!fiatValueInput.currency.equals(fiatValueOutput.currency)) return undefined;

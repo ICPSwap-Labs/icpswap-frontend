@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
-import { Currency, FeeAmount } from "@icpswap/swap-sdk";
+import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 
 export function useDensityChartData({
@@ -8,8 +8,8 @@ export function useDensityChartData({
   currencyB,
   feeAmount,
 }: {
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+  currencyA: Token | undefined;
+  currencyB: Token | undefined;
   feeAmount: FeeAmount;
 }) {
   const { isLoading, isUninitialized, isError, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount);

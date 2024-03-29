@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { useMemo } from "react";
-import { ChartDayVolumeData, GenericChartEntry } from "types/analytic";
+import { ChartDayVolumeData, GenericChartEntry } from "@icpswap/types";
 import { unixToDate } from "utils/date";
 import dayjs from "dayjs";
 

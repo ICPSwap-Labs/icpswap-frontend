@@ -1,12 +1,7 @@
 import { useMemo } from "react";
-import { Currency, Token } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 
-export function useAllCurrencyCombinations(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
-): Token[][] {
-  const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped];
-
+export function useAllCurrencyCombinations(tokenA: Token | undefined, tokenB: Token | undefined): Token[][] {
   return useMemo(() => {
     return tokenA && tokenB
       ? [[tokenA, tokenB]]

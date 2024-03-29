@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { useAllowance } from "hooks/token";
 import { useMemo } from "react";
@@ -6,7 +6,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { isUseTransfer } from "utils/token";
 
 export interface UseMaxAmountSpendArgs {
-  currencyAmount: CurrencyAmount<Currency> | undefined;
+  currencyAmount: CurrencyAmount<Token> | undefined;
   poolId?: string;
 }
 

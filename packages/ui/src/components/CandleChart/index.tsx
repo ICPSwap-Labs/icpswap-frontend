@@ -2,33 +2,30 @@ import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateActi
 import { createChart, IChartApi } from "lightweight-charts";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { darken } from "polished";
-import { GridRowBetween } from "ui-component/index";
-import usePrevious from "hooks/usePrevious";
 import { Theme } from "@mui/material/styles";
-import { formatDollarAmount } from "@icpswap/utils";
-
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
 
-export type LineChartProps = {
+export type CandleChartProps = {
   data: any[];
   color?: string | undefined;
   height?: number | undefined;
   minHeight?: number;
   setValue?: Dispatch<SetStateAction<number | undefined>>; // used for value on hover
-  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for label value
+  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for value label on hover
   topLeft?: ReactNode | undefined;
   topRight?: ReactNode | undefined;
   bottomLeft?: ReactNode | undefined;
   bottomRight?: ReactNode | undefined;
+  onHoverChange?: (data: any) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const LineChart = ({
+export const CandleChart = ({
   data,
   color = "#56B2A4",
   setValue,
@@ -39,27 +36,14 @@ const LineChart = ({
   bottomRight,
   height = DEFAULT_HEIGHT,
   minHeight = DEFAULT_HEIGHT,
+  onHoverChange,
   ...rest
-}: LineChartProps) => {
-  // theming
+}: CandleChartProps) => {
   const theme = useTheme() as Theme;
-  const textColor = theme.palette.text.secondary;
 
-  // chart pointer
+  const textColor = theme.palette.text.secondary;
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartCreated, setChart] = useState<IChartApi | undefined>();
-  const dataPrev = usePrevious(data);
-
-  // reset on new data
-  useEffect(() => {
-    if (dataPrev !== data && chartCreated) {
-      chartCreated.resize(0, 0);
-      setChart(undefined);
-    }
-  }, [data, dataPrev, chartCreated]);
-
-  // for reseting value on hover exit
-  const currentValue = data[data.length - 1]?.value;
 
   const handleResize = useCallback(() => {
     if (chartCreated && chartRef?.current?.parentElement) {
@@ -87,7 +71,7 @@ const LineChart = ({
         width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: "transparent",
-          textColor: "#565A69",
+          textColor,
           fontFamily: "Inter var",
         },
         rightPriceScale: {
@@ -95,14 +79,17 @@ const LineChart = ({
             top: 0.1,
             bottom: 0.1,
           },
-          drawTicks: false,
           borderVisible: false,
         },
         timeScale: {
           borderVisible: false,
+          secondsVisible: true,
+          tickMarkFormatter: (unixTime: number) => {
+            return dayjs.unix(unixTime).format("MM/DD h:mm A");
+          },
         },
         watermark: {
-          color: "rgba(0, 0, 0, 0)",
+          visible: false,
         },
         grid: {
           horzLines: {
@@ -117,38 +104,45 @@ const LineChart = ({
             visible: false,
             labelVisible: false,
           },
+          mode: 1,
           vertLine: {
             visible: true,
-            style: 0,
-            width: 2,
-            color: "#505050",
             labelVisible: false,
+            style: 3,
+            width: 1,
+            color: textColor,
+            labelBackgroundColor: color,
           },
         },
       });
+
       chart.timeScale().fitContent();
       setChart(chart);
     }
-  }, [color, chartCreated, currentValue, data, height, setValue, textColor, theme]);
+  }, [color, chartCreated, data, height, setValue, textColor, theme]);
 
   useEffect(() => {
     if (chartCreated && data) {
-      const series = chartCreated.addAreaSeries({
-        lineColor: color,
-        topColor: darken(0.36, color),
-        // bottomColor: theme.bg0,
-        lineWidth: 2,
-        priceLineVisible: false,
+      const series = chartCreated.addCandlestickSeries({
+        upColor: "green",
+        downColor: "red",
+        borderDownColor: "red",
+        borderUpColor: "green",
+        wickDownColor: "red",
+        wickUpColor: "green",
       });
+
       series.setData(data);
-      chartCreated.timeScale().fitContent();
-      chartCreated.timeScale().scrollToRealTime();
+
+      const lastOpen = data[data.length - 1] ? data[data.length - 1].open : undefined;
+
+      const precision = lastOpen ? (lastOpen < 0.000001 ? 8 : lastOpen < 0.0001 ? 6 : lastOpen < 0.001 ? 4 : 3) : 2;
 
       series.applyOptions({
         priceFormat: {
-          type: "custom",
-          minMove: 0.02,
-          formatter: (price: any) => formatDollarAmount(price),
+          type: "price",
+          precision,
+          minMove: 1 / 10 ** precision,
         },
       });
 
@@ -163,18 +157,21 @@ const LineChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
+          // reset values
           if (setValue) setValue(undefined);
           if (setLabel) setLabel(undefined);
+          if (onHoverChange) onHoverChange(undefined);
         } else if (series && param) {
-          const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
-          const time = param?.time as { day: number; year: number; month: number };
-          const timeString = dayjs(`${time.year}-${time.month}-${time.day}`).format("MMM D, YYYY");
-          if (setValue) setValue(price);
-          if (setLabel && timeString) setLabel(timeString);
+          const timestamp = param.time as number;
+          const time = dayjs.unix(timestamp).format("MMM D, YYYY h:mm A");
+          const parsed = param.seriesPrices.get(series) as { open: number } | undefined;
+          if (setValue) setValue(parsed?.open);
+          if (setLabel) setLabel(time);
+          if (onHoverChange) onHoverChange(parsed);
         }
       });
     }
-  }, [chartCreated, color, currentValue, data, height, setLabel, setValue]);
+  }, [chartCreated, color, data, height, setValue, setLabel]);
 
   return (
     <Box
@@ -182,10 +179,9 @@ const LineChart = ({
         width: "100%",
         padding: "1rem",
         display: "flex",
-        // backgroundColor: theme.palette.background.
         flexDirection: "column",
         minHeight,
-        "& > *": {
+        " > *": {
           fontSize: "1rem",
         },
       }}
@@ -194,7 +190,7 @@ const LineChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </GridRowBetween>
-      <div ref={chartRef} id="line-chart" {...rest} />
+      <div ref={chartRef} id="candle-chart" {...rest} />
       <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
@@ -202,5 +198,3 @@ const LineChart = ({
     </Box>
   );
 };
-
-export default LineChart;

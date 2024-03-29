@@ -1,6 +1,6 @@
 import JSBI from "jsbi";
 import { TradeType } from "@icpswap/constants";
-import { Currency, CurrencyAmount, Fraction, Percent, Trade } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount, Fraction, Percent, Trade } from "@icpswap/swap-sdk";
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -11,7 +11,7 @@ import {
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000));
 
 // computes realized lp fee as a percent
-export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>): Percent {
+export function computeRealizedLPFeePercent(trade: Trade<Token, Token, TradeType>): Percent {
   const percent: Percent = ONE_HUNDRED_PERCENT.subtract(
     trade.route.pools.reduce<Percent>(
       (currentFee: Percent, pool): Percent =>
@@ -25,8 +25,8 @@ export function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, Tra
 
 // computes price breakdown for the trade
 export function computeRealizedLPFeeAmount(
-  trade?: Trade<Currency, Currency, TradeType> | null,
-): CurrencyAmount<Currency> | undefined {
+  trade?: Trade<Token, Token, TradeType> | null,
+): CurrencyAmount<Token> | undefined {
   if (trade) {
     const realizedLPFee = computeRealizedLPFeePercent(trade);
 

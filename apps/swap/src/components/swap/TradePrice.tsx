@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
 import BigNumber from "bignumber.js";
-import { Price, Currency } from "@icpswap/swap-sdk";
+import { Price, Token } from "@icpswap/swap-sdk";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
@@ -9,10 +9,10 @@ import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
 
 export interface TradePricePropsNoInfo {
-  price: Price<Currency, Currency> | undefined;
-  token0?: Currency | undefined;
+  price: Price<Token, Token> | undefined;
+  token0?: Token | undefined;
   token0PriceUSDValue?: string | null | undefined | number;
-  token1?: Currency | undefined;
+  token1?: Token | undefined;
   token1PriceUSDValue?: string | null | undefined | number;
 }
 
@@ -50,9 +50,7 @@ export function TradePriceNoInfo({
       : token1PriceUSDValue;
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
-  const text = `${
-    `1 ${  labelInverted  } = ${  formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`
-  } ${label}`;
+  const text = `${`1 ${labelInverted} = ${formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`} ${label}`;
 
   return (
     <Grid container justifyContent="flex-end" alignItems="center">
@@ -70,10 +68,10 @@ export function TradePriceNoInfo({
 }
 
 export interface TradePriceProps {
-  price: Price<Currency, Currency> | undefined;
-  token0?: Currency | undefined;
+  price: Price<Token, Token> | undefined;
+  token0?: Token | undefined;
   token0PriceUSDValue?: string | null | undefined | number;
-  token1?: Currency | undefined;
+  token1?: Token | undefined;
   token1PriceUSDValue?: string | null | undefined | number;
   poolId: string | undefined;
   v2?: boolean;
@@ -115,9 +113,7 @@ export default function TradePrice({
       : token1PriceUSDValue;
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
-  const text = `${
-    `1 ${  labelInverted  } = ${  formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`
-  } ${label}`;
+  const text = `${`1 ${labelInverted} = ${formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`} ${label}`;
 
   return (
     <Grid container>

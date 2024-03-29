@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { parseTokenAmount } from "@icpswap/utils";
 import { TradeType } from "@icpswap/constants";
-import { Currency, Trade } from "@icpswap/swap-sdk";
+import { Token, Trade } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 
-export function useSwapFeeTip(trade: Trade<Currency, Currency, TradeType> | null) {
+export function useSwapFeeTip(trade: Trade<Token, Token, TradeType> | null) {
   const inputToken = trade?.inputAmount.currency;
   const outputToken = trade?.outputAmount.currency;
 

@@ -1,4 +1,4 @@
-import { CurrencyAmount, BigintIsh, Trade, Currency } from "@icpswap/swap-sdk";
+import { CurrencyAmount, BigintIsh, Trade, Token } from "@icpswap/swap-sdk";
 import { StatusResult } from "@icpswap/types";
 import { TradeType } from "@icpswap/constants";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ export enum SwapCallbackState {
 }
 
 export function useSwapArguments(
-  trade: Trade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>[] | undefined | null,
+  trade: Trade<Token, Token, TradeType> | Trade<Token, Token, TradeType>[] | undefined | null,
   allowedSlippage: BigintIsh,
   recipientPrincipal?: Principal,
 ): {
@@ -38,7 +38,7 @@ export function useSwapArguments(
   return useMemo(() => {
     if (!trade || !recipient || !principal || !deadline) return { callData: undefined, value: "" };
 
-    let trades: Trade<Currency, Currency, TradeType>[] = [];
+    let trades: Trade<Token, Token, TradeType>[] = [];
 
     if (!Array.isArray(trade)) {
       trades = [trade];
@@ -82,7 +82,7 @@ export function useSwapArguments(
         if (singleHop) {
           const tokenIn = route.tokenPath[0].address;
           const tokenOut = route.tokenPath[1].address;
-          const {fee} = route.pools[0];
+          const { fee } = route.pools[0];
 
           const poolId = route.pools[0].id;
 
@@ -169,7 +169,7 @@ export function useSwapArguments(
 }
 
 export function useSwapCallback(
-  trade: Trade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>[] | undefined | null,
+  trade: Trade<Token, Token, TradeType> | Trade<Token, Token, TradeType>[] | undefined | null,
   recipientAddress?: Principal,
 ) {
   const account = useAccount();
@@ -203,13 +203,12 @@ export function useSwapCallback(
           callback: null,
           error: "Invalid recipient",
         };
-      } 
-        return {
-          state: SwapCallbackState.LOADING,
-          callback: null,
-          error: null,
-        };
-      
+      }
+      return {
+        state: SwapCallbackState.LOADING,
+        callback: null,
+        error: null,
+      };
     }
 
     return {

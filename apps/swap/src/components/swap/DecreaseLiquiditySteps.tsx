@@ -1,6 +1,6 @@
 import { Box, Avatar } from "@mui/material";
-import { toSignificant, parseTokenAmount, BigNumber , shorten } from "@icpswap/utils";
-import { Currency } from "@icpswap/swap-sdk";
+import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/utils";
+import { Token } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { BURN_FIELD } from "constants/swap";
@@ -10,8 +10,8 @@ import { getDecreaseLiquidityAmount } from "store/swap/hooks";
 
 export interface DecreaseLiquidityStepsProps {
   formattedAmounts: { [key in BURN_FIELD]?: string };
-  currencyA: Currency | undefined;
-  currencyB: Currency | undefined;
+  currencyA: Token | undefined;
+  currencyB: Token | undefined;
   positionId: bigint;
   principal: Principal | undefined;
   handleReclaim: () => void;

@@ -1,5 +1,5 @@
-import { useInfoTokenPriceChart, useInfoTokenStorageIds } from "@icpswap/hooks";
 import { useMemo } from "react";
+import { useInfoTokenPriceChart, useInfoTokenStorageIds } from "./info";
 
 export function useTokenPriceChart(canisterId: string | undefined) {
   const { result: storageIds } = useInfoTokenStorageIds(canisterId);

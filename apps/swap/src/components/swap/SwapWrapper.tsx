@@ -27,12 +27,15 @@ import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
 import { ReclaimLink } from "components/swap/ReclaimLink";
+import { Trade, Token, TradeType } from "@icpswap/swap-sdk";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
+  onOutputTokenChange?: (tokenId: string) => void;
+  onTradeChange?: (trade: Trade<Token, Token, TradeType.EXACT_INPUT>) => void;
 }
 
-export function SwapWrapper({ ui = "normal" }: SwapWrapperProps) {
+export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradeChange }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [refreshBalance, setRefreshBalance] = useState(false);
 
@@ -42,9 +45,6 @@ export function SwapWrapper({ ui = "normal" }: SwapWrapperProps) {
   useLoadDefaultParams();
 
   const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
-
-  console.log("currencyA:", currencyA);
-  console.log("currencyB:", currencyB);
 
   const { onCurrencySelection, onUserInput } = useSwapHandlers();
   const handleClearSwapState = useCleanSwapState();
@@ -62,6 +62,17 @@ export function SwapWrapper({ ui = "normal" }: SwapWrapperProps) {
     inputCurrencyState,
     outputCurrencyState,
   } = useSwapInfo({ refreshBalance });
+
+  // For swap pro
+  useEffect(() => {
+    if (currencyB.currencyId) {
+      if (onOutputTokenChange) onOutputTokenChange(currencyB.currencyId);
+    }
+
+    if (trade) {
+      if (onTradeChange) onTradeChange(trade);
+    }
+  }, [trade, currencyB]);
 
   const parsedAmounts = useMemo(
     () => ({

@@ -1,14 +1,11 @@
 import { useMemo, useCallback } from "react";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import type { NumberType } from "@icpswap/types";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 import { getTokenStandard, useUpdateTokenStandards } from "store/token/cache/hooks";
 import { getSwapPoolTokenStandard } from "hooks/swap/v2/calls";
 
-export function useActualSwapAmount(
-  amount: NumberType | undefined,
-  currency: Currency | undefined,
-): string | undefined {
+export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
   return useMemo(() => {
     if (!amount || !currency) return undefined;
 
@@ -17,9 +14,8 @@ export function useActualSwapAmount(
 
     if (typedValue.isGreaterThan(currency.transFee)) {
       return numberToString(parseTokenAmount(typedValue.minus(fee), currency.decimals));
-    } 
-      return "0";
-    
+    }
+    return "0";
   }, [amount, currency]);
 }
 

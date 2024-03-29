@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { SWAP_FIELD } from "constants/swap";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -78,8 +78,8 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
     [SWAP_FIELD.OUTPUT]: { currencyId: outputCurrencyId },
   } = useSwapState();
 
-  const [inputCurrencyState, inputCurrency] = useCurrency(inputCurrencyId);
-  const [outputCurrencyState, outputCurrency] = useCurrency(outputCurrencyId);
+  const [inputCurrencyState, inputCurrency] = useToken(inputCurrencyId);
+  const [outputCurrencyState, outputCurrency] = useToken(outputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 

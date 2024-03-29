@@ -1,5 +1,5 @@
 import { formatTokenAmount } from "@icpswap/utils";
-import { Price, Currency, CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
+import { Price, Token, CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
 import { useAppSelector } from "store/hooks";
 import { useMemo, useState, useEffect } from "react";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
@@ -20,7 +20,7 @@ export function useICPPrice(): number | undefined {
   }, [ICPPriceList]);
 }
 
-export function useUSDPrice(currency: Currency | undefined): string | number | undefined {
+export function useUSDPrice(currency: Token | undefined): string | number | undefined {
   const _currency = useMemo(() => {
     if (!currency) return undefined;
     if (currency?.wrapped.equals(WRAPPED_ICP) || currency?.wrapped.equals(ICP)) return undefined;
@@ -84,7 +84,7 @@ export function useUSDPriceById(tokenId: string | undefined): number | undefined
   }, [tokenId, graphToken, icpPriceNumber]);
 }
 
-export function useUSDValue(currencyAmount: CurrencyAmount<Currency> | undefined) {
+export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {
   const price = useUSDPrice(currencyAmount?.currency);
 
   return useMemo(() => {
@@ -97,8 +97,8 @@ export function useUSDValue(currencyAmount: CurrencyAmount<Currency> | undefined
   }, [currencyAmount, price]);
 }
 
-export function useInterfacePrice(currency: Currency | undefined): BigNumber | undefined {
-  const [amountOut, setAmountOut] = useState<CurrencyAmount<Currency> | undefined>(undefined);
+export function useInterfacePrice(currency: Token | undefined): BigNumber | undefined {
+  const [amountOut, setAmountOut] = useState<CurrencyAmount<Token> | undefined>(undefined);
 
   const [, pool] = usePool(currency, ICP, FeeAmount.MEDIUM);
 
@@ -138,9 +138,9 @@ export function useInterfacePrice(currency: Currency | undefined): BigNumber | u
 
 export function useInterfacePriceFromPool(
   pool: Pool | undefined | null,
-  currency: Currency | undefined,
+  currency: Token | undefined,
 ): BigNumber | undefined {
-  const [amountOut, setAmountOut] = useState<CurrencyAmount<Currency> | undefined>(undefined);
+  const [amountOut, setAmountOut] = useState<CurrencyAmount<Token> | undefined>(undefined);
 
   const ICPPrice = useICPPrice();
 

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { TradeType } from "@icpswap/constants";
-import { CurrencyAmount, Trade, Currency, Route } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Trade, Token, Route } from "@icpswap/swap-sdk";
 import { useQuoteExactInput, useQuoteExactOutput, useQuoteUnitPrice } from "hooks/swap/v2/useSwapCalls";
 import { tryParseAmount } from "utils/swap";
 import BigNumber from "bignumber.js";
@@ -16,8 +16,8 @@ export enum TradeState {
 }
 
 export function useUnitPrice(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
   typedValue: string | undefined,
 ) {
   const amountIn = useMemo(() => {
@@ -71,7 +71,7 @@ export function useUnitPrice(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: string | null }, { amountOut }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
         if (currentBest.amountOut === null) {
@@ -79,7 +79,8 @@ export function useUnitPrice(
             bestRoute: routes[i],
             amountOut,
           };
-        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        }
+        if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
             amountOut,
@@ -114,8 +115,8 @@ export function useUnitPrice(
 }
 
 export function useBestTradeExactIn(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
   typedValue: string | undefined,
 ) {
   const amountIn = useMemo(() => {
@@ -160,7 +161,7 @@ export function useBestTradeExactIn(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: string | null }, { amountOut }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
         if (currentBest.amountOut === null) {
@@ -168,7 +169,8 @@ export function useBestTradeExactIn(
             bestRoute: routes[i],
             amountOut,
           };
-        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        }
+        if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
             amountOut,
@@ -203,8 +205,8 @@ export function useBestTradeExactIn(
 }
 
 export function useBestTradeExactOut(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
   typedValue: string | undefined,
 ) {
   const { routes, loading: routesLoading } = useAllRoutes(currencyIn, currencyOut);
@@ -259,7 +261,7 @@ export function useBestTradeExactOut(
     }
 
     const { bestRoute, amountIn } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountIn: string | null }, { amountIn }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountIn: string | null }, { amountIn }, i) => {
         if (!amountIn) return currentBest;
 
         if (currentBest.amountIn === null) {
@@ -267,7 +269,8 @@ export function useBestTradeExactOut(
             bestRoute: routes[i],
             amountIn,
           };
-        } if (new BigNumber(currentBest.amountIn).isGreaterThan(amountIn)) {
+        }
+        if (new BigNumber(currentBest.amountIn).isGreaterThan(amountIn)) {
           return {
             bestRoute: routes[i],
             amountIn,

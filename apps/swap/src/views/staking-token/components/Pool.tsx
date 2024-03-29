@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { useAccount } from "store/global/hooks";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-token";
 import upperFirst from "lodash/upperFirst";
@@ -83,8 +83,8 @@ export default function StakingPool({ stakedOnly, pool, state }: StakingPoolProp
   const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId, pool?.version);
   const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId, pool?.version, account);
 
-  const [, rewardToken] = useCurrency(pool?.rewardToken.address);
-  const [, stakingToken] = useCurrency(pool?.stakingToken.address);
+  const [, rewardToken] = useToken(pool?.rewardToken.address);
+  const [, stakingToken] = useToken(pool?.stakingToken.address);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const stakingTokenPrice = useUSDPrice(stakingToken);

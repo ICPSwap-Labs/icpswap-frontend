@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
-import { useToken } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import Selector from "./selector";
 import CurrencySelectButton from "./button";
 

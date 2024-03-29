@@ -1,6 +1,6 @@
 import { Position, Pool } from "@icpswap/swap-sdk";
 import { usePool, PoolState, usePoolV1 } from "hooks/swap/v2/usePools";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { PositionResult, UserPosition } from "types/swapv2";
 
 export function usePositionInfo(positionDetails: PositionResult | UserPosition | undefined | null): {
@@ -8,8 +8,8 @@ export function usePositionInfo(positionDetails: PositionResult | UserPosition |
   position: Position | undefined;
   pool: Pool | undefined;
 } {
-  const [, currency0] = useCurrency(positionDetails?.token0);
-  const [, currency1] = useCurrency(positionDetails?.token1);
+  const [, currency0] = useToken(positionDetails?.token0);
+  const [, currency1] = useToken(positionDetails?.token1);
 
   const [poolState, pool] = usePool(
     currency0 ?? undefined,
@@ -39,8 +39,8 @@ export function usePositionInfoV1(positionDetails: PositionResult | UserPosition
   position: Position | undefined;
   pool: Pool | undefined;
 } {
-  const [, currency0] = useCurrency(positionDetails?.token0);
-  const [, currency1] = useCurrency(positionDetails?.token1);
+  const [, currency0] = useToken(positionDetails?.token0);
+  const [, currency1] = useToken(positionDetails?.token1);
 
   const [poolState, pool] = usePoolV1(
     currency0 ?? undefined,

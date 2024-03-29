@@ -1,7 +1,7 @@
 import { TradeType } from "@icpswap/constants";
 import { ResultStatus } from "@icpswap/types";
 import BigNumber from "bignumber.js";
-import { Trade, Currency } from "@icpswap/swap-sdk";
+import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
 import { useSlippageManager } from "store/swap/cache/hooks";
 import { useUpdateSwapOutAmount, getSwapOutAmount } from "store/swap/hooks";
@@ -9,7 +9,7 @@ import { slippageToPercent } from "constants/index";
 import { swap } from "hooks/swap/v3Calls";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
-import { StepCallback, useStepCalls, newStepKey , useCloseAllSteps } from "hooks/useStepCall";
+import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getActorIdentity } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
 import { useErrorTip } from "hooks/useTips";
@@ -27,7 +27,7 @@ export enum SwapCallbackState {
 }
 
 export interface InitialSwapStepsArgs {
-  trade: Trade<Currency, Currency, TradeType> | undefined | null;
+  trade: Trade<Token, Token, TradeType> | undefined | null;
   key: number | string;
   retry?: () => Promise<boolean>;
 }
@@ -66,7 +66,7 @@ export function useInitialSwapSteps() {
 }
 
 export interface SwapCallsCallbackArgs {
-  trade: Trade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>[] | undefined | null;
+  trade: Trade<Token, Token, TradeType> | Trade<Token, Token, TradeType>[] | undefined | null;
   stepKey: string | number;
   openExternalTip: OpenExternalTip;
   subAccountTokenBalance: BigNumber;
@@ -102,7 +102,7 @@ export function useSwapCalls() {
 
       const stepKey = _stepKey.toString();
 
-      let trades: Trade<Currency, Currency, TradeType>[] = [];
+      let trades: Trade<Token, Token, TradeType>[] = [];
 
       if (!Array.isArray(trade)) {
         trades = [trade];
@@ -222,7 +222,7 @@ export function useSwapCalls() {
 }
 
 export interface SwapCallbackArgs {
-  trade: Trade<Currency, Currency, TradeType> | undefined | null;
+  trade: Trade<Token, Token, TradeType> | undefined | null;
   openExternalTip: OpenExternalTip;
   subAccountTokenBalance: BigNumber;
   swapInTokenUnusedBalance: bigint;

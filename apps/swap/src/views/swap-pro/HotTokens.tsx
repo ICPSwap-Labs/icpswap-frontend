@@ -1,12 +1,13 @@
+import { useContext, useMemo } from "react";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useAllTokenIds } from "store/token/cache/hooks";
 import { useTokensInfo, TokenInfoState } from "hooks/token/useTokenInfo";
-import { useMemo } from "react";
 import { TokenInfo } from "types/token";
 import { TokenImage } from "components/index";
+import { SwapProContext } from "./context";
 
 const animationKeyframes = keyframes`
   0% {
@@ -22,8 +23,13 @@ interface TokenItemProps {
 }
 
 function TokenItem({ tokenInfo }: TokenItemProps) {
+  const { setTokenId } = useContext(SwapProContext);
+
   return (
-    <Box sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }}>
+    <Box
+      sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }}
+      onClick={() => setTokenId(tokenInfo.canisterId)}
+    >
       <Typography color="text.primary">#</Typography>
       <TokenImage logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} size="16px" />
       <Typography color="text.primary" sx={{ width: "fit-content", textWrap: "nowrap", userSelect: "none" }}>

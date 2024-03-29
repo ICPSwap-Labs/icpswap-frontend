@@ -5,7 +5,7 @@ import { NumberTextField } from "components/index";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -35,7 +35,7 @@ const useStyle = makeStyles((theme: Theme) => {
 });
 
 export interface DecreaseLiquidityInputProps {
-  currency: Currency | undefined;
+  currency: Token | undefined;
   value: string | number;
   onUserInput: (value: string) => void;
   totalAmount: React.ReactChild;

@@ -8,8 +8,7 @@ import { MainCard } from "ui-component/index";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
+import { LineChartAlt, BarChartAlt } from "@icpswap/ui";
 import DensityChart from "ui-component/DensityChart";
 import ChartToggle, { ChartView } from "ui-component/analytic/ChartViewsButton";
 import LoadingImage from "assets/images/loading.png";
@@ -261,21 +260,27 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
       >
         {chartView === ChartView.VOL ? (
           formattedVolumeData && formattedVolumeData.length > 0 ? (
-            <BarChart
+            <BarChartAlt
               data={formattedVolumeData}
               minHeight={340}
               setValue={setLatestValue}
               setLabel={setValueLabel}
               value={latestValue}
               label={valueLabel}
-              activeWindow={volumeWindow}
+              activeWindow={
+                volumeWindow === VolumeWindow.daily
+                  ? "daily"
+                  : volumeWindow === VolumeWindow.monthly
+                  ? "monthly"
+                  : "weekly"
+              }
             />
           ) : (
             <Box sx={{ height: "340px", width: "auto" }} />
           )
         ) : chartView === ChartView.TVL ? (
           formattedTvlData.length > 0 ? (
-            <LineChart data={formattedTvlData} setLabel={setValueLabel} minHeight={340} setValue={setLatestValue} />
+            <LineChartAlt data={formattedTvlData} setLabel={setValueLabel} minHeight={340} setValue={setLatestValue} />
           ) : (
             <Box sx={{ height: "340px", width: "auto" }} />
           )

@@ -1,13 +1,15 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { GridRowBetween } from "ui-component/index";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
+import { darken } from "polished";
+import { usePrevious } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
-import usePrevious from "hooks/usePrevious";
 import { formatDollarAmount } from "@icpswap/utils";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
 
@@ -19,14 +21,14 @@ export type LineChartProps = {
   height?: number | undefined;
   minHeight?: number;
   setValue?: Dispatch<SetStateAction<number | undefined>>; // used for value on hover
-  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for label of valye
+  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for label value
   topLeft?: ReactNode | undefined;
   topRight?: ReactNode | undefined;
   bottomLeft?: ReactNode | undefined;
   bottomRight?: ReactNode | undefined;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const BarChart = ({
+export const LineChart = ({
   data,
   color = "#56B2A4",
   setValue,
@@ -39,11 +41,13 @@ const BarChart = ({
   minHeight = DEFAULT_HEIGHT,
   ...rest
 }: LineChartProps) => {
+  // theming
   const theme = useTheme() as Theme;
-  const textColor = "#fff";
+  const textColor = theme.palette.text.secondary;
+
+  // chart pointer
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartCreated, setChart] = useState<IChartApi | undefined>();
-
   const dataPrev = usePrevious(data);
 
   // reset on new data
@@ -80,7 +84,7 @@ const BarChart = ({
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
         height,
-        width: chartRef.current.parentElement.clientWidth - 62,
+        width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: "transparent",
           textColor: "#565A69",
@@ -89,12 +93,10 @@ const BarChart = ({
         rightPriceScale: {
           scaleMargins: {
             top: 0.1,
-            bottom: 0,
+            bottom: 0.1,
           },
-
           drawTicks: false,
           borderVisible: false,
-          visible: false,
         },
         timeScale: {
           borderVisible: false,
@@ -117,15 +119,13 @@ const BarChart = ({
           },
           vertLine: {
             visible: true,
-            style: 3,
-            width: 1,
+            style: 0,
+            width: 2,
             color: "#505050",
-            labelBackgroundColor: color,
             labelVisible: false,
           },
         },
       });
-
       chart.timeScale().fitContent();
       setChart(chart);
     }
@@ -133,12 +133,16 @@ const BarChart = ({
 
   useEffect(() => {
     if (chartCreated && data) {
-      const series = chartCreated.addHistogramSeries({
-        color,
+      const series = chartCreated.addAreaSeries({
+        lineColor: color,
+        topColor: darken(0.36, color),
+        // bottomColor: theme.bg0,
+        lineWidth: 2,
+        priceLineVisible: false,
       });
-
       series.setData(data);
       chartCreated.timeScale().fitContent();
+      chartCreated.timeScale().scrollToRealTime();
 
       series.applyOptions({
         priceFormat: {
@@ -162,9 +166,9 @@ const BarChart = ({
           if (setValue) setValue(undefined);
           if (setLabel) setLabel(undefined);
         } else if (series && param) {
+          const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
           const time = param?.time as { day: number; year: number; month: number };
           const timeString = dayjs(`${time.year}-${time.month}-${time.day}`).format("MMM D, YYYY");
-          const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
           if (setValue) setValue(price);
           if (setLabel && timeString) setLabel(timeString);
         }
@@ -177,12 +181,11 @@ const BarChart = ({
       sx={{
         width: "100%",
         padding: "1rem",
-        paddingRight: "2rem",
         display: "flex",
-        // backgroundColor: ${({ theme }) => theme.bg0}
+        // backgroundColor: theme.palette.background.
         flexDirection: "column",
         minHeight,
-        "> * ": {
+        "& > *": {
           fontSize: "1rem",
         },
       }}
@@ -191,7 +194,7 @@ const BarChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </GridRowBetween>
-      <div ref={chartRef} id="bar-chart" {...rest} />
+      <div ref={chartRef} id="line-chart" {...rest} />
       <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
@@ -199,5 +202,3 @@ const BarChart = ({
     </Box>
   );
 };
-
-export default BarChart;

@@ -4,7 +4,6 @@ import { useAppSelector, useAppDispatch } from "store/hooks";
 import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
 import { resultFormat } from "@icpswap/utils";
 import {
-  Token,
   FeeAmount,
   TickMath,
   tickToPrice,
@@ -13,7 +12,7 @@ import {
   encodeSqrtRatioX96,
   Pool,
   Position,
-  Currency,
+  Token,
   Rounding,
   Price,
   CurrencyAmount,
@@ -261,7 +260,7 @@ export function useMintInfo(
   currencyA: Token | undefined,
   currencyB: Token | undefined,
   feeAmount: FeeAmount | undefined,
-  baseCurrency: Currency | undefined,
+  baseCurrency: Token | undefined,
   existingPosition?: Position,
   inverted?: boolean | undefined,
 ) {
@@ -556,7 +555,7 @@ export function useMintInfo(
     tickUpper,
   ]);
 
-  const maxAmounts: { [field in FIELD]?: CurrencyAmount<Currency> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
+  const maxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
@@ -566,7 +565,7 @@ export function useMintInfo(
     {},
   );
 
-  const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Currency> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
+  const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
@@ -697,8 +696,8 @@ export function useMintHandlers(noLiquidity: boolean) {
 }
 
 export function useRangeCallbacks(
-  baseCurrency: Currency | undefined,
-  quoteCurrency: Currency | undefined,
+  baseCurrency: Token | undefined,
+  quoteCurrency: Token | undefined,
   feeAmount: FeeAmount,
   tickLower: number | undefined,
   tickUpper: number | undefined,

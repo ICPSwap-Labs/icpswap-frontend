@@ -1,5 +1,5 @@
 import { Box, Avatar } from "@mui/material";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
@@ -7,8 +7,8 @@ import { getSwapOutAmount } from "store/swap/hooks";
 import { TextButton } from "components/index";
 
 export interface GetStepsArgs {
-  inputCurrency: Currency;
-  outputCurrency: Currency;
+  inputCurrency: Token;
+  outputCurrency: Token;
   amount0: string;
   amount1: string;
   key: string;

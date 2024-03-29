@@ -1,31 +1,32 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { GridRowBetween } from "ui-component/index";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
+import { usePrevious } from "@icpswap/hooks";
+import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
 
-export type LineChartProps = {
+export type BarChartProps = {
   data: any[];
   color?: string | undefined;
   height?: number | undefined;
   minHeight?: number;
   setValue?: Dispatch<SetStateAction<number | undefined>>; // used for value on hover
-  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for value label on hover
+  setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for label of valye
   topLeft?: ReactNode | undefined;
   topRight?: ReactNode | undefined;
   bottomLeft?: ReactNode | undefined;
   bottomRight?: ReactNode | undefined;
-  onHoverChange?: (data: any) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const CandleChart = ({
+export function BarChart({
   data,
   color = "#56B2A4",
   setValue,
@@ -36,14 +37,25 @@ const CandleChart = ({
   bottomRight,
   height = DEFAULT_HEIGHT,
   minHeight = DEFAULT_HEIGHT,
-  onHoverChange,
   ...rest
-}: LineChartProps) => {
+}: BarChartProps) {
   const theme = useTheme() as Theme;
-
-  const textColor = theme.palette.text.secondary;
+  const textColor = "#fff";
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartCreated, setChart] = useState<IChartApi | undefined>();
+
+  const dataPrev = usePrevious(data);
+
+  // reset on new data
+  useEffect(() => {
+    if (dataPrev !== data && chartCreated) {
+      chartCreated.resize(0, 0);
+      setChart(undefined);
+    }
+  }, [data, dataPrev, chartCreated]);
+
+  // for reseting value on hover exit
+  const currentValue = data[data.length - 1]?.value;
 
   const handleResize = useCallback(() => {
     if (chartCreated && chartRef?.current?.parentElement) {
@@ -68,28 +80,27 @@ const CandleChart = ({
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
         height,
-        width: chartRef.current.parentElement.clientWidth - 32,
+        width: chartRef.current.parentElement.clientWidth - 62,
         layout: {
           backgroundColor: "transparent",
-          textColor,
+          textColor: "#565A69",
           fontFamily: "Inter var",
         },
         rightPriceScale: {
           scaleMargins: {
             top: 0.1,
-            bottom: 0.1,
+            bottom: 0,
           },
+
+          drawTicks: false,
           borderVisible: false,
+          visible: false,
         },
         timeScale: {
           borderVisible: false,
-          secondsVisible: true,
-          tickMarkFormatter: (unixTime: number) => {
-            return dayjs.unix(unixTime).format("MM/DD h:mm A");
-          },
         },
         watermark: {
-          visible: false,
+          color: "rgba(0, 0, 0, 0)",
         },
         grid: {
           horzLines: {
@@ -104,14 +115,13 @@ const CandleChart = ({
             visible: false,
             labelVisible: false,
           },
-          mode: 1,
           vertLine: {
             visible: true,
-            labelVisible: false,
             style: 3,
             width: 1,
-            color: textColor,
+            color: "#505050",
             labelBackgroundColor: color,
+            labelVisible: false,
           },
         },
       });
@@ -119,30 +129,22 @@ const CandleChart = ({
       chart.timeScale().fitContent();
       setChart(chart);
     }
-  }, [color, chartCreated, data, height, setValue, textColor, theme]);
+  }, [color, chartCreated, currentValue, data, height, setValue, textColor, theme]);
 
   useEffect(() => {
     if (chartCreated && data) {
-      const series = chartCreated.addCandlestickSeries({
-        upColor: "green",
-        downColor: "red",
-        borderDownColor: "red",
-        borderUpColor: "green",
-        wickDownColor: "red",
-        wickUpColor: "green",
+      const series = chartCreated.addHistogramSeries({
+        color,
       });
 
       series.setData(data);
-
-      const lastOpen = data[data.length - 1] ? data[data.length - 1].open : undefined;
-
-      const precision = lastOpen ? (lastOpen < 0.000001 ? 8 : lastOpen < 0.0001 ? 6 : lastOpen < 0.001 ? 4 : 3) : 2;
+      chartCreated.timeScale().fitContent();
 
       series.applyOptions({
         priceFormat: {
-          type: "price",
-          precision,
-          minMove: 1 / 10 ** precision,
+          type: "custom",
+          minMove: 0.02,
+          formatter: (price: any) => formatDollarAmount(price),
         },
       });
 
@@ -157,31 +159,30 @@ const CandleChart = ({
             (param && param.point && param.point.y < 0) ||
             (param && param.point && param.point.y > height))
         ) {
-          // reset values
           if (setValue) setValue(undefined);
           if (setLabel) setLabel(undefined);
-          if (onHoverChange) onHoverChange(undefined);
         } else if (series && param) {
-          const timestamp = param.time as number;
-          const time = dayjs.unix(timestamp).format("MMM D, YYYY h:mm A");
-          const parsed = param.seriesPrices.get(series) as { open: number } | undefined;
-          if (setValue) setValue(parsed?.open);
-          if (setLabel) setLabel(time);
-          if (onHoverChange) onHoverChange(parsed);
+          const time = param?.time as { day: number; year: number; month: number };
+          const timeString = dayjs(`${time.year}-${time.month}-${time.day}`).format("MMM D, YYYY");
+          const price = parseFloat(param?.seriesPrices?.get(series)?.toString() ?? currentValue);
+          if (setValue) setValue(price);
+          if (setLabel && timeString) setLabel(timeString);
         }
       });
     }
-  }, [chartCreated, color, data, height, setValue, setLabel]);
+  }, [chartCreated, color, currentValue, data, height, setLabel, setValue]);
 
   return (
     <Box
       sx={{
         width: "100%",
         padding: "1rem",
+        paddingRight: "2rem",
         display: "flex",
+        // backgroundColor: ${({ theme }) => theme.bg0}
         flexDirection: "column",
         minHeight,
-        " > *": {
+        "> * ": {
           fontSize: "1rem",
         },
       }}
@@ -190,13 +191,11 @@ const CandleChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </GridRowBetween>
-      <div ref={chartRef} id="candle-chart" {...rest} />
+      <div ref={chartRef} id="bar-chart" {...rest} />
       <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
       </GridRowBetween>
     </Box>
   );
-};
-
-export default CandleChart;
+}

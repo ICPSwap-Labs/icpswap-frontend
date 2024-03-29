@@ -4,7 +4,7 @@ import SwapModal from "components/modal/swap";
 import CurrencyAvatar from "components/CurrencyAvatar";
 import { BURN_FIELD } from "constants/swap";
 import { Trans } from "@lingui/macro";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 
 export default memo(
   ({
@@ -18,8 +18,8 @@ export default memo(
     open: boolean;
     onCancel: () => void;
     onConfirm: () => void;
-    currencyA: Currency | undefined;
-    currencyB: Currency | undefined;
+    currencyA: Token | undefined;
+    currencyB: Token | undefined;
     formattedAmounts: { [key in BURN_FIELD]?: string };
   }) => {
     return (

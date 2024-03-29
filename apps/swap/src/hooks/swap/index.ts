@@ -1,7 +1,7 @@
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { NumberType, ResultStatus } from "@icpswap/types";
 import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
-import { Token, Currency, FeeAmount } from "@icpswap/swap-sdk";
+import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import { getPoolCanisterId } from "hooks/swap/v3Calls";
 import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
@@ -17,10 +17,7 @@ import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
 import { SubAccount } from "@dfinity/ledger-icp";
 
-export function useActualSwapAmount(
-  amount: NumberType | undefined,
-  currency: Currency | undefined,
-): string | undefined {
+export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
   return useMemo(() => {
     if (!amount || !currency) return undefined;
 

@@ -1,7 +1,7 @@
-import { useTvlStorageCanister, getTokenChartTvl } from "@icpswap/hooks";
 import { useState, useEffect, useMemo } from "react";
-import { TvlChartDayData } from "types/info";
-import { getNoLengthPaginationAllData } from "hooks/useNoLengthPaginationData";
+import { TvlChartDayData } from "@icpswap/types";
+import { useTvlStorageCanister, getTokenChartTvl } from "./info";
+import { getLimitedInfinityCall } from "./useLimitedInfinityCall";
 
 export function useTokenTvlChart(canisterId: string | undefined) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export function useTokenTvlChart(canisterId: string | undefined) {
                 return await getTokenChartTvl(storageId, canisterId, offset, limit);
               };
 
-              return await getNoLengthPaginationAllData<TvlChartDayData>(callback, 1000, 5);
+              return await getLimitedInfinityCall<TvlChartDayData>(callback, 1000, 5);
             }),
           )
         )
@@ -31,14 +31,6 @@ export function useTokenTvlChart(canisterId: string | undefined) {
             if (a.timestamp > b.timestamp) return 1;
             return 0;
           });
-
-        // if (chartData) {
-        //   if (chartData.length > 1000) {
-        //     setChartData(chartData.slice(chartData.length - 1 - 1000, chartData.length - 1));
-        //   } else {
-        //     setChartData(chartData);
-        //   }
-        // }
 
         setChartData(chartData);
         setLoading(false);

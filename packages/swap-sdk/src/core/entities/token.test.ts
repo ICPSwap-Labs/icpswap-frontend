@@ -9,8 +9,8 @@ describe("Token", () => {
     it("fails with invalid address", () => {
       expect(
         () =>
-          new Token({ address: "0xhello00000000000000000000000000000000002", decimals: 18, standard: "EXT" }).address
-      ).toThrow("0xhello00000000000000000000000000000000002 is not a valid address");
+          new Token({ address: "0x_hello_00000000000000000000000000000000002", decimals: 18, standard: "EXT" }).address,
+      ).toThrow("0x_hello_00000000000000000000000000000000002 is not a valid address");
     });
     it("fails with negative decimals", () => {
       expect(() => new Token({ address: ADDRESS_ONE, decimals: -1, standard: "EXT" }).address).toThrow("DECIMALS");
@@ -27,24 +27,24 @@ describe("Token", () => {
     it("fails if address differs", () => {
       expect(
         new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" }).equals(
-          new Token({ address: ADDRESS_TWO, decimals: 18, standard: "EXT" })
-        )
+          new Token({ address: ADDRESS_TWO, decimals: 18, standard: "EXT" }),
+        ),
       ).toBe(false);
     });
 
     it("true if only decimals differs", () => {
       expect(
         new Token({ address: ADDRESS_ONE, decimals: 9, standard: "EXT" }).equals(
-          new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" })
-        )
+          new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" }),
+        ),
       ).toBe(true);
     });
 
     it("true if address is the same", () => {
       expect(
         new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" }).equals(
-          new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" })
-        )
+          new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" }),
+        ),
       ).toBe(true);
     });
 
@@ -66,7 +66,7 @@ describe("Token", () => {
         decimals: 18,
         symbol: "DAI",
         name: "DAI",
-        standard: "EXT"
+        standard: "EXT",
       });
       expect(tokenA.equals(tokenB)).toBe(true);
     });

@@ -3,12 +3,10 @@ import { Typography, Box, Grid, Button, Tooltip } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Wrapper } from "ui-component/index";
-import { useSwapProtocolData } from "@icpswap/hooks";
+import { useSwapProtocolData, useTransformedVolumeData } from "@icpswap/hooks";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
-import { GridAutoRows , MainCard } from "@icpswap/ui";
+import { GridAutoRows, MainCard, BarChartAlt, LineChartAlt } from "@icpswap/ui";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -16,7 +14,6 @@ import SwapAnalyticLoading from "ui-component/analytic/Loading";
 import { useHistory } from "react-router-dom";
 import { QuestionMark } from "assets/icons/QuestionMark";
 import { useChartData } from "hooks/info/useSwapChartData";
-import { useTransformedVolumeData } from "hooks/chart";
 import ChartDateButton from "ui-component/ChartDateButton";
 import { VolumeWindow } from "types/analytic";
 
@@ -153,7 +150,7 @@ export default function SwapOverview() {
             )}
 
             {formattedTvlData ? (
-              <LineChart
+              <LineChartAlt
                 data={formattedTvlData}
                 height={220}
                 minHeight={332}
@@ -221,7 +218,7 @@ export default function SwapOverview() {
             ) : null}
 
             {!!volumeDayData && !!formattedVolumeData ? (
-              <BarChart
+              <BarChartAlt
                 height={220}
                 minHeight={332}
                 data={
@@ -235,7 +232,13 @@ export default function SwapOverview() {
                 setLabel={setRightLabel}
                 value={volumeHover}
                 label={rightLabel}
-                activeWindow={volumeWindow}
+                activeWindow={
+                  volumeWindow === VolumeWindow.daily
+                    ? "daily"
+                    : volumeWindow === VolumeWindow.monthly
+                    ? "monthly"
+                    : "weekly"
+                }
                 topRight={
                   <Box
                     sx={{

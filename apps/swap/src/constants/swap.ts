@@ -1,4 +1,4 @@
-import { ICP, WRAPPED_ICP, ICS, GHOST } from "@icpswap/tokens";
+import { ICP, WRAPPED_ICP, GHOST } from "@icpswap/tokens";
 import { isIC } from "./server";
 
 export enum SWAP_FIELD {

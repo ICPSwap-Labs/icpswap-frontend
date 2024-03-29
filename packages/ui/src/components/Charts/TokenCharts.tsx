@@ -1,38 +1,33 @@
 import { useState, useMemo } from "react";
 import { Typography, Box } from "@mui/material";
-import { t } from "@lingui/macro";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
-import { MainCard } from "ui-component/index";
+import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
+import type { PublicTokenChartDayData } from "@icpswap/types";
+import { VolumeWindow } from "@icpswap/constants";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
-import CandleChart from "ui-component/CandleChart";
-import ChartToggle, { ChartView } from "ui-component/analytic/ChartViewsButton";
-import SwapAnalyticLoading from "ui-component/analytic/Loading";
-import { useTokenTvlChart } from "hooks/info/useTokenTvlChart";
-import { useTokenVolChart } from "hooks/info/useTokenVolChart";
-import { useTokenPriceChart } from "hooks/info/useTokenPriceChart";
-import { PublicTokenChartDayData } from "types/info";
-import ChartDateButtons from "ui-component/ChartDateButton";
-import { VolumeWindow } from "types/analytic";
-import { useTransformedVolumeData } from "hooks/chart";
+
+import { LineChartAlt } from "../LineChart/alt";
+import { BarChartAlt } from "../BarChart/alt";
+import { CandleChart } from "../CandleChart/index";
+import { ChartDateButtons } from "./ChartDateButton";
+
+import { ChartToggle, ChartView } from "./Button";
+import { SwapAnalyticLoading } from "./Loading";
+
+import { MainCard } from "../MainCard";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
 export const chartViews = [
-  { label: t`Volume`, key: ChartView.VOL },
-  { label: t`TVL`, key: ChartView.TVL },
-  { label: t`Price`, key: ChartView.PRICE },
+  { label: `Volume`, key: ChartView.VOL },
+  { label: `TVL`, key: ChartView.TVL },
+  { label: `Price`, key: ChartView.PRICE },
 ];
-
-export interface TokenChartsProps {
-  canisterId: string;
-  volume?: number;
-}
 
 function volumeDataFormatter(data: PublicTokenChartDayData[]) {
   const oldData = [...data];
@@ -93,7 +88,14 @@ type PriceLine = {
   low: number;
 };
 
-export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
+export interface TokenChartsProps {
+  canisterId: string;
+  volume?: number;
+  background?: number;
+  borderRadius?: string;
+}
+
+export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }: TokenChartsProps) {
   const { result: chartData } = useTokenVolChart(canisterId);
 
   const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
@@ -170,7 +172,8 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
 
   return (
     <MainCard
-      level={2}
+      level={background}
+      borderRadius={borderRadius}
       sx={{
         position: "relative",
       }}
@@ -252,7 +255,7 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
       <Box mt="20px">
         {chartView === ChartView.TVL ? (
           formattedTvlData.length > 0 ? (
-            <LineChart
+            <LineChartAlt
               data={formattedTvlData}
               setLabel={setValueLabel}
               minHeight={340}
@@ -265,14 +268,20 @@ export function TokenCharts({ canisterId, volume }: TokenChartsProps) {
           )
         ) : chartView === ChartView.VOL ? (
           formattedVolumeData && formattedVolumeData.length > 0 ? (
-            <BarChart
+            <BarChartAlt
               data={formattedVolumeData}
               minHeight={340}
               setValue={setLatestValue}
               setLabel={setValueLabel}
               value={latestValue}
               label={valueLabel}
-              activeWindow={volumeWindow}
+              activeWindow={
+                volumeWindow === VolumeWindow.daily
+                  ? "daily"
+                  : volumeWindow === VolumeWindow.monthly
+                  ? "monthly"
+                  : "weekly"
+              }
             />
           ) : (
             <Box sx={{ height: "340px", width: "auto" }} />

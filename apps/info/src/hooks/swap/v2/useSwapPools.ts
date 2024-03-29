@@ -1,9 +1,9 @@
-import { FeeAmount, Currency, Token } from "@icpswap/swap-sdk";
+import { FeeAmount, Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useAllCurrencyCombinations } from "../useAllCurrencyCombinations";
 import { PoolState, usePools } from "./usePools";
 
-export function useSwapPools(currencyIn: Currency | undefined, currencyOut: Currency | undefined) {
+export function useSwapPools(currencyIn: Token | undefined, currencyOut: Token | undefined) {
   const allCurrencyCombinations = useAllCurrencyCombinations(currencyIn, currencyOut);
 
   const allCurrencyCombinationsWithAllFees: [Token, Token, FeeAmount][] = useMemo(() => {

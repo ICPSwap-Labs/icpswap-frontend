@@ -1,4 +1,4 @@
-import { Pool, Currency, FeeAmount } from "@icpswap/swap-sdk";
+import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
 import { useMemo, useEffect, useState } from "react";
 import { v2SwapPool, v2SwapFactory } from "hooks/v2-actor";
@@ -19,7 +19,7 @@ type TypePoolsState = {
 };
 
 export function usePools(
-  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
+  poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][],
 ): [PoolState, Pool | null][] {
   const [pools, setPools] = useState<TypePoolsState[]>([]);
   const [loading, setLoading] = useState(false);
@@ -103,12 +103,8 @@ export function usePools(
   }, [pools, loading, poolKeys, transformedPoolKeys]);
 }
 
-export function usePool(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined,
-) {
-  const poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][] = useMemo(
+export function usePool(currencyA: Token | undefined, currencyB: Token | undefined, feeAmount: FeeAmount | undefined) {
+  const poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
     [currencyA, currencyB, feeAmount],
   );

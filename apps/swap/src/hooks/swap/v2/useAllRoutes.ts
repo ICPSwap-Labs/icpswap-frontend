@@ -1,15 +1,15 @@
-import { Route, Currency } from "@icpswap/swap-sdk";
+import { Route, Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useIsSingleHop } from "store/swapv2/cache/hooks";
 import { useSwapPools } from "./useSwapPools";
 import { computeAllRoutes } from "../useAllRoutes";
 
 export function useAllRoutes(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
 ): {
   loading: boolean;
-  routes: Route<Currency, Currency>[];
+  routes: Route<Token, Token>[];
 } {
   const { pools, loading: poolsLoading } = useSwapPools(currencyIn, currencyOut);
 

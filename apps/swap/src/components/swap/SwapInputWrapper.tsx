@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { Box } from "@mui/material";
 import SwitchIcon from "assets/images/swap/switch";
-import { CurrencyAmount, Currency, NativeCurrency, Token } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState, useSwapHandlers } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { SWAP_FIELD } from "constants/swap";
-import { UseCurrencyState } from "hooks/useCurrency";
+import { UseCurrencyState } from "hooks/useToken";
 import { TokenInfo } from "types/token";
 import { SwapInputCurrency } from "./SwapInputCurrency";
 
@@ -17,8 +17,8 @@ export interface SwapInputWrapperProps {
   tokenAPrice: string | number | undefined;
   tokenBPrice: string | number | undefined;
   parsedAmounts: {
-    INPUT: CurrencyAmount<Token | NativeCurrency> | undefined;
-    OUTPUT: CurrencyAmount<Currency> | undefined;
+    INPUT: CurrencyAmount<Token> | undefined;
+    OUTPUT: CurrencyAmount<Token> | undefined;
   };
   tradePoolId: string | undefined;
   currencyBalances: {

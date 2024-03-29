@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { brushX, select, ScaleLinear, BrushBehavior } from "d3";
 import styled from "styled-components/macro";
-import usePrevious from "hooks/usePrevious";
+import { usePrevious } from "@icpswap/hooks";
 import { useTheme } from "@mui/material";
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 

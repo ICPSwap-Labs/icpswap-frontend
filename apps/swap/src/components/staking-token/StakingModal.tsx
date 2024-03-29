@@ -9,7 +9,7 @@ import BigNumber from "bignumber.js";
 import Identity, { CallbackProps } from "components/Identity";
 import MaxButton from "components/MaxButton";
 import type { ActorIdentity, StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useToken } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { Modal, NumberTextField } from "components/index";
 import { isUseTransfer } from "utils/token";
 

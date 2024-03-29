@@ -10,7 +10,7 @@ import {
 } from "hooks/staking-farm";
 import CountUp from "react-countup";
 import { makeStyles, useTheme } from "@mui/styles";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { INFO_URL, AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
@@ -101,10 +101,10 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
   const userRewardAmount = useIntervalUserRewardInfo(farm.farmCid, positionIds);
 
-  const [, token0] = useCurrency(farm.poolToken0.address) ?? undefined;
-  const [, token1] = useCurrency(farm.poolToken1.address) ?? undefined;
+  const [, token0] = useToken(farm.poolToken0.address) ?? undefined;
+  const [, token1] = useToken(farm.poolToken1.address) ?? undefined;
 
-  const [, rewardToken] = useCurrency(farm.rewardToken.address) ?? undefined;
+  const [, rewardToken] = useToken(farm.rewardToken.address) ?? undefined;
 
   const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,

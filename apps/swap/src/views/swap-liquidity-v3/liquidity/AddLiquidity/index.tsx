@@ -16,7 +16,7 @@ import {
   useResetMintState,
 } from "store/swap/liquidity/hooks";
 import { useSlippageManager } from "store/swap/cache/hooks";
-import { useCurrency, UseCurrencyState, useToken } from "hooks/useCurrency";
+import { UseCurrencyState, useToken } from "hooks/useToken";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useAccount } from "store/global/hooks";
@@ -101,10 +101,9 @@ export default function AddLiquidity() {
 
   const feeAmount = feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
 
-  const [useCurrencyALoading, baseCurrency] = useCurrency(currencyIdA);
-  const [useCurrencyBLoading, currencyB] = useCurrency(currencyIdB);
-  const quoteCurrency =
-    baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB;
+  const [useCurrencyALoading, baseCurrency] = useToken(currencyIdA);
+  const [useCurrencyBLoading, currencyB] = useToken(currencyIdB);
+  const quoteCurrency = baseCurrency && currencyB && baseCurrency.equals(currencyB) ? undefined : currencyB;
 
   const { independentField, typedValue, startPrice } = useMintState();
 

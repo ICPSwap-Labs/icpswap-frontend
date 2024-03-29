@@ -6,6 +6,7 @@ import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import { t } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
+import { useHistory } from "react-router-dom";
 
 import ProfileSection from "./ProfileSection";
 import MobileNavbar from "../Navbar/MobileNavbar";
@@ -22,12 +23,17 @@ export const customizeTheme = createTheme({
 export const customizeBreakPoints = customizeTheme.breakpoints;
 
 export default function Header() {
+  const history = useHistory();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const matchDownMD = useMediaQuery(customizeBreakPoints.down("md"));
 
   const handleToggleDrawer = () => {
     setDrawerOpen(true);
+  };
+
+  const handleLoadPage = (path: string) => {
+    history.push(path);
   };
 
   return (
@@ -75,8 +81,8 @@ export default function Header() {
                 }}
               />
             </Box>
-            <ButtonChip label={t`Wallet`} />
-            <ButtonChip label={t`Standard Modal`} />
+            <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
+            <ButtonChip label={t`Standard Modal`} onClick={() => handleLoadPage("/swap")} />
             <ProfileSection />
           </Box>
         </Grid>

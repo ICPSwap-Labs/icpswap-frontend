@@ -1,18 +1,18 @@
 import React, { Dispatch, SetStateAction, ReactNode } from "react";
-import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from "recharts";
+import { ResponsiveContainer, XAxis, Tooltip, AreaChart, Area } from "recharts";
 import { Box } from "@mui/material";
-import { GridRowBetween } from "ui-component/index";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { VolumeWindow } from "types/analytic";
+import { darken } from "polished";
+import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
 
-export type LineChartProps = {
+export type LineChartAltProps = {
   data: any[];
   color?: string | undefined;
   height?: number | undefined;
@@ -21,7 +21,6 @@ export type LineChartProps = {
   setLabel?: Dispatch<SetStateAction<string | undefined>>; // used for label of valye
   value?: number;
   label?: string;
-  activeWindow?: VolumeWindow;
   topLeft?: ReactNode | undefined;
   topRight?: ReactNode | undefined;
   bottomLeft?: ReactNode | undefined;
@@ -29,34 +28,13 @@ export type LineChartProps = {
   tickFormat?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const CustomBar = ({
-  x,
-  y,
-  width,
-  height,
-  fill,
-}: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  fill: string;
-}) => {
-  return (
-    <g>
-      <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
-    </g>
-  );
-};
-
-export default function Chart({
+export function LineChartAlt({
   data,
   color = "#5669dc",
-  setValue,
-  setLabel,
   value,
   label,
-  activeWindow,
+  setValue,
+  setLabel,
   topLeft,
   topRight,
   bottomLeft,
@@ -64,11 +42,9 @@ export default function Chart({
   minHeight = DEFAULT_HEIGHT,
   tickFormat = "DD",
   ...rest
-}: LineChartProps) {
+}: LineChartAltProps) {
   const theme = useTheme() as Theme;
   const parsedValue = value;
-
-  const now = dayjs();
 
   return (
     <Box
@@ -76,20 +52,21 @@ export default function Chart({
         width: "100%",
         height: `${DEFAULT_HEIGHT}px`,
         display: "flex",
-        flexDirection: "column",
         minHeight,
+        flexDirection: "column",
         "> *": {
           fontSize: "1rem",
         },
       }}
       {...rest}
     >
-      <GridRowBetween align="flex-start">
+      <GridRowBetween>
         {topLeft ?? null}
         {topRight ?? null}
       </GridRowBetween>
+
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart
+        <AreaChart
           width={500}
           height={300}
           data={data}
@@ -104,49 +81,36 @@ export default function Chart({
             if (setValue) setValue(undefined);
           }}
         >
+          <defs>
+            <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={darken(0.36, color)} stopOpacity={0.5} />
+              <stop offset="100%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <XAxis
             dataKey="time"
             axisLine={false}
             tickLine={false}
-            tickFormatter={(time) => dayjs(time).format(activeWindow === VolumeWindow.monthly ? "MMM" : tickFormat)}
+            tickFormatter={(time) => dayjs(time).format(tickFormat)}
             minTickGap={10}
             tick={{ fill: theme.palette.text.secondary }}
           />
           <Tooltip
-            cursor={{ fill: "#29314F" }}
+            cursor={{ stroke: "#8572FF" }}
             contentStyle={{ display: "none" }}
             // @ts-ignore
             formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);
               }
-              const formattedTime = dayjs(props.payload.time).format("MMM D");
-              const formattedTimeDaily = dayjs(props.payload.time).format("MMM D YYYY");
-              const formattedTimePlusWeek = dayjs(props.payload.time).add(1, "week");
-              const formattedTimePlusMonth = dayjs(props.payload.time).add(1, "month");
-
-              if (setLabel && label !== formattedTime) {
-                if (activeWindow === VolumeWindow.weekly) {
-                  const isCurrent = formattedTimePlusWeek.isAfter(now);
-                  setLabel(`${formattedTime}-${isCurrent ? "current" : formattedTimePlusWeek.format("MMM D, YYYY")}`);
-                } else if (activeWindow === VolumeWindow.monthly) {
-                  const isCurrent = formattedTimePlusMonth.isAfter(now);
-                  setLabel(`${formattedTime}-${isCurrent ? "current" : formattedTimePlusMonth.format("MMM D, YYYY")}`);
-                } else {
-                  setLabel(formattedTimeDaily);
-                }
-              }
+              const formattedTime = dayjs(props.payload.time).format("MMM D, YYYY");
+              if (setLabel && label !== formattedTime) setLabel(formattedTime);
             }}
           />
-          <Bar
-            dataKey="value"
-            fill={color}
-            shape={(props: any) => {
-              return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={color} />;
-            }}
-          />
-        </BarChart>
+          <Area dataKey="value" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />
+        </AreaChart>
       </ResponsiveContainer>
+
       <GridRowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}

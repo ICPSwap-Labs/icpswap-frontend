@@ -1,7 +1,7 @@
 import { Position } from "@icpswap/swap-sdk";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { usePool, PoolState } from "hooks/swap/usePools";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 
 export interface usePositionProps {
   poolId: string | undefined;
@@ -13,8 +13,8 @@ export interface usePositionProps {
 export function usePosition(userPosition: usePositionProps | undefined) {
   const { result: poolMetadata } = useSwapPoolMetadata(userPosition?.poolId);
 
-  const [, currency0] = useCurrency(poolMetadata?.token0.address);
-  const [, currency1] = useCurrency(poolMetadata?.token1.address);
+  const [, currency0] = useToken(poolMetadata?.token0.address);
+  const [, currency1] = useToken(poolMetadata?.token1.address);
 
   const [poolState, pool] = usePool(
     currency0 ?? undefined,

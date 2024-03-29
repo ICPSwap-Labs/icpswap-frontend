@@ -36,10 +36,6 @@ export function useToken(tokenId: string | undefined): [UseCurrencyState, Token 
   }, [tokenId, tokenInfo, queryLoading]);
 }
 
-export function useCurrency(currencyId: string | undefined) {
-  return useToken(currencyId);
-}
-
 export function useCurrencyFromInfo(tokenInfo: TokenInfo | undefined) {
   return useMemo(() => {
     if (!tokenInfo) return undefined;

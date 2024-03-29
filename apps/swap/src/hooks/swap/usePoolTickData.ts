@@ -1,4 +1,4 @@
-import { tickToPrice, TICK_SPACINGS, Currency, FeeAmount, Token, TickMath } from "@icpswap/swap-sdk";
+import { tickToPrice, TICK_SPACINGS, Token, FeeAmount, TickMath } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { JSBI } from "utils/index";
 import { useMemo } from "react";
@@ -58,8 +58,8 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
 }
 
 export function usePoolActiveLiquidity(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
+  currencyA: Token | undefined,
+  currencyB: Token | undefined,
   feeAmount: FeeAmount,
 ) {
   const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;

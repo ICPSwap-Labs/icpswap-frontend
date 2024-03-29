@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { Currency, Price, Token } from "../core";
+import { Token, Price } from "../core";
 import { Pool } from "./pool";
 
 /**
@@ -7,10 +7,13 @@ import { Pool } from "./pool";
  * @template TInput The input token
  * @template TOutput The output token
  */
-export class Route<TInput extends Currency, TOutput extends Currency> {
+export class Route<TInput extends Token, TOutput extends Token> {
   public readonly pools: Pool[];
+
   public readonly tokenPath: Token[];
+
   public readonly input: TInput;
+
   public readonly output: TOutput;
 
   private _midPrice: Price<TInput, TOutput> | null = null;
@@ -35,14 +38,8 @@ export class Route<TInput extends Currency, TOutput extends Currency> {
     const tokenPath: Token[] = [wrappedInput];
     for (const [i, pool] of pools.entries()) {
       const currentInputToken = tokenPath[i];
-      invariant(
-        currentInputToken.equals(pool.token0) ||
-          currentInputToken.equals(pool.token1),
-        "PATH"
-      );
-      const nextToken = currentInputToken.equals(pool.token0)
-        ? pool.token1
-        : pool.token0;
+      invariant(currentInputToken.equals(pool.token0) || currentInputToken.equals(pool.token1), "PATH");
+      const nextToken = currentInputToken.equals(pool.token0) ? pool.token1 : pool.token0;
       tokenPath.push(nextToken);
     }
 
@@ -78,14 +75,11 @@ export class Route<TInput extends Currency, TOutput extends Currency> {
         : {
             nextInput: this.pools[0].token0,
             price: this.pools[0].token1Price,
-          }
+          },
     ).price;
 
-    return (this._midPrice = new Price(
-      this.input,
-      this.output,
-      price.denominator,
-      price.numerator
-    ));
+    this._midPrice = new Price(this.input, this.output, price.denominator, price.numerator);
+
+    return this._midPrice;
   }
 }

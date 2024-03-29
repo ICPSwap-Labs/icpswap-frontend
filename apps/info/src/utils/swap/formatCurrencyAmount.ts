@@ -1,7 +1,7 @@
-import { Price, Currency, CurrencyAmount, Fraction } from "@icpswap/swap-sdk";
+import { Price, Token, CurrencyAmount, Fraction } from "@icpswap/swap-sdk";
 import JSBI from "jsbi";
 
-export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefined, sigFigs: number) {
+export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number) {
   if (!amount) return "--";
 
   if (JSBI.equal(amount.quotient, JSBI.BigInt(0))) {
@@ -15,7 +15,7 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefine
   return amount.toFixed(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
 }
 
-export function formatPrice(price: Price<Currency, Currency> | undefined, sigFigs: number, format?: object) {
+export function formatPrice(price: Price<Token, Token> | undefined, sigFigs: number, format?: object) {
   if (!price) {
     return "-";
   }

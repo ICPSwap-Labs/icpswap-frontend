@@ -9,11 +9,9 @@ import BigNumber from "bignumber.js";
 import { MainCard, TextButton, Breadcrumbs } from "ui-component/index";
 import { useGraphPool, useGraphPoolTVLChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion } from "@icpswap/ui";
+import { GridAutoRows, Proportion, LineChartAlt, BarChartAlt } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
 import DensityChart from "ui-component/DensityChart/v2";
 import ChartToggle, { ChartView } from "ui-component/analytic-v2/ChartViewsButton";
 import PoolTransactions from "ui-component/analytic-v2/PoolTransactions";
@@ -172,7 +170,7 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
         }}
       >
         {chartView === ChartView.VOL ? (
-          <BarChart
+          <BarChartAlt
             data={formattedVolumeData}
             minHeight={340}
             setValue={setLatestValue}
@@ -181,9 +179,9 @@ export function PoolChartData({ canisterId, token0Price }: { canisterId: string;
             label={valueLabel}
           />
         ) : chartView === ChartView.TVL ? (
-          <LineChart data={formattedTvlData} setLabel={setValueLabel} minHeight={340} setValue={setLatestValue} />
+          <LineChartAlt data={formattedTvlData} setLabel={setValueLabel} minHeight={340} setValue={setLatestValue} />
         ) : chartView === ChartView.FEES ? (
-          <BarChart
+          <BarChartAlt
             data={formattedFeesUSD}
             minHeight={340}
             setValue={setLatestValue}

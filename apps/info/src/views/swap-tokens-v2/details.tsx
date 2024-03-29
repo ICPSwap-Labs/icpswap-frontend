@@ -8,11 +8,8 @@ import { mockALinkAndOpen, toSignificant, formatDollarAmount } from "@icpswap/ut
 import BigNumber from "bignumber.js";
 import { useGraphToken, useGraphTokenTVLChartData, useGraphTokenPriceChartData } from "hooks/v2";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion } from "@icpswap/ui";
+import { GridAutoRows, Proportion, LineChartAlt, BarChartAlt, CandleChart } from "@icpswap/ui";
 import dayjs from "dayjs";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
-import CandleChart from "ui-component/CandleChart";
 import TokenPools from "ui-component/analytic-v2/TokenPools";
 import ChartToggle, { ChartView } from "ui-component/analytic-v2/ChartViewsButton";
 import TokenTransactions from "ui-component/analytic-v2/TokenTransactions";
@@ -174,7 +171,7 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
 
       <Box mt="20px">
         {chartView === ChartView.TVL ? (
-          <LineChart
+          <LineChartAlt
             data={formattedTvlData}
             setLabel={setValueLabel}
             minHeight={340}
@@ -183,7 +180,7 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
             label={valueLabel}
           />
         ) : chartView === ChartView.VOL ? (
-          <BarChart
+          <BarChartAlt
             data={formattedVolumeData}
             minHeight={340}
             setValue={setLatestValue}
@@ -196,7 +193,7 @@ export function TokenChartData({ canisterId }: { canisterId: string }) {
             <CandleChart data={priceChartData} setValue={setLatestValue} setLabel={setValueLabel} />
           ) : null
         ) : chartView === ChartView.TRANSACTIONS ? (
-          <BarChart
+          <BarChartAlt
             data={formattedTransactionData}
             minHeight={340}
             setValue={setLatestValue}

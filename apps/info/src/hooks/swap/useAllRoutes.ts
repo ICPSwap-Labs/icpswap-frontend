@@ -1,4 +1,4 @@
-import { Currency , Route, Pool } from "@icpswap/swap-sdk";
+import { Token, Route, Pool } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useSwapPools } from "./useSwapPools";
 
@@ -10,12 +10,12 @@ function poolEquals(poolA: Pool, poolB: Pool) {
 }
 
 function computeAllRoutes(
-  currencyIn: Currency,
-  currencyOut: Currency,
+  currencyIn: Token,
+  currencyOut: Token,
   pools: (Pool | null)[],
   currentPath: Pool[],
-  allPaths: Route<Currency, Currency>[],
-  startCurrencyIn: Currency = currencyIn,
+  allPaths: Route<Token, Token>[],
+  startCurrencyIn: Token = currencyIn,
   maxHops = 2,
 ) {
   const tokenIn = currencyIn?.wrapped;
@@ -38,11 +38,11 @@ function computeAllRoutes(
 }
 
 export function useAllRoutes(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
 ): {
   loading: boolean;
-  routes: Route<Currency, Currency>[];
+  routes: Route<Token, Token>[];
 } {
   const { pools, loading: poolsLoading } = useSwapPools(currencyIn, currencyOut);
 

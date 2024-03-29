@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, FeeAmount } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount, FeeAmount } from "@icpswap/swap-sdk";
 import { formatTokenAmount, resultFormat } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useMemo, useEffect, useState } from "react";
@@ -33,7 +33,7 @@ export function useUSDPrice(tokenId: string | undefined): number | undefined {
   }, [tokenId, ICP, icpPrice, graphToken]);
 }
 
-export function useUSDValue(currencyAmount: CurrencyAmount<Currency> | undefined) {
+export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {
   const price = useUSDPrice(currencyAmount?.currency.wrapped.address);
 
   return useMemo(() => {
@@ -46,8 +46,8 @@ export function useUSDValue(currencyAmount: CurrencyAmount<Currency> | undefined
   }, [currencyAmount, price]);
 }
 
-export function useInterfacePrice(currency: Currency | undefined): BigNumber | undefined {
-  const [amountOut, setAmountOut] = useState<CurrencyAmount<Currency> | undefined>(undefined);
+export function useInterfacePrice(currency: Token | undefined): BigNumber | undefined {
+  const [amountOut, setAmountOut] = useState<CurrencyAmount<Token> | undefined>(undefined);
 
   const [, pool] = usePool(currency, ICP, FeeAmount.MEDIUM);
 
@@ -73,7 +73,7 @@ export function useInterfacePrice(currency: Currency | undefined): BigNumber | u
     }
 
     // handle ICP
-    if (currency?.wrapped.equals(WRAPPED_ICP) || currency?.wrapped.equals(ICP)) {
+    if (currency?.equals(WRAPPED_ICP) || currency?.equals(ICP)) {
       return new BigNumber(ICPPrice);
     }
 

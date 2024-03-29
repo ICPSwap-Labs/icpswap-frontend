@@ -1,13 +1,25 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
+
 import invariant from "tiny-invariant";
 import { validateAndParseAddress } from "../utils/validateAndParseAddress";
 import { BaseCurrency } from "./baseCurrency";
-import { Currency } from "./currency";
+
+interface ConstructorArgs {
+  address: string;
+  decimals: number;
+  symbol?: string;
+  name?: string;
+  logo?: string;
+  transFee?: number;
+  standard: string;
+}
 
 /**
  * Represents an ERC20 token with a unique address and some metadata.
  */
 export class Token extends BaseCurrency {
   public readonly isNative: false = false;
+
   public readonly isToken: true = true;
 
   /**
@@ -15,23 +27,7 @@ export class Token extends BaseCurrency {
    */
   public readonly address: string;
 
-  public constructor({
-    address,
-    decimals,
-    symbol,
-    name,
-    logo,
-    transFee,
-    standard,
-  }: {
-    address: string;
-    decimals: number;
-    symbol?: string;
-    name?: string;
-    logo?: string;
-    transFee?: number;
-    standard: string;
-  }) {
+  public constructor({ address, decimals, symbol, name, logo, transFee, standard }: ConstructorArgs) {
     super({
       decimals,
       symbol,
@@ -48,7 +44,7 @@ export class Token extends BaseCurrency {
    * Returns true if the two tokens are equivalent, i.e. have the same address.
    * @param other other token to compare
    */
-  public equals(other: Currency): boolean {
+  public equals(other: Token): boolean {
     return other.isToken && this.address === other.address;
   }
 

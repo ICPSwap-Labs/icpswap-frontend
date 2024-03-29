@@ -19,7 +19,6 @@
   "dependencies": {
     "idb": "8.0.0",
     "numbro": "^2.3.6",
-    "dayjs": "^1.11.9",
     "@icpswap/types": "workspace:*",
     "big.js": "^6.1.1",
     "decimal.js-light": "^2.5.1",

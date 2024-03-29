@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 import { ArrowRightAlt } from "@mui/icons-material";
 import { t } from "@lingui/macro";
 import { SWAP_FIELD } from "constants/swap";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
 
@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme: Theme) => {
 });
 
 interface SwapCurrencyProps {
-  currency: Currency | undefined | null;
+  currency: Token | undefined | null;
   currencyAmount: number | string;
 }
 
@@ -54,8 +54,8 @@ const SwapCurrency = ({ currency, currencyAmount }: SwapCurrencyProps) => {
 export interface ConfirmModalProps {
   open: boolean;
   loading: boolean;
-  inputCurrency: Currency | undefined | null;
-  outputCurrency: Currency | undefined | null;
+  inputCurrency: Token | undefined | null;
+  outputCurrency: Token | undefined | null;
   formattedAmounts: {
     [SWAP_FIELD.INPUT]: number | string;
     [SWAP_FIELD.OUTPUT]: number | string;

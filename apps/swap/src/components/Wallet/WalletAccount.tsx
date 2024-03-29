@@ -59,7 +59,7 @@ export function AddressWrapper({ address, label }: AddressWrapperProps) {
         >
           {address}
         </Typography>
-        <Box component="span" sx={{ cursor: "pointer", margin: "0 0 0 4px" }} onClick={handleCopy}>
+        <Box component="span" sx={{ cursor: "pointer", margin: "0 0 0 4px", color: "#5669DC" }} onClick={handleCopy}>
           <CopyIcon />
         </Box>
       </Box>

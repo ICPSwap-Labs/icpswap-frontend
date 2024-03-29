@@ -17,7 +17,7 @@ import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/uesInfoToken";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { isHouseUserTokenTransactions } from "utils/index";
@@ -128,7 +128,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const history = useHistory();
 
-  const [, currency] = useCurrency(canisterId);
+  const [, currency] = useToken(canisterId);
   const { result: infoToken } = useInfoToken(currency?.address);
 
   const tokenUSDPrice = useMemo(() => {

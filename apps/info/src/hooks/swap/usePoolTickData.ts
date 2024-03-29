@@ -1,4 +1,4 @@
-import { tickToPrice, TICK_SPACINGS, Currency, FeeAmount, Token } from "@icpswap/swap-sdk";
+import { tickToPrice, TICK_SPACINGS, FeeAmount, Token } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
 import { useMemo } from "react";
 import computeSurroundingTicks from "utils/computeSurroundingTicks";
@@ -36,8 +36,8 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
 }
 
 export function usePoolActiveLiquidity(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
+  currencyA: Token | undefined,
+  currencyB: Token | undefined,
   feeAmount: FeeAmount | undefined,
 ) {
   const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;

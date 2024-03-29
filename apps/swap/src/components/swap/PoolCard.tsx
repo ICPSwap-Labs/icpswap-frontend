@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { useCurrency } from "hooks/useCurrency";
+import { useToken } from "hooks/useToken";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { useHistory } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -68,8 +68,8 @@ export default function PoolCard({
   const history = useHistory();
   const classes = useStyles();
 
-  const [, currency0] = useCurrency(token0);
-  const [, currency1] = useCurrency(token1);
+  const [, currency0] = useToken(token0);
+  const [, currency1] = useToken(token1);
 
   const handlePoolClick = useCallback(() => {
     if (version === "v2") {

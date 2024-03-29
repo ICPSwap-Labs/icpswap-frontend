@@ -3,12 +3,9 @@ import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/ut
 import { type NumberType } from "@icpswap/types";
 import { getTokenStandard, useUpdateTokenStandard } from "store/token/cache/hooks";
 import { getPoolTokenStandard, getPoolCanisterId } from "hooks/swap/v2/useSwapCalls";
-import { FeeAmount, Currency } from "@icpswap/swap-sdk";
+import { FeeAmount, Token } from "@icpswap/swap-sdk";
 
-export function useActualSwapAmount(
-  amount: NumberType | undefined,
-  currency: Currency | undefined,
-): string | undefined {
+export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
   return useMemo(() => {
     if (!amount || !currency) return undefined;
 
@@ -17,9 +14,8 @@ export function useActualSwapAmount(
 
     if (typedValue.isGreaterThan(currency.transFee)) {
       return numberToString(parseTokenAmount(typedValue.minus(fee), currency.decimals));
-    } 
-      return "0";
-    
+    }
+    return "0";
   }, [amount, currency]);
 }
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { TradeType } from "@icpswap/constants";
-import { CurrencyAmount, Trade, Currency, Route } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Trade, Token, Route } from "@icpswap/swap-sdk";
 import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
@@ -18,8 +18,8 @@ export enum TradeState {
 }
 
 export function useBestTrade(
-  inputCurrency: Currency | undefined,
-  outputCurrency: Currency | undefined,
+  inputCurrency: Token | undefined,
+  outputCurrency: Token | undefined,
   typedValue: string | undefined,
 ) {
   const actualSwapValue = useActualSwapAmount(typedValue, inputCurrency);
@@ -98,7 +98,7 @@ export function useBestTrade(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: string | null }, { amountOut }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
         if (currentBest.amountOut === null) {

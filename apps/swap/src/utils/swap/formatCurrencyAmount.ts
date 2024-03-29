@@ -1,8 +1,8 @@
-import { Price, CurrencyAmount, Currency, Fraction } from "@icpswap/swap-sdk";
+import { Price, CurrencyAmount, Token, Fraction } from "@icpswap/swap-sdk";
 import { JSBI } from "utils/index";
 import { NONE_PRICE_SYMBOL } from "constants/index";
 
-export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefined, sigFigs: number | undefined | null) {
+export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number | undefined | null) {
   if (!amount) {
     return NONE_PRICE_SYMBOL;
   }
@@ -18,7 +18,7 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefine
   return amount.toFixed(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
 }
 
-export function formatPrice(price: Price<Currency, Currency> | undefined, sigFigs: number) {
+export function formatPrice(price: Price<Token, Token> | undefined, sigFigs: number) {
   if (!price) {
     return "-";
   }

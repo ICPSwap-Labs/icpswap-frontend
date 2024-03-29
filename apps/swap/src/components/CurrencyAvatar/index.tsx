@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Currency } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyles = ({ borderColor, size }: { borderColor: string; size?: string | undefined }) =>
   makeStyles(() => {
@@ -14,7 +14,7 @@ const useStyles = ({ borderColor, size }: { borderColor: string; size?: string |
   });
 
 export interface CurrencyAvatarProps {
-  currency: Currency | undefined | null;
+  currency: Token | undefined | null;
   borderColor?: string;
   bgColor?: string;
   className?: string;
@@ -31,11 +31,7 @@ export default function CurrencyAvatar({
   const classes = useStyles({ borderColor, size })();
 
   return (
-    <Avatar
-      className={`${classes.avatar} ${className || ""}`}
-      sx={{ bgcolor: bgColor }}
-      src={currency?.logo}
-    >
+    <Avatar className={`${classes.avatar} ${className || ""}`} sx={{ bgcolor: bgColor }} src={currency?.logo}>
       &nbsp;
     </Avatar>
   );

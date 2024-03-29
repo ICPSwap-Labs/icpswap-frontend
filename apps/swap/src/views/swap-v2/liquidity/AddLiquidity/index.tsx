@@ -17,7 +17,7 @@ import {
   useResetMintState,
 } from "store/swapv2/liquidity/hooks";
 import { useUserTransactionsDeadline, useSlippageManager } from "store/swapv2/cache/hooks";
-import { useCurrency, UseCurrencyState } from "hooks/useCurrency";
+import { useToken, UseCurrencyState } from "hooks/useToken";
 import { Bound, DEFAULT_FEE, FIELD } from "constants/swap";
 import AddLiquidityConfirmModal from "components/swap/AddLiquidityConfirmModal";
 import { mint as mintRequest } from "hooks/swap/v2/useSwapCalls";
@@ -100,8 +100,8 @@ export default memo(() => {
 
   const feeAmount = feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
 
-  const [useCurrencyALoading, baseCurrency] = useCurrency(currencyIdA);
-  const [useCurrencyBLoading, currencyB] = useCurrency(currencyIdB);
+  const [useCurrencyALoading, baseCurrency] = useToken(currencyIdA);
+  const [useCurrencyBLoading, currencyB] = useToken(currencyIdB);
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB;
 

@@ -1,21 +1,21 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { useContext } from "react";
+import { Box, Typography } from "@mui/material";
 import { SwapWrapper } from "components/swap/SwapWrapper";
-import { Theme } from "@mui/material/styles";
-import { Trans } from "@lingui/macro";
+import { SwapProCardWrapper } from "./SwapProWrapper";
+import { SwapProContext } from "./context";
 
 export default function Swap() {
-  const theme = useTheme() as Theme;
+  const { setTokenId, setTrade } = useContext(SwapProContext);
 
   return (
-    <Box sx={{ background: theme.palette.background.level3, padding: "16px", borderRadius: "12px" }}>
+    <SwapProCardWrapper>
       <Typography color="text.primary" fontSize="18px" fontWeight={600} align="center">
         ICPSwap
       </Typography>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <SwapWrapper ui="pro" />
+        <SwapWrapper ui="pro" onOutputTokenChange={setTokenId} onTradeChange={setTrade} />
       </Box>
-    </Box>
+    </SwapProCardWrapper>
   );
 }

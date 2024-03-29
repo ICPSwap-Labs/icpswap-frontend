@@ -7,9 +7,7 @@ import { MainCard } from "ui-component/index";
 import { useGraphSwapProtocolData, useGraphSwapProtocolChart } from "hooks/v2";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import LineChart from "ui-component/LineChart/alt";
-import BarChart from "ui-component/BarChart/alt";
-import { GridAutoRows } from "@icpswap/ui";
+import { GridAutoRows, LineChartAlt, BarChartAlt } from "@icpswap/ui";
 import dayjs from "dayjs";
 import SwapAnalyticLoading from "ui-component/analytic-v2/Loading";
 import { useHistory } from "react-router-dom";
@@ -165,7 +163,7 @@ export default function SwapOverview() {
           >
             <SwapAnalyticLoading loading={chartDataLoading} />
 
-            <LineChart
+            <LineChartAlt
               data={formattedTvlData}
               height={220}
               minHeight={332}
@@ -196,7 +194,7 @@ export default function SwapOverview() {
           >
             <SwapAnalyticLoading loading={chartDataLoading} />
 
-            <BarChart
+            <BarChartAlt
               height={220}
               minHeight={332}
               data={
@@ -210,37 +208,13 @@ export default function SwapOverview() {
               setLabel={setRightLabel}
               value={volumeHover}
               label={rightLabel}
-              activeWindow={volumeWindow}
-              // topRight={
-              //   <Box
-              //     sx={{
-              //       marginLeft: "-40px",
-              //       marginTop: "8px",
-              //       display: "grid",
-              //       columnGap: "8px",
-              //       gridTemplateColumns: "repeat(3, 1fr)",
-              //     }}
-              //   >
-              //     <SmallOptionButton
-              //       active={volumeWindow === VolumeWindow.daily}
-              //       onClick={() => setVolumeWindow(VolumeWindow.daily)}
-              //     >
-              //       D
-              //     </SmallOptionButton>
-              //     <SmallOptionButton
-              //       active={volumeWindow === VolumeWindow.weekly}
-              //       onClick={() => setVolumeWindow(VolumeWindow.weekly)}
-              //     >
-              //       W
-              //     </SmallOptionButton>
-              //     <SmallOptionButton
-              //       active={volumeWindow === VolumeWindow.monthly}
-              //       onClick={() => setVolumeWindow(VolumeWindow.monthly)}
-              //     >
-              //       M
-              //     </SmallOptionButton>
-              //   </Box>
-              // }
+              activeWindow={
+                volumeWindow === VolumeWindow.daily
+                  ? "daily"
+                  : volumeWindow === VolumeWindow.monthly
+                  ? "monthly"
+                  : "weekly"
+              }
               topLeft={
                 <GridAutoRows gap="4px">
                   <Typography fontSize="16px">Volume 24H</Typography>

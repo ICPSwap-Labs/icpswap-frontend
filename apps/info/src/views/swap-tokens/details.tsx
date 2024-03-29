@@ -6,7 +6,7 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion } from "@icpswap/ui";
+import { GridAutoRows, Proportion, TokenCharts } from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
@@ -15,7 +15,6 @@ import { swapLink, addLiquidityLink } from "utils/index";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 
 import { TokenPrices } from "./components/TokenPrice";
-import { TokenCharts } from "./components/Charts";
 
 export default function TokenDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();

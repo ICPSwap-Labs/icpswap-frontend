@@ -4,7 +4,7 @@ import { TradeType } from "@icpswap/constants";
 import { useQuotePrice } from "hooks/swap/useQuotePrice";
 import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
-import { CurrencyAmount, Currency , Route, Trade } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Token, Route, Trade } from "@icpswap/swap-sdk";
 import { useAllRoutes } from "./useAllRoutes";
 
 export enum TradeState {
@@ -16,8 +16,8 @@ export enum TradeState {
 }
 
 export function useUnitPrice(
-  currencyIn: Currency | undefined,
-  currencyOut: Currency | undefined,
+  currencyIn: Token | undefined,
+  currencyOut: Token | undefined,
   typedValue: string | undefined,
 ) {
   const amountIn = useMemo(() => {
@@ -77,7 +77,7 @@ export function useUnitPrice(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: string | null }, { amountOut }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
         if (currentBest.amountOut === null) {
@@ -85,7 +85,8 @@ export function useUnitPrice(
             bestRoute: routes[i],
             amountOut,
           };
-        } if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        }
+        if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
           return {
             bestRoute: routes[i],
             amountOut,

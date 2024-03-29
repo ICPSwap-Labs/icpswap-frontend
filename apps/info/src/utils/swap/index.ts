@@ -1,9 +1,9 @@
-import { Currency, CurrencyAmount } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import JSBI from "jsbi";
 import { NO_GROUP_SEPARATOR_FORMATTER } from "utils/index";
 
-export function tryParseAmount<T extends Currency>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
+export function tryParseAmount<T extends Token>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
   if (!value || !currency) {
     return undefined;
   }
