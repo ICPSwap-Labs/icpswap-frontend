@@ -1,4 +1,4 @@
-import { useRef , useState } from "react";
+import { useRef, useState } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { MenuList, MenuItem, Popper, Box, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useLocation, useHistory } from "react-router-dom";
@@ -6,7 +6,7 @@ import { ClickAwayListener } from "@mui/base";
 import { Theme } from "@mui/material/styles";
 import { mockALinkAndOpen } from "utils/index";
 import { routes, Route } from "./config";
-import LogoSection from "../LogoSection";
+import LogoSection from "../../LogoSection";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

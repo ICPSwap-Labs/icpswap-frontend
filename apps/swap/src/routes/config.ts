@@ -18,6 +18,7 @@ const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/Recla
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
+const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
@@ -75,6 +76,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,
   "/swap/pcm/reclaim": PCMReclaim,
+  "/swap-pro": SwapPro,
 
   "/swap/v2/liquidity": LiquidityV2,
   "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,

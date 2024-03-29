@@ -1,5 +1,5 @@
 import { Route, Switch, useLocation } from "react-router-dom";
-import MainLayout from "components/MainLayout";
+import { Layout } from "components/Layout/index";
 import PageNotFound from "components/404";
 import { Maintenance } from "components/Maintenance";
 import { routeConfigs } from "./config";
@@ -27,7 +27,7 @@ export default function MainRoutes() {
 
   return (
     <Route path={allPath}>
-      <MainLayout>
+      <Layout>
         <Switch location={location} key={location.pathname}>
           {allPath.map((pathName) => {
             const component = maintenancePages.includes(pathName) ? Maintenance : routeConfigs[pathName];
@@ -38,7 +38,7 @@ export default function MainRoutes() {
           {/* @ts-ignore TODO:FIX */}
           <Route path="*" component={PageNotFound} />
         </Switch>
-      </MainLayout>
+      </Layout>
     </Route>
   );
 }

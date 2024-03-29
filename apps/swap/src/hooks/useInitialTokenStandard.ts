@@ -6,9 +6,7 @@ import { useGlobalTokenList } from "store/global/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
 import { getSwapPools } from "@icpswap/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
-import { getAllProjects } from "hooks/voting/useAllProjects";
 import { getAllTokenPools } from "hooks/staking-token/index";
-import { getAllFarms } from "hooks/staking-farm";
 import { getAllClaimEvents } from "hooks/token-claim";
 import { updateCanisters } from "store/allCanisters";
 import type { SwapPoolData } from "@icpswap/types";
@@ -35,20 +33,9 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
     if (network === NETWORK.IC) {
       Promise.all([
         getSwapPools(),
-        getAllFarms().catch(() => undefined),
-        getAllProjects().catch(() => undefined),
         getAllTokenPools().catch(() => undefined),
         getAllClaimEvents().catch(() => undefined),
-      ]).then(([allSwapPools, allFarms, allProjects, allTokenPools, allClaimEvents]) => {
-        allProjects?.forEach((project) => {
-          if (!!project.projectCid && !!project.tokenStand) {
-            updateTokenStandard({
-              canisterId: project.tokenCid,
-              standard: project.tokenStand as TOKEN_STANDARD,
-            });
-          }
-        });
-
+      ]).then(([allSwapPools, allTokenPools, allClaimEvents]) => {
         allTokenPools?.forEach((pool) => {
           updateTokenStandard({
             canisterId: pool.stakingToken.address,
@@ -58,23 +45,6 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
           updateTokenStandard({
             canisterId: pool.rewardToken.address,
             standard: pool.rewardToken.standard as TOKEN_STANDARD,
-          });
-        });
-
-        allFarms?.forEach((farm) => {
-          updateTokenStandard({
-            canisterId: farm.poolToken0.address,
-            standard: farm.poolToken0.standard as TOKEN_STANDARD,
-          });
-
-          updateTokenStandard({
-            canisterId: farm.poolToken1.address,
-            standard: farm.poolToken1.standard as TOKEN_STANDARD,
-          });
-
-          updateTokenStandard({
-            canisterId: farm.rewardToken.address,
-            standard: farm.rewardToken.standard as TOKEN_STANDARD,
           });
         });
 
@@ -104,8 +74,6 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         updateCanisters(
           [
             ...(allSwapPools?.map((ele) => [ele.canisterId.toString(), ele.token0.address, ele.token1.address]) ?? []),
-            ...(allFarms?.map((ele) => [ele.farmCid, ele.poolToken0.address, ele.poolToken1.address]) ?? []),
-            ...(allProjects?.map((ele) => [ele.projectCid, ele.tokenCid]) ?? []),
             ...(allTokenPools?.map((ele) => [
               ele.canisterId.toString(),
               ele.rewardToken.address,
@@ -135,8 +103,8 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
       updateCanisters(globalTokenList.map((ele) => ele.canisterId));
     } else if (!fetchGlobalTokensLoading) {
-        setTokensLoading(false);
-      }
+      setTokensLoading(false);
+    }
   }, [globalTokenList, fetchGlobalTokensLoading]);
 
   useEffect(() => {

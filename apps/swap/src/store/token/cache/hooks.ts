@@ -4,7 +4,7 @@ import { TokenMetadata } from "types/token";
 import store from "store/index";
 import { ICP, TOKEN_STANDARD } from "constants/tokens";
 import { registerTokens } from "@icpswap/token-adapter";
-import { updateTokenStandard, updateImportedToken } from "./actions";
+import { updateTokenStandard, updateImportedToken, updateAllTokenIds } from "./actions";
 
 export function useUpdateTokenStandard() {
   const dispatch = useAppDispatch();
@@ -20,6 +20,8 @@ export function useUpdateTokenStandard() {
           dispatch(updateTokenStandard({ canisterId, standard }));
           registerTokens({ canisterIds: [canisterId], standard });
         }
+
+        dispatch(updateAllTokenIds(canisterId));
       }
     },
     [dispatch],
@@ -63,4 +65,8 @@ export function useImportedTokens() {
 
 export function useTokenStandards() {
   return useAppSelector((state) => state.tokenCache.standards);
+}
+
+export function useAllTokenIds() {
+  return useAppSelector((state) => state.tokenCache.allTokenIds);
 }

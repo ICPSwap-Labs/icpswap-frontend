@@ -9,7 +9,7 @@ import { useTheme } from "@mui/styles";
 import { usePoolCycles } from "hooks/staking-token/index";
 import { Trans } from "@lingui/macro";
 import Countdown from "react-countdown";
-import { ICRocksLoadIcon } from "components/Header/ProfileSection";
+import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";

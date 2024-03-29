@@ -7,7 +7,7 @@ import MediumIcon from "./icons/Medium";
 import GithubIcon from "./icons/Github";
 import GitbookIcon from "./icons/Gitbook";
 import DSCVRIcon from "./icons/DSCVR";
-import { version } from "../../.version";
+import { version } from "../../../.version";
 
 export type Route = {
   name: string;

@@ -17,7 +17,7 @@ import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, toSignificant, cycleValueFormat, shorten, timestampFormat } from "@icpswap/utils";
 import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
-import { ICRocksLoadIcon } from "components/Header/ProfileSection";
+import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-farm";
 import type { StakingFarmInfo } from "@icpswap/types";

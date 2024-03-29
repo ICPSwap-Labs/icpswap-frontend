@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import Background from "components/Background";
-import { GlobalTips } from "@icpswap/ui";
-import { useLocation } from "react-router-dom";
-import V3Event from "./V3Event";
-import Header from "./Header";
+import Header from "./Header/ProHeader";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -19,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => {
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
       padding: "20px",
-      borderRadius: `${theme.customization.borderRadius  }px`,
+      borderRadius: `${theme.customization.borderRadius}px`,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       transition: theme.transitions.create("margin", {
@@ -46,13 +43,13 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export interface SwapProLayoutProps {
+  children: React.ReactNode;
+}
+
+export function SwapProLayout({ children }: SwapProLayoutProps) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
-  const location = useLocation();
-
-  const [show, setShow] = useState(true);
-  const [globalTipShow, setGlobalTipShow] = useState(true);
 
   return (
     <>
@@ -75,9 +72,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </AppBar>
 
       <Box className={classes.mainContent}>
-        {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
-        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
-
         <main className={classes.content}>{children}</main>
       </Box>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Grid, Box, useMediaQuery, Drawer } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
-import LogoSection from "../LogoSection";
+import LogoSection from "../../LogoSection";
 import ProfileSection from "./ProfileSection";
 import Navbar from "../Navbar";
 import MobileNavbar from "../Navbar/MobileNavbar";
@@ -56,8 +56,17 @@ export default function Header() {
             textAlign: "right",
           }}
         >
-          <TokenClaim />
-          <ProfileSection />
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0 12px",
+              justifyContent: "flex-end",
+              "@media(max-width: 640px)": { gap: "0 8px" },
+            }}
+          >
+            <TokenClaim />
+            <ProfileSection />
+          </Box>
         </Grid>
       </Grid>
 

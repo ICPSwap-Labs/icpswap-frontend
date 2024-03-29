@@ -9,3 +9,5 @@ export const updateTokenStandard = createAction<{ canisterId: string; standard: 
 export const updateImportedToken = createAction<{ canisterId: string; metadata: TokenMetadata }>(
   "token/updateImportedToken",
 );
+
+export const updateAllTokenIds = createAction<string>("token/updateAllTokenIds");

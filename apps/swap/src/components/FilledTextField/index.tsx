@@ -5,13 +5,21 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import NoData from "components/no-data";
 import { Theme } from "@mui/material/styles";
 
-const useStyles = (contained: boolean, fullHeight?: boolean) => {
+interface UseStylesProps {
+  contained: boolean;
+  fullHeight?: boolean;
+  borderRadius: string;
+}
+
+const useStyles = ({ contained, fullHeight, borderRadius }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
+        display: "flex",
+        alignItems: "center",
         border: contained ? theme.palette.border.normal : "none",
         background: theme.palette.background.level4,
-        borderRadius: "8px",
+        borderRadius,
         padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         "& input": {
           color: theme.palette.text.primary,
@@ -46,6 +54,7 @@ export interface FilledTextFieldProps {
   menuDisabled?: (value: FilledTextFiledMenus) => boolean;
   helperText?: string;
   multiline?: boolean;
+  borderRadius?: string;
   [x: string]: any;
 }
 
@@ -111,6 +120,7 @@ export default function FilledTextField({
   fullHeight,
   disabled,
   InputProps,
+  borderRadius = "8px",
   contained = true,
   alignCenter = false,
   width,
@@ -120,7 +130,7 @@ export default function FilledTextField({
   multiline,
   ...props
 }: FilledTextFieldProps) {
-  const classes = useStyles(contained, fullHeight)();
+  const classes = useStyles({ contained, fullHeight, borderRadius })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);

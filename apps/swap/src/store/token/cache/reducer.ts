@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTokenStandard, updateImportedToken } from "./actions";
+import { updateTokenStandard, updateImportedToken, updateAllTokenIds } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
@@ -12,6 +12,11 @@ export default createReducer(initialState, (builder) => {
     .addCase(updateImportedToken, (state, { payload }) => {
       if (!!payload && !!payload.canisterId) {
         state.importedTokens[payload.canisterId] = payload.metadata;
+      }
+    })
+    .addCase(updateAllTokenIds, (state, { payload }) => {
+      if (payload && !state.allTokenIds.includes(payload)) {
+        state.allTokenIds = state.allTokenIds.concat(payload);
       }
     });
 });

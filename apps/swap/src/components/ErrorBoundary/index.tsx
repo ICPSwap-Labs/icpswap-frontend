@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import * as Sentry from "@sentry/react";
 import { Grid, Box, Typography } from "@mui/material";
 import ErrorImage from "assets/images/Error";
-import MainLayout from "components/MainLayout";
+import { Layout } from "components/Layout/index";
 import { Trans } from "@lingui/macro";
 import copy from "copy-to-clipboard";
 
@@ -26,7 +26,7 @@ function Fallback({ error, eventId }: FallbackProps) {
   }, [error]);
 
   return (
-    <MainLayout>
+    <Layout>
       <Box sx={{ width: "100%", height: "calc(100vh - 280px)" }}>
         <Grid container alignItems="center" justifyContent="center" sx={{ width: "100%", height: "100%" }}>
           <Grid item>
@@ -78,7 +78,7 @@ function Fallback({ error, eventId }: FallbackProps) {
           </Grid>
         </Grid>
       </Box>
-    </MainLayout>
+    </Layout>
   );
 }
 

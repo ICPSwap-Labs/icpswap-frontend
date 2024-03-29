@@ -11,7 +11,7 @@ import {
   useWalletConnectorManager,
 } from "store/auth/hooks";
 import { Theme } from "@mui/material/styles";
-import Account from "./Account";
+import { AccountSection } from "./Account";
 import Principal from "./Principal";
 import LogoutIcon from "./LogoutIcon";
 import LogOutSection from "../LogOutSection";
@@ -65,12 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "& .MuiTypography-root": {
       color: "#111936",
       marginLeft: "10px",
-    },
-  },
-  box: {
-    marginLeft: "16px",
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "8px",
     },
   },
   profileRoot: {
@@ -136,18 +130,16 @@ export default function ProfileSection() {
 
   return (
     <>
-      <Box component="span" className={classes.box}>
-        <ButtonBase sx={{ borderRadius: "12px" }}>
-          <Chip
-            ref={anchorRef}
-            classes={{ root: classes.profileRoot, label: classes.profileLabel }}
-            label={isConnected && !!principal ? shorten(principal.toString()) : t`Connect Wallet`}
-            variant="outlined"
-            onClick={isConnected ? handleToggle : handleConnectWallet}
-            color="primary"
-          />
-        </ButtonBase>
-      </Box>
+      <ButtonBase sx={{ borderRadius: "12px" }}>
+        <Chip
+          ref={anchorRef}
+          classes={{ root: classes.profileRoot, label: classes.profileLabel }}
+          label={isConnected && !!principal ? shorten(principal.toString()) : t`Connect Wallet`}
+          variant="outlined"
+          onClick={isConnected ? handleToggle : handleConnectWallet}
+          color="primary"
+        />
+      </ButtonBase>
 
       {/* @ts-ignore */}
       <Popper
@@ -176,7 +168,7 @@ export default function ProfileSection() {
                   <List component="nav" className={classes.navContainer}>
                     <Box sx={{ padding: "12px", boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)" }}>
                       <Box sx={{ marginBottom: "12px" }}>
-                        <Account />
+                        <AccountSection />
                       </Box>
                       <Box>
                         <Principal />
