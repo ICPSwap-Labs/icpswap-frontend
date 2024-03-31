@@ -1,6 +1,6 @@
 import { Position, Pool } from "@icpswap/swap-sdk";
 import { usePool, PoolState, usePoolV1 } from "hooks/swap/v2/usePools";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { PositionResult, UserPosition } from "types/swapv2";
 
 export function usePositionInfo(positionDetails: PositionResult | UserPosition | undefined | null): {

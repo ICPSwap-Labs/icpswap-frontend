@@ -89,7 +89,7 @@ type PriceLine = {
 };
 
 export interface TokenChartsProps {
-  canisterId: string;
+  canisterId: string | undefined;
   volume?: number;
   background?: number;
   borderRadius?: string;

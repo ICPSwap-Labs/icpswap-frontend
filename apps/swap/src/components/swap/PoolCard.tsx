@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { useHistory } from "react-router-dom";
 import { Trans } from "@lingui/macro";

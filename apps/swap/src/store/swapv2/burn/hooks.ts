@@ -4,7 +4,7 @@ import { numberToString } from "@icpswap/utils";
 import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
 import { tryParseAmount } from "utils/swap";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { usePool } from "hooks/swap/v2/usePools";
 import { t } from "@lingui/macro";
 import { PositionResult } from "types/swapv2";

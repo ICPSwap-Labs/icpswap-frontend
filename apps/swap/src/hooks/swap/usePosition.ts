@@ -1,7 +1,7 @@
 import { Position } from "@icpswap/swap-sdk";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { usePool, PoolState } from "hooks/swap/usePools";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 
 export interface usePositionProps {
   poolId: string | undefined;

@@ -17,6 +17,7 @@ export function SwapProCardWrapper({ children, padding = "16px", background = "l
         background: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level2,
         padding,
         borderRadius: "12px",
+        overflow: "hidden",
       }}
     >
       {children}

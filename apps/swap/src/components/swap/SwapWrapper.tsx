@@ -27,15 +27,14 @@ import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
 import { ReclaimLink } from "components/swap/ReclaimLink";
-import { Trade, Token, TradeType } from "@icpswap/swap-sdk";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
-  onOutputTokenChange?: (tokenId: string) => void;
-  onTradeChange?: (trade: Trade<Token, Token, TradeType.EXACT_INPUT>) => void;
+  onOutputTokenChange?: (tokenId: string | undefined) => void;
+  onTradePoolIdChange?: (poolId: string | undefined) => void;
 }
 
-export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradeChange }: SwapWrapperProps) {
+export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdChange }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [refreshBalance, setRefreshBalance] = useState(false);
 
@@ -65,14 +64,9 @@ export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradeChange 
 
   // For swap pro
   useEffect(() => {
-    if (currencyB.currencyId) {
-      if (onOutputTokenChange) onOutputTokenChange(currencyB.currencyId);
-    }
-
-    if (trade) {
-      if (onTradeChange) onTradeChange(trade);
-    }
-  }, [trade, currencyB]);
+    if (onOutputTokenChange) onOutputTokenChange(currencyB.currencyId);
+    if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
+  }, [tradePoolId, currencyB]);
 
   const parsedAmounts = useMemo(
     () => ({

@@ -13,6 +13,7 @@ export function useTokenVolChart(canisterId: string | undefined) {
   useEffect(() => {
     async function call() {
       if (storageIds && storageIds.length > 0 && canisterId) {
+        setChartData(undefined);
         setLoading(true);
 
         const chartData = (

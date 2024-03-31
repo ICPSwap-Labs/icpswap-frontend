@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
-import { UseCurrencyState } from "hooks/useToken";
+import { UseCurrencyState } from "hooks/useCurrency";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";

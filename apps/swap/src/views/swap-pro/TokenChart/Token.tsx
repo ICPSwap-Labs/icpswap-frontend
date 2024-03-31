@@ -1,25 +1,25 @@
 import { useContext, useMemo } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useTokenInfo } from "hooks/token";
-import { useInfoToken } from "hooks/uesInfoToken";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
-import { useTokenListTokenInfo } from "@icpswap/hooks";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
+import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
+import type { TokenInfo } from "types/token";
 
 import { SwapProContext } from "../context";
 
-export default function TokenChartInfo() {
+export interface TokenChartInfoProps {
+  infoToken: PublicTokenOverview | undefined;
+  tokenInfo: TokenInfo | undefined;
+  tokenListInfo: TokenListMetadata | undefined;
+}
+
+export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
   const theme = useTheme() as Theme;
   const { tokenId } = useContext(SwapProContext);
-
-  const { result: tokenInfo } = useTokenInfo(tokenId);
-  const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
-
-  const { result: infoToken } = useInfoToken(tokenId);
 
   const mediaLinks = useMemo(() => {
     if (!tokenListInfo) return undefined;

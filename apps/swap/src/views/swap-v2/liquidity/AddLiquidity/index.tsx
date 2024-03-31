@@ -17,7 +17,7 @@ import {
   useResetMintState,
 } from "store/swapv2/liquidity/hooks";
 import { useUserTransactionsDeadline, useSlippageManager } from "store/swapv2/cache/hooks";
-import { useToken, UseCurrencyState } from "hooks/useToken";
+import { useToken, UseCurrencyState } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, FIELD } from "constants/swap";
 import AddLiquidityConfirmModal from "components/swap/AddLiquidityConfirmModal";
 import { mint as mintRequest } from "hooks/swap/v2/useSwapCalls";

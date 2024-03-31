@@ -26,3 +26,5 @@ export * from "./useTransformedVolumeData";
 export * from "./useTokenTvlChart";
 export * from "./useTokenVolumeChart";
 export * from "./useTokenPriceChart";
+export * from "./usePoolTransactions";
+export * from "./useUserPoolTransactions";

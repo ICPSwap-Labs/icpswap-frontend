@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { useAccount } from "store/global/hooks";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-token";
 import upperFirst from "lodash/upperFirst";

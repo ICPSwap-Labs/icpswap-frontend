@@ -1,13 +1,14 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
-import { useAllTokenIds } from "store/token/cache/hooks";
-import { useTokensInfo, TokenInfoState } from "hooks/token/useTokenInfo";
-import { TokenInfo } from "types/token";
+import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
-import { SwapProContext } from "./context";
+import { useHistory } from "react-router-dom";
+import { ICP } from "@icpswap/tokens";
+import { useInfoAllTokens } from "@icpswap/hooks";
 
 const animationKeyframes = keyframes`
   0% {
@@ -19,19 +20,22 @@ const animationKeyframes = keyframes`
 `;
 
 interface TokenItemProps {
-  tokenInfo: TokenInfo;
+  tokenInfo: PublicTokenOverview;
 }
 
 function TokenItem({ tokenInfo }: TokenItemProps) {
-  const { setTokenId } = useContext(SwapProContext);
+  const history = useHistory();
+
+  const handleTokenClick = () => {
+    history.push(`/swap-pro?input=${ICP.address}&output=${tokenInfo.address}`);
+  };
+
+  const { result: token } = useTokenInfo(tokenInfo.address);
 
   return (
-    <Box
-      sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }}
-      onClick={() => setTokenId(tokenInfo.canisterId)}
-    >
+    <Box sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }} onClick={handleTokenClick}>
       <Typography color="text.primary">#</Typography>
-      <TokenImage logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} size="16px" />
+      <TokenImage logo={token?.logo} tokenId={tokenInfo.address} size="16px" />
       <Typography color="text.primary" sx={{ width: "fit-content", textWrap: "nowrap", userSelect: "none" }}>
         {tokenInfo.name}
       </Typography>
@@ -40,7 +44,7 @@ function TokenItem({ tokenInfo }: TokenItemProps) {
 }
 
 interface TokensWrapperProps {
-  tokensInfo: TokenInfo[];
+  tokensInfo: PublicTokenOverview[];
 }
 
 function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
@@ -66,8 +70,8 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
           gap: "0 16px",
         }}
       >
-        {(tokensInfo.filter((e) => !!e) as TokenInfo[]).map((tokenInfo) => (
-          <TokenItem key={tokenInfo.canisterId} tokenInfo={tokenInfo} />
+        {tokensInfo.map((tokenInfo) => (
+          <TokenItem key={tokenInfo.address} tokenInfo={tokenInfo} />
         ))}
       </Box>
     </Box>
@@ -77,18 +81,20 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
 export default function HotTokens() {
   const theme = useTheme() as Theme;
 
-  const allTokenIds = useAllTokenIds();
-  const allTokensInfo = useTokensInfo(allTokenIds);
+  const { result: infoAllTokens } = useInfoAllTokens();
 
-  const validTokensInfo = useMemo(() => {
-    return allTokensInfo
-      .filter((e) => e[0] === TokenInfoState.EXISTS)
-      .map((e) => e[1])
-      .slice(0, 50)
-      .filter((e) => !!e) as TokenInfo[];
-  }, [allTokensInfo]);
+  const tokenList = useMemo(() => {
+    return infoAllTokens
+      ?.filter((e) => e.symbol !== "ICP")
+      ?.sort((a, b) => {
+        if (a.volumeUSD > b.volumeUSD) return -1;
+        if (a.volumeUSD < b.volumeUSD) return 1;
+        return 0;
+      })
+      .slice(0, 20);
+  }, [infoAllTokens]);
 
-  return (
+  return tokenList ? (
     <Box
       sx={{
         display: "flex",
@@ -152,11 +158,11 @@ export default function HotTokens() {
               },
             }}
           >
-            <TokensWrapper tokensInfo={validTokensInfo} />
+            <TokensWrapper tokensInfo={tokenList} />
 
-            <TokensWrapper tokensInfo={validTokensInfo} />
+            <TokensWrapper tokensInfo={tokenList} />
 
-            <TokensWrapper tokensInfo={validTokensInfo} />
+            <TokensWrapper tokensInfo={tokenList} />
           </Box>
         </Box>
       </Box>
@@ -175,5 +181,5 @@ export default function HotTokens() {
         </Typography>
       </Box>
     </Box>
-  );
+  ) : null;
 }

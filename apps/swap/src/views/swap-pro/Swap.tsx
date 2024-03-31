@@ -5,7 +5,7 @@ import { SwapProCardWrapper } from "./SwapProWrapper";
 import { SwapProContext } from "./context";
 
 export default function Swap() {
-  const { setTokenId, setTrade } = useContext(SwapProContext);
+  const { setTokenId, setTradePoolId } = useContext(SwapProContext);
 
   return (
     <SwapProCardWrapper>
@@ -14,7 +14,7 @@ export default function Swap() {
       </Typography>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <SwapWrapper ui="pro" onOutputTokenChange={setTokenId} onTradeChange={setTrade} />
+        <SwapWrapper ui="pro" onOutputTokenChange={setTokenId} onTradePoolIdChange={setTradePoolId} />
       </Box>
     </SwapProCardWrapper>
   );

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { SWAP_FIELD } from "constants/swap";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";

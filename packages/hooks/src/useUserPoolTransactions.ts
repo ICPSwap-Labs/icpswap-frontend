@@ -1,20 +1,26 @@
-import { getTransactionsByPool, useBaseStorages } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { Transaction } from "types/info";
+import { BaseTransaction } from "@icpswap/types";
+import { useInfoUserStorageIds, getInfoUserTransactions } from "./info";
 
-export function usePoolTransactions(poolId: string | undefined, offset: number, limit: number) {
-  const { result: storageIds } = useBaseStorages();
+export function useUserPoolTransactions(
+  principal: string | undefined,
+  poolId: string | undefined,
+  offset: number,
+  limit: number,
+) {
+  const { result: storageIds } = useInfoUserStorageIds(principal);
 
   const [loading, setLoading] = useState(false);
-  const [transactions, setTransactions] = useState<undefined | Transaction[]>(undefined);
+  const [transactions, setTransactions] = useState<undefined | BaseTransaction[]>(undefined);
 
   useEffect(() => {
     async function call() {
       if (storageIds && poolId) {
+        setTransactions(undefined);
         setLoading(true);
 
         for (let i = 0; i < storageIds.length; i++) {
-          const result = await getTransactionsByPool(storageIds[i], offset, limit, poolId);
+          const result = await getInfoUserTransactions(storageIds[i], principal, offset, limit, [poolId]);
 
           if (result) {
             setTransactions((prevState) => [...result.content, ...(prevState ?? [])]);

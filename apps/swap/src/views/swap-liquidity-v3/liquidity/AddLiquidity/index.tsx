@@ -16,7 +16,7 @@ import {
   useResetMintState,
 } from "store/swap/liquidity/hooks";
 import { useSlippageManager } from "store/swap/cache/hooks";
-import { UseCurrencyState, useToken } from "hooks/useToken";
+import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useAccount } from "store/global/hooks";

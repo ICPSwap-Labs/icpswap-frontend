@@ -19,3 +19,4 @@ export * from "./components/BarChart/alt";
 export * from "./components/BarChart/index";
 export * from "./components/CandleChart/index";
 export * from "./components/Charts";
+export * from "./components/SimplePagination";

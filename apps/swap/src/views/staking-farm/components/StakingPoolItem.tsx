@@ -10,7 +10,7 @@ import {
 } from "hooks/staking-farm";
 import CountUp from "react-countup";
 import { makeStyles, useTheme } from "@mui/styles";
-import { useToken } from "hooks/useToken";
+import { useToken } from "hooks/useCurrency";
 import { INFO_URL, AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";

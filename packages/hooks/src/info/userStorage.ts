@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
-import { useCallsData } from "../useCallData";
 import { userStorage } from "@icpswap/actor";
-import { UserStorageTransaction } from "@icpswap/types";
-import { PaginationResult } from "@icpswap/types";
+import { UserStorageTransaction , PaginationResult } from "@icpswap/types";
+import { useCallsData } from "../useCallData";
 
 /**
  * @param storageId The user storage canister id
@@ -18,12 +17,10 @@ export async function getInfoUserTransactions(
   principal: string,
   offset: number,
   limit: number,
-  poolIds: string[]
+  poolIds: string[],
 ) {
   return resultFormat<PaginationResult<UserStorageTransaction>>(
-    await (
-      await userStorage(storageId)
-    ).get(principal, BigInt(offset), BigInt(limit), poolIds)
+    await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), poolIds),
   ).data;
 }
 
@@ -40,19 +37,12 @@ export function useInfoUserTransactions(
   principal: string | undefined,
   offset: number,
   limit: number,
-  poolIds?: string[]
+  poolIds?: string[],
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!storageId || !principal || !isAvailablePageArgs(offset, limit))
-        return undefined;
-      return await getInfoUserTransactions(
-        storageId!,
-        principal!,
-        offset,
-        limit,
-        poolIds ?? []
-      );
-    }, [storageId, principal, offset, limit, JSON.stringify(poolIds)])
+      if (!storageId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
+      return await getInfoUserTransactions(storageId, principal, offset, limit, poolIds ?? []);
+    }, [storageId, principal, offset, limit, JSON.stringify(poolIds)]),
   );
 }

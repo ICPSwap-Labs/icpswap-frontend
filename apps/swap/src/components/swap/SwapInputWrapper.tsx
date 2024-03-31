@@ -5,7 +5,7 @@ import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState, useSwapHandlers } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { SWAP_FIELD } from "constants/swap";
-import { UseCurrencyState } from "hooks/useToken";
+import { UseCurrencyState } from "hooks/useCurrency";
 import { TokenInfo } from "types/token";
 import { SwapInputCurrency } from "./SwapInputCurrency";
 

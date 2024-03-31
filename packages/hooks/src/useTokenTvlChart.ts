@@ -12,6 +12,7 @@ export function useTokenTvlChart(canisterId: string | undefined) {
   useEffect(() => {
     async function call() {
       if (tvlStorageIds && tvlStorageIds.length > 0 && canisterId) {
+        setChartData(undefined);
         setLoading(true);
 
         const chartData = (
