@@ -6,9 +6,15 @@ export interface SwapProCardWrapperProps {
   children: React.ReactNode;
   padding?: string;
   background?: "level2" | "level3";
+  overflow?: "hidden" | "visible";
 }
 
-export function SwapProCardWrapper({ children, padding = "16px", background = "level3" }: SwapProCardWrapperProps) {
+export function SwapProCardWrapper({
+  children,
+  overflow = "hidden",
+  padding = "16px",
+  background = "level3",
+}: SwapProCardWrapperProps) {
   const theme = useTheme() as Theme;
 
   return (
@@ -17,7 +23,7 @@ export function SwapProCardWrapper({ children, padding = "16px", background = "l
         background: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level2,
         padding,
         borderRadius: "12px",
-        overflow: "hidden",
+        overflow,
       }}
     >
       {children}

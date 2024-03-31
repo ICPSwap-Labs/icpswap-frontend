@@ -3,10 +3,10 @@ import BigNumber from "bignumber.js";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
+import { ReactComponent as SyncAltIcon } from "assets/icons/sync-alt.svg";
 
 export interface TradePricePropsNoInfo {
   price: Price<Token, Token> | undefined;
@@ -62,7 +62,7 @@ export function TradePriceNoInfo({
           ({formatDollarAmount(usdValue)})
         </Typography>
       ) : null}
-      <SyncAltIcon sx={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+      <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
     </Grid>
   );
 }
@@ -75,6 +75,7 @@ export interface TradePriceProps {
   token1PriceUSDValue?: string | null | undefined | number;
   poolId: string | undefined;
   v2?: boolean;
+  fontSize?: string;
 }
 
 export default function TradePrice({
@@ -85,6 +86,7 @@ export default function TradePrice({
   token1PriceUSDValue,
   poolId,
   v2,
+  fontSize,
 }: TradePriceProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -119,15 +121,18 @@ export default function TradePrice({
     <Grid container>
       <Grid item xs>
         <Grid container justifyContent="flex-start" alignItems="center">
-          <Typography onClick={flipPrice} sx={{ cursor: "pointer", ...(matchDownSM ? { fontSize: "12px" } : {}) }}>
+          <Typography
+            onClick={flipPrice}
+            sx={{ cursor: "pointer", fontSize, ...(matchDownSM ? { fontSize: "12px" } : {}) }}
+          >
             {text}
           </Typography>
           {usdValue ? (
-            <Typography onClick={flipPrice} sx={{ cursor: "pointer" }}>
+            <Typography onClick={flipPrice} sx={{ fontSize, cursor: "pointer" }}>
               ({formatDollarAmount(usdValue)})
             </Typography>
           ) : null}
-          <SyncAltIcon sx={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+          <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
         </Grid>
       </Grid>
 

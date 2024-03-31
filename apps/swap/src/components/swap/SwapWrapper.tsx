@@ -264,6 +264,7 @@ export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdC
                 token1={outputCurrency}
                 token0PriceUSDValue={toSignificant(inputCurrencyInterfacePrice ?? 0, 18)}
                 token1PriceUSDValue={toSignificant(outputCurrencyInterfacePrice ?? 0, 18)}
+                fontSize={ui === "pro" ? "12px" : undefined}
               />
             ) : null}
           </Box>

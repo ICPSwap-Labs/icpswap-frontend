@@ -1,29 +1,16 @@
 import { useState } from "react";
 import { Box, ClickAwayListener } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { useTheme } from "@mui/styles";
 import SettingIcon from "assets/images/swap/setting";
 import UserSetting from "components/swap/UserSetting";
 import { isDarkTheme } from "utils";
 
-const useStyles = makeStyles(() => {
-  return {
-    settingBox: {
-      position: "relative",
-      "& img": {
-        cursor: "pointer",
-      },
-    },
-    userSetting: {
-      position: "absolute",
-      right: 0,
-      top: "30px",
-      zIndex: 1,
-    },
-  };
-});
+export interface SwapSettingsProps {
+  type: string;
+  position?: "right" | "left";
+}
 
-export default function SwapSettingIcon({ type }: { type: string }) {
-  const classes = useStyles();
+export default function SwapSettingIcon({ type, position = "right" }: SwapSettingsProps) {
   const theme = useTheme();
   const [settingShow, setSettingShow] = useState(false);
 
@@ -37,7 +24,14 @@ export default function SwapSettingIcon({ type }: { type: string }) {
 
   return (
     <ClickAwayListener onClickAway={hideSettingBox}>
-      <Box className={classes.settingBox}>
+      <Box
+        sx={{
+          position: "relative",
+          "& img": {
+            cursor: "pointer",
+          },
+        }}
+      >
         <SettingIcon
           onClick={handleToggleSettingShow}
           sx={{
@@ -46,8 +40,16 @@ export default function SwapSettingIcon({ type }: { type: string }) {
           }}
           strokeColor={isDarkTheme(theme) ? "#BDC8F0" : undefined}
         />
+
         {settingShow && (
-          <Box className={classes.userSetting}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "30px",
+              zIndex: 10,
+              ...(position === "right" ? { right: 0 } : { left: 0 }),
+            }}
+          >
             <UserSetting type={type} onClose={() => setSettingShow(false)} />
           </Box>
         )}

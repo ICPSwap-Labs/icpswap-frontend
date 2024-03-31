@@ -1,6 +1,5 @@
 import { useContext, useMemo } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
@@ -8,6 +7,7 @@ import { formatDollarAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
+import { Copy } from "components/Copy/icon";
 
 import { SwapProContext } from "../context";
 
@@ -43,7 +43,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             {tokenInfo ? tokenInfo.symbol : "--"}
           </Typography>
           <Typography color="text.theme_secondary">{tokenId}</Typography>
-          <CopyIcon style={{ cursor: "pointer" }} />
+          <Copy content={tokenId} />
         </Box>
 
         {mediaLinks ? (

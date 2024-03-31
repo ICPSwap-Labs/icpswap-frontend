@@ -2,7 +2,6 @@ import React, { useContext, useMemo, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Theme } from "@mui/material/styles";
 import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import { usePool } from "hooks/info/useInfoPool";
@@ -14,6 +13,7 @@ import { useICPPrice } from "hooks/useUSDPrice";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { ChevronDown } from "react-feather";
+import { Copy } from "components/Copy/icon";
 
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { SwapProContext } from "./context";
@@ -136,7 +136,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
             <Typography component="span" color="text.theme_secondary" fontSize="12px">
               {tokenInfo ? shorten(tokenInfo.canisterId, 5) : "--"}
             </Typography>
-            <CopyIcon />
+            <Copy content={tokenId} />
           </Typography>
 
           <Typography
@@ -149,7 +149,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
             <Typography component="span" color="text.theme_secondary" fontSize="12px">
               {tradePoolId ? shorten(tradePoolId) : "--"}
             </Typography>
-            <CopyIcon />
+            <Copy content={tradePoolId} />
           </Typography>
         </Box>
 
