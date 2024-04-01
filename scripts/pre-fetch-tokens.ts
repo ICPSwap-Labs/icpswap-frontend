@@ -1,5 +1,6 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { idlFactory } from "../packages/candid/src/token-list/TokenList.did";
+import { Principal } from "@dfinity/principal";
+import { idlFactory } from "../packages/candid/src/token-list/AllTokenOfSwap.did";
 import fs from "fs";
 import path from "path";
 
@@ -7,29 +8,33 @@ const tokenList = Actor.createActor(idlFactory, {
   agent: new HttpAgent({
     host: "https://icp0.io",
   }),
-  canisterId: "k37c6-riaaa-aaaag-qcyza-cai",
+  canisterId: "aofop-yyaaa-aaaag-qdiqa-cai",
 });
 
 interface Metadata {
   fee: bigint;
   decimals: bigint;
+  logo: [] | [string];
   name: string;
-  rank: number;
-  totalSupply: bigint;
-  introduction: string;
+  ledger_id: Principal;
+  min_burn_amount: bigint;
+  max_supply: [] | [bigint];
+  index: bigint;
   standard: string;
+  total_supply: bigint;
   symbol: string;
-  canisterId: string;
 }
 
 async function fetch_and_write_file() {
-  const result = (await tokenList.getList()) as { ok: Metadata[] };
+  const result = (await tokenList.get_token_list(0, 10000, [])) as { ok: { content: Metadata[] } };
 
   if (result.ok) {
-    const allTokenMetadata = result.ok.map((e) => ({
+    const content = result.ok.content;
+
+    const allTokenMetadata = content.map((e) => ({
       fee: Number(e.fee),
       decimals: Number(e.decimals),
-      canisterId: e.canisterId,
+      canisterId: e.ledger_id.toString(),
       name: e.name,
       standard: e.standard,
       symbol: e.symbol,

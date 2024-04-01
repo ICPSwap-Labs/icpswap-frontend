@@ -80,9 +80,9 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             {infoToken?.priceUSD ? formatDollarAmount(infoToken.priceUSD, 4) : "--"}
           </Typography>
           {infoToken ? (
-            <Typography sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               (<Proportion value={infoToken.priceUSDChange} />)
-            </Typography>
+            </Box>
           ) : null}
         </Box>
 

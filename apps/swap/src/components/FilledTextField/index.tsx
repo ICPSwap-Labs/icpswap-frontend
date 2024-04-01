@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { TextField, Typography, Box, Menu, Grid, MenuItem } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -40,6 +40,7 @@ export interface FilledTextFieldProps {
   width?: number;
   select?: boolean;
   onChange?: (value: any) => void;
+  onFocus?: () => void;
   required?: boolean;
   menus?: FilledTextFiledMenus[];
   maxWidth?: number;
@@ -109,27 +110,31 @@ export function Value({ select, value, menus = [], helperText }: ValueProps) {
   );
 }
 
-export default function FilledTextField({
-  label,
-  value,
-  select,
-  onChange,
-  required,
-  menus = [],
-  maxWidth,
-  fullHeight,
-  disabled,
-  InputProps,
-  borderRadius = "8px",
-  contained = true,
-  alignCenter = false,
-  width,
-  CustomNoData,
-  menuDisabled,
-  helperText,
-  multiline,
-  ...props
-}: FilledTextFieldProps) {
+function FilledTextField(
+  {
+    label,
+    value,
+    select,
+    onChange,
+    required,
+    menus = [],
+    maxWidth,
+    fullHeight,
+    disabled,
+    InputProps,
+    borderRadius = "8px",
+    contained = true,
+    alignCenter = false,
+    width,
+    CustomNoData,
+    menuDisabled,
+    helperText,
+    multiline,
+    onFocus,
+    ...props
+  }: FilledTextFieldProps,
+  ref,
+) {
   const classes = useStyles({ contained, fullHeight, borderRadius })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
@@ -144,6 +149,18 @@ export default function FilledTextField({
       inputRef?.current?.focus();
     }
   };
+
+  const focus = () => {
+    inputRef?.current?.focus();
+  };
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus,
+    }),
+    [focus],
+  );
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -202,6 +219,8 @@ export default function FilledTextField({
                       multiline={multiline}
                       disabled={disabled}
                       helperText={helperText}
+                      onFocus={onFocus}
+                      autoComplete="off"
                     />
                   ) : value ? (
                     <Value menus={menus} value={value} helperText={helperText} select={select} />
@@ -256,6 +275,8 @@ export default function FilledTextField({
                     fullWidth
                     disabled={disabled}
                     helperText={helperText}
+                    onFocus={onFocus}
+                    autoComplete="off"
                   />
                 ) : value ? (
                   <Value menus={menus} value={value} helperText={helperText} select={select} />
@@ -313,3 +334,5 @@ export default function FilledTextField({
     </>
   );
 }
+
+export default forwardRef(FilledTextField);

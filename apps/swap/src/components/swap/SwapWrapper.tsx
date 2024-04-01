@@ -27,6 +27,8 @@ import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
 import { ReclaimLink } from "components/swap/ReclaimLink";
+import { useHistory } from "react-router-dom";
+import { ICP } from "@icpswap/tokens";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -40,12 +42,13 @@ export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdC
 
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
+  const history = useHistory();
 
   useLoadDefaultParams();
 
   const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
 
-  const { onCurrencySelection, onUserInput } = useSwapHandlers();
+  const { onUserInput } = useSwapHandlers();
   const handleClearSwapState = useCleanSwapState();
 
   const {
@@ -82,26 +85,28 @@ export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdC
 
   const handleTokenAChange = useCallback(
     (token: TokenInfo) => {
+      const prePath = ui === "pro" ? "/swap-pro" : "/swap";
+
       if (token.canisterId === currencyB.currencyId) {
-        onCurrencySelection(SWAP_FIELD.INPUT, token.canisterId);
-        onCurrencySelection(SWAP_FIELD.OUTPUT, undefined);
+        history.push(`${prePath}?input=${token.canisterId}&output=${ICP.address}`);
       } else {
-        onCurrencySelection(SWAP_FIELD.INPUT, token.canisterId);
+        history.push(`${prePath}?input=${token.canisterId}&output=${currencyB.currencyId}`);
       }
     },
-    [onCurrencySelection, currencyB],
+    [currencyB],
   );
 
   const handleTokenBChange = useCallback(
     (token: TokenInfo) => {
+      const prePath = ui === "pro" ? "/swap-pro" : "/swap";
+
       if (token.canisterId === currencyA.currencyId) {
-        onCurrencySelection(SWAP_FIELD.INPUT, undefined);
-        onCurrencySelection(SWAP_FIELD.OUTPUT, token.canisterId);
+        history.push(`${prePath}?input=${ICP.address}&output=${token.canisterId}`);
       } else {
-        onCurrencySelection(SWAP_FIELD.OUTPUT, token.canisterId);
+        history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.canisterId}`);
       }
     },
-    [onCurrencySelection, currencyB],
+    [currencyA],
   );
 
   const handleInput = (value: string, type: "input" | "output") => {

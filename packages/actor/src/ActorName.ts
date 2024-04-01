@@ -13,6 +13,7 @@ export enum ActorName {
   TVL = "TVL",
 
   TokenList = "TokenList",
+  AllTokenOfSwap = "AllTokenOfSwap",
 
   Token = "token",
   WICP = "wicp",

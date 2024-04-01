@@ -117,7 +117,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
 
   return (
     <SwapProCardWrapper padding="0px">
-      <Box sx={{ padding: "16px 16px 0 16px" }}>
+      <Box sx={{ padding: !(tokenListInfo && tokenInfo && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
         <Typography color="text.primary" fontWeight={600}>
           <Trans>Token Name</Trans>
           <Typography component="span" color="text.theme_secondary" fontWeight={600}>
@@ -209,6 +209,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                   fontSize: "12px",
                   fontWeight: 500,
                 }}
+                component="div"
               >
                 {tokenInfo ? parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals).toFormat() : "--"}
                 <Typography

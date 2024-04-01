@@ -3,7 +3,7 @@ import { makeStyles, useTheme } from "@mui/styles";
 import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import Background from "components/Background";
-import Header from "./Header/ProHeader";
+import Header from "./Header";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

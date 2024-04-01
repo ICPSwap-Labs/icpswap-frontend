@@ -2,12 +2,13 @@ import numbro from "numbro";
 import { toSignificant } from "./toSignificant";
 
 // using a currency library here in case we want to add more in future
-export const formatDollarAmount = (num: number | string | undefined, digits = 2, round = true) => {
+export const formatDollarAmount = (num: number | string | undefined, digits = 2, round = true, ab?: number) => {
   const _num = num;
   if (_num === 0 || _num === "0") return "$0.00";
   if (!_num) return "-";
 
   if (Number(_num) < 0.01) {
+    if (ab && Number(_num) < ab) return `<$${ab}`;
     return `$${toSignificant(_num, digits)}`;
   }
 

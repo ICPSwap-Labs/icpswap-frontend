@@ -2,13 +2,12 @@ import { useMemo } from "react";
 import { Box, Typography, useTheme, keyframes } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { Trans } from "@lingui/macro";
-import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
+import HotIcon from "assets/icons/swap-pro/hot.svg";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { PublicTokenOverview } from "@icpswap/types";
+import type { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
-import { useInfoAllTokens } from "@icpswap/hooks";
 
 const animationKeyframes = keyframes`
   0% {
@@ -78,10 +77,12 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
   );
 }
 
-export default function HotTokens() {
-  const theme = useTheme() as Theme;
+export interface HotTokensProps {
+  infoAllTokens: PublicTokenOverview[] | undefined;
+}
 
-  const { result: infoAllTokens } = useInfoAllTokens();
+export default function HotTokens({ infoAllTokens }: HotTokensProps) {
+  const theme = useTheme() as Theme;
 
   const tokenList = useMemo(() => {
     return infoAllTokens
@@ -127,7 +128,7 @@ export default function HotTokens() {
             overflow: "hidden",
           }}
         >
-          <HotIcon />
+          <img width="20px" height="20px" src={HotIcon} alt="" />
           <Typography>
             <Trans>Hot Tokens</Trans>
           </Typography>

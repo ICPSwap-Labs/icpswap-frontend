@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { Grid, Box, useMediaQuery, Drawer, InputAdornment } from "@mui/material";
+import { Grid, Box, InputAdornment } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import { t } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
+import ProfileSection from "components/Layout/Header/ProfileSection";
+import { useState } from "react";
 
-import ProfileSection from "./ProfileSection";
-import MobileNavbar from "../Navbar/MobileNavbar";
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
+import { Search } from "./Search";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -20,17 +19,9 @@ export const customizeTheme = createTheme({
   },
 });
 
-export const customizeBreakPoints = customizeTheme.breakpoints;
-
 export default function Header() {
   const history = useHistory();
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-
-  const matchDownMD = useMediaQuery(customizeBreakPoints.down("md"));
-
-  const handleToggleDrawer = () => {
-    setDrawerOpen(true);
-  };
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleLoadPage = (path: string) => {
     history.push(path);
@@ -39,13 +30,9 @@ export default function Header() {
   return (
     <>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-        {matchDownMD ? (
-          <DensityMediumIcon sx={{ cursor: "pointer" }} onClick={handleToggleDrawer} />
-        ) : (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <ProLogo />
-          </Box>
-        )}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <ProLogo />
+        </Box>
 
         <Grid
           item
@@ -79,6 +66,7 @@ export default function Header() {
                     </InputAdornment>
                   ),
                 }}
+                onFocus={() => setSearchOpen(true)}
               />
             </Box>
             <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
@@ -88,9 +76,7 @@ export default function Header() {
         </Grid>
       </Box>
 
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <MobileNavbar onPageLoad={() => setDrawerOpen(false)} />
-      </Drawer>
+      <Search open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

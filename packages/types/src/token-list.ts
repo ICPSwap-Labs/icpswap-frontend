@@ -1,1 +1,1 @@
-export type { TokenListMetadata } from "@icpswap/candid";
+export type { TokenListMetadata, AllTokenOfSwapTokenInfo } from "@icpswap/candid";
