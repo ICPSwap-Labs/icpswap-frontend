@@ -129,7 +129,7 @@ export default function HotTokens({ infoAllTokens }: HotTokensProps) {
           }}
         >
           <img width="20px" height="20px" src={HotIcon} alt="" />
-          <Typography>
+          <Typography sx={{ "@media(max-width: 640px)": { display: "none" } }}>
             <Trans>Hot Tokens</Trans>
           </Typography>
         </Box>

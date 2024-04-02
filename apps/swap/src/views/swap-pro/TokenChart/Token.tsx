@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
@@ -11,6 +11,42 @@ import { Copy } from "components/Copy/icon";
 
 import { SwapProContext } from "../context";
 
+interface MediasProps {
+  mediaLinks: undefined | { k: string; v: string }[];
+}
+
+function Medias({ mediaLinks }: MediasProps) {
+  const theme = useTheme() as Theme;
+
+  return mediaLinks ? (
+    <Box
+      sx={{
+        width: "fit-content",
+        borderRadius: "60px",
+        border: `1px solid ${theme.colors.border0}`,
+        display: "flex",
+        alignItems: "center",
+        height: "30px",
+        padding: "0 24px",
+        gap: "0 10px",
+      }}
+    >
+      {mediaLinks.map((e) => (
+        <a
+          key={e.k}
+          href={e.v}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={e.k}
+          style={{ width: "20px", height: "20px" }}
+        >
+          <MediaLinkIcon k={e.k} size={20} />
+        </a>
+      ))}
+    </Box>
+  ) : null;
+}
+
 export interface TokenChartInfoProps {
   infoToken: PublicTokenOverview | undefined;
   tokenInfo: TokenInfo | undefined;
@@ -19,6 +55,7 @@ export interface TokenChartInfoProps {
 
 export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
   const theme = useTheme() as Theme;
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { tokenId } = useContext(SwapProContext);
 
   const mediaLinks = useMemo(() => {
@@ -35,46 +72,62 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
   }, [tokenId, tokenListInfo]);
 
   return (
-    <Box sx={{ padding: "16px 16px 0 16px" }}>
-      <Box sx={{ display: "flex", gap: "0 47px" }}>
-        <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <TokenImage size="24px" logo={tokenInfo?.logo} tokenId={tokenId} />
-          <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 600 }}>
-            {tokenInfo ? tokenInfo.symbol : "--"}
-          </Typography>
-          <Typography color="text.theme_secondary">{tokenId}</Typography>
-          <Copy content={tokenId} />
+    <Box
+      sx={{
+        padding: "16px 16px 0 16px",
+        "@media(max-width: 640px)": {
+          padding: "0px",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          gap: "0 47px",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            alignItems: "flex-start",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            gap: "0 5px",
+            alignItems: "center",
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "8px 0",
+            },
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
+            <TokenImage size="24px" logo={tokenInfo?.logo} tokenId={tokenId} />
+            <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 600 }}>
+              {tokenInfo ? tokenInfo.symbol : "--"}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
+            <Typography color="text.theme_secondary">{tokenId}</Typography>
+            <Copy content={tokenId} />
+          </Box>
         </Box>
 
-        {mediaLinks ? (
-          <Box
-            sx={{
-              borderRadius: "60px",
-              border: `1px solid ${theme.colors.border0}`,
-              display: "flex",
-              alignItems: "center",
-              height: "30px",
-              padding: "0 24px",
-              gap: "0 10px",
-            }}
-          >
-            {mediaLinks.map((e) => (
-              <a
-                key={e.k}
-                href={e.v}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={e.k}
-                style={{ width: "20px", height: "20px" }}
-              >
-                <MediaLinkIcon k={e.k} size={20} />
-              </a>
-            ))}
-          </Box>
-        ) : null}
+        {!matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
       </Box>
 
-      <Box sx={{ margin: "10px 0 0 0", display: "flex", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          margin: "10px 0 0 0",
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "8px 0",
+          },
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
             {infoToken?.priceUSD ? formatDollarAmount(infoToken.priceUSD, 4) : "--"}
@@ -85,6 +138,8 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             </Box>
           ) : null}
         </Box>
+
+        {matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
 
         <a href={`https://info.icpswap.com/token/details/${tokenId}`} target="_blank" rel="noreferrer">
           <Box

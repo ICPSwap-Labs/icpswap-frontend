@@ -64,6 +64,7 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
             height: "64px",
             [theme.breakpoints.down("md")]: {
               height: "60px",
+              padding: "0 12px",
             },
           }}
         >

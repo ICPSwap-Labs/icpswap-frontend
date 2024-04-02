@@ -174,112 +174,120 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
               </Box>
             </Card>
           ) : null}
-          <Card>
-            <Box sx={{ display: "flex", gap: "0 16px" }}>
-              <Box sx={{ padding: "0 0 0 8px" }}>
-                <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
-                  <Trans>TVL</Trans>
-                </Typography>
-                <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
-                  {totalTVL ?? "--"}
-                </Typography>
+
+          {moreInformation ? (
+            <Card>
+              <Box sx={{ display: "flex", gap: "0 16px" }}>
+                <Box sx={{ padding: "0 0 0 8px" }}>
+                  <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
+                    <Trans>TVL</Trans>
+                  </Typography>
+                  <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
+                    {totalTVL ?? "--"}
+                  </Typography>
+                </Box>
+                <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
+                <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+                  <TokenTvl token={token0} tvlUsd={token0UsdTvl} balance={token0Balance} />
+                  <TokenTvl token={token1} tvlUsd={token1UsdTvl} balance={token1Balance} />
+                </Box>
               </Box>
-              <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
-                <TokenTvl token={token0} tvlUsd={token0UsdTvl} balance={token0Balance} />
-                <TokenTvl token={token1} tvlUsd={token1UsdTvl} balance={token1Balance} />
-              </Box>
-            </Box>
-          </Card>
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-            <Card title={t`Total Supply`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenSupply && tokenInfo
-                  ? formatAmount(parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals).toNumber())
-                  : "--"}
-              </Typography>
             </Card>
-            <Card title={t`Transfer Fee`}>
-              <Typography
-                color="text.primary"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  fontSize: "12px",
-                  fontWeight: 500,
-                }}
-                component="div"
-              >
-                {tokenInfo ? parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals).toFormat() : "--"}
+          ) : null}
+
+          {moreInformation ? (
+            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+              <Card title={t`Total Supply`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenSupply && tokenInfo
+                    ? formatAmount(parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals).toNumber())
+                    : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Transfer Fee`}>
                 <Typography
                   color="text.primary"
                   sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                     fontSize: "12px",
                     fontWeight: 500,
-                    maxWidth: "86px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
                   }}
+                  component="div"
                 >
-                  (
+                  {tokenInfo ? parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals).toFormat() : "--"}
+                  <Typography
+                    color="text.primary"
+                    sx={{
+                      fontSize: "12px",
+                      fontWeight: 500,
+                      maxWidth: "86px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    (
+                    {tokenSupply && tokenInfo && tokenPrice
+                      ? formatDollarAmount(
+                          parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals)
+                            .multipliedBy(tokenPrice)
+                            .toString(),
+                        )
+                      : "--"}
+                    )
+                  </Typography>
+                </Typography>
+              </Card>
+              <Card title={t`Market Cap (USD)`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && tokenInfo && tokenPrice
                     ? formatDollarAmount(
-                        parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals)
+                        parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals)
                           .multipliedBy(tokenPrice)
                           .toString(),
                       )
                     : "--"}
-                  )
                 </Typography>
-              </Typography>
-            </Card>
-            <Card title={t`Market Cap (USD)`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenSupply && tokenInfo && tokenPrice
-                  ? formatDollarAmount(
-                      parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals).multipliedBy(tokenPrice).toString(),
-                    )
-                  : "--"}
-              </Typography>
-            </Card>
-            <Card title={t`Market Cap (ICP)`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenSupply && tokenInfo && tokenPrice && icpPrice
-                  ? formatAmount(
-                      parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals)
-                        .multipliedBy(tokenPrice)
-                        .dividedBy(icpPrice)
-                        .toString(),
-                    )
-                  : "--"}
-              </Typography>
-            </Card>
-            <Card title={t`Volume 24H`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {infoToken ? formatDollarAmount(infoToken.volumeUSD1d) : "--"}
-              </Typography>
-            </Card>
-            <Card title={t`Volume 7D`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
-              </Typography>
-            </Card>
-            <Card title={t`Decimals`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenInfo ? tokenInfo.decimals : "--"}
-              </Typography>
-            </Card>
-            <Card title={t`Holders`}>
-              <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenHolders ? tokenHolders.toString() : "--"}
-              </Typography>
-            </Card>
-          </Box>
+              </Card>
+              <Card title={t`Market Cap (ICP)`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenSupply && tokenInfo && tokenPrice && icpPrice
+                    ? formatAmount(
+                        parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals)
+                          .multipliedBy(tokenPrice)
+                          .dividedBy(icpPrice)
+                          .toString(),
+                      )
+                    : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Volume 24H`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {infoToken ? formatDollarAmount(infoToken.volumeUSD1d) : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Volume 7D`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Decimals`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenInfo ? tokenInfo.decimals : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Holders`}>
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenHolders ? tokenHolders.toString() : "--"}
+                </Typography>
+              </Card>
+            </Box>
+          ) : null}
         </Box>
 
-        {tokenListInfo && tokenInfo && tokenListInfo.introduction ? (
+        {tokenListInfo && tokenInfo && tokenListInfo.introduction && moreInformation ? (
           <Box sx={{ margin: "20px 0 0 0" }}>
             <Typography sx={{ fontWeight: 600 }} color="text.primary">
               <Trans>Introduction</Trans>

@@ -1,4 +1,4 @@
-import { Grid, Box, InputAdornment } from "@mui/material";
+import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
@@ -9,6 +9,8 @@ import ProfileSection from "components/Layout/Header/ProfileSection";
 import { useState } from "react";
 
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
+import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
+
 import { Search } from "./Search";
 
 export const customizeTheme = createTheme({
@@ -20,8 +22,10 @@ export const customizeTheme = createTheme({
 });
 
 export default function Header() {
+  const theme = useTheme();
   const history = useHistory();
   const [searchOpen, setSearchOpen] = useState(false);
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleLoadPage = (path: string) => {
     history.push(path);
@@ -31,7 +35,7 @@ export default function Header() {
     <>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <ProLogo />
+          {matchDownSM ? <MobileSearchIcon onClick={() => setSearchOpen(true)} /> : <ProLogo />}
         </Box>
 
         <Grid
@@ -53,22 +57,24 @@ export default function Header() {
               "@media(max-width: 640px)": { gap: "0 8px" },
             }}
           >
-            <Box sx={{ width: "358px", height: "32px" }}>
-              <FilledTextField
-                fullHeight
-                contained={false}
-                placeholder="Symbol / Name / Canister ID"
-                borderRadius="12px"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                onFocus={() => setSearchOpen(true)}
-              />
-            </Box>
+            {matchDownSM ? null : (
+              <Box sx={{ width: "358px", height: "32px" }}>
+                <FilledTextField
+                  fullHeight
+                  contained={false}
+                  placeholder="Symbol / Name / Canister ID"
+                  borderRadius="12px"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onFocus={() => setSearchOpen(true)}
+                />
+              </Box>
+            )}
             <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
             <ButtonChip label={t`Standard Modal`} onClick={() => handleLoadPage("/swap")} />
             <ProfileSection />

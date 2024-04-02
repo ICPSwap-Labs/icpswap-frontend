@@ -31,6 +31,9 @@ export function ButtonChip({ label, onClick, border }: ButtonChipProps) {
           "& .MuiChip-label": {
             color: "#ffffff",
             overflow: "visible",
+            "@media(max-width: 640px)": {
+              fontSize: "12px",
+            },
           },
         }}
         label={label}

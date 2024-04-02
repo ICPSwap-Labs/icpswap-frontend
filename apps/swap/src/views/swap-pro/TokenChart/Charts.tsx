@@ -18,6 +18,9 @@ export default function TokenChartInfo() {
         borderBottomLeftRadius: "12px",
         borderBottomRightRadius: "12px",
         overflow: "hidden",
+        "@media(max-width: 640px)": {
+          margin: "0",
+        },
       }}
     >
       <TokenCharts canisterId={tokenId} background={3} borderRadius="0px" />

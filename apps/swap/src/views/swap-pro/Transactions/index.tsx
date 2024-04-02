@@ -48,6 +48,9 @@ export default function Transactions() {
               "&.active": {
                 background: theme.palette.background.level3,
               },
+              "@media(max-width: 640px)": {
+                padding: "6px",
+              },
             }}
             onClick={() => setActive(e.value)}
           >
@@ -58,6 +61,9 @@ export default function Transactions() {
                   color: "text.primary",
                   fontWeight: 500,
                 },
+                "@media(max-width: 640px)": {
+                  fontSize: "11px",
+                },
               }}
             >
               {e.label}
@@ -66,7 +72,7 @@ export default function Transactions() {
         ))}
       </Box>
 
-      <Box sx={{ margin: "30px 0 0 0" }}>
+      <Box sx={{ margin: "10px 0 0 0" }}>
         {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} /> : null}
         {active === TransactionPart.YOUR ? <UserTransactions canisterId={tradePoolId} /> : null}
       </Box>
