@@ -6,7 +6,7 @@ import NFTCard from "components/NFT/market/NFTCard";
 import { useNFTRecommend } from "hooks/nft/trade";
 import NoData from "components/no-data";
 import { pageArgsFormat } from "@icpswap/utils";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import Loading from "components/Loading/Static";
 import { TradeOrder } from "types/nft";
 import { Trans } from "@lingui/macro";

@@ -1,8 +1,12 @@
 import { useMemo } from "react";
 import { usePositionFee } from "@icpswap/hooks";
 
-export function usePositionFees(canisterId: string | undefined, positionId: bigint | undefined, reload?: boolean) {
-  const { result } = usePositionFee(canisterId, positionId, reload);
+export function usePositionFees(
+  canisterId: string | undefined,
+  positionId: bigint | undefined,
+  refresh?: number | boolean,
+) {
+  const { result } = usePositionFee(canisterId, positionId, refresh);
 
   return useMemo(() => {
     if (!result)

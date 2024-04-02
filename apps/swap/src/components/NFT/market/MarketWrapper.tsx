@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import FilledTextField from "components/FilledTextField";
 import { t } from "@lingui/macro";
 import { IconSearch } from "@tabler/icons";

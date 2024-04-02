@@ -1,4 +1,4 @@
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { Grid, Typography, Box } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 // import NFTVerifyLabel from "./VerifyLabel";
@@ -51,7 +51,7 @@ export default function NFTCard({ nft, onCardClick, showDetails = true }: NFTCar
   return (
     <MainCard
       level={5}
-      contentSX={{
+      sx={{
         position: "relative",
         padding: "12px",
         cursor: "pointer",

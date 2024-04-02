@@ -4,16 +4,10 @@ import SwapModal from "components/modal/swap";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { BigNumber } from "@icpswap/utils";
-import { Token, CurrencyAmount, Pool } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import Button from "components/authentication/ButtonConnector";
 import { toFormat } from "utils/index";
 import { TokenImage } from "components/index";
-import { useMemo, useState } from "react";
-import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
-import { ExternalTipArgs } from "types/index";
-import { ReclaimTips } from "components/ReclaimTips";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
-import StepViewButton from "components/Steps/View";
 
 const useStyles = makeStyles((theme: Theme) => ({
   feeBox: {
@@ -26,69 +20,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface CollectFeeModalProps {
   open: boolean;
   onClose: () => void;
+  onConfirm: () => void;
+  token0: Token | undefined;
+  token1: Token | undefined;
+  loading: boolean;
   currencyFeeAmount0: CurrencyAmount<Token> | undefined;
   currencyFeeAmount1: CurrencyAmount<Token> | undefined;
-  pool: Pool | undefined | null;
-  positionId: number | bigint | undefined | string;
-  onClaimedSuccessfully?: () => void;
 }
 
-export default function CollectFees({
+export default function CollectFeesModal({
   open,
   onClose,
+  onConfirm,
+  token0,
+  token1,
+  loading,
   currencyFeeAmount0,
   currencyFeeAmount1,
-  pool,
-  positionId,
-  onClaimedSuccessfully,
 }: CollectFeeModalProps) {
   const classes = useStyles();
-  const [openSuccessTip] = useSuccessTip();
-  const [openErrorTip] = useErrorTip();
-  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-  const [loading, setLoading] = useState(false);
-
-  const { token0, token1 } = useMemo(() => {
-    if (!pool) return { token0: undefined, token1: undefined };
-    return { token0: pool.token0, token1: pool.token1 };
-  }, [pool]);
-
-  const getClaimFeeCall = useCollectFeeCallback();
-
-  const handleCollect = async () => {
-    if (loading || !positionId || !pool || !currencyFeeAmount0 || !currencyFeeAmount1) return;
-
-    setLoading(true);
-
-    const { call, key } = getClaimFeeCall({
-      pool,
-      positionId: BigInt(positionId),
-      currencyFeeAmount0,
-      currencyFeeAmount1,
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
-      },
-    });
-
-    const loadingTipKey = openLoadingTip(
-      `Claim ${currencyFeeAmount0.toSignificant(6, {
-        groupSeparator: ",",
-      })} ${token0?.symbol} and ${currencyFeeAmount1.toSignificant(6, { groupSeparator: "," })} ${token1?.symbol}`,
-      {
-        extraContent: <StepViewButton step={key} />,
-      },
-    );
-
-    const result = await call();
-
-    if (result === true) {
-      openSuccessTip(t`Claimed successfully`);
-      if (onClaimedSuccessfully) onClaimedSuccessfully();
-    }
-
-    closeLoadingTip(loadingTipKey);
-    setLoading(false);
-  };
 
   return (
     <SwapModal open={open} onClose={onClose} title={t`Claim fees`}>
@@ -133,7 +83,7 @@ export default function CollectFees({
           size="large"
           fullWidth
           sx={{ marginTop: "24px" }}
-          onClick={handleCollect}
+          onClick={onConfirm}
           disabled={loading}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >

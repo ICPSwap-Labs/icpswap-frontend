@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Menu, MenuItem, Pagination as PaginationComponent } from "@mui/material";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 
 const PageSizeList = [10, 50, 100];
@@ -66,13 +66,7 @@ export default ({
       <Grid container justifyContent={flexEnd ? "flex-end" : ""}>
         <Grid item xs container>
           <Grid item>
-            <MainCard
-              level={4}
-              contentSX={{
-                padding: "12px",
-                paddingBottom: "12px!important",
-              }}
-            >
+            <MainCard level={4} padding="12px">
               <PaginationComponent
                 count={Math.ceil(Number(count || "") / pageSize)}
                 page={pageNum}
@@ -85,14 +79,7 @@ export default ({
         </Grid>
         {showPageSize && (
           <Grid item>
-            <MainCard
-              level={4}
-              onClick={handleClick}
-              contentSX={{
-                padding: "14px",
-                paddingBottom: "14px!important",
-              }}
-            >
+            <MainCard level={4} onClick={handleClick} padding="14px">
               <Grid container alignItems="center">
                 {pageSize} Rows <ExpandMoreRoundedIcon sx={{ fontSize: "18px" }} />
               </Grid>

@@ -266,7 +266,7 @@ export default function VotingCreateProposal() {
 
       <Box mt="20px" />
 
-      <MainCard contentSX={{ position: "relative" }}>
+      <MainCard sx={{ position: "relative" }}>
         <Grid container justifyContent="center">
           <Box sx={{ width: "100%", maxWidth: "570px" }}>
             <Box mt="20px">
@@ -520,7 +520,7 @@ export default function VotingCreateProposal() {
 
         {preview ? (
           <Box sx={{ position: "absolute", top: "0", left: "0", width: "100%", height: "100%" }}>
-            <MainCard sx={{ width: "100%", height: "100%" }} contentSX={{ width: "100%", height: "100%" }}>
+            <MainCard sx={{ width: "100%", height: "100%" }}>
               <Grid container justifyContent="center" sx={{ height: "100%", overflow: "auto" }}>
                 <Box sx={{ width: "100%", maxWidth: "570px" }}>
                   <Grid container justifyContent="flex-end">

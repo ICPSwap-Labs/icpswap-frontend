@@ -231,7 +231,7 @@ export default function Swap() {
 
       {isLoadingRoute || (!isLoadingRoute && !!trade) ? (
         <Box mt="22px">
-          <MainCard contentSX={{ padding: "18px 16px", paddingBottom: "18px!important" }} border="level4">
+          <MainCard padding="18px 16px" border="level4">
             <Box sx={{ display: "grid", gap: "20px 0", gridTemplateColumns: "1fr" }}>
               {isLoadingRoute ? (
                 <Grid mt={1} container justifyContent="flex-start" alignItems="center">

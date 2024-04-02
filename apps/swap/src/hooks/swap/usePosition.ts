@@ -1,4 +1,5 @@
-import { Position } from "@icpswap/swap-sdk";
+import { useMemo } from "react";
+import { Position, Pool } from "@icpswap/swap-sdk";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { usePool, PoolState } from "hooks/swap/usePools";
 import { useToken } from "hooks/useCurrency";
@@ -46,4 +47,26 @@ export function usePosition(userPosition: usePositionProps | undefined) {
     position,
     pool: pool ?? undefined,
   };
+}
+
+export interface usePositionWithPoolProps {
+  pool: Pool | null | undefined;
+  liquidity: number | string | undefined;
+  tickLower: number | string | undefined;
+  tickUpper: number | string | undefined;
+}
+
+export function usePositionWithPool({ tickLower, tickUpper, liquidity, pool }: usePositionWithPoolProps) {
+  let position: Position | undefined;
+
+  if (pool && liquidity && (tickLower || tickLower === 0) && (tickUpper || tickUpper === 0)) {
+    position = new Position({
+      pool,
+      liquidity,
+      tickLower: Number(tickLower),
+      tickUpper: Number(tickUpper),
+    });
+  }
+
+  return useMemo(() => position, [position]);
 }

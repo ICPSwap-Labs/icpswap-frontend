@@ -29,14 +29,21 @@ import SwapConfirm from "components/swap/SwapConfirm";
 import { ReclaimLink } from "components/swap/ReclaimLink";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
-  onOutputTokenChange?: (tokenId: string | undefined) => void;
+  onInputTokenChange?: (token: Token | undefined) => void;
+  onOutputTokenChange?: (tokenId: Token | undefined) => void;
   onTradePoolIdChange?: (poolId: string | undefined) => void;
 }
 
-export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdChange }: SwapWrapperProps) {
+export function SwapWrapper({
+  ui = "normal",
+  onInputTokenChange,
+  onOutputTokenChange,
+  onTradePoolIdChange,
+}: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [refreshBalance, setRefreshBalance] = useState(false);
 
@@ -67,9 +74,10 @@ export function SwapWrapper({ ui = "normal", onOutputTokenChange, onTradePoolIdC
 
   // For swap pro
   useEffect(() => {
-    if (onOutputTokenChange) onOutputTokenChange(currencyB.currencyId);
+    if (onInputTokenChange) onInputTokenChange(inputCurrency);
+    if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
-  }, [tradePoolId, currencyB]);
+  }, [tradePoolId, outputCurrency, inputCurrency]);
 
   const parsedAmounts = useMemo(
     () => ({

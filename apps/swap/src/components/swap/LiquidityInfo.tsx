@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
-import { Position, Price, Token } from "@icpswap/swap-sdk";
+import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans } from "@lingui/macro";
 import { Theme, createTheme } from "@mui/material/styles";
@@ -53,52 +53,6 @@ const useStyle = makeStyles((theme: Theme) => ({
     background: theme.palette.background.level2,
   },
 }));
-
-export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
-  if (!position) return {};
-
-  const token0 = position.amount0.currency;
-  const token1 = position.amount1.currency;
-
-  // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(1)) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    };
-  }
-
-  // otherwise, just return the default
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  };
-}
-
-const useInverter = ({
-  priceLower,
-  priceUpper,
-  quote,
-  base,
-  invert,
-}: {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
 
 export interface LiquidityInfoProps {
   position: Position | undefined;

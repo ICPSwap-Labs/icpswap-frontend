@@ -6,7 +6,7 @@ import NFTList from "components/NFT/NFTList";
 import CollectionUserTransactions from "components/NFT/CollectionUserTransactions";
 import CanisterHeader from "components/NFT/CanisterHeader";
 import { useCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { t, Trans } from "@lingui/macro";
 import { useAccount } from "store/global/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";

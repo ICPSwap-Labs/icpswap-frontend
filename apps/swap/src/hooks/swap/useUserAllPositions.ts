@@ -10,7 +10,7 @@ type UserPositions = {
   poolId: string;
 };
 
-export function useUserAllPositions(counter?: number) {
+export function useUserAllPositions(refresh?: number) {
   const [loading, setLoading] = useState(true);
   const [positions, setPositions] = useState<UserPosition[]>([]);
 
@@ -32,9 +32,7 @@ export function useUserAllPositions(counter?: number) {
               }),
             )
           )
-            .map((positions, index) =>
-              positions ? { positions, poolId: userPositionPools[index] } : undefined,
-            )
+            .map((positions, index) => (positions ? { positions, poolId: userPositionPools[index] } : undefined))
             .filter((ele) => !!ele) as UserPositions[];
 
           const positions = await Promise.all(
@@ -60,7 +58,41 @@ export function useUserAllPositions(counter?: number) {
     }
 
     call();
-  }, [userPositionPools, principal, counter]);
+  }, [userPositionPools, principal, refresh]);
+
+  return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+}
+
+export function useUserPoolPositions(poolId: string | undefined, refresh?: number) {
+  const [loading, setLoading] = useState(true);
+  const [positions, setPositions] = useState<UserPosition[]>([]);
+
+  const principal = useAccountPrincipal();
+
+  useEffect(() => {
+    async function call() {
+      if (!!principal && poolId) {
+        const userPositionsResult = await getUserPositionIds(poolId, principal.toString());
+
+        if (userPositionsResult) {
+          const positions = await Promise.all(
+            userPositionsResult.map(async (index) => {
+              const position = await getSwapPosition(poolId, index);
+              return { ...position, id: poolId, index: Number(index) };
+            }),
+          );
+
+          setPositions(positions.filter((position) => !!position) as UserPosition[]);
+        }
+
+        setLoading(false);
+      } else {
+        setPositions([]);
+      }
+    }
+
+    call();
+  }, [principal, refresh, poolId]);
 
   return useMemo(() => ({ loading, result: positions }), [positions, loading]);
 }

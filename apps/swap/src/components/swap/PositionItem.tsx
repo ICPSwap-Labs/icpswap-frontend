@@ -11,25 +11,18 @@ import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/
 import { feeAmountToPercentage } from "utils/swap/index";
 import CollectFeesModal from "components/swap/CollectFeesModal";
 import { usePositionFees } from "hooks/swap/usePositionFees";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { numberToString, BigNumber, formatDollarAmount } from "@icpswap/utils";
-import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme, toFormat } from "utils";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
-import { Identity as TypeIdentity } from "types/global";
 import { Loading } from "components/index";
-import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
-import StepViewButton from "components/Steps/View";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import PositionContext from "components/swap/PositionContext";
-import { ExternalTipArgs } from "types/index";
-import { ReclaimTips } from "components/ReclaimTips";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
+
 import PositionStatus from "./PositionRangeState";
 import TransferPosition from "./TransferPosition";
 
@@ -97,40 +90,6 @@ export function PositionDetailItem({ label, value, convert, onConvertClick }: Po
   );
 }
 
-export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
-  if (!position) return {};
-
-  const token0 = position.amount0.currency;
-  const token1 = position.amount1.currency;
-
-  // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(1)) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    };
-  }
-
-  // otherwise, just return the default
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  };
-}
-
-export const useInverter = ({ priceLower, priceUpper, quote, base, invert }: useInverterProps) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
-
 export interface PositionDetailsProps {
   positionId: bigint;
   invalid?: boolean;
@@ -156,20 +115,15 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const classes = useStyle();
   const history = useHistory();
-
-  const principal = useAccountPrincipal();
+  const moreRef = useRef(null);
   const theme = useTheme() as Theme;
-
-  const [openSuccessTip] = useSuccessTip();
-  const [openErrorTip] = useErrorTip();
-  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
   const [collectFeesShow, setCollectFeesShow] = useState(false);
   const [reloadPositionFee, setReloadPositionFee] = useState(false);
   const [transferPopperShow, setTransferPopperShow] = useState(false);
   const [transferShow, setTransferShow] = useState(false);
 
-  const moreRef = useRef(null);
+  const { updateCounter } = useContext(PositionContext);
 
   const noLiquidity = position?.liquidity.toString() === "0";
 
@@ -238,45 +192,9 @@ export function PositionDetails({
     return CurrencyAmount.fromRawAmount(token1, numberToString(new BigNumber(feeAmount1.toString())));
   }, [feeAmount1, token1]);
 
-  const getClaimFeeCall = useCollectFeeCallback();
-
-  const onCollectConfirm = useCallback(
-    async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
-      if (!identity || loading || !principal || !positionId || !pool || !currencyFeeAmount0 || !currencyFeeAmount1)
-        return;
-
-      const { call, key } = getClaimFeeCall({
-        pool,
-        positionId,
-        currencyFeeAmount0,
-        currencyFeeAmount1,
-        openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-          openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
-        },
-      });
-
-      setCollectFeesShow(false);
-
-      const loadingTipKey = openLoadingTip(
-        `Claim ${currencyFeeAmount0.toSignificant(12, {
-          groupSeparator: ",",
-        })} ${token0?.symbol} and ${currencyFeeAmount1.toSignificant(12, { groupSeparator: "," })} ${token1?.symbol}`,
-        {
-          extraContent: <StepViewButton step={key} />,
-        },
-      );
-
-      const result = await call();
-
-      if (result === true) {
-        openSuccessTip(t`Claimed successfully`);
-        setReloadPositionFee(!reloadPositionFee);
-      }
-
-      closeLoadingTip(loadingTipKey);
-    },
-    [reloadPositionFee, token0, token1, pool, positionId, currencyFeeAmount0, currencyFeeAmount1],
-  );
+  const handleClaimedSuccessfully = () => {
+    setReloadPositionFee(!reloadPositionFee);
+  };
 
   const hasUnclaimedFees = useMemo(() => {
     if (!feeAmount0 && !feeAmount1) return false;
@@ -284,6 +202,10 @@ export function PositionDetails({
   }, [feeAmount0, feeAmount1]);
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleTransferSuccess = () => {
+    updateCounter();
+  };
 
   return (
     <>
@@ -481,22 +403,17 @@ export function PositionDetails({
       </Grid>
 
       {collectFeesShow ? (
-        <Identity onSubmit={onCollectConfirm}>
-          {({ submit, loading }: CallbackProps) => (
-            <CollectFeesModal
-              open={collectFeesShow}
-              token0={token0}
-              token1={token1}
-              currencyFeeAmount0={currencyFeeAmount0}
-              currencyFeeAmount1={currencyFeeAmount1}
-              onClose={() => {
-                setCollectFeesShow(false);
-              }}
-              onConfirm={submit}
-              loading={loading}
-            />
-          )}
-        </Identity>
+        <CollectFeesModal
+          pool={pool}
+          positionId={positionId}
+          open={collectFeesShow}
+          currencyFeeAmount0={currencyFeeAmount0}
+          currencyFeeAmount1={currencyFeeAmount1}
+          onClose={() => {
+            setCollectFeesShow(false);
+          }}
+          onClaimedSuccessfully={handleClaimedSuccessfully}
+        />
       ) : null}
 
       {transferShow ? (
@@ -506,18 +423,11 @@ export function PositionDetails({
           position={position}
           positionId={positionId}
           onClose={() => setTransferShow(false)}
+          onTransferSuccess={handleTransferSuccess}
         />
       ) : null}
     </>
   );
-}
-
-interface useInverterProps {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
 }
 
 export interface PositionItemProps {
@@ -585,7 +495,7 @@ export default function PositionItem({
     return totalUSD.toString();
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const { setAllPositionsUSDValue } = useContext(PositionContext);
+  const { setAllPositionsUSDValue, updateCounter } = useContext(PositionContext);
 
   const positionKey = useMemo(() => {
     if (!position) return undefined;

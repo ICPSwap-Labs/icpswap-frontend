@@ -8,7 +8,7 @@ import { SwapProContext } from "../context";
 export default function TokenChartInfo() {
   const theme = useTheme() as Theme;
 
-  const { tokenId } = useContext(SwapProContext);
+  const { outputToken } = useContext(SwapProContext);
 
   return (
     <Box
@@ -23,7 +23,7 @@ export default function TokenChartInfo() {
         },
       }}
     >
-      <TokenCharts canisterId={tokenId} background={3} borderRadius="0px" />
+      <TokenCharts canisterId={outputToken?.address} background={3} borderRadius="0px" />
     </Box>
   );
 }

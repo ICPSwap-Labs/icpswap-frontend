@@ -17,7 +17,9 @@ import type {
   UserPositionInfoWithId,
   PositionInfoWithId,
   TickInfoWithId,
- ActorIdentity, PaginationResult } from "@icpswap/types";
+  ActorIdentity,
+  PaginationResult,
+} from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 import { useCallsData, getPaginationAllData, usePaginationAllData } from "../useCallData";
@@ -165,13 +167,17 @@ export async function getPositionFee(canisterId: string, positionId: bigint) {
   ).data;
 }
 
-export function usePositionFee(canisterId: string | undefined, positionId: bigint | undefined, reload?: boolean) {
+export function usePositionFee(
+  canisterId: string | undefined,
+  positionId: bigint | undefined,
+  refresh?: number | boolean,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || (!positionId && positionId === BigInt(0))) return undefined;
       return await getPositionFee(canisterId, positionId);
     }, [canisterId, positionId]),
-    reload,
+    refresh,
   );
 }
 

@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
 import Exchange from "components/Wrap/Exchange";
 import Record from "components/Wrap/Record";
 import RetryWrap from "components/Wrap/RetryWrap";
-import { TextButton } from "components/index";
+import { TextButton, MainCard } from "components/index";
 import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
 import { t, Trans } from "@lingui/macro";
 import { INFO_URL } from "constants/index";

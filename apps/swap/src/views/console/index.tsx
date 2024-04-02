@@ -1,7 +1,7 @@
 import { Grid, Box, useTheme, Typography, createTheme, useMediaQuery, SvgIcon } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { t, Trans } from "@lingui/macro";
 import NFTIcon from "assets/images/console/NFT.svg";
 import { mockALinkAndOpen } from "@icpswap/utils";

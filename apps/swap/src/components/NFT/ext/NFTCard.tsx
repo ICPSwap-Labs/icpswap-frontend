@@ -1,4 +1,4 @@
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { Grid, Typography, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { type EXTCollection, type ExtNft } from "@icpswap/types";
@@ -33,7 +33,7 @@ export function NFTCard({ nft, collection, setReload }: NFTCardProps) {
   return (
     <MainCard
       level={5}
-      contentSX={{
+      sx={{
         position: "relative",
         padding: "12px",
         cursor: "pointer",

@@ -11,3 +11,6 @@ export * from "./priceTickConversions";
 export * from "./sqrtPriceMath";
 export * from "./tickMath";
 export * from "./tickList";
+export * from "./getPriceOrderingFromPositionForUI";
+export * from "./format";
+export * from "./invert";

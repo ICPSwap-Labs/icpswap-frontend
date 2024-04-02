@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { Link as ReactLink, useHistory } from "react-router-dom";
 import { Breadcrumbs, Typography, Grid, Box, InputAdornment } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import RequiredMark from "components/RequiredMark";
 import TextField from "components/TextField";
 import Upload, { UploadRef } from "components/NFT/Upload";

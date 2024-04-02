@@ -4,17 +4,14 @@ import { isDarkTheme } from "utils";
 import { Theme } from "@mui/material/styles";
 import Modal from "./index";
 
-export default ({
-  width = "570px",
-  open,
-  children,
-  ...props
-}: {
+export interface SwapModalProps {
   width?: string;
   open: boolean;
   children: React.ReactNode;
   [key: string]: any;
-}) => {
+}
+
+export default ({ width = "570px", open, children, ...props }: SwapModalProps) => {
   const theme = useTheme() as Theme;
 
   return (

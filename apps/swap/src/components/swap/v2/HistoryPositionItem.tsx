@@ -2,21 +2,27 @@ import React, { useState, memo, useCallback, useMemo } from "react";
 import { Typography, Grid, Chip, Button, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp , SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound , BURN_FIELD, slippageToPercent } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL , CurrencyAmountFormatDecimals } from "constants/index";
+import { Bound, BURN_FIELD, slippageToPercent } from "constants/swap";
+import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import Loading from "components/Loading";
-import CollectFeesModal from "components/swap/CollectFeesModal";
-import { useCollectFeesCall , decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
+import { useCollectFeesCall, decreaseV1Liquidity } from "hooks/swap/v2/useSwapCalls";
 import { usePositionFees } from "hooks/swap/v2/usePositionFees";
 import { useAccount } from "store/global/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MaxUint128 } from "constants/misc";
 import { numberToString } from "@icpswap/utils";
-import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
+import {
+  CurrencyAmount,
+  Position,
+  Price,
+  Token,
+  getPriceOrderingFromPositionForUI,
+  useInverter,
+} from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils";
 import { useErrorTip, useSuccessTip, useLoadingTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
@@ -27,6 +33,8 @@ import PositionStatus from "components/swap/PositionRangeState";
 import { getLocaleMessage } from "locales/services";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
 import ConfirmRemoveLiquidityModal from "./HistoryRemoveModal";
+
+import CollectFeesModal from "./CollectFeesModal";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -91,35 +99,6 @@ export const DetailItem = memo(
     );
   },
 );
-
-export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
-  try {
-    if (!position) return {};
-
-    const token0 = position.amount0.currency;
-    const token1 = position.amount1.currency;
-
-    // if both prices are below 1, invert
-    if (position.token0PriceUpper.lessThan(1)) {
-      return {
-        priceLower: position.token0PriceUpper.invert(),
-        priceUpper: position.token0PriceLower.invert(),
-        quote: token0,
-        base: token1,
-      };
-    }
-
-    // otherwise, just return the default
-    return {
-      priceLower: position.token0PriceLower,
-      priceUpper: position.token0PriceUpper,
-      quote: token1,
-      base: token0,
-    };
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 export interface PositionDetailsProps {
   positionId: number | bigint | string | undefined;
@@ -429,27 +408,6 @@ export function PositionDetails({
     </>
   );
 }
-
-const useInverter = ({
-  priceLower,
-  priceUpper,
-  quote,
-  base,
-  invert,
-}: {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
 
 export interface PositionItemProps {
   positionId: number | bigint | string | undefined;

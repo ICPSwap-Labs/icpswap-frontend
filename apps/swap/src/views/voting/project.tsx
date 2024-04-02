@@ -85,7 +85,7 @@ export default function VotingProject() {
       >
         <Box sx={{ width: "100%", overflow: "hidden" }}>
           {matchDown1440 ? (
-            <MainCard contentSX={{ padding: "0px!important" }}>
+            <MainCard padding="0px">
               <Box sx={{ padding: "12px 12px 0 12px" }}>
                 <Grid container alignItems="center">
                   <Box sx={{ display: "flex", alignItems: "center" }}>

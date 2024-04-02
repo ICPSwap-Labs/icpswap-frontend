@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { Theme } from "@mui/material/styles";
 import Wrapper from "components/Wrapper";

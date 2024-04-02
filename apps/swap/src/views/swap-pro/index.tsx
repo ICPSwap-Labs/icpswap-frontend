@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useInfoToken } from "hooks/uesInfoToken";
+// import { useInfoToken } from "hooks/uesInfoToken";
 import { useTokenListTokenInfo, useInfoAllTokens } from "@icpswap/hooks";
+import { Token } from "@icpswap/swap-sdk";
 
 import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
@@ -18,16 +19,42 @@ export default function SwapPro() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
+  const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
+  const [outputToken, setOutputToken] = useState<Token | undefined>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
 
-  const { result: infoToken } = useInfoToken(tokenId);
-  const { result: tokenInfo } = useTokenInfo(tokenId);
-  const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
+  // const { result: infoToken } = useInfoToken(outputToken?.address);
+  const { result: tokenInfo } = useTokenInfo(outputToken?.address);
+  const { result: tokenListInfo } = useTokenListTokenInfo(outputToken?.address);
   const { result: infoAllTokens } = useInfoAllTokens();
 
+  const infoToken = useMemo(() => {
+    return infoAllTokens?.find((e) => e.address === outputToken?.address);
+  }, [infoAllTokens]);
+
+  const { inputTokenPrice, outputTokenPrice } = useMemo(() => {
+    const outputTokenInfo = infoAllTokens?.find((e) => e.address === outputToken?.address);
+
+    return {
+      inputTokenPrice: infoToken?.priceUSD,
+      outputTokenPrice: outputTokenInfo?.priceUSD,
+    };
+  }, [infoToken, infoAllTokens, outputToken]);
+
   return (
-    <SwapProContext.Provider value={{ tokenId, setTokenId, tradePoolId, setTradePoolId, infoAllTokens }}>
+    <SwapProContext.Provider
+      value={{
+        inputToken,
+        setInputToken,
+        outputToken,
+        setOutputToken,
+        tradePoolId,
+        setTradePoolId,
+        infoAllTokens,
+        inputTokenPrice,
+        outputTokenPrice,
+      }}
+    >
       <SwapProLayout>
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <Box sx={{ width: "100%", maxWidth: "1440px" }}>

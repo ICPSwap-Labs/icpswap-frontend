@@ -62,8 +62,10 @@ export interface TokenProps {
 
 export default function Token({ infoToken, tokenListInfo }: TokenProps) {
   const theme = useTheme() as Theme;
-  const { tokenId, tradePoolId } = useContext(SwapProContext);
+  const { outputToken, tradePoolId } = useContext(SwapProContext);
   const [moreInformation, setMoreInformation] = useState(false);
+
+  const tokenId = useMemo(() => outputToken?.address, [outputToken]);
 
   const { result: poolMetadata } = useSwapPoolMetadata(tradePoolId);
 

@@ -1,7 +1,7 @@
 import { useState, memo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import Exchange from "./Exchange";
@@ -45,7 +45,7 @@ export default memo(() => {
   return (
     <Grid container justifyContent="center">
       <Grid item className={classes.outerBox}>
-        <MainCard level={1} contentSX={{ width: "570px" }}>
+        <MainCard level={1} sx={{ width: "570px" }}>
           <Box
             sx={{
               position: "relative",

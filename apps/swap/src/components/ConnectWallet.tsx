@@ -1,5 +1,5 @@
 import { Grid, Box, Typography, Button } from "@mui/material";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import NoData from "components/no-data";
 import { useWalletConnectorManager } from "store/auth/hooks";
 import { Trans } from "@lingui/macro";

@@ -5,7 +5,7 @@ import { UserPosition } from "types/swap";
 import { usePositions } from "hooks/swap-scan/index";
 import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shorten } from "@icpswap/utils";
 import { useSwapPositionOwner, useParsedQueryString, useTickAtLimit } from "@icpswap/hooks";
-import { Pool, Position, Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
+import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 import { LoadingRow, NoData, SelectPair, Pagination, PaginationType, Copy } from "ui-component/index";
@@ -30,48 +30,6 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-
-export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
-  if (!position) return {};
-
-  const token0 = position.amount0.currency;
-  const token1 = position.amount1.currency;
-
-  // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(1)) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    };
-  }
-
-  // otherwise, just return the default
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  };
-}
-
-interface useInverterProps {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}
-
-function useInverter({ priceLower, priceUpper, quote, base, invert }: useInverterProps) {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-}
 
 enum Bound {
   LOWER = "LOWER",

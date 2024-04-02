@@ -144,7 +144,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
     <Box>
       <MainCard
         level={1}
-        contentSX={{ padding: "0!important", paddingBottom: "0!important" }}
+        padding="0px"
         sx={{
           display: stakeOnly && userAllPositions.length === 0 ? "none" : "block",
           width: "384px",

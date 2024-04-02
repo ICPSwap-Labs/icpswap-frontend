@@ -7,6 +7,7 @@ import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
 import { PoolTransactions } from "./PoolTransactions";
 import { UserTransactions } from "./UserTransactions";
+import { Positions } from "./Positions";
 
 enum TransactionPart {
   All = "all",
@@ -75,6 +76,7 @@ export default function Transactions() {
       <Box sx={{ margin: "10px 0 0 0" }}>
         {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} /> : null}
         {active === TransactionPart.YOUR ? <UserTransactions canisterId={tradePoolId} /> : null}
+        {active === TransactionPart.POSITIONS ? <Positions canisterId={tradePoolId} /> : null}
       </Box>
     </SwapProCardWrapper>
   );

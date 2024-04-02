@@ -1,7 +1,7 @@
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
 import { BigintIsh } from "../core";
-import { TickMath } from "../utils";
+import { TickMath } from "../utils/tickMath";
 
 export interface TickConstructorArgs {
   index: number;
@@ -11,7 +11,9 @@ export interface TickConstructorArgs {
 
 export class Tick {
   public readonly index: number;
+
   public readonly liquidityGross: JSBI;
+
   public readonly liquidityNet: JSBI;
 
   constructor({ index, liquidityGross, liquidityNet }: TickConstructorArgs) {

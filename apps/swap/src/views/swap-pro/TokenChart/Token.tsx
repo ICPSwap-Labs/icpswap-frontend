@@ -56,7 +56,11 @@ export interface TokenChartInfoProps {
 export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
   const theme = useTheme() as Theme;
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { tokenId } = useContext(SwapProContext);
+  const { outputToken } = useContext(SwapProContext);
+
+  const tokenId = useMemo(() => {
+    return outputToken?.address;
+  }, [outputToken]);
 
   const mediaLinks = useMemo(() => {
     if (!tokenListInfo) return undefined;

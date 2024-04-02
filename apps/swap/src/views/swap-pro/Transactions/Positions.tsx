@@ -1,0 +1,356 @@
+import { useState, useMemo, useContext } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Trans } from "@lingui/macro";
+import { useTickAtLimit } from "@icpswap/hooks";
+import {
+  CurrencyAmount,
+  FeeAmount,
+  Pool,
+  useInverter,
+  getPriceOrderingFromPositionForUI,
+  formatTickPrice,
+} from "@icpswap/swap-sdk";
+import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
+import { Header, HeaderCell, TableRow, BodyCell, StaticLoading, NoData, SimplePagination } from "@icpswap/ui";
+import type { UserPosition } from "types/swap";
+import { usePositionFees } from "hooks/swap/usePositionFees";
+import { usePositionWithPool } from "hooks/swap/usePosition";
+import { usePool } from "hooks/swap/usePools";
+import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
+import { ChevronDown } from "react-feather";
+import CollectFeesModal from "components/swap/CollectFeesModal";
+import TransferPosition from "components/swap/TransferPosition";
+import { useHistory } from "react-router-dom";
+
+import { SwapProContext } from "../context";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gap: "1em",
+      alignItems: "center",
+      gridTemplateColumns: "100px repeat(5, 1fr) 30px",
+    },
+  };
+});
+
+interface PositionItemProps {
+  positionInfo: UserPosition;
+  pool: Pool | undefined | null;
+}
+
+enum Bound {
+  LOWER = "LOWER",
+  UPPER = "UPPER",
+}
+
+function PositionItem({ positionInfo, pool }: PositionItemProps) {
+  const classes = useStyles();
+  const history = useHistory();
+  const [manuallyInverted, setManuallyInverted] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const [collectOpen, setCollectOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [transferred, setTransferred] = useState(false);
+  const [refreshFeeFlag, setRefreshFeeFlag] = useState<number>(0);
+  const { inputTokenPrice, outputTokenPrice, inputToken, outputToken } = useContext(SwapProContext);
+
+  const position = usePositionWithPool({
+    tickLower: positionInfo.tickLower.toString(),
+    tickUpper: positionInfo.tickUpper.toString(),
+    liquidity: positionInfo.liquidity.toString(),
+    pool,
+  });
+  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(
+    positionInfo.id,
+    BigInt(positionInfo.index),
+    refreshFeeFlag,
+  );
+
+  const { token0, token1, fee, tickLower, tickUpper } = useMemo(
+    () => ({
+      token0: pool?.token0,
+      token1: pool?.token1,
+      fee: pool?.fee,
+      tickLower: position?.tickLower,
+      tickUpper: position?.tickUpper,
+    }),
+    [position, pool],
+  );
+
+  const nonInvertedTicksAtLimit = useTickAtLimit(fee, tickLower, tickUpper);
+  const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
+
+  // handle manual inversion
+  const { priceLower, priceUpper, base } = useInverter({
+    priceLower: pricesFromPosition?.priceLower,
+    priceUpper: pricesFromPosition?.priceUpper,
+    quote: pricesFromPosition?.quote,
+    base: pricesFromPosition?.base,
+    invert: manuallyInverted,
+  });
+
+  const inverted = token1 ? base?.equals(token1) : undefined;
+  const currencyQuote = inverted ? token0 : token1;
+  const currencyBase = inverted ? token1 : token0;
+
+  const tickAtLimit = useMemo(() => {
+    if (!inverted) return nonInvertedTicksAtLimit;
+
+    return {
+      [Bound.LOWER]: nonInvertedTicksAtLimit[Bound.UPPER] ? true : undefined,
+      [Bound.UPPER]: nonInvertedTicksAtLimit[Bound.LOWER] ? true : undefined,
+    };
+  }, [nonInvertedTicksAtLimit, inverted]);
+
+  const pairName = useMemo(() => {
+    if (!currencyQuote || !currencyBase) return undefined;
+    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
+  }, [currencyQuote, currencyBase]);
+
+  const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
+    if (!token0 || feeAmount0 === undefined || !token1 || feeAmount1 === undefined)
+      return {
+        currencyFeeAmount0: undefined,
+        currencyFeeAmount1: undefined,
+      };
+
+    return {
+      currencyFeeAmount0: CurrencyAmount.fromRawAmount(token0, feeAmount0.toString()),
+      currencyFeeAmount1: CurrencyAmount.fromRawAmount(token1, feeAmount1.toString()),
+    };
+  }, [feeAmount0, token0]);
+
+  const { token0USDPrice, token1USDPrice } = useMemo(() => {
+    if (!pool || !inputToken || !outputToken) return { token0USDPrice: undefined, token1USDPrice: undefined };
+
+    return {
+      token0USDPrice: pool.token0.address === inputToken.address ? inputTokenPrice : outputTokenPrice,
+      token1USDPrice: pool.token1.address === inputToken.address ? inputTokenPrice : outputTokenPrice,
+    };
+  }, [pool, inputTokenPrice, outputTokenPrice, inputToken, outputToken]);
+
+  const handleToggleShowButtons = () => {
+    setShowButtons(!showButtons);
+  };
+
+  const handleClaimedSuccessfully = () => {
+    setRefreshFeeFlag(refreshFeeFlag + 1);
+    setCollectOpen(false);
+  };
+
+  const handleLoadPage = (path: string) => {
+    history.push(path);
+  };
+
+  const handleTransferSuccess = () => {
+    setTransferred(true);
+  };
+
+  return (
+    <Box
+      sx={{
+        borderBottom: "1px solid rgba(189, 200, 240, 0.082)",
+        display: !transferred ? "block" : "none",
+      }}
+    >
+      <TableRow className={classes.wrapper} border="none">
+        <BodyCell>{positionInfo.index}</BodyCell>
+
+        <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount0.toExact(), 6)} ` : "--"}</BodyCell>
+
+        <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount1.toExact(), 6)} ` : "--"}</BodyCell>
+
+        <BodyCell>
+          {!!token1 && !!token0 && pool ? (
+            inverted ? (
+              <BodyCell>
+                {pool.priceOf(token1).toSignificant(6)}
+                <BodyCell>{pairName ?? ""}</BodyCell>
+              </BodyCell>
+            ) : (
+              <BodyCell>
+                ${pool.priceOf(token0).toSignificant(6)}
+                <BodyCell>{pairName ?? ""}</BodyCell>
+              </BodyCell>
+            )
+          ) : (
+            "--"
+          )}
+        </BodyCell>
+
+        <BodyCell>
+          {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
+            groupSeparator: ",",
+          })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
+            groupSeparator: ",",
+          })} ${pairName ?? ""}`}
+        </BodyCell>
+
+        <BodyCell>
+          <BodyCell>
+            {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined
+              ? `${toSignificantWithGroupSeparator(
+                  new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
+                  6,
+                )} ${token0?.symbol}`
+              : "--"}
+          </BodyCell>
+          {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined ? (
+            <BodyCell>
+              and&nbsp;
+              {toSignificantWithGroupSeparator(
+                new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
+                6,
+              )}
+              &nbsp;{token1?.symbol}
+            </BodyCell>
+          ) : null}
+
+          <Typography mt="10px" align="left">
+            {currencyFeeAmount0 !== undefined &&
+            currencyFeeAmount1 !== undefined &&
+            !!token0USDPrice &&
+            !!token1USDPrice
+              ? `≈ ${formatDollarAmount(
+                  new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
+                    .multipliedBy(token0USDPrice)
+                    .plus(
+                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(token1USDPrice),
+                    )
+                    .toString(),
+                )}`
+              : "--"}
+          </Typography>
+        </BodyCell>
+
+        <BodyCell>
+          <ChevronDown
+            style={{ transform: showButtons ? "rotate(180deg)" : "rotate(0deg)" }}
+            color="#8492C4"
+            size="24px"
+            onClick={handleToggleShowButtons}
+          />
+        </BodyCell>
+      </TableRow>
+
+      {showButtons ? (
+        <Box sx={{ padding: "0 0 20px 0", display: "flex", justifyContent: "flex-end", gap: "0 16px" }}>
+          <Button variant="outlined" onClick={() => setTransferOpen(true)}>
+            <Trans>Transfer Position</Trans>
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+          >
+            <Trans>Remove Liquidity</Trans>
+          </Button>
+          <Button variant="outlined" onClick={() => setCollectOpen(true)}>
+            <Trans>Claim Fees</Trans>
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+          >
+            <Trans>Increase Liquidity</Trans>
+          </Button>
+        </Box>
+      ) : null}
+
+      {collectOpen ? (
+        <CollectFeesModal
+          open={collectOpen}
+          pool={pool}
+          positionId={positionInfo.index}
+          onClose={() => setCollectOpen(false)}
+          currencyFeeAmount0={currencyFeeAmount0}
+          currencyFeeAmount1={currencyFeeAmount1}
+          onClaimedSuccessfully={handleClaimedSuccessfully}
+        />
+      ) : null}
+
+      {transferOpen ? (
+        <TransferPosition
+          open={transferOpen}
+          onClose={() => setTransferOpen(false)}
+          position={position}
+          positionId={BigInt(positionInfo.index)}
+          closed={false}
+          onTransferSuccess={handleTransferSuccess}
+        />
+      ) : null}
+    </Box>
+  );
+}
+
+const maxItems = 10;
+
+export interface PoolTransactionsProps {
+  canisterId: string | undefined;
+}
+
+export function Positions({ canisterId }: PoolTransactionsProps) {
+  const classes = useStyles();
+  const [page, setPage] = useState(1);
+  const { result, loading } = useUserPoolPositions(canisterId);
+
+  const filteredPositions = useMemo(() => {
+    return result?.filter((e) => e.liquidity !== BigInt(0)).slice(maxItems * (page - 1), page * maxItems);
+  }, [result]);
+
+  const { inputToken, outputToken } = useContext(SwapProContext);
+
+  const [, pool] = usePool(inputToken, outputToken, FeeAmount.MEDIUM);
+
+  return (
+    <Box sx={{ width: "100%", overflow: "auto" }}>
+      <Box sx={{ minWidth: "1026px" }}>
+        <Header className={classes.wrapper}>
+          <HeaderCell field="amountUSD">
+            <Trans>Position ID</Trans>
+          </HeaderCell>
+
+          <HeaderCell field="amountUSD">
+            <Trans>{pool?.token0.symbol} Amount</Trans>
+          </HeaderCell>
+
+          <HeaderCell field="tokenAmount">
+            <Trans>{pool?.token1.symbol} Amount</Trans>
+          </HeaderCell>
+
+          <HeaderCell field="currentPrice">
+            <Trans>Current Price</Trans>
+          </HeaderCell>
+
+          <HeaderCell field="priceRange">
+            <Trans>Price Range</Trans>
+          </HeaderCell>
+
+          <HeaderCell field="unclaimedFees">
+            <Trans>Unclaimed Fees</Trans>
+          </HeaderCell>
+
+          <HeaderCell>&nbsp;</HeaderCell>
+        </Header>
+
+        {!loading
+          ? (filteredPositions ?? []).map((position) => (
+              <PositionItem key={`${position.id}_${position.index}`} positionInfo={position} pool={pool} />
+            ))
+          : null}
+
+        {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
+
+        {loading ? <StaticLoading loading={loading} /> : null}
+
+        <Box mt="20px">
+          {!loading && !!filteredPositions?.length ? (
+            <SimplePagination maxItems={maxItems} length={filteredPositions?.length ?? 0} onPageChange={setPage} />
+          ) : null}
+        </Box>
+      </Box>
+    </Box>
+  );
+}

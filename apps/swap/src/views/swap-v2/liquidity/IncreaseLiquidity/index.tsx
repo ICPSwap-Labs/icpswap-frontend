@@ -2,7 +2,7 @@ import { ReactChild, memo, useMemo, useCallback, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Grid, Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import HeaderTab from "components/swap/Header";
 import DepositAmount from "components/swap/SwapDepositAmount";
 import { FIELD, slippageToPercent } from "constants/mint";

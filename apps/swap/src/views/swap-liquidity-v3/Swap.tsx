@@ -51,12 +51,10 @@ export function SwapMain() {
         <Grid item className={classes.outerBox}>
           <MainCard
             level={1}
-            contentSX={{
+            sx={{
               minHeight: "380px",
               padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
               paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
-            }}
-            sx={{
               overflow: "visible",
             }}
           >

@@ -2,7 +2,7 @@ import { ReactChild, useMemo, useCallback, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Grid, Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import HeaderTab from "components/swap/Header";
 import DepositAmount from "components/swap/SwapDepositAmount";
 import { FIELD } from "constants/swap";
@@ -15,7 +15,7 @@ import Loading from "components/Loading/Static";
 import { parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
-import { isDarkTheme , toSignificantFormatted } from "utils/index";
+import { isDarkTheme, toSignificantFormatted } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -191,8 +191,8 @@ export default function IncreaseLiquidity() {
 
       setConfirmModalShow(false);
 
-      const {token0} = position.pool;
-      const {token1} = position.pool;
+      const { token0 } = position.pool;
+      const { token1 } = position.pool;
 
       const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
       const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());

@@ -1,6 +1,5 @@
 export { default as Pagination } from "./pagination";
 export type { PaginationType, PaginationProps } from "./pagination";
-export { default as MainCard } from "./cards/MainCard";
 export { default as NoData } from "./no-data";
 export { default as ListLoading } from "./Loading/List";
 export { default as StaticLoading } from "./Loading/Static";
@@ -12,7 +11,7 @@ export { default as Wrapper } from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as LoadingRow } from "./Loading/LoadingRow";
 export { default as ViewMore } from "./ViewMore/index";
-export { Breadcrumbs } from "@icpswap/ui";
+export { Breadcrumbs, MainCard } from "@icpswap/ui";
 export { default as StepViewButton } from "./Steps/View";
 export * from "./Maintenance";
 export { default as FindPositionsModal } from "./swap/FindPositions";

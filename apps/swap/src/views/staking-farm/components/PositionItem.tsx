@@ -8,7 +8,7 @@ import { useState, useMemo } from "react";
 import { Theme } from "@mui/material/styles";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { Bound } from "constants/swap";
-import { getPriceOrderingFromPositionForUI, useInverter } from "components/swap/PositionItem";
+import { getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import LoadingRow from "components/Loading/LoadingRow";
 import { useUSDPriceById } from "hooks/useUSDPrice";

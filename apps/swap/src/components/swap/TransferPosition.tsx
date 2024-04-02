@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo } from "react";
 import { Typography, Grid, Chip, Button, useMediaQuery, Box } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
@@ -12,7 +12,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { numberToString, BigNumber, resultFormat, formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import { ResultStatus } from "@icpswap/types";
-import { CurrencyAmount, Position, Price, Token } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme, toFormat } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
@@ -23,7 +23,7 @@ import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";
 import SwapModal from "components/modal/swap";
 import { Principal } from "@dfinity/principal";
-import PositionContext from "components/swap/PositionContext";
+
 import PositionStatus from "./PositionRangeState";
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -88,48 +88,6 @@ export function PositionDetailItem({ label, value, convert, onConvertClick }: Po
       </Grid>
     </Grid>
   );
-}
-
-interface useInverterProps {
-  priceLower: Price<Token, Token> | undefined;
-  priceUpper: Price<Token, Token> | undefined;
-  quote: Token | undefined;
-  base: Token | undefined;
-  invert: boolean;
-}
-
-export const useInverter = ({ priceLower, priceUpper, quote, base, invert }: useInverterProps) => {
-  return {
-    priceUpper: invert ? priceLower?.invert() : priceUpper,
-    priceLower: invert ? priceUpper?.invert() : priceLower,
-    quote: invert ? base : quote,
-    base: invert ? quote : base,
-  };
-};
-
-export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
-  if (!position) return {};
-
-  const token0 = position.amount0.currency;
-  const token1 = position.amount1.currency;
-
-  // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(1)) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    };
-  }
-
-  // otherwise, just return the default
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  };
 }
 
 export interface PositionDetailsProps {
@@ -318,6 +276,7 @@ export interface TransferPositionProps {
   closed: boolean;
   open: boolean;
   onClose: () => void;
+  onTransferSuccess?: () => void;
 }
 
 export default function TransferPosition({
@@ -328,6 +287,7 @@ export default function TransferPosition({
   closed,
   open,
   onClose,
+  onTransferSuccess,
 }: TransferPositionProps) {
   const classes = useStyle();
   const theme = useTheme() as Theme;
@@ -340,8 +300,6 @@ export default function TransferPosition({
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-
-  const { updateCounter } = useContext(PositionContext);
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -405,7 +363,7 @@ export default function TransferPosition({
     if (status === ResultStatus.OK) {
       openSuccessTip(t`Transfer successfully`);
       onClose();
-      updateCounter();
+      if (onTransferSuccess) onTransferSuccess();
     } else {
       openErrorTip(message ?? t`Failed to transfer`);
     }

@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
 import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";

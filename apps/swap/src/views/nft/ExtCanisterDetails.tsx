@@ -1,7 +1,7 @@
-import { Breadcrumbs , Box, Grid, Typography } from "@mui/material";
+import { Breadcrumbs, Box, Grid, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import NFTList from "components/NFT/ext/NFTList";
-import MainCard from "components/cards/MainCard";
+import { MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
 import Wrapper from "components/Wrapper";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
