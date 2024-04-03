@@ -156,7 +156,7 @@ export default function SwapDepositAmount({
       <Grid container mt={1}>
         <Grid item mr={1}>
           <Typography>
-            <Trans>Balance:</Trans> {formatCurrencyAmount(currencyBalance, currency?.decimals ?? 8)}
+            <Trans>Balance:</Trans> {currency ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}
           </Typography>
         </Grid>
         {showMaxButton && (
