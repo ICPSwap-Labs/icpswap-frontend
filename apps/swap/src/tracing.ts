@@ -6,6 +6,9 @@ export function shouldRejectError(error: ErrorEvent) {
   // User reject plug connect
   if (error.message?.includes("The agent creation was rejected")) return true;
 
+  // Plug disconnect error
+  if (error.message?.includes("Attempting to use a disconnected port object")) return true;
+
   return false;
 }
 
