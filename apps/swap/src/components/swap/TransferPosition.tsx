@@ -9,7 +9,14 @@ import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/
 import { feeAmountToPercentage } from "utils/swap/index";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { numberToString, BigNumber, resultFormat, formatDollarAmount, isValidPrincipal } from "@icpswap/utils";
+import {
+  numberToString,
+  BigNumber,
+  resultFormat,
+  formatDollarAmount,
+  isValidPrincipal,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import { ResultStatus } from "@icpswap/types";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
@@ -48,6 +55,9 @@ const useStyle = makeStyles((theme: Theme) => ({
     borderRadius: `${theme.radius}px`,
     border: theme.palette.border.gray200,
     padding: "20px",
+    [theme.breakpoints.down("md")]: {
+      padding: "10px",
+    },
   },
 }));
 
@@ -63,17 +73,9 @@ export function PositionDetailItem({ label, value, convert, onConvertClick }: Po
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Grid
-      container
-      sx={{
-        height: "48px",
-      }}
-      alignItems="center"
-    >
-      <Grid item xs={4}>
-        <Typography {...(matchDownSM ? { fontSize: "12px" } : {})}>{label}</Typography>
-      </Grid>
-      <Grid item xs={8} container justifyContent="flex-end">
+    <Grid container alignItems="center">
+      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})}>{label}</Typography>
+      <Grid sx={{ flex: 1 }} container justifyContent="flex-end" alignItems="center">
         {isElement(value) ? (
           value
         ) : (
@@ -162,35 +164,46 @@ export function PositionDetails({
 
   return (
     <>
-      <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
+      <Box
+        className={classes.detailContainer}
+        sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
+      >
         <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
         <PositionDetailItem
           label={t`${currencyQuote?.symbol} Amount`}
           value={
-            inverted
-              ? toFormat(position?.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)))
-              : toFormat(position?.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)))
+            !position
+              ? "--"
+              : inverted
+              ? toSignificantWithGroupSeparator(
+                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                )
+              : toSignificantWithGroupSeparator(
+                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                )
           }
         />
         <PositionDetailItem
           label={t`${currencyBase?.symbol} Amount`}
           value={
-            inverted
-              ? toFormat(position?.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)))
-              : toFormat(position?.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)))
+            !position
+              ? "--"
+              : inverted
+              ? toSignificantWithGroupSeparator(
+                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                )
+              : toSignificantWithGroupSeparator(
+                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                )
           }
         />
         <PositionDetailItem
           label={t`Current Price`}
           value={
-            !!token1 && !!token0
+            !!token1 && !!token0 && pool
               ? inverted
-                ? pool?.priceOf(token1)
-                  ? `${toFormat(pool?.priceOf(token1).toSignificant(6))} ${pairName}`
-                  : "--"
-                : pool?.priceOf(token0)
-                ? `${toFormat(pool?.priceOf(token0).toSignificant(6))} ${pairName}`
-                : "--"
+                ? `${toSignificantWithGroupSeparator(pool.priceOf(token1).toFixed())} ${pairName}`
+                : `${toSignificantWithGroupSeparator(pool.priceOf(token0).toFixed())} ${pairName}`
               : "--"
           }
           convert
@@ -198,11 +211,33 @@ export function PositionDetails({
         />
         <PositionDetailItem
           label={t`Price Range`}
-          value={`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
-            priceUpper,
-            tickAtLimit,
-            Bound.UPPER,
-          )} ${pairName}`}
+          value={
+            <Box>
+              <Typography
+                color="text.primary"
+                align="right"
+                sx={{
+                  "@media(max-width: 640px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
+                {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+              </Typography>
+              <Typography
+                color="text.primary"
+                align="right"
+                sx={{
+                  "@media(max-width: 640px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                {pairName}
+              </Typography>
+            </Box>
+          }
           convert
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
@@ -220,10 +255,23 @@ export function PositionDetails({
                 }}
               >
                 {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                  ? `${toFormat(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFixed(8),
-                    )} ${token0?.symbol} and ${toFormat(
-                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toFixed(8),
+                  ? `${toSignificantWithGroupSeparator(
+                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFormat(),
+                    )} ${token0?.symbol}`
+                  : "--"}
+              </Typography>
+              <Typography
+                color="text.primary"
+                align="right"
+                sx={{
+                  "@media(max-width: 640px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
+                  ? `and ${toSignificantWithGroupSeparator(
+                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
                     )} ${token1?.symbol}`
                   : "--"}
               </Typography>
@@ -263,7 +311,7 @@ export function PositionDetails({
 
           <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
         </Box>
-      </Grid>
+      </Box>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useTickAtLimit } from "@icpswap/hooks";
@@ -12,7 +12,7 @@ import {
   formatTickPrice,
 } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, StaticLoading, NoData, SimplePagination } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination } from "@icpswap/ui";
 import type { UserPosition } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
@@ -22,6 +22,7 @@ import { ChevronDown } from "react-feather";
 import CollectFeesModal from "components/swap/CollectFeesModal";
 import TransferPosition from "components/swap/TransferPosition";
 import { useHistory } from "react-router-dom";
+import { Theme } from "@mui/material/styles";
 
 import { SwapProContext } from "../context";
 
@@ -49,6 +50,8 @@ enum Bound {
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme() as Theme;
+  const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [manuallyInverted, setManuallyInverted] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [collectOpen, setCollectOpen] = useState(false);
@@ -226,7 +229,22 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           </Typography>
         </BodyCell>
 
-        <BodyCell>
+        <BodyCell
+          sx={{
+            width: "24px",
+            height: "24px",
+            "@media screen and (max-width: 600px)": {
+              fontSize: "14px",
+              width: "24px",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              position: "sticky",
+              right: "0",
+              background: theme.palette.background.level3,
+            },
+          }}
+        >
           <ChevronDown
             style={{ transform: showButtons ? "rotate(180deg)" : "rotate(0deg)" }}
             color="#8492C4"
@@ -237,25 +255,79 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       </TableRow>
 
       {showButtons ? (
-        <Box sx={{ padding: "0 0 20px 0", display: "flex", justifyContent: "flex-end", gap: "0 16px" }}>
-          <Button variant="outlined" onClick={() => setTransferOpen(true)}>
-            <Trans>Transfer Position</Trans>
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+        <Box
+          sx={{
+            padding: "0 0 20px 0",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "0 16px",
+            background: theme.palette.background.level3,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              gap: "8px",
+              "@media(max-width: 640px)": {
+                position: "sticky",
+                right: 0,
+                display: "grid",
+                gridTemplateRows: "2fr",
+              },
+            }}
           >
-            <Trans>Remove Liquidity</Trans>
-          </Button>
-          <Button variant="outlined" onClick={() => setCollectOpen(true)}>
-            <Trans>Claim Fees</Trans>
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
-          >
-            <Trans>Increase Liquidity</Trans>
-          </Button>
+            {matchSM ? (
+              <>
+                <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
+                  <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
+                    <Trans>Claim Fees</Trans>
+                  </Button>
+                  <Button
+                    size={matchSM ? "small" : "medium"}
+                    variant="contained"
+                    onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                  >
+                    <Trans>Increase Liquidity</Trans>
+                  </Button>
+                </Box>
+                <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
+                  <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setTransferOpen(true)}>
+                    <Trans>Transfer Position</Trans>
+                  </Button>
+                  <Button
+                    size={matchSM ? "small" : "medium"}
+                    variant="outlined"
+                    onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                  >
+                    <Trans>Remove Liquidity</Trans>
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setTransferOpen(true)}>
+                  <Trans>Transfer Position</Trans>
+                </Button>
+                <Button
+                  size={matchSM ? "small" : "medium"}
+                  variant="outlined"
+                  onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                >
+                  <Trans>Remove Liquidity</Trans>
+                </Button>
+                <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
+                  <Trans>Claim Fees</Trans>
+                </Button>
+                <Button
+                  size={matchSM ? "small" : "medium"}
+                  variant="contained"
+                  onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                >
+                  <Trans>Increase Liquidity</Trans>
+                </Button>
+              </>
+            )}
+          </Box>
         </Box>
       ) : null}
 
@@ -343,7 +415,18 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
 
         {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-        {loading ? <StaticLoading loading={loading} /> : null}
+        {loading ? (
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        ) : null}
 
         <Box mt="20px">
           {!loading && !!filteredPositions?.length ? (

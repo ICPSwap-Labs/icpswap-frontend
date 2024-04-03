@@ -82,7 +82,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
 
   const tokenInfo = useMemo(() => {
     if (!token0 || !token1 || !tokenId) return undefined;
-    return token0.canisterId === token0Id ? token0 : token1;
+    return token0.canisterId === tokenId ? token0 : token1;
   }, [token0, token1, tokenId]);
 
   const { result: pool } = usePool(tradePoolId);

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default ({
   open,
-  onClose = () => {},
+  onClose,
   details,
   canisterId,
 }: {

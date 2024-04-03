@@ -9,7 +9,7 @@ import {
   TableRow,
   BodyCell,
   SortDirection,
-  StaticLoading,
+  LoadingRow,
   NoData,
   SimplePagination,
 } from "@icpswap/ui";
@@ -205,7 +205,18 @@ export default function Transactions({
 
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? (
+        <LoadingRow>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </LoadingRow>
+      ) : null}
 
       <Box mt="20px">
         {!loading && !!filteredTransactions?.length ? (

@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography, SxProps } from "@mui/material";
 
 export type BodyCellProps = {
   color?: string;
@@ -6,9 +6,10 @@ export type BodyCellProps = {
   onClick?: (event: any) => void;
   children: React.ReactNode;
   sub?: boolean;
+  sx?: SxProps;
 };
 
-export default function BodyCell({ sub, ...props }: BodyCellProps) {
+export default function BodyCell({ sub, sx, ...props }: BodyCellProps) {
   const handleClick = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     if (props.onClick) props.onClick(event);
   };
@@ -22,6 +23,7 @@ export default function BodyCell({ sub, ...props }: BodyCellProps) {
         "@media screen and (max-width: 600px)": {
           fontSize: sub ? "12px" : "14px",
         },
+        ...sx,
       }}
       color={props.color ?? (sub ? "text.secondary" : "text.primary")}
       align={props.align}

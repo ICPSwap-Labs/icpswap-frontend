@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export default function MarketNFTCard({
   order,
-  onCardClick = () => {},
+  onCardClick,
 }: {
   order: TradeOrder;
   onCardClick?: (value: TradeOrder) => void;
@@ -48,7 +48,7 @@ export default function MarketNFTCard({
 
   const handleCardClick = () => {
     history.push(`/marketplace/NFT/view/${Number(order.tokenIndex)}`);
-    onCardClick && onCardClick(order);
+    if (onCardClick) onCardClick(order);
   };
 
   const isDark = theme.customization.mode === "dark";
