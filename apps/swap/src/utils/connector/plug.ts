@@ -58,6 +58,11 @@ export class PlugConnector implements IConnector {
   }
 
   async connect() {
+    // Fix tracing message if plug is uninstalled but still connect to
+    if (!window.ic?.plug) {
+      return false;
+    }
+
     if (await this.isConnected()) {
       this.principal = window.ic.plug.principalId;
     } else {
