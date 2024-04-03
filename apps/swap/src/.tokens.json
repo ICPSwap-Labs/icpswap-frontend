@@ -515,9 +515,9 @@
     "fee": 100000,
     "decimals": 8,
     "canisterId": "zfcdd-tqaaa-aaaaq-aaaga-cai",
-    "name": "SNS-1",
+    "name": "Draggin Karma Points",
     "standard": "ICRC1",
-    "symbol": "SNS1"
+    "symbol": "DKP"
   },
   {
     "fee": 1000000,

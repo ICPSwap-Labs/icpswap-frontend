@@ -11,7 +11,7 @@ import { getTokenBaseInfo } from "./info-calls";
 import { useLocalTokens } from "./useLocalTokens";
 
 const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
-const STORAGE_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
+const STORAGE_EXPIRE_TIME = 2 * 60 * 60 * 1000;
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 

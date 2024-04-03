@@ -10,7 +10,7 @@ import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
 
 const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
-const STORAGE_EXPIRE_TIME = 24 * 60 * 60 * 1000; // millisecond
+const STORAGE_EXPIRE_TIME = 2 * 60 * 60 * 1000; // millisecond
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
