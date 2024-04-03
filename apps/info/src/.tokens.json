@@ -786,42 +786,10 @@
   {
     "fee": 0,
     "decimals": 8,
-    "canisterId": "6expm-sqaaa-aaaap-qblaq-cai",
-    "name": "World meme Coin",
-    "standard": "DIP20",
-    "symbol": "WLD"
-  },
-  {
-    "fee": 0,
-    "decimals": 8,
-    "canisterId": "65ax4-taaaa-aaaap-abzga-cai",
-    "name": "Snap",
+    "canisterId": "zfcdd-tqaaa-aaaaq-aaaga-cai",
+    "name": "Draggin Karma Points",
     "standard": "ICRC1",
-    "symbol": "Snap"
-  },
-  {
-    "fee": 200000000000000,
-    "decimals": 8,
-    "canisterId": "r7m6q-tiaaa-aaaak-afj7a-cai",
-    "name": "iSHIB",
-    "standard": "ICRC1",
-    "symbol": "iSHIB"
-  },
-  {
-    "fee": 100000000,
-    "decimals": 8,
-    "canisterId": "pcj6u-uaaaa-aaaak-aewnq-cai",
-    "name": "CLOUD TOKEN",
-    "standard": "ICRC1",
-    "symbol": "CLOUD"
-  },
-  {
-    "fee": 100000000,
-    "decimals": 8,
-    "canisterId": "2qrsq-uiaaa-aaaai-aa3zq-cai",
-    "name": "$Carrot",
-    "standard": "EXT",
-    "symbol": "🐰🥕"
+    "symbol": "DKP"
   },
   {
     "fee": 1000000,
