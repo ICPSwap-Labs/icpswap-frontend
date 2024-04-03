@@ -12,7 +12,11 @@ export interface CanisterInfo {
 export function useCanisterInfo(canisterId: string): CallResult<CanisterInfo> {
   return useCallsData(
     useCallback(async () => {
-      return await (await fetch(`https://ic-api.internetcomputer.org/api/v3/canisters/${canisterId}`)).json();
+      const fetch_result = await fetch(`https://ic-api.internetcomputer.org/api/v3/canisters/${canisterId}`).catch(
+        () => undefined,
+      );
+      if (!fetch_result) return undefined;
+      return await fetch_result.json();
     }, []),
   );
 }

@@ -11,10 +11,10 @@ export type ipLocationResult = {
 export function useIpLocation() {
   return useCallsData(
     useCallback(async () => {
-      return (await (
-        await fetch("https://api.iplocation.net/?cmd=get-ip")
-      ).json()) as ipLocationResult;
-    }, [])
+      const fetch_result = await fetch("https://api.iplocation.net/?cmd=get-ip").catch(() => undefined);
+      if (!fetch_result) return undefined;
+      return (await fetch_result.json()) as ipLocationResult;
+    }, []),
   );
 }
 
@@ -36,17 +36,19 @@ export function useIpLocationCode() {
     useCallback(async () => {
       if (!ipLocation || !ipLocation.ip) return undefined;
 
-      const result = (await (
-        await fetch(
-          `https://api.iplocation.net/?cmd=ip-country&ip=${ipLocation.ip}`
-        )
-      ).json()) as ipLocationCodeResult;
+      const fetch_result = await fetch(`https://api.iplocation.net/?cmd=ip-country&ip=${ipLocation.ip}`).catch(
+        () => undefined,
+      );
+
+      if (!fetch_result) return undefined;
+
+      const result = (await fetch_result.json()) as ipLocationCodeResult;
 
       if (result) {
         return result.country_code2;
       }
 
       return undefined;
-    }, [ipLocation])
+    }, [ipLocation]),
   );
 }

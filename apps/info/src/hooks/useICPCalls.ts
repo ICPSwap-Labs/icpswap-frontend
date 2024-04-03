@@ -45,23 +45,25 @@ export interface ICPTransactions {
 }
 
 export async function getICPTransactions(address: string) {
-  const result = (await (
-    await fetch(`${ROSETTA_API__BASE}/search/transactions`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
+  const fetch_result = await fetch(`${ROSETTA_API__BASE}/search/transactions`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      network_identifier: {
+        blockchain: "Internet Computer",
+        network: "00000000000000020101",
       },
-      body: JSON.stringify({
-        network_identifier: {
-          blockchain: "Internet Computer",
-          network: "00000000000000020101",
-        },
-        account_identifier: {
-          address,
-        },
-      }),
-    })
-  ).json()) as ICPTransactions;
+      account_identifier: {
+        address,
+      },
+    }),
+  }).catch(() => undefined);
+
+  if (!fetch_result) return undefined;
+
+  const result = (await fetch_result.json()) as ICPTransactions;
 
   return result;
 }
@@ -78,7 +80,11 @@ export function useICPTransactions(address: string | undefined) {
 export function useICPBlocksCall() {
   return useCallsData(
     useCallback(async () => {
-      const result = (await (await fetch(`${INTERNET_COMPUTER_BASE}/metrics/block-rate`)).json()) as {
+      const fetch_result = await fetch(`${INTERNET_COMPUTER_BASE}/metrics/block-rate`).catch(() => undefined);
+
+      if (!fetch_result) return undefined;
+
+      const result = (await fetch_result.json()) as {
         block_rate: [number, number][];
       };
 

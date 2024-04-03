@@ -1,15 +1,17 @@
 import { useCallback } from "react";
-import { useCallsData } from "../useCallData";
 import { type ExtNft } from "@icpswap/types";
+import { useCallsData } from "../useCallData";
 
 export function useExtUserNFTs(address: string | undefined, reload?: boolean) {
   const call = useCallback(async () => {
     if (!address) return undefined;
-    const result = await fetch(
-      `https://us-central1-entrepot-api.cloudfunctions.net/api/user/${address}/all`
+    const result = await fetch(`https://us-central1-entrepot-api.cloudfunctions.net/api/user/${address}/all`).catch(
+      () => undefined,
     );
-    const data = (await result.json()) as ExtNft[];
-    return data;
+
+    if (!result) return undefined;
+
+    return (await result.json()) as ExtNft[];
   }, [address]);
 
   return useCallsData(call, reload);

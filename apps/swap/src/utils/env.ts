@@ -27,12 +27,8 @@ export function isSentryEnabled(): boolean {
 }
 
 export function getEnvName(): "production" | "staging" | "development" {
-  if (isStagingEnv()) {
-    return "staging";
-  }
+  if (isStagingEnv()) return "staging";
+  if (isProductionEnv()) return "production";
 
-  if (isProductionEnv()) {
-    return "production";
-  }
   return "development";
 }
