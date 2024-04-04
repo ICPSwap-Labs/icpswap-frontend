@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import Background from "components/Background";
+import { GlobalTips } from "@icpswap/ui";
+
 import Header from "./Header";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -49,6 +51,7 @@ export interface SwapProLayoutProps {
 export function SwapProLayout({ children }: SwapProLayoutProps) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
+  const [globalTipShow, setGlobalTipShow] = useState(true);
 
   return (
     <>
@@ -72,6 +75,7 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
       </AppBar>
 
       <Box className={classes.mainContent}>
+        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
         <main className={classes.content}>{children}</main>
       </Box>
 
