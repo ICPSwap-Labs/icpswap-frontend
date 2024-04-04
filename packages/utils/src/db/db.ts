@@ -42,6 +42,10 @@ async function _removeValue(db: Database, storeName: string, key: IDBValidKey): 
   return await db.delete(storeName, key);
 }
 
+async function _getAllValues<T>(db: Database, storeName: string): Promise<(T | undefined)[]> {
+  return await db.getAll(storeName);
+}
+
 export type DBCreateOptions = {
   dbName: string;
   storeName: string;
@@ -104,5 +108,14 @@ export class IdbKeyVal {
    */
   public async remove(key: IDBValidKey) {
     return await _removeValue(this._db, this._storeName, key);
+  }
+
+  /**
+   * Get all values
+   * @param key {@link IDBValidKey}
+   * @returns void
+   */
+  public async getAll<T>(): Promise<(T | undefined)[] | null> {
+    return await _getAllValues(this._db, this._storeName);
   }
 }

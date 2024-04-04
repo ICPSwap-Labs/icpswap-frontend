@@ -24,11 +24,14 @@ export interface ClientStorage {
 export class IdbStorage implements ClientStorage {
   // Initializes a KeyVal on first request
   private initializedDb: IdbKeyVal | undefined;
-  private version: number = 1;
+
+  private version = 1;
+
   private dbName: string;
+
   private storeName: string;
 
-  constructor(dbName: string, DB_VERSION: number = 1, storeName: string) {
+  constructor(dbName: string, DB_VERSION = 1, storeName: string) {
     this.version = DB_VERSION;
     this.dbName = dbName;
     this.storeName = storeName;
@@ -66,5 +69,10 @@ export class IdbStorage implements ClientStorage {
   public async remove(key: string): Promise<void> {
     const db = await this._db;
     await db.remove(key);
+  }
+
+  public async getAll(): Promise<(string | undefined)[] | null> {
+    const db = await this._db;
+    return await db.getAll<string>();
   }
 }
