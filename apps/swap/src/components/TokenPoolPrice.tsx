@@ -7,18 +7,18 @@ import BigNumber from "bignumber.js";
 import { TokenImage } from "components/index";
 
 export interface TokenPoolPriceProps {
-  token0: TokenInfo | undefined;
-  token1: TokenInfo | undefined;
-  price0: number | undefined;
-  price1: number | undefined;
+  tokenA: TokenInfo | undefined;
+  tokenB: TokenInfo | undefined;
+  priceA: number | undefined;
+  priceB: number | undefined;
   background?: "none" | "level4";
   disable?: boolean;
 }
 
-export function TokenPoolPrice({ token0, token1, price0, price1, background = "level4" }: TokenPoolPriceProps) {
+export function TokenPoolPrice({ tokenA, tokenB, priceB, priceA, background = "level4" }: TokenPoolPriceProps) {
   const theme = useTheme() as Theme;
 
-  return price0 && price1 ? (
+  return priceA && priceB ? (
     <Box
       sx={{
         display: "flex",
@@ -27,13 +27,13 @@ export function TokenPoolPrice({ token0, token1, price0, price1, background = "l
         cursor: "pointer",
       }}
     >
-      <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} size="18px" sx={{ margin: "0 6px 0 0" }} />
+      <TokenImage logo={tokenA?.logo} tokenId={tokenA?.canisterId} size="18px" sx={{ margin: "0 6px 0 0" }} />
 
       <Typography color="text.primary" fontSize="12px">
-        1 {token0?.symbol} = {formatAmount(new BigNumber(price0).dividedBy(price1).toNumber(), 3)} {token1?.symbol}
+        1 {tokenA?.symbol} = {formatAmount(new BigNumber(priceA).dividedBy(priceB).toNumber(), 3)} {tokenB?.symbol}
       </Typography>
       <Typography color="text.primary" fontSize="12px">
-        &nbsp;= ${toSignificant(price0, 3, { groupSeparator: "," })}
+        &nbsp;= ${toSignificant(priceA, 3, { groupSeparator: "," })}
       </Typography>
     </Box>
   ) : null;

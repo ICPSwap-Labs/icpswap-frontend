@@ -98,33 +98,35 @@ function Reclaim({ address }: ReclaimProps) {
   };
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1200px" }}>
-        <Box sx={{ margin: "10px 0" }}>
-          <Box sx={{ width: "240px" }}>
-            <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} />
-          </Box>
+    <>
+      <Box sx={{ margin: "10px 0" }}>
+        <Box sx={{ width: "240px" }}>
+          <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} />
         </Box>
-
-        <Header className={classes.wrapper}>
-          <HeaderCell field="amountUSD">
-            <Trans>Token Amount</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="amountToken0">
-            <Trans>Token Pair</Trans>
-          </HeaderCell>
-        </Header>
-
-        {allClaims.map((ele) => (
-          <ClaimItem key={`${ele.token0.address}_${ele.token1.address}_${ele.type}`} claim={ele} />
-        ))}
-
-        {allClaims.length === 0 && !loading ? <NoData /> : null}
-
-        {loading ? <StaticLoading loading={loading} /> : null}
       </Box>
-    </Box>
+
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1200px" }}>
+          <Header className={classes.wrapper}>
+            <HeaderCell field="amountUSD">
+              <Trans>Token Amount</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="amountToken0">
+              <Trans>Token Pair</Trans>
+            </HeaderCell>
+          </Header>
+
+          {allClaims.map((ele) => (
+            <ClaimItem key={`${ele.token0.address}_${ele.token1.address}_${ele.type}`} claim={ele} />
+          ))}
+
+          {allClaims.length === 0 && !loading ? <NoData /> : null}
+
+          {loading ? <StaticLoading loading={loading} /> : null}
+        </Box>
+      </Box>
+    </>
   );
 }
 

@@ -6,7 +6,7 @@ import { Theme } from "@mui/material/styles";
 import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import { usePool } from "hooks/info/useInfoPool";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
-import { useSwapPoolMetadata, useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
+import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenImage } from "components/index";
 import { useICPPrice } from "hooks/useUSDPrice";
@@ -67,15 +67,15 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
 
   const tokenId = useMemo(() => outputToken?.address, [outputToken]);
 
-  const { result: poolMetadata } = useSwapPoolMetadata(tradePoolId);
+  const { result: pool } = usePool(tradePoolId);
 
   const token0Id = useMemo(() => {
-    return poolMetadata?.token0.address;
-  }, [poolMetadata]);
+    return pool?.token0Id;
+  }, [pool]);
 
   const token1Id = useMemo(() => {
-    return poolMetadata?.token1.address;
-  }, [poolMetadata]);
+    return pool?.token1Id;
+  }, [pool]);
 
   const { result: token0 } = useTokenInfo(token0Id);
   const { result: token1 } = useTokenInfo(token1Id);
@@ -85,10 +85,8 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
     return token0.canisterId === tokenId ? token0 : token1;
   }, [token0, token1, tokenId]);
 
-  const { result: pool } = usePool(tradePoolId);
-
-  const { result: token0Balance } = useTokenBalance(pool?.token0Id, pool?.pool);
-  const { result: token1Balance } = useTokenBalance(pool?.token1Id, pool?.pool);
+  const { result: token0Balance } = useTokenBalance(token0Id, pool?.pool);
+  const { result: token1Balance } = useTokenBalance(token1Id, pool?.pool);
 
   const tokenPrice = useMemo(() => {
     return pool?.token0Id === tokenId ? pool?.token0Price : pool?.token1Price;
@@ -122,7 +120,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
       <Box sx={{ padding: !(tokenListInfo && tokenInfo && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
         <Typography color="text.primary" fontWeight={600}>
           <Trans>Token Name</Trans>
-          <Typography component="span" color="text.theme_secondary" fontWeight={600}>
+          <Typography component="span" color="text.theme_secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
             {tokenInfo?.name}
           </Typography>
         </Typography>
@@ -160,17 +158,17 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
             <Card title={t`Price swap with ICP`} fontSize="12px">
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0", padding: "0 0 0 4px" }}>
                 <TokenPoolPrice
-                  token0={token0}
-                  price0={pool?.token1Price}
-                  price1={pool?.token0Price}
-                  token1={token1}
+                  tokenA={token0}
+                  tokenB={token1}
+                  priceA={pool?.token0Price}
+                  priceB={pool?.token1Price}
                   background="none"
                 />
                 <TokenPoolPrice
-                  token0={token1}
-                  price0={pool?.token0Price}
-                  price1={pool?.token1Price}
-                  token1={token0}
+                  tokenA={token1}
+                  tokenB={token0}
+                  priceA={pool?.token1Price}
+                  priceB={pool?.token0Price}
                   background="none"
                 />
               </Box>
@@ -267,7 +265,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
               </Card>
               <Card title={t`Volume 24H`}>
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {infoToken ? formatDollarAmount(infoToken.volumeUSD1d) : "--"}
+                  {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
                 </Typography>
               </Card>
               <Card title={t`Volume 7D`}>

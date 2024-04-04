@@ -75,15 +75,15 @@ export default function TokenClaim() {
 
   return (
     <MainContainer>
-      <Box sx={{ overflow: "auto" }}>
-        <MainCard>
-          <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography variant="h3" component="div">
-              <Trans>Claim event records</Trans>
-            </Typography>
-          </Box>
+      <MainCard>
+        <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Typography variant="h3" component="div">
+            <Trans>Claim event records</Trans>
+          </Typography>
+        </Box>
 
-          <Box mt="20px">
+        <Box mt="20px" sx={{ overflow: "auto", width: "100%" }}>
+          <Box sx={{ minWidth: "1368px" }}>
             <Header className={classes.wrapper}>
               <HeaderCell>
                 <Trans>Claim Event</Trans>
@@ -139,8 +139,8 @@ export default function TokenClaim() {
               <Pagination total={totalElements} num={pagination.pageNum} onPageChange={handlePageChange} />
             ) : null}
           </Box>
-        </MainCard>
-      </Box>
+        </Box>
+      </MainCard>
     </MainContainer>
   );
 }

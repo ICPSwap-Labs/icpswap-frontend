@@ -97,87 +97,93 @@ function Transactions({ address }: TransactionsProps) {
   }, [address]);
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1200px" }}>
-        <Box sx={{ display: "flex", margin: "10px 0 0 0", gap: "0 16px", alignItems: "center" }}>
-          <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-            <SelectPair value={pair} onPairChange={handlePairChange} />
-          </Box>
-          {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+    <>
+      <Box sx={{ display: "flex", margin: "10px 0 0 0", gap: "0 16px", alignItems: "center" }}>
+        <Box sx={{ width: "fit-content", minWidth: "214px" }}>
+          <SelectPair value={pair} onPairChange={handlePairChange} />
         </Box>
+        {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+      </Box>
 
-        <Box>
-          <Header className={classes.wrapper}>
-            <HeaderCell>#</HeaderCell>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1200px" }}>
+          <Box>
+            <Header className={classes.wrapper}>
+              <HeaderCell>#</HeaderCell>
 
-            <HeaderCell field="amountUSD" isSort>
-              <Trans>Total Value</Trans>
-            </HeaderCell>
+              <HeaderCell field="amountUSD" isSort>
+                <Trans>Total Value</Trans>
+              </HeaderCell>
 
-            <HeaderCell field="amountToken0" isSort>
-              <Trans>Token Amount</Trans>
-            </HeaderCell>
+              <HeaderCell field="amountToken0" isSort>
+                <Trans>Token Amount</Trans>
+              </HeaderCell>
 
-            <HeaderCell field="amountToken1" isSort>
-              <Trans>Token Amount</Trans>
-            </HeaderCell>
+              <HeaderCell field="amountToken1" isSort>
+                <Trans>Token Amount</Trans>
+              </HeaderCell>
 
-            <HeaderCell field="sender" isSort>
-              <Trans>Account</Trans>
-            </HeaderCell>
+              <HeaderCell field="sender" isSort>
+                <Trans>Account</Trans>
+              </HeaderCell>
 
-            <HeaderCell field="timestamp" isSort>
-              <Trans>Time</Trans>
-            </HeaderCell>
-          </Header>
+              <HeaderCell field="timestamp" isSort>
+                <Trans>Time</Trans>
+              </HeaderCell>
+            </Header>
 
-          {(transactions ?? []).map((transaction, index) => (
-            <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
-              <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
+            {(transactions ?? []).map((transaction, index) => (
+              <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
+                <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
-              <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
+                <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
-              <BodyCell>
-                {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
-              </BodyCell>
+                <BodyCell>
+                  {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
+                </BodyCell>
 
-              <BodyCell>
-                {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
-              </BodyCell>
+                <BodyCell>
+                  {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
+                </BodyCell>
 
-              <BodyCell>
-                <Copy content={transaction.recipient}>
-                  <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
-                </Copy>
-              </BodyCell>
+                <BodyCell>
+                  <Copy content={transaction.recipient}>
+                    <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
+                  </Copy>
+                </BodyCell>
 
-              <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-            </TableRow>
-          ))}
+                <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
+              </TableRow>
+            ))}
 
-          {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
+            {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-          {loading ? (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          ) : null}
+            {loading ? (
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            ) : null}
 
-          {!loading && !!transactions?.length ? (
-            <Box mt="20px">
-              <Pagination num={pagination.pageNum} total={result?.totalElements ?? 0} onPageChange={handlePageChange} />
-            </Box>
-          ) : null}
+            {!loading && !!transactions?.length ? (
+              <Box mt="20px">
+                <Pagination
+                  num={pagination.pageNum}
+                  total={result?.totalElements ?? 0}
+                  onPageChange={handlePageChange}
+                />
+              </Box>
+            ) : null}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

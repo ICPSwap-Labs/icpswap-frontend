@@ -16,6 +16,8 @@ import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { TokenImage } from "@icpswap/ui";
 
 export function TokenItem({ canisterId }: { canisterId: string }) {
+  const theme = useTheme() as Theme;
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const walletCatchTokenIds = useWalletCatchTokenIds() ?? [];
   const addToken = useSaveCacheTokenCallback();
   const deleteToken = useDeleteCacheTokenCallback();
@@ -78,7 +80,7 @@ export function TokenItem({ canisterId }: { canisterId: string }) {
         </Grid>
       </Grid>
 
-      <Typography sx={{ "@media (max-width: 540px)": { display: "none" } }}>{tokenInfo?.canisterId}</Typography>
+      <Typography>{matchDownSM ? "" : tokenInfo?.canisterId}</Typography>
 
       <>
         {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : hasBeenAdded(canisterId) ? (
@@ -209,7 +211,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
             <Typography sx={{ "@media (max-width: 540px)": { display: "none" } }}>
               <Trans>Canister ID</Trans>
             </Typography>
-            <Typography> &nbsp; </Typography>
+            <Typography>&nbsp;</Typography>
           </Box>
 
           <Box

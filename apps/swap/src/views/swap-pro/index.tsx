@@ -30,7 +30,7 @@ export default function SwapPro() {
 
   const infoToken = useMemo(() => {
     return infoAllTokens?.find((e) => e.address === outputToken?.address);
-  }, [infoAllTokens]);
+  }, [infoAllTokens, outputToken]);
 
   const { inputTokenPrice, outputTokenPrice } = useMemo(() => {
     const outputTokenInfo = infoAllTokens?.find((e) => e.address === outputToken?.address);
@@ -79,6 +79,7 @@ export default function SwapPro() {
                   gap: "8px 0",
                   "@media(max-width: 640px)": {
                     gap: "20px 0",
+                    width: "100%",
                   },
                 }}
               >

@@ -244,67 +244,71 @@ function Positions({ address }: PositionsProps) {
   };
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
-      <Box sx={{ minWidth: "1200px" }}>
-        <Box sx={{ display: "flex", gap: "0 16px", alignItems: "center" }}>
-          <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-            <SelectPair value={pair} onPairChange={handlePairChange} />
-          </Box>
-          {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+    <>
+      <Box sx={{ display: "flex", gap: "0 16px", alignItems: "center", margin: "10px 0 0 0" }}>
+        <Box sx={{ width: "fit-content", minWidth: "214px" }}>
+          <SelectPair value={pair} onPairChange={handlePairChange} />
         </Box>
-
-        <Header className={classes.wrapper}>
-          <HeaderCell field="Pair">
-            <Trans>Owner</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="Position ID">
-            <Trans>Position ID</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="USDValue">
-            <Trans>Value</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="TokenAmount">
-            <Trans>Token Amount</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="PriceRange">
-            <Trans>Price Range</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="UnclaimedFees">
-            <Trans>Unclaimed fees</Trans>
-          </HeaderCell>
-        </Header>
-
-        {!loading ? positions?.map((ele, index) => <PositionItem key={index} positionInfo={ele} pool={pool} />) : null}
-
-        {(positions ?? []).length === 0 && !loading ? <NoData /> : null}
-
-        {loading ? (
-          <Box sx={{ margin: "20px 0 0 0" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          </Box>
-        ) : null}
-
-        {totalElements && Number(totalElements) !== 0 ? (
-          <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
-        ) : null}
+        {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
       </Box>
-    </Box>
+
+      <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
+        <Box sx={{ minWidth: "1200px" }}>
+          <Header className={classes.wrapper}>
+            <HeaderCell field="Pair">
+              <Trans>Owner</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="Position ID">
+              <Trans>Position ID</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="USDValue">
+              <Trans>Value</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="TokenAmount">
+              <Trans>Token Amount</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="PriceRange">
+              <Trans>Price Range</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="UnclaimedFees">
+              <Trans>Unclaimed fees</Trans>
+            </HeaderCell>
+          </Header>
+
+          {!loading
+            ? positions?.map((ele, index) => <PositionItem key={index} positionInfo={ele} pool={pool} />)
+            : null}
+
+          {(positions ?? []).length === 0 && !loading ? <NoData /> : null}
+
+          {loading ? (
+            <Box sx={{ margin: "20px 0 0 0" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : null}
+
+          {totalElements && Number(totalElements) !== 0 ? (
+            <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+          ) : null}
+        </Box>
+      </Box>
+    </>
   );
 }
 
