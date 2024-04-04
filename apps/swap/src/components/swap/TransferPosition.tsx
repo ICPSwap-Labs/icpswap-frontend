@@ -256,7 +256,7 @@ export function PositionDetails({
               >
                 {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
                   ? `${toSignificantWithGroupSeparator(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFormat(),
+                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
                     )} ${token0?.symbol}`
                   : "--"}
               </Typography>
