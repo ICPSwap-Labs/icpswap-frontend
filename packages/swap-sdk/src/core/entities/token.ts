@@ -7,8 +7,8 @@ import { BaseCurrency } from "./baseCurrency";
 interface ConstructorArgs {
   address: string;
   decimals: number;
-  symbol?: string;
-  name?: string;
+  symbol: string;
+  name: string;
   logo?: string;
   transFee?: number;
   standard: string;

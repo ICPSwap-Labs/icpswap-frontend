@@ -22,7 +22,7 @@ export abstract class BaseCurrency {
   /**
    * The symbol of the currency, i.e. a short textual non-unique identifier
    */
-  public readonly symbol?: string;
+  public readonly symbol: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
@@ -50,8 +50,8 @@ export abstract class BaseCurrency {
     standard,
   }: {
     decimals: number;
-    symbol?: string;
-    name?: string;
+    symbol: string;
+    name: string;
     logo?: string;
     transFee?: number;
     standard: string;

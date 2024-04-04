@@ -63,7 +63,7 @@ export default function SwapPro() {
                 margin: "8px 0 0 0",
                 display: "flex",
                 gap: "0 8px",
-                "@media(max-width: 640px)": {
+                "@media(max-width: 960px)": {
                   flexDirection: "column",
                   gap: "20px 0",
                 },
@@ -75,7 +75,7 @@ export default function SwapPro() {
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px 0",
-                  "@media(max-width: 640px)": {
+                  "@media(max-width: 960px)": {
                     gap: "20px 0",
                     width: "100%",
                   },

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { Box, useTheme } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { TokenCharts } from "@icpswap/ui";
@@ -8,7 +8,12 @@ import { SwapProContext } from "../context";
 export default function TokenChartInfo() {
   const theme = useTheme() as Theme;
 
-  const { outputToken } = useContext(SwapProContext);
+  const { inputToken, outputToken } = useContext(SwapProContext);
+
+  const priceToggles = useMemo(() => {
+    if (!inputToken || !outputToken) return undefined;
+    return [inputToken, outputToken].map((e) => ({ label: e.symbol, id: e.address }));
+  }, [inputToken, outputToken]);
 
   return (
     <Box
@@ -23,7 +28,7 @@ export default function TokenChartInfo() {
         },
       }}
     >
-      <TokenCharts canisterId={outputToken?.address} background={3} borderRadius="0px" />
+      <TokenCharts canisterId={outputToken?.address} background={3} borderRadius="0px" priceToggles={priceToggles} />
     </Box>
   );
 }

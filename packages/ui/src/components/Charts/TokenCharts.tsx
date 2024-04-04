@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
@@ -88,14 +88,21 @@ type PriceLine = {
   low: number;
 };
 
+export type PriceToggle = {
+  label: string;
+  id: string;
+};
 export interface TokenChartsProps {
   canisterId: string | undefined;
   volume?: number;
   background?: number;
   borderRadius?: string;
+  priceToggles?: PriceToggle[];
 }
 
-export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }: TokenChartsProps) {
+export function TokenCharts({ canisterId, volume, borderRadius, priceToggles, background = 2 }: TokenChartsProps) {
+  const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
+
   const { result: chartData } = useTokenVolChart(canisterId);
 
   const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
@@ -104,11 +111,14 @@ export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }
   const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-  const { priceChartData: _priceChartData, loading: priceChartLoading } = useTokenPriceChart(canisterId);
+  const { priceChartData: _priceChartData, loading: priceChartLoading } = useTokenPriceChart(
+    priceChartTokenId ?? canisterId,
+  );
 
   const priceChartData = useMemo(() => {
     if (!_priceChartData) return undefined;
 
+    // SNS1
     if (canisterId === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
       return _priceChartData.filter((e) => {
         const time = new Date("2024-03-12").getTime();
@@ -170,6 +180,14 @@ export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }
     return weeklyVolumeData;
   }, [weeklyVolumeData, monthlyVolumeData, dailyVolumeData, volumeWindow]);
 
+  const handleTogglePrice = (id: string) => {
+    setPriceChartTokenId(id);
+  };
+
+  useEffect(() => {
+    setPriceChartTokenId(canisterId);
+  }, [canisterId]);
+
   return (
     <MainCard
       level={background}
@@ -186,11 +204,19 @@ export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }
           fontSize="24px"
           fontWeight={500}
           sx={{
+            width: "100%",
+            display: "flex",
             height: "30px",
-            "@media (max-width: 640px)": {
-              margin: "40px 0 0 0",
+            gap: "0 12px",
+            alignItems: "center",
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              gap: "4px 0",
+              alignItems: "flex-start",
+              height: "fit-content",
             },
           }}
+          component="div"
         >
           {latestValue || latestValue === 0
             ? chartView === ChartView.TRANSACTIONS
@@ -205,7 +231,33 @@ export function TokenCharts({ canisterId, volume, borderRadius, background = 2 }
             : priceChartData
             ? formatDollarAmount(priceChartData[priceChartData.length - 1]?.close, 2)
             : "--"}
+
+          {chartView === ChartView.PRICE && priceToggles ? (
+            <Box sx={{ display: "flex" }}>
+              {priceToggles.map((e, index) => (
+                <Typography
+                  key={e.id}
+                  color={priceChartTokenId === e.id ? "text.theme_secondary" : "text.secondary"}
+                  fontWeight={500}
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleTogglePrice(e.id)}
+                >
+                  {index !== 0 ? (
+                    <Typography component="span" fontWeight={500}>
+                      /
+                    </Typography>
+                  ) : (
+                    ""
+                  )}
+                  {priceToggles[index].label}
+                </Typography>
+              ))}
+            </Box>
+          ) : null}
         </Typography>
+
         <Typography
           color="text.primary"
           fontWeight={500}

@@ -38,7 +38,7 @@ function Medias({ mediaLinks }: MediasProps) {
           target="_blank"
           rel="noreferrer"
           aria-label={e.k}
-          style={{ width: "20px", height: "20px" }}
+          style={{ width: "20px", height: "20px", textDecoration: "none" }}
         >
           <MediaLinkIcon k={e.k} size={20} />
         </a>
@@ -145,7 +145,12 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
 
         {matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
 
-        <a href={`https://info.icpswap.com/token/details/${tokenId}`} target="_blank" rel="noreferrer">
+        <a
+          href={`https://info.icpswap.com/token/details/${tokenId}`}
+          target="_blank"
+          rel="noreferrer"
+          style={{ textDecoration: "none" }}
+        >
           <Box
             sx={{
               width: "121px",

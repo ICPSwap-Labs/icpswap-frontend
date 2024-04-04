@@ -25,7 +25,7 @@ export default function Header() {
   const theme = useTheme();
   const history = useHistory();
   const [searchOpen, setSearchOpen] = useState(false);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleLoadPage = (path: string) => {
     history.push(path);
