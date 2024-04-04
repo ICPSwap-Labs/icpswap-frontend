@@ -51,7 +51,8 @@ export function getExplorerPrincipalLink(principalId: string): string {
   if ((principalId ?? "").length > 27) {
     return `https://icscan.io/principal/${principalId}`;
   }
-  return `https://icscan.io/canister/${principalId}`;
+
+  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
 }
 
 export function getExplorerAccountLink(account: string): string {

@@ -14,7 +14,14 @@ import { useToken } from "hooks/useCurrency";
 import { INFO_URL, AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, toSignificant, cycleValueFormat, shorten, timestampFormat } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  toSignificant,
+  cycleValueFormat,
+  shorten,
+  timestampFormat,
+  explorerLink,
+} from "@icpswap/utils";
 import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
@@ -414,7 +421,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Incentive pool Id</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    <Link href={`https://icscan.io/canister/${farm.farmCid}`} target="_blank">
+                    <Link href={explorerLink(farm.farmCid)} target="_blank">
                       {shorten(farm.farmCid)}
                     </Link>
                   </Typography>

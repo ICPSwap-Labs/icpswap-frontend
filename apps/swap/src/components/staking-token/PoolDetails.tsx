@@ -15,6 +15,7 @@ import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
+import { getExplorerPrincipalLink } from "utils/index";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const nowTime = parseInt(String(Date.now() / 1000));
@@ -246,9 +247,11 @@ export default function StakingPoolDetails({
               </Grid>
               <Grid item>
                 <Typography color="text.primary">
-                  <Link href={`https://icscan.io/canister/${pool?.canisterId}`} target="_blank">
-                    {pool?.canisterId ? shorten(pool?.canisterId) : "--"}
-                  </Link>
+                  {pool ? (
+                    <Link href={getExplorerPrincipalLink(pool.canisterId)} target="_blank">
+                      {pool?.canisterId ? shorten(pool?.canisterId) : "--"}
+                    </Link>
+                  ) : null}
                 </Typography>
               </Grid>
             </Grid>

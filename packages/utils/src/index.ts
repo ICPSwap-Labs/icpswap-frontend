@@ -24,3 +24,4 @@ export * from "./isValidUrl";
 export * from "./isNullArgs";
 export * from "./xlsx";
 export * from "./unixToDate";
+export * from "./explorerLink";
