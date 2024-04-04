@@ -58,7 +58,6 @@ export class IdbStorage implements ClientStorage {
   public async get(key: string): Promise<string | null> {
     const db = await this._db;
     return await db.get<string>(key);
-    // return (await db.get<string>(key)) ?? null;
   }
 
   public async set(key: string, value: string): Promise<void> {

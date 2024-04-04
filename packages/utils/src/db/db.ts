@@ -4,6 +4,15 @@ import { openDB, IDBPDatabase, deleteDB } from "idb";
 type Database = IDBPDatabase<unknown>;
 type IDBValidKey = string | number | Date | BufferSource | IDBValidKey[];
 
+function isLessThanCurrentVersion(err: string) {
+  // Chrome
+  if (err.includes("is less than the existing version")) return true;
+  // Safari
+  if (err.includes("using a lower version than the existing version.")) return true;
+  // Firefox
+  if (err.includes("is a higher version than the version requested")) return true;
+}
+
 const _openDbStore = async (dbName: string, storeName: string, version: number) => {
   return await openDB(dbName, version, {
     upgrade: (database, oldVersion, newVersion, transaction) => {
@@ -21,11 +30,13 @@ const _openDbStore = async (dbName: string, storeName: string, version: number) 
       }
     },
   }).catch((err) => {
-    if (String(err).includes("is less than the existing version")) {
+    // For development
+    if (isLessThanCurrentVersion(String(err))) {
       deleteDB(dbName).then(() => {
         window.location.reload();
       });
     }
+
     return undefined;
   });
 };
