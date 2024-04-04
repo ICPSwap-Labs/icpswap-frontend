@@ -6,9 +6,9 @@ describe("Price", () => {
   const ADDRESS_ZERO = "zfcdd-tqaaa-aaaaq-aaaga-cai";
   const ADDRESS_ONE = "5xnja-6aaaa-aaaan-qad4a-cai";
 
-  const t0 = new Token({ address: ADDRESS_ZERO, decimals: 18, standard: "EXT" });
-  const t0_6 = new Token({ address: ADDRESS_ZERO, decimals: 6, standard: "EXT" });
-  const t1 = new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" });
+  const t0 = new Token({ symbol: "A", name: "A", address: ADDRESS_ZERO, decimals: 18, standard: "EXT" });
+  const t0_6 = new Token({ symbol: "A", name: "A", address: ADDRESS_ZERO, decimals: 6, standard: "EXT" });
+  const t1 = new Token({ symbol: "A", name: "A", address: ADDRESS_ONE, decimals: 18, standard: "EXT" });
 
   describe("#constructor", () => {
     it("array format works", () => {
@@ -20,7 +20,7 @@ describe("Price", () => {
     it("object format works", () => {
       const price = new Price({
         baseAmount: CurrencyAmount.fromRawAmount(t0, 1),
-        quoteAmount: CurrencyAmount.fromRawAmount(t1, 54321)
+        quoteAmount: CurrencyAmount.fromRawAmount(t1, 54321),
       });
       expect(price.toSignificant(5)).toEqual("54321");
       expect(price.baseCurrency.equals(t0));

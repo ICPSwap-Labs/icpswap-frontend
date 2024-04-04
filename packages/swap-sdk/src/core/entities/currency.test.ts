@@ -4,8 +4,8 @@ describe("Currency", () => {
   const ADDRESS_ZERO = "2ouva-viaaa-aaaaq-aaamq-cai";
   const ADDRESS_ONE = "5xnja-6aaaa-aaaan-qad4a-cai";
 
-  const t0 = new Token({ address: ADDRESS_ZERO, decimals: 18, standard: "EXT" });
-  const t1 = new Token({ address: ADDRESS_ONE, decimals: 18, standard: "EXT" });
+  const t0 = new Token({ symbol: "A", name: "A", address: ADDRESS_ZERO, decimals: 18, standard: "EXT" });
+  const t1 = new Token({ symbol: "B", name: "B", address: ADDRESS_ONE, decimals: 18, standard: "EXT" });
 
   describe("#equals", () => {
     it("token1 is not token0", () => {
