@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => {
       gap: "1em",
       alignItems: "center",
       gridTemplateColumns: "100px repeat(5, 1fr) 30px",
+      padding: "20px 16px",
     },
   };
 });
@@ -157,6 +158,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       sx={{
         borderBottom: "1px solid rgba(189, 200, 240, 0.082)",
         display: !transferred ? "block" : "none",
+        background: showButtons ? theme.palette.background.level2 : "none",
       }}
     >
       <TableRow className={classes.wrapper} border="none">
@@ -241,7 +243,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               alignItems: "center",
               position: "sticky",
               right: "0",
-              background: theme.palette.background.level3,
+              background: showButtons ? theme.palette.background.level2 : theme.palette.background.level3,
             },
           }}
         >
@@ -257,11 +259,10 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       {showButtons ? (
         <Box
           sx={{
-            padding: "0 0 20px 0",
+            padding: "0 16px 20px 0",
             display: "flex",
             justifyContent: "flex-end",
             gap: "0 16px",
-            background: theme.palette.background.level3,
           }}
         >
           <Box

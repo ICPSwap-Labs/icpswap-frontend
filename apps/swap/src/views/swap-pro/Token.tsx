@@ -313,7 +313,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
         ) : null}
       </Box>
 
-      {tokenListInfo && tokenInfo && tokenListInfo.introduction ? (
+      {tokenInfo ? (
         <Box
           sx={{
             margin: "12px 0 0 0",

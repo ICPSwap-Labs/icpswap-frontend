@@ -28,49 +28,51 @@ export default function Transactions() {
   const [active, setActive] = useState<TransactionPart>(TransactionPart.All);
 
   return (
-    <SwapProCardWrapper>
-      <Box
-        sx={{
-          display: "flex",
-          width: "fit-content",
-          background: theme.palette.background.level1,
-          padding: "4px",
-          borderRadius: "15px",
-        }}
-      >
-        {Menus.map((e) => (
-          <Box
-            key={e.value}
-            className={e.value === active ? "active" : ""}
-            sx={{
-              cursor: "pointer",
-              padding: "6px 10px",
-              borderRadius: "12px",
-              "&.active": {
-                background: theme.palette.background.level3,
-              },
-              "@media(max-width: 640px)": {
-                padding: "6px",
-              },
-            }}
-            onClick={() => setActive(e.value)}
-          >
-            <Typography
+    <SwapProCardWrapper padding="16px 0px">
+      <Box sx={{ padding: "0 16px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            width: "fit-content",
+            background: theme.palette.background.level1,
+            padding: "4px",
+            borderRadius: "15px",
+          }}
+        >
+          {Menus.map((e) => (
+            <Box
+              key={e.value}
               className={e.value === active ? "active" : ""}
               sx={{
+                cursor: "pointer",
+                padding: "6px 10px",
+                borderRadius: "12px",
                 "&.active": {
-                  color: "text.primary",
-                  fontWeight: 500,
+                  background: theme.palette.background.level3,
                 },
                 "@media(max-width: 640px)": {
-                  fontSize: "11px",
+                  padding: "6px",
                 },
               }}
+              onClick={() => setActive(e.value)}
             >
-              {e.label}
-            </Typography>
-          </Box>
-        ))}
+              <Typography
+                className={e.value === active ? "active" : ""}
+                sx={{
+                  "&.active": {
+                    color: "text.primary",
+                    fontWeight: 500,
+                  },
+                  "@media(max-width: 640px)": {
+                    fontSize: "11px",
+                  },
+                }}
+              >
+                {e.label}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>

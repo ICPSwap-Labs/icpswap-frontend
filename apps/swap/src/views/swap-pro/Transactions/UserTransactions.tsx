@@ -13,7 +13,7 @@ export function UserTransactions({ canisterId }: PoolTransactionsProps) {
   const { result: transactions, loading } = useUserPoolTransactions(principal, canisterId, 0, 300);
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
+    <Box sx={{ width: "100%", padding: "0 16px", overflow: "auto" }}>
       <Box sx={{ minWidth: "1026px" }}>
         <Transaction transactions={transactions} loading={loading} hasFilter />
       </Box>

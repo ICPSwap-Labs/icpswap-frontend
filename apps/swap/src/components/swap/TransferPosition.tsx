@@ -202,8 +202,8 @@ export function PositionDetails({
           value={
             !!token1 && !!token0 && pool
               ? inverted
-                ? `${toSignificantWithGroupSeparator(pool.priceOf(token1).toFixed())} ${pairName}`
-                : `${toSignificantWithGroupSeparator(pool.priceOf(token0).toFixed())} ${pairName}`
+                ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
+                : `${pool.priceOf(token0).toSignificant(6, { groupSeparator: "," })} ${pairName}`
               : "--"
           }
           convert

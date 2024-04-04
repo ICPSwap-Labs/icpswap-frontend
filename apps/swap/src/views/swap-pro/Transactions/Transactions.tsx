@@ -149,6 +149,9 @@ export default function Transactions({
                     color: filter === ele.key ? "#ffffff" : theme.colors.darkPrimary400,
                     cursor: "pointer",
                     fontSize: "16px",
+                    "@media(max-width: 640px)": {
+                      fontSize: "12px",
+                    },
                   }}
                   onClick={() => handleFilterChange(ele.key)}
                 >
