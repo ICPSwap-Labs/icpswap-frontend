@@ -64,7 +64,7 @@ export function useUserAllPositions(refresh?: number) {
 }
 
 export function useUserPoolPositions(poolId: string | undefined, refresh?: number) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [positions, setPositions] = useState<UserPosition[]>([]);
 
   const principal = useAccountPrincipal();
@@ -72,6 +72,8 @@ export function useUserPoolPositions(poolId: string | undefined, refresh?: numbe
   useEffect(() => {
     async function call() {
       if (!!principal && poolId) {
+        setLoading(true);
+
         const userPositionsResult = await getUserPositionIds(poolId, principal.toString());
 
         if (userPositionsResult) {
