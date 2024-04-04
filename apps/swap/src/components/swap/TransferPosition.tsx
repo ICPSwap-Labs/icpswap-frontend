@@ -20,7 +20,7 @@ import {
 import { swapPool } from "@icpswap/actor";
 import { ResultStatus } from "@icpswap/types";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme, toFormat } from "utils/index";
+import { isDarkTheme } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans, t } from "@lingui/macro";

@@ -495,7 +495,7 @@ export default function PositionItem({
     return totalUSD.toString();
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const { setAllPositionsUSDValue, updateCounter } = useContext(PositionContext);
+  const { setAllPositionsUSDValue } = useContext(PositionContext);
 
   const positionKey = useMemo(() => {
     if (!position) return undefined;

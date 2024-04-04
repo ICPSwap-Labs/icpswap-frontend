@@ -417,21 +417,28 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
         {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
 
         {loading ? (
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
+          <Box sx={{ padding: "0 16px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
         ) : null}
 
         <Box mt="20px">
           {!loading && !!filteredPositions?.length ? (
-            <SimplePagination maxItems={maxItems} length={filteredPositions?.length ?? 0} onPageChange={setPage} />
+            <SimplePagination
+              page={page}
+              maxItems={maxItems}
+              length={filteredPositions?.length ?? 0}
+              onPageChange={setPage}
+            />
           ) : null}
         </Box>
       </Box>

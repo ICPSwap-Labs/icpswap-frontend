@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => {
       width: "100%",
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
-      padding: "20px",
+      padding: "8px",
       borderRadius: `${theme.customization.borderRadius}px`,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
@@ -24,12 +24,11 @@ const useStyles = makeStyles((theme: Theme) => {
         duration: theme.transitions.duration.leavingScreen,
       }),
       [theme.breakpoints.down("md")]: {
-        padding: "16px",
+        padding: "8px",
         minHeight: "calc(100vh - 60px)",
       },
       [theme.breakpoints.down("sm")]: {
-        padding: "10px",
-        marginRight: "10px",
+        padding: "8px",
         backgroundColor: "transparent",
       },
     },
