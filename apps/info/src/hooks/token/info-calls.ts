@@ -3,7 +3,7 @@ import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { useCallsData, getTokenMetadata, getTokenSupply } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getTokenListLogo } from "./useTokenListLogo";
 
@@ -24,7 +24,7 @@ export async function getTokenBaseInfo(canisterId: string | undefined) {
 
     if (metadata.decimals === undefined || metadata.fee === undefined || !metadata.symbol) return undefined;
 
-    const _logo = isICRCToken(canisterId) ? (logo || metadata.logo) : metadata.logo;
+    const _logo = isICRCToken(canisterId) ? logo || metadata.logo : metadata.logo;
 
     return {
       timestamp: undefined,

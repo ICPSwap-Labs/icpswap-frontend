@@ -5,6 +5,8 @@ import type { TokenApproveArgs } from "@icpswap/types";
 
 export type { Metadata as DIP20Metadata } from "candid/dip20/dip20";
 
+export type { TokenInfo } from "@icpswap/types";
+
 export type BalanceRequest = { token: string; user: { [key: string]: string | Principal } };
 
 export type TokenAllowanceRequest = {
@@ -35,16 +37,6 @@ export type Metadata = {
 export type fungibleMetadata = {
   fungible: Metadata;
 };
-
-export type TokenInfo = Override<
-  TokenMetadata,
-  {
-    logo: string;
-    transFee: bigint;
-    canisterId: string;
-    standardType: TOKEN_STANDARD;
-  }
->;
 
 export interface TokenCanisterInfo {
   cycleAvailable: bigint;

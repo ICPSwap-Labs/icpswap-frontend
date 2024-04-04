@@ -12,7 +12,7 @@ import { Wrapper, MainCard, NumberFilledTextField } from "components/index";
 import { numberToString, formatTokenAmount } from "@icpswap/utils";
 import Button from "components/authentication/ButtonConnector";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { type ActorIdentity, ResultStatus } from "@icpswap/types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

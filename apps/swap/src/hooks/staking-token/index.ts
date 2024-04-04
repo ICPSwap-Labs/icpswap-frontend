@@ -18,8 +18,7 @@ import {
   getStakingTokenPool,
   getV1StakingTokenPool,
 } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/constants";
-import { ResultStatus } from "@icpswap/types";
+import { TOKEN_STANDARD , ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { getActorIdentity } from "components/Identity";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";

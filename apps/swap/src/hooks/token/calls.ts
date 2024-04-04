@@ -15,9 +15,8 @@ import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
 import { tokenList } from "@icpswap/actor";
 import { getTokenStandard } from "store/token/cache/hooks";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
-import { TOKEN_STANDARD } from "@icpswap/constants";
 import { useCallsData } from "@icpswap/hooks";
-import { ResultStatus, StatusResult } from "@icpswap/types";
+import { ResultStatus, StatusResult, TOKEN_STANDARD } from "@icpswap/types";
 
 export async function getTokenTotalHolder(canisterId: string | undefined) {
   if (!canisterId) return undefined;
@@ -212,11 +211,11 @@ export async function getTokenInfo(canisterId: string | undefined) {
       logo: _logo || TokenDefaultLogo,
       transFee: metadata.fee,
       decimals: metadata.decimals,
-      metadata: [],
       name: metadata.name,
       symbol: metadata.symbol,
       canisterId,
       standardType: getTokenStandard(canisterId) ?? TOKEN_STANDARD.ICRC1,
+      totalSupply: BigInt(0),
     } as TokenInfo;
   });
 }

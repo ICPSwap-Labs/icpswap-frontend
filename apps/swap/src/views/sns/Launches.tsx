@@ -9,7 +9,7 @@ import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 
 interface LaunchpadProps {
   token_root: TokenRoots;

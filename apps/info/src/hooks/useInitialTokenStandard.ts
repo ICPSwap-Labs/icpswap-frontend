@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandards, useTokenStandards } from "store/token/cache/hooks";
-import { useSwapPools , useTokensFromList } from "@icpswap/hooks";
+import { useSwapPools, useTokensFromList } from "@icpswap/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useSwapPools as useV2SwapPools } from "hooks/swap/v2/calls";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
@@ -90,8 +90,8 @@ export function useInitialTokenStandard() {
 
       setTokenListLoading(false);
     } else if (!fetchListLoading) {
-        setTokenListLoading(false);
-      }
+      setTokenListLoading(false);
+    }
   }, [tokenList, setTokenListLoading, fetchListLoading]);
 
   useEffect(() => {

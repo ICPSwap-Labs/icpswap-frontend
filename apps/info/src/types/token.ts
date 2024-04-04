@@ -1,5 +1,7 @@
 import { Principal } from "@dfinity/principal";
 
+export type { TokenInfo } from "@icpswap/types";
+
 export type BalanceRequest = { token: string; user: { [key: string]: string | Principal } };
 
 export type TokenAllowanceRequest = {
@@ -25,17 +27,6 @@ export type Metadata = {
 
 export type fungibleMetadata = {
   fungible: Metadata;
-};
-
-export type TokenInfo = {
-  decimals: number;
-  name: string;
-  standardType: string;
-  symbol: string;
-  canisterId: string;
-  logo: string;
-  totalSupply: bigint;
-  transFee: bigint;
 };
 
 export interface TokenCanisterInfo {

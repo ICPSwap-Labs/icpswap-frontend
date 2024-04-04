@@ -16,7 +16,7 @@ import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
 import Button from "components/authentication/ButtonConnector";
 import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { read, utils } from "xlsx";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { Principal } from "@dfinity/principal";

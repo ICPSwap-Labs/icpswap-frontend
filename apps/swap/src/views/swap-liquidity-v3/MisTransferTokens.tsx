@@ -4,8 +4,7 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/ma
 import { useTheme } from "@mui/styles";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { TOKEN_STANDARD } from "@icpswap/constants";
-import { ResultStatus } from "@icpswap/types";
+import { TOKEN_STANDARD , ResultStatus } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";

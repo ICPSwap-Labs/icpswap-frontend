@@ -1,5 +1,5 @@
 import { numberToString, BigNumber } from "@icpswap/utils";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 
 export function isUseTransfer(token: Token | undefined) {

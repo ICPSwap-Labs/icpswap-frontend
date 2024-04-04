@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import { ICP_TOKEN_INFO, TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
-import { TokenInfo } from "types/token";
+import type { TokenInfo, StorageTokenInfo } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
@@ -16,11 +16,11 @@ const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
 async function getStorageTokenInfo(tokenId: string) {
   const storageInfo = await storage.get(`TOKEN_${tokenId}`);
-  if (storageInfo) return JSON.parse(storageInfo) as TokenInfo;
+  if (storageInfo) return JSON.parse(storageInfo) as StorageTokenInfo;
   return undefined;
 }
 
-async function setStorageTokenInfo(tokenInfo: TokenInfo) {
+async function setStorageTokenInfo(tokenInfo: StorageTokenInfo) {
   await storage.set(`TOKEN_${tokenInfo.canisterId}`, JSON.stringify(tokenInfo));
 }
 
@@ -50,7 +50,7 @@ function isNeedUpdateTokenInfo(tokenId: string) {
   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
 }
 
-function isStorageInfoValid(storageInfo: TokenInfo | undefined): storageInfo is TokenInfo {
+function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageInfo is StorageTokenInfo {
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
 }
 
@@ -64,7 +64,11 @@ export async function _getTokenInfo(tokenId: string) {
   const baseTokenInfo = await getTokenInfo(tokenId);
 
   if (baseTokenInfo) {
-    await setStorageTokenInfo(baseTokenInfo);
+    await setStorageTokenInfo({
+      ...baseTokenInfo,
+      totalSupply: "0",
+      transFee: baseTokenInfo.transFee.toString(),
+    });
     updateTokenStorageTime(tokenId);
     return baseTokenInfo as TokenInfo;
   }
@@ -115,11 +119,11 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
         ...prevState,
         [tokenId]: {
           ...localToken,
-          metadata: [],
           logo: TokenDefaultLogo,
           transFee: BigInt(localToken.fee),
           decimals: Number(localToken.decimals),
           standardType: localToken.standard as TOKEN_STANDARD,
+          totalSupply: BigInt(0),
         },
       }));
 
@@ -139,8 +143,14 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
         setTokenInfos((prevState) => ({
           ...prevState,
           [tokenId]: {
-            ...storageInfo,
-            transFee: BigInt(storageInfo.transFee.toString()),
+            name: storageInfo.name,
+            logo: storageInfo.logo,
+            symbol: storageInfo.symbol,
+            canisterId: storageInfo.canisterId,
+            totalSupply: BigInt(0),
+            transFee: storageInfo.transFee.includes("bigint:")
+              ? BigInt(storageInfo.transFee.replace(/\D/g, ""))
+              : BigInt(storageInfo.transFee.toString()),
             decimals: Number(storageInfo.decimals),
             standardType: storageInfo.standardType,
           },
@@ -160,7 +170,11 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       const tokenInfo = await getTokenInfo(tokenId);
 
       if (tokenInfo) {
-        await setStorageTokenInfo(tokenInfo);
+        await setStorageTokenInfo({
+          ...tokenInfo,
+          transFee: tokenInfo.transFee.toString(),
+          totalSupply: "0",
+        });
         updateTokenStorageTime(tokenId);
 
         // The token standard maybe changed in some case,

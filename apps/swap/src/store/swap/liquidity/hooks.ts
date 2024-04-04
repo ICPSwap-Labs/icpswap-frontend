@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import {
   Price,
   CurrencyAmount,
@@ -21,7 +21,7 @@ import {
 import { tryParseTick } from "utils/swap/mint";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { getTickToPrice } from "utils/swap/getTickToPrice";
-import { usePool, PoolState , useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
+import { usePool, PoolState, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { JSBI } from "utils/index";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { maxAmountSpend } from "utils/swap/maxAmountSpend";
@@ -129,9 +129,8 @@ export function useMintInfo(
         return (invertPrice ? price?.invert() : price) ?? undefined;
       }
       return undefined;
-    } 
-      return pool && token0 ? pool.priceOf(token0) : undefined;
-    
+    }
+    return pool && token0 ? pool.priceOf(token0) : undefined;
   }, [noLiquidity, startPrice, invertPrice, token1, token0, pool]);
 
   const invalidPrice = useMemo(() => {

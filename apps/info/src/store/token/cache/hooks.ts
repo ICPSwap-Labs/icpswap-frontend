@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import store from "store/index";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { updateTokenStandard, updateTokenCapId } from "./actions";
 
