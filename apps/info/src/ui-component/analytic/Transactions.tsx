@@ -127,6 +127,11 @@ export default function Transactions({
     { key: "removes", value: "Removes" },
   ];
 
+  const handleFilterChange = (filter: Filter) => {
+    setPage(1);
+    setFilter(filter);
+  };
+
   return (
     <Box>
       <Header className={classes.wrapper} onSortChange={handleSortChange} defaultSortFiled={sortField}>
@@ -141,7 +146,7 @@ export default function Transactions({
                     cursor: "pointer",
                     fontSize: "16px",
                   }}
-                  onClick={() => setFilter(ele.key)}
+                  onClick={() => handleFilterChange(ele.key)}
                 >
                   {ele.value}
                 </Typography>
@@ -203,7 +208,12 @@ export default function Transactions({
 
       <Box mt="20px">
         {!loading && !!filteredTransactions?.length ? (
-          <Pagination maxItems={maxItems} length={filteredTransactions?.length ?? 0} onPageChange={setPage} />
+          <Pagination
+            page={page}
+            maxItems={maxItems}
+            length={filteredTransactions?.length ?? 0}
+            onPageChange={setPage}
+          />
         ) : null}
       </Box>
     </Box>

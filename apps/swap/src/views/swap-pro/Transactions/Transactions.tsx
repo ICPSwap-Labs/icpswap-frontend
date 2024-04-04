@@ -124,6 +124,11 @@ export default function Transactions({
     setSortField(sortField);
   };
 
+  const handleFilterChange = (filter: Filter) => {
+    setPage(1);
+    setFilter(filter);
+  };
+
   const Filters: { key: Filter; value: string }[] = [
     { key: "all", value: "All" },
     { key: "swaps", value: "Swaps" },
@@ -145,7 +150,7 @@ export default function Transactions({
                     cursor: "pointer",
                     fontSize: "16px",
                   }}
-                  onClick={() => setFilter(ele.key)}
+                  onClick={() => handleFilterChange(ele.key)}
                 >
                   {ele.value}
                 </Typography>
@@ -220,7 +225,12 @@ export default function Transactions({
 
       <Box mt="20px">
         {!loading && !!filteredTransactions?.length ? (
-          <SimplePagination maxItems={maxItems} length={filteredTransactions?.length ?? 0} onPageChange={setPage} />
+          <SimplePagination
+            page={page}
+            maxItems={maxItems}
+            length={filteredTransactions?.length ?? 0}
+            onPageChange={setPage}
+          />
         ) : null}
       </Box>
     </Box>
