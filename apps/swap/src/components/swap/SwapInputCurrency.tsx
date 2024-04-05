@@ -26,6 +26,7 @@ export interface SwapInputCurrencyProps {
   tradePoolId: string | undefined;
   usdChange?: string | null;
   background?: "level3" | "level1";
+  disabled?: boolean;
 }
 
 export function SwapInputCurrency({
@@ -41,6 +42,7 @@ export function SwapInputCurrency({
   tradePoolId,
   usdChange,
   background = "level3",
+  disabled,
 }: SwapInputCurrencyProps) {
   const theme = useTheme() as Theme;
 
@@ -83,7 +85,7 @@ export function SwapInputCurrency({
         </Box>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formatAmount} currency={currency} onUserInput={onInput} />
+          <SwapInput value={formatAmount} currency={currency} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 

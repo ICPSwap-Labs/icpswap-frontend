@@ -127,6 +127,7 @@ export function SwapInputWrapper({
           parsedAmount={parsedAmounts[SWAP_FIELD.OUTPUT]}
           usdChange={USDChange}
           background={ui === "pro" ? "level1" : "level3"}
+          disabled
         />
       </Box>
     </Box>
