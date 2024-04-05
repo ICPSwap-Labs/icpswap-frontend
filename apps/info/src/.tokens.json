@@ -424,6 +424,14 @@
     "symbol": "RBH"
   },
   {
+    "fee": 0,
+    "decimals": 18,
+    "canisterId": "vhez3-uqaaa-aaaam-achza-cai",
+    "name": "Chugga Chugga",
+    "standard": "ICRC2",
+    "symbol": "Chugga Chugga"
+  },
+  {
     "fee": 100000000000000000,
     "decimals": 18,
     "canisterId": "s5hrt-wiaaa-aaaam-achlq-cai",
@@ -752,6 +760,14 @@
     "symbol": "ICPI"
   },
   {
+    "fee": 100000,
+    "decimals": 8,
+    "canisterId": "rh2pm-ryaaa-aaaan-qeniq-cai",
+    "name": "Windoge98",
+    "standard": "ICRC1",
+    "symbol": "EXE"
+  },
+  {
     "fee": 0,
     "decimals": 8,
     "canisterId": "ad47e-ryaaa-aaaak-afnlq-cai",
@@ -768,14 +784,6 @@
     "symbol": "TAGGR"
   },
   {
-    "fee": 100000,
-    "decimals": 8,
-    "canisterId": "rh2pm-ryaaa-aaaan-qeniq-cai",
-    "name": "Windoge98",
-    "standard": "ICRC1",
-    "symbol": "EXE"
-  },
-  {
     "fee": 0,
     "decimals": 8,
     "canisterId": "ltire-ryaaa-aaaan-qautq-cai",
@@ -786,10 +794,42 @@
   {
     "fee": 0,
     "decimals": 8,
-    "canisterId": "zfcdd-tqaaa-aaaaq-aaaga-cai",
-    "name": "Draggin Karma Points",
+    "canisterId": "6expm-sqaaa-aaaap-qblaq-cai",
+    "name": "World meme Coin",
+    "standard": "DIP20",
+    "symbol": "WLD"
+  },
+  {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "65ax4-taaaa-aaaap-abzga-cai",
+    "name": "Snap",
     "standard": "ICRC1",
-    "symbol": "DKP"
+    "symbol": "Snap"
+  },
+  {
+    "fee": 200000000000000,
+    "decimals": 8,
+    "canisterId": "r7m6q-tiaaa-aaaak-afj7a-cai",
+    "name": "iSHIB",
+    "standard": "ICRC1",
+    "symbol": "iSHIB"
+  },
+  {
+    "fee": 100000000,
+    "decimals": 8,
+    "canisterId": "pcj6u-uaaaa-aaaak-aewnq-cai",
+    "name": "CLOUD TOKEN",
+    "standard": "ICRC1",
+    "symbol": "CLOUD"
+  },
+  {
+    "fee": 100000000,
+    "decimals": 8,
+    "canisterId": "2qrsq-uiaaa-aaaai-aa3zq-cai",
+    "name": "$Carrot",
+    "standard": "EXT",
+    "symbol": "🐰🥕"
   },
   {
     "fee": 1000000,
@@ -800,20 +840,20 @@
     "symbol": "Punks"
   },
   {
-    "fee": 1000000,
-    "decimals": 8,
-    "canisterId": "cxc2q-uyaaa-aaaak-afnfq-cai",
-    "name": "CAM1",
-    "standard": "ICRC1",
-    "symbol": "CAM1"
-  },
-  {
     "fee": 300,
     "decimals": 8,
     "canisterId": "3t52a-uyaaa-aaaap-abz2q-cai",
     "name": "Royal",
     "standard": "ICRC1",
     "symbol": "Royal"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "cxc2q-uyaaa-aaaak-afnfq-cai",
+    "name": "CAM1",
+    "standard": "ICRC1",
+    "symbol": "CAM1"
   },
   {
     "fee": 100000,
@@ -848,20 +888,20 @@
     "symbol": "SNEED"
   },
   {
-    "fee": 10000000,
-    "decimals": 8,
-    "canisterId": "x65da-wyaaa-aaaao-a2lfa-cai",
-    "name": "The Eye Cees",
-    "standard": "ICRC1",
-    "symbol": "EYEC"
-  },
-  {
     "fee": 0,
     "decimals": 10,
     "canisterId": "6ejiy-wyaaa-aaaar-qadaq-cai",
     "name": "Buffer",
     "standard": "ICRC1",
     "symbol": "BUFF"
+  },
+  {
+    "fee": 10000000,
+    "decimals": 8,
+    "canisterId": "x65da-wyaaa-aaaao-a2lfa-cai",
+    "name": "The Eye Cees",
+    "standard": "ICRC1",
+    "symbol": "EYEC"
   },
   {
     "fee": 0,
@@ -880,20 +920,20 @@
     "symbol": "GRIMACE"
   },
   {
-    "fee": 50000000,
-    "decimals": 8,
-    "canisterId": "sminu-xqaaa-aaaak-afoka-cai",
-    "name": "ICTT",
-    "standard": "ICRC1",
-    "symbol": "$ICTT"
-  },
-  {
     "fee": 0,
     "decimals": 18,
     "canisterId": "p6hwu-xqaaa-aaaam-accqq-cai",
     "name": "HOT",
     "standard": "ICRC2",
     "symbol": "HOT"
+  },
+  {
+    "fee": 50000000,
+    "decimals": 8,
+    "canisterId": "sminu-xqaaa-aaaak-afoka-cai",
+    "name": "ICTT",
+    "standard": "ICRC1",
+    "symbol": "$ICTT"
   },
   {
     "fee": 10000000,
@@ -1016,20 +1056,20 @@
     "symbol": "WICP"
   },
   {
-    "fee": 50,
-    "decimals": 8,
-    "canisterId": "f4knq-6aaaa-aaaap-ab4lq-cai",
-    "name": "BEBE",
-    "standard": "ICRC1",
-    "symbol": "BeBe"
-  },
-  {
     "fee": 0,
     "decimals": 8,
     "canisterId": "qi26q-6aaaa-aaaap-qapeq-cai",
     "name": "Canister Token",
     "standard": "DIP20",
     "symbol": "XCANIC"
+  },
+  {
+    "fee": 50,
+    "decimals": 8,
+    "canisterId": "f4knq-6aaaa-aaaap-ab4lq-cai",
+    "name": "BEBE",
+    "standard": "ICRC1",
+    "symbol": "BeBe"
   },
   {
     "fee": 10000000,
@@ -1288,20 +1328,12 @@
     "symbol": "Schnitzel"
   },
   {
-    "fee": 4.0404e23,
+    "fee": 4.0404e+23,
     "decimals": 18,
     "canisterId": "2qvqj-jyaaa-aaaam-acbba-cai",
     "name": "FUGİİİ",
     "standard": "ICRC2",
     "symbol": "FUGİİİ"
-  },
-  {
-    "fee": 10,
-    "decimals": 8,
-    "canisterId": "hbjjz-kaaaa-aaaan-qiocq-cai",
-    "name": "mora",
-    "standard": "ICRC1",
-    "symbol": "mora"
   },
   {
     "fee": 0,
@@ -1310,6 +1342,14 @@
     "name": "ckBINGO",
     "standard": "ICRC2",
     "symbol": "ckBINGO"
+  },
+  {
+    "fee": 10,
+    "decimals": 8,
+    "canisterId": "hbjjz-kaaaa-aaaan-qiocq-cai",
+    "name": "mora",
+    "standard": "ICRC1",
+    "symbol": "mora"
   },
   {
     "fee": 0,
@@ -2792,20 +2832,20 @@
     "symbol": "PORN"
   },
   {
-    "fee": 0,
-    "decimals": 8,
-    "canisterId": "feyix-4aaaa-aaaap-ab3ua-cai",
-    "name": "NODE",
-    "standard": "ICRC1",
-    "symbol": "NODE"
-  },
-  {
     "fee": 100000,
     "decimals": 8,
     "canisterId": "tyyy3-4aaaa-aaaaq-aab7a-cai",
     "name": "Gold Governance Token",
     "standard": "ICRC1",
     "symbol": "GLDGov"
+  },
+  {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "feyix-4aaaa-aaaap-ab3ua-cai",
+    "name": "NODE",
+    "standard": "ICRC1",
+    "symbol": "NODE"
   },
   {
     "fee": 0,
