@@ -6,7 +6,7 @@ export function getSwapTokenArgs(token: string) {
   let standard = standards[token];
   if (token === WRAPPED_ICP_TOKEN_INFO.canisterId) standard = WRAPPED_ICP_TOKEN_INFO.standardType;
   if (token === ICP_TOKEN_INFO.canisterId) standard = ICP_TOKEN_INFO.standardType;
-  if (!standard) throw Error(`No token standard: ${token}`);
+  if (!standard) throw Error(`No token standard: ${token}, please reload the page`);
   return { address: token, standard: standard as string };
 }
 
