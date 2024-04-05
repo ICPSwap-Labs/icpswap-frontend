@@ -381,15 +381,15 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
     <Box sx={{ width: "100%", overflow: "auto" }}>
       <Box sx={{ minWidth: "1026px" }}>
         <Header className={classes.wrapper}>
-          <HeaderCell field="amountUSD">
+          <HeaderCell field="PositionId">
             <Trans>Position ID</Trans>
           </HeaderCell>
 
-          <HeaderCell field="amountUSD">
+          <HeaderCell field="token0Amount">
             <Trans>{pool?.token0.symbol} Amount</Trans>
           </HeaderCell>
 
-          <HeaderCell field="tokenAmount">
+          <HeaderCell field="token1Amount">
             <Trans>{pool?.token1.symbol} Amount</Trans>
           </HeaderCell>
 

@@ -88,13 +88,21 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
               textFiledProps={{
                 placeholder: `Search the principal for ${
                   activeTab === TabPanelValue.TRANSACTIONS
-                    ? "swap transactions"
+                    ? "transactions"
                     : activeTab === TabPanelValue.POSITIONS
-                    ? "swap positions"
+                    ? "positions"
                     : activeTab === TabPanelValue.RECLAIM
                     ? "reclaims"
                     : "valuation"
                 }`,
+                sx: {
+                  "& input": {
+                    padding: "0",
+                    "::-webkit-input-placeholder": {
+                      fontSize: "12px",
+                    },
+                  },
+                },
               }}
               onChange={(value: string) => setSearch(value)}
             />

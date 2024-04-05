@@ -104,7 +104,11 @@ export default function FilledTextField({
                       fontSize: "14px",
                       "& input": {
                         padding: "0",
+                        "::-webkit-input-placeholder": {
+                          fontSize: "12px",
+                        },
                       },
+                      ...textFiledProps?.sx,
                     }}
                     inputRef={inputRef}
                     {...(textFiledProps
@@ -152,6 +156,7 @@ export default function FilledTextField({
                 <TextField
                   sx={{
                     fontSize: "14px",
+                    ...textFiledProps?.sx,
                   }}
                   {...(textFiledProps
                     ? {
