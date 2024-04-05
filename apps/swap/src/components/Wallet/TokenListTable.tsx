@@ -16,7 +16,7 @@ import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
-import { useInfoToken } from "hooks/uesInfoToken";
+import { useInfoToken } from "hooks/info/useInfoTokens";
 import { useToken } from "hooks/useCurrency";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
@@ -129,7 +129,8 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const history = useHistory();
 
   const [, currency] = useToken(canisterId);
-  const { result: infoToken } = useInfoToken(currency?.address);
+
+  const infoToken = useInfoToken(currency?.address);
 
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.priceUSD;

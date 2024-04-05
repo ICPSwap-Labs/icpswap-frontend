@@ -220,11 +220,9 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             !!token0USDPrice &&
             !!token1USDPrice
               ? `≈ ${formatDollarAmount(
-                  new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
+                  new BigNumber(currencyFeeAmount0.toExact())
                     .multipliedBy(token0USDPrice)
-                    .plus(
-                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(token1USDPrice),
-                    )
+                    .plus(new BigNumber(currencyFeeAmount1.toExact()).multipliedBy(token1USDPrice))
                     .toString(),
                 )}`
               : "--"}

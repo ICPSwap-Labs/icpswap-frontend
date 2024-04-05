@@ -11,6 +11,7 @@ import ErrorBoundary from "components/ErrorBoundary";
 import WalletConnector from "components/authentication/ConnectorModal";
 import Loader from "components/Loading/LinearLoader";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
+import { useFetchInfoAllToken } from "hooks/info/useInfoTokens";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
 import { GlobalContext } from "hooks/useGlobalContext";
@@ -29,6 +30,7 @@ export default function App() {
 
   useFetchXDR2USD();
   useFetchICPPrices();
+  useFetchInfoAllToken();
 
   const { isConnected } = useConnectManager();
 
