@@ -13,6 +13,7 @@ import useDebounce from "hooks/useDebounce";
 import store from "store/index";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { isValidPrincipal } from "@icpswap/utils";
 import {
   selectCurrency,
   switchCurrencies,
@@ -174,7 +175,7 @@ export function useLoadDefaultParams() {
   const { input, output } = useParsedQueryString() as { input: string | undefined; output: string | undefined };
 
   useEffect(() => {
-    if (input !== undefined) {
+    if (input !== undefined && isValidPrincipal(input)) {
       dispatch(
         selectCurrency({
           field: SWAP_FIELD.INPUT,
@@ -183,7 +184,7 @@ export function useLoadDefaultParams() {
       );
     }
 
-    if (output !== undefined) {
+    if (output !== undefined && isValidPrincipal(output)) {
       dispatch(
         selectCurrency({
           field: SWAP_FIELD.OUTPUT,
