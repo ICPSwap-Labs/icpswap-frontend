@@ -250,7 +250,7 @@ export interface PriceRangeProps {
   poolLoading?: boolean;
 }
 
-export default memo(
+const PriceRange = memo(
   ({
     onStartPriceInput,
     onLeftRangeInput,
@@ -500,3 +500,5 @@ export default memo(
     );
   },
 );
+
+export default PriceRange;

@@ -3,18 +3,16 @@ import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 
-export function useDensityChartData({
-  currencyA,
-  currencyB,
-  feeAmount,
-}: {
+export interface UseDensityChartDataArgs {
   currencyA: Token | undefined;
   currencyB: Token | undefined;
   feeAmount: FeeAmount;
-}) {
+}
+
+export function useDensityChartData({ currencyA, currencyB, feeAmount }: UseDensityChartDataArgs) {
   const { isLoading, isUninitialized, isError, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount);
 
-  const formatData = useCallback(() => {
+  const formatData = useMemo(() => {
     if (!data?.length) return undefined;
 
     const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
@@ -45,10 +43,10 @@ export function useDensityChartData({
 
   return useMemo(() => {
     return {
-      isLoading,
+      isLoading: isLoading || !data,
       isUninitialized,
       isError,
-      formattedData: !isLoading && !isUninitialized ? formatData() : undefined,
+      formattedData: !isLoading && !isUninitialized ? formatData : undefined,
     };
   }, [isLoading, isUninitialized, isError, formatData]);
 }

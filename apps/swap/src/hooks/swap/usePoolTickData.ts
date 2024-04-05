@@ -65,19 +65,19 @@ export function usePoolActiveLiquidity(
   const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
   const token0 = isSorted ? currencyA?.wrapped : currencyB?.wrapped;
   const token1 = isSorted ? currencyB?.wrapped : currencyA?.wrapped;
-  const pool = usePool(currencyA, currencyB, feeAmount);
+  const [poolState, pool] = usePool(currencyA, currencyB, feeAmount);
 
-  const tickCurrent = pool[1]?.tickCurrent;
+  const tickCurrent = pool?.tickCurrent;
 
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(tickCurrent, feeAmount), [tickCurrent, feeAmount]);
 
-  const { loading: isLoading, result: _ticks } = useAllTicks(token0, token1, feeAmount);
+  const { loading: isLoading, result: ticks } = useAllTicks(token0, token1, feeAmount);
 
-  const ticks = useMemo(() => {
-    if (!_ticks) return [];
+  const sortedTicks = useMemo(() => {
+    if (!ticks) return [];
 
-    return _ticks
+    return ticks
       .map((item) => {
         const price0 = new BigNumber(String(item.price0))
           .div(String(item.price0Decimal))
@@ -101,10 +101,10 @@ export function usePoolActiveLiquidity(
         if (a.tickIdx > b.tickIdx) return 1;
         return 0;
       });
-  }, [_ticks, isLoading]);
+  }, [ticks, isLoading]);
 
   return useMemo(() => {
-    const isUninitialized = pool[0] === PoolState.NOT_EXISTS;
+    const isUninitialized = poolState === PoolState.NOT_EXISTS;
 
     if (
       !currencyA ||
@@ -112,13 +112,13 @@ export function usePoolActiveLiquidity(
       !token0 ||
       !token1 ||
       activeTick === undefined ||
-      pool[0] !== PoolState.EXISTS ||
-      !ticks ||
-      ticks.length === 0 ||
+      poolState !== PoolState.EXISTS ||
+      !sortedTicks ||
+      sortedTicks.length === 0 ||
       isLoading
     ) {
       return {
-        isLoading: isLoading || pool[0] === PoolState.LOADING,
+        isLoading: isLoading || poolState === PoolState.LOADING,
         isUninitialized,
         activeTick,
         data: undefined,
@@ -128,7 +128,7 @@ export function usePoolActiveLiquidity(
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
     // if not, take the previous tick as pivot
-    const pivot = ticks.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1;
+    const pivot = sortedTicks.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1;
 
     if (pivot < 0) {
       // consider setting a local error
@@ -142,14 +142,16 @@ export function usePoolActiveLiquidity(
     }
 
     const activeTickProcessed = {
-      liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
+      liquidityActive: JSBI.BigInt(pool?.liquidity ?? 0),
       tickIdx: activeTick,
       liquidityNet:
-        Number(ticks[pivot].tickIdx) === activeTick ? JSBI.BigInt(ticks[pivot].liquidityNet) : JSBI.BigInt(0),
+        Number(sortedTicks[pivot].tickIdx) === activeTick
+          ? JSBI.BigInt(sortedTicks[pivot].liquidityNet)
+          : JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     };
 
-    const formatTicks = ticks.map((tick) => ({
+    const formatTicks = sortedTicks.map((tick) => ({
       tickIdx: tick.tickIdx,
       liquidityNet: tick.liquidityNet,
       liquidityGross: tick.liquidityGross,
@@ -166,7 +168,7 @@ export function usePoolActiveLiquidity(
       isUninitialized,
       activeTick,
       data: ticksProcessed,
-      isError: _ticks === undefined,
+      isError: ticks === undefined,
     };
-  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading]);
+  }, [currencyA, currencyB, activeTick, pool, sortedTicks, isLoading, poolState, ticks]);
 }

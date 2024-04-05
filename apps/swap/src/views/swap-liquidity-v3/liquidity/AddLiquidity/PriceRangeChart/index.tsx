@@ -146,14 +146,6 @@ export default function LiquidityChartRangeInput({
     [isSorted, price, ticksAtLimit],
   );
 
-  // if (isError) {
-  //   ReactGA.exception({
-  //     ...error,
-  //     category: "Liquidity",
-  //     fatal: false,
-  //   });
-  // }
-
   return (
     <Box style={{ minHeight: "200px" }}>
       {isUninitialized ? (
