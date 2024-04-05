@@ -8,6 +8,7 @@ import type { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
+import { useInfoAllTokens } from "hooks/info/useInfoTokens";
 
 const animationKeyframes = keyframes`
   0% {
@@ -77,12 +78,9 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
   );
 }
 
-export interface HotTokensProps {
-  infoAllTokens: PublicTokenOverview[] | undefined;
-}
-
-export default function HotTokens({ infoAllTokens }: HotTokensProps) {
+export default function HotTokens() {
   const theme = useTheme() as Theme;
+  const infoAllTokens = useInfoAllTokens();
 
   const tokenList = useMemo(() => {
     return infoAllTokens

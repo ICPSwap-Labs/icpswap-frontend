@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { FilledTextField, TokenImage } from "components/index";
@@ -14,8 +14,7 @@ import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
-
-import { SwapProContext } from "../context";
+import { useInfoAllTokens } from "hooks/info/useInfoTokens";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
@@ -112,7 +111,7 @@ export function Search({ open, onClose }: SearchProps) {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const history = useHistory();
   const [search, setSearch] = useState<string>("");
-  const { infoAllTokens } = useContext(SwapProContext);
+  const infoAllTokens = useInfoAllTokens();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 

@@ -2,6 +2,7 @@ import { getInfoAllTokens } from "@icpswap/hooks";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
 import type { PublicTokenOverview } from "@icpswap/types";
+import { useMemo } from "react";
 
 export function useFetchInfoAllToken() {
   const { data } = useSwr(
@@ -17,7 +18,15 @@ export function useFetchInfoAllToken() {
   return data;
 }
 
+export function useInfoAllTokens() {
+  const { data } = useSWRImmutable<PublicTokenOverview[] | undefined>(["info_all_tokens"]);
+  return useMemo(() => data, data);
+}
+
 export function useInfoToken(tokenId: string | undefined) {
   const { data } = useSWRImmutable<PublicTokenOverview[] | undefined>(["info_all_tokens"]);
-  return data?.find((e) => e.address === tokenId);
+
+  return useMemo(() => {
+    return data?.find((e) => e.address === tokenId);
+  }, [data, tokenId]);
 }

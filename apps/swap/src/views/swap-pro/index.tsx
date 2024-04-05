@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useTokenListTokenInfo, useInfoAllTokens } from "@icpswap/hooks";
+import { useTokenListTokenInfo } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useInfoToken } from "hooks/info/useInfoTokens";
 
 import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
@@ -24,20 +25,16 @@ export default function SwapPro() {
 
   const { result: tokenInfo } = useTokenInfo(outputToken?.address);
   const { result: tokenListInfo } = useTokenListTokenInfo(outputToken?.address);
-  const { result: infoAllTokens } = useInfoAllTokens();
 
-  const infoToken = useMemo(() => {
-    return infoAllTokens?.find((e) => e.address === outputToken?.address);
-  }, [infoAllTokens, outputToken]);
+  const inputTokenInfo = useInfoToken(inputToken?.address);
+  const outputTokenInfo = useInfoToken(outputToken?.address);
 
   const { inputTokenPrice, outputTokenPrice } = useMemo(() => {
-    const outputTokenInfo = infoAllTokens?.find((e) => e.address === outputToken?.address);
-
     return {
-      inputTokenPrice: infoToken?.priceUSD,
+      inputTokenPrice: inputTokenInfo?.priceUSD,
       outputTokenPrice: outputTokenInfo?.priceUSD,
     };
-  }, [infoToken, infoAllTokens, outputToken]);
+  }, [inputTokenInfo, outputTokenInfo]);
 
   return (
     <SwapProContext.Provider
@@ -48,7 +45,6 @@ export default function SwapPro() {
         setOutputToken,
         tradePoolId,
         setTradePoolId,
-        infoAllTokens,
         inputTokenPrice,
         outputTokenPrice,
       }}
@@ -56,7 +52,7 @@ export default function SwapPro() {
       <SwapProLayout>
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <Box sx={{ width: "100%" }}>
-            <HotTokens infoAllTokens={infoAllTokens} />
+            <HotTokens />
 
             <Box
               sx={{
@@ -83,9 +79,9 @@ export default function SwapPro() {
               >
                 <Swap />
                 {matchDownSM ? (
-                  <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                  <TokenChartInfo infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 ) : null}
-                <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenUI infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
               </Box>
 
               <Box
@@ -100,7 +96,7 @@ export default function SwapPro() {
                   },
                 }}
               >
-                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenChartWrapper infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 <Transactions />
               </Box>
             </Box>
