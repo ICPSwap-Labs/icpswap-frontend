@@ -35,7 +35,8 @@ export default function Header() {
     <>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          {matchDownSM ? <MobileSearchIcon onClick={() => setSearchOpen(true)} /> : <ProLogo />}
+          {/* {matchDownSM ? <MobileSearchIcon onClick={() => setSearchOpen(true)} /> : <ProLogo />} */}
+          {matchDownSM ? null : <ProLogo />}
         </Box>
 
         <Grid
@@ -57,7 +58,7 @@ export default function Header() {
               "@media(max-width: 640px)": { gap: "0 8px" },
             }}
           >
-            {matchDownSM ? null : (
+            {/* {matchDownSM ? null : (
               <Box sx={{ width: "358px", height: "32px" }}>
                 <FilledTextField
                   fullHeight
@@ -74,7 +75,7 @@ export default function Header() {
                   onFocus={() => setSearchOpen(true)}
                 />
               </Box>
-            )}
+            )} */}
             <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
             <ButtonChip label={t`Standard Modal`} onClick={() => handleLoadPage("/swap")} />
             <ProfileSection />
