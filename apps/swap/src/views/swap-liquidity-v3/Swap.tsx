@@ -56,6 +56,10 @@ export function SwapMain() {
               padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
               paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
               overflow: "visible",
+              "@media(max-width: 640px)": {
+                padding: activeSwitch === 2 ? "16px 0 0 0" : "16px",
+                paddingBottom: activeSwitch === 2 ? "0!important" : "16px",
+              },
             }}
           >
             <Box
@@ -65,6 +69,9 @@ export function SwapMain() {
                 justifyContent: "space-between",
                 position: "relative",
                 padding: activeSwitch === 2 ? "0 24px" : "0",
+                "@media(max-width: 640px)": {
+                  padding: activeSwitch === 2 ? "0 16px" : "0",
+                },
               }}
             >
               <Box>
