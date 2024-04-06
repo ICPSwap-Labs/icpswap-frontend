@@ -1,4 +1,5 @@
 import numbro from "numbro";
+import { BigNumber } from "./bignumber";
 import { toSignificant } from "./toSignificant";
 
 // using a currency library here in case we want to add more in future
@@ -7,8 +8,8 @@ export const formatDollarAmount = (num: number | string | undefined, digits = 2,
   if (_num === 0 || _num === "0") return "$0.00";
   if (!_num) return "-";
 
-  if (Number(_num) < 0.01) {
-    if (ab && Number(_num) < ab) return `<$${ab}`;
+  if (new BigNumber(_num).isLessThan(0.01)) {
+    if (ab && new BigNumber(_num).isLessThan(ab)) return `<$${ab}`;
     return `$${toSignificant(_num, digits)}`;
   }
 

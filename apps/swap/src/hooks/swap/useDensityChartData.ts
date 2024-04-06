@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";

@@ -14,8 +14,8 @@ import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
-// import { useUSDPriceById } from "hooks/useUSDPrice";
-import { parseTokenAmount } from "@icpswap/utils";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { parseTokenAmount, formatDollarAmount, BigNumber } from "@icpswap/utils";
 
 export interface SwapToken {
   canisterId: string;
@@ -55,6 +55,7 @@ export interface TokenItemInfoProps {
   disabledCurrencyIds: string[];
   activeCurrencyIds: string[];
   onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
+  search?: string;
 }
 
 export function TokenItemInfo({
@@ -63,6 +64,7 @@ export function TokenItemInfo({
   disabledCurrencyIds,
   activeCurrencyIds,
   onUpdateTokenAdditional,
+  search,
 }: TokenItemInfoProps) {
   const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
@@ -70,7 +72,7 @@ export function TokenItemInfo({
 
   const { result: tokenInfo } = useTokenInfo(_tokenInfo.canisterId);
   const { result: balance, loading } = useTokenBalance(_tokenInfo.canisterId, principal);
-  // const interfacePrice = useUSDPriceById(_tokenInfo.canisterId);
+  const interfacePrice = useUSDPriceById(_tokenInfo.canisterId);
 
   const [taggedTokens, updateTaggedTokens, removeTaggedTokens] = useTaggedTokenManager();
 
@@ -102,12 +104,22 @@ export function TokenItemInfo({
     }
   };
 
+  const hidden = useMemo(() => {
+    if (!search) return false;
+
+    return (
+      !_tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
+      !_tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    );
+  }, [search, _tokenInfo]);
+
   return (
     <Grid
       item
       container
       alignItems="center"
       sx={{
+        display: hidden ? "none" : "flex",
         height: "63px",
         cursor: "pointer",
         padding: matchDownSM ? "0 16px" : "0 24px",
@@ -179,7 +191,7 @@ export function TokenItemInfo({
                   >
                     {tokenBalanceAmount ?? "--"}
                   </Typography>
-                  {/* <Typography
+                  <Typography
                     align="right"
                     sx={{
                       "@media (max-width: 580px)": {
@@ -191,11 +203,13 @@ export function TokenItemInfo({
                       ? formatDollarAmount(
                           new BigNumber(interfacePrice)
                             .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
-                            .toNumber(),
+                            .toString(),
                           4,
+                          true,
+                          0.001,
                         )
                       : "--"}
-                  </Typography> */}
+                  </Typography>
                 </Box>
               )}
 
@@ -252,17 +266,7 @@ export default function Selector({
   const isDark = isDarkTheme(theme);
 
   const list = useMemo(() => {
-    let list: SwapToken[] = [];
-
-    if (searchKeyword) {
-      list = originList.filter(
-        (item) =>
-          item.symbol?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
-          item.name?.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
-      );
-    } else {
-      list = [...originList];
-    }
+    const list: SwapToken[] = [...originList];
 
     // const new_list_tagged: SwapToken[] = [];
     // const new_list_has_balance: SwapToken[] = [];
@@ -292,7 +296,7 @@ export default function Selector({
     });
 
     return new_list_tagged.concat(other_tokens);
-  }, [originList, taggedTokenIds, searchKeyword]);
+  }, [originList, taggedTokenIds]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
@@ -388,6 +392,7 @@ export default function Selector({
                   disabledCurrencyIds={disabledCurrencyIds}
                   activeCurrencyIds={activeCurrencyIds}
                   onClick={handleTokenClick}
+                  search={searchKeyword}
                 />
               ))}
               {list.length === 0 && <NoData />}
