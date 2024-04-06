@@ -6,7 +6,7 @@ import { WRAPPED_ICP, ICP } from "@icpswap/tokens";
 import { usePool } from "hooks/swap/usePools";
 import { useICPPrice } from "store/global/hooks";
 import { analyticToken } from "@icpswap/actor";
-import { useToken } from "hooks/info/useToken";
+import { useInfoToken } from "hooks/info/useInfoTokens";
 import { PublicTokenOverview } from "@icpswap/types";
 
 /**
@@ -16,7 +16,7 @@ import { PublicTokenOverview } from "@icpswap/types";
 export function useUSDPrice(tokenId: string | undefined): number | undefined {
   const icpPrice = useICPPrice();
 
-  const graphToken = useToken(tokenId);
+  const graphToken = useInfoToken(tokenId);
 
   return useMemo(() => {
     if (!tokenId) return undefined;
@@ -130,7 +130,7 @@ export function useUSDPriceById(tokenId: string | undefined): number | undefined
     return tokenId;
   }, [tokenId]);
 
-  const graphToken = useToken(_tokenId);
+  const graphToken = useInfoToken(_tokenId);
 
   const icpPriceNumber = useICPPrice();
 

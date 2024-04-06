@@ -6,7 +6,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TextButton, TokenImage } from "ui-component/index";
 import { TokenListMetadata } from "@icpswap/candid";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/constants";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useTokenTotalHolder, useTokensFromList, useTokenSupply } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
