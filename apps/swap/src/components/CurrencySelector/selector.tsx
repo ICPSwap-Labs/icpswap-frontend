@@ -54,7 +54,7 @@ export interface TokenItemInfoProps {
   onClick: (token: TokenInfo) => void;
   disabledCurrencyIds: string[];
   activeCurrencyIds: string[];
-  onUpdateTokenAdditional: (tokenId: string, balance: string) => void;
+  onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
 }
 
 export function TokenItemInfo({
@@ -86,7 +86,7 @@ export function TokenItemInfo({
 
   useEffect(() => {
     if (_tokenInfo && balance) {
-      onUpdateTokenAdditional(_tokenInfo.canisterId, balance.toString());
+      if (onUpdateTokenAdditional) onUpdateTokenAdditional(_tokenInfo.canisterId, balance.toString());
     }
   }, [_tokenInfo, balance]);
 
@@ -245,7 +245,7 @@ export default function Selector({
   const [searchKeyword, setSearchKeyword] = useState("");
   const [importTokenShow, setImportTokenShow] = useState(false);
 
-  const [tokenAdditionalData, setTokenAdditionalData] = useState({} as TokenAdditionalData);
+  // const [tokenAdditionalData, setTokenAdditionalData] = useState({} as TokenAdditionalData);
 
   const [taggedTokenIds] = useTaggedTokenManager();
   const originList = useSwapTokenList(version);
@@ -264,24 +264,35 @@ export default function Selector({
       list = [...originList];
     }
 
+    // const new_list_tagged: SwapToken[] = [];
+    // const new_list_has_balance: SwapToken[] = [];
+    // const new_list_no_balance: SwapToken[] = [];
+
+    // list.forEach((e) => {
+    //   const tokenBalance = tokenAdditionalData[e.canisterId]?.balance ?? "0";
+
+    //   if (taggedTokenIds.includes(e.canisterId)) {
+    //     new_list_tagged.push(e);
+    //   } else if (tokenBalance !== "0") {
+    //     new_list_has_balance.push(e);
+    //   } else {
+    //     new_list_no_balance.push(e);
+    //   }
+    // });
+
     const new_list_tagged: SwapToken[] = [];
-    const new_list_has_balance: SwapToken[] = [];
-    const new_list_no_balance: SwapToken[] = [];
+    const other_tokens: SwapToken[] = [];
 
     list.forEach((e) => {
-      const tokenBalance = tokenAdditionalData[e.canisterId]?.balance ?? "0";
-
       if (taggedTokenIds.includes(e.canisterId)) {
         new_list_tagged.push(e);
-      } else if (tokenBalance !== "0") {
-        new_list_has_balance.push(e);
       } else {
-        new_list_no_balance.push(e);
+        other_tokens.push(e);
       }
     });
 
-    return new_list_tagged.concat(new_list_has_balance.concat(new_list_no_balance));
-  }, [originList, taggedTokenIds, searchKeyword, JSON.stringify(tokenAdditionalData)]);
+    return new_list_tagged.concat(other_tokens);
+  }, [originList, taggedTokenIds, searchKeyword]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
@@ -295,14 +306,14 @@ export default function Selector({
     setSearchKeyword(value);
   }, []);
 
-  const handleUpdateTokenAdditionalData = (tokenId: string, balance: string) => {
-    setTokenAdditionalData((prevState) => ({
-      ...prevState,
-      [tokenId]: {
-        balance,
-      },
-    }));
-  };
+  // const handleUpdateTokenAdditionalData = (tokenId: string, balance: string) => {
+  //   setTokenAdditionalData((prevState) => ({
+  //     ...prevState,
+  //     [tokenId]: {
+  //       balance,
+  //     },
+  //   }));
+  // };
 
   return (
     <>
@@ -377,7 +388,6 @@ export default function Selector({
                   disabledCurrencyIds={disabledCurrencyIds}
                   activeCurrencyIds={activeCurrencyIds}
                   onClick={handleTokenClick}
-                  onUpdateTokenAdditional={handleUpdateTokenAdditionalData}
                 />
               ))}
               {list.length === 0 && <NoData />}
