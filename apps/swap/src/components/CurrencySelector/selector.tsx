@@ -319,6 +319,20 @@ export default function Selector({
   //   }));
   // };
 
+  const no_data = useMemo(() => {
+    if (list.length === 0) return true;
+    if (!searchKeyword) return list.length === 0;
+
+    const filteredTokens = list.filter((tokenInfo) => {
+      return (
+        tokenInfo.symbol.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
+        tokenInfo.name.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase())
+      );
+    });
+
+    return filteredTokens.length === 0;
+  }, [list, searchKeyword]);
+
   return (
     <>
       <SwapModal
@@ -395,7 +409,7 @@ export default function Selector({
                   search={searchKeyword}
                 />
               ))}
-              {list.length === 0 && <NoData />}
+              {no_data ? <NoData /> : null}
             </Grid>
           </Box>
           <Grid
