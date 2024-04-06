@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function MainLayout({ children }: { children: ReactNode }) {
   const classes = useStyles();
 
-  const [globalTipsOpen, setGlobalTipsOpen] = useState(true);
+  const [globalTipsOpen, setGlobalTipsOpen] = useState(false);
 
   return (
     <div>

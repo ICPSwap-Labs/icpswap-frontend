@@ -51,7 +51,7 @@ export interface SwapProLayoutProps {
 export function SwapProLayout({ children }: SwapProLayoutProps) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
-  const [globalTipShow, setGlobalTipShow] = useState(true);
+  const [globalTipShow, setGlobalTipShow] = useState(false);
 
   return (
     <>

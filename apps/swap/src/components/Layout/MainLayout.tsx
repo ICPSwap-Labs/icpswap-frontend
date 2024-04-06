@@ -52,7 +52,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   const [show, setShow] = useState(true);
-  const [globalTipShow, setGlobalTipShow] = useState(true);
+  const [globalTipShow, setGlobalTipShow] = useState(false);
 
   return (
     <>
