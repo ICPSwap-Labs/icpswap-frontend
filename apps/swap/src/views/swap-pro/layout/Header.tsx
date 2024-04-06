@@ -77,7 +77,7 @@ export default function Header() {
               </Box>
             )} */}
             <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
-            <ButtonChip label={t`Standard Modal`} onClick={() => handleLoadPage("/swap")} />
+            <ButtonChip label={t`Standard Model`} onClick={() => handleLoadPage("/swap")} />
             <ProfileSection />
           </Box>
         </Grid>
