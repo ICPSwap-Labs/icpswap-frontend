@@ -4,7 +4,7 @@ import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, GridAutoRows, LoadingRow } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow } from "@icpswap/ui";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
@@ -62,15 +62,15 @@ function UserTokenBalance({
     >
       <BodyCell>
         <Box sx={{ display: "flex", gap: "0 10px", alignItems: "center" }}>
-          <TokenImage logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} />
+          <TokenImage size="28px" logo={tokenInfo.logo} tokenId={tokenInfo.canisterId} />
 
-          <Typography color="text.primary">{tokenInfo.symbol}</Typography>
-
-          <Typography color="text.primary">
+          <BodyCell color="text.primary">
             {balance
               ? toSignificant(parseTokenAmount(balance, tokenInfo.decimals).toString(), 8, { groupSeparator: "," })
               : "--"}
-          </Typography>
+          </BodyCell>
+
+          <BodyCell>{tokenInfo.symbol}</BodyCell>
         </Box>
       </BodyCell>
 
@@ -87,11 +87,7 @@ function UserTokenBalance({
       <BodyCell>{tokenUSDPrice ? `$${toSignificant(tokenUSDPrice, 6, { groupSeparator: "," })}` : "--"}</BodyCell>
 
       <BodyCell>
-        <Link
-          href={getExplorerPrincipalLink(tokenInfo.canisterId)}
-          target="_blank"
-          sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-        >
+        <Link href={getExplorerPrincipalLink(tokenInfo.canisterId)} target="_blank">
           {tokenInfo.canisterId}
         </Link>
       </BodyCell>
@@ -290,51 +286,49 @@ export default function SwapScanValuation() {
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
           <Box sx={{ minWidth: "840px" }}>
-            <GridAutoRows gap="20px">
-              <Header className={classes.wrapper} sx={{ display: "grid" }}>
-                <HeaderCell>Token</HeaderCell>
+            <Header className={classes.wrapper} sx={{ display: "grid" }}>
+              <HeaderCell>Token</HeaderCell>
 
-                <HeaderCell field="usdValue">
-                  <Trans>Value</Trans>
-                </HeaderCell>
+              <HeaderCell field="usdValue">
+                <Trans>Value</Trans>
+              </HeaderCell>
 
-                <HeaderCell field="price">
-                  <Trans>Price</Trans>
-                </HeaderCell>
+              <HeaderCell field="price">
+                <Trans>Price</Trans>
+              </HeaderCell>
 
-                <HeaderCell field="amountToken1">
-                  <Trans>Canister ID</Trans>
-                </HeaderCell>
-              </Header>
+              <HeaderCell field="amountToken1">
+                <Trans>Canister ID</Trans>
+              </HeaderCell>
+            </Header>
 
-              {loading ? (
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              ) : !address || sortedUserTokenBalances.filter((e) => e.balance !== BigInt(0)).length === 0 ? (
-                <NoData />
-              ) : (
-                sortedUserTokenBalances
-                  .filter((e) => e.balance !== BigInt(0))
-                  .map((e) => (
-                    <UserTokenBalance
-                      key={e.tokenInfo.canisterId}
-                      tokenInfo={e.tokenInfo}
-                      balance={e.balance}
-                      displayTokenInList={checked}
-                      tokenList={tokenList}
-                      onUpdateUSDValues={handleUpdateUSDValues}
-                    />
-                  ))
-              )}
-            </GridAutoRows>
+            {loading ? (
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            ) : !address || sortedUserTokenBalances.filter((e) => e.balance !== BigInt(0)).length === 0 ? (
+              <NoData />
+            ) : (
+              sortedUserTokenBalances
+                .filter((e) => e.balance !== BigInt(0))
+                .map((e) => (
+                  <UserTokenBalance
+                    key={e.tokenInfo.canisterId}
+                    tokenInfo={e.tokenInfo}
+                    balance={e.balance}
+                    displayTokenInList={checked}
+                    tokenList={tokenList}
+                    onUpdateUSDValues={handleUpdateUSDValues}
+                  />
+                ))
+            )}
           </Box>
         </Box>
       </MainCard>
