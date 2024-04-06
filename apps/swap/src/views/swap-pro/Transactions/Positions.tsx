@@ -330,17 +330,15 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         </Box>
       ) : null}
 
-      {collectOpen ? (
-        <CollectFeesModal
-          open={collectOpen}
-          pool={pool}
-          positionId={positionInfo.index}
-          onClose={() => setCollectOpen(false)}
-          currencyFeeAmount0={currencyFeeAmount0}
-          currencyFeeAmount1={currencyFeeAmount1}
-          onClaimedSuccessfully={handleClaimedSuccessfully}
-        />
-      ) : null}
+      <CollectFeesModal
+        open={collectOpen}
+        pool={pool}
+        positionId={positionInfo.index}
+        onClose={() => setCollectOpen(false)}
+        currencyFeeAmount0={currencyFeeAmount0}
+        currencyFeeAmount1={currencyFeeAmount1}
+        onClaimedSuccessfully={handleClaimedSuccessfully}
+      />
 
       {transferOpen ? (
         <TransferPosition

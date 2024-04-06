@@ -59,6 +59,7 @@ export default function CollectFees({
     if (loading || !positionId || !pool || !currencyFeeAmount0 || !currencyFeeAmount1) return;
 
     setLoading(true);
+    onClose();
 
     const { call, key } = getClaimFeeCall({
       pool,
@@ -137,7 +138,7 @@ export default function CollectFees({
           disabled={loading}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {loading ? "" : t`Claim`}
+          {t`Claim`}
         </Button>
       </>
     </SwapModal>

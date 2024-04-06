@@ -402,19 +402,17 @@ export function PositionDetails({
         )}
       </Grid>
 
-      {collectFeesShow ? (
-        <CollectFeesModal
-          pool={pool}
-          positionId={positionId}
-          open={collectFeesShow}
-          currencyFeeAmount0={currencyFeeAmount0}
-          currencyFeeAmount1={currencyFeeAmount1}
-          onClose={() => {
-            setCollectFeesShow(false);
-          }}
-          onClaimedSuccessfully={handleClaimedSuccessfully}
-        />
-      ) : null}
+      <CollectFeesModal
+        pool={pool}
+        positionId={positionId}
+        open={collectFeesShow}
+        currencyFeeAmount0={currencyFeeAmount0}
+        currencyFeeAmount1={currencyFeeAmount1}
+        onClose={() => {
+          setCollectFeesShow(false);
+        }}
+        onClaimedSuccessfully={handleClaimedSuccessfully}
+      />
 
       {transferShow ? (
         <TransferPosition

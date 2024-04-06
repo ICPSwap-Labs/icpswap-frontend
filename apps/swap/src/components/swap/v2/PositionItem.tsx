@@ -329,22 +329,20 @@ export function PositionDetails({
         )}
       </Grid>
 
-      {collectFeesShow ? (
-        <Identity onSubmit={onCollectConfirm}>
-          {({ submit, loading }: CallbackProps) => (
-            <CollectFeesModal
-              open={collectFeesShow}
-              token0={token0}
-              token1={token1}
-              currencyFeeAmount0={currencyFeeAmount0}
-              currencyFeeAmount1={currencyFeeAmount1}
-              onClose={() => setCollectFeesShow(false)}
-              onConfirm={submit}
-              loading={loading}
-            />
-          )}
-        </Identity>
-      ) : null}
+      <Identity onSubmit={onCollectConfirm}>
+        {({ submit, loading }: CallbackProps) => (
+          <CollectFeesModal
+            open={collectFeesShow}
+            token0={token0}
+            token1={token1}
+            currencyFeeAmount0={currencyFeeAmount0}
+            currencyFeeAmount1={currencyFeeAmount1}
+            onClose={() => setCollectFeesShow(false)}
+            onConfirm={submit}
+            loading={loading}
+          />
+        )}
+      </Identity>
     </>
   );
 }
