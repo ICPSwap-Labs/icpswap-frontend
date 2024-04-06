@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { Override } from "@icpswap/types";
 import { forwardRef } from "react";
 import { NumericFormat, NumericFormatProps } from "react-number-format";
@@ -18,29 +16,29 @@ type InputProps = {
   value: any;
 };
 
-export const TextFieldNumberComponent = forwardRef<NumericFormatProps, InputProps>(
-  (props, ref) => {
-    const { onChange, ...other } = props;
+export const TextFieldNumberComponent = forwardRef<NumericFormatProps, InputProps>((props, ref) => {
+  const { onChange, ...other } = props;
 
-    return (
-      <NumericFormat
-        {...other}
-        type="text"
-        getInputRef={ref}
-        onValueChange={(values) => {
-          // fix outsize value change cause to maximum update
-          if (values.value === props.value) return;
+  return (
+    <NumericFormat
+      {...other}
+      type="text"
+      inputMode="decimal"
+      getInputRef={ref}
+      onValueChange={(values) => {
+        // Fix outside value change cause to maximum update
+        if (values.value === props.value) return;
 
-          onChange({
-            target: {
-              value: values.value,
-            },
-          });
-        }}
-      />
-    );
-  },
-);
+        onChange({
+          target: {
+            // Fix if user typed . first could case some NaN errors
+            value: values.value === "." ? "0." : values.value,
+          },
+        });
+      }}
+    />
+  );
+});
 
 export type NumberTextFieldProps = Override<TextFieldProps, { numericProps: NumericProps }>;
 
@@ -48,6 +46,7 @@ export default function NumberTextField(props: NumberTextFieldProps) {
   const { numericProps, ...textFiledProps } = props;
 
   return (
+    // @ts-ignore
     <TextField
       {...textFiledProps}
       type="text"
