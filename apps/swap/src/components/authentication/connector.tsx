@@ -48,9 +48,13 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
   const [selfConnector, setSelfConnector] = useState<null | WalletConnector>(null);
 
   useEffect(() => {
-    const selfConnector = new WalletConnector();
-    selfConnector.init(value);
-    setSelfConnector(selfConnector);
+    async function call() {
+      const selfConnector = new WalletConnector();
+      await selfConnector.init(value);
+      setSelfConnector(selfConnector);
+    }
+
+    call();
   }, []);
 
   const handleConnect = async () => {
@@ -71,10 +75,11 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
 
       const connectSuccessful = await selfConnector.connect();
 
-      if (connectSuccessful) {
-        walletConnectorManager(false);
+      if (!connectSuccessful) {
+        openErrorTip(t`An unknown error occurred. Please try connect again.`);
       }
 
+      walletConnectorManager(false);
       setLoading(false);
     } catch (error: any) {
       console.error(error);

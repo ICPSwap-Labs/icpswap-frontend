@@ -69,14 +69,12 @@ export class WalletConnector {
       case Connector.ME:
         return new MeConnector(config);
       default:
-        throw new Error("Not support this connect for now");
+        throw new Error(`Connector error ${Connector}: Not support this connect for now`);
     }
   }
 
   public async connect() {
-    if (!this.connector) {
-      throw Error("No connector found");
-    }
+    if (!this.connector) return false;
 
     const isConnectedSuccessfully = await this.connector.connect();
 
