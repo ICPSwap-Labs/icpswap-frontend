@@ -161,6 +161,14 @@
   },
   {
     "fee": 10000,
+    "decimals": 8,
+    "canisterId": "rqwtn-kqaaa-aaaap-ag7jq-cai",
+    "name": "ICUP",
+    "standard": "ICRC1",
+    "symbol": "ICUP"
+  },
+  {
+    "fee": 10000,
     "decimals": 6,
     "canisterId": "skr3v-mqaaa-aaaap-qcc6a-cai",
     "name": "<TEST2456>",
@@ -290,6 +298,14 @@
   {
     "fee": 0,
     "decimals": 18,
+    "canisterId": "bbzyg-byaaa-aaaam-acidq-cai",
+    "name": "ICP MOON",
+    "standard": "ICRC1",
+    "symbol": "Icm"
+  },
+  {
+    "fee": 0,
+    "decimals": 18,
     "canisterId": "xi7ak-liaaa-aaaam-achvq-cai",
     "name": "T-Shirt",
     "standard": "ICRC2",
@@ -318,6 +334,14 @@
     "name": "Chock OF Meme",
     "standard": "ICRC1",
     "symbol": "COME"
+  },
+  {
+    "fee": 10000,
+    "decimals": 8,
+    "canisterId": "druyg-tyaaa-aaaaq-aactq-cai",
+    "name": "ICPanda",
+    "standard": "ICRC1",
+    "symbol": "PANDA"
   },
   {
     "fee": 0,
@@ -358,6 +382,14 @@
     "name": "Shiva Inu",
     "standard": "ICRC1",
     "symbol": "SHIVA"
+  },
+  {
+    "fee": 0,
+    "decimals": 15,
+    "canisterId": "vohsh-cyaaa-aaaam-achyq-cai",
+    "name": "3475y-5yaaa-aaaag-qjqha-cai.icp0.io",
+    "standard": "ICRC2",
+    "symbol": "LOCAL "
   },
   {
     "fee": 10000000,
@@ -528,20 +560,20 @@
     "symbol": "TICP"
   },
   {
-    "fee": 50000000,
-    "decimals": 8,
-    "canisterId": "gxgka-eqaaa-aaaak-afkdq-cai",
-    "name": "PINGU",
-    "standard": "ICRC1",
-    "symbol": "PINGU"
-  },
-  {
     "fee": 10000,
     "decimals": 8,
     "canisterId": "qcdem-eqaaa-aaaak-qcq3q-cai",
     "name": "Phantom",
     "standard": "ICRC1",
     "symbol": "FADE"
+  },
+  {
+    "fee": 50000000,
+    "decimals": 8,
+    "canisterId": "gxgka-eqaaa-aaaak-afkdq-cai",
+    "name": "PINGU",
+    "standard": "ICRC1",
+    "symbol": "PINGU"
   },
   {
     "fee": 0,
@@ -576,20 +608,20 @@
     "symbol": "BOOM"
   },
   {
-    "fee": 1000000,
-    "decimals": 8,
-    "canisterId": "mn5xm-gyaaa-aaaak-afl2a-cai",
-    "name": "ORCA",
-    "standard": "ICRC1",
-    "symbol": "ORCA"
-  },
-  {
     "fee": 10,
     "decimals": 8,
     "canisterId": "mc6ru-gyaaa-aaaar-qaaaq-cai",
     "name": "Chain key testnet Bitcoin",
     "standard": "ICRC1",
     "symbol": "ckTESTBTC"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "mn5xm-gyaaa-aaaak-afl2a-cai",
+    "name": "ORCA",
+    "standard": "ICRC1",
+    "symbol": "ORCA"
   },
   {
     "fee": 0,
@@ -760,12 +792,12 @@
     "symbol": "ICPI"
   },
   {
-    "fee": 100000,
-    "decimals": 8,
-    "canisterId": "rh2pm-ryaaa-aaaan-qeniq-cai",
-    "name": "Windoge98",
+    "fee": 25,
+    "decimals": 2,
+    "canisterId": "6qfxa-ryaaa-aaaai-qbhsq-cai",
+    "name": "Taggr",
     "standard": "ICRC1",
-    "symbol": "EXE"
+    "symbol": "TAGGR"
   },
   {
     "fee": 0,
@@ -776,12 +808,12 @@
     "symbol": "ICRIDER"
   },
   {
-    "fee": 25,
-    "decimals": 2,
-    "canisterId": "6qfxa-ryaaa-aaaai-qbhsq-cai",
-    "name": "Taggr",
+    "fee": 100000,
+    "decimals": 8,
+    "canisterId": "rh2pm-ryaaa-aaaan-qeniq-cai",
+    "name": "Windoge98",
     "standard": "ICRC1",
-    "symbol": "TAGGR"
+    "symbol": "EXE"
   },
   {
     "fee": 0,
@@ -904,12 +936,12 @@
     "symbol": "EYEC"
   },
   {
-    "fee": 0,
-    "decimals": 8,
+    "fee": 2000000000,
+    "decimals": 12,
     "canisterId": "aanaa-xaaaa-aaaah-aaeiq-cai",
-    "name": "",
+    "name": "Cycles",
     "standard": "DIP20-XTC",
-    "symbol": ""
+    "symbol": "XTC"
   },
   {
     "fee": 10000000000000,
@@ -920,20 +952,20 @@
     "symbol": "GRIMACE"
   },
   {
-    "fee": 0,
-    "decimals": 18,
-    "canisterId": "p6hwu-xqaaa-aaaam-accqq-cai",
-    "name": "HOT",
-    "standard": "ICRC2",
-    "symbol": "HOT"
-  },
-  {
     "fee": 50000000,
     "decimals": 8,
     "canisterId": "sminu-xqaaa-aaaak-afoka-cai",
     "name": "ICTT",
     "standard": "ICRC1",
     "symbol": "$ICTT"
+  },
+  {
+    "fee": 0,
+    "decimals": 18,
+    "canisterId": "p6hwu-xqaaa-aaaam-accqq-cai",
+    "name": "HOT",
+    "standard": "ICRC2",
+    "symbol": "HOT"
   },
   {
     "fee": 10000000,
@@ -1056,20 +1088,20 @@
     "symbol": "WICP"
   },
   {
-    "fee": 0,
-    "decimals": 8,
-    "canisterId": "qi26q-6aaaa-aaaap-qapeq-cai",
-    "name": "Canister Token",
-    "standard": "DIP20",
-    "symbol": "XCANIC"
-  },
-  {
     "fee": 50,
     "decimals": 8,
     "canisterId": "f4knq-6aaaa-aaaap-ab4lq-cai",
     "name": "BEBE",
     "standard": "ICRC1",
     "symbol": "BeBe"
+  },
+  {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "qi26q-6aaaa-aaaap-qapeq-cai",
+    "name": "Canister Token",
+    "standard": "DIP20",
+    "symbol": "XCANIC"
   },
   {
     "fee": 10000000,
@@ -1192,20 +1224,20 @@
     "symbol": "STAR"
   },
   {
-    "fee": 1000000,
-    "decimals": 8,
-    "canisterId": "clgab-dyaaa-aaaak-afnhq-cai",
-    "name": "Goku",
-    "standard": "ICRC1",
-    "symbol": "Goku"
-  },
-  {
     "fee": 1000,
     "decimals": 8,
     "canisterId": "ovc5j-dyaaa-aaaan-qlmsa-cai",
     "name": "ckETHI",
     "standard": "ICRC2",
     "symbol": "ckETHI"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "clgab-dyaaa-aaaak-afnhq-cai",
+    "name": "Goku",
+    "standard": "ICRC1",
+    "symbol": "Goku"
   },
   {
     "fee": 100000,
@@ -1288,20 +1320,20 @@
     "symbol": "KINIC"
   },
   {
-    "fee": 1000000,
-    "decimals": 6,
-    "canisterId": "iczfn-iiaaa-aaaan-qltcq-cai",
-    "name": "motokowifhat",
-    "standard": "ICRC1",
-    "symbol": "MIF"
-  },
-  {
     "fee": 0,
     "decimals": 18,
     "canisterId": "nr4pf-iiaaa-aaaam-acc4a-cai",
     "name": "Block Prate",
     "standard": "ICRC2",
     "symbol": "BPrate"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 6,
+    "canisterId": "iczfn-iiaaa-aaaan-qltcq-cai",
+    "name": "motokowifhat",
+    "standard": "ICRC1",
+    "symbol": "MIF"
   },
   {
     "fee": 1000,
@@ -1336,20 +1368,20 @@
     "symbol": "FUGİİİ"
   },
   {
-    "fee": 0,
-    "decimals": 18,
-    "canisterId": "csmdr-kaaaa-aaaam-ab74a-cai",
-    "name": "ckBINGO",
-    "standard": "ICRC2",
-    "symbol": "ckBINGO"
-  },
-  {
     "fee": 10,
     "decimals": 8,
     "canisterId": "hbjjz-kaaaa-aaaan-qiocq-cai",
     "name": "mora",
     "standard": "ICRC1",
     "symbol": "mora"
+  },
+  {
+    "fee": 0,
+    "decimals": 18,
+    "canisterId": "csmdr-kaaaa-aaaam-ab74a-cai",
+    "name": "ckBINGO",
+    "standard": "ICRC2",
+    "symbol": "ckBINGO"
   },
   {
     "fee": 0,
@@ -1401,19 +1433,19 @@
   },
   {
     "fee": 0,
-    "decimals": 18,
-    "canisterId": "76i5v-oaaaa-aaaam-acb5q-cai",
-    "name": "TrollMode",
-    "standard": "ICRC2",
-    "symbol": "TrollMode"
-  },
-  {
-    "fee": 0,
     "decimals": 8,
     "canisterId": "3iygf-oaaaa-aaaap-abzya-cai",
     "name": "fizz",
     "standard": "ICRC1",
     "symbol": "fizz"
+  },
+  {
+    "fee": 0,
+    "decimals": 18,
+    "canisterId": "76i5v-oaaaa-aaaam-acb5q-cai",
+    "name": "TrollMode",
+    "standard": "ICRC2",
+    "symbol": "TrollMode"
   },
   {
     "fee": 1000000,
@@ -1523,9 +1555,9 @@
     "fee": 0,
     "decimals": 8,
     "canisterId": "utozz-siaaa-aaaam-qaaxq-cai",
-    "name": "",
+    "name": "WICP",
     "standard": "DIP20-WICP",
-    "symbol": ""
+    "symbol": "WICP"
   },
   {
     "fee": 1000000,
@@ -2032,20 +2064,20 @@
     "symbol": "PLAT"
   },
   {
-    "fee": 1000000,
-    "decimals": 8,
-    "canisterId": "mjli2-tyaaa-aaaak-afmhq-cai",
-    "name": "BONJO",
-    "standard": "ICRC1",
-    "symbol": "BONJO"
-  },
-  {
     "fee": 1000,
     "decimals": 6,
     "canisterId": "i47hs-tyaaa-aaaah-advwq-cai",
     "name": "BABY STACK",
     "standard": "ICRC2",
     "symbol": "BABYSTACK"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "mjli2-tyaaa-aaaak-afmhq-cai",
+    "name": "BONJO",
+    "standard": "ICRC1",
+    "symbol": "BONJO"
   },
   {
     "fee": 0,
@@ -2545,19 +2577,19 @@
   },
   {
     "fee": 0,
-    "decimals": 18,
-    "canisterId": "opnil-pyaaa-aaaam-accva-cai",
-    "name": "JEWS DID 9 11 AND 6M SEEMS A BIT HIGH ",
-    "standard": "ICRC2",
-    "symbol": "COMING SOON"
-  },
-  {
-    "fee": 0,
     "decimals": 8,
     "canisterId": "kz5t3-pyaaa-aaaap-ab2qq-cai",
     "name": "VishnuAI",
     "standard": "ICRC1",
     "symbol": "iVishnu"
+  },
+  {
+    "fee": 0,
+    "decimals": 18,
+    "canisterId": "opnil-pyaaa-aaaam-accva-cai",
+    "name": "JEWS DID 9 11 AND 6M SEEMS A BIT HIGH ",
+    "standard": "ICRC2",
+    "symbol": "COMING SOON"
   },
   {
     "fee": 0,
@@ -2569,19 +2601,19 @@
   },
   {
     "fee": 0,
-    "decimals": 8,
-    "canisterId": "ph45x-riaaa-aaaak-afabq-cai",
-    "name": "SpellKaster",
-    "standard": "ICRC2",
-    "symbol": "KAST"
-  },
-  {
-    "fee": 0,
     "decimals": 18,
     "canisterId": "mvrax-riaaa-aaaam-acc2a-cai",
     "name": "Xlink",
     "standard": "ICRC1",
     "symbol": "Xlink"
+  },
+  {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "ph45x-riaaa-aaaak-afabq-cai",
+    "name": "SpellKaster",
+    "standard": "ICRC2",
+    "symbol": "KAST"
   },
   {
     "fee": 100000000,
@@ -2659,9 +2691,9 @@
     "fee": 100000,
     "decimals": 8,
     "canisterId": "zfcdd-tqaaa-aaaaq-aaaga-cai",
-    "name": "SNS-1",
+    "name": "Draggin Karma Points",
     "standard": "ICRC1",
-    "symbol": "SNS1"
+    "symbol": "DKP"
   },
   {
     "fee": 0,
@@ -2720,20 +2752,20 @@
     "symbol": "ICP"
   },
   {
-    "fee": 1000000,
-    "decimals": 8,
-    "canisterId": "cpq7x-wyaaa-aaaak-afk2a-cai",
-    "name": "STOIK",
-    "standard": "ICRC1",
-    "symbol": "STOIK"
-  },
-  {
     "fee": 10000,
     "decimals": 8,
     "canisterId": "vi5vh-wyaaa-aaaan-qizxa-cai",
     "name": "QRO",
     "standard": "ICRC1",
     "symbol": "Querio"
+  },
+  {
+    "fee": 1000000,
+    "decimals": 8,
+    "canisterId": "cpq7x-wyaaa-aaaak-afk2a-cai",
+    "name": "STOIK",
+    "standard": "ICRC1",
+    "symbol": "STOIK"
   },
   {
     "fee": 1000000,
@@ -2809,19 +2841,19 @@
   },
   {
     "fee": 0,
-    "decimals": 8,
-    "canisterId": "opt2x-2iaaa-aaaak-afmkq-cai",
-    "name": "Spider",
-    "standard": "ICRC1",
-    "symbol": "Spider"
-  },
-  {
-    "fee": 0,
     "decimals": 18,
     "canisterId": "t54bx-2iaaa-aaaam-acaqa-cai",
     "name": "BabyMotoko",
     "standard": "ICRC2",
     "symbol": "BabyMotoko"
+  },
+  {
+    "fee": 0,
+    "decimals": 8,
+    "canisterId": "opt2x-2iaaa-aaaak-afmkq-cai",
+    "name": "Spider",
+    "standard": "ICRC1",
+    "symbol": "Spider"
   },
   {
     "fee": 0,
