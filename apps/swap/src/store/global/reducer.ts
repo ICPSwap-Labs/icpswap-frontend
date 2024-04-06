@@ -3,14 +3,12 @@ import {
   updateXDR2USD,
   updateDrawerWidth,
   updateICPPriceList,
-  addCatchToken,
   updateUserLocale,
   updateTokenList,
   updatePoolStandardInitialed,
   updateTokenSNSRootId,
 } from "./actions";
 import { initialState } from "./states";
-
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -22,9 +20,6 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateICPPriceList, (state, { payload }) => {
       state.ICPPriceList = payload;
-    })
-    .addCase(addCatchToken, (state, { payload }) => {
-      state.requestTokenList = [...state.requestTokenList, ...(payload || [])];
     })
     .addCase(updateUserLocale, (state, { payload }) => {
       state.userLocale = payload;

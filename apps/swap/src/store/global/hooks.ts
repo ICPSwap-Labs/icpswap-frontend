@@ -31,10 +31,6 @@ export function useICPPriceList() {
   return useAppSelector((state: AppState) => state.global.ICPPriceList);
 }
 
-export function useCacheTokenList() {
-  return useAppSelector((state: AppState) => state.global.requestTokenList);
-}
-
 export interface SwapToken {
   canisterId: string;
   symbol: string;

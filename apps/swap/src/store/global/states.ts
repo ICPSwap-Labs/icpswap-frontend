@@ -1,6 +1,6 @@
 import { drawerWidth } from "constants/theme";
 import { DEFAULT_LOCALE, SupportedLocale } from "constants/locales";
-import { ICPPriceInfo, TokenMetadata } from "types/token";
+import { ICPPriceInfo } from "types/token";
 import { TokenListMetadata } from "types/token-list";
 
 export interface GlobalState {
@@ -9,7 +9,6 @@ export interface GlobalState {
   ICPPriceList: ICPPriceInfo[];
   tokenList: TokenListMetadata[];
   hasBeenClaimTestToken: boolean;
-  requestTokenList: TokenMetadata[];
   swapTokenList: [];
   userLocale: SupportedLocale;
   poolStandardUpdated: boolean;
@@ -22,7 +21,6 @@ export const initialState: GlobalState = {
   ICPPriceList: [],
   tokenList: [],
   hasBeenClaimTestToken: false,
-  requestTokenList: [],
   swapTokenList: [],
   userLocale: DEFAULT_LOCALE,
   poolStandardUpdated: false,

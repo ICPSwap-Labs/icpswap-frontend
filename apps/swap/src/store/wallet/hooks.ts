@@ -1,10 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useCacheTokenList } from "store/global/hooks";
-import { useImportedTokens } from "store/token/cache/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
-import { TokenMetadata } from "types/token";
 import {
   saveWalletCacheToken,
   deleteWalletCatchToken,
@@ -15,54 +12,12 @@ import {
 
 export function toHexString(byteArray: number[]) {
   return Array.from(byteArray, (byte) => {
-    return (`0${  (byte & 0xff).toString(16)}`).slice(-2);
+    return `0${(byte & 0xff).toString(16)}`.slice(-2);
   }).join("");
 }
 
 export function useWalletCatchTokenIds() {
   return useAppSelector((state) => state.wallet.cacheTokenIds);
-}
-
-export function useWalletTokens() {
-  const globalCacheTokenList = useCacheTokenList();
-  const importedTokens = useImportedTokens();
-  const cacheTokenIds = useWalletCatchTokenIds() ?? [];
-
-  const tokens: TokenMetadata[] = [];
-
-  for (let i = 0; i < cacheTokenIds.length; i++) {
-    const tokenId = cacheTokenIds[i];
-    const token = globalCacheTokenList.filter((token) => token.canisterId?.toString() === tokenId)[0];
-
-    if (token) {
-      tokens.push(token);
-    } else if (importedTokens[tokenId]) {
-        tokens.push(importedTokens[tokenId]);
-      }
-  }
-
-  return tokens;
-}
-
-export function useWalletTokenCanisterIds() {
-  const globalCacheTokenList = useCacheTokenList();
-  const importedTokens = useImportedTokens();
-  const cacheTokenIds = useWalletCatchTokenIds() ?? [];
-
-  const tokens: TokenMetadata[] = [];
-
-  for (let i = 0; i < cacheTokenIds.length; i++) {
-    const tokenId = cacheTokenIds[i];
-    const token = globalCacheTokenList.filter((token) => token.canisterId?.toString() === tokenId)[0];
-
-    if (token) {
-      tokens.push(token);
-    } else if (importedTokens[tokenId]) {
-        tokens.push(importedTokens[tokenId]);
-      }
-  }
-
-  return tokens;
 }
 
 export function useSaveCacheTokenCallback() {
