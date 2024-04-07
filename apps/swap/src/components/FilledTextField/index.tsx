@@ -21,6 +21,7 @@ const useStyles = ({ contained, fullHeight, borderRadius }: UseStylesProps) => {
         background: theme.palette.background.level4,
         borderRadius,
         padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
+        gap: "0 5px",
         "& input": {
           color: theme.palette.text.primary,
         },
@@ -61,7 +62,7 @@ export interface FilledTextFieldProps {
 
 export function Label({ label, required }: { label?: React.ReactNode; required?: boolean }) {
   return (
-    <Box>
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       {required && (
         <Typography sx={{ color: "#D3625B" }} fontSize={12} component="span">
           *
@@ -187,19 +188,17 @@ function FilledTextField(
           }}
           onClick={handleOuterBoxClick}
         >
-          <Grid
+          <Box
             className={classes.inputBox}
             sx={{
               ...(fullHeight ? { height: "100%" } : {}),
               ...(select ? { cursor: "pointer" } : {}),
               ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
             }}
-            container
-            alignItems="center"
           >
             <>
               {contained && <Label required={required} label={label} />}
-              <Grid container alignItems="center">
+              <Grid container alignItems="center" sx={{ flex: 1 }}>
                 <Grid item xs>
                   {!select ? (
                     <TextField
@@ -240,7 +239,7 @@ function FilledTextField(
                 {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
               </Grid>
             </>
-          </Grid>
+          </Box>
         </Box>
       ) : (
         <Box
@@ -255,7 +254,7 @@ function FilledTextField(
         >
           <>
             {contained && <Label required={required} label={label} />}
-            <Grid container alignItems="center">
+            <Grid container alignItems="center" sx={{ flex: 1 }}>
               <Grid item xs>
                 {!select ? (
                   <TextField
