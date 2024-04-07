@@ -221,7 +221,7 @@ export function useUserUnUsedBalance(
 }
 
 export function useUserSwapPoolBalances(principal: string | undefined, selectedTokenId?: string, reload?: boolean) {
-  const { result: pools, loading: poolsLoading } = useSwapPools();
+  const { result: pools } = useSwapPools();
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal,
@@ -238,10 +238,10 @@ export function useUserSwapPoolBalances(principal: string | undefined, selectedT
 
   return useMemo(
     () => ({
-      loading: unUsedBalanceLoading || poolsLoading || unDepositBalanceLoading,
+      loading: unUsedBalanceLoading || unDepositBalanceLoading,
       pools,
       balances: unUsedBalances.concat(unDepositBalances).filter((balances) => !!balances) as UserSwapPoolsBalance[],
     }),
-    [pools, poolsLoading, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
+    [pools, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
   );
 }

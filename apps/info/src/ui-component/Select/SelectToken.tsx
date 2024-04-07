@@ -1,20 +1,18 @@
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { Select, type MenuProps } from "ui-component/index";
-import { useSwapPools } from "@icpswap/hooks";
+import { Select, type MenuProps, TokenImage } from "ui-component/index";
 import { isValidPrincipal } from "@icpswap/utils";
-import { useTokensInfo, TokenInfoState } from "hooks/token/index";
-import { ICP, ICP_TOKEN_INFO } from "@icpswap/tokens";
-import { TokenInfo } from "types/index";
+import { useTokenInfo } from "hooks/token/index";
+import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { useAllTokensOfSwap } from "@icpswap/hooks";
 
 interface TokenMenuItemProps {
-  tokenInfo: TokenInfo;
-  symbol?: string;
+  tokenInfo: AllTokenOfSwapTokenInfo;
   search?: string;
 }
 
-function isTokenHide(tokenInfo: TokenInfo, search: string | undefined) {
-  if (!!search && isValidPrincipal(search) && tokenInfo.canisterId !== search) return true;
+function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
+  if (!!search && isValidPrincipal(search) && tokenInfo.ledger_id.toString() !== search) return true;
   if (
     !!search &&
     !!tokenInfo &&
@@ -25,13 +23,13 @@ function isTokenHide(tokenInfo: TokenInfo, search: string | undefined) {
   return false;
 }
 
-function TokenMenuItem({ tokenInfo, symbol }: TokenMenuItemProps) {
+function TokenMenuItem({ tokenInfo }: TokenMenuItemProps) {
+  const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
+
   return (
     <Box sx={{ display: "flex", gap: "0 8px" }}>
-      <Avatar sx={{ width: "20px", height: "20px" }} src={tokenInfo?.logo}>
-        &nbsp;
-      </Avatar>
-      <Typography>{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
+      <TokenImage size="20px" logo={token?.logo} tokenId={tokenInfo.ledger_id.toString()} />
+      <Typography>{tokenInfo.symbol ?? "--"}</Typography>
     </Box>
   );
 }
@@ -39,21 +37,14 @@ function TokenMenuItem({ tokenInfo, symbol }: TokenMenuItemProps) {
 export interface SelectTokenProps {
   value?: string;
   onTokenChange?: (tokenId: string) => void;
-  filter?: (tokenInfo: TokenInfo) => boolean;
+  filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
 }
 
 export function SelectToken({ value: tokenId, onTokenChange, filter }: SelectTokenProps) {
   const [value, setValue] = useState<string | null>(null);
-  const { result: swapPools } = useSwapPools();
   const [search, setSearch] = useState<string | undefined>(undefined);
 
-  const allSwapTokenIds = useMemo(() => {
-    return swapPools?.reduce((prev, curr) => {
-      return [...new Set(prev.concat([curr.token0.address, curr.token1.address]))];
-    }, [] as string[]);
-  }, [swapPools]);
-
-  const allSwapTokenInfos = useTokensInfo(allSwapTokenIds);
+  const { result: allTokens } = useAllTokensOfSwap();
 
   useEffect(() => {
     if (tokenId) {
@@ -62,21 +53,16 @@ export function SelectToken({ value: tokenId, onTokenChange, filter }: SelectTok
   }, [tokenId]);
 
   const menus = useMemo(() => {
-    const contents = allSwapTokenInfos.filter(
-      (ele) => ele[0] === TokenInfoState.EXISTS && ele[1]?.canisterId !== ICP.address,
-    ) as [TokenInfoState, TokenInfo][];
+    if (!allTokens) return [];
 
-    contents.unshift([TokenInfoState.EXISTS, ICP_TOKEN_INFO]);
-
-    return contents.map((ele) => {
-      const tokenInfo = ele[1];
+    return allTokens.map((tokenInfo) => {
       return {
-        value: tokenInfo.canisterId,
+        value: tokenInfo.ledger_id.toString(),
         label: <TokenMenuItem tokenInfo={tokenInfo} />,
         additional: JSON.stringify(tokenInfo),
       };
     });
-  }, [allSwapTokenInfos]);
+  }, [allTokens]);
 
   const handleValueChange = (value: string) => {
     setValue(value);
@@ -93,7 +79,7 @@ export function SelectToken({ value: tokenId, onTokenChange, filter }: SelectTok
   const handleFilterMenu = (menu: MenuProps) => {
     if (!menu.additional) return false;
 
-    const tokenInfo = JSON.parse(menu.additional) as TokenInfo;
+    const tokenInfo = JSON.parse(menu.additional) as AllTokenOfSwapTokenInfo;
 
     return isTokenHide(tokenInfo, search) || (!!filter && filter(tokenInfo));
   };
