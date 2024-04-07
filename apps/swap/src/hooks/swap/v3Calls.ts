@@ -4,6 +4,7 @@ import { userStorage, swapPool } from "@icpswap/actor";
 import {
   useCallsData,
   useInfoUserStorageIds,
+  getInfoUserStorageIds,
   quote,
   getSwapPoolMetadata,
   getSwapPosition,
@@ -262,7 +263,14 @@ export function useUserSwapTransactions(principal: string | undefined, offset: n
 
   return useCallsData(
     useCallback(async () => {
-      if (!storageId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
+      if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
+
+      const storageIds = await getInfoUserStorageIds(principal);
+
+      if (!storageIds || storageIds.length === 0) return undefined;
+
+      const storageId = storageIds[storageIds.length - 1];
+
       return resultFormat<PaginationResult<UserStorageTransaction>>(
         await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), []),
       ).data;
