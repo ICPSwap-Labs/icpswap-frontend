@@ -215,109 +215,102 @@ export function Select({
         </Box>
       </Box>
 
-      {anchorEl ? (
-        <Popper
-          id="Select-popper"
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          style={{
-            width: menuWidth,
-            background: theme.colors.darkLevel3,
-            border: "1px solid #49588E",
-            borderRadius: "12px",
-            overflow: "hidden",
-          }}
-        >
-          <ClickAwayListener onClickAway={handleClose}>
-            <Box>
-              {hasSearch ? (
+      <Popper
+        id="Select-token-popper"
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        style={{
+          width: menuWidth,
+          background: theme.colors.darkLevel3,
+          border: "1px solid #49588E",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
+      >
+        <ClickAwayListener onClickAway={handleClose}>
+          <Box>
+            {hasSearch ? (
+              <Box
+                sx={{
+                  margin: "8px 0",
+                  padding: "0 12px",
+                  "& input": {
+                    color: theme.palette.text.primary,
+                  },
+                }}
+              >
                 <Box
                   sx={{
-                    margin: "8px 0",
-                    padding: "0 12px",
-                    "& input": {
-                      color: theme.palette.text.primary,
-                    },
+                    padding: "0 3px",
+                    borderRadius: "8px",
+                    border: theme.palette.border.normal,
+                    background: theme.palette.background.level4,
                   }}
                 >
-                  <Box
+                  <TextField
                     sx={{
-                      padding: "0 3px",
-                      borderRadius: "8px",
-                      border: theme.palette.border.normal,
+                      fontSize: "14px",
                       background: theme.palette.background.level4,
                     }}
-                  >
-                    <TextField
-                      sx={{
-                        fontSize: "14px",
-                        background: theme.palette.background.level4,
-                      }}
-                      variant="standard"
-                      onChange={({ target: { value } }) => handleSearchChange(value)}
-                      value={search}
-                      InputProps={{
-                        disableUnderline: true,
-                        // startAdornment: (
-                        //   <InputAdornment position="start">
-                        //     <SearchIcon />
-                        //   </InputAdornment>
-                        // ),
-                      }}
-                      fullWidth
-                    />
-                  </Box>
+                    variant="standard"
+                    onChange={({ target: { value } }) => handleSearchChange(value)}
+                    value={search}
+                    InputProps={{
+                      disableUnderline: true,
+                    }}
+                    fullWidth
+                  />
                 </Box>
-              ) : null}
-
-              <Box sx={{ maxHeight: menuMaxHeight ?? "540px", overflow: "hidden auto" }}>
-                {menus.map((menu, index) => {
-                  const isFiltered = menuFilter && menuFilter(menu);
-
-                  return customLabel ? (
-                    <Box
-                      key={menu.value + index}
-                      onClick={() => handleMenuItemClick(menu)}
-                      sx={{ ...(isFiltered ? { display: "none" } : {}) }}
-                    >
-                      {menu.label}
-                    </Box>
-                  ) : (
-                    <Box
-                      key={menu.value + index}
-                      sx={{
-                        padding: "10px 10px",
-                        cursor: "pointer",
-                        ...(isFiltered ? { display: "none" } : {}),
-                        "&:hover": {
-                          background: "#313D67",
-                        },
-                      }}
-                      onClick={() => handleMenuItemClick(menu)}
-                    >
-                      {multiple && (
-                        <Box sx={{ margin: "0 5px 0 0" }}>
-                          <Checkbox
-                            sx={{ padding: 0 }}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
-                              handleCheckboxChange(checked, menu.value)
-                            }
-                            checked={value?.includes(menu.value)}
-                          />
-                        </Box>
-                      )}
-
-                      {menu.label}
-                    </Box>
-                  );
-                })}
-
-                {menus.length === 0 ? CustomNoData || <NoData /> : null}
               </Box>
+            ) : null}
+
+            <Box sx={{ maxHeight: menuMaxHeight ?? "540px", overflow: "hidden auto" }}>
+              {menus.map((menu, index) => {
+                const isFiltered = menuFilter && menuFilter(menu);
+
+                return customLabel ? (
+                  <Box
+                    key={menu.value + index}
+                    onClick={() => handleMenuItemClick(menu)}
+                    sx={{ ...(isFiltered ? { display: "none" } : {}) }}
+                  >
+                    {menu.label}
+                  </Box>
+                ) : (
+                  <Box
+                    key={menu.value + index}
+                    sx={{
+                      padding: "10px 10px",
+                      cursor: "pointer",
+                      ...(isFiltered ? { display: "none" } : {}),
+                      "&:hover": {
+                        background: "#313D67",
+                      },
+                    }}
+                    onClick={() => handleMenuItemClick(menu)}
+                  >
+                    {multiple && (
+                      <Box sx={{ margin: "0 5px 0 0" }}>
+                        <Checkbox
+                          sx={{ padding: 0 }}
+                          onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                            handleCheckboxChange(checked, menu.value)
+                          }
+                          checked={value?.includes(menu.value)}
+                        />
+                      </Box>
+                    )}
+
+                    {menu.label}
+                  </Box>
+                );
+              })}
+
+              {menus.length === 0 ? CustomNoData || <NoData /> : null}
             </Box>
-          </ClickAwayListener>
-        </Popper>
-      ) : null}
+          </Box>
+        </ClickAwayListener>
+      </Popper>
     </>
   );
 }

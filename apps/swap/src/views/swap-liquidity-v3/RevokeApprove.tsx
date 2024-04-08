@@ -4,16 +4,15 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar, useMediaQuery 
 import { useTheme } from "@mui/styles";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
-import { ResultStatus , TOKEN_STANDARD } from "@icpswap/types";
+import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { ICP } from "constants/tokens";
 import { useGlobalContext } from "hooks/useGlobalContext";
 import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
-import type { SwapPoolData } from "@icpswap/types";
+import type { SwapPoolData, AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { TokenInfo } from "types/token";
 
 export interface RevokeItemProps {
   tokenId: string;
@@ -193,8 +192,8 @@ export default function SwapRevokeApprove() {
     return result?.filter((e) => !!e.allowance);
   }, [result]);
 
-  const tokenFilter = (tokenInfo: TokenInfo) => {
-    return tokenInfo.standardType !== TOKEN_STANDARD.ICRC2;
+  const tokenFilter = (tokenInfo: AllTokenOfSwapTokenInfo) => {
+    return tokenInfo.standard !== TOKEN_STANDARD.ICRC2;
   };
 
   return (

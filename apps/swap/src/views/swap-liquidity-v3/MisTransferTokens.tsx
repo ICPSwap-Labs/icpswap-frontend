@@ -4,7 +4,7 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/ma
 import { useTheme } from "@mui/styles";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { TOKEN_STANDARD , ResultStatus } from "@icpswap/types";
+import { TOKEN_STANDARD, ResultStatus, type AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
@@ -174,8 +174,8 @@ export default function SwapFindMisTransferTokens() {
                 value={selectedTokenId}
                 border
                 onTokenChange={handleTokenChange}
-                filter={(tokenInfo: TokenInfo) =>
-                  tokenInfo.standardType !== TOKEN_STANDARD.ICRC1 && tokenInfo.standardType !== TOKEN_STANDARD.ICRC2
+                filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
+                  tokenInfo.standard !== TOKEN_STANDARD.ICRC1 && tokenInfo.standard !== TOKEN_STANDARD.ICRC2
                 }
               />
             </Box>

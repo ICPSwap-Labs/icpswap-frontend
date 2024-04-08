@@ -1,21 +1,20 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { Select, type MenuProps } from "components/Select/ForToken";
-import { useAllTokenIds } from "hooks/useAllTokens";
-import { TokenInfoState, useTokensInfo } from "hooks/token/useTokenInfo";
-import { ICP, ICP_TOKEN_INFO } from "constants/tokens";
+import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { isValidPrincipal } from "@icpswap/utils";
-import { TokenInfo } from "types/token";
 import { TokenImage } from "components/index";
+import { useAllTokensOfSwap } from "@icpswap/hooks";
+import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 
 interface TokenMenuItemProps {
-  tokenInfo: TokenInfo;
+  tokenInfo: AllTokenOfSwapTokenInfo;
   symbol?: string;
   search?: string;
 }
 
-function isTokenHide(tokenInfo: TokenInfo, search: string | undefined) {
-  if (!!search && isValidPrincipal(search) && tokenInfo.canisterId !== search) return true;
+function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
+  if (!!search && isValidPrincipal(search) && tokenInfo.ledger_id.toString() !== search) return true;
   if (
     !!search &&
     !!tokenInfo &&
@@ -31,9 +30,11 @@ function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
     return isTokenHide(tokenInfo, search);
   }, [search, tokenInfo]);
 
+  const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
+
   return hide ? null : (
     <Box sx={{ display: "flex", gap: "0 8px" }}>
-      <TokenImage logo={tokenInfo?.logo} size="20px" tokenId={tokenInfo.canisterId} />
+      <TokenImage logo={token?.logo} size="20px" tokenId={tokenInfo.ledger_id.toString()} />
       <Typography component="span">{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
     </Box>
   );
@@ -43,7 +44,7 @@ export interface SelectTokenProps {
   border?: boolean;
   value?: string;
   onTokenChange?: (tokenId: string) => void;
-  filter?: (tokenInfo: TokenInfo) => boolean;
+  filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
   search?: boolean;
 }
 
@@ -51,8 +52,7 @@ export function SelectToken({ value: tokenId, onTokenChange, border, filter, sea
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
-  const allTokenIds = useAllTokenIds();
-  const allTokenInfos = useTokensInfo(allTokenIds);
+  const { result: allTokensOfSwap } = useAllTokensOfSwap();
 
   useEffect(() => {
     if (tokenId) {
@@ -61,21 +61,16 @@ export function SelectToken({ value: tokenId, onTokenChange, border, filter, sea
   }, [tokenId]);
 
   const menus = useMemo(() => {
-    const contents = allTokenInfos.filter(
-      (ele) => ele[0] === TokenInfoState.EXISTS && ele[1]?.canisterId !== ICP.address,
-    ) as [TokenInfoState, TokenInfo][];
+    if (!allTokensOfSwap) return undefined;
 
-    contents.unshift([TokenInfoState.EXISTS, ICP_TOKEN_INFO]);
-
-    return contents.map((ele) => {
-      const tokenInfo = ele[1];
+    return allTokensOfSwap.map((tokenInfo) => {
       return {
-        value: tokenInfo.canisterId,
+        value: tokenInfo.ledger_id.toString(),
         label: <TokenMenuItem tokenInfo={tokenInfo} />,
         additional: JSON.stringify(tokenInfo),
       };
     });
-  }, [allTokenInfos]);
+  }, [allTokensOfSwap]);
 
   const handleValueChange = (value: string) => {
     setValue(value);
@@ -87,7 +82,7 @@ export function SelectToken({ value: tokenId, onTokenChange, border, filter, sea
   const handleFilterMenu = (menu: MenuProps) => {
     if (!menu.additional) return false;
 
-    const tokenInfo = JSON.parse(menu.additional) as TokenInfo;
+    const tokenInfo = JSON.parse(menu.additional) as AllTokenOfSwapTokenInfo;
 
     return isTokenHide(tokenInfo, search) || (!!filter && filter(tokenInfo));
   };
