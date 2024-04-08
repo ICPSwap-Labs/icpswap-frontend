@@ -13,10 +13,10 @@ const DISPLAY_ITEMS: Item[] = [
     name: t`Token`,
     pageName: "token",
   },
-  {
-    name: t`NFT`,
-    pageName: "nft",
-  },
+  // {
+  //   name: t`NFT`,
+  //   pageName: "nft",
+  // },
 ];
 
 export default function WalletPageToggle() {
