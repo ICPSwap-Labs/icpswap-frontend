@@ -1,3 +1,7 @@
+import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
+import { PaginationResult, ResultStatus } from "@icpswap/types";
+import { icrc2 } from "@icpswap/actor";
+import { ICRC2 } from "@icpswap/candid";
 import {
   BaseTokenAdapter,
   SupplyRequest,
@@ -10,10 +14,6 @@ import {
   MetadataRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
-import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
-import { icrc2 } from "@icpswap/actor";
-import { ICRC2 } from "@icpswap/candid";
 import { TokenHolder } from "./types";
 import { icrc1Adapter } from "./ICRC1";
 
@@ -36,13 +36,11 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
   }
 
   public async supply({ canisterId }: SupplyRequest) {
-    return resultFormat<bigint>(
-      await (await this.actor(canisterId)).icrc1_total_supply()
-    );
+    return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_total_supply());
   }
 
   public async balance({ canisterId, params }: BalanceRequest) {
-    if (!!params.user.principal) {
+    if (params.user.principal) {
       return await icrc1Adapter.balance({ canisterId, params });
     }
 
@@ -53,13 +51,11 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
     if (!params.to.principal) throw Error("no user principal address");
     if (isBigIntMemo(params.memo)) throw Error("Can't support bigint (memo)");
 
-    const result = await icrc1Adapter.transfer({
+    return await icrc1Adapter.transfer({
       canisterId,
       identity,
       params,
     });
-
-    return resultFormat<bigint>(result);
   }
 
   public async getFee({ canisterId }: GetFeeRequest) {
@@ -85,22 +81,16 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
       ).icrc2_approve({
         spender: {
           owner: params.spender,
-          subaccount: availableArgsNull<number[]>(
-            params.spenderSub ? params.spenderSub : undefined
-          ),
+          subaccount: availableArgsNull<number[]>(params.spenderSub ? params.spenderSub : undefined),
         },
         fee: availableArgsNull<bigint>(params.fee),
         created_at_time: [],
         amount: params.allowance,
         memo: [],
-        expected_allowance: availableArgsNull<bigint>(
-          params.expected_allowance
-        ),
+        expected_allowance: availableArgsNull<bigint>(params.expected_allowance),
         expires_at: availableArgsNull<bigint>(params.expires_at),
-        from_subaccount: availableArgsNull<number[]>(
-          params.subaccount ? params.subaccount : undefined
-        ),
-      })
+        from_subaccount: availableArgsNull<number[]>(params.subaccount ? params.subaccount : undefined),
+      }),
     );
   }
 
@@ -112,15 +102,11 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
     ).icrc2_allowance({
       spender: {
         owner: params.spender,
-        subaccount: availableArgsNull<Array<number>>(
-          params.spenderSub ? params.spenderSub : undefined
-        ),
+        subaccount: availableArgsNull<Array<number>>(params.spenderSub ? params.spenderSub : undefined),
       },
       account: {
         owner: params.owner.principal,
-        subaccount: availableArgsNull<Array<number>>(
-          params.subaccount ? params.subaccount : undefined
-        ),
+        subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
       },
     });
 

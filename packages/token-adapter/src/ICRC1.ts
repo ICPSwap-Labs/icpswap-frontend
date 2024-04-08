@@ -1,3 +1,8 @@
+import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
+import { PaginationResult, ResultStatus } from "@icpswap/types";
+import { icrc1, icrcArchive } from "@icpswap/actor";
+import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
+import { TokenHolder, Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
   SupplyRequest,
@@ -8,16 +13,6 @@ import {
   MetadataRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
-import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
-import { icrc1, icrcArchive } from "@icpswap/actor";
-import { TokenHolder, Transaction, Metadata } from "./types";
-import {
-  ICRC1_SERVICE,
-  MetadataValue,
-  GetTransactionsResponse,
-  ArchivedTransaction,
-} from "@icpswap/candid";
 import { icrcTransactionFormat } from "./utils";
 
 export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
@@ -39,22 +34,18 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
   }
 
   public async supply({ canisterId }: SupplyRequest) {
-    return resultFormat<bigint>(
-      await (await this.actor(canisterId)).icrc1_total_supply()
-    );
+    return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_total_supply());
   }
 
   public async balance({ canisterId, params }: BalanceRequest) {
-    if (!!params.user.principal) {
+    if (params.user.principal) {
       return resultFormat<bigint>(
         await (
           await this.actor(canisterId)
         ).icrc1_balance_of({
           owner: params.user.principal,
-          subaccount: availableArgsNull<Array<number>>(
-            params.subaccount ? params.subaccount : undefined
-          ),
-        })
+          subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
+        }),
       );
     }
 
@@ -70,16 +61,12 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
     ).icrc1_transfer({
       to: {
         owner: params.to.principal,
-        subaccount: availableArgsNull<Array<number>>(
-          params.subaccount ? params.subaccount : undefined
-        ),
+        subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
       },
       memo: availableArgsNull<number[]>(params.memo),
       amount: params.amount,
       created_at_time: availableArgsNull<bigint>(params.create_at_time),
-      from_subaccount: availableArgsNull<Array<number>>(
-        params.from_sub_account ? params.from_sub_account : undefined
-      ),
+      from_subaccount: availableArgsNull<Array<number>>(params.from_sub_account ? params.from_sub_account : undefined),
       fee: availableArgsNull<bigint>(params.fee),
     });
 
@@ -87,9 +74,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
   }
 
   public async getFee({ canisterId }: GetFeeRequest) {
-    return resultFormat<bigint>(
-      await (await this.actor(canisterId)).icrc1_fee()
-    );
+    return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_fee());
   }
 
   public async setFee() {
@@ -101,14 +86,11 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
   }
 
   public async transactions({ canisterId, params }: TransactionRequest) {
-    if (params.offset === undefined || params.limit === undefined)
-      throw Error("no offset or limit");
+    if (params.offset === undefined || params.limit === undefined) throw Error("no offset or limit");
 
     // To get the total length
     const init_result = resultFormat<GetTransactionsResponse>(
-      await (
-        await this.actor(canisterId)
-      ).get_transactions({ start: BigInt(0), length: BigInt(10) })
+      await (await this.actor(canisterId)).get_transactions({ start: BigInt(0), length: BigInt(10) }),
     ).data;
 
     if (init_result) {
@@ -125,14 +107,11 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
         ).get_transactions({
           start: BigInt(start_index),
           length: BigInt(params.limit),
-        })
+        }),
       ).data;
 
-      if (!!_result) {
-        const {
-          archived_transactions,
-          transactions: token_canister_transactions,
-        } = _result;
+      if (_result) {
+        const { archived_transactions, transactions: token_canister_transactions } = _result;
 
         let archivedTransactions: ArchivedTransaction[] = [];
 
@@ -148,7 +127,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
                     length: ele.length,
                   })
                 ).transactions;
-              })
+              }),
             )
           )
             .flat()
@@ -168,7 +147,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
           })
           .map((ele, index) =>
             // @ts-ignore
-            icrcTransactionFormat(ele, BigInt(start_index) + BigInt(index))
+            icrcTransactionFormat(ele, BigInt(start_index) + BigInt(index)),
           );
 
         return resultFormat<PaginationResult<Transaction>>({
@@ -193,7 +172,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
 
   public async metadata({ canisterId }: MetadataRequest) {
     const metadata = resultFormat<Array<[string, MetadataValue]>>(
-      await (await this.actor(canisterId)).icrc1_metadata()
+      await (await this.actor(canisterId)).icrc1_metadata(),
     ).data;
 
     if (!metadata) {
@@ -204,11 +183,11 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
       };
     }
 
-    let name: string = "";
-    let symbol: string = "";
-    let decimals: bigint = BigInt(0);
-    let fee: bigint = BigInt(0);
-    let logo: string = "";
+    let name = "";
+    let symbol = "";
+    let decimals = BigInt(0);
+    let fee = BigInt(0);
+    let logo = "";
 
     for (let i = 0; i < metadata.length; i++) {
       const ele = metadata[i];
@@ -234,9 +213,9 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
       status: ResultStatus.OK,
       data: {
         decimals: Number(decimals),
-        name: name,
-        symbol: symbol,
-        fee: fee,
+        name,
+        symbol,
+        fee,
         logo,
       } as Metadata,
       message: "",
