@@ -1,5 +1,5 @@
 import React, { useState, useContext, useMemo } from "react";
-import { Button, Grid, TextField, Typography, Box, InputAdornment } from "@mui/material";
+import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {
   parseTokenAmount,
@@ -22,7 +22,7 @@ import { TokenInfo } from "types/token";
 import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
-import { Modal, NumberTextField } from "components/index";
+import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
 import MaxButton from "components/MaxButton";
 import { useUSDPriceById } from "hooks/useUSDPrice";
@@ -175,27 +175,24 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   return (
     <Modal open={open} onClose={onClose} title={t`Transfer`}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
-        <TextField label={t`Token Symbol`} value={token.symbol} fullWidth disabled />
-        <TextField
-          label={t`To`}
+        <FilledTextField value={token.symbol} fullWidth disabled />
+        <FilledTextField
           value={values.to}
           placeholder={
             usePrincipalStandard(token.canisterId, token.standardType)
               ? t`Enter the principal ID`
               : t`Enter the account ID or principal ID`
           }
-          onChange={({ target: { value } }) => handleFieldChange(value, "to")}
+          onChange={(value: string) => handleFieldChange(value, "to")}
           helperText={addressHelpText()}
           fullWidth
           autoComplete="To"
           multiline
         />
-
-        <NumberTextField
-          label={t`Amount`}
-          type="text"
+        <NumberFilledTextField
+          placeholder="Enter the amount"
           value={values.amount}
-          onChange={({ target: { value } }) => handleFieldChange(value, "amount")}
+          onChange={(value: string) => handleFieldChange(value, "amount")}
           fullWidth
           numericProps={{
             allowNegative: false,
