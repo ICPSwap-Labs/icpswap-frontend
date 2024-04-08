@@ -9,13 +9,14 @@ interface UseStylesProps {
   contained: boolean;
   fullHeight?: boolean;
   borderRadius: string;
+  label: boolean;
 }
 
-const useStyles = ({ contained, fullHeight, borderRadius }: UseStylesProps) => {
+const useStyles = ({ contained, fullHeight, borderRadius, label }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
-        display: "flex",
+        display: label ? "block" : "flex",
         alignItems: "center",
         border: contained ? theme.palette.border.normal : "none",
         background: theme.palette.background.level4,
@@ -49,7 +50,6 @@ export interface FilledTextFieldProps {
   disabled?: boolean;
   InputProps?: any;
   contained?: boolean;
-  alignCenter?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
   type?: string;
@@ -62,7 +62,7 @@ export interface FilledTextFieldProps {
 
 export function Label({ label, required }: { label?: React.ReactNode; required?: boolean }) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box>
       {required && (
         <Typography sx={{ color: "#D3625B" }} fontSize={12} component="span">
           *
@@ -125,7 +125,6 @@ function FilledTextField(
     InputProps,
     borderRadius = "8px",
     contained = true,
-    alignCenter = false,
     width,
     CustomNoData,
     menuDisabled,
@@ -136,7 +135,7 @@ function FilledTextField(
   }: FilledTextFieldProps,
   ref,
 ) {
-  const classes = useStyles({ contained, fullHeight, borderRadius })();
+  const classes = useStyles({ contained, fullHeight, borderRadius, label: !!label })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);
@@ -179,124 +178,60 @@ function FilledTextField(
 
   return (
     <>
-      {alignCenter ? (
-        <Box
-          ref={outerBoxRef}
-          sx={{
-            ...(width ? { width: `${width}px` } : {}),
-            ...(fullHeight ? { height: "100%" } : {}),
-          }}
-          onClick={handleOuterBoxClick}
-        >
-          <Box
-            className={classes.inputBox}
-            sx={{
-              ...(fullHeight ? { height: "100%" } : {}),
-              ...(select ? { cursor: "pointer" } : {}),
-              ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
-            }}
-          >
-            <>
-              {contained && <Label required={required} label={label} />}
-              <Grid container alignItems="center" sx={{ flex: 1 }}>
-                <Grid item xs>
-                  {!select ? (
-                    <TextField
-                      sx={{
-                        fontSize: "14px",
-                      }}
-                      inputRef={inputRef}
-                      {...props}
-                      variant="standard"
-                      onChange={({ target: { value } }) => onChange && onChange(value)}
-                      value={value}
-                      InputProps={{
-                        disableUnderline: true,
-                        ...(InputProps || {}),
-                      }}
-                      fullWidth
-                      multiline={multiline}
-                      disabled={disabled}
-                      helperText={helperText}
-                      onFocus={onFocus}
-                      autoComplete="off"
-                    />
-                  ) : value ? (
-                    <Value menus={menus} value={value} helperText={helperText} select={select} />
-                  ) : (
-                    <Typography
-                      sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                      color="#c5c5c5"
-                    >
-                      {props.placeholder}
-                    </Typography>
-                  )}
-                </Grid>
-                {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
-              </Grid>
-            </>
-          </Box>
-        </Box>
-      ) : (
-        <Box
-          ref={outerBoxRef}
-          className={classes.inputBox}
-          sx={{
-            ...(fullHeight ? { height: "100%" } : {}),
-            ...(select ? { cursor: "pointer" } : {}),
-            ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
-          }}
-          onClick={handleOuterBoxClick}
-        >
-          <>
-            {contained && <Label required={required} label={label} />}
-            <Grid container alignItems="center" sx={{ flex: 1 }}>
-              <Grid item xs>
-                {!select ? (
-                  <TextField
-                    sx={{
-                      fontSize: "14px",
-                    }}
-                    inputRef={inputRef}
-                    {...props}
-                    variant="standard"
-                    onChange={({ target: { value } }) => onChange && onChange(value)}
-                    value={value}
-                    multiline={multiline}
-                    InputProps={{
-                      disableUnderline: true,
-                      ...(InputProps || {}),
-                    }}
-                    fullWidth
-                    disabled={disabled}
-                    helperText={helperText}
-                    onFocus={onFocus}
-                    autoComplete="off"
-                  />
-                ) : value ? (
-                  <Value menus={menus} value={value} helperText={helperText} select={select} />
-                ) : (
-                  <Typography
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    color="#c5c5c5"
-                  >
-                    {props.placeholder}
-                  </Typography>
-                )}
-              </Grid>
-              {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+      <Box
+        ref={outerBoxRef}
+        className={classes.inputBox}
+        sx={{
+          ...(fullHeight ? { height: "100%" } : {}),
+          ...(select ? { cursor: "pointer" } : {}),
+          ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
+        }}
+        onClick={handleOuterBoxClick}
+      >
+        <>
+          {contained && <Label required={required} label={label} />}
+          <Grid container alignItems="center" sx={{ flex: 1, margin: "3px 0 0 0" }}>
+            <Grid item xs>
+              {!select ? (
+                <TextField
+                  sx={{
+                    fontSize: "14px",
+                  }}
+                  inputRef={inputRef}
+                  {...props}
+                  variant="standard"
+                  onChange={({ target: { value } }) => onChange && onChange(value)}
+                  value={value}
+                  multiline={multiline}
+                  InputProps={{
+                    disableUnderline: true,
+                    ...(InputProps || {}),
+                  }}
+                  fullWidth
+                  disabled={disabled}
+                  helperText={helperText}
+                  onFocus={onFocus}
+                  autoComplete="off"
+                />
+              ) : value ? (
+                <Value menus={menus} value={value} helperText={helperText} select={select} />
+              ) : (
+                <Typography
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                  color="#c5c5c5"
+                >
+                  {props.placeholder}
+                </Typography>
+              )}
             </Grid>
-          </>
-        </Box>
-      )}
+            {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+          </Grid>
+        </>
+      </Box>
 
       {Boolean(anchorEl) && (
         <Menu
