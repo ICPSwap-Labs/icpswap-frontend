@@ -47,7 +47,7 @@ export enum ActorName {
   V1TokenPool = "V1TokenPool",
   V1TokenPoolStorage = "V1TokenPoolStorage",
 
-  GlobalIndex = "GlobalIndex",
-  NodeIndex = "NodeIndex",
-  BaseIndex = "BaseIndex",
+  GlobalIndex = "global_index",
+  NodeIndex = "node_index",
+  BaseIndex = "base_index",
 }

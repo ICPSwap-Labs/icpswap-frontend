@@ -1,11 +1,17 @@
 {
+  "PassCodeManager": {
+    "ic": "pybqd-4yaaa-aaaag-ak5ta-cai"
+  },
   "PositionIndex": {
-    "ic": "cglrh-lyaaa-aaaag-qcs4q-cai"
+    "ic": "p7awx-raaaa-aaaag-ak5tq-cai"
   },
   "SwapFactory": {
-    "ic": "4mmnk-kiaaa-aaaag-qbllq-cai"
+    "ic": "ososz-6iaaa-aaaag-ak5ua-cai"
   },
-  "SwapNFT": {
-    "ic": "4lnl6-hqaaa-aaaag-qblla-cai"
+  "SwapFeeReceiver": {
+    "ic": "ovpun-tqaaa-aaaag-ak5uq-cai"
+  },
+  "TrustedCanisterManager": {
+    "ic": "o4m7r-fyaaa-aaaag-ak5va-cai"
   }
 }
