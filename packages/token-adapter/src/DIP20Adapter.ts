@@ -1,3 +1,9 @@
+import { resultFormat } from "@icpswap/utils";
+import { PaginationResult, ResultStatus } from "@icpswap/types";
+import { dip20, dip20BalanceActor, dip20SupplyActor } from "@icpswap/actor";
+import { Principal } from "@dfinity/principal";
+import { DIP20, type DIP20TokenInfo } from "@icpswap/candid";
+import { TokenHolder, Transaction, DIP20Metadata, Metadata } from "./types";
 import {
   BaseTokenAdapter,
   HoldersRequest,
@@ -15,21 +21,15 @@ import {
   SetLogoRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
-import { resultFormat } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
-import { dip20, dip20BalanceActor, dip20SupplyActor } from "@icpswap/actor";
-import { TokenHolder, Transaction, DIP20Metadata, Metadata } from "./types";
-import { Principal } from "@dfinity/principal";
-import { DIP20, type DIP20TokenInfo } from "@icpswap/candid";
 
 export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   public async holders({ canisterId, params }: HoldersRequest) {
     const totalHolder = (await this.totalHolders({ canisterId })).data;
 
     if (totalHolder) {
-      const _holders = (await (
-        await this.actor(canisterId)
-      ).getHolders(params.offset, params.limit)) as Array<[Principal, bigint]>;
+      const _holders = (await (await this.actor(canisterId)).getHolders(params.offset, params.limit)) as Array<
+        [Principal, bigint]
+      >;
 
       const holders = _holders.map((holder) => {
         return {
@@ -66,13 +66,10 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
     let tokenInfo: null | DIP20TokenInfo = null;
 
     try {
-      tokenInfo = (await (
-        await this.actor(canisterId)
-      ).getTokenInfo()) as DIP20TokenInfo;
+      tokenInfo = (await (await this.actor(canisterId)).getTokenInfo()) as DIP20TokenInfo;
       return resultFormat<bigint>(tokenInfo.holderNumber);
     } catch (error) {
-      console.log(error);
-      console.log("DIP20Adapter: no getTokenInfo method");
+      console.error(error);
     }
 
     return resultFormat<bigint>(undefined);
@@ -80,30 +77,22 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
 
   public async supply({ canisterId }: SupplyRequest) {
     try {
-      return resultFormat<bigint>(
-        await (await this.actor(canisterId)).totalSupply()
-      );
+      return resultFormat<bigint>(await (await this.actor(canisterId)).totalSupply());
     } catch (error) {
-      console.log(error);
-      return resultFormat<bigint>(
-        await (await dip20SupplyActor(canisterId)).totalSupply()
-      );
+      console.error(error);
+      return resultFormat<bigint>(await (await dip20SupplyActor(canisterId)).totalSupply());
     }
   }
 
   public async balance({ canisterId, params }: BalanceRequest) {
-    if (!!params.user.principal) {
+    if (params.user.principal) {
       let balance = BigInt(0);
 
       try {
-        balance = (await (
-          await this.actor(canisterId)
-        ).balanceOf(params.user.principal)) as bigint;
+        balance = (await (await this.actor(canisterId)).balanceOf(params.user.principal)) as bigint;
       } catch (error) {
-        console.log(error);
-        balance = (await (
-          await dip20BalanceActor(canisterId)
-        ).balanceOf(params.user.principal)) as bigint;
+        console.error(error);
+        balance = (await (await dip20BalanceActor(canisterId)).balanceOf(params.user.principal)) as bigint;
       }
 
       return resultFormat<bigint>(balance);
@@ -115,9 +104,7 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   public async transfer({ canisterId, identity, params }: TransferRequest) {
     if (!params.to.principal) throw Error("no user principal");
 
-    const result = await (
-      await this.actor(canisterId, identity)
-    ).transfer(params.to.principal, params.amount);
+    const result = await (await this.actor(canisterId, identity)).transfer(params.to.principal, params.amount);
     return resultFormat<bigint>(result);
   }
 
@@ -127,16 +114,12 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   }
 
   public async setFee({ canisterId, identity, params }: SetFeeRequest) {
-    return resultFormat<boolean>(
-      await (await this.actor(canisterId, identity)).setFee(params)
-    );
+    return resultFormat<boolean>(await (await this.actor(canisterId, identity)).setFee(params));
   }
 
   public async setFeeTo({ canisterId, identity, params }: SetFeeToRequest) {
     if (!params.principal) throw Error("no principal");
-    return resultFormat<boolean>(
-      await (await this.actor(canisterId, identity)).setFeeTo(params.principal)
-    );
+    return resultFormat<boolean>(await (await this.actor(canisterId, identity)).setFeeTo(params.principal));
   }
 
   public async transactions({ canisterId, params }: TransactionRequest) {
@@ -155,17 +138,13 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
             cap_id.toString(),
             params.user?.principal,
             params.witness ?? false,
-            params.offset
-          )
+            params.offset,
+          ),
         );
       }
 
       return resultFormat<PaginationResult<Transaction>>(
-        await params.getCapTransactions(
-          cap_id.toString(),
-          params.witness ?? false,
-          params.offset
-        )
+        await params.getCapTransactions(cap_id.toString(), params.witness ?? false, params.offset),
       );
     }
 
@@ -183,9 +162,7 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
     // 10 times approve amount to fix dip20 insufficient allowance amount
     // TODO: A better way to fix it
     return resultFormat<boolean>(
-      await (
-        await this.actor(canisterId, identity)
-      ).approve(params.spender, params.allowance * BigInt(10))
+      await (await this.actor(canisterId, identity)).approve(params.spender, params.allowance * BigInt(10)),
     );
   }
 
@@ -194,17 +171,11 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
       throw Error("no principal");
     }
 
-    return resultFormat<bigint>(
-      await (
-        await this.actor(canisterId)
-      ).allowance(params.owner.principal, params.spender)
-    );
+    return resultFormat<bigint>(await (await this.actor(canisterId)).allowance(params.owner.principal, params.spender));
   }
 
   public async metadata({ canisterId }: MetadataRequest) {
-    const metadata = (await (
-      await this.actor(canisterId)
-    ).getMetadata()) as DIP20Metadata;
+    const metadata = (await (await this.actor(canisterId)).getMetadata()) as DIP20Metadata;
 
     return {
       status: ResultStatus.OK,
@@ -221,9 +192,7 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   }
 
   public async setLogo({ canisterId, params, identity }: SetLogoRequest) {
-    return resultFormat<boolean>(
-      await (await this.actor(canisterId, identity)).setLogo(params)
-    );
+    return resultFormat<boolean>(await (await this.actor(canisterId, identity)).setLogo(params));
   }
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {

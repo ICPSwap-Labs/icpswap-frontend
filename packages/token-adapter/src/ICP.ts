@@ -1,3 +1,8 @@
+import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
+import { ledgerService } from "@icpswap/actor";
+import { Ledger } from "@icpswap/candid";
+import { ActorIdentity, PaginationResult, ResultStatus } from "@icpswap/types";
+import { TokenHolder, Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
   BalanceRequest,
@@ -5,11 +10,6 @@ import {
   MetadataRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
-import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
-import { ledgerService } from "@icpswap/actor";
-import { TokenHolder, Transaction, Metadata } from "./types";
-import { Ledger } from "@icpswap/candid";
-import { ActorIdentity, PaginationResult, ResultStatus } from "@icpswap/types";
 
 export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   public async holders() {
@@ -30,9 +30,7 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   }
 
   public async supply() {
-    return resultFormat<bigint>(
-      await (await this.actor()).icrc1_total_supply()
-    );
+    return resultFormat<bigint>(await (await this.actor()).icrc1_total_supply());
   }
 
   public async balance({ params }: BalanceRequest) {
@@ -42,22 +40,18 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
           await (
             await this.actor()
           ).account_balance({
-            account: Array.from(
-              Uint8Array.from(Buffer.from(params.user.address, "hex"))
-            ),
+            account: Array.from(Uint8Array.from(Buffer.from(params.user.address, "hex"))),
           })
-        ).e8s
+        ).e8s,
       );
-    } else if (params.user.principal) {
+    } if (params.user.principal) {
       return resultFormat<bigint>(
         await (
           await this.actor()
         ).icrc1_balance_of({
           owner: params.user.principal,
-          subaccount: availableArgsNull<Array<number>>(
-            params.subaccount ? params.subaccount : undefined
-          ),
-        })
+          subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
+        }),
       );
     }
 
@@ -65,12 +59,10 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   }
 
   public async transfer({ canisterId, identity, params }: TransferRequest) {
-    if (!params.to.address && !params.to.principal)
-      throw Error("No transfer to");
+    if (!params.to.address && !params.to.principal) throw Error("No transfer to");
 
     if (params.to.address) {
-      if (params.memo && !isBigIntMemo(params.memo))
-        throw Error("Only bigint support (memo)");
+      if (params.memo && !isBigIntMemo(params.memo)) throw Error("Only bigint support (memo)");
 
       const result = await (
         await this.actor(canisterId, identity)
@@ -79,33 +71,26 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
         memo: (params.memo as bigint) ?? BigInt(0),
         amount: { e8s: params.amount },
         created_at_time: availableArgsNull<{ timestamp_nanos: bigint }>(
-          params.create_at_time
-            ? { timestamp_nanos: params.create_at_time }
-            : undefined
+          params.create_at_time ? { timestamp_nanos: params.create_at_time } : undefined,
         ),
         from_subaccount: availableArgsNull<number[]>(params.from_sub_account),
         fee: { e8s: BigInt(10000) },
       });
 
       return resultFormat<bigint>(result);
-    } else if (params.to.principal) {
+    } if (params.to.principal) {
       const result = await (
         await this.actor(canisterId, identity)
       ).icrc1_transfer({
         to: {
           owner: params.to.principal,
-          subaccount: availableArgsNull<Array<number>>(
-            params.subaccount ? params.subaccount : undefined
-          ),
+          subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
         },
-        memo:
-          typeof params.memo === "bigint"
-            ? []
-            : availableArgsNull<number[]>(params.memo),
+        memo: typeof params.memo === "bigint" ? [] : availableArgsNull<number[]>(params.memo),
         amount: params.amount,
         created_at_time: availableArgsNull<bigint>(params.create_at_time),
         from_subaccount: availableArgsNull<Array<number>>(
-          params.from_sub_account ? params.from_sub_account : undefined
+          params.from_sub_account ? params.from_sub_account : undefined,
         ),
         fee: availableArgsNull<bigint>(null),
       });
@@ -117,11 +102,7 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   }
 
   public async getFee() {
-    return resultFormat<bigint>(
-      await (
-        await (await this.actor()).transfer_fee({})
-      ).transfer_fee.e8s
-    );
+    return resultFormat<bigint>(await (await (await this.actor()).transfer_fee({})).transfer_fee.e8s);
   }
 
   public async setFee() {
@@ -153,19 +134,15 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
     const symbol = (await (await this.actor(canisterId)).symbol()).symbol;
     const decimals = (await (await this.actor()).decimals()).decimals;
     const name = "Internet Computer";
-    const fee = resultFormat<bigint>(
-      await (
-        await (await this.actor()).transfer_fee({})
-      ).transfer_fee.e8s
-    ).data;
+    const fee = resultFormat<bigint>(await (await (await this.actor()).transfer_fee({})).transfer_fee.e8s).data;
 
     return {
       status: ResultStatus.OK,
       data: {
-        decimals: decimals,
+        decimals,
         metadata: [],
-        name: name,
-        symbol: symbol,
+        name,
+        symbol,
         fee: fee ?? BigInt(1000),
         logo: "",
       } as Metadata,
@@ -184,6 +161,5 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
 
 export const icpAdapter = new ICPAdapter({
   // @ts-ignore
-  actor: async (canisterId?: string, identity?: ActorIdentity) =>
-    await ledgerService(identity),
+  actor: async (canisterId?: string, identity?: ActorIdentity) => await ledgerService(identity),
 });

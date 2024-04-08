@@ -79,10 +79,7 @@ export type ApproveRequest = {
   expected_allowance?: bigint;
 };
 
-export type TokenApproveRequest = Override<
-  ApproveRequest,
-  { account: string | Principal }
->;
+export type TokenApproveRequest = Override<ApproveRequest, { account: string | Principal }>;
 
 export type { DIP20Metadata } from "@icpswap/candid";
 

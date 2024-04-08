@@ -1,5 +1,9 @@
+import { BigNumber } from "bignumber.js";
+import { Override, ActorIdentity, StatusResult, PaginationResult } from "@icpswap/types";
+import { ActorSubclass } from "@dfinity/agent";
+import { Principal } from "@dfinity/principal";
+import type { TokenTransaction } from "@icpswap/types";
 import {
-  TokenHolderArgs,
   TokenHolder,
   BalanceRequest as _BalanceRequest,
   TokenTransferRequest as _TransferRequest,
@@ -10,16 +14,6 @@ import {
   TokenApproveRequest,
   Metadata,
 } from "./types";
-import { BigNumber } from "bignumber.js";
-import {
-  Override,
-  ActorIdentity,
-  StatusResult,
-  PaginationResult,
-} from "@icpswap/types";
-import { ActorSubclass } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
-import type { TokenTransaction } from "@icpswap/types";
 
 export type BaseTokenRequestNoParams = {
   canisterId: string;
@@ -76,7 +70,7 @@ export type TransactionRequest = BaseTokenRequest<
         canisterId: string,
         principal: Principal,
         witness: boolean,
-        offset: number
+        offset: number,
       ) => Promise<{
         totalElements: number;
         offset: number;
@@ -86,7 +80,7 @@ export type TransactionRequest = BaseTokenRequest<
       getCapTransactions?: (
         canisterId: string,
         witness: boolean,
-        offset: number
+        offset: number,
       ) => Promise<{
         totalElements: number;
         offset: number;
@@ -120,37 +114,19 @@ export type ActualReceivedByTransferRequest = {
 export type ActualReceivedByTransferResult = BigNumber;
 
 export abstract class BaseTokenAdapter<T> {
-  public readonly actor: (
-    canister?: string,
-    identity?: ActorIdentity
-  ) => Promise<ActorSubclass<T>>;
+  public readonly actor: (canister?: string, identity?: ActorIdentity) => Promise<ActorSubclass<T>>;
 
-  constructor({
-    actor,
-  }: {
-    actor: (
-      canister?: string,
-      identity?: ActorIdentity
-    ) => Promise<ActorSubclass<T>>;
-  }) {
+  constructor({ actor }: { actor: (canister?: string, identity?: ActorIdentity) => Promise<ActorSubclass<T>> }) {
     this.actor = actor;
   }
 
-  public abstract totalHolders({
-    canisterId,
-  }: TotalHoldersRequest): TotalHoldersResult;
+  public abstract totalHolders({ canisterId }: TotalHoldersRequest): TotalHoldersResult;
 
-  public abstract holders({
-    canisterId,
-    params,
-  }: HoldersRequest): HoldersResult;
+  public abstract holders({ canisterId, params }: HoldersRequest): HoldersResult;
 
   public abstract supply({ canisterId }: SupplyRequest): SupplyResult;
 
-  public abstract balance({
-    canisterId,
-    params,
-  }: BalanceRequest): BalanceResult;
+  public abstract balance({ canisterId, params }: BalanceRequest): BalanceResult;
 
   public abstract transfer(request: TransferRequest): TransferResult;
 
@@ -168,7 +144,5 @@ export abstract class BaseTokenAdapter<T> {
 
   public abstract setLogo(request: SetLogoRequest): SetLogoResult;
 
-  public abstract actualReceivedByTransfer(
-    request: ActualReceivedByTransferRequest
-  ): ActualReceivedByTransferResult;
+  public abstract actualReceivedByTransfer(request: ActualReceivedByTransferRequest): ActualReceivedByTransferResult;
 }
