@@ -36,7 +36,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
       {globalTipsOpen ? <GlobalTips onClose={() => setGlobalTipsOpen(false)} /> : null}
 
-      <NavBar />
+      {/* <NavBar /> */}
 
       <main className={classes.content}>{children}</main>
     </div>
