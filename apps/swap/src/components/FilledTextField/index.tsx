@@ -23,6 +23,9 @@ const useStyles = ({ contained, fullHeight, borderRadius, label }: UseStylesProp
         borderRadius,
         padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         gap: "0 5px",
+        "@media(max-width: 640px)": {
+          padding: contained ? `4px 6px` : `${fullHeight ? "0px" : "6px"} 8px`,
+        },
         "& input": {
           color: theme.palette.text.primary,
         },
