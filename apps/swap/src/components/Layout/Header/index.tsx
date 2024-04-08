@@ -64,7 +64,7 @@ export default function Header() {
               "@media(max-width: 640px)": { gap: "0 8px" },
             }}
           >
-            <TokenClaim />
+            {/* <TokenClaim /> */}
             <ProfileSection />
           </Box>
         </Grid>

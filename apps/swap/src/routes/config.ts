@@ -3,11 +3,11 @@ import Loadable from "../components/Loading/Loadable";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
-const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
-const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/create")));
+// const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
+// const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/create")));
 
-const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
-const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
+// const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
+// const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
@@ -20,39 +20,39 @@ const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 
-const NFTView = Loadable(lazy(() => import("../views/nft/View")));
+// const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
-const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
-const Console = Loadable(lazy(() => import("../views/console/index")));
-const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
-const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
+// const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
+// const Console = Loadable(lazy(() => import("../views/console/index")));
+// const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
+// const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 
 // const NFTMarket = Loadable(lazy(() => import("../views/nft")));
-const NFTCollectMarket = Loadable(lazy(() => import("../views/nft/Collection")));
-const NFTMarketCollections = Loadable(lazy(() => import("../views/nft/MarketplaceCollections")));
+// const NFTCollectMarket = Loadable(lazy(() => import("../views/nft/Collection")));
+// const NFTMarketCollections = Loadable(lazy(() => import("../views/nft/MarketplaceCollections")));
 
-const Voting = Loadable(lazy(() => import("../views/voting/index")));
-const VotingProject = Loadable(lazy(() => import("../views/voting/project")));
-const VotingProposal = Loadable(lazy(() => import("../views/voting/proposal")));
-const VotingCreateProposal = Loadable(lazy(() => import("../views/voting/create")));
-const VoteCreateProject = Loadable(lazy(() => import("../views/voting/create-project")));
+// const Voting = Loadable(lazy(() => import("../views/voting/index")));
+// const VotingProject = Loadable(lazy(() => import("../views/voting/project")));
+// const VotingProposal = Loadable(lazy(() => import("../views/voting/proposal")));
+// const VotingCreateProposal = Loadable(lazy(() => import("../views/voting/create")));
+// const VoteCreateProject = Loadable(lazy(() => import("../views/voting/create-project")));
 
-const TokenClaimIndex = Loadable(lazy(() => import("../views/token-claim/index")));
-const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
-const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
+// const TokenClaimIndex = Loadable(lazy(() => import("../views/token-claim/index")));
+// const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
+// const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
 
-const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
-const AddLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/AddLiquidity")));
-const IncreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/IncreaseLiquidity")));
-const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
-const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
+// const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
+// const AddLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/AddLiquidity")));
+// const IncreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/IncreaseLiquidity")));
+// const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
+// const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const ckBTC = Loadable(lazy(() => import("../views/wallet/ckBTC")));
 const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
 
-const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launches")));
-const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launch")));
+// const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launches")));
+// const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launch")));
 
 export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/wallet": Wallet,
@@ -62,10 +62,10 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/wallet/nft/view/:canisterId/:tokenId": WalletNFTView,
   "/wallet/nft/canister/details/:id": NFTCanisterDetails,
 
-  "/staking-token": StakingToken,
-  "/staking-token/create": StakingTokenCreate,
-  "/staking-farm": StakingFarm,
-  "/staking-farm/create": StakingFarmCreate,
+  // "/staking-token": StakingToken,
+  // "/staking-token/create": StakingTokenCreate,
+  // "/staking-farm": StakingFarm,
+  // "/staking-farm/create": StakingFarmCreate,
 
   "/swap": Swap,
   "/swap/liquidity": Liquidity,
@@ -78,33 +78,33 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/swap/pcm/reclaim": PCMReclaim,
   "/swap-pro": SwapPro,
 
-  "/swap/v2/liquidity": LiquidityV2,
-  "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,
-  "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
-  "/swap/v2/liquidity/increase/:positionId?": IncreaseLiquidityV2,
-  "/swap/v2/wrap": Wrap,
+  // "/swap/v2/liquidity": LiquidityV2,
+  // "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,
+  // "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
+  // "/swap/v2/liquidity/increase/:positionId?": IncreaseLiquidityV2,
+  // "/swap/v2/wrap": Wrap,
 
   // "/marketplace/NFT": NFTMarket,
-  "/marketplace/NFT/:canisterId": NFTCollectMarket,
-  "/marketplace/NFT/view/:canisterId/:tokenId": NFTView,
-  "/marketplace/collections": NFTMarketCollections,
+  // "/marketplace/NFT/:canisterId": NFTCollectMarket,
+  // "/marketplace/NFT/view/:canisterId/:tokenId": NFTView,
+  // "/marketplace/collections": NFTMarketCollections,
 
-  "/voting": Voting,
-  "/voting/:canisterId": VotingProject,
-  "/voting/project/create": VoteCreateProject,
+  // "/voting": Voting,
+  // "/voting/:canisterId": VotingProject,
+  // "/voting/project/create": VoteCreateProject,
 
-  "/voting/proposal/details/:canisterId/:id": VotingProposal,
-  "/voting/proposal/create/:id": VotingCreateProposal,
+  // "/voting/proposal/details/:canisterId/:id": VotingProposal,
+  // "/voting/proposal/create/:id": VotingCreateProposal,
 
-  "/token-claim": TokenClaimIndex,
-  "/token-claim/transactions/:id": TokenClaimTransactions,
-  "/token-claim/create": CreateTokenClaim,
+  // "/token-claim": TokenClaimIndex,
+  // "/token-claim/transactions/:id": TokenClaimTransactions,
+  // "/token-claim/create": CreateTokenClaim,
 
-  "/console": Console,
-  "/console/nft/canister/create": NFTCanisterCreate,
-  "/console/nft/mint": NFTMint,
-  "/console/nft/canister/list": NFTCanisterList,
+  // "/console": Console,
+  // "/console/nft/canister/create": NFTCanisterCreate,
+  // "/console/nft/mint": NFTMint,
+  // "/console/nft/canister/list": NFTCanisterList,
 
-  "/sns/launches": SNSLaunches,
-  "/sns/launch/:root_id": SNSLaunch,
+  // "/sns/launches": SNSLaunches,
+  // "/sns/launch/:root_id": SNSLaunch,
 };
