@@ -88,9 +88,9 @@ export function useMintInfo(
     [tokenA, tokenB],
   );
 
-  const tokens = useMemo(() => (tokenA && tokenB ? [tokenA.address, tokenB.address] : undefined), [tokenA, tokenB]);
+  // const tokens = useMemo(() => (tokenA && tokenB ? [tokenA.address, tokenB.address] : undefined), [tokenA, tokenB]);
 
-  const hasPairWithBaseToken = useTokensHasPairWithBaseToken(tokens);
+  // const hasPairWithBaseToken = useTokensHasPairWithBaseToken(tokens);
 
   const { result: tokenABalance } = useCurrencyBalance(principal, tokenA);
   const { result: tokenBBalance } = useCurrencyBalance(principal, tokenB);
@@ -384,7 +384,7 @@ export function useMintInfo(
 
   let errorMessage: string | undefined;
 
-  if (hasPairWithBaseToken !== true) errorMessage = errorMessage ?? t`No pair with icp`;
+  // if (hasPairWithBaseToken !== true) errorMessage = errorMessage ?? t`No pair with icp`;
 
   if (inputNumberCheck(typedValue) === false) errorMessage = errorMessage ?? t`Amount exceeds limit`;
 
