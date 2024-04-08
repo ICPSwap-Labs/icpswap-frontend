@@ -11,7 +11,7 @@ import { MainCard } from "@icpswap/ui";
 
 export default function TopTokens() {
   const [search, setSearch] = useState<null | string>(null);
-  const [onlyTokenList, setOnlyTokenList] = useState(true);
+  const [onlyTokenList, setOnlyTokenList] = useState(false);
 
   const { result: allTokens, loading } = useInfoAllTokens();
 

@@ -9,7 +9,7 @@ import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
 
 export default function TopPools() {
-  const [onlyTokenList, setOnlyTokenList] = useState(true);
+  const [onlyTokenList, setOnlyTokenList] = useState(false);
   const [selectedPair, setSelectedPair] = useState<undefined | string>(undefined);
 
   const { result: pools, loading } = useInfoAllPools();
