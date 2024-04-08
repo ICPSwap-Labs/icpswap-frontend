@@ -21,7 +21,6 @@ export function TokenItem({ canisterId }: { canisterId: string }) {
   const walletCatchTokenIds = useWalletCatchTokenIds() ?? [];
   const addToken = useSaveCacheTokenCallback();
   const deleteToken = useDeleteCacheTokenCallback();
-  const globalTokenList = useGlobalTokenList();
 
   const handleAddToken = (canisterId: string) => {
     addToken([canisterId]);
@@ -36,12 +35,6 @@ export function TokenItem({ canisterId }: { canisterId: string }) {
   };
 
   const { result: tokenInfo } = useTokenInfo(canisterId);
-
-  const inWallet = useMemo(() => {
-    const token = globalTokenList.find((e) => e.canisterId === canisterId);
-    if (!token) return false;
-    return !!token.configs.find((config) => config.name === "WALLET" && config.value === "true");
-  }, [globalTokenList, canisterId]);
 
   return (
     <Box
@@ -90,7 +83,7 @@ export function TokenItem({ canisterId }: { canisterId: string }) {
       <Typography>{matchDownSM ? "" : tokenInfo?.canisterId}</Typography>
 
       <>
-        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) || inWallet ? null : hasBeenAdded(canisterId) ? (
+        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : hasBeenAdded(canisterId) ? (
           <Button
             variant="outlined"
             color="primary"
@@ -142,11 +135,13 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         };
       });
 
-    const _tokens = globalTokenList.map((token) => ({
-      canisterId: token.canisterId,
-      name: token.name,
-      symbol: token.symbol,
-    }));
+    const _tokens = globalTokenList
+      .filter((token) => !token.configs.find((config) => config.name === "WALLET" && config.value === "true"))
+      .map((token) => ({
+        canisterId: token.canisterId,
+        name: token.name,
+        symbol: token.symbol,
+      }));
 
     const tokens = [...iTokens, ..._tokens];
 
