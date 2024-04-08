@@ -183,7 +183,7 @@ export interface TokenPoolsProps {
 }
 
 export default function TokenPools({ canisterId }: TokenPoolsProps) {
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
   const { pools, loading } = usePoolsOfToken(canisterId);
 
   const { result: tokenList } = useTokensFromList();

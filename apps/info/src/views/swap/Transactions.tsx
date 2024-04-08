@@ -9,7 +9,7 @@ import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
 
 export default function AllTransactions() {
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
 
   const { result, loading } = useBaseTransactions(0, 500);
   const transactions = result?.content;

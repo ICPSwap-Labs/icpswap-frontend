@@ -124,7 +124,7 @@ export default function SwapOverview() {
           </Grid>
         </Grid>
 
-        <Box
+        {/* <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -300,7 +300,7 @@ export default function SwapOverview() {
               />
             ) : null}
           </MainCard>
-        </Box>
+        </Box> */}
 
         {/* <MainCard level={2} border={false}>
           <Box
