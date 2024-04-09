@@ -1,5 +1,4 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { TextButton } from "./TextButton";
 
 function CloseIcon() {
   return (
@@ -34,17 +33,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          ICPSwap SNS Launchpad is live! Don't miss out!&nbsp;
-          <TextButton
-            link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai"
-            color="write"
-            textDecoration="underline"
-            sx={{
-              "@media(max-width: 640px)": { fontSize: "12px" },
-            }}
-          >
-            Click here to join the excitement!
-          </TextButton>
+          The ICPSwap testing environment is for the IC project team only, with all tokens being test tokens.
         </Typography>
       </Grid>
 
