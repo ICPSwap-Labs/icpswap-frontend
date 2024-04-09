@@ -8,6 +8,7 @@ import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { Copy } from "components/Copy/icon";
+import { TokenListIdentifying } from "components/TokenListIdentifying";
 
 import { SwapProContext } from "../context";
 
@@ -118,7 +119,12 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           </Box>
         </Box>
 
-        {!matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
+        {!matchDownSM ? (
+          <Box sx={{ display: "flex", gap: "0 10px" }}>
+            <Medias mediaLinks={mediaLinks} />
+            <TokenListIdentifying tokenId={tokenId} />
+          </Box>
+        ) : null}
       </Box>
 
       <Box
@@ -143,7 +149,12 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           ) : null}
         </Box>
 
-        {matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
+        {matchDownSM ? (
+          <Box sx={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <Medias mediaLinks={mediaLinks} />
+            <TokenListIdentifying tokenId={tokenId} />
+          </Box>
+        ) : null}
 
         <a
           href={`https://info.icpswap.com/token/details/${tokenId}`}

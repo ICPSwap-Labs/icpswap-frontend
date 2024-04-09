@@ -236,3 +236,13 @@ export function usePoolStandardManager(): [boolean, (value: boolean) => void] {
 
   return [isInitialed, call];
 }
+
+export function useTokenIsInTokenList(tokenId: string | undefined) {
+  const globalTokenList = useGlobalTokenList();
+
+  return useMemo(() => {
+    if (!tokenId || !globalTokenList || globalTokenList.length === 0) return false;
+    const token = globalTokenList.find((e) => e.canisterId === tokenId);
+    return Boolean(token);
+  }, [globalTokenList, tokenId]);
+}

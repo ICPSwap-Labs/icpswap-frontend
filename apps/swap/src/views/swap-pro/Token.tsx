@@ -63,7 +63,7 @@ export interface TokenProps {
 export default function Token({ infoToken, tokenListInfo }: TokenProps) {
   const theme = useTheme() as Theme;
   const { outputToken, tradePoolId } = useContext(SwapProContext);
-  const [moreInformation, setMoreInformation] = useState(false);
+  const [moreInformation, setMoreInformation] = useState(true);
 
   const tokenId = useMemo(() => outputToken?.address, [outputToken]);
 
