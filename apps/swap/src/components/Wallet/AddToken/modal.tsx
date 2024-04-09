@@ -189,12 +189,6 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
               handleSearch(event.target.value);
             }}
           />
-
-          <Box mt="12px">
-            <Typography color="text.warning" fontSize="12px">
-              $ICS (ICPSwap Token) has NOT been minted and traded yet! Please beware of Fake tokens!
-            </Typography>
-          </Box>
         </Box>
 
         <Box mt="16px">
