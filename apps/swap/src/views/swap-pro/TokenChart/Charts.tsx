@@ -8,7 +8,7 @@ import { SwapProContext } from "../context";
 export default function TokenChartInfo() {
   const theme = useTheme() as Theme;
 
-  const { inputToken, outputToken } = useContext(SwapProContext);
+  const { inputToken, outputToken, token } = useContext(SwapProContext);
 
   const priceToggles = useMemo(() => {
     if (!inputToken || !outputToken) return undefined;
@@ -28,7 +28,7 @@ export default function TokenChartInfo() {
         },
       }}
     >
-      <TokenCharts canisterId={outputToken?.address} background={3} borderRadius="0px" priceToggles={priceToggles} />
+      <TokenCharts canisterId={token?.address} background={3} borderRadius="0px" priceToggles={priceToggles} />
     </Box>
   );
 }

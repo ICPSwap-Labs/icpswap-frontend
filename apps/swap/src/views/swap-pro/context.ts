@@ -10,6 +10,7 @@ export interface SwapProContextProps {
   setOutputToken: (token: Token | undefined) => void;
   inputTokenPrice: number | undefined;
   outputTokenPrice: number | undefined;
+  token: Token | undefined;
 }
 
 export const SwapProContext = createContext({} as SwapProContextProps);
