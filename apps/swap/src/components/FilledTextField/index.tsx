@@ -42,7 +42,6 @@ export type FilledTextFiledMenus = {
 export interface FilledTextFieldProps {
   label?: string | React.ReactNode;
   value?: any;
-  width?: number;
   select?: boolean;
   onChange?: (value: any) => void;
   onFocus?: () => void;
@@ -128,7 +127,6 @@ function FilledTextField(
     InputProps,
     borderRadius = "8px",
     contained = true,
-    width,
     CustomNoData,
     menuDisabled,
     helperText,

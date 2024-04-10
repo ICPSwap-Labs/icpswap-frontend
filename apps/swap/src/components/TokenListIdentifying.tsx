@@ -21,10 +21,11 @@ export function TokenListIdentifying({ tokenId }: TokenListIdentifyingProps) {
         padding: "0 10px",
         borderRadius: "60px",
         background: theme.colors.successDark,
+        gap: "0 2px",
       }}
     >
       <TokenListDarkIcon />
-      <Typography sx={{ fontSize: "12px", color: "#1A223F" }}>Token List</Typography>
+      <Typography sx={{ fontSize: "12px", fontWeight: 500, color: "#1A223F" }}>Token List</Typography>
     </Box>
   ) : null;
 }

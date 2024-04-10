@@ -212,6 +212,7 @@ export function Search({ open, onClose }: SearchProps) {
           display: "flex",
           justifyContent: "center",
           background: theme.palette.background.level1,
+          minHeight: "230px",
           "@media(max-width: 640px)": {
             padding: "12px",
           },
@@ -311,7 +312,7 @@ export function Search({ open, onClose }: SearchProps) {
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ height: "220px", overflow: "hidden auto" }}>
+              <Box sx={{ maxHeight: "220px", overflow: "hidden auto" }}>
                 {filteredTokenListTokens?.length > 0 ? (
                   <Box>
                     <Typography fontSize="12px">Token List</Typography>
