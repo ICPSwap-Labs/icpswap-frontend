@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
-import { ToggleButton } from "components/SwitchToggle";
-import { Wrapper, Breadcrumbs } from "components/index";
+import { Wrapper, Breadcrumbs, type Tab } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { useBTCCurrentBlock } from "hooks/ck-btc/useBTCCalls";
 import MintBTC from "./components/ckBTC/Mint";
@@ -31,7 +30,7 @@ export default function ckBTC() {
     if (type) setActive(type);
   }, [type]);
 
-  const handleChange = (button: ToggleButton) => {
+  const handleChange = (button: Tab) => {
     setActive(button.key);
     history.push(`/wallet/ckBTC?type=${button.key}`);
   };

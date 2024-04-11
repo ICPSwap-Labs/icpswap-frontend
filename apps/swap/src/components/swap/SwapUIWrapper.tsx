@@ -1,7 +1,6 @@
 import { Box, Typography, Grid } from "@mui/material";
 import { t } from "@lingui/macro";
-import { Wrapper } from "components/index";
-import SwitchComponent from "components/SwitchToggle";
+import { Wrapper, TabPanel } from "components/index";
 import React from "react";
 import { INFO_URL } from "constants/index";
 
@@ -28,7 +27,7 @@ type Button = {
 function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons: Button[] }) {
   return (
     <Wrapper>
-      <SwitchComponent buttons={buttons} />
+      <TabPanel tabs={buttons} />
       <Box mt={4}>{children}</Box>
     </Wrapper>
   );

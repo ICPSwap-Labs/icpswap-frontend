@@ -51,8 +51,9 @@ const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 const ckBTC = Loadable(lazy(() => import("../views/wallet/ckBTC")));
 const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
 
-const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launches")));
-const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launch")));
+const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
+const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launchpad/Launch")));
+const SNSNervous = Loadable(lazy(() => import("../views/sns/Nervous/index")));
 
 export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/wallet": Wallet,
@@ -105,6 +106,8 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/console/nft/mint": NFTMint,
   "/console/nft/canister/list": NFTCanisterList,
 
+  "/sns/nervous": SNSNervous,
+  "/sns/nervous/:id": SNSNervous,
   "/sns/launches": SNSLaunches,
   "/sns/launch/:root_id": SNSLaunch,
 };
