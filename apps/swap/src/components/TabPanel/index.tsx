@@ -1,4 +1,4 @@
-import { memo, useState, ReactNode } from "react";
+import { useState, ReactNode } from "react";
 import { Grid, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory, useLocation } from "react-router-dom";
@@ -34,68 +34,68 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export interface ToggleButton {
+export interface Tab {
   key: string | any;
   value: ReactNode;
   path?: string;
   link?: string;
 }
 
-export interface SwitchToggleProps {
+export interface TabPanelProps {
   active?: string;
-  buttons: ToggleButton[];
-  onChange?: (button: ToggleButton) => void;
+  tabs: Tab[];
+  onChange?: (tab: Tab) => void;
 }
 
-export default memo(({ buttons, onChange, active }: SwitchToggleProps) => {
+export function TabPanel({ tabs, onChange, active }: TabPanelProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
   const [activeButtonKey, setActiveButtonKey] = useState<null | string>(null);
 
-  const loadPage = (button: ToggleButton) => {
-    if (button.link) {
-      mockALinkAndOpen(button.link, "toggle_link");
+  const loadPage = (tab: Tab) => {
+    if (tab.link) {
+      mockALinkAndOpen(tab.link, "toggle_link");
       return;
     }
 
-    if (!button.path) {
-      setActiveButtonKey(button.key);
-      if (onChange) onChange(button);
+    if (!tab.path) {
+      setActiveButtonKey(tab.key);
+      if (onChange) onChange(tab);
       return;
     }
-    history.push(button.path);
+    history.push(tab.path);
   };
 
-  const isActive = (button: ToggleButton) => {
-    if (button.path) {
-      if (button.key === "/swap" || button.key === "/swap/v2") {
-        if (button.key === location.pathname || `${button.key}/` === location.pathname) return "active";
+  const isActive = (tab: Tab) => {
+    if (tab.path) {
+      if (tab.key === "/swap" || tab.key === "/swap/v2") {
+        if (tab.key === location.pathname || `${tab.key}/` === location.pathname) return "active";
         return "";
       }
-      return location.pathname.includes(button.key);
+      return location.pathname.includes(tab.key);
     }
-    if (active) return active === button.key;
-    if (!activeButtonKey) return buttons[0].key === button.key;
-    return activeButtonKey === button.key;
+    if (active) return active === tab.key;
+    if (!activeButtonKey) return tabs[0].key === tab.key;
+    return activeButtonKey === tab.key;
   };
 
   return (
     <Grid container justifyContent="center">
       <Grid className={classes.switchBox} container>
-        {buttons.map((item) => (
+        {tabs.map((tab) => (
           <Box
-            key={item.key}
-            className={`${classes.switchButton} ${isActive(item) ? "active" : ""}`}
-            onClick={() => loadPage(item)}
+            key={tab.key}
+            className={`${classes.switchButton} ${isActive(tab) ? "active" : ""}`}
+            onClick={() => loadPage(tab)}
           >
             <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
-              {item.value}
+              {tab.value}
             </Grid>
           </Box>
         ))}
       </Grid>
     </Grid>
   );
-});
+}

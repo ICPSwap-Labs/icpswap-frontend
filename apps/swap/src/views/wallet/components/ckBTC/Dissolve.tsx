@@ -6,7 +6,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { ckBTC_ID, DISSOLVE_FEE } from "constants/ckBTC";
 import { useState, useMemo } from "react";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { FilledTextField, NumberFilledTextField , MainCard } from "components/index";
+import { FilledTextField, NumberFilledTextField, MainCard, TabPanel, type Tab } from "components/index";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
@@ -14,22 +14,19 @@ import Identity, { CallbackProps } from "components/Identity";
 import { ResultStatus } from "@icpswap/types";
 import { validate } from "bitcoin-address-validation";
 import { MessageTypes, useTips } from "hooks/useTips";
-import Toggle, { ToggleButton } from "components/SwitchToggle";
 import { useUpdateUserTx } from "store/wallet/hooks";
 import Links from "./Links";
 import Logo from "./Logo";
 import DissolveRecords from "./DissolveRecords";
 import RetryDissolve from "./Retry";
 
-export default function DissolveBTC({
-  buttons,
-  handleChange,
-  active,
-}: {
+export interface DissolveBTCProps {
   buttons: { key: string; value: string }[];
-  handleChange: (button: ToggleButton) => void;
+  handleChange: (button: Tab) => void;
   active: string;
-}) {
+}
+
+export default function DissolveBTC({ buttons, handleChange, active }: DissolveBTCProps) {
   const principal = useAccountPrincipalString();
 
   const [reload, setReload] = useState(false);
@@ -118,7 +115,7 @@ export default function DissolveBTC({
   return (
     <>
       <MainCard>
-        <Toggle buttons={buttons} onChange={handleChange} active={active} />
+        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "20px 0 0 0" }}>
           <Logo type="dissolve" />
 

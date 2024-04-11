@@ -3,15 +3,14 @@ import { Trans, t } from "@lingui/macro";
 import { withdraw_eth, useFetchUserTxStates } from "hooks/ck-eth";
 import { useApprove, useTokenInfo, useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT , chain } from "constants/ckETH";
+import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT, chain } from "constants/ckETH";
 import { ckETH } from "constants/tokens";
 import { useState, useEffect } from "react";
-import { FilledTextField, NumberFilledTextField, MainCard } from "components/index";
+import { FilledTextField, NumberFilledTextField, MainCard, TabPanel, type Tab } from "components/index";
 import { parseTokenAmount, formatTokenAmount, numberToString, toSignificant } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { isAddress } from "utils/web3/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import Toggle, { ToggleButton } from "components/SwitchToggle";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
@@ -23,7 +22,7 @@ import DissolveRecords from "./DissolveRecords";
 
 export interface DissolveETHProps {
   buttons: { key: string; value: string }[];
-  handleChange: (button: ToggleButton) => void;
+  handleChange: (tab: Tab) => void;
   active: string;
 }
 
@@ -115,7 +114,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
   return (
     <>
       <MainCard>
-        <Toggle buttons={buttons} onChange={handleChange} active={active} />
+        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "20px 0 0 0" }}>
           <Logo type="dissolve" />
 

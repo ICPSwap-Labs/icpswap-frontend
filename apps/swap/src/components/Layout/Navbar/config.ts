@@ -52,8 +52,8 @@ export const routes: Route[] = [
   },
   {
     key: "sns",
-    name: `SNS Launchpad`,
-    path: `/sns/launch/csyra-haaaa-aaaaq-aacva-cai`,
+    name: `SNS`,
+    path: `/sns`,
   },
   {
     key: "voting",

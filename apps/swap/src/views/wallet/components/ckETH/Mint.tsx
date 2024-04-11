@@ -3,8 +3,7 @@ import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard, NumberFilledTextField } from "components/index";
-import Toggle, { ToggleButton } from "components/SwitchToggle";
+import { MainCard, NumberFilledTextField, TabPanel, type Tab } from "components/index";
 import { principalToBytes32 } from "utils/ic/index";
 import { useETHContract } from "hooks/web3/useETHContract";
 import { useWeb3React } from "@web3-react/core";
@@ -47,7 +46,7 @@ function DeadContent({ content }: DeadContentProps) {
 
 export interface MintProps {
   buttons: { key: string; value: string }[];
-  handleChange: (button: ToggleButton) => void;
+  handleChange: (button: Tab) => void;
   active: string;
 }
 
@@ -127,7 +126,7 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
   return (
     <>
       <MainCard>
-        <Toggle buttons={buttons} onChange={handleChange} active={active} />
+        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
 
         <Box sx={{ margin: "20px 0 0 0" }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

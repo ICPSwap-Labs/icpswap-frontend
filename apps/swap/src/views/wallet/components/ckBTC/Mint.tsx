@@ -12,8 +12,7 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard } from "components/index";
-import Toggle, { ToggleButton } from "components/SwitchToggle";
+import { MainCard, TabPanel, type Tab } from "components/index";
 import Transaction from "./Transaction";
 import Links from "./Links";
 import Logo from "./Logo";
@@ -37,17 +36,14 @@ function CopyIcon() {
   );
 }
 
-export default function MintCK_BTC({
-  buttons,
-  handleChange,
-  active,
-  block,
-}: {
+export interface MintProps {
   buttons: { key: string; value: string }[];
-  handleChange: (button: ToggleButton) => void;
+  handleChange: (button: Tab) => void;
   active: string;
   block: number | undefined;
-}) {
+}
+
+export default function MintCkBTC({ buttons, handleChange, active, block }: MintProps) {
   const theme = useTheme() as Theme;
 
   const principal = useAccountPrincipalString();
@@ -80,7 +76,7 @@ export default function MintCK_BTC({
   return (
     <>
       <MainCard>
-        <Toggle buttons={buttons} onChange={handleChange} active={active} />
+        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
         <Box sx={{ margin: "20px 0 0 0" }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Logo type="mint" />
