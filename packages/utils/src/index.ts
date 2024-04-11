@@ -25,3 +25,5 @@ export * from "./isNullArgs";
 export * from "./xlsx";
 export * from "./unixToDate";
 export * from "./explorerLink";
+export * from "./nowInSeconds";
+export * from "./converter";

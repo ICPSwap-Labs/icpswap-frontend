@@ -20,3 +20,4 @@ export * from "./components/BarChart/index";
 export * from "./components/CandleChart/index";
 export * from "./components/Charts";
 export * from "./components/SimplePagination";
+export * from "./components/Modal";

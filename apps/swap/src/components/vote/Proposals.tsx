@@ -6,7 +6,7 @@ import { Trans, t } from "@lingui/macro";
 import { ProposalInfo, ProjectInfo } from "@icpswap/types";
 import { Pagination, PaginationType, NoData, StaticLoading, MainCard } from "components/index";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
-import Select from "components/Select";
+import { Select } from "components/Select";
 import { useAccount } from "store/auth/hooks";
 import removeMD from "remove-markdown";
 import { useVotingProposals } from "@icpswap/hooks";
