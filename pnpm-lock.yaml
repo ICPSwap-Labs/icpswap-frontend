@@ -532,6 +532,9 @@ importers:
       qs:
         specifier: ^6.9.4
         version: 6.11.2
+      randombytes:
+        specifier: ^2.1.0
+        version: 2.1.0
       react:
         specifier: ^17.0.2
         version: 17.0.2
@@ -656,6 +659,9 @@ importers:
       '@types/qs':
         specifier: ^6.9.2
         version: 6.9.10
+      '@types/randombytes':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@types/react':
         specifier: 17.0.2
         version: 17.0.2
@@ -906,6 +912,12 @@ importers:
       polished:
         specifier: ^3.3.2
         version: 3.7.2
+      react-feather:
+        specifier: ^2.0.8
+        version: 2.0.10(react@17.0.2)
+      react-is:
+        specifier: ^17.0.2
+        version: 17.0.2
       react-router-dom:
         specifier: 5.2.0
         version: 5.2.0(react@17.0.2)
@@ -6401,6 +6413,12 @@ packages:
 
   /@types/qs@6.9.10:
     resolution: {integrity: sha512-3Gnx08Ns1sEoCrWssEgTSJs/rsT2vhGP+Ja9cnnk9k4ALxinORlQneLXFeFKOTJMOeZUFD1s7w+w2AphTpvzZw==}
+
+  /@types/randombytes@2.0.3:
+    resolution: {integrity: sha512-+NRgihTfuURllWCiIAhm1wsJqzsocnqXM77V/CalsdJIYSRGEHMnritxh+6EsBklshC+clo1KgnN14qgSGeQdw==}
+    dependencies:
+      '@types/node': 13.13.52
+    dev: true
 
   /@types/range-parser@1.2.7:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}

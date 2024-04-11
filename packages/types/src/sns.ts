@@ -11,6 +11,19 @@ export type {
   GetBuyerStateResponse,
   BuyerState,
   RefreshBuyerTokensResponse,
+  Neuron,
+  NeuronId,
+  GetNeuron,
+  GetNeuronResponse,
+  ListNeurons,
+  ListNeuronsResponse,
+  DissolveState,
+  NervousSystemParameters,
+  DefaultFollowees,
+  NeuronParameters,
+  NeuronPermissionList,
+  ManageNeuronResponse,
+  Operation,
 } from "@icpswap/candid";
 
 export interface TokenRoots {
