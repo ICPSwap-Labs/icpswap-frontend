@@ -41,13 +41,13 @@ export function neuronState(state: DissolveState | undefined): NeuronState {
 
   if (state_key === "DissolveDelaySeconds") {
     const delay_seconds: bigint = state[state_key];
-    if (new BigNumber(delay_seconds.toString(10)).gt(0)) return NeuronState.Locked;
+    if (new BigNumber(delay_seconds.toString()).gt(0)) return NeuronState.Locked;
     return NeuronState.Dissolved;
   }
 
   const now = new Date().getTime();
   const dissolve_time: bigint = state[state_key];
-  if (new BigNumber(dissolve_time.toString(10)).times(1000).gt(now)) return NeuronState.Dissolving;
+  if (new BigNumber(dissolve_time.toString()).times(1000).gt(now)) return NeuronState.Dissolving;
   return NeuronState.Dissolved;
 }
 
@@ -191,4 +191,10 @@ export function getNervousVotingPower(
     .div(100)
     .decimalPlaces(2, 0)
     .toString(10);
+}
+
+export function canSpawnNeuron(neuron: Neuron): boolean {
+  const maturity_e8s_equivalent = neuron.maturity_e8s_equivalent;
+  // 1/95
+  return new BigNumber(maturity_e8s_equivalent.toString()).lt(105263158);
 }

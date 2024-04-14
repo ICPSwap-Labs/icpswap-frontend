@@ -33,7 +33,8 @@ export function Dissolve({ onDissolveSuccess, governance_id, neuron_id }: Dissol
         openTip(t`Dissolve successfully`, TIP_SUCCESS);
         if (onDissolveSuccess) onDissolveSuccess();
       } else {
-        openTip(stop_dissolving_neuron_error.error_message, TIP_ERROR);
+        const message = stop_dissolving_neuron_error.error_message;
+        openTip(message !== "" ? message : t`Failed to dissolve`, TIP_ERROR);
       }
     } else {
       openTip(message ?? t`Failed to dissolve`, TIP_ERROR);

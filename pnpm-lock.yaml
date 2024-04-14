@@ -23,6 +23,9 @@ importers:
       '@dfinity/ledger-icp':
         specifier: 2.2.0
         version: 2.2.0(@dfinity/agent@1.0.1)(@dfinity/candid@1.0.1)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1)
+      '@dfinity/nns':
+        specifier: 4.0.2
+        version: 4.0.2(@dfinity/agent@1.0.1)(@dfinity/candid@1.0.1)(@dfinity/ledger-icp@2.2.0)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1)
       '@dfinity/principal':
         specifier: 1.0.1
         version: 1.0.1
@@ -3123,7 +3126,7 @@ packages:
       '@dfinity/principal': ^1.0.1
       '@peculiar/webcrypto': ^1.4.0
     dependencies:
-      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+      '@dfinity/agent': 1.0.1(@dfinity/candid@0.19.3)(@dfinity/principal@1.0.1)
       '@dfinity/principal': 1.0.1
       '@noble/curves': 1.3.0
       '@noble/hashes': 1.3.3
@@ -3151,6 +3154,26 @@ packages:
     resolution: {integrity: sha512-zMtlERvmE3X9vlx13rMPghWJNiTAzEU8R6CA5EScnK3EnDFUMdFhBPeW06/BmqG3ngVqES+AM58u9v/SB4ECDQ==}
     dependencies:
       google-protobuf: 3.21.2
+    dev: false
+
+  /@dfinity/nns@4.0.2(@dfinity/agent@1.0.1)(@dfinity/candid@1.0.1)(@dfinity/ledger-icp@2.2.0)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1):
+    resolution: {integrity: sha512-cX6c8JCGAcfdvS2l+JT3u63dIZtVcAUdOKodeFOdN1ADyuC0zu05uurZVHpCmt+uaDM3ahf9LsAC1RxAImd7UQ==}
+    peerDependencies:
+      '@dfinity/agent': ^1.0.1
+      '@dfinity/candid': ^1.0.1
+      '@dfinity/ledger-icp': ^2.2.2
+      '@dfinity/nns-proto': ^1.0.1
+      '@dfinity/principal': ^1.0.1
+      '@dfinity/utils': ^2.1.3
+    dependencies:
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/ledger-icp': 2.2.0(@dfinity/agent@1.0.1)(@dfinity/candid@1.0.1)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1)
+      '@dfinity/nns-proto': 1.0.1
+      '@dfinity/principal': 1.0.1
+      '@dfinity/utils': 2.1.1(@dfinity/agent@1.0.1)(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+      '@noble/hashes': 1.3.3
+      randombytes: 2.1.0
     dev: false
 
   /@dfinity/principal@0.10.4:

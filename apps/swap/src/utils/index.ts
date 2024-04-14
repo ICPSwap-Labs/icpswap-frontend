@@ -10,7 +10,7 @@ BigInt.prototype.toJSON = function toJSON() {
 };
 
 // avoid scientific notation when use toString
-BigNumber.set({ EXPONENTIAL_AT: 100 });
+BigNumber.set({ EXPONENTIAL_AT: 10 ** 9 });
 
 BigNumber.config({
   ROUNDING_MODE: BigNumber.ROUND_DOWN,

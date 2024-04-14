@@ -1,6 +1,6 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import { LoadingRow, TabPanel, Copy } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
@@ -18,6 +18,10 @@ import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
 import { Dissolve } from "./components/Dissolve";
 import { Stake } from "./components/Stake";
+import { SetDissolveDelay } from "./components/Delay";
+import { Disburse } from "./components/Disburse";
+import { Maturity } from "./components/Maturity";
+import { Followings } from "./components/Following";
 
 interface NeuronProps {
   neuron: Neuron;
@@ -38,11 +42,15 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
 
   const seconds = getDissolvingTimeInSeconds(neuron) ?? formatted_neuron.dissolve_delay;
 
+  const neuron_id = useMemo(() => {
+    return neuron.id[0]?.id;
+  }, [neuron]);
+
   const handleSuccessTrigger = () => {
     refreshTrigger();
   };
 
-  return formatted_neuron.dissolve_state === NeuronState.Dissolved ? null : (
+  return formatted_neuron.dissolve_state === NeuronState.Spawning ? null : (
     <>
       <Box
         sx={{
@@ -118,20 +126,32 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
             token={tokenInfo}
-            neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
-            onSplitSuccess={handleSuccessTrigger}
+            onStakeSuccess={handleSuccessTrigger}
           />
 
-          <Button onClick={() => setSplitNeuronOpen(true)} variant="contained" size="small">
-            <Trans>Delay</Trans>
-          </Button>
+          <SetDissolveDelay
+            governance_id={governance_id}
+            neuron_id={neuron.id[0]?.id}
+            open={splitNeuronOpen}
+            onClose={() => setSplitNeuronOpen(false)}
+            token={tokenInfo}
+            neuronSystemParameters={neuronSystemParameters}
+            neuron_stake={neuron.cached_neuron_stake_e8s}
+            onSetSuccess={handleSuccessTrigger}
+          />
 
           {formatted_neuron.dissolve_state === NeuronState.Dissolving ? (
             <StopDissolving
               governance_id={governance_id}
               neuron_id={neuron.id[0]?.id}
               onStopSuccess={handleSuccessTrigger}
+            />
+          ) : formatted_neuron.dissolve_state === NeuronState.Dissolved ? (
+            <Disburse
+              governance_id={governance_id}
+              neuron_id={neuron.id[0]?.id}
+              onDisburseSuccess={handleSuccessTrigger}
             />
           ) : (
             <Dissolve
@@ -140,6 +160,18 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
               onDissolveSuccess={handleSuccessTrigger}
             />
           )}
+        </Box>
+
+        <Maturity
+          neuron={neuron}
+          token={tokenInfo}
+          governance_id={governance_id}
+          neuron_id={neuron.id[0]?.id}
+          onMaturitySuccess={handleSuccessTrigger}
+        />
+
+        <Box sx={{ margin: "20px 0 0 0" }}>
+          <Followings neuron_id={neuron_id} governance_id={governance_id} />
         </Box>
       </Box>
     </>
@@ -182,6 +214,11 @@ export default function Neurons() {
     setRefreshTrigger(refreshTrigger + 1);
   };
 
+  const filteredNeurons = useMemo(() => {
+    if (!listNeurons) return undefined;
+    return listNeurons?.filter((neuron) => neuron.cached_neuron_stake_e8s !== BigInt(0));
+  }, [listNeurons]);
+
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
@@ -195,7 +232,7 @@ export default function Neurons() {
         </Box>
 
         {!loading ? (
-          listNeurons && listNeurons?.length > 0 ? (
+          filteredNeurons && filteredNeurons?.length > 0 ? (
             <Box
               sx={{
                 display: "grid",
@@ -210,7 +247,7 @@ export default function Neurons() {
                 },
               }}
             >
-              {listNeurons?.map((neuron, index) => (
+              {filteredNeurons?.map((neuron, index) => (
                 <NeuronItem
                   key={index}
                   neuron={neuron}

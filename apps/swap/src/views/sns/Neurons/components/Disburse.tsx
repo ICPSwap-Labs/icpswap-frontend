@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button } from "@mui/material";
-import { stopDissolvingNeuron } from "@icpswap/hooks";
+import { disburseNeuron } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import { ConfirmModal } from "@icpswap/ui";
 
-export interface StopDissolvingProps {
-  onStopSuccess?: () => void;
+export interface DisburseProps {
+  onDisburseSuccess?: () => void;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
 }
 
-export function StopDissolving({ onStopSuccess, governance_id, neuron_id }: StopDissolvingProps) {
+export function Disburse({ onDisburseSuccess, governance_id, neuron_id }: DisburseProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -23,21 +23,21 @@ export function StopDissolving({ onStopSuccess, governance_id, neuron_id }: Stop
     setLoading(true);
     openFullscreenLoading();
 
-    const { data, message, status } = await stopDissolvingNeuron(governance_id, neuron_id);
+    const { data, message, status } = await disburseNeuron(governance_id, neuron_id);
 
     const result = data ? data.command[0] : undefined;
     const stop_dissolving_neuron_error = result ? ("Error" in result ? result.Error : undefined) : undefined;
 
     if (status === "ok") {
       if (!stop_dissolving_neuron_error) {
-        openTip(t`Stop dissolving successfully`, TIP_SUCCESS);
-        if (onStopSuccess) onStopSuccess();
+        openTip(t`Disburse successfully`, TIP_SUCCESS);
+        if (onDisburseSuccess) onDisburseSuccess();
       } else {
         const message = stop_dissolving_neuron_error.error_message;
-        openTip(message === "" ? t`Failed to stop dissolving` : message, TIP_ERROR);
+        openTip(message === "" ? t`Failed to disburse` : message, TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to stop dissolving`, TIP_ERROR);
+      openTip(message ?? t`Failed to disburse`, TIP_ERROR);
     }
 
     setLoading(false);
@@ -47,15 +47,15 @@ export function StopDissolving({ onStopSuccess, governance_id, neuron_id }: Stop
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small">
-        <Trans>Stop Dissolving</Trans>
+        <Trans>Disburse</Trans>
       </Button>
 
       <ConfirmModal
         open={open}
         onClose={() => setOpen(false)}
-        title={t`Stop Dissolving`}
+        title={t`Disburse`}
         onConfirm={handleConfirm}
-        text={t`Are you sure you want to stop the dissolve process?`}
+        text={t`Are you sure you want to disburse this neuron?`}
       />
     </>
   );

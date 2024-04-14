@@ -52,6 +52,7 @@
     "@dfinity/ledger-icp": "2.2.0",
     "@dfinity/principal": "1.0.1",
     "@dfinity/utils": "2.1.1",
+    "@dfinity/nns": "4.0.2",
     "@lingui/cli": "4.6.0",
     "@lingui/core": "4.6.0",
     "@lingui/format-json": "4.6.0",
