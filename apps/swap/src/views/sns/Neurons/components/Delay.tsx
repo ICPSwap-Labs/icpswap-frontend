@@ -1,6 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatTokenAmount,
+  uint8ArrayToBigInt,
+  toHexString,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { splitNeuron } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,10 +18,10 @@ import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
 import randomBytes from "randombytes";
 
-export interface SplitNeuronProps {
+export interface SetDissolveDelayProps {
   open: boolean;
   onClose: () => void;
-  onSplitSuccess?: () => void;
+  onSetSuccess?: () => void;
   token: TokenInfo | undefined;
   neuron_stake: bigint;
   governance_id: string | undefined;
@@ -23,14 +29,14 @@ export interface SplitNeuronProps {
   neuronSystemParameters: NervousSystemParameters | undefined;
 }
 
-export function SplitNeuron({
-  onSplitSuccess,
+export function SetDissolveDelay({
+  onSetSuccess,
   neuron_stake,
   token,
   governance_id,
   neuron_id,
   neuronSystemParameters,
-}: SplitNeuronProps) {
+}: SetDissolveDelayProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -64,14 +70,13 @@ export function SplitNeuron({
 
     if (status === "ok") {
       if (!split_neuron_error) {
-        openTip(t`Split successfully`, TIP_SUCCESS);
-        if (onSplitSuccess) onSplitSuccess();
+        openTip(t`Set dissolve delay successfully`, TIP_SUCCESS);
+        if (onSetSuccess) onSetSuccess();
       } else {
-        const message = split_neuron_error.error_message;
-        openTip(message !== "" ? message : t`Failed to split`, TIP_ERROR);
+        openTip(split_neuron_error.error_message, TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to split`, TIP_ERROR);
+      openTip(message ?? t`Failed to set dissolve delay`, TIP_ERROR);
     }
 
     setLoading(false);
@@ -112,27 +117,41 @@ export function SplitNeuron({
   )
     error = t`Must be greater than trans fee`;
 
-  if (
-    amount &&
-    token &&
-    neuron_minimum_stake &&
-    !formatTokenAmount(amount, token.decimals)
-      .minus(token.transFee.toString())
-      .isGreaterThan(neuron_minimum_stake?.toString())
-  )
-    error = t`Amount must be greater than ${parseTokenAmount(
-      neuron_minimum_stake + token.transFee,
-      token.decimals,
-    ).toFormat()} ${token.symbol}`;
-
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small">
-        <Trans>Split Neuron</Trans>
+        <Trans>Delay</Trans>
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Split Neuron`}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t`Set Dissolve Delay`}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0" }}>
+          <Box>
+            <Typography>Neuron ID</Typography>
+            <Typography>{neuron_id ? toHexString(neuron_id) : "--"}</Typography>
+          </Box>
+
+          <Box>
+            <Typography>Balance</Typography>
+            <Typography>
+              {neuron_stake && token
+                ? toSignificantWithGroupSeparator(parseTokenAmount(neuron_stake, token.decimals).toString(), 6)
+                : "--"}
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography>
+              <Trans>Dissolve Delay</Trans>
+            </Typography>
+            <Typography>
+              <Trans>
+                Dissolve delay is the minimum amount of time you have to wait for the neuron to unlock, and ICS to be
+                available again. Note, that dissolve delay only decreases when the neuron is in a dissolving state.
+                Voting power is given to neurons with a dissolve delay of at least 1 month, 1 day.
+              </Trans>
+            </Typography>
+          </Box>
+
           <NumberFilledTextField
             placeholder={t`Enter the amount`}
             value={amount}

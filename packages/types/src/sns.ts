@@ -24,6 +24,8 @@ export type {
   NeuronPermissionList,
   ManageNeuronResponse,
   Operation,
+  ListNervousSystemFunctionsResponse,
+  NervousSystemFunction,
 } from "@icpswap/candid";
 
 export interface TokenRoots {

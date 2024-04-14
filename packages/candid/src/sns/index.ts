@@ -34,5 +34,7 @@ export type {
   DefaultFollowees,
   ManageNeuronResponse,
   Operation,
+  ListNervousSystemFunctionsResponse,
+  NervousSystemFunction,
 } from "./governance";
 export { idlFactory as SNS_GOVERNANCE_INTERFACE_FACTORY } from "./governance.did";

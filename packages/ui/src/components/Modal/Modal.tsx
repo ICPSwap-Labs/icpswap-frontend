@@ -159,7 +159,7 @@ export function Modal({
               display: "flex",
               justifyContent: "flex-end",
               gridTemplateColumns: down760 ? "1fr" : showConfirm && showCancel ? "1fr 1fr" : "1fr",
-              gap: down760 ? "10px 0" : "0 10px",
+              gap: down760 ? "10px 10px" : "0 10px",
             }}
           >
             {showCancel ? (

@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
 import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
-import { splitNeuron } from "@icpswap/hooks";
+import { claimOrRefreshNeuron, claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
+import { tokenTransfer } from "hooks/token/calls";
 import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { NervousSystemParameters } from "@icpswap/types";
@@ -13,26 +14,19 @@ import MaxButton from "components/MaxButton";
 import randomBytes from "randombytes";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { SubAccount } from "@dfinity/ledger-icp";
 
 export interface StakeProps {
   open: boolean;
   onClose: () => void;
-  onSplitSuccess?: () => void;
+  onStakeSuccess?: () => void;
   token: TokenInfo | undefined;
   neuron_stake: bigint;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
-  neuronSystemParameters: NervousSystemParameters | undefined;
 }
 
-export function Stake({
-  onSplitSuccess,
-  neuron_stake,
-  token,
-  governance_id,
-  neuron_id,
-  neuronSystemParameters,
-}: StakeProps) {
+export function Stake({ onStakeSuccess, neuron_stake, token, governance_id, neuron_id }: StakeProps) {
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -42,40 +36,27 @@ export function Stake({
 
   const { result: balance } = useTokenBalance(token?.canisterId, principal);
 
-  const neuron_minimum_stake = useMemo(() => {
-    if (!neuronSystemParameters) return undefined;
-
-    return neuronSystemParameters.neuron_minimum_stake_e8s[0];
-  }, [neuronSystemParameters]);
-
   const handleSubmit = async () => {
-    if (loading || !amount || !token || !governance_id || !neuron_id) return;
+    if (loading || !amount || !principal || !token || !governance_id || !neuron_id) return;
 
     setLoading(true);
     openFullscreenLoading();
 
-    const nonceBytes = new Uint8Array(randomBytes(8));
-    const memo = uint8ArrayToBigInt(nonceBytes);
-
-    const { data, message, status } = await splitNeuron(
-      governance_id,
-      neuron_id,
-      BigInt(formatTokenAmount(amount, token.decimals).toString()),
-      memo,
-    );
-
-    const result = data ? data.command[0] : undefined;
-    const split_neuron_error = result ? ("Error" in result ? result.Error : undefined) : undefined;
+    const { message, status } = await tokenTransfer({
+      canisterId: token.canisterId,
+      to: governance_id,
+      subaccount: [...neuron_id],
+      amount: formatTokenAmount(amount, token.decimals),
+      from: principal.toString(),
+      identity: true,
+    });
 
     if (status === "ok") {
-      if (!split_neuron_error) {
-        openTip(t`Split successfully`, TIP_SUCCESS);
-        if (onSplitSuccess) onSplitSuccess();
-      } else {
-        openTip(split_neuron_error.error_message, TIP_ERROR);
-      }
+      const refreshCommand = await claimOrRefreshNeuron(governance_id, neuron_id);
+      openTip(t`Staked successfully`, TIP_SUCCESS);
+      if (onStakeSuccess) onStakeSuccess();
     } else {
-      openTip(message ?? t`Failed to split`, TIP_ERROR);
+      openTip(message ?? t`Failed to stake`, TIP_ERROR);
     }
 
     setLoading(false);
@@ -98,8 +79,6 @@ export function Stake({
     parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount)
   )
     error = t`There are not enough funds in this account`;
-
-  console.log("error:", error);
 
   return (
     <>

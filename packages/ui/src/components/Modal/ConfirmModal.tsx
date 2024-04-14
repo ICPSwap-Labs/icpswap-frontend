@@ -13,16 +13,7 @@ export interface ConfirmModalProps {
 
 export function ConfirmModal({ title, open, text, onConfirm, onClose }: ConfirmModalProps) {
   return (
-    <Modal
-      open={open}
-      title={title}
-      showConfirm
-      showCancel
-      confirmText="Confirm"
-      cancelText="Cancel"
-      onCancel={onClose}
-      onConfirm={onConfirm}
-    >
+    <Modal open={open} title={title} showConfirm confirmText="Confirm" onConfirm={onConfirm} onClose={onClose}>
       <Typography color="text.primary" fontSize="16px">
         {text}
       </Typography>

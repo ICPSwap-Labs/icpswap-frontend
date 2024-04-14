@@ -1,223 +1,282 @@
-import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import {
-  useListDeployedSNSs,
-  useSNSTokensRootIds,
-  useNervousSystemParameters,
-  useListNeurons,
-  useNeuron,
-} from "@icpswap/hooks";
+import { Box, Button, Typography, useTheme } from "@mui/material";
+import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useMemo, useState } from "react";
-import { LoadingRow, TabPanel, Copy, MainCard, AvatarImage, Flex } from "components/index";
-import type { Neuron } from "@icpswap/types";
+import { LoadingRow, TabPanel, Copy } from "components/index";
+import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
-import { useHistory, useParams } from "react-router-dom";
+import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/neuron";
-import { parseTokenAmount, shorten, toSignificantWithGroupSeparator, hexToBytes } from "@icpswap/utils";
+import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Unlock, Clock } from "react-feather";
 import { useTokenInfo } from "hooks/token";
 import { secondsToDuration } from "@dfinity/utils";
 
+import { SplitNeuron } from "./components/SplitNeuron";
+import { StopDissolving } from "./components/StopDissolving";
+import { Dissolve } from "./components/Dissolve";
+import { Stake } from "./components/Stake";
+import { SetDissolveDelay } from "./components/Delay";
+import { Disburse } from "./components/Disburse";
+import { Maturity } from "./components/Maturity";
+import { Followings } from "./components/Following";
+
 interface NeuronProps {
   neuron: Neuron;
   ledger_id: string | undefined;
   root_id: string | null;
+  governance_id: string | undefined;
+  neuronSystemParameters: NervousSystemParameters | undefined;
+  refreshTrigger: () => void;
 }
 
-function NeuronItem({ neuron, ledger_id, root_id }: NeuronProps) {
+function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
   const theme = useTheme() as Theme;
-  const history = useHistory();
+  const [splitNeuronOpen, setSplitNeuronOpen] = useState(false);
+
   const { result: tokenInfo } = useTokenInfo(ledger_id);
 
   const formatted_neuron = neuronFormat(neuron);
 
   const seconds = getDissolvingTimeInSeconds(neuron) ?? formatted_neuron.dissolve_delay;
 
-  return (
-    <Box
-      sx={{
-        background: theme.palette.background.level4,
-        borderRadius: "12px",
-        padding: "20px",
-        cursor: "pointer",
-        "@media(max-width: 640px)": {
-          padding: "10px",
-        },
-      }}
-      onClick={() => {
-        if (root_id) {
-          history.push(`/sns/neurons/${root_id}?neuron=${formatted_neuron.id}`);
-        }
-      }}
-    >
-      <Flex justify="space-between" align="center">
-        <Flex gap="0 5px" align="center">
-          <Typography color="text.primary">{formatted_neuron.id ? shorten(formatted_neuron.id, 6) : "--"}</Typography>
-          {formatted_neuron.id ? (
-            <Copy content={formatted_neuron.id}>
-              <CopyIcon color={theme.colors.darkSecondaryMain} />
-            </Copy>
-          ) : null}
-        </Flex>
-
-        <Flex gap="0 8px" align="center">
-          {formatted_neuron.dissolve_state === NeuronState.Locked ? <Lock size="16px" /> : null}
-          {formatted_neuron.dissolve_state === NeuronState.Dissolving ? <Clock size="16px" /> : null}
-          {formatted_neuron.dissolve_state === NeuronState.Dissolved ? <Unlock size="16px" /> : null}
-          <Typography>{formatted_neuron.dissolve_state_text}</Typography>
-        </Flex>
-      </Flex>
-
-      <Box sx={{ display: "flex", margin: "20px 0 0 0" }}>
-        <Typography color="text.primary" fontWeight={500} fontSize="24px">
-          {tokenInfo
-            ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, tokenInfo.decimals).toString(),
-              )} ${tokenInfo.symbol}`
-            : "--"}
-        </Typography>
-      </Box>
-
-      <Box sx={{ margin: "20px 0 0 0" }}>
-        <Typography>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-export default function Neuron() {
-  const theme = useTheme() as Theme;
-  const { root_id, neuron_id } = useParams<{ root_id: string; neuron_id: string }>();
-
-  console.log("root_id", root_id);
-  console.log("neuron_id", neuron_id);
-
-  const principal = useAccountPrincipalString();
-
-  const { result: listedSNS } = useListDeployedSNSs();
-  const { result: snsTokens } = useSNSTokensRootIds();
-
-  const { governance_id, ledger_id } = useMemo(() => {
-    if (!root_id || !listedSNS) return { governance_id: undefined, ledger_id: undefined };
-
-    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === root_id);
-
-    if (!instance) return { governance_id: undefined, ledger_id: undefined };
-
-    return {
-      governance_id: instance.governance_canister_id.toString(),
-      ledger_id: instance.ledger_canister_id.toString(),
-    };
-  }, [listedSNS, root_id]);
-
-  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
-
-  const snsToken = useMemo(() => {
-    if (!snsTokens) return undefined;
-    return snsTokens.data.find((e) => e.root_canister_id === root_id);
-  }, [snsTokens, root_id]);
-
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
-
-  const { result: listNeurons, loading } = useListNeurons({
-    canisterId: governance_id,
-    limit: 100,
-    of_principal: principal,
-  });
-
-  const bytes_neuron_id = useMemo(() => {
-    return hexToBytes(neuron_id);
-  }, [neuron_id]);
-
-  const { result: neuron } = useNeuron(governance_id, bytes_neuron_id);
-
-  const { formatted_neuron, seconds } = useMemo(() => {
-    if (!neuron) return { formatted_neuron: undefined, seconds: undefined };
-
-    const formatted_neuron = neuronFormat(neuron);
-    const seconds = getDissolvingTimeInSeconds(neuron) ?? formatted_neuron.dissolve_delay;
-
-    return { formatted_neuron, seconds };
+  const neuron_id = useMemo(() => {
+    return neuron.id[0]?.id;
   }, [neuron]);
 
-  return (
-    <MainCard>
-      <Flex justify="space-between" align="center">
-        <Flex gap="0 10px" align="center">
-          <AvatarImage src={snsToken?.logo} sx={{ width: "24px", height: "24px" }} />
-          <Typography color="text.primary" fontWeight={500}>
-            {snsToken?.name ?? "--"}
+  const handleSuccessTrigger = () => {
+    refreshTrigger();
+  };
+
+  return formatted_neuron.dissolve_state === NeuronState.Spawning ? null : (
+    <>
+      <Box
+        sx={{
+          background: theme.palette.background.level4,
+          borderRadius: "12px",
+          padding: "20px",
+          "@media(max-width: 640px)": {
+            padding: "10px",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
+            <Typography color="text.primary">{formatted_neuron.id ? shorten(formatted_neuron.id, 6) : "--"}</Typography>
+            {formatted_neuron.id ? (
+              <Copy content={formatted_neuron.id}>
+                <CopyIcon color={theme.colors.darkSecondaryMain} />
+              </Copy>
+            ) : null}
+          </Box>
+
+          <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
+            {formatted_neuron.dissolve_state === NeuronState.Locked ? <Lock size="16px" /> : null}
+            {formatted_neuron.dissolve_state === NeuronState.Dissolving ? <Clock size="16px" /> : null}
+            <Typography>{formatted_neuron.dissolve_state_text}</Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", margin: "20px 0 0 0" }}>
+          <Typography color="text.primary" fontWeight={500} fontSize="24px">
+            {tokenInfo
+              ? `${toSignificantWithGroupSeparator(
+                  parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, tokenInfo.decimals).toString(),
+                )} ${tokenInfo.symbol}`
+              : "--"}
           </Typography>
-        </Flex>
-
-        <Flex gap="0 5px" align="center">
-          <Typography color="text.primary">{neuron_id ? shorten(neuron_id, 6) : "--"}</Typography>
-          {neuron_id ? (
-            <Copy content={neuron_id}>
-              <CopyIcon color={theme.colors.darkSecondaryMain} />
-            </Copy>
-          ) : null}
-        </Flex>
-      </Flex>
-
-      <Box sx={{ margin: "40px 0 0 0" }}>
-        <Typography color="text.primary" fontWeight={500} fontSize="28px" align="center">
-          {tokenInfo && formatted_neuron
-            ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, tokenInfo.decimals).toString(),
-              )} ${tokenInfo.symbol}`
-            : "--"}
-        </Typography>
+        </Box>
 
         <Box sx={{ margin: "20px 0 0 0" }}>
+          <Typography>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
+        </Box>
+
+        {/* <Box sx={{ margin: "20px 0 0 0" }}>
           <Typography align="center" fontSize="16px">
             <Trans>Voting Power</Trans>&nbsp;
             {neuron && tokenInfo && neuronSystemParameters
               ? getNervousVotingPower(neuron, neuronSystemParameters, tokenInfo.decimals)
               : "--"}
           </Typography>
+        </Box> */}
+
+        <Box sx={{ display: "flex", gap: "0 8px", margin: "20px 0 0 0" }}>
+          <SplitNeuron
+            governance_id={governance_id}
+            neuron_id={neuron.id[0]?.id}
+            open={splitNeuronOpen}
+            onClose={() => setSplitNeuronOpen(false)}
+            token={tokenInfo}
+            neuronSystemParameters={neuronSystemParameters}
+            neuron_stake={neuron.cached_neuron_stake_e8s}
+            onSplitSuccess={handleSuccessTrigger}
+          />
+
+          <Stake
+            governance_id={governance_id}
+            neuron_id={neuron.id[0]?.id}
+            open={splitNeuronOpen}
+            onClose={() => setSplitNeuronOpen(false)}
+            token={tokenInfo}
+            neuron_stake={neuron.cached_neuron_stake_e8s}
+            onStakeSuccess={handleSuccessTrigger}
+          />
+
+          <SetDissolveDelay
+            governance_id={governance_id}
+            neuron_id={neuron.id[0]?.id}
+            open={splitNeuronOpen}
+            onClose={() => setSplitNeuronOpen(false)}
+            token={tokenInfo}
+            neuronSystemParameters={neuronSystemParameters}
+            neuron_stake={neuron.cached_neuron_stake_e8s}
+            onSetSuccess={handleSuccessTrigger}
+          />
+
+          {formatted_neuron.dissolve_state === NeuronState.Dissolving ? (
+            <StopDissolving
+              governance_id={governance_id}
+              neuron_id={neuron.id[0]?.id}
+              onStopSuccess={handleSuccessTrigger}
+            />
+          ) : formatted_neuron.dissolve_state === NeuronState.Dissolved ? (
+            <Disburse
+              governance_id={governance_id}
+              neuron_id={neuron.id[0]?.id}
+              onDisburseSuccess={handleSuccessTrigger}
+            />
+          ) : (
+            <Dissolve
+              governance_id={governance_id}
+              neuron_id={neuron.id[0]?.id}
+              onDissolveSuccess={handleSuccessTrigger}
+            />
+          )}
+        </Box>
+
+        <Maturity
+          neuron={neuron}
+          token={tokenInfo}
+          governance_id={governance_id}
+          neuron_id={neuron.id[0]?.id}
+          onMaturitySuccess={handleSuccessTrigger}
+        />
+
+        <Box sx={{ margin: "20px 0 0 0" }}>
+          <Followings neuron_id={neuron_id} governance_id={governance_id} />
         </Box>
       </Box>
+    </>
+  );
+}
 
-      {!loading ? (
-        listNeurons && listNeurons?.length > 0 ? (
-          <Box
-            sx={{
-              display: "grid",
-              gap: "20px",
-              margin: "20px 0 0 0",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              "@media (max-width:1088px)": {
-                gridTemplateColumns: "1fr 1fr",
-              },
-              "@media (max-width:640px)": {
-                gridTemplateColumns: "1fr",
-              },
-            }}
-          >
-            {listNeurons?.map((neuron, index) => (
-              <NeuronItem key={index} neuron={neuron} ledger_id={ledger_id} root_id={root_id} />
-            ))}
+export default function Neurons() {
+  const principal = useAccountPrincipalString();
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
+
+  const { result: listedSNS } = useListDeployedSNSs();
+
+  const sns = useMemo(() => {
+    if (!selectedNeuron || !listedSNS) return undefined;
+
+    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === selectedNeuron);
+
+    if (!instance) return undefined;
+
+    return instance;
+  }, [listedSNS, selectedNeuron]);
+
+  const { governance_id, ledger_id } = useMemo(() => {
+    if (!sns) return { governance_id: undefined, ledger_id: undefined };
+    return { governance_id: sns.governance_canister_id.toString(), ledger_id: sns.ledger_canister_id.toString() };
+  }, [sns]);
+
+  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
+
+  const { result: listNeurons, loading } = useListNeurons({
+    canisterId: governance_id,
+    limit: 100,
+    of_principal: principal,
+    refresh: refreshTrigger,
+  });
+
+  const handleRefresh = () => {
+    setRefreshTrigger(refreshTrigger + 1);
+  };
+
+  const filteredNeurons = useMemo(() => {
+    if (!listNeurons) return undefined;
+    return listNeurons?.filter((neuron) => neuron.cached_neuron_stake_e8s !== BigInt(0));
+  }, [listNeurons]);
+
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box sx={{ maxWidth: "1400px", width: "100%" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
+          <Box>
+            <Button variant="contained">
+              <Trans>Stake</Trans>
+            </Button>
           </Box>
-        ) : (
-          <Typography sx={{ margin: "20px 0 0 0" }}>No Neurons</Typography>
-        )
-      ) : (
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
         </Box>
-      )}
-    </MainCard>
+
+        {!loading ? (
+          filteredNeurons && filteredNeurons?.length > 0 ? (
+            <Box
+              sx={{
+                display: "grid",
+                gap: "20px",
+                margin: "20px 0 0 0",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                "@media (max-width:1088px)": {
+                  gridTemplateColumns: "1fr 1fr",
+                },
+                "@media (max-width:640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              {filteredNeurons?.map((neuron, index) => (
+                <NeuronItem
+                  key={index}
+                  neuron={neuron}
+                  ledger_id={ledger_id}
+                  root_id={selectedNeuron}
+                  governance_id={governance_id}
+                  neuronSystemParameters={neuronSystemParameters}
+                  refreshTrigger={handleRefresh}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Typography sx={{ margin: "20px 0 0 0" }}>No Neurons</Typography>
+          )
+        ) : (
+          <Box sx={{ margin: "20px 0 0 0" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }
