@@ -26,6 +26,12 @@ export type {
   Operation,
   ListNervousSystemFunctionsResponse,
   NervousSystemFunction,
+  ListProposals,
+  ListProposalsResponse,
+  Proposal,
+  ProposalId,
+  GetProposalResponse,
+  ProposalData,
 } from "@icpswap/candid";
 
 export interface TokenRoots {
