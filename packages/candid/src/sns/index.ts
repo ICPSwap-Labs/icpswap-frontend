@@ -36,5 +36,11 @@ export type {
   Operation,
   ListNervousSystemFunctionsResponse,
   NervousSystemFunction,
+  ListProposals,
+  ListProposalsResponse,
+  Proposal,
+  ProposalId,
+  GetProposalResponse,
+  ProposalData,
 } from "./governance";
 export { idlFactory as SNS_GOVERNANCE_INTERFACE_FACTORY } from "./governance.did";

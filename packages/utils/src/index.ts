@@ -27,3 +27,4 @@ export * from "./unixToDate";
 export * from "./explorerLink";
 export * from "./nowInSeconds";
 export * from "./converter";
+export * from "./formatPercentage";
