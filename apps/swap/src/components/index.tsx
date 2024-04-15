@@ -25,3 +25,5 @@ export { default as SwapTooltip } from "./Tooltip";
 export { default as Copy } from "./Copy/index";
 export * from "./TabPanel";
 export * from "./Image/index";
+export * from "./CollapseWrapper";
+export * from "./Mui";
