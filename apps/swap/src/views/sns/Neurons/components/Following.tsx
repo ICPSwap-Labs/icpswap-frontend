@@ -1,11 +1,11 @@
 import { Trans, t } from "@lingui/macro";
 import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
-import { Modal, Button, Box, Typography, Collapse } from "@icpswap/ui";
+import { Modal } from "@icpswap/ui";
+import { Button, Box, Typography, Collapse, Copy } from "components/index";
 import { Neuron, NervousSystemFunction } from "@icpswap/types";
 import { useMemo, useState } from "react";
 import { shorten, toHexString } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
-import { Copy } from "components/index";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 
 import { AddFollowee } from "./AddFollowee";

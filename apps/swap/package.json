@@ -124,6 +124,7 @@
     "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
     "react-horizontal-scrolling-menu": "^3.2.2",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-is": "^17.0.2",
     "react-markdown": "^6.0.0",
     "react-number-format": "5.3.1",

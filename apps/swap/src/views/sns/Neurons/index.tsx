@@ -13,6 +13,7 @@ import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Unlock, Clock } from "react-feather";
 import { useTokenInfo } from "hooks/token";
 import { secondsToDuration } from "@dfinity/utils";
+import { Tabs } from "components/sns/Tab";
 
 import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
@@ -222,6 +223,8 @@ export default function Neurons() {
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
+        <Tabs />
+
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
           <Box>
