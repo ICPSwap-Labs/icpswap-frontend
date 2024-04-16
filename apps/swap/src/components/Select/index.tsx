@@ -70,6 +70,7 @@ export function Value({ value, menus = [], helperText }: { helperText?: string; 
           whiteSpace: "nowrap",
         }}
         color="#fff"
+        component="div"
       >
         {menus.filter((menu) => menu.value === value)[0]?.label ?? value}
       </Typography>

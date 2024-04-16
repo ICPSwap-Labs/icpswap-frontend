@@ -1,28 +1,24 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useListDeployedSNSs, useProposal } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
+import { Box, Typography, useTheme } from "@mui/material";
+import { useListDeployedSNSs, useProposal, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { LoadingRow, TabPanel, TokenImage, MainCard } from "components/index";
-import type { Neuron, NervousSystemParameters } from "@icpswap/types";
+import { LoadingRow, TokenImage, MainCard } from "components/index";
 import { Theme } from "@mui/material/styles";
-import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/neuron";
-import { parseTokenAmount, shorten, toSignificantWithGroupSeparator, nowInSeconds, toHexString } from "@icpswap/utils";
-import { Lock, Unlock, Clock } from "react-feather";
+import { nowInSeconds } from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token";
-import { secondsToDuration } from "@dfinity/utils";
-import { useParams } from "react-router-dom";
-import { Copy } from "components/Copy/icon";
-import dayjs from "dayjs";
+import { useHistory, useParams } from "react-router-dom";
+import { ArrowLeft } from "react-feather";
 
 import { ProposalDetails } from "./components/ProposalDetails";
 import { VotingResult } from "./components/VotingResult";
-import { convertProposalNumberToText, snsRewardStatus, SnsRewordsText } from "./proposal.utils";
+import { ProposalSummary } from "./components/Summary";
+import { ProposalPayload } from "./components/Payload";
 
 export default function Voting() {
   const theme = useTheme() as Theme;
+  const history = useHistory();
   const principal = useAccountPrincipalString();
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const { governance_id, proposal_id } = useParams<{ governance_id: string; proposal_id: string }>();
 
@@ -36,12 +32,24 @@ export default function Voting() {
   }, [listedSNS, governance_id]);
 
   const ledger_id = sns?.ledger_canister_id.toString();
+
   const { result: tokenInfo } = useTokenInfo(ledger_id);
-  const { result: proposal_data, loading } = useProposal(governance_id, proposal_id ? BigInt(proposal_id) : undefined);
+  const { result: proposal_data, loading } = useProposal(
+    governance_id,
+    proposal_id ? BigInt(proposal_id) : undefined,
+    refreshTrigger,
+  );
 
-  console.log("proposal_data:", proposal_data);
+  const { result: listNeurons } = useListNeurons({
+    canisterId: governance_id,
+    limit: 100,
+    of_principal: principal,
+    refresh: refreshTrigger,
+  });
 
-  const { title, summary, seconds, isExecuted, proposer } = useMemo(() => {
+  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
+
+  const { title, isExecuted } = useMemo(() => {
     if (!proposal_data) return {};
 
     const __proposal = proposal_data.proposal[0];
@@ -61,8 +69,16 @@ export default function Voting() {
     };
   }, [proposal_data]);
 
+  const handleBack = () => {
+    history.push("/sns/voting");
+  };
+
   return (
     <MainCard>
+      <Box sx={{ margin: "0 0 12px 0" }}>
+        <ArrowLeft color="#ffffff" size="20px" cursor="pointer" onClick={handleBack} />
+      </Box>
+
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {loading ? (
           <Box sx={{ width: "100%" }}>
@@ -78,7 +94,7 @@ export default function Voting() {
             </LoadingRow>
           </Box>
         ) : (
-          <Box sx={{ maxWidth: "1400px", width: "100%" }}>
+          <Box sx={{ width: "100%" }}>
             <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
               <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={ledger_id} />
               <Typography fontSize="16px" fontWeight={500} color="text.primary">
@@ -109,9 +125,20 @@ export default function Voting() {
               >
                 <ProposalDetails proposal_data={proposal_data} />
 
-                <VotingResult proposal_data={proposal_data} />
+                <VotingResult
+                  proposal_id={proposal_id}
+                  governance_id={governance_id}
+                  proposal_data={proposal_data}
+                  neurons={listNeurons}
+                  neuronSystemParameters={neuronSystemParameters}
+                  onRefresh={() => setRefreshTrigger(refreshTrigger + 1)}
+                />
               </Box>
             </MainCard>
+
+            <ProposalSummary proposal_data={proposal_data} />
+
+            <ProposalPayload proposal_data={proposal_data} />
           </Box>
         )}
       </Box>

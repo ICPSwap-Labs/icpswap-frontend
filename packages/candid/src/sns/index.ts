@@ -42,5 +42,6 @@ export type {
   ProposalId,
   GetProposalResponse,
   ProposalData,
+  Ballot as SnsBallot,
 } from "./governance";
 export { idlFactory as SNS_GOVERNANCE_INTERFACE_FACTORY } from "./governance.did";

@@ -11,7 +11,6 @@ import { Trans, t } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
-import randomBytes from "randombytes";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";

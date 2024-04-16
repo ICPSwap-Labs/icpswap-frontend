@@ -1,4 +1,4 @@
-import type { Neuron, DissolveState, NervousSystemParameters } from "@icpswap/types";
+import type { Neuron, DissolveState, NervousSystemParameters, ProposalData, SnsBallot } from "@icpswap/types";
 import { BigNumber, nowInSeconds, toHexString } from "@icpswap/utils";
 
 export enum NeuronState {
@@ -81,6 +81,7 @@ export function neuronFormat(neuron: Neuron) {
     dissolve_delay,
     when_dissolved_timestamp_seconds,
     vesting_period_seconds: neuron.vesting_period_seconds[0],
+    neuron,
   };
 }
 
@@ -197,4 +198,76 @@ export function canSpawnNeuron(neuron: Neuron): boolean {
   const maturity_e8s_equivalent = neuron.maturity_e8s_equivalent;
   // 1/95
   return new BigNumber(maturity_e8s_equivalent.toString()).lt(105263158);
+}
+
+export interface IneligibleNeuronsArgs {
+  neurons: Neuron[];
+  proposal: ProposalData;
+}
+
+export const filterIneligibleNeurons = ({ neurons, proposal }: IneligibleNeuronsArgs): Neuron[] => {
+  const { ballots, proposal_creation_timestamp_seconds } = proposal;
+
+  return neurons.filter((neuron: Neuron) => {
+    const { created_timestamp_seconds, id } = neuronFormat(neuron);
+
+    const createdSinceProposal: boolean = created_timestamp_seconds > proposal_creation_timestamp_seconds;
+
+    const dissolveTooShort: boolean = ballots.find(([ballotNeuronId]) => ballotNeuronId === id) === undefined;
+
+    return createdSinceProposal || dissolveTooShort;
+  });
+};
+
+export interface VoteableForProposalArgs {
+  ballots: [string, SnsBallot][];
+  neuronId: string | undefined;
+}
+
+export function voteableForProposal({ ballots, neuronId }: VoteableForProposalArgs) {
+  if (!neuronId) return undefined;
+  const ballot: [string, SnsBallot] | undefined = ballots.find(([id]) => id === neuronId);
+  if (!ballot) return false;
+  return ballot[1].vote === 0;
+}
+
+export interface VotableNeuronsArgs {
+  neurons: Neuron[];
+  proposal: ProposalData;
+}
+
+export const filterVotableNeurons = ({ neurons, proposal }: VotableNeuronsArgs): Neuron[] => {
+  return neurons.filter((neuron: Neuron) => {
+    const formattedNeuron = neuronFormat(neuron);
+
+    return (
+      voteableForProposal({ ballots: proposal.ballots, neuronId: formattedNeuron.id }) &&
+      filterIneligibleNeurons({ neurons, proposal }).find((ineligibleNeuron: Neuron) => {
+        const formattedIneligibleNeuron = neuronFormat(ineligibleNeuron);
+        return formattedNeuron.id === formattedIneligibleNeuron.id;
+      }) === undefined
+    );
+  });
+};
+
+export interface VotedNeuronsArgs {
+  neurons: Neuron[];
+  proposal: ProposalData;
+}
+
+export const filterVotedNeurons = ({ neurons, proposal }: VotedNeuronsArgs): Neuron[] => {
+  return neurons.filter((neuron: Neuron) => {
+    const formattedNeuron = neuronFormat(neuron);
+    return (
+      !voteableForProposal({ ballots: proposal.ballots, neuronId: formattedNeuron.id }) &&
+      filterIneligibleNeurons({ neurons, proposal }).find((ineligibleNeuron: Neuron) => {
+        const formattedIneligibleNeuron = neuronFormat(ineligibleNeuron);
+        return formattedNeuron.id === formattedIneligibleNeuron.id;
+      }) === undefined
+    );
+  });
+};
+
+export function votingPowerFormat(votingPower_es8: bigint) {
+  return new BigNumber(votingPower_es8.toString()).dividedBy(10 ** 8).toFormat(2);
 }

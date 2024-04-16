@@ -6,3 +6,4 @@ export { default as Button, type ButtonProps } from "@mui/material/Button";
 export { default as TextField, type TextFieldProps } from "@mui/material/TextField";
 export { default as Fade, type FadeProps } from "@mui/material/Fade";
 export { default as Collapse, type CollapseProps } from "@mui/material/Collapse";
+export { default as Checkbox, type CheckboxProps } from "@mui/material/Checkbox";

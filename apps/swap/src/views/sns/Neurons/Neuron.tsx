@@ -7,7 +7,7 @@ import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/neuron";
+import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/sns/neurons";
 import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Unlock, Clock } from "react-feather";

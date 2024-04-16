@@ -53,7 +53,7 @@ export const routes: Route[] = [
   {
     key: "sns",
     name: `SNS`,
-    path: `/sns`,
+    path: `/sns/neurons`,
   },
   {
     key: "voting",

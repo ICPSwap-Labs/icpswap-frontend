@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme, CircularProgress } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, getListProposals } from "@icpswap/hooks";
 import { useMemo, useState, useEffect } from "react";
 import type { ProposalData } from "@icpswap/types";
@@ -9,6 +9,7 @@ import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useHistory } from "react-router-dom";
+import { LoadingRow } from "components/index";
 
 interface ProposalItemProps {
   proposal: ProposalData;
@@ -169,9 +170,17 @@ export default function Votes() {
         </InfiniteScroll>
 
         {loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <CircularProgress style={{ width: "24px", height: "24px" }} color="inherit" />
-          </Box>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
         ) : proposals && proposals.length === 0 ? (
           <Typography sx={{ margin: "20px 0 0 0" }}>No Proposals</Typography>
         ) : null}
