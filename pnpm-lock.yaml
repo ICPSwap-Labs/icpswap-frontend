@@ -943,6 +943,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@icpswap/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@icpswap/types':
         specifier: workspace:*
         version: link:../types

@@ -317,3 +317,33 @@ export async function setNeuronFollows(
     }),
   );
 }
+
+export async function neuronVoteForProposal(
+  governance_id: string,
+  neuron_id: Uint8Array | number[],
+  vote: number,
+  proposal_id: bigint,
+) {
+  console.log({
+    governance_id,
+    neuron_id,
+    vote,
+    proposal_id,
+  });
+
+  return resultFormat<ManageNeuronResponse>(
+    await (
+      await sns_governance(governance_id, true)
+    ).manage_neuron({
+      subaccount: [...neuron_id],
+      command: [
+        {
+          RegisterVote: {
+            vote,
+            proposal: [{ id: proposal_id }],
+          },
+        },
+      ],
+    }),
+  );
+}

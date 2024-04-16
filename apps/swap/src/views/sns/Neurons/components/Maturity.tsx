@@ -1,9 +1,9 @@
-import { Box, Typography, Checkbox, Button } from "@mui/material";
+import { Box, Typography, Checkbox } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
 import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
 import { Flex, ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
-// import { getNeuronMaturityBalance } from "utils/neuron";
+// import { getNeuronMaturityBalance } from "utils/sns/neurons";
 import type { TokenInfo } from "types/token";
 import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";

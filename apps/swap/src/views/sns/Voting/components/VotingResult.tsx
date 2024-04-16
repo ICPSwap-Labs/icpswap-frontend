@@ -1,130 +1,63 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
-import { useMemo } from "react";
-import type { ProposalData } from "@icpswap/types";
-import { nowInSeconds, formatPercentage, BigNumber } from "@icpswap/utils";
-import { CollapseText } from "components/index";
-import { useParams } from "react-router-dom";
+import { useTheme } from "@mui/material";
+import { Trans } from "@lingui/macro";
+import { useMemo, useState } from "react";
+import type { Neuron, ProposalData, NervousSystemParameters } from "@icpswap/types";
+import { nowInSeconds, formatPercentage, BigNumber, shorten, toHexString } from "@icpswap/utils";
+import { CollapseText, Collapse, Typography, Button, Box } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { secondsToDuration } from "@dfinity/utils";
+import {
+  filterIneligibleNeurons,
+  filterVotableNeurons,
+  filterVotedNeurons,
+  neuronFormat,
+  secondsToDissolveDelayDuration,
+} from "utils/sns/index";
+import { ChevronDown } from "react-feather";
 
-interface ProgressbarProps {
-  yes: number | undefined;
-  no: number | undefined;
-  YesColor: string;
-  NoColor: string;
-  standardMajorityPercent: number | undefined;
-  immediateMajorityPercent: number | undefined;
-}
-
-function Progressbar({
-  yes,
-  no,
-  YesColor,
-  NoColor,
-  immediateMajorityPercent,
-  standardMajorityPercent,
-}: ProgressbarProps) {
-  const theme = useTheme() as Theme;
-
-  return (
-    <Box sx={{ position: "relative", width: "100%", height: "10px" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          height: "10px",
-          borderRadius: "12px",
-          background: theme.palette.background.level3,
-        }}
-      >
-        <Box
-          sx={{
-            width: yes,
-            height: "100%",
-            borderTopLeftRadius: "12px",
-            borderBottomLeftRadius: "12px",
-            background: YesColor,
-          }}
-        />
-
-        <Box
-          sx={{
-            width: no,
-            height: "100%",
-            borderTopRightRadius: "12px",
-            borderBottomRightRadius: "12px",
-            background: NoColor,
-          }}
-        />
-      </Box>
-      <Box sx={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0 }}>
-        {immediateMajorityPercent ? (
-          <Box
-            className="immediate-majority"
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              left: `${immediateMajorityPercent}%`,
-              width: "2px",
-              height: "16px",
-              background: "#ffffff",
-              transform: "translate(-50%, 0)",
-              "&: after": {
-                display: "block",
-                position: "absolute",
-                top: "-5px",
-                left: "-2px",
-                content: '" "',
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: theme.colors.primaryMain,
-              },
-            }}
-          />
-        ) : null}
-
-        {standardMajorityPercent ? (
-          <Box
-            className="standard-majority"
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              left: `${standardMajorityPercent}%`,
-              width: "2px",
-              height: "16px",
-              background: "#ffffff",
-              transform: "translate(-50%, 0)",
-              "&: after": {
-                display: "block",
-                position: "absolute",
-                top: "-5px",
-                left: "-2px",
-                content: '" "',
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: theme.colors.secondaryMain,
-              },
-            }}
-          />
-        ) : null}
-      </Box>
-    </Box>
-  );
-}
+import { VotableNeurons } from "./VotableNeurons";
+import { VoteConfirm } from "./VoteConfirm";
+import { Progressbar } from "./Progressbar";
+import { VotedNeurons } from "./VotedNeurons";
 
 export interface ProposalDetailsProps {
   proposal_data: ProposalData | undefined;
+  neurons: Neuron[] | undefined;
+  neuronSystemParameters: NervousSystemParameters | undefined;
+  proposal_id: string;
+  governance_id: string;
+  onRefresh?: () => void;
 }
 
-export function VotingResult({ proposal_data }: ProposalDetailsProps) {
+export function VotingResult({
+  proposal_id,
+  governance_id,
+  proposal_data,
+  neurons,
+  neuronSystemParameters,
+  onRefresh,
+}: ProposalDetailsProps) {
   const theme = useTheme() as Theme;
-  const { proposal_id } = useParams<{ governance_id: string; proposal_id: string }>();
+  const [checkedNeuronIds, setCheckedNeuronIds] = useState<string[]>([]);
+  const [ineligibleOpen, setIneligibleOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [adopt, setAdopt] = useState(false);
+  const [votingPowers, setVotingPowers] = useState<bigint>(BigInt(0));
 
-  console.log("proposal_data:", proposal_data);
+  const ineligibleNeurons = useMemo(() => {
+    if (!neurons || !proposal_data) return undefined;
+    return filterIneligibleNeurons({ neurons, proposal: proposal_data });
+  }, [neurons, proposal_data]);
+
+  const voteableNeurons = useMemo(() => {
+    if (!neurons || !proposal_data) return undefined;
+    return filterVotableNeurons({ neurons, proposal: proposal_data });
+  }, [neurons, proposal_data]);
+
+  const votedNeurons = useMemo(() => {
+    if (!neurons || !proposal_data) return undefined;
+    return filterVotedNeurons({ neurons, proposal: proposal_data });
+  }, [neurons, proposal_data]);
 
   const {
     castVotesNo,
@@ -136,6 +69,7 @@ export function VotingResult({ proposal_data }: ProposalDetailsProps) {
     immediateMajorityPercent,
     standardMajorityPercent,
     seconds,
+    isExecuted,
   } = useMemo(() => {
     if (!proposal_data) return {};
 
@@ -183,10 +117,43 @@ export function VotingResult({ proposal_data }: ProposalDetailsProps) {
   const YesColor = theme.colors.successDark;
   const NoColor = theme.colors.errorDark;
 
+  const { minimumDissolveDelaySeconds } = useMemo(() => {
+    if (!neuronSystemParameters) return {};
+
+    return {
+      minimumDissolveDelaySeconds: neuronSystemParameters.neuron_minimum_dissolve_delay_to_vote_seconds[0],
+    };
+  }, [neuronSystemParameters]);
+
+  const handleCheckedNeuronIdsChange = (checkedNeuronIds: string[], votingPowers: bigint) => {
+    setCheckedNeuronIds(checkedNeuronIds);
+    setVotingPowers(votingPowers);
+  };
+
+  const handleAdopt = () => {
+    setConfirmOpen(true);
+    setAdopt(true);
+  };
+
+  const handleReject = () => {
+    setConfirmOpen(true);
+    setAdopt(false);
+  };
+
+  const voteNeurons = useMemo(() => {
+    if (!voteableNeurons) return undefined;
+
+    return voteableNeurons.filter((neuron) => {
+      const formattedNeuron = neuronFormat(neuron);
+      if (formattedNeuron.id === undefined) return false;
+      return checkedNeuronIds.includes(formattedNeuron.id);
+    });
+  }, [voteableNeurons, checkedNeuronIds]);
+
   return (
     <Box>
-      <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
-        <Trans>Voting Result</Trans>
+      <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "16px" }}>
+        <Trans>Voting Results</Trans>
       </Typography>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
@@ -247,14 +214,16 @@ export function VotingResult({ proposal_data }: ProposalDetailsProps) {
             </Typography>
           </Box>
 
-          <Box>
-            <Typography sx={{ fontSize: "12px", textAlign: "center" }}>
-              <Trans>Expiration date</Trans>
-            </Typography>
-            <Typography sx={{ fontSize: "12px", textAlign: "center", margin: "5px 0 0 0" }}>
-              {seconds ? secondsToDuration({ seconds }) : "--"}
-            </Typography>
-          </Box>
+          {isExecuted ? null : (
+            <Box>
+              <Typography sx={{ fontSize: "12px", textAlign: "center" }}>
+                <Trans>Expiration date</Trans>
+              </Typography>
+              <Typography sx={{ fontSize: "12px", textAlign: "center", margin: "5px 0 0 0" }}>
+                {seconds ? secondsToDuration({ seconds }) : "--"}
+              </Typography>
+            </Box>
+          )}
 
           <Box>
             <Typography sx={{ textAlign: "right" }}>
@@ -332,51 +301,120 @@ export function VotingResult({ proposal_data }: ProposalDetailsProps) {
         </Box>
       </Box>
 
-      <Box sx={{ margin: "30px 0 0 0" }}>
-        <Box sx={{ display: "flex", gap: "0 10px" }}>
-          <Box sx={{ flex: 1 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                background: theme.colors.successDark,
-                "&:hover": {
-                  background: theme.colors.successDark,
-                },
-              }}
-            >
-              <Trans>Adopt</Trans>
-            </Button>
+      {isExecuted ? null : (
+        <>
+          <Box sx={{ margin: "30px 0 0 0" }}>
+            <Box sx={{ display: "flex", gap: "0 10px" }}>
+              <Box sx={{ flex: 1 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    background: theme.colors.successDark,
+                    "&:hover": {
+                      background: theme.colors.successDark,
+                    },
+                  }}
+                  disabled={checkedNeuronIds.length === 0}
+                  onClick={handleAdopt}
+                >
+                  <Trans>Adopt</Trans>
+                </Button>
+              </Box>
+
+              <Box sx={{ flex: 1 }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    background: theme.colors.errorDark,
+                    "&:hover": {
+                      background: theme.colors.errorDark,
+                    },
+                  }}
+                  disabled={checkedNeuronIds.length === 0}
+                  onClick={handleReject}
+                >
+                  <Trans>Reject</Trans>
+                </Button>
+              </Box>
+            </Box>
           </Box>
 
-          <Box sx={{ flex: 1 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{
-                background: theme.colors.errorDark,
-                "&:hover": {
-                  background: theme.colors.errorDark,
-                },
-              }}
-            >
-              <Trans>Reject</Trans>
-            </Button>
-          </Box>
-        </Box>
-      </Box>
+          {voteableNeurons && proposal_data && voteableNeurons.length > 0 ? (
+            <Box sx={{ margin: "10px 0 0 0" }}>
+              <VotableNeurons
+                voteableNeurons={voteableNeurons}
+                onCheckedChange={handleCheckedNeuronIdsChange}
+                proposal={proposal_data}
+              />
+            </Box>
+          ) : (
+            <Typography sx={{ margin: "10px 0 0 0" }}>
+              <Trans>You don't have any neurons to vote</Trans>
+            </Typography>
+          )}
 
-      <Box sx={{ margin: "10px 0 0 0" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <Trans>Vote with 1/1 Neuron</Trans>
-          </Typography>
+          <VotedNeurons votedNeurons={votedNeurons} proposal_data={proposal_data} />
 
-          <Typography>
-            <Trans>Voting Power: 39.24</Trans>
-          </Typography>
-        </Box>
-      </Box>
+          {ineligibleNeurons && ineligibleNeurons.length > 0 ? (
+            <Box sx={{ margin: "20px 0 0 0" }}>
+              <Box
+                sx={{ display: "flex", gap: "0 5px", alignItems: "center", cursor: "pointer" }}
+                onClick={() => setIneligibleOpen(!ineligibleOpen)}
+              >
+                <Typography>
+                  <Trans>{ineligibleNeurons.length} Ineligible neuron</Trans>
+                </Typography>
+                <ChevronDown size="18px" style={{ transform: ineligibleOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
+              </Box>
+              <Collapse in={ineligibleOpen}>
+                <Box sx={{ padding: "12px" }}>
+                  <Typography sx={{ fontSize: "12px" }}>
+                    <Trans>
+                      The following neurons are not eligible to vote. They either have dissolve delays of less than 1
+                      month, 1 day at the time when the proposal was submitted, or they were created after the proposal
+                      was submitted.
+                    </Trans>
+                  </Typography>
+
+                  <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "10px 0" }}>
+                    {ineligibleNeurons.map((ineligibleNeuron, index) => (
+                      <Box
+                        key={ineligibleNeuron.id[0]?.id ? toHexString(ineligibleNeuron.id[0]?.id) : `neuron_${index}`}
+                        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                      >
+                        <Typography sx={{ fontSize: "12px" }}>
+                          {neuronFormat(ineligibleNeuron) ? shorten(neuronFormat(ineligibleNeuron).id, 12) : "--"}
+                        </Typography>
+                        {minimumDissolveDelaySeconds !== undefined ? (
+                          <Typography sx={{ fontSize: "12px" }}>
+                            <Trans>
+                              dissolve delay &lt; {secondsToDissolveDelayDuration(minimumDissolveDelaySeconds)}
+                            </Trans>
+                          </Typography>
+                        ) : null}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Collapse>
+            </Box>
+          ) : null}
+
+          <VoteConfirm
+            governance_id={governance_id}
+            proposal_id={proposal_id}
+            proposal={proposal_data}
+            rejected={!adopt}
+            open={confirmOpen}
+            onClose={() => setConfirmOpen(false)}
+            votingPowers={votingPowers}
+            voteNeurons={voteNeurons}
+            onVoteCallEnded={onRefresh}
+          />
+        </>
+      )}
     </Box>
   );
 }

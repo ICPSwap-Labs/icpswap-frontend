@@ -52,7 +52,7 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
 
   return (
     <Box>
-      <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
+      <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "16px" }}>
         <Trans>Proposal Details</Trans>
       </Typography>
 
@@ -87,6 +87,36 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
               </Typography>
             }
           />
+
+          {isExecuted ? (
+            <>
+              <ProposalDetailItem
+                label={<Trans>Decided</Trans>}
+                value={
+                  <Typography>
+                    {proposal_data?.decided_timestamp_seconds
+                      ? dayjs(Number(proposal_data.decided_timestamp_seconds * BigInt(1000))).format(
+                          "YYYY-MM-DD HH:mm:ss",
+                        )
+                      : "--"}
+                  </Typography>
+                }
+              />
+
+              <ProposalDetailItem
+                label={<Trans>Executed</Trans>}
+                value={
+                  <Typography>
+                    {proposal_data?.executed_timestamp_seconds
+                      ? dayjs(Number(proposal_data.executed_timestamp_seconds * BigInt(1000))).format(
+                          "YYYY-MM-DD HH:mm:ss",
+                        )
+                      : "--"}
+                  </Typography>
+                }
+              />
+            </>
+          ) : null}
 
           <ProposalDetailItem
             label={<Trans>Proposer</Trans>}
