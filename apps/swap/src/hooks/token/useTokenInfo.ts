@@ -1,11 +1,10 @@
 import { useMemo, useEffect, useState } from "react";
-import { ICP_TOKEN_INFO, TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { ICP_TOKEN_INFO, TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO, ckTestUSD_TOKEN_INFO } from "constants/index";
 import type { TokenInfo, StorageTokenInfo } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
-import ckTestUSDLogo from "assets/images/ckTestUSD.png";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
@@ -95,6 +94,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
     if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;
+    if (tokenId === ckTestUSD_TOKEN_INFO.canisterId) tokeInfo = ckTestUSD_TOKEN_INFO;
 
     if (tokeInfo) {
       setTokenInfos((prevState) => ({
@@ -236,10 +236,7 @@ export function useTokenInfo(tokenId: string | undefined) {
     }
 
     return {
-      result: {
-        ...tokenInfo,
-        logo: tokenInfo.canisterId === "yfumr-cyaaa-aaaar-qaela-cai" ? ckTestUSDLogo : tokenInfo.logo,
-      } as TokenInfo,
+      result: tokenInfo as TokenInfo,
       loading: state === TokenInfoState.LOADING,
     };
   }, [tokenInfo, state]);

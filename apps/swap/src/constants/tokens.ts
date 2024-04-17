@@ -4,6 +4,8 @@ import { TokenInfo, TokenMetadata } from "types/token";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "@icpswap/types";
 import { LEDGER_CANISTER_ID } from "constants/icp";
+import ckTestUSDLogo from "assets/images/ckTestUSD.png";
+
 import ICPAvatar from "../assets/images/icons/tokens/icp.svg";
 import { ckETH_LEDGER_ID } from "./ckETH";
 import { ckBTC_ID } from "./ckBTC";
@@ -55,6 +57,17 @@ export const ICP_TOKEN_INFO: TokenInfo = {
   canisterId: ICP_METADATA.canisterId.toString(),
   transFee: BigInt(10000),
   logo: ICPAvatar,
+  totalSupply: BigInt(0),
+};
+
+export const ckTestUSD_TOKEN_INFO: TokenInfo = {
+  canisterId: "yfumr-cyaaa-aaaar-qaela-cai",
+  decimals: 6,
+  symbol: "ckSepoliaUSDC",
+  name: "Chain key Sepolia USDC",
+  logo: ckTestUSDLogo,
+  standardType: TOKEN_STANDARD.ICRC2,
+  transFee: BigInt(4000),
   totalSupply: BigInt(0),
 };
 
@@ -206,4 +219,14 @@ export const GLDGov = new Token({
   logo: "",
   standard: TOKEN_STANDARD.ICRC1,
   transFee: 100_000,
+});
+
+export const ckTestUSD = new Token({
+  address: ckTestUSD_TOKEN_INFO.canisterId,
+  decimals: ckTestUSD_TOKEN_INFO.decimals,
+  symbol: ckTestUSD_TOKEN_INFO.symbol,
+  name: ckTestUSD_TOKEN_INFO.name,
+  logo: ckTestUSD_TOKEN_INFO.logo,
+  standard: ckTestUSD_TOKEN_INFO.standardType,
+  transFee: Number(ckTestUSD_TOKEN_INFO.transFee),
 });

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TOKEN_STANDARD } from "@icpswap/types";
+import { ckTestUSD } from "constants/tokens";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandards, useTokenStandards } from "store/token/cache/hooks";
 import { useSwapPools, useTokensFromList } from "@icpswap/hooks";
@@ -12,6 +13,7 @@ export const TOKENS = [
   { canisterId: "utozz-siaaa-aaaam-qaaxq-cai", standard: TOKEN_STANDARD.DIP20_WICP },
   { canisterId: "aanaa-xaaaa-aaaah-aaeiq-cai", standard: TOKEN_STANDARD.DIP20_XTC },
   { canisterId: "rd6wb-lyaaa-aaaaj-acvla-cai", standard: TOKEN_STANDARD.DIP20 },
+  { canisterId: ckTestUSD.address, standard: ckTestUSD.standard },
 ];
 
 export function useInitialTokenStandard() {

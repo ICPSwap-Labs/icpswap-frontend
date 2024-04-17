@@ -1,5 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import { WRAPPED_ICP_TOKEN_INFO, ICP_TOKEN_INFO } from "@icpswap/tokens";
+import { ckTestUSD_TOKEN_INFO } from "constants/tokens";
 import type { TokenInfo, StorageTokenInfo } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { getPromisesAwait } from "@icpswap/hooks";
@@ -101,6 +102,7 @@ export function useTokensInfo(
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
     if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;
+    if (tokenId === ckTestUSD_TOKEN_INFO.canisterId) tokeInfo = ckTestUSD_TOKEN_INFO;
 
     if (tokeInfo) {
       setTokenInfos((prevState) => ({
@@ -252,10 +254,7 @@ export function useTokenInfo(tokenId: string | undefined) {
     }
 
     return {
-      result: {
-        ...tokenInfo,
-        logo: tokenInfo.canisterId === "yfumr-cyaaa-aaaar-qaela-cai" ? ckTestUSDLogo : tokenInfo.logo,
-      } as TokenInfo,
+      result: tokenInfo as TokenInfo,
       loading: state === TokenInfoState.LOADING,
     };
   }, [tokenInfo, state]);

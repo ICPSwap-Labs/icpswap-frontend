@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { XTC, TOKEN_STANDARD, WRAPPED_ICP, ICP, CAT, MOD, BoomDAO, ICX, NUA, SONIC } from "constants/tokens";
+import { XTC, TOKEN_STANDARD, WRAPPED_ICP, ICP, CAT, MOD, BoomDAO, ICX, NUA, SONIC, ckTestUSD } from "constants/tokens";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
 import { useGlobalTokenList } from "store/global/hooks";
@@ -11,7 +11,7 @@ import { getAllClaimEvents } from "hooks/token-claim";
 import { updateCanisters } from "store/allCanisters";
 import type { SwapPoolData } from "@icpswap/types";
 
-export const Tokens = [XTC, CAT, MOD, BoomDAO, ICX, NUA, SONIC];
+export const Tokens = [XTC, CAT, MOD, BoomDAO, ICX, NUA, SONIC, ckTestUSD];
 
 export interface UseInitialTokenStandardArgs {
   fetchGlobalTokensLoading: boolean;
