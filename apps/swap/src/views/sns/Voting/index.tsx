@@ -85,7 +85,7 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
   );
 }
 
-const sns_proposals_limit = 20;
+const sns_proposals_limit = 50;
 
 export default function Votes() {
   const [loading, setLoading] = useState(false);
@@ -98,18 +98,23 @@ export default function Votes() {
 
   const sns = useMemo(() => {
     if (!selectedNeuron || !listedSNS) return undefined;
-
-    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === selectedNeuron);
-
-    if (!instance) return undefined;
-
-    return instance;
+    return listedSNS.instances.find((e) => e.root_canister_id.toString() === selectedNeuron);
   }, [listedSNS, selectedNeuron]);
 
   const { governance_id } = useMemo(() => {
     if (!sns) return { governance_id: undefined, ledger_id: undefined };
-    return { governance_id: sns.governance_canister_id.toString(), ledger_id: sns.ledger_canister_id.toString() };
+
+    const governance_canister_id = sns.governance_canister_id[0];
+    const ledger_canister_id = sns.ledger_canister_id[0];
+
+    return { governance_id: governance_canister_id?.toString(), ledger_id: ledger_canister_id?.toString() };
   }, [sns]);
+
+  const handleSelectNeuronChange = (id: string) => {
+    setFetchDone(false);
+    setAllProposals([]);
+    setSelectedNeuron(id);
+  };
 
   const proposals = useMemo(() => {
     if (!allProposals) return undefined;
@@ -121,17 +126,19 @@ export default function Votes() {
 
     setLoading(true);
 
+    const before_proposal = allProposals[allProposals.length - 1]?.id ?? [];
+
     const result = await getListProposals({
       canisterId: governance_id,
       limit: sns_proposals_limit,
       include_status: [],
-      before_proposal: [],
+      before_proposal,
       exclude_type: [],
       include_reward_status: [],
     });
 
     if (result && result.length > 0) {
-      setAllProposals((prevState) => [...result, ...(prevState ?? [])]);
+      setAllProposals((prevState) => [...(prevState ?? []), ...result]);
       if (result.length < sns_proposals_limit) {
         setFetchDone(true);
       }
@@ -151,14 +158,26 @@ export default function Votes() {
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <Tabs />
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "20px 0 0 0" }}>
+          <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
         </Box>
 
         <Box sx={{ width: "100%", height: "20px" }} />
 
         <InfiniteScroll dataLength={proposals?.length ?? 0} next={fetch_proposals} hasMore={!fetchDone} loader={null}>
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "20px",
+              "@media(max-width: 940px)": {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              "@media(max-width: 640)": {
+                gridTemplateColumns: "1fr",
+              },
+            }}
+          >
             {proposals?.map((proposal, index) => (
               <ProposalItem
                 key={proposal.id[0]?.id ? proposal.id[0]?.id.toString() : `proposal_${index}`}
@@ -170,17 +189,19 @@ export default function Votes() {
         </InfiniteScroll>
 
         {loading ? (
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
+          <Box sx={{ margin: "20px 0 0 0" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
         ) : proposals && proposals.length === 0 ? (
           <Typography sx={{ margin: "20px 0 0 0" }}>No Proposals</Typography>
         ) : null}
