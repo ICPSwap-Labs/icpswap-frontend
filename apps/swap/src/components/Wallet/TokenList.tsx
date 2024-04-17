@@ -16,7 +16,11 @@ export default function WalletTokenList() {
   const globalTokenList = useGlobalTokenList();
 
   const tokens = useMemo(() => {
-    let tokenIds = [ICP_METADATA.canisterId.toString(), WRAPPED_ICP_METADATA.canisterId.toString()];
+    let tokenIds = [
+      ICP_METADATA.canisterId.toString(),
+      WRAPPED_ICP_METADATA.canisterId.toString(),
+      "yfumr-cyaaa-aaaar-qaela-cai",
+    ];
 
     if (network === NETWORK.IC) {
       tokenIds = [

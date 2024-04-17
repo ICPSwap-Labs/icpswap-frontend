@@ -5,6 +5,7 @@ import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
+import ckTestUSDLogo from "assets/images/ckTestUSD.png";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
@@ -235,7 +236,10 @@ export function useTokenInfo(tokenId: string | undefined) {
     }
 
     return {
-      result: tokenInfo as TokenInfo,
+      result: {
+        ...tokenInfo,
+        logo: tokenInfo.canisterId === "yfumr-cyaaa-aaaar-qaela-cai" ? ckTestUSDLogo : tokenInfo.logo,
+      } as TokenInfo,
       loading: state === TokenInfoState.LOADING,
     };
   }, [tokenInfo, state]);
