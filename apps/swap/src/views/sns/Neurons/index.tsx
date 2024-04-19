@@ -2,7 +2,7 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
-import { LoadingRow, TabPanel, Copy } from "components/index";
+import { LoadingRow, Copy } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
@@ -10,7 +10,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/sns/neurons";
 import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { Lock, Unlock, Clock } from "react-feather";
+import { Lock, Clock } from "react-feather";
 import { useTokenInfo } from "hooks/token";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
@@ -225,7 +225,7 @@ export default function Neurons() {
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <Tabs />
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "20px 0 0 0" }}>
           <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
           <Box>
             <Button variant="contained">

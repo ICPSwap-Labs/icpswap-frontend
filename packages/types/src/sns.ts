@@ -33,6 +33,7 @@ export type {
   GetProposalResponse,
   ProposalData,
   SnsBallot,
+  SnsFunctionType,
 } from "@icpswap/candid";
 
 export interface TokenRoots {
