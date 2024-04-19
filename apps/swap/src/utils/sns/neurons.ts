@@ -1,5 +1,9 @@
 import type { Neuron, DissolveState, NervousSystemParameters, ProposalData, SnsBallot } from "@icpswap/types";
-import { BigNumber, nowInSeconds, toHexString } from "@icpswap/utils";
+import { BigNumber, nowInSeconds, toHexString, asciiStringToByteArray } from "@icpswap/utils";
+import { Principal } from "@dfinity/principal";
+import { SubAccount } from "@dfinity/ledger-icp";
+import { arrayOfNumberToUint8Array } from "@dfinity/utils";
+import { sha256 } from "@noble/hashes/sha256";
 
 export enum NeuronState {
   Unspecified = 0,
@@ -270,4 +274,15 @@ export const filterVotedNeurons = ({ neurons, proposal }: VotedNeuronsArgs): Neu
 
 export function votingPowerFormat(votingPower_es8: bigint) {
   return new BigNumber(votingPower_es8.toString()).dividedBy(10 ** 8).toFormat(2);
+}
+
+export function getNeuronStakeSubAccountBytes(nonce: Uint8Array, principal: Principal): Uint8Array {
+  const padding = asciiStringToByteArray("neuron-stake");
+  const shaObj = sha256.create();
+  shaObj.update(arrayOfNumberToUint8Array([0x0c, ...padding, ...principal.toUint8Array(), ...nonce]));
+  return shaObj.digest();
+}
+
+export function buildNeuronStakeSubAccount(nonce: Uint8Array, principal: Principal): SubAccount {
+  return SubAccount.fromBytes(getNeuronStakeSubAccountBytes(nonce, principal)) as SubAccount;
 }

@@ -125,9 +125,17 @@ export function SplitNeuron({
       token.decimals,
     ).toFormat()} ${token.symbol}`;
 
+  const canSplit = useMemo(() => {
+    const neuron_minimum_stake_e8s = neuronSystemParameters?.neuron_minimum_stake_e8s[0];
+
+    if (!neuron_minimum_stake_e8s) return false;
+
+    return new BigNumber(neuron_stake.toString()).isGreaterThan((neuron_minimum_stake_e8s * BigInt(2)).toString());
+  }, [neuron_stake, neuronSystemParameters]);
+
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={!canSplit}>
         <Trans>Split Neuron</Trans>
       </Button>
 

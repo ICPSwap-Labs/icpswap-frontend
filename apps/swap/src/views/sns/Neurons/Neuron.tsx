@@ -126,7 +126,6 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
             token={tokenInfo}
-            neuron_stake={neuron.cached_neuron_stake_e8s}
             onStakeSuccess={handleSuccessTrigger}
           />
 
