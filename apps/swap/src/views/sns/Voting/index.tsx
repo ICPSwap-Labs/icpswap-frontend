@@ -1,7 +1,9 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import { t } from "@lingui/macro";
 import { useListDeployedSNSs, getListProposals } from "@icpswap/hooks";
 import { useMemo, useState, useEffect } from "react";
 import type { ProposalData } from "@icpswap/types";
+import { SnsProposalDecisionStatus } from "@icpswap/constants";
 import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
 import { shortenString, nowInSeconds } from "@icpswap/utils";
@@ -10,6 +12,10 @@ import { Tabs } from "components/sns/Tab";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useHistory } from "react-router-dom";
 import { LoadingRow } from "components/index";
+import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
+import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
+
+import { getProposalStatus } from "./proposal.utils";
 
 interface ProposalItemProps {
   proposal: ProposalData;
@@ -43,6 +49,25 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
     history.push(`/sns/voting/${governance_id}/${proposal_id}`);
   };
 
+  const proposal_status_text = useMemo(() => {
+    const proposal_status = getProposalStatus(proposal);
+
+    switch (proposal_status) {
+      case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_ADOPTED:
+        return t`Adopted`;
+      case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_EXECUTED:
+        return t`Executed`;
+      case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_FAILED:
+        return t`Failed`;
+      case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN:
+        return t`Open`;
+      case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_REJECTED:
+        return t`Rejected`;
+      default:
+        return "Unspecified";
+    }
+  }, [proposal]);
+
   return (
     <>
       <Box
@@ -64,10 +89,10 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
             sx={{
               padding: "3px 10px",
               borderRadius: "12px",
-              background: !isExecuted ? theme.colors.successDark : theme.palette.background.level1,
+              background: proposal_status_text === "Open" ? theme.colors.successDark : theme.palette.background.level1,
             }}
           >
-            <Typography color="text.primary">{isExecuted ? "Executed" : "Open"}</Typography>
+            <Typography color="text.primary">{proposal_status_text}</Typography>
           </Box>
         </Box>
 
@@ -91,6 +116,8 @@ export default function Votes() {
   const [loading, setLoading] = useState(false);
   const [fetchDone, setFetchDone] = useState(false);
   const [allProposals, setAllProposals] = useState<ProposalData[]>([]);
+  const [filterStatus, setFilterStatus] = useState<SnsProposalDecisionStatus[]>([]);
+  const [excludeFuncIds, setExcludeFuncIds] = useState<bigint[]>([]);
 
   const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
 
@@ -110,9 +137,14 @@ export default function Votes() {
     return { governance_id: governance_canister_id?.toString(), ledger_id: ledger_canister_id?.toString() };
   }, [sns]);
 
-  const handleSelectNeuronChange = (id: string) => {
+  const reset_state = () => {
+    setFilterStatus([]);
     setFetchDone(false);
     setAllProposals([]);
+  };
+
+  const handleSelectNeuronChange = (id: string) => {
+    reset_state();
     setSelectedNeuron(id);
   };
 
@@ -131,9 +163,9 @@ export default function Votes() {
     const result = await getListProposals({
       canisterId: governance_id,
       limit: sns_proposals_limit,
-      include_status: [],
+      include_status: filterStatus,
       before_proposal,
-      exclude_type: [],
+      exclude_type: excludeFuncIds,
       include_reward_status: [],
     });
 
@@ -151,15 +183,36 @@ export default function Votes() {
 
   useEffect(() => {
     fetch_proposals();
-  }, [governance_id]);
+  }, [governance_id, filterStatus]);
+
+  const handleProposalStatusFilter = (status: SnsProposalDecisionStatus[]) => {
+    reset_state();
+    setFilterStatus(status);
+  };
+
+  const handleSelectNeuronFuncs = (func_ids: bigint[], exclude_ids: bigint[]) => {
+    reset_state();
+    setExcludeFuncIds(exclude_ids);
+  };
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <Tabs />
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "20px 0 0 0" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            margin: "20px 0 0 0",
+            gap: "0 20px",
+          }}
+        >
           <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
+
+          <SelectNeuronFuncs governance_id={governance_id} onConfirm={handleSelectNeuronFuncs} />
+
+          <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
         </Box>
 
         <Box sx={{ width: "100%", height: "20px" }} />
@@ -173,7 +226,7 @@ export default function Votes() {
               "@media(max-width: 940px)": {
                 gridTemplateColumns: "1fr 1fr",
               },
-              "@media(max-width: 640)": {
+              "@media(max-width: 640px)": {
                 gridTemplateColumns: "1fr",
               },
             }}

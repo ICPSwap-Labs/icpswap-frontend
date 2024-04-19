@@ -1,5 +1,6 @@
 import type { ProposalData } from "@icpswap/types";
-import { nowInSeconds } from "@icpswap/utils";
+import { nowInSeconds, BigNumber } from "@icpswap/utils";
+import { SnsProposalDecisionStatus } from "@icpswap/constants";
 import { t } from "@lingui/macro";
 
 const PROPOSAL_TYPES = [
@@ -124,3 +125,40 @@ export const snsRewardStatus = ({
 
   return SnsProposalRewardStatus.PROPOSAL_REWARD_STATUS_SETTLED;
 };
+
+export function getProposalStatus(proposal: ProposalData) {
+  const now = new Date().getTime();
+
+  if (!proposal.decided_timestamp_seconds || new BigNumber(proposal.decided_timestamp_seconds.toString()).gt(now)) {
+    return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN;
+  }
+
+  if (proposal.executed_timestamp_seconds && new BigNumber(proposal.executed_timestamp_seconds.toString()).lt(now)) {
+    return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_EXECUTED;
+  }
+
+  if (proposal.failed_timestamp_seconds && new BigNumber(proposal.failed_timestamp_seconds.toString(10)).lt(now)) {
+    return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_FAILED;
+  }
+
+  if (proposal.decided_timestamp_seconds && new BigNumber(proposal.decided_timestamp_seconds.toString(10)).lt(now)) {
+    const total = proposal.latest_tally[0]?.total;
+    const yes = proposal.latest_tally[0]?.yes;
+    const no = proposal.latest_tally[0]?.no;
+
+    if (total !== undefined && yes !== undefined && no !== undefined) {
+      // at least 3% of the total voting power
+      if (
+        (new BigNumber(yes.toString()).gt(no.toString(10)) &&
+          new BigNumber(total.toString()).times(3 / 100).lt(yes.toString())) ||
+        new BigNumber(yes.toString()).times(2).gt(total.toString(10))
+      ) {
+        return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_ADOPTED;
+      }
+
+      return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_REJECTED;
+    }
+  }
+
+  return undefined;
+}

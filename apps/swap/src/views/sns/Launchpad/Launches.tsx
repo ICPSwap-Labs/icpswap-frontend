@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "@icpswap/types";
+import { Tabs } from "components/sns/Tab";
 
 interface LaunchpadProps {
   token_root: TokenRoots;
@@ -122,7 +123,9 @@ export default function LaunchpadList() {
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
-        <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
+        <Tabs />
+
+        <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "10px 0 20px 0" }} color="text.primary">
           <Trans>Current Launches</Trans>
         </Typography>
 
