@@ -194,15 +194,15 @@ export async function autoStakeMaturity(governance_id: string, neuron_id: Uint8A
 
 export async function claimOrRefreshNeuronFromAccount(
   governance_id: string,
-  neuron_id: Uint8Array | number[],
   controller: Principal,
   memo: bigint,
+  subaccount: number[],
 ) {
   return resultFormat<ManageNeuronResponse>(
     await (
       await sns_governance(governance_id, true)
     ).manage_neuron({
-      subaccount: [...neuron_id],
+      subaccount,
       command: [
         {
           ClaimOrRefresh: {

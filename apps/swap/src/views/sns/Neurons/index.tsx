@@ -1,6 +1,5 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
-import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
@@ -14,6 +13,7 @@ import { Lock, Clock } from "react-feather";
 import { useTokenInfo } from "hooks/token";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
+import type { TokenInfo } from "types/token";
 
 import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
@@ -23,6 +23,7 @@ import { SetDissolveDelay } from "./components/Delay";
 import { Disburse } from "./components/Disburse";
 import { Maturity } from "./components/Maturity";
 import { Followings } from "./components/Following";
+import { StakeToCreateNeuron } from "./components/StakeToCreateNeuron";
 
 interface NeuronProps {
   neuron: Neuron;
@@ -31,13 +32,12 @@ interface NeuronProps {
   governance_id: string | undefined;
   neuronSystemParameters: NervousSystemParameters | undefined;
   refreshTrigger: () => void;
+  token: TokenInfo | undefined;
 }
 
-function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
+function NeuronItem({ neuron, token, ledger_id, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
   const theme = useTheme() as Theme;
   const [splitNeuronOpen, setSplitNeuronOpen] = useState(false);
-
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
 
   const formatted_neuron = neuronFormat(neuron);
 
@@ -88,10 +88,10 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
 
         <Box sx={{ display: "flex", margin: "20px 0 0 0" }}>
           <Typography color="text.primary" fontWeight={500} fontSize="24px">
-            {tokenInfo
+            {token
               ? `${toSignificantWithGroupSeparator(
-                  parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, tokenInfo.decimals).toString(),
-                )} ${tokenInfo.symbol}`
+                  parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, token.decimals).toString(),
+                )} ${token.symbol}`
               : "--"}
           </Typography>
         </Box>
@@ -100,22 +100,13 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
           <Typography>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
         </Box>
 
-        {/* <Box sx={{ margin: "20px 0 0 0" }}>
-          <Typography align="center" fontSize="16px">
-            <Trans>Voting Power</Trans>&nbsp;
-            {neuron && tokenInfo && neuronSystemParameters
-              ? getNervousVotingPower(neuron, neuronSystemParameters, tokenInfo.decimals)
-              : "--"}
-          </Typography>
-        </Box> */}
-
         <Box sx={{ display: "flex", gap: "0 8px", margin: "20px 0 0 0" }}>
           <SplitNeuron
             governance_id={governance_id}
             neuron_id={neuron.id[0]?.id}
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
-            token={tokenInfo}
+            token={token}
             neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
             onSplitSuccess={handleSuccessTrigger}
@@ -126,8 +117,7 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
             neuron_id={neuron.id[0]?.id}
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
-            token={tokenInfo}
-            neuron_stake={neuron.cached_neuron_stake_e8s}
+            token={token}
             onStakeSuccess={handleSuccessTrigger}
           />
 
@@ -136,7 +126,7 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
             neuron_id={neuron.id[0]?.id}
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
-            token={tokenInfo}
+            token={token}
             neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
             onSetSuccess={handleSuccessTrigger}
@@ -165,7 +155,7 @@ function NeuronItem({ neuron, ledger_id, governance_id, neuronSystemParameters, 
 
         <Maturity
           neuron={neuron}
-          token={tokenInfo}
+          token={token}
           governance_id={governance_id}
           neuron_id={neuron.id[0]?.id}
           onMaturitySuccess={handleSuccessTrigger}
@@ -220,6 +210,8 @@ export default function Neurons() {
     return listNeurons?.filter((neuron) => neuron.cached_neuron_stake_e8s !== BigInt(0));
   }, [listNeurons]);
 
+  const { result: tokenInfo } = useTokenInfo(ledger_id);
+
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
@@ -228,9 +220,12 @@ export default function Neurons() {
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "20px 0 0 0" }}>
           <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
           <Box>
-            <Button variant="contained">
-              <Trans>Stake</Trans>
-            </Button>
+            <StakeToCreateNeuron
+              onStakeSuccess={handleRefresh}
+              token={tokenInfo}
+              governance_id={governance_id}
+              neuronSystemParameters={neuronSystemParameters}
+            />
           </Box>
         </Box>
 
@@ -259,6 +254,7 @@ export default function Neurons() {
                   governance_id={governance_id}
                   neuronSystemParameters={neuronSystemParameters}
                   refreshTrigger={handleRefresh}
+                  token={tokenInfo}
                 />
               ))}
             </Box>

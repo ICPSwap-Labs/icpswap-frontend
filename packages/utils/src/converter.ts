@@ -27,3 +27,7 @@ export const uint8ArrayToBigInt = (array: Uint8Array): bigint => {
   const low = BigInt(view.getUint32(4));
   return (high << BigInt(32)) + low;
 };
+
+export const asciiStringToByteArray = (text: string): Array<number> => {
+  return Array.from(text).map((c) => c.charCodeAt(0));
+};
