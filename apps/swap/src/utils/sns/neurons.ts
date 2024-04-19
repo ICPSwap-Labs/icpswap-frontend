@@ -99,6 +99,53 @@ export const getDissolvingTimestampSeconds = (neuron: Neuron): bigint | undefine
     : undefined;
 };
 
+export const getSnsNeuronState = ({ dissolve_state }: Neuron): NeuronState => {
+  const dissolveState = dissolve_state[0];
+
+  if (dissolveState === undefined) {
+    return NeuronState.Dissolved;
+  }
+  if ("DissolveDelaySeconds" in dissolveState) {
+    return dissolveState.DissolveDelaySeconds === 0n
+      ? // 0 = already dissolved (more info: https://gitlab.com/dfinity-lab/public/ic/-/blob/master/rs/nns/governance/src/governance.rs#L827)
+        NeuronState.Dissolved
+      : NeuronState.Locked;
+  }
+  if ("WhenDissolvedTimestampSeconds" in dissolveState) {
+    // In case `nowInSeconds` ever changes and doesn't return an integer we use Math.floor
+    return dissolveState.WhenDissolvedTimestampSeconds < BigInt(Math.floor(nowInSeconds()))
+      ? NeuronState.Dissolved
+      : NeuronState.Dissolving;
+  }
+  return NeuronState.Unspecified;
+};
+
+export const getSnsLockedTimeInSeconds = (neuron: Neuron): bigint | undefined => {
+  const neuronState = getSnsNeuronState(neuron);
+  const dissolveState = neuron.dissolve_state[0];
+
+  if (neuronState === NeuronState.Locked && dissolveState !== undefined && "DissolveDelaySeconds" in dissolveState) {
+    return dissolveState.DissolveDelaySeconds;
+  }
+};
+
+export const getSnsDelayTimeInSeconds = (neuron: Neuron): bigint | undefined => {
+  const neuronState = getSnsNeuronState(neuron);
+  const dissolveState = neuron.dissolve_state[0];
+
+  if (neuronState === NeuronState.Locked && dissolveState !== undefined && "DissolveDelaySeconds" in dissolveState) {
+    return dissolveState.DissolveDelaySeconds;
+  }
+
+  if (
+    neuronState === NeuronState.Dissolving &&
+    dissolveState !== undefined &&
+    "WhenDissolvedTimestampSeconds" in dissolveState
+  ) {
+    return dissolveState.WhenDissolvedTimestampSeconds - BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
+  }
+};
+
 export const getDissolvingTimeInSeconds = (neuron: Neuron): bigint | undefined => {
   const dissolvingTimestamp = getDissolvingTimestampSeconds(neuron);
   if (dissolvingTimestamp === undefined) return undefined;

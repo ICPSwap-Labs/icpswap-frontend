@@ -48,7 +48,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id }: Stake
     });
 
     if (status === "ok") {
-      const refreshCommand = await claimOrRefreshNeuron(governance_id, neuron_id);
+      await claimOrRefreshNeuron(governance_id, neuron_id);
       openTip(t`Staked successfully`, TIP_SUCCESS);
       if (onStakeSuccess) onStakeSuccess();
     } else {

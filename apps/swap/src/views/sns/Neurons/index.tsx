@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy } from "components/index";
@@ -6,7 +6,7 @@ import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { neuronFormat, NeuronState, getDissolvingTimeInSeconds, getNervousVotingPower } from "utils/sns/neurons";
+import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns/neurons";
 import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Clock } from "react-feather";
@@ -35,7 +35,7 @@ interface NeuronProps {
   token: TokenInfo | undefined;
 }
 
-function NeuronItem({ neuron, token, ledger_id, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
+function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
   const theme = useTheme() as Theme;
   const [splitNeuronOpen, setSplitNeuronOpen] = useState(false);
 
@@ -127,6 +127,7 @@ function NeuronItem({ neuron, token, ledger_id, governance_id, neuronSystemParam
             open={splitNeuronOpen}
             onClose={() => setSplitNeuronOpen(false)}
             token={token}
+            neuron={neuron}
             neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
             onSetSuccess={handleSuccessTrigger}
