@@ -3,11 +3,11 @@ import { Trans, t } from "@lingui/macro";
 import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
 import { Flex, ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
-// import { getNeuronMaturityBalance } from "utils/sns/neurons";
 import type { TokenInfo } from "types/token";
 import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { secondsToDuration } from "@dfinity/utils";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
@@ -131,6 +131,33 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
           <DisburseMaturity neuron={neuron} neuron_id={neuron_id} governance_id={governance_id} />
         </Flex>
       </Flex>
+
+      {neuron.disburse_maturity_in_progress.length > 0 ? (
+        <Box sx={{ margin: "10px 0 0 0" }}>
+          <Typography color="text.primary" fontWeight={500}>
+            <Trans>Disbursing countdown</Trans>
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "10px 0", margin: "10px 0 0 0" }}>
+            {neuron.disburse_maturity_in_progress.map((e) => {
+              const finalize_disbursement_timestamp_seconds = e.finalize_disbursement_timestamp_seconds[0];
+
+              if (!finalize_disbursement_timestamp_seconds) return null;
+
+              const seconds =
+                finalize_disbursement_timestamp_seconds -
+                BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
+
+              return token ? (
+                <Typography sx={{ fontSize: "12px" }}>
+                  {parseTokenAmount(e.amount_e8s, token.decimals).toString()} {token?.symbol} remaining{" "}
+                  {secondsToDuration({ seconds })}
+                </Typography>
+              ) : null;
+            })}
+          </Box>
+        </Box>
+      ) : null}
 
       <Box margin="15px 0 0 0" sx={{ cursor: "pointer", width: "fit-content" }} onClick={handleToggleMaturity}>
         <Flex gap="0 5px">
