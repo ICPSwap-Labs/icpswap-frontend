@@ -324,13 +324,6 @@ export async function neuronVoteForProposal(
   vote: number,
   proposal_id: bigint,
 ) {
-  console.log({
-    governance_id,
-    neuron_id,
-    vote,
-    proposal_id,
-  });
-
   return resultFormat<ManageNeuronResponse>(
     await (
       await sns_governance(governance_id, true)
