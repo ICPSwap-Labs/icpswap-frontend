@@ -60,7 +60,8 @@ export function VoteConfirm({
               const manage_error = result ? ("Error" in result ? result.Error : undefined) : undefined;
 
               if (status === "ok") {
-                if (!manage_error) {
+                // If neuron is already voted, make it no error tip
+                if (!manage_error || manage_error.error_message === "Neuron already voted on proposal.") {
                   openTip(t`Neuron ${formattedNeuron.id} Vote successfully`, TIP_SUCCESS);
                 } else {
                   const message = manage_error.error_message;
