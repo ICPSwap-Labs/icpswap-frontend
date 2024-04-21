@@ -10,10 +10,15 @@ export interface DisburseMaturityProps {
   neuron: Neuron;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
-  onDisburseSuccess?: () => void;
+  onDisburseMaturitySuccess?: () => void;
 }
 
-export function DisburseMaturity({ neuron, governance_id, neuron_id }: DisburseMaturityProps) {
+export function DisburseMaturity({
+  neuron,
+  governance_id,
+  neuron_id,
+  onDisburseMaturitySuccess,
+}: DisburseMaturityProps) {
   const [disburseOpen, setDisburseOpen] = useState(false);
 
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -43,7 +48,7 @@ export function DisburseMaturity({ neuron, governance_id, neuron_id }: DisburseM
       if (!neuron_error) {
         openTip(t`Disburse maturity successfully`, TIP_SUCCESS);
         setDisburseOpen(false);
-        setLoading(false);
+        if (onDisburseMaturitySuccess) onDisburseMaturitySuccess();
       } else {
         const message = neuron_error.error_message;
         openTip(message === "" ? t`Failed to disburse maturity` : message, TIP_ERROR);
@@ -52,6 +57,7 @@ export function DisburseMaturity({ neuron, governance_id, neuron_id }: DisburseM
       openTip(message ?? t`Failed to disburse maturity`, TIP_ERROR);
     }
 
+    setLoading(false);
     closeFullscreenLoading();
   };
 
