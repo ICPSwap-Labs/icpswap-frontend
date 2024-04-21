@@ -1,17 +1,17 @@
 import { Trans, t } from "@lingui/macro";
-import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
 import { Modal } from "@icpswap/ui";
-import { Button, Box, Typography, Collapse, Copy } from "components/index";
+import { Button, Box, Typography, Collapse, Copy, FilledTextField } from "components/index";
 import { Neuron, NervousSystemFunction } from "@icpswap/types";
 import { useMemo, useState } from "react";
-import { shorten, toHexString } from "@icpswap/utils";
+import { isValidPrincipal, shorten, toHexString } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 
 import { AddFollowee } from "./AddFollowee";
 import { DeleteFollowee } from "./DeleteFollowee";
 
-interface FollowNeuronProps {
+interface HotKeyProps {
   func: NervousSystemFunction;
   neuron_id: Uint8Array | number[] | undefined;
   governance_id: string | undefined;
@@ -19,7 +19,7 @@ interface FollowNeuronProps {
   refreshNeuron: () => void;
 }
 
-function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }: FollowNeuronProps) {
+function HotKey({ neuron, func, neuron_id, governance_id, refreshNeuron }: HotKeyProps) {
   const [open, setOpen] = useState(false);
 
   const following = useMemo(() => {
@@ -115,54 +115,58 @@ function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }:
   );
 }
 
-export interface FollowingProps {
+export interface HotKeysProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
 }
 
-export function Followings({ governance_id, neuron_id }: FollowingProps) {
+export function HotKeys({ governance_id, neuron_id }: HotKeysProps) {
   const [open, setOpen] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [hotKey, setHotKey] = useState<undefined | string>(undefined);
 
-  const { result: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
-  const { result: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
+  const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
+  const [openTip] = useTips();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleHotKeyChange = (principal: string) => {
+    setHotKey(principal);
+  };
+
+  const handleAddHotKey = async () => {
+    setLoading(true);
+    openFullscreenLoading();
+
+    setOpen(true);
+    setLoading(false);
+    closeFullscreenLoading();
+  };
+
+  let error: string | undefined;
+  if (!hotKey) error = t`Enter the hotkey`;
+  if (hotKey && !isValidPrincipal(hotKey)) error = t`Invalid principal ID`;
 
   return (
     <Box>
       <Typography color="text.primary" fontSize="16px" fontWeight={600}>
-        <Trans>Following</Trans>
+        <Trans>Hotkeys</Trans>
       </Typography>
 
       <Typography fontSize="12px" sx={{ margin: "10px 0 0 0" }}>
         <Trans>
-          Following allows you to delegate your votes to another neuron holder. You still earn rewards if you delegate
-          your voting rights. You can change your following at any time.
+          To vote with this neuron from another dapp, add the principal id you have in the other dapp as a hotkey.
         </Trans>
       </Typography>
 
       <Button sx={{ margin: "10px 0 0 0" }} onClick={() => setOpen(true)} variant="contained" size="small">
-        <Trans>Following</Trans>
+        <Trans>Add Hotkey</Trans>
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Follow neurons`}>
-        <Typography fontSize="12px">
-          <Trans>
-            Follow neurons to automate your voting, and receive the maximum voting rewards. You can follow neurons on
-            specific topics or all topics.
-          </Trans>
-        </Typography>
-
-        <Box sx={{ margin: "40px 0 0 0", display: "flex", flexDirection: "column", gap: "20px 0" }}>
-          {neuron_system_functions?.functions.map((func) => (
-            <FollowNeuron
-              key={func.id.toString()}
-              func={func}
-              neuron_id={neuron_id}
-              governance_id={governance_id}
-              neuron={neuron}
-              refreshNeuron={() => setRefreshTrigger(refreshTrigger + 1)}
-            />
-          ))}
+      <Modal open={open} onClose={() => setOpen(false)} title={t`Add Hotkey`}>
+        <FilledTextField placeholder={t`Enter hotkey principal ID`} onChange={handleHotKeyChange} />
+        <Box sx={{ margin: "20px 0 0 0" }}>
+          <Button fullWidth variant="contained" size="large" disabled={error !== undefined} onClick={handleAddHotKey}>
+            {error === undefined ? <Trans>Confirm</Trans> : error}
+          </Button>
         </Box>
       </Modal>
     </Box>

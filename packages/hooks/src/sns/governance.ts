@@ -340,3 +340,34 @@ export async function neuronVoteForProposal(
     }),
   );
 }
+
+// export async function neuronAddHotkey(neuron_id: Uint8Array | number[], principal: Principal) {
+//   return resultFormat<ManageNeuronResponse>(
+//     await (
+//       await sns_governance(governance_id, true)
+//     ).manage_neuron({
+//       subaccount: [...neuron_id],
+//       command: neuronOperationCommand({
+//         AddHotKey: {
+//           new_hot_key: principal,
+//         },
+//       }),
+//     }),
+//   );
+// }
+
+// export const toRemoveHotkeyRequest = ({
+//   neuronId,
+//   principal,
+// }: {
+//   neuronId: NeuronId;
+//   principal: Principal;
+// }): RawManageNeuron =>
+//   toConfigureOperation({
+//     neuronId,
+//     operation: {
+//       RemoveHotKey: {
+//         hot_key_to_remove: [principal],
+//       },
+//     },
+//   });
