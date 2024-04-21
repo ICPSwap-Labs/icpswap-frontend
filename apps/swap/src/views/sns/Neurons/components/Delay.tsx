@@ -186,6 +186,16 @@ export function SetDissolveDelay({
     aging_since_timestamp_seconds,
   ]);
 
+  const votingPowerPercentage = useMemo(() => {
+    if (neuron_max_dissolve_seconds === undefined || day === undefined) return undefined;
+
+    const maxDelay = Number(neuron_max_dissolve_seconds);
+
+    const val = (daysToSeconds(Number(day)) / maxDelay) * 100;
+
+    return val > 100 ? "100%" : `${val.toFixed(2)}%`;
+  }, [day, neuron_max_dissolve_seconds]);
+
   let error: string | undefined;
 
   if (!day) error = t`Enter the dissolve delay`;
@@ -289,7 +299,14 @@ export function SetDissolveDelay({
                 background: theme.palette.background.level1,
               }}
             >
-              <Box sx={{ borderRadius: "8px", background: theme.colors.secondaryMain, width: "20%", height: "100%" }} />
+              <Box
+                sx={{
+                  borderRadius: "8px",
+                  background: theme.colors.secondaryMain,
+                  width: votingPowerPercentage,
+                  height: "100%",
+                }}
+              />
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "space-around", margin: "12px 0 0 0" }}>

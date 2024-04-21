@@ -23,6 +23,7 @@ import { SetDissolveDelay } from "./components/Delay";
 import { Disburse } from "./components/Disburse";
 import { Maturity } from "./components/Maturity";
 import { Followings } from "./components/Following";
+// import { HotKeys } from "./components/HotKeys";
 import { StakeToCreateNeuron } from "./components/StakeToCreateNeuron";
 
 interface NeuronProps {
@@ -162,8 +163,10 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
           onMaturitySuccess={handleSuccessTrigger}
         />
 
-        <Box sx={{ margin: "20px 0 0 0" }}>
+        <Box sx={{ margin: "20px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
           <Followings neuron_id={neuron_id} governance_id={governance_id} />
+
+          {/* <HotKeys neuron_id={neuron_id} governance_id={governance_id} /> */}
         </Box>
       </Box>
     </>
