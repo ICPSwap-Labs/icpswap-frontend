@@ -13,10 +13,10 @@ export interface StakeMaturityProps {
   token: TokenInfo | undefined;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
-  onDisburseSuccess?: () => void;
+  onStakeMaturitySuccess?: () => void;
 }
 
-export function StakeMaturity({ neuron, token, governance_id, neuron_id }: StakeMaturityProps) {
+export function StakeMaturity({ neuron, token, governance_id, neuron_id, onStakeMaturitySuccess }: StakeMaturityProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -47,6 +47,7 @@ export function StakeMaturity({ neuron, token, governance_id, neuron_id }: Stake
         openTip(t`Stake maturity successfully`, TIP_SUCCESS);
         setOpen(false);
         setLoading(false);
+        if (onStakeMaturitySuccess) onStakeMaturitySuccess();
       } else {
         const message = neuron_error.error_message;
         openTip(message === "" ? t`Failed to stake maturity` : message, TIP_ERROR);
@@ -56,6 +57,7 @@ export function StakeMaturity({ neuron, token, governance_id, neuron_id }: Stake
     }
 
     closeFullscreenLoading();
+    setLoading(false);
   };
 
   return (

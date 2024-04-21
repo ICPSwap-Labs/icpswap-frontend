@@ -127,8 +127,20 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
         </Typography>
 
         <Flex gap="0 5px" align="center">
-          <StakeMaturity neuron={neuron} neuron_id={neuron_id} governance_id={governance_id} token={token} />
-          <DisburseMaturity neuron={neuron} neuron_id={neuron_id} governance_id={governance_id} />
+          <StakeMaturity
+            neuron={neuron}
+            neuron_id={neuron_id}
+            governance_id={governance_id}
+            token={token}
+            onStakeMaturitySuccess={onMaturitySuccess}
+          />
+
+          <DisburseMaturity
+            neuron={neuron}
+            neuron_id={neuron_id}
+            governance_id={governance_id}
+            onDisburseMaturitySuccess={onMaturitySuccess}
+          />
         </Flex>
       </Flex>
 
