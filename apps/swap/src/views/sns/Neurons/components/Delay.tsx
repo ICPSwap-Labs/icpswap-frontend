@@ -117,9 +117,8 @@ export function SetDissolveDelay({
 
   const handleMin = () => {
     if (!neuron) return;
-    setDay(
-      secondsToDays(Math.max(Number(neuron_minimum_dissolve_seconds), Number(currentDissolveDelaySeconds))).toString(),
-    );
+    const day = secondsToDays(Math.max(Number(neuron_minimum_dissolve_seconds), Number(currentDissolveDelaySeconds)));
+    setDay((day + 1).toString());
   };
 
   const votingPower = useMemo(() => {
