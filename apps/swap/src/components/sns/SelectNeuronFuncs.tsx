@@ -18,7 +18,7 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
   const { result } = useNeuronSystemFunctions(governance_id);
 
   const functions = useMemo(() => {
-    return result?.functions;
+    return result?.functions.filter((e) => e.name !== "All non-critical topics");
   }, [result]);
 
   useEffect(() => {
