@@ -70,7 +70,7 @@ export default function Voting() {
   }, [proposal_data]);
 
   const handleBack = () => {
-    history.push("/sns/voting");
+    history.goBack();
   };
 
   return (

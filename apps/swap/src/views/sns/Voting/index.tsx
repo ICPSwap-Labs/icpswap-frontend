@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { t } from "@lingui/macro";
-import { useListDeployedSNSs, getListProposals } from "@icpswap/hooks";
+import { useListDeployedSNSs, getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState, useEffect } from "react";
 import type { ProposalData } from "@icpswap/types";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
@@ -113,6 +113,8 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
 const sns_proposals_limit = 50;
 
 export default function Votes() {
+  const history = useHistory();
+  const { root_id } = useParsedQueryString() as { root_id: string };
   const [loading, setLoading] = useState(false);
   const [fetchDone, setFetchDone] = useState(false);
   const [allProposals, setAllProposals] = useState<ProposalData[]>([]);
@@ -120,6 +122,12 @@ export default function Votes() {
   const [excludeFuncIds, setExcludeFuncIds] = useState<bigint[]>([]);
 
   const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
+
+  useEffect(() => {
+    if (root_id) {
+      setSelectedNeuron(root_id);
+    }
+  }, [root_id]);
 
   const { result: listedSNS } = useListDeployedSNSs();
 
@@ -145,6 +153,7 @@ export default function Votes() {
 
   const handleSelectNeuronChange = (id: string) => {
     reset_state();
+    history.push(`/sns/voting?root_id=${id}`);
     setSelectedNeuron(id);
   };
 
