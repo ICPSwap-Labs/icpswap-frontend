@@ -198,7 +198,7 @@ export default function LaunchpadList() {
 
         <Box sx={{ margin: "30px 0 0 0" }}>
           <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-            <Trans>Launchpad</Trans>
+            <Trans>Launched</Trans>
           </Typography>
 
           {!loading ? (
