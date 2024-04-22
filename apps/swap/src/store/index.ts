@@ -7,7 +7,6 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import { PersistState } from "redux-persist/es/types";
 import allReducer, { sessionReducer } from "./reducer";
 
-
 import { AuthState } from "./auth/states";
 import { SessionState } from "./session/states";
 import { GlobalState } from "./global/states";
@@ -25,11 +24,11 @@ import { TokenCacheState } from "./token/cache/states";
 import { CallState } from "./call/states";
 import { StepsState } from "./steps/state";
 import { Web3State } from "./web3/states";
+import { SnsState } from "./sns/states";
 
 import { SwapBurnState as SwapV2BurnState } from "./swapv2/burn/state";
 import { SwapLiquidityState as SwapV2LiquidityState } from "./swapv2/liquidity/state";
 import { SwapCacheState as SwapV2CacheState } from "./swapv2/cache/state";
-
 
 interface PersistPartial {
   _persist: PersistState;
@@ -56,6 +55,7 @@ export interface AllState {
   swapV2Liquidity: SwapV2LiquidityState;
   swapV2Cache: SwapV2CacheState;
   web3: Web3State;
+  sns: SnsState;
 }
 
 const defaultStorageConfig = {
@@ -80,6 +80,7 @@ const rootPersistConfig = {
     "step",
     "swapV2Liquidity",
     "swapV2Burn",
+    "sns",
   ],
   migrate: (state: any) => {
     let newState = {};
