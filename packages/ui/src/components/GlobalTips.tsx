@@ -1,5 +1,5 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { TextButton } from "./TextButton";
+// import { TextButton } from "./TextButton";
 
 function CloseIcon() {
   return (
@@ -34,8 +34,8 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          ICPSwap SNS Launchpad is live! Don't miss out!&nbsp;
-          <TextButton
+          The SNS function is deployed based on the NNS frontend and is currently in public testing.
+          {/* <TextButton
             link="https://nns.ic0.app/project/?project=csyra-haaaa-aaaaq-aacva-cai"
             color="write"
             textDecoration="underline"
@@ -44,7 +44,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             }}
           >
             Click here to join the excitement!
-          </TextButton>
+          </TextButton> */}
         </Typography>
       </Grid>
 

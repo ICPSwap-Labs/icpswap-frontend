@@ -52,7 +52,7 @@ export const routes: Route[] = [
   },
   {
     key: "sns",
-    name: `SNS`,
+    name: `SNS(Beta)`,
     path: `/sns/neurons`,
   },
   {
