@@ -13,6 +13,7 @@ import sessionReducer from "./session/reducer";
 import tokenCacheReducer from "./token/cache/reducer";
 import callReducer from "./call/reducer";
 import StepReducer from "./steps/reducer";
+import SnsReducer from "./sns/reducer";
 
 import SwapV2LiquidityReducer from "./swapv2/liquidity/reducer";
 import SwapV2CacheReducer from "./swapv2/cache/reducer";
@@ -41,4 +42,5 @@ export default {
   swapV2Liquidity: SwapV2LiquidityReducer,
   swapV2Burn: SwapV2Burn,
   web3: Web3,
+  sns: SnsReducer,
 };

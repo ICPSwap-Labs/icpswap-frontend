@@ -1,9 +1,9 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { useSNSTokensRootIds, useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
+import { useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useEffect, useMemo } from "react";
 import { LoadingRow } from "components/index";
-import type { TokenRoots, ListDeployedSnsesResponse } from "@icpswap/types";
+import type { SnsTokensInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
@@ -11,26 +11,23 @@ import { useHistory } from "react-router-dom";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "@icpswap/types";
 import { Tabs } from "components/sns/Tab";
+import { SnsSwapLifecycle } from "@icpswap/constants";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 
 interface LaunchpadProps {
-  token_root: TokenRoots;
-  listedSNS: ListDeployedSnsesResponse | undefined;
+  sns: SnsTokensInfo;
 }
 
-function Launchpad({ token_root, listedSNS }: LaunchpadProps) {
+function Launchpad({ sns }: LaunchpadProps) {
   const theme = useTheme() as Theme;
   const history = useHistory();
 
-  const swap_id = useMemo(() => {
-    if (!listedSNS) return undefined;
-
-    const sns = listedSNS.instances.find((e) => {
-      const root_id = e.root_canister_id[0];
-      return root_id && root_id.toString() === token_root.root_canister_id;
-    });
-
-    return sns ? sns.swap_canister_id[0]?.toString() : undefined;
-  }, [listedSNS, token_root]);
+  const { swap_id, root_id } = useMemo(() => {
+    return {
+      swap_id: sns.canister_ids.swap_canister_id,
+      root_id: sns.canister_ids.root_canister_id,
+    };
+  }, [sns]);
 
   const { result: saleParameters } = useSwapSaleParameters(swap_id);
 
@@ -50,12 +47,12 @@ function Launchpad({ token_root, listedSNS }: LaunchpadProps) {
           padding: "10px",
         },
       }}
-      onClick={() => history.push(`/sns/launch/${token_root.root_canister_id}`)}
+      onClick={() => history.push(`/sns/launch/${root_id}`)}
     >
       <Box sx={{ display: "flex", gap: "0 10px" }}>
-        <AvatarImage src={token_root.logo} />
+        <AvatarImage src={sns.meta.logo} />
         <Typography color="text.primary" fontSize="18px" fontWeight={500}>
-          {token_root.name}
+          {sns.meta.name}
         </Typography>
       </Box>
 
@@ -69,15 +66,13 @@ function Launchpad({ token_root, listedSNS }: LaunchpadProps) {
           textOverflow: "ellipsis",
         }}
       >
-        {token_root.description}
+        {sns.meta.description}
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", margin: "20px 0 0 0" }}>
-        <Typography>
-          {token_root.swap_lifecycle.lifecycle === "LIFECYCLE_COMMITTED" ? t`Status` : t`Deadline`}
-        </Typography>
+        <Typography>{sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed ? t`Status` : t`Deadline`}</Typography>
         <Typography color="text.primary">
-          {token_root.swap_lifecycle.lifecycle === "LIFECYCLE_COMMITTED"
+          {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed
             ? t`Complete`
             : deadline !== undefined
             ? dayjs(Number(deadline)).format("YYYY-MM-DD HH:mm:ss")
@@ -89,23 +84,23 @@ function Launchpad({ token_root, listedSNS }: LaunchpadProps) {
 }
 
 export default function LaunchpadList() {
-  const { result: snsTokens, loading } = useSNSTokensRootIds();
   const { result: listedSNS } = useListDeployedSNSs();
+  const { result: allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
 
   const openedLaunches = useMemo(() => {
-    if (!snsTokens) return undefined;
-    return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_OPEN");
-  }, [snsTokens]);
+    if (!allSnsTokensInfo) return undefined;
+    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Open);
+  }, [allSnsTokensInfo]);
 
   const completedLaunches = useMemo(() => {
-    if (!snsTokens) return undefined;
-    return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_COMMITTED");
-  }, [snsTokens]);
+    if (!allSnsTokensInfo) return undefined;
+    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Committed);
+  }, [allSnsTokensInfo]);
 
   const upcomingLaunches = useMemo(() => {
-    if (!snsTokens) return undefined;
-    return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_ADOPTED");
-  }, [snsTokens]);
+    if (!allSnsTokensInfo) return undefined;
+    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Pending);
+  }, [allSnsTokensInfo]);
 
   const updateTokenStandard = useUpdateTokenStandard();
 
@@ -144,7 +139,7 @@ export default function LaunchpadList() {
                 },
               }}
             >
-              {openedLaunches?.map((e) => <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />)}
+              {openedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
             </Box>
           ) : (
             <Typography>No Launches</Typography>
@@ -182,9 +177,7 @@ export default function LaunchpadList() {
                   },
                 }}
               >
-                {upcomingLaunches?.map((e) => (
-                  <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />
-                ))}
+                {upcomingLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
               </Box>
             ) : (
               <Typography>No Upcoming Launches</Typography>
@@ -222,9 +215,7 @@ export default function LaunchpadList() {
                 },
               }}
             >
-              {completedLaunches?.map((e) => (
-                <Launchpad key={e.root_canister_id} token_root={e} listedSNS={listedSNS} />
-              ))}
+              {completedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
             </Box>
           ) : (
             <LoadingRow>
