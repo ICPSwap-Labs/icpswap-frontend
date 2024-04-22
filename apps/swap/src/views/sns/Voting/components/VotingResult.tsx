@@ -364,7 +364,7 @@ export function VotingResult({
                 onClick={() => setIneligibleOpen(!ineligibleOpen)}
               >
                 <Typography>
-                  <Trans>{ineligibleNeurons.length} Ineligible neuron</Trans>
+                  <Trans>{ineligibleNeurons.length} Ineligible neurons</Trans>
                 </Typography>
                 <ChevronDown size="18px" style={{ transform: ineligibleOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
               </Box>
