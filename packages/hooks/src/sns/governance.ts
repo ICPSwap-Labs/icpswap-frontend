@@ -341,33 +341,56 @@ export async function neuronVoteForProposal(
   );
 }
 
-// export async function neuronAddHotkey(neuron_id: Uint8Array | number[], principal: Principal) {
-//   return resultFormat<ManageNeuronResponse>(
-//     await (
-//       await sns_governance(governance_id, true)
-//     ).manage_neuron({
-//       subaccount: [...neuron_id],
-//       command: neuronOperationCommand({
-//         AddHotKey: {
-//           new_hot_key: principal,
-//         },
-//       }),
-//     }),
-//   );
-// }
+export async function neuronAddPermissions(
+  governance_id: string,
+  neuron_id: Uint8Array | number[],
+  principal: Principal,
+  permissions: Int32Array | number[],
+) {
+  return resultFormat<ManageNeuronResponse>(
+    await (
+      await sns_governance(governance_id, true)
+    ).manage_neuron({
+      subaccount: [...neuron_id],
+      command: [
+        {
+          AddNeuronPermissions: {
+            permissions_to_add: [
+              {
+                permissions,
+              },
+            ],
+            principal_id: [principal],
+          },
+        },
+      ],
+    }),
+  );
+}
 
-// export const toRemoveHotkeyRequest = ({
-//   neuronId,
-//   principal,
-// }: {
-//   neuronId: NeuronId;
-//   principal: Principal;
-// }): RawManageNeuron =>
-//   toConfigureOperation({
-//     neuronId,
-//     operation: {
-//       RemoveHotKey: {
-//         hot_key_to_remove: [principal],
-//       },
-//     },
-//   });
+export async function neuronRemovePermissions(
+  governance_id: string,
+  neuron_id: Uint8Array | number[],
+  principal: Principal,
+  permissions: Int32Array | number[],
+) {
+  return resultFormat<ManageNeuronResponse>(
+    await (
+      await sns_governance(governance_id, true)
+    ).manage_neuron({
+      subaccount: [...neuron_id],
+      command: [
+        {
+          RemoveNeuronPermissions: {
+            permissions_to_remove: [
+              {
+                permissions,
+              },
+            ],
+            principal_id: [principal],
+          },
+        },
+      ],
+    }),
+  );
+}
