@@ -76,12 +76,12 @@ export function SetDissolveDelay({
   }, [neuronSystemParameters]);
 
   const currentDissolveDelaySeconds = useMemo(() => {
-    if (!neuron) return 0n;
+    if (!neuron) return undefined;
     return getSnsDelayTimeInSeconds(neuron) ?? 0n;
   }, [neuron]);
 
   const handleSubmit = async () => {
-    if (loading || !day || !token || !governance_id || !neuron_id || !currentDissolveDelaySeconds) return;
+    if (loading || !day || !token || !governance_id || !neuron_id || currentDissolveDelaySeconds === undefined) return;
 
     setLoading(true);
     openFullscreenLoading();
