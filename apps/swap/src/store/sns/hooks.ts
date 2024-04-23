@@ -15,7 +15,7 @@ export function useFetchSnsAllTokensInfo() {
 
   useEffect(() => {
     async function call() {
-      if (allTokensInfo.length > 0) return;
+      if (allTokensInfo.length > 0 || loading) return;
 
       setLoading(true);
       const data = await getSnsAllTokensInfo();
