@@ -382,7 +382,16 @@ export function VotingResult({
                     {ineligibleNeurons.map((ineligibleNeuron, index) => (
                       <Box
                         key={ineligibleNeuron.id[0]?.id ? toHexString(ineligibleNeuron.id[0]?.id) : `neuron_${index}`}
-                        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          "@media(max-width: 640px)": {
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                          },
+                        }}
                       >
                         <Typography sx={{ fontSize: "12px" }}>
                           {neuronFormat(ineligibleNeuron) ? shorten(neuronFormat(ineligibleNeuron).id, 12) : "--"}

@@ -89,6 +89,11 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
           justifyContent: "space-between",
           cursor: "pointer",
           alignItems: "center",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "5px",
+            alignItems: "flex-start",
+          },
         }}
         onClick={handleToggleOpen}
       >

@@ -55,9 +55,23 @@ export function VotedNeurons({ proposal_data, votedNeurons }: VotedNeuronsProps)
 
   return votedNeurons && proposal_data && votedNeurons.length > 0 ? (
     <Box sx={{ margin: "20px 0 0 0" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "5px",
+          },
+        }}
+      >
         <Box
-          sx={{ display: "flex", gap: "0 5px", alignItems: "center", cursor: "pointer" }}
+          sx={{
+            display: "flex",
+            gap: "0 5px",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
           onClick={() => setVotedOpen(!votedOpen)}
         >
           <Typography>

@@ -35,7 +35,14 @@ export function SelectSns({ onChange, value }: SelectSnsProps) {
   };
 
   return (
-    <Box sx={{ width: "420px" }}>
+    <Box
+      sx={{
+        width: "420px",
+        "@media(max-width: 640px)": {
+          width: "100%",
+        },
+      }}
+    >
       <Select value={value} menus={menus} onChange={handleSelectChange} />
     </Box>
   );
