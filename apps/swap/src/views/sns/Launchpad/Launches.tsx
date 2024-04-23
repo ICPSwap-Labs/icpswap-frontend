@@ -85,7 +85,13 @@ function Launchpad({ sns }: LaunchpadProps) {
 
 export default function LaunchpadList() {
   const { result: listedSNS } = useListDeployedSNSs();
-  const { result: allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
+  const { result: _allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
+
+  // Only show the launches after ICPSwap Token
+  const allSnsTokensInfo = useMemo(() => {
+    if (!_allSnsTokensInfo) return undefined;
+    return _allSnsTokensInfo.filter((e) => e.index >= 27);
+  }, [_allSnsTokensInfo]);
 
   const openedLaunches = useMemo(() => {
     if (!allSnsTokensInfo) return undefined;
