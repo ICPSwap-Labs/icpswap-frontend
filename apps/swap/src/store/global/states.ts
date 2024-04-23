@@ -12,7 +12,6 @@ export interface GlobalState {
   swapTokenList: [];
   userLocale: SupportedLocale;
   poolStandardUpdated: boolean;
-  snsTokenRootIds: { [key: string]: string };
 }
 
 export const initialState: GlobalState = {
@@ -24,5 +23,4 @@ export const initialState: GlobalState = {
   swapTokenList: [],
   userLocale: DEFAULT_LOCALE,
   poolStandardUpdated: false,
-  snsTokenRootIds: {},
 };

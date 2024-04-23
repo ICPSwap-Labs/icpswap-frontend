@@ -14,5 +14,3 @@ export const updateUserLocale = createAction<SupportedLocale>("global/updateUser
 export const updateTokenList = createAction<TokenListMetadata[]>("global/updateTokenList");
 
 export const updatePoolStandardInitialed = createAction<boolean>("global/updatePoolStandardInitialed");
-
-export const updateTokenSNSRootId = createAction<{ root_id: string; id: string }>("global/updateTokenSNSRootId");

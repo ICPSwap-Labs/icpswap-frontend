@@ -1,7 +1,8 @@
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { useFetchXDR2USD, useFetchGlobalTokenList, useFetchSNSTokenRootIds } from "store/global/hooks";
+import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
 import { useConnectManager, useWalletConnectorManager } from "store/auth/hooks";
@@ -39,7 +40,7 @@ export default function App() {
   const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
   const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
 
-  useFetchSNSTokenRootIds();
+  useFetchSnsAllTokensInfo();
 
   return (
     <StyledEngineProvider injectFirst>

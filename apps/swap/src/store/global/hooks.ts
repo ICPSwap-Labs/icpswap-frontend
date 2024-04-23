@@ -4,20 +4,8 @@ import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
-import {
-  use100ICPPriceInfo,
-  useXDR2USD,
-  useTokensFromList,
-  useSNSTokensRootIds,
-  useListDeployedSNSs,
-} from "@icpswap/hooks";
-import {
-  updateXDR2USD,
-  updateICPPriceList,
-  updateTokenList,
-  updatePoolStandardInitialed,
-  updateTokenSNSRootId,
-} from "./actions";
+import { use100ICPPriceInfo, useXDR2USD, useTokensFromList } from "@icpswap/hooks";
+import { updateXDR2USD, updateICPPriceList, updateTokenList, updatePoolStandardInitialed } from "./actions";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -178,49 +166,6 @@ export function useFetchGlobalTokenList() {
     loading,
     result: tokens,
   };
-}
-
-export function useFetchSNSTokenRootIds() {
-  const dispatch = useAppDispatch();
-  const { result: snsTokenRootIds, loading } = useSNSTokensRootIds();
-  const { result: list_deployed_sns } = useListDeployedSNSs();
-
-  useEffect(() => {
-    async function call() {
-      if (snsTokenRootIds && list_deployed_sns && snsTokenRootIds.data.length > 0) {
-        snsTokenRootIds.data.forEach((sns_root) => {
-          const deployed_sns = list_deployed_sns.instances.find((e) => {
-            const root_id = e.root_canister_id[0];
-            if (root_id) return root_id.toString() === sns_root.root_canister_id;
-            return false;
-          });
-
-          if (deployed_sns) {
-            const ledger_canister_id = deployed_sns.ledger_canister_id[0];
-            if (ledger_canister_id) {
-              dispatch(
-                updateTokenSNSRootId({
-                  id: deployed_sns.ledger_canister_id.toString(),
-                  root_id: sns_root.root_canister_id,
-                }),
-              );
-            }
-          }
-        });
-      }
-    }
-
-    call();
-  }, [snsTokenRootIds, dispatch, list_deployed_sns]);
-
-  return {
-    loading,
-    result: snsTokenRootIds,
-  };
-}
-
-export function useTokenSNSRootIds() {
-  return useAppSelector((state: AppState) => state.global.snsTokenRootIds);
 }
 
 export function usePoolStandardManager(): [boolean, (value: boolean) => void] {

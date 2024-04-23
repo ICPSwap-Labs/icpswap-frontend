@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { useTokenSNSRootIds } from "store/global/hooks";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 
 export function useSNSTokenRootId(tokenId: string | undefined) {
-  const tokenRootIds = useTokenSNSRootIds();
+  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
 
   return useMemo(() => {
-    if (!tokenId || !tokenRootIds) return undefined;
-    return tokenRootIds[tokenId];
-  }, [tokenRootIds, tokenId]);
+    if (!tokenId || !snsAllTokensInfo) return undefined;
+    const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === tokenId);
+    return snsTokenInfo?.canister_ids.root_canister_id;
+  }, [snsAllTokensInfo, tokenId]);
 }
