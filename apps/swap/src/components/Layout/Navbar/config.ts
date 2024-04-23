@@ -25,6 +25,8 @@ export type SubMenu = Route;
 
 export const MAX_NUMBER = 5;
 
+export const MOBILE_MAX_NUMBER = 5;
+
 export const routes: Route[] = [
   {
     key: "swap",

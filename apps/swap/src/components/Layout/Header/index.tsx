@@ -5,7 +5,7 @@ import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import LogoSection from "../../LogoSection";
 import ProfileSection from "./ProfileSection";
 import Navbar from "../Navbar";
-import MobileNavbar from "../Navbar/MobileNavbar";
+import MobileNavbar from "../Navbar/mobile/Navbar";
 import TokenClaim from "./TokenClaim";
 
 export const customizeTheme = createTheme({
@@ -70,8 +70,18 @@ export default function Header() {
         </Grid>
       </Grid>
 
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <MobileNavbar onPageLoad={() => setDrawerOpen(false)} />
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        sx={{
+          width: "100%",
+          "& .MuiPaper-root": {
+            width: "100%",
+          },
+        }}
+      >
+        <MobileNavbar onClose={() => setDrawerOpen(false)} />
       </Drawer>
     </>
   );
