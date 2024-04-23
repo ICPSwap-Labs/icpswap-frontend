@@ -92,9 +92,15 @@ export function VoteConfirm({
       onConfirm={handleVote}
       onClose={onClose}
       title={rejected ? t`Reject Proposal` : t`Adopt Proposal`}
-      text={t`You are about to cast ${votingPowerFormat(
-        votingPowers,
-      )} votes against this proposal, are you sure you want to proceed?`}
+      text={
+        rejected
+          ? t`You are about to cast ${votingPowerFormat(
+              votingPowers,
+            )} votes against this proposal, are you sure you want to proceed?`
+          : t`You are about to cast ${votingPowerFormat(
+              votingPowers,
+            )} votes for this proposal, are you sure you want to proceed?`
+      }
     />
   );
 }
