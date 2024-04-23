@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Select, AvatarImage } from "components/index";
-import { useSNSTokensRootIds } from "@icpswap/hooks";
 import { Box, Typography } from "@mui/material";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { SnsSwapLifecycle } from "@icpswap/constants";
 
 export interface SelectSnsProps {
   onChange: (value: string) => void;
@@ -9,21 +10,21 @@ export interface SelectSnsProps {
 }
 
 export function SelectSns({ onChange, value }: SelectSnsProps) {
-  const { result: snsTokens } = useSNSTokensRootIds();
+  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
 
   const completedSns = useMemo(() => {
-    if (!snsTokens) return undefined;
-    return snsTokens.data.filter((e) => e.swap_lifecycle.lifecycle === "LIFECYCLE_COMMITTED");
-  }, [snsTokens]);
+    if (!snsAllTokensInfo) return undefined;
+    return snsAllTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Committed);
+  }, [snsAllTokensInfo]);
 
   const menus = useMemo(() => {
     if (!completedSns) return [];
     return completedSns?.map((e) => ({
-      value: e.root_canister_id,
+      value: e.canister_ids.root_canister_id,
       label: (
         <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-          <AvatarImage src={e.logo} sx={{ width: "24px", height: "24px" }} />
-          <Typography fontWeight={500}>{e.name}</Typography>
+          <AvatarImage src={e.meta.logo} sx={{ width: "24px", height: "24px" }} />
+          <Typography fontWeight={500}>{e.meta.name}</Typography>
         </Box>
       ),
     }));
