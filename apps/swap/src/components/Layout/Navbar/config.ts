@@ -7,6 +7,8 @@ import MediumIcon from "./icons/Medium";
 import GithubIcon from "./icons/Github";
 import GitbookIcon from "./icons/Gitbook";
 import DSCVRIcon from "./icons/DSCVR";
+import SimpleModeIcon from "./icons/SimpleMode";
+import ProModeIcon from "./icons/ProMode";
 import { version } from "../../../.version";
 
 export type Route = {
@@ -28,6 +30,10 @@ export const routes: Route[] = [
     key: "swap",
     name: `Swap`,
     path: "/swap",
+    subMenus: [
+      { key: "simple-mode", name: `Simple mode`, path: "/swap", icon: SimpleModeIcon },
+      { key: "pro-mode", name: `Pro mode`, path: "/swap-pro", icon: ProModeIcon },
+    ],
   },
   {
     key: "staking-token",
@@ -42,7 +48,6 @@ export const routes: Route[] = [
   {
     key: "marketplace",
     name: `Marketplace`,
-    // path: "/marketplace/NFT",
     path: "/marketplace/collections",
   },
   {

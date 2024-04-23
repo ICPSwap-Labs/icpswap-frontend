@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { fileCanisterId, network, NETWORK, host } from "constants/index";
 import { t } from "@lingui/macro";
-import { Identity } from "types/index";
 import { NFTCanister } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 
