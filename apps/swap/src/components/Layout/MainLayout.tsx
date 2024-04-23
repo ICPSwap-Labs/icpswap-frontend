@@ -76,7 +76,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       <Box className={classes.mainContent}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
-        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
+        {globalTipShow && location.pathname.includes("sns") ? (
+          <GlobalTips onClose={() => setGlobalTipShow(false)} />
+        ) : null}
 
         <main className={classes.content}>{children}</main>
       </Box>
