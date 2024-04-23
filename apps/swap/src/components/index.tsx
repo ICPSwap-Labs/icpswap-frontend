@@ -27,3 +27,4 @@ export * from "./TabPanel";
 export * from "./Image/index";
 export * from "./CollapseWrapper";
 export * from "./Mui";
+export { default as Switch } from "./switch";

@@ -15,6 +15,7 @@ import {
   updateShowClosedPosition,
   updateUserPositionPools,
   updateUserMultipleApprove,
+  updateSwapProAutoRefresh,
 } from "./actions";
 
 export function useIsExpertMode() {
@@ -106,16 +107,15 @@ export function useSlippageToleranceToPercent(type: string) {
   return useMemo(() => {
     if (slippageToPercent && slippageTolerance) {
       return slippageToPercent(slippageTolerance);
-    } 
-      let percentSlippage: Percent | null = null;
-      // input change will case error when value is 0.
-      try {
-        percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
-      } catch {
-        percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
-      }
-      return percentSlippage;
-    
+    }
+    let percentSlippage: Percent | null = null;
+    // input change will case error when value is 0.
+    try {
+      percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
+    } catch {
+      percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
+    }
+    return percentSlippage;
   }, [slippageTolerance, slippageToPercent]);
 }
 
@@ -204,11 +204,29 @@ export function useInitialUserPositionPools() {
       updateStoreUserPositionPools(allPoolIds);
       setInitialLoading(false);
     } else if (loading === false) {
-        setInitialLoading(false);
-      }
+      setInitialLoading(false);
+    }
   }, [JSON.stringify(storeUserPositionPools), positionPools, updateStoreUserPositionPools, loading]);
 
   return {
     loading: initialLoading,
   };
+}
+
+export function useSwapProAutoRefresh() {
+  return useAppSelector((state) => state.swapCache.swapProAutoRefresh);
+}
+
+export function useSwapProAutoRefreshManager(): [boolean, (autoRefresh: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const swapProAutoRefresh = useSwapProAutoRefresh();
+
+  const callback = useCallback(
+    (autoRefresh: boolean) => {
+      dispatch(updateSwapProAutoRefresh(autoRefresh));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [swapProAutoRefresh, callback], [swapProAutoRefresh, callback]);
 }

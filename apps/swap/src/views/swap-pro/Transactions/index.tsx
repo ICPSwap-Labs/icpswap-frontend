@@ -8,6 +8,7 @@ import { SwapProContext } from "../context";
 import { PoolTransactions } from "./PoolTransactions";
 import { UserTransactions } from "./UserTransactions";
 import { Positions } from "./Positions";
+import { AutoRefresh } from "./AutoRefresh";
 
 enum TransactionPart {
   All = "all",
@@ -21,15 +22,23 @@ const Menus = [
   { label: t`Your Positions`, value: TransactionPart.POSITIONS },
 ];
 
+let AUTO_REFRESH_COUNTER = 0;
+
 export default function Transactions() {
   const theme = useTheme() as Theme;
   const { tradePoolId } = useContext(SwapProContext);
 
   const [active, setActive] = useState<TransactionPart>(TransactionPart.All);
+  const [autoRefresh, setAutoRefresh] = useState(0);
+
+  const handleAutoRefresh = () => {
+    AUTO_REFRESH_COUNTER++;
+    setAutoRefresh(AUTO_REFRESH_COUNTER);
+  };
 
   return (
     <SwapProCardWrapper padding="16px 0px">
-      <Box sx={{ padding: "0 16px" }}>
+      <Box sx={{ padding: "0 16px", display: "flex", justifyContent: "space-between" }}>
         <Box
           sx={{
             display: "flex",
@@ -73,10 +82,12 @@ export default function Transactions() {
             </Box>
           ))}
         </Box>
+
+        {active === TransactionPart.All ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} /> : null}
+        {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} /> : null}
         {active === TransactionPart.YOUR ? <UserTransactions canisterId={tradePoolId} /> : null}
         {active === TransactionPart.POSITIONS ? <Positions canisterId={tradePoolId} /> : null}
       </Box>

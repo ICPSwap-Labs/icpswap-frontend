@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => {
     root: {
       height: 20,
       padding: 0,
-      margin: theme.spacing(1),
+      margin: 0,
     },
     switchBase: {
       padding: 0,
