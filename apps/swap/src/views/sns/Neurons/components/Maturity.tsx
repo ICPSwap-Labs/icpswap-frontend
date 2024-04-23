@@ -151,7 +151,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "10px 0", margin: "10px 0 0 0" }}>
-            {neuron.disburse_maturity_in_progress.map((e) => {
+            {neuron.disburse_maturity_in_progress.map((e, index) => {
               const finalize_disbursement_timestamp_seconds = e.finalize_disbursement_timestamp_seconds[0];
 
               if (!finalize_disbursement_timestamp_seconds) return null;
@@ -161,7 +161,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
                 BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
 
               return token ? (
-                <Typography sx={{ fontSize: "12px" }}>
+                <Typography key={index} sx={{ fontSize: "12px" }}>
                   {parseTokenAmount(e.amount_e8s, token.decimals).toString()} {token?.symbol} remaining{" "}
                   {secondsToDuration({ seconds })}
                 </Typography>

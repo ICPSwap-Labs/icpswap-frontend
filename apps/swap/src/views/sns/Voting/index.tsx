@@ -98,7 +98,7 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
 
         <Typography sx={{ color: "text.primary", margin: "10px 0 0 0" }}>{title}</Typography>
 
-        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px" }}>
+        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word" }}>
           {summary ? shortenString(summary, 150) : "--"}
         </Typography>
 
@@ -214,7 +214,8 @@ export default function Votes() {
             display: "flex",
             alignItems: "center",
             margin: "20px 0 0 0",
-            gap: "0 20px",
+            gap: "10px 20px",
+            flexWrap: "wrap",
           }}
         >
           <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
@@ -224,31 +225,38 @@ export default function Votes() {
           <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
         </Box>
 
-        <Box sx={{ width: "100%", height: "20px" }} />
-
-        <InfiniteScroll dataLength={proposals?.length ?? 0} next={fetch_proposals} hasMore={!fetchDone} loader={null}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "20px",
-              "@media(max-width: 940px)": {
-                gridTemplateColumns: "1fr 1fr",
-              },
-              "@media(max-width: 640px)": {
-                gridTemplateColumns: "1fr",
-              },
-            }}
+        <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
+          <InfiniteScroll
+            style={{ width: "100%" }}
+            dataLength={proposals?.length ?? 0}
+            next={fetch_proposals}
+            hasMore={!fetchDone}
+            loader={null}
           >
-            {proposals?.map((proposal, index) => (
-              <ProposalItem
-                key={proposal.id[0]?.id ? proposal.id[0]?.id.toString() : `proposal_${index}`}
-                proposal={proposal}
-                governance_id={governance_id}
-              />
-            ))}
-          </Box>
-        </InfiniteScroll>
+            <Box
+              sx={{
+                width: "100%",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "20px",
+                "@media(max-width: 940px)": {
+                  gridTemplateColumns: "1fr 1fr",
+                },
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              {proposals?.map((proposal, index) => (
+                <ProposalItem
+                  key={proposal.id[0]?.id ? proposal.id[0]?.id.toString() : `proposal_${index}`}
+                  proposal={proposal}
+                  governance_id={governance_id}
+                />
+              ))}
+            </Box>
+          </InfiniteScroll>
+        </Box>
 
         {loading ? (
           <Box sx={{ margin: "20px 0 0 0" }}>

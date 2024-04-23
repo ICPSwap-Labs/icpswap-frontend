@@ -101,7 +101,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
           <Typography>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
         </Box>
 
-        <Box sx={{ display: "flex", gap: "0 8px", margin: "20px 0 0 0" }}>
+        <Box sx={{ display: "flex", gap: "8px", margin: "20px 0 0 0", flexWrap: "wrap" }}>
           <SplitNeuron
             governance_id={governance_id}
             neuron_id={neuron.id[0]?.id}
@@ -227,7 +227,21 @@ export default function Neurons() {
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <Tabs />
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "20px 0 0 0" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: "20px 0 0 0",
+            width: "100%",
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              gap: "10px 0",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            },
+          }}
+        >
           <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
           <Box>
             <StakeToCreateNeuron
