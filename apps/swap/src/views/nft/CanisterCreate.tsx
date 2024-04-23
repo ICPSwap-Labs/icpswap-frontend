@@ -1,8 +1,7 @@
-import { useState, useCallback, useRef } from "react";
-import { Link as ReactLink, useHistory } from "react-router-dom";
-import { Breadcrumbs, Typography, Grid, Box, InputAdornment } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { MainCard } from "components/index";
+import { useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { Typography, Grid, Box, InputAdornment } from "@mui/material";
+import { MainCard, Breadcrumbs } from "components/index";
 import RequiredMark from "components/RequiredMark";
 import TextField from "components/TextField";
 import Upload, { UploadRef } from "components/NFT/Upload";
@@ -25,22 +24,7 @@ import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity
 import { getLocaleMessage } from "locales/services";
 import Button from "components/authentication/ButtonConnector";
 
-const useStyles = makeStyles(() => {
-  return {
-    breadcrumbs: {
-      padding: "0 0 25px 16px",
-      "& a": {
-        textDecoration: "none",
-        "&:hover": {
-          textDecoration: "underline",
-        },
-      },
-    },
-  };
-});
-
 export default function NFTCanisterCreate() {
-  const classes = useStyles();
   const history = useHistory();
   const account = useAccount();
 
@@ -54,10 +38,6 @@ export default function NFTCanisterCreate() {
   const [fileError, setFileError] = useState<string>("");
 
   const { result: NFTMintInfo } = useNFTMintInfo();
-
-  const handleLoadPage = useCallback(() => {
-    history.goBack();
-  }, [history]);
 
   const onFieldChange = (value: string, field: string) => {
     setValues({
@@ -107,7 +87,7 @@ export default function NFTCanisterCreate() {
       return;
     }
 
-    const { status, data, message } = await createCanister(identity, {
+    const { status, data, message } = await createCanister({
       name: values.name,
       ownerName: values.minter,
       introduction: values.introduction,
@@ -130,10 +110,10 @@ export default function NFTCanisterCreate() {
 
         setCanisterId(data);
 
-        const { filePath } = (await uploadRef.current?.uploadCb(identity)) ?? {};
+        const { filePath } = (await uploadRef.current?.uploadCb()) ?? {};
 
-        if (filePath) await setCanisterLogo(identity, data, filePath);
-        if (filePath) await setCanisterLogoInController(identity, data, filePath);
+        if (filePath) await setCanisterLogo(data, filePath);
+        if (filePath) await setCanisterLogoInController(data, filePath);
       }
 
       history.push("/console/nft/canister/list");
@@ -213,294 +193,276 @@ export default function NFTCanisterCreate() {
 
   return (
     <Wrapper>
-      <>
-        <Grid container flexDirection="column">
-          <Grid item>
-            <Breadcrumbs className={classes.breadcrumbs}>
-              <ReactLink
-                to="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLoadPage();
-                }}
-              >
-                <Typography color="secondary">
-                  <Trans>NFT Canister List</Trans>
+      <Breadcrumbs
+        prevLabel={<Trans>NFT Canister List</Trans>}
+        currentLabel={<Trans>Create an NFT Canister</Trans>}
+        prevLink="/console/nft/canister/list"
+      />
+
+      <MainCard level={2} sx={{ margin: "20px 0 0 0" }}>
+        <Grid container justifyContent="center">
+          <Box
+            sx={{
+              maxWidth: "474px",
+              width: "100%",
+            }}
+          >
+            <Box>
+              <Box>
+                <RequiredMark />
+                <Typography component="span" fontSize="16px">
+                  <Trans>Collection Name</Trans>
                 </Typography>
-              </ReactLink>
-              <Typography>
-                <Trans>Create an NFT Canister</Trans>
-              </Typography>
-            </Breadcrumbs>
-          </Grid>
-          <Grid item>
-            <MainCard level={2}>
-              <Grid container justifyContent="center">
+              </Box>
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  placeholder={t`Enter the collection name`}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "name")}
+                  placeholderSize="16px"
+                  InputProps={{
+                    disableUnderline: true,
+                    inputProps: {
+                      maxLength: 50,
+                    },
+                  }}
+                />
+              </Box>
+            </Box>
+            <Box mt={3}>
+              <Box>
+                <RequiredMark />
+                <Typography component="span" fontSize="16px">
+                  <Trans>Collection Description</Trans>
+                </Typography>
+              </Box>
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  placeholderSize="16px"
+                  placeholder={t`Enter the canister description`}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    onFieldChange(event.target.value, "introduction")
+                  }
+                  InputProps={{
+                    disableUnderline: true,
+                    inputProps: {
+                      maxLength: 500,
+                    },
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box mt={3}>
+              <Box>
+                <RequiredMark />
+                <Typography component="span" fontSize="16px">
+                  <Trans>Creator</Trans>
+                </Typography>
+              </Box>
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  placeholderSize="16px"
+                  placeholder={t`Enter the creator`}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "minter")}
+                  InputProps={{
+                    disableUnderline: true,
+                    inputProps: {
+                      maxLength: 50,
+                    },
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box mt={3}>
+              <Grid container>
+                <Grid item xs>
+                  <Typography component="span" fontSize="16px">
+                    <Trans>Social Media Links</Trans>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{
+                      width: "72px",
+                      height: "31px",
+                      border: "1px solid #4F5A84",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleSocialMediaAdd}
+                  >
+                    <AddIcon fontSize="small" />
+                    <Typography color="text.primary">
+                      <Trans>Add</Trans>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Box mt={2}>
+                {(values.socialMediaLinks ?? []).map((socialMediaLink, index) => (
+                  <Grid
+                    container
+                    key={socialMediaLink.label ? socialMediaLink.label : index}
+                    sx={{
+                      marginBottom: "10px",
+                      "&:last-child": {
+                        marginBottom: "0px",
+                      },
+                    }}
+                  >
+                    <Box mr="10px" sx={{ width: "145px" }}>
+                      <FilledTextField
+                        select
+                        contained={false}
+                        placeholder={t`Media`}
+                        required
+                        value={socialMediaLink.label}
+                        onChange={(value) => onSocialMediaLinkChange(value, index)}
+                        menus={SOCIAL_LINKS}
+                        menuDisabled={(value: FilledTextFiledMenus) => isExistInSocialLinks(value)}
+                      />
+                    </Box>
+                    <Grid item xs>
+                      <TextField
+                        fullWidth
+                        placeholderSize="16px"
+                        placeholder={t`Enter your link, e.g. https://yoursite.io`}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                          handleMediaInput(event.target.value, index)
+                        }
+                        InputProps={{
+                          disableUnderline: true,
+                          inputProps: {
+                            maxLength: 100,
+                          },
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <HighlightOffIcon
+                                sx={{
+                                  color: "#8492C4",
+                                  fontSize: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleMediaDelete(index)}
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                ))}
+              </Box>
+            </Box>
+
+            <Box mt={3}>
+              <Box>
+                <RequiredMark />
+                <Typography component="span" fontSize="16px">
+                  <Trans>Upload Collection Avatar</Trans>
+                </Typography>
+              </Box>
+              <Box mt={2}>
                 <Box
                   sx={{
-                    maxWidth: "474px",
-                    width: "100%",
+                    height: "160px",
                   }}
                 >
-                  <Box>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Collection Name</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <TextField
-                        fullWidth
-                        placeholder={t`Enter the collection name`}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                          onFieldChange(event.target.value, "name")
-                        }
-                        InputProps={{
-                          disableUnderline: true,
-                          inputProps: {
-                            maxLength: 50,
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                  <Box mt={3}>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Collection Description</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        placeholder={t`Enter the canister description`}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                          onFieldChange(event.target.value, "introduction")
-                        }
-                        InputProps={{
-                          disableUnderline: true,
-                          inputProps: {
-                            maxLength: 500,
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box mt={3}>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Creator</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <TextField
-                        fullWidth
-                        placeholder={t`Enter the creator`}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                          onFieldChange(event.target.value, "minter")
-                        }
-                        InputProps={{
-                          disableUnderline: true,
-                          inputProps: {
-                            maxLength: 50,
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box mt={3}>
-                    <Grid container>
-                      <Grid item xs>
-                        <Typography component="span" fontSize="16px" color="textPrimary">
-                          <Trans>Social Media Links</Trans>
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid
-                          container
-                          alignItems="center"
-                          justifyContent="center"
-                          sx={{
-                            width: "72px",
-                            height: "31px",
-                            border: "1px solid #4F5A84",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleSocialMediaAdd}
-                        >
-                          <AddIcon fontSize="small" />
-                          <Typography color="text.primary">
-                            <Trans>Add</Trans>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Box mt={2}>
-                      {(values.socialMediaLinks ?? []).map((socialMediaLink, index) => (
-                        <Grid
-                          container
-                          key={socialMediaLink.label ? socialMediaLink.label : index}
-                          sx={{
-                            marginBottom: "10px",
-                            "&:last-child": {
-                              marginBottom: "0px",
-                            },
-                          }}
-                        >
-                          <Box mr="10px" sx={{ width: "145px" }}>
-                            <FilledTextField
-                              select
-                              contained={false}
-                              placeholder={t`Media`}
-                              required
-                              value={socialMediaLink.label}
-                              onChange={(value) => onSocialMediaLinkChange(value, index)}
-                              menus={SOCIAL_LINKS}
-                              menuDisabled={(value: FilledTextFiledMenus) => isExistInSocialLinks(value)}
-                            />
-                          </Box>
-                          <Grid item xs>
-                            <TextField
-                              fullWidth
-                              placeholder={t`Enter your link, e.g. https://yoursite.io`}
-                              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                handleMediaInput(event.target.value, index)
-                              }
-                              InputProps={{
-                                disableUnderline: true,
-                                inputProps: {
-                                  maxLength: 100,
-                                },
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <HighlightOffIcon
-                                      sx={{
-                                        color: "#8492C4",
-                                        fontSize: "20px",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => handleMediaDelete(index)}
-                                    />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      ))}
-                    </Box>
-                  </Box>
-
-                  <Box mt={3}>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Upload Collection Avatar</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <Box
-                        sx={{
-                          height: "160px",
-                        }}
-                      >
-                        <Upload
-                          ref={uploadRef}
-                          onUploaded={handleFileUploaded}
-                          maxSize={2 * 1024 * 1024}
-                          types={["image"]}
-                          accept=".jpeg, .png, .jpg, .gif, .apng"
-                          placeholder={t`Upload collection avatar`}
-                          uploadImmediately={false}
-                          canisterId={canisterId}
-                          onFileSelected={handleFileChange}
-                          onFileError={handleFileError}
-                          imageProps={{
-                            style: {
-                              maxWidth: 108,
-                              maxHeight: 108,
-                            },
-                          }}
-                        />
-                      </Box>
-                      <Box mt={1}>
-                        <Typography>
-                          <Trans>Support : png / jpg / gif; Size: ≤2M</Trans>
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-
-                  <Box mt={3}>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Creator Royalty Fee</Trans>
-                      </Typography>
-                      {values.royalties || String(values.royalties) === "0" ? (
-                        <Typography component="span" fontSize="14px" color="textPrimary">
-                          : {values.royalties}%
-                        </Typography>
-                      ) : null}
-                    </Box>
-                    <Box mt="30px">
-                      <PercentageSlider
-                        value={Number(values.royalties ?? 0)}
-                        onChange={(event: any, value: string) => onFieldChange(value, "royalties")}
-                        size="small"
-                        min={0}
-                        max={20}
-                        step={0.1}
-                        marks={[{ value: 0 }, { value: 5 }, { value: 10 }, { value: 15 }, { value: 20 }]}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box mt={4}>
-                    <Typography variant="h3" align="center" color="textPrimary">
-                      Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
-                      {WRAPPED_ICP_TOKEN_INFO.symbol}
-                    </Typography>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      sx={{
-                        marginTop: "20px",
-                      }}
-                      disabled={!!errorMsg}
-                      onClick={() => setConfirmModal(true)}
-                    >
-                      {errorMsg || t`Create`}
-                    </Button>
-                  </Box>
+                  <Upload
+                    ref={uploadRef}
+                    onUploaded={handleFileUploaded}
+                    maxSize={2 * 1024 * 1024}
+                    types={["image"]}
+                    accept=".jpeg, .png, .jpg, .gif, .apng"
+                    placeholder={t`Upload collection avatar`}
+                    uploadImmediately={false}
+                    canisterId={canisterId}
+                    onFileSelected={handleFileChange}
+                    onFileError={handleFileError}
+                    imageProps={{
+                      style: {
+                        maxWidth: 108,
+                        maxHeight: 108,
+                      },
+                    }}
+                  />
                 </Box>
-              </Grid>
-            </MainCard>
-          </Grid>
-        </Grid>
+                <Box mt={1}>
+                  <Typography>
+                    <Trans>Support : png / jpg / gif; Size: ≤2M</Trans>
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
 
-        {confirmModal ? (
-          <Identity onSubmit={handleMint} fullScreenLoading>
-            {({ submit }: CallbackProps) => (
-              <CanisterCreateConfirm
-                details={values}
-                open={confirmModal}
-                onClose={() => setConfirmModal(false)}
-                onConfirm={submit}
-                mintInfo={NFTMintInfo}
-              />
-            )}
-          </Identity>
-        ) : null}
-      </>
+            <Box mt={3}>
+              <Box>
+                <RequiredMark />
+                <Typography component="span" fontSize="16px">
+                  <Trans>Creator Royalty Fee</Trans>
+                </Typography>
+                {values.royalties || String(values.royalties) === "0" ? (
+                  <Typography component="span" fontSize="14px">
+                    : {values.royalties}%
+                  </Typography>
+                ) : null}
+              </Box>
+              <Box mt="30px">
+                <PercentageSlider
+                  value={Number(values.royalties ?? 0)}
+                  onChange={(event: any, value: string) => onFieldChange(value, "royalties")}
+                  size="small"
+                  min={0}
+                  max={20}
+                  step={0.1}
+                  marks={[{ value: 0 }, { value: 5 }, { value: 10 }, { value: 15 }, { value: 20 }]}
+                />
+              </Box>
+            </Box>
+
+            <Box mt={4}>
+              <Typography variant="h3" align="center" color="textPrimary">
+                Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
+                {WRAPPED_ICP_TOKEN_INFO.symbol}
+              </Typography>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  marginTop: "20px",
+                }}
+                disabled={!!errorMsg}
+                onClick={() => setConfirmModal(true)}
+              >
+                {errorMsg || t`Create`}
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+      </MainCard>
+
+      {confirmModal ? (
+        <Identity onSubmit={handleMint} fullScreenLoading>
+          {({ submit }: CallbackProps) => (
+            <CanisterCreateConfirm
+              details={values}
+              open={confirmModal}
+              onClose={() => setConfirmModal(false)}
+              onConfirm={submit}
+              mintInfo={NFTMintInfo}
+            />
+          )}
+        </Identity>
+      ) : null}
     </Wrapper>
   );
 }

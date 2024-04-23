@@ -190,16 +190,16 @@ export function useUserCanisterList(account: string, offset: number, limit: numb
   );
 }
 
-export async function createCanister(identity: Identity, values: NFTControllerArgs): Promise<StatusResult<string>> {
-  return resultFormat<string>(await (await NFTCanisterController(identity)).create(values));
+export async function createCanister(values: NFTControllerArgs): Promise<StatusResult<string>> {
+  return resultFormat<string>(await (await NFTCanisterController(true)).create(values));
 }
 
-export async function setCanisterLogo(identity: Identity, canisterId: string, logo: string) {
-  return resultFormat<boolean>(await (await NFTCanister(canisterId, identity)).setLogo(logo));
+export async function setCanisterLogo(canisterId: string, logo: string) {
+  return resultFormat<boolean>(await (await NFTCanister(canisterId, true)).setLogo(logo));
 }
 
-export async function setCanisterLogoInController(identity: Identity, canisterId: string, logo: string) {
-  return resultFormat<boolean>(await (await NFTCanisterController(identity)).setLogo(logo, canisterId));
+export async function setCanisterLogoInController(canisterId: string, logo: string) {
+  return resultFormat<boolean>(await (await NFTCanisterController(true)).setLogo(logo, canisterId));
 }
 
 export function useCanisterMetadata(canisterId: string) {

@@ -94,10 +94,10 @@ function UploadImageModal({ canisterId, open, onClose }: UploadImageModalProps) 
   };
 
   const handleUpload = async () => {
-    const { filePath } = (await uploadRef.current?.uploadCb(true)) ?? {};
+    const { filePath } = (await uploadRef.current?.uploadCb()) ?? {};
 
     if (filePath) {
-      const { status, message } = await setCanisterLogo(true, canisterId, filePath);
+      const { status, message } = await setCanisterLogo(canisterId, filePath);
       if (status === ResultStatus.ERROR) {
         openTip(message ?? "Failed to upload, please try again later", TIP_ERROR);
       } else {

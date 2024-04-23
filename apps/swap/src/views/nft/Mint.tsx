@@ -95,7 +95,7 @@ export default function NFTMint() {
   const handleMintNFT = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
     if (loading) return;
 
-    const { filePath, fileType } = (await uploadRef.current?.uploadCb(identity)) ?? {};
+    const { filePath, fileType } = (await uploadRef.current?.uploadCb()) ?? {};
 
     if (!filePath) {
       closeLoading();

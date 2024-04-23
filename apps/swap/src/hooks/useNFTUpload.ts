@@ -9,11 +9,10 @@ export interface UploadChunkRequest {
   batch_id: bigint;
   chunk: Blob;
   canisterId: string;
-  identity?: Identity;
 }
 
-const uploadChunk = async ({ batch_id, chunk, canisterId, identity }: UploadChunkRequest) => {
-  return (await NFTCanister(canisterId, identity)).create_chunk({
+const uploadChunk = async ({ batch_id, chunk, canisterId }: UploadChunkRequest) => {
+  return (await NFTCanister(canisterId, true)).create_chunk({
     batch_id,
     content: [...new Uint8Array(await chunk.arrayBuffer())],
   });
@@ -27,13 +26,12 @@ export interface FileUploadResult {
 
 export type UploadCallbackProps = {
   file: File;
-  identity?: Identity;
   canisterId: string;
 };
 
 export default function useFileUpload({ fileType }: { fileType: string }): [
   FileUploadResult,
-  ({ file, identity, canisterId }: UploadCallbackProps) => Promise<
+  ({ file, canisterId }: UploadCallbackProps) => Promise<
     | {
         filePath: string;
         batchId: bigint;
@@ -47,12 +45,12 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
   const [filePath, setFilePath] = useState<string>("");
   const [batchId, setBatchId] = useState<bigint>(BigInt(0));
 
-  const fileUploadCallback = async ({ file, identity, canisterId }: UploadCallbackProps) => {
+  const fileUploadCallback = async ({ file, canisterId }: UploadCallbackProps) => {
     if (uploading) return;
 
     setUploading(true);
 
-    const actor = await NFTCanister(canisterId, identity);
+    const actor = await NFTCanister(canisterId, true);
 
     const result = resultFormat<{
       batch_id: bigint;
@@ -78,7 +76,6 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
           batch_id,
           chunk,
           canisterId,
-          identity,
         }),
       );
     }
