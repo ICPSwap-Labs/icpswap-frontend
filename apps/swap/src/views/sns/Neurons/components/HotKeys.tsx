@@ -4,7 +4,7 @@ import { Button, Box, Typography, FilledTextField } from "components/index";
 import { useMemo, useState } from "react";
 import { isValidPrincipal, shorten } from "@icpswap/utils";
 import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";
-import { SnsNeuronPermissions } from "@icpswap/constants";
+import { HotKeysPermissions } from "@icpswap/constants";
 import type { Neuron, NeuronPermission } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Principal } from "@dfinity/principal";
@@ -45,7 +45,7 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
       governance_id,
       neuron_id,
       Principal.fromText(hotKey),
-      SnsNeuronPermissions,
+      HotKeysPermissions,
     );
 
     const result = data ? data.command[0] : undefined;

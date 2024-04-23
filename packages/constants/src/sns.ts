@@ -82,3 +82,8 @@ export const SnsNeuronPermissions: SnsNeuronPermissionType[] = [
   SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_UNSPECIFIED,
   SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_VOTE,
 ];
+
+export const HotKeysPermissions: SnsNeuronPermissionType[] = [
+  SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_SUBMIT_PROPOSAL,
+  SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_VOTE,
+];
