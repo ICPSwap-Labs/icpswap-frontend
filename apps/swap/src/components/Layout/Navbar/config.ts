@@ -89,11 +89,11 @@ export const routes: Route[] = [
       { key: "followUS_Website", name: `Website`, link: "http://icpswap.com/", icon: WebsiteIcon },
     ],
   },
-  {
-    key: "feedback",
-    name: "Feedback",
-    link: "https://forms.gle/E1WAEfemwDBnLmY66",
-  },
+  // {
+  //   key: "feedback",
+  //   name: "Feedback",
+  //   link: "https://forms.gle/E1WAEfemwDBnLmY66",
+  // },
   {
     key: "wrap",
     name: "WICP",
