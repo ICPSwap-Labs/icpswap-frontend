@@ -7,7 +7,6 @@ import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
 import { useWalletConnectorManager } from "store/auth/hooks";
-import { sendSentryError } from "hooks/useTracingTransaction";
 
 const useStyles = makeStyles(() => {
   return {
@@ -86,10 +85,6 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
       setLoading(false);
 
       openErrorTip(`Failed to connect to ${label}: ${error}`);
-
-      if (!error.toString().includes("UserInterrupt")) {
-        sendSentryError(`connect to ${label}: ${error}`);
-      }
     }
   };
 
