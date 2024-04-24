@@ -38,7 +38,17 @@ export default function Transactions() {
 
   return (
     <SwapProCardWrapper padding="16px 0px">
-      <Box sx={{ padding: "0 16px", display: "flex", justifyContent: "space-between" }}>
+      <Box
+        sx={{
+          padding: "0 16px",
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "12px 0",
+          },
+        }}
+      >
         <Box
           sx={{
             display: "flex",
