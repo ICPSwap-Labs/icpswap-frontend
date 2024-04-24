@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/react";
 import { ClientOptions, ErrorEvent } from "@sentry/types";
 import { isSentryEnabled, getEnvName } from "utils/env";
+import { BrowserTracing } from "@sentry/browser";
 
 export function shouldRejectError(error: ErrorEvent) {
   // User reject plug connect
@@ -30,4 +31,10 @@ Sentry.init({
   enabled: isSentryEnabled(),
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   beforeSend,
+  integrations: [
+    new BrowserTracing({
+      startTransactionOnLocationChange: false,
+      startTransactionOnPageLoad: true,
+    }),
+  ],
 });
