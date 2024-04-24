@@ -7,14 +7,20 @@ import { Theme } from "@mui/material/styles";
 import { NoData } from "components/index";
 import { ClickAwayListener } from "@mui/base";
 
-const useStyles = (contained: boolean, fullHeight?: boolean) => {
+interface StyleProps {
+  contained: boolean;
+  fullHeight?: boolean;
+  filled?: boolean;
+}
+
+const useStyles = ({ contained, fullHeight, filled }: StyleProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
         display: "flex",
         alignItems: "center",
-        background: theme.palette.background.level1,
-        borderRadius: "12px",
+        background: filled ? theme.palette.background.level4 : theme.palette.background.level1,
+        borderRadius: filled ? "8px" : "12px",
         padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         width: "100%",
         "& input": {
@@ -55,6 +61,7 @@ export interface SelectProps {
   customLabel?: boolean;
   border?: boolean;
   menuFilter?: (menu: MenuProps) => boolean;
+  filled?: boolean;
 }
 
 export function Select({
@@ -74,9 +81,10 @@ export function Select({
   search: hasSearch,
   customLabel,
   menuFilter,
+  filled,
   ...props
 }: SelectProps) {
-  const classes = useStyles(contained, fullHeight)();
+  const classes = useStyles({ contained, fullHeight, filled })();
   const [anchorEl, setAnchorEl] = useState(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);
   const [menuWidth, setMenuWidth] = useState<number | undefined>(undefined);

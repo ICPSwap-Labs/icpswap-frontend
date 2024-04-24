@@ -197,7 +197,6 @@ export default function Exchange() {
           canisterId: ICP.address,
           to: WICPAccount,
           amount: formatTokenAmount(new BigNumber(formattedAmounts[SWAP_FIELD.INPUT]).minus(ICPFee), ICP.decimals),
-          identity,
           from: account,
           decimals: ICP.decimals,
         });

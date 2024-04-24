@@ -6,9 +6,10 @@ import React from "react";
 export interface SmallButtonProps {
   children: React.ReactNode;
   onClick: TypographyProps["onClick"];
+  background?: string;
 }
 
-export function SmallButton({ children, onClick }: SmallButtonProps) {
+export function SmallButton({ children, onClick, background }: SmallButtonProps) {
   const theme = useTheme() as Theme;
 
   return (
@@ -17,7 +18,7 @@ export function SmallButton({ children, onClick }: SmallButtonProps) {
         padding: "1px 3px",
         cursor: "pointer",
         borderRadius: "2px",
-        backgroundColor: theme.colors.secondaryMain,
+        backgroundColor: background ?? theme.colors.secondaryMain,
         color: "#ffffff",
         fontSize: "12px",
       }}

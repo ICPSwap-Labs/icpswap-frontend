@@ -20,6 +20,7 @@ import {
   MetadataRequest,
   SetLogoRequest,
   ActualReceivedByTransferRequest,
+  BaseTokenResult,
 } from "./BaseTokenAdapter";
 
 export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
@@ -197,6 +198,18 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
+  }
+
+  public async getMintingAccount({
+    canisterId,
+  }: {
+    canisterId: string;
+  }): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
+    return {
+      status: ResultStatus.OK,
+      data: undefined,
+      message: "",
+    };
   }
 }
 

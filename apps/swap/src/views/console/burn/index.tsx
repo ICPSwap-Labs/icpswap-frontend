@@ -1,0 +1,157 @@
+import { Box, Typography } from "@mui/material";
+import { useState } from "react";
+import {
+  MainCard,
+  Breadcrumbs,
+  FilledTextField,
+  NumberFilledTextField,
+  MaxButton,
+  AuthButton,
+  SelectToken,
+} from "components/index";
+import { type AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { Trans, t } from "@lingui/macro";
+import { useTokenMintingAccount } from "@icpswap/hooks";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useTokenInfo } from "hooks/token";
+import { parseTokenAmount } from "@icpswap/utils";
+
+import { ConfirmBurnModal } from "./ConfirmBurn";
+
+export default function ConsoleBurn() {
+  const principal = useAccountPrincipal();
+  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
+  const [amount, setAmount] = useState<string | undefined>(undefined);
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+
+  const handleTokenChange = (tokenId: string) => {
+    setTokenId(tokenId);
+  };
+
+  const { result: tokenInfo } = useTokenInfo(tokenId);
+  const { result: mintingAccount } = useTokenMintingAccount(tokenId);
+  const { result: balance } = useTokenBalance(tokenId, principal);
+
+  const handleMax = () => {
+    if (!balance || !tokenInfo) return;
+    setAmount(parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).toString());
+  };
+
+  const handleBurnSuccess = () => {
+    setAmount(undefined);
+  };
+
+  let error: string | undefined;
+  if (
+    amount &&
+    balance &&
+    tokenInfo &&
+    parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount)
+  )
+    error = t`Insufficient Balance`;
+  if (mintingAccount === undefined) error = t`Waiting for fetch minting account`;
+  if (tokenInfo === undefined) error = t`Waiting for fetch token info`;
+  if (amount === undefined || amount === "0") error = t`Enter the amount`;
+
+  return (
+    <>
+      <Breadcrumbs prevLabel={<Trans>Console</Trans>} prevLink="/console" currentLabel={<Trans>Burn Tool</Trans>} />
+
+      <MainCard sx={{ margin: "20px 0 0 0" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ width: "100%", maxWidth: "474px", padding: "47px 0" }}>
+            <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
+              <Trans>Confirm Burn</Trans>
+            </Typography>
+
+            <Box sx={{ margin: "32px 0 0 0" }}>
+              <Box>
+                <Typography sx={{ fontSize: "16px" }}>
+                  <Trans>Token</Trans>
+                </Typography>
+
+                <Box sx={{ margin: "12px 0 0 0" }}>
+                  <Box sx={{ height: "48px" }}>
+                    <SelectToken
+                      value={tokenId}
+                      filled
+                      search
+                      fullHeight
+                      onTokenChange={handleTokenChange}
+                      filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
+                        tokenInfo.standard !== TOKEN_STANDARD.ICRC1 && tokenInfo.standard !== TOKEN_STANDARD.ICRC2
+                      }
+                    />
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box sx={{ margin: "24px 0 0 0" }}>
+                <Typography sx={{ fontSize: "16px" }}>
+                  <Trans>Minting Account</Trans>
+                </Typography>
+
+                <Box sx={{ margin: "12px 0 0 0" }}>
+                  <FilledTextField border="none" disabled value={mintingAccount?.owner} />
+                </Box>
+              </Box>
+
+              <Box sx={{ margin: "24px 0 0 0" }}>
+                <Typography sx={{ fontSize: "16px" }}>
+                  <Trans>Amount</Trans>
+                </Typography>
+
+                <Box sx={{ margin: "12px 0 0 0" }}>
+                  <NumberFilledTextField
+                    value={amount}
+                    border="none"
+                    onChange={(value: string) => setAmount(value)}
+                    numericProps={{
+                      thousandSeparator: true,
+                      decimalScale: tokenInfo?.decimals ?? 18,
+                      allowNegative: false,
+                      maxLength: 20,
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              <Box sx={{ margin: "20px 0 0 0", display: "flex", gap: "0 8px", alignItems: "center" }}>
+                <Typography>
+                  <Trans>Balance:</Trans>
+                  &nbsp;
+                  <Typography component="span">
+                    {tokenInfo && balance ? parseTokenAmount(balance, tokenInfo.decimals).toFormat() : "--"}
+                  </Typography>
+                </Typography>
+                <MaxButton background="rgba(86, 105, 220, 0.50)" onClick={handleMax} />
+              </Box>
+
+              <Box sx={{ margin: "34px 0 0 0" }}>
+                <AuthButton
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  onClick={() => setConfirmModalOpen(true)}
+                  disabled={error !== undefined}
+                >
+                  {error ?? <Trans>Burn</Trans>}
+                </AuthButton>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        <ConfirmBurnModal
+          token={tokenInfo}
+          open={confirmModalOpen}
+          onClose={() => setConfirmModalOpen(false)}
+          mintingAccount={mintingAccount}
+          amount={amount}
+          onBurnSuccess={handleBurnSuccess}
+        />
+      </MainCard>
+    </>
+  );
+}

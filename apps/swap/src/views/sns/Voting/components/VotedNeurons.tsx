@@ -3,7 +3,7 @@ import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten, toHexString } from "@icpswap/utils";
-import { Collapse, Typography, Box } from "components/index";
+import { Collapse, Typography, Box } from "components/Mui";
 import { Theme } from "@mui/material/styles";
 import { neuronFormat, votingPowerFormat, getVotingPower, getVotingPowers, getVote } from "utils/sns/index";
 import { ChevronDown, ThumbsUp, ThumbsDown } from "react-feather";

@@ -1,14 +1,10 @@
 import { useCallback } from "react";
-import {
-  isPrincipal,
-  isAvailablePageArgs,
-  isValidPrincipal,
-} from "@icpswap/utils";
-import { useCallsData, useLatestDataCall } from "../useCallData";
+import { isPrincipal, isAvailablePageArgs } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
 import type { ActorIdentity, StatusResult } from "@icpswap/types";
-import BigNumber from "bignumber.js";
+
+import { useCallsData } from "../useCallData";
 
 export async function getTokenTotalHolder(canisterId: string | undefined) {
   return (
@@ -18,24 +14,17 @@ export async function getTokenTotalHolder(canisterId: string | undefined) {
   ).data;
 }
 
-export function useTokenTotalHolder(
-  canisterId: string | undefined,
-  reload?: boolean
-) {
+export function useTokenTotalHolder(canisterId: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getTokenTotalHolder(canisterId);
     }, [canisterId]),
-    reload
+    reload,
   );
 }
 
-export async function getTokenHolders(
-  canisterId: string,
-  offset: number,
-  limit: number
-) {
+export async function getTokenHolders(canisterId: string, offset: number, limit: number) {
   return (
     await tokenAdapter.holders({
       canisterId,
@@ -47,16 +36,12 @@ export async function getTokenHolders(
   ).data;
 }
 
-export function useTokenHolders(
-  canisterId: string,
-  offset: number,
-  limit: number
-) {
+export function useTokenHolders(canisterId: string, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getTokenHolders(canisterId, offset, limit);
-    }, [offset, limit, canisterId])
+    }, [offset, limit, canisterId]),
   );
 }
 
@@ -81,13 +66,9 @@ export async function getTokenTransaction({
     await tokenAdapter.transactions({
       canisterId,
       params: {
-        user: account
-          ? isPrincipal(account)
-            ? { principal: account }
-            : { address: account }
-          : undefined,
-        offset: offset,
-        limit: limit,
+        user: account ? (isPrincipal(account) ? { principal: account } : { address: account }) : undefined,
+        offset,
+        limit,
         index: undefined,
         hash: undefined,
         capId,
@@ -127,7 +108,7 @@ export function useTokenTransactions({
         capId,
         witness,
       });
-    }, [offset, limit, canisterId, account, capId, witness])
+    }, [offset, limit, canisterId, account, capId, witness]),
   );
 }
 
@@ -135,16 +116,13 @@ export async function getTokenSupply(canisterId: string) {
   return (await tokenAdapter.supply({ canisterId: canisterId! })).data;
 }
 
-export function useTokenSupply(
-  canisterId: string | undefined,
-  reload?: boolean
-) {
+export function useTokenSupply(canisterId: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getTokenSupply(canisterId!);
     }, [canisterId]),
-    reload
+    reload,
   );
 }
 
@@ -155,7 +133,7 @@ export async function getTokenMetadata(canisterId: string) {
 export function useTokenMetadata(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => await getTokenMetadata(canisterId!), [canisterId]),
-    !!canisterId
+    !!canisterId,
   );
 }
 
@@ -166,20 +144,13 @@ export interface Allowance {
   subaccount?: number[];
 }
 
-export async function allowance({
-  canisterId,
-  account,
-  spenderCanisterId,
-  subaccount,
-}: Allowance) {
+export async function allowance({ canisterId, account, spenderCanisterId, subaccount }: Allowance) {
   return (
     await tokenAdapter.allowance({
       canisterId,
       params: {
         spender: Principal.fromText(spenderCanisterId),
-        owner: isPrincipal(account)
-          ? { principal: account }
-          : { address: account },
+        owner: isPrincipal(account) ? { principal: account } : { address: account },
         subaccount,
       },
     })
@@ -195,14 +166,7 @@ export interface Approve {
   subaccount?: number[];
 }
 
-export async function approve({
-  canisterId,
-  identity,
-  spenderCanisterId,
-  value,
-  account,
-  subaccount,
-}: Approve) {
+export async function approve({ canisterId, identity, spenderCanisterId, value, account, subaccount }: Approve) {
   return tokenAdapter.approve({
     canisterId,
     identity,
@@ -215,49 +179,47 @@ export async function approve({
   });
 }
 
-export function useApproveCallback(): (
-  approveParams: Approve
-) => Promise<StatusResult<boolean>> {
-  return useCallback(
-    async ({
+export function useApproveCallback(): (approveParams: Approve) => Promise<StatusResult<boolean>> {
+  return useCallback(async ({ canisterId, identity, spenderCanisterId, value, account }: Approve) => {
+    if (!account)
+      return await Promise.resolve({
+        status: "err",
+        message: "Invalid account",
+      } as StatusResult<boolean>);
+
+    const allowedBalance = await allowance({
       canisterId,
-      identity,
-      spenderCanisterId,
-      value,
       account,
-    }: Approve) => {
-      if (!account)
-        return await Promise.resolve({
-          status: "err",
-          message: "Invalid account",
-        } as StatusResult<boolean>);
+      spenderCanisterId,
+    });
 
-      const allowedBalance = await allowance({
+    if (!allowedBalance || allowedBalance === BigInt(0) || BigInt(value ?? 0) > allowedBalance) {
+      return await approve({
         canisterId,
-        account,
+        identity,
         spenderCanisterId,
+        value,
+        account,
       });
+    } 
+      return await Promise.resolve({
+        status: "ok",
+        data: true,
+        message: "You have approved successfully",
+      } as StatusResult<boolean>);
+    
+  }, []);
+}
 
-      if (
-        !allowedBalance ||
-        allowedBalance === BigInt(0) ||
-        BigInt(value ?? 0) > allowedBalance
-      ) {
-        return await approve({
-          canisterId,
-          identity,
-          spenderCanisterId,
-          value,
-          account,
-        });
-      } else {
-        return await Promise.resolve({
-          status: "ok",
-          data: true,
-          message: "You have approved successfully",
-        } as StatusResult<boolean>);
-      }
-    },
-    []
+export async function getTokenMintingAccount(canisterId: string) {
+  return (await tokenAdapter.getMintingAccount({ canisterId })).data;
+}
+
+export function useTokenMintingAccount(canisterId: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getTokenMintingAccount(canisterId);
+    }, [canisterId]),
   );
 }

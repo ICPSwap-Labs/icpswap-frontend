@@ -1,9 +1,8 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 import { Typography, Grid, Box } from "@mui/material";
-import { MainCard, Wrapper, TextFieldNumberComponent } from "components/index";
+import { MainCard, Wrapper, TextFieldNumberComponent , FilledTextField } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import FilledTextField from "components/FilledTextField";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";

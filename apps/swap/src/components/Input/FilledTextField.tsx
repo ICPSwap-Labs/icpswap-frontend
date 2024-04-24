@@ -10,18 +10,19 @@ interface UseStylesProps {
   fullHeight?: boolean;
   borderRadius: string;
   label: boolean;
+  border?: string;
 }
 
-const useStyles = ({ contained, fullHeight, borderRadius, label }: UseStylesProps) => {
+const useStyles = ({ contained, fullHeight, borderRadius, label, border }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
         display: label ? "block" : "flex",
         alignItems: "center",
-        border: contained ? theme.palette.border.normal : "none",
+        border: contained ? border ?? theme.palette.border.normal : "none",
         background: theme.palette.background.level4,
         borderRadius,
-        padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
+        padding: contained ? `7px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         gap: "0 5px",
         "@media(max-width: 640px)": {
           padding: contained ? `4px 6px` : `${fullHeight ? "0px" : "6px"} 8px`,
@@ -59,6 +60,7 @@ export interface FilledTextFieldProps {
   helperText?: string;
   multiline?: boolean;
   borderRadius?: string;
+  border?: string;
   [x: string]: any;
 }
 
@@ -132,11 +134,12 @@ function FilledTextField(
     helperText,
     multiline,
     onFocus,
+    border,
     ...props
   }: FilledTextFieldProps,
   ref,
 ) {
-  const classes = useStyles({ contained, fullHeight, borderRadius, label: !!label })();
+  const classes = useStyles({ contained, fullHeight, borderRadius, border, label: !!label })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);

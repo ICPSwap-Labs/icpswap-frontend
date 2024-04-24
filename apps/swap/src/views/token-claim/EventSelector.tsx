@@ -1,4 +1,4 @@
-import FilledTextField from "components/FilledTextField";
+import { FilledTextField } from "components/index";
 import { t } from "@lingui/macro";
 import { useClaimEvents } from "@icpswap/hooks";
 

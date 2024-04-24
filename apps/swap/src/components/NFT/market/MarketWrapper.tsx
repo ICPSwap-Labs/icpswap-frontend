@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { MainCard } from "components/index";
-import FilledTextField from "components/FilledTextField";
+import { MainCard , FilledTextField } from "components/index";
 import { t } from "@lingui/macro";
 import { IconSearch } from "@tabler/icons";
 import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";

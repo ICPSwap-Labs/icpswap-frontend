@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
-import { getActorIdentity } from "components/Identity";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { useApprove } from "hooks/token/useApprove";
@@ -22,12 +21,9 @@ export function useTokenSubAccountTransfer() {
         return false;
       }
 
-      const identity = await getActorIdentity();
-
       const subAccount = SubAccount.fromPrincipal(principal);
 
       const { status, message } = await tokenTransfer({
-        identity,
         to: address,
         canisterId: token.address,
         amount: new BigNumber(amount),

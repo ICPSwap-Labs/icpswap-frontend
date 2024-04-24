@@ -19,6 +19,7 @@ import {
   MetadataRequest,
   SetLogoRequest,
   ActualReceivedByTransferRequest,
+  BaseTokenResult,
 } from "./BaseTokenAdapter";
 
 export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
@@ -199,6 +200,18 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
 
   public async extensions({ canisterId }: { canisterId: string }) {
     return await (await this.actor(canisterId)).extensions();
+  }
+
+  public async getMintingAccount({
+    canisterId,
+  }: {
+    canisterId: string;
+  }): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
+    return {
+      status: ResultStatus.OK,
+      data: undefined,
+      message: "",
+    };
   }
 }
 

@@ -7,7 +7,7 @@ import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { DISSOLVE_FEE } from "constants/ckBTC";
-import FilledTextField from "components/FilledTextField";
+import { FilledTextField } from "components/index";
 import { retrieveBTCv1 } from "hooks/ck-btc/useRetrieve";
 import { useUpdateUserTx } from "store/wallet/hooks";
 import { TokenInfo } from "types/token";

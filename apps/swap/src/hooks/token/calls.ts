@@ -9,7 +9,6 @@ import {
 } from "@icpswap/utils";
 import { ICP } from "constants/tokens";
 import { Principal } from "@dfinity/principal";
-import { Identity } from "types/index";
 import { TokenInfo } from "types/token";
 import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
 import { tokenList } from "@icpswap/actor";
@@ -59,7 +58,6 @@ export interface TokenTransferProps {
   canisterId: string;
   to: string;
   amount: BigNumber | number;
-  identity: Identity;
   from: string;
   subaccount?: number[];
   memo?: number[] | bigint;
@@ -71,7 +69,6 @@ export async function tokenTransfer({
   canisterId,
   to,
   amount,
-  identity,
   from,
   subaccount,
   memo,
@@ -83,7 +80,7 @@ export async function tokenTransfer({
   if (canisterId === ICP.address) {
     result = await icpAdapter.transfer({
       canisterId,
-      identity,
+      identity: true,
       params: {
         from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
         to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
@@ -94,7 +91,7 @@ export async function tokenTransfer({
     });
   } else {
     result = await tokenAdapter.transfer({
-      identity,
+      identity: true,
       canisterId,
       params: {
         from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },

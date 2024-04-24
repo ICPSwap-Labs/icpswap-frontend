@@ -10,6 +10,7 @@ import {
   MetadataRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
+import { icrc1Adapter } from "./ICRC1";
 
 export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   public async holders() {
@@ -44,7 +45,8 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
           })
         ).e8s,
       );
-    } if (params.user.principal) {
+    }
+    if (params.user.principal) {
       return resultFormat<bigint>(
         await (
           await this.actor()
@@ -78,7 +80,8 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
       });
 
       return resultFormat<bigint>(result);
-    } if (params.to.principal) {
+    }
+    if (params.to.principal) {
       const result = await (
         await this.actor(canisterId, identity)
       ).icrc1_transfer({
@@ -156,6 +159,10 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
+  }
+
+  public async getMintingAccount({ canisterId }: { canisterId: string }) {
+    return await icrc1Adapter.getMintingAccount({ canisterId });
   }
 }
 

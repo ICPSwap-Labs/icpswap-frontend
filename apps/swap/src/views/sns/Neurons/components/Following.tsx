@@ -1,7 +1,8 @@
 import { Trans, t } from "@lingui/macro";
 import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
 import { Modal } from "@icpswap/ui";
-import { Button, Box, Typography, Collapse, Copy } from "components/index";
+import { Copy } from "components/index";
+import { Button, Box, Typography, Collapse } from "components/Mui";
 import { Neuron, NervousSystemFunction } from "@icpswap/types";
 import { useMemo, useState } from "react";
 import { shorten, toHexString } from "@icpswap/utils";

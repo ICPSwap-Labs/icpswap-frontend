@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MainCard } from "components/index";
 import { t, Trans } from "@lingui/macro";
 import NFTIcon from "assets/images/console/NFT.svg";
+import BurnIcon from "assets/images/console/Burn.svg";
 import { mockALinkAndOpen } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
 import { useConnectorStateConnected } from "store/auth/hooks";
@@ -212,6 +213,11 @@ const items: Console[] = [
       { label: t`Mint NFT`, path: "/console/nft/mint" },
       { label: t`NFT Canisters`, path: "/console/nft/canister/list" },
     ],
+  },
+  {
+    label: t`Burn Tool`,
+    Icon: BurnIcon,
+    path: "/console/burn",
   },
 ];
 

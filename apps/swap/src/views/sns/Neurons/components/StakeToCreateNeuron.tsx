@@ -62,7 +62,6 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
       subaccount: [...subaccount.toUint8Array()],
       amount: formatTokenAmount(amount, token.decimals),
       from: principal.toString(),
-      identity: true,
       memo: [...nonceBytes],
     });
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React, { useState } from "react";
 import { Typography, Box, Input } from "@mui/material";
-import FilledTextField from "components/FilledTextField";
+import { FilledTextField } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";

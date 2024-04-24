@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material";
-import { Box } from "components/index";
+import { Box } from "components/Mui";
 import { Theme } from "@mui/material/styles";
 
 export interface ProgressbarProps {

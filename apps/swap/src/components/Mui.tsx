@@ -11,3 +11,4 @@ export { default as MenuList, type MenuListProps } from "@mui/material/MenuList"
 export { default as MenuItem } from "@mui/material/MenuItem";
 export { default as Popper } from "@mui/material/Popper";
 export { default as useMediaQuery } from "@mui/material/useMediaQuery";
+export { default as CircularProgress } from "@mui/material/CircularProgress";

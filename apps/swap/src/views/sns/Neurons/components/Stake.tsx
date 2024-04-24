@@ -44,7 +44,6 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id }: Stake
       subaccount: [...neuron_id],
       amount: formatTokenAmount(amount, token.decimals),
       from: principal.toString(),
-      identity: true,
     });
 
     if (status === "ok") {

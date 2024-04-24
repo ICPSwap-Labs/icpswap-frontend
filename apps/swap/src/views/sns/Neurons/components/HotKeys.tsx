@@ -1,6 +1,7 @@
 import { Trans, t } from "@lingui/macro";
 import { Modal } from "@icpswap/ui";
-import { Button, Box, Typography, FilledTextField } from "components/index";
+import { FilledTextField } from "components/index";
+import { Button, Box, Typography } from "components/Mui";
 import { useMemo, useState } from "react";
 import { isValidPrincipal, shorten } from "@icpswap/utils";
 import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";

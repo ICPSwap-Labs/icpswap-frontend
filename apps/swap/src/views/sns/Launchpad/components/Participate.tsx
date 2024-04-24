@@ -72,7 +72,6 @@ export function Participate({
       canisterId: ICP.address,
       to,
       amount: formatTokenAmount(amount, ICP.decimals),
-      identity: true,
     });
 
     if (status === ResultStatus.ERROR) {

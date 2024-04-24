@@ -10,7 +10,7 @@ import { createCanister, setCanisterLogo, useNFTMintInfo, setCanisterLogoInContr
 import { useErrorTip } from "hooks/useTips";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import { useSelectedCanistersManager } from "store/nft/hooks";
-import FilledTextField, { FilledTextFiledMenus } from "components/FilledTextField";
+import FilledTextField, { FilledTextFiledMenus } from "components/Input/FilledTextField";
 import { Trans, t } from "@lingui/macro";
 import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
 import Wrapper from "components/Wrapper";

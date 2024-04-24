@@ -181,6 +181,13 @@ export class TokenAdapter {
     const adapter = this.getAdapter(request.canisterId);
     return adapter!.actualReceivedByTransfer(request);
   }
+
+  public async getMintingAccount({ canisterId }: { canisterId: string }) {
+    const adapter = this.getAdapter(canisterId);
+    return await adapter!.getMintingAccount({
+      canisterId,
+    });
+  }
 }
 
 export const tokenAdapter = new TokenAdapter();

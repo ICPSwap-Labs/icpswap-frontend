@@ -207,10 +207,7 @@ export function useSwapTransfer() {
         return false;
       }
 
-      const identity = await getActorIdentity();
-
       const { status, message } = await tokenTransfer({
-        identity,
         to: poolId,
         canisterId: token.address,
         amount: new BigNumber(amount),

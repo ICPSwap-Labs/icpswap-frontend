@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
-import { Modal } from "components/index";
-import FilledTextField from "components/FilledTextField";
+import { Modal, FilledTextField } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { isValidPrincipal } from "@icpswap/utils";
 import { addVotingAuthorityUsers } from "@icpswap/hooks";

@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro";
 import { useEffect, useMemo, useState } from "react";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten } from "@icpswap/utils";
-import { Collapse, Typography, Box, Checkbox } from "components/index";
+import { Collapse, Typography, Box, Checkbox } from "components/Mui";
 import { neuronFormat, votingPowerFormat, getVotingPowers, getVotingPower } from "utils/sns/index";
 import { ChevronDown } from "react-feather";
 

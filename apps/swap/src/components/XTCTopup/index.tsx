@@ -1,7 +1,6 @@
 import { useState } from "react";
-import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
-import FilledTextField from "components/FilledTextField";
+import { FilledTextField, Modal, TextFieldNumberComponent, MaxButton } from "components/index";
 import { Box, Button, Typography, Grid } from "@mui/material";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -12,11 +11,9 @@ import BigNumber from "bignumber.js";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
-import { TextFieldNumberComponent } from "components/index";
 import { useXTCTopUp } from "hooks/token/dip20";
 import { getLocaleMessage } from "locales/services";
 import { ResultStatus } from "constants/index";
-import MaxButton from "components/MaxButton";
 
 export interface XTCTopUpProps {
   open: boolean;

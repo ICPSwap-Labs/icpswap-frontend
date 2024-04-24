@@ -46,9 +46,19 @@ export interface SelectTokenProps {
   onTokenChange?: (tokenId: string) => void;
   filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
   search?: boolean;
+  filled?: boolean;
+  fullHeight?: boolean;
 }
 
-export function SelectToken({ value: tokenId, onTokenChange, border, filter, search: hasSearch }: SelectTokenProps) {
+export function SelectToken({
+  value: tokenId,
+  onTokenChange,
+  border,
+  filter,
+  search: hasSearch,
+  filled,
+  fullHeight,
+}: SelectTokenProps) {
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
@@ -98,6 +108,8 @@ export function SelectToken({ value: tokenId, onTokenChange, border, filter, sea
       onSearch={setSearch}
       search={hasSearch}
       menuFilter={handleFilterMenu}
+      filled={filled}
+      fullHeight={fullHeight}
     />
   );
 }

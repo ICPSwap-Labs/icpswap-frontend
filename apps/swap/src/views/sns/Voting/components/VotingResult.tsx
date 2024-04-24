@@ -3,7 +3,8 @@ import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import type { Neuron, ProposalData, NervousSystemParameters } from "@icpswap/types";
 import { nowInSeconds, formatPercentage, BigNumber, shorten, toHexString } from "@icpswap/utils";
-import { CollapseText, Collapse, Typography, Button, Box } from "components/index";
+import { CollapseText } from "components/index";
+import { Collapse, Typography, Button, Box } from "components/Mui";
 import { Theme } from "@mui/material/styles";
 import { secondsToDuration } from "@dfinity/utils";
 import {

@@ -145,4 +145,10 @@ export abstract class BaseTokenAdapter<T> {
   public abstract setLogo(request: SetLogoRequest): SetLogoResult;
 
   public abstract actualReceivedByTransfer(request: ActualReceivedByTransferRequest): ActualReceivedByTransferResult;
+
+  public abstract getMintingAccount({
+    canisterId,
+  }: {
+    canisterId: string;
+  }): BaseTokenResult<{ owner: string; sub: number[] | undefined }>;
 }

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Grid, Button, Typography, Box, CircularProgress } from "@mui/material";
-import { Wrapper, MainCard } from "components/index";
+import { Wrapper, MainCard , FilledTextField } from "components/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
 import { Trans, t } from "@lingui/macro";
-import FilledTextField from "components/FilledTextField";
 import Upload from "components/upload/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { createVotingCanister } from "@icpswap/hooks";
@@ -135,10 +134,9 @@ export default function CreateVotingProject() {
                       onChange={(result) => {
                         if ((typeof result).toLowerCase() === "string") {
                           onFiledChange(result, "logo");
-                          
                         } else if (!result.status && result.message) {
-                            openErrorTip(result.message);
-                          }
+                          openErrorTip(result.message);
+                        }
                       }}
                       fullWidth
                     />
