@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   MainCard,
   Breadcrumbs,
@@ -39,20 +39,17 @@ export default function ConsoleBurn() {
   };
 
   const handleBurnSuccess = () => {
-    setAmount(undefined);
+    setAmount("");
   };
 
-  let error: string | undefined;
-  if (
-    amount &&
-    balance &&
-    tokenInfo &&
-    parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount)
-  )
-    error = t`Insufficient Balance`;
-  if (mintingAccount === undefined) error = t`Waiting for fetch minting account`;
-  if (tokenInfo === undefined) error = t`Waiting for fetch token info`;
-  if (amount === undefined || amount === "0") error = t`Enter the amount`;
+  const error = useMemo(() => {
+    if (!tokenId) return t`Select a token`;
+    if (!tokenInfo || !balance || !mintingAccount) return t`Waiting for fetch data`;
+    if (!amount) return t`Enter the amount`;
+
+    if (parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount))
+      return t`Insufficient Balance`;
+  }, [amount, balance, tokenInfo, mintingAccount, tokenId]);
 
   return (
     <>
