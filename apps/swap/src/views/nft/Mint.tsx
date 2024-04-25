@@ -1,15 +1,22 @@
 import { useState, useRef, useEffect } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
-import { Typography, Grid, Box, CircularProgress, InputAdornment, Breadcrumbs, Checkbox } from "@mui/material";
+import { useHistory } from "react-router-dom";
+import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAccount } from "store/global/hooks";
-import { FilledTextField , Wrapper, TextFieldNumberComponent, TextButton, MainCard } from "components/index";
+import {
+  FilledTextField,
+  Wrapper,
+  TextFieldNumberComponent,
+  TextButton,
+  MainCard,
+  NoData,
+  Breadcrumbs,
+} from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
 import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR } from "hooks/useTips";
 import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
 import { Trans, t } from "@lingui/macro";
-import NoData from "components/no-data";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { Identity as TypeIdentity } from "types/index";
@@ -27,15 +34,6 @@ import { useParsedQueryString } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    breadcrumbs: {
-      padding: "0 0 25px 16px",
-      "& a": {
-        textDecoration: "none",
-        "&:hover": {
-          textDecoration: "underline",
-        },
-      },
-    },
     nftDesc: {
       color: theme.palette.primary[`400`],
     },
@@ -207,17 +205,9 @@ export default function NFTMint() {
   return (
     <Wrapper>
       <>
-        <Breadcrumbs className={classes.breadcrumbs}>
-          <RouterLink to="/console">
-            <Typography color="secondary">
-              <Trans>Console</Trans>
-            </Typography>
-          </RouterLink>
-          <Typography>
-            <Trans>Mint NFT</Trans>
-          </Typography>
-        </Breadcrumbs>
-        <MainCard>
+        <Breadcrumbs prevLink="/console" prevLabel={<Trans>Console</Trans>} currentLabel={<Trans>Mint NFT</Trans>} />
+
+        <MainCard sx={{ margin: "20px 0 0 0" }}>
           <Grid container justifyContent="center">
             <Box sx={{ maxWidth: "474px" }}>
               <Grid mt="30px" container className={classes.mintInfoBox}>

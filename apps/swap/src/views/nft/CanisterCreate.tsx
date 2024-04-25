@@ -220,6 +220,7 @@ export default function NFTCanisterCreate() {
                   placeholder={t`Enter the collection name`}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "name")}
                   placeholderSize="16px"
+                  fontSize="16px"
                   InputProps={{
                     disableUnderline: true,
                     inputProps: {
@@ -241,6 +242,7 @@ export default function NFTCanisterCreate() {
                   fullWidth
                   multiline
                   rows={4}
+                  fontSize="16px"
                   placeholderSize="16px"
                   placeholder={t`Enter the canister description`}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -266,6 +268,7 @@ export default function NFTCanisterCreate() {
               <Box mt={2}>
                 <TextField
                   fullWidth
+                  fontSize="16px"
                   placeholderSize="16px"
                   placeholder={t`Enter the creator`}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "minter")}

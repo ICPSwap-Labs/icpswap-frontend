@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export type CustomTextFieldProps = Override<TextFieldProps, { placeholderSize?: string }>;
+export type CustomTextFieldProps = Override<TextFieldProps, { placeholderSize?: string; fontSize?: string }>;
 
 export default function CustomTextField(props: CustomTextFieldProps) {
   const classes = useStyles();
@@ -27,6 +27,12 @@ export default function CustomTextField(props: CustomTextFieldProps) {
       <TextField
         {...props}
         sx={{
+          "& input": {
+            fontSize: props.fontSize ?? "14px",
+          },
+          "& textarea": {
+            fontSize: props.fontSize ?? "14px",
+          },
           "& input::placeholder": {
             fontSize: props.placeholderSize ?? "14px",
           },

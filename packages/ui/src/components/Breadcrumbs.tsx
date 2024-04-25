@@ -1,31 +1,50 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { Typography, Breadcrumbs as MuiBreadcrumbs } from "@mui/material";
+import { useHistory } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { ChevronRight } from "react-feather";
 
 export interface BreadcrumbsProps {
   prevLink: string;
   prevLabel: ReactNode;
   currentLabel: ReactNode;
+  fontSize?: string;
 }
 
-export function Breadcrumbs({ prevLabel, currentLabel, prevLink }: BreadcrumbsProps) {
+export function Breadcrumbs({ prevLabel, currentLabel, prevLink, fontSize = "12px" }: BreadcrumbsProps) {
+  const history = useHistory();
+
+  const handleClick = () => {
+    history.push(prevLink);
+  };
+
   return (
-    <MuiBreadcrumbs
+    <Box
       sx={{
-        "& a": {
-          textDecoration: "none",
-          fontSize: "12px",
+        display: "flex",
+        gap: "0 5px",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        sx={{
+          fontSize,
+          color: "text.secondary",
+          cursor: "pointer",
           "&:hover": {
             textDecoration: "underline",
           },
-        },
-      }}
-    >
-      <Link to={prevLink}>
-        <Typography color="secondary">{prevLabel}</Typography>
-      </Link>
+        }}
+        onClick={handleClick}
+      >
+        {prevLabel}
+      </Typography>
 
-      <Typography fontSize="12px">{currentLabel}</Typography>
-    </MuiBreadcrumbs>
+      <ChevronRight size="18px" />
+
+      <Typography color="text.primary" fontSize={fontSize}>
+        {currentLabel}
+      </Typography>
+    </Box>
   );
 }

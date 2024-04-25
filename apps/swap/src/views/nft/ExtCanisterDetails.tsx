@@ -1,7 +1,7 @@
-import { Breadcrumbs, Box, Grid, Typography } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Box, Grid, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
 import NFTList from "components/NFT/ext/NFTList";
-import { MainCard } from "components/index";
+import { MainCard, Breadcrumbs } from "components/index";
 import { Trans } from "@lingui/macro";
 import Wrapper from "components/Wrapper";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
@@ -14,14 +14,6 @@ import LoadingRow from "components/Loading/LoadingRow";
 import Avatar from "components/Image/Avatar";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  breadcrumbs: {
-    "& a": {
-      textDecoration: "none",
-      "&:hover": {
-        textDecoration: "underline",
-      },
-    },
-  },
   infoCard: {
     display: "inline-block",
     background: theme.palette.background.level4,
@@ -150,7 +142,6 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
 export function ExtNftCollectionDetail() {
   const { id: canisterId } = useParams<{ id: string }>();
   const account = useAccount();
-  const classes = useStyles();
 
   const [reload, setReload] = useState(false);
   const { result: userExtAllNfts, loading } = useExtUserNFTs(account, reload);
@@ -174,16 +165,7 @@ export function ExtNftCollectionDetail() {
   return (
     <Wrapper>
       <Box>
-        <Breadcrumbs className={classes.breadcrumbs}>
-          <Link to="/wallet">
-            <Typography color="secondary">
-              <Trans>Wallet NFTs</Trans>
-            </Typography>
-          </Link>
-          <Typography>
-            <Trans>NFTs</Trans>
-          </Typography>
-        </Breadcrumbs>
+        <Breadcrumbs prevLink="/wallet" prevLabel={<Trans>Wallet NFTs</Trans>} currentLabel={<Trans>NFTs</Trans>} />
 
         <Box mt={2}>
           <CanisterHeader loading={!collection} collection={collection} count={count ?? "--"} />
