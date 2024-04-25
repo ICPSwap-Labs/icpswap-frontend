@@ -175,6 +175,7 @@ function Pools() {
           sx={{
             position: "relative",
             minHeight: "440px",
+            margin: "20px 0 0 0",
           }}
         >
           {!loading ? (
