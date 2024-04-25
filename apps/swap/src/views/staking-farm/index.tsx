@@ -88,7 +88,7 @@ function MainContent() {
             </Box>
           </Grid>
           <Grid item style={{ marginLeft: "auto" }}>
-            <Grid container alignItems="center">
+            <Grid container alignItems="center" gap="0 10px">
               <Typography display="inline">
                 <Trans>Staked only</Trans>
               </Typography>

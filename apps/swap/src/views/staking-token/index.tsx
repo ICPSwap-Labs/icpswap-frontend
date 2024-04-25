@@ -159,11 +159,11 @@ function Pools() {
             </Box>
           </Grid>
           <Grid item alignItems="center" style={{ marginLeft: "auto" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
               <TextButton onClick={handleWithdrawUnusedTokens}>
                 <Trans>Unused tokens</Trans>
               </TextButton>
-              <Typography component="span" sx={{ margin: "0 0 0 10px" }}>
+              <Typography component="span">
                 <Trans>Staked only</Trans>
               </Typography>
               <Switch checked={stakedOnly} onChange={(event: any) => handleStakedOnly(event.target.checked)} />
