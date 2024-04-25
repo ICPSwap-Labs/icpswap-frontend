@@ -373,16 +373,7 @@ const PriceRange = memo(
             </Box>
           </>
         )}
-        <Box
-          sx={
-            isRangePriceDisabled
-              ? {
-                  opacity: "0.2",
-                  pointerEvents: "none",
-                }
-              : {}
-          }
-        >
+        <Box>
           <Grid container alignItems="center">
             <Grid item xs>
               <Typography variant="h4" color="textPrimary">
@@ -395,105 +386,119 @@ const PriceRange = memo(
               </Grid>
             )}
           </Grid>
-          {/* zoom position */}
-          {!noLiquidity && (
-            <Box mt={3} sx={{ position: "relative" }}>
-              <Grid sx={{ height: "28px" }} container alignItems="center">
-                <Typography color="textPrimary" fontSize="12px">
-                  <Trans>Current Price: </Trans> {price ? toSignificantFormatted(price) : "--"}
-                  <Typography component="span" sx={{ marginLeft: "5px" }} fontSize="12px">
-                    {quoteCurrency?.symbol} per {baseCurrency?.symbol}
+
+          <Box
+            sx={
+              isRangePriceDisabled
+                ? {
+                    opacity: "0.2",
+                    pointerEvents: "none",
+                  }
+                : {}
+            }
+          >
+            {/* zoom position */}
+            {!noLiquidity && (
+              <Box mt={3} sx={{ position: "relative" }}>
+                <Grid sx={{ height: "28px" }} container alignItems="center">
+                  <Typography color="textPrimary" fontSize="12px">
+                    <Trans>Current Price: </Trans> {price ? toSignificantFormatted(price) : "--"}
+                    <Typography component="span" sx={{ marginLeft: "5px" }} fontSize="12px">
+                      {quoteCurrency?.symbol} per {baseCurrency?.symbol}
+                    </Typography>
                   </Typography>
-                </Typography>
-              </Grid>
-              <Box mt={3}>
-                {/* @ts-ignore */}
-                <PriceRangeChart
-                  priceLower={priceLower}
-                  priceUpper={priceUpper}
-                  ticksAtLimit={ticksAtLimit}
-                  onLeftRangeInput={onLeftRangeInput}
-                  onRightRangeInput={onRightRangeInput}
-                  currencyA={baseCurrency}
-                  currencyB={quoteCurrency}
-                  feeAmount={feeAmount}
-                  price={price}
-                />
+                </Grid>
+                <Box mt={3}>
+                  {/* @ts-ignore */}
+                  <PriceRangeChart
+                    priceLower={priceLower}
+                    priceUpper={priceUpper}
+                    ticksAtLimit={ticksAtLimit}
+                    onLeftRangeInput={onLeftRangeInput}
+                    onRightRangeInput={onRightRangeInput}
+                    currencyA={baseCurrency}
+                    currencyB={quoteCurrency}
+                    feeAmount={feeAmount}
+                    price={price}
+                  />
+                </Box>
               </Box>
-            </Box>
-          )}
-          <Box mt={4} className={classes.priceRangeInput}>
-            <Box
-              sx={{
-                opacity: isFullRange ? 0.05 : 1,
-              }}
-            >
-              <Grid container justifyContent="space-between">
-                <Grid item sx={{ width: "48%" }}>
-                  <PriceRangeSelector
-                    label={t`Min Price`}
-                    value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""}
-                    onRangeInput={onLeftRangeInput}
-                    decrement={isSorted ? getDecrementLower : getIncrementUpper}
-                    increment={isSorted ? getIncrementLower : getDecrementUpper}
-                    decrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
-                    incrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
-                    baseCurrency={baseCurrency}
-                    quoteCurrency={quoteCurrency}
-                  />
+            )}
+            <Box mt={4} className={classes.priceRangeInput}>
+              <Box
+                sx={{
+                  opacity: isFullRange ? 0.05 : 1,
+                }}
+              >
+                <Grid container justifyContent="space-between">
+                  <Grid item sx={{ width: "48%" }}>
+                    <PriceRangeSelector
+                      label={t`Min Price`}
+                      value={
+                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
+                      }
+                      onRangeInput={onLeftRangeInput}
+                      decrement={isSorted ? getDecrementLower : getIncrementUpper}
+                      increment={isSorted ? getIncrementLower : getDecrementUpper}
+                      decrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+                      incrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+                      baseCurrency={baseCurrency}
+                      quoteCurrency={quoteCurrency}
+                    />
+                  </Grid>
+                  <Grid item sx={{ width: "48%" }}>
+                    <PriceRangeSelector
+                      label={t`Max Price`}
+                      value={
+                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
+                      }
+                      onRangeInput={(value) => onRightRangeInput(value)}
+                      decrement={isSorted ? getDecrementUpper : getIncrementLower}
+                      increment={isSorted ? getIncrementUpper : getDecrementLower}
+                      isUpperFullRange={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+                      incrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+                      decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+                      baseCurrency={baseCurrency}
+                      quoteCurrency={quoteCurrency}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item sx={{ width: "48%" }}>
-                  <PriceRangeSelector
-                    label={t`Max Price`}
-                    value={
-                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
-                    }
-                    onRangeInput={(value) => onRightRangeInput(value)}
-                    decrement={isSorted ? getDecrementUpper : getIncrementLower}
-                    increment={isSorted ? getIncrementUpper : getDecrementLower}
-                    isUpperFullRange={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
-                    incrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
-                    decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
-                    baseCurrency={baseCurrency}
-                    quoteCurrency={quoteCurrency}
-                  />
-                </Grid>
-              </Grid>
-              {!noLiquidity && (
-                <Box mt={2}>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    fullWidth
-                    color="secondary"
-                    className={classes.fullRangeButton}
-                    onClick={handleFullRangeClick}
-                  >
-                    <Trans>Full Range</Trans>
-                  </Button>
+                {!noLiquidity && (
+                  <Box mt={2}>
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      fullWidth
+                      color="secondary"
+                      className={classes.fullRangeButton}
+                      onClick={handleFullRangeClick}
+                    >
+                      <Trans>Full Range</Trans>
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+              {isFullRange && (
+                <Box className={classes.fullRangeMask} sx={{ p: 3 }}>
+                  <Grid container alignItems="center">
+                    <Grid item xs="auto" mr="12px">
+                      <Grid container>
+                        <WarningIcon />
+                      </Grid>
+                    </Grid>
+                    <Typography className={classes.warningTitle}>
+                      <Trans>Efficiency Comparison</Trans>
+                    </Typography>
+                  </Grid>
+                  <Typography className={classes.warningText}>
+                    <Trans>Full range positions may earn less fees than concentrated positions.</Trans>
+                  </Typography>
+                  <ButtonBase className={classes.iUnderstand} onClick={handleIUnderstand}>
+                    <Trans>I Understand</Trans>
+                  </ButtonBase>
                 </Box>
               )}
             </Box>
-            {isFullRange && (
-              <Box className={classes.fullRangeMask} sx={{ p: 3 }}>
-                <Grid container alignItems="center">
-                  <Grid item xs="auto" mr="12px">
-                    <Grid container>
-                      <WarningIcon />
-                    </Grid>
-                  </Grid>
-                  <Typography className={classes.warningTitle}>
-                    <Trans>Efficiency Comparison</Trans>
-                  </Typography>
-                </Grid>
-                <Typography className={classes.warningText}>
-                  <Trans>Full range positions may earn less fees than concentrated positions.</Trans>
-                </Typography>
-                <ButtonBase className={classes.iUnderstand} onClick={handleIUnderstand}>
-                  <Trans>I Understand</Trans>
-                </ButtonBase>
-              </Box>
-            )}
           </Box>
         </Box>
       </>
