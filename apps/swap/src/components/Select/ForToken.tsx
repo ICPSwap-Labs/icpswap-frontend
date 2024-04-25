@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, ReactNode, useMemo } from "react";
-import { Typography, Box, Checkbox, Popper, TextField } from "@mui/material";
+import { Typography, Box, Checkbox, Popper, TextField, InputAdornment } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseIcon from "@mui/icons-material/Close";
 import { Theme } from "@mui/material/styles";
 import { NoData } from "components/index";
 import { ClickAwayListener } from "@mui/base";
+import { Search } from "react-feather";
 
 interface StyleProps {
   contained: boolean;
@@ -247,28 +248,27 @@ export function Select({
                   },
                 }}
               >
-                <Box
+                <TextField
                   sx={{
-                    padding: "0 3px",
                     borderRadius: "8px",
-                    border: theme.palette.border.normal,
-                    background: theme.palette.background.level4,
+                    padding: "5px 10px",
+                    fontSize: "14px",
+                    background: theme.palette.background.level1,
                   }}
-                >
-                  <TextField
-                    sx={{
-                      fontSize: "14px",
-                      background: theme.palette.background.level4,
-                    }}
-                    variant="standard"
-                    onChange={({ target: { value } }) => handleSearchChange(value)}
-                    value={search}
-                    InputProps={{
-                      disableUnderline: true,
-                    }}
-                    fullWidth
-                  />
-                </Box>
+                  placeholder="Search"
+                  variant="standard"
+                  onChange={({ target: { value } }) => handleSearchChange(value)}
+                  value={search}
+                  InputProps={{
+                    disableUnderline: true,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size="12px" color={theme.palette.text.secondary} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                />
               </Box>
             ) : null}
 
@@ -288,7 +288,10 @@ export function Select({
                   <Box
                     key={menu.value + index}
                     sx={{
-                      padding: "10px 10px",
+                      display: "flex",
+                      alignItems: "center",
+                      height: "48px",
+                      padding: "0 16px",
                       cursor: "pointer",
                       ...(isFiltered ? { display: "none" } : {}),
                       "&:hover": {

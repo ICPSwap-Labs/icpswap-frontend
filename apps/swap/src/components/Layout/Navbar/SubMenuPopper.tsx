@@ -1,6 +1,8 @@
 import { makeStyles } from "@mui/styles";
 import { MenuList, MenuItem, Popper, Grid, Typography } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
+import { useLocation } from "react-router-dom";
+
 import { Route } from "./config";
 
 const useStyles = makeStyles(() => {
@@ -39,6 +41,12 @@ export function SubMenuPopper({
   menuWidth,
 }: SubMenuPopperProps) {
   const classes = useStyles();
+  const location = useLocation();
+  const pathName = location.pathname;
+
+  const isActive = (route: Route) => {
+    return pathName === route?.path;
+  };
 
   return route.subMenus && route.subMenus.length ? (
     <Popper
@@ -73,11 +81,24 @@ export function SubMenuPopper({
                 disabled={!!subRoute.disabled}
                 onClick={() => onMenuClick(subRoute)}
                 className={subRoute.disabled ? "opacity1" : ""}
+                sx={{
+                  "&:hover": {
+                    "& svg": {
+                      color: "text.primary",
+                    },
+                  },
+                }}
               >
-                <Grid container alignItems="center">
+                <Grid
+                  container
+                  alignItems="center"
+                  sx={{ color: isActive(subRoute) ? "text.primary" : "text.secondary" }}
+                >
                   {Icon ? <Icon /> : null}
                   <Grid item xs sx={{ marginLeft: "10px" }}>
-                    <Typography className="customize-label">{subRoute.name}</Typography>
+                    <Typography className={`customize-label ${isActive(subRoute) ? "active" : ""}`}>
+                      {subRoute.name}
+                    </Typography>
                   </Grid>
                 </Grid>
               </MenuItem>

@@ -89,7 +89,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           },
         },
         rounded: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
         },
       },
     },
@@ -244,7 +244,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
       styleOverrides: {
         root: {
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor:
               theme.customization.mode === "dark" ? theme.colors.textPrimary + 28 : theme.colors.lightGray200,
@@ -260,7 +260,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           fontWeight: 500,
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
           padding: "15.5px 14px",
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
           "&.MuiInputBase-inputSizeSmall": {
             padding: "10px 14px",
             "&.MuiInputBase-inputAdornedStart": {
@@ -272,7 +272,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           paddingLeft: 4,
         },
         notchedOutline: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
         },
       },
     },
@@ -305,7 +305,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           },
         },
         popper: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
           boxShadow:
             "0px 8px 10px -5px rgb(0 0 0 / 20%), 0px 16px 24px 2px rgb(0 0 0 / 14%), 0px 6px 30px 5px rgb(0 0 0 / 12%)",
         },
@@ -595,12 +595,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
               paddingTop: "10px",
               paddingBottom: "10px",
               margin: "5px 0",
-              // "&:first-child": {
-              //   borderRadius: "8px 8px 0 0",
-              // },
-              // "&:last-child": {
-              //   borderRadius: "0 0 8px 8px",
-              // },
               "&.active": {
                 background: "#313D67",
               },
@@ -618,6 +612,9 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                   "& .customize-label": {
                     color: "#fff",
                   },
+                },
+                "& .customize-label.active": {
+                  color: "#fff",
                 },
                 "&:hover": {
                   background: theme.colors.darkLevel3,

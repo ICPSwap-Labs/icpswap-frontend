@@ -52,7 +52,7 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
     <>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px" }}>
         <Logo />
-        <XCircle style={{ cursor: "pointer" }} />
+        <XCircle style={{ cursor: "pointer" }} onClick={onClose} />
       </Box>
 
       <Box sx={{ padding: "0 20px", margin: "32px 0 0 0" }}>

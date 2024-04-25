@@ -3,7 +3,7 @@ import { useTheme } from "@mui/styles";
 import { Box, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
-import ArrowDown from "assets/images/arrow-down.svg";
+import { ChevronDown } from "react-feather";
 
 import { Route, MAX_NUMBER } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
@@ -90,7 +90,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
                 color={isActive(route) ? "text.primary" : "text.secondary"}
               >
                 {route.name}
-                {route.subMenus ? <img src={ArrowDown} width="16px" height="16px" alt="" /> : null}
+                {route.subMenus ? <ChevronDown size="18px" /> : null}
               </Typography>
 
               <SubMenuPopper

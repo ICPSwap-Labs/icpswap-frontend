@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Box, Typography, Collapse } from "components/Mui";
 import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
+import { useLocation } from "react-router-dom";
+
 import { Route } from "../config";
 
 export interface RoutesProps {
@@ -9,6 +11,8 @@ export interface RoutesProps {
 }
 
 export function Routes({ routes, onRouteClick }: RoutesProps) {
+  const location = useLocation();
+  const pathName = location.pathname;
   const [collapseKey, setCollapseKey] = useState<string | undefined>(undefined);
 
   const handleRouteClick = (route: Route) => {
@@ -23,6 +27,10 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
     }
 
     onRouteClick(route);
+  };
+
+  const isActive = (route: Route) => {
+    return pathName === route?.path;
   };
 
   return (
@@ -55,10 +63,18 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
                     const Icon = subRoute.icon;
 
                     return (
-                      <Box key={subRoute.key} onClick={() => handleRouteClick(subRoute)}>
+                      <Box
+                        key={subRoute.key}
+                        onClick={() => handleRouteClick(subRoute)}
+                        sx={{
+                          color: isActive(subRoute) ? "text.primary" : "text.secondary",
+                        }}
+                      >
                         <Box sx={{ display: "flex", gap: "0 16px", alignItems: "center" }}>
                           {Icon ? <Icon /> : null}
-                          <Typography className="customize-label">{subRoute.name}</Typography>
+                          <Typography sx={{ color: isActive(subRoute) ? "text.primary" : "text.secondary" }}>
+                            {subRoute.name}
+                          </Typography>
                         </Box>
                       </Box>
                     );

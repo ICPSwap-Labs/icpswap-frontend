@@ -33,8 +33,8 @@ function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
   const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
 
   return hide ? null : (
-    <Box sx={{ display: "flex", gap: "0 8px" }}>
-      <TokenImage logo={token?.logo} size="20px" tokenId={tokenInfo.ledger_id.toString()} />
+    <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
+      <TokenImage logo={token?.logo} size="24px" tokenId={tokenInfo.ledger_id.toString()} />
       <Typography component="span">{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
     </Box>
   );

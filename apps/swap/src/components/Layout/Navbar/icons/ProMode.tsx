@@ -1,36 +1,12 @@
 export default function ProModeIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <mask id="path-1-inside-1_39269_18920" fill="white">
-        <rect x="4" y="5.5" width="7" height="11" rx="1.5" />
-      </mask>
-      <rect
-        x="4"
-        y="5.5"
-        width="7"
-        height="11"
-        rx="1.5"
-        stroke="#ffffff"
-        strokeWidth="4"
-        mask="url(#path-1-inside-1_39269_18920)"
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.5 2C6.94772 2 6.5 2.44772 6.5 3V5.5H5.5C4.67157 5.5 4 6.17157 4 7V15C4 15.8284 4.67157 16.5 5.5 16.5H6.5V21C6.5 21.5523 6.94772 22 7.5 22C8.05228 22 8.5 21.5523 8.5 21V16.5H9.5C10.3284 16.5 11 15.8284 11 15V7C11 6.17157 10.3284 5.5 9.5 5.5H8.5V3C8.5 2.44772 8.05228 2 7.5 2ZM6 14.5V7.5H9V14.5H6ZM15 16.5V9.5H18V16.5H15ZM13 9C13 8.17157 13.6716 7.5 14.5 7.5H15.5V3C15.5 2.44772 15.9477 2 16.5 2C17.0523 2 17.5 2.44772 17.5 3V7.5H18.5C19.3284 7.5 20 8.17157 20 9V17C20 17.8284 19.3284 18.5 18.5 18.5H17.5V21C17.5 21.5523 17.0523 22 16.5 22C15.9477 22 15.5 21.5523 15.5 21V18.5H14.5C13.6716 18.5 13 17.8284 13 17V9Z"
+        fill="currentColor"
       />
-      <rect x="6.5" y="2" width="2" height="5" rx="1" fill="#ffffff" />
-      <rect x="6.5" y="15" width="2" height="7" rx="1" fill="#ffffff" />
-      <mask id="path-4-inside-2_39269_18920" fill="white">
-        <rect x="13" y="7.5" width="7" height="11" rx="1.5" />
-      </mask>
-      <rect
-        x="13"
-        y="7.5"
-        width="7"
-        height="11"
-        rx="1.5"
-        stroke="#ffffff"
-        strokeWidth="4"
-        mask="url(#path-4-inside-2_39269_18920)"
-      />
-      <rect x="15.5" y="2" width="2" height="7" rx="1" fill="#ffffff" />
-      <rect x="15.5" y="17" width="2" height="5" rx="1" fill="#ffffff" />
     </svg>
   );
 }
