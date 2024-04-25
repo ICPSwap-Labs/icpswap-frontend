@@ -14,9 +14,17 @@ export interface StakeMaturityProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   onStakeMaturitySuccess?: () => void;
+  disabled?: boolean;
 }
 
-export function StakeMaturity({ neuron, token, governance_id, neuron_id, onStakeMaturitySuccess }: StakeMaturityProps) {
+export function StakeMaturity({
+  neuron,
+  token,
+  governance_id,
+  neuron_id,
+  onStakeMaturitySuccess,
+  disabled,
+}: StakeMaturityProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -66,7 +74,7 @@ export function StakeMaturity({ neuron, token, governance_id, neuron_id, onStake
         onClick={() => setOpen(true)}
         variant="contained"
         size="small"
-        disabled={available_maturity.toString() === "0"}
+        disabled={available_maturity.toString() === "0" || disabled}
       >
         <Trans>Stake</Trans>
       </Button>

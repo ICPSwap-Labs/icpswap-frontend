@@ -18,9 +18,10 @@ export interface HotKeysProps {
   onAddSuccess?: () => void;
   onRemoveSuccess?: () => void;
   neuron: Neuron;
+  disabled?: boolean;
 }
 
-export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemoveSuccess }: HotKeysProps) {
+export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemoveSuccess, disabled }: HotKeysProps) {
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [hotKey, setHotKey] = useState<undefined | string>(undefined);
@@ -146,7 +147,13 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
         ))}
       </Box>
 
-      <Button sx={{ margin: "10px 0 0 0" }} onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button
+        sx={{ margin: "10px 0 0 0" }}
+        onClick={() => setOpen(true)}
+        variant="contained"
+        size="small"
+        disabled={disabled}
+      >
         <Trans>Add Hotkey</Trans>
       </Button>
 

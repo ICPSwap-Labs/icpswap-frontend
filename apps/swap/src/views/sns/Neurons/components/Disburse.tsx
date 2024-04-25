@@ -9,9 +9,10 @@ export interface DisburseProps {
   onDisburseSuccess?: () => void;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
+  disabled?: boolean;
 }
 
-export function Disburse({ onDisburseSuccess, governance_id, neuron_id }: DisburseProps) {
+export function Disburse({ onDisburseSuccess, governance_id, neuron_id, disabled }: DisburseProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -46,7 +47,7 @@ export function Disburse({ onDisburseSuccess, governance_id, neuron_id }: Disbur
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
         <Trans>Disburse</Trans>
       </Button>
 

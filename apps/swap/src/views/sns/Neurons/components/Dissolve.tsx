@@ -9,9 +9,10 @@ export interface DissolveProps {
   onDissolveSuccess?: () => void;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
+  disabled?: boolean;
 }
 
-export function Dissolve({ onDissolveSuccess, governance_id, neuron_id }: DissolveProps) {
+export function Dissolve({ onDissolveSuccess, governance_id, neuron_id, disabled }: DissolveProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -46,7 +47,7 @@ export function Dissolve({ onDissolveSuccess, governance_id, neuron_id }: Dissol
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
         <Trans>Dissolve</Trans>
       </Button>
 

@@ -119,9 +119,10 @@ function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }:
 export interface FollowingProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
+  disabled?: boolean;
 }
 
-export function Followings({ governance_id, neuron_id }: FollowingProps) {
+export function Followings({ governance_id, neuron_id, disabled }: FollowingProps) {
   const [open, setOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -141,7 +142,13 @@ export function Followings({ governance_id, neuron_id }: FollowingProps) {
         </Trans>
       </Typography>
 
-      <Button sx={{ margin: "10px 0 0 0" }} onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button
+        sx={{ margin: "10px 0 0 0" }}
+        onClick={() => setOpen(true)}
+        variant="contained"
+        size="small"
+        disabled={disabled}
+      >
         <Trans>Following</Trans>
       </Button>
 

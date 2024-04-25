@@ -3,9 +3,10 @@ import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from 
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
+import { SnsNeuronPermissionType } from "@icpswap/constants";
 import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns/neurons";
 import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
@@ -38,15 +39,23 @@ interface NeuronProps {
 
 function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
   const theme = useTheme() as Theme;
+  const principal = useAccountPrincipal();
   const [splitNeuronOpen, setSplitNeuronOpen] = useState(false);
 
   const formatted_neuron = neuronFormat(neuron);
 
   const seconds = getDissolvingTimeInSeconds(neuron) ?? formatted_neuron.dissolve_delay;
 
-  const neuron_id = useMemo(() => {
-    return neuron.id[0]?.id;
-  }, [neuron]);
+  const { neuron_id, permissions } = useMemo(() => {
+    const permission = neuron.permissions.filter(
+      (permission) => permission.principal.toString() === principal?.toString(),
+    )[0];
+
+    return {
+      neuron_id: neuron.id[0]?.id,
+      permissions: [...(permission?.permission_type ?? [])],
+    };
+  }, [neuron, principal]);
 
   const handleSuccessTrigger = () => {
     refreshTrigger();
@@ -111,6 +120,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
             neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
             onSplitSuccess={handleSuccessTrigger}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_SPLIT)}
           />
 
           <Stake
@@ -132,6 +142,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
             neuronSystemParameters={neuronSystemParameters}
             neuron_stake={neuron.cached_neuron_stake_e8s}
             onSetSuccess={handleSuccessTrigger}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_CONFIGURE_DISSOLVE_STATE)}
           />
 
           {formatted_neuron.dissolve_state === NeuronState.Dissolving ? (
@@ -139,18 +150,21 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
               governance_id={governance_id}
               neuron_id={neuron.id[0]?.id}
               onStopSuccess={handleSuccessTrigger}
+              disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_CONFIGURE_DISSOLVE_STATE)}
             />
           ) : formatted_neuron.dissolve_state === NeuronState.Dissolved ? (
             <Disburse
               governance_id={governance_id}
               neuron_id={neuron.id[0]?.id}
               onDisburseSuccess={handleSuccessTrigger}
+              disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_DISBURSE)}
             />
           ) : (
             <Dissolve
               governance_id={governance_id}
               neuron_id={neuron.id[0]?.id}
               onDissolveSuccess={handleSuccessTrigger}
+              disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_CONFIGURE_DISSOLVE_STATE)}
             />
           )}
         </Box>
@@ -161,10 +175,11 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
           governance_id={governance_id}
           neuron_id={neuron.id[0]?.id}
           onMaturitySuccess={handleSuccessTrigger}
+          permissions={permissions}
         />
 
         <Box sx={{ margin: "20px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
-          <Followings neuron_id={neuron_id} governance_id={governance_id} />
+          <Followings neuron_id={neuron_id} governance_id={governance_id} disabled={false} />
 
           <HotKeys
             neuron_id={neuron_id}
@@ -172,6 +187,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
             neuron={neuron}
             onAddSuccess={handleSuccessTrigger}
             onRemoveSuccess={handleSuccessTrigger}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_MANAGE_PRINCIPALS)}
           />
         </Box>
       </Box>

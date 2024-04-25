@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { secondsToDuration } from "@dfinity/utils";
+import { SnsNeuronPermissionType } from "@icpswap/constants";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
@@ -18,9 +19,10 @@ export interface MaturityProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   onMaturitySuccess?: () => void;
+  permissions: number[];
 }
 
-export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySuccess }: MaturityProps) {
+export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySuccess, permissions }: MaturityProps) {
   const [open, setOpen] = useState(false);
   const [disburseOpen, setDisburseOpen] = useState(false);
 
@@ -37,6 +39,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
   }, [neuron]);
 
   const handleToggleMaturity = () => {
+    if (!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_STAKE_MATURITY)) return;
     setOpen(true);
   };
 
@@ -133,6 +136,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
             governance_id={governance_id}
             token={token}
             onStakeMaturitySuccess={onMaturitySuccess}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_STAKE_MATURITY)}
           />
 
           <DisburseMaturity
@@ -140,6 +144,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
             neuron_id={neuron_id}
             governance_id={governance_id}
             onDisburseMaturitySuccess={onMaturitySuccess}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_DISBURSE_MATURITY)}
           />
         </Flex>
       </Flex>
@@ -173,7 +178,10 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
 
       <Box margin="15px 0 0 0" sx={{ cursor: "pointer", width: "fit-content" }} onClick={handleToggleMaturity}>
         <Flex gap="0 5px">
-          <Checkbox checked={auto_stake_maturity} />
+          <Checkbox
+            checked={auto_stake_maturity}
+            disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_STAKE_MATURITY)}
+          />
           <Typography>
             <Trans>Automatically stake new maturity.</Trans>
           </Typography>

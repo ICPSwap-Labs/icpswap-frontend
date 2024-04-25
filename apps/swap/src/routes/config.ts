@@ -56,7 +56,6 @@ const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
 const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launchpad/Launch")));
 const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
-const SnsNeuron = Loadable(lazy(() => import("../views/sns/Neurons/Neuron")));
 const SnsVotes = Loadable(lazy(() => import("../views/sns/Voting/index")));
 const SnsVoting = Loadable(lazy(() => import("../views/sns/Voting/Voting")));
 
@@ -113,7 +112,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/console/nft/canister/list": NFTCanisterList,
 
   "/sns/neurons": SnsNeurons,
-  "/sns/neurons/:root_id/:neuron_id": SnsNeuron,
   "/sns/voting": SnsVotes,
   "/sns/voting/:governance_id/:proposal_id": SnsVoting,
   "/sns/launches": SNSLaunches,

@@ -29,6 +29,7 @@ export interface SetDissolveDelayProps {
   neuron_id: Uint8Array | number[] | undefined;
   neuronSystemParameters: NervousSystemParameters | undefined;
   neuron: Neuron | undefined;
+  disabled?: boolean;
 }
 
 export function SetDissolveDelay({
@@ -39,6 +40,7 @@ export function SetDissolveDelay({
   neuron_id,
   neuronSystemParameters,
   neuron,
+  disabled,
 }: SetDissolveDelayProps) {
   const theme = useTheme() as Theme;
   const [open, setOpen] = useState(false);
@@ -216,7 +218,7 @@ export function SetDissolveDelay({
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
         <Trans>Delay</Trans>
       </Button>
 

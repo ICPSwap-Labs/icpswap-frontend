@@ -20,9 +20,10 @@ export interface StakeProps {
   token: TokenInfo | undefined;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
+  disabled?: boolean;
 }
 
-export function Stake({ onStakeSuccess, token, governance_id, neuron_id }: StakeProps) {
+export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disabled }: StakeProps) {
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -77,7 +78,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id }: Stake
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
         <Trans>Stake</Trans>
       </Button>
 

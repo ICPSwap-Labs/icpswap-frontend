@@ -9,9 +9,10 @@ export interface StopDissolvingProps {
   onStopSuccess?: () => void;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
+  disabled?: boolean;
 }
 
-export function StopDissolving({ onStopSuccess, governance_id, neuron_id }: StopDissolvingProps) {
+export function StopDissolving({ onStopSuccess, governance_id, neuron_id, disabled }: StopDissolvingProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -46,7 +47,7 @@ export function StopDissolving({ onStopSuccess, governance_id, neuron_id }: Stop
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
         <Trans>Stop Dissolving</Trans>
       </Button>
 

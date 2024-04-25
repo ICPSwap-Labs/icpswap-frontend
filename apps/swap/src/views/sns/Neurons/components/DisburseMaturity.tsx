@@ -11,6 +11,7 @@ export interface DisburseMaturityProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   onDisburseMaturitySuccess?: () => void;
+  disabled?: boolean;
 }
 
 export function DisburseMaturity({
@@ -18,6 +19,7 @@ export function DisburseMaturity({
   governance_id,
   neuron_id,
   onDisburseMaturitySuccess,
+  disabled,
 }: DisburseMaturityProps) {
   const [disburseOpen, setDisburseOpen] = useState(false);
 
@@ -67,7 +69,7 @@ export function DisburseMaturity({
         onClick={() => setDisburseOpen(true)}
         variant="contained"
         size="small"
-        disabled={available_maturity.toString() === "0"}
+        disabled={available_maturity.toString() === "0" || disabled}
       >
         <Trans>Disburse</Trans>
       </Button>

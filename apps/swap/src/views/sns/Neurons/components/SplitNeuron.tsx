@@ -21,6 +21,7 @@ export interface SplitNeuronProps {
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   neuronSystemParameters: NervousSystemParameters | undefined;
+  disabled?: boolean;
 }
 
 export function SplitNeuron({
@@ -30,6 +31,7 @@ export function SplitNeuron({
   governance_id,
   neuron_id,
   neuronSystemParameters,
+  disabled,
 }: SplitNeuronProps) {
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -135,7 +137,7 @@ export function SplitNeuron({
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={!canSplit}>
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={!canSplit || disabled}>
         <Trans>Split Neuron</Trans>
       </Button>
 
