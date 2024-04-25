@@ -15,7 +15,7 @@ export default function Swap() {
     <SwapProCardWrapper overflow="visible">
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography color="text.primary" fontSize="18px" fontWeight={600} align="center">
-          ICPSwap
+          ICPSwap Pro
         </Typography>
 
         <SwapSettings type="swap" position={matchDownSM ? "right" : "left"} />

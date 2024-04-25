@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { makeStyles, useTheme } from "@mui/styles";
 import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
 import { Theme } from "@mui/material/styles";
@@ -19,9 +19,12 @@ const useStyles = makeStyles((theme: Theme) => {
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
       padding: "20px",
-      borderRadius: `${theme.customization.borderRadius}px`,
+      borderRadius: "8px",
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
+      "&.small-padding": {
+        padding: "8px 12px",
+      },
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -36,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => {
         backgroundColor: "transparent",
       },
     },
-
     mainContent: {
       paddingTop: "64px",
       [theme.breakpoints.down("md")]: {
@@ -46,6 +48,8 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
+const SMALL_PADDING_PATH = ["/swap-pro"];
+
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
@@ -53,6 +57,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const [show, setShow] = useState(true);
   const [globalTipShow, setGlobalTipShow] = useState(true);
+
+  const isSmallPadding = useMemo(() => {
+    return SMALL_PADDING_PATH.includes(location.pathname);
+  }, [location]);
 
   return (
     <>
@@ -80,7 +88,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <GlobalTips onClose={() => setGlobalTipShow(false)} />
         ) : null}
 
-        <main className={classes.content}>{children}</main>
+        <main className={`${classes.content} ${isSmallPadding ? "small-padding" : ""}`}>{children}</main>
       </Box>
 
       <Background />

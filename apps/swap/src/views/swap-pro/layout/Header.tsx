@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
 import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
 
-import { Search } from "./Search";
+import { TokenSearch } from "./TokenSearch";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -82,7 +82,7 @@ export default function Header() {
         </Grid>
       </Box>
 
-      <Search open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <TokenSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

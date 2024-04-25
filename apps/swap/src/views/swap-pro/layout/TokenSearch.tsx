@@ -110,7 +110,7 @@ export interface SearchProps {
   onClose: () => void;
 }
 
-export function Search({ open, onClose }: SearchProps) {
+export function TokenSearch({ open, onClose }: SearchProps) {
   const theme = useTheme() as Theme;
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const history = useHistory();
@@ -202,6 +202,7 @@ export function Search({ open, onClose }: SearchProps) {
         opacity: open ? 1 : 0,
         display: open ? "block" : "none",
         transition: "height 100ms, opacity 100ms",
+        zIndex: 1101,
       }}
       onClick={handleClose}
     >

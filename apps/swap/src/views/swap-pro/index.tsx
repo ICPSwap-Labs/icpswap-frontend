@@ -13,7 +13,7 @@ import Swap from "./Swap";
 import TokenUI from "./Token";
 import TokenChartWrapper from "./TokenChart";
 import Transactions from "./Transactions";
-import { SwapProLayout } from "./layout";
+import { SearchWrapper } from "./layout/SearchWrapper";
 import TokenChartInfo from "./TokenChart/Token";
 
 export default function SwapPro() {
@@ -62,60 +62,62 @@ export default function SwapPro() {
         token,
       }}
     >
-      <SwapProLayout>
-        <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <Box sx={{ width: "100%" }}>
-            <HotTokens />
+      <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ margin: "0 0 8px 0" }}>
+            <SearchWrapper />
+          </Box>
+
+          <HotTokens />
+
+          <Box
+            sx={{
+              margin: "8px 0 0 0",
+              display: "flex",
+              gap: "0 8px",
+              "@media(max-width: 960px)": {
+                flexDirection: "column",
+                gap: "20px 0",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                width: "350px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px 0",
+                "@media(max-width: 960px)": {
+                  gap: "20px 0",
+                  width: "100%",
+                },
+              }}
+            >
+              <Swap />
+              {matchDownSM ? (
+                <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+              ) : null}
+              <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+            </Box>
 
             <Box
               sx={{
-                margin: "8px 0 0 0",
+                flex: 1,
                 display: "flex",
-                gap: "0 8px",
-                "@media(max-width: 960px)": {
-                  flexDirection: "column",
+                flexDirection: "column",
+                gap: "8px 0",
+                overflow: "hidden",
+                "@media(max-width: 640px)": {
                   gap: "20px 0",
                 },
               }}
             >
-              <Box
-                sx={{
-                  width: "350px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px 0",
-                  "@media(max-width: 960px)": {
-                    gap: "20px 0",
-                    width: "100%",
-                  },
-                }}
-              >
-                <Swap />
-                {matchDownSM ? (
-                  <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                ) : null}
-                <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-              </Box>
-
-              <Box
-                sx={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px 0",
-                  overflow: "hidden",
-                  "@media(max-width: 640px)": {
-                    gap: "20px 0",
-                  },
-                }}
-              >
-                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                <Transactions />
-              </Box>
+              <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+              <Transactions />
             </Box>
           </Box>
         </Box>
-      </SwapProLayout>
+      </Box>
     </SwapProContext.Provider>
   );
 }
