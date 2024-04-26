@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => {
       width: "100%",
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
-      padding: "20px",
+      padding: "16px",
       borderRadius: "8px",
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,

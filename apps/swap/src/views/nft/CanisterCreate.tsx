@@ -11,7 +11,6 @@ import { useSelectedCanistersManager } from "store/nft/hooks";
 import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
 import { Trans, t } from "@lingui/macro";
 import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
-import Wrapper from "components/Wrapper";
 import PercentageSlider from "components/PercentageSlider/Marks";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -21,6 +20,7 @@ import { useAccount } from "store/global/hooks";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
 import Button from "components/authentication/ButtonConnector";
+import { CardContent1120 } from "components/Layout/CardContent1120";
 
 export default function NFTCanisterCreate() {
   const history = useHistory();
@@ -190,14 +190,14 @@ export default function NFTCanisterCreate() {
   };
 
   return (
-    <Wrapper>
+    <CardContent1120>
       <Breadcrumbs
         prevLabel={<Trans>NFT Canister List</Trans>}
         currentLabel={<Trans>Create an NFT Canister</Trans>}
         prevLink="/console/nft/canister/list"
       />
 
-      <MainCard level={2} sx={{ margin: "20px 0 0 0" }}>
+      <MainCard sx={{ margin: "16px 0 0 0" }}>
         <Grid container justifyContent="center">
           <Box
             sx={{
@@ -205,7 +205,11 @@ export default function NFTCanisterCreate() {
               width: "100%",
             }}
           >
-            <Box mt={2}>
+            <Typography sx={{ margin: "28px 0 0 0", fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
+              <Trans>Create an NFT Canister</Trans>
+            </Typography>
+
+            <Box mt="32px">
               <FilledTextField
                 label={<Trans>Collection Name</Trans>}
                 labelSize="16px"
@@ -444,6 +448,6 @@ export default function NFTCanisterCreate() {
           )}
         </Identity>
       ) : null}
-    </Wrapper>
+    </CardContent1120>
   );
 }
