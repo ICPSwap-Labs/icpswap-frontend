@@ -70,7 +70,7 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
   };
 
   const handleRemoveHotKey = async (permission: NeuronPermission) => {
-    if (governance_id === undefined || !neuron_id) return;
+    if (governance_id === undefined || !neuron_id || disabled) return;
 
     const { principal, permission_type } = permission;
     const _principal = principal[0];
@@ -139,7 +139,7 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
             </Typography>
 
             <X
-              style={{ cursor: "pointer", color: "#fff" }}
+              style={{ cursor: disabled ? "default" : "pointer", color: disabled ? "#4F5A84" : "#ffffff" }}
               size="18px"
               onClick={() => handleRemoveHotKey(permission)}
             />
