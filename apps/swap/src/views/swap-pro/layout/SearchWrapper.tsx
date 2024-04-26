@@ -12,8 +12,10 @@ export function SearchWrapper() {
       <Box sx={{ width: "100%", height: "40px" }}>
         <FilledTextField
           fullHeight
+          border="border0"
           placeholder="Symbol / Name / Canister ID"
           borderRadius="52px"
+          background="level3"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

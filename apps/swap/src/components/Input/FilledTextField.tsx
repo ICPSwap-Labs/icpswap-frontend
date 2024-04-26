@@ -10,9 +10,9 @@ interface UseStylesProps {
   fullHeight?: boolean;
   borderRadius: string;
   label: boolean;
-  border?: string;
+  border?: string | boolean;
   multiline?: boolean;
-  background?: string;
+  background?: string | "level3";
 }
 
 const useStyles = ({ contained, background, fullHeight, multiline, borderRadius, label, border }: UseStylesProps) => {
@@ -21,8 +21,18 @@ const useStyles = ({ contained, background, fullHeight, multiline, borderRadius,
       inputBox: {
         display: label && contained ? "block" : "flex",
         alignItems: "center",
-        border: contained ? border ?? theme.palette.border.normal : "none",
-        background: background ?? theme.palette.background.level4,
+        border: contained
+          ? border ?? theme.palette.border.normal
+          : border === true
+          ? theme.palette.border.normal
+          : border === "border0"
+          ? theme.palette.border.border0
+          : "none",
+        background: background
+          ? background === "level3"
+            ? theme.palette.background.level3
+            : background
+          : theme.palette.background.level4,
         borderRadius,
         padding: contained ? `7px 12px` : "3px 12px",
         gap: "0 5px",
@@ -68,7 +78,7 @@ export interface FilledTextFieldProps {
   helperText?: string;
   multiline?: boolean;
   borderRadius?: string;
-  border?: string;
+  border?: string | boolean;
   labelSize?: string;
   fontSize?: string;
   placeholderSize?: string;
