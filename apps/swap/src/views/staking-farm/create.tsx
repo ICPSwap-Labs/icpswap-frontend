@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Typography, TextFieldProps, Grid, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { FilledTextField , Wrapper, MainCard, NumberFilledTextField } from "components/index";
+import { FilledTextField, Wrapper, MainCard, NumberFilledTextField } from "components/index";
 import { useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
@@ -17,7 +17,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { timeParser } from "utils/index";
-import TextField from "components/TextField";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { getSwapTokenArgs } from "hooks/token/index";
@@ -201,8 +200,8 @@ export default function CreateProject() {
                 onChange={(value) => handleFieldChange(value, "pool")}
                 value={values.pool}
               />
-              <Grid mt={2}>
-                <Typography color="text.primary">Start/End Time</Typography>
+              <Box>
+                <Typography color="text.secondary">Start/End Time</Typography>
                 <Box mt={2}>
                   <Grid container justifyContent="space-between">
                     <Grid
@@ -215,7 +214,7 @@ export default function CreateProject() {
                         <DateTimePicker
                           // @ts-ignore
                           renderInput={(params: TextFieldProps) => (
-                            <TextField
+                            <FilledTextField
                               fullWidth
                               {...params}
                               InputProps={{
@@ -243,7 +242,7 @@ export default function CreateProject() {
                         <DateTimePicker
                           // @ts-ignore
                           renderInput={(params: TextFieldProps) => (
-                            <TextField
+                            <FilledTextField
                               fullWidth
                               {...params}
                               InputProps={{
@@ -262,7 +261,7 @@ export default function CreateProject() {
                     </Grid>
                   </Grid>
                 </Box>
-              </Grid>
+              </Box>
 
               <NumberFilledTextField
                 label="Reward"

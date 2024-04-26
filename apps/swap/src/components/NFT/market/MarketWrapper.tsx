@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { MainCard , FilledTextField } from "components/index";
+import { MainCard, FilledTextField } from "components/index";
 import { t } from "@lingui/macro";
 import { IconSearch } from "@tabler/icons";
 import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";
@@ -186,7 +186,6 @@ export default function MarketWrapper({
                         fullHeight
                         alignCenter
                         select
-                        contained={false}
                         placeholder={t`Sort By`}
                         required
                         value={sortBy}

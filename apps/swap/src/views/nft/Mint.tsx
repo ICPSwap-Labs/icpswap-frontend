@@ -213,67 +213,49 @@ export default function NFTMint() {
               <Grid mt="30px" container className={classes.mintInfoBox}>
                 <Box className="grid-box">
                   <Box>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>NFT Canister</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <FilledTextField
-                        select
-                        contained={false}
-                        placeholder="Select the NFT canister"
-                        helperText={mintTokenInfo.nftCanister ?? ""}
-                        value={
-                          nftCanisterList.filter((canister) => canister.cid === mintTokenInfo.nftCanister)[0]?.name
-                        }
-                        onChange={(value) => handleFieldChange(value, "nftCanister")}
-                        menus={nftCanisterList.map((canister) => ({
-                          value: canister.cid,
-                          label: canister.name,
-                        }))}
-                        CustomNoData={
-                          <Grid
-                            container
-                            alignItems="center"
-                            flexDirection="column"
-                            sx={{
-                              paddingBottom: "20px",
-                            }}
-                          >
-                            <NoData />
-                            <TextButton to="/console/nft/canister/create">
-                              <Trans>Create an NFT canister</Trans>
-                            </TextButton>
-                          </Grid>
-                        }
-                      />
-                    </Box>
+                    <FilledTextField
+                      label={<Trans>NFT Canister</Trans>}
+                      required
+                      select
+                      placeholder="Select the NFT canister"
+                      helperText={mintTokenInfo.nftCanister ?? ""}
+                      value={nftCanisterList.filter((canister) => canister.cid === mintTokenInfo.nftCanister)[0]?.name}
+                      onChange={(value) => handleFieldChange(value, "nftCanister")}
+                      menus={nftCanisterList.map((canister) => ({
+                        value: canister.cid,
+                        label: canister.name,
+                      }))}
+                      CustomNoData={
+                        <Grid
+                          container
+                          alignItems="center"
+                          flexDirection="column"
+                          sx={{
+                            paddingBottom: "20px",
+                          }}
+                        >
+                          <NoData />
+                          <TextButton to="/console/nft/canister/create">
+                            <Trans>Create an NFT canister</Trans>
+                          </TextButton>
+                        </Grid>
+                      }
+                    />
                   </Box>
                 </Box>
 
                 <Box className="grid-box">
-                  <Box>
-                    <Box>
-                      <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>NFT Name</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <FilledTextField
-                        contained={false}
-                        placeholder="Enter the NFT name"
-                        onChange={(value) => handleFieldChange(value, "name")}
-                        InputProps={{
-                          inputProps: {
-                            maxLength: 200,
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
+                  <FilledTextField
+                    label={<Trans>NFT Name</Trans>}
+                    required
+                    placeholder="Enter the NFT name"
+                    onChange={(value) => handleFieldChange(value, "name")}
+                    InputProps={{
+                      inputProps: {
+                        maxLength: 200,
+                      },
+                    }}
+                  />
                 </Box>
 
                 <Box className="grid-box">
@@ -281,11 +263,11 @@ export default function NFTMint() {
                     <Grid container alignItems="center">
                       <Grid item xs>
                         <RequiredMark />
-                        <Typography component="span" fontSize="16px" color="textPrimary">
+                        <Typography component="span" fontSize="16px" color="text.secondary">
                           <Trans>Supply</Trans>
                         </Typography>
                       </Grid>
-                      <Typography component="span" fontSize="14px" color="textPrimary">
+                      <Typography component="span" fontSize="14px" color="text.primary">
                         <Trans>Max Supply:</Trans>
                         &nbsp;
                         {new BigNumber(canisterMetadata?.totalSupply ? String(canisterMetadata?.totalSupply) : 0)
@@ -295,7 +277,6 @@ export default function NFTMint() {
                     </Grid>
                     <Box mt={2}>
                       <FilledTextField
-                        contained={false}
                         placeholder={t`The number of copies that can be minted`}
                         onChange={(value) => handleFieldChange(value, "supply")}
                         value={mintTokenInfo.supply ?? 1}
@@ -320,33 +301,26 @@ export default function NFTMint() {
 
                 <Box className="grid-box">
                   <Box>
-                    <Box>
-                      <Typography component="span" fontSize="16px" color="textPrimary">
-                        <Trans>Description</Trans>
-                      </Typography>
-                    </Box>
-                    <Box mt={2}>
-                      <FilledTextField
-                        contained={false}
-                        placeholder={t`Enter the NFT description`}
-                        multiline
-                        rows={5}
-                        maxRows={5}
-                        onChange={(value) => handleFieldChange(value, "desc")}
-                        InputProps={{
-                          inputProps: {
-                            maxLength: 500,
-                          },
-                        }}
-                      />
-                    </Box>
+                    <FilledTextField
+                      label={<Trans>Description</Trans>}
+                      placeholder={t`Enter the NFT description`}
+                      multiline
+                      rows={5}
+                      maxRows={5}
+                      onChange={(value) => handleFieldChange(value, "desc")}
+                      InputProps={{
+                        inputProps: {
+                          maxLength: 500,
+                        },
+                      }}
+                    />
                   </Box>
                 </Box>
 
                 <Box className="grid-box">
                   <Grid container>
                     <Grid item xs>
-                      <Typography component="span" fontSize="16px" color="textPrimary">
+                      <Typography component="span" fontSize="16px" color="text.secondary">
                         <Trans>Metadata</Trans>
                       </Typography>
                     </Grid>
@@ -386,7 +360,6 @@ export default function NFTMint() {
                         <Box mr="10px" sx={{ width: "145px" }}>
                           <FilledTextField
                             fullWidth
-                            contained={false}
                             placeholder={t`Metadata Key`}
                             InputProps={{
                               disableUnderline: true,
@@ -399,7 +372,6 @@ export default function NFTMint() {
                         </Box>
                         <Grid item xs>
                           <FilledTextField
-                            contained={false}
                             fullWidth
                             placeholder={t`Metadata Value`}
                             onChange={(value: string) => handleMetadataValueInput(value, index)}
@@ -432,7 +404,7 @@ export default function NFTMint() {
                   <>
                     <Box>
                       <RequiredMark />
-                      <Typography component="span" fontSize="16px" color="textPrimary">
+                      <Typography component="span" fontSize="16px" color="text.secondary">
                         <Trans>Upload NFT File</Trans>
                       </Typography>
                     </Box>

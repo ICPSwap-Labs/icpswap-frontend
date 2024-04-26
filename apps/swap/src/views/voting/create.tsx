@@ -1,17 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
-import {
-  Grid,
-  Button,
-  Typography,
-  Box,
-  TextField,
-  InputAdornment,
-  CircularProgress,
-  Input,
-  useMediaQuery,
-} from "@mui/material";
+import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input, useMediaQuery } from "@mui/material";
 import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
@@ -291,12 +281,7 @@ export default function VotingCreateProposal() {
               </Grid>
 
               <Box>
-                <Typography color="text.primary">
-                  <Trans>Title</Trans>
-                </Typography>
-                <Box mt="20px">
-                  <FilledTextField onChange={(value) => onFiledChange(value, "title")} />
-                </Box>
+                <FilledTextField label={<Trans>Title</Trans>} onChange={(value) => onFiledChange(value, "title")} />
               </Box>
 
               <Box mt="20px">
@@ -308,7 +293,7 @@ export default function VotingCreateProposal() {
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
+                <Typography color="text.secondary">
                   <Trans>Start/End Time</Trans>
                 </Typography>
                 <Box mt={2}>
@@ -324,7 +309,7 @@ export default function VotingCreateProposal() {
                         <DateTimePicker
                           // @ts-ignore
                           renderInput={(params: any) => (
-                            <TextField
+                            <FilledTextField
                               fullWidth
                               {...params}
                               InputProps={{
@@ -347,7 +332,7 @@ export default function VotingCreateProposal() {
                         <DateTimePicker
                           // @ts-ignore
                           renderInput={(params: any) => (
-                            <TextField
+                            <FilledTextField
                               fullWidth
                               {...params}
                               InputProps={{
@@ -369,28 +354,23 @@ export default function VotingCreateProposal() {
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
-                  <Trans>Amount of voters</Trans>
-                </Typography>
-
-                <Box mt={2}>
-                  <NumberFilledTextField
-                    value={values.userAmount}
-                    onChange={(value: number) => onFiledChange(value, "userAmount")}
-                    numericProps={{
-                      allowNegative: false,
-                      decimalScale: 0,
-                      maxLength: 16,
-                    }}
-                  />
-                </Box>
+                <NumberFilledTextField
+                  label={<Trans>Amount of voters</Trans>}
+                  value={values.userAmount}
+                  onChange={(value: number) => onFiledChange(value, "userAmount")}
+                  numericProps={{
+                    allowNegative: false,
+                    decimalScale: 0,
+                    maxLength: 16,
+                  }}
+                />
               </Box>
             </Box>
 
             <Box mt="20px">
               <Grid container>
                 <Grid item xs>
-                  <Typography color="text.primary">
+                  <Typography color="text.secondary">
                     <Trans>Set up the Choices</Trans>
                   </Typography>
                 </Grid>

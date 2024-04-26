@@ -61,7 +61,6 @@ export default function Header() {
               <Box sx={{ width: "358px", height: "32px" }}>
                 <FilledTextField
                   fullHeight
-                  contained={false}
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
                   InputProps={{

@@ -11,24 +11,32 @@ interface UseStylesProps {
   borderRadius: string;
   label: boolean;
   border?: string;
+  multiline?: boolean;
+  background?: string;
 }
 
-const useStyles = ({ contained, fullHeight, borderRadius, label, border }: UseStylesProps) => {
+const useStyles = ({ contained, background, fullHeight, multiline, borderRadius, label, border }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
-        display: label ? "block" : "flex",
+        display: label && contained ? "block" : "flex",
         alignItems: "center",
         border: contained ? border ?? theme.palette.border.normal : "none",
-        background: theme.palette.background.level4,
+        background: background ?? theme.palette.background.level4,
         borderRadius,
-        padding: contained ? `7px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
+        padding: contained ? `7px 12px` : "3px 12px",
         gap: "0 5px",
+        height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
+        ...(multiline ? { minHeight: "48px" } : {}),
+        margin: label ? "12px 0 0 0" : "0",
         "@media(max-width: 640px)": {
-          padding: contained ? `4px 6px` : `${fullHeight ? "0px" : "6px"} 8px`,
+          padding: contained ? `4px 6px` : "0 6px",
         },
         "& input": {
           color: theme.palette.text.primary,
+        },
+        "&:hover": {
+          borderColor: "#ffffff",
         },
       },
     };
@@ -61,32 +69,43 @@ export interface FilledTextFieldProps {
   multiline?: boolean;
   borderRadius?: string;
   border?: string;
+  labelSize?: string;
+  fontSize?: string;
+  placeholderSize?: string;
+  background?: string;
   [x: string]: any;
 }
 
-export function Label({ label, required }: { label?: React.ReactNode; required?: boolean }) {
+export interface FilledTextFieldLabelProps {
+  label?: React.ReactNode;
+  required?: boolean;
+  labelSize?: string;
+}
+
+export function FilledTextFieldLabel({ label, required, labelSize = "16px" }: FilledTextFieldLabelProps) {
   return (
     <Box>
       {required && (
-        <Typography sx={{ color: "#D3625B" }} fontSize={12} component="span">
+        <Typography sx={{ color: "#D3625B" }} fontSize={labelSize} component="span">
           *
         </Typography>
       )}
-      <Typography component="span" fontSize={12}>
+
+      <Typography component="span" fontSize={labelSize}>
         {label}
       </Typography>
     </Box>
   );
 }
 
-export interface ValueProps {
+interface ValueProps {
   helperText?: string;
   select?: boolean;
   value?: any;
   menus?: FilledTextFiledMenus[];
 }
 
-export function Value({ select, value, menus = [], helperText }: ValueProps) {
+function Value({ select, value, menus = [], helperText }: ValueProps) {
   return (
     <>
       <Typography
@@ -128,18 +147,20 @@ function FilledTextField(
     disabled,
     InputProps,
     borderRadius = "8px",
-    contained = true,
+    contained = false,
     CustomNoData,
     menuDisabled,
     helperText,
     multiline,
     onFocus,
     border,
+    background,
+    labelSize,
     ...props
   }: FilledTextFieldProps,
   ref,
 ) {
-  const classes = useStyles({ contained, fullHeight, borderRadius, border, label: !!label })();
+  const classes = useStyles({ contained, background, fullHeight, borderRadius, border, label: !!label, multiline })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);
@@ -181,7 +202,8 @@ function FilledTextField(
   };
 
   return (
-    <>
+    <Box>
+      {label ? <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} /> : null}
       <Box
         ref={outerBoxRef}
         className={classes.inputBox}
@@ -193,13 +215,24 @@ function FilledTextField(
         onClick={handleOuterBoxClick}
       >
         <>
-          {contained && <Label required={required} label={label} />}
-          <Grid container alignItems="center" sx={{ flex: 1, margin: "3px 0 0 0" }}>
+          {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
+          <Grid container alignItems="center" sx={{ flex: 1 }}>
             <Grid item xs>
               {!select ? (
                 <TextField
                   sx={{
-                    fontSize: "14px",
+                    "& input": {
+                      fontSize: props.fontSize ?? "16px",
+                    },
+                    "& textarea": {
+                      fontSize: props.fontSize ?? "16px",
+                    },
+                    "& input::placeholder": {
+                      fontSize: props.placeholderSize ?? "16px",
+                    },
+                    "& textarea::placeholder": {
+                      fontSize: props.placeholderSize ?? "16px",
+                    },
                   }}
                   inputRef={inputRef}
                   {...props}
@@ -269,7 +302,7 @@ function FilledTextField(
           {menus.length === 0 ? CustomNoData || <NoData /> : null}
         </Menu>
       )}
-    </>
+    </Box>
   );
 }
 

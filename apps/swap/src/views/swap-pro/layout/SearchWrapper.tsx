@@ -12,7 +12,6 @@ export function SearchWrapper() {
       <Box sx={{ width: "100%", height: "40px" }}>
         <FilledTextField
           fullHeight
-          contained={false}
           placeholder="Symbol / Name / Canister ID"
           borderRadius="52px"
           InputProps={{

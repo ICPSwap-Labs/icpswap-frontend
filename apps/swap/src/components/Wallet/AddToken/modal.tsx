@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Button, Grid, Box, TextField, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
+import { Button, Grid, Box, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useWalletCatchTokenIds, useSaveCacheTokenCallback, useDeleteCacheTokenCallback } from "store/wallet/hooks";
 import { IconSearch } from "@tabler/icons";
@@ -10,7 +10,7 @@ import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import ImportToken from "components/Wallet/ImportToken";
-import { NoData, TextButton, Modal } from "components/index";
+import { NoData, TextButton, Modal, FilledTextField } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { TokenImage } from "@icpswap/ui";
@@ -172,8 +172,10 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         }}
       >
         <Box>
-          <TextField
-            id="searchToken"
+          <FilledTextField
+            contained
+            background={theme.palette.background.level1}
+            borderRadius="12px"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -183,11 +185,8 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
             }}
             fullWidth
             size={matchDownSM ? "small" : undefined}
-            autoComplete="searchToken"
             placeholder={t`Search token`}
-            onChange={(event) => {
-              handleSearch(event.target.value);
-            }}
+            onChange={handleSearch}
           />
         </Box>
 

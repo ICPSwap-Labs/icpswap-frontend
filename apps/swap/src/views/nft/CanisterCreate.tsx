@@ -2,15 +2,13 @@ import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, InputAdornment } from "@mui/material";
 import { MainCard, Breadcrumbs } from "components/index";
-import RequiredMark from "components/RequiredMark";
-import TextField from "components/TextField";
 import Upload, { UploadRef } from "components/NFT/Upload";
 import { WRAPPED_ICP_TOKEN_INFO, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
 import { createCanister, setCanisterLogo, useNFTMintInfo, setCanisterLogoInController } from "hooks/nft/useNFTCalls";
 import { useErrorTip } from "hooks/useTips";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import { useSelectedCanistersManager } from "store/nft/hooks";
-import FilledTextField, { FilledTextFiledMenus } from "components/Input/FilledTextField";
+import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
 import { Trans, t } from "@lingui/macro";
 import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
 import Wrapper from "components/Wrapper";
@@ -207,79 +205,66 @@ export default function NFTCanisterCreate() {
               width: "100%",
             }}
           >
-            <Box>
-              <Box>
-                <RequiredMark />
-                <Typography component="span" fontSize="16px">
-                  <Trans>Collection Name</Trans>
-                </Typography>
-              </Box>
-              <Box mt={2}>
-                <TextField
-                  fullWidth
-                  placeholder={t`Enter the collection name`}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "name")}
-                  placeholderSize="16px"
-                  fontSize="16px"
-                  InputProps={{
-                    disableUnderline: true,
-                    inputProps: {
-                      maxLength: 50,
-                    },
-                  }}
-                />
-              </Box>
-            </Box>
-            <Box mt={3}>
-              <Box>
-                <RequiredMark />
-                <Typography component="span" fontSize="16px">
-                  <Trans>Collection Description</Trans>
-                </Typography>
-              </Box>
-              <Box mt={2}>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  fontSize="16px"
-                  placeholderSize="16px"
-                  placeholder={t`Enter the canister description`}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    onFieldChange(event.target.value, "introduction")
-                  }
-                  InputProps={{
-                    disableUnderline: true,
-                    inputProps: {
-                      maxLength: 500,
-                    },
-                  }}
-                />
-              </Box>
+            <Box mt={2}>
+              <FilledTextField
+                label={<Trans>Collection Name</Trans>}
+                labelSize="16px"
+                required
+                fullWidth
+                border="none"
+                placeholder={t`Enter the collection name`}
+                onChange={(value: string) => onFieldChange(value, "name")}
+                placeholderSize="16px"
+                fontSize="16px"
+                InputProps={{
+                  disableUnderline: true,
+                  inputProps: {
+                    maxLength: 50,
+                  },
+                }}
+              />
             </Box>
 
             <Box mt={3}>
-              <Box>
-                <RequiredMark />
-                <Typography component="span" fontSize="16px">
-                  <Trans>Creator</Trans>
-                </Typography>
-              </Box>
-              <Box mt={2}>
-                <TextField
-                  fullWidth
-                  fontSize="16px"
-                  placeholderSize="16px"
-                  placeholder={t`Enter the creator`}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFieldChange(event.target.value, "minter")}
-                  InputProps={{
-                    disableUnderline: true,
-                    inputProps: {
-                      maxLength: 50,
-                    },
-                  }}
-                />
-              </Box>
+              <FilledTextField
+                label={<Trans>Collection Description</Trans>}
+                labelSize="16px"
+                required
+                fullWidth
+                multiline
+                rows={4}
+                fontSize="16px"
+                border="none"
+                placeholderSize="16px"
+                placeholder={t`Enter the canister description`}
+                onChange={(value: string) => onFieldChange(value, "introduction")}
+                InputProps={{
+                  disableUnderline: true,
+                  inputProps: {
+                    maxLength: 500,
+                  },
+                }}
+              />
+            </Box>
+
+            <Box mt={3}>
+              <FilledTextField
+                label={<Trans>Creator</Trans>}
+                labelSize="16px"
+                required
+                fullWidth
+                border="none"
+                fontSize="16px"
+                placeholderSize="16px"
+                placeholder={t`Enter the creator`}
+                onChange={(value: string) => onFieldChange(value, "minter")}
+                InputProps={{
+                  disableUnderline: true,
+                  inputProps: {
+                    maxLength: 50,
+                  },
+                }}
+              />
             </Box>
 
             <Box mt={3}>
@@ -325,9 +310,8 @@ export default function NFTCanisterCreate() {
                     <Box mr="10px" sx={{ width: "145px" }}>
                       <FilledTextField
                         select
-                        contained={false}
+                        border="none"
                         placeholder={t`Media`}
-                        required
                         value={socialMediaLink.label}
                         onChange={(value) => onSocialMediaLinkChange(value, index)}
                         menus={SOCIAL_LINKS}
@@ -335,13 +319,12 @@ export default function NFTCanisterCreate() {
                       />
                     </Box>
                     <Grid item xs>
-                      <TextField
+                      <FilledTextField
+                        border="none"
                         fullWidth
                         placeholderSize="16px"
                         placeholder={t`Enter your link, e.g. https://yoursite.io`}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                          handleMediaInput(event.target.value, index)
-                        }
+                        onChange={(value: string) => handleMediaInput(value, index)}
                         InputProps={{
                           disableUnderline: true,
                           inputProps: {
@@ -368,12 +351,8 @@ export default function NFTCanisterCreate() {
             </Box>
 
             <Box mt={3}>
-              <Box>
-                <RequiredMark />
-                <Typography component="span" fontSize="16px">
-                  <Trans>Upload Collection Avatar</Trans>
-                </Typography>
-              </Box>
+              <FilledTextFieldLabel label={<Trans>Upload Collection Avatar</Trans>} labelSize="16px" required />
+
               <Box mt={2}>
                 <Box
                   sx={{
@@ -408,17 +387,16 @@ export default function NFTCanisterCreate() {
             </Box>
 
             <Box mt={3}>
-              <Box>
-                <RequiredMark />
-                <Typography component="span" fontSize="16px">
-                  <Trans>Creator Royalty Fee</Trans>
-                </Typography>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <FilledTextFieldLabel label={<Trans>Creator Royalty Fee</Trans>} labelSize="16px" required />
+
                 {values.royalties || String(values.royalties) === "0" ? (
-                  <Typography component="span" fontSize="14px">
+                  <Typography component="span" fontSize="16px">
                     : {values.royalties}%
                   </Typography>
                 ) : null}
               </Box>
+
               <Box mt="30px">
                 <PercentageSlider
                   value={Number(values.royalties ?? 0)}

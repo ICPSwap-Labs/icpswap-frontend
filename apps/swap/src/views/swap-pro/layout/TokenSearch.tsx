@@ -227,7 +227,6 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 ref={inputRef}
                 value={search}
                 fullHeight
-                contained={false}
                 placeholder="Symbol / Name / Canister ID"
                 borderRadius="12px"
                 InputProps={{

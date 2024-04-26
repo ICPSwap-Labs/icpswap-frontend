@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import SwapModal from "components/modal/swap";
-import { OutlinedInput, InputAdornment, useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
+import { InputAdornment, useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
 import { Search as SearchIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useTaggedTokenManager } from "store/swap/cache/hooks";
 import { useSwapTokenList } from "store/global/hooks";
@@ -8,7 +8,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { isDarkTheme } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { NoData, DotLoading, TokenImage } from "components/index";
+import { NoData, DotLoading, TokenImage, FilledTextField } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -306,7 +306,7 @@ export default function Selector({
     [disabledCurrencyIds],
   );
 
-  const handleSearchToken = useCallback(({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchToken = useCallback((value: string) => {
     setSearchKeyword(value);
   }, []);
 
@@ -363,19 +363,22 @@ export default function Selector({
               padding: matchDownSM ? "8px 16px" : "8px 24px",
             }}
           >
-            <OutlinedInput
+            <FilledTextField
+              contained
+              borderRadius="12px"
+              background={theme.palette.background.level2}
               fullWidth
               placeholder={t`Search name or canister ID`}
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon
-                    sx={{
-                      color: theme.themeOption.textSecondary,
-                    }}
-                  />
-                </InputAdornment>
-              }
-              inputProps={{
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon
+                      sx={{
+                        color: theme.themeOption.textSecondary,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
                 maxLength: 50,
               }}
               onChange={handleSearchToken}

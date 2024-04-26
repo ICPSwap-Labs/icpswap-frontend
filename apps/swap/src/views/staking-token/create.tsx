@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
 import { Typography, Grid, Box } from "@mui/material";
-import { MainCard, Wrapper, TextFieldNumberComponent , FilledTextField } from "components/index";
+import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
@@ -15,7 +15,6 @@ import { TOKEN_STANDARD } from "@icpswap/types";
 import { standardCheck } from "utils/token/standardCheck";
 import { getTokenInfo } from "hooks/token/calls";
 import { timeParser } from "utils/index";
-import TextField from "components/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -218,62 +217,52 @@ export default function CreateStakingTokenPool() {
         <Grid container justifyContent="center">
           <Box sx={{ maxWidth: "474px", width: "100%", display: "grid", gap: "20px 0" }}>
             <Box>
-              <Typography color="text.primary">Token pool's name</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  placeholder={t`Enter token pool's name`}
-                  onChange={(value) => handleFieldChange(value, "name")}
-                  value={values.name}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Token pool's name`}
+                placeholder={t`Enter token pool's name`}
+                onChange={(value) => handleFieldChange(value, "name")}
+                value={values.name}
+              />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Reward token id</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  placeholder={t`Enter reward token id`}
-                  onChange={(value) => handleFieldChange(value, "rewardToken")}
-                  value={values.rewardToken}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Reward token id`}
+                placeholder={t`Enter reward token id`}
+                onChange={(value) => handleFieldChange(value, "rewardToken")}
+                value={values.rewardToken}
+              />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Reward token standard</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  select
-                  menus={TokenStandards}
-                  placeholder={t`Select reward token standard`}
-                  onChange={(value) => handleFieldChange(value, "rewardStandard")}
-                  value={values.rewardStandard}
-                />
-              </Box>
+              <FilledTextField
+                select
+                label={t`Reward token standard`}
+                menus={TokenStandards}
+                placeholder={t`Select reward token standard`}
+                onChange={(value) => handleFieldChange(value, "rewardStandard")}
+                value={values.rewardStandard}
+              />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Staking token id</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  placeholder={t`Enter staking token id`}
-                  onChange={(value) => handleFieldChange(value, "stakingToken")}
-                  value={values.stakingToken}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Staking token id`}
+                placeholder={t`Enter staking token id`}
+                onChange={(value) => handleFieldChange(value, "stakingToken")}
+                value={values.stakingToken}
+              />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Staking token standard</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  select
-                  menus={TokenStandards}
-                  placeholder={t`Select staking token standard`}
-                  onChange={(value) => handleFieldChange(value, "stakingStandard")}
-                  value={values.stakingStandard}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Staking token standard`}
+                select
+                menus={TokenStandards}
+                placeholder={t`Select staking token standard`}
+                onChange={(value) => handleFieldChange(value, "stakingStandard")}
+                value={values.stakingStandard}
+              />
             </Box>
 
             <Box>
@@ -289,7 +278,7 @@ export default function CreateStakingTokenPool() {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
                         renderInput={(params: any) => (
-                          <TextField
+                          <FilledTextField
                             fullWidth
                             {...params}
                             InputProps={{
@@ -320,7 +309,7 @@ export default function CreateStakingTokenPool() {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
                         renderInput={(params: any) => (
-                          <TextField
+                          <FilledTextField
                             fullWidth
                             {...params}
                             InputProps={{
@@ -343,36 +332,32 @@ export default function CreateStakingTokenPool() {
             </Box>
 
             <Box>
-              <Typography color="text.primary">Output Per Second</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  placeholder={t`Enter output per second`}
-                  onChange={(value) => handleFieldChange(value, "outputPerSecond")}
-                  value={values.outputPerSecond}
-                  InputProps={{
-                    disableUnderline: true,
-                    inputComponent: TextFieldNumberComponent,
-                    inputProps: {
-                      thousandSeparator: true,
-                      decimalScale: rewardTokenInfo?.decimals ?? 8,
-                      allowNegative: false,
-                      maxLength: 100,
-                      value: values.outputPerSecond,
-                    },
-                  }}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Output Per Second`}
+                placeholder={t`Enter output per second`}
+                onChange={(value) => handleFieldChange(value, "outputPerSecond")}
+                value={values.outputPerSecond}
+                InputProps={{
+                  disableUnderline: true,
+                  inputComponent: TextFieldNumberComponent,
+                  inputProps: {
+                    thousandSeparator: true,
+                    decimalScale: rewardTokenInfo?.decimals ?? 8,
+                    allowNegative: false,
+                    maxLength: 100,
+                    value: values.outputPerSecond,
+                  },
+                }}
+              />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Bonus multiplier</Typography>
-              <Box mt="12px">
-                <FilledTextField
-                  placeholder={t`Enter bonus multiplier`}
-                  onChange={(value) => handleFieldChange(value, "BONUS_MULTIPLIER")}
-                  value={values.BONUS_MULTIPLIER}
-                />
-              </Box>
+              <FilledTextField
+                label={t`Bonus multiplier`}
+                placeholder={t`Enter bonus multiplier`}
+                onChange={(value) => handleFieldChange(value, "BONUS_MULTIPLIER")}
+                value={values.BONUS_MULTIPLIER}
+              />
             </Box>
 
             <Box mt={4}>
