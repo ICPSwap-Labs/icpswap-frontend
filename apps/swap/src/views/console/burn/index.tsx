@@ -47,6 +47,7 @@ export default function ConsoleBurn() {
     if (!tokenId) return t`Select a token`;
     if (!tokenInfo || !balance || !mintingAccount) return t`Waiting for fetch data`;
     if (!amount) return t`Enter the amount`;
+    if (amount === "0") return t`Must be greater than 0`;
 
     if (parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount))
       return t`Insufficient Balance`;
