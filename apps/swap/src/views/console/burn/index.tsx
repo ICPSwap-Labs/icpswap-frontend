@@ -35,6 +35,7 @@ export default function ConsoleBurn() {
 
   const handleMax = () => {
     if (!balance || !tokenInfo) return;
+
     setAmount(parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).toString());
   };
 
@@ -50,6 +51,12 @@ export default function ConsoleBurn() {
     if (parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount))
       return t`Insufficient Balance`;
   }, [amount, balance, tokenInfo, mintingAccount, tokenId]);
+
+  const showMax = useMemo(() => {
+    if (!balance || !tokenInfo) return false;
+    if (!balance.isGreaterThan(tokenInfo.transFee.toString())) return false;
+    return true;
+  }, [balance, tokenInfo]);
 
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
@@ -123,7 +130,7 @@ export default function ConsoleBurn() {
                       {tokenInfo && balance ? parseTokenAmount(balance, tokenInfo.decimals).toFormat() : "--"}
                     </Typography>
                   </Typography>
-                  <MaxButton background="rgba(86, 105, 220, 0.50)" onClick={handleMax} />
+                  {showMax ? <MaxButton background="rgba(86, 105, 220, 0.50)" onClick={handleMax} /> : null}
                 </Box>
 
                 <Box sx={{ margin: "34px 0 0 0" }}>
