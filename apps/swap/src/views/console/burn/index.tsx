@@ -15,7 +15,7 @@ import { useTokenMintingAccount } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTokenInfo } from "hooks/token";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 
 import { ConfirmBurnModal } from "./ConfirmBurn";
@@ -48,7 +48,7 @@ export default function ConsoleBurn() {
     if (!tokenId) return t`Select a token`;
     if (!tokenInfo || !balance || !mintingAccount) return t`Waiting for fetch data`;
     if (!amount) return t`Enter the amount`;
-    if (amount === "0") return t`Must be greater than 0`;
+    if (new BigNumber(amount).isEqualTo(0)) return t`Must be greater than 0`;
 
     if (parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount))
       return t`Insufficient Balance`;
