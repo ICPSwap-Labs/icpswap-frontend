@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useICPPrice } from "store/global/hooks";
-import { v3FarmController } from "@icpswap/actor";
-import { formatDollarAmount, resultFormat } from "@icpswap/utils";
+import { getFarmGlobalTVL } from "@icpswap/hooks";
+import { formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 
 type GlobalData = { stakeTokenTVL: string; rewardTokenTVL: string };
@@ -18,9 +18,7 @@ export function useFarmGlobalData(): [GlobalData, () => void] {
 
   useMemo(async () => {
     if (icpPrice) {
-      const {data} = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
-        await (await v3FarmController()).getGlobalTVL(),
-      );
+      const data = await getFarmGlobalTVL();
 
       if (data) {
         setData({

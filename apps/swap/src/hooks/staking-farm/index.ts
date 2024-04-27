@@ -4,17 +4,15 @@ import { resultFormat, parseTokenAmount, formatDollarAmount } from "@icpswap/uti
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
 import {
-  getV3StakingFarms,
-  usePaginationAllData,
-  getPaginationAllData,
   useCallsData,
-  getV3UserFarmInfo,
+  getUserFarmInfo,
   getV3UserFarmRewardInfo,
+  getFarmGlobalTVL,
   getFarmTVL,
   getFarmUserTVL,
 } from "@icpswap/hooks";
-import { v3FarmController, v3Farm } from "@icpswap/actor";
-import { type StakingFarmInfo, type ActorIdentity } from "@icpswap/types";
+import { farm } from "@icpswap/actor";
+import { type FarmInfo } from "@icpswap/types";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 import { useAccountPrincipalString } from "store/auth/hooks";
 
@@ -30,19 +28,25 @@ export function useGetGlobalData(): [GlobalData, () => void] {
 
   const [forceUpdate, setForceUpdate] = useState(0);
 
-  useMemo(async () => {
-    if (_ICPPrice) {
-      const { data } = resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(
-        await (await v3FarmController()).getGlobalTVL(),
-      );
+  useMemo(() => {
+    async function call() {
+      if (_ICPPrice) {
+        const globalTvl = await getFarmGlobalTVL();
 
-      if (data) {
-        setData({
-          stakeTokenTVL: formatDollarAmount(new BigNumber(data.stakedTokenTVL).multipliedBy(_ICPPrice).toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(new BigNumber(data.rewardTokenTVL).multipliedBy(_ICPPrice).toFixed(4)),
-        });
+        if (globalTvl) {
+          setData({
+            stakeTokenTVL: formatDollarAmount(
+              new BigNumber(globalTvl.stakedTokenTVL).multipliedBy(_ICPPrice).toFixed(4),
+            ),
+            rewardTokenTVL: formatDollarAmount(
+              new BigNumber(globalTvl.rewardTokenTVL).multipliedBy(_ICPPrice).toFixed(4),
+            ),
+          });
+        }
       }
     }
+
+    call();
   }, [_ICPPrice, forceUpdate]);
 
   const update = useCallback(() => {
@@ -53,25 +57,23 @@ export function useGetGlobalData(): [GlobalData, () => void] {
 }
 
 export async function getAllFarms() {
-  const call = async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
-  };
-
-  return getPaginationAllData(call, 400);
+  // const call = async (offset: number, limit: number) => {
+  //   return await getV3StakingFarms(offset, limit, "all");
+  // };
+  // return getPaginationAllData(call, 400);
 }
 
 export function useAllFarmPools() {
-  const call = useCallback(async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
-  }, []);
-
-  return usePaginationAllData(call, 100);
+  // const call = useCallback(async (offset: number, limit: number) => {
+  //   return await getV3StakingFarms(offset, limit, "all");
+  // }, []);
+  // return usePaginationAllData(call, 100);
 }
 
 export function useIntervalUserFarmInfo(canisterId: string | undefined, user: string | undefined, force?: boolean) {
   const call = useCallback(async () => {
     if (!canisterId || !user) return undefined;
-    return await getV3UserFarmInfo(canisterId, user);
+    return await getUserFarmInfo(canisterId, user);
   }, [canisterId, user]);
 
   return useIntervalFetch(call, force);
@@ -112,13 +114,13 @@ export function useIntervalUserRewardInfo(
   return useIntervalFetch(call, force);
 }
 
-export async function stake(identity: ActorIdentity, farmId: string, positionIndex: bigint) {
-  const result = await (await v3Farm(farmId, identity)).stake(positionIndex);
+export async function stake(farmId: string, positionIndex: bigint) {
+  const result = await (await farm(farmId, true)).stake(positionIndex);
   return resultFormat<string>(result);
 }
 
-export async function unStake(identity: ActorIdentity, farmId: string, tokenId: bigint) {
-  const result = await (await v3Farm(farmId, identity)).unstake(tokenId);
+export async function unStake(farmId: string, tokenId: bigint) {
+  const result = await (await farm(farmId, true)).unstake(tokenId);
   return resultFormat<string>(result);
 }
 
@@ -126,7 +128,7 @@ export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint }>(await (await v3Farm(canisterId)).getCycleInfo()).data?.balance;
+      return resultFormat<{ balance: bigint }>(await (await farm(canisterId)).getCycleInfo()).data?.balance;
     }, [canisterId]),
   );
 }
@@ -135,7 +137,7 @@ export function useV3StakingCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint; available: bigint }>(await (await v3Farm(canisterId)).getCycleInfo()).data;
+      return resultFormat<{ balance: bigint; available: bigint }>(await (await farm(canisterId)).getCycleInfo()).data;
     }, [canisterId]),
   );
 }
@@ -144,18 +146,18 @@ export interface useFarmUSDValueArgs {
   token0?: Token | undefined;
   token1?: Token | undefined;
   rewardToken: Token | undefined;
-  farm: StakingFarmInfo;
+  userFarmInfo: FarmInfo | undefined;
   userRewardAmount: bigint | undefined;
-  userFarmInfo?: StakingFarmInfo | undefined;
+  farmId: string;
 }
 
-export function useFarmUSDValue({ rewardToken, farm, userRewardAmount }: useFarmUSDValueArgs) {
+export function useFarmUSDValue({ farmId, rewardToken, userFarmInfo, userRewardAmount }: useFarmUSDValueArgs) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const icpPrice = useICPPrice();
 
   const principal = useAccountPrincipalString();
 
-  const farmTVL = userIntervalFarmTVL(farm.farmCid);
+  const farmTVL = userIntervalFarmTVL(farmId);
 
   const poolTVL = useMemo(() => {
     if (!farmTVL || !icpPrice) return 0;
@@ -163,14 +165,14 @@ export function useFarmUSDValue({ rewardToken, farm, userRewardAmount }: useFarm
   }, [farmTVL, icpPrice]);
 
   const totalRewardUSD = useMemo(() => {
-    if (!rewardToken || !rewardTokenPrice) {
+    if (!rewardToken || !rewardTokenPrice || !userFarmInfo) {
       return 0;
     }
 
-    const usdValue = new BigNumber(rewardTokenPrice).multipliedBy(farm.totalReward.toString());
+    const usdValue = new BigNumber(rewardTokenPrice).multipliedBy(userFarmInfo.totalReward.toString());
 
     return usdValue.toNumber();
-  }, [rewardToken, farm, rewardTokenPrice]);
+  }, [rewardToken, userFarmInfo, rewardTokenPrice]);
 
   const userRewardUSD = useMemo(() => {
     if (!rewardToken || !rewardTokenPrice || !userRewardAmount) {
@@ -188,7 +190,7 @@ export function useFarmUSDValue({ rewardToken, farm, userRewardAmount }: useFarm
     return parseTokenAmount(userRewardAmount, rewardToken.decimals).toNumber();
   }, [rewardToken, userRewardAmount]);
 
-  const userTVLAmount = userIntervalFarmUserTVL(farm.farmCid, principal);
+  const userTVLAmount = userIntervalFarmUserTVL(farmId, principal);
 
   const userTVL = useMemo(() => {
     if (!userTVLAmount || !icpPrice) return 0;

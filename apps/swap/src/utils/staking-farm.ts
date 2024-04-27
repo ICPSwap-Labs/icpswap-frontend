@@ -1,13 +1,16 @@
-import type { StakingFarmInfo } from "@icpswap/types";
+import type { FarmInfo } from "@icpswap/types";
 
 export enum POOL_STATE {
   LIVE = "Live",
   CLOSURE = "Closure",
   UNSTARTED = "Unstarted",
   FINISHED = "Finished",
+  Unspecified = "Unspecified",
 }
 
-export function getFarmsState(pool: StakingFarmInfo): POOL_STATE {
+export function getFarmsState(pool: FarmInfo | undefined): POOL_STATE {
+  if (!pool) return POOL_STATE.Unspecified;
+
   if (pool.status.toLowerCase() === POOL_STATE.CLOSURE.toLowerCase()) return POOL_STATE.CLOSURE;
 
   const now = BigInt(new Date().getTime());

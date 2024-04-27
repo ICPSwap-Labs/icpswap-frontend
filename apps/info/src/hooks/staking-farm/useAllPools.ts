@@ -1,18 +1,26 @@
-import { useCallback } from "react";
-import { getV3StakingFarms, usePaginationAllData, getPaginationAllData } from "@icpswap/hooks";
+import { useEffect, useMemo, useState } from "react";
+import { getV3StakingFarms } from "@icpswap/hooks";
+import { Principal } from "@dfinity/principal";
+import type { FarmTvl } from "@icpswap/types";
 
 export async function getAllFarms() {
-  const call = async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
-  };
-
-  return getPaginationAllData(call, 400);
+  return await getV3StakingFarms("all");
 }
 
 export function useAllFarmPools() {
-  const call = useCallback(async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
+  const [loading, setLoading] = useState(false);
+  const [farms, setFarms] = useState<Array<[Principal, FarmTvl]>>([]);
+
+  useEffect(() => {
+    async function call() {
+      setLoading(true);
+      const farms = await getAllFarms();
+      setFarms(farms);
+      setLoading(false);
+    }
+
+    call();
   }, []);
 
-  return usePaginationAllData(call, 100);
+  return useMemo(() => ({ result: farms, loading }), [farms, loading]);
 }

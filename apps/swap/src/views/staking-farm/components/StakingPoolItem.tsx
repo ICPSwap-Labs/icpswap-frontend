@@ -22,13 +22,15 @@ import {
   timestampFormat,
   explorerLink,
 } from "@icpswap/utils";
-import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
+import { useV3FarmMetadata, useFarmUserPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-farm";
-import type { StakingFarmInfo } from "@icpswap/types";
+import type { FarmTvl } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
+import { Principal } from "@dfinity/principal";
+
 import FarmContext from "../context";
 import OptionStaking from "./OptionStaking";
 
@@ -86,9 +88,9 @@ const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: numb
   );
 };
 
-export type FarmPoolProps = { stakeOnly: boolean; state: STATE; farm: StakingFarmInfo };
+export type FarmPoolProps = { stakeOnly: boolean; state: STATE; farmTVL: [Principal, FarmTvl] };
 
-export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
+export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const classes = useStyle();
   const theme = useTheme() as Theme;
 
@@ -98,28 +100,32 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
   const [forceUpdate, setForceUpdate] = useState(false);
 
-  const userFarmInfo = useIntervalUserFarmInfo(farm.farmCid, principal?.toString() ?? AnonymousPrincipal);
+  const { farmId } = useMemo(() => {
+    return { farmId: farmTVL[0].toString(), tvl: farmTVL[1] };
+  }, [farmTVL]);
 
-  const { result: userAllPositions } = useFarmUserAllPositions(farm.farmCid, principal?.toString(), forceUpdate);
+  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
+
+  const { result: userAllPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
 
   const positionIds = useMemo(() => {
-    return userAllPositions.map((position) => BigInt(position.positionId));
+    return userAllPositions?.map((position) => position.positionId) ?? [];
   }, [userAllPositions]);
 
-  const userRewardAmount = useIntervalUserRewardInfo(farm.farmCid, positionIds);
+  const userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
-  const [, token0] = useToken(farm.poolToken0.address) ?? undefined;
-  const [, token1] = useToken(farm.poolToken1.address) ?? undefined;
+  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
+  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
 
-  const [, rewardToken] = useToken(farm.rewardToken.address) ?? undefined;
+  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
 
   const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
     rewardToken,
-    farm,
     userRewardAmount,
     userFarmInfo,
+    farmId,
   });
 
   const handleExpandClick = () => {
@@ -127,7 +133,10 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
   };
 
   const handleGoToGetPosition = () => {
-    window.open(`/swap/liquidity/add/${farm.poolToken0.address}/${farm.poolToken1.address}`, "_target");
+    window.open(
+      `/swap/liquidity/add/${userFarmInfo?.poolToken0.address}/${userFarmInfo?.poolToken1.address}`,
+      "_target",
+    );
   };
 
   const walletIsConnected = useConnectorStateConnected();
@@ -137,15 +146,15 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
   useEffect(() => {
     if (positionIds !== undefined) {
       if (positionIds.length === 0) {
-        updateUnStakedFarms(farm.farmCid);
+        updateUnStakedFarms(farmId);
       } else {
-        deleteUnStakedFarms(farm.farmCid);
+        deleteUnStakedFarms(farmId);
       }
     }
   }, [positionIds?.length]);
 
-  const { result: farmMetadata } = useV3FarmMetadata(farm.farmCid);
-  const { result: cycles } = useV3StakingCycles(farm.farmCid);
+  const { result: farmMetadata } = useV3FarmMetadata(farmId);
+  const { result: cycles } = useV3StakingCycles(farmId);
 
   return (
     <Box>
@@ -153,7 +162,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
         level={1}
         padding="0px"
         sx={{
-          display: stakeOnly && userAllPositions.length === 0 ? "none" : "block",
+          display: stakeOnly && userAllPositions?.length === 0 ? "none" : "block",
           width: "384px",
           overflow: "hidden",
           height: "fit-content",
@@ -211,7 +220,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                 <CountUp
                   preserveValue
                   end={parseTokenAmount(
-                    farm?.totalReward ?? farm.totalRewardUnclaimed,
+                    userFarmInfo?.totalReward ?? userFarmInfo?.totalRewardUnclaimed,
                     rewardToken?.decimals,
                   ).toNumber()}
                   decimals={2}
@@ -270,12 +279,14 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
               >
                 <Typography sx={{ flex: 1 }}>{Number(positionIds.length ?? 0)}</Typography>
                 {walletIsConnected ? (
-                  <OptionStaking
-                    farm={farm}
-                    resetData={() => setForceUpdate(!forceUpdate)}
-                    userIncentives={userFarmInfo}
-                    userAllPositions={userAllPositions}
-                  />
+                  userFarmInfo && userAllPositions ? (
+                    <OptionStaking
+                      userFarmInfo={userFarmInfo}
+                      resetData={() => setForceUpdate(!forceUpdate)}
+                      userAllPositions={userAllPositions}
+                      farmId={farmId}
+                    />
+                  ) : null
                 ) : (
                   <ConnectWallet />
                 )}
@@ -397,13 +408,15 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                   <Typography>
                     <Trans>Starting at</Trans>
                   </Typography>
-                  <Typography color="text.primary">{timestampFormat(Number(farm.startTime) * 1000)}</Typography>
+                  <Typography color="text.primary">
+                    {timestampFormat(Number(userFarmInfo?.startTime) * 1000)}
+                  </Typography>
                 </Grid>
 
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End in</Trans>}</Typography>
                   <Typography color="text.primary" component="div">
-                    <CountdownBox startTime={Number(farm.startTime)} endTime={Number(farm.endTime)} />
+                    <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="space-between" alignItems="flex-start">
@@ -411,8 +424,8 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Created by</Trans>
                   </Typography>
                   <Typography color="text.primary.main">
-                    <Link href={`https://icscan.io/principal/${farm.creator.toString()}`} target="_blank">
-                      {shorten(farm.creator.toString())}
+                    <Link href={`https://icscan.io/principal/${userFarmInfo?.creator.toString()}`} target="_blank">
+                      {shorten(userFarmInfo?.creator.toString())}
                     </Link>
                   </Typography>
                 </Grid>
@@ -421,8 +434,8 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Incentive pool Id</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    <Link href={explorerLink(farm.farmCid)} target="_blank">
-                      {shorten(farm.farmCid)}
+                    <Link href={explorerLink(farmId)} target="_blank">
+                      {shorten(farmId)}
                     </Link>
                   </Typography>
                 </Grid>
@@ -437,7 +450,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
                 <Grid item container justifyContent="flex-end">
                   <Typography color="text.primary">
-                    <Link href={`${INFO_URL}/staking-farm/details/${farm.farmCid}`} target="_blank">
+                    <Link href={`${INFO_URL}/staking-farm/details/${farmId}`} target="_blank">
                       <Trans>Farms Info</Trans>
                     </Link>
                   </Typography>

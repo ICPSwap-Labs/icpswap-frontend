@@ -1,8 +1,11 @@
 export type {
-  StakingFarmInfo,
-  StakingFarmDepositArgs,
+  CreateFarmArgs,
+  FarmTvl,
+  FarmDepositArgs,
   StakingFarmDistributeTransaction,
   StakingFarmStakeTransaction,
+  FarmInfo,
+  FarmStatusArgs,
 } from "@icpswap/candid";
 
 export type FarmMetadata = {
@@ -15,3 +18,5 @@ export type FarmMetadata = {
   totalReward: bigint;
   totalRewardUnclaimed: bigint;
 };
+
+export type FarmState = "LIVE" | "NOT_STARTED" | "CLOSED" | "FINISHED";

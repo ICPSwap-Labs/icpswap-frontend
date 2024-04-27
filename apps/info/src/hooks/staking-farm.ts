@@ -1,22 +1,12 @@
-import { useCallback, useMemo } from "react";
-import { getV3StakingFarms, useFarmTVL } from "@icpswap/hooks";
-import { usePaginationAllData } from "hooks/usePaginationAllData";
+import { useMemo } from "react";
+import { useFarmTVL } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
-import type { StakingFarmInfo } from "@icpswap/types";
 import { useICPPrice } from "store/global/hooks";
 
-export function useAllFarmPools() {
-  const call = useCallback(async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
-  }, []);
-
-  return usePaginationAllData(call, 100);
-}
-
-export function useFarmUSDValue(farm: StakingFarmInfo) {
+export function useFarmUSDValue(farmId: string) {
   const icpPrice = useICPPrice();
 
-  const { result: farmTVL } = useFarmTVL(farm.farmCid);
+  const { result: farmTVL } = useFarmTVL(farmId);
 
   const poolTVL = useMemo(() => {
     if (!farmTVL || !icpPrice) {

@@ -16,6 +16,7 @@ import { useV3UserFarmInfo } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
+import { useTokenInfo } from "hooks/token";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -52,11 +53,13 @@ export function timeFormatter(dateTime: bigint | undefined) {
 
 export default function FarmDetails() {
   const classes = useStyles();
-  const { poolId } = useParams<{ poolId: string }>();
-  const { result: pool } = useV3UserFarmInfo(poolId, AnonymousPrincipal);
-  const { statusText } = getFarmPoolStatus(pool) ?? { statusText: "" };
+  const { farmId } = useParams<{ farmId: string }>();
+  const { result: farmInfo } = useV3UserFarmInfo(farmId, AnonymousPrincipal);
+  const { statusText } = getFarmPoolStatus(farmInfo) ?? { statusText: "" };
 
   const [recordType, setRecordType] = useState("transactions");
+
+  const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
 
   return (
     <MainContainer>
@@ -91,33 +94,33 @@ export default function FarmDetails() {
             <PoolDetailItem
               label={t`ID:`}
               value={
-                <Copy content={pool?.farmCid ?? ""}>
+                <Copy content={farmId}>
                   <Typography fontSize="12px" color="text.primary">
-                    {shorten(pool?.farmCid ?? "", 8)}
+                    {shorten(farmId, 8)}
                   </Typography>
                 </Copy>
               }
             />
-            <PoolDetailItem label={t`Staking NFTs Amount:`} value={String(pool?.numberOfStakes ?? 0)} />
+            <PoolDetailItem label={t`Staking NFTs Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
             <PoolDetailItem
               label={t`Reward Token Amount:`}
               value={
                 <Typography fontSize="12px" component="span" color="text.primary">
-                  {parseTokenAmount(pool?.totalReward, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.rewardToken.address ?? "")} target="_blank">
-                    &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
+                  {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
+                  <Link href={getExplorerPrincipalLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                    &nbsp;{`${rewardToken?.symbol ?? "--"}`}
                   </Link>
                 </Typography>
               }
             />
-            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(pool?.startTime)} />
-            <PoolDetailItem label={t`End Time:`} value={timeFormatter(pool?.endTime)} />
+            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
+            <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
             <PoolDetailItem
               label={t`Creator:`}
               value={
-                <Copy content={pool?.creator.toString() ?? ""}>
+                <Copy content={farmInfo?.creator.toString() ?? ""}>
                   <Typography fontSize="12px" color="text.primary">
-                    {shorten(pool?.creator.toString() ?? "", 8)}
+                    {shorten(farmInfo?.creator.toString() ?? "", 8)}
                   </Typography>
                 </Copy>
               }
@@ -154,9 +157,9 @@ export default function FarmDetails() {
           </Grid>
           <Grid item container justifyContent="center">
             {recordType === "transactions" ? (
-              <Transactions id={pool?.farmCid} rewardTokenId={pool?.rewardToken.address} />
+              <Transactions id={farmId} rewardTokenId={farmInfo?.rewardToken.address} />
             ) : (
-              <ClaimRecords id={pool?.farmCid} rewardTokenId={pool?.rewardToken.address} />
+              <ClaimRecords id={farmId} rewardTokenId={farmInfo?.rewardToken.address} />
             )}
           </Grid>
         </MainCard>
