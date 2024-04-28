@@ -39,10 +39,16 @@ export const idlFactory = ({ IDL }: any) => {
     totalElements: IDL.Nat,
   });
   const Result_19 = IDL.Variant({ ok: Page_1, err: IDL.Text });
+  const FarmStatus = IDL.Variant({
+    LIVE: IDL.Null,
+    NOT_STARTED: IDL.Null,
+    CLOSED: IDL.Null,
+    FINISHED: IDL.Null,
+  });
   const Token = IDL.Record({ address: IDL.Text, standard: IDL.Text });
   const FarmInfo = IDL.Record({
     startTime: IDL.Nat,
-    status: IDL.Text,
+    status: FarmStatus,
     creator: IDL.Principal,
     numberOfStakes: IDL.Nat,
     rewardToken: Token,
@@ -63,7 +69,7 @@ export const idlFactory = ({ IDL }: any) => {
   const InitFarmArgs = IDL.Record({
     ICP: Token,
     startTime: IDL.Nat,
-    status: IDL.Text,
+    status: FarmStatus,
     secondPerCycle: IDL.Nat,
     farmControllerCid: IDL.Principal,
     creator: IDL.Principal,

@@ -19,7 +19,8 @@ import { AnonymousPrincipal } from "@icpswap/constants";
 import { useCallsData } from "../useCallData";
 
 export async function getUserFarmInfo(canisterId: string, principal: string) {
-  return resultFormat<FarmInfo>(await (await farm(canisterId)).getFarmInfo(principal)).data;
+  const farmResult = await (await farm(canisterId)).getFarmInfo(principal);
+  return resultFormat<FarmInfo>(farmResult).data;
 }
 
 export function useV3UserFarmInfo(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {

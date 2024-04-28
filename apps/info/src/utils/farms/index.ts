@@ -20,7 +20,7 @@ export const POOL_STATUS_COLORS = {
 export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   if (!pool) return undefined;
 
-  if (pool.status === "Closure") {
+  if ("CLOSED" in pool.status) {
     return {
       statusText: "Closure",
       status: POOL_STATUS.Closure,
@@ -32,15 +32,15 @@ export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   let statusClassName = "";
   let status = "";
 
-  if (pool.status === "NOT_STARTED") {
+  if ("NOT_STARTED" in pool.status) {
     statusText = t`Upcoming`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
-  } else if (pool.status === "LIVE") {
+  } else if ("LIVE" in pool.status) {
     statusText = t`Live`;
     statusClassName = "ongoing";
     status = POOL_STATUS.ONGOING;
-  } else if (pool.status === "FINISHED") {
+  } else if ("FINISHED" in pool.status) {
     statusText = t`Finished`;
     statusClassName = "finished";
     status = POOL_STATUS.FINISHED;

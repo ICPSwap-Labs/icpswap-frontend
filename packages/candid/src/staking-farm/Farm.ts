@@ -32,7 +32,7 @@ export type Error =
   | { InsufficientFunds: null };
 export interface FarmInfo {
   startTime: bigint;
-  status: string;
+  status: FarmStatus;
   creator: Principal;
   numberOfStakes: bigint;
   rewardToken: Token;
@@ -49,10 +49,11 @@ export interface FarmInfo {
   totalRewardUnclaimed: bigint;
   positionIds: Array<bigint>;
 }
+export type FarmStatus = { LIVE: null } | { NOT_STARTED: null } | { CLOSED: null } | { FINISHED: null };
 export interface InitFarmArgs {
   ICP: Token;
   startTime: bigint;
-  status: string;
+  status: FarmStatus;
   secondPerCycle: bigint;
   farmControllerCid: Principal;
   creator: Principal;
