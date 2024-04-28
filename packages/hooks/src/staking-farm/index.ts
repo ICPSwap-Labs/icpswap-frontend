@@ -144,17 +144,16 @@ export async function createV3Farm(args: CreateFarmArgs) {
   return resultFormat<string>(await (await farmController(true)).create(args));
 }
 
-export async function getV3StakingFarms(state: FarmState) {
+export async function getFarms(state: FarmState | undefined) {
   return resultFormat<Array<[Principal, FarmTvl]>>(
-    await (await farmController()).getFarms({ [state]: null } as FarmStatusArgs),
+    await (await farmController()).getFarms(state ? [{ [state]: null } as FarmStatusArgs] : []),
   ).data;
 }
 
-export function useV3StakingFarms(state: FarmState | undefined, reload?: boolean) {
+export function useFarms(state: FarmState | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
-      if (state === undefined) return undefined;
-      return await getV3StakingFarms(state);
+      return await getFarms(state);
     }, [state]),
     reload,
   );

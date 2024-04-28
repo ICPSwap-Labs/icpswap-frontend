@@ -4,7 +4,7 @@ import { NoData, StaticLoading, MainCard } from "components/index";
 import Switch from "components/switch";
 import { Trans } from "@lingui/macro";
 import { STATE } from "types/staking-farm";
-import { useV3StakingFarms, useParsedQueryString } from "@icpswap/hooks";
+import { useFarms, useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
 import StakingPoolItem from "./components/StakingPoolItem";
 import GlobalData from "./components/GlobalData";
@@ -19,7 +19,7 @@ function MainContent() {
   const { state } = useParsedQueryString() as { state: STATE };
   const _state = useMemo(() => state ?? STATE.LIVE, [state]);
   // TODO: page
-  const { result, loading } = useV3StakingFarms(_state);
+  const { result, loading } = useFarms(_state);
 
   const farms = useMemo(() => {
     return result ?? [];

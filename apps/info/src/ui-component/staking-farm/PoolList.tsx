@@ -10,7 +10,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
 import type { FarmTvl } from "@icpswap/types";
-import { useFarmInfo, useSwapPoolMetadata, useV3StakingFarms } from "@icpswap/hooks";
+import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
 import { useFarmUSDValue } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
 import { Principal } from "@dfinity/principal";
@@ -38,8 +38,7 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
     return { farmId: farmTVL[0].toString() };
   }, [farmTVL]);
 
-  const { result: farmInfo } = useFarmInfo(farmId);
-
+  const { result: farmInfo, loading } = useFarmInfo(farmId);
   const { status, statusText } = getFarmPoolStatus(farmInfo) ?? { status: "", statusText: "" };
   const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
   const { result: token0 } = useTokenInfo(swapPool?.token0.address);
@@ -48,7 +47,14 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
 
   const { poolTVL } = useFarmUSDValue(farmId);
 
-  return (
+  return loading ? (
+    <LoadingRow>
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRow>
+  ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell>
         {token0 && token1 && farmInfo ? (
@@ -101,7 +107,7 @@ export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useV3StakingFarms("all");
+  const { result, loading } = useFarms(undefined);
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);

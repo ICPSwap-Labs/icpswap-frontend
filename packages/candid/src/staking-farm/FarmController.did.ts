@@ -62,7 +62,7 @@ export const idlFactory = ({ IDL }: any) => {
     getAdmins: IDL.Func([], [Result_5], ["query"]),
     getAllFarms: IDL.Func([], [Result_4], ["query"]),
     getCycleInfo: IDL.Func([], [Result_3], []),
-    getFarms: IDL.Func([FarmStatus], [Result_2], ["query"]),
+    getFarms: IDL.Func([IDL.Opt(FarmStatus)], [Result_2], ["query"]),
     getGlobalTVL: IDL.Func([], [Result_1], ["query"]),
     getInitArgs: IDL.Func([], [Result], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),

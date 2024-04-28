@@ -58,7 +58,7 @@ export interface _SERVICE {
   getAdmins: ActorMethod<[], Result_5>;
   getAllFarms: ActorMethod<[], Result_4>;
   getCycleInfo: ActorMethod<[], Result_3>;
-  getFarms: ActorMethod<[FarmStatus], Result_2>;
+  getFarms: ActorMethod<[[] | [FarmStatus]], Result_2>;
   getGlobalTVL: ActorMethod<[], Result_1>;
   getInitArgs: ActorMethod<[], Result>;
   getVersion: ActorMethod<[], string>;
