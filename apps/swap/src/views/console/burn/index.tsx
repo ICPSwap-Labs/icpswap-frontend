@@ -22,6 +22,7 @@ import { ConfirmBurnModal } from "./ConfirmBurn";
 
 export default function ConsoleBurn() {
   const principal = useAccountPrincipal();
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
@@ -32,7 +33,7 @@ export default function ConsoleBurn() {
 
   const { result: tokenInfo } = useTokenInfo(tokenId);
   const { result: mintingAccount } = useTokenMintingAccount(tokenId);
-  const { result: balance } = useTokenBalance(tokenId, principal);
+  const { result: balance } = useTokenBalance(tokenId, principal, refreshTrigger);
 
   const handleMax = () => {
     if (!balance || !tokenInfo) return;
@@ -42,6 +43,7 @@ export default function ConsoleBurn() {
 
   const handleBurnSuccess = () => {
     setAmount("");
+    setRefreshTrigger(refreshTrigger + 1);
   };
 
   const error = useMemo(() => {
