@@ -279,11 +279,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               >
                 <Typography sx={{ flex: 1 }}>{Number(positionIds.length ?? 0)}</Typography>
                 {walletIsConnected ? (
-                  userFarmInfo && userAllPositions ? (
+                  userFarmInfo ? (
                     <OptionStaking
                       userFarmInfo={userFarmInfo}
                       resetData={() => setForceUpdate(!forceUpdate)}
-                      userAllPositions={userAllPositions}
+                      userAllPositions={userAllPositions ?? []}
                       farmId={farmId}
                     />
                   ) : null
