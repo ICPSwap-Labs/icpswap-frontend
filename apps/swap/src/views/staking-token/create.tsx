@@ -1,17 +1,14 @@
-// @ts-nocheck
 import { useEffect, useState } from "react";
 import { Typography, Grid, Box } from "@mui/material";
 import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
-import Identity, { CallbackProps } from "components/Identity";
 import { numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import Button from "components/authentication/ButtonConnector";
 import { createStakingTokenPool } from "@icpswap/hooks";
-import { type ActorIdentity, ResultStatus } from "@icpswap/types";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { standardCheck } from "utils/token/standardCheck";
 import { getTokenInfo } from "hooks/token/calls";
 import { timeParser } from "utils/index";
@@ -48,16 +45,13 @@ type Values = {
   stakingStandard: string;
   stakingTokenFee: number | bigint;
   outputPerSecond: number;
-  BONUS_MULTIPLIER: number;
 };
 
 export default function CreateStakingTokenPool() {
   const principal = useAccountPrincipal();
   const updateTokenStandard = useUpdateTokenStandard();
 
-  const [values, setValues] = useState<Values>({
-    BONUS_MULTIPLIER: 1,
-  } as Values);
+  const [values, setValues] = useState<Values>({} as Values);
 
   const [openTip] = useTips();
 
@@ -97,8 +91,8 @@ export default function CreateStakingTokenPool() {
     call();
   }, [values.rewardToken, values.rewardStandard]);
 
-  const handleCreateEvent = async (identity: ActorIdentity) => {
-    if (!identity || loading || !principal) return;
+  const handleCreateEvent = async () => {
+    if (loading || !principal) return;
     setLoading(true);
 
     const { valid: rewardTokenValid } = await standardCheck(
@@ -149,9 +143,7 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    const amount = new BigNumber(values.outputPerSecond)
-      .multipliedBy(10 ** rewardTokenInfo.decimals)
-      .dividedBy(values.BONUS_MULTIPLIER);
+    const amount = new BigNumber(values.outputPerSecond).multipliedBy(10 ** rewardTokenInfo.decimals);
 
     if (amount.isLessThan(1) || amount.toString().includes(".")) {
       openTip("Wrong amount per second", MessageTypes.error);
@@ -159,40 +151,26 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    const { status, message } = await createStakingTokenPool(
-      {
-        name: values.name,
-
-        stakingTokenSymbol: stakingTokenInfo.symbol,
-        stakingToken: { address: stakingTokenInfo.canisterId, standard: values.stakingStandard },
-        stakingTokenFee: stakingTokenInfo.transFee,
-        stakingTokenDecimals: BigInt(stakingTokenInfo.decimals),
-
-        rewardTokenSymbol: rewardTokenInfo.symbol,
-        rewardToken: { address: rewardTokenInfo.canisterId, standard: values.rewardStandard },
-        rewardTokenFee: rewardTokenInfo.transFee,
-        rewardTokenDecimals: BigInt(rewardTokenInfo.decimals),
-
-        startTime: BigInt(values.startDateTime) / BigInt(1000),
-        rewardPerTime: BigInt(
-          numberToString(
-            new BigNumber(values.outputPerSecond)
-              .multipliedBy(10 ** rewardTokenInfo.decimals)
-              .dividedBy(values.BONUS_MULTIPLIER),
-          ),
-        ),
-
-        bonusEndTime: BigInt(values.endDateTime) / BigInt(1000),
-        BONUS_MULTIPLIER: BigInt(values.BONUS_MULTIPLIER),
-      },
-      identity,
-    );
+    const { status, message } = await createStakingTokenPool({
+      name: values.name,
+      stakingTokenSymbol: stakingTokenInfo.symbol,
+      stakingToken: { address: stakingTokenInfo.canisterId, standard: values.stakingStandard },
+      stakingTokenFee: stakingTokenInfo.transFee,
+      stakingTokenDecimals: BigInt(stakingTokenInfo.decimals),
+      rewardTokenSymbol: rewardTokenInfo.symbol,
+      rewardToken: { address: rewardTokenInfo.canisterId, standard: values.rewardStandard },
+      rewardTokenFee: rewardTokenInfo.transFee,
+      rewardTokenDecimals: BigInt(rewardTokenInfo.decimals),
+      startTime: BigInt(values.startDateTime) / BigInt(1000),
+      rewardPerTime: BigInt(
+        numberToString(new BigNumber(values.outputPerSecond).multipliedBy(10 ** rewardTokenInfo.decimals)),
+      ),
+      bonusEndTime: BigInt(values.endDateTime) / BigInt(1000),
+    });
 
     if (status === ResultStatus.OK) {
       openTip(`create success pool:${message}`, MessageTypes.success);
-      setValues({
-        BONUS_MULTIPLIER: 1000,
-      } as Values);
+      setValues({} as Values);
     } else {
       openTip(message ?? "Failed to create token pool", MessageTypes.error);
     }
@@ -209,7 +187,6 @@ export default function CreateStakingTokenPool() {
   if (!values.outputPerSecond) errorMsg = t`Enter the output per second`;
   if (!values.stakingToken) errorMsg = t`Enter the staking Token`;
   if (!values.stakingStandard) errorMsg = t`Enter the staking token standard`;
-  if (!values.BONUS_MULTIPLIER) errorMsg = t`Enter the bonus multiplier`;
 
   return (
     <Wrapper>
@@ -351,34 +328,17 @@ export default function CreateStakingTokenPool() {
               />
             </Box>
 
-            <Box>
-              <FilledTextField
-                label={t`Bonus multiplier`}
-                placeholder={t`Enter bonus multiplier`}
-                onChange={(value) => handleFieldChange(value, "BONUS_MULTIPLIER")}
-                value={values.BONUS_MULTIPLIER}
-              />
-            </Box>
-
             <Box mt={4}>
-              <Identity
-                onSubmit={async (identity) => {
-                  await handleCreateEvent(identity);
-                }}
+              <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={handleCreateEvent}
+                disabled={Boolean(errorMsg) || loading}
+                loading={loading}
               >
-                {({ submit }: CallbackProps) => (
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    onClick={submit}
-                    disabled={Boolean(errorMsg) || loading}
-                    loading={loading}
-                  >
-                    {errorMsg || t`Create token pool`}
-                  </Button>
-                )}
-              </Identity>
+                {errorMsg || t`Create token pool`}
+              </Button>
             </Box>
           </Box>
         </Grid>

@@ -1,5 +1,6 @@
 import type { Principal } from "@dfinity/principal";
 import type { ActorMethod } from "@dfinity/agent";
+import type { IDL } from "@dfinity/candid";
 
 export interface CycleInfo {
   balance: bigint;
@@ -26,7 +27,6 @@ export interface InitRequest {
   rewardTokenFee: bigint;
   stakingTokenDecimals: bigint;
   bonusEndTime: bigint;
-  BONUS_MULTIPLIER: bigint;
   rewardTokenDecimals: bigint;
 }
 export interface Page {
@@ -36,14 +36,15 @@ export interface Page {
   totalElements: bigint;
 }
 export type Result = { ok: TokenPoolInfo } | { err: string };
-export type Result_1 = { ok: string } | { err: string };
-export type Result_2 = { ok: boolean } | { err: string };
+export type Result_1 = { ok: TokenGlobalDataInfo } | { err: string };
+export type Result_2 = { ok: { governanceCid: [] | [Principal] } } | { err: Error };
 export type Result_3 = { ok: GlobalDataInfo } | { err: string };
-export type Result_4 = { ok: TokenGlobalDataInfo } | { err: string };
-export type Result_5 = { ok: CycleInfo } | { err: Error };
-export type Result_6 = { ok: Array<string> } | { err: string };
+export type Result_4 = { ok: CycleInfo } | { err: Error };
+export type Result_5 = { ok: Array<Principal> } | { err: Error };
+export type Result_6 = { ok: Page } | { err: Page };
 export type Result_7 = { ok: Array<TokenGlobalDataInfo> } | { err: string };
-export type Result_8 = { ok: Page } | { err: Page };
+export type Result_8 = { ok: boolean } | { err: string };
+export type Result_9 = { ok: Principal } | { err: string };
 export interface Token {
   address: string;
   standard: string;
@@ -62,45 +63,34 @@ export interface TokenPoolInfo {
   stakingTokenSymbol: string;
   startTime: bigint;
   rewardTokenSymbol: string;
-  creator: string;
+  creator: Principal;
   stakingToken: Token;
   rewardToken: Token;
   name: string;
   createTime: bigint;
   stakingTokenFee: bigint;
-  version: string;
-  storageCid: string;
   rewardTokenFee: bigint;
   stakingTokenDecimals: bigint;
-  rewardTokenFeeMultiplier: bigint;
   bonusEndTime: bigint;
   rewardTokenDecimals: bigint;
-  stakingTokenFeeMultiplier: bigint;
-  canisterId: string;
+  canisterId: Principal;
 }
 export interface _SERVICE {
-  addAdmin: ActorMethod<[string], Result_2>;
-  createTokenPool: ActorMethod<[InitRequest], Result_1>;
-  deleteTokenPool: ActorMethod<[Principal], Result_2>;
-  findTokenPoolPage: ActorMethod<[[] | [bigint], bigint, bigint], Result_8>;
-  findTokenPoolsGlobalData: ActorMethod<[], Result_7>;
-  getAdminList: ActorMethod<[], Result_6>;
-  getCanister: ActorMethod<[], { icp: Token; scheduleCanister: string }>;
-  getCycleInfo: ActorMethod<[], Result_5>;
-  getPoolInfo: ActorMethod<[Principal], Result>;
-  getPoolStatInfo: ActorMethod<[Principal], Result_4>;
-  getTokenPoolsGlobalData: ActorMethod<[], Result_3>;
-  registerTask: ActorMethod<[], Result_2>;
-  removeAdmin: ActorMethod<[string], Result_2>;
-  setICP: ActorMethod<[Token], Result_2>;
-  setScheduleCanister: ActorMethod<[string], Result_2>;
-  setTaskState: ActorMethod<[boolean], Result_2>;
-  setTokenPoolAdmin: ActorMethod<[Principal, string], Result_2>;
+  createTokenPool: ActorMethod<[InitRequest], Result_9>;
+  deleteTokenPool: ActorMethod<[Principal], Result_8>;
+  findPoolStatInfo: ActorMethod<[], Result_7>;
+  findTokenPoolPage: ActorMethod<[[] | [bigint], bigint, bigint], Result_6>;
+  getAdmins: ActorMethod<[], Result_5>;
+  getCycleInfo: ActorMethod<[], Result_4>;
+  getGlobalData: ActorMethod<[], Result_3>;
+  getInitArgs: ActorMethod<[], Result_2>;
+  getPoolStatInfo: ActorMethod<[Principal], Result_1>;
+  getTokenPool: ActorMethod<[Principal], Result>;
+  setAdmins: ActorMethod<[Array<Principal>], undefined>;
   startTokenPool: ActorMethod<[Principal, bigint, bigint], Result>;
   stopTokenPool: ActorMethod<[Principal], Result>;
-  syncV1TokenPool: ActorMethod<[], Result_1>;
-  syncV1TokenPoolInfo: ActorMethod<[], Result_1>;
-  task: ActorMethod<[string], undefined>;
-  updateMultiplier: ActorMethod<[Principal, bigint], Result>;
-  updateStat: ActorMethod<[], boolean>;
+  task_end: ActorMethod<[], undefined>;
+  task_start: ActorMethod<[], undefined>;
 }
+export declare const idlFactory: IDL.InterfaceFactory;
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

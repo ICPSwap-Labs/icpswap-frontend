@@ -5,11 +5,10 @@ import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { getLocaleMessage } from "locales/services";
-import Identity, { CallbackProps } from "components/Identity";
 import { t } from "@lingui/macro";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import type { ActorIdentity, StakingPoolControllerPoolInfo } from "@icpswap/types";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { harvest } from "hooks/staking-token/index";
 
 export interface ClaimRewardProps {
@@ -23,12 +22,12 @@ export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardPr
   const walletIsConnected = useConnectorStateConnected();
   const [loading, setLoading] = React.useState(false);
 
-  const handleClaimReward = async (identity: ActorIdentity) => {
+  const handleClaimReward = async () => {
     if (loading || !pool) return;
 
     setLoading(true);
 
-    const { status, message } = await harvest(pool.canisterId, pool.version, identity);
+    const { status, message } = await harvest(pool.canisterId.toString());
 
     if (status === ResultStatus.OK) {
       openTip(t`Harvest successfully`, TIP_SUCCESS);
@@ -48,22 +47,18 @@ export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardPr
   return (
     <Grid>
       {walletIsConnected ? (
-        <Identity onSubmit={handleClaimReward}>
-          {({ submit }: CallbackProps) => (
-            <Button
-              disabled={loading || noRewardToken}
-              fullWidth
-              style={{ height: "42px" }}
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={submit}
-              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-            >
-              {t`Harvest`}
-            </Button>
-          )}
-        </Identity>
+        <Button
+          disabled={loading || noRewardToken}
+          fullWidth
+          style={{ height: "42px" }}
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={handleClaimReward}
+          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {t`Harvest`}
+        </Button>
       ) : (
         <ConnectWallet style={{ whiteSpace: "nowrap" }} />
       )}

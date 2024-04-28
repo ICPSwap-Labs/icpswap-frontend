@@ -5,7 +5,6 @@ import { Modal, NumberTextField } from "components/index";
 import { BigNumber, parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
 import Identity, { CallbackProps } from "components/Identity";
 import MaxButton from "components/MaxButton";
-import { Identity as CallIdentity } from "types/global";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { withdraw, useUserStakingInfo } from "hooks/staking-token/index";
@@ -24,7 +23,7 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
   const account = useAccount();
   const [openTip] = useTips();
 
-  const [userInfo] = useUserStakingInfo(pool.canisterId, pool.version, account);
+  const [userInfo] = useUserStakingInfo(pool.canisterId.toString(), account);
 
   const userStakingAmount = useMemo(() => userInfo?.amount, [userInfo]);
 
@@ -33,15 +32,13 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
 
   const { result: token } = useTokenInfo(pool.rewardToken.address);
 
-  const handleSubmit = async (identity: CallIdentity) => {
+  const handleSubmit = async () => {
     if (loading || !amount || !token) return;
     setLoading(true);
 
     const { status, message } = await withdraw(
-      pool.canisterId,
+      pool.canisterId.toString(),
       BigInt(formatTokenAmount(amount, token?.decimals).toString()),
-      pool.version,
-      identity,
     );
 
     openTip(getLocaleMessage(message), status);

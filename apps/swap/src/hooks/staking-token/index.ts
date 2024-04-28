@@ -8,19 +8,13 @@ import {
   getPaginationAllData,
   useCallsData,
   getStakingTokenCycles,
-  getV1StakingTokenCycles,
-  stakingV1TokenWithdraw,
   stakingTokenWithdraw,
-  stakingV1TokenHarvest,
   stakingTokenHarvest,
-  getV1StakingTokenUserInfo,
   getStakingTokenUserInfo,
   getStakingTokenPool,
-  getV1StakingTokenPool,
 } from "@icpswap/hooks";
-import { TOKEN_STANDARD , ResultStatus } from "@icpswap/types";
+import { TOKEN_STANDARD, ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { getActorIdentity } from "components/Identity";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
@@ -32,8 +26,6 @@ import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getSteps } from "views/staking-token/components/Step";
 import { useStepContentManager } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
-import { Identity as CallIdentity } from "types/global";
-import { StakingPoolInfo as V1PoolData } from "types/staking";
 import type { UserStakingInfo } from "types/staking-token";
 import type { StakingPoolGlobalData, StakingTokenPoolInfo } from "@icpswap/types";
 import { SubAccount } from "@dfinity/ledger-icp";
@@ -65,19 +57,17 @@ export function useStakingTokenDeposit() {
   const [openErrorTip] = useErrorTip();
 
   return useCallback(async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
-    const identity = await getActorIdentity();
-
     const useTransfer = isUseTransfer(token);
 
     let status: ResultStatus = ResultStatus.ERROR;
     let message = "";
 
     if (useTransfer) {
-      const { status: _status, message: _message } = await stakingTokenDeposit(poolId, identity);
+      const { status: _status, message: _message } = await stakingTokenDeposit(poolId);
       status = _status;
       message = _message;
     } else {
-      const { status: _status, message: _message } = await stakingTokenDepositFrom(poolId, identity, BigInt(amount));
+      const { status: _status, message: _message } = await stakingTokenDepositFrom(poolId, BigInt(amount));
       status = _status;
       message = _message;
     }
@@ -127,7 +117,7 @@ export function useUserUnusedTokens(reload?: boolean) {
         const calls = pools.map(async (ele) => {
           return await getTokenBalance(
             ele.stakingToken.address,
-            Principal.fromText(ele.canisterId),
+            Principal.fromText(ele.canisterId.toString()),
             SubAccount.fromPrincipal(principal).toUint8Array(),
           );
         });
@@ -167,13 +157,12 @@ export function useUserUnusedTokens(reload?: boolean) {
   }, [poolsLoading, loading, balances]);
 }
 
-export function usePoolCycles(canisterId: string | undefined, version: string | undefined) {
+export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      if (version === "1.0") return await getV1StakingTokenCycles(canisterId);
       return (await getStakingTokenCycles(canisterId))?.balance;
-    }, [canisterId, version]),
+    }, [canisterId]),
   );
 }
 
@@ -230,25 +219,16 @@ export function useStakingToken() {
   );
 }
 
-export async function withdraw(poolId: string, amount: bigint, version: string, identity: CallIdentity) {
-  if (version === "1.0") {
-    return await stakingV1TokenWithdraw(poolId, identity, amount);
-  }
-
-  return await stakingTokenWithdraw(poolId, identity, amount);
+export async function withdraw(poolId: string, amount: bigint) {
+  return await stakingTokenWithdraw(poolId, amount);
 }
 
-export async function harvest(poolId: string, version: string, identity: CallIdentity) {
-  if (version === "1.0") {
-    return await stakingV1TokenHarvest(poolId, identity);
-  }
-
-  return await stakingTokenHarvest(poolId, identity);
+export async function harvest(poolId: string) {
+  return await stakingTokenHarvest(poolId);
 }
 
 export function useUserStakingInfo(
   poolId: string | undefined,
-  version: string | undefined,
   account: string | undefined,
 ): [UserStakingInfo | undefined, () => void] {
   const [userInfo, setUserInfo] = useState<UserStakingInfo | undefined>(undefined);
@@ -272,36 +252,16 @@ export function useUserStakingInfo(
       }
     };
 
-    const v1Call = async () => {
-      if (!poolId || !account) return;
-
-      const result = await getV1StakingTokenUserInfo(poolId, account);
-
-      if (result) {
-        setUserInfo({
-          amount: result.amount,
-          reward: result.pendingReward,
-        } as UserStakingInfo);
-      }
-    };
-
-    if (account && poolId && version) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+    if (account && poolId) {
+      call();
     }
-  }, [poolId, account, forceUpdate, version]);
+  }, [poolId, account, forceUpdate]);
 
   return [userInfo, update];
 }
 
-export function useStakingPoolData(
-  poolId: string | undefined,
-  version: string | undefined,
-): [StakingTokenPoolInfo | V1PoolData | undefined, () => void] {
-  const [poolData, setPoolData] = useState<StakingTokenPoolInfo | V1PoolData | undefined>(undefined);
+export function useStakingPoolData(poolId: string | undefined): [StakingTokenPoolInfo | undefined, () => void] {
+  const [poolData, setPoolData] = useState<StakingTokenPoolInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
@@ -315,20 +275,10 @@ export function useStakingPoolData(
       setPoolData(data);
     };
 
-    const v1Call = async () => {
-      if (!poolId) return;
-      const data = await getV1StakingTokenPool(poolId);
-      setPoolData(data);
-    };
-
     if (poolId) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+      call();
     }
-  }, [poolId, version, forceUpdate]);
+  }, [poolId, forceUpdate]);
 
   return [poolData, update];
 }

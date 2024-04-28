@@ -6,9 +6,8 @@ import {
   getStakingTokenCycles,
   getV1StakingTokenCycles,
   getStakingTokenPool,
-  getV1StakingTokenPool,
 } from "@icpswap/hooks";
-import { PoolData, UserStakingInfo, V1PoolData } from "types/staking-token";
+import { PoolData, UserStakingInfo } from "types/staking-token";
 
 export function useUserStakingInfo(
   poolId: string | undefined,
@@ -61,10 +60,7 @@ export function useUserStakingInfo(
   return [userInfo, update];
 }
 
-export function useStakingPoolData(
-  poolId: string | undefined,
-  version: string | undefined,
-): [PoolData | undefined, () => void] {
+export function useStakingPoolData(poolId: string | undefined): [PoolData | undefined, () => void] {
   const [poolData, setPoolData] = useState<PoolData | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
@@ -79,33 +75,10 @@ export function useStakingPoolData(
       setPoolData(data);
     };
 
-    const v1Call = async () => {
-      if (!poolId) return;
-      const data = await getV1StakingTokenPool(poolId);
-      if (data) {
-        setPoolData({
-          ...data,
-          stakingToken: {
-            address: data?.stakingToken,
-            standard: data?.stakingStandard,
-          },
-          rewardToken: {
-            address: data?.rewardToken,
-            standard: data?.rewardStandard,
-          },
-          storageCid: data.storageCanisterId,
-        } as V1PoolData);
-      }
-    };
-
     if (poolId) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+      call();
     }
-  }, [poolId, version, forceUpdate]);
+  }, [poolId, forceUpdate]);
 
   return [poolData, update];
 }

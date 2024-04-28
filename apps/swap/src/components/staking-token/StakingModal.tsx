@@ -14,7 +14,6 @@ import { Modal, NumberTextField } from "components/index";
 import { isUseTransfer } from "utils/token";
 
 export interface StakingProps {
-  identity: ActorIdentity;
   token: Token;
   amount: string;
   id: string;
@@ -43,10 +42,9 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
     if (!identity || loading || !token || !principal || !amount) return;
 
     await onStaking({
-      identity,
       token,
       amount: numberToString(formatTokenAmount(amount, token.decimals)),
-      id: pool.canisterId,
+      id: pool.canisterId.toString(),
     });
 
     setLoading(false);

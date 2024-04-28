@@ -81,7 +81,7 @@ export default function StakingPoolDetails({
   //   return new BigNumber(totalStakingDeposit).multipliedBy(stakingTokenPrice ?? 0).toNumber();
   // }, [totalStakingDeposit, stakingTokenPrice]);
 
-  const { result: stakingTokenPoolInfo } = useStakingTokenPool(pool?.canisterId);
+  const { result: stakingTokenPoolInfo } = useStakingTokenPool(pool?.canisterId.toString());
 
   const totalRewardDeposit = useMemo(() => {
     if (!rewardToken || !poolData) return 0;
@@ -104,7 +104,7 @@ export default function StakingPoolDetails({
     }
   };
 
-  const { result: cycles } = usePoolCycles(pool?.canisterId, pool?.version);
+  const { result: cycles } = usePoolCycles(pool?.canisterId.toString());
 
   return (
     <>
@@ -234,9 +234,13 @@ export default function StakingPoolDetails({
               </Grid>
               <Grid item>
                 <Typography color="text.primary.main">
-                  <Link href={`https://icscan.io/principal/${pool?.creator}`} target="_blank">
-                    {pool?.creator ? shorten(pool?.creator) : "--"}
-                  </Link>
+                  {pool ? (
+                    <Link href={`https://icscan.io/principal/${pool.creator.toString()}`} target="_blank">
+                      {pool?.creator ? shorten(pool.creator.toString()) : "--"}
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
                 </Typography>
               </Grid>
             </Grid>
@@ -248,8 +252,8 @@ export default function StakingPoolDetails({
               <Grid item>
                 <Typography color="text.primary">
                   {pool ? (
-                    <Link href={getExplorerPrincipalLink(pool.canisterId)} target="_blank">
-                      {pool?.canisterId ? shorten(pool?.canisterId) : "--"}
+                    <Link href={getExplorerPrincipalLink(pool.canisterId.toString())} target="_blank">
+                      {pool?.canisterId ? shorten(pool.canisterId.toString()) : "--"}
                     </Link>
                   ) : null}
                 </Typography>
@@ -268,7 +272,7 @@ export default function StakingPoolDetails({
             <Grid container direction="row" justifyContent="flex-end">
               <Typography color="text.primary">
                 <Link
-                  href={`${INFO_URL}/staking-token/details/${pool?.canisterId}/${pool?.version}/${state}`}
+                  href={`${INFO_URL}/staking-token/details/${pool?.canisterId.toString()}/${state}`}
                   target="_blank"
                 >
                   Token Pools Info

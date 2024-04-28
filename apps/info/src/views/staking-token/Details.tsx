@@ -51,8 +51,8 @@ export function timeFormatter(dateTime: bigint | undefined) {
 
 export default function PoolsDetails() {
   const classes = useStyles();
-  const { state, poolId, version } = useParams<{ poolId: string; state: string; version: string }>();
-  const [pool] = useStakingPoolData(poolId, version);
+  const { state, poolId } = useParams<{ poolId: string; state: string }>();
+  const [pool] = useStakingPoolData(poolId);
 
   const [recordType, setRecordType] = useState("transactions");
 

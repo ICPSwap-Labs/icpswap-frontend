@@ -17,13 +17,13 @@ export default function V2StakingModal({ open, onClose, onStakingSuccess, pool }
   const staking = useStakingToken();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
-  const handleStaking = async ({ identity, amount, token }: StakingProps) => {
-    if (!identity || !token || !principal || !amount || !pool) return;
+  const handleStaking = async ({ amount, token }: StakingProps) => {
+    if (!token || !principal || !amount || !pool) return;
 
     const { call, key } = staking({
       token,
       amount,
-      poolId: pool.canisterId,
+      poolId: pool.canisterId.toString(),
     });
 
     const loadingTipKey = openLoadingTip(`Staking ${token.symbol}`, {

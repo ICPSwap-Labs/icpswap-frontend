@@ -80,8 +80,8 @@ export interface StakingPoolProps {
 export default function StakingPool({ stakedOnly, pool, state }: StakingPoolProps) {
   const account = useAccount();
   const theme = useTheme() as Theme;
-  const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId, pool?.version);
-  const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId, pool?.version, account);
+  const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId.toString());
+  const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), account);
 
   const [, rewardToken] = useToken(pool?.rewardToken.address);
   const [, stakingToken] = useToken(pool?.stakingToken.address);

@@ -6,7 +6,6 @@ import { Theme } from "@mui/material/styles";
 import { STATE, UserStakingInfo } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import V2StakingModal from "./V2StakingModal";
-import V1StakingModal from "./V1StakingModal";
 import ClaimModal from "./ClaimModal";
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -67,21 +66,12 @@ export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess,
       </Grid>
       {openStakingModal &&
         (modalType === "Deposit" ? (
-          pool?.version === "1.0" ? (
-            <V1StakingModal
-              open={openStakingModal}
-              onClose={() => setOpenStakingModal(false)}
-              onStakingSuccess={onStakingSuccess}
-              pool={pool}
-            />
-          ) : (
-            <V2StakingModal
-              open={openStakingModal}
-              onClose={() => setOpenStakingModal(false)}
-              onStakingSuccess={onStakingSuccess}
-              pool={pool}
-            />
-          )
+          <V2StakingModal
+            open={openStakingModal}
+            onClose={() => setOpenStakingModal(false)}
+            onStakingSuccess={onStakingSuccess}
+            pool={pool}
+          />
         ) : pool ? (
           <ClaimModal
             open={openStakingModal}

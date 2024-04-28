@@ -105,7 +105,7 @@ export default function WithdrawUnusedTokens({ open, onClose }: WithdrawTokensMo
 
         if (amount !== BigInt(0)) {
           calls.push(
-            stakingTokenClaim(pool, identity).then(async (result) => {
+            stakingTokenClaim(pool).then(async (result) => {
               if (result.status === ResultStatus.OK) {
                 openTip(`Withdrew ${balance.stakingTokenSymbol} successfully`, MessageTypes.success);
               } else {
