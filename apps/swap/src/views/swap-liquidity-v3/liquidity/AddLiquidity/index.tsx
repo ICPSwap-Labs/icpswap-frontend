@@ -19,7 +19,6 @@ import { useSlippageManager } from "store/swap/cache/hooks";
 import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
-import { useAccount } from "store/global/hooks";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import BigNumber from "bignumber.js";
 import { isDarkTheme } from "utils/index";
@@ -193,8 +192,6 @@ export default function AddLiquidity() {
     setConfirmModalShow(true);
   }, []);
 
-  const account = useAccount();
-
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
@@ -204,53 +201,50 @@ export default function AddLiquidity() {
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
   const getAddLiquidityCall = useAddLiquidityCall();
 
-  const handleOnConfirm = useCallback(
-    async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
-      if (
-        !identity ||
-        loading ||
-        !position ||
-        !principal ||
-        !pcmMetadata ||
-        !pcmToken ||
-        userPCMBalance === undefined ||
-        userPCMBalance === null
-      )
-        return;
+  const handleOnConfirm = async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
+    if (
+      !identity ||
+      loading ||
+      !position ||
+      !principal ||
+      !pcmMetadata ||
+      !pcmToken ||
+      userPCMBalance === undefined ||
+      userPCMBalance === null
+    )
+      return;
 
-      const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
+    const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
 
-      const { call, key } = await getAddLiquidityCall({
-        noLiquidity,
-        position,
-        pcmMetadata,
-        needPayForPCM,
-        pcmToken,
-        principal: principal.toString(),
-        openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-          openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
-        },
-      });
+    const { call, key } = await getAddLiquidityCall({
+      noLiquidity,
+      position,
+      pcmMetadata,
+      needPayForPCM,
+      pcmToken,
+      principal: principal.toString(),
+      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      },
+    });
 
-      const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
-        extraContent: <StepViewButton step={key} />,
-      });
+    const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
+      extraContent: <StepViewButton step={key} />,
+    });
 
-      setConfirmModalShow(false);
+    setConfirmModalShow(false);
 
-      const result = await call();
+    const result = await call();
 
-      if (!result) {
-        closeLoadingTip(loadingTipKey);
-        return;
-      }
-
+    if (!result) {
       closeLoadingTip(loadingTipKey);
+      return;
+    }
 
-      handleBackToPosition();
-    },
-    [position, slippageTolerance, account, noLiquidity],
-  );
+    closeLoadingTip(loadingTipKey);
+
+    handleBackToPosition();
+  };
 
   const handleOnCancel = useCallback(() => {
     setConfirmModalShow(false);
