@@ -1,22 +1,7 @@
 import type { Principal } from "@dfinity/principal";
 import type { ActorMethod } from "@dfinity/agent";
+import type { IDL } from "@dfinity/candid";
 
-export interface ChangeTokenPoolInfo {
-  stakingTokenSymbol: string;
-  lastRewardTime: bigint;
-  rewardTokenSymbol: string;
-  stakingToken: Token;
-  rewardToken: Token;
-  rewardPerTime: bigint;
-  stakingTokenFee: bigint;
-  rewardTokenFee: bigint;
-  stakingTokenDecimals: bigint;
-  rewardTokenFeeMultiplier: bigint;
-  bonusEndTime: bigint;
-  BONUS_MULTIPLIER: bigint;
-  rewardTokenDecimals: bigint;
-  stakingTokenFeeMultiplier: bigint;
-}
 export interface CycleInfo {
   balance: bigint;
   available: bigint;
@@ -38,17 +23,23 @@ export interface InitRequest {
   rewardTokenFee: bigint;
   stakingTokenDecimals: bigint;
   bonusEndTime: bigint;
-  BONUS_MULTIPLIER: bigint;
   rewardTokenDecimals: bigint;
 }
-export interface Page_2 {
-  content: Array<[string, PublicUserInfo]>;
+export interface Page {
+  content: Array<Record>;
+  offset: bigint;
+  limit: bigint;
+  totalElements: bigint;
+}
+export interface Page_1 {
+  content: Array<[Principal, PublicUserInfo]>;
   offset: bigint;
   limit: bigint;
   totalElements: bigint;
 }
 export interface PublicTokenPoolInfo {
   stakingTokenSymbol: string;
+  startTime: bigint;
   lastRewardTime: bigint;
   totalDeposit: bigint;
   rewardTokenSymbol: string;
@@ -57,63 +48,99 @@ export interface PublicTokenPoolInfo {
   rewardPerTime: bigint;
   stakingTokenFee: bigint;
   rewardDebt: bigint;
-  storageCid: string;
   rewardTokenFee: bigint;
   accPerShare: bigint;
   stakingTokenDecimals: bigint;
-  rewardTokenFeeMultiplier: bigint;
   bonusEndTime: bigint;
-  BONUS_MULTIPLIER: bigint;
   rewardTokenDecimals: bigint;
-  allocPoint: bigint;
-  stakingTokenFeeMultiplier: bigint;
 }
 export interface PublicUserInfo {
   pendingReward: bigint;
   rewardDebt: bigint;
   amount: bigint;
 }
+export interface Record {
+  to: Principal;
+  stakingTokenSymbol: string;
+  rewardTokenSymbol: string;
+  stakingToken: string;
+  rewardToken: string;
+  stakingStandard: string;
+  transType: TransType;
+  from: Principal;
+  rewardStandard: string;
+  timestamp: bigint;
+  stakingTokenDecimals: bigint;
+  amount: bigint;
+  rewardTokenDecimals: bigint;
+}
+export type Result = { ok: bigint } | { err: string };
 export type Result_1 = { ok: string } | { err: string };
-export type Result_10 = { ok: bigint } | { err: string };
-export type Result_11 = { ok: PublicTokenPoolInfo } | { err: string };
-export type Result_12 = { ok: PublicUserInfo } | { err: string };
-export type Result_13 = { ok: Array<[Principal, bigint]> } | { err: string };
-export type Result_14 = { ok: Page_2 } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
+export type Result_3 = { ok: PublicTokenPoolInfo } | { err: string };
+export type Result_4 = { ok: PublicUserInfo } | { err: string };
 export type Result_5 = { ok: CycleInfo } | { err: Error };
-export type Result_6 = { ok: Array<string> } | { err: string };
+export type Result_6 = { ok: Array<[Principal, bigint]> } | { err: string };
+export type Result_7 = { ok: Array<Principal> } | { err: Error };
+export type Result_8 = { ok: Page } | { err: string };
+export type Result_9 = { ok: Page_1 } | { err: string };
 export interface Token {
   address: string;
   standard: string;
 }
-export type User = { principal: Principal } | { address: string };
+export type TransType =
+  | { withdraw: null }
+  | { unstaking: null }
+  | { staking: null }
+  | { endIncentive: null }
+  | { claim: null }
+  | { unstakeTokenids: null }
+  | { deposit: null }
+  | { stakeTokenids: null }
+  | { createIncentive: null }
+  | { depositFrom: null };
+export interface UpdateTokenPool {
+  stakingTokenSymbol: string;
+  startTime: bigint;
+  rewardTokenSymbol: string;
+  stakingToken: Token;
+  rewardToken: Token;
+  rewardPerTime: bigint;
+  stakingTokenFee: bigint;
+  rewardTokenFee: bigint;
+  stakingTokenDecimals: bigint;
+  bonusEndTime: bigint;
+  rewardTokenDecimals: bigint;
+}
 export interface _SERVICE {
-  addAdmin: ActorMethod<[string], Result_2>;
-  balanceTo: ActorMethod<[Principal], Result_10>;
-  changePoolInfo: ActorMethod<[ChangeTokenPoolInfo], Result_2>;
   claim: ActorMethod<[], Result_1>;
-  claimTo: ActorMethod<[], Result_1>;
-  clearLocksMap: ActorMethod<[], Result_10>;
+  claimOf: ActorMethod<[Principal], Result_1>;
+  clearErrorLog: ActorMethod<[], undefined>;
+  clearLocks: ActorMethod<[], Result>;
   deposit: ActorMethod<[], Result_1>;
   depositFrom: ActorMethod<[bigint], Result_1>;
-  endTokenPoolStaking: ActorMethod<[], Result_10>;
-  findAllUserInfo: ActorMethod<[bigint, bigint], Result_14>;
-  getAdminList: ActorMethod<[], Result_6>;
-  getAllLocks: ActorMethod<[], Result_13>;
+  deposit_test: ActorMethod<[bigint], Result_1>;
+  findAllUserInfo: ActorMethod<[bigint, bigint], Result_9>;
+  findRewardRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
+  findStakingRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
+  getAdmins: ActorMethod<[], Result_7>;
+  getAllLocks: ActorMethod<[], Result_6>;
   getCycleInfo: ActorMethod<[], Result_5>;
-  getPoolInfo: ActorMethod<[], Result_11>;
-  getUserInfo: ActorMethod<[User], Result_12>;
-  harvest: ActorMethod<[], Result_10>;
-  pendingReward: ActorMethod<[User], Result_10>;
-  registerTask: ActorMethod<[], Result_2>;
-  removeAdmin: ActorMethod<[string], Result_2>;
-  resetReward: ActorMethod<[bigint, bigint], Result_11>;
-  setAutoUnlockTimes: ActorMethod<[bigint], Result_10>;
-  setTaskState: ActorMethod<[boolean], Result_2>;
-  setTokenPoolController: ActorMethod<[string], Result_2>;
-  stopReward: ActorMethod<[], Result_11>;
-  task: ActorMethod<[string], undefined>;
-  updateMultiplier: ActorMethod<[bigint], Result_11>;
+  getErrorLog: ActorMethod<[], Array<string>>;
+  getPoolInfo: ActorMethod<[], Result_3>;
+  getUserInfo: ActorMethod<[Principal], Result_4>;
+  getVersion: ActorMethod<[], string>;
+  harvest: ActorMethod<[], Result>;
+  pendingReward: ActorMethod<[Principal], Result>;
+  setAdmins: ActorMethod<[Array<Principal>], undefined>;
+  setAutoUnlockTimes: ActorMethod<[bigint], Result>;
+  setTime: ActorMethod<[bigint, bigint], Result_3>;
+  startTimer: ActorMethod<[], Result_3>;
+  stop: ActorMethod<[], Result_3>;
+  subaccountBalanceOf: ActorMethod<[Principal], Result>;
+  updateTokenPool: ActorMethod<[UpdateTokenPool], Result_2>;
   withdraw: ActorMethod<[bigint], Result_1>;
-  withdrawTokenTo: ActorMethod<[string, string, bigint, Principal], Result_10>;
+  withdrawRemainingRewardToken: ActorMethod<[bigint, Principal], Result>;
 }
+export declare const idlFactory: IDL.InterfaceFactory;
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

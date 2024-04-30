@@ -4,6 +4,7 @@ export type {
   PublicTokenPoolInfo as StakingTokenPoolInfo,
   PublicUserInfo as StakingPoolUserInfo,
   CycleInfo as StakingPoolCycle,
+  Record as StakingPoolTransaction,
 } from "./TokenPool";
 
 export { idlFactory as TokenPoolControllerInterfaceFactory } from "./TokenPoolController.did";
@@ -15,10 +16,7 @@ export type {
 } from "./TokenPoolController";
 
 export { idlFactory as TokenPoolStorageInterfaceFactory } from "./TokenPoolStorage.did";
-export type {
-  _SERVICE as TokenPoolStorage,
-  Record as StakingPoolTransaction,
-} from "./TokenPoolStorage";
+export type { _SERVICE as TokenPoolStorage } from "./TokenPoolStorage";
 
 export { idlFactory as V1TokenPoolInterfaceFactory } from "./V1TokenPool.did";
 export type {
@@ -34,7 +32,4 @@ export type {
 } from "./V1TokenPoolController";
 
 export { idlFactory as V1TokenPoolStorageInterfaceFactory } from "./V1TokenPoolStorage.did";
-export type {
-  _SERVICE as V1TokenPoolStorage,
-  Record as V1StakingPoolTransaction,
-} from "./V1TokenPoolStorage";
+export type { _SERVICE as V1TokenPoolStorage, Record as V1StakingPoolTransaction } from "./V1TokenPoolStorage";

@@ -26,7 +26,9 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   return (
     <TableRow>
       <TableCell>
-        <TextButton link={getExplorerPrincipalLink(pool.canisterId.toString())}>{pool.canisterId}</TextButton>
+        <TextButton link={getExplorerPrincipalLink(pool.canisterId.toString())}>
+          {pool.canisterId.toString()}
+        </TextButton>
       </TableCell>
       <TableCell>
         <Typography sx={{ fontSize: "16px" }} color="text.primary">

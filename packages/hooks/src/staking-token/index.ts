@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, availableArgsNull, isPrincipal } from "@icpswap/utils";
-import { stakingTokenStorage, stakingTokenController, stakingToken } from "@icpswap/actor";
+import { stakingTokenController, stakingToken } from "@icpswap/actor";
 import type {
   CreateTokenPoolArgs,
   StakingTokenPoolInfo,
@@ -9,7 +9,6 @@ import type {
   StakingPoolUserInfo,
   StakingPoolCycle,
   StakingPoolGlobalData,
-  ActorIdentity,
   PaginationResult,
 } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -80,24 +79,20 @@ export function useStakingTokenPool(canisterId: string | undefined, reload?: boo
   );
 }
 
-export async function getStakingTokenUserInfo(canisterId: string, account: string | Principal) {
-  return resultFormat<StakingPoolUserInfo>(
-    await (
-      await stakingToken(canisterId)
-    ).getUserInfo(isPrincipal(account) ? { principal: account } : { address: account }),
-  ).data;
+export async function getStakingTokenUserInfo(canisterId: string, principal: Principal) {
+  return resultFormat<StakingPoolUserInfo>(await (await stakingToken(canisterId)).getUserInfo(principal)).data;
 }
 
 export function useStakingTokenUserInfo(
   canisterId: string | undefined,
-  account: string | Principal | undefined,
+  principal: Principal | undefined,
   reload?: boolean,
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!canisterId || !account) return undefined;
-      return await getStakingTokenUserInfo(canisterId, account);
-    }, [canisterId, account]),
+      if (!canisterId || !principal) return undefined;
+      return await getStakingTokenUserInfo(canisterId, principal);
+    }, [canisterId, principal]),
     reload,
   );
 }
@@ -157,15 +152,23 @@ export async function stakingTokenWithdraw(canisterId: string, amount: bigint) {
   return resultFormat<string>(await (await stakingToken(canisterId, true)).withdraw(amount));
 }
 
-/*  storage */
-export async function getStakingTokenTransactions(canisterId: string, offset: number, limit: number) {
+/*  records */
+export async function getStakingTokenTransactions(
+  canisterId: string,
+  principal: Principal | undefined,
+  offset: number,
+  limit: number,
+) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (await stakingTokenStorage(canisterId)).getTrans(BigInt(offset), BigInt(limit)),
+    await (
+      await stakingToken(canisterId)
+    ).findStakingRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
 export function useStakingTokenTransactions(
   canisterId: string | undefined,
+  principal: Principal | undefined,
   offset: number,
   limit: number,
   reload?: boolean,
@@ -173,20 +176,28 @@ export function useStakingTokenTransactions(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenTransactions(canisterId, offset, limit);
-    }, [canisterId, offset, limit]),
+      return await getStakingTokenTransactions(canisterId, principal, offset, limit);
+    }, [canisterId, offset, limit, principal]),
     reload,
   );
 }
 
-export async function getStakingTokenClaimTransactions(canisterId: string, offset: number, limit: number) {
+export async function getStakingTokenClaimTransactions(
+  canisterId: string,
+  principal: Principal | undefined,
+  offset: number,
+  limit: number,
+) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (await stakingTokenStorage(canisterId)).getRewardTrans(BigInt(offset), BigInt(limit)),
+    await (
+      await stakingToken(canisterId)
+    ).findRewardRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
 export function useStakingTokenClaimTransactions(
   canisterId: string | undefined,
+  principal: Principal | undefined,
   offset: number,
   limit: number,
   reload?: boolean,
@@ -194,8 +205,8 @@ export function useStakingTokenClaimTransactions(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenClaimTransactions(canisterId!, offset, limit);
-    }, [canisterId, offset, limit]),
+      return await getStakingTokenClaimTransactions(canisterId!, principal, offset, limit);
+    }, [canisterId, offset, limit, principal]),
     reload,
   );
 }

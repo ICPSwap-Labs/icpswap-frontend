@@ -4,7 +4,7 @@ import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import AddressFormat from "ui-component/AddressFormat";
-import { useV1StakingTokenClaimTransactions } from "@icpswap/hooks";
+import { useStakingTokenClaimTransactions } from "@icpswap/hooks";
 import { NoData, ListLoading, Pagination, PaginationType } from "ui-component/index";
 import { type StakingPoolTransaction } from "@icpswap/types";
 
@@ -20,7 +20,7 @@ export function PoolItem({ transactions }: { transactions: StakingPoolTransactio
         }`}</Typography>
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.to} />
+        <AddressFormat address={transactions.to.toString()} />
       </TableCell>
     </TableRow>
   );
@@ -30,7 +30,7 @@ export default function ClaimRecords({ id }: { id: string | undefined }) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useV1StakingTokenClaimTransactions(id, offset, pagination.pageSize);
+  const { result, loading } = useStakingTokenClaimTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (value: PaginationType) => {

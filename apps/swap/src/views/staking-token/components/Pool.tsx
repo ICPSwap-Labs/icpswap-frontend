@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import { useAccount } from "store/global/hooks";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useToken } from "hooks/useCurrency";
@@ -14,6 +13,7 @@ import StakingAndClaim from "components/staking-token/StakingAndClaim";
 import { useStakingPoolData, useUserStakingInfo } from "hooks/staking-token/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "@icpswap/ui";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface PoolInfoProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
@@ -78,10 +78,10 @@ export interface StakingPoolProps {
 }
 
 export default function StakingPool({ stakedOnly, pool, state }: StakingPoolProps) {
-  const account = useAccount();
+  const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
   const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId.toString());
-  const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), account);
+  const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
 
   const [, rewardToken] = useToken(pool?.rewardToken.address);
   const [, stakingToken] = useToken(pool?.stakingToken.address);

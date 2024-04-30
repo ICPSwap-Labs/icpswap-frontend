@@ -3,7 +3,7 @@ import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, Tabl
 import { Trans } from "@lingui/macro";
 import { PaginationType, Pagination, NoData, ListLoading, AddressFormat } from "ui-component/index";
 import dayjs from "dayjs";
-import { useV1StakingTokenTransactions } from "@icpswap/hooks";
+import { useStakingTokenTransactions } from "@icpswap/hooks";
 import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
 
@@ -29,10 +29,10 @@ export function PoolItem({ transactions }: { transactions: StakingPoolTransactio
         <Typography>{StakingType[enumToString(transactions.transType)]}</Typography>
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.from} />
+        <AddressFormat address={transactions.from.toString()} />
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.to} />
+        <AddressFormat address={transactions.to.toString()} />
       </TableCell>
       <TableCell>
         <Typography color="text.primary">{`${parseTokenAmount(
@@ -44,11 +44,15 @@ export function PoolItem({ transactions }: { transactions: StakingPoolTransactio
   );
 }
 
-export default function Transactions({ id }: { id: string | undefined }) {
+export interface TransactionsProps {
+  id: string | undefined;
+}
+
+export default function Transactions({ id }: TransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useV1StakingTokenTransactions(id, offset, pagination.pageSize);
+  const { result, loading } = useStakingTokenTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (pagination: PaginationType) => {

@@ -9,8 +9,8 @@ import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { withdraw, useUserStakingInfo } from "hooks/staking-token/index";
 import { useTips } from "hooks/useTips";
-import { useAccount } from "store/global/hooks";
 import { getLocaleMessage } from "locales/services";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface ClaimModalProps {
   open: boolean;
@@ -20,10 +20,10 @@ export interface ClaimModalProps {
 }
 
 export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: ClaimModalProps) {
-  const account = useAccount();
+  const principal = useAccountPrincipal();
   const [openTip] = useTips();
 
-  const [userInfo] = useUserStakingInfo(pool.canisterId.toString(), account);
+  const [userInfo] = useUserStakingInfo(pool.canisterId.toString(), principal);
 
   const userStakingAmount = useMemo(() => userInfo?.amount, [userInfo]);
 

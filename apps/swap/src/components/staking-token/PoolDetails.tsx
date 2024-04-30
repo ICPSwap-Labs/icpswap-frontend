@@ -188,12 +188,7 @@ export default function StakingPoolDetails({
               <Grid item xs>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   {stakingTokenPoolInfo && rewardToken
-                    ? parseTokenAmount(
-                        new BigNumber(stakingTokenPoolInfo.rewardPerTime.toString()).multipliedBy(
-                          stakingTokenPoolInfo.BONUS_MULTIPLIER.toString(),
-                        ),
-                        rewardToken.decimals,
-                      ).toFormat()
+                    ? parseTokenAmount(stakingTokenPoolInfo.rewardPerTime.toString(), rewardToken.decimals).toFormat()
                     : "--"}
                   &nbsp;
                   {pool?.rewardTokenSymbol}

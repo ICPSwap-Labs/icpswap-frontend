@@ -154,11 +154,7 @@ export default function PoolsDetails() {
             </Typography>
           </Grid>
           <Grid item container justifyContent="center">
-            {recordType === "transactions" ? (
-              <Transactions id={pool?.storageCid} />
-            ) : (
-              <ClaimRecords id={pool?.storageCid} />
-            )}
+            {recordType === "transactions" ? <Transactions id={poolId} /> : <ClaimRecords id={poolId} />}
           </Grid>
         </MainCard>
       </Box>

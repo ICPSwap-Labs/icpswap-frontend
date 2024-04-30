@@ -1,18 +1,17 @@
 import { useCallback, useState, useEffect } from "react";
 import {
   useCallsData,
-  getV1StakingTokenUserInfo,
   getStakingTokenUserInfo,
   getStakingTokenCycles,
   getV1StakingTokenCycles,
   getStakingTokenPool,
 } from "@icpswap/hooks";
 import { PoolData, UserStakingInfo } from "types/staking-token";
+import { Principal } from "@dfinity/principal";
 
 export function useUserStakingInfo(
   poolId: string | undefined,
-  version: string | undefined,
-  account: string | undefined,
+  principal: Principal | undefined,
 ): [UserStakingInfo | undefined, () => void] {
   const [userInfo, setUserInfo] = useState<UserStakingInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
@@ -23,22 +22,9 @@ export function useUserStakingInfo(
 
   useEffect(() => {
     const call = async () => {
-      if (!poolId || !account) return;
+      if (!poolId || !principal) return;
 
-      const result = await getStakingTokenUserInfo(poolId, account);
-
-      if (result) {
-        setUserInfo({
-          amount: result.amount,
-          reward: result.pendingReward,
-        } as UserStakingInfo);
-      }
-    };
-
-    const v1Call = async () => {
-      if (!poolId || !account) return;
-
-      const result = await getV1StakingTokenUserInfo(poolId, account);
+      const result = await getStakingTokenUserInfo(poolId, principal);
 
       if (result) {
         setUserInfo({
@@ -48,14 +34,10 @@ export function useUserStakingInfo(
       }
     };
 
-    if (account && poolId && version) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+    if (principal && poolId) {
+      call();
     }
-  }, [poolId, account, forceUpdate, version]);
+  }, [poolId, principal, forceUpdate]);
 
   return [userInfo, update];
 }
