@@ -11,12 +11,11 @@ import {
   Box,
   Link,
 } from "@mui/material";
-import { getExplorerPrincipalLink } from "utils/index";
 import { Trans } from "@lingui/macro";
 import { getTokenPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
 import { useStakingTokenPools } from "@icpswap/hooks";
-import { pageArgsFormat } from "@icpswap/utils";
+import { pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { TextButton, Pagination, NoData, ListLoading, PaginationType } from "ui-component/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 
@@ -26,9 +25,7 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   return (
     <TableRow>
       <TableCell>
-        <TextButton link={getExplorerPrincipalLink(pool.canisterId.toString())}>
-          {pool.canisterId.toString()}
-        </TextButton>
+        <TextButton link={explorerLink(pool.canisterId.toString())}>{pool.canisterId.toString()}</TextButton>
       </TableCell>
       <TableCell>
         <Typography sx={{ fontSize: "16px" }} color="text.primary">
@@ -41,12 +38,12 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
         </Typography>
       </TableCell>
       <TableCell>
-        <Link href={getExplorerPrincipalLink(pool.stakingToken.address)} target="_blank">
+        <Link href={explorerLink(pool.stakingToken.address)} target="_blank">
           {pool.stakingTokenSymbol}
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={getExplorerPrincipalLink(pool.rewardToken.address)} target="_blank">
+        <Link href={explorerLink(pool.rewardToken.address)} target="_blank">
           {pool.rewardTokenSymbol}
         </Link>
       </TableCell>

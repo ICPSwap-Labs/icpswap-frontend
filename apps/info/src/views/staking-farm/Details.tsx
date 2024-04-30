@@ -7,11 +7,10 @@ import MainContainer from "ui-component/MainContainer";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, shorten } from "@icpswap/utils";
+import { parseTokenAmount, shorten, explorerLink } from "@icpswap/utils";
 import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { getExplorerPrincipalLink } from "utils";
 import { useV3UserFarmInfo } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "@icpswap/constants";
@@ -104,7 +103,7 @@ export default function FarmDetails() {
               value={
                 <Typography fontSize="12px" component="span" color="text.primary">
                   {parseTokenAmount(pool?.totalReward, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.rewardToken.address ?? "")} target="_blank">
+                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
                   </Link>
                 </Typography>

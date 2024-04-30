@@ -8,10 +8,9 @@ import { MainCard } from "ui-component/index";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t } from "@lingui/macro";
-import { parseTokenAmount, shorten } from "@icpswap/utils";
+import { parseTokenAmount, shorten, explorerLink } from "@icpswap/utils";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { getExplorerPrincipalLink } from "utils";
 import { useStakingPoolData } from "hooks/staking-token";
 import { Theme } from "@mui/material/styles";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -103,7 +102,7 @@ export default function PoolsDetails() {
               value={
                 <Typography fontSize="12px" component="span" color="text.primary">
                   {parseTokenAmount(poolTokenBalance, pool?.stakingTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.stakingToken.address ?? "")} target="_blank">
+                  <Link href={explorerLink(pool?.stakingToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.stakingTokenSymbol ?? "--"}`}
                   </Link>
                 </Typography>
@@ -114,7 +113,7 @@ export default function PoolsDetails() {
               value={
                 <Typography fontSize="12px" component="span" color="text.primary">
                   {parseTokenAmount(pool?.rewardDebt, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.rewardToken.address ?? "")} target="_blank">
+                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
                   </Link>
                 </Typography>

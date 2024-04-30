@@ -14,8 +14,7 @@ import { Theme } from "@mui/material/styles";
 import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
-import { getExplorerPrincipalLink } from "utils/index";
+import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const nowTime = parseInt(String(Date.now() / 1000));
@@ -230,7 +229,7 @@ export default function StakingPoolDetails({
               <Grid item>
                 <Typography color="text.primary.main">
                   {pool ? (
-                    <Link href={`https://icscan.io/principal/${pool.creator.toString()}`} target="_blank">
+                    <Link href={explorerLink(pool.creator.toString())} target="_blank">
                       {pool?.creator ? shorten(pool.creator.toString()) : "--"}
                     </Link>
                   ) : (
@@ -247,7 +246,7 @@ export default function StakingPoolDetails({
               <Grid item>
                 <Typography color="text.primary">
                   {pool ? (
-                    <Link href={getExplorerPrincipalLink(pool.canisterId.toString())} target="_blank">
+                    <Link href={explorerLink(pool.canisterId.toString())} target="_blank">
                       {pool?.canisterId ? shorten(pool.canisterId.toString()) : "--"}
                     </Link>
                   ) : null}

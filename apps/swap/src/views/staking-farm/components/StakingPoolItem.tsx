@@ -411,7 +411,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Created by</Trans>
                   </Typography>
                   <Typography color="text.primary.main">
-                    <Link href={`https://icscan.io/principal/${farm.creator.toString()}`} target="_blank">
+                    <Link href={explorerLink(farm.creator.toString())} target="_blank">
                       {shorten(farm.creator.toString())}
                     </Link>
                   </Typography>

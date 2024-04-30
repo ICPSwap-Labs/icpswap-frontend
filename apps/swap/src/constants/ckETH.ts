@@ -1,4 +1,5 @@
 import { ChainId } from "constants/web3";
+import { explorerLink } from "@icpswap/utils";
 
 export const chain = ChainId.Mainnet;
 
@@ -23,8 +24,8 @@ const DASHBOARD = {
 };
 
 const CANISTER = {
-  [ChainId.Mainnet]: `https://icscan.io/canister/${LEDGER_ID[chain]}`,
-  [ChainId.SepoliaTestnet]: `https://icscan.io/canister/${LEDGER_ID[chain]}`,
+  [ChainId.Mainnet]: explorerLink(LEDGER_ID[chain]),
+  [ChainId.SepoliaTestnet]: explorerLink(LEDGER_ID[chain]),
 };
 
 const EXPLORER_TX_LINKS = {

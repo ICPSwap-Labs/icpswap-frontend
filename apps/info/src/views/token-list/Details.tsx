@@ -5,7 +5,6 @@ import { useEffect, useMemo } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTokenInfo } from "hooks/token/index";
 import { useToken } from "hooks/useToken";
-import { getExplorerPrincipalLink } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { MainContainer, MainCard, TokenImage } from "ui-component/index";
 import { TOKEN_STANDARD } from "@icpswap/types";
@@ -13,7 +12,7 @@ import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount, explorerLink } from "@icpswap/utils";
 import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
@@ -232,7 +231,7 @@ export function TokenDetail() {
                 <BoxItem
                   CustomChild={
                     <Link
-                      href={getExplorerPrincipalLink(canisterId)}
+                      href={explorerLink(canisterId)}
                       target="_blank"
                       sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
                     >

@@ -47,18 +47,6 @@ export function mockALinkAndOpen(url: string, id: string): void {
   a.click();
 }
 
-export function getExplorerPrincipalLink(principalId: string): string {
-  if ((principalId ?? "").length > 27) {
-    return `https://icscan.io/principal/${principalId}`;
-  }
-
-  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
-}
-
-export function getExplorerAccountLink(account: string): string {
-  return `https://dashboard.internetcomputer.org/account/${account}`;
-}
-
 export function openBase64ImageInNewWindow(base64String: string) {
   const image = new Image();
   image.src = base64String;

@@ -68,18 +68,6 @@ export function mockALinkAndOpen(url: string, id: string): void {
   a.click();
 }
 
-export function getExplorerPrincipalLink(principalId: string): string {
-  if ((principalId ?? "").length > 27) {
-    return `https://icscan.io/principal/${principalId}`;
-  }
-
-  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
-}
-
-export function getExplorerAccountLink(account: string): string {
-  return `https://icscan.io/account/${account}`;
-}
-
 export function arrayBufferToString(arrayBuffer: Uint8Array): string {
   return new TextDecoder("utf-8").decode(arrayBuffer);
 }

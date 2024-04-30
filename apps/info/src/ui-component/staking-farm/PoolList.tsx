@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Grid, Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
+import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
@@ -40,9 +39,9 @@ export function PoolItem({ farm }: { farm: StakingFarmInfo }) {
     <TableRow className={classes.wrapper}>
       <BodyCell>
         {token0 && token1 ? (
-          <TextButton link={getExplorerPrincipalLink(farm.pool)}>{`${token0.symbol}/${
-            token1.symbol
-          }/${feeAmountToPercentage(Number(farm.poolFee))}`}</TextButton>
+          <TextButton link={explorerLink(farm.pool)}>{`${token0.symbol}/${token1.symbol}/${feeAmountToPercentage(
+            Number(farm.poolFee),
+          )}`}</TextButton>
         ) : (
           "--"
         )}
