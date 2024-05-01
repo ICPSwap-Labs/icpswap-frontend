@@ -16,12 +16,17 @@ import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
 
-const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+interface CountdownBoxProps {
+  startTime: number;
+  endTime: number;
+}
+
+const CountdownBox = ({ startTime, endTime }: CountdownBoxProps) => {
   const nowTime = parseInt(String(Date.now() / 1000));
-  let expand = false;
+  let ended = false;
   let date = startTime;
 
-  if (nowTime > endTime) expand = true;
+  if (nowTime > endTime) ended = true;
 
   if (nowTime < startTime) {
     date = startTime * 1000;
@@ -31,7 +36,7 @@ const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: numb
     date = 0;
   }
 
-  return expand ? (
+  return ended ? (
     <Typography color="text.primary">
       <Trans>End</Trans>
     </Typography>
@@ -215,7 +220,7 @@ export default function StakingPoolDetails({
               <Grid item>
                 <Typography color="text.primary">
                   <CountdownBox
-                    startTime={Number(poolData?.lastRewardTime ?? 0)}
+                    startTime={Number(pool?.startTime ?? 0)}
                     endTime={Number(poolData?.bonusEndTime ?? 0)}
                   />
                 </Typography>
