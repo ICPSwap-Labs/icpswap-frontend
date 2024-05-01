@@ -8,7 +8,7 @@ import { Trans } from "@lingui/macro";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useICPPrice } from "store/global/hooks";
-import { PoolData , UserStakingInfo , STATE } from "types/staking-token";
+import { PoolData, UserStakingInfo, STATE } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import Harvest from "components/staking-token/Harvest";
 
@@ -38,8 +38,8 @@ export default function UserStaking({
   const ICPPrice = useICPPrice();
 
   const apr = useMemo(() => {
-    if (poolData?.BONUS_MULTIPLIER && poolData?.rewardPerTime && stakingToken && rewardToken) {
-      const poolInfoPerSecond = Number(poolData.BONUS_MULTIPLIER * poolData.rewardPerTime);
+    if (poolData?.rewardPerTime && stakingToken && rewardToken) {
+      const poolInfoPerSecond = Number(poolData.rewardPerTime);
       const totalDeposit = parseTokenAmount(poolData.totalDeposit, stakingToken.decimals).toNumber();
       if (ICPPrice && rewardTokenPrice && stakingTokenPrice && rewardToken.decimals && poolInfoPerSecond > 0) {
         const perSecond = parseTokenAmount(poolInfoPerSecond, rewardToken.decimals).toNumber();
