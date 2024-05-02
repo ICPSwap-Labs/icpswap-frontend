@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 import { farm, farmController } from "@icpswap/actor";
 import type {
@@ -147,7 +147,7 @@ export async function createV3Farm(args: CreateFarmArgs) {
 
 export async function getFarms(state: FarmState | undefined) {
   return resultFormat<Array<[Principal, FarmTvl]>>(
-    await (await farmController()).getFarms(state ? [{ [state]: null } as FarmStatusArgs] : []),
+    await (await farmController()).getFarms(availableArgsNull<FarmStatusArgs>({ [state]: null } as FarmStatusArgs)),
   ).data;
 }
 
