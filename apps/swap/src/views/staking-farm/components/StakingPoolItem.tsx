@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard, TokenImage } from "components/index";
+import { MainCard, TokenImage, Flex } from "components/index";
 import {
   useIntervalUserRewardInfo,
   useIntervalUserFarmInfo,
@@ -212,11 +212,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
           </Grid>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between">
               <Typography>
                 <Trans>Total Reward Amount</Trans>
               </Typography>
-              <Box sx={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
+              <Typography color="text.primary">
                 <CountUp
                   preserveValue
                   end={parseTokenAmount(
@@ -227,38 +227,32 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                   duration={1}
                   separator=","
                 />
-              </Box>
-            </Grid>
+              </Typography>
+            </Flex>
 
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between">
               <Typography>
                 <Trans>Total Value Staked</Trans>
               </Typography>
               <Typography color="text.primary">${poolTVL}</Typography>
-            </Grid>
+            </Flex>
 
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between" align="flex-start">
               <Typography>
                 <Trans>Earned</Trans>
                 &nbsp;
                 {rewardToken?.symbol}
               </Typography>
 
-              <Grid item>
-                <Grid container direction="column" justifyContent="flex-end">
+              <Flex vertical align="flex-end">
+                <Typography color="text.primary">
                   <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
-                  <CountUp
-                    style={{ fontSize: 14, textAlign: "right", display: "block" }}
-                    preserveValue
-                    end={userRewardUSD ?? 0}
-                    decimals={2}
-                    duration={1}
-                    separator=","
-                    prefix="~$"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
+                </Typography>
+                <Typography color="text.primary">
+                  <CountUp preserveValue end={userRewardUSD ?? 0} decimals={2} duration={1} separator="," prefix="~$" />
+                </Typography>
+              </Flex>
+            </Flex>
 
             <Box>
               <Typography mb="14px">
