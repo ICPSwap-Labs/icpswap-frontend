@@ -11,6 +11,7 @@ import { useICPPrice } from "store/global/hooks";
 import { PoolData, UserStakingInfo, STATE } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import Harvest from "components/staking-token/Harvest";
+import { Flex } from "components/index";
 
 export interface UserStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
@@ -80,29 +81,24 @@ export default function UserStaking({
     <Box sx={{ padding: "24px" }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Box sx={{ marginBottom: "14px" }}>
-                <Typography fontSize="14px">
-                  <Trans>APR:</Trans>
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={6}>
-              <Grid container justifyContent="flex-end">
-                {state === STATE.FINISHED ? (
-                  "--"
-                ) : (
-                  <CountUp preserveValue end={apr} decimals={2} duration={1} suffix="%" separator="," />
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
+          <Flex justify="space-between" align="center">
+            <Typography>
+              <Trans>APR:</Trans>
+            </Typography>
+
+            <Typography color="text.primary">
+              {state === STATE.FINISHED ? (
+                "--"
+              ) : (
+                <CountUp preserveValue end={apr} decimals={2} duration={1} suffix="%" separator="," />
+              )}
+            </Typography>
+          </Flex>
         </Grid>
         <Grid item container xs={12} direction="row" justifyContent="space-between" alignItems="flex-start">
           <Grid item container>
             <Box sx={{ marginBottom: "14px" }}>
-              <Typography fontSize="14px">
+              <Typography>
                 <Trans>{pool?.rewardTokenSymbol} Earned</Trans>
               </Typography>
             </Box>
@@ -117,7 +113,7 @@ export default function UserStaking({
             spacing={2}
           >
             <Grid item xs={9}>
-              <Box>
+              <Typography color="text.primary">
                 <CountUp
                   style={{ fontSize: 24 }}
                   preserveValue
@@ -126,8 +122,8 @@ export default function UserStaking({
                   duration={1}
                   separator=","
                 />
-              </Box>
-              <Box>
+              </Typography>
+              <Typography color="text.primary">
                 <CountUp
                   style={{ fontSize: 14 }}
                   preserveValue
@@ -137,7 +133,7 @@ export default function UserStaking({
                   separator=","
                   prefix="~$"
                 />
-              </Box>
+              </Typography>
             </Grid>
             <Grid item>
               <Harvest rewardToken={rewardToken} reward={pendingReward} pool={pool} />
@@ -153,7 +149,7 @@ export default function UserStaking({
           <Grid>
             <Grid container>
               <Grid item xs={6}>
-                <Box>
+                <Typography color="text.primary">
                   <CountUp
                     style={{ fontSize: 24 }}
                     preserveValue
@@ -162,8 +158,8 @@ export default function UserStaking({
                     duration={1}
                     separator=","
                   />
-                </Box>
-                <Box>
+                </Typography>
+                <Typography color="text.primary">
                   <CountUp
                     style={{ fontSize: 14 }}
                     preserveValue
@@ -173,7 +169,7 @@ export default function UserStaking({
                     separator=","
                     prefix="~$"
                   />
-                </Box>
+                </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justifyContent="flex-end">
