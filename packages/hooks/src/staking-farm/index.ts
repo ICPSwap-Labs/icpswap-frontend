@@ -147,7 +147,9 @@ export async function createV3Farm(args: CreateFarmArgs) {
 
 export async function getFarms(state: FarmState | undefined) {
   return resultFormat<Array<[Principal, FarmTvl]>>(
-    await (await farmController()).getFarms(availableArgsNull<FarmStatusArgs>({ [state]: null } as FarmStatusArgs)),
+    await (
+      await farmController()
+    ).getFarms(availableArgsNull<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
   ).data;
 }
 
