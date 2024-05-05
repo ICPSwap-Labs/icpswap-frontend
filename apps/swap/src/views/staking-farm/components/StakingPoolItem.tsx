@@ -21,6 +21,7 @@ import {
   shorten,
   timestampFormat,
   explorerLink,
+  BigNumber,
 } from "@icpswap/utils";
 import { useV3FarmMetadata, useFarmUserPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
@@ -112,7 +113,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     return userAllPositions?.map((position) => position.positionId) ?? [];
   }, [userAllPositions]);
 
-  const userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
+  const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
+
+  const userRewardAmount = useMemo(() => {
+    return _userRewardAmount ? new BigNumber(_userRewardAmount.toString()).multipliedBy(0.95) : undefined;
+  }, [_userRewardAmount]);
 
   const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;

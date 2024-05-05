@@ -147,7 +147,7 @@ export interface useFarmUSDValueArgs {
   token1?: Token | undefined;
   rewardToken: Token | undefined;
   userFarmInfo: FarmInfo | undefined;
-  userRewardAmount: bigint | undefined;
+  userRewardAmount: BigNumber | undefined;
   farmId: string;
 }
 
