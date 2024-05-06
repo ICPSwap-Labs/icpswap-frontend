@@ -85,7 +85,7 @@ export default function PoolList() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingTokenPools(undefined, offset, pagination.pageSize);
+  const { result, loading } = useStakingTokenPools(BigInt(2), offset, pagination.pageSize);
   const { content = [], totalElements = 0 } = result ?? { content: [], totalElements: 0 };
 
   const handlePageChange = (pagination: PaginationType) => {

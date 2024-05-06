@@ -86,11 +86,12 @@ function Pools() {
   const pools = useMemo(() => {
     if (result?.content) {
       if (!!filter && filter === STATE.FINISHED) {
-        return result?.content.sort((a, b) => {
-          if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
-          if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
-          return 0;
-        });
+        // return result?.content.sort((a, b) => {
+        //   if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
+        //   if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
+        //   return 0;
+        // });
+        return undefined;
       }
 
       return result?.content;
