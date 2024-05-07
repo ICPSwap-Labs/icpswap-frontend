@@ -9,7 +9,7 @@ import { ResultStatus } from "types/global";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapUserPositions, approvePosition } from "@icpswap/hooks";
 import type { FarmInfo } from "@icpswap/types";
-import { collectPositionFee } from "hooks/swap/useClaimFees";
+// import { collectPositionFee } from "hooks/swap/useClaimFees";
 import { Theme } from "@mui/material/styles";
 
 import { PositionItem } from "./PositionItem";
@@ -56,7 +56,7 @@ export default function StakingModal({ open, farmId, onClose, resetData, farm }:
       return;
     }
 
-    await collectPositionFee(swapPoolId, selectedPosition.id);
+    // await collectPositionFee(swapPoolId, selectedPosition.id);
 
     const { status, message } = await stake(farmId, BigInt(selectedPositionId));
 
