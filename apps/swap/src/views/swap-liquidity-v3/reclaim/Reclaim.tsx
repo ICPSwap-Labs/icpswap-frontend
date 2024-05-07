@@ -1,4 +1,4 @@
-import { Typography, Box, useMediaQuery, useTheme, Collapse } from "@mui/material";
+import { Typography, Box, Collapse } from "@mui/material";
 import { Wrapper, Breadcrumbs, TabPanel } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
@@ -31,7 +31,6 @@ const Tabs = [
 export default function SwapReclaim() {
   const location = useLocation();
   const history = useHistory();
-  const theme = useTheme();
 
   const [showTips, setShowTips] = useState(false);
 
@@ -61,6 +60,7 @@ export default function SwapReclaim() {
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
               <Trans>Reclaim Your Tokens</Trans>
             </Typography>
+
             {isMobile ? <AlertCircle size="18px" onClick={handleShowTips} /> : null}
           </Box>
 

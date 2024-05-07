@@ -120,7 +120,7 @@ export function ReclaimAll() {
             display: "flex",
             alignItems: "center",
             "@media(max-width: 640px)": {
-              justifyContent: "flex-end",
+              justifyContent: "flex-start",
               width: "100%",
             },
           }}
