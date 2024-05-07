@@ -1,9 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/Loading/Loadable";
 
-import Swap from "../views/swap-liquidity-v3/Swap";
-import SwapPro from "../views/swap-pro";
-
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
 const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
@@ -12,6 +9,8 @@ const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/crea
 const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 
+const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
+const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));
 const IncreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/IncreaseLiquidity")));
