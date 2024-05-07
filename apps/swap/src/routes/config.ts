@@ -1,6 +1,9 @@
 import { lazy } from "react";
 import Loadable from "../components/Loading/Loadable";
 
+import Swap from "../views/swap-liquidity-v3/Swap";
+import SwapPro from "../views/swap-pro";
+
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
 const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
@@ -9,16 +12,14 @@ const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/crea
 const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 
-const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));
 const IncreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/IncreaseLiquidity")));
 const DecreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/DecreaseLiquidity")));
-const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/Reclaim")));
+const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/reclaim/Reclaim")));
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
-const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
@@ -59,7 +60,7 @@ const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
 const SnsVotes = Loadable(lazy(() => import("../views/sns/Voting/index")));
 const SnsVoting = Loadable(lazy(() => import("../views/sns/Voting/Voting")));
 
-export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
+export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any } = {
   "/wallet": Wallet,
 
   "/wallet/ckBTC": ckBTC,

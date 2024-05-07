@@ -242,7 +242,7 @@ export function Select({
               <Box
                 sx={{
                   margin: "8px 0",
-                  padding: "0 12px",
+                  padding: "0 6px",
                   "& input": {
                     color: theme.palette.text.primary,
                   },

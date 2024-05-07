@@ -5,19 +5,29 @@ import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 
-export function useUserSwapPoolBalances(principal: string | undefined, selectedTokenId?: string, reload?: boolean) {
-  const { result: pools } = useSwapPools();
+export function useUserSwapUnusedBalanceByPoolId(
+  principal: string | undefined,
+  poolId: string | undefined,
+  reload?: boolean,
+) {
+  const { result: allSwapPools } = useSwapPools();
+
+  const pools = useMemo(() => {
+    if (!poolId || !allSwapPools) return [];
+    return allSwapPools.filter((ele) => ele.canisterId.toString() === poolId);
+  }, [allSwapPools, poolId]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal,
     pools,
-    selectedTokenId,
+    undefined,
     reload,
   );
+
   const { loading: unUsedBalanceLoading, balances: unUsedBalances } = useUserUnUsedBalance(
     principal,
     pools,
-    selectedTokenId,
+    undefined,
     reload,
   );
 

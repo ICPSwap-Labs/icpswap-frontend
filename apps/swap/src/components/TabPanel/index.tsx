@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory, useLocation } from "react-router-dom";
 import { isDarkTheme, mockALinkAndOpen } from "utils";
@@ -7,12 +7,6 @@ import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    switchBox: {
-      width: "auto",
-      backgroundColor: isDarkTheme(theme) ? theme.colors.darkLevel1 : theme.colors.lightGray200,
-      borderRadius: "15px",
-      padding: "4px",
-    },
     switchButton: {
       minWidth: "90px",
       padding: "0 20px",
@@ -24,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) => {
       "&.active": {
         color: theme.themeOption.textPrimary,
         background: isDarkTheme(theme) ? theme.colors.darkLevel3 : "#ffffff",
+      },
+      "&.fontNormal": {
+        fontWeight: 400,
       },
       "@media (max-width: 640px)": {
         minWidth: "76px",
@@ -45,10 +42,14 @@ export interface TabPanelProps {
   active?: string;
   tabs: Tab[];
   onChange?: (tab: Tab) => void;
+  fontNormal?: boolean;
+  fullWidth?: boolean;
+  activeWithSearch?: boolean;
 }
 
-export function TabPanel({ tabs, onChange, active }: TabPanelProps) {
+export function TabPanel({ tabs, onChange, active, fullWidth, fontNormal, activeWithSearch }: TabPanelProps) {
   const classes = useStyles();
+  const theme = useTheme() as Theme;
   const history = useHistory();
   const location = useLocation();
 
@@ -74,6 +75,11 @@ export function TabPanel({ tabs, onChange, active }: TabPanelProps) {
         if (tab.key === location.pathname || `${tab.key}/` === location.pathname) return "active";
         return "";
       }
+
+      if (activeWithSearch) {
+        return location.search.includes(tab.key);
+      }
+
       return location.pathname.includes(tab.key);
     }
     if (active) return active === tab.key;
@@ -83,11 +89,20 @@ export function TabPanel({ tabs, onChange, active }: TabPanelProps) {
 
   return (
     <Grid container justifyContent="center">
-      <Grid className={classes.switchBox} container>
+      <Box
+        sx={{
+          display: "grid",
+          width: fullWidth ? "100%" : "auto",
+          backgroundColor: isDarkTheme(theme) ? theme.colors.darkLevel1 : theme.colors.lightGray200,
+          borderRadius: "15px",
+          padding: "4px",
+          gridTemplateColumns: fullWidth ? `repeat(${tabs.length}, 1fr)` : `repeat(${tabs.length}, auto)`,
+        }}
+      >
         {tabs.map((tab) => (
           <Box
             key={tab.key}
-            className={`${classes.switchButton} ${isActive(tab) ? "active" : ""}`}
+            className={`${classes.switchButton}${fontNormal ? " fontNormal" : ""}${isActive(tab) ? " active" : ""}`}
             onClick={() => loadPage(tab)}
           >
             <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
@@ -95,7 +110,7 @@ export function TabPanel({ tabs, onChange, active }: TabPanelProps) {
             </Grid>
           </Box>
         ))}
-      </Grid>
+      </Box>
     </Grid>
   );
 }

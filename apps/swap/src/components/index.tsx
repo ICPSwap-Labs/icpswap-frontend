@@ -15,7 +15,7 @@ export { Breadcrumbs, MainCard, Flex } from "@icpswap/ui";
 export { default as StepViewButton } from "./Steps/View";
 export * from "./Maintenance";
 export { default as FindPositionsModal } from "./swap/FindPositions";
-export { SelectToken } from "./SelectToken";
+export { SelectToken } from "./Select/SelectToken";
 export * from "./Select";
 export { default as NumberTextField, TextFieldNumberComponent } from "./Input/NumberTextField";
 export { default as FilledTextField } from "./Input/FilledTextField";
