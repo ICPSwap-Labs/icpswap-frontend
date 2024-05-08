@@ -29,3 +29,4 @@ export * from "./CollapseWrapper";
 export { default as Switch } from "./switch";
 export * from "./Button/index";
 export { default as AuthButton } from "./authentication/ButtonConnector";
+export * from "./Link";

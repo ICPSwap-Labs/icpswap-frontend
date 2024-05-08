@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export interface ExceedRoutesProps {
   routes: Route[];
-  onMenuClick: (route: Route) => void;
+  onMenuClick?: (route: Route) => void;
 }
 
 export function ExceedRoutes({ routes, onMenuClick }: ExceedRoutesProps) {
@@ -74,7 +74,7 @@ export function ExceedRoutes({ routes, onMenuClick }: ExceedRoutesProps) {
 
   const handleMenuClick = (route: Route) => {
     setOpen(false);
-    onMenuClick(route);
+    if (onMenuClick) onMenuClick(route);
   };
 
   return (

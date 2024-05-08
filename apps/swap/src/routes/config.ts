@@ -81,7 +81,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,
   "/swap/pcm/reclaim": PCMReclaim,
-  "/swap-pro": SwapPro,
+  "/swap/pro": SwapPro,
 
   "/swap/v2/liquidity": LiquidityV2,
   "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,

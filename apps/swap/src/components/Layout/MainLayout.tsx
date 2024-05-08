@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const SMALL_PADDING_PATH = ["/swap-pro"];
+const SMALL_PADDING_PATH = ["/swap/pro"];
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const theme = useTheme() as Theme;

@@ -34,7 +34,7 @@ export const routes: Route[] = [
     path: "/swap",
     subMenus: [
       { key: "simple-mode", name: `Simple mode`, path: "/swap", icon: SimpleModeIcon },
-      { key: "pro-mode", name: `Pro mode`, path: "/swap-pro", icon: ProModeIcon },
+      { key: "pro-mode", name: `Pro mode`, path: "/swap/pro", icon: ProModeIcon },
     ],
   },
   {

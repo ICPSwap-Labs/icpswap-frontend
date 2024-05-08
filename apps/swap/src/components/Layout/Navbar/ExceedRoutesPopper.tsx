@@ -2,6 +2,7 @@ import { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { MenuList, MenuItem, Popper, Typography } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
+import { Link } from "components/index";
 
 import { Route } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
@@ -70,24 +71,25 @@ export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickA
       <ClickAwayListener onClickAway={onClickAway}>
         <MenuList autoFocusItem={open} className="customize-menu-list style1">
           {routes.map((route, index) => (
-            <MenuItem
-              key={route.path ?? index}
-              onClick={() => handleMenuClick(route)}
-              onMouseEnter={({ target }) => handleSubMenuMouseEnter(route, target)}
-              onMouseLeave={handleSubMenuMouseLeave}
-              disabled={!!route.disabled}
-              className={route.disabled ? "opacity1" : ""}
-            >
-              <Typography className="customize-label">{route.name}</Typography>
+            <Link key={route.path ?? index} to={route.path} link={route.link}>
+              <MenuItem
+                onClick={() => handleMenuClick(route)}
+                onMouseEnter={({ target }) => handleSubMenuMouseEnter(route, target)}
+                onMouseLeave={handleSubMenuMouseLeave}
+                disabled={!!route.disabled}
+                className={route.disabled ? "opacity1" : ""}
+              >
+                <Typography className="customize-label">{route.name}</Typography>
 
-              <SubMenuPopper
-                route={route}
-                onClickAway={handleSubMenuClose}
-                onMenuClick={handleMenuClick}
-                anchor={subMenuTarget}
-                subMenuKey={subMenuOpenKey}
-              />
-            </MenuItem>
+                <SubMenuPopper
+                  route={route}
+                  onClickAway={handleSubMenuClose}
+                  onMenuClick={handleMenuClick}
+                  anchor={subMenuTarget}
+                  subMenuKey={subMenuOpenKey}
+                />
+              </MenuItem>
+            </Link>
           ))}
         </MenuList>
       </ClickAwayListener>

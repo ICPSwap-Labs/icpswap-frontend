@@ -27,7 +27,7 @@ function TokenItem({ tokenInfo }: TokenItemProps) {
   const history = useHistory();
 
   const handleTokenClick = () => {
-    history.push(`/swap-pro?input=${ICP.address}&output=${tokenInfo.address}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.address}`);
   };
 
   const { result: token } = useTokenInfo(tokenInfo.address);

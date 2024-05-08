@@ -37,7 +37,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
 
   const handleTokenClick = () => {
     if (onTokenClick) onTokenClick(tokenInfo);
-    history.push(`/swap-pro?input=${ICP.address}&output=${tokenInfo.ledger_id.toString()}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.ledger_id.toString()}`);
   };
 
   return (
@@ -155,7 +155,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
 
   const handleHotTokenClick = (token: PublicTokenOverview) => {
     handleClose();
-    history.push(`/swap-pro?input=${ICP.address}&output=${token.address}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${token.address}`);
   };
 
   const handleStopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
