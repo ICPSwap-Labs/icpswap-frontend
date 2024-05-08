@@ -129,7 +129,7 @@ export function ReclaimWithPair() {
               <Trans>Select a pair</Trans>
             </Typography>
 
-            {isMobile ? <AlertCircle size="14px" onClick={handleShowTips} /> : null}
+            {isMobile ? <AlertCircle size="16px" onClick={handleShowTips} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>

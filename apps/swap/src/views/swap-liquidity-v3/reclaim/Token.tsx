@@ -166,7 +166,7 @@ export function ReclaimWithToken() {
         </Box>
       </Box>
 
-      {selectedTokenId === ICP.address && showTips ? (
+      {selectedTokenId === ICP.address && (showTips || !isMobile) ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography>
             <Trans>

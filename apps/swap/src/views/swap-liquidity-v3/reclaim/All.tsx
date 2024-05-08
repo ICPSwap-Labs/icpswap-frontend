@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
-import { Typography, Box, Checkbox } from "@mui/material";
+import { Typography, Box, Checkbox, Collapse } from "components/Mui";
 import { NoData, LoadingRow } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { isMobile } from "react-device-detect";
+import { AlertCircle } from "react-feather";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -23,6 +25,7 @@ export function ReclaimAll() {
   const { pools, loading, balances } = useUserSwapPoolBalances(principal);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
+  const [showTips, setShowTips] = useState<boolean>(false);
 
   const _balances = useMemo(() => {
     if (!balances) return [];
@@ -85,6 +88,10 @@ export function ReclaimAll() {
     return unavailableClaimNumbers + claimedKeys.length === totalClaimedNumbers && hideUnavailableClaim;
   }, [claimedKeys, unavailableClaimNumbers, totalClaimedNumbers, hideUnavailableClaim]);
 
+  const handleToggleShowTips = () => {
+    setShowTips(!showTips);
+  };
+
   return (
     <>
       <Box
@@ -113,6 +120,8 @@ export function ReclaimAll() {
           <Typography color="text.primary">
             <Trans>All</Trans>
           </Typography>
+
+          {isMobile ? <AlertCircle size="16px" onClick={handleToggleShowTips} /> : null}
         </Box>
 
         <Box
@@ -143,14 +152,29 @@ export function ReclaimAll() {
         </Box>
       </Box>
 
-      <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-        <Typography>
-          <Trans>
-            If you select All, please note that selecting it may involve querying all trading pairs, resulting in longer
-            wait times. This process may take around 5 minutes. Thank you for your patience.
-          </Trans>
-        </Typography>
-      </Box>
+      {!isMobile ? (
+        <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
+          <Typography>
+            <Trans>
+              If you select All, please note that selecting it may involve querying all trading pairs, resulting in
+              longer wait times. This process may take around 5 minutes. Thank you for your patience.
+            </Trans>
+          </Typography>
+        </Box>
+      ) : null}
+
+      {isMobile ? (
+        <Collapse in={showTips}>
+          <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
+            <Typography>
+              <Trans>
+                If you select All, please note that selecting it may involve querying all trading pairs, resulting in
+                longer wait times. This process may take around 5 minutes. Thank you for your patience.
+              </Trans>
+            </Typography>
+          </Box>
+        </Collapse>
+      ) : null}
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         {loading ? (
