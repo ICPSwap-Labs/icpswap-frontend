@@ -77,7 +77,7 @@ export function SubMenuPopper({
             const Icon = subRoute.icon;
 
             return (
-              <Link to={subRoute.path} link={subRoute.link}>
+              <Link key={subRoute.key} to={subRoute.path} link={subRoute.link}>
                 <MenuItem
                   disabled={!!subRoute.disabled}
                   onClick={() => onMenuClick(subRoute)}
