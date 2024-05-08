@@ -13,7 +13,7 @@ export function useUserSwapUnusedBalanceByPoolId(
   const { result: allSwapPools } = useSwapPools();
 
   const pools = useMemo(() => {
-    if (!poolId || !allSwapPools) return [];
+    if (!poolId || !allSwapPools) return undefined;
     return allSwapPools.filter((ele) => ele.canisterId.toString() === poolId);
   }, [allSwapPools, poolId]);
 
