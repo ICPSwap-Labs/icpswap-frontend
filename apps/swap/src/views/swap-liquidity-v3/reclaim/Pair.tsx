@@ -1,13 +1,12 @@
 import { useState, useMemo } from "react";
-import { Typography, Box, Checkbox, Collapse } from "@mui/material";
-import { NoData, LoadingRow } from "components/index";
+import { Typography, Box, Checkbox } from "@mui/material";
+import { NoData, LoadingRow, SwapTooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapUnusedBalanceByPoolId } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
 import { isMobile } from "react-device-detect";
-import { AlertCircle } from "react-feather";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -23,7 +22,6 @@ type Balance = {
 export function ReclaimWithPair() {
   const principal = useAccountPrincipalString();
   const [selectedPoolId, setSelectedPoolId] = useState<string | undefined>(undefined);
-  const [showTips, setShowTips] = useState(false);
   const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, selectedPoolId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -93,10 +91,6 @@ export function ReclaimWithPair() {
     setSelectedPoolId(poolId);
   };
 
-  const handleShowTips = () => {
-    setShowTips(!showTips);
-  };
-
   return (
     <>
       <Box
@@ -129,21 +123,13 @@ export function ReclaimWithPair() {
               <Trans>Select a pair</Trans>
             </Typography>
 
-            {isMobile ? <AlertCircle size="16px" onClick={handleShowTips} /> : null}
+            {isMobile ? <SwapTooltip tips={<Trans>Select the trading pair you wish to reclaim.</Trans>} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
             <SelectPair search value={selectedPoolId} border onPairChange={handlePairChange} />
           </Box>
         </Box>
-
-        {isMobile && showTips ? (
-          <Collapse in={showTips}>
-            <Typography>
-              <Trans>Select the trading pair you wish to reclaim.</Trans>
-            </Typography>
-          </Collapse>
-        ) : null}
 
         <Box
           sx={{

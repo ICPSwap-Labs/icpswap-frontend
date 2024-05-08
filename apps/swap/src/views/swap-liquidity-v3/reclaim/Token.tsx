@@ -1,12 +1,11 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
-import { NoData, LoadingRow, SelectToken } from "components/index";
+import { NoData, LoadingRow, SelectToken, SwapTooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { ICP } from "constants/tokens";
-import { AlertCircle } from "react-feather";
 import { isMobile } from "react-device-detect";
 
 import { ReclaimItems } from "./components/ReclaimItem";
@@ -23,7 +22,6 @@ type Balance = {
 export function ReclaimWithToken() {
   const principal = useAccountPrincipalString();
   const [selectedTokenId, setSelectedTokenId] = useState<string>(ICP.address);
-  const [showTips, setShowTips] = useState(false);
 
   const { pools, loading, balances } = useUserSwapPoolBalances(principal, selectedTokenId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
@@ -94,10 +92,6 @@ export function ReclaimWithToken() {
     setSelectedTokenId(tokenId);
   };
 
-  const handleShowTips = () => {
-    setShowTips(!showTips);
-  };
-
   return (
     <>
       <Box
@@ -130,7 +124,16 @@ export function ReclaimWithToken() {
               <Trans>Select Token</Trans>
             </Typography>
 
-            {isMobile ? <AlertCircle size="16px" onClick={handleShowTips} /> : null}
+            {isMobile && selectedTokenId === ICP.address ? (
+              <SwapTooltip
+                tips={
+                  <Trans>
+                    Selecting ICP may require querying all trading pairs associated with it, leading to longer wait
+                    times. This process could take approximately 2-3 minutes. Please be patient.
+                  </Trans>
+                }
+              />
+            ) : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
@@ -166,7 +169,7 @@ export function ReclaimWithToken() {
         </Box>
       </Box>
 
-      {selectedTokenId === ICP.address && (showTips || !isMobile) ? (
+      {selectedTokenId === ICP.address && !isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography>
             <Trans>

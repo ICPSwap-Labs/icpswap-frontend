@@ -1,9 +1,9 @@
-import { Typography, Box, Collapse } from "@mui/material";
-import { Wrapper, Breadcrumbs, TabPanel } from "components/index";
+import { Typography, Box } from "@mui/material";
+import { Wrapper, Breadcrumbs, TabPanel, SwapTooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { AlertCircle } from "react-feather";
+import { useEffect } from "react";
+
 import { isMobile } from "react-device-detect";
 
 import { ReclaimWithPair } from "./Pair";
@@ -32,17 +32,11 @@ export default function SwapReclaim() {
   const location = useLocation();
   const history = useHistory();
 
-  const [showTips, setShowTips] = useState(false);
-
   useEffect(() => {
     if (location.search === "") {
       history.push("/swap/reclaim?type=pair");
     }
   }, [location, history]);
-
-  const handleShowTips = () => {
-    setShowTips(!showTips);
-  };
 
   return (
     <Wrapper>
@@ -61,28 +55,60 @@ export default function SwapReclaim() {
               <Trans>Reclaim Your Tokens</Trans>
             </Typography>
 
-            {isMobile ? <AlertCircle size="18px" onClick={handleShowTips} /> : null}
+            {isMobile ? (
+              <SwapTooltip
+                maxWidth="calc(100% - 60px)"
+                tips={
+                  <>
+                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
+                      <Trans>
+                        For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens,
+                        we've implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues
+                        during swaps, liquidity withdrawals/additions, fee claims, or transaction failures due to
+                        significant slippage. It allows you to retrieve and reclaim your tokens when issues occur!
+                      </Trans>
+                    </Typography>
+
+                    <Typography sx={{ margin: "20px 0 0 0", color: "#111936", fontSize: "12px", lineHeight: "18px" }}>
+                      <Trans>
+                        When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
+                        excessive slippage, significant token price fluctuations, and so on.
+                      </Trans>
+                    </Typography>
+                  </>
+                }
+              />
+            ) : null}
           </Box>
 
-          <Collapse in={isMobile ? showTips : true}>
-            <Typography sx={{ margin: "10px 0 0 0" }}>
-              <Trans>
-                For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens, we've
-                implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues during swaps,
-                liquidity withdrawals/additions, fee claims, or transaction failures due to significant slippage. It
-                allows you to retrieve and reclaim your tokens when issues occur!
-              </Trans>
-            </Typography>
+          {!isMobile ? (
+            <>
+              <Typography sx={{ margin: "10px 0 0 0" }}>
+                <Trans>
+                  For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens, we've
+                  implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues during swaps,
+                  liquidity withdrawals/additions, fee claims, or transaction failures due to significant slippage. It
+                  allows you to retrieve and reclaim your tokens when issues occur!
+                </Trans>
+              </Typography>
 
-            <Typography sx={{ margin: "20px 0 0 0" }}>
-              <Trans>
-                When might issues occur: Such as network latency or stutter, page refreshing during the Swap, excessive
-                slippage, significant token price fluctuations, and so on.
-              </Trans>
-            </Typography>
-          </Collapse>
+              <Typography sx={{ margin: "20px 0 0 0" }}>
+                <Trans>
+                  When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
+                  excessive slippage, significant token price fluctuations, and so on.
+                </Trans>
+              </Typography>
+            </>
+          ) : null}
 
-          <Box sx={{ margin: "44px 0 0 0" }}>
+          <Box
+            sx={{
+              margin: "44px 0 0 0",
+              "@media(max-width: 640px)": {
+                margin: "24px 0 0 0",
+              },
+            }}
+          >
             <TabPanel tabs={Tabs} fontNormal fullWidth activeWithSearch />
           </Box>
 
