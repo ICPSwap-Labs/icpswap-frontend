@@ -219,7 +219,7 @@ export default function StakingPoolDetails({
                 <Typography>{state === STATE.UPCOMING ? <Trans>Left</Trans> : <Trans>End in</Trans>}</Typography>
               </Grid>
               <Grid item>
-                <Typography color="text.primary">
+                <Typography color="text.primary" component="div">
                   <CountdownBox
                     startTime={Number(poolData?.lastRewardTime ?? 0)}
                     endTime={Number(poolData?.bonusEndTime ?? 0)}
