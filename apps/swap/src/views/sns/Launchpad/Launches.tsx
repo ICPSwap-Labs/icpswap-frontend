@@ -105,7 +105,9 @@ export default function LaunchpadList() {
 
   const upcomingLaunches = useMemo(() => {
     if (!allSnsTokensInfo) return undefined;
-    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Pending);
+    return allSnsTokensInfo.filter(
+      (e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Pending || e.lifecycle.lifecycle === SnsSwapLifecycle.Adopted,
+    );
   }, [allSnsTokensInfo]);
 
   const updateTokenStandard = useUpdateTokenStandard();
