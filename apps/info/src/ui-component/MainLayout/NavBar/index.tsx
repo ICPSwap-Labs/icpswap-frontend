@@ -124,7 +124,7 @@ export default function NavBar() {
     },
     {
       key: "staking-token",
-      name: t`Token Pools`,
+      name: t`Staking Pool`,
       path: "/staking-token",
     },
     {

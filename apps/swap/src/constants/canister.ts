@@ -72,7 +72,7 @@ export const CANISTER_NAMES = {
 
   VotingFileCanister: "VotingFileCanister",
   FarmController: "FarmController",
-  TokenPoolController: "TokenPoolController",
+  StakingTokenController: "StakingTokenController",
 
   NodeIndex: "node_index",
   GlobalIndex: "global_index",

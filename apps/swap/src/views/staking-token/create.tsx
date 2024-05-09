@@ -172,7 +172,7 @@ export default function CreateStakingTokenPool() {
       openTip(`create success pool:${message}`, MessageTypes.success);
       setValues({} as Values);
     } else {
-      openTip(message ?? "Failed to create token pool", MessageTypes.error);
+      openTip(message ?? "Failed to create staking pool", MessageTypes.error);
     }
 
     setLoading(false);
@@ -195,8 +195,8 @@ export default function CreateStakingTokenPool() {
           <Box sx={{ maxWidth: "474px", width: "100%", display: "grid", gap: "20px 0" }}>
             <Box>
               <FilledTextField
-                label={t`Token pool's name`}
-                placeholder={t`Enter token pool's name`}
+                label={t`Staking pool's name`}
+                placeholder={t`Enter staking pool's name`}
                 onChange={(value) => handleFieldChange(value, "name")}
                 value={values.name}
               />
@@ -337,7 +337,7 @@ export default function CreateStakingTokenPool() {
                 disabled={Boolean(errorMsg) || loading}
                 loading={loading}
               >
-                {errorMsg || t`Create token pool`}
+                {errorMsg || t`Create staking pool`}
               </Button>
             </Box>
           </Box>

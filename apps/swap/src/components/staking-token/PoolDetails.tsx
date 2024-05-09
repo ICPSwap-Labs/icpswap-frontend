@@ -274,7 +274,7 @@ export default function StakingPoolDetails({
                   href={`${INFO_URL}/staking-token/details/${pool?.canisterId.toString()}/${state}`}
                   target="_blank"
                 >
-                  Token Pools Info
+                  Staking Pool Info
                 </Link>
               </Typography>
             </Grid>

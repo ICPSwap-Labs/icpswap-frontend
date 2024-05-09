@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, availableArgsNull, isPrincipal } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
 import { stakingTokenController, stakingToken } from "@icpswap/actor";
 import type {
   CreateTokenPoolArgs,
@@ -16,14 +16,14 @@ import { useCallsData } from "../useCallData";
 
 /* token controller */
 export async function createStakingTokenPool(args: CreateTokenPoolArgs) {
-  return resultFormat<string>(await (await stakingTokenController(true)).createTokenPool(args));
+  return resultFormat<string>(await (await stakingTokenController(true)).createStakingPool(args));
 }
 
 export async function getStakingTokenPools(state: bigint | undefined, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
     await (
       await stakingTokenController()
-    ).findTokenPoolPage(availableArgsNull<bigint>(state), BigInt(offset), BigInt(limit)),
+    ).findStakingPoolPage(availableArgsNull<bigint>(state), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -51,7 +51,7 @@ export function useStakingTokenGlobalData(reload?: boolean) {
 
 export async function getStakingPoolFromController(canisterId: string) {
   return resultFormat<StakingPoolControllerPoolInfo>(
-    await (await stakingTokenController()).getTokenPool(Principal.fromText(canisterId)),
+    await (await stakingTokenController()).getStakingPool(Principal.fromText(canisterId)),
   ).data;
 }
 

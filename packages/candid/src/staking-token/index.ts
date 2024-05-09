@@ -7,13 +7,13 @@ export type {
   Record as StakingPoolTransaction,
 } from "./TokenPool";
 
-export { idlFactory as TokenPoolControllerInterfaceFactory } from "./TokenPoolController.did";
+export { idlFactory as StakingTokenControllerInterfaceFactory } from "./StakingTokenController.did";
 export type {
-  _SERVICE as TokenPoolController,
+  _SERVICE as StakingTokenController,
   InitRequest as CreateTokenPoolArgs,
-  TokenPoolInfo as StakingPoolControllerPoolInfo,
+  StakingPoolInfo as StakingPoolControllerPoolInfo,
   GlobalDataInfo as StakingPoolGlobalData,
-} from "./TokenPoolController";
+} from "./StakingTokenController";
 
 export { idlFactory as TokenPoolStorageInterfaceFactory } from "./TokenPoolStorage.did";
 export type { _SERVICE as TokenPoolStorage } from "./TokenPoolStorage";

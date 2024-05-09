@@ -39,7 +39,7 @@ export enum ActorName {
   VotingCanister = "VoteProjectCanister",
   VotingFileCanister = "VoteFileCanister",
 
-  TokenPoolController = "TokenPoolController",
+  StakingTokenController = "StakingTokenController",
   TokenPool = "TokenPool",
   TokenPoolStorage = "TokenPoolStorage",
 
