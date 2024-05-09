@@ -7,10 +7,12 @@ import { Link } from "../Link";
 
 export default function BTC_Links() {
   return (
-    <Box sx={{ margin: "30px 0 0 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "20px 0" }}>
-      <Link href={ckBTC_DASHBOARD} label={<Trans>Open in ckBTC Dashboard</Trans>} />
+    <Box
+      sx={{ margin: "30px 0 0 0", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "10px 0" }}
+    >
+      <Link href={ckBTC_DASHBOARD} label={<Trans>Open in ckBTC Dashboard</Trans>} fontSize="12px" />
 
-      <Link href={explorerLink(ckBTC_MINTER_ID)} label={<Trans>Open in ckBTC canister</Trans>} />
+      <Link href={explorerLink(ckBTC_MINTER_ID)} label={<Trans>Open in ckBTC canister</Trans>} fontSize="12px" />
     </Box>
   );
 }

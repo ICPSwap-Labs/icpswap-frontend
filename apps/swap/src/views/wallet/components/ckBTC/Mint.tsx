@@ -1,21 +1,25 @@
-import { Box, Button, CircularProgress, Typography, useTheme } from "@mui/material";
+import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import QRCode from "components/qrcode";
 import { useBTCDepositAddress, useUpdateBalanceCallback } from "hooks/ck-btc/useBTCCalls";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import Copy from "components/Copy";
-import { useState } from "react";
+import Copy, { CopyRef } from "components/Copy";
+import { useState, useRef } from "react";
 import { ckBTC_ID } from "constants/ckBTC";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard, TabPanel, type Tab } from "components/index";
+import { MainCard, type Tab } from "components/index";
+import { RefreshIcon } from "assets/icons/Refresh";
+
 import Transaction from "./Transaction";
 import Links from "./Links";
 import Logo from "./Logo";
+import { LogosWrapper } from "../ckTokens/LogosWrapper";
+import { MainContent } from "../ckTokens/MainContent";
 
 function CopyIcon() {
   return (
@@ -73,101 +77,182 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
     setBalanceLoading(false);
   };
 
+  const copyRef = useRef<CopyRef>(null);
+
+  const handleCopy = () => {
+    if (copyRef) {
+      copyRef?.current?.copy();
+    }
+  };
+
   return (
     <>
-      <MainCard>
-        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Logo type="mint" />
-
+      <MainCard
+        sx={{
+          padding: "40px",
+          "@media(max-width: 980px)": {
+            padding: "20px",
+          },
+        }}
+      >
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: "0 12px",
+              gridTemplateColumns: "564px auto",
+              "@media(max-width: 980px)": {
+                gridTemplateColumns: "minmax(100%, 564px)",
+                gap: "12px 0",
+              },
+            }}
+          >
             <Box
               sx={{
-                margin: "20px 0 0 0",
-                display: "flex",
-                gap: "0 10px",
-                alignItems: "center",
+                maxWidth: "564px",
+                width: "100%",
               }}
             >
-              <Typography color="#fff">
-                <Trans>Balance:</Trans>
-                &nbsp;{parseTokenAmount(balance, token?.decimals).toFormat()} ckBTC
-              </Typography>
-
-              <Button variant="outlined" size="small" disabled={balanceLoading} onClick={handelUpdateBalance}>
-                {balanceLoading ? <CircularProgress size={18} sx={{ margin: "0 5px 0 0", color: "inherit" }} /> : null}
-                <Trans>Update</Trans>
-              </Button>
-            </Box>
-
-            {loading ? (
-              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "180px" }}>
-                <CircularProgress />
-              </Box>
-            ) : !btc_address ? (
-              <Typography sx={{ margin: "10px 0 0 0" }}>
-                <Trans>No BTC Deposit Address</Trans>
-              </Typography>
-            ) : (
-              <>
-                <Box sx={{ background: theme.palette.background.level4, margin: "30px 0 0 0", padding: "10px" }}>
-                  <Typography>
-                    <Trans>BTC Deposit Address</Trans>
-                  </Typography>
-
-                  <Box sx={{ margin: "15px 0 0 0", display: "flex", justifyContent: "center" }}>
-                    <QRCode value={btc_address ?? ""} />
-                  </Box>
-                </Box>
-
-                <Box sx={{ margin: "10px 0 0 0", display: "flex", alignItems: "center", gap: "0 10px" }}>
-                  <Copy content={btc_address}>
-                    <Typography color="#fff" fontWeight={500}>
-                      {btc_address}
+              <MainContent buttons={buttons} onChange={handleChange} active={active}>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  {loading ? (
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "180px" }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : !btc_address ? (
+                    <Typography sx={{ margin: "10px 0 0 0" }}>
+                      <Trans>No BTC Deposit Address</Trans>
                     </Typography>
-                  </Copy>
-                  <Copy content={btc_address}>
-                    <CopyIcon />
-                  </Copy>
+                  ) : (
+                    <>
+                      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                        <Box
+                          sx={{
+                            width: "160px",
+                            height: "160px",
+                            padding: "16px",
+                            border: `1px solid ${theme.palette.background.level3}`,
+                            display: "flex",
+                            justifyContent: "center",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <QRCode value={btc_address ?? ""} />
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ margin: "24px 0 0 0" }}>
+                        <Typography>
+                          <Trans>BTC Deposit Address</Trans>
+                        </Typography>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          margin: "10px 0 0 0",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "0 10px",
+                        }}
+                      >
+                        <Typography
+                          sx={{ color: "text.primary", cursor: "pointer", fontWeight: 500 }}
+                          onClick={handleCopy}
+                        >
+                          {btc_address}
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onClick={handleCopy}
+                        >
+                          <CopyIcon />
+                        </Box>
+
+                        <Copy content={btc_address} ref={copyRef} />
+                      </Box>
+                    </>
+                  )}
+
+                  <Box
+                    sx={{
+                      margin: "30px 0 0 0",
+                      display: "flex",
+                      width: "360px",
+                      "@media(max-width:640px)": { width: "320px" },
+                    }}
+                  >
+                    <Typography sx={{ flex: "1" }}>
+                      <Trans>Minimum Minting Amount</Trans>
+                    </Typography>
+
+                    <Typography>
+                      <Trans>0.001 ckBTC</Trans>
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      margin: "10px 0 0 0",
+                      display: "flex",
+                      width: "360px",
+                      "@media(max-width:640px)": { width: "320px" },
+                    }}
+                  >
+                    <Typography sx={{ flex: "1" }}>
+                      <Trans>KYT Fee</Trans>
+                    </Typography>
+
+                    <Typography>
+                      <Trans>0.00002 ckBTC</Trans>
+                    </Typography>
+                  </Box>
+
+                  <Links />
                 </Box>
-              </>
-            )}
-
-            <Box
-              sx={{
-                margin: "30px 0 0 0",
-                display: "flex",
-                width: "360px",
-                "@media(max-width:640px)": { width: "320px" },
-              }}
-            >
-              <Typography sx={{ flex: "1" }}>
-                <Trans>Minimum Minting Amount</Trans>
-              </Typography>
-
-              <Typography>
-                <Trans>0.001 ckBTC</Trans>
-              </Typography>
+              </MainContent>
             </Box>
 
             <Box
               sx={{
-                margin: "10px 0 0 0",
-                display: "flex",
-                width: "360px",
-                "@media(max-width:640px)": { width: "320px" },
+                "@media(max-width: 980px)": {
+                  gridArea: "1 / auto",
+                },
               }}
             >
-              <Typography sx={{ flex: "1" }}>
-                <Trans>KYT Fee</Trans>
-              </Typography>
+              <LogosWrapper>
+                <Logo type="mint" />
 
-              <Typography>
-                <Trans>0.00002 ckBTC</Trans>
-              </Typography>
+                <Box sx={{ margin: "32px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "10px 0" }}>
+                  <Box sx={{ display: "flex", gap: "0 4px", alignItems: "center" }}>
+                    <Typography fontSize="16px">
+                      <Trans>Balance</Trans>
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                      onClick={handelUpdateBalance}
+                    >
+                      <RefreshIcon fill="#ffffff" />
+                    </Box>
+                  </Box>
+
+                  <Typography color="text.primary" fontSize="18px" fontWeight={600}>
+                    {balance && !balanceLoading ? parseTokenAmount(balance, token?.decimals).toFormat() : "--"}{" "}
+                    <Typography component="span" fontSize="16px">
+                      ckBTC
+                    </Typography>
+                  </Typography>
+                </Box>
+              </LogosWrapper>
             </Box>
-
-            <Links />
           </Box>
         </Box>
       </MainCard>
