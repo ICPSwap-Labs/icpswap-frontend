@@ -1,9 +1,10 @@
 import { Box, Typography, InputAdornment } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
+import { useTheme } from "@mui/styles";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard, NumberFilledTextField, TabPanel, type Tab } from "components/index";
+import { NumberFilledTextField, type Tab } from "components/index";
 import { principalToBytes32 } from "utils/ic/index";
 import { useETHContract } from "hooks/web3/useETHContract";
 import { useWeb3React } from "@web3-react/core";
@@ -19,25 +20,31 @@ import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork } from "constants/web3";
 import { useTokenBalance } from "hooks/token";
 import { ckETH } from "constants/tokens";
+import { Theme } from "@mui/material/styles";
 
+import { MainContent } from "../ckTokens/MainContent";
+import { LogosWrapper } from "../ckTokens/LogosWrapper";
 import Links from "./Links";
 import Transaction from "./Transaction";
 import Logo from "./Logo";
+import { Wrapper } from "../ckTokens/Wrapper";
 
 interface DeadContentProps {
   content: string | undefined;
 }
 
 function DeadContent({ content }: DeadContentProps) {
+  const theme = useTheme() as Theme;
+
   return (
     <Box
       sx={{
         padding: "14px 16px",
         borderRadius: "8px",
-        background: "#4F5A84",
+        background: theme.palette.background.level4,
       }}
     >
-      <Typography color="text.primary" sx={{ wordBreak: "break-all" }}>
+      <Typography sx={{ wordBreak: "break-all", fontWeight: 500 }}>
         {content || <Typography height="10px" width="2px" />}
       </Typography>
     </Box>
@@ -50,7 +57,7 @@ export interface MintProps {
   active: string;
 }
 
-export default function MintCK_ETH({ buttons, handleChange, active }: MintProps) {
+export default function MintCkETH({ buttons, handleChange, active }: MintProps) {
   const principal = useAccountPrincipalString();
   const { account, provider, chainId } = useWeb3React();
 
@@ -124,35 +131,87 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
   if (!amount) error = t`Enter the amount`;
 
   return (
-    <>
-      <MainCard>
-        <TabPanel tabs={buttons} onChange={handleChange} active={active} />
+    <Wrapper
+      main={
+        <MainContent buttons={buttons} onChange={handleChange} active={active}>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "24px 0",
+            }}
+          >
+            <Box>
+              <Typography fontSize="16px">Your wallet of IC network</Typography>
+              <Box sx={{ margin: "12px 0 0 0" }}>
+                <DeadContent content={principal} />
+              </Box>
+            </Box>
 
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Logo type="mint" />
+            <Box>
+              <Typography fontSize="16px">Principal → Bytes32</Typography>
+              <Box sx={{ margin: "12px 0 0 0" }}>
+                <DeadContent content={bytes32} />
+              </Box>
+            </Box>
 
-            <Box
-              sx={{
-                margin: "20px 0 0 0",
-                display: "flex",
-                gap: "0 10px",
-              }}
+            <Box sx={{ width: "100%" }}>
+              <Typography fontSize="16px">Your wallet of Metamask</Typography>
+              <Box sx={{ margin: "12px 0 0 0" }}>
+                {account ? <DeadContent content={account} /> : <Web3ButtonConnector chainId={chain} />}
+              </Box>
+            </Box>
+
+            <Box sx={{ width: "100%" }}>
+              <Typography fontSize="16px">Transfer ETH (Ethereum Mainnet) amount:</Typography>
+              <Box sx={{ margin: "12px 0 0 0" }}>
+                <NumberFilledTextField
+                  value={amount}
+                  numericProps={{
+                    decimalScale: 8,
+                    thousandSeparator: true,
+                  }}
+                  onChange={(value: number) => setAmount(value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        <Typography component="span" color="text.primary">
+                          ETH
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+
+          <Box sx={{ margin: "32px 0 0 0" }}>
+            <ButtonConnector
+              variant="contained"
+              fullWidth
+              size="large"
+              onClick={handleMint}
+              disabled={loading || !account || !amount || !!error}
+              loading={loading}
             >
-              <Typography color="#ffffff">
-                <Trans>Balance:</Trans>
-              </Typography>
-              <Typography>
-                <Typography color="#ffffff">
-                  {ethBalance && !balanceLoading ? toSignificant(ethBalance.toString()) : "--"} ETH
-                </Typography>
+              {error || t`Mint ckETH`}
+            </ButtonConnector>
+          </Box>
 
-                <Typography color="#ffffff">
-                  {ckETHBalance && !ckBalanceLoading
-                    ? toSignificant(parseTokenAmount(ckETHBalance, ckETH.decimals).toString())
-                    : "--"}{" "}
-                  ckETH
-                </Typography>
+          <Links />
+        </MainContent>
+      }
+      logo={
+        <LogosWrapper>
+          <Logo type="mint" />
+
+          <Box sx={{ margin: "32px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "10px 0" }}>
+            <Box sx={{ display: "flex", gap: "0 4px", alignItems: "center" }}>
+              <Typography fontSize="16px">
+                <Trans>Balance</Trans>
               </Typography>
 
               <Box
@@ -161,71 +220,29 @@ export default function MintCK_ETH({ buttons, handleChange, active }: MintProps)
                 }}
                 onClick={handelUpdateBalance}
               >
-                <RefreshIcon fill="rgb(86, 105, 220)" />
+                <RefreshIcon fill="#ffffff" />
               </Box>
             </Box>
 
-            <Box sx={{ margin: "40px 0 0 0", width: "100%", maxWidth: "474px" }}>
-              <Box>
-                <Typography>Your wallet of IC network</Typography>
-                <Box sx={{ margin: "16px 0 0 0" }}>
-                  <DeadContent content={principal} />
-                </Box>
-              </Box>
+            <Typography sx={{ fontWeight: 600, fontSize: "18px", color: "text.primary" }}>
+              {ethBalance && !balanceLoading ? toSignificant(ethBalance.toString()) : "--"}{" "}
+              <Typography component="span" fontSize="16px">
+                ETH
+              </Typography>
+            </Typography>
 
-              <Box sx={{ margin: "16px 0 0 0" }}>
-                <Typography>Principal → Bytes32</Typography>
-                <Box sx={{ margin: "16px 0 0 0" }}>
-                  <DeadContent content={bytes32} />
-                </Box>
-              </Box>
-
-              <Box sx={{ margin: "16px 0 0 0" }}>
-                <Typography>Your wallet of Metamask</Typography>
-                <Box sx={{ margin: "16px 0 0 0" }}>
-                  {account ? <DeadContent content={account} /> : <Web3ButtonConnector chainId={chain} />}
-                </Box>
-              </Box>
-
-              <Box sx={{ margin: "16px 0 0 0" }}>
-                <Typography>Transfer ETH (Ethereum Mainnet) amount:</Typography>
-                <Box sx={{ margin: "16px 0 0 0" }}>
-                  <NumberFilledTextField
-                    value={amount}
-                    numericProps={{
-                      decimalScale: 8,
-                      thousandSeparator: true,
-                    }}
-                    onChange={(value: number) => setAmount(value)}
-                    InputProps={{
-                      endAdornment: <InputAdornment position="start">ETH</InputAdornment>,
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              <Box sx={{ margin: "48px 0 0 0" }}>
-                <ButtonConnector
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  onClick={handleMint}
-                  disabled={loading || !account || !amount || !!error}
-                  loading={loading}
-                >
-                  {error || t`Mint ckETH`}
-                </ButtonConnector>
-              </Box>
-            </Box>
-
-            <Links />
+            <Typography sx={{ fontWeight: 600, fontSize: "18px", color: "text.primary" }}>
+              {ckETHBalance && !ckBalanceLoading
+                ? toSignificant(parseTokenAmount(ckETHBalance, ckETH.decimals).toString())
+                : "--"}{" "}
+              <Typography component="span" fontSize="16px">
+                ckETH
+              </Typography>
+            </Typography>
           </Box>
-        </Box>
-      </MainCard>
-
-      <Box sx={{ margin: "20px 0 0 0" }}>
-        <Transaction blockNumber={blockNumber} />
-      </Box>
-    </>
+        </LogosWrapper>
+      }
+      transactions={<Transaction blockNumber={blockNumber} />}
+    />
   );
 }

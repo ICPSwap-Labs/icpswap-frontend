@@ -6,18 +6,29 @@ import { mockALinkAndOpen } from "@icpswap/utils";
 export interface ALinkProps {
   children: ReactNode;
   link: string | undefined;
+  color?: string;
+  textDecorationColor?: "primary" | "secondary" | "text.secondary";
 }
 
-export function ALink({ children, link }: ALinkProps) {
+export function ALink({ children, link, textDecorationColor = "text.secondary", color = "" }: ALinkProps) {
   return (
     <a
       href={link}
       target="_blank"
       rel="noreferrer"
-      style={{ textDecoration: "underline", textDecorationColor: "#8492c4" }}
+      style={{
+        textDecoration: "underline",
+        textDecorationColor:
+          textDecorationColor === "primary"
+            ? "rgb(134, 114, 255)"
+            : textDecorationColor === "secondary"
+            ? "rgb(86, 105, 220)"
+            : "#8492c4",
+        color,
+      }}
     >
       <Typography
-        color="text.secondary"
+        color={color ?? "text.secondary"}
         sx={{
           cursor: "pointer",
           userSelect: "none",

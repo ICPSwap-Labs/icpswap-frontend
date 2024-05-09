@@ -2,7 +2,7 @@ import { useState, ReactNode } from "react";
 import { Grid, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory, useLocation } from "react-router-dom";
-import { isDarkTheme, mockALinkAndOpen } from "utils";
+import { mockALinkAndOpen } from "utils";
 import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => {
       fontWeight: 600,
       "&.active": {
         color: theme.themeOption.textPrimary,
-        background: isDarkTheme(theme) ? theme.colors.darkLevel3 : "#ffffff",
       },
       "&.fontNormal": {
         fontWeight: 400,
@@ -43,11 +42,24 @@ export interface TabPanelProps {
   tabs: Tab[];
   onChange?: (tab: Tab) => void;
   fontNormal?: boolean;
+  fontSize?: string;
   fullWidth?: boolean;
   activeWithSearch?: boolean;
+  bg0?: string;
+  bg1?: string;
 }
 
-export function TabPanel({ tabs, onChange, active, fullWidth, fontNormal, activeWithSearch }: TabPanelProps) {
+export function TabPanel({
+  tabs,
+  onChange,
+  active,
+  fullWidth,
+  fontNormal,
+  activeWithSearch,
+  fontSize = "14px",
+  bg0,
+  bg1,
+}: TabPanelProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const history = useHistory();
@@ -93,7 +105,7 @@ export function TabPanel({ tabs, onChange, active, fullWidth, fontNormal, active
         sx={{
           display: "grid",
           width: fullWidth ? "100%" : "auto",
-          backgroundColor: isDarkTheme(theme) ? theme.colors.darkLevel1 : theme.colors.lightGray200,
+          backgroundColor: bg0 ?? theme.colors.darkLevel1,
           borderRadius: "15px",
           padding: "4px",
           gridTemplateColumns: fullWidth ? `repeat(${tabs.length}, 1fr)` : `repeat(${tabs.length}, auto)`,
@@ -104,6 +116,12 @@ export function TabPanel({ tabs, onChange, active, fullWidth, fontNormal, active
             key={tab.key}
             className={`${classes.switchButton}${fontNormal ? " fontNormal" : ""}${isActive(tab) ? " active" : ""}`}
             onClick={() => loadPage(tab)}
+            sx={{
+              fontSize,
+              "&.active": {
+                background: bg1 ?? theme.colors.darkLevel3,
+              },
+            }}
           >
             <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
               {tab.value}

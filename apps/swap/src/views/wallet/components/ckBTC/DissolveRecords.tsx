@@ -1,23 +1,24 @@
-import { Box, Typography , Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
+import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { useUserTxs } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { StoredTxValue } from "types/ckBTC";
 import { parseTokenAmount } from "@icpswap/utils";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 function ListItem({ tx }: { tx: StoredTxValue }) {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{tx.block_index}</Typography>
+        <BodyCell>{tx.block_index}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{tx.state ?? "--"}</Typography>
+        <BodyCell>{tx.state ?? "--"}</BodyCell>
       </TableCell>
       <TableCell>
         {tx.txid ? (
-          <Typography
+          <BodyCell
             sx={{
               maxWidth: "400px",
               wordBreak: "break-all",
@@ -25,14 +26,20 @@ function ListItem({ tx }: { tx: StoredTxValue }) {
               "@media(max-width:640px)": { width: "300px" },
             }}
           >
-            <ALink link={`https://explorer.btc.com/btc/transaction/${tx.txid}`}>{tx.txid}</ALink>
-          </Typography>
+            <ALink
+              link={`https://explorer.btc.com/btc/transaction/${tx.txid}`}
+              color="primary"
+              textDecorationColor="primary"
+            >
+              {tx.txid}
+            </ALink>
+          </BodyCell>
         ) : (
-          <Typography>--</Typography>
+          <BodyCell>--</BodyCell>
         )}
       </TableCell>
       <TableCell>
-        {tx.value ? <Typography>{parseTokenAmount(tx.value, 8).toFormat()}</Typography> : <Typography>--</Typography>}
+        {tx.value ? <BodyCell>{parseTokenAmount(tx.value, 8).toFormat()}</BodyCell> : <BodyCell>--</BodyCell>}
       </TableCell>
     </TableRow>
   );
@@ -56,16 +63,24 @@ export default function DissolveRecords() {
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Trans>Block Index</Trans>
+                  <HeaderCell>
+                    <Trans>Block Index</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>State</Trans>
+                  <HeaderCell>
+                    <Trans>State</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Txid</Trans>
+                  <HeaderCell>
+                    <Trans>Txid</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Amount</Trans>
+                  <HeaderCell>
+                    <Trans>Amount</Trans>
+                  </HeaderCell>
                 </TableCell>
               </TableRow>
             </TableHead>
