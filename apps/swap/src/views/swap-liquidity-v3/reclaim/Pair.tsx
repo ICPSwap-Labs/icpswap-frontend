@@ -2,11 +2,12 @@ import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
 import { NoData, LoadingRow, SwapTooltip } from "components/index";
 import { Trans } from "@lingui/macro";
-import { useUserSwapUnusedBalanceByPoolId } from "@icpswap/hooks";
+import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
 import { isMobile } from "react-device-detect";
+import { useHistory } from "react-router-dom";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -21,8 +22,9 @@ type Balance = {
 
 export function ReclaimWithPair() {
   const principal = useAccountPrincipalString();
-  const [selectedPoolId, setSelectedPoolId] = useState<string | undefined>(undefined);
-  const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, selectedPoolId);
+  const history = useHistory();
+  const { poolId } = useParsedQueryString() as { poolId: string };
+  const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, poolId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
 
@@ -88,7 +90,11 @@ export function ReclaimWithPair() {
   }, [claimedKeys, unavailableClaimNumbers, totalClaimedNumbers, hideUnavailableClaim]);
 
   const handlePairChange = (poolId: string | undefined) => {
-    setSelectedPoolId(poolId);
+    if (poolId) {
+      history.push(`/swap/reclaim?type=pair&poolId=${poolId}`);
+    } else {
+      history.push(`/swap/reclaim?type=pair`);
+    }
   };
 
   return (
@@ -127,7 +133,7 @@ export function ReclaimWithPair() {
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
-            <SelectPair search value={selectedPoolId} border onPairChange={handlePairChange} />
+            <SelectPair search value={poolId} border onPairChange={handlePairChange} />
           </Box>
         </Box>
 
