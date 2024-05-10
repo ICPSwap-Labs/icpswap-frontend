@@ -33,6 +33,7 @@
     "ethersproject",
     "unstake",
     "craco",
-    "typechain"
+    "typechain",
+    "Sepolia"
   ]
 }

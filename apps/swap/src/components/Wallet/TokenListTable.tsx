@@ -15,6 +15,7 @@ import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
+import { ckSepoliaUSDC } from "@icpswap/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import { useToken } from "hooks/useCurrency";
@@ -89,6 +90,11 @@ type ckTOKEN = {
 const ckTokens: ckTOKEN[] = [
   { id: ckBTC.address, mintPath: "/wallet/ckBTC?type=mint", dissolvePath: "/wallet/ckBTC?type=dissolve" },
   { id: ckETH.address, mintPath: "/wallet/ckETH?type=mint", dissolvePath: "/wallet/ckETH?type=dissolve" },
+  {
+    id: ckSepoliaUSDC.address,
+    mintPath: `/wallet/ckToken?type=mint&tokenId=${ckSepoliaUSDC.address}`,
+    dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ckSepoliaUSDC.address}`,
+  },
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {

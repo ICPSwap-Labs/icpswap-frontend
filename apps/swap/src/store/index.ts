@@ -25,6 +25,7 @@ import { CallState } from "./call/states";
 import { StepsState } from "./steps/state";
 import { Web3State } from "./web3/states";
 import { SnsState } from "./sns/states";
+import { TransactionsState } from "./transactions/reducer";
 
 import { SwapBurnState as SwapV2BurnState } from "./swapv2/burn/state";
 import { SwapLiquidityState as SwapV2LiquidityState } from "./swapv2/liquidity/state";
@@ -56,6 +57,7 @@ export interface AllState {
   swapV2Cache: SwapV2CacheState;
   web3: Web3State;
   sns: SnsState;
+  transactions: TransactionsState;
 }
 
 const defaultStorageConfig = {

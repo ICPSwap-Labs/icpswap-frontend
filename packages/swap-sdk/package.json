@@ -17,6 +17,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "@ethersproject/address": "^5.7.0",
     "@icpswap/utils": "workspace:*",
     "big.js": "^6.1.1",
     "decimal.js-light": "^2.5.1"

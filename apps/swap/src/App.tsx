@@ -16,6 +16,8 @@ import { useFetchInfoAllToken } from "hooks/info/useInfoTokens";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
 import { GlobalContext } from "hooks/useGlobalContext";
+import TransactionsUpdater from "store/transactions/updater";
+
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
@@ -46,6 +48,7 @@ export default function App() {
     <StyledEngineProvider injectFirst>
       <Web3Provider>
         <Route component={GoogleAnalytics} />
+        <TransactionsUpdater />
         <ThemeProvider theme={theme(customization)}>
           <SnackbarProvider maxSnack={100}>
             <GlobalContext.Provider value={{ AllPools }}>

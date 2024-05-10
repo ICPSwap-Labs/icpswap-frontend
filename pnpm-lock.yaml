@@ -523,6 +523,9 @@ importers:
       lint-staged:
         specifier: '>=10'
         version: 15.2.0
+      ms:
+        specifier: 2.1.3
+        version: 2.1.3
       node-vibrant:
         specifier: ^3.1.5
         version: 3.1.6
@@ -659,6 +662,9 @@ importers:
       '@types/jest':
         specifier: ^25.2.1
         version: 25.2.3
+      '@types/ms':
+        specifier: ^0.7.34
+        version: 0.7.34
       '@types/multicodec':
         specifier: ^1.0.0
         version: 1.0.0
@@ -840,6 +846,9 @@ importers:
 
   packages/swap-sdk:
     dependencies:
+      '@ethersproject/address':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@icpswap/utils':
         specifier: workspace:*
         version: link:../utils
@@ -6373,6 +6382,10 @@ packages:
 
   /@types/mime@3.0.4:
     resolution: {integrity: sha512-iJt33IQnVRkqeqC7PzBHPTC6fDlRNRW8vjrgqtScAhrmMwe8c4Eo7+fUGTa+XdWrpEgpyKWMYmi2dIwMAYRzPw==}
+
+  /@types/ms@0.7.34:
+    resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
+    dev: true
 
   /@types/multicodec@1.0.0:
     resolution: {integrity: sha512-UZkJT3rb8AfT2S1bTk7Gj+1wP9GJQ4zSnHDycRxEiI4yPOn47s5rSK86w/EFHvnNBhsu3zl+XNbTnBcxBd9dAQ==}

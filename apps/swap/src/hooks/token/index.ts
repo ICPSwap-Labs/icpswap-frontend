@@ -15,3 +15,4 @@ export * from "./useApprove";
 export * from "./useTokenInfo";
 export * from "./useTokenBalance";
 export * from "./useTokenInSNS";
+export * from "./useERC20Token";

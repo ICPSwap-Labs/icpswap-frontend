@@ -25,8 +25,8 @@ function Arrow() {
 }
 
 export interface LogosProps {
-  logo0: string;
-  logo1: string;
+  logo0: string | undefined;
+  logo1: string | undefined;
 }
 
 export function Logos({ logo0, logo1 }: LogosProps) {
