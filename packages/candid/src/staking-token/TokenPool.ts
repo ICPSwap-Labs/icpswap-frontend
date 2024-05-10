@@ -11,7 +11,7 @@ export type Error =
   | { InternalError: string }
   | { UnsupportedToken: string }
   | { InsufficientFunds: null };
-export interface InitRequest {
+export interface InitRequests {
   stakingTokenSymbol: string;
   startTime: bigint;
   rewardTokenSymbol: string;
@@ -20,10 +20,12 @@ export interface InitRequest {
   rewardPerTime: bigint;
   name: string;
   stakingTokenFee: bigint;
+  rewardFee: bigint;
   rewardTokenFee: bigint;
   stakingTokenDecimals: bigint;
   bonusEndTime: bigint;
   rewardTokenDecimals: bigint;
+  feeReceiverCid: Principal;
 }
 export interface Page {
   content: Array<Record>;
@@ -37,7 +39,7 @@ export interface Page_1 {
   limit: bigint;
   totalElements: bigint;
 }
-export interface PublicTokenPoolInfo {
+export interface PublicStakingPoolInfo {
   stakingTokenSymbol: string;
   startTime: bigint;
   lastRewardTime: bigint;
@@ -47,6 +49,7 @@ export interface PublicTokenPoolInfo {
   rewardToken: Token;
   rewardPerTime: bigint;
   stakingTokenFee: bigint;
+  rewardFee: bigint;
   rewardDebt: bigint;
   rewardTokenFee: bigint;
   accPerShare: bigint;
@@ -74,10 +77,10 @@ export interface Record {
   amount: bigint;
   rewardTokenDecimals: bigint;
 }
-export type Result = { ok: bigint } | { err: string };
-export type Result_1 = { ok: string } | { err: string };
+export type Result = { ok: string } | { err: string };
+export type Result_1 = { ok: bigint } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
-export type Result_3 = { ok: PublicTokenPoolInfo } | { err: string };
+export type Result_3 = { ok: PublicStakingPoolInfo } | { err: string };
 export type Result_4 = { ok: PublicUserInfo } | { err: string };
 export type Result_5 = { ok: CycleInfo } | { err: Error };
 export type Result_6 = { ok: Array<[Principal, bigint]> } | { err: string };
@@ -99,7 +102,7 @@ export type TransType =
   | { stakeTokenids: null }
   | { createIncentive: null }
   | { depositFrom: null };
-export interface UpdateTokenPool {
+export interface UpdateStakingPool {
   stakingTokenSymbol: string;
   startTime: bigint;
   rewardTokenSymbol: string;
@@ -113,34 +116,33 @@ export interface UpdateTokenPool {
   rewardTokenDecimals: bigint;
 }
 export interface _SERVICE {
-  claim: ActorMethod<[], Result_1>;
-  claimOf: ActorMethod<[Principal], Result_1>;
-  clearErrorLog: ActorMethod<[], undefined>;
-  clearLocks: ActorMethod<[], Result>;
-  deposit: ActorMethod<[], Result_1>;
-  depositFrom: ActorMethod<[bigint], Result_1>;
-  deposit_test: ActorMethod<[bigint], Result_1>;
+  claim: ActorMethod<[], Result>;
+  clearLocks: ActorMethod<[], Result_1>;
+  deposit: ActorMethod<[], Result>;
+  depositFrom: ActorMethod<[bigint], Result>;
   findAllUserInfo: ActorMethod<[bigint, bigint], Result_9>;
   findRewardRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
   findStakingRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
   getAdmins: ActorMethod<[], Result_7>;
   getAllLocks: ActorMethod<[], Result_6>;
   getCycleInfo: ActorMethod<[], Result_5>;
-  getErrorLog: ActorMethod<[], Array<string>>;
   getPoolInfo: ActorMethod<[], Result_3>;
   getUserInfo: ActorMethod<[Principal], Result_4>;
   getVersion: ActorMethod<[], string>;
-  harvest: ActorMethod<[], Result>;
-  pendingReward: ActorMethod<[Principal], Result>;
+  harvest: ActorMethod<[], Result_1>;
+  pendingReward: ActorMethod<[Principal], Result_1>;
+  refundSubaccountBalance: ActorMethod<[Principal], Result>;
+  refundUserStaking: ActorMethod<[Principal], Result>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
-  setAutoUnlockTimes: ActorMethod<[bigint], Result>;
+  setAutoUnlockTimes: ActorMethod<[bigint], Result_1>;
   setTime: ActorMethod<[bigint, bigint], Result_3>;
-  startTimer: ActorMethod<[], Result_3>;
   stop: ActorMethod<[], Result_3>;
-  subaccountBalanceOf: ActorMethod<[Principal], Result>;
-  updateTokenPool: ActorMethod<[UpdateTokenPool], Result_2>;
-  withdraw: ActorMethod<[bigint], Result_1>;
-  withdrawRemainingRewardToken: ActorMethod<[bigint, Principal], Result>;
+  subaccountBalanceOf: ActorMethod<[Principal], Result_1>;
+  unclaimdRewardFee: ActorMethod<[], Result_1>;
+  updateStakingPool: ActorMethod<[UpdateStakingPool], Result_2>;
+  withdraw: ActorMethod<[bigint], Result>;
+  withdrawRemainingRewardToken: ActorMethod<[bigint, Principal], Result_1>;
+  withdrawRewardFee: ActorMethod<[], Result>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

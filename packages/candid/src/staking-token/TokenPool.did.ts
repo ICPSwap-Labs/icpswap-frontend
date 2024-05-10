@@ -1,6 +1,6 @@
 export const idlFactory = ({ IDL }: any) => {
-  const Result_1 = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
-  const Result = IDL.Variant({ ok: IDL.Nat, err: IDL.Text });
+  const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
+  const Result_1 = IDL.Variant({ ok: IDL.Nat, err: IDL.Text });
   const PublicUserInfo = IDL.Record({
     pendingReward: IDL.Nat,
     rewardDebt: IDL.Nat,
@@ -64,7 +64,7 @@ export const idlFactory = ({ IDL }: any) => {
   const CycleInfo = IDL.Record({ balance: IDL.Nat, available: IDL.Nat });
   const Result_5 = IDL.Variant({ ok: CycleInfo, err: Error });
   const Token = IDL.Record({ address: IDL.Text, standard: IDL.Text });
-  const PublicTokenPoolInfo = IDL.Record({
+  const PublicStakingPoolInfo = IDL.Record({
     stakingTokenSymbol: IDL.Text,
     startTime: IDL.Nat,
     lastRewardTime: IDL.Nat,
@@ -74,6 +74,7 @@ export const idlFactory = ({ IDL }: any) => {
     rewardToken: Token,
     rewardPerTime: IDL.Nat,
     stakingTokenFee: IDL.Nat,
+    rewardFee: IDL.Nat,
     rewardDebt: IDL.Nat,
     rewardTokenFee: IDL.Nat,
     accPerShare: IDL.Nat,
@@ -82,11 +83,11 @@ export const idlFactory = ({ IDL }: any) => {
     rewardTokenDecimals: IDL.Nat,
   });
   const Result_3 = IDL.Variant({
-    ok: PublicTokenPoolInfo,
+    ok: PublicStakingPoolInfo,
     err: IDL.Text,
   });
   const Result_4 = IDL.Variant({ ok: PublicUserInfo, err: IDL.Text });
-  const UpdateTokenPool = IDL.Record({
+  const UpdateStakingPool = IDL.Record({
     stakingTokenSymbol: IDL.Text,
     startTime: IDL.Nat,
     rewardTokenSymbol: IDL.Text,
@@ -101,33 +102,32 @@ export const idlFactory = ({ IDL }: any) => {
   });
   const Result_2 = IDL.Variant({ ok: IDL.Bool, err: IDL.Text });
   return IDL.Service({
-    claim: IDL.Func([], [Result_1], []),
-    claimOf: IDL.Func([IDL.Principal], [Result_1], []),
-    clearErrorLog: IDL.Func([], [], []),
-    clearLocks: IDL.Func([], [Result], []),
-    deposit: IDL.Func([], [Result_1], []),
-    depositFrom: IDL.Func([IDL.Nat], [Result_1], []),
-    deposit_test: IDL.Func([IDL.Nat], [Result_1], []),
+    claim: IDL.Func([], [Result], []),
+    clearLocks: IDL.Func([], [Result_1], []),
+    deposit: IDL.Func([], [Result], []),
+    depositFrom: IDL.Func([IDL.Nat], [Result], []),
     findAllUserInfo: IDL.Func([IDL.Nat, IDL.Nat], [Result_9], ["query"]),
     findRewardRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
     findStakingRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
     getAdmins: IDL.Func([], [Result_7], ["query"]),
     getAllLocks: IDL.Func([], [Result_6], ["query"]),
     getCycleInfo: IDL.Func([], [Result_5], []),
-    getErrorLog: IDL.Func([], [IDL.Vec(IDL.Text)], ["query"]),
     getPoolInfo: IDL.Func([], [Result_3], ["query"]),
     getUserInfo: IDL.Func([IDL.Principal], [Result_4], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
-    harvest: IDL.Func([], [Result], []),
-    pendingReward: IDL.Func([IDL.Principal], [Result], ["query"]),
+    harvest: IDL.Func([], [Result_1], []),
+    pendingReward: IDL.Func([IDL.Principal], [Result_1], ["query"]),
+    refundSubaccountBalance: IDL.Func([IDL.Principal], [Result], []),
+    refundUserStaking: IDL.Func([IDL.Principal], [Result], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
-    setAutoUnlockTimes: IDL.Func([IDL.Nat], [Result], []),
+    setAutoUnlockTimes: IDL.Func([IDL.Nat], [Result_1], []),
     setTime: IDL.Func([IDL.Nat, IDL.Nat], [Result_3], []),
-    startTimer: IDL.Func([], [Result_3], []),
     stop: IDL.Func([], [Result_3], []),
-    subaccountBalanceOf: IDL.Func([IDL.Principal], [Result], []),
-    updateTokenPool: IDL.Func([UpdateTokenPool], [Result_2], []),
-    withdraw: IDL.Func([IDL.Nat], [Result_1], []),
-    withdrawRemainingRewardToken: IDL.Func([IDL.Nat, IDL.Principal], [Result], []),
+    subaccountBalanceOf: IDL.Func([IDL.Principal], [Result_1], []),
+    unclaimdRewardFee: IDL.Func([], [Result_1], ["query"]),
+    updateStakingPool: IDL.Func([UpdateStakingPool], [Result_2], []),
+    withdraw: IDL.Func([IDL.Nat], [Result], []),
+    withdrawRemainingRewardToken: IDL.Func([IDL.Nat, IDL.Principal], [Result_1], []),
+    withdrawRewardFee: IDL.Func([], [Result], []),
   });
 };

@@ -1,7 +1,7 @@
 export { idlFactory as TokenPoolInterfaceFactory } from "./TokenPool.did";
 export type {
   _SERVICE as TokenPool,
-  PublicTokenPoolInfo as StakingTokenPoolInfo,
+  PublicStakingPoolInfo as StakingTokenPoolInfo,
   PublicUserInfo as StakingPoolUserInfo,
   CycleInfo as StakingPoolCycle,
   Record as StakingPoolTransaction,
