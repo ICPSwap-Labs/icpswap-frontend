@@ -1,9 +1,9 @@
 import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
-import { parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { toSignificant } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { usePrincipalTX } from "store/web3/hooks";
+import { useUserErc20TX } from "store/web3/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
@@ -25,7 +25,7 @@ function ListItem({ transaction }: ListItemProps) {
       <TableCell>
         <BodyCell>
           {trans?.blockNumber ? (
-            <ALink link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`} color="text.primary">
+            <ALink link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`} color="text.primary" fontSize="16px">
               {trans.blockNumber}
             </ALink>
           ) : (
@@ -42,7 +42,12 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="primary" textDecorationColor="primary">
+          <ALink
+            link={`${EXPLORER_TX_LINK}/${transaction.hash}`}
+            color="primary"
+            textDecorationColor="primary"
+            fontSize="16px"
+          >
             {transaction.hash}
           </ALink>
         </BodyCell>
@@ -56,9 +61,18 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.from}`} color="primary" textDecorationColor="primary">
-            {transaction.from}
-          </ALink>
+          {trans ? (
+            <ALink
+              link={`${EXPLORER_ADDRESS_LINK}/${trans.from}`}
+              color="primary"
+              textDecorationColor="primary"
+              fontSize="16px"
+            >
+              {trans.from}
+            </ALink>
+          ) : (
+            "--"
+          )}
         </BodyCell>
       </TableCell>
       <TableCell>
@@ -70,9 +84,14 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          {transaction.to ? (
-            <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.to}`} color="primary" textDecorationColor="primary">
-              {transaction.to}
+          {trans?.to ? (
+            <ALink
+              link={`${EXPLORER_ADDRESS_LINK}/${trans.to}`}
+              color="primary"
+              textDecorationColor="primary"
+              fontSize="16px"
+            >
+              {trans.to}
             </ALink>
           ) : (
             "--"
@@ -80,7 +99,7 @@ function ListItem({ transaction }: ListItemProps) {
         </BodyCell>
       </TableCell>
       <TableCell>
-        <BodyCell>{toSignificant(parseTokenAmount(transaction.value, 18).toString())}</BodyCell>
+        <BodyCell>{toSignificant(transaction.value)}</BodyCell>
       </TableCell>
       <TableCell>
         <BodyCell>{trans ? trans.confirmations : "--"}</BodyCell>
@@ -91,11 +110,12 @@ function ListItem({ transaction }: ListItemProps) {
 
 export interface TransactionsProps {
   blockNumber: number | undefined;
+  ledger: string | undefined;
 }
 
-export default function Transactions({ blockNumber }: TransactionsProps) {
+export default function Transactions({ blockNumber, ledger }: TransactionsProps) {
   const principal = useAccountPrincipalString();
-  const tx = usePrincipalTX(principal);
+  const tx = useUserErc20TX(principal, ledger);
 
   const Headers = [
     { key: "Time", label: t`Time` },

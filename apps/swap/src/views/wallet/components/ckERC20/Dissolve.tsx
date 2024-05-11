@@ -1,20 +1,17 @@
 import { Box, Button, CircularProgress, Typography, InputAdornment } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
-import { withdraw_eth, useFetchUserTxStates } from "hooks/ck-eth";
-import { useApprove, useTokenBalance } from "hooks/token";
+import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ckETH_MINTER_ID, ckETH } from "constants/ckETH";
 import { useState, useEffect, useMemo } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
-import { parseTokenAmount, formatTokenAmount, numberToString, toSignificant } from "@icpswap/utils";
+import { parseTokenAmount, formatTokenAmount, toSignificant } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { isAddress } from "utils/web3/index";
-import { MessageTypes, useTips } from "hooks/useTips";
-import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
+import { useDissolveCkERC20 } from "hooks/ckERC20/index";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -33,7 +30,7 @@ export interface DissolveETHProps {
 
 export default function DissolveCkERC20({ buttons, handleChange, active, token, erc20Token }: DissolveETHProps) {
   const principal = useAccountPrincipalString();
-  const [reload, setReload] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
@@ -46,45 +43,19 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
     }
   }, [account]);
 
-  const { result: tokenBalance } = useTokenBalance(token?.address, principal, reload);
+  const { result: tokenBalance } = useTokenBalance(token?.address, principal, refreshTrigger);
 
-  const updateUserTx = useUpdateUserWithdrawTx();
-  const [openTip] = useTips();
-  const approve = useApprove();
-
-  useFetchUserTxStates();
+  const dissolveErc20 = useDissolveCkERC20();
 
   const handleSubmit = async () => {
     if (!amount || !principal || !token || !address) return;
 
-    const withdraw_amount = BigInt(numberToString(formatTokenAmount(amount, token.decimals)));
-
     setLoading(true);
 
-    const { status, message } = await approve({
-      canisterId: token.address,
-      spender: ckETH_MINTER_ID,
-      value: withdraw_amount,
-      account: principal,
-    });
+    const withdrawResult = await dissolveErc20(token, amount, address);
 
-    if (status === ResultStatus.ERROR) {
-      openTip(message ?? t`Failed to approve ${token.symbol}`, MessageTypes.error);
-      setLoading(false);
-      return;
-    }
-
-    const { status: status1, message: message1, data } = await withdraw_eth(address, withdraw_amount);
-
-    if (status1 === ResultStatus.ERROR) {
-      openTip(message1 ?? t`Transaction for dissolving ${token.symbol} failed to submit`, MessageTypes.error);
-    } else {
-      setAmount("");
-      openTip(t`${token.symbol} dissolution transaction submitted: Awaiting completion.`, MessageTypes.success);
-      if (data?.block_index) {
-        updateUserTx(principal, data.block_index, undefined, withdraw_amount.toString());
-      }
-      setReload(!reload);
+    if (withdrawResult?.status === ResultStatus.OK) {
+      setRefreshTrigger(refreshTrigger + 1);
     }
 
     setLoading(false);
@@ -93,9 +64,10 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
   const handleMax = () => {
     if (!token) return;
     setAmount(
-      parseTokenAmount(tokenBalance, token.decimals)
-        .minus(parseTokenAmount(token.transFee, token.decimals))
-        .toFixed(token.decimals - 1),
+      // parseTokenAmount(tokenBalance, token.decimals)
+      //   .minus(parseTokenAmount(token.transFee, token.decimals))
+      //   .toFixed(token.decimals - 1),
+      parseTokenAmount(tokenBalance, token.decimals).minus(parseTokenAmount(token.transFee, token.decimals)).toString(),
     );
   };
 
@@ -117,11 +89,25 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
         token.symbol
       }`;
 
-    if (!formatTokenAmount(amount, token.decimals).plus(token.transFee.toString()).isLessThan(tokenBalance))
-      return t`Insufficient Balance`;
+    if (formatTokenAmount(amount, token.decimals).isGreaterThan(tokenBalance)) return t`Insufficient Balance`;
 
     return undefined;
   }, [amount, token, tokenBalance, chain, chainId, address]);
+
+  // Refresh dissolve records each 20s
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = setInterval(() => {
+      setRefreshTrigger(refreshTrigger + 1);
+    }, 60000);
+
+    return () => {
+      if (timer !== null) {
+        clearInterval(timer);
+      }
+
+      timer = null;
+    };
+  }, [refreshTrigger]);
 
   return (
     <Wrapper
@@ -230,7 +216,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
                 sx={{
                   cursor: "pointer",
                 }}
-                onClick={() => setReload(!reload)}
+                onClick={() => setRefreshTrigger(refreshTrigger + 1)}
               >
                 <RefreshIcon fill="#ffffff" />
               </Box>
@@ -245,7 +231,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
           </Box>
         </LogosWrapper>
       }
-      transactions={<DissolveRecords />}
+      transactions={<DissolveRecords refresh={refreshTrigger} />}
     />
   );
 }

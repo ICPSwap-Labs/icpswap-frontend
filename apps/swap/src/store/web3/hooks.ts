@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
-import { updateTX, updateWithdrawTX } from "./actions";
+import { updateTX, updateWithdrawTX, updateErc20TX } from "./actions";
 
 export function useUpdateTX() {
   const dispatch = useAppDispatch();
@@ -91,4 +91,27 @@ export function useUserWithdrawTxs(principal: string | undefined) {
 
     return undefined;
   }, [principal, states]);
+}
+
+export function useUpdateErc20TX() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (principal: string, ledger: string, tx: TX) => {
+      dispatch(updateErc20TX({ principal, ledger_id: ledger, tx }));
+    },
+    [dispatch],
+  );
+}
+
+export function useUserErc20TX(principal: string | undefined, ledger: string | undefined) {
+  const states = useAppSelector((state) => state.web3.erc20Transactions);
+
+  return useMemo(() => {
+    if (principal && ledger && states) {
+      return states[`${principal}_${ledger}`];
+    }
+
+    return undefined;
+  }, [principal, states, ledger]);
 }

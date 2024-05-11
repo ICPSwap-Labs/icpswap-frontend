@@ -87,6 +87,10 @@ export function useTransaction(transactionHash?: string): TransactionDetails | u
   return allTransactions[transactionHash];
 }
 
+export function isPendingTx(tx: TransactionDetails): boolean {
+  return !tx.receipt && !tx.cancelled;
+}
+
 export function useIsTransactionPending(transactionHash?: string): boolean {
   const transactions = useAllTransactions();
 
@@ -135,10 +139,6 @@ export function useHasPendingApproval(token?: ERC20Token, spender?: string): boo
 
 export function useHasPendingRevocation(token?: ERC20Token, spender?: string): boolean {
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false;
-}
-
-export function isPendingTx(tx: TransactionDetails): boolean {
-  return !tx.receipt && !tx.cancelled;
 }
 
 export function usePendingTransactions(): TransactionDetails[] {

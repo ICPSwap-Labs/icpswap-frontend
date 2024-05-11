@@ -42,8 +42,6 @@ export default function Updater() {
     );
   }, [chainId, transactions]);
 
-  console.log("pendingTransactions:", pendingTransactions);
-
   const dispatch = useAppDispatch();
   const onCheck = useCallback(
     ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) =>

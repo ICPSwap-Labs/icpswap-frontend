@@ -8,9 +8,16 @@ export interface ALinkProps {
   link: string | undefined;
   color?: string;
   textDecorationColor?: "primary" | "secondary" | "text.secondary";
+  fontSize?: string;
 }
 
-export function ALink({ children, link, textDecorationColor = "text.secondary", color = "" }: ALinkProps) {
+export function ALink({
+  children,
+  link,
+  textDecorationColor = "text.secondary",
+  color = "",
+  fontSize = "14px",
+}: ALinkProps) {
   return (
     <a
       href={link}
@@ -18,6 +25,7 @@ export function ALink({ children, link, textDecorationColor = "text.secondary", 
       rel="noreferrer"
       style={{
         textDecoration: "underline",
+        fontSize,
         textDecorationColor:
           textDecorationColor === "primary"
             ? "rgb(134, 114, 255)"
@@ -32,6 +40,7 @@ export function ALink({ children, link, textDecorationColor = "text.secondary", 
         sx={{
           cursor: "pointer",
           userSelect: "none",
+          fontSize,
         }}
         component="span"
       >

@@ -17,9 +17,10 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useTokenBalance } from "hooks/token";
 import { Theme } from "@mui/material/styles";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
-import { CK_ERC20_HELPER_SMART_CONTRACT } from "constants/ckERC20";
+import { HELPER_SMART_CONTRACT } from "constants/ckERC20";
 import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
-import { useMintCkERC20Callback } from "hooks/web3/useMintCkERC20";
+import { useMintCkERC20Callback } from "hooks/ckERC20/useMintCkERC20";
+import { useUpdateErc20TX } from "store/web3/hooks";
 
 import { MainContent } from "../ckTokens/MainContent";
 import { LogosWrapper } from "../ckTokens/LogosWrapper";
@@ -81,14 +82,14 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
     setReload(!reload);
   };
 
-  const erc20MinterHelper = useERC20MinterHelperContract(CK_ERC20_HELPER_SMART_CONTRACT);
+  const erc20MinterHelper = useERC20MinterHelperContract(HELPER_SMART_CONTRACT);
 
   const approveAmount = useMemo(() => {
     if (!amount || !erc20Token) return undefined;
     return formatTokenAmount(amount, erc20Token.decimals).toString();
   }, [amount, erc20Token]);
 
-  const [approveState, approve] = useApproveCallback(approveAmount, erc20Token, CK_ERC20_HELPER_SMART_CONTRACT);
+  const [approveState, approve] = useApproveCallback(approveAmount, erc20Token, HELPER_SMART_CONTRACT);
 
   const handleApprove = async () => {
     if (!erc20Token || !amount) return;
@@ -99,14 +100,25 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
   };
 
   const mintCkERC20 = useMintCkERC20Callback();
+  const updateErc20Tx = useUpdateErc20TX();
 
   const handleMint = async () => {
-    if (!erc20MinterHelper || !erc20Token || !principal || !bytes32 || !amount) return;
+    if (!token || !erc20MinterHelper || !erc20Token || !principal || !bytes32 || !amount) return;
 
     setLoading(true);
     const response = await mintCkERC20(erc20Token, amount);
+
     if (response && response.hash) {
       setAmount("");
+      updateErc20Tx(principal, token.address, {
+        timestamp: String(new Date().getTime()),
+        block: String(blockNumber),
+        hash: response.hash,
+        from: response.from,
+        to: response.to,
+        value: amount.toString(),
+        gas: response.gasPrice?.toString(),
+      });
     }
     setLoading(false);
   };
@@ -251,7 +263,7 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
           </Box>
         </LogosWrapper>
       }
-      transactions={<Transaction blockNumber={blockNumber} />}
+      transactions={<Transaction blockNumber={blockNumber} ledger={token?.address} />}
     />
   );
 }

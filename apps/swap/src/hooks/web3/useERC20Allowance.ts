@@ -1,13 +1,14 @@
 // import { ContractTransaction } from "@ethersproject/contracts";
 import { useCallsData } from "@icpswap/hooks";
-import { MaxUint256, ERC20Token } from "@icpswap/swap-sdk";
+// import { MaxUint256, ERC20Token } from "@icpswap/swap-sdk";
+import { ERC20Token } from "@icpswap/swap-sdk";
 import { useERC20Contract } from "hooks/web3/useContract";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 // import { ApproveTransactionInfo, TransactionType } from "store/transactions/types";
 // import { UserRejectedRequestError } from "utils/web3/errors";
 // import { didUserReject } from "utils/web3/swapErrorToUserReadableMessage";
 
-const MAX_ALLOWANCE = MaxUint256.toString();
+// const MAX_ALLOWANCE = MaxUint256.toString();
 
 export interface UseTokenAllowanceArgs {
   tokenAllowance?: string;
@@ -24,7 +25,7 @@ export function useERC20TokenAllowance(
 
   // If there is no allowance yet, re-check next observed block.
   // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
-  const [blocksPerFetch, setBlocksPerFetch] = useState<1>();
+  // const [blocksPerFetch, setBlocksPerFetch] = useState<1>();
   const { result, loading } = useCallsData<string>(
     useCallback(async () => {
       if (!owner || !spender) return undefined;
@@ -41,8 +42,6 @@ export function useERC20TokenAllowance(
 
   const rawAmount = result?.toString(); // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(() => (token && rawAmount ? rawAmount : undefined), [token, rawAmount]);
-
-  useEffect(() => setBlocksPerFetch(allowance && allowance === "0" ? 1 : undefined), [allowance]);
 
   return useMemo(() => ({ tokenAllowance: allowance, isSyncing: loading }), [allowance, loading]);
 }
