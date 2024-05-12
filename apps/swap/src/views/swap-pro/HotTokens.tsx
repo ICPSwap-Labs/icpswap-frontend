@@ -7,7 +7,7 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import type { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
-import { ICP } from "@icpswap/tokens";
+import { ICP, ICS } from "@icpswap/tokens";
 import { useInfoAllTokens } from "hooks/info/useInfoTokens";
 
 const animationKeyframes = keyframes`
@@ -59,7 +59,7 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
         backfaceVisibility: "hidden",
         perspective: "1000px",
         transform: "translateZ(0)",
-        animation: `${animationKeyframes} 60s linear infinite`,
+        animation: `${animationKeyframes} 40s linear infinite`,
       }}
     >
       <Box
@@ -83,14 +83,22 @@ export default function HotTokens() {
   const infoAllTokens = useInfoAllTokens();
 
   const tokenList = useMemo(() => {
-    return infoAllTokens
-      ?.filter((e) => e.symbol !== "ICP")
+    const icsInfo = infoAllTokens?.filter((e) => e.address === ICS.address)?.[0];
+
+    const allTokens = infoAllTokens
+      ?.filter((e) => e.symbol !== "ICP" && e.address !== ICS.address)
       ?.sort((a, b) => {
         if (a.volumeUSD > b.volumeUSD) return -1;
         if (a.volumeUSD < b.volumeUSD) return 1;
         return 0;
       })
       .slice(0, 20);
+
+    if (icsInfo) {
+      allTokens?.unshift(icsInfo);
+    }
+
+    return allTokens;
   }, [infoAllTokens]);
 
   return tokenList ? (
