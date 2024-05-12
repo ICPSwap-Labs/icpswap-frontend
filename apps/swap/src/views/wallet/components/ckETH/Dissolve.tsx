@@ -133,6 +133,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
 
               <Box sx={{ margin: "12px 0 0 0" }}>
                 <FilledTextField
+                  placeholder="Enter the address"
                   value={address}
                   onChange={(value) => setAddress(value)}
                   inputProps={{
@@ -150,6 +151,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
 
               <Box sx={{ margin: "12px 0 0 0" }}>
                 <NumberFilledTextField
+                  placeholder="0.00"
                   value={amount}
                   onChange={(value: number) => setAmount(String(value))}
                   numericProps={{

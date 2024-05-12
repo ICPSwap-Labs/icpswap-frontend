@@ -16,6 +16,7 @@ import { validate } from "bitcoin-address-validation";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserTx } from "store/wallet/hooks";
 import { RefreshIcon } from "assets/icons/Refresh";
+import { InputAdornment } from "components/Mui";
 
 import Links from "./Links";
 import Logo from "./Logo";
@@ -103,9 +104,10 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
   };
 
   const handleMax = () => {
-    if (!token) return;
+    if (!token || !ckBTCBalance) return;
+
     setAmount(
-      parseTokenAmount(ckBTCBalance, token?.decimals)
+      parseTokenAmount(ckBTCBalance, token.decimals)
         .minus(parseTokenAmount(token.transFee, token.decimals))
         .toFixed(token.decimals - 1),
     );
@@ -139,6 +141,7 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
                   <FilledTextField
                     value={address}
                     onChange={(value) => setAddress(value)}
+                    placeholder="Enter the address"
                     inputProps={{
                       maxLength: 255,
                     }}
@@ -154,12 +157,30 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
 
                 <Box sx={{ margin: "12px 0 0 0" }}>
                   <NumberFilledTextField
+                    placeholder="0.00"
                     value={amount}
                     onChange={(value: number) => setAmount(String(value))}
                     numericProps={{
                       allowNegative: false,
                       decimalScale: 8,
                       maxLength: 26,
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start">
+                          <Typography color="text.primary" fontSize="16px">
+                            ckBTC
+                          </Typography>
+                          <Typography
+                            color="secondary"
+                            sx={{ cursor: "pointer", margin: "0 0 0 5px" }}
+                            onClick={handleMax}
+                            fontSize="16px"
+                          >
+                            <Trans>Max</Trans>
+                          </Typography>
+                        </InputAdornment>
+                      ),
                     }}
                   />
 
@@ -169,9 +190,6 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
                       <Typography>
                         <Trans>(Excludes Bitcoin Network Tx fees)</Trans>
                       </Typography>
-                    </Typography>
-                    <Typography color="secondary" sx={{ cursor: "pointer" }} onClick={handleMax}>
-                      <Trans>Max</Trans>
                     </Typography>
                   </Box>
 

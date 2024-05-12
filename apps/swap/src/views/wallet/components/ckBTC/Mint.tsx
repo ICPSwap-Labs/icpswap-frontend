@@ -183,8 +183,7 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
                     sx={{
                       margin: "30px 0 0 0",
                       display: "flex",
-                      width: "360px",
-                      "@media(max-width:640px)": { width: "320px" },
+                      width: "100%",
                     }}
                   >
                     <Typography sx={{ flex: "1" }}>
@@ -200,8 +199,7 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
                     sx={{
                       margin: "10px 0 0 0",
                       display: "flex",
-                      width: "360px",
-                      "@media(max-width:640px)": { width: "320px" },
+                      width: "100%",
                     }}
                   >
                     <Typography sx={{ flex: "1" }}>
