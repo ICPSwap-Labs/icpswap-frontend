@@ -48,7 +48,7 @@ export default function ConsoleBurn() {
 
   const error = useMemo(() => {
     if (!tokenId) return t`Select a token`;
-    if (!tokenInfo || !balance || !mintingAccount) return t`Waiting for fetch data`;
+    if (!tokenInfo || !balance || !mintingAccount) return t`Waiting to fetch data`;
     if (!amount) return t`Enter the amount`;
     if (new BigNumber(amount).isEqualTo(0)) return t`Must be greater than 0`;
 
