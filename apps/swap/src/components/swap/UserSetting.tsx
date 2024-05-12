@@ -100,10 +100,9 @@ export default memo(({ type }: UserSettingProps) => {
   }, [slippageTolerance]);
 
   const handleSlippageToleranceInput = useCallback(
-    (event) => {
-      let { value } = event.target;
-      if (!value) value = 0;
-      setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setSlippageTolerance(new BigNumber(!!value && value !== "" ? value : 0).multipliedBy(1000).toNumber());
     },
     [setSlippageTolerance],
   );
