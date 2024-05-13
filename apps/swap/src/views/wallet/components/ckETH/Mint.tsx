@@ -167,7 +167,7 @@ export default function MintCkETH({ buttons, handleChange, active }: MintProps) 
               <Typography fontSize="16px">Transfer ETH (Ethereum Mainnet) amount:</Typography>
               <Box sx={{ margin: "12px 0 0 0" }}>
                 <NumberFilledTextField
-                  placeholder="Enter the amount"
+                  placeholder="0.00"
                   value={amount}
                   numericProps={{
                     decimalScale: 8,
