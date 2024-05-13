@@ -102,15 +102,17 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
               gap: "0 12px",
               gridTemplateColumns: "564px auto",
               "@media(max-width: 980px)": {
-                gridTemplateColumns: "minmax(100%, 564px)",
+                gridTemplateColumns: "1fr",
                 gap: "12px 0",
               },
             }}
           >
             <Box
               sx={{
-                maxWidth: "564px",
-                width: "100%",
+                width: "564px",
+                "@media(max-width: 980px)": {
+                  width: "100%",
+                },
               }}
             >
               <MainContent buttons={buttons} onChange={handleChange} active={active}>
@@ -157,7 +159,7 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
                         }}
                       >
                         <Typography
-                          sx={{ color: "text.primary", cursor: "pointer", fontWeight: 500 }}
+                          sx={{ color: "text.primary", cursor: "pointer", fontWeight: 500, wordBreak: "break-all" }}
                           onClick={handleCopy}
                         >
                           {btc_address}
