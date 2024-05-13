@@ -23,7 +23,7 @@ import {
   explorerLink,
   BigNumber,
 } from "@icpswap/utils";
-import { useV3FarmMetadata, useFarmUserPositions } from "@icpswap/hooks";
+import { useV3FarmMetadata, useFarmUserPositions, useFarmInitArgs } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
@@ -113,11 +113,17 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     return userAllPositions?.map((position) => position.positionId) ?? [];
   }, [userAllPositions]);
 
+  const { result: farmInitArgs } = useFarmInitArgs(farmId);
+
   const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
   const userRewardAmount = useMemo(() => {
-    return _userRewardAmount ? new BigNumber(_userRewardAmount.toString()).multipliedBy(0.95) : undefined;
-  }, [_userRewardAmount]);
+    if (!farmInitArgs || !_userRewardAmount) return undefined;
+
+    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
+
+    return new BigNumber(_userRewardAmount.toString()).multipliedBy(userRewardRatio);
+  }, [_userRewardAmount, farmInitArgs]);
 
   const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;

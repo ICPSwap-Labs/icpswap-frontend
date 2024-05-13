@@ -5,6 +5,7 @@ export type {
   DistributeRecord as StakingFarmDistributeTransaction,
   FarmInfo,
   Deposit as FarmDepositArgs,
+  InitFarmArgs,
 } from "./Farm";
 
 export { idlFactory as FarmControllerInterfaceFactory } from "./FarmController.did";

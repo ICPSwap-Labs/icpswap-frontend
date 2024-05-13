@@ -13,6 +13,7 @@ import type {
   FarmTvl,
   FarmState,
   FarmStatusArgs,
+  InitFarmArgs,
 } from "@icpswap/types";
 import { AnonymousPrincipal } from "@icpswap/constants";
 
@@ -171,6 +172,19 @@ export function useV3FarmMetadata(canisterId: string | undefined) {
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getV3FarmMetadata(canisterId!);
+    }, [canisterId]),
+  );
+}
+
+export async function getFarmInitArgs(canisterId: string) {
+  return resultFormat<InitFarmArgs>(await (await farm(canisterId)).getInitArgs()).data;
+}
+
+export function useFarmInitArgs(canisterId: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getFarmInitArgs(canisterId!);
     }, [canisterId]),
   );
 }
