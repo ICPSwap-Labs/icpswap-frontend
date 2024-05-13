@@ -15,7 +15,7 @@ export function Wrapper({ main, logo, transactions }: WrapperProps) {
         sx={{
           padding: "40px",
           "@media(max-width: 980px)": {
-            padding: "20px",
+            padding: "12px",
           },
         }}
       >
