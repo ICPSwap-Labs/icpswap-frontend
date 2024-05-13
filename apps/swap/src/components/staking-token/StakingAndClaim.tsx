@@ -29,7 +29,7 @@ export interface OptionStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined;
   userStakingInfo?: UserStakingInfo;
   onStakingSuccess?: () => void;
-  state: STATE;
+  state: STATE | undefined;
 }
 
 export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess, state }: OptionStakingProps) {

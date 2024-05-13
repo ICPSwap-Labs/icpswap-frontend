@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -13,11 +13,13 @@ import StakingAndClaim from "components/staking-token/StakingAndClaim";
 import { useStakingPoolData, useUserStakingInfo } from "hooks/staking-token/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "@icpswap/ui";
+import { useInterval } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { getStakingTokenPoolState } from "utils/staking";
 
 export interface PoolInfoProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
-  state: STATE;
+  state: STATE | undefined;
   rewardToken: Token | undefined;
   stakingToken: Token | undefined;
 }
@@ -42,7 +44,7 @@ function PoolInfo({ pool, rewardToken, state, stakingToken }: PoolInfoProps) {
         }}
         component="span"
       >
-        {upperFirst(state.toLocaleLowerCase())}
+        {state ? upperFirst(state.toLocaleLowerCase()) : "--"}
       </Typography>
 
       <Box sx={{ margin: "23px 0 26px 0", display: "flex", justifyContent: "center" }}>
@@ -74,14 +76,19 @@ function PoolInfo({ pool, rewardToken, state, stakingToken }: PoolInfoProps) {
 export interface StakingPoolProps {
   stakedOnly: boolean;
   pool: StakingPoolControllerPoolInfo | undefined;
-  state: STATE;
 }
 
-export default function StakingPool({ stakedOnly, pool, state }: StakingPoolProps) {
+export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
   const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId.toString());
   const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
+
+  const callback = useCallback(async () => {
+    return getStakingTokenPoolState(pool);
+  }, [pool]);
+
+  const state = useInterval(callback, undefined, 1000);
 
   const [, rewardToken] = useToken(pool?.rewardToken.address);
   const [, stakingToken] = useToken(pool?.stakingToken.address);

@@ -22,7 +22,7 @@ export interface UserStakingProps {
   stakingToken: Token | undefined | null;
   rewardTokenPrice: string | number | undefined | null;
   stakingTokenPrice: string | number | undefined | null;
-  state: STATE;
+  state: STATE | undefined;
 }
 
 export default function UserStaking({

@@ -6,7 +6,6 @@ import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
 import { useStakingTokenPools, useStakingPoolInfoFromController, useParsedQueryString } from "@icpswap/hooks";
 import { STATE } from "types/staking-token";
-import { getStakingTokenPoolState } from "utils/staking";
 import UnusedTokens from "./components/UnusedTokens";
 import Pool from "./components/Pool";
 import GlobalData from "./components/GlobalData";
@@ -49,8 +48,6 @@ function SinglePool() {
 
   const { result: poolInfo } = useStakingPoolInfoFromController(poolId);
 
-  const state = getStakingTokenPoolState(poolInfo);
-
   return (
     <>
       <MainCard>
@@ -61,7 +58,7 @@ function SinglePool() {
           }}
         >
           <Box sx={{ display: "grid", justifyContent: "center" }}>
-            <Pool stakedOnly={false} pool={poolInfo} state={state} />
+            <Pool stakedOnly={false} pool={poolInfo} />
           </Box>
         </Box>
       </MainCard>
@@ -188,7 +185,7 @@ function Pools() {
               }}
             >
               {pools?.map((ele, index) => (
-                <Pool key={`${ele.canisterId}-${index}`} stakedOnly={stakedOnly} pool={ele} state={filter} />
+                <Pool key={`${ele.canisterId}-${index}`} stakedOnly={stakedOnly} pool={ele} />
               ))}
             </Box>
           ) : null}

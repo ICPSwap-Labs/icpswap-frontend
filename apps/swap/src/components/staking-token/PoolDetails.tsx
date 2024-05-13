@@ -47,7 +47,7 @@ const CountdownBox = ({ startTime, endTime }: CountdownBoxProps) => {
 
 export interface StakingPoolDetailsProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
-  state: STATE;
+  state: STATE | undefined;
   poolData: PoolData | undefined;
   rewardToken: Token | undefined;
   stakingToken: Token | undefined;
