@@ -34,19 +34,19 @@ export interface FarmInfo {
   startTime: bigint;
   status: FarmStatus;
   creator: Principal;
+  totalRewardHarvested: bigint;
   numberOfStakes: bigint;
   rewardToken: Token;
   endTime: bigint;
   totalRewardBalance: bigint;
   pool: Principal;
   refunder: Principal;
-  totalRewardClaimed: bigint;
   poolToken0: Token;
   poolToken1: Token;
   poolFee: bigint;
+  totalRewardUnharvested: bigint;
   totalReward: bigint;
   userNumberOfStakes: bigint;
-  totalRewardUnclaimed: bigint;
   positionIds: Array<bigint>;
 }
 export type FarmStatus = { LIVE: null } | { NOT_STARTED: null } | { CLOSED: null } | { FINISHED: null };
@@ -81,39 +81,30 @@ export interface Page_1 {
   limit: bigint;
   totalElements: bigint;
 }
-export type Result = { ok: string } | { err: Error };
-export type Result_1 = { ok: number } | { err: Error };
-export type Result_10 = { ok: InitFarmArgs } | { err: Error };
-export type Result_11 = { ok: FarmInfo } | { err: Error };
-export type Result_12 = { ok: Page_1 } | { err: string };
-export type Result_13 = { ok: Deposit } | { err: Error };
-export type Result_14 = { ok: CycleInfo } | { err: Error };
-export type Result_15 = { ok: Array<Principal> } | { err: Error };
-export type Result_2 = { ok: Array<Deposit> } | { err: Error };
-export type Result_3 =
+export type Result_10 = { ok: Array<Deposit> } | { err: Error };
+export type Result_11 =
   | {
       ok: { stakedTokenTVL: number; rewardTokenTVL: number };
     }
   | { err: Error };
-export type Result_4 = { ok: Page } | { err: string };
-export type Result_5 =
+export type Result_12 = { ok: Page } | { err: string };
+export type Result_13 =
   | {
       ok: {
         secondPerCycle: bigint;
+        totalRewardHarvested: bigint;
         totalRewardBalance: bigint;
         totalRewardFee: bigint;
         rewardPerCycle: bigint;
-        totalRewardClaimed: bigint;
         totalCycleCount: bigint;
+        totalRewardUnharvested: bigint;
         currentCycleCount: bigint;
         totalReward: bigint;
-        totalRewardUnclaimed: bigint;
       };
     }
   | { err: Error };
-export type Result_6 = { ok: bigint } | { err: Error };
-export type Result_7 = { ok: Array<bigint> } | { err: Error };
-export type Result_8 =
+export type Result_14 = { ok: Array<bigint> } | { err: Error };
+export type Result_15 =
   | {
       ok: {
         poolToken0Amount: bigint;
@@ -122,7 +113,7 @@ export type Result_8 =
       };
     }
   | { err: Error };
-export type Result_9 =
+export type Result_16 =
   | {
       ok: {
         priceInsideLimit: boolean;
@@ -132,6 +123,15 @@ export type Result_9 =
       };
     }
   | { err: Error };
+export type Result_17 = { ok: InitFarmArgs } | { err: Error };
+export type Result_18 = { ok: FarmInfo } | { err: Error };
+export type Result_19 = { ok: Page_1 } | { err: string };
+export type Result_2 = { ok: bigint } | { err: Error };
+export type Result_20 = { ok: Deposit } | { err: Error };
+export type Result_4 = { ok: CycleInfo } | { err: Error };
+export type Result_6 = { ok: Array<Principal> } | { err: Error };
+export type Result_8 = { ok: string } | { err: Error };
+export type Result_9 = { ok: number } | { err: Error };
 export interface StakeRecord {
   to: Principal;
   transType: TransType;
@@ -147,23 +147,23 @@ export interface Token {
 }
 export type TransType =
   | { withdraw: null }
-  | { claim: null }
   | { distribute: null }
   | { unstake: null }
-  | { stake: null };
+  | { stake: null }
+  | { harvest: null };
 export interface _SERVICE {
   clearErrorLog: ActorMethod<[], undefined>;
-  close: ActorMethod<[], Result>;
-  finishManually: ActorMethod<[], Result>;
-  getAdmins: ActorMethod<[], Result_15>;
-  getCycleInfo: ActorMethod<[], Result_14>;
-  getDeposit: ActorMethod<[bigint], Result_13>;
-  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_12>;
+  close: ActorMethod<[], Result_8>;
+  finishManually: ActorMethod<[], Result_8>;
+  getAdmins: ActorMethod<[], Result_6>;
+  getCycleInfo: ActorMethod<[], Result_4>;
+  getDeposit: ActorMethod<[bigint], Result_20>;
+  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_19>;
   getErrorLog: ActorMethod<[], Array<string>>;
-  getFarmInfo: ActorMethod<[string], Result_11>;
-  getInitArgs: ActorMethod<[], Result_10>;
-  getLimitInfo: ActorMethod<[], Result_9>;
-  getLiquidityInfo: ActorMethod<[], Result_8>;
+  getFarmInfo: ActorMethod<[string], Result_18>;
+  getInitArgs: ActorMethod<[], Result_17>;
+  getLimitInfo: ActorMethod<[], Result_16>;
+  getLiquidityInfo: ActorMethod<[], Result_15>;
   getPoolMeta: ActorMethod<
     [],
     {
@@ -181,22 +181,22 @@ export interface _SERVICE {
       };
     }
   >;
-  getPositionIds: ActorMethod<[], Result_7>;
-  getRewardInfo: ActorMethod<[Array<bigint>], Result_6>;
-  getRewardMeta: ActorMethod<[], Result_5>;
+  getPositionIds: ActorMethod<[], Result_14>;
+  getRewardInfo: ActorMethod<[Array<bigint>], Result_2>;
+  getRewardMeta: ActorMethod<[], Result_13>;
   getRewardTokenBalance: ActorMethod<[], bigint>;
-  getStakeRecord: ActorMethod<[bigint, bigint, string], Result_4>;
-  getTVL: ActorMethod<[], Result_3>;
-  getUserDeposits: ActorMethod<[Principal], Result_2>;
-  getUserTVL: ActorMethod<[Principal], Result_1>;
+  getStakeRecord: ActorMethod<[bigint, bigint, string], Result_12>;
+  getTVL: ActorMethod<[], Result_11>;
+  getUserDeposits: ActorMethod<[Principal], Result_10>;
+  getUserTVL: ActorMethod<[Principal], Result_9>;
   getVersion: ActorMethod<[], string>;
   init: ActorMethod<[], undefined>;
-  restartManually: ActorMethod<[], Result>;
+  restartManually: ActorMethod<[], Result_8>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setLimitInfo: ActorMethod<[bigint, bigint, bigint, boolean], undefined>;
-  stake: ActorMethod<[bigint], Result>;
-  unstake: ActorMethod<[bigint], Result>;
-  withdrawRewardFee: ActorMethod<[], Result>;
+  stake: ActorMethod<[bigint], Result_8>;
+  unstake: ActorMethod<[bigint], Result_8>;
+  withdrawRewardFee: ActorMethod<[], Result_8>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

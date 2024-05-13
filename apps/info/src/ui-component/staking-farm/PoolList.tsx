@@ -95,7 +95,7 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell>
-        <TextButton to={`/staking-farm/details/${farmId}`}>
+        <TextButton to={`/farm/details/${farmId}`}>
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>

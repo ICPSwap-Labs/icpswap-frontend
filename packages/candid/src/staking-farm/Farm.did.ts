@@ -5,13 +5,13 @@ export const idlFactory = ({ IDL }: any) => {
     UnsupportedToken: IDL.Text,
     InsufficientFunds: IDL.Null,
   });
-  const Result = IDL.Variant({ ok: IDL.Text, err: Error });
-  const Result_15 = IDL.Variant({
+  const Result_8 = IDL.Variant({ ok: IDL.Text, err: Error });
+  const Result_6 = IDL.Variant({
     ok: IDL.Vec(IDL.Principal),
     err: Error,
   });
   const CycleInfo = IDL.Record({ balance: IDL.Nat, available: IDL.Nat });
-  const Result_14 = IDL.Variant({ ok: CycleInfo, err: Error });
+  const Result_4 = IDL.Variant({ ok: CycleInfo, err: Error });
   const Deposit = IDL.Record({
     tickUpper: IDL.Int,
     rewardAmount: IDL.Nat,
@@ -24,7 +24,7 @@ export const idlFactory = ({ IDL }: any) => {
     token1Amount: IDL.Int,
     tickLower: IDL.Int,
   });
-  const Result_13 = IDL.Variant({ ok: Deposit, err: Error });
+  const Result_20 = IDL.Variant({ ok: Deposit, err: Error });
   const DistributeRecord = IDL.Record({
     rewardTotal: IDL.Nat,
     owner: IDL.Principal,
@@ -38,7 +38,7 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_12 = IDL.Variant({ ok: Page_1, err: IDL.Text });
+  const Result_19 = IDL.Variant({ ok: Page_1, err: IDL.Text });
   const FarmStatus = IDL.Variant({
     LIVE: IDL.Null,
     NOT_STARTED: IDL.Null,
@@ -50,22 +50,22 @@ export const idlFactory = ({ IDL }: any) => {
     startTime: IDL.Nat,
     status: FarmStatus,
     creator: IDL.Principal,
+    totalRewardHarvested: IDL.Nat,
     numberOfStakes: IDL.Nat,
     rewardToken: Token,
     endTime: IDL.Nat,
     totalRewardBalance: IDL.Nat,
     pool: IDL.Principal,
     refunder: IDL.Principal,
-    totalRewardClaimed: IDL.Nat,
     poolToken0: Token,
     poolToken1: Token,
     poolFee: IDL.Nat,
+    totalRewardUnharvested: IDL.Nat,
     totalReward: IDL.Nat,
     userNumberOfStakes: IDL.Nat,
-    totalRewardUnclaimed: IDL.Nat,
     positionIds: IDL.Vec(IDL.Nat),
   });
-  const Result_11 = IDL.Variant({ ok: FarmInfo, err: Error });
+  const Result_18 = IDL.Variant({ ok: FarmInfo, err: Error });
   const InitFarmArgs = IDL.Record({
     ICP: Token,
     fee: IDL.Nat,
@@ -85,8 +85,8 @@ export const idlFactory = ({ IDL }: any) => {
     totalReward: IDL.Nat,
     feeReceiverCid: IDL.Principal,
   });
-  const Result_10 = IDL.Variant({ ok: InitFarmArgs, err: Error });
-  const Result_9 = IDL.Variant({
+  const Result_17 = IDL.Variant({ ok: InitFarmArgs, err: Error });
+  const Result_16 = IDL.Variant({
     ok: IDL.Record({
       priceInsideLimit: IDL.Bool,
       positionNumLimit: IDL.Nat,
@@ -95,7 +95,7 @@ export const idlFactory = ({ IDL }: any) => {
     }),
     err: Error,
   });
-  const Result_8 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     ok: IDL.Record({
       poolToken0Amount: IDL.Nat,
       totalLiquidity: IDL.Nat,
@@ -103,28 +103,28 @@ export const idlFactory = ({ IDL }: any) => {
     }),
     err: Error,
   });
-  const Result_7 = IDL.Variant({ ok: IDL.Vec(IDL.Nat), err: Error });
-  const Result_6 = IDL.Variant({ ok: IDL.Nat, err: Error });
-  const Result_5 = IDL.Variant({
+  const Result_14 = IDL.Variant({ ok: IDL.Vec(IDL.Nat), err: Error });
+  const Result_2 = IDL.Variant({ ok: IDL.Nat, err: Error });
+  const Result_13 = IDL.Variant({
     ok: IDL.Record({
       secondPerCycle: IDL.Nat,
+      totalRewardHarvested: IDL.Nat,
       totalRewardBalance: IDL.Nat,
       totalRewardFee: IDL.Nat,
       rewardPerCycle: IDL.Nat,
-      totalRewardClaimed: IDL.Nat,
       totalCycleCount: IDL.Nat,
+      totalRewardUnharvested: IDL.Nat,
       currentCycleCount: IDL.Nat,
       totalReward: IDL.Nat,
-      totalRewardUnclaimed: IDL.Nat,
     }),
     err: Error,
   });
   const TransType = IDL.Variant({
     withdraw: IDL.Null,
-    claim: IDL.Null,
     distribute: IDL.Null,
     unstake: IDL.Null,
     stake: IDL.Null,
+    harvest: IDL.Null,
   });
   const StakeRecord = IDL.Record({
     to: IDL.Principal,
@@ -141,29 +141,29 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_4 = IDL.Variant({ ok: Page, err: IDL.Text });
-  const Result_3 = IDL.Variant({
+  const Result_12 = IDL.Variant({ ok: Page, err: IDL.Text });
+  const Result_11 = IDL.Variant({
     ok: IDL.Record({
       stakedTokenTVL: IDL.Float64,
       rewardTokenTVL: IDL.Float64,
     }),
     err: Error,
   });
-  const Result_2 = IDL.Variant({ ok: IDL.Vec(Deposit), err: Error });
-  const Result_1 = IDL.Variant({ ok: IDL.Float64, err: Error });
+  const Result_10 = IDL.Variant({ ok: IDL.Vec(Deposit), err: Error });
+  const Result_9 = IDL.Variant({ ok: IDL.Float64, err: Error });
   return IDL.Service({
     clearErrorLog: IDL.Func([], [], []),
-    close: IDL.Func([], [Result], []),
-    finishManually: IDL.Func([], [Result], []),
-    getAdmins: IDL.Func([], [Result_15], ["query"]),
-    getCycleInfo: IDL.Func([], [Result_14], []),
-    getDeposit: IDL.Func([IDL.Nat], [Result_13], ["query"]),
-    getDistributeRecord: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text], [Result_12], ["query"]),
+    close: IDL.Func([], [Result_8], []),
+    finishManually: IDL.Func([], [Result_8], []),
+    getAdmins: IDL.Func([], [Result_6], ["query"]),
+    getCycleInfo: IDL.Func([], [Result_4], []),
+    getDeposit: IDL.Func([IDL.Nat], [Result_20], ["query"]),
+    getDistributeRecord: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text], [Result_19], ["query"]),
     getErrorLog: IDL.Func([], [IDL.Vec(IDL.Text)], ["query"]),
-    getFarmInfo: IDL.Func([IDL.Text], [Result_11], ["query"]),
-    getInitArgs: IDL.Func([], [Result_10], ["query"]),
-    getLimitInfo: IDL.Func([], [Result_9], ["query"]),
-    getLiquidityInfo: IDL.Func([], [Result_8], ["query"]),
+    getFarmInfo: IDL.Func([IDL.Text], [Result_18], ["query"]),
+    getInitArgs: IDL.Func([], [Result_17], ["query"]),
+    getLimitInfo: IDL.Func([], [Result_16], ["query"]),
+    getLiquidityInfo: IDL.Func([], [Result_15], ["query"]),
     getPoolMeta: IDL.Func(
       [],
       [
@@ -184,21 +184,21 @@ export const idlFactory = ({ IDL }: any) => {
       ],
       [],
     ),
-    getPositionIds: IDL.Func([], [Result_7], ["query"]),
-    getRewardInfo: IDL.Func([IDL.Vec(IDL.Nat)], [Result_6], ["query"]),
-    getRewardMeta: IDL.Func([], [Result_5], ["query"]),
+    getPositionIds: IDL.Func([], [Result_14], ["query"]),
+    getRewardInfo: IDL.Func([IDL.Vec(IDL.Nat)], [Result_2], ["query"]),
+    getRewardMeta: IDL.Func([], [Result_13], ["query"]),
     getRewardTokenBalance: IDL.Func([], [IDL.Nat], []),
-    getStakeRecord: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text], [Result_4], ["query"]),
-    getTVL: IDL.Func([], [Result_3], ["query"]),
-    getUserDeposits: IDL.Func([IDL.Principal], [Result_2], ["query"]),
-    getUserTVL: IDL.Func([IDL.Principal], [Result_1], ["query"]),
+    getStakeRecord: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text], [Result_12], ["query"]),
+    getTVL: IDL.Func([], [Result_11], ["query"]),
+    getUserDeposits: IDL.Func([IDL.Principal], [Result_10], ["query"]),
+    getUserTVL: IDL.Func([IDL.Principal], [Result_9], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
     init: IDL.Func([], [], []),
-    restartManually: IDL.Func([], [Result], []),
+    restartManually: IDL.Func([], [Result_8], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
     setLimitInfo: IDL.Func([IDL.Nat, IDL.Nat, IDL.Nat, IDL.Bool], [], []),
-    stake: IDL.Func([IDL.Nat], [Result], []),
-    unstake: IDL.Func([IDL.Nat], [Result], []),
-    withdrawRewardFee: IDL.Func([], [Result], []),
+    stake: IDL.Func([IDL.Nat], [Result_8], []),
+    unstake: IDL.Func([IDL.Nat], [Result_8], []),
+    withdrawRewardFee: IDL.Func([], [Result_8], []),
   });
 };

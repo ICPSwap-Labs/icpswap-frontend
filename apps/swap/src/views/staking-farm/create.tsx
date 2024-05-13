@@ -155,7 +155,7 @@ export default function CreateProject() {
     setLoading(false);
 
     if (status === ResultStatus.OK) {
-      history.push("/staking-farm");
+      history.push("/farm");
     }
   };
 

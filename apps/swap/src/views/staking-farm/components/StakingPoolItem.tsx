@@ -225,7 +225,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 <CountUp
                   preserveValue
                   end={parseTokenAmount(
-                    userFarmInfo?.totalReward ?? userFarmInfo?.totalRewardUnclaimed,
+                    userFarmInfo?.totalReward ?? userFarmInfo?.totalRewardHarvested,
                     rewardToken?.decimals,
                   ).toNumber()}
                   decimals={2}
@@ -449,8 +449,8 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
                 <Grid item container justifyContent="flex-end">
                   <Typography color="text.primary">
-                    <Link href={`${INFO_URL}/staking-farm/details/${farmId}`} target="_blank">
-                      <Trans>Farms Info</Trans>
+                    <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank">
+                      <Trans>Farm Info</Trans>
                     </Link>
                   </Typography>
                 </Grid>
