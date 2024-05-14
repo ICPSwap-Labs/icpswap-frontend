@@ -71,7 +71,10 @@ export const idlFactory = ({ IDL }: any) => {
   });
   const Result_5 = IDL.Variant({ ok: GlobalDataInfo, err: IDL.Text });
   const Result_4 = IDL.Variant({
-    ok: IDL.Record({ governanceCid: IDL.Opt(IDL.Principal) }),
+    ok: IDL.Record({
+      governanceCid: IDL.Opt(IDL.Principal),
+      feeReceiverCid: IDL.Principal,
+    }),
     err: Error,
   });
   const Result_3 = IDL.Variant({

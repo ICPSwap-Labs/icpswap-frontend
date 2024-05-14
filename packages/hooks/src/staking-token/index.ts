@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
-import { stakingTokenController, stakingToken } from "@icpswap/actor";
+import { stakingPoolController, stakingPool } from "@icpswap/actor";
 import type {
-  CreateTokenPoolArgs,
-  StakingTokenPoolInfo,
+  CreateStakingPoolArgs,
+  StakingPoolInfo,
   StakingPoolControllerPoolInfo,
   StakingPoolTransaction,
   StakingPoolUserInfo,
@@ -15,35 +15,35 @@ import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
 
 /* token controller */
-export async function createStakingTokenPool(args: CreateTokenPoolArgs) {
-  return resultFormat<string>(await (await stakingTokenController(true)).createStakingPool(args));
+export async function createStakingPool(args: CreateStakingPoolArgs) {
+  return resultFormat<string>(await (await stakingPoolController(true)).createStakingPool(args));
 }
 
-export async function getStakingTokenPools(state: bigint | undefined, offset: number, limit: number) {
+export async function getStakingPools(state: bigint | undefined, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
     await (
-      await stakingTokenController()
+      await stakingPoolController()
     ).findStakingPoolPage(availableArgsNull<bigint>(state), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useStakingTokenPools(state: bigint | undefined, offset: number, limit: number) {
+export function useStakingPools(state: bigint | undefined, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenPools(state, offset, limit);
+      return await getStakingPools(state, offset, limit);
     }, [offset, limit, state]),
   );
 }
 
-export async function getStakingTokenGlobalData() {
-  return resultFormat<StakingPoolGlobalData>(await (await stakingTokenController()).getGlobalData()).data;
+export async function getStakingPoolGlobalData() {
+  return resultFormat<StakingPoolGlobalData>(await (await stakingPoolController()).getGlobalData()).data;
 }
 
-export function useStakingTokenGlobalData(reload?: boolean) {
+export function useStakingPoolGlobalData(reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
-      return await getStakingTokenGlobalData();
+      return await getStakingPoolGlobalData();
     }, []),
     reload,
   );
@@ -51,7 +51,7 @@ export function useStakingTokenGlobalData(reload?: boolean) {
 
 export async function getStakingPoolFromController(canisterId: string) {
   return resultFormat<StakingPoolControllerPoolInfo>(
-    await (await stakingTokenController()).getStakingPool(Principal.fromText(canisterId)),
+    await (await stakingPoolController()).getStakingPool(Principal.fromText(canisterId)),
   ).data;
 }
 
@@ -66,7 +66,7 @@ export function useStakingPoolInfoFromController(canisterId: string | undefined)
 
 /* token pool */
 export async function getStakingTokenPool(canisterId: string) {
-  return resultFormat<StakingTokenPoolInfo>(await (await stakingToken(canisterId)).getPoolInfo()).data;
+  return resultFormat<StakingPoolInfo>(await (await stakingPool(canisterId)).getPoolInfo()).data;
 }
 
 export function useStakingTokenPool(canisterId: string | undefined, reload?: boolean) {
@@ -80,7 +80,7 @@ export function useStakingTokenPool(canisterId: string | undefined, reload?: boo
 }
 
 export async function getStakingTokenUserInfo(canisterId: string, principal: Principal) {
-  return resultFormat<StakingPoolUserInfo>(await (await stakingToken(canisterId)).getUserInfo(principal)).data;
+  return resultFormat<StakingPoolUserInfo>(await (await stakingPool(canisterId)).getUserInfo(principal)).data;
 }
 
 export function useStakingTokenUserInfo(
@@ -97,13 +97,13 @@ export function useStakingTokenUserInfo(
   );
 }
 
-export async function getStakingTokenAllUserInfo(canisterId: string, offset: number, limit: number) {
+export async function getStakingPoolAllUserInfo(canisterId: string, offset: number, limit: number) {
   return resultFormat<StakingPoolUserInfo>(
-    await (await stakingToken(canisterId)).findAllUserInfo(BigInt(offset), BigInt(limit)),
+    await (await stakingPool(canisterId)).findAllUserInfo(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useStakingTokenAllUserInfo(
+export function useStakingPoolAllUserInfo(
   canisterId: string | undefined,
   offset: number,
   limit: number,
@@ -112,48 +112,48 @@ export function useStakingTokenAllUserInfo(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenAllUserInfo(canisterId!, offset, limit);
+      return await getStakingPoolAllUserInfo(canisterId!, offset, limit);
     }, [canisterId, offset, limit]),
     reload,
   );
 }
 
-export async function getStakingTokenCycles(canisterId: string) {
-  return resultFormat<StakingPoolCycle>(await (await stakingToken(canisterId)).getCycleInfo()).data;
+export async function getStakingPoolCycles(canisterId: string) {
+  return resultFormat<StakingPoolCycle>(await (await stakingPool(canisterId)).getCycleInfo()).data;
 }
 
-export function useStakingTokenCycles(canisterId: string | undefined, reload?: boolean) {
+export function useStakingPoolCycles(canisterId: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getStakingTokenCycles(canisterId);
+      return await getStakingPoolCycles(canisterId);
     }, [canisterId]),
     reload,
   );
 }
 
-export async function stakingTokenClaim(canisterId: string) {
-  return resultFormat<string>(await (await stakingToken(canisterId, true)).claim());
+export async function stakingPoolClaim(canisterId: string) {
+  return resultFormat<string>(await (await stakingPool(canisterId, true)).claim());
 }
 
-export async function stakingTokenDeposit(canisterId: string) {
-  return resultFormat<string>(await (await stakingToken(canisterId, true)).deposit());
+export async function stakingPoolDeposit(canisterId: string) {
+  return resultFormat<string>(await (await stakingPool(canisterId, true)).stake());
 }
 
-export async function stakingTokenDepositFrom(canisterId: string, amount: bigint) {
-  return resultFormat<string>(await (await stakingToken(canisterId, true)).depositFrom(amount));
+export async function stakingPoolDepositFrom(canisterId: string, amount: bigint) {
+  return resultFormat<string>(await (await stakingPool(canisterId, true)).stakeFrom(amount));
 }
 
-export async function stakingTokenHarvest(canisterId: string) {
-  return resultFormat<bigint>(await (await stakingToken(canisterId, true)).harvest());
+export async function stakingPoolHarvest(canisterId: string) {
+  return resultFormat<bigint>(await (await stakingPool(canisterId, true)).harvest());
 }
 
-export async function stakingTokenWithdraw(canisterId: string, amount: bigint) {
-  return resultFormat<string>(await (await stakingToken(canisterId, true)).withdraw(amount));
+export async function stakingPoolWithdraw(canisterId: string, amount: bigint) {
+  return resultFormat<string>(await (await stakingPool(canisterId, true)).unstake(amount));
 }
 
 /*  records */
-export async function getStakingTokenTransactions(
+export async function getStakingPoolTransactions(
   canisterId: string,
   principal: Principal | undefined,
   offset: number,
@@ -161,12 +161,12 @@ export async function getStakingTokenTransactions(
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
     await (
-      await stakingToken(canisterId)
+      await stakingPool(canisterId)
     ).findStakingRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useStakingTokenTransactions(
+export function useStakingPoolTransactions(
   canisterId: string | undefined,
   principal: Principal | undefined,
   offset: number,
@@ -176,13 +176,13 @@ export function useStakingTokenTransactions(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenTransactions(canisterId, principal, offset, limit);
+      return await getStakingPoolTransactions(canisterId, principal, offset, limit);
     }, [canisterId, offset, limit, principal]),
     reload,
   );
 }
 
-export async function getStakingTokenClaimTransactions(
+export async function getStakingPoolClaimTransactions(
   canisterId: string,
   principal: Principal | undefined,
   offset: number,
@@ -190,12 +190,12 @@ export async function getStakingTokenClaimTransactions(
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
     await (
-      await stakingToken(canisterId)
+      await stakingPool(canisterId)
     ).findRewardRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useStakingTokenClaimTransactions(
+export function useStakingPoolClaimTransactions(
   canisterId: string | undefined,
   principal: Principal | undefined,
   offset: number,
@@ -205,7 +205,7 @@ export function useStakingTokenClaimTransactions(
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingTokenClaimTransactions(canisterId!, principal, offset, limit);
+      return await getStakingPoolClaimTransactions(canisterId!, principal, offset, limit);
     }, [canisterId, offset, limit, principal]),
     reload,
   );

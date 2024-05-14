@@ -3,7 +3,7 @@ import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, Tabl
 import { Trans } from "@lingui/macro";
 import { PaginationType, Pagination, NoData, ListLoading, AddressFormat } from "ui-component/index";
 import dayjs from "dayjs";
-import { useStakingTokenTransactions } from "@icpswap/hooks";
+import { useStakingPoolTransactions } from "@icpswap/hooks";
 import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
 
@@ -52,7 +52,7 @@ export default function Transactions({ id }: TransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingTokenTransactions(id, undefined, offset, pagination.pageSize);
+  const { result, loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (pagination: PaginationType) => {

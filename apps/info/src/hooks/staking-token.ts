@@ -1,11 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import {
-  useCallsData,
-  getStakingTokenUserInfo,
-  getStakingTokenCycles,
-  getV1StakingTokenCycles,
-  getStakingTokenPool,
-} from "@icpswap/hooks";
+import { useCallsData, getStakingTokenUserInfo, getStakingPoolCycles, getStakingTokenPool } from "@icpswap/hooks";
 import { PoolData, UserStakingInfo } from "types/staking-token";
 import { Principal } from "@dfinity/principal";
 
@@ -65,12 +59,11 @@ export function useStakingPoolData(poolId: string | undefined): [PoolData | unde
   return [poolData, update];
 }
 
-export function usePoolCycles(canisterId: string | undefined, version: string | undefined) {
+export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      if (version === "1.0") return await getV1StakingTokenCycles(canisterId);
-      return (await getStakingTokenCycles(canisterId))?.balance;
-    }, [canisterId, version]),
+      return (await getStakingPoolCycles(canisterId))?.balance;
+    }, [canisterId]),
   );
 }

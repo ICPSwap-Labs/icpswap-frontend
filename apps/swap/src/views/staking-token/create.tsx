@@ -7,7 +7,7 @@ import { t } from "@lingui/macro";
 import { numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import Button from "components/authentication/ButtonConnector";
-import { createStakingTokenPool } from "@icpswap/hooks";
+import { createStakingPool } from "@icpswap/hooks";
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { standardCheck } from "utils/token/standardCheck";
 import { getTokenInfo } from "hooks/token/calls";
@@ -151,7 +151,7 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    const { status, message } = await createStakingTokenPool({
+    const { status, message } = await createStakingPool({
       name: values.name,
       stakingTokenSymbol: stakingTokenInfo.symbol,
       stakingToken: { address: stakingTokenInfo.canisterId, standard: values.stakingStandard },

@@ -1,5 +1,5 @@
 import { Override } from "@icpswap/types";
-import { type StakingPoolControllerPoolInfo, type StakingTokenPoolInfo } from "@icpswap/types";
+import type { StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
 
 import type { PublicPoolInfo as V1Pool } from "constants/v2/SingleSmartChef.did";
 
@@ -25,7 +25,7 @@ export type V1PoolData = Override<
   }
 >;
 
-export type V2PoolData = StakingTokenPoolInfo;
+export type V2PoolData = StakingPoolInfo;
 
 export type PoolData = V1PoolData | V2PoolData;
 

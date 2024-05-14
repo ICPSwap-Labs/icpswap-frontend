@@ -14,16 +14,9 @@ export const idlFactory = ({ IDL }: any) => {
   });
   const Result_9 = IDL.Variant({ ok: Page_1, err: IDL.Text });
   const TransType = IDL.Variant({
-    withdraw: IDL.Null,
-    unstaking: IDL.Null,
-    staking: IDL.Null,
-    endIncentive: IDL.Null,
-    claim: IDL.Null,
-    unstakeTokenids: IDL.Null,
-    deposit: IDL.Null,
-    stakeTokenids: IDL.Null,
-    createIncentive: IDL.Null,
-    depositFrom: IDL.Null,
+    unstake: IDL.Null,
+    stake: IDL.Null,
+    harvest: IDL.Null,
   });
   const Record = IDL.Record({
     to: IDL.Principal,
@@ -104,8 +97,6 @@ export const idlFactory = ({ IDL }: any) => {
   return IDL.Service({
     claim: IDL.Func([], [Result], []),
     clearLocks: IDL.Func([], [Result_1], []),
-    deposit: IDL.Func([], [Result], []),
-    depositFrom: IDL.Func([IDL.Nat], [Result], []),
     findAllUserInfo: IDL.Func([IDL.Nat, IDL.Nat], [Result_9], ["query"]),
     findRewardRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
     findStakingRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
@@ -122,11 +113,13 @@ export const idlFactory = ({ IDL }: any) => {
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
     setAutoUnlockTimes: IDL.Func([IDL.Nat], [Result_1], []),
     setTime: IDL.Func([IDL.Nat, IDL.Nat], [Result_3], []),
+    stake: IDL.Func([], [Result], []),
+    stakeFrom: IDL.Func([IDL.Nat], [Result], []),
     stop: IDL.Func([], [Result_3], []),
     subaccountBalanceOf: IDL.Func([IDL.Principal], [Result_1], []),
     unclaimdRewardFee: IDL.Func([], [Result_1], ["query"]),
+    unstake: IDL.Func([IDL.Nat], [Result], []),
     updateStakingPool: IDL.Func([UpdateStakingPool], [Result_2], []),
-    withdraw: IDL.Func([IDL.Nat], [Result], []),
     withdrawRemainingRewardToken: IDL.Func([IDL.Nat, IDL.Principal], [Result_1], []),
     withdrawRewardFee: IDL.Func([], [Result], []),
   });

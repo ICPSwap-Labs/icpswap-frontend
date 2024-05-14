@@ -85,7 +85,7 @@ export default function StakingPoolDetails({
   //   return new BigNumber(totalStakingDeposit).multipliedBy(stakingTokenPrice ?? 0).toNumber();
   // }, [totalStakingDeposit, stakingTokenPrice]);
 
-  const { result: stakingTokenPoolInfo } = useStakingTokenPool(pool?.canisterId.toString());
+  const { result: stakingPoolInfo } = useStakingTokenPool(pool?.canisterId.toString());
 
   const totalRewardDeposit = useMemo(() => {
     if (!rewardToken || !poolData) return 0;
@@ -191,8 +191,8 @@ export default function StakingPoolDetails({
               </Grid>
               <Grid item xs>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
-                  {stakingTokenPoolInfo && rewardToken
-                    ? parseTokenAmount(stakingTokenPoolInfo.rewardPerTime.toString(), rewardToken.decimals).toFormat()
+                  {stakingPoolInfo && rewardToken
+                    ? parseTokenAmount(stakingPoolInfo.rewardPerTime.toString(), rewardToken.decimals).toFormat()
                     : "--"}
                   &nbsp;
                   {pool?.rewardTokenSymbol}

@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
 import {
-  getStakingTokenGlobalData,
-  stakingTokenDeposit,
-  stakingTokenDepositFrom,
-  getStakingTokenPools,
+  getStakingPoolGlobalData,
+  stakingPoolDeposit,
+  stakingPoolDepositFrom,
+  getStakingPools,
   usePaginationAllData,
   getPaginationAllData,
   useCallsData,
-  getStakingTokenCycles,
-  stakingTokenWithdraw,
-  stakingTokenHarvest,
+  getStakingPoolCycles,
+  stakingPoolWithdraw,
+  stakingPoolHarvest,
   getStakingTokenUserInfo,
   getStakingTokenPool,
 } from "@icpswap/hooks";
@@ -27,7 +27,7 @@ import { getSteps } from "views/staking-token/components/Step";
 import { useStepContentManager } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import type { UserStakingInfo } from "types/staking-token";
-import type { StakingPoolGlobalData, StakingTokenPoolInfo } from "@icpswap/types";
+import type { StakingPoolGlobalData, StakingPoolInfo } from "@icpswap/types";
 import { SubAccount } from "@dfinity/ledger-icp";
 
 export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () => void] {
@@ -39,7 +39,7 @@ export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () =
 
   useEffect(() => {
     const call = async () => {
-      const data = await getStakingTokenGlobalData();
+      const data = await getStakingPoolGlobalData();
       setData(data);
     };
 
@@ -63,11 +63,11 @@ export function useStakingTokenDeposit() {
     let message = "";
 
     if (useTransfer) {
-      const { status: _status, message: _message } = await stakingTokenDeposit(poolId);
+      const { status: _status, message: _message } = await stakingPoolDeposit(poolId);
       status = _status;
       message = _message;
     } else {
-      const { status: _status, message: _message } = await stakingTokenDepositFrom(poolId, BigInt(amount));
+      const { status: _status, message: _message } = await stakingPoolDepositFrom(poolId, BigInt(amount));
       status = _status;
       message = _message;
     }
@@ -83,7 +83,7 @@ export function useStakingTokenDeposit() {
 
 export async function getAllTokenPools() {
   const call = async (offset: number, limit: number) => {
-    return await getStakingTokenPools(undefined, offset, limit);
+    return await getStakingPools(undefined, offset, limit);
   };
 
   return getPaginationAllData(call, 500);
@@ -91,7 +91,7 @@ export async function getAllTokenPools() {
 
 export function useStakingTokenAllPools() {
   const call = useCallback(async (offset: number, limit: number) => {
-    return await getStakingTokenPools(undefined, offset, limit);
+    return await getStakingPools(undefined, offset, limit);
   }, []);
 
   return usePaginationAllData(call, 500);
@@ -161,7 +161,7 @@ export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return (await getStakingTokenCycles(canisterId))?.balance;
+      return (await getStakingPoolCycles(canisterId))?.balance;
     }, [canisterId]),
   );
 }
@@ -220,11 +220,11 @@ export function useStakingToken() {
 }
 
 export async function withdraw(poolId: string, amount: bigint) {
-  return await stakingTokenWithdraw(poolId, amount);
+  return await stakingPoolWithdraw(poolId, amount);
 }
 
 export async function harvest(poolId: string) {
-  return await stakingTokenHarvest(poolId);
+  return await stakingPoolHarvest(poolId);
 }
 
 export function useUserStakingInfo(
@@ -260,8 +260,8 @@ export function useUserStakingInfo(
   return [userInfo, update];
 }
 
-export function useStakingPoolData(poolId: string | undefined): [StakingTokenPoolInfo | undefined, () => void] {
-  const [poolData, setPoolData] = useState<StakingTokenPoolInfo | undefined>(undefined);
+export function useStakingPoolData(poolId: string | undefined): [StakingPoolInfo | undefined, () => void] {
+  const [poolData, setPoolData] = useState<StakingPoolInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {

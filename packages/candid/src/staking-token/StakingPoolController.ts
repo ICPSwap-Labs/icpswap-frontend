@@ -40,7 +40,11 @@ export type Result_1 = { ok: StakingPoolInfo } | { err: string };
 export type Result_10 = { ok: Principal } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
 export type Result_3 = { ok: TokenGlobalDataInfo } | { err: string };
-export type Result_4 = { ok: { governanceCid: [] | [Principal] } } | { err: Error };
+export type Result_4 =
+  | {
+      ok: { governanceCid: [] | [Principal]; feeReceiverCid: Principal };
+    }
+  | { err: Error };
 export type Result_5 = { ok: GlobalDataInfo } | { err: string };
 export type Result_6 = { ok: CycleInfo } | { err: Error };
 export type Result_7 = { ok: Array<Principal> } | { err: Error };

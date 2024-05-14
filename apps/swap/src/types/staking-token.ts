@@ -1,4 +1,4 @@
-import { Override, StakingPoolControllerPoolInfo, StakingTokenPoolInfo } from "@icpswap/types";
+import { Override, StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
 import type { PublicPoolInfo as V1Pool } from "candid/swap-v2/SingleSmartChef.did";
 
 export type UnusedBalance = Override<StakingPoolControllerPoolInfo, { balance: bigint }>;
@@ -14,7 +14,7 @@ export enum STAKING_POOL_VERSION {
   version2 = "2.0",
 }
 
-export type PoolData = StakingTokenPoolInfo | V1Pool;
+export type PoolData = StakingPoolInfo | V1Pool;
 
 export type UserStakingInfo = {
   amount: bigint;

@@ -14,7 +14,7 @@ import {
 import { Trans } from "@lingui/macro";
 import { getTokenPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
-import { useStakingTokenPools } from "@icpswap/hooks";
+import { useStakingPools } from "@icpswap/hooks";
 import { pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { TextButton, Pagination, NoData, ListLoading, PaginationType } from "ui-component/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
@@ -81,7 +81,7 @@ export default function PoolList() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingTokenPools(undefined, offset, pagination.pageSize);
+  const { result, loading } = useStakingPools(undefined, offset, pagination.pageSize);
   const { content = [], totalElements = 0 } = result ?? { content: [], totalElements: 0 };
 
   const handlePageChange = (pagination: PaginationType) => {

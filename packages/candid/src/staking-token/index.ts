@@ -1,22 +1,19 @@
 export { idlFactory as TokenPoolInterfaceFactory } from "./TokenPool.did";
 export type {
   _SERVICE as TokenPool,
-  PublicStakingPoolInfo as StakingTokenPoolInfo,
+  PublicStakingPoolInfo as StakingPoolInfo,
   PublicUserInfo as StakingPoolUserInfo,
   CycleInfo as StakingPoolCycle,
   Record as StakingPoolTransaction,
 } from "./TokenPool";
 
-export { idlFactory as StakingTokenControllerInterfaceFactory } from "./StakingTokenController.did";
+export { idlFactory as StakingPoolControllerInterfaceFactory } from "./StakingPoolController.did";
 export type {
-  _SERVICE as StakingTokenController,
-  InitRequest as CreateTokenPoolArgs,
+  _SERVICE as StakingPoolController,
+  InitRequest as CreateStakingPoolArgs,
   StakingPoolInfo as StakingPoolControllerPoolInfo,
   GlobalDataInfo as StakingPoolGlobalData,
-} from "./StakingTokenController";
-
-export { idlFactory as TokenPoolStorageInterfaceFactory } from "./TokenPoolStorage.did";
-export type { _SERVICE as TokenPoolStorage } from "./TokenPoolStorage";
+} from "./StakingPoolController";
 
 export { idlFactory as V1TokenPoolInterfaceFactory } from "./V1TokenPool.did";
 export type {

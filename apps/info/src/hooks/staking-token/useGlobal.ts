@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import { getStakingTokenGlobalData } from "@icpswap/hooks";
+import { getStakingPoolGlobalData } from "@icpswap/hooks";
 import { type StakingPoolGlobalData } from "@icpswap/types";
 
 export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () => void] {
@@ -11,7 +11,7 @@ export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () =
 
   useEffect(() => {
     const call = async () => {
-      const data = await getStakingTokenGlobalData();
+      const data = await getStakingPoolGlobalData();
       setData(data);
     };
 

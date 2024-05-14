@@ -91,17 +91,7 @@ export interface Token {
   address: string;
   standard: string;
 }
-export type TransType =
-  | { withdraw: null }
-  | { unstaking: null }
-  | { staking: null }
-  | { endIncentive: null }
-  | { claim: null }
-  | { unstakeTokenids: null }
-  | { deposit: null }
-  | { stakeTokenids: null }
-  | { createIncentive: null }
-  | { depositFrom: null };
+export type TransType = { unstake: null } | { stake: null } | { harvest: null };
 export interface UpdateStakingPool {
   stakingTokenSymbol: string;
   startTime: bigint;
@@ -118,8 +108,6 @@ export interface UpdateStakingPool {
 export interface _SERVICE {
   claim: ActorMethod<[], Result>;
   clearLocks: ActorMethod<[], Result_1>;
-  deposit: ActorMethod<[], Result>;
-  depositFrom: ActorMethod<[bigint], Result>;
   findAllUserInfo: ActorMethod<[bigint, bigint], Result_9>;
   findRewardRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
   findStakingRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
@@ -136,11 +124,13 @@ export interface _SERVICE {
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setAutoUnlockTimes: ActorMethod<[bigint], Result_1>;
   setTime: ActorMethod<[bigint, bigint], Result_3>;
+  stake: ActorMethod<[], Result>;
+  stakeFrom: ActorMethod<[bigint], Result>;
   stop: ActorMethod<[], Result_3>;
   subaccountBalanceOf: ActorMethod<[Principal], Result_1>;
   unclaimdRewardFee: ActorMethod<[], Result_1>;
+  unstake: ActorMethod<[bigint], Result>;
   updateStakingPool: ActorMethod<[UpdateStakingPool], Result_2>;
-  withdraw: ActorMethod<[bigint], Result>;
   withdrawRemainingRewardToken: ActorMethod<[bigint, Principal], Result_1>;
   withdrawRewardFee: ActorMethod<[], Result>;
 }
