@@ -32,7 +32,7 @@ export function getSteps({ token, amount }: GetSteps) {
       ],
     },
     {
-      title: t`Deposit ${token.symbol}`,
+      title: t`Stake ${token.symbol}`,
       children: [
         {
           label: t`Amount`,

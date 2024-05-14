@@ -5,7 +5,7 @@ import { Modal, NumberTextField } from "components/index";
 import { BigNumber, parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
 import Identity, { CallbackProps } from "components/Identity";
 import MaxButton from "components/MaxButton";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { ResultStatus, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { withdraw, useUserStakingInfo } from "hooks/staking-token/index";
 import { useTips } from "hooks/useTips";
@@ -41,7 +41,11 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
       BigInt(formatTokenAmount(amount, token?.decimals).toString()),
     );
 
-    openTip(getLocaleMessage(message), status);
+    if (status === ResultStatus.OK) {
+      openTip(t`Unstake successfully`, status);
+    } else {
+      openTip(getLocaleMessage(message), status);
+    }
 
     if (onStakingSuccess) onStakingSuccess();
     if (onClose) onClose();
@@ -63,7 +67,7 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Withdraw`}>
+    <Modal open={open} onClose={onClose} title={t`Unstake`}>
       <Grid>
         <NumberTextField
           id="reward"

@@ -107,9 +107,9 @@ export default function WithdrawUnusedTokens({ open, onClose }: WithdrawTokensMo
           calls.push(
             stakingPoolClaim(pool).then(async (result) => {
               if (result.status === ResultStatus.OK) {
-                openTip(`Withdrew ${balance.stakingTokenSymbol} successfully`, MessageTypes.success);
+                openTip(`Reclaim ${balance.stakingTokenSymbol} successfully`, MessageTypes.success);
               } else {
-                openTip(result.message ?? `Failed to Withdraw ${balance.stakingTokenSymbol}`, MessageTypes.error);
+                openTip(result.message ?? `Failed to reclaim ${balance.stakingTokenSymbol}`, MessageTypes.error);
               }
             }),
           );
