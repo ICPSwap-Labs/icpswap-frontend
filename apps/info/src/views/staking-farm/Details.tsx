@@ -92,7 +92,7 @@ export default function FarmDetails() {
           </Box>
           <Box mt="30px" className={classes.details}>
             <PoolDetailItem
-              label={t`ID:`}
+              label={t`Canister ID:`}
               value={
                 <Copy content={farmId}>
                   <Typography fontSize="12px" color="text.primary">
@@ -101,7 +101,7 @@ export default function FarmDetails() {
                 </Copy>
               }
             />
-            <PoolDetailItem label={t`Staking NFTs Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
+            <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
             <PoolDetailItem
               label={t`Reward Token Amount:`}
               value={

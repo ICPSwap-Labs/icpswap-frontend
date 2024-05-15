@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr) 140px 120px",
+      gridTemplateColumns: "180px repeat(5, 1fr) 140px 120px",
       padding: "16px",
       alignItems: "center",
       minWidth: "1200px",
@@ -56,6 +56,9 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
     </LoadingRow>
   ) : (
     <TableRow className={classes.wrapper}>
+      <BodyCell>
+        <TextButton link={explorerLink(farmId)}>{farmId}</TextButton>
+      </BodyCell>
       <BodyCell>
         {token0 && token1 && farmInfo ? (
           <TextButton link={getExplorerPrincipalLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
@@ -116,6 +119,9 @@ export default function PoolList() {
   return (
     <Box sx={{ overflow: "auto" }}>
       <Header className={classes.wrapper}>
+        <HeaderCell>
+          <Trans>Canister ID</Trans>
+        </HeaderCell>
         <HeaderCell>
           <Trans>Pool</Trans>
         </HeaderCell>

@@ -216,7 +216,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
             <Grid>
               <Grid item>
                 <Typography color="text.primary" sx={{ padding: "0 12px" }}>
-                  Stake {token0?.symbol}/{token1?.symbol} position(LP) to earn {rewardToken?.symbol}
+                  Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
                 </Typography>
               </Grid>
             </Grid>
@@ -267,7 +267,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
             <Box>
               <Typography mb="14px">
-                <Trans>Position(LP) Staked</Trans>
+                <Trans>Position Staked</Trans>
               </Typography>
 
               <Box
@@ -333,7 +333,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 <Grid container justifyContent="space-between" alignItems="center">
                   <Grid item>
                     <Typography sx={{ cursor: "pointer", textDecoration: "underline" }} onClick={handleGoToGetPosition}>
-                      Get {token0?.symbol}/{token1?.symbol} position(LP)
+                      Get {token0?.symbol}/{token1?.symbol} position
                       <ICRocksLoadIcon
                         fontSize="24"
                         sx={{
