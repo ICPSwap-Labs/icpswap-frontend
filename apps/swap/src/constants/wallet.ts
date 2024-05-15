@@ -1,4 +1,4 @@
-import { ICP, WRAPPED_ICP } from "./tokens";
+import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 
 export { Connector } from "@icpswap/actor";
 

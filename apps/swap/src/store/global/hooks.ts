@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useCallback } from "react";
-import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD, ICP_TOKEN_INFO } from "constants/tokens";
+import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -41,7 +42,7 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
       }))
       .filter((token) => {
         if (version === "v2") {
-          return token.canisterId.toString() !== ICP_TOKEN_INFO.canisterId;
+          return token.canisterId.toString() !== ICP.address;
         }
         return token.canisterId.toString() !== WRAPPED_ICP_TOKEN_INFO.canisterId;
       });
@@ -60,11 +61,11 @@ export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
       }));
 
     const ICPToken = {
-      canisterId: ICP_TOKEN_INFO.canisterId,
-      symbol: ICP_TOKEN_INFO.symbol,
-      name: ICP_TOKEN_INFO.name,
-      standard: ICP_TOKEN_INFO.standardType,
-      decimals: ICP_TOKEN_INFO.decimals,
+      canisterId: ICP.address,
+      symbol: ICP.symbol,
+      name: ICP.name,
+      standard: ICP.standard,
+      decimals: ICP.decimals,
     } as SwapToken;
 
     return [...(version === "v2" ? [] : [ICPToken]), ...iTokens, ...globalTokens];
@@ -88,7 +89,7 @@ export function useICPAmountUSDValue(amount: number | null | string | undefined 
 
   return useMemo(() => {
     if (!ICPPrice || !amount) return undefined;
-    return new BigNumber(ICPPrice).multipliedBy(parseTokenAmount(amount, ICP_TOKEN_INFO.decimals));
+    return new BigNumber(ICPPrice).multipliedBy(parseTokenAmount(amount, ICP.decimals));
   }, [ICPPrice, amount]);
 }
 

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Grid, Box, Collapse, Typography, Link } from "@mui/material";
 import { INFO_URL } from "constants/index";
-import { WRAPPED_ICP, ICP } from "constants/tokens";
+import { WRAPPED_ICP } from "constants/tokens";
 import { useStakingTokenPool } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
@@ -16,6 +16,7 @@ import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
 import { getExplorerPrincipalLink } from "utils/index";
+import { ICP } from "@icpswap/tokens";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const nowTime = parseInt(String(Date.now() / 1000));

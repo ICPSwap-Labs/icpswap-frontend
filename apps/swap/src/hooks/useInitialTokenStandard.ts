@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
-import { XTC, TOKEN_STANDARD, WRAPPED_ICP, ICP, CAT, MOD, BoomDAO, ICX, NUA, SONIC } from "constants/tokens";
-import { ckSepoliaUSDC, ckSepoliaETH } from "@icpswap/tokens";
+import { XTC, TOKEN_STANDARD, CAT, MOD, BoomDAO, ICX, NUA, SONIC } from "constants/tokens";
+import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
 import { useGlobalTokenList } from "store/global/hooks";

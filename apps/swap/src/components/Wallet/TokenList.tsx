@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { Box } from "@mui/material";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
-import { ICP_METADATA, WRAPPED_ICP_METADATA } from "constants/tokens";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
+import { WRAPPED_ICP_METADATA } from "constants/tokens";
+import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo, ICP } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
 import { NETWORK, network } from "constants/server";
@@ -20,7 +20,7 @@ export default function WalletTokenList() {
 
   const tokens = useMemo(() => {
     let tokenIds = [
-      ICP_METADATA.canisterId.toString(),
+      ICP.address,
       WRAPPED_ICP_METADATA.canisterId.toString(),
       ...(chain === ChainId.SEPOLIA ? [ckSepoliaUSDCTokenInfo.canisterId, ckSepoliaETHTokenInfo.canisterId] : []),
     ];

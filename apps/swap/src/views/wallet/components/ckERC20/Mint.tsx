@@ -185,6 +185,7 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
               </Typography>
               <Box sx={{ margin: "12px 0 0 0" }}>
                 <NumberFilledTextField
+                  placeholder="0.00"
                   value={amount}
                   numericProps={{
                     decimalScale: 8,

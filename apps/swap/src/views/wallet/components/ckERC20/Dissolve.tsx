@@ -133,6 +133,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
                   inputProps={{
                     maxLength: 255,
                   }}
+                  placeholder={t`Enter the address`}
                 />
               </Box>
 
@@ -145,6 +146,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
 
               <Box sx={{ margin: "12px 0 0 0" }}>
                 <NumberFilledTextField
+                  placeholder="0.00"
                   value={amount}
                   onChange={(value: number) => setAmount(String(value))}
                   numericProps={{

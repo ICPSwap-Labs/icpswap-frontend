@@ -4,7 +4,8 @@ import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
 import type { PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
-import { ICP, NETWORK, network } from "constants/index";
+import { NETWORK, network } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 
 export enum PoolState {
   LOADING = "LOADING",

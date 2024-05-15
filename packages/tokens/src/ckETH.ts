@@ -10,7 +10,7 @@ export const ckETHTokenInfo: TokenInfo = {
   canisterId: "ss2fx-dyaaa-aaaar-qacoq-cai",
   totalSupply: BigInt(0),
   transFee: BigInt(10_000_000_000),
-  logo: `/images/tokens/ss2fx-dyaaa-aaaar-qacoq-cai.png`,
+  logo: `/images/tokens/ss2fx-dyaaa-aaaar-qacoq-cai.svg`,
 };
 
 export const ckETH = new Token({

@@ -5,7 +5,7 @@ import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, prin
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, Connector, NO_HIDDEN_TOKENS, INFO_URL } from "constants/index";
+import { Connector, NO_HIDDEN_TOKENS, INFO_URL } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -14,8 +14,8 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
-import { ckSepoliaUSDC } from "@icpswap/tokens";
+import { XTC, ckETH, ckBTC, TOKEN_STANDARD } from "constants/tokens";
+import { ckSepoliaUSDC, ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import { useToken } from "hooks/useCurrency";
@@ -24,6 +24,7 @@ import { useHistory } from "react-router-dom";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+
 import { ReceiveModal } from "./Receive";
 
 const useStyles = makeStyles(() => ({
@@ -116,7 +117,7 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
   );
 }
 
-const SWAP_BUTTON_EXCLUDE = [ICP_TOKEN_INFO.canisterId, WRAPPED_ICP.address];
+const SWAP_BUTTON_EXCLUDE = [ICP.address, WRAPPED_ICP.address];
 
 export interface TokenListItemProps {
   isHideSmallBalances: boolean;
@@ -208,7 +209,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
     const { canisterId, standardType, symbol } = tokenInfo;
 
-    if (symbol === ICP_TOKEN_INFO.symbol) {
+    if (symbol === ICP.symbol) {
       mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
     } else if (root_canister_id) {
       mockALinkAndOpen(
@@ -227,7 +228,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   };
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
-    if (tokenInfo && tokenInfo.symbol !== ICP_TOKEN_INFO.symbol) {
+    if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
       mockALinkAndOpen(
         `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
@@ -290,7 +291,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
           <Box>
             <Typography
               color="textPrimary"
-              className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
+              className={tokenInfo?.symbol !== ICP.symbol ? classes.walletSymbol : ""}
               onClick={() => handleLoadToDetail(tokenInfo)}
               fontWeight={500}
             >

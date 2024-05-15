@@ -3,7 +3,7 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { parseTokenAmount, isValidAccount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { ICP_TOKEN_INFO } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
@@ -93,7 +93,7 @@ export default function NFIDTransferModal({
         openSuccessTip(t`Transferred successfully`);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.canisterId.toString() === ICP_TOKEN_INFO.canisterId) {
+        if (token.canisterId.toString() === ICP.address) {
           if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
         }
       }
@@ -194,11 +194,8 @@ export default function NFIDTransferModal({
                 disabled={loading || !!errorMessage}
                 onClick={submit}
               >
-                {errorMessage || (!loading ? (
-                  <Trans>Approve by NFID</Trans>
-                ) : (
-                  <CircularProgress size={26} color="inherit" />
-                ))}
+                {errorMessage ||
+                  (!loading ? <Trans>Approve by NFID</Trans> : <CircularProgress size={26} color="inherit" />)}
               </Button>
             )}
           </Identity>
