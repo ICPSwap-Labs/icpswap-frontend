@@ -6,18 +6,7 @@ import dayjs from "dayjs";
 import { useStakingPoolTransactions } from "@icpswap/hooks";
 import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
-
-export const StakingType: { [key: string]: string } = {
-  staking: "Stake",
-  unstaking: "Unstake",
-  deposit: "Deposit",
-  withdraw: "Withdraw",
-  claim: "Claim",
-  createIncentive: "CreateIncentive",
-  endIncentive: "EndIncentive",
-  stakeTokenids: "StakeTokenids",
-  unstakeTokenids: "UnstakeTokenids",
-};
+import upperFirst from "lodash/upperFirst";
 
 export function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
   return (
@@ -26,7 +15,7 @@ export function PoolItem({ transactions }: { transactions: StakingPoolTransactio
         <Typography>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{StakingType[enumToString(transactions.transType)]}</Typography>
+        <Typography>{upperFirst(enumToString(transactions.transType))}</Typography>
       </TableCell>
       <TableCell>
         <AddressFormat address={transactions.from.toString()} />
