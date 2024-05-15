@@ -95,7 +95,7 @@ export default function PoolList() {
           <TableRow>
             <TableCell>
               <Typography sx={{ fontSize: "16px" }}>
-                <Trans>Pool ID</Trans>
+                <Trans>Canister ID</Trans>
               </Typography>
             </TableCell>
             <TableCell>
