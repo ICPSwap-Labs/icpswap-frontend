@@ -56,6 +56,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
 
     if (withdrawResult?.status === ResultStatus.OK) {
       setRefreshTrigger(refreshTrigger + 1);
+      setAmount("");
     }
 
     setLoading(false);
