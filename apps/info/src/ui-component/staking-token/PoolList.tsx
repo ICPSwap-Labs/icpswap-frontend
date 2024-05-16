@@ -1,16 +1,5 @@
 import { useState } from "react";
-import {
-  Grid,
-  Typography,
-  Table,
-  TableHead,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TableBody,
-  Box,
-  Link,
-} from "@mui/material";
+import { Grid, Table, TableHead, TableCell, TableContainer, TableRow, TableBody, Box, Link } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { getTokenPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
@@ -18,6 +7,7 @@ import { useStakingPools } from "@icpswap/hooks";
 import { pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { TextButton, Pagination, NoData, ListLoading, PaginationType } from "ui-component/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   const { status, statusText } = getTokenPoolStatus(pool) ?? { status: "", statusText: "" };
@@ -25,25 +15,23 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   return (
     <TableRow>
       <TableCell>
-        <TextButton link={explorerLink(pool.canisterId.toString())}>{pool.canisterId.toString()}</TextButton>
+        <Link href={explorerLink(pool.canisterId.toString())} target="_blank" sx={{ fontSize: "16px" }}>
+          {pool.canisterId.toString()}
+        </Link>
       </TableCell>
       <TableCell>
-        <Typography sx={{ fontSize: "16px" }} color="text.primary">
-          {dayjs(Number(pool.startTime) * 1000).format("YYYY-MM-DD HH:mm")}
-        </Typography>
+        <BodyCell>{dayjs(Number(pool.startTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography sx={{ fontSize: "16px" }} color="text.primary">
-          {dayjs(Number(pool.bonusEndTime) * 1000).format("YYYY-MM-DD HH:mm")}
-        </Typography>
+        <BodyCell>{dayjs(Number(pool.bonusEndTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Link href={explorerLink(pool.stakingToken.address)} target="_blank">
+        <Link href={explorerLink(pool.stakingToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.stakingTokenSymbol}
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={explorerLink(pool.rewardToken.address)} target="_blank">
+        <Link href={explorerLink(pool.rewardToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.rewardTokenSymbol}
         </Link>
       </TableCell>
@@ -58,14 +46,13 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
               marginRight: "8px",
             }}
           />
-          <Typography
+          <BodyCell
             sx={{
-              fontSize: "16px",
               color: POOL_STATUS_COLORS[status],
             }}
           >
             {statusText}
-          </Typography>
+          </BodyCell>
         </Grid>
       </TableCell>
       <TableCell>
@@ -94,34 +81,34 @@ export default function PoolList() {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>Canister ID</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>Start Time</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>End Time</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>Staking Token</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>Reward Token</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Typography sx={{ fontSize: "16px" }}>
+              <HeaderCell>
                 <Trans>Status</Trans>
-              </Typography>
+              </HeaderCell>
             </TableCell>
             <TableCell>&nbsp;</TableCell>
           </TableRow>

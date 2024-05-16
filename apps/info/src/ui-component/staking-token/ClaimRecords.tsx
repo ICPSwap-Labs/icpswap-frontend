@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
+import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
@@ -7,20 +7,21 @@ import AddressFormat from "ui-component/AddressFormat";
 import { useStakingPoolClaimTransactions } from "@icpswap/hooks";
 import { NoData, ListLoading, Pagination, PaginationType } from "ui-component/index";
 import { type StakingPoolTransaction } from "@icpswap/types";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
+        <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{`${parseTokenAmount(transactions.amount, Number(transactions.rewardTokenDecimals)).toFormat()} ${
+        <BodyCell>{`${parseTokenAmount(transactions.amount, Number(transactions.rewardTokenDecimals)).toFormat()} ${
           transactions.rewardTokenSymbol
-        }`}</Typography>
+        }`}</BodyCell>
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.to.toString()} />
+        <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
     </TableRow>
   );
@@ -43,13 +44,19 @@ export default function ClaimRecords({ id }: { id: string | undefined }) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Trans>Time</Trans>
+              <HeaderCell>
+                <Trans>Time</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Token Amount</Trans>
+              <HeaderCell>
+                <Trans>Token Amount</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Address</Trans>
+              <HeaderCell>
+                <Trans>Address</Trans>
+              </HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>

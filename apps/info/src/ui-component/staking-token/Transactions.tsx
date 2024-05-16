@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
+import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { PaginationType, Pagination, NoData, ListLoading, AddressFormat } from "ui-component/index";
 import dayjs from "dayjs";
@@ -7,27 +7,27 @@ import { useStakingPoolTransactions } from "@icpswap/hooks";
 import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
+        <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{upperFirst(enumToString(transactions.transType))}</Typography>
+        <BodyCell>{upperFirst(enumToString(transactions.transType))}</BodyCell>
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.from.toString()} />
+        <AddressFormat address={transactions.from.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.to.toString()} />
+        <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
       <TableCell>
-        <Typography color="text.primary">{`${parseTokenAmount(
-          transactions.amount,
-          transactions.stakingTokenDecimals,
-        ).toFormat()} ${transactions.stakingTokenSymbol}`}</Typography>
+        <BodyCell>{`${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
+          transactions.stakingTokenSymbol
+        }`}</BodyCell>
       </TableCell>
     </TableRow>
   );
@@ -54,19 +54,29 @@ export default function Transactions({ id }: TransactionsProps) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Trans>Time</Trans>
+              <HeaderCell>
+                <Trans>Time</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Type</Trans>
+              <HeaderCell>
+                <Trans>Type</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>From</Trans>
+              <HeaderCell>
+                <Trans>From</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>To</Trans>
+              <HeaderCell>
+                <Trans>To</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Amount</Trans>
+              <HeaderCell>
+                <Trans>Amount</Trans>
+              </HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>
