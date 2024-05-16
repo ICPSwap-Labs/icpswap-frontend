@@ -85,6 +85,11 @@ export default function DissolveCkERC20({
     );
   };
 
+  const showMax = useMemo(() => {
+    if (!tokenBalance || !token) return false;
+    return !tokenBalance.isLessThan(token.transFee);
+  }, [tokenBalance, token]);
+
   const error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
     if (!address) return t`Enter the address`;
@@ -174,14 +179,16 @@ export default function DissolveCkERC20({
                         <Typography color="text.primary" fontSize="16px">
                           {token?.symbol ?? "--"}
                         </Typography>
-                        <Typography
-                          color="secondary"
-                          sx={{ cursor: "pointer", margin: "0 0 0 5px" }}
-                          onClick={handleMax}
-                          fontSize="16px"
-                        >
-                          <Trans>Max</Trans>
-                        </Typography>
+                        {showMax ? (
+                          <Typography
+                            color="secondary"
+                            sx={{ cursor: "pointer", margin: "0 0 0 5px" }}
+                            onClick={handleMax}
+                            fontSize="16px"
+                          >
+                            <Trans>Max</Trans>
+                          </Typography>
+                        ) : null}
                       </InputAdornment>
                     ),
                   }}
@@ -247,7 +254,7 @@ export default function DissolveCkERC20({
           </Box>
         </LogosWrapper>
       }
-      transactions={<DissolveRecords refresh={refreshTrigger} />}
+      transactions={<DissolveRecords refresh={refreshTrigger} token={token} />}
     />
   );
 }
