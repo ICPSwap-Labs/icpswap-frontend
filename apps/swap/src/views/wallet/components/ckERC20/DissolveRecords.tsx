@@ -11,6 +11,7 @@ import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "con
 import { Principal } from "@dfinity/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 import { useTokenInfo } from "hooks/token";
+import { Token } from "@icpswap/swap-sdk";
 
 interface ListItemProps {
   transaction: WithdrawalDetail;
@@ -117,9 +118,10 @@ function ListItem({ transaction, minterInfo }: ListItemProps) {
 
 export interface DissolveRecordsProps {
   refresh?: boolean | number;
+  token: Token | undefined;
 }
 
-export default function DissolveRecords({ refresh }: DissolveRecordsProps) {
+export default function DissolveRecords({ refresh, token }: DissolveRecordsProps) {
   const principal = useAccountPrincipalString();
   const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
@@ -139,6 +141,12 @@ export default function DissolveRecords({ refresh }: DissolveRecordsProps) {
     params,
     refresh,
   });
+
+  const transactions = useMemo(() => {
+    if (!token || !withdrawalResult) return [];
+
+    return withdrawalResult.filter((ele) => ele.token_symbol === token.symbol);
+  }, [withdrawalResult, token]);
 
   const Headers = [
     { key: "withdrawal_id", label: t`Withdrawal ID` },
@@ -184,12 +192,12 @@ export default function DissolveRecords({ refresh }: DissolveRecordsProps) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {withdrawalResult?.map((transaction, index) => (
+                {transactions?.map((transaction, index) => (
                   <ListItem key={index} transaction={transaction} minterInfo={minterInfo} />
                 ))}
               </TableBody>
             </Table>
-            {withdrawalResult?.length === 0 || !withdrawalResult ? <NoData /> : null}
+            {transactions?.length === 0 || !transactions ? <NoData /> : null}
           </TableContainer>
         )}
       </Box>
