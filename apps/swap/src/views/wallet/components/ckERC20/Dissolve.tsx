@@ -5,7 +5,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useState, useEffect, useMemo } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
 import { parseTokenAmount, formatTokenAmount, toSignificant } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
+import { ResultStatus, Erc20MinterInfo } from "@icpswap/types";
 import { isAddress } from "utils/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
@@ -26,9 +26,17 @@ export interface DissolveETHProps {
   active: string;
   token: Token | undefined;
   erc20Token: ERC20Token | undefined;
+  minterInfo: Erc20MinterInfo | undefined;
 }
 
-export default function DissolveCkERC20({ buttons, handleChange, active, token, erc20Token }: DissolveETHProps) {
+export default function DissolveCkERC20({
+  buttons,
+  handleChange,
+  active,
+  token,
+  erc20Token,
+  minterInfo,
+}: DissolveETHProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -44,6 +52,11 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
   }, [account]);
 
   const { result: tokenBalance } = useTokenBalance(token?.address, principal, refreshTrigger);
+
+  const helperContractAddress = useMemo(() => {
+    if (!minterInfo) return undefined;
+    return minterInfo.erc20_helper_contract_address[0];
+  }, [minterInfo]);
 
   const dissolveErc20 = useDissolveCkERC20();
 
@@ -197,7 +210,7 @@ export default function DissolveCkERC20({ buttons, handleChange, active, token, 
               </Box>
             </Box>
 
-            <Links ckToken={token} />
+            <Links ckToken={token} helperContract={helperContractAddress} />
           </Box>
         </MainContent>
       }

@@ -25,3 +25,21 @@ export const EXPLORER_MAPS = {
   [ChainId.MAINNET]: `https://etherscan.io/address`,
   [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/address`,
 };
+
+export const getExplorerAddress = (address: string) => {
+  return `${EXPLORER_MAPS[chain]}/${address}`;
+};
+
+export const getMinterDashboard = (minterId: string) => {
+  return `https://${minterId}.raw.icp0.io/dashboard`;
+};
+
+export const EXPLORER_TX_LINKS = {
+  [ChainId.MAINNET]: `https://etherscan.io/tx`,
+  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/tx`,
+};
+
+export const EXPLORER_BLOCK_LINKS = {
+  [ChainId.MAINNET]: `https://etherscan.io/block`,
+  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/block`,
+};

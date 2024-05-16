@@ -3,10 +3,11 @@ import { useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { Wrapper, Breadcrumbs, type Tab } from "components/index";
-import { useParsedQueryString } from "@icpswap/hooks";
+import { useParsedQueryString, useChainKeyMinterInfo } from "@icpswap/hooks";
 import { useFetchBlockNumber } from "hooks/web3/useBlockNumber";
 import { useERC20TokenByChainKeyId } from "hooks/token/index";
 import { useToken } from "hooks/useCurrency";
+import { MINTER_CANISTER_ID } from "constants/ckERC20";
 
 import MintCkERC20 from "./components/ckERC20/Mint";
 import DissolveCkERC20 from "./components/ckERC20/Dissolve";
@@ -42,6 +43,7 @@ export default function ckToken() {
   };
 
   useFetchBlockNumber();
+  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   return (
     <Wrapper>
@@ -60,6 +62,7 @@ export default function ckToken() {
           active={active}
           token={token}
           erc20Token={erc20Token}
+          minterInfo={chainKeyMinterInfo}
         />
       ) : (
         <MintCkERC20
@@ -68,6 +71,7 @@ export default function ckToken() {
           active={active}
           token={token}
           erc20Token={erc20Token}
+          minterInfo={chainKeyMinterInfo}
         />
       )}
     </Wrapper>

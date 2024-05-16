@@ -17,10 +17,10 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useTokenBalance } from "hooks/token";
 import { Theme } from "@mui/material/styles";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
-import { HELPER_SMART_CONTRACT } from "constants/ckERC20";
 import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
 import { useMintCkERC20Callback } from "hooks/ckERC20/useMintCkERC20";
 import { useUpdateErc20TX } from "store/web3/hooks";
+import type { Erc20MinterInfo } from "@icpswap/types";
 
 import { MainContent } from "../ckTokens/MainContent";
 import { LogosWrapper } from "../ckTokens/LogosWrapper";
@@ -57,9 +57,10 @@ export interface MintProps {
   active: string;
   token: Token | undefined;
   erc20Token: ERC20Token | undefined;
+  minterInfo: Erc20MinterInfo | undefined;
 }
 
-export default function MintCkERC20({ buttons, handleChange, active, token, erc20Token }: MintProps) {
+export default function MintCkERC20({ buttons, handleChange, active, token, erc20Token, minterInfo }: MintProps) {
   const principal = useAccountPrincipalString();
   const { account, chainId } = useWeb3React();
 
@@ -82,14 +83,19 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
     setReload(!reload);
   };
 
-  const erc20MinterHelper = useERC20MinterHelperContract(HELPER_SMART_CONTRACT);
+  const helperContractAddress = useMemo(() => {
+    if (!minterInfo) return undefined;
+    return minterInfo.erc20_helper_contract_address[0];
+  }, [minterInfo]);
+
+  const erc20MinterHelper = useERC20MinterHelperContract(helperContractAddress);
 
   const approveAmount = useMemo(() => {
     if (!amount || !erc20Token) return undefined;
     return formatTokenAmount(amount, erc20Token.decimals).toString();
   }, [amount, erc20Token]);
 
-  const [approveState, approve] = useApproveCallback(approveAmount, erc20Token, HELPER_SMART_CONTRACT);
+  const [approveState, approve] = useApproveCallback(approveAmount, erc20Token, helperContractAddress);
 
   const handleApprove = async () => {
     if (!erc20Token || !amount) return;
@@ -99,7 +105,7 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
     setLoading(false);
   };
 
-  const mintCkERC20 = useMintCkERC20Callback();
+  const mintCkERC20 = useMintCkERC20Callback(helperContractAddress);
   const updateErc20Tx = useUpdateErc20TX();
 
   const handleMint = async () => {
@@ -215,13 +221,15 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
               disabled={loading || !account || !amount || !!error || approveState === ApprovalState.PENDING}
               loading={loading || approveState === ApprovalState.PENDING}
             >
-              {error || approveState === ApprovalState.APPROVED || approveState === ApprovalState.PENDING
-                ? t`Mint ck${erc20Token?.symbol}`
-                : t`Approve`}
+              {error === undefined
+                ? approveState === ApprovalState.APPROVED || approveState === ApprovalState.PENDING
+                  ? t`Mint ck${erc20Token?.symbol}`
+                  : t`Approve`
+                : error}
             </ButtonConnector>
           </Box>
 
-          <Links ckToken={token} />
+          <Links ckToken={token} helperContract={helperContractAddress} />
         </MainContent>
       }
       logo={

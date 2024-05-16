@@ -1,5 +1,5 @@
 import { ChainId } from "@icpswap/constants";
-import { chain } from "constants/web3";
+import { chain, EXPLORER_TX_LINKS, EXPLORER_BLOCK_LINKS, EXPLORER_MAPS } from "constants/web3";
 import { ckETH as ckETHToken, ckSepoliaETH } from "@icpswap/tokens";
 
 const API_LINKS = {
@@ -27,26 +27,6 @@ const CANISTER = {
   [ChainId.SEPOLIA]: `https://icscan.io/canister/${LEDGER_ID[chain]}`,
 };
 
-const EXPLORER_TX_LINKS = {
-  [ChainId.MAINNET]: `https://etherscan.io/tx`,
-  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/tx`,
-};
-
-const EXPLORER_BLOCK_LINKS = {
-  [ChainId.MAINNET]: `https://etherscan.io/block`,
-  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/block`,
-};
-
-const EXPLORER_ADDRESS_LINKS = {
-  [ChainId.MAINNET]: `https://etherscan.io/address`,
-  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/address`,
-};
-
-const EXPLORER_CONTRACT_LINKS = {
-  [ChainId.MAINNET]: `https://etherscan.io/address`,
-  [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/address`,
-};
-
 const ETH_MINT_CONTRACTS = {
   [ChainId.MAINNET]: `0x7574eb42ca208a4f6960eccafdf186d627dcc175`,
   [ChainId.SEPOLIA]: `0xb44B5e756A894775FC32EDdf3314Bb1B1944dC34`,
@@ -68,9 +48,9 @@ export const EXPLORER_TX_LINK = EXPLORER_TX_LINKS[chain];
 
 export const EXPLORER_BLOCK_LINK = EXPLORER_BLOCK_LINKS[chain];
 
-export const EXPLORER_ADDRESS_LINK = EXPLORER_ADDRESS_LINKS[chain];
+export const EXPLORER_ADDRESS_LINK = EXPLORER_MAPS[chain];
 
-export const EXPLORER_CONTRACT_LINK = `${EXPLORER_CONTRACT_LINKS[chain]}/${ckETH_MINTER_CONTRACT}`;
+export const EXPLORER_CONTRACT_LINK = `${EXPLORER_MAPS[chain]}/${ckETH_MINTER_CONTRACT}`;
 
 export const DISSOLVE_FEE = "0.0000001";
 

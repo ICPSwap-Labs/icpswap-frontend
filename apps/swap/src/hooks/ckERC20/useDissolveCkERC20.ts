@@ -2,10 +2,9 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback, useMemo } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
-import { useERC20MinterHelperContract } from "hooks/web3/useContract";
 import { formatTokenAmount } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import { HELPER_SMART_CONTRACT, MINTER_CANISTER_ID } from "constants/ckERC20";
+import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { ckETH } from "constants/ckETH";
 import { useApprove } from "hooks/token/index";
 import { ResultStatus } from "@icpswap/types";
@@ -16,7 +15,6 @@ import { Principal } from "@dfinity/principal";
 export function useDissolveCkERC20() {
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
-  const erc20MinterHelper = useERC20MinterHelperContract(HELPER_SMART_CONTRACT);
 
   const bytes32 = useMemo(() => {
     if (principal) return principalToBytes32(principal);
@@ -27,7 +25,7 @@ export function useDissolveCkERC20() {
 
   return useCallback(
     async (ckErc20Token: Token, rawAmount: string | number, recipient: string) => {
-      if (!erc20MinterHelper || !bytes32) return undefined;
+      if (!bytes32) return undefined;
 
       const amount = formatTokenAmount(rawAmount, ckErc20Token.decimals).toString();
 
@@ -71,6 +69,6 @@ export function useDissolveCkERC20() {
 
       return result;
     },
-    [erc20MinterHelper, bytes32, principal],
+    [bytes32, principal],
   );
 }

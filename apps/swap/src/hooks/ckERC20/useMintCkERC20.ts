@@ -5,13 +5,12 @@ import { principalToBytes32 } from "utils/ic/index";
 import { useERC20MinterHelperContract } from "hooks/web3/useContract";
 import { formatTokenAmount } from "@icpswap/utils";
 import { ERC20Token } from "@icpswap/swap-sdk";
-import { HELPER_SMART_CONTRACT } from "constants/ckERC20";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
 
-export function useMintCkERC20Callback() {
+export function useMintCkERC20Callback(helperContractAddress: string | undefined) {
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
-  const helperContract = useERC20MinterHelperContract(HELPER_SMART_CONTRACT);
+  const helperContract = useERC20MinterHelperContract(helperContractAddress);
 
   const bytes32 = useMemo(() => {
     if (principal) return principalToBytes32(principal);

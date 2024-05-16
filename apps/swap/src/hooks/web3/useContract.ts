@@ -42,12 +42,10 @@ export function useETHContract(withSignerIfPossible?: boolean) {
 }
 
 export function useERC20Contract(contract: string | undefined, withSignerIfPossible?: boolean) {
-  if (!contract) return null;
   return useContract<ERC20>(contract, ERC20ABI, withSignerIfPossible);
 }
 
 export function useERC20MinterHelperContract(contract: string | undefined, withSignerIfPossible?: boolean) {
-  if (!contract) return null;
   return useContract<ERC20Helper>(contract, ERC20HelperAbi, withSignerIfPossible);
 }
 
