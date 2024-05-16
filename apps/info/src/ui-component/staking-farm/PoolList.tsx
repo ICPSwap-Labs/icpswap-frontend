@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
-import { Grid, Typography, Box } from "@mui/material";
+import { Grid, Box, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
+import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
@@ -20,9 +19,10 @@ const useStyles = makeStyles(() => {
     wrapper: {
       display: "grid",
       gridTemplateColumns: "180px repeat(5, 1fr) 140px 120px",
-      padding: "16px",
+      padding: "16px 0",
       alignItems: "center",
       minWidth: "1200px",
+      gap: "0 5px",
     },
   };
 });
@@ -57,13 +57,13 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
   ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell>
-        <TextButton link={explorerLink(farmId)}>{farmId}</TextButton>
+        <Link href={explorerLink(farmId)}>{farmId}</Link>
       </BodyCell>
       <BodyCell>
         {token0 && token1 && farmInfo ? (
-          <TextButton link={getExplorerPrincipalLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
+          <Link href={explorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
             token1.symbol
-          }/${feeAmountToPercentage(Number(farmInfo.poolFee))}`}</TextButton>
+          }/${feeAmountToPercentage(Number(farmInfo?.poolFee))}`}</Link>
         ) : (
           "--"
         )}
@@ -88,17 +88,17 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
               marginRight: "8px",
             }}
           />
-          <Typography
+          <BodyCell
             sx={{
               color: POOL_STATUS_COLORS[status],
             }}
           >
             {statusText}
-          </Typography>
+          </BodyCell>
         </Grid>
       </BodyCell>
       <BodyCell>
-        <TextButton to={`/farm/details/${farmId}`}>
+        <TextButton to={`/farm/details/${farmId}`} sx={{ fontSize: "16px" }}>
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>

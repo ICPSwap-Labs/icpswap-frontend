@@ -37,10 +37,8 @@ const useStyles = makeStyles((theme: Theme) => {
 export function PoolDetailItem({ label, value }: { value: ReactNode; label: ReactNode }) {
   return (
     <Box>
-      <Typography fontSize="12px" component="span">
-        {label}
-      </Typography>{" "}
-      <Typography fontSize="12px" component="span" color="text.primary">
+      <Typography component="span">{label}</Typography>{" "}
+      <Typography component="span" color="text.primary">
         {value}
       </Typography>
     </Box>
@@ -95,9 +93,7 @@ export default function FarmDetails() {
               label={t`Canister ID:`}
               value={
                 <Copy content={farmId}>
-                  <Typography fontSize="12px" color="text.primary">
-                    {shorten(farmId, 8)}
-                  </Typography>
+                  <Typography color="text.primary">{shorten(farmId, 8)}</Typography>
                 </Copy>
               }
             />
@@ -105,7 +101,7 @@ export default function FarmDetails() {
             <PoolDetailItem
               label={t`Reward Token Amount:`}
               value={
-                <Typography fontSize="12px" component="span" color="text.primary">
+                <Typography component="span" color="text.primary">
                   {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
                   <Link href={getExplorerPrincipalLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${rewardToken?.symbol ?? "--"}`}
@@ -119,9 +115,7 @@ export default function FarmDetails() {
               label={t`Creator:`}
               value={
                 <Copy content={farmInfo?.creator.toString() ?? ""}>
-                  <Typography fontSize="12px" color="text.primary">
-                    {shorten(farmInfo?.creator.toString() ?? "", 8)}
-                  </Typography>
+                  <Typography color="text.primary">{shorten(farmInfo?.creator.toString() ?? "", 8)}</Typography>
                 </Copy>
               }
             />
@@ -155,7 +149,7 @@ export default function FarmDetails() {
               <Trans>Reward Tokens</Trans>
             </Typography>
           </Grid>
-          <Grid item container justifyContent="center">
+          <Grid item container justifyContent="center" mt="20px">
             {recordType === "transactions" ? (
               <Transactions id={farmId} rewardTokenId={farmInfo?.rewardToken.address} />
             ) : (
