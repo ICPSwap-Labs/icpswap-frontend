@@ -12,6 +12,7 @@ import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { useDissolveCkERC20 } from "hooks/ckERC20/index";
+import { ckETH } from "constants/ckETH";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -52,6 +53,7 @@ export default function DissolveCkERC20({
   }, [account]);
 
   const { result: tokenBalance } = useTokenBalance(token?.address, principal, refreshTrigger);
+  const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal, refreshTrigger);
 
   const helperContractAddress = useMemo(() => {
     if (!minterInfo) return undefined;
@@ -160,7 +162,7 @@ export default function DissolveCkERC20({
                 <Typography component="span" color="#D3625B" fontSize="16px">
                   *
                 </Typography>
-                <Trans>Amount: (includes Ethereum network fees)</Trans>
+                <Trans>Amount (Additional ckETH will be deducted for Gas fees)</Trans>
               </Typography>
 
               <Box sx={{ margin: "12px 0 0 0" }}>
@@ -249,6 +251,13 @@ export default function DissolveCkERC20({
               {toSignificant(parseTokenAmount(tokenBalance, token?.decimals).toNumber())}
               <Typography component="span" fontSize="16px">
                 &nbsp;{token?.symbol ?? "--"}
+              </Typography>
+            </Typography>
+
+            <Typography color="text.primary" sx={{ margin: "10px 0 0 0", fontSize: "18px", fontWeight: 600 }}>
+              {ckETHBalance ? toSignificant(parseTokenAmount(ckETHBalance, ckETH.decimals).toNumber()) : "--"}
+              <Typography component="span" fontSize="16px">
+                &nbsp;{ckETH?.symbol ?? "--"}
               </Typography>
             </Typography>
           </Box>

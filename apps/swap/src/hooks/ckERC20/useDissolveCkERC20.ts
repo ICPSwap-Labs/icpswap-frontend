@@ -33,6 +33,7 @@ export function useDissolveCkERC20() {
       const ckETHApproveResult = await approve({
         canisterId: ckETH.address,
         spender: MINTER_CANISTER_ID,
+        // TODO: approve amount gas fee
         value: formatTokenAmount(1, ckETH.decimals).toString(),
         account: principal,
       });
