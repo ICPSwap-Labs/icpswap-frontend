@@ -1,4 +1,5 @@
 import { useContext, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
@@ -9,6 +10,7 @@ import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
+import { ICP } from "@icpswap/tokens";
 
 import { SwapProContext } from "../context";
 
@@ -156,28 +158,48 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           </Box>
         ) : null}
 
-        <a
-          href={`https://info.icpswap.com/token/details/${tokenId}`}
-          target="_blank"
-          rel="noreferrer"
-          style={{ textDecoration: "none" }}
-        >
-          <Box
-            sx={{
-              width: "121px",
-              height: "36px",
-              borderRadius: "8px",
-              background: "#515A81",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+        <Box sx={{ display: "flex", gap: "0 10px" }}>
+          <a
+            href={`https://info.icpswap.com/token/details/${tokenId}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: "none" }}
           >
-            <Typography align="center" color="text.primary">
-              <Trans>Token Details</Trans>
-            </Typography>
-          </Box>
-        </a>
+            <Box
+              sx={{
+                width: "121px",
+                height: "36px",
+                borderRadius: "8px",
+                background: "#515A81",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography align="center" color="text.primary">
+                <Trans>Token Details</Trans>
+              </Typography>
+            </Box>
+          </a>
+
+          <Link to={`/swap/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
+            <Box
+              sx={{
+                width: "121px",
+                height: "36px",
+                borderRadius: "8px",
+                background: "#515A81",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography align="center" color="text.primary">
+                <Trans>Add Liquidity</Trans>
+              </Typography>
+            </Box>
+          </Link>
+        </Box>
       </Box>
     </Box>
   );
