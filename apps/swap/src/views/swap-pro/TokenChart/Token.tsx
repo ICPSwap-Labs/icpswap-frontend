@@ -159,6 +159,24 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
         ) : null}
 
         <Box sx={{ display: "flex", gap: "0 10px" }}>
+          <Link to={`/swap/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
+            <Box
+              sx={{
+                width: "121px",
+                height: "36px",
+                borderRadius: "8px",
+                background: "#515A81",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography align="center" color="text.primary">
+                <Trans>Add Liquidity</Trans>
+              </Typography>
+            </Box>
+          </Link>
+
           <a
             href={`https://info.icpswap.com/token/details/${tokenId}`}
             target="_blank"
@@ -181,24 +199,6 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
               </Typography>
             </Box>
           </a>
-
-          <Link to={`/swap/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
-            <Box
-              sx={{
-                width: "121px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "#515A81",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography align="center" color="text.primary">
-                <Trans>Add Liquidity</Trans>
-              </Typography>
-            </Box>
-          </Link>
         </Box>
       </Box>
     </Box>
