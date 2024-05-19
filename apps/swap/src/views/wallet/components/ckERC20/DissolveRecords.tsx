@@ -145,7 +145,13 @@ export default function DissolveRecords({ refresh, token }: DissolveRecordsProps
   const transactions = useMemo(() => {
     if (!token || !withdrawalResult) return [];
 
-    return withdrawalResult.filter((ele) => ele.token_symbol === token.symbol);
+    return withdrawalResult
+      .filter((ele) => ele.token_symbol === token.symbol)
+      .sort((a, b) => {
+        if (a.withdrawal_id < b.withdrawal_id) return 1;
+        if (a.withdrawal_id > b.withdrawal_id) return -1;
+        return 0;
+      });
   }, [withdrawalResult, token]);
 
   const Headers = [
