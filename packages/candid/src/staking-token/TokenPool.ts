@@ -15,10 +15,12 @@ export interface InitRequests {
   stakingTokenSymbol: string;
   startTime: bigint;
   rewardTokenSymbol: string;
+  creator: Principal;
   stakingToken: Token;
   rewardToken: Token;
   rewardPerTime: bigint;
   name: string;
+  createTime: bigint;
   stakingTokenFee: bigint;
   rewardFee: bigint;
   rewardTokenFee: bigint;
@@ -45,9 +47,11 @@ export interface PublicStakingPoolInfo {
   lastRewardTime: bigint;
   totalDeposit: bigint;
   rewardTokenSymbol: string;
+  creator: Principal;
   stakingToken: Token;
   rewardToken: Token;
   rewardPerTime: bigint;
+  createTime: bigint;
   stakingTokenFee: bigint;
   rewardFee: bigint;
   rewardDebt: bigint;

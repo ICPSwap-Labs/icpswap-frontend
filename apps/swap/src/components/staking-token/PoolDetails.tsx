@@ -2,11 +2,10 @@ import React, { useMemo } from "react";
 import { Grid, Box, Collapse, Typography, Link } from "@mui/material";
 import { INFO_URL } from "constants/index";
 import { WRAPPED_ICP, ICP } from "constants/tokens";
-import { useStakingTokenPool } from "@icpswap/hooks";
+import { useStakingTokenPool, useStakingPoolCycles } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { useTheme } from "@mui/styles";
-import { usePoolCycles } from "hooks/staking-token/index";
 import { Trans } from "@lingui/macro";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
@@ -108,7 +107,7 @@ export default function StakingPoolDetails({
     }
   };
 
-  const { result: cycles } = usePoolCycles(pool?.canisterId.toString());
+  const { result: cycles } = useStakingPoolCycles(pool?.canisterId.toString());
 
   return (
     <>
@@ -203,7 +202,7 @@ export default function StakingPoolDetails({
             <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
               <Grid item>
                 <Typography>
-                  <Trans>Starting at</Trans>
+                  <Trans>Starting At</Trans>
                 </Typography>
               </Grid>
               <Grid item>
@@ -215,7 +214,7 @@ export default function StakingPoolDetails({
 
             <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
               <Grid item>
-                <Typography>{state === STATE.UPCOMING ? <Trans>Left</Trans> : <Trans>End in</Trans>}</Typography>
+                <Typography>{state === STATE.UPCOMING ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
               </Grid>
               <Grid item>
                 <Typography color="text.primary">
@@ -229,7 +228,22 @@ export default function StakingPoolDetails({
 
             <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
               <Grid item>
-                <Typography>Created by</Typography>
+                <Typography>
+                  <Trans>Last Reward Time</Trans>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography color="text.primary">
+                  {stakingPoolInfo?.lastRewardTime
+                    ? timestampFormat(Number(stakingPoolInfo.lastRewardTime) * 1000)
+                    : "--"}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Grid item>
+                <Typography>Creator</Typography>
               </Grid>
               <Grid item>
                 <Typography color="text.primary.main">
@@ -261,10 +275,10 @@ export default function StakingPoolDetails({
 
             <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
               <Grid item>
-                <Typography>Cycles left</Typography>
+                <Typography>Cycles Left</Typography>
               </Grid>
               <Grid item>
-                <Typography color="text.primary">{cycles ? cycleValueFormat(cycles) : "--"}</Typography>
+                <Typography color="text.primary">{cycles ? cycleValueFormat(cycles.balance) : "--"}</Typography>
               </Grid>
             </Grid>
 

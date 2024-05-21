@@ -16,18 +16,18 @@ export enum STAKING_POOL_VERSION {
   version2 = "2.0",
 }
 
-export type V1PoolData = Override<
-  V1Pool,
-  {
-    stakingToken: { address: string; standard: string };
-    rewardToken: { address: string; standard: string };
-    storageCid: string;
-  }
->;
+// export type V1PoolData = Override<
+//   V1Pool,
+//   {
+//     stakingToken: { address: string; standard: string };
+//     rewardToken: { address: string; standard: string };
+//     storageCid: string;
+//   }
+// >;
 
 export type V2PoolData = StakingPoolInfo;
 
-export type PoolData = V1PoolData | V2PoolData;
+export type PoolData = V2PoolData;
 
 export type UserStakingInfo = {
   amount: bigint;

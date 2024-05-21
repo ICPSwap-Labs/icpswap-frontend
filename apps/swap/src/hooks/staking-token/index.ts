@@ -6,8 +6,6 @@ import {
   getStakingPools,
   usePaginationAllData,
   getPaginationAllData,
-  useCallsData,
-  getStakingPoolCycles,
   stakingPoolWithdraw,
   stakingPoolHarvest,
   getStakingTokenUserInfo,
@@ -155,15 +153,6 @@ export function useUserUnusedTokens(reload?: boolean) {
       result: balances,
     };
   }, [poolsLoading, loading, balances]);
-}
-
-export function usePoolCycles(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return (await getStakingPoolCycles(canisterId))?.balance;
-    }, [canisterId]),
-  );
 }
 
 type StakingProps = {
