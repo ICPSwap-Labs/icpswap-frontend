@@ -236,3 +236,12 @@ export function useV3FarmDistributeRecords(
 }
 
 /* v3 farm storage */
+
+export function useFarmCycles(farmId: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!farmId) return undefined;
+      return resultFormat<{ balance: bigint; available: bigint }>(await (await farm(farmId)).getCycleInfo()).data;
+    }, [farmId]),
+  );
+}
