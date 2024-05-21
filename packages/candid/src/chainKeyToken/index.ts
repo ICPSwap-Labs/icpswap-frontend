@@ -9,5 +9,6 @@ export type {
   EthTransaction,
   TxFinalizedStatus,
   MinterInfo as Erc20MinterInfo,
+  Eip1559TransactionPrice,
 } from "./erc20Minter";
 export { idlFactory as Erc20MinterInterfaceFactory } from "./erc20Minter.did";

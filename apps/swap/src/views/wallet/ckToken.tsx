@@ -63,6 +63,7 @@ export default function ckToken() {
           token={token}
           erc20Token={erc20Token}
           minterInfo={chainKeyMinterInfo}
+          minterAddress={MINTER_CANISTER_ID}
         />
       ) : (
         <MintCkERC20

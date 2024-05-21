@@ -1,7 +1,12 @@
 import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
 import { erc20Minter } from "@icpswap/actor";
-import type { WithdrawalSearchParameter, WithdrawalDetail, Erc20MinterInfo } from "@icpswap/types";
+import type {
+  WithdrawalSearchParameter,
+  WithdrawalDetail,
+  Erc20MinterInfo,
+  Eip1559TransactionPrice,
+} from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 
 import { useCallsData } from "../useCallData";
@@ -58,6 +63,19 @@ export function useChainKeyMinterInfo(minter_id: string) {
   return useCallsData(
     useCallback(async () => {
       return await getChainKeyMinterInfo(minter_id);
+    }, [minter_id]),
+  );
+}
+
+export async function getChainKeyTransactionPrice(minter_id: string) {
+  return resultFormat<Eip1559TransactionPrice>(await (await erc20Minter(minter_id)).eip_1559_transaction_price()).data;
+}
+
+export function useChainKeyTransactionPrice(minter_id: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!minter_id) return undefined;
+      return await getChainKeyTransactionPrice(minter_id);
     }, [minter_id]),
   );
 }

@@ -13,6 +13,7 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { useDissolveCkERC20 } from "hooks/ckERC20/index";
 import { ckETH } from "constants/ckETH";
+import { useChainKeyTransactionPrice } from "@icpswap/hooks";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -28,6 +29,7 @@ export interface DissolveETHProps {
   token: Token | undefined;
   erc20Token: ERC20Token | undefined;
   minterInfo: Erc20MinterInfo | undefined;
+  minterAddress: string | undefined;
 }
 
 export default function DissolveCkERC20({
@@ -37,6 +39,7 @@ export default function DissolveCkERC20({
   token,
   erc20Token,
   minterInfo,
+  minterAddress,
 }: DissolveETHProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -52,13 +55,20 @@ export default function DissolveCkERC20({
     }
   }, [account]);
 
+  const { helperContractAddress } = useMemo(() => {
+    if (!minterInfo) return {};
+
+    return {
+      helperContractAddress: minterInfo.erc20_helper_contract_address[0],
+      minterAddress: minterInfo.minter_address[0],
+    };
+  }, [minterInfo]);
+
   const { result: tokenBalance } = useTokenBalance(token?.address, principal, refreshTrigger);
   const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal, refreshTrigger);
+  const { result: transactionPrice } = useChainKeyTransactionPrice(minterAddress);
 
-  const helperContractAddress = useMemo(() => {
-    if (!minterInfo) return undefined;
-    return minterInfo.erc20_helper_contract_address[0];
-  }, [minterInfo]);
+  console.log("transactionPrice:", transactionPrice);
 
   const dissolveErc20 = useDissolveCkERC20();
 
@@ -162,7 +172,15 @@ export default function DissolveCkERC20({
                 <Typography component="span" color="#D3625B" fontSize="16px">
                   *
                 </Typography>
-                <Trans>Amount (Additional ckETH will be deducted for Gas fees)</Trans>
+                <Trans>Amount</Trans>
+                {transactionPrice ? (
+                  <Trans>
+                    (Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
+                    {ckETH.symbol} for gas fees)
+                  </Trans>
+                ) : (
+                  ""
+                )}
               </Typography>
 
               <Box sx={{ margin: "12px 0 0 0" }}>

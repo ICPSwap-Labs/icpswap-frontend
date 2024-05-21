@@ -8,4 +8,5 @@ export type {
   EthTransaction,
   TxFinalizedStatus,
   Erc20MinterInfo,
+  Eip1559TransactionPrice,
 } from "@icpswap/candid";
