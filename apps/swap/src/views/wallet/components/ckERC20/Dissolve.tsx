@@ -14,6 +14,7 @@ import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { useDissolveCkERC20 } from "hooks/ckERC20/index";
 import { ckETH } from "constants/ckETH";
 import { useChainKeyTransactionPrice } from "@icpswap/hooks";
+import { useInfoToken } from "hooks/info/useInfoTokens";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -67,6 +68,7 @@ export default function DissolveCkERC20({
   const { result: tokenBalance } = useTokenBalance(token?.address, principal, refreshTrigger);
   const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal, refreshTrigger);
   const { result: transactionPrice } = useChainKeyTransactionPrice(minterAddress);
+  const ckETHInfoToken = useInfoToken(ckETH.address);
 
   const dissolveErc20 = useDissolveCkERC20();
 
@@ -171,10 +173,14 @@ export default function DissolveCkERC20({
                   *
                 </Typography>
                 <Trans>Amount</Trans>
-                {transactionPrice ? (
+                {transactionPrice && ckETHInfoToken ? (
                   <Trans>
                     (Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
-                    {ckETH.symbol} for gas fees)
+                    {ckETH.symbol} ($
+                    {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
+                      .multipliedBy(ckETHInfoToken.priceUSD)
+                      .toFormat(2)}
+                    ) for gas fees)
                   </Trans>
                 ) : (
                   ""

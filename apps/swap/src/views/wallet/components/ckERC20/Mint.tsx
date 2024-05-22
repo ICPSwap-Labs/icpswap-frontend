@@ -272,7 +272,7 @@ export default function MintCkERC20({ buttons, handleChange, active, token, erc2
           </Box>
         </LogosWrapper>
       }
-      transactions={<Transaction blockNumber={blockNumber} ledger={token?.address} />}
+      transactions={<Transaction blockNumber={blockNumber} ledger={token?.address} minterInfo={minterInfo} />}
     />
   );
 }

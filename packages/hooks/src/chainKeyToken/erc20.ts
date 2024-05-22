@@ -19,7 +19,10 @@ export interface WithdrawErc20TokenArgs {
 }
 
 export async function withdrawErc20Token({ minter_id, ledger_id, recipient, amount }: WithdrawErc20TokenArgs) {
-  return resultFormat<string[]>(
+  return resultFormat<{
+    ckerc20_block_index: bigint;
+    cketh_block_index: bigint;
+  }>(
     await (
       await erc20Minter(minter_id, true)
     ).withdraw_erc20({

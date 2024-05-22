@@ -11,8 +11,8 @@ export interface LogoProps {
 export default function Logo({ type, token, erc20Token }: LogoProps) {
   return (
     <Logos
-      logo0={type === "mint" ? token?.logo : erc20Token?.logo}
-      logo1={type === "mint" ? erc20Token?.logo : token?.logo}
+      logo0={type === "mint" ? erc20Token?.logo : token?.logo}
+      logo1={type === "mint" ? token?.logo : erc20Token?.logo}
     />
   );
 }

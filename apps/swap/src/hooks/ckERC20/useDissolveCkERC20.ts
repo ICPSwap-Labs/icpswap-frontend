@@ -63,7 +63,11 @@ export function useDissolveCkERC20() {
       });
 
       if (result.status === ResultStatus.ERROR) {
-        openTip(result.message ?? t`Failed to withdraw ${ckErc20Token.symbol}`, MessageTypes.error);
+        if (result.message.includes("InsufficientFunds")) {
+          openTip(t`Your wallet doesn't have enough ckETH (Gas fee) or ckUSDC to dissolve.`, MessageTypes.error);
+        } else {
+          openTip(result.message ?? t`Failed to withdraw ${ckErc20Token.symbol}`, MessageTypes.error);
+        }
       } else {
         openTip(t`Withdraw ${rawAmount} ${ckErc20Token.symbol} successfully`, MessageTypes.success);
       }
