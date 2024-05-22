@@ -2,6 +2,10 @@ import { Typography, Box, Checkbox, useMediaQuery, useTheme } from "@mui/materia
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { Trans } from "@lingui/macro";
+import { SelectSortType } from "components/Wallet/SelectSortType";
+import { useContext } from "react";
+
+import WalletContext from "./context";
 
 interface HideSmallBalanceProps {
   onHideSmallBalances: (checked: boolean) => void;
@@ -32,6 +36,8 @@ export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalanc
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { setSort, sort } = useContext(WalletContext);
+
   return (
     <Box>
       <Box
@@ -44,14 +50,24 @@ export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalanc
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
           {!matchDownSM ? (
-            <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
+            <>
+              <Box>
+                <SelectSortType value={sort} onChange={setSort} />
+              </Box>
+
+              <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
+            </>
           ) : null}
 
           <AddToken />
         </Box>
       </Box>
+
       {matchDownSM ? (
-        <Box sx={{ margin: "10px 0 0 0" }}>
+        <Box sx={{ margin: "10px 0 0 0", display: "flex", justifyContent: "space-between" }}>
+          <Box>
+            <SelectSortType value={sort} onChange={setSort} />
+          </Box>
           <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
         </Box>
       ) : null}

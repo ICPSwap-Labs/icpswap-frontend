@@ -17,7 +17,6 @@ import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
-import { useToken } from "hooks/useCurrency";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { isHouseUserTokenTransactions } from "utils/index";
@@ -128,9 +127,12 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const history = useHistory();
 
-  const [, currency] = useToken(canisterId);
+  const infoTokenAddress = useMemo(() => {
+    if (canisterId === WRAPPED_ICP.address) return ICP.address;
+    return canisterId;
+  }, [canisterId]);
 
-  const infoToken = useInfoToken(currency?.address);
+  const infoToken = useInfoToken(infoTokenAddress);
 
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.priceUSD;
@@ -145,13 +147,13 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const [receiveOpen, setReceiveOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
 
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
 
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;
   }, [refreshInnerCounter, refreshCounter]);
 
-  const { result: tokenBalance } = useTokenBalance(canisterId, principal, refreshNumber);
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
 
   useEffect(() => {
     if (
@@ -175,7 +177,20 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(usdBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, tokenInfo]);
+  }, [tokenBalance, infoToken, tokenInfo, tokenUSDPrice]);
+
+  useEffect(() => {
+    if (
+      tokenInfo &&
+      tokenInfo.decimals !== undefined &&
+      tokenInfo.transFee !== undefined &&
+      tokenBalance &&
+      tokenBalanceLoading === false &&
+      !infoToken
+    ) {
+      setNoUSDTokens(tokenInfo.canisterId);
+    }
+  }, [tokenInfo, tokenBalance, tokenBalanceLoading, infoToken]);
 
   const handleCloseModal = async () => {
     setOpen(false);
@@ -391,13 +406,13 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 }
 
 export interface TokenListProps {
-  list: string[];
+  tokens: string[];
   loading?: boolean;
   isHideSmallBalances: boolean;
   searchValue: string;
 }
 
-export default function TokenList({ list, loading, isHideSmallBalances, searchValue }: TokenListProps) {
+export default function TokenList({ tokens, loading, isHideSmallBalances, searchValue }: TokenListProps) {
   return (
     <Box
       sx={{
@@ -415,7 +430,7 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         },
       }}
     >
-      {list.map((canisterId) => {
+      {tokens.map((canisterId) => {
         return (
           <TokenListItem
             key={canisterId}
@@ -426,7 +441,7 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         );
       })}
 
-      {list.length === 0 && !loading ? <NoData /> : null}
+      {tokens.length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
         <LoadingRow>

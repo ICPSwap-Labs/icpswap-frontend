@@ -12,9 +12,10 @@ interface StyleProps {
   contained: boolean;
   fullHeight?: boolean;
   filled?: boolean;
+  padding?: string;
 }
 
-const useStyles = ({ contained, fullHeight, filled }: StyleProps) => {
+const useStyles = ({ contained, fullHeight, filled, padding }: StyleProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
@@ -22,10 +23,13 @@ const useStyles = ({ contained, fullHeight, filled }: StyleProps) => {
         alignItems: "center",
         background: filled ? theme.palette.background.level4 : theme.palette.background.level1,
         borderRadius: filled ? "8px" : "12px",
-        padding: contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
+        padding: padding !== undefined ? padding : contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         width: "100%",
         "& input": {
           color: theme.palette.text.primary,
+        },
+        "&.none-background": {
+          background: "transparent",
         },
       },
     };
@@ -63,6 +67,11 @@ export interface SelectProps {
   border?: boolean;
   menuFilter?: (menu: MenuProps) => boolean;
   filled?: boolean;
+  showClean?: boolean;
+  showBackground?: boolean;
+  minMenuWidth?: string;
+  valueColor?: string;
+  padding?: string;
 }
 
 export function Select({
@@ -83,9 +92,14 @@ export function Select({
   customLabel,
   menuFilter,
   filled,
+  showClean = true,
+  showBackground = true,
+  minMenuWidth = "120px",
+  valueColor,
+  padding,
   ...props
 }: SelectProps) {
-  const classes = useStyles({ contained, fullHeight, filled })();
+  const classes = useStyles({ contained, fullHeight, filled, padding })();
   const [anchorEl, setAnchorEl] = useState(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);
   const [menuWidth, setMenuWidth] = useState<number | undefined>(undefined);
@@ -161,6 +175,7 @@ export function Select({
   }, [menus, value]);
 
   const handleMouseEnter = () => {
+    if (showClean === false) return;
     setShowClose(true);
   };
 
@@ -177,7 +192,7 @@ export function Select({
     <>
       <Box
         ref={outerBoxRef}
-        className={classes.inputBox}
+        className={`${classes.inputBox}${showBackground ? "" : " none-background"}`}
         sx={{
           ...(fullHeight ? { height: "100%" } : {}),
           ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
@@ -204,7 +219,7 @@ export function Select({
         <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
             {value ? (
-              <Typography color="textPrimary" component="div">
+              <Typography color={valueColor ?? "text.primary"} component="div">
                 {selectedMenu?.selectLabel ?? selectedMenu?.label}
               </Typography>
             ) : (
@@ -234,6 +249,7 @@ export function Select({
           border: "1px solid #49588E",
           borderRadius: "12px",
           overflow: "hidden",
+          minWidth: minMenuWidth,
         }}
       >
         <ClickAwayListener onClickAway={handleClose}>
@@ -296,6 +312,7 @@ export function Select({
                       ...(isFiltered ? { display: "none" } : {}),
                       "&:hover": {
                         background: "#313D67",
+                        color: "text.primary",
                       },
                     }}
                     onClick={() => handleMenuItemClick(menu)}
