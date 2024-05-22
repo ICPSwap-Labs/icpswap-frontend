@@ -28,7 +28,28 @@ function PoolInfo({ pool, rewardToken, state, stakingToken }: PoolInfoProps) {
   const theme = useTheme() as Theme;
 
   return (
-    <Box sx={{ height: "196px", background: "rgba(101, 80, 186, 0.18)", borderRadius: "4px 4px 0 0" }}>
+    <Box
+      sx={{
+        position: "relative",
+        height: "196px",
+        background: "rgba(101, 80, 186, 0.18)",
+        borderRadius: "4px 4px 0 0",
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          width: "212px",
+          height: "131px",
+          background: "rgba(53, 6, 89, 0.50)",
+          filter: "blur(27px)",
+          position: "absolute",
+          left: "-61px",
+          zIndex: 1,
+          bottom: "-60px",
+        }}
+      />
+
       <Typography
         fontSize="14px"
         sx={{
@@ -66,7 +87,7 @@ function PoolInfo({ pool, rewardToken, state, stakingToken }: PoolInfoProps) {
         </Box>
       </Box>
 
-      <Typography color="text.primary" align="center">
+      <Typography align="center" sx={{ position: "relative", color: "text.primary", fontWeight: 500, zIndex: 1 }}>
         Stake {pool?.stakingTokenSymbol} to earn {pool?.rewardTokenSymbol}
       </Typography>
     </Box>
@@ -118,7 +139,7 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
     <Box
       sx={{
         width: "384px",
-        borderRadius: "12px",
+        borderRadius: "4px",
         overflow: "hidden",
         height: "fit-content",
         display: !stakedOnly ? "block" : userStakingInfo?.amount ? "block" : "none",
@@ -128,9 +149,9 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
       }}
       className="staking-token-pool-item"
     >
-      <Box sx={{ background: theme.palette.background.level1 }}>
-        <PoolInfo state={state} pool={pool} rewardToken={rewardToken} stakingToken={stakingToken} />
+      <PoolInfo state={state} pool={pool} rewardToken={rewardToken} stakingToken={stakingToken} />
 
+      <Box sx={{ background: theme.palette.background.level1 }}>
         <UserStaking
           state={state}
           pool={pool}

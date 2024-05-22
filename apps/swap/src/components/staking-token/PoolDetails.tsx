@@ -9,6 +9,7 @@ import { useTheme } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
+import { Flex } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
@@ -115,7 +116,6 @@ export default function StakingPoolDetails({
         <Grid container justifyContent="center" onClick={handleExpandClick}>
           <Typography
             sx={{
-              fontWeight: "500",
               fontSize: "14px",
               lineHeight: "24px",
               textAlign: "center",
@@ -133,29 +133,25 @@ export default function StakingPoolDetails({
           style={{ padding: "24px 24px", borderTop: "1px solid #313A5A", background: theme.palette.background.level1 }}
         >
           <Box sx={{ display: "grid", gap: "24px 0" }}>
-            <Grid container direction="row" justifyContent="space-between" alignItems="center">
-              <Typography sx={{ cursor: "pointer" }} onClick={handleGetToken}>
-                Get {pool?.stakingTokenSymbol}
-                <ICRocksLoadIcon
-                  fontSize="24"
-                  sx={{
-                    position: "relative",
-                    top: "3px",
-                    cursor: "pointer",
-                    marginLeft: "5px",
-                    color: theme.colors.secondaryMain,
-                  }}
-                />
-              </Typography>
-            </Grid>
+            <Typography sx={{ cursor: "pointer" }} onClick={handleGetToken}>
+              Get {pool?.stakingTokenSymbol}
+              <ICRocksLoadIcon
+                fontSize="24"
+                sx={{
+                  position: "relative",
+                  top: "3px",
+                  cursor: "pointer",
+                  marginLeft: "5px",
+                  color: theme.colors.secondaryMain,
+                }}
+              />
+            </Typography>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Pool Balance</Trans>
-                </Typography>
-              </Grid>
-              <Grid item>
+            <Flex justify="space-between" align="flex-start">
+              <Typography>
+                <Trans>Pool Balance</Trans>
+              </Typography>
+              <Box>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   {parseTokenAmount(poolTokenBalance ?? 0, pool?.stakingTokenDecimals).toFormat()}{" "}
                   {pool?.stakingTokenSymbol}
@@ -163,32 +159,30 @@ export default function StakingPoolDetails({
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   ~${new BigNumber(poolUSDValue ?? 0).toFormat(2)}
                 </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Total Rewards</Trans>
-                </Typography>
-              </Grid>
-              <Grid item xs>
+            <Flex justify="space-between" align="flex-start">
+              <Typography>
+                <Trans>Total Rewards</Trans>
+              </Typography>
+
+              <Box>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   {new BigNumber(totalRewardDeposit ?? 0).toFormat()} {pool?.rewardTokenSymbol}
                 </Typography>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   ~${new BigNumber(totalRewardUSDValue ?? 0).toFormat(2)}
                 </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Reward Per Second</Trans>
-                </Typography>
-              </Grid>
-              <Grid item xs>
+            <Flex justify="space-between" align="flex-start">
+              <Typography>
+                <Trans>Reward Per Second</Trans>
+              </Typography>
+
+              <Box>
                 <Typography color="text.primary" style={{ textAlign: "right" }}>
                   {stakingPoolInfo && rewardToken
                     ? parseTokenAmount(stakingPoolInfo.rewardPerTime.toString(), rewardToken.decimals).toFormat()
@@ -196,93 +190,69 @@ export default function StakingPoolDetails({
                   &nbsp;
                   {pool?.rewardTokenSymbol}
                 </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Starting At</Trans>
-                </Typography>
-              </Grid>
-              <Grid item>
+            <Flex align="flex-start" justify="space-between">
+              <Typography>
+                <Trans>Starting At</Trans>
+              </Typography>
+
+              <Box>
                 <Typography color="text.primary">
                   {pool?.startTime ? timestampFormat(Number(pool.startTime) * 1000) : "--"}
                 </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>{state === STATE.UPCOMING ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary">
-                  <CountdownBox
-                    startTime={Number(pool?.startTime ?? 0)}
-                    endTime={Number(poolData?.bonusEndTime ?? 0)}
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
+            <Flex justify="space-between">
+              <Typography>{state === STATE.UPCOMING ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
+              <Typography color="text.primary" component="div">
+                <CountdownBox startTime={Number(pool?.startTime ?? 0)} endTime={Number(poolData?.bonusEndTime ?? 0)} />
+              </Typography>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Last Reward Time</Trans>
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary">
-                  {stakingPoolInfo?.lastRewardTime
-                    ? timestampFormat(Number(stakingPoolInfo.lastRewardTime) * 1000)
-                    : "--"}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Flex justify="space-between">
+              <Typography>
+                <Trans>Last Reward Time</Trans>
+              </Typography>
+              <Typography color="text.primary">
+                {stakingPoolInfo?.lastRewardTime
+                  ? timestampFormat(Number(stakingPoolInfo.lastRewardTime) * 1000)
+                  : "--"}
+              </Typography>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>Creator</Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary.main">
-                  {pool ? (
-                    <Link href={explorerLink(pool.creator.toString())} target="_blank">
-                      {pool?.creator ? shorten(pool.creator.toString()) : "--"}
-                    </Link>
-                  ) : (
-                    "--"
-                  )}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Flex justify="space-between">
+              <Typography>Creator</Typography>
+              <Typography color="text.primary.main">
+                {pool ? (
+                  <Link href={explorerLink(pool.creator.toString())} target="_blank">
+                    {pool?.creator ? shorten(pool.creator.toString()) : "--"}
+                  </Link>
+                ) : (
+                  "--"
+                )}
+              </Typography>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>Canister ID</Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary">
-                  {pool ? (
-                    <Link href={explorerLink(pool.canisterId.toString())} target="_blank">
-                      {pool?.canisterId ? shorten(pool.canisterId.toString()) : "--"}
-                    </Link>
-                  ) : null}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Flex justify="space-between">
+              <Typography>Canister ID</Typography>
+              <Typography color="text.primary">
+                {pool ? (
+                  <Link href={explorerLink(pool.canisterId.toString())} target="_blank">
+                    {pool?.canisterId ? shorten(pool.canisterId.toString()) : "--"}
+                  </Link>
+                ) : null}
+              </Typography>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>Cycles Left</Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary">{cycles ? cycleValueFormat(cycles.balance) : "--"}</Typography>
-              </Grid>
-            </Grid>
+            <Flex justify="space-between">
+              <Typography>Cycles Left</Typography>
+              <Typography color="text.primary">{cycles ? cycleValueFormat(cycles.balance) : "--"}</Typography>
+            </Flex>
 
-            <Grid container direction="row" justifyContent="flex-end">
+            <Flex justify="flex-end">
               <Typography color="text.primary">
                 <Link
                   href={`${INFO_URL}/staking-token/details/${pool?.canisterId.toString()}/${state}`}
@@ -291,7 +261,7 @@ export default function StakingPoolDetails({
                   Staking Pool Info
                 </Link>
               </Typography>
-            </Grid>
+            </Flex>
           </Box>
         </Box>
       </Collapse>

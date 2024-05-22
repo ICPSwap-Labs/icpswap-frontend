@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
 import { Theme } from "@mui/material/styles";
@@ -11,14 +11,17 @@ import ClaimModal from "./ClaimModal";
 const useStyle = makeStyles((theme: Theme) => ({
   button: {
     minWidth: "28px",
-    width: "28px",
-    height: "28px",
+    width: "44px",
+    height: "44px",
     lineHeight: "100%",
     background: "#29314F",
     borderRadius: "8px",
     fontSize: "28px",
     fontWeight: "normal",
-    color: theme.palette.mode === "dark" ? theme.colors.darkTextSecondary : theme.colors.lightPrimaryMain,
+    color: "#ffffff",
+    "&:hover": {
+      background: "#29314F",
+    },
     "&.Mui-disabled": {
       color: "#666",
     },
@@ -39,31 +42,28 @@ export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess,
   const classes = useStyle();
 
   return (
-    <Grid container direction="row" spacing={3} justifyContent="flex-end">
-      <Grid item>
-        <Button
-          disabled={!new BigNumber(Number(userStakingInfo?.amount ?? 0)).isGreaterThan(0)}
-          className={classes.button}
-          onClick={() => {
-            setOpenModalType("Withdraw");
-            setOpenStakingModal(true);
-          }}
-        >
-          -
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          disabled={state !== STATE.LIVE}
-          className={classes.button}
-          onClick={() => {
-            setOpenModalType("Deposit");
-            setOpenStakingModal(true);
-          }}
-        >
-          +
-        </Button>
-      </Grid>
+    <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
+      <Button
+        disabled={!new BigNumber(Number(userStakingInfo?.amount ?? 0)).isGreaterThan(0)}
+        className={classes.button}
+        onClick={() => {
+          setOpenModalType("Withdraw");
+          setOpenStakingModal(true);
+        }}
+      >
+        -
+      </Button>
+      <Button
+        disabled={state !== STATE.LIVE}
+        className={classes.button}
+        onClick={() => {
+          setOpenModalType("Deposit");
+          setOpenStakingModal(true);
+        }}
+      >
+        +
+      </Button>
+
       {openStakingModal &&
         (modalType === "Deposit" ? (
           <V2StakingModal
@@ -80,6 +80,6 @@ export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess,
             pool={pool}
           />
         ) : null)}
-    </Grid>
+    </Box>
   );
 }

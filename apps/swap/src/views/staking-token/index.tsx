@@ -139,9 +139,10 @@ function Pools() {
               {Pages.map((ele) => (
                 <Typography
                   key={ele.key}
-                  variant="h3"
-                  color={filter === ele.key ? "textPrimary" : "textTertiary"}
+                  color={filter === ele.key ? "text.primary" : "text.secondary"}
                   sx={{
+                    fontSize: "20px",
+                    fontWeight: 500,
                     cursor: "pointer",
                     textTransform: "capitalize",
                     "@media (max-width:640px)": {
