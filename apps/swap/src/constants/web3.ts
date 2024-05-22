@@ -1,6 +1,6 @@
 import { ChainId } from "@icpswap/constants";
 
-export const chain: ChainId = ChainId.SEPOLIA;
+export const chain: ChainId = ChainId.MAINNET;
 
 export const ETH_MINT_CHAIN = 1;
 

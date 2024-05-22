@@ -68,8 +68,6 @@ export default function DissolveCkERC20({
   const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal, refreshTrigger);
   const { result: transactionPrice } = useChainKeyTransactionPrice(minterAddress);
 
-  console.log("transactionPrice:", transactionPrice);
-
   const dissolveErc20 = useDissolveCkERC20();
 
   const handleSubmit = async () => {

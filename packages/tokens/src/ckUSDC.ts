@@ -7,10 +7,10 @@ export const ckUSDCTokenInfo: TokenInfo = {
   name: "ckUSDC",
   decimals: 8,
   symbol: "ckUSDC",
-  canisterId: "yfumr-cyaaa-aaaar-qaela-cai",
+  canisterId: "xevnm-gaaaa-aaaar-qafnq-cai",
   totalSupply: BigInt(0),
   transFee: BigInt(10),
-  logo: `/images/tokens/yfumr-cyaaa-aaaar-qaela-cai.png`,
+  logo: `/images/tokens/xevnm-gaaaa-aaaar-qafnq-cai.svg`,
 };
 
 export const ckUSDC = new Token({
