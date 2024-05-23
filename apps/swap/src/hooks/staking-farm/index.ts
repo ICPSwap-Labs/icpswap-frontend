@@ -39,7 +39,7 @@ export function useGetGlobalData(): [GlobalData, () => void] {
               new BigNumber(globalTvl.stakedTokenTVL).multipliedBy(_ICPPrice).toFixed(4),
             ),
             rewardTokenTVL: formatDollarAmount(
-              new BigNumber(globalTvl.rewardTokenTVL).multipliedBy(_ICPPrice).toFixed(4),
+              new BigNumber(globalTvl.rewardTokenTV).multipliedBy(_ICPPrice).toFixed(4),
             ),
           });
         }

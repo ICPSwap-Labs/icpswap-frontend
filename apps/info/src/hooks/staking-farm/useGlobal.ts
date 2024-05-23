@@ -23,7 +23,7 @@ export function useFarmGlobalData(): [GlobalData, () => void] {
       if (data) {
         setData({
           stakeTokenTVL: formatDollarAmount(new BigNumber(data.stakedTokenTVL).multipliedBy(icpPrice).toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(new BigNumber(data.rewardTokenTVL).multipliedBy(icpPrice).toFixed(4)),
+          rewardTokenTVL: formatDollarAmount(new BigNumber(data.rewardTokenTV).multipliedBy(icpPrice).toFixed(4)),
         });
       }
     }
