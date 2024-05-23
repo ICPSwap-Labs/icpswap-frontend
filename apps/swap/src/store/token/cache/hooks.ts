@@ -17,7 +17,8 @@ export function useUpdateTokenStandard() {
         if (canisterId === ICP.address) {
           dispatch(updateTokenStandard({ canisterId, standard: TOKEN_STANDARD.ICRC2 }));
           registerTokens({ canisterIds: [canisterId], standard: TOKEN_STANDARD.ICRC2 });
-        } else if (canisterId === "yfumr-cyaaa-aaaar-qaela-cai") {
+          // Register usdc as icrc2 token
+        } else if (canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" || canisterId === "yfumr-cyaaa-aaaar-qaela-cai") {
           dispatch(updateTokenStandard({ canisterId, standard: TOKEN_STANDARD.ICRC2 }));
           registerTokens({ canisterIds: [canisterId], standard: TOKEN_STANDARD.ICRC2 });
         } else {

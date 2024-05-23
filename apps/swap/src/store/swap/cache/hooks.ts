@@ -105,9 +105,10 @@ export function useSlippageToleranceToPercent(type: string) {
   const [slippageTolerance] = useSlippageManager(type);
 
   return useMemo(() => {
-    if (slippageToPercent && slippageTolerance) {
+    if (slippageTolerance || slippageTolerance === 0) {
       return slippageToPercent(slippageTolerance);
     }
+
     let percentSlippage: Percent | null = null;
     // input change will case error when value is 0.
     try {
@@ -115,6 +116,7 @@ export function useSlippageToleranceToPercent(type: string) {
     } catch {
       percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
     }
+
     return percentSlippage;
   }, [slippageTolerance, slippageToPercent]);
 }

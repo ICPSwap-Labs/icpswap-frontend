@@ -1,12 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
 import { NoData, LoadingRow, SelectToken, SwapTooltip } from "components/index";
 import { Trans } from "@lingui/macro";
-import { useUserSwapPoolBalances } from "@icpswap/hooks";
+import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { ICP } from "@icpswap/tokens";
 import { isMobile } from "react-device-detect";
+import { useHistory } from "react-router-dom";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -21,9 +22,9 @@ type Balance = {
 
 export function ReclaimWithToken() {
   const principal = useAccountPrincipalString();
-  const [selectedTokenId, setSelectedTokenId] = useState<string>(ICP.address);
-
-  const { pools, loading, balances } = useUserSwapPoolBalances(principal, selectedTokenId);
+  const history = useHistory();
+  const { tokenId } = useParsedQueryString() as { tokenId: string };
+  const { pools, loading, balances } = useUserSwapPoolBalances(principal, tokenId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
 
@@ -89,8 +90,18 @@ export function ReclaimWithToken() {
   }, [claimedKeys, unavailableClaimNumbers, totalClaimedNumbers, hideUnavailableClaim]);
 
   const handleTokenChange = (tokenId: string) => {
-    setSelectedTokenId(tokenId);
+    if (tokenId) {
+      history.push(`/swap/reclaim?type=token&tokenId=${tokenId}`);
+    } else {
+      history.push(`/swap/reclaim?type=token`);
+    }
   };
+
+  useEffect(() => {
+    if (!tokenId) {
+      history.push(`/swap/reclaim?type=token&tokenId=${ICP.address}`);
+    }
+  }, [tokenId]);
 
   return (
     <>
@@ -124,7 +135,7 @@ export function ReclaimWithToken() {
               <Trans>Select Token</Trans>
             </Typography>
 
-            {isMobile && selectedTokenId === ICP.address ? (
+            {isMobile && tokenId === ICP.address ? (
               <SwapTooltip
                 tips={
                   <Trans>
@@ -137,7 +148,7 @@ export function ReclaimWithToken() {
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
-            <SelectToken search value={selectedTokenId} border onTokenChange={handleTokenChange} />
+            <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} />
           </Box>
         </Box>
 
@@ -169,7 +180,7 @@ export function ReclaimWithToken() {
         </Box>
       </Box>
 
-      {selectedTokenId === ICP.address && !isMobile ? (
+      {tokenId === ICP.address && !isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography>
             <Trans>

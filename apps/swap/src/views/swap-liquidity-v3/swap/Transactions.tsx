@@ -11,19 +11,7 @@ import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { mockALinkAndOpen } from "utils/index";
 import { t } from "@lingui/macro";
-
-function ArrowIcon() {
-  return (
-    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.87558 1.64258H0.927903V0.642578H7.08452H7.58452V1.14258V7.29919H6.58452V2.34786L1.34151 7.59087L0.634399 6.88376L5.87558 1.64258Z"
-        fill="#5669dc"
-      />
-    </svg>
-  );
-}
+import { ArrowUpRight } from "react-feather";
 
 export const RECORD_TYPE: { [key: string]: string } = {
   swap: "Swap",
@@ -62,7 +50,7 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
           background: theme.palette.background.level2,
         },
         "@media(max-width: 640px)": {
-          padding: "10px 0px",
+          padding: "10px 6px",
         },
       }}
     >
@@ -140,7 +128,7 @@ export default function SwapTransactions() {
           <Typography sx={{ fontSize: "12px" }} component="span" color="secondary">
             View more
           </Typography>
-          <ArrowIcon />
+          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
         </Typography>
       ) : null}
     </>
