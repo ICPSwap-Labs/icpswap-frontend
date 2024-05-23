@@ -65,11 +65,7 @@ export class CurrencyAmount<T extends Token> extends Fraction {
     return CurrencyAmount.fromFractionalAmount(this.currency, divided.numerator, divided.denominator);
   }
 
-  public toSignificant(
-    significantDigits = 6,
-    format?: object,
-    rounding: Rounding = Rounding.ROUND_DOWN,
-  ): string {
+  public toSignificant(significantDigits = 6, format?: object, rounding: Rounding = Rounding.ROUND_DOWN): string {
     return super.divide(this.decimalScale).toSignificant(significantDigits, format, rounding);
   }
 

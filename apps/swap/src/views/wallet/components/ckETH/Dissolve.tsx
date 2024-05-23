@@ -3,7 +3,7 @@ import { Trans, t } from "@lingui/macro";
 import { withdraw_eth, useFetchUserTxStates } from "hooks/ck-eth";
 import { useApprove, useTokenInfo, useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT, chain } from "constants/ckETH";
+import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { ckETH } from "constants/tokens";
 import { useState, useEffect } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
@@ -14,7 +14,7 @@ import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
-import { chainIdToNetwork } from "constants/web3";
+import { chainIdToNetwork, chain } from "constants/web3";
 
 import Logo from "./Logo";
 import Links from "./Links";

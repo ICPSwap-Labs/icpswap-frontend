@@ -7,7 +7,7 @@ import ListLoading from "components/Loading/List";
 import { Trans } from "@lingui/macro";
 import { useUserExchangeRecord } from "hooks/useWICPCalls";
 import { enumToString, pageArgsFormat, parseTokenAmount, timestampFormat } from "@icpswap/utils";
-import { ICP } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 import WrapContext from "components/Wrap/context";
 
 const pageSize = 5;

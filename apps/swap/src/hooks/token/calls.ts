@@ -7,7 +7,7 @@ import {
   isAvailablePageArgs,
   parseTokenAmount,
 } from "@icpswap/utils";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
 import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";

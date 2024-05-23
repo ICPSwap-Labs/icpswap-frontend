@@ -7,3 +7,4 @@ export * from "./node";
 export * from "./poolStorage";
 export * from "./tokenStorage";
 export * from "./userStorage";
+export * from "./useInfoToken";

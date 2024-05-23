@@ -2,7 +2,10 @@ import { useState, useMemo } from "react";
 import { Box } from "@mui/material";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
-import { ICP_METADATA, WRAPPED_ICP_METADATA } from "constants/tokens";
+import { WRAPPED_ICP_METADATA } from "constants/tokens";
+import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo, ICP } from "@icpswap/tokens";
+import { chain } from "constants/web3";
+import { ChainId } from "@icpswap/constants";
 import { NETWORK, network } from "constants/server";
 import { useWalletCatchTokenIds, useUpdateHideSmallBalanceManager } from "store/wallet/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
@@ -16,7 +19,11 @@ export default function WalletTokenList() {
   const globalTokenList = useGlobalTokenList();
 
   const tokens = useMemo(() => {
-    let tokenIds = [ICP_METADATA.canisterId.toString(), WRAPPED_ICP_METADATA.canisterId.toString()];
+    let tokenIds = [
+      ICP.address,
+      WRAPPED_ICP_METADATA.canisterId.toString(),
+      ...(chain === ChainId.SEPOLIA ? [ckSepoliaUSDCTokenInfo.canisterId, ckSepoliaETHTokenInfo.canisterId] : []),
+    ];
 
     if (network === NETWORK.IC) {
       tokenIds = [

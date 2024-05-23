@@ -5,7 +5,7 @@ import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
 

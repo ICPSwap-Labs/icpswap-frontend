@@ -6,7 +6,7 @@ import { NumberFilledTextField, Modal } from "components/index";
 import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
 import { TokenInfo } from "types/index";
 import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount } from "@icpswap/utils";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import Button from "components/authentication/ButtonConnector";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/index";

@@ -8,7 +8,7 @@ import { Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import { TokenInfo } from "types/index";
 import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import Button from "components/authentication/ButtonConnector";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";

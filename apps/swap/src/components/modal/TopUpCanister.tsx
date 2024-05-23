@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useICP2CyclesManager } from "store/global/hooks";
 import { t, Trans } from "@lingui/macro";
-import { CYCLES_MINTING_CANISTER_ID, ICP_TOKEN_INFO } from "constants/index";
+import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import Identity, { Submit } from "components/Identity";
 import { Identity as CallIdentity } from "types/index";
@@ -17,6 +17,8 @@ import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { useTokenBalance } from "@icpswap/hooks";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+
 import Modal from "./index";
 
 export interface TopUpCanisterProps {

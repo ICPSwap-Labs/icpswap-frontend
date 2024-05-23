@@ -9,7 +9,6 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { WRAPPED_ICP, ICP } from "constants/tokens";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
@@ -26,6 +25,7 @@ import { Modal, FilledTextField, NumberFilledTextField } from "components/index"
 import { Principal } from "@dfinity/principal";
 import MaxButton from "components/MaxButton";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

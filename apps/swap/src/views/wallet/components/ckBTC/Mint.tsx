@@ -12,7 +12,7 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { MainCard, type Tab } from "components/index";
+import { type Tab } from "components/index";
 import { RefreshIcon } from "assets/icons/Refresh";
 
 import Transaction from "./Transaction";

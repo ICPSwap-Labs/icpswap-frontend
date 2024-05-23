@@ -3,7 +3,7 @@ import { Principal } from "@dfinity/principal";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { isPrincipal, isValidPrincipal, isOkSubAccount, principalToAccount, BigNumber } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter } from "@icpswap/token-adapter";

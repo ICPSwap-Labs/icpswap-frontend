@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
-import { useCallsData } from "../useCallData";
 import { tokenStorage } from "@icpswap/actor";
 import {
   PublicTokenChartDayData,
@@ -9,35 +8,24 @@ import {
   TokenPoolsInfo,
   InfoToken,
 } from "@icpswap/types";
+import { useCallsData } from "../useCallData";
 
-export async function getInfoToken(storageId: string, tokenId: string) {
-  return resultFormat<InfoToken>(
-    await (await tokenStorage(storageId)).getToken(tokenId)
-  ).data;
+export async function getStorageInfoToken(storageId: string, tokenId: string) {
+  return resultFormat<InfoToken>(await (await tokenStorage(storageId)).getToken(tokenId)).data;
 }
 
-export function useInfoToken(
-  storageId: string | undefined,
-  tokenId: string | undefined
-) {
+export function useStorageInfoToken(storageId: string | undefined, tokenId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenId || !storageId) return undefined;
-      return await getInfoToken(storageId!, tokenId!);
-    }, [storageId, tokenId])
+      return await getStorageInfoToken(storageId!, tokenId!);
+    }, [storageId, tokenId]),
   );
 }
 
-export async function getInfoTokenChartData(
-  storageId: string,
-  tokenId: string,
-  offset: number,
-  limit: number
-) {
+export async function getInfoTokenChartData(storageId: string, tokenId: string, offset: number, limit: number) {
   return resultFormat<PublicTokenChartDayData[]>(
-    await (
-      await tokenStorage(storageId)
-    ).getTokenChartData(tokenId, BigInt(offset), BigInt(limit))
+    await (await tokenStorage(storageId)).getTokenChartData(tokenId, BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -45,27 +33,19 @@ export function useInfoTokenChartData(
   storageId: string | undefined,
   tokenId: string | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!storageId || !tokenId || !isAvailablePageArgs(offset, limit))
-        return undefined;
+      if (!storageId || !tokenId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getInfoTokenChartData(storageId!, tokenId!, offset, limit);
-    }, [storageId, tokenId, offset, limit])
+    }, [storageId, tokenId, offset, limit]),
   );
 }
 
-export async function getInfoTokenTransactions(
-  storageId: string,
-  tokenId: string,
-  offset: number,
-  limit: number
-) {
+export async function getInfoTokenTransactions(storageId: string, tokenId: string, offset: number, limit: number) {
   return resultFormat<TokenTransaction[]>(
-    await (
-      await tokenStorage(storageId)
-    ).getTokenTransactions(tokenId, BigInt(offset), BigInt(limit))
+    await (await tokenStorage(storageId)).getTokenTransactions(tokenId, BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -73,20 +53,14 @@ export function useInfoTokenTransactions(
   storageId: string | undefined,
   tokenId: string | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!storageId || !tokenId || !isAvailablePageArgs(offset, limit))
-        return undefined;
+      if (!storageId || !tokenId || !isAvailablePageArgs(offset, limit)) return undefined;
 
-      return await getInfoTokenTransactions(
-        storageId!,
-        tokenId!,
-        offset,
-        limit
-      );
-    }, [storageId, tokenId, offset, limit])
+      return await getInfoTokenTransactions(storageId!, tokenId!, offset, limit);
+    }, [storageId, tokenId, offset, limit]),
   );
 }
 
@@ -95,12 +69,10 @@ export async function getInfoTokenPriceChart(
   tokenId: string,
   time: number,
   interval: number,
-  limit: number
+  limit: number,
 ) {
   return resultFormat<PublicTokenPricesData[]>(
-    await (
-      await tokenStorage(storageId)
-    ).getTokenPricesData(tokenId, BigInt(time), BigInt(interval), BigInt(limit))
+    await (await tokenStorage(storageId)).getTokenPricesData(tokenId, BigInt(time), BigInt(interval), BigInt(limit)),
   ).data;
 }
 
@@ -109,38 +81,26 @@ export function useInfoTokenPriceChart(
   tokenId: string | undefined,
   time: number | undefined,
   interval: number | undefined,
-  limit: number
+  limit: number,
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!storageId || !tokenId || (!time && time !== 0) || !interval)
-        return undefined;
+      if (!storageId || !tokenId || (!time && time !== 0) || !interval) return undefined;
 
-      return await getInfoTokenPriceChart(
-        storageId!,
-        tokenId!,
-        time!,
-        interval!,
-        limit
-      );
-    }, [storageId, tokenId, time, interval, limit])
+      return await getInfoTokenPriceChart(storageId!, tokenId!, time!, interval!, limit);
+    }, [storageId, tokenId, time, interval, limit]),
   );
 }
 
 export async function getInfoPoolsOfToken(storageId: string, tokenId: string) {
-  return resultFormat<TokenPoolsInfo[]>(
-    await (await tokenStorage(storageId)).getPoolsForToken(tokenId)
-  ).data;
+  return resultFormat<TokenPoolsInfo[]>(await (await tokenStorage(storageId)).getPoolsForToken(tokenId)).data;
 }
 
-export function useInfoPoolsOfToken(
-  storageId: string | undefined,
-  tokenId: string | undefined
-) {
+export function useInfoPoolsOfToken(storageId: string | undefined, tokenId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!storageId || !tokenId) return undefined;
       return await getInfoPoolsOfToken(storageId!, tokenId!);
-    }, [tokenId, storageId])
+    }, [tokenId, storageId]),
   );
 }

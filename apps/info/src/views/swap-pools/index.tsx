@@ -3,11 +3,11 @@ import { Typography, Box } from "@mui/material";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
 import { MainCard } from "ui-component/index";
-import { useInfoAllPools } from "@icpswap/hooks";
+import { useNodeInfoAllPools } from "@icpswap/hooks";
 import Pools from "ui-component/analytic/Pools";
 
 export default function SwapPools() {
-  const { result: pools, loading } = useInfoAllPools();
+  const { result: pools, loading } = useNodeInfoAllPools();
 
   const _pools = useMemo(() => {
     return pools?.filter((pool) => pool.feeTier === BigInt(3000));
