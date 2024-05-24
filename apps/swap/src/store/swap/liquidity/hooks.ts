@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import {
   Price,
   CurrencyAmount,

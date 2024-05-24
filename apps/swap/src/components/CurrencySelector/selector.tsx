@@ -1,21 +1,37 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import SwapModal from "components/modal/swap";
 import { InputAdornment, useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
-import { Search as SearchIcon, Edit as EditIcon } from "@mui/icons-material";
-import { useTaggedTokenManager } from "store/swap/cache/hooks";
-import { useSwapTokenList } from "store/global/hooks";
+import { makeStyles } from "@mui/styles";
+import { useGlobalTokenList, useFetchAllSwapTokens } from "store/global/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { isDarkTheme } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { NoData, DotLoading, TokenImage, FilledTextField } from "components/index";
+import { DotLoading, TokenImage, FilledTextField } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import ImportToken from "components/Wallet/ImportToken";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { parseTokenAmount, formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount, BigNumber, isValidPrincipal } from "@icpswap/utils";
+import { Search as SearchIcon, PlusCircle } from "react-feather";
+import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { TokenListMetadata } from "types/token-list";
+import { type AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { useTaggedTokenManager } from "store/wallet/hooks";
+import { ImportToken } from "components/ImportToken/index";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      padding: "0 24px",
+      "@media(max-width: 640px)": {
+        padding: "0 16px",
+      },
+    },
+  };
+});
 
 export interface SwapToken {
   canisterId: string;
@@ -24,57 +40,41 @@ export interface SwapToken {
   decimals: number;
 }
 
-export function SelectedIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M14.8194 5.62616L11.2078 8.72794L11.2182 8.77066C11.6467 10.5661 11.1517 12.4823 9.845 13.8491L9.80211 13.8935L9.75953 13.9366C9.54022 14.1584 9.18232 14.1594 8.96176 13.9388L6.02149 10.9986C5.98538 11.1008 5.92644 11.1967 5.84467 11.2785L2.8858 14.2374C2.59291 14.5303 2.11803 14.5303 1.82514 14.2374C1.53225 13.9445 1.53225 13.4696 1.82514 13.1767L4.78401 10.2178C4.86578 10.1361 4.96173 10.0771 5.06394 10.041L1.97911 6.95616C1.75942 6.73649 1.75942 6.38033 1.97911 6.16066C3.38921 4.75054 5.4202 4.23451 7.29417 4.73683L7.3409 4.74965L10.3912 1.19799C10.6024 0.952053 10.9766 0.93549 11.2087 1.15979L14.8507 4.80169C15.0822 5.03323 15.0678 5.41282 14.8194 5.62616ZM9.75997 9.12221C10.0052 10.1536 9.83186 11.2378 9.28122 12.137L6.53109 9.38684L3.78103 6.63677C4.71225 6.06653 5.84087 5.90134 6.90199 6.18467L6.94431 6.19627L7.86013 6.44734L8.47883 5.72695L10.8702 2.94255L13.0748 5.14719L10.2305 7.59001L9.53239 8.18955L9.75053 9.08353L9.75997 9.12221Z"
-        fill="#8492C4"
-      />
-    </svg>
-  );
-}
-
-export function SelectedIcon1() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M14.8176 5.62616C15.066 5.41282 15.0803 5.03323 14.8488 4.80169L11.2069 1.15979C10.9747 0.93549 10.6006 0.952053 10.3894 1.19799L7.33906 4.74965L7.29233 4.73683C5.41836 4.23451 3.38738 4.75054 1.97727 6.16066C1.75758 6.38033 1.75758 6.73649 1.97727 6.95616L5.46859 10.4475L8.95992 13.9388C9.18048 14.1594 9.53838 14.1584 9.75769 13.9366L9.80027 13.8935L9.84316 13.8491C11.1498 12.4823 11.6449 10.5661 11.2164 8.77066L11.2059 8.72794L14.8176 5.62616Z"
-        fill="#8492C4"
-      />
-      <rect x="6" y="9" width="1.5" height="6.65675" rx="0.75" transform="rotate(45 6 9)" fill="#8492C4" />
-    </svg>
-  );
-}
-
 export interface TokenItemInfoProps {
-  tokenInfo: SwapToken;
+  tokenInfo: AllTokenOfSwapTokenInfo;
+  canisterId: string;
   onClick: (token: TokenInfo) => void;
   disabledCurrencyIds: string[];
   activeCurrencyIds: string[];
   onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
   search?: string;
+  showBalance?: boolean;
 }
 
 export function TokenItemInfo({
   tokenInfo: _tokenInfo,
+  canisterId,
   onClick,
   disabledCurrencyIds,
   activeCurrencyIds,
   onUpdateTokenAdditional,
   search,
+  showBalance,
 }: TokenItemInfoProps) {
   const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { result: tokenInfo } = useTokenInfo(_tokenInfo.canisterId);
-  const { result: balance, loading } = useTokenBalance(_tokenInfo.canisterId, principal);
-  const interfacePrice = useUSDPriceById(_tokenInfo.canisterId);
+  const getBalanceId = useMemo(() => {
+    if (showBalance) return canisterId;
+    return undefined;
+  }, [showBalance, canisterId]);
 
-  const [taggedTokens, updateTaggedTokens, removeTaggedTokens] = useTaggedTokenManager();
+  const { result: tokenInfo } = useTokenInfo(canisterId);
+  const { result: balance, loading } = useTokenBalance(getBalanceId, principal);
+  const interfacePrice = useUSDPriceById(getBalanceId);
+
+  const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();
 
   const tokenBalanceAmount = useMemo(() => {
     if (!tokenInfo || balance === undefined) return undefined;
@@ -87,25 +87,29 @@ export function TokenItemInfo({
   };
 
   useEffect(() => {
-    if (_tokenInfo && balance) {
-      if (onUpdateTokenAdditional) onUpdateTokenAdditional(_tokenInfo.canisterId, balance.toString());
+    if (canisterId && balance) {
+      if (onUpdateTokenAdditional) onUpdateTokenAdditional(canisterId, balance.toString());
     }
-  }, [_tokenInfo, balance]);
+  }, [canisterId, balance]);
 
-  const isTagged = taggedTokens.includes(_tokenInfo.canisterId);
+  const isTagged = taggedTokens.includes(canisterId);
 
-  const handleToggleSelect = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleAddToCache = (event: React.MouseEvent<SVGAElement>) => {
     event.stopPropagation();
 
     if (isTagged) {
-      removeTaggedTokens([_tokenInfo.canisterId]);
+      deleteTaggedTokens([canisterId]);
     } else {
-      updateTaggedTokens([_tokenInfo.canisterId]);
+      updateTaggedTokens([canisterId]);
     }
   };
 
   const hidden = useMemo(() => {
     if (!search) return false;
+
+    if (isValidPrincipal(search)) {
+      return _tokenInfo.ledger_id.toString() !== search;
+    }
 
     return (
       !_tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
@@ -114,15 +118,15 @@ export function TokenItemInfo({
   }, [search, _tokenInfo]);
 
   return (
-    <Grid
-      item
-      container
-      alignItems="center"
+    <Box
       sx={{
-        display: hidden ? "none" : "flex",
+        display: hidden ? "none" : "grid",
         height: "63px",
         cursor: "pointer",
         padding: matchDownSM ? "0 16px" : "0 24px",
+        gridTemplateColumns: "198px 50px 1fr",
+        gap: "0 5px",
+        alignItems: "center",
         "&.disabled": {
           opacity: 0.5,
           cursor: "default",
@@ -131,20 +135,19 @@ export function TokenItemInfo({
           background: theme.palette.background.level4,
           cursor: "default",
         },
+        "&:hover": {
+          background: theme.palette.background.level4,
+        },
+        "@media (max-width: 580px)": {
+          gridTemplateColumns: "90px 50px 1fr",
+        },
       }}
       onClick={handleItemClick}
       className={`${
         tokenInfo?.canisterId ? (disabledCurrencyIds.includes(tokenInfo?.canisterId) ? "disabled" : "") : ""
       }${tokenInfo?.canisterId ? (activeCurrencyIds.includes(tokenInfo?.canisterId) ? " active" : "") : ""}`}
     >
-      <Box
-        sx={{
-          width: "198px",
-          "@media (max-width: 580px)": {
-            width: "90px",
-          },
-        }}
-      >
+      <Box>
         <Grid container alignItems="center">
           <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
 
@@ -166,68 +169,57 @@ export function TokenItemInfo({
         </Grid>
       </Box>
 
-      <Box ml="12px">
-        <TokenStandardLabel standard={tokenInfo?.standardType} />
+      <Box>
+        <TokenStandardLabel standard={tokenInfo?.standardType} borderRadius="34px" height="20px" fontSize="10px" />
       </Box>
 
-      <Grid item xs>
+      <Box>
         <Grid container justifyContent="flex-end" alignItems="center">
-          <Box>
-            <Grid container>
-              {loading ? (
-                <DotLoading loading />
-              ) : (
-                <Box>
-                  <Typography
-                    color="text.primary"
-                    align="right"
-                    sx={{
-                      maxWidth: "10rem",
-                      "@media (max-width: 580px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                    fontWeight={500}
-                  >
-                    {tokenBalanceAmount ?? "--"}
-                  </Typography>
-                  <Typography
-                    align="right"
-                    sx={{
-                      "@media (max-width: 580px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    {interfacePrice !== undefined && balance !== undefined && tokenInfo !== undefined
-                      ? formatDollarAmount(
-                          new BigNumber(interfacePrice)
-                            .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
-                            .toString(),
-                          4,
-                          true,
-                          0.001,
-                        )
-                      : "--"}
-                  </Typography>
-                </Box>
-              )}
-
-              <Grid
-                item
-                xs
-                container
-                alignItems="center"
-                sx={{ cursor: "pointer", marginLeft: "10px" }}
-                onClick={handleToggleSelect}
+          {!showBalance ? null : loading ? (
+            <DotLoading loading />
+          ) : (
+            <Box>
+              <Typography
+                color="text.primary"
+                align="right"
+                sx={{
+                  maxWidth: "10rem",
+                  "@media (max-width: 580px)": {
+                    fontSize: "12px",
+                  },
+                }}
+                fontWeight={500}
               >
-                {isTagged ? <SelectedIcon1 /> : <SelectedIcon />}
-              </Grid>
-            </Grid>
-          </Box>
+                {tokenBalanceAmount ?? "--"}
+              </Typography>
+              <Typography
+                align="right"
+                sx={{
+                  "@media (max-width: 580px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                {interfacePrice !== undefined && balance !== undefined && tokenInfo !== undefined
+                  ? formatDollarAmount(
+                      new BigNumber(interfacePrice)
+                        .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
+                        .toString(),
+                      4,
+                      true,
+                      0.001,
+                    )
+                  : "--"}
+              </Typography>
+            </Box>
+          )}
+
+          {showBalance ? null : (
+            <PlusCircle color={theme.themeOption.textSecondary} size="16px" onClick={handleAddToCache} />
+          )}
         </Grid>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 }
 
@@ -240,63 +232,78 @@ export interface SelectorProps {
   version?: "v2" | "v3";
 }
 
-type TokenAdditionalData = {
-  [tokenId: string]: {
-    balance: string;
-  };
-};
-
 export default function Selector({
   open,
   onChange,
   onClose,
   disabledCurrencyIds = [],
   activeCurrencyIds = [],
-  version,
 }: SelectorProps) {
   const theme = useTheme() as Theme;
+  const isDark = isDarkTheme(theme);
+  const classes = useStyles();
+
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [importTokenShow, setImportTokenShow] = useState(false);
+  const [importTokenCanceled, setImportTokenCanceled] = useState(false);
 
-  // const [tokenAdditionalData, setTokenAdditionalData] = useState({} as TokenAdditionalData);
+  const { result: allTokensOfSwap } = useFetchAllSwapTokens();
 
-  const [taggedTokenIds] = useTaggedTokenManager();
-  const originList = useSwapTokenList(version);
-  const isDark = isDarkTheme(theme);
+  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
+  const globalTokenList = useGlobalTokenList();
 
-  const list = useMemo(() => {
-    const list: SwapToken[] = [...originList];
+  const { taggedTokens } = useTaggedTokenManager();
 
-    // const new_list_tagged: SwapToken[] = [];
-    // const new_list_has_balance: SwapToken[] = [];
-    // const new_list_no_balance: SwapToken[] = [];
+  const yourTokens: string[] = useMemo(() => {
+    return DEFAULT_DISPLAYED_TOKENS.map((e) => e.address).concat(taggedTokens);
+  }, [DEFAULT_DISPLAYED_TOKENS, taggedTokens]);
 
-    // list.forEach((e) => {
-    //   const tokenBalance = tokenAdditionalData[e.canisterId]?.balance ?? "0";
+  const { snsTokens, noneSnsTokens } = useMemo(() => {
+    if (!snsAllTokensInfo) return {};
 
-    //   if (taggedTokenIds.includes(e.canisterId)) {
-    //     new_list_tagged.push(e);
-    //   } else if (tokenBalance !== "0") {
-    //     new_list_has_balance.push(e);
-    //   } else {
-    //     new_list_no_balance.push(e);
-    //   }
-    // });
+    const snsTokens: TokenListMetadata[] = [];
+    const noneSnsTokens: TokenListMetadata[] = [];
 
-    const new_list_tagged: SwapToken[] = [];
-    const other_tokens: SwapToken[] = [];
+    globalTokenList
+      .filter((token) => {
+        return !yourTokens.includes(token.canisterId);
+      })
+      .forEach((token) => {
+        const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === token.canisterId);
 
-    list.forEach((e) => {
-      if (taggedTokenIds.includes(e.canisterId)) {
-        new_list_tagged.push(e);
-      } else {
-        other_tokens.push(e);
-      }
-    });
+        if (snsTokenInfo?.canister_ids.root_canister_id) {
+          snsTokens.push(token);
+        } else {
+          noneSnsTokens.push(token);
+        }
+      });
 
-    return new_list_tagged.concat(other_tokens);
-  }, [originList, taggedTokenIds]);
+    return { snsTokens: snsTokens.map((e) => e.canisterId), noneSnsTokens: noneSnsTokens.map((e) => e.canisterId) };
+  }, [globalTokenList, yourTokens, snsAllTokensInfo]);
+
+  const yourTokenList = useMemo(() => {
+    if (!allTokensOfSwap) return undefined;
+
+    const tokens = yourTokens
+      .map((tokenId) => {
+        return allTokensOfSwap.find((token) => token.ledger_id.toString() === tokenId);
+      })
+      .filter((token) => !!token) as AllTokenOfSwapTokenInfo[];
+
+    return tokens;
+  }, [allTokensOfSwap, yourTokens]);
+
+  const snsTokenList = useMemo(() => {
+    if (!allTokensOfSwap || !snsTokens) return undefined;
+    const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
+    return tokens;
+  }, [allTokensOfSwap, snsTokens]);
+
+  const noneTokenList = useMemo(() => {
+    if (!allTokensOfSwap || !noneSnsTokens) return undefined;
+    const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
+    return tokens;
+  }, [allTokensOfSwap, noneSnsTokens]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
@@ -307,31 +314,25 @@ export default function Selector({
   );
 
   const handleSearchToken = useCallback((value: string) => {
+    setImportTokenCanceled(false);
     setSearchKeyword(value);
   }, []);
 
-  // const handleUpdateTokenAdditionalData = (tokenId: string, balance: string) => {
-  //   setTokenAdditionalData((prevState) => ({
-  //     ...prevState,
-  //     [tokenId]: {
-  //       balance,
-  //     },
-  //   }));
-  // };
+  const noToken = useMemo(() => {
+    if (!searchKeyword || !yourTokenList || !noneTokenList || !snsTokenList) return false;
 
-  const no_data = useMemo(() => {
-    if (list.length === 0) return true;
-    if (!searchKeyword) return list.length === 0;
+    const tokenList = yourTokenList.concat(noneTokenList).concat(snsTokenList);
 
-    const filteredTokens = list.filter((tokenInfo) => {
-      return (
-        tokenInfo.symbol.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
-        tokenInfo.name.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase())
-      );
-    });
+    if (isValidPrincipal(searchKeyword)) {
+      return !tokenList.find((token) => token.ledger_id.toString() === searchKeyword);
+    }
 
-    return filteredTokens.length === 0;
-  }, [list, searchKeyword]);
+    return !tokenList.find(
+      (token) =>
+        token.symbol.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
+        token.name.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
+    );
+  }, [searchKeyword, yourTokenList, noneTokenList, snsTokenList]);
 
   return (
     <>
@@ -357,26 +358,31 @@ export default function Selector({
             position: "relative",
           }}
         >
+          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px" }}>
+            <Typography sx={{ fontSize: "12px" }}>
+              Do your own research before investing. While we've collected known information about tokens on the list,
+              it's essential to conduct your research.
+            </Typography>
+          </Box>
+
           <Box
             sx={{
               position: "relative",
-              padding: matchDownSM ? "8px 16px" : "8px 24px",
+              margin: "8px 0 0 0",
+              padding: matchDownSM ? "0 16px" : "0 24px",
             }}
           >
             <FilledTextField
               contained
-              borderRadius="12px"
-              background={theme.palette.background.level2}
+              borderRadius="8px"
+              background={theme.palette.background.level1}
+              placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon
-                      sx={{
-                        color: theme.themeOption.textSecondary,
-                      }}
-                    />
+                    <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
                   </InputAdornment>
                 ),
                 maxLength: 50,
@@ -385,63 +391,94 @@ export default function Selector({
             />
           </Box>
 
-          <Box sx={{ margin: "8px 0 24px 0", padding: matchDownSM ? "0 16px" : "0 24px" }}>
-            <Typography sx={{ fontSize: "12px" }}>
-              Disclaimer: Do your own research before investing. While we've collected known information about tokens on
-              the list, it's essential to conduct your research.
-            </Typography>
-          </Box>
+          <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
 
-          <Box mt={2}>
-            <Grid
-              container
-              mt={2}
-              sx={{
-                maxHeight: "295px",
-                overflow: "auto",
-                paddingBottom: "56px",
-              }}
-            >
-              {list.map((token) => (
-                <TokenItemInfo
-                  key={token.canisterId.toString()}
-                  tokenInfo={token}
-                  disabledCurrencyIds={disabledCurrencyIds}
-                  activeCurrencyIds={activeCurrencyIds}
-                  onClick={handleTokenClick}
-                  search={searchKeyword}
-                />
-              ))}
-              {no_data ? <NoData /> : null}
-            </Grid>
+          <Box sx={{ height: "386px", overflow: "hidden auto" }}>
+            {noToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
+              <Box className={classes.wrapper}>
+                <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
+              </Box>
+            ) : null}
+
+            <Box>
+              {searchKeyword ? null : (
+                <Box className={classes.wrapper}>
+                  <Typography fontSize="16px">
+                    <Trans>Your Tokens</Trans>
+                  </Typography>
+                </Box>
+              )}
+
+              <Box mt={searchKeyword ? "0px" : "16px"}>
+                {(yourTokenList ?? []).map((token) => (
+                  <TokenItemInfo
+                    key={token.ledger_id.toString()}
+                    tokenInfo={token}
+                    canisterId={token.ledger_id.toString()}
+                    disabledCurrencyIds={disabledCurrencyIds}
+                    activeCurrencyIds={activeCurrencyIds}
+                    onClick={handleTokenClick}
+                    search={searchKeyword}
+                    showBalance
+                  />
+                ))}
+              </Box>
+            </Box>
+
+            <Box mt={searchKeyword ? "0px" : "16px"}>
+              {searchKeyword ? null : (
+                <Typography className={classes.wrapper} fontSize="16px">
+                  <Trans>Token List</Trans>
+                </Typography>
+              )}
+
+              <Box mt={searchKeyword ? "0px" : "16px"}>
+                {searchKeyword ? null : (
+                  <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                    <Trans>SNS</Trans>
+                  </Typography>
+                )}
+
+                <Box mt={searchKeyword ? "0px" : "16px"}>
+                  {(snsTokenList ?? []).map((token) => (
+                    <TokenItemInfo
+                      key={token.ledger_id.toString()}
+                      tokenInfo={token}
+                      canisterId={token.ledger_id.toString()}
+                      disabledCurrencyIds={disabledCurrencyIds}
+                      activeCurrencyIds={activeCurrencyIds}
+                      onClick={handleTokenClick}
+                      search={searchKeyword}
+                    />
+                  ))}
+                </Box>
+              </Box>
+
+              <Box mt={searchKeyword ? "0px" : "16px"}>
+                {searchKeyword ? null : (
+                  <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                    <Trans>Other</Trans>
+                  </Typography>
+                )}
+
+                <Box mt={searchKeyword ? "0px" : "16px"}>
+                  {(noneTokenList ?? []).map((token) => (
+                    <TokenItemInfo
+                      key={token.ledger_id.toString()}
+                      tokenInfo={token}
+                      canisterId={token.ledger_id.toString()}
+                      disabledCurrencyIds={disabledCurrencyIds}
+                      activeCurrencyIds={activeCurrencyIds}
+                      onClick={handleTokenClick}
+                      search={searchKeyword}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            </Box>
           </Box>
-          <Grid
-            container
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              height: "56px",
-              padding: matchDownSM ? "8px 16px" : "8px 24px",
-              ...(isDark
-                ? {
-                    background: theme.palette.background.level4,
-                  }
-                : { color: "#9E9E9E", background: "#E0E0E0" }),
-              cursor: "pointer",
-            }}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <EditIcon sx={{ fontSize: "1.2rem", marginRight: "8px", color: "#648EFB" }} />
-            <Typography component="span" color="#648EFB" onClick={() => setImportTokenShow(true)}>
-              <Trans>Import Token</Trans>
-            </Typography>
-          </Grid>
         </Box>
       </SwapModal>
-
-      {importTokenShow ? <ImportToken open={importTokenShow} onClose={() => setImportTokenShow(false)} /> : null}
     </>
   );
 }

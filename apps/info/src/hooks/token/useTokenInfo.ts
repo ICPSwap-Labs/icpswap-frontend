@@ -5,7 +5,7 @@ import { getTokenStandard } from "store/token/cache/hooks";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { IdbStorage } from "@icpswap/utils";
 import { DB_NAME, DB_VERSION } from "constants/db";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getTokenBaseInfo } from "./info-calls";
 import { useLocalTokens } from "./useLocalTokens";

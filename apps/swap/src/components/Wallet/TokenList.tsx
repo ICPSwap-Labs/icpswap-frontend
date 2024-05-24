@@ -2,12 +2,10 @@ import { useState, useMemo, useContext } from "react";
 import { Box } from "@mui/material";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
-import { WRAPPED_ICP_METADATA } from "constants/tokens";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo, ICP } from "@icpswap/tokens";
+import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { NETWORK, network } from "constants/server";
-import { useWalletCatchTokenIds, useUpdateHideSmallBalanceManager } from "store/wallet/hooks";
+import { useTaggedTokenManager, useUpdateHideSmallBalanceManager } from "store/wallet/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
@@ -17,34 +15,19 @@ import WalletContext from "./context";
 export default function WalletTokenList() {
   const [searchValue, setSearchValue] = useState("");
   const [isHideSmallBalances, setIsHideSmallBalances] = useUpdateHideSmallBalanceManager();
-  const walletCacheTokenIds = useWalletCatchTokenIds();
+  const { taggedTokens } = useTaggedTokenManager();
   const { allTokenUSDMap, noUSDTokens, sort } = useContext(WalletContext);
 
   const globalTokenList = useGlobalTokenList();
 
   const tokens = useMemo(() => {
-    let tokenIds = [
-      ICP.address,
-      WRAPPED_ICP_METADATA.canisterId.toString(),
+    const tokenIds = [
+      ...DISPLAY_IN_WALLET_FOREVER,
       ...(chain === ChainId.SEPOLIA ? [ckSepoliaUSDCTokenInfo.canisterId, ckSepoliaETHTokenInfo.canisterId] : []),
     ];
 
-    if (network === NETWORK.IC) {
-      tokenIds = [
-        ...tokenIds,
-        ...globalTokenList
-          .filter((token) => !!token.configs.find((config) => config.name === "WALLET" && config.value === "true"))
-          .sort((a, b) => {
-            if (a.rank < b.rank) return -1;
-            if (a.rank > b.rank) return 1;
-            return 0;
-          })
-          .map((token) => token.canisterId),
-      ];
-    }
-
-    return [...new Set([...tokenIds, ...walletCacheTokenIds.filter((id) => !DISPLAY_IN_WALLET_FOREVER.includes(id))])];
-  }, [walletCacheTokenIds, globalTokenList]);
+    return [...new Set([...tokenIds, ...taggedTokens.filter((id) => !DISPLAY_IN_WALLET_FOREVER.includes(id))])];
+  }, [taggedTokens, globalTokenList]);
 
   const sortedTokens = useMemo(() => {
     if (Object.keys(allTokenUSDMap).length + noUSDTokens.length < tokens.length) return tokens;

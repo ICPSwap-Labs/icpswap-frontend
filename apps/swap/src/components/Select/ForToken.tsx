@@ -250,6 +250,7 @@ export function Select({
           borderRadius: "12px",
           overflow: "hidden",
           minWidth: minMenuWidth,
+          zIndex: 100000,
         }}
       >
         <ClickAwayListener onClickAway={handleClose}>

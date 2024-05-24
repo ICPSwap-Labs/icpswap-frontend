@@ -18,7 +18,7 @@ import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import { useStateTokenCapId, useTokenStandardIsRegistered, useUpdateTokenStandards } from "store/token/cache/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import upperFirst from "lodash/upperFirst";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 

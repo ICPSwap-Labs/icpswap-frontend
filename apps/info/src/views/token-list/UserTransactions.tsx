@@ -39,7 +39,7 @@ import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import { useStateTokenCapId, useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { Principal } from "@dfinity/principal";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { useICPTransactions } from "hooks/useICPCalls";
 import upperFirst from "lodash/upperFirst";
 

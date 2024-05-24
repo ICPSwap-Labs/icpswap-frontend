@@ -11,7 +11,7 @@ import BigNumber from "bignumber.js";
 import Button from "components/authentication/ButtonConnector";
 import { createStakingTokenPool } from "@icpswap/hooks";
 import { type ActorIdentity, ResultStatus } from "@icpswap/types";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { standardCheck } from "utils/token/standardCheck";
 import { getTokenInfo } from "hooks/token/calls";
 import { timeParser } from "utils/index";

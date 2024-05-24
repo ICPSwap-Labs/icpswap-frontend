@@ -3,7 +3,7 @@ import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { useCallsData, getTokenMetadata, getTokenSupply } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getTokenListLogo } from "./useTokenListLogo";
 

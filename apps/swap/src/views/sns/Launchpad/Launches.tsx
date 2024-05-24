@@ -9,7 +9,7 @@ import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Tabs } from "components/sns/Tab";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";

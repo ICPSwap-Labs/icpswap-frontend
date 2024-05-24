@@ -5,7 +5,7 @@ import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, prin
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { Connector, NO_HIDDEN_TOKENS, INFO_URL } from "constants/index";
+import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -25,6 +25,7 @@ import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 
 import { ReceiveModal } from "./Receive";
+import { RemoveToken } from "./RemoveToken";
 
 const useStyles = makeStyles(() => ({
   tokenAssets: {
@@ -35,6 +36,12 @@ const useStyles = makeStyles(() => ({
     "&:hover": {
       textDecoration: "underline",
     },
+  },
+  dot: {
+    width: "4px",
+    height: "4px",
+    borderRadius: "50%",
+    background: "#8492C4",
   },
 }));
 
@@ -349,33 +356,34 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         </Box>
       </Box>
 
-      <Box
-        sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
-      >
-        {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
+      <Box sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "space-between", gap: "0 5px" }}>
+        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : <RemoveToken canisterId={canisterId} />}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}>
+          {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
 
-        <ActionButton label="Send" onClick={handleTransfer} />
-        <ActionButton label="Receive" onClick={handleReceive} />
-        <ActionButton label="Transactions" onClick={handleToTransactions} />
+          <ActionButton label="Send" onClick={handleTransfer} />
+          <ActionButton label="Receive" onClick={handleReceive} />
+          <ActionButton label="Transactions" onClick={handleToTransactions} />
 
-        {canisterId === ICP.address && walletType === Connector.NFID ? (
-          <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
-        ) : null}
+          {canisterId === ICP.address && walletType === Connector.NFID ? (
+            <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
+          ) : null}
 
-        {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
+          {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
 
-        {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
-          <>
-            <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
-            <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
-          </>
-        ) : null}
+          {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
+            <>
+              <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
+              <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
+            </>
+          ) : null}
 
-        {ckTokens
-          .filter((ele) => ele.id === tokenInfo?.canisterId)
-          .map((ele) => (
-            <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
-          ))}
+          {ckTokens
+            .filter((ele) => ele.id === tokenInfo?.canisterId)
+            .map((ele) => (
+              <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
+            ))}
+        </Box>
       </Box>
 
       {open && !!tokenInfo ? (

@@ -1,11 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
   updateXDR2USD,
-  updateDrawerWidth,
   updateICPPriceList,
   updateUserLocale,
   updateTokenList,
   updatePoolStandardInitialed,
+  updateAllSwapTokens,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -13,9 +13,6 @@ export default createReducer(initialState, (builder) => {
   builder
     .addCase(updateXDR2USD, (state, { payload }) => {
       state.xdr_usdt = payload;
-    })
-    .addCase(updateDrawerWidth, (state, { payload }) => {
-      state.drawerWidth = payload;
     })
     .addCase(updateICPPriceList, (state, { payload }) => {
       state.ICPPriceList = payload;
@@ -28,5 +25,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updatePoolStandardInitialed, (state, { payload }) => {
       state.poolStandardUpdated = payload;
+    })
+    .addCase(updateAllSwapTokens, (state, { payload }) => {
+      state.allSwapTokens = payload;
     });
 });

@@ -19,7 +19,7 @@ import { GlobalContext } from "hooks/useGlobalContext";
 import TransactionsUpdater from "store/transactions/updater";
 
 import Web3Provider from "./components/Web3Injector";
-import { useFetchICPPrices } from "./store/global/hooks";
+import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
 import Snackbar from "./components/Snackbar";
 import NavigationScroll from "./components/NavigationScroll";
@@ -34,6 +34,7 @@ export default function App() {
   useFetchXDR2USD();
   useFetchICPPrices();
   useFetchInfoAllTokens();
+  useFetchAllSwapTokens();
 
   const { isConnected } = useConnectManager();
 

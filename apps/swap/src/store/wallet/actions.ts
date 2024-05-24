@@ -1,9 +1,9 @@
 import { createAction } from "@reduxjs/toolkit";
 import { BTCAddressType, TxState } from "types/ckBTC";
 
-export const saveWalletCacheToken = createAction<string[]>("wallet/saveWalletCacheToken");
+export const updateTaggedTokens = createAction<string[]>("wallet/updateTaggedTokens");
 
-export const deleteWalletCatchToken = createAction<string[]>("wallet/deleteWalletCatchToken");
+export const deleteTaggedTokens = createAction<string[]>("wallet/deleteTaggedTokens");
 
 export const updateHideSmallBalance = createAction<boolean>("wallet/updateHideSmallBalance");
 

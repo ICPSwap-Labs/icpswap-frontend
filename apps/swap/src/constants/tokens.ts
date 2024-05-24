@@ -2,7 +2,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { WICPCanisterId } from "constants/canister";
 import { TokenInfo, TokenMetadata } from "types/token";
 import { Principal } from "@dfinity/principal";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { ckETH_LEDGER_ID } from "./ckETH";
 import { ckBTC_ID } from "./ckBTC";
 import ckETHSVG from "../assets/images/token/ckETH.svg";

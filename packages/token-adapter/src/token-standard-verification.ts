@@ -10,12 +10,11 @@ import { TOKEN_STANDARD, Metadata } from "./types";
 export async function tokenStandardVerification(canisterId: string, standard: TOKEN_STANDARD) {
   let valid = false;
   let metadata: undefined | Metadata | null = null;
-  let logo: undefined | string | null = null;
+  let support_icrc2 = false;
 
   if (standard === TOKEN_STANDARD.DIP20) {
     try {
       metadata = (await DIP20Adapter.metadata({ canisterId })).data;
-      logo = metadata?.logo;
       if (metadata?.symbol && metadata?.symbol !== "WICP" && metadata?.symbol !== "XTC") valid = true;
     } catch (error) {
       console.error(error);
@@ -24,7 +23,6 @@ export async function tokenStandardVerification(canisterId: string, standard: TO
   } else if (standard === TOKEN_STANDARD.DIP20_WICP) {
     try {
       metadata = (await DIP20WICPAdapter.metadata({ canisterId })).data;
-      logo = metadata?.logo;
       if (metadata?.symbol && metadata?.symbol === "WICP") valid = true;
     } catch (error) {
       console.error(error);
@@ -33,7 +31,7 @@ export async function tokenStandardVerification(canisterId: string, standard: TO
   } else if (standard === TOKEN_STANDARD.DIP20_XTC) {
     try {
       metadata = (await DIP20XTCAdapter.metadata({ canisterId })).data;
-      logo = metadata?.logo;
+
       if (metadata?.symbol && metadata.symbol === "XTC") valid = true;
     } catch (error) {
       console.error(error);
@@ -42,7 +40,6 @@ export async function tokenStandardVerification(canisterId: string, standard: TO
   } else if (standard === TOKEN_STANDARD.EXT) {
     try {
       metadata = (await EXTAdapter.metadata({ canisterId })).data;
-      logo = metadata?.logo;
       if (metadata?.symbol) valid = true;
     } catch (error) {
       console.error(error);
@@ -82,6 +79,13 @@ export async function tokenStandardVerification(canisterId: string, standard: TO
         }
       }
 
+      for (let i = 0; i < standards.length; i++) {
+        if (standards[i].name.includes("ICRC-2")) {
+          support_icrc2 = true;
+          break;
+        }
+      }
+
       if (metadata?.symbol && !!_valid) valid = true;
     } catch (error) {
       console.error(error);
@@ -92,6 +96,6 @@ export async function tokenStandardVerification(canisterId: string, standard: TO
   return {
     valid,
     metadata,
-    logo,
+    support_icrc2,
   };
 }

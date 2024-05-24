@@ -126,7 +126,7 @@ export default function Modal({
           ...(matchDownMD ? { padding: "8px 14px" } : {}),
         },
         ...{
-          "& .MuiPaper-root": {
+          "& .MuiPaper-root ": {
             ...(background ? { backgroundColor: background } : { backgroundColor: theme.palette.background.level2 }),
           },
           ...(dialogProps?.sx || {}),

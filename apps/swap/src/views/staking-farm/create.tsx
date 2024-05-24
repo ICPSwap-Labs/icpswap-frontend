@@ -11,7 +11,7 @@ import { Theme } from "@mui/material/styles";
 import { numberToString, formatTokenAmount } from "@icpswap/utils";
 import Button from "components/authentication/ButtonConnector";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { type ActorIdentity, ResultStatus } from "@icpswap/types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

@@ -124,8 +124,8 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
     registerTokens({ canisterIds: [ICP.address], standard: ICP.standard as TOKEN_STANDARD });
   }, []);
 
+  // All token's standards, includes the local cached tokens
   const tokenStandards = useTokenStandards();
-
   useEffect(() => {
     if (tokenStandards) {
       Object.keys(tokenStandards).forEach((key) => {

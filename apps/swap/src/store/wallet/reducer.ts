@@ -1,7 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  deleteWalletCatchToken,
-  saveWalletCacheToken,
+  updateTaggedTokens,
+  deleteTaggedTokens,
   updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
@@ -10,20 +10,20 @@ import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
   builder
-    .addCase(saveWalletCacheToken, (state, { payload }) => {
-      const newSaveCacheTokenIds = [...(state.cacheTokenIds ?? []), ...(payload || [])];
+    .addCase(updateTaggedTokens, (state, { payload }) => {
+      const newTaggedTokens = [...state.taggedTokens, ...payload];
 
       return {
         ...state,
-        cacheTokenIds: newSaveCacheTokenIds,
+        taggedTokens: newTaggedTokens,
       };
     })
-    .addCase(deleteWalletCatchToken, (state, { payload }) => {
-      const newDelCacheTokenIds = (state.cacheTokenIds ?? []).filter((token) => !(payload || []).includes(token));
+    .addCase(deleteTaggedTokens, (state, { payload }) => {
+      const newTaggedTokens = [...state.taggedTokens].filter((token) => !payload.includes(token));
 
       return {
         ...state,
-        cacheTokenIds: newDelCacheTokenIds,
+        taggedTokens: newTaggedTokens,
       };
     })
     .addCase(updateHideSmallBalance, (state, { payload }) => {
