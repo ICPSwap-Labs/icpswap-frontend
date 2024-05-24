@@ -62,6 +62,7 @@ export interface InitFarmArgs {
   endTime: bigint;
   pool: Principal;
   refunder: Principal;
+  governanceCid: [] | [Principal];
   priceInsideLimit: boolean;
   token0AmountLimit: bigint;
   rewardPool: Principal;
@@ -84,7 +85,7 @@ export interface Page_1 {
 export type Result_10 = { ok: Array<Deposit> } | { err: Error };
 export type Result_11 =
   | {
-      ok: { stakedTokenTVL: number; rewardTokenTVL: number };
+      ok: { stakedTokenTVL: number; rewardTokenTV: number };
     }
   | { err: Error };
 export type Result_12 = { ok: Page } | { err: string };

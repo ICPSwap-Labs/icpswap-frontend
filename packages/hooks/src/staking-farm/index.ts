@@ -8,7 +8,7 @@ import type {
   CreateFarmArgs,
   StakingFarmStakeTransaction,
   StakingFarmDistributeTransaction,
-  FarmMetadata,
+  FarmRewardMetadata,
   PaginationResult,
   FarmTvl,
   FarmState,
@@ -73,7 +73,7 @@ export function useFarmGlobalTVL(reload?: boolean) {
 }
 
 export async function getFarmTVL(canisterId: string) {
-  return resultFormat<{ stakedTokenTVL: number; rewardTokenTVL: number }>(await (await farm(canisterId)).getTVL()).data;
+  return resultFormat<{ stakedTokenTVL: number; rewardTokenTV: number }>(await (await farm(canisterId)).getTVL()).data;
 }
 
 export function useFarmTVL(canisterId: string | undefined, reload?: boolean) {
@@ -163,15 +163,15 @@ export function useFarms(state: FarmState | undefined, reload?: boolean) {
   );
 }
 
-export async function getV3FarmMetadata(canisterId: string) {
-  return resultFormat<FarmMetadata>(await (await farm(canisterId)).getRewardMeta()).data;
+export async function getV3FarmRewardMetadata(canisterId: string) {
+  return resultFormat<FarmRewardMetadata>(await (await farm(canisterId)).getRewardMeta()).data;
 }
 
-export function useV3FarmMetadata(canisterId: string | undefined) {
+export function useV3FarmRewardMetadata(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getV3FarmMetadata(canisterId!);
+      return await getV3FarmRewardMetadata(canisterId!);
     }, [canisterId]),
   );
 }

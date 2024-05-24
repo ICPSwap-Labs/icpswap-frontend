@@ -7,11 +7,17 @@ import MainContainer from "ui-component/MainContainer";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, shorten, explorerLink, toSignificant, cycleValueFormat } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  shorten,
+  explorerLink,
+  toSignificantWithGroupSeparator,
+  cycleValueFormat,
+} from "@icpswap/utils";
 import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { useV3UserFarmInfo, useV3FarmMetadata, useFarmCycles } from "@icpswap/hooks";
+import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
@@ -52,7 +58,7 @@ export default function FarmDetails() {
   const classes = useStyles();
   const { farmId } = useParams<{ farmId: string }>();
   const { result: farmInfo } = useV3UserFarmInfo(farmId, AnonymousPrincipal);
-  const { result: farmMetadata } = useV3FarmMetadata(farmId);
+  const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useFarmCycles(farmId);
 
   const { statusText } = getFarmPoolStatus(farmInfo) ?? { statusText: "" };
@@ -115,13 +121,9 @@ export default function FarmDetails() {
               label={t`Claimed Rewards:`}
               value={
                 farmMetadata && rewardToken
-                  ? toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardClaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
+                  ? toSignificantWithGroupSeparator(
+                      parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
                       8,
-                      { groupSeparator: "," },
                     )
                   : "--"
               }
@@ -130,13 +132,9 @@ export default function FarmDetails() {
               label={t`Unclaimed Rewards:`}
               value={
                 farmMetadata && rewardToken
-                  ? toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardUnclaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
+                  ? toSignificantWithGroupSeparator(
+                      parseTokenAmount(farmMetadata.totalRewardUnharvested.toString(), rewardToken.decimals).toString(),
                       8,
-                      { groupSeparator: "," },
                     )
                   : "--"
               }
@@ -157,9 +155,10 @@ export default function FarmDetails() {
               label={t`Amount per Distribution:`}
               value={
                 farmMetadata && rewardToken
-                  ? toSignificant(parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(), 8, {
-                      groupSeparator: ",",
-                    })
+                  ? toSignificantWithGroupSeparator(
+                      parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
+                      8,
+                    )
                   : "--"
               }
             />

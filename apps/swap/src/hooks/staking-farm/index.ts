@@ -148,11 +148,17 @@ export interface useFarmUSDValueArgs {
   rewardToken: Token | undefined;
   userFarmInfo: FarmInfo | undefined;
   userRewardAmount: BigNumber | undefined;
+  rewardTokenPrice: string | number | undefined;
   farmId: string;
 }
 
-export function useFarmUSDValue({ farmId, rewardToken, userFarmInfo, userRewardAmount }: useFarmUSDValueArgs) {
-  const rewardTokenPrice = useUSDPrice(rewardToken);
+export function useFarmUSDValue({
+  rewardTokenPrice,
+  farmId,
+  rewardToken,
+  userFarmInfo,
+  userRewardAmount,
+}: useFarmUSDValueArgs) {
   const icpPrice = useICPPrice();
 
   const principal = useAccountPrincipalString();

@@ -16,14 +16,14 @@ import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hook
 import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
-  toSignificant,
+  toSignificantWithGroupSeparator,
   cycleValueFormat,
   shorten,
   timestampFormat,
   explorerLink,
   BigNumber,
 } from "@icpswap/utils";
-import { useV3FarmMetadata, useFarmUserPositions, useFarmInitArgs } from "@icpswap/hooks";
+import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
@@ -31,6 +31,7 @@ import { STATE } from "types/staking-farm";
 import type { FarmTvl } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { Principal } from "@dfinity/principal";
+import { useUSDPrice } from "hooks/useUSDPrice";
 
 import FarmContext from "../context";
 import OptionStaking from "./OptionStaking";
@@ -130,6 +131,8 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
 
+  const rewardTokenPrice = useUSDPrice(rewardToken);
+
   const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
@@ -137,6 +140,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     userRewardAmount,
     userFarmInfo,
     farmId,
+    rewardTokenPrice,
   });
 
   const handleExpandClick = () => {
@@ -164,8 +168,29 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     }
   }, [positionIds?.length]);
 
-  const { result: farmMetadata } = useV3FarmMetadata(farmId);
+  const { result: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useV3StakingCycles(farmId);
+
+  // (Reward token amount each cycles * reward token price / Total valued staked ) * (3600*24*360/seconds each cycle) *100%
+  const apr = useMemo(() => {
+    if (
+      !rewardTokenPrice ||
+      !farmInitArgs ||
+      !farmRewardMetadata ||
+      !rewardToken ||
+      new BigNumber(poolTVL).isEqualTo(0)
+    )
+      return undefined;
+
+    const val = parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals)
+      .multipliedBy(rewardTokenPrice)
+      .dividedBy(poolTVL)
+      .multipliedBy(new BigNumber(3600 * 24 * 360).dividedBy(farmInitArgs.secondPerCycle.toString()))
+      .multipliedBy(100)
+      .toFixed(2);
+
+    return `${val}%`;
+  }, [poolTVL, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
 
   return (
     <Box>
@@ -223,6 +248,13 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
           </Grid>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
+            <Flex justify="space-between">
+              <Typography>
+                <Trans>APR</Trans>
+              </Typography>
+              <Typography color="text.primary">{apr ?? "--"}</Typography>
+            </Flex>
+
             <Flex justify="space-between">
               <Typography>
                 <Trans>Total Reward Amount</Trans>
@@ -360,14 +392,15 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Claimed Rewards</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardClaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
-                      8,
-                      { groupSeparator: "," },
-                    )}
+                    {!farmRewardMetadata || !rewardToken
+                      ? "--"
+                      : toSignificantWithGroupSeparator(
+                          parseTokenAmount(
+                            farmRewardMetadata.totalRewardHarvested.toString(),
+                            rewardToken.decimals,
+                          ).toString(),
+                          8,
+                        )}
                   </Typography>
                 </Grid>
 
@@ -376,14 +409,15 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Unclaimed Rewards</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardUnclaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
-                      8,
-                      { groupSeparator: "," },
-                    )}
+                    {!farmRewardMetadata
+                      ? "--"
+                      : toSignificantWithGroupSeparator(
+                          parseTokenAmount(
+                            farmRewardMetadata.totalRewardUnharvested.toString(),
+                            rewardToken?.decimals,
+                          ).toString(),
+                          8,
+                        )}
                   </Typography>
                 </Grid>
 
@@ -392,7 +426,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Distribution Interval</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                    {Number(farmRewardMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
                   </Typography>
                 </Grid>
 
@@ -401,10 +435,9 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Amount per Distribution</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(farmMetadata?.rewardPerCycle, rewardToken?.decimals).toString(),
+                    {toSignificantWithGroupSeparator(
+                      parseTokenAmount(farmRewardMetadata?.rewardPerCycle, rewardToken?.decimals).toString(),
                       8,
-                      { groupSeparator: "," },
                     )}
                   </Typography>
                 </Grid>

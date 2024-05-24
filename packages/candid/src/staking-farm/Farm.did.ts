@@ -78,6 +78,7 @@ export const idlFactory = ({ IDL }: any) => {
     endTime: IDL.Nat,
     pool: IDL.Principal,
     refunder: IDL.Principal,
+    governanceCid: IDL.Opt(IDL.Principal),
     priceInsideLimit: IDL.Bool,
     token0AmountLimit: IDL.Nat,
     rewardPool: IDL.Principal,
@@ -145,7 +146,7 @@ export const idlFactory = ({ IDL }: any) => {
   const Result_11 = IDL.Variant({
     ok: IDL.Record({
       stakedTokenTVL: IDL.Float64,
-      rewardTokenTVL: IDL.Float64,
+      rewardTokenTV: IDL.Float64,
     }),
     err: Error,
   });
