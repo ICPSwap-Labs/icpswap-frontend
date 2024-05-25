@@ -417,13 +417,13 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                   <Typography color="text.primary">
                     {!farmRewardMetadata || !rewardToken
                       ? "--"
-                      : toSignificantWithGroupSeparator(
+                      : `${toSignificantWithGroupSeparator(
                           parseTokenAmount(
                             farmRewardMetadata.totalRewardHarvested.toString(),
                             rewardToken.decimals,
                           ).toString(),
                           8,
-                        )}
+                        )} ${rewardToken.symbol}`}
                   </Typography>
                 </Grid>
 
@@ -432,15 +432,15 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Unclaimed Rewards</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {!farmRewardMetadata
+                    {!farmRewardMetadata || !rewardToken
                       ? "--"
-                      : toSignificantWithGroupSeparator(
+                      : `${toSignificantWithGroupSeparator(
                           parseTokenAmount(
                             farmRewardMetadata.totalRewardUnharvested.toString(),
-                            rewardToken?.decimals,
+                            rewardToken.decimals,
                           ).toString(),
                           8,
-                        )}
+                        )} ${rewardToken.symbol}`}
                   </Typography>
                 </Grid>
 
