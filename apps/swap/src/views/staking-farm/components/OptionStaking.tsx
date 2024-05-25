@@ -27,11 +27,11 @@ const useStyle = makeStyles((theme: Theme) => ({
 export interface OptionStakingProps {
   userFarmInfo: FarmInfo | undefined;
   resetData?: () => void;
-  userAllPositions: FarmDepositArgs[];
+  userStakedPositions: FarmDepositArgs[];
   farmId: string;
 }
 
-export default function OptionStaking({ farmId, userFarmInfo, resetData, userAllPositions }: OptionStakingProps) {
+export default function OptionStaking({ farmId, userFarmInfo, resetData, userStakedPositions }: OptionStakingProps) {
   const classes = useStyle();
 
   const [unStakingModal, setUnStakingModal] = useState(false);
@@ -79,7 +79,7 @@ export default function OptionStaking({ farmId, userFarmInfo, resetData, userAll
           farm={userFarmInfo}
           farmId={farmId}
           resetData={resetData}
-          userAllPositions={userAllPositions}
+          userStakedPositions={userStakedPositions}
         />
       )}
     </>

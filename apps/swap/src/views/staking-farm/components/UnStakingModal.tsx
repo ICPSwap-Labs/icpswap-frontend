@@ -14,7 +14,7 @@ export interface UnStakingModalProps {
   onClose: () => void;
   resetData?: () => void;
   farm: FarmInfo;
-  userAllPositions: FarmDepositArgs[];
+  userStakedPositions: FarmDepositArgs[];
   farmId: string;
 }
 
@@ -24,7 +24,7 @@ export default function UnStakingModal({
   resetData,
   farmId,
   farm,
-  userAllPositions,
+  userStakedPositions,
 }: UnStakingModalProps) {
   const theme = useTheme() as Theme;
   const [openTip] = useTips();
@@ -72,7 +72,7 @@ export default function UnStakingModal({
             overflow: "auto",
           }}
         >
-          {userAllPositions.map((position, index) => {
+          {userStakedPositions.map((position, index) => {
             return (
               <PositionItem
                 key={index}
@@ -89,7 +89,7 @@ export default function UnStakingModal({
             );
           })}
 
-          {!userAllPositions.length && <NoData />}
+          {!userStakedPositions.length && <NoData />}
         </Box>
 
         <Box mt="20px" sx={{ padding: "0 24px" }}>

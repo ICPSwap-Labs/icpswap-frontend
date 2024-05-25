@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useICPPrice, useUSDPrice } from "hooks/useUSDPrice";
+import { useICPPrice } from "hooks/useUSDPrice";
 import { resultFormat, parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
