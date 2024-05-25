@@ -13,7 +13,13 @@ import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { parseTokenAmount, formatDollarAmount, BigNumber, isValidPrincipal } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatDollarAmount,
+  BigNumber,
+  isValidPrincipal,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { Search as SearchIcon, PlusCircle } from "react-feather";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
@@ -41,7 +47,7 @@ export interface SwapToken {
 }
 
 export interface TokenItemInfoProps {
-  tokenInfo: AllTokenOfSwapTokenInfo;
+  // tokenInfo: AllTokenOfSwapTokenInfo;
   canisterId: string;
   onClick: (token: TokenInfo) => void;
   disabledCurrencyIds: string[];
@@ -52,7 +58,7 @@ export interface TokenItemInfoProps {
 }
 
 export function TokenItemInfo({
-  tokenInfo: _tokenInfo,
+  // tokenInfo: _tokenInfo,
   canisterId,
   onClick,
   disabledCurrencyIds,
@@ -78,7 +84,7 @@ export function TokenItemInfo({
 
   const tokenBalanceAmount = useMemo(() => {
     if (!tokenInfo || balance === undefined) return undefined;
-    return parseTokenAmount(balance, tokenInfo.decimals).toFormat();
+    return toSignificantWithGroupSeparator(parseTokenAmount(balance, tokenInfo.decimals).toString(), 6);
   }, [tokenInfo, balance]);
 
   const handleItemClick = () => {
@@ -106,16 +112,17 @@ export function TokenItemInfo({
 
   const hidden = useMemo(() => {
     if (!search) return false;
+    if (!tokenInfo) return true;
 
     if (isValidPrincipal(search)) {
-      return _tokenInfo.ledger_id.toString() !== search;
+      return tokenInfo?.canisterId.toString() !== search;
     }
 
     return (
-      !_tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
-      !_tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      !tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
+      !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
     );
-  }, [search, _tokenInfo]);
+  }, [search, tokenInfo]);
 
   return (
     <Box
@@ -257,7 +264,7 @@ export default function Selector({
   const [searchKeyword, setSearchKeyword] = useState("");
   const [importTokenCanceled, setImportTokenCanceled] = useState(false);
 
-  const { result: allTokensOfSwap } = useFetchAllSwapTokens();
+  // const { result: allTokensOfSwap } = useFetchAllSwapTokens();
 
   const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
   const globalTokenList = useGlobalTokenList();
@@ -265,7 +272,7 @@ export default function Selector({
   const { taggedTokens } = useTaggedTokenManager();
 
   const yourTokens: string[] = useMemo(() => {
-    return DEFAULT_DISPLAYED_TOKENS.map((e) => e.address).concat(taggedTokens);
+    return [...new Set(DEFAULT_DISPLAYED_TOKENS.map((e) => e.address).concat(taggedTokens))];
   }, [DEFAULT_DISPLAYED_TOKENS, taggedTokens]);
 
   const { snsTokens, noneSnsTokens } = useMemo(() => {
@@ -291,29 +298,29 @@ export default function Selector({
     return { snsTokens: snsTokens.map((e) => e.canisterId), noneSnsTokens: noneSnsTokens.map((e) => e.canisterId) };
   }, [globalTokenList, yourTokens, snsAllTokensInfo]);
 
-  const yourTokenList = useMemo(() => {
-    if (!allTokensOfSwap) return undefined;
+  // const yourTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap) return undefined;
 
-    const tokens = yourTokens
-      .map((tokenId) => {
-        return allTokensOfSwap.find((token) => token.ledger_id.toString() === tokenId);
-      })
-      .filter((token) => !!token) as AllTokenOfSwapTokenInfo[];
+  //   const tokens = yourTokens
+  //     .map((tokenId) => {
+  //       return allTokensOfSwap.find((token) => token.ledger_id.toString() === tokenId);
+  //     })
+  //     .filter((token) => !!token) as AllTokenOfSwapTokenInfo[];
 
-    return tokens;
-  }, [allTokensOfSwap, yourTokens]);
+  //   return tokens;
+  // }, [allTokensOfSwap, yourTokens]);
 
-  const snsTokenList = useMemo(() => {
-    if (!allTokensOfSwap || !snsTokens) return undefined;
-    const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
-    return tokens;
-  }, [allTokensOfSwap, snsTokens]);
+  // const snsTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap || !snsTokens) return undefined;
+  //   const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
+  //   return tokens;
+  // }, [allTokensOfSwap, snsTokens]);
 
-  const noneTokenList = useMemo(() => {
-    if (!allTokensOfSwap || !noneSnsTokens) return undefined;
-    const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
-    return tokens;
-  }, [allTokensOfSwap, noneSnsTokens]);
+  // const noneTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap || !noneSnsTokens) return undefined;
+  //   const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
+  //   return tokens;
+  // }, [allTokensOfSwap, noneSnsTokens]);
 
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
@@ -328,21 +335,15 @@ export default function Selector({
     setSearchKeyword(value);
   }, []);
 
-  const noToken = useMemo(() => {
-    if (!searchKeyword || !yourTokenList || !noneTokenList || !snsTokenList) return false;
-
-    const tokenList = yourTokenList.concat(noneTokenList).concat(snsTokenList);
+  const showImportToken = useMemo(() => {
+    if (!searchKeyword || !yourTokens || !noneSnsTokens || !snsTokens) return false;
 
     if (isValidPrincipal(searchKeyword)) {
-      return !tokenList.find((token) => token.ledger_id.toString() === searchKeyword);
+      return !yourTokens.concat(noneSnsTokens).concat(snsTokens).includes(searchKeyword);
     }
 
-    return !tokenList.find(
-      (token) =>
-        token.symbol.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
-        token.name.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
-    );
-  }, [searchKeyword, yourTokenList, noneTokenList, snsTokenList]);
+    return false;
+  }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
 
   return (
     <>
@@ -404,7 +405,7 @@ export default function Selector({
           <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
 
           <Box sx={{ height: "386px", overflow: "hidden auto" }}>
-            {noToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
+            {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
               <Box className={classes.wrapper}>
                 <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
               </Box>
@@ -420,11 +421,10 @@ export default function Selector({
               )}
 
               <Box mt={searchKeyword ? "0px" : "16px"}>
-                {(yourTokenList ?? []).map((token) => (
+                {(yourTokens ?? []).map((tokenId) => (
                   <TokenItemInfo
-                    key={token.ledger_id.toString()}
-                    tokenInfo={token}
-                    canisterId={token.ledger_id.toString()}
+                    key={tokenId}
+                    canisterId={tokenId}
                     disabledCurrencyIds={disabledCurrencyIds}
                     activeCurrencyIds={activeCurrencyIds}
                     onClick={handleTokenClick}
@@ -450,11 +450,10 @@ export default function Selector({
                 )}
 
                 <Box mt={searchKeyword ? "0px" : "16px"}>
-                  {(snsTokenList ?? []).map((token) => (
+                  {(snsTokens ?? []).map((tokenId) => (
                     <TokenItemInfo
-                      key={token.ledger_id.toString()}
-                      tokenInfo={token}
-                      canisterId={token.ledger_id.toString()}
+                      key={tokenId}
+                      canisterId={tokenId}
                       disabledCurrencyIds={disabledCurrencyIds}
                       activeCurrencyIds={activeCurrencyIds}
                       onClick={handleTokenClick}
@@ -472,11 +471,10 @@ export default function Selector({
                 )}
 
                 <Box mt={searchKeyword ? "0px" : "16px"}>
-                  {(noneTokenList ?? []).map((token) => (
+                  {(noneSnsTokens ?? []).map((tokenId) => (
                     <TokenItemInfo
-                      key={token.ledger_id.toString()}
-                      tokenInfo={token}
-                      canisterId={token.ledger_id.toString()}
+                      key={tokenId}
+                      canisterId={tokenId}
                       disabledCurrencyIds={disabledCurrencyIds}
                       activeCurrencyIds={activeCurrencyIds}
                       onClick={handleTokenClick}

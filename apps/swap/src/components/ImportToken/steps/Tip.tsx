@@ -33,7 +33,7 @@ export function ImportTokenTip({ onOk, onNo }: ImportTokenTipProps) {
         position: "relative",
         borderRadius: "12px",
         background: theme.palette.background.level4,
-        padding: "24px 0",
+        padding: "24px",
       }}
     >
       <Typography align="center">

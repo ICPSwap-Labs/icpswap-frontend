@@ -11,7 +11,7 @@ import { Modal, FilledTextField, TokenImage } from "components/index";
 import { useGlobalTokenList, useFetchAllSwapTokens } from "store/global/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
-import { type AllTokenOfSwapTokenInfo } from "@icpswap/types";
+// import { type AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { isValidPrincipal, classNames } from "@icpswap/utils";
 import { PlusCircle, Search as SearchIcon } from "react-feather";
 import { TokenListMetadata } from "types/token-list";
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export interface TokenItemInfoProps {
-  tokenInfo: AllTokenOfSwapTokenInfo;
+  // tokenInfo: AllTokenOfSwapTokenInfo;
   canisterId: string;
   onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
   search?: string;
@@ -55,7 +55,7 @@ export interface TokenItemInfoProps {
   isHidden?: boolean;
 }
 
-export function TokenItemInfo({ tokenInfo: _tokenInfo, canisterId, search, isHidden }: TokenItemInfoProps) {
+export function TokenItemInfo({ canisterId, search, isHidden }: TokenItemInfoProps) {
   const theme = useTheme() as Theme;
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -79,20 +79,21 @@ export function TokenItemInfo({ tokenInfo: _tokenInfo, canisterId, search, isHid
 
   const hidden = useMemo(() => {
     if (isHidden) return true;
+    if (!tokenInfo) return true;
 
-    if (DISPLAY_IN_WALLET_FOREVER.includes(_tokenInfo.ledger_id.toString())) return true;
+    if (DISPLAY_IN_WALLET_FOREVER.includes(tokenInfo.canisterId)) return true;
 
     if (!search) return false;
 
     if (isValidPrincipal(search)) {
-      return _tokenInfo.ledger_id.toString() !== search;
+      return tokenInfo.canisterId !== search;
     }
 
     return (
-      !_tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
-      !_tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      !tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
+      !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
     );
-  }, [search, _tokenInfo, isHidden]);
+  }, [search, tokenInfo, isHidden]);
 
   return (
     <Box
@@ -183,13 +184,13 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
 
   const globalTokenList = useGlobalTokenList();
 
-  const { result: allTokensOfSwap } = useFetchAllSwapTokens();
+  // const { result: allTokensOfSwap } = useFetchAllSwapTokens();
   const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
 
   const { taggedTokens } = useTaggedTokenManager();
 
   const yourTokens: string[] = useMemo(() => {
-    return DISPLAY_IN_WALLET_FOREVER.map((e) => e).concat(taggedTokens);
+    return [...new Set(DISPLAY_IN_WALLET_FOREVER.map((e) => e).concat(taggedTokens))];
   }, [DISPLAY_IN_WALLET_FOREVER, taggedTokens]);
 
   const { snsTokens, noneSnsTokens } = useMemo(() => {
@@ -243,44 +244,38 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
     };
   }, [globalTokenList, yourTokens, snsAllTokensInfo]);
 
-  const yourTokenList = useMemo(() => {
-    if (!allTokensOfSwap) return undefined;
-    const tokens = allTokensOfSwap.filter((token) => yourTokens.includes(token.ledger_id.toString()));
-    return tokens;
-  }, [allTokensOfSwap, yourTokens]);
+  // const yourTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap) return undefined;
+  //   const tokens = allTokensOfSwap.filter((token) => yourTokens.includes(token.ledger_id.toString()));
+  //   return tokens;
+  // }, [allTokensOfSwap, yourTokens]);
 
-  const snsTokenList = useMemo(() => {
-    if (!allTokensOfSwap || !snsTokens) return [];
-    const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
-    return tokens;
-  }, [allTokensOfSwap, snsTokens]);
+  // const snsTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap || !snsTokens) return [];
+  //   const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
+  //   return tokens;
+  // }, [allTokensOfSwap, snsTokens]);
 
-  const noneTokenList = useMemo(() => {
-    if (!allTokensOfSwap || !noneSnsTokens) return [];
-    const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
-    return tokens;
-  }, [allTokensOfSwap, noneSnsTokens]);
+  // const noneTokenList = useMemo(() => {
+  //   if (!allTokensOfSwap || !noneSnsTokens) return [];
+  //   const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
+  //   return tokens;
+  // }, [allTokensOfSwap, noneSnsTokens]);
 
   const handleSearchToken = useCallback((value: string) => {
     setImportTokenCanceled(false);
     setSearchKeyword(value);
   }, []);
 
-  const noToken = useMemo(() => {
-    if (!searchKeyword || !yourTokenList || !noneTokenList || !snsTokenList) return false;
-
-    const tokenList = yourTokenList.concat(noneTokenList).concat(snsTokenList);
+  const showImportToken = useMemo(() => {
+    if (!searchKeyword || !yourTokens || !noneSnsTokens || !snsTokens) return false;
 
     if (isValidPrincipal(searchKeyword)) {
-      return !tokenList.find((token) => token.ledger_id.toString() === searchKeyword);
+      return !yourTokens.concat(noneSnsTokens).concat(snsTokens).includes(searchKeyword);
     }
 
-    return !tokenList.find(
-      (token) =>
-        token.symbol.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()) ||
-        token.name.toLocaleLowerCase().includes(searchKeyword.toLocaleLowerCase()),
-    );
-  }, [searchKeyword, yourTokenList, noneTokenList, snsTokenList]);
+    return false;
+  }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
 
   return (
     <>
@@ -345,7 +340,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
           <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
 
           <Box sx={{ height: "370px", overflow: "hidden auto" }}>
-            {noToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
+            {showImportToken && !importTokenCanceled ? (
               <Box className={classes.wrapper}>
                 <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
               </Box>
@@ -368,21 +363,19 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
             </Box>
 
             <Box mt={searchKeyword ? "0px" : "16px"}>
-              {snsTokenList.map((token) => (
+              {snsTokens?.map((tokenId) => (
                 <TokenItemInfo
-                  key={token.ledger_id.toString()}
-                  tokenInfo={token}
-                  canisterId={token.ledger_id.toString()}
+                  key={tokenId}
+                  canisterId={tokenId}
                   search={searchKeyword}
                   isHidden={panel === "Others" && !searchKeyword}
                 />
               ))}
 
-              {noneTokenList.map((token) => (
+              {noneSnsTokens?.map((tokenId) => (
                 <TokenItemInfo
-                  key={token.ledger_id.toString()}
-                  tokenInfo={token}
-                  canisterId={token.ledger_id.toString()}
+                  key={tokenId}
+                  canisterId={tokenId}
                   search={searchKeyword}
                   isHidden={panel === "SNS" && !searchKeyword}
                 />
