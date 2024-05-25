@@ -139,7 +139,7 @@ export function TokenItemInfo({
           background: theme.palette.background.level4,
         },
         "@media (max-width: 580px)": {
-          gridTemplateColumns: "90px 50px 1fr",
+          gridTemplateColumns: "115px 50px 1fr",
         },
       }}
       onClick={handleItemClick}
@@ -148,15 +148,24 @@ export function TokenItemInfo({
       }${tokenInfo?.canisterId ? (activeCurrencyIds.includes(tokenInfo?.canisterId) ? " active" : "") : ""}`}
     >
       <Box>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" gap="0 12px">
           <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
 
-          <Grid item xs ml="6px" sx={{ overflow: "hidden" }}>
+          <Grid item xs sx={{ overflow: "hidden" }}>
             <Grid container alignItems="center">
               <Box sx={{ width: "100%" }}>
                 <Typography
                   color="text.primary"
-                  sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                    "@media (max-width: 580px)": {
+                      fontSize: "14px",
+                    },
+                  }}
                 >
                   {tokenInfo?.symbol}
                 </Typography>
@@ -184,8 +193,9 @@ export function TokenItemInfo({
                 align="right"
                 sx={{
                   maxWidth: "10rem",
+                  fontSize: "16px",
                   "@media (max-width: 580px)": {
-                    fontSize: "12px",
+                    fontSize: "14px",
                   },
                 }}
                 fontWeight={500}
@@ -435,7 +445,7 @@ export default function Selector({
               <Box mt={searchKeyword ? "0px" : "16px"}>
                 {searchKeyword ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    <Trans>SNS</Trans>
+                    <Trans>SNS Tokens</Trans>
                   </Typography>
                 )}
 
@@ -457,7 +467,7 @@ export default function Selector({
               <Box mt={searchKeyword ? "0px" : "16px"}>
                 {searchKeyword ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    <Trans>Other</Trans>
+                    <Trans>Other Tokens</Trans>
                   </Typography>
                 )}
 

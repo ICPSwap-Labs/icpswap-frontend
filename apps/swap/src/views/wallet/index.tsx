@@ -17,7 +17,7 @@ export default function Wallet() {
   const [transferTo, setTransferTo] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<BigNumber>(new BigNumber(0));
   const [page, setPage] = useState<Page>("token");
-  const [tokenSort, setTokenSort] = useState<WalletTokenSortType>("High");
+  const [tokenSort, setTokenSort] = useState<WalletTokenSortType>("Default");
   const [noUSDTokens, setNoUSDTokens] = useState<string[]>([]);
 
   const walletIsConnected = useConnectorStateConnected();

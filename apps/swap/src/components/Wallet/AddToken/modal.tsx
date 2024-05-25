@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     panel: {
       position: "relative",
-      fontSize: "18px",
+      fontSize: "16px",
       fontWeight: 500,
       color: theme.palette.text.secondary,
       cursor: "pointer",
@@ -80,6 +80,8 @@ export function TokenItemInfo({ tokenInfo: _tokenInfo, canisterId, search, isHid
   const hidden = useMemo(() => {
     if (isHidden) return true;
 
+    if (DISPLAY_IN_WALLET_FOREVER.includes(_tokenInfo.ledger_id.toString())) return true;
+
     if (!search) return false;
 
     if (isValidPrincipal(search)) {
@@ -114,20 +116,29 @@ export function TokenItemInfo({ tokenInfo: _tokenInfo, canisterId, search, isHid
           background: theme.palette.background.level4,
         },
         "@media (max-width: 580px)": {
-          gridTemplateColumns: "90px 50px 1fr",
+          gridTemplateColumns: "115px 50px 1fr",
         },
       }}
     >
       <Box>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" gap="0 12px">
           <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
 
-          <Grid item xs ml="6px" sx={{ overflow: "hidden" }}>
+          <Grid item xs sx={{ overflow: "hidden" }}>
             <Grid container alignItems="center">
               <Box sx={{ width: "100%" }}>
                 <Typography
                   color="text.primary"
-                  sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                    "@media (max-width: 580px)": {
+                      fontSize: "14px",
+                    },
+                  }}
                 >
                   {tokenInfo?.symbol}
                 </Typography>
@@ -158,8 +169,8 @@ export function TokenItemInfo({ tokenInfo: _tokenInfo, canisterId, search, isHid
 type Panel = "SNS" | "Others";
 
 const Panels: { value: Panel; label: string }[] = [
-  { value: "SNS", label: t`SNS` },
-  { value: "Others", label: t`Others` },
+  { value: "SNS", label: t`SNS Tokens` },
+  { value: "Others", label: t`Other Tokens` },
 ];
 
 export default function AddTokenModal({ open, onClose }: { open: boolean; onClose: () => void }) {
