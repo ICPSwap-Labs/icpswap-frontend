@@ -462,7 +462,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>
-                    <Trans>Starting at</Trans>
+                    <Trans>Starting At</Trans>
                   </Typography>
                   <Typography color="text.primary">
                     {timestampFormat(Number(userFarmInfo?.startTime) * 1000)}
@@ -470,19 +470,23 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 </Grid>
 
                 <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End in</Trans>}</Typography>
+                  <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
                   <Typography color="text.primary" component="div">
                     <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>
-                    <Trans>Created by</Trans>
+                    <Trans>Creator</Trans>
                   </Typography>
                   <Typography color="text.primary.main">
-                    <Link href={`https://icscan.io/principal/${userFarmInfo?.creator.toString()}`} target="_blank">
-                      {shorten(userFarmInfo?.creator.toString())}
-                    </Link>
+                    {userFarmInfo ? (
+                      <Link href={explorerLink(userFarmInfo.creator.toString())} target="_blank">
+                        {shorten(userFarmInfo?.creator.toString())}
+                      </Link>
+                    ) : (
+                      "--"
+                    )}
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="space-between" alignItems="flex-start">
@@ -497,7 +501,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 </Grid>
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>
-                    <Trans>Cycles left</Trans>
+                    <Trans>Cycles Left</Trans>
                   </Typography>
                   <Typography color="text.primary">
                     {cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
