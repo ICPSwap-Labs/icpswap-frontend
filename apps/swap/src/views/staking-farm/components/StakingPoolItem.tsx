@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard, TokenImage, Flex } from "components/index";
+import { MainCard, TokenImage, Flex, Tooltip } from "components/index";
 import {
   useIntervalUserRewardInfo,
   useIntervalUserFarmInfo,
@@ -260,9 +260,17 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
             <Flex justify="space-between">
-              <Typography>
-                <Trans>APR</Trans>
-              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
+                <Typography>
+                  <Trans>APR</Trans>
+                </Typography>
+
+                <Tooltip
+                  iconSize="14px"
+                  tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
+                />
+              </Box>
+
               <Typography color="text.primary">{apr ?? "--"}</Typography>
             </Flex>
 
@@ -292,7 +300,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               <Typography>
                 <Trans>Total Value Staked</Trans>
               </Typography>
-              <Typography color="text.primary">${poolTvl}</Typography>
+              <Typography color="text.primary">{poolTvl ? `$${poolTvl}` : "--"}</Typography>
             </Flex>
 
             <Flex justify="space-between" align="flex-start">
