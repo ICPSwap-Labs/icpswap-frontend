@@ -10,7 +10,7 @@ import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "utils/index";
 import { useStakingGlobalData, useStakingTokenAllPools } from "hooks/staking-token/index";
-import { useAllFarmPools, useFarmGlobalData } from "hooks/staking-farm/index";
+import { useAllFarmPools, useFarmGlobalTVL } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
 import ICPPriceChart from "./ICPPriceChart";
@@ -146,7 +146,7 @@ export default function Overview() {
   const [stakingGlobalData] = useStakingGlobalData();
   const { result: stakingTokenAllPools } = useStakingTokenAllPools();
 
-  const [farmGlobalData] = useFarmGlobalData();
+  const farmGlobalTvl = useFarmGlobalTVL();
   const { result: farmAllPools } = useAllFarmPools();
 
   const { result: swapGlobalData } = useSwapGlobalData();
@@ -240,11 +240,11 @@ export default function Overview() {
           <Title title="Farms" to="/farm" />
 
           <Box className={classes.itemMargin}>
-            <Item label={t`TVL`} value={farmGlobalData.stakeTokenTVL} />
+            <Item label={t`TVL`} value={farmGlobalTvl.stakeTokenTVL} />
           </Box>
 
           <Box sx={{ display: "flex" }}>
-            <Item label={t`Total Earned Value`} value={farmGlobalData.rewardTokenTVL} />
+            <Item label={t`Total Earned Value`} value={farmGlobalTvl.rewardTokenTVL} />
             <Item label={t`Total Pools`} value={farmAllPools ? farmAllPools.length : "--"} />
           </Box>
         </Box>

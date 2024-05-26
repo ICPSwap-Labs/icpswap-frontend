@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Grid, Typography, Box } from "components/Mui";
 import { makeStyles } from "@mui/styles";
-import { useGetGlobalData } from "hooks/staking-farm";
+import { useFarmGlobalTVL } from "hooks/staking-farm";
 import GlobalBg1 from "assets/images/staking/1.png";
 import GlobalBg3 from "assets/images/staking/3.png";
 import { Trans } from "@lingui/macro";
@@ -27,13 +27,7 @@ const useStyle = makeStyles(() => ({
 
 export default function GlobalData() {
   const classes = useStyle();
-  const [result, update] = useGetGlobalData();
-
-  useEffect(() => {
-    setTimeout(() => {
-      update();
-    }, 5000);
-  }, [result]);
+  const globalTVL = useFarmGlobalTVL();
 
   return (
     <Box
@@ -62,7 +56,7 @@ export default function GlobalData() {
 
           <Grid item>
             <Typography color="text.primary" fontSize="24px">
-              {result?.stakeTokenTVL ?? "-"}
+              {globalTVL?.stakeTokenTVL ?? "-"}
             </Typography>
           </Grid>
         </Box>
@@ -82,7 +76,7 @@ export default function GlobalData() {
           </Typography>
 
           <Typography color="text.primary" fontSize="24px">
-            {result?.rewardTokenTVL ?? "-"}
+            {globalTVL?.rewardTokenTVL ?? "-"}
           </Typography>
         </Box>
       </Box>

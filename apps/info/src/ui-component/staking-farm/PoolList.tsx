@@ -10,7 +10,7 @@ import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
 import type { FarmTvl } from "@icpswap/types";
 import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
-import { useFarmUSDValue } from "hooks/staking-farm";
+import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
 import { Principal } from "@dfinity/principal";
 
@@ -45,7 +45,7 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
   const { result: token1 } = useTokenInfo(swapPool?.token1.address);
   const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
 
-  const { poolTVL } = useFarmUSDValue(farmId);
+  const { tvl } = useFarmTvl(farmId);
 
   return loading ? (
     <LoadingRow>
@@ -72,10 +72,12 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
       <BodyCell>{dayjs(Number(farmInfo?.endTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
       <BodyCell>
         <BodyCell>{String(farmInfo?.numberOfStakes)}</BodyCell>
-        <BodyCell sub>~${poolTVL}</BodyCell>
+        <BodyCell sub>{tvl ? `~$${tvl}` : "--"}</BodyCell>
       </BodyCell>
       <BodyCell>
-        {`${parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()} ${rewardToken?.symbol}`}
+        {farmInfo && rewardToken
+          ? `${parseTokenAmount(farmInfo.totalReward, rewardToken.decimals).toFormat()} ${rewardToken.symbol}`
+          : "--"}
       </BodyCell>
       <BodyCell>
         <Grid container alignItems="center">

@@ -452,12 +452,17 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(poolId: string | undefined, principal: string | undefined) {
+export function useSwapUserPositions(
+  poolId: string | undefined,
+  principal: string | undefined,
+  refresh?: boolean | number,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !poolId) return undefined;
       return await getSwapUserPositions(poolId, principal);
     }, [principal, poolId]),
+    refresh,
   );
 }
 

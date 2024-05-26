@@ -7,6 +7,7 @@ export type {
   FarmInfo,
   FarmStatusArgs,
   InitFarmArgs,
+  FarmUserTvl,
 } from "@icpswap/candid";
 
 export type FarmRewardMetadata = {

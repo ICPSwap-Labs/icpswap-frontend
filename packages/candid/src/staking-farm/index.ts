@@ -1,3 +1,5 @@
+import type { TokenAmount } from "./Farm";
+
 export { idlFactory as FarmInterfaceFactory } from "./Farm.did";
 export type {
   _SERVICE as Farm,
@@ -18,3 +20,5 @@ export type {
 
 export { idlFactory as FarmStorageInterfaceFactory } from "./FarmStorage.did";
 export type { _SERVICE as FarmStorage } from "./FarmStorage";
+
+export type FarmUserTvl = { poolToken0: TokenAmount; poolToken1: TokenAmount };

@@ -14,6 +14,7 @@ import type {
   FarmState,
   FarmStatusArgs,
   InitFarmArgs,
+  FarmUserTvl,
 } from "@icpswap/types";
 import { AnonymousPrincipal } from "@icpswap/constants";
 
@@ -59,21 +60,8 @@ export function useFarmUserPositions(canisterId: string | undefined, principal: 
   );
 }
 
-export async function getFarmGlobalTVL() {
-  return resultFormat<FarmTvl>(await (await farmController()).getGlobalTVL()).data;
-}
-
-export function useFarmGlobalTVL(reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
-      return await getFarmGlobalTVL();
-    }, []),
-    reload,
-  );
-}
-
 export async function getFarmTVL(canisterId: string) {
-  return resultFormat<{ stakedTokenTVL: number; rewardTokenTV: number }>(await (await farm(canisterId)).getTVL()).data;
+  return resultFormat<FarmTvl>(await (await farm(canisterId)).getTVL()).data;
 }
 
 export function useFarmTVL(canisterId: string | undefined, reload?: boolean) {
@@ -88,14 +76,13 @@ export function useFarmTVL(canisterId: string | undefined, reload?: boolean) {
 }
 
 export async function getFarmUserTVL(canisterId: string, principal: string) {
-  return resultFormat<number>(await (await farm(canisterId)).getUserTVL(Principal.fromText(principal))).data;
+  return resultFormat<FarmUserTvl>(await (await farm(canisterId)).getUserTVL(Principal.fromText(principal))).data;
 }
 
 export function useFarmUserTVL(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
-
       return await getFarmUserTVL(canisterId, principal);
     }, [canisterId, principal]),
     reload,
@@ -154,7 +141,7 @@ export async function getFarms(state: FarmState | undefined) {
   ).data;
 }
 
-export function useFarms(state: FarmState | undefined, reload?: boolean) {
+export function useFarms(state: FarmState | undefined, reload?: boolean | number) {
   return useCallsData(
     useCallback(async () => {
       return await getFarms(state);

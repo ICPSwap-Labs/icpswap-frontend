@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
+import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { pageArgsFormat, enumToString, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ListLoading, NoData, Pagination, PaginationType } from "ui-component/index";
 import { Trans } from "@lingui/macro";

@@ -106,7 +106,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
 
-  const { result: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
+  const { result: userAllPositions } = useSwapUserPositions(
+    userFarmInfo?.pool.toString(),
+    principal?.toString(),
+    forceUpdate,
+  );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
 
   const userAvailablePositions = useMemo(() => {
@@ -132,12 +136,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
   const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
-
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
+  const { poolTvl, userTvl, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
     rewardToken,
@@ -177,24 +180,28 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
   // (Reward token amount each cycles * reward token price / Total valued staked ) * (3600*24*360/seconds each cycle) *100%
   const apr = useMemo(() => {
+    if (!poolTvl) return undefined;
+
     if (
       !rewardTokenPrice ||
       !farmInitArgs ||
       !farmRewardMetadata ||
       !rewardToken ||
-      new BigNumber(poolTVL).isEqualTo(0)
+      new BigNumber(poolTvl).isEqualTo(0)
     )
       return undefined;
 
+    if (state !== STATE.LIVE) return undefined;
+
     const val = parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals)
       .multipliedBy(rewardTokenPrice)
-      .dividedBy(poolTVL)
+      .dividedBy(poolTvl)
       .multipliedBy(new BigNumber(3600 * 24 * 360).dividedBy(farmInitArgs.secondPerCycle.toString()))
       .multipliedBy(100)
       .toFixed(2);
 
     return `${val}%`;
-  }, [poolTVL, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
+  }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
 
   return (
     <Box>
@@ -281,7 +288,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               <Typography>
                 <Trans>Total Value Staked</Trans>
               </Typography>
-              <Typography color="text.primary">${poolTVL}</Typography>
+              <Typography color="text.primary">${poolTvl}</Typography>
             </Flex>
 
             <Flex justify="space-between" align="flex-start">
@@ -353,7 +360,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography color="text.primary">${userTVL}</Typography>
+                <Typography color="text.primary">{userTvl ? `$${userTvl}` : "--"}</Typography>
               </Grid>
             </Grid>
           </Box>

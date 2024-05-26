@@ -120,23 +120,37 @@ export default function FarmDetails() {
             <PoolDetailItem
               label={t`Claimed Rewards:`}
               value={
-                farmMetadata && rewardToken
-                  ? toSignificantWithGroupSeparator(
+                farmMetadata && rewardToken ? (
+                  <>
+                    {toSignificantWithGroupSeparator(
                       parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
                       8,
-                    )
-                  : "--"
+                    )}
+                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      &nbsp;{rewardToken.symbol}
+                    </Link>
+                  </>
+                ) : (
+                  "--"
+                )
               }
             />
             <PoolDetailItem
               label={t`Unclaimed Rewards:`}
               value={
-                farmMetadata && rewardToken
-                  ? toSignificantWithGroupSeparator(
+                farmMetadata && rewardToken ? (
+                  <>
+                    {toSignificantWithGroupSeparator(
                       parseTokenAmount(farmMetadata.totalRewardUnharvested.toString(), rewardToken.decimals).toString(),
                       8,
-                    )
-                  : "--"
+                    )}
+                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      &nbsp;{rewardToken.symbol}
+                    </Link>
+                  </>
+                ) : (
+                  "--"
+                )
               }
             />
             <PoolDetailItem
@@ -154,12 +168,19 @@ export default function FarmDetails() {
             <PoolDetailItem
               label={t`Amount per Distribution:`}
               value={
-                farmMetadata && rewardToken
-                  ? toSignificantWithGroupSeparator(
+                farmMetadata && rewardToken ? (
+                  <>
+                    {toSignificantWithGroupSeparator(
                       parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
                       8,
-                    )
-                  : "--"
+                    )}
+                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      &nbsp;{rewardToken.symbol}
+                    </Link>
+                  </>
+                ) : (
+                  "--"
+                )
               }
             />
             <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />

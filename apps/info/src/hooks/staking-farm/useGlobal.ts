@@ -1,37 +1,72 @@
 import { useCallback, useMemo, useState } from "react";
-import { useICPPrice } from "store/global/hooks";
-import { getFarmGlobalTVL } from "@icpswap/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
+import { useFarms, useInfoAllTokens, useInterval } from "@icpswap/hooks";
+import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
+import { getTokenInfo } from "hooks/token/index";
 
 type GlobalData = { stakeTokenTVL: string; rewardTokenTVL: string };
 
-export function useFarmGlobalData(): [GlobalData, () => void] {
-  const icpPrice = useICPPrice();
+export function useFarmGlobalTVL() {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { result: allLiveFarms } = useFarms("LIVE", refreshTrigger);
 
   const [data, setData] = useState<GlobalData>({
     stakeTokenTVL: "0",
     rewardTokenTVL: "0",
   });
 
-  const [forceUpdate, setForceUpdate] = useState(0);
+  const infoAllTokens = useInfoAllTokens();
 
-  useMemo(async () => {
-    if (icpPrice) {
-      const data = await getFarmGlobalTVL();
+  useMemo(() => {
+    async function call() {
+      if (allLiveFarms && infoAllTokens && infoAllTokens.length > 0) {
+        let stakedTVL = new BigNumber(0);
+        let rewardTVL = new BigNumber(0);
 
-      if (data) {
+        for (let i = 0; i < allLiveFarms.length; i++) {
+          const farm = allLiveFarms[i];
+
+          const { poolToken0, poolToken1, rewardToken } = farm[1];
+
+          const token0Price = infoAllTokens.find((token) => token.address === poolToken0.address)?.priceUSD;
+          const token1Price = infoAllTokens.find((token) => token.address === poolToken1.address)?.priceUSD;
+          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardToken.address)?.priceUSD;
+
+          const token0Info = await getTokenInfo(poolToken0.address);
+          const token1Info = await getTokenInfo(poolToken1.address);
+          const rewardTokenInfo = await getTokenInfo(rewardToken.address);
+
+          if (!token0Price || !token1Price || !rewardTokenPrice || !token0Info || !token1Info || !rewardTokenInfo) {
+            stakedTVL = stakedTVL.plus(0);
+            rewardTVL = rewardTVL.plus(0);
+          } else {
+            const stakedToken0TVL = parseTokenAmount(poolToken0.amount, token0Info.decimals).multipliedBy(token0Price);
+            const stakedToken1TVL = parseTokenAmount(poolToken1.amount, token1Info.decimals).multipliedBy(token1Price);
+            const rewardTokenTVL = parseTokenAmount(rewardToken.amount, rewardTokenInfo.decimals).multipliedBy(
+              rewardTokenPrice,
+            );
+
+            stakedTVL = stakedTVL.plus(stakedToken0TVL).plus(stakedToken1TVL);
+            rewardTVL = rewardTVL.plus(rewardTokenTVL);
+          }
+        }
+
         setData({
-          stakeTokenTVL: formatDollarAmount(new BigNumber(data.stakedTokenTVL).multipliedBy(icpPrice).toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(new BigNumber(data.rewardTokenTV).multipliedBy(icpPrice).toFixed(4)),
+          stakeTokenTVL: formatDollarAmount(stakedTVL.toFixed(4)),
+          rewardTokenTVL: formatDollarAmount(rewardTVL.toFixed(4)),
         });
       }
     }
-  }, [icpPrice, forceUpdate]);
 
-  const update = useCallback(() => {
-    setForceUpdate((prevState) => prevState + 1);
-  }, [setForceUpdate]);
+    call();
+  }, [infoAllTokens, allLiveFarms]);
 
-  return [data, update];
+  const update = useCallback(async () => {
+    setRefreshTrigger((prevState) => prevState + 1);
+  }, []);
+
+  useInterval<void>(update);
+
+  return useMemo(() => data, [data]);
 }
