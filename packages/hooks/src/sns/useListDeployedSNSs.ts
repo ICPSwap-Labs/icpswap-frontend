@@ -44,22 +44,29 @@ export async function getSnsAllTokensInfo(): Promise<SnsTokensInfo[]> {
   const fetch = async (index: number) => {
     fetch_index += 1;
 
-    await Promise.all(
-      Array.from({ length: sns_all_tokens_info_call_rounds }, (_, i) => i).map(async (call_index) => {
-        const page = call_index + index * sns_all_tokens_info_call_rounds;
-        const result = await getSnsTokensInfo(page);
+    const allResults: (SnsTokensInfo | undefined)[] = (
+      await Promise.all(
+        Array.from({ length: sns_all_tokens_info_call_rounds }, (_, i) => i).map(async (call_index) => {
+          const page = call_index + index * sns_all_tokens_info_call_rounds;
+          const result = await getSnsTokensInfo(page);
 
-        if (!result) return undefined;
+          if (!result) return undefined;
 
-        data = data.concat(result);
+          data = data.concat(result);
 
-        if (result.length < 10) {
-          fetch_done = true;
-        }
+          if (result.length < 10) {
+            fetch_done = true;
+          }
 
-        return undefined;
-      }),
-    );
+          return result;
+        }),
+      )
+    ).flat();
+
+    // If happened network error, make is fetch_done = true when have two or more undefined result
+    if (allResults.filter((e) => !e).length >= 2) {
+      fetch_done = true;
+    }
 
     if (!fetch_done) {
       await fetch(fetch_index);
