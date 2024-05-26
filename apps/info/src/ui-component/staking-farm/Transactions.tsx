@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
-import { pageArgsFormat, enumToString, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { pageArgsFormat, enumToString, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ListLoading, NoData, Pagination, PaginationType } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
@@ -40,9 +40,14 @@ export function PoolItem({
         <BodyCell sx={{ maxWidth: "200px", wordBreak: "break-word" }}>
           {isStaking
             ? ""
-            : toSignificant(parseTokenAmount(transactions.amount, token?.decimals).toString(), 6, {
-                groupSeparator: ",",
-              })}
+            : `${
+                token
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(transactions.amount, token?.decimals).toString(),
+                      6,
+                    )} ${token.symbol}`
+                  : "--"
+              }`}
         </BodyCell>
       </TableCell>
     </TableRow>

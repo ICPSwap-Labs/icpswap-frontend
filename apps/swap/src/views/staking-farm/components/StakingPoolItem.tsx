@@ -271,16 +271,20 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 <Trans>Total Reward Amount</Trans>
               </Typography>
               <Typography color="text.primary">
-                <CountUp
-                  preserveValue
-                  end={parseTokenAmount(
-                    userFarmInfo?.totalReward ?? userFarmInfo?.totalRewardHarvested,
-                    rewardToken?.decimals,
-                  ).toNumber()}
-                  decimals={2}
-                  duration={1}
-                  separator=","
-                />
+                {userFarmInfo && rewardToken ? (
+                  <>
+                    <CountUp
+                      preserveValue
+                      end={parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toNumber()}
+                      decimals={2}
+                      duration={1}
+                      separator=","
+                    />
+                    &nbsp;{rewardToken.symbol}
+                  </>
+                ) : (
+                  "--"
+                )}
               </Typography>
             </Flex>
 
