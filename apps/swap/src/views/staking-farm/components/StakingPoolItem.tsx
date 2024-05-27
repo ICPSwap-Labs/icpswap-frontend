@@ -38,13 +38,14 @@ import OptionStaking from "./OptionStaking";
 
 const useStyle = makeStyles(() => ({
   cardHeader: {
+    position: "relative",
     height: "196px",
     background: "rgba(101, 80, 186, 0.18)",
     borderRadius: "4px 4px 0 0",
-    position: "relative",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
+    overflow: "hidden",
   },
   headerImage: {
     marginTop: "50px",
@@ -203,6 +204,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   return (
     <Box>
       <MainCard
+        borderRadius="4px"
         level={1}
         padding="0px"
         sx={{
@@ -217,8 +219,24 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
       >
         <Box sx={{ maxWidth: 400 }}>
           <Grid className={classes.cardHeader}>
+            <Box
+              sx={{
+                width: "212px",
+                height: "131px",
+                background: "rgba(53, 6, 89, 0.50)",
+                filter: "blur(27px)",
+                position: "absolute",
+                left: "-61px",
+                zIndex: 1,
+                bottom: "-60px",
+              }}
+            />
+
             <Typography
               sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 position: "absolute",
                 top: 0,
                 left: 0,
@@ -227,8 +245,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 padding: "6px",
                 background: "#654DA9",
                 borderRadius: "4px 0 4px 0",
-                textAlign: "center",
-                border: "1px solid #654DA9",
+                border: "1px solid #7D5DC1",
                 color: theme.palette.mode === "dark" ? theme.colors.darkTextPrimary : theme.colors.primaryMain,
               }}
             >
@@ -246,19 +263,18 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               </Grid>
             </Grid>
 
-            <Grid>
-              <Grid item>
-                <Typography color="text.primary" sx={{ padding: "0 12px" }}>
-                  Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Typography
+              color="text.primary"
+              sx={{ position: "relative", padding: "0 12px", fontWeight: 700, zIndex: 1 }}
+            >
+              Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
+            </Typography>
           </Grid>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
             <Flex justify="space-between">
               <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-                <Typography>
+                <Typography fontWeight={600}>
                   <Trans>APR</Trans>
                 </Typography>
 
@@ -268,14 +284,16 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 />
               </Box>
 
-              <Typography color="text.primary">{apr ?? "--"}</Typography>
+              <Typography color="text.primary" fontWeight={600}>
+                {apr ?? "--"}
+              </Typography>
             </Flex>
 
             <Flex justify="space-between">
-              <Typography>
+              <Typography fontWeight={600}>
                 <Trans>Total Reward Amount</Trans>
               </Typography>
-              <Typography color="text.primary">
+              <Typography color="text.primary" fontWeight={600}>
                 {userFarmInfo && rewardToken ? (
                   <>
                     <CountUp
@@ -294,10 +312,12 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
             </Flex>
 
             <Flex justify="space-between">
-              <Typography>
+              <Typography fontWeight={600}>
                 <Trans>Total Value Staked</Trans>
               </Typography>
-              <Typography color="text.primary">{poolTvl ? `$${poolTvl}` : "--"}</Typography>
+              <Typography color="text.primary" fontWeight={600}>
+                {poolTvl ? `$${poolTvl}` : "--"}
+              </Typography>
             </Flex>
 
             <Flex justify="space-between" align="flex-start">
@@ -346,7 +366,9 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ flex: 1 }}>{Number(positionIds.length ?? 0)}</Typography>
+                <Typography sx={{ flex: 1, fontWeight: 500, fontSize: "16px" }}>
+                  {Number(positionIds.length ?? 0)}
+                </Typography>
                 {walletIsConnected ? (
                   userFarmInfo ? (
                     <OptionStaking
@@ -375,16 +397,16 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
           </Box>
 
           <CardActions disableSpacing style={{ paddingTop: 0 }}>
-            <Grid container justifyContent="center" onClick={handleExpandClick}>
+            <Grid container justifyContent="center">
               <Typography
                 sx={{
-                  fontWeight: "500",
                   fontSize: "14px",
                   lineHeight: "24px",
                   textAlign: "center",
                   color: "#648EFB",
                   cursor: "pointer",
                 }}
+                onClick={handleExpandClick}
               >
                 {expanded ? t`Hide` : t`Details`}
               </Typography>
@@ -393,7 +415,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent style={{ paddingTop: 0 }} className={classes.collapseContent}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", maxWidth: 400, paddingTop: "24px" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0", maxWidth: 400, paddingTop: "24px" }}>
                 <Grid container justifyContent="space-between" alignItems="center">
                   <Grid item>
                     <Typography sx={{ cursor: "pointer", textDecoration: "underline" }} onClick={handleGoToGetPosition}>

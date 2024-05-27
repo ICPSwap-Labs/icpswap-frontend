@@ -58,52 +58,68 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <MainCard>
+      <MainCard padding="24px 20px">
         <Grid
           container
-          direction="row"
+          justifyContent="space-between"
           sx={{
-            padding: "10px 0 40px",
-            "@media (max-width: 960px)": {
-              padding: "10px 0px 0px 0px",
+            "@media (max-width:640px)": {
+              flexDirection: "column",
+              gap: "10px 0",
             },
           }}
         >
-          <Grid item>
-            <Box sx={{ display: "flex", gap: "0 20px" }}>
-              {Pages.map((ele) => (
-                <Typography
-                  key={ele.path}
-                  variant="h3"
-                  color={_state === ele.state ? "textPrimary" : "textTertiary"}
-                  onClick={() => handleToggle(ele)}
-                  sx={{
-                    cursor: "pointer",
-                    textTransform: "capitalize",
-                    "@media (max-width:640px)": {
-                      fontSize: "16px",
-                    },
-                  }}
-                >
-                  {ele.label}
-                </Typography>
-              ))}
-            </Box>
-          </Grid>
-          <Grid item style={{ marginLeft: "auto" }}>
-            <Grid container alignItems="center" gap="0 10px">
-              <Typography display="inline">
-                <Trans>Staked only</Trans>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0 72px",
+              "@media (max-width:640px)": {
+                gap: "0 20px",
+              },
+            }}
+          >
+            {Pages.map((ele) => (
+              <Typography
+                key={ele.path}
+                color={_state === ele.state ? "textPrimary" : "textTertiary"}
+                onClick={() => handleToggle(ele)}
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  textTransform: "capitalize",
+                  "@media (max-width:640px)": {
+                    fontSize: "16px",
+                  },
+                }}
+              >
+                {ele.label}
               </Typography>
-              <Switch checked={stakeOnly} onChange={(event: any) => handleToggleCheck(event.target.checked)} />
-            </Grid>
-          </Grid>
+            ))}
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0 10px",
+              "@media (max-width:640px)": {
+                justifyContent: "flex-end",
+              },
+            }}
+          >
+            <Typography display="inline">
+              <Trans>Staked only</Trans>
+            </Typography>
+            <Switch checked={stakeOnly} onChange={(event: any) => handleToggleCheck(event.target.checked)} />
+          </Box>
         </Grid>
 
         <Box
           sx={{
             position: "relative",
             minHeight: "440px",
+            margin: "50px 0 0 0",
           }}
         >
           {!loading ? (
