@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Grid, Typography, Box } from "components/Mui";
 import { makeStyles } from "@mui/styles";
 import { useFarmGlobalTVL } from "hooks/staking-farm";
