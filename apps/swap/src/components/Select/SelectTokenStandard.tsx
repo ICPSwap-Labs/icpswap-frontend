@@ -16,6 +16,7 @@ export interface SelectTokenStandardProps {
   filled?: boolean;
   fullHeight?: boolean;
   defaultValue?: TOKEN_STANDARD;
+  showClean?: boolean;
 }
 
 export function SelectTokenStandard({
@@ -24,6 +25,7 @@ export function SelectTokenStandard({
   border,
   filled,
   fullHeight,
+  showClean,
   defaultValue = TOKEN_STANDARD.ICRC1,
 }: SelectTokenStandardProps) {
   const [value, setValue] = useState<TOKEN_STANDARD>(defaultValue);
@@ -53,6 +55,7 @@ export function SelectTokenStandard({
       border={border}
       filled={filled}
       fullHeight={fullHeight}
+      showClean={showClean}
     />
   );
 }

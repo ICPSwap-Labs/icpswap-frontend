@@ -54,7 +54,7 @@ export function ChooseStandardAndVerify({ canisterId, onNext }: ChooseStandardPr
         position: "relative",
         borderRadius: "12px",
         background: theme.palette.background.level4,
-        padding: "24px 0",
+        padding: "24px",
       }}
     >
       <Typography align="center">
@@ -68,7 +68,7 @@ export function ChooseStandardAndVerify({ canisterId, onNext }: ChooseStandardPr
       ) : null}
 
       <Box mt="16px" sx={{ display: "flex", justifyContent: "center", gap: "0 20px" }}>
-        <SelectTokenStandard value={standard} onChange={handleStandardChange} />
+        <SelectTokenStandard value={standard} onChange={handleStandardChange} showClean={false} />
       </Box>
 
       <Box mt="16px" sx={{ display: "flex", justifyContent: "center" }}>

@@ -1,32 +1,22 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import SwapModal from "components/modal/swap";
-import { InputAdornment, useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
+import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useGlobalTokenList, useFetchAllSwapTokens } from "store/global/hooks";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useGlobalTokenList } from "store/global/hooks";
 import { isDarkTheme } from "utils";
 import { Trans, t } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { DotLoading, TokenImage, FilledTextField } from "components/index";
+import { FilledTextField, NoData } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import {
-  parseTokenAmount,
-  formatDollarAmount,
-  BigNumber,
-  isValidPrincipal,
-  toSignificantWithGroupSeparator,
-} from "@icpswap/utils";
-import { Search as SearchIcon, PlusCircle } from "react-feather";
+import { isValidPrincipal } from "@icpswap/utils";
+import { Search as SearchIcon } from "react-feather";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { TokenListMetadata } from "types/token-list";
-import { type AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import { TokenItem } from "./TokenItem";
 
 const useStyles = makeStyles(() => {
   return {
@@ -39,214 +29,12 @@ const useStyles = makeStyles(() => {
   };
 });
 
-export interface SwapToken {
-  canisterId: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-}
-
-export interface TokenItemInfoProps {
-  // tokenInfo: AllTokenOfSwapTokenInfo;
-  canisterId: string;
-  onClick: (token: TokenInfo) => void;
-  disabledCurrencyIds: string[];
-  activeCurrencyIds: string[];
-  onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
-  search?: string;
-  showBalance?: boolean;
-}
-
-export function TokenItemInfo({
-  // tokenInfo: _tokenInfo,
-  canisterId,
-  onClick,
-  disabledCurrencyIds,
-  activeCurrencyIds,
-  onUpdateTokenAdditional,
-  search,
-  showBalance,
-}: TokenItemInfoProps) {
-  const theme = useTheme() as Theme;
-  const principal = useAccountPrincipal();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const getBalanceId = useMemo(() => {
-    if (showBalance) return canisterId;
-    return undefined;
-  }, [showBalance, canisterId]);
-
-  const { result: tokenInfo } = useTokenInfo(canisterId);
-  const { result: balance, loading } = useTokenBalance(getBalanceId, principal);
-  const interfacePrice = useUSDPriceById(getBalanceId);
-
-  const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();
-
-  const tokenBalanceAmount = useMemo(() => {
-    if (!tokenInfo || balance === undefined) return undefined;
-    return toSignificantWithGroupSeparator(parseTokenAmount(balance, tokenInfo.decimals).toString(), 6);
-  }, [tokenInfo, balance]);
-
-  const handleItemClick = () => {
-    if (!tokenInfo) return;
-    onClick(tokenInfo);
-  };
-
-  useEffect(() => {
-    if (canisterId && balance) {
-      if (onUpdateTokenAdditional) onUpdateTokenAdditional(canisterId, balance.toString());
-    }
-  }, [canisterId, balance]);
-
-  const isTagged = taggedTokens.includes(canisterId);
-
-  const handleAddToCache = (event: React.MouseEvent<SVGAElement>) => {
-    event.stopPropagation();
-
-    if (isTagged) {
-      deleteTaggedTokens([canisterId]);
-    } else {
-      updateTaggedTokens([canisterId]);
-    }
-  };
-
-  const hidden = useMemo(() => {
-    if (!search) return false;
-    if (!tokenInfo) return true;
-
-    if (isValidPrincipal(search)) {
-      return tokenInfo?.canisterId.toString() !== search;
-    }
-
-    return (
-      !tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
-      !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-    );
-  }, [search, tokenInfo]);
-
-  return (
-    <Box
-      sx={{
-        display: hidden ? "none" : "grid",
-        height: "63px",
-        cursor: "pointer",
-        padding: matchDownSM ? "0 16px" : "0 24px",
-        gridTemplateColumns: "198px 50px 1fr",
-        gap: "0 5px",
-        alignItems: "center",
-        "&.disabled": {
-          opacity: 0.5,
-          cursor: "default",
-        },
-        "&.active": {
-          background: theme.palette.background.level4,
-          cursor: "default",
-        },
-        "&:hover": {
-          background: theme.palette.background.level4,
-        },
-        "@media (max-width: 580px)": {
-          gridTemplateColumns: "115px 50px 1fr",
-        },
-      }}
-      onClick={handleItemClick}
-      className={`${
-        tokenInfo?.canisterId ? (disabledCurrencyIds.includes(tokenInfo?.canisterId) ? "disabled" : "") : ""
-      }${tokenInfo?.canisterId ? (activeCurrencyIds.includes(tokenInfo?.canisterId) ? " active" : "") : ""}`}
-    >
-      <Box>
-        <Grid container alignItems="center" gap="0 12px">
-          <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
-
-          <Grid item xs sx={{ overflow: "hidden" }}>
-            <Grid container alignItems="center">
-              <Box sx={{ width: "100%" }}>
-                <Typography
-                  color="text.primary"
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    "@media (max-width: 580px)": {
-                      fontSize: "14px",
-                    },
-                  }}
-                >
-                  {tokenInfo?.symbol}
-                </Typography>
-                <Typography fontSize="12px" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {tokenInfo?.name}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-
-      <Box>
-        <TokenStandardLabel standard={tokenInfo?.standardType} borderRadius="34px" height="20px" fontSize="10px" />
-      </Box>
-
-      <Box>
-        <Grid container justifyContent="flex-end" alignItems="center">
-          {!showBalance ? null : loading ? (
-            <DotLoading loading />
-          ) : (
-            <Box>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  maxWidth: "10rem",
-                  fontSize: "16px",
-                  "@media (max-width: 580px)": {
-                    fontSize: "14px",
-                  },
-                }}
-                fontWeight={500}
-              >
-                {tokenBalanceAmount ?? "--"}
-              </Typography>
-              <Typography
-                align="right"
-                sx={{
-                  "@media (max-width: 580px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {interfacePrice !== undefined && balance !== undefined && tokenInfo !== undefined
-                  ? formatDollarAmount(
-                      new BigNumber(interfacePrice)
-                        .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
-                        .toString(),
-                      4,
-                      true,
-                      0.001,
-                    )
-                  : "--"}
-              </Typography>
-            </Box>
-          )}
-
-          {showBalance ? null : (
-            <PlusCircle color={theme.themeOption.textSecondary} size="16px" onClick={handleAddToCache} />
-          )}
-        </Grid>
-      </Box>
-    </Box>
-  );
-}
-
 export interface SelectorProps {
   open: boolean;
   onChange: (token: TokenInfo) => void;
   onClose: () => void;
   disabledCurrencyIds?: string[];
   activeCurrencyIds?: string[];
-  version?: "v2" | "v3";
 }
 
 export default function Selector({
@@ -263,8 +51,7 @@ export default function Selector({
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchKeyword, setSearchKeyword] = useState("");
   const [importTokenCanceled, setImportTokenCanceled] = useState(false);
-
-  // const { result: allTokensOfSwap } = useFetchAllSwapTokens();
+  const [hiddenCanisterIds, setHiddenCanisterIds] = useState<string[]>([]);
 
   const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
   const globalTokenList = useGlobalTokenList();
@@ -298,30 +85,6 @@ export default function Selector({
     return { snsTokens: snsTokens.map((e) => e.canisterId), noneSnsTokens: noneSnsTokens.map((e) => e.canisterId) };
   }, [globalTokenList, yourTokens, snsAllTokensInfo]);
 
-  // const yourTokenList = useMemo(() => {
-  //   if (!allTokensOfSwap) return undefined;
-
-  //   const tokens = yourTokens
-  //     .map((tokenId) => {
-  //       return allTokensOfSwap.find((token) => token.ledger_id.toString() === tokenId);
-  //     })
-  //     .filter((token) => !!token) as AllTokenOfSwapTokenInfo[];
-
-  //   return tokens;
-  // }, [allTokensOfSwap, yourTokens]);
-
-  // const snsTokenList = useMemo(() => {
-  //   if (!allTokensOfSwap || !snsTokens) return undefined;
-  //   const tokens = allTokensOfSwap.filter((token) => snsTokens.includes(token.ledger_id.toString()));
-  //   return tokens;
-  // }, [allTokensOfSwap, snsTokens]);
-
-  // const noneTokenList = useMemo(() => {
-  //   if (!allTokensOfSwap || !noneSnsTokens) return undefined;
-  //   const tokens = allTokensOfSwap.filter((token) => noneSnsTokens.includes(token.ledger_id.toString()));
-  //   return tokens;
-  // }, [allTokensOfSwap, noneSnsTokens]);
-
   const handleTokenClick = useCallback(
     (token: TokenInfo) => {
       if (disabledCurrencyIds.includes(token?.canisterId.toString())) return;
@@ -335,6 +98,8 @@ export default function Selector({
     setSearchKeyword(value);
   }, []);
 
+  const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, handleSearchToken, 300);
+
   const showImportToken = useMemo(() => {
     if (!searchKeyword || !yourTokens || !noneSnsTokens || !snsTokens) return false;
 
@@ -344,6 +109,36 @@ export default function Selector({
 
     return false;
   }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
+
+  const handleTokenHidden = (canisterId: string, hidden: boolean) => {
+    const index = hiddenCanisterIds.indexOf(canisterId);
+
+    if (index !== -1) {
+      if (!hidden) {
+        setHiddenCanisterIds((prevState) => {
+          const newCanisterIds = [...prevState];
+          newCanisterIds.splice(index, 1);
+          return [...newCanisterIds];
+        });
+      }
+      return;
+    }
+
+    if (hidden) {
+      setHiddenCanisterIds((prevState) => {
+        const newCanisterIds = [...prevState, canisterId];
+        return [...newCanisterIds];
+      });
+    }
+  };
+
+  const allTokenCanisterIds = useMemo(() => {
+    return [...new Set([...yourTokens, ...(snsTokens ?? []), ...(noneSnsTokens ?? [])])];
+  }, [yourTokens, snsTokens, noneSnsTokens]);
+
+  const noData = useMemo(() => {
+    return hiddenCanisterIds.length === allTokenCanisterIds.length;
+  }, [hiddenCanisterIds, allTokenCanisterIds]);
 
   return (
     <>
@@ -398,13 +193,15 @@ export default function Selector({
                 ),
                 maxLength: 50,
               }}
-              onChange={handleSearchToken}
+              onChange={debouncedSearch}
             />
           </Box>
 
           <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
 
           <Box sx={{ height: "386px", overflow: "hidden auto" }}>
+            {noData ? <NoData /> : null}
+
             {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
               <Box className={classes.wrapper}>
                 <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
@@ -422,14 +219,15 @@ export default function Selector({
 
               <Box mt={searchKeyword ? "0px" : "16px"}>
                 {(yourTokens ?? []).map((tokenId) => (
-                  <TokenItemInfo
+                  <TokenItem
                     key={tokenId}
                     canisterId={tokenId}
-                    disabledCurrencyIds={disabledCurrencyIds}
-                    activeCurrencyIds={activeCurrencyIds}
                     onClick={handleTokenClick}
-                    search={searchKeyword}
+                    searchWord={searchKeyword}
                     showBalance
+                    onTokenHide={handleTokenHidden}
+                    isActive={activeCurrencyIds.includes(tokenId)}
+                    isDisabled={disabledCurrencyIds.includes(tokenId)}
                   />
                 ))}
               </Box>
@@ -451,13 +249,14 @@ export default function Selector({
 
                 <Box mt={searchKeyword ? "0px" : "16px"}>
                   {(snsTokens ?? []).map((tokenId) => (
-                    <TokenItemInfo
+                    <TokenItem
                       key={tokenId}
                       canisterId={tokenId}
-                      disabledCurrencyIds={disabledCurrencyIds}
-                      activeCurrencyIds={activeCurrencyIds}
                       onClick={handleTokenClick}
-                      search={searchKeyword}
+                      searchWord={searchKeyword}
+                      onTokenHide={handleTokenHidden}
+                      isActive={activeCurrencyIds.includes(tokenId)}
+                      isDisabled={disabledCurrencyIds.includes(tokenId)}
                     />
                   ))}
                 </Box>
@@ -472,13 +271,14 @@ export default function Selector({
 
                 <Box mt={searchKeyword ? "0px" : "16px"}>
                   {(noneSnsTokens ?? []).map((tokenId) => (
-                    <TokenItemInfo
+                    <TokenItem
                       key={tokenId}
                       canisterId={tokenId}
-                      disabledCurrencyIds={disabledCurrencyIds}
-                      activeCurrencyIds={activeCurrencyIds}
                       onClick={handleTokenClick}
-                      search={searchKeyword}
+                      searchWord={searchKeyword}
+                      onTokenHide={handleTokenHidden}
+                      isActive={activeCurrencyIds.includes(tokenId)}
+                      isDisabled={disabledCurrencyIds.includes(tokenId)}
                     />
                   ))}
                 </Box>

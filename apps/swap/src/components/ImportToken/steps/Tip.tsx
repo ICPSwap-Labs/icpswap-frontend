@@ -23,7 +23,7 @@ export interface ImportTokenTipProps {
   onNo: () => void;
 }
 
-export function ImportTokenTip({ onOk, onNo }: ImportTokenTipProps) {
+export function ImportTokenTip({ onOk }: ImportTokenTipProps) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
 
@@ -40,11 +40,11 @@ export function ImportTokenTip({ onOk, onNo }: ImportTokenTipProps) {
         <Trans>The token is not found in the list, do you want to import it?</Trans>
       </Typography>
       <Box mt="16px" sx={{ display: "flex", justifyContent: "center", gap: "0 20px" }}>
-        <Box className={classes.button} onClick={onNo}>
+        {/* <Box className={classes.button} onClick={onNo}>
           <Typography color="text.primary" fontWeight={500}>
             <Trans>No</Trans>
           </Typography>
-        </Box>
+        </Box> */}
         <Box className={classes.button} onClick={onOk}>
           <Typography color="text.primary" fontWeight={500}>
             <Trans>Yes</Trans>
