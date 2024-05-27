@@ -23,6 +23,24 @@ try {
   console.error(error);
 }
 
+// Test canister ids
+function dynamicGetTestCanisters() {
+  const context = require.context("../../src", false, /canister_ids.json$/);
+
+  context.keys().forEach((key: string) => {
+    if (key.includes("temp_canister_ids")) {
+      const canister_ids = context(key);
+
+      CanisterIdsJson = {
+        ...CanisterIdsJson,
+        ...canister_ids,
+      };
+    }
+  });
+}
+
+dynamicGetTestCanisters();
+
 const canisterIds: any = {};
 
 Object.keys(CanisterIdsJson).forEach((key) => {
