@@ -92,7 +92,7 @@ src/canister-ids/**/canister_ids_local.json
 .version.ts
 
 # test cansiter ids
-.canister_ids.json
+temp_canister_ids.json
 
 
 build/
