@@ -72,6 +72,29 @@ function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageI
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
 }
 
+export async function getTokenInfo(tokenId: string) {
+  const storageInfo = await getStorageInfo(tokenId);
+
+  if (isStorageInfoValid(storageInfo) && !isNeedUpdateTokenInfo(tokenId)) {
+    return storageInfo;
+  }
+
+  const baseTokenInfo = await getTokenBaseInfo(tokenId);
+
+  if (baseTokenInfo) {
+    await setStorageInfo(
+      tokenId,
+      JSON.stringify({
+        ...baseTokenInfo,
+        totalSupply: baseTokenInfo.totalSupply.toString(),
+        transFee: baseTokenInfo.transFee.toString(),
+      }),
+    );
+    updateTokenStorageTime(tokenId);
+    return baseTokenInfo as TokenInfo;
+  }
+}
+
 let get_tokens_info_index = 0;
 
 export enum TokenInfoState {

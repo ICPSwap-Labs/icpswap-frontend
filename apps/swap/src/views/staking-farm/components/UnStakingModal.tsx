@@ -3,9 +3,8 @@ import { Button, Box, Grid, CircularProgress, useTheme } from "@mui/material";
 import { t } from "@lingui/macro";
 import { useTips } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import Identity, { CallbackProps } from "components/Identity";
 import { NoData, Modal } from "components/index";
-import type { StakingFarmInfo, StakingFarmDepositArgs, ActorIdentity } from "@icpswap/types";
+import type { FarmInfo, FarmDepositArgs } from "@icpswap/types";
 import { unStake } from "hooks/staking-farm";
 import { Theme } from "@mui/material/styles";
 import { PositionItem } from "./PositionItem";
@@ -14,11 +13,19 @@ export interface UnStakingModalProps {
   open: boolean;
   onClose: () => void;
   resetData?: () => void;
-  farm: StakingFarmInfo;
-  userAllPositions: StakingFarmDepositArgs[];
+  farm: FarmInfo;
+  userStakedPositions: FarmDepositArgs[];
+  farmId: string;
 }
 
-export default function UnStakingModal({ open, onClose, resetData, farm, userAllPositions }: UnStakingModalProps) {
+export default function UnStakingModal({
+  open,
+  onClose,
+  resetData,
+  farmId,
+  farm,
+  userStakedPositions,
+}: UnStakingModalProps) {
   const theme = useTheme() as Theme;
   const [openTip] = useTips();
 
@@ -26,20 +33,15 @@ export default function UnStakingModal({ open, onClose, resetData, farm, userAll
 
   const [selectedPositionId, setSelectedPositionId] = useState<number | undefined>(undefined);
 
-  const handelUnStakeToken = async (identity: ActorIdentity) => {
-    if (!identity || !selectedPositionId) return;
+  const handelUnStakeToken = async () => {
+    if (!selectedPositionId) return;
 
     setConfirmLoading(true);
-    const { status, message } = await unStake(identity, farm.farmCid, BigInt(selectedPositionId));
+    const { status, message } = await unStake(farmId, BigInt(selectedPositionId));
     openTip(getLocaleMessage(message), status);
     setConfirmLoading(false);
     if (resetData) resetData();
     if (onClose) onClose();
-  };
-
-  const handleSubmit = async (identity: ActorIdentity) => {
-    if (!identity) return;
-    handelUnStakeToken(identity);
   };
 
   return (
@@ -70,11 +72,11 @@ export default function UnStakingModal({ open, onClose, resetData, farm, userAll
             overflow: "auto",
           }}
         >
-          {userAllPositions.map((position, index) => {
+          {userStakedPositions.map((position, index) => {
             return (
               <PositionItem
                 key={index}
-                poolId={farm.pool}
+                poolId={farm.pool.toString()}
                 positionInfo={{
                   id: position.positionId,
                   liquidity: position.liquidity,
@@ -87,26 +89,22 @@ export default function UnStakingModal({ open, onClose, resetData, farm, userAll
             );
           })}
 
-          {!userAllPositions.length && <NoData />}
+          {!userStakedPositions.length && <NoData />}
         </Box>
 
         <Box mt="20px" sx={{ padding: "0 24px" }}>
-          <Identity onSubmit={handleSubmit}>
-            {({ submit }: CallbackProps) => (
-              <Button
-                disabled={confirmLoading || !selectedPositionId}
-                variant="contained"
-                fullWidth
-                type="button"
-                onClick={submit}
-                color="primary"
-                size="large"
-                startIcon={confirmLoading ? <CircularProgress size={24} color="inherit" /> : null}
-              >
-                {t`Confirm`}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            disabled={confirmLoading || !selectedPositionId}
+            variant="contained"
+            fullWidth
+            type="button"
+            onClick={handelUnStakeToken}
+            color="primary"
+            size="large"
+            startIcon={confirmLoading ? <CircularProgress size={24} color="inherit" /> : null}
+          >
+            {t`Confirm`}
+          </Button>
         </Box>
       </Grid>
     </Modal>

@@ -1,60 +1,83 @@
-import { useState } from "react";
-import { Grid, Typography, Box } from "@mui/material";
+import { useMemo, useState } from "react";
+import { Grid, Box, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
+import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { NoData, LoadingRow, Pagination, TextButton, PaginationType } from "ui-component/index";
-import type { StakingFarmInfo } from "@icpswap/types";
-import { useSwapPoolMetadata, useV3StakingFarms } from "@icpswap/hooks";
-import { useFarmUSDValue } from "hooks/staking-farm";
-import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
+import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
+import type { FarmTvl } from "@icpswap/types";
+import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
+import { useFarmTvl } from "hooks/staking-farm";
+import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
+import { Principal } from "@dfinity/principal";
 
 const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr) 140px 120px",
-      padding: "16px",
+      gridTemplateColumns: "180px repeat(5, 1fr) 140px 120px",
+      padding: "16px 0",
       alignItems: "center",
       minWidth: "1200px",
+      gap: "0 5px",
     },
   };
 });
 
-export function PoolItem({ farm }: { farm: StakingFarmInfo }) {
-  const classes = useStyles();
-  const { status, statusText } = getFarmPoolStatus(farm) ?? { status: "", statusText: "" };
+export interface PoolItemProps {
+  farmTVL: [Principal, FarmTvl];
+}
 
-  const { result: swapPool } = useSwapPoolMetadata(farm.pool);
+export function PoolItem({ farmTVL }: PoolItemProps) {
+  const classes = useStyles();
+
+  const { farmId } = useMemo(() => {
+    return { farmId: farmTVL[0].toString() };
+  }, [farmTVL]);
+
+  const { result: farmInfo, loading } = useFarmInfo(farmId);
+  const { status, statusText } = getFarmPoolStatus(farmInfo) ?? { status: "", statusText: "" };
+  const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
   const { result: token0 } = useTokenInfo(swapPool?.token0.address);
   const { result: token1 } = useTokenInfo(swapPool?.token1.address);
+  const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
 
-  const { poolTVL } = useFarmUSDValue(farm);
+  const { tvl } = useFarmTvl(farmId);
 
-  return (
+  return loading ? (
+    <LoadingRow>
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRow>
+  ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell>
-        {token0 && token1 ? (
-          <TextButton link={getExplorerPrincipalLink(farm.pool)}>{`${token0.symbol}/${
+        <Link href={explorerLink(farmId)}>{farmId}</Link>
+      </BodyCell>
+      <BodyCell>
+        {token0 && token1 && farmInfo ? (
+          <Link href={explorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
             token1.symbol
-          }/${feeAmountToPercentage(Number(farm.poolFee))}`}</TextButton>
+          }/${feeAmountToPercentage(Number(farmInfo?.poolFee))}`}</Link>
         ) : (
           "--"
         )}
       </BodyCell>
-      <BodyCell>{dayjs(Number(farm.startTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
-      <BodyCell>{dayjs(Number(farm.endTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
+      <BodyCell>{dayjs(Number(farmInfo?.startTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
+      <BodyCell>{dayjs(Number(farmInfo?.endTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
       <BodyCell>
-        <BodyCell>{String(farm.numberOfStakes)}</BodyCell>
-        <BodyCell sub>~${poolTVL}</BodyCell>
+        <BodyCell>{String(farmInfo?.numberOfStakes)}</BodyCell>
+        <BodyCell sub>{tvl ? `~$${tvl}` : "--"}</BodyCell>
       </BodyCell>
       <BodyCell>
-        {`${parseTokenAmount(farm.totalReward, farm.rewardTokenDecimals).toFormat()} ${farm.rewardTokenSymbol}`}
+        {farmInfo && rewardToken
+          ? `${parseTokenAmount(farmInfo.totalReward, rewardToken.decimals).toFormat()} ${rewardToken.symbol}`
+          : "--"}
       </BodyCell>
       <BodyCell>
         <Grid container alignItems="center">
@@ -67,17 +90,17 @@ export function PoolItem({ farm }: { farm: StakingFarmInfo }) {
               marginRight: "8px",
             }}
           />
-          <Typography
+          <BodyCell
             sx={{
               color: POOL_STATUS_COLORS[status],
             }}
           >
             {statusText}
-          </Typography>
+          </BodyCell>
         </Grid>
       </BodyCell>
       <BodyCell>
-        <TextButton to={`/staking-farm/details/${farm.farmCid}`}>
+        <TextButton to={`/farm/details/${farmId}`} sx={{ fontSize: "16px" }}>
           <Trans>Details</Trans>
         </TextButton>
       </BodyCell>
@@ -89,8 +112,7 @@ export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useV3StakingFarms(offset, pagination.pageSize, "all");
-  const { content = [], totalElements = 0 } = result ?? { content: [], totalElements: 0 };
+  const { result, loading } = useFarms(undefined);
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);
@@ -99,6 +121,9 @@ export default function PoolList() {
   return (
     <Box sx={{ overflow: "auto" }}>
       <Header className={classes.wrapper}>
+        <HeaderCell>
+          <Trans>Canister ID</Trans>
+        </HeaderCell>
         <HeaderCell>
           <Trans>Pool</Trans>
         </HeaderCell>
@@ -120,11 +145,9 @@ export default function PoolList() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {content.map((farm) => (
-        <PoolItem key={farm.farmCid} farm={farm} />
-      ))}
+      {result?.map((farm) => <PoolItem key={farm[0].toString()} farmTVL={farm} />)}
 
-      {content.length === 0 && !loading ? <NoData /> : null}
+      {result?.length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
         <LoadingRow>
@@ -142,9 +165,9 @@ export default function PoolList() {
         </LoadingRow>
       ) : null}
 
-      {Number(totalElements) > 0 ? (
+      {/* {Number(totalElements) > 0 ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
-      ) : null}
+      ) : null} */}
     </Box>
   );
 }

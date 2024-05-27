@@ -29,3 +29,4 @@ export * from "./useTokenPriceChart";
 export * from "./usePoolTransactions";
 export * from "./useUserPoolTransactions";
 export * from "./chainKeyToken";
+export * from "./useInterval";

@@ -43,9 +43,9 @@ export const routes: Route[] = [
     path: `/staking-token`,
   },
   {
-    key: "staking-farm",
-    name: `Farms`,
-    path: `/staking-farm`,
+    key: "farm",
+    name: `Farm`,
+    path: `/farm`,
   },
   {
     key: "marketplace",

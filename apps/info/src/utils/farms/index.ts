@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { t } from "@lingui/macro";
 
-import type { StakingPoolControllerPoolInfo, StakingFarmInfo } from "@icpswap/types";
+import type { StakingPoolControllerPoolInfo, FarmInfo } from "@icpswap/types";
 
 export const POOL_STATUS = {
   ONGOING: "ongoing",
@@ -17,10 +17,10 @@ export const POOL_STATUS_COLORS = {
   [POOL_STATUS.Closure]: "#8492C4",
 };
 
-export function getFarmPoolStatus(pool: StakingFarmInfo | undefined) {
+export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   if (!pool) return undefined;
 
-  if (pool.status === "Closure") {
+  if ("CLOSED" in pool.status) {
     return {
       statusText: "Closure",
       status: POOL_STATUS.Closure,
@@ -32,15 +32,15 @@ export function getFarmPoolStatus(pool: StakingFarmInfo | undefined) {
   let statusClassName = "";
   let status = "";
 
-  if (pool.status === "NOT_STARTED") {
+  if ("NOT_STARTED" in pool.status) {
     statusText = t`Upcoming`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
-  } else if (pool.status === "LIVE") {
+  } else if ("LIVE" in pool.status) {
     statusText = t`Live`;
     statusClassName = "ongoing";
     status = POOL_STATUS.ONGOING;
-  } else if (pool.status === "FINISHED") {
+  } else if ("FINISHED" in pool.status) {
     statusText = t`Finished`;
     statusClassName = "finished";
     status = POOL_STATUS.FINISHED;
@@ -65,14 +65,14 @@ export function getTokenPoolStatus(pool: StakingPoolControllerPoolInfo | undefin
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
   } else if (new BigNumber(Number(pool.bonusEndTime)).multipliedBy(1000).isLessThan(new Date().getTime())) {
-      statusText = t`Finished`;
-      statusClassName = "finished";
-      status = POOL_STATUS.FINISHED;
-    } else {
-      statusText = t`Live`;
-      statusClassName = "ongoing";
-      status = POOL_STATUS.ONGOING;
-    }
+    statusText = t`Finished`;
+    statusClassName = "finished";
+    status = POOL_STATUS.FINISHED;
+  } else {
+    statusText = t`Live`;
+    statusClassName = "ongoing";
+    status = POOL_STATUS.ONGOING;
+  }
 
   return {
     statusText,

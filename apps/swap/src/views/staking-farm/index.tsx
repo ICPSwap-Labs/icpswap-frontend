@@ -4,8 +4,7 @@ import { NoData, StaticLoading, MainCard } from "components/index";
 import Switch from "components/switch";
 import { Trans } from "@lingui/macro";
 import { STATE } from "types/staking-farm";
-import type { StakingFarmInfo } from "@icpswap/types";
-import { useV3StakingFarms, useParsedQueryString } from "@icpswap/hooks";
+import { useFarms, useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
 import StakingPoolItem from "./components/StakingPoolItem";
 import GlobalData from "./components/GlobalData";
@@ -19,8 +18,12 @@ function MainContent() {
 
   const { state } = useParsedQueryString() as { state: STATE };
   const _state = useMemo(() => state ?? STATE.LIVE, [state]);
-  const { result, loading } = useV3StakingFarms(0, 200, _state);
-  const { content: list } = result ?? { content: [] as StakingFarmInfo[] };
+  // TODO: page
+  const { result, loading } = useFarms(_state);
+
+  const farms = useMemo(() => {
+    return result ?? [];
+  }, [result]);
 
   const handleToggle = (value: Page) => {
     history.push(value.path);
@@ -105,12 +108,12 @@ function MainContent() {
         >
           {!loading ? (
             <Grid container justifyContent="center" sx={{ gap: "20px" }}>
-              {list.map((ele) => (
-                <StakingPoolItem key={ele.farmCid} stakeOnly={stakeOnly} state={_state} farm={ele} />
+              {farms.map((ele) => (
+                <StakingPoolItem key={ele[0].toString()} stakeOnly={stakeOnly} state={_state} farmTVL={ele} />
               ))}
             </Grid>
           ) : null}
-          {((unStakedFarms.length === list.length && stakeOnly) || !list.length) && !loading && <NoData />}
+          {((unStakedFarms.length === farms.length && stakeOnly) || !farms.length) && !loading && <NoData />}
           {loading ? <StaticLoading loading={loading} /> : null}
         </Box>
       </MainCard>
