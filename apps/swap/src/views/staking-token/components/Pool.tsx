@@ -146,6 +146,7 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
         "@media (max-width: 520px)": {
           width: "340px",
         },
+        background: theme.palette.background.level1,
       }}
       className="staking-token-pool-item"
     >

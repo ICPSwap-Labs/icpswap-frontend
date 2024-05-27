@@ -133,10 +133,26 @@ function Pools() {
 
   return (
     <>
-      <MainCard>
-        <Grid container direction="row">
+      <MainCard padding="24px 20px">
+        <Grid
+          container
+          sx={{
+            "@media (max-width:640px)": {
+              gap: "10px 0",
+              flexDirection: "column",
+            },
+          }}
+        >
           <Grid item>
-            <Box sx={{ display: "flex", gap: "0 20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "0 72px",
+                "@media (max-width:640px)": {
+                  gap: "0 20px",
+                },
+              }}
+            >
               {Pages.map((ele) => (
                 <Typography
                   key={ele.key}
@@ -157,6 +173,7 @@ function Pools() {
               ))}
             </Box>
           </Grid>
+
           <Grid item alignItems="center" style={{ marginLeft: "auto" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
               <TextButton onClick={handleWithdrawUnusedTokens}>
@@ -174,7 +191,7 @@ function Pools() {
           sx={{
             position: "relative",
             minHeight: "440px",
-            margin: "20px 0 0 0",
+            margin: "50px 0 0 0",
           }}
         >
           {!loading ? (
