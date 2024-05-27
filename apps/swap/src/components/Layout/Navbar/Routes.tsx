@@ -54,7 +54,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
     <>
       {routes.map((route, index) =>
         index >= MAX_NUMBER ? null : (
-          <Link key={route.path ?? index} to={route.path ?? ""}>
+          <Link key={route.path ?? index} to={route.path ?? ""} link={route.link}>
             <Box
               key={route.path ?? index}
               onClick={() => handleRouteClick(route)}

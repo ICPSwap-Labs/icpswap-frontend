@@ -159,7 +159,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
         ) : null}
 
         <Box sx={{ display: "flex", gap: "0 10px" }}>
-          <Link to={`/swap/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
+          <Link to={`/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
             <Box
               sx={{
                 width: "121px",

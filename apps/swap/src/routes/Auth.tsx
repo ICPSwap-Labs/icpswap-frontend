@@ -4,21 +4,7 @@ import PageNotFound from "components/404";
 import { Maintenance } from "components/Maintenance";
 import { routeConfigs } from "./config";
 
-const maintenancePages: string[] = [
-  // "/swap",
-  // "/swap/liquidity",
-  // "/swap/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?",
-  // "/swap/liquidity/decrease/:positionId/:pool",
-  // "/swap/liquidity/increase/:positionId/:pool",
-  // "/swap/reclaim",
-  // "/swap/v2/liquidity",
-  // "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?",
-  // "/swap/v2/liquidity/decrease/:positionId?",
-  // "/swap/v2/liquidity/increase/:positionId?",
-  // "/swap/v2/wrap",
-  // "/staking-farm",
-  // "/staking-farm/create",
-];
+const maintenancePages: string[] = [];
 
 export default function MainRoutes() {
   const location = useLocation();

@@ -155,10 +155,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   };
 
   const handleGoToGetPosition = () => {
-    window.open(
-      `/swap/liquidity/add/${userFarmInfo?.poolToken0.address}/${userFarmInfo?.poolToken1.address}`,
-      "_target",
-    );
+    window.open(`/liquidity/add/${userFarmInfo?.poolToken0.address}/${userFarmInfo?.poolToken1.address}`, "_target");
   };
 
   const walletIsConnected = useConnectorStateConnected();

@@ -132,14 +132,14 @@ export function PositionDetails({
 
   const handleLoadRemoveLiquidity = useCallback(() => {
     if (invalid) {
-      history.push(`/swap/liquidity/decrease/${String(positionId)}?invalid=true`);
+      history.push(`/liquidity/decrease/${String(positionId)}?invalid=true`);
       return;
     }
-    history.push(`/swap/liquidity/decrease/${String(positionId)}/${position?.pool.id}`);
+    history.push(`/liquidity/decrease/${String(positionId)}/${position?.pool.id}`);
   }, [history, invalid, positionId]);
 
   const handleLoadIncreaseLiquidity = useCallback(() => {
-    history.push(`/swap/liquidity/increase/${String(positionId)}/${position?.pool.id}`);
+    history.push(`/liquidity/increase/${String(positionId)}/${position?.pool.id}`);
   }, [token0, token1]);
 
   const handleCollectFee = useCallback(() => {

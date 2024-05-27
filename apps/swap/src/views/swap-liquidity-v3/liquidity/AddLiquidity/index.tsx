@@ -143,16 +143,16 @@ export default function AddLiquidity() {
 
   const handleBackToPosition = useCallback(() => {
     resetMintState();
-    history.push("/swap/liquidity");
+    history.push("/liquidity");
   }, [history, resetMintState]);
 
   const onTokenAChange = (token: TokenInfo) => {
     const tokenId = token.canisterId.toString();
 
     if (tokenId === currencyIdB || !currencyIdB) {
-      history.push(`/swap/liquidity/add/${tokenId}`);
+      history.push(`/liquidity/add/${tokenId}`);
     } else {
-      history.push(`/swap/liquidity/add/${tokenId}/${currencyIdB}`);
+      history.push(`/liquidity/add/${tokenId}/${currencyIdB}`);
     }
   };
 
@@ -160,16 +160,16 @@ export default function AddLiquidity() {
     const tokenId = token.canisterId.toString();
 
     if (tokenId === currencyIdA || !currencyIdA) {
-      history.push(`/swap/liquidity/add/${tokenId}`);
+      history.push(`/liquidity/add/${tokenId}`);
     } else {
-      history.push(`/swap/liquidity/add/${currencyIdA}/${tokenId}`);
+      history.push(`/liquidity/add/${currencyIdA}/${tokenId}`);
     }
   };
 
   const handleFeeChange = useCallback(
     (feeValue) => {
       if (currencyIdA && currencyIdB) {
-        history.push(`/swap/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
+        history.push(`/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
       }
     },
     [currencyIdA, currencyIdB],
@@ -180,7 +180,7 @@ export default function AddLiquidity() {
     onFieldBInput("");
     onLeftRangeInput("");
     onRightRangeInput("");
-    history.push(`/swap/liquidity/add`);
+    history.push(`/liquidity/add`);
   }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
 
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
@@ -263,7 +263,7 @@ export default function AddLiquidity() {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
+    history.push(`/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
   };
 
   const handleCurrencyAMax = () => {

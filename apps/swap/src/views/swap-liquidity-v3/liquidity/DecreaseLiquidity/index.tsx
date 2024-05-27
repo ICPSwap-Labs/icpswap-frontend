@@ -136,7 +136,7 @@ export default function DecreaseLiquidity() {
 
   const handleBack = useCallback(() => {
     resetBurnState();
-    history.push("/swap/liquidity");
+    history.push("/liquidity");
   }, [history, resetBurnState]);
 
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));

@@ -75,10 +75,11 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/farm/create": CreateFarm,
 
   "/swap": Swap,
-  "/swap/liquidity": Liquidity,
-  "/swap/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
-  "/swap/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
-  "/swap/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+  "/liquidity": Liquidity,
+  "/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
+  "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
+  "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+
   "/swap/reclaim": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,

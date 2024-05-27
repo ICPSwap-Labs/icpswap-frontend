@@ -284,7 +284,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                   <Button
                     size={matchSM ? "small" : "medium"}
                     variant="contained"
-                    onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                    onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
                   >
                     <Trans>Increase Liquidity</Trans>
                   </Button>
@@ -296,7 +296,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                   <Button
                     size={matchSM ? "small" : "medium"}
                     variant="outlined"
-                    onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                    onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
                   >
                     <Trans>Remove Liquidity</Trans>
                   </Button>
@@ -310,7 +310,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                 <Button
                   size={matchSM ? "small" : "medium"}
                   variant="outlined"
-                  onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                  onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
                 >
                   <Trans>Remove Liquidity</Trans>
                 </Button>
@@ -320,7 +320,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                 <Button
                   size={matchSM ? "small" : "medium"}
                   variant="contained"
-                  onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                  onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
                 >
                   <Trans>Increase Liquidity</Trans>
                 </Button>

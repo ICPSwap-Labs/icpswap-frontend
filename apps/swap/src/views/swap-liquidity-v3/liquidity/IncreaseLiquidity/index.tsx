@@ -171,7 +171,7 @@ export default function IncreaseLiquidity() {
 
   const loadLiquidityPage = useCallback(() => {
     resetMintState();
-    history.push("/swap/liquidity");
+    history.push("/liquidity");
   }, [history, resetMintState]);
 
   const increaseLiquidityCall = useIncreaseLiquidityCall();
