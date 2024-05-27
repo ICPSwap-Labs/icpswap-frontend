@@ -29,6 +29,11 @@ export interface InitRequests {
   rewardTokenDecimals: bigint;
   feeReceiverCid: Principal;
 }
+export interface LedgerAmountInfo {
+  staking: number;
+  harvest: number;
+  unStaking: number;
+}
 export interface Page {
   content: Array<Record>;
   offset: bigint;
@@ -86,8 +91,8 @@ export type Result_1 = { ok: bigint } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
 export type Result_3 = { ok: PublicStakingPoolInfo } | { err: string };
 export type Result_4 = { ok: PublicUserInfo } | { err: string };
-export type Result_5 = { ok: CycleInfo } | { err: Error };
-export type Result_6 = { ok: Array<[Principal, bigint]> } | { err: string };
+export type Result_5 = { ok: LedgerAmountInfo } | { err: Error };
+export type Result_6 = { ok: CycleInfo } | { err: Error };
 export type Result_7 = { ok: Array<Principal> } | { err: Error };
 export type Result_8 = { ok: Page } | { err: string };
 export type Result_9 = { ok: Page_1 } | { err: string };
@@ -111,22 +116,23 @@ export interface UpdateStakingPool {
 }
 export interface _SERVICE {
   claim: ActorMethod<[], Result>;
-  clearLocks: ActorMethod<[], Result_1>;
+  claimReward: ActorMethod<[Principal], Result_2>;
+  clearErrorLog: ActorMethod<[], undefined>;
   findAllUserInfo: ActorMethod<[bigint, bigint], Result_9>;
   findRewardRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
   findStakingRecordPage: ActorMethod<[[] | [Principal], bigint, bigint], Result_8>;
   getAdmins: ActorMethod<[], Result_7>;
-  getAllLocks: ActorMethod<[], Result_6>;
-  getCycleInfo: ActorMethod<[], Result_5>;
+  getCycleInfo: ActorMethod<[], Result_6>;
+  getErrorLog: ActorMethod<[], Array<string>>;
+  getLedgerInfo: ActorMethod<[], Result_5>;
   getPoolInfo: ActorMethod<[], Result_3>;
   getUserInfo: ActorMethod<[Principal], Result_4>;
   getVersion: ActorMethod<[], string>;
-  harvest: ActorMethod<[], Result_1>;
+  harvest: ActorMethod<[], Result_2>;
   pendingReward: ActorMethod<[Principal], Result_1>;
   refundSubaccountBalance: ActorMethod<[Principal], Result>;
   refundUserStaking: ActorMethod<[Principal], Result>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
-  setAutoUnlockTimes: ActorMethod<[bigint], Result_1>;
   setTime: ActorMethod<[bigint, bigint], Result_3>;
   stake: ActorMethod<[], Result>;
   stakeFrom: ActorMethod<[bigint], Result>;

@@ -6,28 +6,33 @@ import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { getLocaleMessage } from "locales/services";
 import { t } from "@lingui/macro";
-import { useConnectorStateConnected } from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { harvest } from "hooks/staking-token/index";
+import { stakingPoolHarvest, stakingPoolClaimRewards } from "@icpswap/hooks";
 
 export interface ClaimRewardProps {
   rewardToken: Token | undefined | null;
   pool: StakingPoolControllerPoolInfo | undefined | null;
-  reward: number;
+  reward: number | undefined;
 }
 
 export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardProps) {
+  const principal = useAccountPrincipal();
   const [openTip] = useTips();
   const walletIsConnected = useConnectorStateConnected();
   const [loading, setLoading] = React.useState(false);
 
   const handleClaimReward = async () => {
-    if (loading || !pool) return;
+    if (loading || !pool || !principal) return;
 
     setLoading(true);
 
-    const { status, message } = await harvest(pool.canisterId.toString());
+    const poolCanisterId = pool.canisterId.toString();
+
+    const { status, message } = await stakingPoolHarvest(poolCanisterId);
+
+    await stakingPoolClaimRewards(poolCanisterId, principal);
 
     if (status === ResultStatus.OK) {
       openTip(t`Harvest successfully`, TIP_SUCCESS);

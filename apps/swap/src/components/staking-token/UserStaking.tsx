@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import type { StakingPoolUserInfo, StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import CountUp from "react-countup";
@@ -8,8 +9,7 @@ import { Trans } from "@lingui/macro";
 import { useConnectorStateConnected, useAccountPrincipalString } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useICPPrice } from "store/global/hooks";
-import { PoolData, UserStakingInfo, STATE } from "types/staking-token";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { PoolData, STATE } from "types/staking-token";
 import Harvest from "components/staking-token/Harvest";
 import { Flex } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -18,7 +18,7 @@ export interface UserStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
   poolData: PoolData | undefined | null;
   StakingAndClaim: React.ReactNode;
-  userStakingInfo: UserStakingInfo | undefined | null;
+  userStakingInfo: StakingPoolUserInfo | undefined | null;
   rewardToken: Token | undefined | null;
   stakingToken: Token | undefined | null;
   rewardTokenPrice: string | number | undefined | null;
@@ -75,20 +75,27 @@ export default function UserStaking({
   }, [ICPPrice, totalDeposit, poolData, rewardToken, rewardTokenPrice, stakingTokenPrice, stakingToken]);
 
   const stakingAmount = useMemo(() => {
-    return parseTokenAmount(userStakingInfo?.amount ?? 0, stakingToken?.decimals).toNumber();
+    if (!userStakingInfo || !stakingToken) return undefined;
+
+    return parseTokenAmount(userStakingInfo.amount, stakingToken.decimals).toNumber();
   }, [userStakingInfo, stakingToken]);
 
-  const stakingAmountEquet = useMemo(() => {
-    return new BigNumber(stakingAmount).multipliedBy(stakingTokenPrice ?? 0).toNumber();
+  const stakingUSDValue = useMemo(() => {
+    if (!stakingAmount || !stakingTokenPrice) return undefined;
+
+    return new BigNumber(stakingAmount).multipliedBy(stakingTokenPrice).toNumber();
   }, [rewardTokenPrice, stakingAmount]);
 
   const pendingReward = useMemo(() => {
-    if (!rewardToken || !userStakingInfo?.reward) return 0;
-    return parseTokenAmount(userStakingInfo.reward, rewardToken.decimals).toNumber();
+    if (!rewardToken || !userStakingInfo) return undefined;
+
+    return parseTokenAmount(userStakingInfo.pendingReward, rewardToken.decimals).toNumber();
   }, [userStakingInfo, rewardToken]);
 
-  const pendingRewardEquet = useMemo(() => {
-    return new BigNumber(pendingReward).multipliedBy(rewardTokenPrice ?? 0).toNumber();
+  const pendingRewardUSD = useMemo(() => {
+    if (!rewardTokenPrice || !pendingReward) return undefined;
+
+    return new BigNumber(pendingReward).multipliedBy(rewardTokenPrice).toNumber();
   }, [pendingReward, rewardTokenPrice]);
 
   const walletIsConnected = useConnectorStateConnected();
@@ -126,9 +133,9 @@ export default function UserStaking({
         </Box>
       </Flex>
 
-      <Flex justify="space-between" align="center">
+      <Flex justify="space-between" align="flex-start">
         <Typography>
-          <Trans>Wallet Balance</Trans>
+          <Trans>Your Available to Stake</Trans>
         </Typography>
 
         <Box>
@@ -169,25 +176,33 @@ export default function UserStaking({
         >
           <Grid item xs={9}>
             <Typography color="text.primary">
-              <CountUp
-                style={{ fontSize: 24 }}
-                preserveValue
-                end={pendingReward}
-                decimals={4}
-                duration={1}
-                separator=","
-              />
+              {pendingReward ? (
+                <CountUp
+                  style={{ fontSize: 24 }}
+                  preserveValue
+                  end={pendingReward}
+                  decimals={4}
+                  duration={1}
+                  separator=","
+                />
+              ) : (
+                "--"
+              )}
             </Typography>
             <Typography color="text.primary">
-              <CountUp
-                style={{ fontSize: 14 }}
-                preserveValue
-                end={pendingRewardEquet}
-                decimals={2}
-                duration={1}
-                separator=","
-                prefix="~$"
-              />
+              {pendingRewardUSD ? (
+                <CountUp
+                  style={{ fontSize: 14 }}
+                  preserveValue
+                  end={pendingRewardUSD}
+                  decimals={2}
+                  duration={1}
+                  separator=","
+                  prefix="~$"
+                />
+              ) : (
+                "--"
+              )}
             </Typography>
           </Grid>
           <Grid item>
@@ -206,25 +221,31 @@ export default function UserStaking({
         <Flex justify="space-between" align="center">
           <Box>
             <Typography color="text.primary">
-              <CountUp
-                style={{ fontSize: 24 }}
-                preserveValue
-                end={stakingAmount}
-                decimals={4}
-                duration={1}
-                separator=","
-              />
+              {stakingAmount ? (
+                <CountUp
+                  style={{ fontSize: 24 }}
+                  preserveValue
+                  end={stakingAmount}
+                  decimals={4}
+                  duration={1}
+                  separator=","
+                />
+              ) : (
+                "--"
+              )}
             </Typography>
             <Typography color="text.primary">
-              <CountUp
-                style={{ fontSize: 14 }}
-                preserveValue
-                end={stakingAmountEquet}
-                decimals={2}
-                duration={1}
-                separator=","
-                prefix="~$"
-              />
+              {stakingUSDValue ? (
+                <CountUp
+                  style={{ fontSize: 14 }}
+                  preserveValue
+                  end={stakingUSDValue}
+                  decimals={2}
+                  duration={1}
+                  separator=","
+                  prefix="~$"
+                />
+              ) : null}
             </Typography>
           </Box>
           <Box>{walletIsConnected ? StakingAndClaim : <ConnectWallet />}</Box>

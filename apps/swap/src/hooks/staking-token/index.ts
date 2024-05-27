@@ -3,15 +3,14 @@ import {
   getStakingPoolGlobalData,
   stakingPoolDeposit,
   stakingPoolDepositFrom,
+  stakingPoolClaimRewards,
   getStakingPools,
   usePaginationAllData,
-  getPaginationAllData,
-  stakingPoolWithdraw,
-  stakingPoolHarvest,
   getStakingTokenUserInfo,
   getStakingTokenPool,
+  getPaginationAllData,
 } from "@icpswap/hooks";
-import { TOKEN_STANDARD, ResultStatus } from "@icpswap/types";
+import { ResultStatus, type StakingPoolUserInfo, StakingPoolGlobalData, StakingPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
@@ -24,8 +23,7 @@ import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getSteps } from "views/staking-token/components/Step";
 import { useStepContentManager } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
-import type { UserStakingInfo } from "types/staking-token";
-import type { StakingPoolGlobalData, StakingPoolInfo } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { SubAccount } from "@dfinity/ledger-icp";
 
 export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () => void] {
@@ -53,30 +51,36 @@ export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () =
 
 export function useStakingTokenDeposit() {
   const [openErrorTip] = useErrorTip();
+  const principal = useAccountPrincipal();
 
-  return useCallback(async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
-    const useTransfer = isUseTransfer(token);
+  return useCallback(
+    async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
+      const useTransfer = isUseTransfer(token);
 
-    let status: ResultStatus = ResultStatus.ERROR;
-    let message = "";
+      let status: ResultStatus = ResultStatus.ERROR;
+      let message = "";
 
-    if (useTransfer) {
-      const { status: _status, message: _message } = await stakingPoolDeposit(poolId);
-      status = _status;
-      message = _message;
-    } else {
-      const { status: _status, message: _message } = await stakingPoolDepositFrom(poolId, BigInt(amount));
-      status = _status;
-      message = _message;
-    }
+      if (useTransfer) {
+        const { status: _status, message: _message } = await stakingPoolDeposit(poolId);
+        await stakingPoolClaimRewards(poolId, principal!);
+        status = _status;
+        message = _message;
+      } else {
+        const { status: _status, message: _message } = await stakingPoolDepositFrom(poolId, BigInt(amount));
+        await stakingPoolClaimRewards(poolId, principal!);
+        status = _status;
+        message = _message;
+      }
 
-    if (status === "err") {
-      openErrorTip(`Failed to deposit ${token.symbol}: ${message}`, options);
-      return false;
-    }
+      if (status === "err") {
+        openErrorTip(`Failed to deposit ${token.symbol}: ${message}`, options);
+        return false;
+      }
 
-    return true;
-  }, []);
+      return true;
+    },
+    [principal],
+  );
 }
 
 export async function getAllTokenPools() {
@@ -208,19 +212,11 @@ export function useStakingToken() {
   );
 }
 
-export async function withdraw(poolId: string, amount: bigint) {
-  return await stakingPoolWithdraw(poolId, amount);
-}
-
-export async function harvest(poolId: string) {
-  return await stakingPoolHarvest(poolId);
-}
-
 export function useUserStakingInfo(
   poolId: string | undefined,
   principal: Principal | undefined,
-): [UserStakingInfo | undefined, () => void] {
-  const [userInfo, setUserInfo] = useState<UserStakingInfo | undefined>(undefined);
+): [StakingPoolUserInfo | undefined, () => void] {
+  const [userInfo, setUserInfo] = useState<StakingPoolUserInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
@@ -234,10 +230,7 @@ export function useUserStakingInfo(
       const result = await getStakingTokenUserInfo(poolId, principal);
 
       if (result) {
-        setUserInfo({
-          amount: result.amount,
-          reward: result.pendingReward,
-        } as UserStakingInfo);
+        setUserInfo(result);
       }
     };
 

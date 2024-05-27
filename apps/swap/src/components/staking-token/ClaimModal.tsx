@@ -7,7 +7,8 @@ import Identity, { CallbackProps } from "components/Identity";
 import MaxButton from "components/MaxButton";
 import { ResultStatus, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { withdraw, useUserStakingInfo } from "hooks/staking-token/index";
+import { stakingPoolWithdraw } from "@icpswap/hooks";
+import { useUserStakingInfo } from "hooks/staking-token/index";
 import { useTips } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -36,7 +37,7 @@ export default function ClaimModal({ open, onClose, pool, onStakingSuccess }: Cl
     if (loading || !amount || !token) return;
     setLoading(true);
 
-    const { status, message } = await withdraw(
+    const { status, message } = await stakingPoolWithdraw(
       pool.canisterId.toString(),
       BigInt(formatTokenAmount(amount, token?.decimals).toString()),
     );

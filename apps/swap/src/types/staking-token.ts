@@ -9,14 +9,4 @@ export enum STATE {
   FINISHED = "FINISHED",
 }
 
-export enum STAKING_POOL_VERSION {
-  version1 = "1.0",
-  version2 = "2.0",
-}
-
 export type PoolData = StakingPoolInfo | V1Pool;
-
-export type UserStakingInfo = {
-  amount: bigint;
-  reward: bigint;
-};

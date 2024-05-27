@@ -1,6 +1,6 @@
 export const idlFactory = ({ IDL }: any) => {
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
-  const Result_1 = IDL.Variant({ ok: IDL.Nat, err: IDL.Text });
+  const Result_2 = IDL.Variant({ ok: IDL.Bool, err: IDL.Text });
   const PublicUserInfo = IDL.Record({
     pendingReward: IDL.Nat,
     rewardDebt: IDL.Nat,
@@ -50,12 +50,14 @@ export const idlFactory = ({ IDL }: any) => {
     ok: IDL.Vec(IDL.Principal),
     err: Error,
   });
-  const Result_6 = IDL.Variant({
-    ok: IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Nat)),
-    err: IDL.Text,
-  });
   const CycleInfo = IDL.Record({ balance: IDL.Nat, available: IDL.Nat });
-  const Result_5 = IDL.Variant({ ok: CycleInfo, err: Error });
+  const Result_6 = IDL.Variant({ ok: CycleInfo, err: Error });
+  const LedgerAmountInfo = IDL.Record({
+    staking: IDL.Float64,
+    harvest: IDL.Float64,
+    unStaking: IDL.Float64,
+  });
+  const Result_5 = IDL.Variant({ ok: LedgerAmountInfo, err: Error });
   const Token = IDL.Record({ address: IDL.Text, standard: IDL.Text });
   const PublicStakingPoolInfo = IDL.Record({
     stakingTokenSymbol: IDL.Text,
@@ -82,6 +84,7 @@ export const idlFactory = ({ IDL }: any) => {
     err: IDL.Text,
   });
   const Result_4 = IDL.Variant({ ok: PublicUserInfo, err: IDL.Text });
+  const Result_1 = IDL.Variant({ ok: IDL.Nat, err: IDL.Text });
   const UpdateStakingPool = IDL.Record({
     stakingTokenSymbol: IDL.Text,
     startTime: IDL.Nat,
@@ -95,25 +98,25 @@ export const idlFactory = ({ IDL }: any) => {
     bonusEndTime: IDL.Nat,
     rewardTokenDecimals: IDL.Nat,
   });
-  const Result_2 = IDL.Variant({ ok: IDL.Bool, err: IDL.Text });
   return IDL.Service({
     claim: IDL.Func([], [Result], []),
-    clearLocks: IDL.Func([], [Result_1], []),
+    claimReward: IDL.Func([IDL.Principal], [Result_2], []),
+    clearErrorLog: IDL.Func([], [], []),
     findAllUserInfo: IDL.Func([IDL.Nat, IDL.Nat], [Result_9], ["query"]),
     findRewardRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
     findStakingRecordPage: IDL.Func([IDL.Opt(IDL.Principal), IDL.Nat, IDL.Nat], [Result_8], ["query"]),
     getAdmins: IDL.Func([], [Result_7], ["query"]),
-    getAllLocks: IDL.Func([], [Result_6], ["query"]),
-    getCycleInfo: IDL.Func([], [Result_5], []),
+    getCycleInfo: IDL.Func([], [Result_6], []),
+    getErrorLog: IDL.Func([], [IDL.Vec(IDL.Text)], ["query"]),
+    getLedgerInfo: IDL.Func([], [Result_5], []),
     getPoolInfo: IDL.Func([], [Result_3], ["query"]),
     getUserInfo: IDL.Func([IDL.Principal], [Result_4], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
-    harvest: IDL.Func([], [Result_1], []),
+    harvest: IDL.Func([], [Result_2], []),
     pendingReward: IDL.Func([IDL.Principal], [Result_1], ["query"]),
     refundSubaccountBalance: IDL.Func([IDL.Principal], [Result], []),
     refundUserStaking: IDL.Func([IDL.Principal], [Result], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
-    setAutoUnlockTimes: IDL.Func([IDL.Nat], [Result_1], []),
     setTime: IDL.Func([IDL.Nat, IDL.Nat], [Result_3], []),
     stake: IDL.Func([], [Result], []),
     stakeFrom: IDL.Func([IDL.Nat], [Result], []),

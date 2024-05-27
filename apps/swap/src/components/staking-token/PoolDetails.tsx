@@ -13,7 +13,7 @@ import { Theme } from "@mui/material/styles";
 import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
+import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 
 interface CountdownBoxProps {

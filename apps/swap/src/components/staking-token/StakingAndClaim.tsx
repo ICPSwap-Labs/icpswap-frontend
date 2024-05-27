@@ -2,13 +2,13 @@ import React from "react";
 import { Button, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
-import { Theme } from "@mui/material/styles";
-import { STATE, UserStakingInfo } from "types/staking-token";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { STATE } from "types/staking-token";
+import type { StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
+
 import V2StakingModal from "./V2StakingModal";
 import ClaimModal from "./ClaimModal";
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles(() => ({
   button: {
     minWidth: "28px",
     width: "44px",
@@ -30,7 +30,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 export interface OptionStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined;
-  userStakingInfo?: UserStakingInfo;
+  userStakingInfo?: StakingPoolUserInfo;
   onStakingSuccess?: () => void;
   state: STATE | undefined;
 }

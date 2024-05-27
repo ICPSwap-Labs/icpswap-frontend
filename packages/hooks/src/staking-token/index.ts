@@ -210,3 +210,7 @@ export function useStakingPoolClaimTransactions(
     reload,
   );
 }
+
+export async function stakingPoolClaimRewards(canisterId: string, owner: Principal) {
+  return resultFormat<boolean>(await (await stakingPool(canisterId, true)).claimReward(owner));
+}
