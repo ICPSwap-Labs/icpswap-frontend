@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard, TokenImage } from "components/index";
+import { MainCard, TokenImage, Flex, Tooltip } from "components/index";
 import {
   useIntervalUserRewardInfo,
   useIntervalUserFarmInfo,
@@ -16,19 +16,23 @@ import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hook
 import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
-  toSignificant,
+  toSignificantWithGroupSeparator,
   cycleValueFormat,
   shorten,
   timestampFormat,
   explorerLink,
+  BigNumber,
 } from "@icpswap/utils";
-import { useV3FarmMetadata, useFarmUserAllPositions } from "@icpswap/hooks";
+import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs, useSwapUserPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-farm";
-import type { StakingFarmInfo } from "@icpswap/types";
+import type { FarmTvl } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
+import { Principal } from "@dfinity/principal";
+import { useUSDPrice } from "hooks/useUSDPrice";
+
 import FarmContext from "../context";
 import OptionStaking from "./OptionStaking";
 
@@ -86,40 +90,64 @@ const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: numb
   );
 };
 
-export type FarmPoolProps = { stakeOnly: boolean; state: STATE; farm: StakingFarmInfo };
+export type FarmPoolProps = { stakeOnly: boolean; state: STATE; farmTVL: [Principal, FarmTvl] };
 
-export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
+export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const classes = useStyle();
   const theme = useTheme() as Theme;
-
   const principal = useAccountPrincipal();
 
   const [expanded, setExpanded] = React.useState(false);
-
   const [forceUpdate, setForceUpdate] = useState(false);
 
-  const userFarmInfo = useIntervalUserFarmInfo(farm.farmCid, principal?.toString() ?? AnonymousPrincipal);
+  const { farmId } = useMemo(() => {
+    return { farmId: farmTVL[0].toString(), tvl: farmTVL[1] };
+  }, [farmTVL]);
 
-  const { result: userAllPositions } = useFarmUserAllPositions(farm.farmCid, principal?.toString(), forceUpdate);
+  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
 
-  const positionIds = useMemo(() => {
-    return userAllPositions.map((position) => BigInt(position.positionId));
+  const { result: userAllPositions } = useSwapUserPositions(
+    userFarmInfo?.pool.toString(),
+    principal?.toString(),
+    forceUpdate,
+  );
+  const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
+
+  const userAvailablePositions = useMemo(() => {
+    if (!userAllPositions) return undefined;
+    return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
   }, [userAllPositions]);
 
-  const userRewardAmount = useIntervalUserRewardInfo(farm.farmCid, positionIds);
+  const positionIds = useMemo(() => {
+    return userStakedPositions?.map((position) => position.positionId) ?? [];
+  }, [userStakedPositions]);
 
-  const [, token0] = useToken(farm.poolToken0.address) ?? undefined;
-  const [, token1] = useToken(farm.poolToken1.address) ?? undefined;
+  const { result: farmInitArgs } = useFarmInitArgs(farmId);
 
-  const [, rewardToken] = useToken(farm.rewardToken.address) ?? undefined;
+  const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
-  const { poolTVL, userTVL, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
+  const userRewardAmount = useMemo(() => {
+    if (!farmInitArgs || !_userRewardAmount) return undefined;
+
+    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
+
+    return new BigNumber(_userRewardAmount.toString()).multipliedBy(userRewardRatio);
+  }, [_userRewardAmount, farmInitArgs]);
+
+  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
+  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
+  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
+
+  const rewardTokenPrice = useUSDPrice(rewardToken);
+
+  const { poolTvl, userTvl, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
     rewardToken,
-    farm,
     userRewardAmount,
     userFarmInfo,
+    farmId,
+    rewardTokenPrice,
   });
 
   const handleExpandClick = () => {
@@ -127,7 +155,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
   };
 
   const handleGoToGetPosition = () => {
-    window.open(`/swap/liquidity/add/${farm.poolToken0.address}/${farm.poolToken1.address}`, "_target");
+    window.open(`/liquidity/add/${userFarmInfo?.poolToken0.address}/${userFarmInfo?.poolToken1.address}`, "_target");
   };
 
   const walletIsConnected = useConnectorStateConnected();
@@ -137,15 +165,40 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
   useEffect(() => {
     if (positionIds !== undefined) {
       if (positionIds.length === 0) {
-        updateUnStakedFarms(farm.farmCid);
+        updateUnStakedFarms(farmId);
       } else {
-        deleteUnStakedFarms(farm.farmCid);
+        deleteUnStakedFarms(farmId);
       }
     }
   }, [positionIds?.length]);
 
-  const { result: farmMetadata } = useV3FarmMetadata(farm.farmCid);
-  const { result: cycles } = useV3StakingCycles(farm.farmCid);
+  const { result: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
+  const { result: cycles } = useV3StakingCycles(farmId);
+
+  // (Reward token amount each cycles * reward token price / Total valued staked ) * (3600*24*360/seconds each cycle) *100%
+  const apr = useMemo(() => {
+    if (!poolTvl) return undefined;
+
+    if (
+      !rewardTokenPrice ||
+      !farmInitArgs ||
+      !farmRewardMetadata ||
+      !rewardToken ||
+      new BigNumber(poolTvl).isEqualTo(0)
+    )
+      return undefined;
+
+    if (state !== STATE.LIVE) return undefined;
+
+    const val = parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals)
+      .multipliedBy(rewardTokenPrice)
+      .dividedBy(poolTvl)
+      .multipliedBy(new BigNumber(3600 * 24 * 360).dividedBy(farmInitArgs.secondPerCycle.toString()))
+      .multipliedBy(100)
+      .toFixed(2);
+
+    return `${val}%`;
+  }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
 
   return (
     <Box>
@@ -153,7 +206,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
         level={1}
         padding="0px"
         sx={{
-          display: stakeOnly && userAllPositions.length === 0 ? "none" : "block",
+          display: stakeOnly && userStakedPositions?.length === 0 ? "none" : "block",
           width: "384px",
           overflow: "hidden",
           height: "fit-content",
@@ -196,64 +249,89 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
             <Grid>
               <Grid item>
                 <Typography color="text.primary" sx={{ padding: "0 12px" }}>
-                  Stake {token0?.symbol}/{token1?.symbol} position(LP) to earn {rewardToken?.symbol}
+                  Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between">
+              <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
+                <Typography>
+                  <Trans>APR</Trans>
+                </Typography>
+
+                <Tooltip
+                  iconSize="14px"
+                  tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
+                />
+              </Box>
+
+              <Typography color="text.primary">{apr ?? "--"}</Typography>
+            </Flex>
+
+            <Flex justify="space-between">
               <Typography>
                 <Trans>Total Reward Amount</Trans>
               </Typography>
-              <Box sx={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
-                <CountUp
-                  preserveValue
-                  end={parseTokenAmount(
-                    farm?.totalReward ?? farm.totalRewardUnclaimed,
-                    rewardToken?.decimals,
-                  ).toNumber()}
-                  decimals={2}
-                  duration={1}
-                  separator=","
-                />
-              </Box>
-            </Grid>
+              <Typography color="text.primary">
+                {userFarmInfo && rewardToken ? (
+                  <>
+                    <CountUp
+                      preserveValue
+                      end={parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toNumber()}
+                      decimals={2}
+                      duration={1}
+                      separator=","
+                    />
+                    &nbsp;{rewardToken.symbol}
+                  </>
+                ) : (
+                  "--"
+                )}
+              </Typography>
+            </Flex>
 
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between">
               <Typography>
                 <Trans>Total Value Staked</Trans>
               </Typography>
-              <Typography color="text.primary">${poolTVL}</Typography>
-            </Grid>
+              <Typography color="text.primary">{poolTvl ? `$${poolTvl}` : "--"}</Typography>
+            </Flex>
 
-            <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Flex justify="space-between" align="flex-start">
               <Typography>
                 <Trans>Earned</Trans>
                 &nbsp;
                 {rewardToken?.symbol}
               </Typography>
 
-              <Grid item>
-                <Grid container direction="column" justifyContent="flex-end">
+              <Flex vertical align="flex-end">
+                <Typography color="text.primary">
                   <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
-                  <CountUp
-                    style={{ fontSize: 14, textAlign: "right", display: "block" }}
-                    preserveValue
-                    end={userRewardUSD ?? 0}
-                    decimals={2}
-                    duration={1}
-                    separator=","
-                    prefix="~$"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
+                </Typography>
+                <Typography color="text.primary">
+                  <CountUp preserveValue end={userRewardUSD ?? 0} decimals={2} duration={1} separator="," prefix="~$" />
+                </Typography>
+              </Flex>
+            </Flex>
+
+            <Flex justify="space-between" align="flex-start">
+              <Typography>
+                <Trans>Your Available Positions</Trans>
+              </Typography>
+
+              <Flex vertical align="flex-end">
+                <Typography color="text.primary">
+                  {userAvailablePositions ? userAvailablePositions.length : "--"}
+                </Typography>
+              </Flex>
+            </Flex>
 
             <Box>
               <Typography mb="14px">
-                <Trans>Position(LP) Staked</Trans>
+                <Trans>Position Staked</Trans>
               </Typography>
 
               <Box
@@ -270,12 +348,14 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
               >
                 <Typography sx={{ flex: 1 }}>{Number(positionIds.length ?? 0)}</Typography>
                 {walletIsConnected ? (
-                  <OptionStaking
-                    farm={farm}
-                    resetData={() => setForceUpdate(!forceUpdate)}
-                    userIncentives={userFarmInfo}
-                    userAllPositions={userAllPositions}
-                  />
+                  userFarmInfo ? (
+                    <OptionStaking
+                      userFarmInfo={userFarmInfo}
+                      resetData={() => setForceUpdate(!forceUpdate)}
+                      userStakedPositions={userStakedPositions ?? []}
+                      farmId={farmId}
+                    />
+                  ) : null
                 ) : (
                   <ConnectWallet />
                 )}
@@ -289,7 +369,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography color="text.primary">${userTVL}</Typography>
+                <Typography color="text.primary">{userTvl ? `$${userTvl}` : "--"}</Typography>
               </Grid>
             </Grid>
           </Box>
@@ -317,7 +397,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                 <Grid container justifyContent="space-between" alignItems="center">
                   <Grid item>
                     <Typography sx={{ cursor: "pointer", textDecoration: "underline" }} onClick={handleGoToGetPosition}>
-                      Get {token0?.symbol}/{token1?.symbol} position(LP)
+                      Get {token0?.symbol}/{token1?.symbol} position
                       <ICRocksLoadIcon
                         fontSize="24"
                         sx={{
@@ -344,14 +424,15 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Claimed Rewards</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardClaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
-                      8,
-                      { groupSeparator: "," },
-                    )}
+                    {!farmRewardMetadata || !rewardToken
+                      ? "--"
+                      : `${toSignificantWithGroupSeparator(
+                          parseTokenAmount(
+                            farmRewardMetadata.totalRewardHarvested.toString(),
+                            rewardToken.decimals,
+                          ).toString(),
+                          8,
+                        )} ${rewardToken.symbol}`}
                   </Typography>
                 </Grid>
 
@@ -360,14 +441,15 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Unclaimed Rewards</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(
-                        farmMetadata?.totalRewardUnclaimed?.toString() ?? 0,
-                        rewardToken?.decimals,
-                      ).toString(),
-                      8,
-                      { groupSeparator: "," },
-                    )}
+                    {!farmRewardMetadata || !rewardToken
+                      ? "--"
+                      : `${toSignificantWithGroupSeparator(
+                          parseTokenAmount(
+                            farmRewardMetadata.totalRewardUnharvested.toString(),
+                            rewardToken.decimals,
+                          ).toString(),
+                          8,
+                        )} ${rewardToken.symbol}`}
                   </Typography>
                 </Grid>
 
@@ -376,7 +458,7 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Distribution Interval</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                    {Number(farmRewardMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
                   </Typography>
                 </Grid>
 
@@ -385,50 +467,57 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
                     <Trans>Amount per Distribution</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    {toSignificant(
-                      parseTokenAmount(farmMetadata?.rewardPerCycle, rewardToken?.decimals).toString(),
-                      8,
-                      { groupSeparator: "," },
+                    {farmRewardMetadata && rewardToken
+                      ? `${toSignificantWithGroupSeparator(
+                          parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals).toString(),
+                          8,
+                        )} ${rewardToken.symbol}`
+                      : "--"}
+                  </Typography>
+                </Grid>
+
+                <Grid container justifyContent="space-between" alignItems="flex-start">
+                  <Typography>
+                    <Trans>Starting At</Trans>
+                  </Typography>
+                  <Typography color="text.primary">
+                    {timestampFormat(Number(userFarmInfo?.startTime) * 1000)}
+                  </Typography>
+                </Grid>
+
+                <Grid container justifyContent="space-between" alignItems="flex-start">
+                  <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
+                  <Typography color="text.primary" component="div">
+                    <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
+                  </Typography>
+                </Grid>
+                <Grid container justifyContent="space-between" alignItems="flex-start">
+                  <Typography>
+                    <Trans>Creator</Trans>
+                  </Typography>
+                  <Typography color="text.primary.main">
+                    {userFarmInfo ? (
+                      <Link href={explorerLink(userFarmInfo.creator.toString())} target="_blank">
+                        {shorten(userFarmInfo?.creator.toString())}
+                      </Link>
+                    ) : (
+                      "--"
                     )}
                   </Typography>
                 </Grid>
-
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>
-                    <Trans>Starting at</Trans>
-                  </Typography>
-                  <Typography color="text.primary">{timestampFormat(Number(farm.startTime) * 1000)}</Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End in</Trans>}</Typography>
-                  <Typography color="text.primary" component="div">
-                    <CountdownBox startTime={Number(farm.startTime)} endTime={Number(farm.endTime)} />
-                  </Typography>
-                </Grid>
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Created by</Trans>
-                  </Typography>
-                  <Typography color="text.primary.main">
-                    <Link href={explorerLink(farm.creator.toString())} target="_blank">
-                      {shorten(farm.creator.toString())}
-                    </Link>
-                  </Typography>
-                </Grid>
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Incentive pool Id</Trans>
+                    <Trans>Canister ID</Trans>
                   </Typography>
                   <Typography color="text.primary">
-                    <Link href={explorerLink(farm.farmCid)} target="_blank">
-                      {shorten(farm.farmCid)}
+                    <Link href={explorerLink(farmId)} target="_blank">
+                      {shorten(farmId)}
                     </Link>
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="space-between" alignItems="flex-start">
                   <Typography>
-                    <Trans>Cycles left</Trans>
+                    <Trans>Cycles Left</Trans>
                   </Typography>
                   <Typography color="text.primary">
                     {cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
@@ -437,8 +526,8 @@ export default function FarmPool({ farm, state, stakeOnly }: FarmPoolProps) {
 
                 <Grid item container justifyContent="flex-end">
                   <Typography color="text.primary">
-                    <Link href={`${INFO_URL}/staking-farm/details/${farm.farmCid}`} target="_blank">
-                      <Trans>Farms Info</Trans>
+                    <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank">
+                      <Trans>Farm Info</Trans>
                     </Link>
                   </Typography>
                 </Grid>

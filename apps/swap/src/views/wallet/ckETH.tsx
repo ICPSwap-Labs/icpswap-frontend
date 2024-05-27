@@ -5,7 +5,7 @@ import { t } from "@lingui/macro";
 import { Wrapper, Breadcrumbs, type Tab } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { useFetchBlockNumber } from "hooks/web3/useBlockNumber";
-import MintETH from "./components/ckETH/Mint";
+import MintCkETH from "./components/ckETH/Mint";
 import DissolveETH from "./components/ckETH/Dissolve";
 
 export const Buttons = [
@@ -50,7 +50,7 @@ export default function ckETH() {
       {type === "dissolve" ? (
         <DissolveETH handleChange={handleChange} buttons={Buttons} active={active} />
       ) : (
-        <MintETH handleChange={handleChange} buttons={Buttons} active={active} />
+        <MintCkETH handleChange={handleChange} buttons={Buttons} active={active} />
       )}
     </Wrapper>
   );

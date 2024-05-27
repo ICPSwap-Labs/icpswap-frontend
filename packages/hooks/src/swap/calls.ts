@@ -452,23 +452,23 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(poolId: string | undefined, principal: string | undefined) {
+export function useSwapUserPositions(
+  poolId: string | undefined,
+  principal: string | undefined,
+  refresh?: boolean | number,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !poolId) return undefined;
       return await getSwapUserPositions(poolId, principal);
     }, [principal, poolId]),
+    refresh,
   );
 }
 
-export async function approvePosition(
-  identity: ActorIdentity,
-  poolId: string,
-  spender: string,
-  index: number | bigint,
-) {
+export async function approvePosition(poolId: string, spender: string, index: number | bigint) {
   return resultFormat<boolean>(
-    await (await swapPool(poolId, identity)).approvePosition(Principal.fromText(spender), BigInt(index)),
+    await (await swapPool(poolId, true)).approvePosition(Principal.fromText(spender), BigInt(index)),
   );
 }
 

@@ -3,7 +3,7 @@ import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SwitchIcon from "assets/images/swap/switch";
 import { SwapInput } from "components/swap/SwapInput";
-import { SWAP_FIELD, ICP, WRAPPED_ICP as WICP, ICP_TOKEN_INFO } from "constants/index";
+import { SWAP_FIELD, WRAPPED_ICP as WICP } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
@@ -26,6 +26,7 @@ import { WICPCanisterId } from "constants/canister";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { StatusResult } from "@icpswap/types";
+import { ICP } from "@icpswap/tokens";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -109,7 +110,7 @@ export default function Exchange() {
     [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
   };
 
-  const ICPFee = parseTokenAmount(ICP_TOKEN_INFO.transFee, ICP_TOKEN_INFO.decimals);
+  const ICPFee = parseTokenAmount(ICP.transFee, ICP.decimals);
 
   const { independentField, typedValue } = values;
 
@@ -377,7 +378,7 @@ export default function Exchange() {
       </Box>
       <Box mt="5px">
         <Typography align="right">
-          Fee: {parseTokenAmount(ICP_TOKEN_INFO.transFee, ICP_TOKEN_INFO.decimals).toFormat()} {ICP_TOKEN_INFO.symbol}
+          Fee: {parseTokenAmount(ICP.transFee, ICP.decimals).toFormat()} {ICP.symbol}
         </Typography>
       </Box>
       <Box mt={4}>

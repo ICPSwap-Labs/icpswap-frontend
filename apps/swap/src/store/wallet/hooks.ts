@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
 import {
-  saveWalletCacheToken,
-  deleteWalletCatchToken,
+  updateTaggedTokens,
+  deleteTaggedTokens,
   updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
@@ -16,29 +16,41 @@ export function toHexString(byteArray: number[]) {
   }).join("");
 }
 
-export function useWalletCatchTokenIds() {
-  return useAppSelector((state) => state.wallet.cacheTokenIds);
+export function useTaggedTokens() {
+  return useAppSelector((state) => state.wallet.taggedTokens);
 }
 
-export function useSaveCacheTokenCallback() {
+export function useUpdateTaggedTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens: string[]) => {
-      dispatch(saveWalletCacheToken(cacheTokens));
+    (tokens: string[]) => {
+      dispatch(updateTaggedTokens(tokens));
     },
     [dispatch],
   );
 }
 
-export function useDeleteCacheTokenCallback() {
+export function useDeleteTaggedTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens: string[]) => {
-      dispatch(deleteWalletCatchToken(cacheTokens));
+    (tokens: string[]) => {
+      dispatch(deleteTaggedTokens(tokens));
     },
     [dispatch],
+  );
+}
+
+export function useTaggedTokenManager() {
+  const taggedTokens = useTaggedTokens();
+
+  const updateTaggedTokens = useUpdateTaggedTokenCallback();
+  const deleteTaggedTokens = useDeleteTaggedTokenCallback();
+
+  return useMemo(
+    () => ({ taggedTokens, updateTaggedTokens, deleteTaggedTokens }),
+    [taggedTokens, updateTaggedTokens, deleteTaggedTokens],
   );
 }
 

@@ -8,8 +8,9 @@ import {
   icpAdapter,
 } from "@icpswap/token-adapter";
 import { icrc1, icrc2 } from "@icpswap/actor";
-import { TOKEN_STANDARD, ICP } from "constants/tokens";
+import { TOKEN_STANDARD } from "constants/tokens";
 import { Metadata } from "types/token";
+import { ICP } from "@icpswap/tokens";
 
 export async function standardCheck(id: string, standard: TOKEN_STANDARD) {
   let valid = false;

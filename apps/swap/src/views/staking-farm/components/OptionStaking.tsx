@@ -3,7 +3,7 @@ import { Grid, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { getFarmsState, POOL_STATE } from "utils/staking-farm";
 import { Theme } from "@mui/material/styles";
-import type { StakingFarmInfo, StakingFarmDepositArgs } from "@icpswap/types";
+import type { FarmDepositArgs, FarmInfo } from "@icpswap/types";
 import UnStakingModal from "./UnStakingModal";
 import StakingModal from "./StakingModal";
 
@@ -24,28 +24,26 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function OptionStaking({
-  farm,
-  resetData,
-  userIncentives,
-  userAllPositions,
-}: {
-  farm: StakingFarmInfo;
-  userIncentives: StakingFarmInfo | undefined;
+export interface OptionStakingProps {
+  userFarmInfo: FarmInfo | undefined;
   resetData?: () => void;
-  userAllPositions: StakingFarmDepositArgs[];
-}) {
-  const [unStakingModal, setUnStakingModal] = useState(false);
-  const [stakingModal, setStakingModal] = useState(false);
+  userStakedPositions: FarmDepositArgs[];
+  farmId: string;
+}
+
+export default function OptionStaking({ farmId, userFarmInfo, resetData, userStakedPositions }: OptionStakingProps) {
   const classes = useStyle();
 
-  const state = getFarmsState(farm);
+  const [unStakingModal, setUnStakingModal] = useState(false);
+  const [stakingModal, setStakingModal] = useState(false);
+
+  const state = getFarmsState(userFarmInfo);
 
   return (
     <>
       <Grid container sx={{ gap: "0 10px" }} justifyContent="flex-end">
         <Button
-          disabled={(userIncentives?.numberOfStakes ?? 0).toString() === "0"}
+          disabled={(userFarmInfo?.numberOfStakes ?? 0).toString() === "0"}
           className={classes.button}
           onClick={() => {
             setUnStakingModal(true);
@@ -64,17 +62,24 @@ export default function OptionStaking({
         </Button>
       </Grid>
 
-      {stakingModal && (
-        <StakingModal open={stakingModal} onClose={() => setStakingModal(false)} farm={farm} resetData={resetData} />
+      {stakingModal && userFarmInfo && (
+        <StakingModal
+          open={stakingModal}
+          onClose={() => setStakingModal(false)}
+          farm={userFarmInfo}
+          farmId={farmId}
+          resetData={resetData}
+        />
       )}
 
-      {unStakingModal && (
+      {unStakingModal && userFarmInfo && (
         <UnStakingModal
           open={unStakingModal}
           onClose={() => setUnStakingModal(false)}
-          farm={farm}
+          farm={userFarmInfo}
+          farmId={farmId}
           resetData={resetData}
-          userAllPositions={userAllPositions}
+          userStakedPositions={userStakedPositions}
         />
       )}
     </>

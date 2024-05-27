@@ -22,7 +22,7 @@ export default function LiquidityPoolIntro({ version }: { version?: "v2" | "v3" 
     if (version === "v2") {
       history.push("/swap/v2/liquidity/add");
     } else {
-      history.push("/swap/liquidity/add");
+      history.push("/liquidity/add");
     }
   }, [history]);
 

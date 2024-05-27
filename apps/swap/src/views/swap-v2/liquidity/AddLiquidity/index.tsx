@@ -374,7 +374,6 @@ export default memo(() => {
                           onChange={onTokenAChange}
                           loading={useCurrencyALoading === UseCurrencyState.LOADING}
                           disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
-                          version="v2"
                         />
                       </Grid>
                       <Grid item xs={6}>
@@ -383,7 +382,6 @@ export default memo(() => {
                           onChange={onTokenBChange}
                           loading={useCurrencyBLoading === UseCurrencyState.LOADING}
                           disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
-                          version="v2"
                         />
                       </Grid>
                     </Grid>

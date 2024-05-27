@@ -8,7 +8,7 @@ import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { useGlobalContext } from "hooks/useGlobalContext";
 import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
 import type { SwapPoolData, AllTokenOfSwapTokenInfo } from "@icpswap/types";

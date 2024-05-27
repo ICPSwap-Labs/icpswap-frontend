@@ -1,7 +1,7 @@
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { SelectPair } from "ui-component/index";
-import { useInfoAllPools, useTokensFromList } from "@icpswap/hooks";
+import { useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
 import Pools from "ui-component/analytic/Pools";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo } from "react";
@@ -12,7 +12,7 @@ export default function TopPools() {
   const [onlyTokenList, setOnlyTokenList] = useState(true);
   const [selectedPair, setSelectedPair] = useState<undefined | string>(undefined);
 
-  const { result: pools, loading } = useInfoAllPools();
+  const { result: pools, loading } = useNodeInfoAllPools();
 
   const { result: tokenList } = useTokensFromList();
 

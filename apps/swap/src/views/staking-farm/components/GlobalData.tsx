@@ -1,8 +1,6 @@
-import { useEffect } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Box } from "components/Mui";
 import { makeStyles } from "@mui/styles";
-import { gridSpacing } from "constants/theme";
-import { useGetGlobalData } from "hooks/staking-farm";
+import { useFarmGlobalTVL } from "hooks/staking-farm";
 import GlobalBg1 from "assets/images/staking/1.png";
 import GlobalBg3 from "assets/images/staking/3.png";
 import { Trans } from "@lingui/macro";
@@ -28,46 +26,59 @@ const useStyle = makeStyles(() => ({
 
 export default function GlobalData() {
   const classes = useStyle();
-  const [result, update] = useGetGlobalData();
-
-  useEffect(() => {
-    setTimeout(() => {
-      update();
-    }, 5000);
-  }, [result]);
+  const globalTVL = useFarmGlobalTVL();
 
   return (
-    <Grid container spacing={gridSpacing}>
-      <Grid item xs={12} md={6}>
-        <Grid container className={`${classes.item} tvl`} direction="column" justifyContent="center">
-          <Grid item className={classes.itemTitle}>
-            <Typography color="text.primary" fontSize="14px">
-              <Trans>TVL</Trans>
-            </Typography>
-          </Grid>
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        gap: "0 24px",
+        "@media(max-width: 960px)": {
+          flexDirection: "column",
+          gap: "24px 0",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          flex: "50%",
+          "@media(max-width: 960px)": {
+            flex: "100%",
+          },
+        }}
+      >
+        <Box className={`${classes.item} tvl`}>
+          <Typography color="text.primary" fontSize="14px" sx={{ margin: "0 0 18px 0" }}>
+            <Trans>TVL</Trans>
+          </Typography>
+
           <Grid item>
             <Typography color="text.primary" fontSize="24px">
-              {result?.stakeTokenTVL ?? "-"}
+              {globalTVL?.stakeTokenTVL ?? "-"}
             </Typography>
           </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Grid container className={`${classes.item} reward`} direction="column" justifyContent="center">
-          <Grid item className={classes.itemTitle}>
-            <Grid container>
-              <Typography color="text.primary" fontSize="14px" sx={{ display: "inline-block" }}>
-                <Trans>Total Farming Rewards</Trans>
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography color="text.primary" fontSize="24px">
-              {result?.rewardTokenTVL ?? "-"}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          flex: "50%",
+          "@media(max-width: 960px)": {
+            flex: "100%",
+          },
+        }}
+      >
+        <Box className={`${classes.item} reward`}>
+          <Typography color="text.primary" fontSize="14px" sx={{ margin: "0 0 18px 0" }}>
+            <Trans>Total Farming Rewards</Trans>
+          </Typography>
+
+          <Typography color="text.primary" fontSize="24px">
+            {globalTVL?.rewardTokenTVL ?? "-"}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 }

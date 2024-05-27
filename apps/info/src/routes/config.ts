@@ -68,8 +68,8 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
 
   "/staking-token": StakingToken,
   "/staking-token/details/:poolId/:state": StakingTokenDetails,
-  "/staking-farm": Farms,
-  "/staking-farm/details/:poolId": FarmsDetails,
+  "/farm": Farms,
+  "/farm/details/:farmId": FarmsDetails,
   "/marketplace": NFTMarket,
   "/token-claim": TokenClaim,
   "/token-claim/transactions/:id": TokenClaimTransactions,

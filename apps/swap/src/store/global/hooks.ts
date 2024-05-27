@@ -1,11 +1,24 @@
-import { useEffect, useMemo, useCallback } from "react";
-import { WRAPPED_ICP_TOKEN_INFO, TOKEN_STANDARD, ICP_TOKEN_INFO } from "constants/tokens";
+import { useEffect, useMemo, useCallback, useState } from "react";
+import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useImportedTokens, getTokenStandard } from "store/token/cache/hooks";
-import { use100ICPPriceInfo, useXDR2USD, useTokensFromList } from "@icpswap/hooks";
-import { updateXDR2USD, updateICPPriceList, updateTokenList, updatePoolStandardInitialed } from "./actions";
+import {
+  use100ICPPriceInfo,
+  useXDR2USD,
+  useTokensFromList,
+  getLimitedInfinityCall,
+  getAllTokensOfSwap,
+} from "@icpswap/hooks";
+import { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+
+import {
+  updateXDR2USD,
+  updateICPPriceList,
+  updateTokenList,
+  updatePoolStandardInitialed,
+  updateAllSwapTokens,
+} from "./actions";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -26,51 +39,6 @@ export interface SwapToken {
   decimals: number;
 }
 
-export function useSwapTokenList(version?: "v2" | "v3"): SwapToken[] {
-  const globalTokenList = useGlobalTokenList();
-  const importedTokens = useImportedTokens();
-
-  return useMemo(() => {
-    const globalTokens = globalTokenList
-      .map((token) => ({
-        canisterId: token.canisterId.toString(),
-        name: token.name,
-        symbol: token.symbol,
-        standard: token.standard as TOKEN_STANDARD,
-        decimals: Number(token.decimals),
-      }))
-      .filter((token) => {
-        if (version === "v2") {
-          return token.canisterId.toString() !== ICP_TOKEN_INFO.canisterId;
-        }
-        return token.canisterId.toString() !== WRAPPED_ICP_TOKEN_INFO.canisterId;
-      });
-
-    const iTokens = Object.keys(importedTokens ?? [])
-      // filter if global tokens is already exist
-      .filter((tokenId) => !globalTokens.find((t) => t.canisterId === tokenId))
-      .map((tokenId) => ({
-        canisterId: tokenId,
-        symbol: importedTokens[tokenId].symbol,
-        name: importedTokens[tokenId].name,
-        // If the token support multiple standards, and user import token before the pool is created
-        // So use the standard cached in storage firstly.
-        standard: (getTokenStandard(tokenId) ?? importedTokens[tokenId].standardType) as TOKEN_STANDARD,
-        decimals: importedTokens[tokenId].decimals,
-      }));
-
-    const ICPToken = {
-      canisterId: ICP_TOKEN_INFO.canisterId,
-      symbol: ICP_TOKEN_INFO.symbol,
-      name: ICP_TOKEN_INFO.name,
-      standard: ICP_TOKEN_INFO.standardType,
-      decimals: ICP_TOKEN_INFO.decimals,
-    } as SwapToken;
-
-    return [...(version === "v2" ? [] : [ICPToken]), ...iTokens, ...globalTokens];
-  }, [globalTokenList, importedTokens]);
-}
-
 export function useICPPrice() {
   const ICPPriceList = useICPPriceList();
 
@@ -88,7 +56,7 @@ export function useICPAmountUSDValue(amount: number | null | string | undefined 
 
   return useMemo(() => {
     if (!ICPPrice || !amount) return undefined;
-    return new BigNumber(ICPPrice).multipliedBy(parseTokenAmount(amount, ICP_TOKEN_INFO.decimals));
+    return new BigNumber(ICPPrice).multipliedBy(parseTokenAmount(amount, ICP.decimals));
   }, [ICPPrice, amount]);
 }
 
@@ -190,4 +158,34 @@ export function useTokenIsInTokenList(tokenId: string | undefined) {
     const token = globalTokenList.find((e) => e.canisterId === tokenId);
     return Boolean(token);
   }, [globalTokenList, tokenId]);
+}
+
+export function useStateSwapAllTokens() {
+  return useAppSelector((state: AppState) => state.global.allSwapTokens);
+}
+
+export function useFetchAllSwapTokens() {
+  const dispatch = useAppDispatch();
+  const allSwapTokens = useStateSwapAllTokens();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetch = async (offset: number, limit: number) => {
+      const result = await getAllTokensOfSwap(offset, limit);
+      return result?.content;
+    };
+
+    async function call() {
+      if (allSwapTokens.length > 0 || loading) return;
+
+      setLoading(true);
+      const data = await getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(fetch, 1000, 2);
+      dispatch(updateAllSwapTokens(data));
+      setLoading(false);
+    }
+
+    call();
+  }, [allSwapTokens, dispatch]);
+
+  return useMemo(() => ({ loading, result: allSwapTokens }), [loading, allSwapTokens]);
 }

@@ -5,6 +5,7 @@ import { MainCard, ListLoading, NoData, ALink } from "components/index";
 import { useBTCTransactions, BTCTx } from "hooks/ck-btc/useBTCCalls";
 import { parseTokenAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
+import { BodyCell, HeaderCell } from "@icpswap/ui";
 
 function RefreshIcon() {
   return (
@@ -61,20 +62,42 @@ function ListItem({ transaction, block, address }: ListItemProps) {
   return (
     <TableRow>
       <TableCell>
-        {transaction.status.block_time ? (
-          <Typography>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
-        ) : (
-          <Typography>--</Typography>
-        )}
+        <BodyCell>
+          {transaction.status.block_time ? (
+            <>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</>
+          ) : (
+            <>--</>
+          )}
+        </BodyCell>
       </TableCell>
       <TableCell>
-        {transaction.status.block_height ? (
-          <ALink link={`https://explorer.btc.com/btc/block/${transaction.status.block_height}`}>
-            {transaction.status.block_height}
+        <BodyCell>
+          {transaction.status.block_height ? (
+            <ALink link={`https://explorer.btc.com/btc/block/${transaction.status.block_height}`} color="text.primary">
+              {transaction.status.block_height}
+            </ALink>
+          ) : (
+            <BodyCell>--</BodyCell>
+          )}
+        </BodyCell>
+      </TableCell>
+      <TableCell>
+        <BodyCell
+          sx={{
+            maxWidth: "200px",
+            wordBreak: "break-all",
+            whiteSpace: "break-spaces",
+            "@media(max-width:640px)": { width: "300px" },
+          }}
+        >
+          <ALink
+            link={`https://explorer.btc.com/btc/transaction/${transaction.txid}`}
+            color="primary"
+            textDecorationColor="primary"
+          >
+            {transaction.txid}
           </ALink>
-        ) : (
-          <Typography>--</Typography>
-        )}
+        </BodyCell>
       </TableCell>
       <TableCell>
         <Typography
@@ -85,19 +108,11 @@ function ListItem({ transaction, block, address }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          <ALink link={`https://explorer.btc.com/btc/transaction/${transaction.txid}`}>{transaction.txid}</ALink>
-        </Typography>
-      </TableCell>
-      <TableCell>
-        <Typography
-          sx={{
-            maxWidth: "200px",
-            wordBreak: "break-all",
-            whiteSpace: "break-spaces",
-            "@media(max-width:640px)": { width: "300px" },
-          }}
-        >
-          <ALink link={`https://explorer.btc.com/btc/address/${transaction.vin[0]?.prevout.scriptpubkey_address}`}>
+          <ALink
+            link={`https://explorer.btc.com/btc/address/${transaction.vin[0]?.prevout.scriptpubkey_address}`}
+            color="primary"
+            textDecorationColor="primary"
+          >
             {transaction.vin[0]?.prevout.scriptpubkey_address}
           </ALink>
         </Typography>
@@ -111,19 +126,18 @@ function ListItem({ transaction, block, address }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          {/* <ALink link={`https://explorer.btc.com/btc/address/${transaction.vout[0]?.scriptpubkey_address}`}>
-            {transaction.vout[0]?.scriptpubkey_address}
-          </ALink> */}
-          <ALink link={`https://explorer.btc.com/btc/address/${address}`}>{address}</ALink>
+          <ALink link={`https://explorer.btc.com/btc/address/${address}`} color="primary" textDecorationColor="primary">
+            {address}
+          </ALink>
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography>{parseTokenAmount(getTransactionAmountOut(transaction, address), 8).toFormat()}</Typography>
+        <BodyCell>{parseTokenAmount(getTransactionAmountOut(transaction, address), 8).toFormat()}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>
+        <BodyCell>
           {block && transaction.status.block_height ? Number(block) - transaction.status.block_height : "--"}
-        </Typography>
+        </BodyCell>
       </TableCell>
     </TableRow>
   );
@@ -160,31 +174,45 @@ export default function Transactions({ address, block }: TransactionsProps) {
         <Trans>Wait for 12 confirmations, then update ckBTC balance.</Trans>
       </Typography>
 
-      <Box sx={{ margin: "0 0 3px 0" }}>
+      <Box sx={{ margin: "20px 0 3px 0" }}>
         <TableContainer className={loading || !address ? "with-loading" : ""}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Trans>Time</Trans>
+                  <HeaderCell>
+                    <Trans>Time</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Height</Trans>
+                  <HeaderCell>
+                    <Trans>Height</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Txid</Trans>
+                  <HeaderCell>
+                    <Trans>Txid</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>From</Trans>
+                  <HeaderCell>
+                    <Trans>From</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>To</Trans>
+                  <HeaderCell>
+                    <Trans>To</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Amount</Trans>
+                  <HeaderCell>
+                    <Trans>Amount</Trans>
+                  </HeaderCell>
                 </TableCell>
                 <TableCell>
-                  <Trans>Confirmations</Trans>
+                  <HeaderCell>
+                    <Trans>Confirmations</Trans>
+                  </HeaderCell>
                 </TableCell>
               </TableRow>
             </TableHead>

@@ -83,11 +83,12 @@ function Pools() {
   const pools = useMemo(() => {
     if (result?.content) {
       if (!!filter && filter === STATE.FINISHED) {
-        return result?.content.sort((a, b) => {
-          if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
-          if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
-          return 0;
-        });
+        // return result?.content.sort((a, b) => {
+        //   if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
+        //   if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
+        //   return 0;
+        // });
+        return result?.content.filter((e) => e.canisterId.toString() === "p7oyq-tiaaa-aaaak-afh6a-cai");
       }
 
       return result?.content;

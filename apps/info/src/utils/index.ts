@@ -87,8 +87,8 @@ export function swapLink(canisterId: string) {
 
 export function addLiquidityLink(canisterId: string) {
   if (canisterId === ICP_TOKEN_INFO.canisterId || canisterId === WRAPPED_ICP_TOKEN_INFO.canisterId)
-    return `${APP_LINK}/swap/liquidity/add/${ICP_TOKEN_INFO.canisterId}/`;
-  return `${APP_LINK}/swap/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
+    return `${APP_LINK}/liquidity/add/${ICP_TOKEN_INFO.canisterId}/`;
+  return `${APP_LINK}/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
 }
 
 export function toFormat(value: string | number | undefined) {

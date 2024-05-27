@@ -1,5 +1,5 @@
-import { Box, Typography , Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
+import { Trans, t } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { useUserWithdrawTxs } from "store/web3/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -7,19 +7,20 @@ import { StoredWithdrawTxValue } from "types/ckETH";
 import { parseTokenAmount } from "@icpswap/utils";
 import { EXPLORER_TX_LINK } from "constants/ckETH";
 import { ckETH } from "constants/tokens";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{tx.block_index}</Typography>
+        <BodyCell>{tx.block_index}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{tx.state ?? "--"}</Typography>
+        <BodyCell>{tx.state ?? "--"}</BodyCell>
       </TableCell>
       <TableCell>
         {tx.hash ? (
-          <Typography
+          <BodyCell
             sx={{
               maxWidth: "400px",
               wordBreak: "break-all",
@@ -27,17 +28,19 @@ function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
               "@media(max-width:640px)": { width: "300px" },
             }}
           >
-            <ALink link={`${EXPLORER_TX_LINK}/${tx.hash}`}>{tx.hash}</ALink>
-          </Typography>
+            <ALink link={`${EXPLORER_TX_LINK}/${tx.hash}`} color="primary" textDecorationColor="primary">
+              {tx.hash}
+            </ALink>
+          </BodyCell>
         ) : (
           <Typography>--</Typography>
         )}
       </TableCell>
       <TableCell>
         {tx.value ? (
-          <Typography>{parseTokenAmount(tx.value, ckETH.decimals).toFormat()}</Typography>
+          <BodyCell>{parseTokenAmount(tx.value, ckETH.decimals).toFormat()}</BodyCell>
         ) : (
-          <Typography>--</Typography>
+          <BodyCell>--</BodyCell>
         )}
       </TableCell>
     </TableRow>
@@ -47,6 +50,13 @@ function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
 export default function DissolveRecords() {
   const principal = useAccountPrincipalString();
   const userTxs = useUserWithdrawTxs(principal);
+
+  const Headers = [
+    { key: "block_index", label: t`Block Index` },
+    { key: "state", label: t`State` },
+    { key: "tx_id", label: t`Txid` },
+    { key: "amount", label: t`Amount` },
+  ];
 
   return (
     <MainCard>
@@ -61,18 +71,11 @@ export default function DissolveRecords() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <Trans>Block Index</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>State</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Txid</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Amount</Trans>
-                </TableCell>
+                {Headers.map((header) => (
+                  <TableCell key={header.key}>
+                    <HeaderCell>{header.label}</HeaderCell>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>{userTxs?.map((tx) => <ListItem key={tx.block_index} tx={tx} />)}</TableBody>

@@ -126,17 +126,7 @@ export default function Positions() {
             </>
           )}
         </MainCard>
-        {/* <Grid mt="10px" container justifyContent="center">
-          <TextButton onClick={() => setOpen(true)}>
-            <Trans>Your Invalid Positions?</Trans>
-          </TextButton>
-        </Grid> */}
-        {/* <Grid mt="10px" container justifyContent="center">
-          <TextButton onClick={() => setOpen(true)}>
-            <Trans>Your History Positions?</Trans>
-          </TextButton>
-        </Grid> */}
-        <TextButton sx={{ padding: "0 0 0 20px", margin: "5px 0 0 0" }} to="/swap/liquidity">
+        <TextButton sx={{ padding: "0 0 0 20px", margin: "5px 0 0 0" }} to="/liquidity">
           <Trans>Check your positions in Swap V3</Trans>
         </TextButton>
       </Grid>

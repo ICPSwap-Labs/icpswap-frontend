@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { TokenInfo } from "types/index";
 import { useTokenSupply } from "hooks/token/calls";
 import { parseTokenAmount } from "@icpswap/utils";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { ItemDisplay } from "./ItemDisplay";
 
 export interface LaunchDetailProps {

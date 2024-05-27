@@ -13,3 +13,4 @@ export * from "./ext-nft";
 export * from "./sns";
 export * from "./charts";
 export * from "./token-list";
+export * from "./chainKeyToken";

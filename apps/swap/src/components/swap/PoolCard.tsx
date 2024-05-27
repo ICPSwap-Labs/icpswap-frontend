@@ -75,7 +75,7 @@ export default function PoolCard({
     if (version === "v2") {
       history.push(`/swap/v2/liquidity/add/${token0}/${token1}/${Number(fee)}`);
     } else {
-      history.push(`/swap/liquidity/add/${token0}/${token1}/${Number(fee)}`);
+      history.push(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
     }
   }, [history]);
 

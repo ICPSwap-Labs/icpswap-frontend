@@ -38,6 +38,25 @@ Object.keys(CanisterIdsJson).forEach((canister) => {
   canisterIds[canister] = CanisterIdsJson[canister][network];
 });
 
+// Test canister ids
+async function dynamicGetTestCanisters() {
+  try {
+    const json = await import("../.canister_ids.json");
+
+    // Override the default canister ids
+    Object.keys(json).forEach((name: string) => {
+      CanisterIdsJson = {
+        ...CanisterIdsJson,
+        [name]: json[name],
+      };
+    });
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+dynamicGetTestCanisters();
+
 export const getCanisterId = (canisterName: string): string => {
   return canisterIds[canisterName];
 };

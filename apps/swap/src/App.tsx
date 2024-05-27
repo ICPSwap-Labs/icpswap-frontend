@@ -12,12 +12,14 @@ import ErrorBoundary from "components/ErrorBoundary";
 import WalletConnector from "components/authentication/ConnectorModal";
 import Loader from "components/Loading/LinearLoader";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
-import { useFetchInfoAllToken } from "hooks/info/useInfoTokens";
+import { useFetchInfoAllTokens } from "hooks/info/useInfoTokens";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
 import { GlobalContext } from "hooks/useGlobalContext";
+import TransactionsUpdater from "store/transactions/updater";
+
 import Web3Provider from "./components/Web3Injector";
-import { useFetchICPPrices } from "./store/global/hooks";
+import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
 import Snackbar from "./components/Snackbar";
 import NavigationScroll from "./components/NavigationScroll";
@@ -31,7 +33,8 @@ export default function App() {
 
   useFetchXDR2USD();
   useFetchICPPrices();
-  useFetchInfoAllToken();
+  useFetchInfoAllTokens();
+  useFetchAllSwapTokens();
 
   const { isConnected } = useConnectManager();
 
@@ -46,6 +49,7 @@ export default function App() {
     <StyledEngineProvider injectFirst>
       <Web3Provider>
         <Route component={GoogleAnalytics} />
+        <TransactionsUpdater />
         <ThemeProvider theme={theme(customization)}>
           <SnackbarProvider maxSnack={100}>
             <GlobalContext.Provider value={{ AllPools }}>

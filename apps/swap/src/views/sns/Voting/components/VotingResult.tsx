@@ -302,129 +302,127 @@ export function VotingResult({
         </Box>
       </Box>
 
-      {isExecuted ? null : (
-        <>
-          <Box sx={{ margin: "30px 0 0 0" }}>
-            <Box sx={{ display: "flex", gap: "0 10px" }}>
-              <Box sx={{ flex: 1 }}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
+      <>
+        <Box sx={{ margin: "30px 0 0 0" }}>
+          <Box sx={{ display: "flex", gap: "0 10px" }}>
+            <Box sx={{ flex: 1 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  background: theme.colors.successDark,
+                  "&:hover": {
                     background: theme.colors.successDark,
-                    "&:hover": {
-                      background: theme.colors.successDark,
-                    },
-                  }}
-                  disabled={checkedNeuronIds.length === 0}
-                  onClick={handleAdopt}
-                >
-                  <Trans>Adopt</Trans>
-                </Button>
-              </Box>
+                  },
+                }}
+                disabled={checkedNeuronIds.length === 0}
+                onClick={handleAdopt}
+              >
+                <Trans>Adopt</Trans>
+              </Button>
+            </Box>
 
-              <Box sx={{ flex: 1 }}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
+            <Box sx={{ flex: 1 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  background: theme.colors.errorDark,
+                  "&:hover": {
                     background: theme.colors.errorDark,
-                    "&:hover": {
-                      background: theme.colors.errorDark,
-                    },
-                  }}
-                  disabled={checkedNeuronIds.length === 0}
-                  onClick={handleReject}
-                >
-                  <Trans>Reject</Trans>
-                </Button>
-              </Box>
+                  },
+                }}
+                disabled={checkedNeuronIds.length === 0}
+                onClick={handleReject}
+              >
+                <Trans>Reject</Trans>
+              </Button>
             </Box>
           </Box>
+        </Box>
 
-          {voteableNeurons && proposal_data && voteableNeurons.length > 0 ? (
-            <Box sx={{ margin: "10px 0 0 0" }}>
-              <VotableNeurons
-                voteableNeurons={voteableNeurons}
-                onCheckedChange={handleCheckedNeuronIdsChange}
-                proposal={proposal_data}
-              />
+        {voteableNeurons && proposal_data && voteableNeurons.length > 0 ? (
+          <Box sx={{ margin: "10px 0 0 0" }}>
+            <VotableNeurons
+              voteableNeurons={voteableNeurons}
+              onCheckedChange={handleCheckedNeuronIdsChange}
+              proposal={proposal_data}
+            />
+          </Box>
+        ) : (
+          <Typography sx={{ margin: "10px 0 0 0" }}>
+            <Trans>You don't have any neurons to vote</Trans>
+          </Typography>
+        )}
+
+        <VotedNeurons votedNeurons={votedNeurons} proposal_data={proposal_data} />
+
+        {ineligibleNeurons && ineligibleNeurons.length > 0 ? (
+          <Box sx={{ margin: "20px 0 0 0" }}>
+            <Box
+              sx={{ display: "flex", gap: "0 5px", alignItems: "center", cursor: "pointer" }}
+              onClick={() => setIneligibleOpen(!ineligibleOpen)}
+            >
+              <Typography>
+                <Trans>{ineligibleNeurons.length} Ineligible neurons</Trans>
+              </Typography>
+              <ChevronDown size="18px" style={{ transform: ineligibleOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
             </Box>
-          ) : (
-            <Typography sx={{ margin: "10px 0 0 0" }}>
-              <Trans>You don't have any neurons to vote</Trans>
-            </Typography>
-          )}
-
-          <VotedNeurons votedNeurons={votedNeurons} proposal_data={proposal_data} />
-
-          {ineligibleNeurons && ineligibleNeurons.length > 0 ? (
-            <Box sx={{ margin: "20px 0 0 0" }}>
-              <Box
-                sx={{ display: "flex", gap: "0 5px", alignItems: "center", cursor: "pointer" }}
-                onClick={() => setIneligibleOpen(!ineligibleOpen)}
-              >
-                <Typography>
-                  <Trans>{ineligibleNeurons.length} Ineligible neurons</Trans>
+            <Collapse in={ineligibleOpen}>
+              <Box sx={{ padding: "12px" }}>
+                <Typography sx={{ fontSize: "12px" }}>
+                  <Trans>
+                    The following neurons are not eligible to vote. They either have dissolve delays of less than 1
+                    month, 1 day at the time when the proposal was submitted, or they were created after the proposal
+                    was submitted.
+                  </Trans>
                 </Typography>
-                <ChevronDown size="18px" style={{ transform: ineligibleOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
-              </Box>
-              <Collapse in={ineligibleOpen}>
-                <Box sx={{ padding: "12px" }}>
-                  <Typography sx={{ fontSize: "12px" }}>
-                    <Trans>
-                      The following neurons are not eligible to vote. They either have dissolve delays of less than 1
-                      month, 1 day at the time when the proposal was submitted, or they were created after the proposal
-                      was submitted.
-                    </Trans>
-                  </Typography>
 
-                  <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "10px 0" }}>
-                    {ineligibleNeurons.map((ineligibleNeuron, index) => (
-                      <Box
-                        key={ineligibleNeuron.id[0]?.id ? toHexString(ineligibleNeuron.id[0]?.id) : `neuron_${index}`}
-                        sx={{
-                          display: "flex",
+                <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "10px 0" }}>
+                  {ineligibleNeurons.map((ineligibleNeuron, index) => (
+                    <Box
+                      key={ineligibleNeuron.id[0]?.id ? toHexString(ineligibleNeuron.id[0]?.id) : `neuron_${index}`}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        "@media(max-width: 640px)": {
+                          flexDirection: "column",
                           justifyContent: "space-between",
-                          alignItems: "center",
-                          "@media(max-width: 640px)": {
-                            flexDirection: "column",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                          },
-                        }}
-                      >
+                          alignItems: "flex-start",
+                        },
+                      }}
+                    >
+                      <Typography sx={{ fontSize: "12px" }}>
+                        {neuronFormat(ineligibleNeuron) ? shorten(neuronFormat(ineligibleNeuron).id, 12) : "--"}
+                      </Typography>
+                      {minimumDissolveDelaySeconds !== undefined ? (
                         <Typography sx={{ fontSize: "12px" }}>
-                          {neuronFormat(ineligibleNeuron) ? shorten(neuronFormat(ineligibleNeuron).id, 12) : "--"}
+                          <Trans>
+                            dissolve delay &lt; {secondsToDissolveDelayDuration(minimumDissolveDelaySeconds)}
+                          </Trans>
                         </Typography>
-                        {minimumDissolveDelaySeconds !== undefined ? (
-                          <Typography sx={{ fontSize: "12px" }}>
-                            <Trans>
-                              dissolve delay &lt; {secondsToDissolveDelayDuration(minimumDissolveDelaySeconds)}
-                            </Trans>
-                          </Typography>
-                        ) : null}
-                      </Box>
-                    ))}
-                  </Box>
+                      ) : null}
+                    </Box>
+                  ))}
                 </Box>
-              </Collapse>
-            </Box>
-          ) : null}
+              </Box>
+            </Collapse>
+          </Box>
+        ) : null}
 
-          <VoteConfirm
-            governance_id={governance_id}
-            proposal_id={proposal_id}
-            proposal={proposal_data}
-            rejected={!adopt}
-            open={confirmOpen}
-            onClose={() => setConfirmOpen(false)}
-            votingPowers={votingPowers}
-            voteNeurons={voteNeurons}
-            onVoteCallEnded={onRefresh}
-          />
-        </>
-      )}
+        <VoteConfirm
+          governance_id={governance_id}
+          proposal_id={proposal_id}
+          proposal={proposal_data}
+          rejected={!adopt}
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          votingPowers={votingPowers}
+          voteNeurons={voteNeurons}
+          onVoteCallEnded={onRefresh}
+        />
+      </>
     </Box>
   );
 }

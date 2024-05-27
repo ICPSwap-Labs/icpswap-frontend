@@ -3,22 +3,22 @@ import Loadable from "../components/Loading/Loadable";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
-const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
-const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/create")));
+const Farm = Loadable(lazy(() => import("../views/staking-farm/index")));
+const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 
 const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
+const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));
 const IncreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/IncreaseLiquidity")));
 const DecreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/DecreaseLiquidity")));
-const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/Reclaim")));
+const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/reclaim/Reclaim")));
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
-const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
@@ -52,6 +52,7 @@ const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const ckBTC = Loadable(lazy(() => import("../views/wallet/ckBTC")));
 const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
+const ckToken = Loadable(lazy(() => import("../views/wallet/ckToken")));
 
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
 const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launchpad/Launch")));
@@ -59,29 +60,31 @@ const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
 const SnsVotes = Loadable(lazy(() => import("../views/sns/Voting/index")));
 const SnsVoting = Loadable(lazy(() => import("../views/sns/Voting/Voting")));
 
-export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
+export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any } = {
   "/wallet": Wallet,
 
   "/wallet/ckBTC": ckBTC,
   "/wallet/ckETH": ckETH,
+  "/wallet/ckToken": ckToken,
   "/wallet/nft/view/:canisterId/:tokenId": WalletNFTView,
   "/wallet/nft/canister/details/:id": NFTCanisterDetails,
 
   "/staking-token": StakingToken,
   "/staking-token/create": StakingTokenCreate,
-  "/staking-farm": StakingFarm,
-  "/staking-farm/create": StakingFarmCreate,
+  "/farm": Farm,
+  "/farm/create": CreateFarm,
 
   "/swap": Swap,
-  "/swap/liquidity": Liquidity,
-  "/swap/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
-  "/swap/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
-  "/swap/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+  "/liquidity": Liquidity,
+  "/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
+  "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
+  "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+
   "/swap/reclaim": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,
   "/swap/pcm/reclaim": PCMReclaim,
-  "/swap-pro": SwapPro,
+  "/swap/pro": SwapPro,
 
   "/swap/v2/liquidity": LiquidityV2,
   "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,

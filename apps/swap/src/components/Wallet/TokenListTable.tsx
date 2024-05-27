@@ -5,7 +5,7 @@ import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, prin
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { ICP, Connector, NO_HIDDEN_TOKENS, INFO_URL } from "constants/index";
+import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
@@ -14,16 +14,18 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { XTC, ckETH, ckBTC, WRAPPED_ICP, ICP_TOKEN_INFO, TOKEN_STANDARD } from "constants/tokens";
+import { XTC, ckETH, ckBTC, TOKEN_STANDARD } from "constants/tokens";
+import { ckSepoliaUSDC, ckUSDC, ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
-import { useToken } from "hooks/useCurrency";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+
 import { ReceiveModal } from "./Receive";
+import { RemoveToken } from "./RemoveToken";
 
 const useStyles = makeStyles(() => ({
   tokenAssets: {
@@ -34,6 +36,12 @@ const useStyles = makeStyles(() => ({
     "&:hover": {
       textDecoration: "underline",
     },
+  },
+  dot: {
+    width: "4px",
+    height: "4px",
+    borderRadius: "50%",
+    background: "#8492C4",
   },
 }));
 
@@ -89,6 +97,16 @@ type ckTOKEN = {
 const ckTokens: ckTOKEN[] = [
   { id: ckBTC.address, mintPath: "/wallet/ckBTC?type=mint", dissolvePath: "/wallet/ckBTC?type=dissolve" },
   { id: ckETH.address, mintPath: "/wallet/ckETH?type=mint", dissolvePath: "/wallet/ckETH?type=dissolve" },
+  {
+    id: ckUSDC.address,
+    mintPath: `/wallet/ckToken?type=mint&tokenId=${ckUSDC.address}`,
+    dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ckUSDC.address}`,
+  },
+  {
+    id: ckSepoliaUSDC.address,
+    mintPath: `/wallet/ckToken?type=mint&tokenId=${ckSepoliaUSDC.address}`,
+    dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ckSepoliaUSDC.address}`,
+  },
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
@@ -110,7 +128,7 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
   );
 }
 
-const SWAP_BUTTON_EXCLUDE = [ICP_TOKEN_INFO.canisterId, WRAPPED_ICP.address];
+const SWAP_BUTTON_EXCLUDE = [ICP.address, WRAPPED_ICP.address];
 
 export interface TokenListItemProps {
   isHideSmallBalances: boolean;
@@ -128,9 +146,12 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
   const history = useHistory();
 
-  const [, currency] = useToken(canisterId);
+  const infoTokenAddress = useMemo(() => {
+    if (canisterId === WRAPPED_ICP.address) return ICP.address;
+    return canisterId;
+  }, [canisterId]);
 
-  const infoToken = useInfoToken(currency?.address);
+  const infoToken = useInfoToken(infoTokenAddress);
 
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.priceUSD;
@@ -145,13 +166,13 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   const [receiveOpen, setReceiveOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
 
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange } = useContext(WalletContext);
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
 
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;
   }, [refreshInnerCounter, refreshCounter]);
 
-  const { result: tokenBalance } = useTokenBalance(canisterId, principal, refreshNumber);
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
 
   useEffect(() => {
     if (
@@ -175,7 +196,20 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(usdBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, tokenInfo]);
+  }, [tokenBalance, infoToken, tokenInfo, tokenUSDPrice]);
+
+  useEffect(() => {
+    if (
+      tokenInfo &&
+      tokenInfo.decimals !== undefined &&
+      tokenInfo.transFee !== undefined &&
+      tokenBalance &&
+      tokenBalanceLoading === false &&
+      !infoToken
+    ) {
+      setNoUSDTokens(tokenInfo.canisterId);
+    }
+  }, [tokenInfo, tokenBalance, tokenBalanceLoading, infoToken]);
 
   const handleCloseModal = async () => {
     setOpen(false);
@@ -202,7 +236,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 
     const { canisterId, standardType, symbol } = tokenInfo;
 
-    if (symbol === ICP_TOKEN_INFO.symbol) {
+    if (symbol === ICP.symbol) {
       mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
     } else if (root_canister_id) {
       mockALinkAndOpen(
@@ -221,7 +255,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
   };
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
-    if (tokenInfo && tokenInfo.symbol !== ICP_TOKEN_INFO.symbol) {
+    if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
       mockALinkAndOpen(
         `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
@@ -284,7 +318,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
           <Box>
             <Typography
               color="textPrimary"
-              className={tokenInfo?.symbol !== ICP_TOKEN_INFO.symbol ? classes.walletSymbol : ""}
+              className={tokenInfo?.symbol !== ICP.symbol ? classes.walletSymbol : ""}
               onClick={() => handleLoadToDetail(tokenInfo)}
               fontWeight={500}
             >
@@ -322,33 +356,34 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
         </Box>
       </Box>
 
-      <Box
-        sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}
-      >
-        {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
+      <Box sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "space-between", gap: "0 5px" }}>
+        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : <RemoveToken canisterId={canisterId} />}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}>
+          {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
 
-        <ActionButton label="Send" onClick={handleTransfer} />
-        <ActionButton label="Receive" onClick={handleReceive} />
-        <ActionButton label="Transactions" onClick={handleToTransactions} />
+          <ActionButton label="Send" onClick={handleTransfer} />
+          <ActionButton label="Receive" onClick={handleReceive} />
+          <ActionButton label="Transactions" onClick={handleToTransactions} />
 
-        {canisterId === ICP.address && walletType === Connector.NFID ? (
-          <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
-        ) : null}
+          {canisterId === ICP.address && walletType === Connector.NFID ? (
+            <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
+          ) : null}
 
-        {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
+          {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
 
-        {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
-          <>
-            <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
-            <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
-          </>
-        ) : null}
+          {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
+            <>
+              <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
+              <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
+            </>
+          ) : null}
 
-        {ckTokens
-          .filter((ele) => ele.id === tokenInfo?.canisterId)
-          .map((ele) => (
-            <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
-          ))}
+          {ckTokens
+            .filter((ele) => ele.id === tokenInfo?.canisterId)
+            .map((ele) => (
+              <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
+            ))}
+        </Box>
       </Box>
 
       {open && !!tokenInfo ? (
@@ -391,13 +426,13 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
 }
 
 export interface TokenListProps {
-  list: string[];
+  tokens: string[];
   loading?: boolean;
   isHideSmallBalances: boolean;
   searchValue: string;
 }
 
-export default function TokenList({ list, loading, isHideSmallBalances, searchValue }: TokenListProps) {
+export default function TokenList({ tokens, loading, isHideSmallBalances, searchValue }: TokenListProps) {
   return (
     <Box
       sx={{
@@ -415,7 +450,7 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         },
       }}
     >
-      {list.map((canisterId) => {
+      {tokens.map((canisterId) => {
         return (
           <TokenListItem
             key={canisterId}
@@ -426,7 +461,7 @@ export default function TokenList({ list, loading, isHideSmallBalances, searchVa
         );
       })}
 
-      {list.length === 0 && !loading ? <NoData /> : null}
+      {tokens.length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
         <LoadingRow>

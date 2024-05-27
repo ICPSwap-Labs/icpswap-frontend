@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import BigNumber from "bignumber.js";
+import { WalletTokenSortType } from "./types";
 
 export type TokenBalance = { [tokenId: string]: BigNumber };
 
@@ -10,6 +11,9 @@ export interface WalletContextProps {
   setRefreshTotalBalance?: (refreshTotalBalance: boolean) => void;
   refreshCounter: number;
   setRefreshCounter: (refreshCounter: number) => void;
+  allTokenUSDMap: { [tokenId: string]: BigNumber };
+  noUSDTokens: string[];
+  setNoUSDTokens: (token: string) => void;
   totalValue: BigNumber;
   setTotalValue: (tokenId: string, value: BigNumber) => void;
   transferTo: string;
@@ -20,6 +24,10 @@ export interface WalletContextProps {
   setPage: (page: Page) => void;
   totalUSDBeforeChange: BigNumber;
   setTotalUSDBeforeChange: (tokenId: string, value: BigNumber) => void;
+  sort: WalletTokenSortType;
+  setSort: (sort: WalletTokenSortType) => void;
 }
 
-export default createContext<WalletContextProps>({} as WalletContextProps);
+export default createContext<WalletContextProps>({
+  allTokenUSDMap: {},
+} as WalletContextProps);

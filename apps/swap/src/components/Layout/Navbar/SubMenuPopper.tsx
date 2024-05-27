@@ -2,6 +2,7 @@ import { makeStyles } from "@mui/styles";
 import { MenuList, MenuItem, Popper, Grid, Typography } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
 import { useLocation } from "react-router-dom";
+import { Link } from "components/index";
 
 import { Route } from "./config";
 
@@ -76,32 +77,33 @@ export function SubMenuPopper({
             const Icon = subRoute.icon;
 
             return (
-              <MenuItem
-                key={subRoute.key}
-                disabled={!!subRoute.disabled}
-                onClick={() => onMenuClick(subRoute)}
-                className={subRoute.disabled ? "opacity1" : ""}
-                sx={{
-                  "&:hover": {
-                    "& svg": {
-                      color: "text.primary",
+              <Link key={subRoute.key} to={subRoute.path} link={subRoute.link}>
+                <MenuItem
+                  disabled={!!subRoute.disabled}
+                  onClick={() => onMenuClick(subRoute)}
+                  className={subRoute.disabled ? "opacity1" : ""}
+                  sx={{
+                    "&:hover": {
+                      "& svg": {
+                        color: "text.primary",
+                      },
                     },
-                  },
-                }}
-              >
-                <Grid
-                  container
-                  alignItems="center"
-                  sx={{ color: isActive(subRoute) ? "text.primary" : "text.secondary" }}
+                  }}
                 >
-                  {Icon ? <Icon /> : null}
-                  <Grid item xs sx={{ marginLeft: "10px" }}>
-                    <Typography className={`customize-label ${isActive(subRoute) ? "active" : ""}`}>
-                      {subRoute.name}
-                    </Typography>
+                  <Grid
+                    container
+                    alignItems="center"
+                    sx={{ color: isActive(subRoute) ? "text.primary" : "text.secondary" }}
+                  >
+                    {Icon ? <Icon /> : null}
+                    <Grid item xs sx={{ marginLeft: "10px" }}>
+                      <Typography className={`customize-label ${isActive(subRoute) ? "active" : ""}`}>
+                        {subRoute.name}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </MenuItem>
+                </MenuItem>
+              </Link>
             );
           })}
         </MenuList>

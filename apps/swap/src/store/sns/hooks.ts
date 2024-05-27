@@ -24,7 +24,7 @@ export function useFetchSnsAllTokensInfo() {
     }
 
     call();
-  }, [allTokensInfo, dispatch]);
+  }, [dispatch]);
 
   return useMemo(() => ({ loading, result: allTokensInfo }), [loading, allTokensInfo]);
 }

@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react";
+import { memo, useCallback, useState, useEffect } from "react";
 import { Grid, Box, Typography, Card, InputAdornment } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Toggle from "components/Toggle";
@@ -88,37 +88,45 @@ export interface UserSettingProps {
   type: string;
 }
 
-export default memo(({ type }: UserSettingProps) => {
+function SwapUserSetting({ type }: UserSettingProps) {
   const classes = useStyles();
 
+  const [slippageValue, setSlippageValue] = useState<string>("");
   const [expertMode, toggleExpertMode] = useExpertModeManager();
   const [slippageTolerance, setSlippageTolerance] = useSlippageManager(type);
   const { multipleApprove, updateMultipleApprove } = useMultipleApproveManager();
 
-  const currentSlippageTolerance = useMemo(() => {
-    return new BigNumber(slippageTolerance).div(1000).toFixed(2);
-  }, [slippageTolerance]);
+  useEffect(() => {
+    setSlippageValue(new BigNumber(slippageTolerance).div(1000).toString());
+  }, []);
 
-  const handleSlippageToleranceInput = useCallback(
-    (event) => {
-      let { value } = event.target;
-      if (!value) value = 0;
-      setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
+  const handleSlippageInput = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+
+      setSlippageValue(value);
+
+      if (value !== "") {
+        setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
+      }
     },
     [setSlippageTolerance],
   );
 
-  const handleSlippageToleranceBlur = useCallback(
-    (event) => {
-      let { value } = event.target;
+  const handleSlippageBlur = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      let value: number | string | BigNumber = event.target.value;
 
       const defaultSlippageTolerance = getDefaultSlippageTolerance(type);
 
-      if (!value) {
-        value = defaultSlippageTolerance;
+      if (value === "") {
+        value = new BigNumber(defaultSlippageTolerance).div(1000).toNumber();
+        setSlippageValue(new BigNumber(defaultSlippageTolerance).div(1000).toString());
       } else if (new BigNumber(value).multipliedBy(1000).isGreaterThan(MAX_SLIPPAGE_TOLERANCE)) {
-        value = new BigNumber(defaultSlippageTolerance).div(1000);
+        value = new BigNumber(MAX_SLIPPAGE_TOLERANCE).div(1000);
+        setSlippageValue(new BigNumber(MAX_SLIPPAGE_TOLERANCE).div(1000).toString());
       }
+
       setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
     },
     [setSlippageTolerance],
@@ -126,6 +134,7 @@ export default memo(({ type }: UserSettingProps) => {
 
   const handleToggleSlippage = (slippage: { id: string; value: number }) => {
     setSlippageTolerance(slippage.value);
+    setSlippageValue(new BigNumber(slippage.value).dividedBy(1000).toString());
   };
 
   const handleMultipleApproveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,29 +142,6 @@ export default memo(({ type }: UserSettingProps) => {
     if (!value) return;
     updateMultipleApprove(Number(value));
   };
-
-  // const handleTransactionDeadlineInput = useCallback(
-  //   (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     const value = event.target.value;
-  //     setTransactionDeadline(new BigNumber(value).toNumber());
-  //   },
-  //   [setTransactionDeadline]
-  // );
-
-  // const handleTransactionsDeadlineBlur = useCallback(
-  //   (event: React.FocusEvent<HTMLInputElement>) => {
-  //     let value = event.target.value;
-
-  //     if (!value) {
-  //       value = String(DEFAULT_TRANSACTIONS_DEADLINE);
-  //     } else if (new BigNumber(value).isGreaterThan(MAX_TRANSACTIONS_DEADLINE)) {
-  //       value = String(MAX_TRANSACTIONS_DEADLINE);
-  //     }
-
-  //     setTransactionDeadline(new BigNumber(value).toNumber());
-  //   },
-  //   [setTransactionDeadline]
-  // );
 
   return (
     <Card
@@ -180,7 +166,7 @@ export default memo(({ type }: UserSettingProps) => {
         <Box className={classes.tolerance}>
           <NumberTextField
             className={classes.settingInput}
-            value={currentSlippageTolerance}
+            value={slippageValue}
             numericProps={{
               decimalScale: 2,
               allowNegative: false,
@@ -189,8 +175,8 @@ export default memo(({ type }: UserSettingProps) => {
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
-            onChange={handleSlippageToleranceInput}
-            onBlur={handleSlippageToleranceBlur}
+            onChange={handleSlippageInput}
+            onBlur={handleSlippageBlur}
           />
           <Grid
             container
@@ -204,7 +190,9 @@ export default memo(({ type }: UserSettingProps) => {
           >
             {SLIPPAGE_TOLERANCE.map((slippage, index) => (
               <Grid
-                className={`${classes.slippageButton} ${slippageTolerance === slippage.value ? "active" : ""}`}
+                className={`${classes.slippageButton} ${
+                  slippageTolerance === slippage.value && slippageValue !== "" ? "active" : ""
+                }`}
                 item
                 key={index}
                 container
@@ -218,32 +206,6 @@ export default memo(({ type }: UserSettingProps) => {
           </Grid>
         </Box>
       </Box>
-      {/* <Box mt={3}>
-        <Grid container alignItems="center">
-          <Typography mr={1} color="textPrimary">
-            Transactions deadline
-          </Typography>
-          <Tooltip tips="Your transaction will revert if it is pending for more than this period of time."></Tooltip>
-        </Grid>
-        <Grid mt={1}>
-          <TextField
-            value={transactionsDeadline}
-            className={classes.settingInput}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">minutes</InputAdornment>,
-              inputComponent: NumberFormat,
-              inputProps: {
-                decimalScale: 0,
-                allowNegative: false,
-                maxLength: 6,
-                value: transactionsDeadline,
-              },
-            }}
-            onChange={handleTransactionDeadlineInput}
-            onBlur={handleTransactionsDeadlineBlur}
-          />
-        </Grid>
-      </Box> */}
       <Box mt={3}>
         <Grid container alignItems="center">
           <Typography mr={1} color="textPrimary">
@@ -298,4 +260,6 @@ export default memo(({ type }: UserSettingProps) => {
       </Box> */}
     </Card>
   );
-});
+}
+
+export default memo(SwapUserSetting);

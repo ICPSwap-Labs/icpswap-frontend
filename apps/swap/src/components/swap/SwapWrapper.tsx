@@ -93,7 +93,7 @@ export function SwapWrapper({
 
   const handleTokenAChange = useCallback(
     (token: TokenInfo) => {
-      const prePath = ui === "pro" ? "/swap-pro" : "/swap";
+      const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
       if (token.canisterId === currencyB.currencyId) {
         history.push(`${prePath}?input=${token.canisterId}&output=${ICP.address}`);
@@ -106,7 +106,7 @@ export function SwapWrapper({
 
   const handleTokenBChange = useCallback(
     (token: TokenInfo) => {
-      const prePath = ui === "pro" ? "/swap-pro" : "/swap";
+      const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
       if (token.canisterId === currencyA.currencyId) {
         history.push(`${prePath}?input=${ICP.address}&output=${token.canisterId}`);

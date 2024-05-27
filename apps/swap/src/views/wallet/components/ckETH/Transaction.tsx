@@ -1,5 +1,5 @@
-import { Box, Typography , Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
+import { Trans, t } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import dayjs from "dayjs";
@@ -8,6 +8,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
 import { useTransaction } from "hooks/web3/useTransaction";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export interface ListItemProps {
   transaction: TX;
@@ -19,17 +20,21 @@ function ListItem({ transaction }: ListItemProps) {
   return (
     <TableRow>
       <TableCell>
-        <Typography>{dayjs(Number(transaction.timestamp)).format("YYYY-MM-DD HH:mm:ss")}</Typography>
+        <BodyCell>{dayjs(Number(transaction.timestamp)).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
       </TableCell>
       <TableCell>
-        {trans?.blockNumber ? (
-          <ALink link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`}>{trans.blockNumber}</ALink>
-        ) : (
-          "--"
-        )}
+        <BodyCell>
+          {trans?.blockNumber ? (
+            <ALink link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`} color="text.primary">
+              {trans.blockNumber}
+            </ALink>
+          ) : (
+            "--"
+          )}
+        </BodyCell>
       </TableCell>
       <TableCell>
-        <Typography
+        <BodyCell
           sx={{
             maxWidth: "200px",
             wordBreak: "break-all",
@@ -37,11 +42,13 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`}>{transaction.hash}</ALink>
-        </Typography>
+          <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="primary" textDecorationColor="primary">
+            {transaction.hash}
+          </ALink>
+        </BodyCell>
       </TableCell>
       <TableCell>
-        <Typography
+        <BodyCell
           sx={{
             maxWidth: "200px",
             wordBreak: "break-all",
@@ -49,11 +56,13 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.from}`}>{transaction.from}</ALink>
-        </Typography>
+          <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.from}`} color="primary" textDecorationColor="primary">
+            {transaction.from}
+          </ALink>
+        </BodyCell>
       </TableCell>
       <TableCell>
-        <Typography
+        <BodyCell
           sx={{
             maxWidth: "200px",
             wordBreak: "break-all",
@@ -61,14 +70,20 @@ function ListItem({ transaction }: ListItemProps) {
             "@media(max-width:640px)": { width: "300px" },
           }}
         >
-          {transaction.to ? <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.to}`}>{transaction.to}</ALink> : "--"}
-        </Typography>
+          {transaction.to ? (
+            <ALink link={`${EXPLORER_ADDRESS_LINK}/${transaction.to}`} color="primary" textDecorationColor="primary">
+              {transaction.to}
+            </ALink>
+          ) : (
+            "--"
+          )}
+        </BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{toSignificant(parseTokenAmount(transaction.value, 18).toString())}</Typography>
+        <BodyCell>{toSignificant(parseTokenAmount(transaction.value, 18).toString())}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{trans ? trans.confirmations : "--"}</Typography>
+        <BodyCell>{trans ? trans.confirmations : "--"}</BodyCell>
       </TableCell>
     </TableRow>
   );
@@ -82,6 +97,16 @@ export default function Transactions({ blockNumber }: TransactionsProps) {
   const principal = useAccountPrincipalString();
   const tx = usePrincipalTX(principal);
 
+  const Headers = [
+    { key: "Time", label: t`Time` },
+    { key: "Height", label: t`Height` },
+    { key: "Txid", label: t`Txid` },
+    { key: "From", label: t`From` },
+    { key: "To", label: t`To` },
+    { key: "Amount", label: t`Amount` },
+    { key: "Confirmations", label: t`Confirmations` },
+  ];
+
   return (
     <MainCard>
       <Box sx={{ display: "flex", justifyItems: "center" }}>
@@ -94,32 +119,16 @@ export default function Transactions({ blockNumber }: TransactionsProps) {
         {blockNumber}
       </Typography>
 
-      <Box sx={{ margin: "0 0 3px 0" }}>
+      <Box sx={{ margin: "20px 0 3px 0" }}>
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <Trans>Time</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Height</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Txid</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>From</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>To</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Amount</Trans>
-                </TableCell>
-                <TableCell>
-                  <Trans>Confirmations</Trans>
-                </TableCell>
+                {Headers.map((header) => (
+                  <TableCell key={header.key}>
+                    <HeaderCell>{header.label}</HeaderCell>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>

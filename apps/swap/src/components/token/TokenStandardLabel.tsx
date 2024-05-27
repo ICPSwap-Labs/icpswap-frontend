@@ -21,18 +21,45 @@ export const StandardLabelBg = {
   [TOKEN_STANDARD.ICRC2]: "#2D98BA",
 };
 
-export default function TokenStandardLabel({ standard }: { standard: TOKEN_STANDARD | undefined | null }) {
+export interface TokenStandardLabelProps {
+  standard: TOKEN_STANDARD | undefined | null;
+  borderRadius?: string;
+  height?: string;
+  fontSize?: string;
+  width?: string;
+}
+
+export default function TokenStandardLabel({
+  standard,
+  height,
+  fontSize = "12px",
+  borderRadius = "4px",
+  width,
+}: TokenStandardLabelProps) {
   return (
     <Box>
       <Box
         sx={{
-          width: "44px",
-          padding: "3px 0",
+          width,
+          minWidth: "44px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: height ?? "fit-content",
+          padding: "4px",
           backgroundColor: standard ? StandardLabelBg[standard] : "",
-          borderRadius: "4px",
+          borderRadius,
         }}
       >
-        <Typography fontSize="12px" color="#fff" fontWeight="500" align="center">
+        <Typography
+          sx={{
+            fontSize,
+            color: "text.primary",
+            fontWeight: 500,
+            textAlign: "center",
+            // transform: fontSize === "10px" ? "scale(0.8)" : "scale(1)",
+          }}
+        >
           {standard ? StandardText[standard] : "--"}
         </Typography>
       </Box>

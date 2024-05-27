@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Grid, Box, Collapse, Typography, Link } from "@mui/material";
 import { INFO_URL } from "constants/index";
-import { WRAPPED_ICP, ICP } from "constants/tokens";
 import { useStakingTokenPool, useStakingPoolCycles } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
@@ -14,7 +13,8 @@ import { Theme } from "@mui/material/styles";
 import { STATE, PoolData } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
+import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
+import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 
 interface CountdownBoxProps {
   startTime: number;

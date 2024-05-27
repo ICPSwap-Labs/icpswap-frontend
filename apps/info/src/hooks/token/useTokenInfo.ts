@@ -5,7 +5,7 @@ import { getTokenStandard } from "store/token/cache/hooks";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { IdbStorage } from "@icpswap/utils";
 import { DB_NAME, DB_VERSION } from "constants/db";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getTokenBaseInfo } from "./info-calls";
 import { useLocalTokens } from "./useLocalTokens";
@@ -70,6 +70,29 @@ export function useStorageInfo(tokenId: string | undefined) {
 
 function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageInfo is StorageTokenInfo {
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
+}
+
+export async function getTokenInfo(tokenId: string) {
+  const storageInfo = await getStorageInfo(tokenId);
+
+  if (isStorageInfoValid(storageInfo) && !isNeedUpdateTokenInfo(tokenId)) {
+    return storageInfo;
+  }
+
+  const baseTokenInfo = await getTokenBaseInfo(tokenId);
+
+  if (baseTokenInfo) {
+    await setStorageInfo(
+      tokenId,
+      JSON.stringify({
+        ...baseTokenInfo,
+        totalSupply: baseTokenInfo.totalSupply.toString(),
+        transFee: baseTokenInfo.transFee.toString(),
+      }),
+    );
+    updateTokenStorageTime(tokenId);
+    return baseTokenInfo as TokenInfo;
+  }
 }
 
 let get_tokens_info_index = 0;

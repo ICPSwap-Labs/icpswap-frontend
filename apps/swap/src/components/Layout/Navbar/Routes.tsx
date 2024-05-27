@@ -4,13 +4,14 @@ import { Box, Grid, Typography, useMediaQuery } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { Theme } from "@mui/material/styles";
 import { ChevronDown } from "react-feather";
+import { Link } from "components/index";
 
 import { Route, MAX_NUMBER } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
 
 export interface RoutesProps {
   routes: Route[];
-  onMenuClick: (route: Route) => void;
+  onMenuClick?: (route: Route) => void;
 }
 
 export function Routes({ routes, onMenuClick }: RoutesProps) {
@@ -45,7 +46,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
   const handleRouteClick = (route: Route) => {
     if (!route.subMenus) {
       handleSubMenuClose();
-      onMenuClick(route);
+      if (onMenuClick) onMenuClick(route);
     }
   };
 
@@ -53,57 +54,59 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
     <>
       {routes.map((route, index) =>
         index >= MAX_NUMBER ? null : (
-          <Box
-            key={route.path ?? index}
-            onClick={() => handleRouteClick(route)}
-            className={`${isActive(route) ? "active" : ""}`}
-            sx={{
-              height: "40px",
-              cursor: "pointer",
-              padding: "0 16px",
-              "&:hover": {
-                "& .MuiTypography-root": {
-                  color: "#FFFFFF",
+          <Link key={route.path ?? index} to={route.path ?? ""} link={route.link}>
+            <Box
+              key={route.path ?? index}
+              onClick={() => handleRouteClick(route)}
+              className={`${isActive(route) ? "active" : ""}`}
+              sx={{
+                height: "40px",
+                cursor: "pointer",
+                padding: "0 16px",
+                "&:hover": {
+                  "& .MuiTypography-root": {
+                    color: "#FFFFFF",
+                  },
                 },
-              },
-              "&.active": {
-                "& .MuiTypography-root": {
-                  color: "#FFFFFF",
+                "&.active": {
+                  "& .MuiTypography-root": {
+                    color: "#FFFFFF",
+                  },
                 },
-              },
-              [theme.breakpoints.down("md")]: {
-                height: "36px",
-                padding: "0 12px",
-              },
-            }}
-          >
-            <Grid
-              container
-              alignItems="center"
-              sx={{ height: "100%" }}
-              onMouseEnter={({ target }) => handleMenuMouseEnter(route, target)}
-              onMouseLeave={handleMenuMouseLeave}
+                [theme.breakpoints.down("md")]: {
+                  height: "36px",
+                  padding: "0 12px",
+                },
+              }}
             >
-              <Typography
-                sx={{ display: "flex", alignItems: "center", gap: "0 5px" }}
-                fontSize={matchDownMD ? "14px" : "16px"}
-                color={isActive(route) ? "text.primary" : "text.secondary"}
+              <Grid
+                container
+                alignItems="center"
+                sx={{ height: "100%" }}
+                onMouseEnter={({ target }) => handleMenuMouseEnter(route, target)}
+                onMouseLeave={handleMenuMouseLeave}
               >
-                {route.name}
-                {route.subMenus ? <ChevronDown size="18px" /> : null}
-              </Typography>
+                <Typography
+                  sx={{ display: "flex", alignItems: "center", gap: "0 5px" }}
+                  fontSize={matchDownMD ? "14px" : "16px"}
+                  color={isActive(route) ? "text.primary" : "text.secondary"}
+                >
+                  {route.name}
+                  {route.subMenus ? <ChevronDown size="18px" /> : null}
+                </Typography>
 
-              <SubMenuPopper
-                route={route}
-                onClickAway={handleSubMenuClose}
-                onMenuClick={handleRouteClick}
-                anchor={subMenuTarget}
-                subMenuKey={subMenuOpenKey}
-                placement="bottom-start"
-                menuWidth="180px"
-              />
-            </Grid>
-          </Box>
+                <SubMenuPopper
+                  route={route}
+                  onClickAway={handleSubMenuClose}
+                  onMenuClick={handleRouteClick}
+                  anchor={subMenuTarget}
+                  subMenuKey={subMenuOpenKey}
+                  placement="bottom-start"
+                  menuWidth="180px"
+                />
+              </Grid>
+            </Box>
+          </Link>
         ),
       )}
     </>

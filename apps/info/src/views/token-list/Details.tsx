@@ -7,7 +7,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { useToken } from "hooks/useToken";
 import { Trans, t } from "@lingui/macro";
 import { MainContainer, MainCard, TokenImage } from "ui-component/index";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
