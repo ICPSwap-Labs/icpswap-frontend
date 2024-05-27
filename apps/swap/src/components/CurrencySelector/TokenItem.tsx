@@ -210,7 +210,7 @@ export function TokenItem({
             </Box>
           )}
 
-          {showBalance ? null : (
+          {showBalance || isTagged ? null : (
             <PlusCircle color={theme.themeOption.textSecondary} size="16px" onClick={handleAddToCache} />
           )}
         </Grid>
