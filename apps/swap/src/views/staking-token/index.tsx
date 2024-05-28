@@ -83,12 +83,11 @@ function Pools() {
   const pools = useMemo(() => {
     if (result?.content) {
       if (!!filter && filter === STATE.FINISHED) {
-        // return result?.content.sort((a, b) => {
-        //   if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
-        //   if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
-        //   return 0;
-        // });
-        return result?.content.filter((e) => e.canisterId.toString() === "p7oyq-tiaaa-aaaak-afh6a-cai");
+        return result?.content.sort((a, b) => {
+          if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
+          if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
+          return 0;
+        });
       }
 
       return result?.content;
@@ -133,13 +132,17 @@ function Pools() {
 
   return (
     <>
-      <MainCard padding="24px 20px">
+      <MainCard padding="24px">
         <Grid
           container
+          justifyContent="space-between"
+          alignItems="center"
           sx={{
             "@media (max-width:640px)": {
-              gap: "10px 0",
+              gap: "24px 0",
               flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
             },
           }}
         >
@@ -147,10 +150,7 @@ function Pools() {
             <Box
               sx={{
                 display: "flex",
-                gap: "0 72px",
-                "@media (max-width:640px)": {
-                  gap: "0 20px",
-                },
+                gap: "0 20px",
               }}
             >
               {Pages.map((ele) => (
@@ -174,7 +174,7 @@ function Pools() {
             </Box>
           </Grid>
 
-          <Grid item alignItems="center" style={{ marginLeft: "auto" }}>
+          <Grid item alignItems="center">
             <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
               <TextButton onClick={handleWithdrawUnusedTokens}>
                 <Trans>Unused tokens</Trans>
