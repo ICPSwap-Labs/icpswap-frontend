@@ -208,7 +208,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
         level={1}
         padding="0px"
         sx={{
-          display: stakeOnly && userStakedPositions?.length === 0 ? "none" : "block",
+          display: stakeOnly ? (userStakedPositions && userStakedPositions.length > 0 ? "block" : "none") : "block",
           width: "384px",
           overflow: "hidden",
           height: "fit-content",
