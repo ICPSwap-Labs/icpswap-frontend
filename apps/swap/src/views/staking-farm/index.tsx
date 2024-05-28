@@ -65,17 +65,14 @@ function MainContent() {
           sx={{
             "@media (max-width:640px)": {
               flexDirection: "column",
-              gap: "10px 0",
+              gap: "24px 0",
             },
           }}
         >
           <Box
             sx={{
               display: "flex",
-              gap: "0 72px",
-              "@media (max-width:640px)": {
-                gap: "0 20px",
-              },
+              gap: "0 20px",
             }}
           >
             {Pages.map((ele) => (
@@ -104,14 +101,17 @@ function MainContent() {
               alignItems: "center",
               gap: "0 10px",
               "@media (max-width:640px)": {
-                justifyContent: "flex-end",
+                justifyContent: "flex-start",
               },
             }}
           >
             <Typography display="inline">
               <Trans>Staked only</Trans>
             </Typography>
-            <Switch checked={stakeOnly} onChange={(event: any) => handleToggleCheck(event.target.checked)} />
+            <Switch
+              checked={stakeOnly}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleToggleCheck(event.target.checked)}
+            />
           </Box>
         </Grid>
 
@@ -120,6 +120,9 @@ function MainContent() {
             position: "relative",
             minHeight: "440px",
             margin: "50px 0 0 0",
+            "@media (max-width:640px)": {
+              margin: "24px 0 0 0",
+            },
           }}
         >
           {!loading ? (
