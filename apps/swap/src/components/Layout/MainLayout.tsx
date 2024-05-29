@@ -7,6 +7,7 @@ import { GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import V3Event from "./V3Event";
 import Header from "./Header";
+import { SnsTips } from "./SnsTips";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -57,6 +58,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const [show, setShow] = useState(true);
   const [globalTipShow, setGlobalTipShow] = useState(true);
+  const [snsTipShow, setSnsTipShow] = useState(true);
 
   const isSmallPadding = useMemo(() => {
     return SMALL_PADDING_PATH.includes(location.pathname);
@@ -84,9 +86,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       <Box className={classes.mainContent}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
-        {globalTipShow && location.pathname.includes("sns") ? (
-          <GlobalTips onClose={() => setGlobalTipShow(false)} />
-        ) : null}
+        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
+        {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
 
         <main className={`${classes.content} ${isSmallPadding ? "small-padding" : ""}`}>{children}</main>
       </Box>
