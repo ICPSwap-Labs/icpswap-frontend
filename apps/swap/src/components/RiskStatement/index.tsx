@@ -3,6 +3,8 @@ import { Grid, Typography, Box, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import { RISK_WARNING_INDEX } from "constants/zIndex";
+
 import RiskStatementModal, { getRiskStorage } from "./Modal";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -67,6 +69,7 @@ export default function RiskStatement() {
           bottom: 0,
           left: 0,
           width: "100%",
+          zIndex: RISK_WARNING_INDEX,
         }}
       >
         <Grid

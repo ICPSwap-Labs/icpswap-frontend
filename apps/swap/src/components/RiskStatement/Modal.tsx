@@ -132,14 +132,15 @@ export default function RiskStatementModal({
           </Typography>
         </Box>
       </Box>
-      <Box>
+      <Box mt="10px">
         <Grid
-          mt="10px"
           container
           alignItems="center"
           sx={{
             cursor: "pointer",
             userSelect: "none",
+            gap: "0 5px",
+            flexWrap: "nowrap",
           }}
           onClick={() => setIsRead(!isRead)}
         >
@@ -149,7 +150,12 @@ export default function RiskStatementModal({
               setIsRead(checked);
             }}
           />
-          <Typography component="span" fontSize="12px">
+          <Typography
+            sx={{
+              fontSize: "12px",
+              wordBreak: "break-word",
+            }}
+          >
             <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
           </Typography>
         </Grid>
