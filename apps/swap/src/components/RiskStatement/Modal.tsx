@@ -81,10 +81,7 @@ export default function RiskStatementModal({
     >
       <Box>
         <Typography>
-          <Trans>
-            Using a Canister (the Smart Contracts) is not always safe, and there is always some potential risk in using
-            Tokens and/or cryptos. DYOR before investing.
-          </Trans>
+          <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
         </Typography>
       </Box>
       <Box className={classes.content}>
@@ -101,9 +98,9 @@ export default function RiskStatementModal({
         <Box mt="30px">
           <Typography>
             <Trans>
-              2. The Internet Computer ecosystem is in its early stage. All functions of ICPSwap have undergone multiple
-              rounds of internal and public testing and also iterative repair, but have not been audited yet. Please
-              bear this in mind when using the platform.
+              2. The Internet Computer ecosystem is in its growth stage. All functions of ICPSwap have undergone
+              multiple rounds of internal and public testing and also iterative repair, The ICPSwap DApp is now under
+              SNS control, enhancing its security!
             </Trans>
           </Typography>
         </Box>
@@ -137,6 +134,7 @@ export default function RiskStatementModal({
       </Box>
       <Box>
         <Grid
+          mt="10px"
           container
           alignItems="center"
           sx={{

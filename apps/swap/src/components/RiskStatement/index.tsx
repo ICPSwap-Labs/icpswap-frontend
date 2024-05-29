@@ -77,10 +77,7 @@ export default function RiskStatement() {
         >
           <Grid item xs>
             <Typography color="text.primary" fontSize={matchDownSM ? "12px" : "14px"}>
-              <Trans>
-                Using a Canister (the Smart Contracts) is not always safe, and there is always some potential risk in
-                using Tokens and/or cryptos. DYOR before investing.
-              </Trans>
+              <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
             </Typography>
           </Grid>
           <Box className={classes.button} onClick={handleRead}>
