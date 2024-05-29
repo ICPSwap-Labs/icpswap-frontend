@@ -58,7 +58,7 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <MainCard padding="24px 20px">
+      <MainCard padding="24px">
         <Grid
           container
           justifyContent="space-between"
@@ -120,9 +120,6 @@ function MainContent() {
             position: "relative",
             minHeight: "440px",
             margin: "50px 0 0 0",
-            "@media (max-width:640px)": {
-              margin: "24px 0 0 0",
-            },
           }}
         >
           {!loading ? (
