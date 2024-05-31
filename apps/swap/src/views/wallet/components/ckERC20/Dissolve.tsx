@@ -127,7 +127,7 @@ export default function DissolveCkERC20({
 
   // Refresh dissolve records each 20s
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = setInterval(() => {
+    let timer: number | null = setInterval(() => {
       setRefreshTrigger(refreshTrigger + 1);
     }, 60000);
 
