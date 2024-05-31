@@ -1,5 +1,5 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { t } from "@lingui/macro";
+import { Box, Button, Typography, useTheme } from "@mui/material";
+import { t, Trans } from "@lingui/macro";
 import { useListDeployedSNSs, getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState, useEffect } from "react";
 import type { ProposalData } from "@icpswap/types";
@@ -11,10 +11,11 @@ import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useHistory } from "react-router-dom";
-import { LoadingRow } from "components/index";
+import { Flex, LoadingRow } from "components/index";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
 
+import { MakeProposal } from "./components/proposal/MakeProposal";
 import { getProposalStatus } from "./proposal.utils";
 
 interface ProposalItemProps {
@@ -122,6 +123,7 @@ export default function Votes() {
   const [excludeFuncIds, setExcludeFuncIds] = useState<bigint[]>([]);
 
   const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
+  const [makeProposalOpen, setMakeProposalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (root_id) {
@@ -209,21 +211,45 @@ export default function Votes() {
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <Tabs />
 
-        <Box
+        <Flex
+          justify="space-between"
           sx={{
-            display: "flex",
-            alignItems: "center",
-            margin: "20px 0 0 0",
-            gap: "10px 20px",
-            flexWrap: "wrap",
+            "@media(max-width: 640px)": {
+              gap: "10px 0",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            },
           }}
         >
-          <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              margin: "20px 0 0 0",
+              gap: "10px 20px",
+              flexWrap: "wrap",
+            }}
+          >
+            <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
 
-          <SelectNeuronFuncs governance_id={governance_id} onConfirm={handleSelectNeuronFuncs} />
+            <SelectNeuronFuncs governance_id={governance_id} onConfirm={handleSelectNeuronFuncs} />
 
-          <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
-        </Box>
+            <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
+          </Box>
+
+          <>
+            <Button variant="contained" onClick={() => setMakeProposalOpen(true)}>
+              <Trans>Make Proposal</Trans>
+            </Button>
+
+            <MakeProposal
+              open={makeProposalOpen}
+              governanceId={governance_id}
+              onClose={() => setMakeProposalOpen(false)}
+            />
+          </>
+        </Flex>
 
         <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
           <InfiniteScroll

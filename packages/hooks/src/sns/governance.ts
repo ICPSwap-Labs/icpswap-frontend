@@ -10,6 +10,7 @@ import type {
   NeuronId,
   ManageNeuronResponse,
   ListNervousSystemFunctionsResponse,
+  Proposal,
 } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 import { neuronOperationCommand } from "./neuronCommand";
@@ -389,6 +390,21 @@ export async function neuronRemovePermissions(
             ],
             principal_id: [principal],
           },
+        },
+      ],
+    }),
+  );
+}
+
+export async function neuronMakeProposal(governance_id: string, neuron_id: Uint8Array | number[], proposal: Proposal) {
+  return resultFormat<ManageNeuronResponse>(
+    await (
+      await sns_governance(governance_id, true)
+    ).manage_neuron({
+      subaccount: [...neuron_id],
+      command: [
+        {
+          MakeProposal: proposal,
         },
       ],
     }),

@@ -30,3 +30,4 @@ export * from "./usePoolTransactions";
 export * from "./useUserPoolTransactions";
 export * from "./chainKeyToken";
 export * from "./useInterval";
+export * from "./ic";

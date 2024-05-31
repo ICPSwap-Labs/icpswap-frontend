@@ -310,6 +310,9 @@ export function Select({
                       height: "48px",
                       padding: "0 16px",
                       cursor: "pointer",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
                       ...(isFiltered ? { display: "none" } : {}),
                       "&:hover": {
                         background: "#313D67",

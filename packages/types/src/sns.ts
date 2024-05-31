@@ -35,6 +35,7 @@ export type {
   SnsBallot,
   SnsFunctionType,
   NeuronPermission,
+  ProposalAction,
 } from "@icpswap/candid";
 
 export interface TokenRoots {

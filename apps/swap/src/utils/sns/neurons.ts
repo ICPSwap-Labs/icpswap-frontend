@@ -152,17 +152,7 @@ export const getDissolvingTimeInSeconds = (neuron: Neuron): bigint | undefined =
   return dissolvingTimestamp - BigInt(nowInSeconds());
 };
 
-// export const getSpawningTimeInSeconds = (neuron: Neuron): bigint | undefined => {
-//   const dissolve_state = neuron.dissolve_state[0];
-
-//   if (dissolve_state === undefined || neuron.) return undefined;
-
-//   return neuronState(dissolve_state) === NeuronState.Spawning ? neuron?.spawnAtTimesSeconds !== undefined
-//     ? neuron.fullNeuron.spawnAtTimesSeconds - BigInt(nowInSeconds())
-//     : undefined;
-// }
-
-export function getNervousVotingPower(
+export function getNeuronVotingPower(
   neuron: Neuron,
   nervousSystemParameters: NervousSystemParameters,
   decimals: number,
@@ -332,4 +322,13 @@ export function getNeuronStakeSubAccountBytes(nonce: Uint8Array, principal: Prin
 
 export function buildNeuronStakeSubAccount(nonce: Uint8Array, principal: Principal): SubAccount {
   return SubAccount.fromBytes(getNeuronStakeSubAccountBytes(nonce, principal)) as SubAccount;
+}
+
+export function neuronHasBalance(neuron: Neuron, nervousSystemParameters: NervousSystemParameters) {
+  const reject_cost_e8s = nervousSystemParameters.reject_cost_e8s[0];
+  if (!reject_cost_e8s) return false;
+
+  return new BigNumber(neuron.cached_neuron_stake_e8s.toString())
+    .minus(neuron.neuron_fees_e8s.toString())
+    .gte(reject_cost_e8s.toString());
 }
