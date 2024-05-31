@@ -117,6 +117,10 @@ export const CandleChart = ({
       });
 
       chart.timeScale().fitContent();
+      chart.timeScale().applyOptions({
+        barSpacing: 20,
+      });
+
       setChart(chart);
     }
   }, [color, chartCreated, data, height, setValue, textColor, theme]);
