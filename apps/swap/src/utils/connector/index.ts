@@ -12,6 +12,7 @@ import { PlugConnector } from "./plug";
 import { ICPSwapConnector } from "./icpswap";
 import { InfinityConnector } from "./infinity";
 import { MeConnector } from "./me";
+import { MetamaskConnector } from "./metamask";
 
 type ConnectorClass = { new (...args: any[]): IConnector };
 
@@ -68,6 +69,8 @@ export class WalletConnector {
         return new InfinityConnector(config);
       case Connector.ME:
         return new MeConnector(config);
+      case Connector.Metamask:
+        return new MetamaskConnector(config);
       default:
         throw new Error(`Connector error ${Connector}: Not support this connect for now`);
     }

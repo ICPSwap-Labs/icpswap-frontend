@@ -93,6 +93,11 @@ export default function WalletConnector() {
       value: Connector.ME,
       logo: AstroXLogo,
     },
+    {
+      label: "MetaMask",
+      value: Connector.Metamask,
+      logo: "/images/connect/metamask.svg",
+    },
   ];
 
   return (
