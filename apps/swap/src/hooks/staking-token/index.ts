@@ -62,12 +62,12 @@ export function useStakingTokenDeposit() {
 
       if (useTransfer) {
         const { status: _status, message: _message } = await stakingPoolDeposit(poolId);
-        await stakingPoolClaimRewards(poolId, principal!);
+        await stakingPoolClaimRewards(poolId, principal);
         status = _status;
         message = _message;
       } else {
         const { status: _status, message: _message } = await stakingPoolDepositFrom(poolId, BigInt(amount));
-        await stakingPoolClaimRewards(poolId, principal!);
+        await stakingPoolClaimRewards(poolId, principal);
         status = _status;
         message = _message;
       }

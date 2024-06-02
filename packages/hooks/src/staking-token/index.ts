@@ -211,6 +211,7 @@ export function useStakingPoolClaimTransactions(
   );
 }
 
-export async function stakingPoolClaimRewards(canisterId: string, owner: Principal) {
+export async function stakingPoolClaimRewards(canisterId: string, owner: Principal | undefined) {
+  if (!owner) return resultFormat<boolean>({ err: "Principal is undefined" });
   return resultFormat<boolean>(await (await stakingPool(canisterId, true)).claimReward(owner));
 }
