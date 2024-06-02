@@ -12,6 +12,7 @@ export interface FlexProps {
   margin?: string;
   gap?: BoxProps["gap"];
   vertical?: boolean;
+  sx?: BoxProps["sx"];
 }
 
 export function Flex({
@@ -25,6 +26,7 @@ export function Flex({
   border,
   borderRadius,
   margin,
+  sx,
 }: FlexProps) {
   return (
     <Box
@@ -40,6 +42,7 @@ export function Flex({
         borderRadius,
         margin: margin ?? 0,
         gap,
+        ...sx,
       }}
     >
       {children}

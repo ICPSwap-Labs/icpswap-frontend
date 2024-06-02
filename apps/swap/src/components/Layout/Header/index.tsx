@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Grid, Box, useMediaQuery, Drawer } from "@mui/material";
+import { Flex } from "@icpswap/ui";
 import { createTheme } from "@mui/material/styles";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
+
 import LogoSection from "../../LogoSection";
 import ProfileSection from "./ProfileSection";
 import Navbar from "../Navbar";
@@ -29,60 +31,47 @@ export default function Header() {
 
   return (
     <>
-      <Grid container>
-        <Grid item>
-          <Grid container alignItems="center" sx={{ height: "100%" }}>
-            {matchDownMD ? (
-              <DensityMediumIcon sx={{ cursor: "pointer" }} onClick={handleToggleDrawer} />
-            ) : (
-              <>
-                <Box mr="20px">
-                  <LogoSection />
-                </Box>
-                <Grid item>
-                  <Navbar />
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          xs
-          flexWrap="wrap"
+      <Flex justify="space-between" sx={{ width: "100%" }}>
+        <Flex sx={{ height: "100%" }}>
+          {matchDownMD ? (
+            <DensityMediumIcon sx={{ cursor: "pointer" }} onClick={handleToggleDrawer} />
+          ) : (
+            <>
+              <Box mr="20px">
+                <LogoSection />
+              </Box>
+              <Grid item>
+                <Navbar />
+              </Grid>
+            </>
+          )}
+        </Flex>
+
+        <Flex
+          gap="0 12px"
+          justify="flex-end"
           sx={{
-            whiteSpace: "nowrap",
-            overflow: "auto",
-            textAlign: "right",
+            "@media(max-width: 640px)": { gap: "0 8px" },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "0 12px",
-              justifyContent: "flex-end",
-              "@media(max-width: 640px)": { gap: "0 8px" },
-            }}
-          >
-            <TokenClaim />
-            <ProfileSection />
-          </Box>
-        </Grid>
-      </Grid>
+          <TokenClaim />
+          <ProfileSection />
+        </Flex>
 
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        sx={{
-          width: "100%",
-          "& .MuiPaper-root": {
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          sx={{
             width: "100%",
-          },
-        }}
-      >
-        <MobileNavbar onClose={() => setDrawerOpen(false)} />
-      </Drawer>
+            "& .MuiPaper-root": {
+              width: "100%",
+            },
+          }}
+        >
+          <MobileNavbar onClose={() => setDrawerOpen(false)} />
+        </Drawer>
+      </Flex>
     </>
   );
 }
