@@ -5,6 +5,7 @@ import type { IConnector, CreateActorArgs, WalletConnectorConfig } from "./conne
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 const EXPIRE_TIME_STORAGE_NAME = "metamask-expire-time";
+const REQUEST_LINK_DOMAIN = "https://app.icpswap.com";
 
 export class MetamaskConnector implements IConnector {
   private config: {
@@ -45,6 +46,9 @@ export class MetamaskConnector implements IConnector {
 
   async connect() {
     if (this.client && (await this.isConnected())) {
+      const requestLinkResult: boolean = await this.client.requestLink(REQUEST_LINK_DOMAIN);
+      if (!requestLinkResult) return false;
+
       const identity: MsqIdentity | null = await this.client.requestLogin();
 
       if (identity === null) {
@@ -61,6 +65,8 @@ export class MetamaskConnector implements IConnector {
       if (!("Ok" in result)) return false;
 
       const client = result.Ok;
+      const requestLinkResult: boolean = await client.requestLink(REQUEST_LINK_DOMAIN);
+      if (!requestLinkResult) return false;
 
       const identity: MsqIdentity | null = await client.requestLogin();
 
