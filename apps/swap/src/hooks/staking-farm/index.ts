@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { useICPPrice } from "hooks/useUSDPrice";
-import { resultFormat, parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
 import {
-  useCallsData,
   getUserFarmInfo,
   getV3UserFarmRewardInfo,
   getFarmTVL,
@@ -13,7 +12,6 @@ import {
   useFarms,
   useInterval,
 } from "@icpswap/hooks";
-import { farm } from "@icpswap/actor";
 import type { FarmInfo } from "@icpswap/types";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -128,34 +126,6 @@ export function useIntervalUserRewardInfo(
   }, [canisterId, positionIds]);
 
   return useIntervalFetch(call, force);
-}
-
-export async function stake(farmId: string, positionIndex: bigint) {
-  const result = await (await farm(farmId, true)).stake(positionIndex);
-  return resultFormat<string>(result);
-}
-
-export async function unStake(farmId: string, tokenId: bigint) {
-  const result = await (await farm(farmId, true)).unstake(tokenId);
-  return resultFormat<string>(result);
-}
-
-export function usePoolCycles(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint }>(await (await farm(canisterId)).getCycleInfo()).data?.balance;
-    }, [canisterId]),
-  );
-}
-
-export function useV3StakingCycles(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint; available: bigint }>(await (await farm(canisterId)).getCycleInfo()).data;
-    }, [canisterId]),
-  );
 }
 
 export interface useFarmUSDValueArgs {

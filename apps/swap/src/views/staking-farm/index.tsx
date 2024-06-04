@@ -7,7 +7,7 @@ import { STATE } from "types/staking-farm";
 import { useFarms, useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
 
-import StakingPoolItem from "./components/StakingPoolItem";
+import Pool from "./components/Pool";
 import GlobalData from "./components/GlobalData";
 import FarmContext from "./context";
 
@@ -140,7 +140,7 @@ function MainContent() {
           {!loading ? (
             <Grid container justifyContent="center" sx={{ gap: "20px" }}>
               {farms?.map((ele) => (
-                <StakingPoolItem key={ele[0].toString()} stakeOnly={stakeOnly === "true"} state={state} farmTVL={ele} />
+                <Pool key={ele[0].toString()} stakeOnly={stakeOnly === "true"} state={state} farmTVL={ele} />
               ))}
             </Grid>
           ) : null}

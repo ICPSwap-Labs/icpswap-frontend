@@ -2,12 +2,7 @@ import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { MainCard, TokenImage, Flex, Tooltip } from "components/index";
-import {
-  useIntervalUserRewardInfo,
-  useIntervalUserFarmInfo,
-  useV3StakingCycles,
-  useFarmUSDValue,
-} from "hooks/staking-farm";
+import { useIntervalUserRewardInfo, useIntervalUserFarmInfo, useFarmUSDValue } from "hooks/staking-farm";
 import CountUp from "react-countup";
 import { makeStyles, useTheme } from "@mui/styles";
 import { useToken } from "hooks/useCurrency";
@@ -23,7 +18,13 @@ import {
   explorerLink,
   BigNumber,
 } from "@icpswap/utils";
-import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs, useSwapUserPositions } from "@icpswap/hooks";
+import {
+  useV3FarmRewardMetadata,
+  useFarmUserPositions,
+  useFarmInitArgs,
+  useSwapUserPositions,
+  useFarmCycles,
+} from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
@@ -174,7 +175,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   }, [positionIds?.length]);
 
   const { result: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
-  const { result: cycles } = useV3StakingCycles(farmId);
+  const { result: cycles } = useFarmCycles(farmId);
 
   // (Reward token amount each cycles * reward token price / Total valued staked ) * (3600*24*360/seconds each cycle) *100%
   const apr = useMemo(() => {

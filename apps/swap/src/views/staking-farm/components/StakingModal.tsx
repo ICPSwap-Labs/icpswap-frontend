@@ -2,12 +2,11 @@ import { useState, useMemo } from "react";
 import { Button, Grid, CircularProgress, Box, useTheme } from "@mui/material";
 import { t } from "@lingui/macro";
 import { useTips } from "hooks/useTips";
-import { stake } from "hooks/staking-farm";
 import { getLocaleMessage } from "locales/services";
 import { NoData, ListLoading, Modal } from "components/index";
 import { ResultStatus } from "types/global";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useSwapUserPositions, approvePosition } from "@icpswap/hooks";
+import { useSwapUserPositions, approvePosition, farmStake } from "@icpswap/hooks";
 import type { FarmInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 
@@ -55,7 +54,7 @@ export default function StakingModal({ open, farmId, onClose, resetData, farm }:
       return;
     }
 
-    const { status, message } = await stake(farmId, BigInt(selectedPositionId));
+    const { status, message } = await farmStake(farmId, BigInt(selectedPositionId));
 
     openTip(getLocaleMessage(message), status);
 

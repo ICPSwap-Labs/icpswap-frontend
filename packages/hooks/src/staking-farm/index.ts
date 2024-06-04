@@ -222,8 +222,6 @@ export function useV3FarmDistributeRecords(
   );
 }
 
-/* v3 farm storage */
-
 export function useFarmCycles(farmId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
@@ -231,4 +229,24 @@ export function useFarmCycles(farmId: string | undefined) {
       return resultFormat<{ balance: bigint; available: bigint }>(await (await farm(farmId)).getCycleInfo()).data;
     }, [farmId]),
   );
+}
+
+export async function farmStake(farmId: string, positionIndex: bigint) {
+  const result = await (await farm(farmId, true)).stake(positionIndex);
+  return resultFormat<string>(result);
+}
+
+export async function farmUnstake(farmId: string, positionIndex: bigint) {
+  const result = await (await farm(farmId, true)).unstake(positionIndex);
+  return resultFormat<string>(result);
+}
+
+/**
+ * @description withdraw the total reward of user
+ * @param {string} farmId farm pool canister id
+ * @return {*}
+ */
+export async function farmWithdraw(farmId: string) {
+  const result = await (await farm(farmId, true)).withdraw();
+  return resultFormat<bigint>(result);
 }

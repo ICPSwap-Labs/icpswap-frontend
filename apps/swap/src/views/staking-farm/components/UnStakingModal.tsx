@@ -4,9 +4,10 @@ import { t } from "@lingui/macro";
 import { useTips } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
 import { NoData, Modal } from "components/index";
-import type { FarmInfo, FarmDepositArgs } from "@icpswap/types";
-import { unStake } from "hooks/staking-farm";
+import { type FarmInfo, type FarmDepositArgs, ResultStatus } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
+import { farmUnstake, farmWithdraw } from "@icpswap/hooks";
+
 import { PositionItem } from "./PositionItem";
 
 export interface UnStakingModalProps {
@@ -37,9 +38,16 @@ export default function UnStakingModal({
     if (!selectedPositionId) return;
 
     setConfirmLoading(true);
-    const { status, message } = await unStake(farmId, BigInt(selectedPositionId));
+    const { status, message } = await farmUnstake(farmId, BigInt(selectedPositionId));
     openTip(getLocaleMessage(message), status);
+
+    if (status === ResultStatus.OK) {
+      const { status: withdrawStatus, message: withdrawMessage } = await farmWithdraw(farmId);
+      openTip(getLocaleMessage(withdrawMessage) ?? t`Failed to withdraw`, withdrawStatus);
+    }
+
     setConfirmLoading(false);
+
     if (resetData) resetData();
     if (onClose) onClose();
   };
