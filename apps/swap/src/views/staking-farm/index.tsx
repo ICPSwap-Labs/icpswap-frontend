@@ -21,10 +21,11 @@ const Tabs = [
 function MainContent() {
   const history = useHistory();
 
-  const { state, stakeOnly } = useParsedQueryString() as { state: STATE; stakeOnly: "true" | undefined };
-  const _state = useMemo(() => state ?? STATE.LIVE, [state]);
+  const { state: __state, stakeOnly } = useParsedQueryString() as { state: STATE; stakeOnly: "true" | undefined };
+  const state = useMemo(() => __state ?? STATE.LIVE, [__state]);
+
   // TODO: page
-  const { result: farms, loading } = useFarms(_state);
+  const { result: farms, loading } = useFarms(state);
 
   const handleToggle = useCallback(
     (value: { label: string; state: STATE }) => {
@@ -95,7 +96,7 @@ function MainContent() {
             {Tabs.map((tab) => (
               <Typography
                 key={tab.state}
-                color={_state === tab.state ? "textPrimary" : "textTertiary"}
+                color={state === tab.state ? "textPrimary" : "textTertiary"}
                 onClick={() => handleToggle(tab)}
                 sx={{
                   fontSize: "20px",
@@ -139,12 +140,7 @@ function MainContent() {
           {!loading ? (
             <Grid container justifyContent="center" sx={{ gap: "20px" }}>
               {farms?.map((ele) => (
-                <StakingPoolItem
-                  key={ele[0].toString()}
-                  stakeOnly={stakeOnly === "true"}
-                  state={_state}
-                  farmTVL={ele}
-                />
+                <StakingPoolItem key={ele[0].toString()} stakeOnly={stakeOnly === "true"} state={state} farmTVL={ele} />
               ))}
             </Grid>
           ) : null}
