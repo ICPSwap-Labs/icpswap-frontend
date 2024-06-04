@@ -165,7 +165,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const { updateUnStakedFarms, deleteUnStakedFarms } = useContext(FarmContext);
 
   useEffect(() => {
-    if (positionIds !== undefined) {
+    if (positionIds !== undefined && state === STATE.LIVE) {
       if (positionIds.length === 0) {
         updateUnStakedFarms(farmId);
       } else {
@@ -208,7 +208,12 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
       level={1}
       padding="0px"
       sx={{
-        display: stakeOnly ? (userStakedPositions && userStakedPositions.length > 0 ? "block" : "none") : "block",
+        display:
+          stakeOnly && state === STATE.LIVE
+            ? userStakedPositions && userStakedPositions.length > 0
+              ? "block"
+              : "none"
+            : "block",
         width: "384px",
         overflow: "hidden",
         height: "fit-content",
