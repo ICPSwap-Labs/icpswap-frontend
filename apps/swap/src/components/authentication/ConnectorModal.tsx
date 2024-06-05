@@ -6,13 +6,6 @@ import { Theme } from "@mui/material/styles";
 import { TextButton } from "components/index";
 import { Connector } from "constants/wallet";
 import { useWalletConnectorManager } from "store/auth/hooks";
-import PlugWalletLogo from "./icons/Plug.svg";
-import ICPSwapWalletLogo from "./icons/icpswap.svg";
-import StoicWalletLogo from "./icons/stoic.svg";
-import InterWalletLogo from "./icons/InternetIdentity.svg";
-import NFIDLogo from "./icons/NFID.svg";
-import InfinityWalletLogo from "./icons/Infinity.svg";
-import AstroXLogo from "./icons/AstroX.svg";
 
 import { ConnectorComponent } from "./connector";
 
@@ -69,29 +62,29 @@ export default function WalletConnector() {
     {
       label: "Internet Identity",
       value: Connector.IC,
-      logo: InterWalletLogo,
+      logo: "/images/connect/InternetIdentity.svg",
     },
-    { label: "Plug", value: Connector.PLUG, logo: PlugWalletLogo },
+    { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
     {
       label: "Stoic Wallet",
       value: Connector.STOIC,
-      logo: StoicWalletLogo,
+      logo: "/images/connect/stoic.svg",
     },
     {
       label: "ICPSwap Wallet",
       value: Connector.ICPSwap,
-      logo: ICPSwapWalletLogo,
+      logo: "/images/connect/icpswap.svg",
     },
-    { label: "NFID", value: Connector.NFID, logo: NFIDLogo },
+    { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
     {
       label: "Bitfinity Wallet",
       value: Connector.INFINITY,
-      logo: InfinityWalletLogo,
+      logo: "/images/connect/Infinity.svg",
     },
     {
       label: "AstroX ME",
       value: Connector.ME,
-      logo: AstroXLogo,
+      logo: "/images/connect/AstroX.svg",
     },
     {
       label: "MetaMask",
