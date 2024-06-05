@@ -45,7 +45,7 @@ export default function GlobalData() {
             <Grid item className={classes.itemTitle}>
               <Grid container>
                 <Typography color="text.primary" fontSize="14px">
-                  <Trans>TVL</Trans>
+                  <Trans>Total Value Locked (TVL)</Trans>
                 </Typography>
               </Grid>
             </Grid>
@@ -63,7 +63,7 @@ export default function GlobalData() {
             <Grid item className={classes.itemTitle}>
               <Grid container>
                 <Typography color="text.primary" fontSize="14px" sx={{ display: "inline-block" }}>
-                  <Trans>Total Earned Value</Trans>
+                  <Trans>Total Earning Value</Trans>
                 </Typography>
               </Grid>
             </Grid>
