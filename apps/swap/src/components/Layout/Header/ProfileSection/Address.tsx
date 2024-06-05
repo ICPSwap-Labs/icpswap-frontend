@@ -4,6 +4,19 @@ import { Theme } from "@mui/material/styles";
 import Copy, { CopyRef } from "components/Copy";
 import { mockALinkAndOpen } from "utils/index";
 import { ReactComponent as ExternalLink } from "assets/icons/external-link.svg";
+import { Connector } from "constants/wallet";
+import { useConnectorType } from "store/auth/hooks";
+
+const ConnectorIcon: { [key: string]: string } = {
+  [Connector.IC]: "/images/connect/InternetIdentity.svg",
+  [Connector.ME]: "/images/connect/AstroX.svg",
+  [Connector.ICPSwap]: "/images/connect/icpswap.svg",
+  [Connector.INFINITY]: "/images/connect/Infinity.svg",
+  [Connector.Metamask]: "/images/connect/metamask.svg",
+  [Connector.NFID]: "/images/connect/NFID.svg",
+  [Connector.PLUG]: "/images/connect/Plug.svg",
+  [Connector.STOIC]: "/images/connect/stoic.svg",
+};
 
 export interface AddressSectionProps {
   label: string;
@@ -28,6 +41,8 @@ export function AddressSection({ label, link, address, labelColor }: AddressSect
     mockALinkAndOpen(link, "explorers_address");
   };
 
+  const connector = useConnectorType();
+
   return (
     <Box
       sx={{
@@ -38,7 +53,7 @@ export function AddressSection({ label, link, address, labelColor }: AddressSect
         borderRadius: "8px",
       }}
     >
-      <Box sx={{ marginBottom: "8px" }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px", margin: "0 0 8px 0" }}>
         <Box
           sx={{
             padding: "3px 6px ",
@@ -51,6 +66,8 @@ export function AddressSection({ label, link, address, labelColor }: AddressSect
         >
           {label}
         </Box>
+
+        {connector ? <img style={{ width: "20px", height: "20px" }} src={ConnectorIcon[connector]} alt="" /> : null}
       </Box>
 
       <Typography
