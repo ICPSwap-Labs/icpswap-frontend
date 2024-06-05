@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 
 export function useInterval<T>(
   callback: (() => Promise<T | undefined>) | undefined,
-  force = false,
+  force: boolean | number = false,
   interval = 5000,
 ): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);

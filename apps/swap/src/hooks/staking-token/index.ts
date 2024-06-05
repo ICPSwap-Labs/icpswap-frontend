@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
 import {
-  getStakingPoolGlobalData,
   stakingPoolDeposit,
   stakingPoolDepositFrom,
   stakingPoolClaimRewards,
@@ -9,10 +8,11 @@ import {
   getStakingTokenUserInfo,
   getStakingTokenPool,
   getPaginationAllData,
+  useInterval,
 } from "@icpswap/hooks";
-import { ResultStatus, type StakingPoolUserInfo, StakingPoolGlobalData, StakingPoolInfo } from "@icpswap/types";
+import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
+import { useTips, MessageTypes } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -26,35 +26,12 @@ import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { SubAccount } from "@dfinity/ledger-icp";
 
-export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () => void] {
-  const [forceUpdate, setForceUpdate] = useState<number>(0);
-  const [data, setData] = useState<StakingPoolGlobalData | undefined>({
-    rewardAmount: 0,
-    stakingAmount: 0,
-  });
-
-  useEffect(() => {
-    const call = async () => {
-      const data = await getStakingPoolGlobalData();
-      setData(data);
-    };
-
-    call();
-  }, [forceUpdate]);
-
-  const update = useCallback(() => {
-    setForceUpdate((prevState) => prevState + 1);
-  }, [setForceUpdate]);
-
-  return [data, update];
-}
-
 export function useStakingTokenDeposit() {
-  const [openErrorTip] = useErrorTip();
+  const [openTip] = useTips();
   const principal = useAccountPrincipal();
 
   return useCallback(
-    async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
+    async (token: Token, amount: string, poolId: string) => {
       const useTransfer = isUseTransfer(token);
 
       let status: ResultStatus = ResultStatus.ERROR;
@@ -73,9 +50,11 @@ export function useStakingTokenDeposit() {
       }
 
       if (status === "err") {
-        openErrorTip(`Failed to deposit ${token.symbol}: ${message}`, options);
+        openTip(`Failed to deposit ${token.symbol}: ${message}`, MessageTypes.error);
         return false;
       }
+
+      openTip(t`Stake successfully`, MessageTypes.success);
 
       return true;
     },
@@ -216,51 +195,35 @@ export function useUserStakingInfo(
   poolId: string | undefined,
   principal: Principal | undefined,
 ): [StakingPoolUserInfo | undefined, () => void] {
-  const [userInfo, setUserInfo] = useState<StakingPoolUserInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
     setForceUpdate((prevState) => prevState + 1);
   }, []);
 
-  useEffect(() => {
-    const call = async () => {
-      if (!poolId || !principal) return;
+  const callback = useCallback(async () => {
+    if (!poolId || !principal) return;
+    return await getStakingTokenUserInfo(poolId, principal);
+  }, [poolId, principal]);
 
-      const result = await getStakingTokenUserInfo(poolId, principal);
+  const userStakingInfo = useInterval<StakingPoolUserInfo | undefined>(callback, forceUpdate);
 
-      if (result) {
-        setUserInfo(result);
-      }
-    };
-
-    if (principal && poolId) {
-      call();
-    }
-  }, [poolId, principal, forceUpdate]);
-
-  return [userInfo, update];
+  return [userStakingInfo, update];
 }
 
 export function useStakingPoolData(poolId: string | undefined): [StakingPoolInfo | undefined, () => void] {
-  const [poolData, setPoolData] = useState<StakingPoolInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
     setForceUpdate((prevState) => prevState + 1);
   }, []);
 
-  useEffect(() => {
-    const call = async () => {
-      if (!poolId) return;
-      const data = await getStakingTokenPool(poolId);
-      setPoolData(data);
-    };
+  const callback = useCallback(async () => {
+    if (!poolId) return;
+    return await getStakingTokenPool(poolId);
+  }, [poolId]);
 
-    if (poolId) {
-      call();
-    }
-  }, [poolId, forceUpdate]);
+  const poolInfo = useInterval<StakingPoolInfo | undefined>(callback, forceUpdate);
 
-  return [poolData, update];
+  return [poolInfo, update];
 }

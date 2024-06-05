@@ -12,8 +12,11 @@ export type Error =
   | { UnsupportedToken: string }
   | { InsufficientFunds: null };
 export interface GlobalDataInfo {
-  rewardAmount: number;
-  stakingAmount: number;
+  valueOfStaking: number;
+  valueOfRewarded: number;
+  totalStaker: bigint;
+  valueOfRewardsInProgress: number;
+  totalPools: bigint;
 }
 export interface InitRequest {
   stakingTokenSymbol: string;
@@ -37,19 +40,20 @@ export interface Page {
 }
 export type Result = { ok: bigint } | { err: string };
 export type Result_1 = { ok: StakingPoolInfo } | { err: string };
-export type Result_10 = { ok: Principal } | { err: string };
+export type Result_10 = { ok: Array<TokenGlobalDataInfo> } | { err: string };
+export type Result_11 = { ok: Principal } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
 export type Result_3 = { ok: TokenGlobalDataInfo } | { err: string };
-export type Result_4 =
+export type Result_4 = { ok: [string, bigint, bigint, boolean] } | { err: string };
+export type Result_5 =
   | {
       ok: { governanceCid: [] | [Principal]; feeReceiverCid: Principal };
     }
   | { err: Error };
-export type Result_5 = { ok: GlobalDataInfo } | { err: string };
-export type Result_6 = { ok: CycleInfo } | { err: Error };
-export type Result_7 = { ok: Array<Principal> } | { err: Error };
-export type Result_8 = { ok: Page } | { err: Page };
-export type Result_9 = { ok: Array<TokenGlobalDataInfo> } | { err: string };
+export type Result_6 = { ok: GlobalDataInfo } | { err: string };
+export type Result_7 = { ok: CycleInfo } | { err: Error };
+export type Result_8 = { ok: Array<Principal> } | { err: Error };
+export type Result_9 = { ok: Page } | { err: Page };
 export interface StakingPoolInfo {
   stakingTokenSymbol: string;
   startTime: bigint;
@@ -57,6 +61,7 @@ export interface StakingPoolInfo {
   creator: Principal;
   stakingToken: Token;
   rewardToken: Token;
+  rewardPerTime: bigint;
   name: string;
   createTime: bigint;
   stakingTokenFee: bigint;
@@ -81,14 +86,15 @@ export interface TokenGlobalDataInfo {
   rewardTokenAmount: bigint;
 }
 export interface _SERVICE {
-  createStakingPool: ActorMethod<[InitRequest], Result_10>;
+  createStakingPool: ActorMethod<[InitRequest], Result_11>;
   deleteStakingPool: ActorMethod<[Principal], Result_2>;
-  findPoolStatInfo: ActorMethod<[], Result_9>;
-  findStakingPoolPage: ActorMethod<[[] | [bigint], bigint, bigint], Result_8>;
-  getAdmins: ActorMethod<[], Result_7>;
-  getCycleInfo: ActorMethod<[], Result_6>;
-  getGlobalData: ActorMethod<[], Result_5>;
-  getInitArgs: ActorMethod<[], Result_4>;
+  findPoolStatInfo: ActorMethod<[], Result_10>;
+  findStakingPoolPage: ActorMethod<[[] | [bigint], bigint, bigint], Result_9>;
+  getAdmins: ActorMethod<[], Result_8>;
+  getCycleInfo: ActorMethod<[], Result_7>;
+  getGlobalData: ActorMethod<[], Result_6>;
+  getInitArgs: ActorMethod<[], Result_5>;
+  getOperationInfo: ActorMethod<[], Result_4>;
   getPoolStatInfo: ActorMethod<[Principal], Result_3>;
   getStakingPool: ActorMethod<[Principal], Result_1>;
   getVersion: ActorMethod<[], string>;
@@ -96,6 +102,7 @@ export interface _SERVICE {
   setRewardFee: ActorMethod<[bigint], Result_2>;
   setStakingPoolTime: ActorMethod<[Principal, bigint, bigint], Result_1>;
   setTokenPriceCanister: ActorMethod<[Principal], Result_2>;
+  setUpdateGlobalDataState: ActorMethod<[boolean], Result_2>;
   stopStakingPool: ActorMethod<[Principal], Result_1>;
   stopTimer: ActorMethod<[], undefined>;
   unclaimdRewardFee: ActorMethod<[Principal], Result>;

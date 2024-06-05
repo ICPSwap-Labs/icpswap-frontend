@@ -5,14 +5,15 @@ import { t } from "@lingui/macro";
 import { WRAPPED_ICP } from "@icpswap/tokens";
 import { parseTokenAmount, formatAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useSwapPools, useSwapProtocolData, useNFTTradeData } from "@icpswap/hooks";
+import { useSwapPools, useSwapProtocolData, useNFTTradeData, useStakeIntervalGlobalData } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "utils/index";
-import { useStakingGlobalData, useStakingTokenAllPools } from "hooks/staking-token/index";
+import { useStakingTokenAllPools } from "hooks/staking-token/index";
 import { useAllFarmPools, useFarmGlobalTVL } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
+
 import ICPPriceChart from "./ICPPriceChart";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -143,7 +144,7 @@ export default function Overview() {
 
   const { result: marketplaceTrade } = useNFTTradeData();
 
-  const [stakingGlobalData] = useStakingGlobalData();
+  const { data: stakingGlobalData } = useStakeIntervalGlobalData();
   const { result: stakingTokenAllPools } = useStakingTokenAllPools();
 
   const farmGlobalTvl = useFarmGlobalTVL();
@@ -195,7 +196,7 @@ export default function Overview() {
               <Item
                 label={t`TVL`}
                 value={formatDollarAmount(
-                  new BigNumber(stakingGlobalData?.stakingAmount ?? 0).times(icpPrice ?? 0).toString(),
+                  new BigNumber(stakingGlobalData?.valueOfStaking ?? 0).times(icpPrice ?? 0).toString(),
                 )}
               />
             </Box>
@@ -204,7 +205,7 @@ export default function Overview() {
               <Item
                 label={t`Total Earned Value`}
                 value={formatDollarAmount(
-                  new BigNumber(stakingGlobalData?.rewardAmount ?? 0).times(icpPrice ?? 0).toString(),
+                  new BigNumber(stakingGlobalData?.valueOfRewardsInProgress ?? 0).times(icpPrice ?? 0).toString(),
                 )}
               />
               <Item label={t`Total Pools`} value={stakingTokenAllPools ? stakingTokenAllPools.length : "--"} />

@@ -1,15 +1,14 @@
-import { useEffect } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { gridSpacing } from "constants/theme";
-import { useStakingGlobalData } from "hooks/staking-token/index";
 import GlobalBg1 from "assets/images/staking/1.png";
 import GlobalBg2 from "assets/images/staking/2.png";
 import GlobalBg3 from "assets/images/staking/3.png";
 import { Trans } from "@lingui/macro";
 import { useICPPrice } from "store/global/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
+import { useStakeIntervalGlobalData } from "@icpswap/hooks";
 
 const useStyle = makeStyles(() => ({
   item: {
@@ -36,18 +35,7 @@ const useStyle = makeStyles(() => ({
 export default function GlobalData() {
   const ICPPrice = useICPPrice();
   const classes = useStyle();
-  const [globalData, updateGlobalData] = useStakingGlobalData();
-
-  useEffect(() => {
-    let timer: number | undefined = window.setInterval(() => {
-      updateGlobalData();
-    }, 5000);
-
-    return () => {
-      if (timer !== null) clearInterval(timer);
-      timer = undefined;
-    };
-  }, []);
+  const { data: globalData } = useStakeIntervalGlobalData();
 
   return (
     <Box>
@@ -63,7 +51,9 @@ export default function GlobalData() {
             </Grid>
             <Grid item>
               <Typography color="text.primary" fontSize="24px">
-                {formatDollarAmount(new BigNumber(globalData?.stakingAmount ?? 0).times(ICPPrice ?? 0).toNumber())}
+                {globalData && ICPPrice
+                  ? formatDollarAmount(new BigNumber(globalData.valueOfStaking).times(ICPPrice).toNumber())
+                  : "--"}
               </Typography>
             </Grid>
           </Grid>
@@ -79,7 +69,9 @@ export default function GlobalData() {
             </Grid>
             <Grid item>
               <Typography color="text.primary" fontSize="24px">
-                {formatDollarAmount(new BigNumber(globalData?.rewardAmount ?? 0).times(ICPPrice ?? 0).toNumber())}
+                {globalData && ICPPrice
+                  ? formatDollarAmount(new BigNumber(globalData.valueOfRewardsInProgress).times(ICPPrice).toNumber())
+                  : "--"}
               </Typography>
             </Grid>
           </Grid>

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -102,7 +102,7 @@ export interface StakingPoolProps {
 export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
-  const [poolData, updatePoolData] = useStakingPoolData(pool?.canisterId.toString());
+  const [poolData] = useStakingPoolData(pool?.canisterId.toString());
   const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
 
   const callback = useCallback(async () => {
@@ -117,22 +117,8 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const stakingTokenPrice = useUSDPrice(stakingToken);
 
-  useEffect(() => {
-    let timer: number | undefined = window.setInterval(() => {
-      updateUserStakingInfo();
-      updatePoolData();
-    }, 5000);
-
-    return () => {
-      window.clearInterval(timer);
-      timer = undefined;
-    };
-  }, []);
-
   const resetData = () => {
-    if (pool?.canisterId) {
-      updateUserStakingInfo();
-    }
+    updateUserStakingInfo();
   };
 
   return (

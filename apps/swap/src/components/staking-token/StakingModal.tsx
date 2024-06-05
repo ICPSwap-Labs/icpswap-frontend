@@ -81,10 +81,7 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
     <Modal open={open} onClose={onClose} title={t`Staking`}>
       <Grid>
         <NumberTextField
-          id="reward"
-          name="reward"
           type="text"
-          style={{ marginBottom: 6 }}
           value={amount}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAmount(event.target.value)}
           defaultValue={amount}
