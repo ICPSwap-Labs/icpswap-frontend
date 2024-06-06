@@ -34,6 +34,10 @@ export const getMinterDashboard = (minterId: string) => {
   return `https://${minterId}.raw.icp0.io/dashboard`;
 };
 
+export const getIcDashboard = (tokenId: string) => {
+  return `https://dashboard.internetcomputer.org/ethereum/${tokenId}`;
+};
+
 export const EXPLORER_TX_LINKS = {
   [ChainId.MAINNET]: `https://etherscan.io/tx`,
   [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/tx`,
