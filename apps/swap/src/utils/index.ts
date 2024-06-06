@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 
 import JSBI from "jsbi";
-import { toSignificant } from "@icpswap/utils";
+import { toSignificant, explorerLink } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 
 // @ts-ignore  hijack bigint
@@ -48,11 +48,7 @@ export function mockALinkAndOpen(url: string, id: string): void {
 }
 
 export function getExplorerPrincipalLink(principalId: string): string {
-  if ((principalId ?? "").length > 27) {
-    return `https://icscan.io/principal/${principalId}`;
-  }
-
-  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
+  return explorerLink(principalId);
 }
 
 export function getExplorerAccountLink(account: string): string {

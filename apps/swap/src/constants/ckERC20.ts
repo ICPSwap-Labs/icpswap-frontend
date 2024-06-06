@@ -1,6 +1,5 @@
 import { ChainId } from "@icpswap/constants";
 import { EXPLORER_MAPS, chain, EXPLORER_BLOCK_LINKS, EXPLORER_TX_LINKS, getMinterDashboard } from "constants/web3";
-import { ckUSDC } from "@icpswap/tokens";
 
 const MINTER_ID = {
   [ChainId.MAINNET]: "sv3dd-oaaaa-aaaar-qacoa-cai",
