@@ -137,8 +137,8 @@ export default function Selector({
   }, [yourTokens, snsTokens, noneSnsTokens]);
 
   const noData = useMemo(() => {
-    return hiddenCanisterIds.length === allTokenCanisterIds.length;
-  }, [hiddenCanisterIds, allTokenCanisterIds]);
+    return hiddenCanisterIds.length === allTokenCanisterIds.length && showImportToken === false;
+  }, [hiddenCanisterIds, allTokenCanisterIds, showImportToken]);
 
   return (
     <>
