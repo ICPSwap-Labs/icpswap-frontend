@@ -22,6 +22,7 @@ import {
   timestampFormat,
   explorerLink,
   BigNumber,
+  formatDollarAmount,
 } from "@icpswap/utils";
 import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs, useSwapUserPositions } from "@icpswap/hooks";
 import Countdown from "react-countdown";
@@ -312,7 +313,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               <Trans>Total Value Staked</Trans>
             </Typography>
             <Typography color="text.primary" fontWeight={600}>
-              {poolTvl ? `$${poolTvl}` : "--"}
+              {poolTvl ? `${formatDollarAmount(poolTvl)}` : "--"}
             </Typography>
           </Flex>
 
@@ -387,7 +388,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography color="text.primary">{userTvl ? `$${userTvl}` : "--"}</Typography>
+              <Typography color="text.primary">{userTvl ? `${formatDollarAmount(userTvl)}` : "--"}</Typography>
             </Grid>
           </Grid>
         </Box>
