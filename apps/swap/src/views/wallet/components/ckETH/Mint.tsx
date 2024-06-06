@@ -20,6 +20,7 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useTokenBalance } from "hooks/token";
 import { ckETH } from "constants/tokens";
 import { Theme } from "@mui/material/styles";
+import type { Erc20MinterInfo } from "@icpswap/types";
 
 import { MainContent } from "../ckTokens/MainContent";
 import { LogosWrapper } from "../ckTokens/LogosWrapper";
@@ -54,9 +55,10 @@ export interface MintProps {
   buttons: { key: string; value: string }[];
   handleChange: (button: Tab) => void;
   active: string;
+  minterInfo?: Erc20MinterInfo;
 }
 
-export default function MintCkETH({ buttons, handleChange, active }: MintProps) {
+export default function MintCkETH({ buttons, handleChange, active, minterInfo }: MintProps) {
   const principal = useAccountPrincipalString();
   const { account, provider, chainId } = useWeb3React();
 
@@ -242,7 +244,7 @@ export default function MintCkETH({ buttons, handleChange, active }: MintProps) 
           </Box>
         </LogosWrapper>
       }
-      transactions={<Transaction blockNumber={blockNumber} />}
+      transactions={<Transaction blockNumber={blockNumber} minterInfo={minterInfo} />}
     />
   );
 }

@@ -9,6 +9,7 @@ import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
 import { useTransaction } from "hooks/web3/useTransaction";
 import { HeaderCell, BodyCell } from "@icpswap/ui";
+import type { Erc20MinterInfo } from "@icpswap/types";
 
 export interface ListItemProps {
   transaction: TX;
@@ -91,9 +92,10 @@ function ListItem({ transaction }: ListItemProps) {
 
 export interface TransactionsProps {
   blockNumber: number | undefined;
+  minterInfo?: Erc20MinterInfo;
 }
 
-export default function Transactions({ blockNumber }: TransactionsProps) {
+export default function Transactions({ blockNumber, minterInfo }: TransactionsProps) {
   const principal = useAccountPrincipalString();
   const tx = usePrincipalTX(principal);
 
@@ -118,6 +120,12 @@ export default function Transactions({ blockNumber }: TransactionsProps) {
         <Trans>Ethereum network block height:</Trans>&nbsp;
         {blockNumber}
       </Typography>
+      {minterInfo ? (
+        <Typography color="#ffffff" sx={{ margin: "5px 0 0 0" }}>
+          <Trans>Last ETH synced block number:</Trans>&nbsp;
+          {minterInfo.last_eth_scraped_block_number[0]?.toString()}
+        </Typography>
+      ) : null}
 
       <Box sx={{ margin: "20px 0 3px 0" }}>
         <TableContainer>

@@ -3,8 +3,10 @@ import { useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { Wrapper, Breadcrumbs, type Tab } from "components/index";
-import { useParsedQueryString } from "@icpswap/hooks";
+import { useParsedQueryString, useChainKeyMinterInfo } from "@icpswap/hooks";
 import { useFetchBlockNumber } from "hooks/web3/useBlockNumber";
+import { ckETH_MINTER_ID } from "constants/ckETH";
+
 import MintCkETH from "./components/ckETH/Mint";
 import DissolveETH from "./components/ckETH/Dissolve";
 
@@ -37,6 +39,8 @@ export default function ckETH() {
 
   useFetchBlockNumber();
 
+  const { result: minterInfo } = useChainKeyMinterInfo(ckETH_MINTER_ID);
+
   return (
     <Wrapper>
       <Breadcrumbs
@@ -50,7 +54,7 @@ export default function ckETH() {
       {type === "dissolve" ? (
         <DissolveETH handleChange={handleChange} buttons={Buttons} active={active} />
       ) : (
-        <MintCkETH handleChange={handleChange} buttons={Buttons} active={active} />
+        <MintCkETH handleChange={handleChange} buttons={Buttons} active={active} minterInfo={minterInfo} />
       )}
     </Wrapper>
   );

@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 import _BigNumber from "bignumber.js";
 import { APP_LINK } from "constants/index";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, explorerLink } from "@icpswap/utils";
 import JSBI from "jsbi";
 import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 
@@ -69,11 +69,7 @@ export function mockALinkAndOpen(url: string, id: string): void {
 }
 
 export function getExplorerPrincipalLink(principalId: string): string {
-  if ((principalId ?? "").length > 27) {
-    return `https://icscan.io/principal/${principalId}`;
-  }
-
-  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
+  return explorerLink(principalId);
 }
 
 export function getExplorerAccountLink(account: string): string {
