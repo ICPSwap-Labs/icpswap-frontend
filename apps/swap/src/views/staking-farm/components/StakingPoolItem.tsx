@@ -524,6 +524,33 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                   <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
                 </Typography>
               </Grid>
+
+              <Flex justify="space-between">
+                <Typography>
+                  <Trans>Token0 minimum amount</Trans>
+                </Typography>
+                <Typography color="text.primary" component="div">
+                  {farmInitArgs && token0
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmInitArgs.token0AmountLimit.toString(), token0.decimals).toString(),
+                      )} ${token0.symbol}`
+                    : "--"}
+                </Typography>
+              </Flex>
+
+              <Flex justify="space-between">
+                <Typography>
+                  <Trans>Token1 minimum amount</Trans>
+                </Typography>
+                <Typography color="text.primary" component="div">
+                  {farmInitArgs && token1
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmInitArgs.token1AmountLimit.toString(), token1.decimals).toString(),
+                      )} ${token1.symbol}`
+                    : "--"}
+                </Typography>
+              </Flex>
+
               <Grid container justifyContent="space-between" alignItems="flex-start">
                 <Typography>
                   <Trans>Creator</Trans>
