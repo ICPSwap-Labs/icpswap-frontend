@@ -138,7 +138,7 @@ export default function TokenList() {
               <Trans>Total Supply</Trans>
             </HeaderCell>
             <HeaderCell>
-              <Trans>Market Cap</Trans>
+              <Trans>FDV</Trans>
             </HeaderCell>
             <HeaderCell>
               <Trans>Holders</Trans>
