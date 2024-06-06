@@ -256,7 +256,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
             : "--"}
           )
         </Typography>
-        <Typography color="text.warning">
+        <Typography color="text.danger">
           <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
         </Typography>
         <Identity onSubmit={handleSubmit} fullScreenLoading>

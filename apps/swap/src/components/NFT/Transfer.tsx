@@ -215,7 +215,7 @@ export default function NFTTransfer({
           />
         </Grid>
         <Grid item xs={12} mt="10px">
-          <Typography color="text.warning">
+          <Typography color="text.danger">
             <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
           </Typography>
         </Grid>

@@ -1,3 +1,6 @@
+import { Theme } from "@mui/material/styles";
+import useMuiTheme from "@mui/styles/useTheme";
+
 export { default as Box, type BoxProps } from "@mui/material/Box";
 export { default as Typography, type TypographyProps } from "@mui/material/Typography";
 export { default as Grid, type GridProps } from "@mui/material/Grid";
@@ -14,4 +17,7 @@ export { default as useMediaQuery } from "@mui/material/useMediaQuery";
 export { default as CircularProgress } from "@mui/material/CircularProgress";
 export { default as InputAdornment } from "@mui/material/InputAdornment";
 export { default as Avatar } from "@mui/material/Avatar";
-export { default as useTheme } from "@mui/styles/useTheme";
+
+export function useTheme() {
+  return useMuiTheme() as Theme;
+}
