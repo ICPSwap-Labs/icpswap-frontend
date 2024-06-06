@@ -24,7 +24,13 @@ import {
   BigNumber,
   formatDollarAmount,
 } from "@icpswap/utils";
-import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs, useSwapUserPositions } from "@icpswap/hooks";
+import {
+  useV3FarmRewardMetadata,
+  useFarmUserPositions,
+  useFarmInitArgs,
+  useSwapUserPositions,
+  useSwapPoolMetadata,
+} from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
@@ -107,24 +113,38 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   }, [farmTVL]);
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
-
+  const { result: farmInitArgs } = useFarmInitArgs(farmId);
   const { result: userAllPositions } = useSwapUserPositions(
     userFarmInfo?.pool.toString(),
     principal?.toString(),
     forceUpdate,
   );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
+  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
+  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
+  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
+  const { result: swapPoolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
 
   const userAvailablePositions = useMemo(() => {
-    if (!userAllPositions) return undefined;
-    return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
-  }, [userAllPositions]);
+    if (!userAllPositions || !farmInitArgs) return undefined;
+
+    if (farmInitArgs.priceInsideLimit === false) {
+      return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
+    }
+
+    if (!swapPoolMetadata) return undefined;
+
+    return userAllPositions
+      .filter((position) => position.liquidity !== BigInt(0))
+      .filter((position) => {
+        const outOfRange = swapPoolMetadata.tick < position.tickLower || swapPoolMetadata.tick >= position.tickUpper;
+        return !outOfRange;
+      });
+  }, [userAllPositions, farmInitArgs, swapPoolMetadata]);
 
   const positionIds = useMemo(() => {
     return userStakedPositions?.map((position) => position.positionId) ?? [];
   }, [userStakedPositions]);
-
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
 
   const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
@@ -135,10 +155,6 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
     return new BigNumber(_userRewardAmount.toString()).multipliedBy(userRewardRatio);
   }, [_userRewardAmount, farmInitArgs]);
-
-  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
-  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
-  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 

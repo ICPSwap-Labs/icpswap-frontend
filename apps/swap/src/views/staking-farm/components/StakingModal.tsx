@@ -79,7 +79,7 @@ export default function StakingModal({ open, farmId, onClose, resetData, farm }:
             width: "632px",
           },
           "& .MuiDialogContent-root": {
-            padding: "0",
+            padding: "0 0 24px 0",
           },
           "& .MuiDialogTitle-root": {
             padding: "8px 12px",
