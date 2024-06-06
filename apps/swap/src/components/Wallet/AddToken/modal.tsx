@@ -147,8 +147,8 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   }, [snsTokens, noneSnsTokens]);
 
   const noData = useMemo(() => {
-    return hiddenCanisterIds.length === allTokenCanisterIds.length;
-  }, [hiddenCanisterIds, allTokenCanisterIds]);
+    return hiddenCanisterIds.length === allTokenCanisterIds.length && showImportToken === false;
+  }, [hiddenCanisterIds, allTokenCanisterIds, showImportToken]);
 
   return (
     <>
