@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { useMemo } from "react";
 import { WRAPPED_ICP, ICP } from "@icpswap/tokens";
 import { useICPPrice } from "store/global/hooks";
-import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useInfoToken } from "@icpswap/hooks";
 
 /**
  * Returns the price in USD of the input currency
