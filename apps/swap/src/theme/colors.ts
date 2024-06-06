@@ -39,9 +39,10 @@ export default {
   warningLight: "#F2994A",
   warningMain: "#ffe57f",
   warningDark: "#ffc107",
-  warning: "#D3625B",
 
-  orangeWarning: "#B79C4A",
+  danger: "#D3625B",
+
+  warning: "#B79C4A",
 
   // grey
   grey50: "#fafafa",

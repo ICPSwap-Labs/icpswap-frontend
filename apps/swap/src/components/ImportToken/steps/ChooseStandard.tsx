@@ -62,7 +62,7 @@ export function ChooseStandardAndVerify({ canisterId, onNext }: ChooseStandardPr
       </Typography>
 
       {checkFailed ? (
-        <Typography sx={{ fontSize: "12px", color: "text.warning", margin: "8px 0", textAlign: "center" }}>
+        <Typography sx={{ fontSize: "12px", color: "text.danger", margin: "8px 0", textAlign: "center" }}>
           <Trans>This canister id did not match the token standard "{standard}"</Trans>
         </Typography>
       ) : null}

@@ -161,7 +161,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
 
       {checkFailed ? (
         <Box mt="16px">
-          <Typography color="text.warning">
+          <Typography color="text.danger">
             <Trans>This canister id did not match the token standard "{values.standard}"</Trans>
           </Typography>
         </Box>
