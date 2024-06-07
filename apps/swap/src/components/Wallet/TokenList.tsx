@@ -93,7 +93,9 @@ export default function WalletTokenList() {
             }}
           >
             <Flex gap="0 12px">
-              <AlertCircle color={theme.colors.warning} size="16px" />
+              <Box sx={{ width: "16px" }}>
+                <AlertCircle color={theme.colors.warning} size="16px" />
+              </Box>
 
               <Typography color="text.primary">
                 <Trans>
@@ -103,7 +105,9 @@ export default function WalletTokenList() {
               </Typography>
             </Flex>
 
-            <X color="#ffffff" size="16px" onClick={handleCloseTip} cursor="pointer" />
+            <Box sx={{ width: "16px" }}>
+              <X color="#ffffff" size="16px" onClick={handleCloseTip} cursor="pointer" />
+            </Box>
           </Flex>
         ) : null}
 
