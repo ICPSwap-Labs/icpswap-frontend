@@ -21,8 +21,8 @@ fs.writeFile(path.resolve(__dirname, "../apps/info/src/.version.ts"), content, (
   console.log(err);
 });
 
-const swapCanisterIdsPath = path.resolve(__dirname, "../apps/swap/src/temp_canister_ids.json");
-const infoCanisterIdsPath = path.resolve(__dirname, "../apps/info/src/temp_canister_ids.json");
+const swapCanisterIdsPath = path.resolve(__dirname, "../apps/swap/src/canister-ids/temp_canister_ids.json");
+const infoCanisterIdsPath = path.resolve(__dirname, "../apps/info/src/canister-ids/temp_canister_ids.json");
 
 fs.access(swapCanisterIdsPath, fs.constants.F_OK, (err) => {
   if (err) {
