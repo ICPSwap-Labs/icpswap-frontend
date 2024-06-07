@@ -6,6 +6,8 @@ let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 try {
   const context = require.context("../canister-ids", true, /\.json$/);
 
+  let temp_canister_ids: any = {};
+
   context.keys().forEach((key: string) => {
     let canister_ids = context(key);
 
@@ -28,28 +30,20 @@ try {
           : {}),
       };
     }
+
+    if (key.includes("temp_canister_ids")) {
+      const canister_ids = context(key);
+      temp_canister_ids = canister_ids;
+    }
   });
+
+  CanisterIdsJson = {
+    ...CanisterIdsJson,
+    ...temp_canister_ids,
+  };
 } catch (error) {
   console.error(error);
 }
-
-// Test canister ids
-function dynamicGetTestCanisters() {
-  const context = require.context("../../src", false, /canister_ids.json$/);
-
-  context.keys().forEach((key: string) => {
-    if (key.includes("temp_canister_ids")) {
-      const canister_ids = context(key);
-
-      CanisterIdsJson = {
-        ...CanisterIdsJson,
-        ...canister_ids,
-      };
-    }
-  });
-}
-
-dynamicGetTestCanisters();
 
 const canisterIds: { [key: string]: string } = {};
 Object.keys(CanisterIdsJson).forEach((canister) => {
