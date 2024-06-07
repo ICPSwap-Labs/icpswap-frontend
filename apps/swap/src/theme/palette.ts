@@ -26,7 +26,6 @@ export function themePalette(theme: { [key: string]: any }) {
     error: {
       light: theme.colors.errorLight,
       main: theme.colors.errorMain,
-      dark: theme.colors.errorDark,
     },
     orange: {
       light: theme.colors.orangeLight,

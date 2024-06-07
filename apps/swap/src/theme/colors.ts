@@ -28,7 +28,6 @@ export default {
   // error
   errorLight: "#ef9a9a",
   errorMain: "#f44336",
-  errorDark: "#c62828",
 
   // orange
   orangeLight: "#fbe9e7",

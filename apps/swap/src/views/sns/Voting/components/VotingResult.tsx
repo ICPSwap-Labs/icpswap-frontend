@@ -117,7 +117,7 @@ export function VotingResult({
   }, [proposal_data]);
 
   const YesColor = theme.colors.successDark;
-  const NoColor = theme.colors.errorDark;
+  const NoColor = theme.colors.danger;
 
   const { minimumDissolveDelaySeconds } = useMemo(() => {
     if (!neuronSystemParameters) return {};
@@ -338,9 +338,9 @@ export function VotingResult({
                 variant="contained"
                 fullWidth
                 sx={{
-                  background: theme.colors.errorDark,
+                  background: theme.colors.danger,
                   "&:hover": {
-                    background: theme.colors.errorDark,
+                    background: theme.colors.danger,
                   },
                 }}
                 disabled={!canVote}
