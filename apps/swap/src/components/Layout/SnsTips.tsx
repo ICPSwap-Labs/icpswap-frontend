@@ -1,5 +1,4 @@
 import { Grid, Box, Typography } from "@mui/material";
-import { TextButton } from "./TextButton";
 
 function CloseIcon() {
   return (
@@ -23,7 +22,7 @@ export interface GlobalTipsProps {
   onClose: () => void;
 }
 
-export function GlobalTips({ onClose }: GlobalTipsProps) {
+export function SnsTips({ onClose }: GlobalTipsProps) {
   return (
     <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
       <Grid item xs>
@@ -34,28 +33,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
             "@media(max-width: 640px)": { fontSize: "12px" },
           }}
         >
-          Join ICP's 3rd Anniversary on ICPSwap with liquidity mining and trading competition.{" "}
-          <TextButton
-            link="https://x.com/ICPSwap/status/1795078197165379886"
-            color="write"
-            textDecoration="underline"
-            sx={{
-              "@media(max-width: 640px)": { fontSize: "12px" },
-            }}
-          >
-            Click here for details!
-          </TextButton>
-          <TextButton
-            link="https://app.icpswap.com/farm"
-            color="write"
-            textDecoration="underline"
-            sx={{
-              "@media(max-width: 640px)": { fontSize: "12px" },
-              margin: "0 0 0 5px!important",
-            }}
-          >
-            Click here to earn juicy APR rewards!
-          </TextButton>
+          The SNS function is deployed based on the NNS frontend and is currently in public testing.
         </Typography>
       </Grid>
 

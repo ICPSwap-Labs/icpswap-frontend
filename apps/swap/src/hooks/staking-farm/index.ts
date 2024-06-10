@@ -229,7 +229,7 @@ export function useFarmUSDValue({
   const userTvl = userIntervalFarmUserTVL(farmId, principal);
 
   const userTvlUSD = useMemo(() => {
-    if (!userTvl || !token0 || !token1) return undefined;
+    if (!userTvl || !token0 || !token1 || !infoAllTokens || infoAllTokens.length === 0) return undefined;
 
     const { poolToken0, poolToken1 } = userTvl;
 
@@ -242,7 +242,7 @@ export function useFarmUSDValue({
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
     return token0Tvl.plus(token1Tvl).toFixed(3);
-  }, [userTvl, icpPrice]);
+  }, [userTvl, icpPrice, infoAllTokens]);
 
   return useMemo(
     () => ({

@@ -17,7 +17,7 @@ interface VotedNeuronItemProps {
 function VotedNeuronItem({ neuron, proposal_data }: VotedNeuronItemProps) {
   const theme = useTheme() as Theme;
   const YesColor = theme.colors.successDark;
-  const NoColor = theme.colors.errorDark;
+  const NoColor = theme.colors.danger;
 
   const { ballot, votingPower } = useMemo(() => {
     if (!proposal_data) return {};

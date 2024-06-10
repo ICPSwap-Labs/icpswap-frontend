@@ -4,7 +4,7 @@ import { network, NETWORK, host } from "./server";
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  const context = require.context("../canister_ids_json", true, /\.json$/);
+  const context = require.context("../canister-ids", true, /\.json$/);
 
   context.keys().forEach((key: string) => {
     const canister_ids = context(key);

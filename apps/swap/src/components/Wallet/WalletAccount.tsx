@@ -8,14 +8,17 @@ import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { useAccountPrincipal } from "store/auth/hooks";
 import Copy, { CopyRef } from "components/Copy";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { Flex, Tooltip } from "components/index";
+
 import WalletContext from "./context";
 
 export interface AddressWrapperProps {
   address: string | undefined;
   label: string;
+  tips?: string;
 }
 
-export function AddressWrapper({ address, label }: AddressWrapperProps) {
+export function AddressWrapper({ address, label, tips }: AddressWrapperProps) {
   const copyRef = useRef<CopyRef>(null);
 
   const handleCopy = () => {
@@ -37,19 +40,23 @@ export function AddressWrapper({ address, label }: AddressWrapperProps) {
         },
       }}
     >
-      <Box
-        sx={{
-          width: "70px",
-          height: "20px",
-          borderRadius: "30px",
-          background: "#29314F",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography sx={{ fontSize: "12px", transform: "scale(0.9)" }}>{label}</Typography>
-      </Box>
+      <Flex gap="0 4px">
+        <Box
+          sx={{
+            width: "70px",
+            height: "20px",
+            borderRadius: "30px",
+            background: "#29314F",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography sx={{ fontSize: "12px", transform: "scale(0.9)" }}>{label}</Typography>
+        </Box>
+
+        {tips ? <Tooltip iconSize="14px" tips={tips} /> : null}
+      </Flex>
 
       <Box sx={{ margin: "8px 0 0 0", wordBreak: "break-all" }}>
         <Typography
@@ -161,6 +168,7 @@ export default function WalletAccount() {
           <AddressWrapper
             address={principal ? principalToAccount(principal?.toString()) : "--"}
             label={t`Account ID`}
+            tips={t`Account ID (AID): Derived from the Principal ID using a subaccount number, used to identify owners of ICP and NFTs. It adds an extra layer of privacy. It supports ICP, EXT standard tokens, and NFT transfers and transactions.`}
           />
         </Box>
         <Box
@@ -171,7 +179,11 @@ export default function WalletAccount() {
             },
           }}
         >
-          <AddressWrapper address={principal ? principal.toString() : "--"} label={t`Principal ID`} />
+          <AddressWrapper
+            address={principal ? principal.toString() : "--"}
+            label={t`Principal ID`}
+            tips={t`Principal ID (PID): Your unique wallet identifier, similar to an Ethereum wallet address. It supports ICRC and DIP20 standards token transfers and transactions.`}
+          />
         </Box>
       </Box>
     </Box>

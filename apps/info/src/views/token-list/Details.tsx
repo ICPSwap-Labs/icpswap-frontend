@@ -222,7 +222,7 @@ export function TokenDetail() {
                       </Box>
                     </Grid>
                   }
-                  title={t`Market Cap`}
+                  title={t`FDV`}
                   border={{ borderRadius: "12px 0 0 12px" }}
                 />
               </Box>

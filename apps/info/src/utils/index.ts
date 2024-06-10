@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 import _BigNumber from "bignumber.js";
 import { APP_LINK } from "constants/index";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, explorerLink } from "@icpswap/utils";
 import JSBI from "jsbi";
 import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 
@@ -66,6 +66,14 @@ export function mockALinkAndOpen(url: string, id: string): void {
     document.body.appendChild(a);
   }
   a.click();
+}
+
+export function getExplorerPrincipalLink(principalId: string): string {
+  return explorerLink(principalId);
+}
+
+export function getExplorerAccountLink(account: string): string {
+  return `https://icscan.io/account/${account}`;
 }
 
 export function arrayBufferToString(arrayBuffer: Uint8Array): string {

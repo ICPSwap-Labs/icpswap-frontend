@@ -50,14 +50,14 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px" }}>
         <Logo />
         <XCircle style={{ cursor: "pointer" }} onClick={onClose} />
       </Box>
 
-      <Box sx={{ padding: "0 20px", margin: "32px 0 0 0" }}>
+      {/* <Box sx={{ padding: "0 20px", margin: "32px 0 0 0" }}>
         <Box sx={{ width: "100%", height: "1px", background: "#29314F" }} />
-      </Box>
+      </Box> */}
 
       <Box>
         <Routes routes={noExceedRoutes} onRouteClick={handleRouteClick} />
@@ -67,7 +67,6 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
             <Box
               sx={{
                 padding: "24px 16px",
-                borderTop: "1px solid #29314F",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",

@@ -6,6 +6,8 @@ let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 try {
   const context = require.context("../canister-ids", true, /\.json$/);
 
+  let temp_canister_ids: any = {};
+
   context.keys().forEach((key: string) => {
     let canister_ids = context(key);
 
@@ -28,7 +30,17 @@ try {
           : {}),
       };
     }
+
+    if (key.includes("temp_canister_ids")) {
+      const canister_ids = context(key);
+      temp_canister_ids = canister_ids;
+    }
   });
+
+  CanisterIdsJson = {
+    ...CanisterIdsJson,
+    ...temp_canister_ids,
+  };
 } catch (error) {
   console.error(error);
 }

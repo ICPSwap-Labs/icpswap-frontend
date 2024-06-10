@@ -22,8 +22,15 @@ import {
   timestampFormat,
   explorerLink,
   BigNumber,
+  formatDollarAmount,
 } from "@icpswap/utils";
-import { useV3FarmRewardMetadata, useFarmUserPositions, useFarmInitArgs, useSwapUserPositions } from "@icpswap/hooks";
+import {
+  useV3FarmRewardMetadata,
+  useFarmUserPositions,
+  useFarmInitArgs,
+  useSwapUserPositions,
+  useSwapPoolMetadata,
+} from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
@@ -38,13 +45,14 @@ import OptionStaking from "./OptionStaking";
 
 const useStyle = makeStyles(() => ({
   cardHeader: {
+    position: "relative",
     height: "196px",
     background: "rgba(101, 80, 186, 0.18)",
     borderRadius: "4px 4px 0 0",
-    position: "relative",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
+    overflow: "hidden",
   },
   headerImage: {
     marginTop: "50px",
@@ -105,24 +113,38 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   }, [farmTVL]);
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
-
+  const { result: farmInitArgs } = useFarmInitArgs(farmId);
   const { result: userAllPositions } = useSwapUserPositions(
     userFarmInfo?.pool.toString(),
     principal?.toString(),
     forceUpdate,
   );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
+  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
+  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
+  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
+  const { result: swapPoolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
 
   const userAvailablePositions = useMemo(() => {
-    if (!userAllPositions) return undefined;
-    return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
-  }, [userAllPositions]);
+    if (!userAllPositions || !farmInitArgs) return undefined;
+
+    if (farmInitArgs.priceInsideLimit === false) {
+      return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
+    }
+
+    if (!swapPoolMetadata) return undefined;
+
+    return userAllPositions
+      .filter((position) => position.liquidity !== BigInt(0))
+      .filter((position) => {
+        const outOfRange = swapPoolMetadata.tick < position.tickLower || swapPoolMetadata.tick >= position.tickUpper;
+        return !outOfRange;
+      });
+  }, [userAllPositions, farmInitArgs, swapPoolMetadata]);
 
   const positionIds = useMemo(() => {
     return userStakedPositions?.map((position) => position.positionId) ?? [];
   }, [userStakedPositions]);
-
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
 
   const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
@@ -133,10 +155,6 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
     return new BigNumber(_userRewardAmount.toString()).multipliedBy(userRewardRatio);
   }, [_userRewardAmount, farmInitArgs]);
-
-  const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
-  const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
-  const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
@@ -201,341 +219,382 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
 
   return (
-    <Box>
-      <MainCard
-        level={1}
-        padding="0px"
-        sx={{
-          display: stakeOnly && userStakedPositions?.length === 0 ? "none" : "block",
-          width: "384px",
-          overflow: "hidden",
-          height: "fit-content",
-          "@media (max-width: 520px)": {
-            width: "340px",
-          },
-        }}
-      >
-        <Box sx={{ maxWidth: 400 }}>
-          <Grid className={classes.cardHeader}>
-            <Typography
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                minWidth: "77px",
-                height: "30px",
-                padding: "6px",
-                background: "#654DA9",
-                borderRadius: "4px 0 4px 0",
-                textAlign: "center",
-                border: "1px solid #654DA9",
-                color: theme.palette.mode === "dark" ? theme.colors.darkTextPrimary : theme.colors.primaryMain,
-              }}
-            >
-              {state === STATE.NOT_STARTED ? upperFirst(t`Unstart`) : upperFirst(state)}
-            </Typography>
+    <MainCard
+      borderRadius="4px"
+      level={1}
+      padding="0px"
+      sx={{
+        display: stakeOnly ? (userStakedPositions && userStakedPositions.length > 0 ? "block" : "none") : "block",
+        width: "384px",
+        overflow: "hidden",
+        height: "fit-content",
+        "@media (max-width: 520px)": {
+          width: "100%",
+        },
+      }}
+    >
+      <Box sx={{ maxWidth: 400, width: "100%" }}>
+        <Grid className={classes.cardHeader}>
+          <Box
+            sx={{
+              width: "212px",
+              height: "131px",
+              background: "rgba(53, 6, 89, 0.50)",
+              filter: "blur(27px)",
+              position: "absolute",
+              left: "-61px",
+              zIndex: 1,
+              bottom: "-60px",
+            }}
+          />
 
-            <Grid item className={classes.headerImage}>
-              <TokenImage size="80px" logo={rewardToken?.logo} tokenId={rewardToken?.address} />
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              minWidth: "77px",
+              height: "30px",
+              padding: "6px",
+              background: "#654DA9",
+              borderRadius: "4px 0 4px 0",
+              border: "1px solid #7D5DC1",
+              color: theme.palette.mode === "dark" ? theme.colors.darkTextPrimary : theme.colors.primaryMain,
+            }}
+          >
+            {state === STATE.NOT_STARTED ? upperFirst(t`Unstart`) : upperFirst(state)}
+          </Typography>
 
-              <Grid container className="poolImageBox">
-                <Box sx={{ display: "flex" }}>
-                  <TokenImage size="44px" logo={token0?.logo} tokenId={token0?.address} />
-                  <TokenImage size="44px" logo={token1?.logo} tokenId={token1?.address} />
-                </Box>
-              </Grid>
-            </Grid>
+          <Grid item className={classes.headerImage}>
+            <TokenImage size="80px" logo={rewardToken?.logo} tokenId={rewardToken?.address} />
 
-            <Grid>
-              <Grid item>
-                <Typography color="text.primary" sx={{ padding: "0 12px" }}>
-                  Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
-                </Typography>
-              </Grid>
+            <Grid container className="poolImageBox">
+              <Box sx={{ display: "flex" }}>
+                <TokenImage size="44px" logo={token0?.logo} tokenId={token0?.address} />
+                <TokenImage size="44px" logo={token1?.logo} tokenId={token1?.address} />
+              </Box>
             </Grid>
           </Grid>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
-            <Flex justify="space-between">
-              <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-                <Typography>
-                  <Trans>APR</Trans>
-                </Typography>
+          <Typography color="text.primary" sx={{ position: "relative", padding: "0 12px", fontWeight: 700, zIndex: 1 }}>
+            Stake {token0?.symbol}/{token1?.symbol} position to earn {rewardToken?.symbol}
+          </Typography>
+        </Grid>
 
-                <Tooltip
-                  iconSize="14px"
-                  tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
-                />
-              </Box>
-
-              <Typography color="text.primary">{apr ?? "--"}</Typography>
-            </Flex>
-
-            <Flex justify="space-between">
-              <Typography>
-                <Trans>Total Reward Amount</Trans>
-              </Typography>
-              <Typography color="text.primary">
-                {userFarmInfo && rewardToken ? (
-                  <>
-                    <CountUp
-                      preserveValue
-                      end={parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toNumber()}
-                      decimals={2}
-                      duration={1}
-                      separator=","
-                    />
-                    &nbsp;{rewardToken.symbol}
-                  </>
-                ) : (
-                  "--"
-                )}
-              </Typography>
-            </Flex>
-
-            <Flex justify="space-between">
-              <Typography>
-                <Trans>Total Value Staked</Trans>
-              </Typography>
-              <Typography color="text.primary">{poolTvl ? `$${poolTvl}` : "--"}</Typography>
-            </Flex>
-
-            <Flex justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Earned</Trans>
-                &nbsp;
-                {rewardToken?.symbol}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", padding: "24px" }}>
+          <Flex justify="space-between">
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
+              <Typography fontWeight={600}>
+                <Trans>APR</Trans>
               </Typography>
 
-              <Flex vertical align="flex-end">
-                <Typography color="text.primary">
-                  <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
-                </Typography>
-                <Typography color="text.primary">
-                  <CountUp preserveValue end={userRewardUSD ?? 0} decimals={2} duration={1} separator="," prefix="~$" />
-                </Typography>
-              </Flex>
-            </Flex>
-
-            <Flex justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Your Available Positions</Trans>
-              </Typography>
-
-              <Flex vertical align="flex-end">
-                <Typography color="text.primary">
-                  {userAvailablePositions ? userAvailablePositions.length : "--"}
-                </Typography>
-              </Flex>
-            </Flex>
-
-            <Box>
-              <Typography mb="14px">
-                <Trans>Position Staked</Trans>
-              </Typography>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  height: "44px",
-                  lineHeight: "42px",
-                  background: "#111936",
-                  border: "1px solid #29314F",
-                  borderRadius: "8px",
-                  padding: "0 14px",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ flex: 1 }}>{Number(positionIds.length ?? 0)}</Typography>
-                {walletIsConnected ? (
-                  userFarmInfo ? (
-                    <OptionStaking
-                      userFarmInfo={userFarmInfo}
-                      resetData={() => setForceUpdate(!forceUpdate)}
-                      userStakedPositions={userStakedPositions ?? []}
-                      farmId={farmId}
-                    />
-                  ) : null
-                ) : (
-                  <ConnectWallet />
-                )}
-              </Box>
+              <Tooltip
+                iconSize="14px"
+                tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
+              />
             </Box>
 
-            <Grid container justifyContent="space-between" alignItems="flex-start">
-              <Grid item>
-                <Typography>
-                  <Trans>Your Total Value Staked</Trans>
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography color="text.primary">{userTvl ? `$${userTvl}` : "--"}</Typography>
-              </Grid>
-            </Grid>
+            <Typography color="text.primary" fontWeight={600}>
+              {apr ?? "--"}
+            </Typography>
+          </Flex>
+
+          <Flex justify="space-between">
+            <Typography fontWeight={600}>
+              <Trans>Total Reward Amount</Trans>
+            </Typography>
+            <Typography color="text.primary" fontWeight={600}>
+              {userFarmInfo && rewardToken ? (
+                <>
+                  <CountUp
+                    preserveValue
+                    end={parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toNumber()}
+                    decimals={2}
+                    duration={1}
+                    separator=","
+                  />
+                  &nbsp;{rewardToken.symbol}
+                </>
+              ) : (
+                "--"
+              )}
+            </Typography>
+          </Flex>
+
+          <Flex justify="space-between">
+            <Typography fontWeight={600}>
+              <Trans>Total Value Staked</Trans>
+            </Typography>
+            <Typography color="text.primary" fontWeight={600}>
+              {poolTvl ? `${formatDollarAmount(poolTvl)}` : "--"}
+            </Typography>
+          </Flex>
+
+          <Flex justify="space-between" align="flex-start">
+            <Typography>
+              <Trans>Earned</Trans>
+              &nbsp;
+              {rewardToken?.symbol}
+            </Typography>
+
+            <Flex vertical align="flex-end">
+              <Typography color="text.primary">
+                <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
+              </Typography>
+              <Typography color="text.primary">
+                <CountUp preserveValue end={userRewardUSD ?? 0} decimals={2} duration={1} separator="," prefix="~$" />
+              </Typography>
+            </Flex>
+          </Flex>
+
+          <Flex justify="space-between" align="flex-start">
+            <Typography>
+              <Trans>Your Available Positions</Trans>
+            </Typography>
+
+            <Flex vertical align="flex-end">
+              <Typography color="text.primary">
+                {userAvailablePositions ? userAvailablePositions.length : "--"}
+              </Typography>
+            </Flex>
+          </Flex>
+
+          <Box>
+            <Typography mb="14px">
+              <Trans>Position Staked</Trans>
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                height: "44px",
+                lineHeight: "42px",
+                background: "#111936",
+                border: "1px solid #29314F",
+                borderRadius: "8px",
+                padding: "0 14px",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ flex: 1, fontWeight: 500, fontSize: "16px" }}>
+                {Number(positionIds.length ?? 0)}
+              </Typography>
+              {walletIsConnected ? (
+                userFarmInfo ? (
+                  <OptionStaking
+                    userFarmInfo={userFarmInfo}
+                    resetData={() => setForceUpdate(!forceUpdate)}
+                    userStakedPositions={userStakedPositions ?? []}
+                    farmId={farmId}
+                  />
+                ) : null
+              ) : (
+                <ConnectWallet />
+              )}
+            </Box>
           </Box>
 
-          <CardActions disableSpacing style={{ paddingTop: 0 }}>
-            <Grid container justifyContent="center" onClick={handleExpandClick}>
-              <Typography
-                sx={{
-                  fontWeight: "500",
-                  fontSize: "14px",
-                  lineHeight: "24px",
-                  textAlign: "center",
-                  color: "#648EFB",
-                  cursor: "pointer",
-                }}
-              >
-                {expanded ? t`Hide` : t`Details`}
+          <Grid container justifyContent="space-between" alignItems="flex-start">
+            <Grid item>
+              <Typography>
+                <Trans>Your Total Value Staked</Trans>
               </Typography>
             </Grid>
-          </CardActions>
-
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent style={{ paddingTop: 0 }} className={classes.collapseContent}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "20px 0", maxWidth: 400, paddingTop: "24px" }}>
-                <Grid container justifyContent="space-between" alignItems="center">
-                  <Grid item>
-                    <Typography sx={{ cursor: "pointer", textDecoration: "underline" }} onClick={handleGoToGetPosition}>
-                      Get {token0?.symbol}/{token1?.symbol} position
-                      <ICRocksLoadIcon
-                        fontSize="24"
-                        sx={{
-                          position: "relative",
-                          top: "3px",
-                          cursor: "pointer",
-                          marginLeft: "5px",
-                          color: theme.colors.secondaryMain,
-                        }}
-                      />
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Total number of staked positions</Trans>
-                  </Typography>
-                  <Typography color="text.primary">{(userFarmInfo?.numberOfStakes ?? 0).toString()}</Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Claimed Rewards</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {!farmRewardMetadata || !rewardToken
-                      ? "--"
-                      : `${toSignificantWithGroupSeparator(
-                          parseTokenAmount(
-                            farmRewardMetadata.totalRewardHarvested.toString(),
-                            rewardToken.decimals,
-                          ).toString(),
-                          8,
-                        )} ${rewardToken.symbol}`}
-                  </Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Unclaimed Rewards</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {!farmRewardMetadata || !rewardToken
-                      ? "--"
-                      : `${toSignificantWithGroupSeparator(
-                          parseTokenAmount(
-                            farmRewardMetadata.totalRewardUnharvested.toString(),
-                            rewardToken.decimals,
-                          ).toString(),
-                          8,
-                        )} ${rewardToken.symbol}`}
-                  </Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Distribution Interval</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {Number(farmRewardMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
-                  </Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Amount per Distribution</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {farmRewardMetadata && rewardToken
-                      ? `${toSignificantWithGroupSeparator(
-                          parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals).toString(),
-                          8,
-                        )} ${rewardToken.symbol}`
-                      : "--"}
-                  </Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Starting At</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {timestampFormat(Number(userFarmInfo?.startTime) * 1000)}
-                  </Typography>
-                </Grid>
-
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
-                  <Typography color="text.primary" component="div">
-                    <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
-                  </Typography>
-                </Grid>
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Creator</Trans>
-                  </Typography>
-                  <Typography color="text.primary.main">
-                    {userFarmInfo ? (
-                      <Link href={explorerLink(userFarmInfo.creator.toString())} target="_blank">
-                        {shorten(userFarmInfo?.creator.toString())}
-                      </Link>
-                    ) : (
-                      "--"
-                    )}
-                  </Typography>
-                </Grid>
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Canister ID</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    <Link href={explorerLink(farmId)} target="_blank">
-                      {shorten(farmId)}
-                    </Link>
-                  </Typography>
-                </Grid>
-                <Grid container justifyContent="space-between" alignItems="flex-start">
-                  <Typography>
-                    <Trans>Cycles Left</Trans>
-                  </Typography>
-                  <Typography color="text.primary">
-                    {cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
-                  </Typography>
-                </Grid>
-
-                <Grid item container justifyContent="flex-end">
-                  <Typography color="text.primary">
-                    <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank">
-                      <Trans>Farm Info</Trans>
-                    </Link>
-                  </Typography>
-                </Grid>
-              </Box>
-            </CardContent>
-          </Collapse>
+            <Grid item>
+              <Typography color="text.primary">{userTvl ? `${formatDollarAmount(userTvl)}` : "--"}</Typography>
+            </Grid>
+          </Grid>
         </Box>
-      </MainCard>
-    </Box>
+
+        <CardActions disableSpacing style={{ paddingTop: 0 }}>
+          <Grid container justifyContent="center">
+            <Typography
+              sx={{
+                fontSize: "14px",
+                lineHeight: "24px",
+                textAlign: "center",
+                color: "#648EFB",
+                cursor: "pointer",
+              }}
+              onClick={handleExpandClick}
+            >
+              {expanded ? t`Hide` : t`Details`}
+            </Typography>
+          </Grid>
+        </CardActions>
+
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent style={{ paddingTop: 0 }} className={classes.collapseContent}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0", maxWidth: 400, paddingTop: "24px" }}>
+              <Grid container justifyContent="space-between" alignItems="center">
+                <Grid item>
+                  <Typography sx={{ cursor: "pointer", textDecoration: "underline" }} onClick={handleGoToGetPosition}>
+                    Get {token0?.symbol}/{token1?.symbol} position
+                    <ICRocksLoadIcon
+                      fontSize="24"
+                      sx={{
+                        position: "relative",
+                        top: "3px",
+                        cursor: "pointer",
+                        marginLeft: "5px",
+                        color: theme.colors.secondaryMain,
+                      }}
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Total number of staked positions</Trans>
+                </Typography>
+                <Typography color="text.primary">{(userFarmInfo?.numberOfStakes ?? 0).toString()}</Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Claimed Rewards</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  {!farmRewardMetadata || !rewardToken
+                    ? "--"
+                    : `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(
+                          farmRewardMetadata.totalRewardHarvested.toString(),
+                          rewardToken.decimals,
+                        ).toString(),
+                        8,
+                      )} ${rewardToken.symbol}`}
+                </Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Unclaimed Rewards</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  {!farmRewardMetadata || !rewardToken
+                    ? "--"
+                    : `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(
+                          farmRewardMetadata.totalRewardUnharvested.toString(),
+                          rewardToken.decimals,
+                        ).toString(),
+                        8,
+                      )} ${rewardToken.symbol}`}
+                </Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Distribution Interval</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  {Number(farmRewardMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                </Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Amount per Distribution</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  {farmRewardMetadata && rewardToken
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals).toString(),
+                        8,
+                      )} ${rewardToken.symbol}`
+                    : "--"}
+                </Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Starting At</Trans>
+                </Typography>
+                <Typography color="text.primary">{timestampFormat(Number(userFarmInfo?.startTime) * 1000)}</Typography>
+              </Grid>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
+                <Typography color="text.primary" component="div">
+                  <CountdownBox startTime={Number(userFarmInfo?.startTime)} endTime={Number(userFarmInfo?.endTime)} />
+                </Typography>
+              </Grid>
+
+              <Flex justify="space-between">
+                <Typography>
+                  <Trans>Token0 minimum amount</Trans>
+                </Typography>
+                <Typography color="text.primary" component="div">
+                  {farmInitArgs && token0
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmInitArgs.token0AmountLimit.toString(), token0.decimals).toString(),
+                      )} ${token0.symbol}`
+                    : "--"}
+                </Typography>
+              </Flex>
+
+              <Flex justify="space-between">
+                <Typography>
+                  <Trans>Token1 minimum amount</Trans>
+                </Typography>
+                <Typography color="text.primary" component="div">
+                  {farmInitArgs && token1
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmInitArgs.token1AmountLimit.toString(), token1.decimals).toString(),
+                      )} ${token1.symbol}`
+                    : "--"}
+                </Typography>
+              </Flex>
+
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Creator</Trans>
+                </Typography>
+                <Typography color="text.primary.main">
+                  {userFarmInfo ? (
+                    <Link href={explorerLink(userFarmInfo.creator.toString())} target="_blank">
+                      {shorten(userFarmInfo?.creator.toString())}
+                    </Link>
+                  ) : (
+                    "--"
+                  )}
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Canister ID</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  <Link href={explorerLink(farmId)} target="_blank">
+                    {shorten(farmId)}
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="space-between" alignItems="flex-start">
+                <Typography>
+                  <Trans>Cycles Left</Trans>
+                </Typography>
+                <Typography color="text.primary">
+                  {cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
+                </Typography>
+              </Grid>
+
+              <Grid item container justifyContent="flex-end">
+                <Typography color="text.primary">
+                  <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank">
+                    <Trans>Farm Info</Trans>
+                  </Link>
+                </Typography>
+              </Grid>
+            </Box>
+          </CardContent>
+        </Collapse>
+      </Box>
+    </MainCard>
   );
 }

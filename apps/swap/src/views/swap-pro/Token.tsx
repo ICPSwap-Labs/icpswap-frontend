@@ -220,7 +220,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                   </Typography>
                 </Typography>
               </Card>
-              <Card title={t`Market Cap (USD)`}>
+              <Card title={t`FDV (USD)`}>
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && token && tokenPrice
                     ? formatDollarAmount(
@@ -229,7 +229,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Market Cap (ICP)`}>
+              <Card title={t`FDV (ICP)`}>
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && token && tokenPrice && icpPrice
                     ? formatAmount(

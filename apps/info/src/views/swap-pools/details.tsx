@@ -19,6 +19,8 @@ import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 import { useSwapPoolCycles } from "hooks/swap/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
@@ -32,6 +34,20 @@ export default function SwapPoolDetails() {
 
   const { result: poolTVLToken0 } = useTokenBalance(pool?.token0Id, pool?.pool);
   const { result: poolTVLToken1 } = useTokenBalance(pool?.token1Id, pool?.pool);
+
+  const token0Price = useUSDPrice(pool?.token0Id);
+  const token1Price = useUSDPrice(pool?.token1Id);
+
+  const poolTvlUsd = useMemo(() => {
+    if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return undefined;
+
+    return formatDollarAmount(
+      parseTokenAmount(poolTVLToken1, token1.decimals)
+        .multipliedBy(token1Price)
+        .plus(parseTokenAmount(poolTVLToken0, token0.decimals).multipliedBy(token0Price))
+        .toString(),
+    );
+  }, [poolTVLToken0, poolTVLToken1, token0Price, token1Price, token0, token1]);
 
   const { result: latestTVL } = usePoolLatestTVL(canisterId);
 
@@ -234,7 +250,7 @@ export default function SwapPoolDetails() {
 
             <GridAutoRows gap="4px">
               <Typography>
-                <Trans>TVL</Trans>
+                <Trans>TVL (Real-Time)</Trans>
               </Typography>
               <Typography
                 color="text.primary"
@@ -243,7 +259,7 @@ export default function SwapPoolDetails() {
                   fontSize: "24px",
                 }}
               >
-                {formatDollarAmount(latestTVL?.tvlUSD)}
+                {poolTvlUsd ?? "--"}
               </Typography>
 
               <Proportion value={latestTVL?.tvlUSDChange} />

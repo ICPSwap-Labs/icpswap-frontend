@@ -1,9 +1,9 @@
-import { createBaseActor } from "./BaseActor";
 import { HttpAgent, ActorSubclass } from "@dfinity/agent";
 import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
-import { ActorName } from "./ActorName";
 import { ic_host } from "@icpswap/constants";
+import { ActorName } from "./ActorName";
+import { createBaseActor } from "./BaseActor";
 
 let cachedCanisterIds: { [key: string]: string } = {};
 
@@ -25,14 +25,11 @@ export enum Connector {
   INFINITY = "INFINITY",
   ME = "ME",
   STOIC_MNEMONIC = "STOIC_MNEMONIC",
+  Metamask = "Metamask",
 }
 
 export function isICConnector(connector: Connector) {
-  return (
-    connector === Connector.IC ||
-    connector === Connector.STOIC ||
-    connector === Connector.NFID
-  );
+  return connector === Connector.IC || connector === Connector.STOIC || connector === Connector.NFID;
 }
 
 export type ActorError = {
@@ -47,9 +44,7 @@ export type BeforeSubmitArgs = {
   identity: ActorIdentity | undefined;
   connector: Connector;
 };
-export type BeforeSubmitCallback = (
-  args: BeforeSubmitArgs
-) => Promise<{ success: boolean; message: string }>;
+export type BeforeSubmitCallback = (args: BeforeSubmitArgs) => Promise<{ success: boolean; message: string }>;
 
 export function isPlugTypeConnector(connector: Connector) {
   return connector === Connector.PLUG || connector === Connector.INFINITY;
@@ -61,12 +56,16 @@ export function isMeConnector(connector: Connector) {
 
 export class Actor {
   private connector: Connector = Connector.ICPSwap;
+
   private agent: null | HttpAgent = null;
+
   private host: string = ic_host;
+
   private errorCallbacks: ActorErrorCallback[] = [];
+
   private beforeSubmit: BeforeSubmitCallback;
 
-  public log: boolean = false;
+  public log = false;
 
   public setConnector(connector: Connector) {
     this.connector = connector;
@@ -86,16 +85,16 @@ export class Actor {
 
     const _host = host ?? this.host;
 
-    let isRejected = false;
+    const isRejected = false;
 
-    const serviceClass = idlFactory({ IDL: IDL });
+    const serviceClass = idlFactory({ IDL });
 
     let actor: ActorSubclass<T> | null = null;
 
     // catch create infinity actor rejected
     let createActorError: null | string = null;
 
-    if (!!identity) {
+    if (identity) {
       try {
         actor = await window.icConnector.createActor<T>({
           canisterId: id,
@@ -153,15 +152,11 @@ export class Actor {
 
           let message = "";
           if (_error.includes("Reject text:")) {
-            const _message =
-              _error.split(`Reject text: `)[1]?.split(" at") ?? "";
-            message = !!_message ? _message[0]?.trim() : _error;
+            const _message = _error.split(`Reject text: `)[1]?.split(" at") ?? "";
+            message = _message ? _message[0]?.trim() : _error;
           } else {
-            const _message = _error.includes(`"Message"`)
-              ? _error.split(`"Message": `)[1]?.split('"')
-              : "";
-            message =
-              _error.includes(`"Message"`) && !!_message ? _message[1] : _error;
+            const _message = _error.includes(`"Message"`) ? _error.split(`"Message": `)[1]?.split('"') : "";
+            message = _error.includes(`"Message"`) && !!_message ? _message[1] : _error;
           }
 
           if (this.log) {
@@ -190,27 +185,23 @@ export class Actor {
     });
   }
 
-  public async createAgent(
-    canisterId: string,
-    host: string,
-    identity?: ActorIdentity
-  ): Promise<HttpAgent> {
+  public async createAgent(canisterId: string, host: string, identity?: ActorIdentity): Promise<HttpAgent> {
     // connector is plug type
     if (identity === true) {
       if (this.connector === Connector.PLUG) {
         await window.ic.plug.createAgent({ whitelist: [canisterId], host });
         return window.ic.plug.agent;
-      } else if (this.connector === Connector.INFINITY) {
+      }
+      if (this.connector === Connector.INFINITY) {
         return new HttpAgent({
           host,
         });
-      } else {
-        return window.icConnector.httpAgent;
       }
+      return window.icConnector.httpAgent;
     }
 
     return new HttpAgent({
-      host: host,
+      host,
     });
   }
 

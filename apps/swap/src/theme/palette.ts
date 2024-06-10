@@ -26,7 +26,6 @@ export function themePalette(theme: { [key: string]: any }) {
     error: {
       light: theme.colors.errorLight,
       main: theme.colors.errorMain,
-      dark: theme.colors.errorDark,
     },
     orange: {
       light: theme.colors.orangeLight,
@@ -65,8 +64,8 @@ export function themePalette(theme: { [key: string]: any }) {
       tertiary: theme.textTertiary,
       dark: theme.textDark,
       light: theme.textLight,
-      warning: theme.colors.warning,
-      orangeWarning: theme.colors.orangeWarning,
+      danger: theme.colors.danger,
+      orangeWarning: theme.colors.warning,
       level1: isDark ? theme.colors.darkLevel1 : theme.colors.primaryLight,
       400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
       theme_primary: theme.colors.darkPrimaryMain,

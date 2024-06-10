@@ -73,6 +73,7 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
+    "@fort-major/msq-client": "^0.3.4",
     "@honopu/auth-client": "1.0.13",
     "@icpswap/actor": "workspace:*",
     "@icpswap/candid": "workspace:*",

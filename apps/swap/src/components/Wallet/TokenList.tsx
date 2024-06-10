@@ -1,5 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
 import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
@@ -9,10 +9,15 @@ import { useTaggedTokenManager, useUpdateHideSmallBalanceManager } from "store/w
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
+import { AlertCircle, X } from "react-feather";
+import { Trans } from "@lingui/macro";
+import { Flex } from "@icpswap/ui";
 
 import WalletContext from "./context";
 
 export default function WalletTokenList() {
+  const theme = useTheme();
+  const [showTip, setShowTip] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [isHideSmallBalances, setIsHideSmallBalances] = useUpdateHideSmallBalanceManager();
   const { taggedTokens } = useTaggedTokenManager();
@@ -54,6 +59,10 @@ export default function WalletTokenList() {
     setIsHideSmallBalances(hideOrNot);
   };
 
+  const handleCloseTip = () => {
+    setShowTip(false);
+  };
+
   return (
     <>
       <Box
@@ -72,6 +81,35 @@ export default function WalletTokenList() {
           onSearchValue={handleSearchValue}
           isHideSmallBalances={isHideSmallBalances}
         />
+
+        {showTip ? (
+          <Flex
+            justify="space-between"
+            sx={{
+              width: "100%",
+              borderRadius: "12px",
+              padding: "13px 16px",
+              background: "rgba(183, 156,  74, 0.3)",
+            }}
+          >
+            <Flex gap="0 12px">
+              <Box sx={{ width: "16px" }}>
+                <AlertCircle color={theme.colors.warning} size="16px" />
+              </Box>
+
+              <Typography color="text.primary">
+                <Trans>
+                  Click '+' on the right to add tokens and display their balance. You can also check 'Wallet Valuation'
+                  to view all your tokens.
+                </Trans>
+              </Typography>
+            </Flex>
+
+            <Box sx={{ width: "16px" }}>
+              <X color="#ffffff" size="16px" onClick={handleCloseTip} cursor="pointer" />
+            </Box>
+          </Flex>
+        ) : null}
 
         <TokenListTable isHideSmallBalances={isHideSmallBalances} tokens={sortedTokens} searchValue={searchValue} />
       </Box>

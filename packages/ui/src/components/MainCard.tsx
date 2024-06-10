@@ -79,7 +79,7 @@ export function MainCard({ border, level, onClick, padding, children, sx, border
       onClick={onClick}
       className={className}
     >
-      <Box>{children}</Box>
+      {children}
     </Box>
   );
 }

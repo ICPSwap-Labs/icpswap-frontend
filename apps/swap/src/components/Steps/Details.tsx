@@ -102,7 +102,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                   sx={{
                     display: "flex",
                     padding: "12px 20px",
-                    border: `1px solid ${showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4}`,
+                    border: `1px solid ${showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4}`,
                     borderRadius: "12px",
                     alignItems: "center",
                     justifyContent: "space-between",
@@ -143,13 +143,13 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                   <Box
                     sx={{
                       borderLeft: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderBottom: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderRight: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderBottomLeftRadius: "12px",
                       borderBottomRightRadius: "12px",
@@ -190,7 +190,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           <Typography component="div">
                             <Trans>Error</Trans>
                           </Typography>
-                          <Typography component="div" color="text.warning" sx={{ maxWidth: "380px" }}>
+                          <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
                             {ele.skipError}
                           </Typography>
                         </Box>
@@ -208,7 +208,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           <Typography component="div">
                             <Trans>Error</Trans>
                           </Typography>
-                          <Typography component="div" color="text.warning" sx={{ maxWidth: "380px" }}>
+                          <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
                             {ele.errorMessage}
                           </Typography>
                         </Box>

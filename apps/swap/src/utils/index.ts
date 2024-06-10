@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 
 import JSBI from "jsbi";
-import { toSignificant } from "@icpswap/utils";
+import { toSignificant, explorerLink } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 
 // @ts-ignore  hijack bigint
@@ -45,6 +45,14 @@ export function mockALinkAndOpen(url: string, id: string): void {
     document.body.appendChild(a);
   }
   a.click();
+}
+
+export function getExplorerPrincipalLink(principalId: string): string {
+  return explorerLink(principalId);
+}
+
+export function getExplorerAccountLink(account: string): string {
+  return `https://dashboard.internetcomputer.org/account/${account}`;
 }
 
 export function openBase64ImageInNewWindow(base64String: string) {

@@ -23,8 +23,8 @@ const DASHBOARD = {
 };
 
 const CANISTER = {
-  [ChainId.MAINNET]: `https://icscan.io/canister/${LEDGER_ID[chain]}`,
-  [ChainId.SEPOLIA]: `https://icscan.io/canister/${LEDGER_ID[chain]}`,
+  [ChainId.MAINNET]: `https://dashboard.internetcomputer.org/canister/${LEDGER_ID[chain]}`,
+  [ChainId.SEPOLIA]: `https://dashboard.internetcomputer.org/canister/${LEDGER_ID[chain]}`,
 };
 
 const ETH_MINT_CONTRACTS = {

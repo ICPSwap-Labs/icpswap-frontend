@@ -15,6 +15,7 @@ import {
   secondsToDissolveDelayDuration,
 } from "utils/sns/index";
 import { ChevronDown } from "react-feather";
+import { snsRewardStatus, SnsProposalRewardStatus } from "../proposal.utils";
 
 import { VotableNeurons } from "./VotableNeurons";
 import { VoteConfirm } from "./VoteConfirm";
@@ -116,7 +117,7 @@ export function VotingResult({
   }, [proposal_data]);
 
   const YesColor = theme.colors.successDark;
-  const NoColor = theme.colors.errorDark;
+  const NoColor = theme.colors.danger;
 
   const { minimumDissolveDelaySeconds } = useMemo(() => {
     if (!neuronSystemParameters) return {};
@@ -150,6 +151,16 @@ export function VotingResult({
       return checkedNeuronIds.includes(formattedNeuron.id);
     });
   }, [voteableNeurons, checkedNeuronIds]);
+
+  const canVote = useMemo(() => {
+    if (!proposal_data) return false;
+
+    const rewardStatus = snsRewardStatus(proposal_data);
+    if (rewardStatus !== SnsProposalRewardStatus.PROPOSAL_REWARD_STATUS_ACCEPT_VOTES) return false;
+    if (checkedNeuronIds.length === 0) return false;
+
+    return true;
+  }, [proposal_data, checkedNeuronIds]);
 
   return (
     <Box>
@@ -315,7 +326,7 @@ export function VotingResult({
                     background: theme.colors.successDark,
                   },
                 }}
-                disabled={checkedNeuronIds.length === 0}
+                disabled={!canVote}
                 onClick={handleAdopt}
               >
                 <Trans>Adopt</Trans>
@@ -327,12 +338,12 @@ export function VotingResult({
                 variant="contained"
                 fullWidth
                 sx={{
-                  background: theme.colors.errorDark,
+                  background: theme.colors.danger,
                   "&:hover": {
-                    background: theme.colors.errorDark,
+                    background: theme.colors.danger,
                   },
                 }}
-                disabled={checkedNeuronIds.length === 0}
+                disabled={!canVote}
                 onClick={handleReject}
               >
                 <Trans>Reject</Trans>

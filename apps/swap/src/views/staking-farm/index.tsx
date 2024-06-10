@@ -1,38 +1,47 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { NoData, StaticLoading, MainCard } from "components/index";
 import Switch from "components/switch";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { STATE } from "types/staking-farm";
 import { useFarms, useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
+
 import StakingPoolItem from "./components/StakingPoolItem";
 import GlobalData from "./components/GlobalData";
-import { Page, Pages } from "./components/PageToggle";
 import FarmContext from "./context";
+
+const Tabs = [
+  { label: t`Live`, state: STATE.LIVE },
+  { label: t`Unstart`, state: STATE.NOT_STARTED },
+  { label: t`Finished`, state: STATE.FINISHED },
+  { label: t`Closure`, state: STATE.CLOSED },
+];
 
 function MainContent() {
   const history = useHistory();
 
-  const [stakeOnly, setStakeOnly] = useState(false);
+  const { state: __state, stakeOnly } = useParsedQueryString() as { state: STATE; stakeOnly: "true" | undefined };
+  const state = useMemo(() => __state ?? STATE.LIVE, [__state]);
 
-  const { state } = useParsedQueryString() as { state: STATE };
-  const _state = useMemo(() => state ?? STATE.LIVE, [state]);
   // TODO: page
-  const { result, loading } = useFarms(_state);
+  const { result: farms, loading } = useFarms(state);
 
-  const farms = useMemo(() => {
-    return result ?? [];
-  }, [result]);
-
-  const handleToggle = (value: Page) => {
-    history.push(value.path);
-  };
+  const handleToggle = useCallback(
+    (value: { label: string; state: STATE }) => {
+      if (stakeOnly === "true") {
+        history.push(`/farm?state=${value.state}&stakeOnly=true`);
+        return;
+      }
+      history.push(`/farm?state=${value.state}`);
+    },
+    [stakeOnly],
+  );
 
   const [unStakedFarms, setUnStakedFarms] = useState<string[]>([]);
 
   const handleUpdateUnStakedFarms = (unStakedFarms: string) => {
-    setUnStakedFarms((prevState) => prevState.concat(unStakedFarms));
+    setUnStakedFarms((prevState) => [...new Set(prevState.concat(unStakedFarms))]);
   };
 
   const handleDeleteUnStakedFarms = (unStakedFarm: string) => {
@@ -46,9 +55,18 @@ function MainContent() {
     });
   };
 
-  const handleToggleCheck = (checked: boolean) => {
-    setStakeOnly(checked);
-  };
+  const handleStakeOnly = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
+
+      if (checked) {
+        history.push(`/farm?state=${state}&stakeOnly=true`);
+      } else {
+        history.push(`/farm?state=${state}`);
+      }
+    },
+    [state],
+  );
 
   return (
     <FarmContext.Provider
@@ -58,62 +76,78 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <MainCard>
+      <MainCard padding="24px">
         <Grid
           container
-          direction="row"
+          justifyContent="space-between"
           sx={{
-            padding: "10px 0 40px",
-            "@media (max-width: 960px)": {
-              padding: "10px 0px 0px 0px",
+            "@media (max-width:640px)": {
+              flexDirection: "column",
+              gap: "24px 0",
             },
           }}
         >
-          <Grid item>
-            <Box sx={{ display: "flex", gap: "0 20px" }}>
-              {Pages.map((ele) => (
-                <Typography
-                  key={ele.path}
-                  variant="h3"
-                  color={_state === ele.state ? "textPrimary" : "textTertiary"}
-                  onClick={() => handleToggle(ele)}
-                  sx={{
-                    cursor: "pointer",
-                    textTransform: "capitalize",
-                    "@media (max-width:640px)": {
-                      fontSize: "16px",
-                    },
-                  }}
-                >
-                  {ele.label}
-                </Typography>
-              ))}
-            </Box>
-          </Grid>
-          <Grid item style={{ marginLeft: "auto" }}>
-            <Grid container alignItems="center" gap="0 10px">
-              <Typography display="inline">
-                <Trans>Staked only</Trans>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0 20px",
+            }}
+          >
+            {Tabs.map((tab) => (
+              <Typography
+                key={tab.state}
+                color={state === tab.state ? "textPrimary" : "textTertiary"}
+                onClick={() => handleToggle(tab)}
+                sx={{
+                  fontSize: "20px",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  textTransform: "capitalize",
+                  "@media (max-width:640px)": {
+                    fontSize: "16px",
+                  },
+                }}
+              >
+                {tab.label}
               </Typography>
-              <Switch checked={stakeOnly} onChange={(event: any) => handleToggleCheck(event.target.checked)} />
-            </Grid>
-          </Grid>
+            ))}
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0 10px",
+              "@media (max-width:640px)": {
+                justifyContent: "flex-start",
+              },
+            }}
+          >
+            <Typography display="inline">
+              <Trans>Staked only</Trans>
+            </Typography>
+            <Switch checked={stakeOnly === "true"} onChange={handleStakeOnly} />
+          </Box>
         </Grid>
 
         <Box
           sx={{
             position: "relative",
             minHeight: "440px",
+            margin: "50px 0 0 0",
           }}
         >
           {!loading ? (
             <Grid container justifyContent="center" sx={{ gap: "20px" }}>
-              {farms.map((ele) => (
-                <StakingPoolItem key={ele[0].toString()} stakeOnly={stakeOnly} state={_state} farmTVL={ele} />
+              {farms?.map((ele) => (
+                <StakingPoolItem key={ele[0].toString()} stakeOnly={stakeOnly === "true"} state={state} farmTVL={ele} />
               ))}
             </Grid>
           ) : null}
-          {((unStakedFarms.length === farms.length && stakeOnly) || !farms.length) && !loading && <NoData />}
+
+          {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
+            <NoData />
+          )}
           {loading ? <StaticLoading loading={loading} /> : null}
         </Box>
       </MainCard>

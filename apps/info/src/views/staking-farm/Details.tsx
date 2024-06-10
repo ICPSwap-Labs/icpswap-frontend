@@ -213,7 +213,7 @@ export default function FarmDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Position(LP) NFTs</Trans>
+              <Trans>Staked Positions</Trans>
             </Typography>
             <Typography
               color={recordType !== "transactions" ? "text.primary" : ""}
