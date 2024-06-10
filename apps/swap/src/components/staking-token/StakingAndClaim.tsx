@@ -6,7 +6,7 @@ import { STATE } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
 
 import V2StakingModal from "./V2StakingModal";
-import ClaimModal from "./ClaimModal";
+import UnstakeModal from "./UnstakeModal";
 
 const useStyle = makeStyles(() => ({
   button: {
@@ -36,15 +36,14 @@ export interface OptionStakingProps {
 }
 
 export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess, state }: OptionStakingProps) {
+  const classes = useStyle();
   const [openStakingModal, setOpenStakingModal] = React.useState(false);
   const [modalType, setOpenModalType] = React.useState<"Deposit" | "Withdraw">("Deposit");
-
-  const classes = useStyle();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
       <Button
-        disabled={!new BigNumber(Number(userStakingInfo?.amount ?? 0)).isGreaterThan(0)}
+        disabled={!new BigNumber(Number(userStakingInfo?.stakeAmount ?? 0)).isGreaterThan(0)}
         className={classes.button}
         onClick={() => {
           setOpenModalType("Withdraw");
@@ -64,22 +63,23 @@ export default function OptionStaking({ pool, userStakingInfo, onStakingSuccess,
         +
       </Button>
 
-      {openStakingModal &&
-        (modalType === "Deposit" ? (
+      {openStakingModal && pool ? (
+        modalType === "Deposit" ? (
           <V2StakingModal
             open={openStakingModal}
             onClose={() => setOpenStakingModal(false)}
             onStakingSuccess={onStakingSuccess}
             pool={pool}
           />
-        ) : pool ? (
-          <ClaimModal
+        ) : (
+          <UnstakeModal
             open={openStakingModal}
             onClose={() => setOpenStakingModal(false)}
             onStakingSuccess={onStakingSuccess}
             pool={pool}
           />
-        ) : null)}
+        )
+      ) : null}
     </Box>
   );
 }

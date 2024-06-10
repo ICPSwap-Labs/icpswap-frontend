@@ -1,45 +1,50 @@
 import React from "react";
-import { Grid, Button, CircularProgress } from "@mui/material";
-import { useTips, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
+import { Button, CircularProgress, Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
-import { getLocaleMessage } from "locales/services";
 import { t } from "@lingui/macro";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { stakingPoolHarvest, stakingPoolClaimRewards } from "@icpswap/hooks";
+import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
+import { StepViewButton } from "components/index";
+import { useHarvestCall } from "hooks/staking-token/useHarvest";
 
-export interface ClaimRewardProps {
+export interface HarvestProps {
   rewardToken: Token | undefined | null;
   pool: StakingPoolControllerPoolInfo | undefined | null;
   reward: number | undefined;
 }
 
-export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardProps) {
+export default function Harvest({ rewardToken, reward, pool }: HarvestProps) {
+  const walletIsConnected = useConnectorStateConnected();
   const principal = useAccountPrincipal();
   const [openTip] = useTips();
-  const walletIsConnected = useConnectorStateConnected();
+  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [loading, setLoading] = React.useState(false);
 
-  const handleClaimReward = async () => {
-    if (loading || !pool || !principal) return;
+  const getHarvestCall = useHarvestCall();
+
+  const handleHarvest = async () => {
+    if (loading || !pool || !principal || !rewardToken) return;
 
     setLoading(true);
 
     const poolCanisterId = pool.canisterId.toString();
 
-    const { status, message } = await stakingPoolHarvest(poolCanisterId);
+    const { call, key } = await getHarvestCall({ token: rewardToken, poolId: poolCanisterId });
 
-    await stakingPoolClaimRewards(poolCanisterId, principal);
+    const loadingTipKey = openLoadingTip(`Harvest ${rewardToken.symbol}`, {
+      extraContent: <StepViewButton step={key} />,
+    });
 
-    if (status === ResultStatus.OK) {
-      openTip(t`Harvest successfully`, TIP_SUCCESS);
-    } else {
-      openTip(getLocaleMessage(message), TIP_ERROR);
+    const result = await call();
+
+    if (result) {
+      openTip(t`Harvest successfully`, MessageTypes.success);
     }
 
+    closeLoadingTip(loadingTipKey);
     setLoading(false);
   };
 
@@ -50,7 +55,7 @@ export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardPr
     reward === 0;
 
   return (
-    <Grid>
+    <Box>
       {walletIsConnected ? (
         <Button
           disabled={loading || noRewardToken}
@@ -59,7 +64,7 @@ export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardPr
           variant="contained"
           size="large"
           color="primary"
-          onClick={handleClaimReward}
+          onClick={handleHarvest}
           startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
         >
           {t`Harvest`}
@@ -67,6 +72,6 @@ export default function ClaimReward({ rewardToken, reward, pool }: ClaimRewardPr
       ) : (
         <ConnectWallet style={{ whiteSpace: "nowrap" }} />
       )}
-    </Grid>
+    </Box>
   );
 }

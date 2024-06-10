@@ -1,25 +1,22 @@
 import { Box } from "components/Mui";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
 import { toFormat } from "utils/index";
-import { isUseTransferByStandard, actualAmountToPool } from "utils/token/index";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { getStepData } from "store/steps/hooks";
+import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
+import { getStepData } from "store/steps/hooks";
 
 export interface GetSteps {
   token: Token;
-  amount: string | number;
-  standard: TOKEN_STANDARD;
-  key: string;
   rewardToken: Token;
+  amount: string | number;
+  key: string;
   retry?: () => void;
 }
 
-export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps) {
-  const amount0 = toFormat(parseTokenAmount(actualAmountToPool(token, String(amount)), token.decimals).toString());
+export function getUnstakeSteps({ token, amount, rewardToken, key }: GetSteps) {
   const data = getStepData<bigint | undefined>(key);
+  const amount0 = toFormat(parseTokenAmount(amount, token.decimals).toString());
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
@@ -30,14 +27,7 @@ export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps
 
   const steps: any[] = [
     {
-      title: isUseTransferByStandard(standard) ? `Transfer ${token.symbol}` : `Approve ${token.symbol}`,
-      children: [
-        { label: t`Amount`, value: amount0Value },
-        { label: t`Canister Id`, value: token.address },
-      ],
-    },
-    {
-      title: t`Deposit ${token.symbol}`,
+      title: t`Unstake ${token.symbol}`,
       children: [
         {
           label: t`Amount`,
@@ -47,7 +37,7 @@ export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps
       ],
     },
     {
-      title: t`Stake ${token.symbol}`,
+      title: t`Withdraw ${token.symbol}`,
       children: [
         {
           label: t`Amount`,

@@ -10,3 +10,5 @@ export const close = createAction<string | undefined>("steps/close");
 export const updateKey = createAction<void>("steps/updateKey");
 
 export const closeAll = createAction<void>("steps/closeAll");
+
+export const updateData = createAction<{ key: string; data: any }>("steps/updateData");

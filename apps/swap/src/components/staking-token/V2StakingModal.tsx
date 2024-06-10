@@ -1,29 +1,34 @@
 import { useAccountPrincipal } from "store/auth/hooks";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useStakingToken } from "hooks/staking-token";
-import { useLoadingTip } from "hooks/useTips";
+import { useStakeCall } from "hooks/staking-token/useStake";
+import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { StepViewButton } from "components/index";
 import StakingModal, { StakingProps } from "components/staking-token/StakingModal";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { t } from "@lingui/macro";
 
 export interface StakingModalProps {
   open: boolean;
   onClose?: () => void;
   onStakingSuccess?: () => void;
-  pool: StakingPoolControllerPoolInfo | undefined;
+  pool: StakingPoolControllerPoolInfo;
 }
 
 export default function V2StakingModal({ open, onClose, onStakingSuccess, pool }: StakingModalProps) {
   const principal = useAccountPrincipal();
-  const staking = useStakingToken();
+  const getStakeCall = useStakeCall();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
+  const [openTip] = useTips();
 
-  const handleStaking = async ({ amount, token }: StakingProps) => {
-    if (!token || !principal || !amount || !pool) return;
+  const handleStaking = async ({ amount, token, rewardToken }: StakingProps) => {
+    if (!token || !principal || !amount) return;
 
-    const { call, key } = staking({
+    const { call, key } = getStakeCall({
       token,
       amount,
       poolId: pool.canisterId.toString(),
+      standard: pool.stakingToken.standard as TOKEN_STANDARD,
+      rewardToken,
     });
 
     const loadingTipKey = openLoadingTip(`Staking ${token.symbol}`, {
@@ -32,15 +37,14 @@ export default function V2StakingModal({ open, onClose, onStakingSuccess, pool }
 
     const result = await call();
 
-    if (!result) {
-      closeLoadingTip(loadingTipKey);
-      return;
+    if (result) {
+      openTip(t`Stake successfully`, MessageTypes.success);
     }
 
     closeLoadingTip(loadingTipKey);
   };
 
-  return pool ? (
+  return (
     <StakingModal
       open={open}
       onClose={onClose}
@@ -48,5 +52,5 @@ export default function V2StakingModal({ open, onClose, onStakingSuccess, pool }
       onStaking={handleStaking}
       pool={pool}
     />
-  ) : null;
+  );
 }

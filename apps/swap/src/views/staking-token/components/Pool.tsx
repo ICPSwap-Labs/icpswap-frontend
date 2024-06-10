@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -13,9 +13,8 @@ import StakingAndClaim from "components/staking-token/StakingAndClaim";
 import { useStakingPoolData, useUserStakingInfo } from "hooks/staking-token/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "@icpswap/ui";
-import { useInterval } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { getStakingTokenPoolState } from "utils/staking";
+import { useCalcPoolState } from "hooks/staking-token/useCalcPoolState";
 
 export interface PoolInfoProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
@@ -97,19 +96,17 @@ function PoolInfo({ pool, rewardToken, state, stakingToken }: PoolInfoProps) {
 export interface StakingPoolProps {
   stakedOnly: boolean;
   pool: StakingPoolControllerPoolInfo | undefined;
+  updatePoolStaked?: (poolId: string, staked: boolean) => void;
+  filterState: STATE;
 }
 
-export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
+export default function StakingPool({ stakedOnly, pool, filterState, updatePoolStaked }: StakingPoolProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
   const [poolData] = useStakingPoolData(pool?.canisterId.toString());
   const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
 
-  const callback = useCallback(async () => {
-    return getStakingTokenPoolState(pool);
-  }, [pool]);
-
-  const state = useInterval(callback, undefined, 1000);
+  const state = useCalcPoolState({ pool });
 
   const [, rewardToken] = useToken(pool?.rewardToken.address);
   const [, stakingToken] = useToken(pool?.stakingToken.address);
@@ -121,6 +118,12 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
     updateUserStakingInfo();
   };
 
+  useEffect(() => {
+    if (userStakingInfo && pool && updatePoolStaked && state === STATE.LIVE) {
+      updatePoolStaked(pool.canisterId.toString(), userStakingInfo.stakeAmount !== BigInt(0));
+    }
+  }, [userStakingInfo, pool, updatePoolStaked, state]);
+
   return (
     <Box
       sx={{
@@ -128,7 +131,14 @@ export default function StakingPool({ stakedOnly, pool }: StakingPoolProps) {
         borderRadius: "4px",
         overflow: "hidden",
         height: "fit-content",
-        display: !stakedOnly ? "block" : userStakingInfo?.amount ? "block" : "none",
+        display:
+          filterState !== STATE.LIVE
+            ? "block"
+            : !stakedOnly
+            ? "block"
+            : userStakingInfo?.stakeAmount
+            ? "block"
+            : "none",
         "@media (max-width: 520px)": {
           width: "340px",
         },

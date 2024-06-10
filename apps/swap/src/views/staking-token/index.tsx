@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography } from "@mui/material";
 import { NoData, MainCard, StaticLoading, TextButton } from "components/index";
@@ -6,6 +6,7 @@ import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
 import { useStakingPools, useStakingPoolInfoFromController, useParsedQueryString } from "@icpswap/hooks";
 import { STATE } from "types/staking-token";
+
 import UnusedTokens from "./components/UnusedTokens";
 import Pool from "./components/Pool";
 import GlobalData from "./components/GlobalData";
@@ -58,7 +59,7 @@ function SinglePool() {
           }}
         >
           <Box sx={{ display: "grid", justifyContent: "center" }}>
-            <Pool stakedOnly={false} pool={poolInfo} />
+            <Pool stakedOnly={false} pool={poolInfo} filterState={STATE.UPCOMING} />
           </Box>
         </Box>
       </MainCard>
@@ -68,21 +69,22 @@ function SinglePool() {
 
 function Pools() {
   const history = useHistory();
+  const [unused, setUnused] = useState(false);
+  const [stakedPools, setStakedPools] = useState<string[]>([]);
+  const { state, stakeOnly } = useParsedQueryString() as { state: string; stakeOnly: "true" | undefined };
 
-  const { filter: _filter } = useParsedQueryString() as { filter: string; poolId: string };
+  const __state = useMemo(() => {
+    return (state ?? STATE.LIVE) as STATE;
+  }, [state]);
 
-  const filter = useMemo(() => {
-    return (_filter ?? STATE.LIVE) as STATE;
-  }, [_filter]);
+  const stateValue = useMemo(() => getStateValue(__state), [__state]);
 
-  const state = useMemo(() => getStateValue((filter ?? STATE.LIVE) as STATE), [filter]);
+  const { result, loading } = useStakingPools(stateValue, 0, 100);
 
-  const { result, loading } = useStakingPools(state, 0, 100);
-
-  // when filter is FINISHED, sort pools by stakingToken symbol
+  // when __state is FINISHED, sort pools by stakingToken symbol
   const pools = useMemo(() => {
     if (result?.content) {
-      if (!!filter && filter === STATE.FINISHED) {
+      if (!!__state && __state === STATE.FINISHED) {
         return result?.content.sort((a, b) => {
           if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
           if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
@@ -94,41 +96,45 @@ function Pools() {
     }
 
     return undefined;
-  }, [result, filter]);
+  }, [result, __state]);
 
-  const [stakedOnly, setStakedOnly] = React.useState(false);
-  const [showNoData, setShowNoData] = React.useState(false);
-  const [unused, setUnused] = useState(false);
-
-  const handleStakedOnly = (checked: boolean) => {
-    setStakedOnly(checked);
-
-    if (checked) {
-      const poolItems = document.querySelectorAll(".staking-token-pool-item");
-      let showNoData = true;
-
-      setTimeout(() => {
-        poolItems.forEach((item) => {
-          if (item.classList.toString().indexOf("block") !== -1) {
-            showNoData = false;
-          }
-        });
-        setShowNoData(showNoData);
-      }, 50);
-    } else if (pools?.length) {
-      setShowNoData(false);
-    } else {
-      setShowNoData(true);
-    }
-  };
+  const handleStakedOnly = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      if (checked) {
+        history.push(`/staking-token?state=${__state}&stakeOnly=true`);
+      } else {
+        history.push(`/staking-token?state=${__state}`);
+      }
+    },
+    [__state],
+  );
 
   const handleLoad = (value: Page) => {
-    history.push(`/staking-token?filter=${value.key}`);
+    history.push(`/staking-token?state=${value.key}${stakeOnly === "true" ? "&stakeOnly=true" : ""}`);
   };
 
   const handleWithdrawUnusedTokens = () => {
     setUnused(true);
   };
+
+  const handleUpdatePoolStaked = (poolId: string, staked: boolean) => {
+    if (stakedPools.includes(poolId) && staked === false) {
+      const __stakedPools = [...stakedPools];
+      __stakedPools.splice(__stakedPools.indexOf(poolId), 1);
+      setStakedPools([...new Set(__stakedPools)]);
+    }
+
+    if (!stakedPools.includes(poolId) && staked === true) {
+      const __stakedPools = [...stakedPools, poolId];
+      setStakedPools([...new Set(__stakedPools)]);
+    }
+  };
+
+  const noData = useMemo(() => {
+    if (!pools) return true;
+    if (__state === STATE.LIVE && stakeOnly === "true" && stakedPools.length === 0) return true;
+    return pools.length === 0;
+  }, [__state, stakedPools, pools, stakeOnly]);
 
   return (
     <>
@@ -156,7 +162,7 @@ function Pools() {
               {Pages.map((ele) => (
                 <Typography
                   key={ele.key}
-                  color={filter === ele.key ? "text.primary" : "text.secondary"}
+                  color={__state === ele.key ? "text.primary" : "text.secondary"}
                   sx={{
                     fontSize: "20px",
                     fontWeight: 500,
@@ -177,12 +183,12 @@ function Pools() {
           <Grid item alignItems="center">
             <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
               <TextButton onClick={handleWithdrawUnusedTokens}>
-                <Trans>Unused tokens</Trans>
+                <Trans>Reclaim</Trans>
               </TextButton>
               <Typography component="span">
                 <Trans>Staked only</Trans>
               </Typography>
-              <Switch checked={stakedOnly} onChange={(event: any) => handleStakedOnly(event.target.checked)} />
+              <Switch checked={stakeOnly === "true"} onChange={handleStakedOnly} />
             </Box>
           </Grid>
         </Grid>
@@ -204,11 +210,17 @@ function Pools() {
               }}
             >
               {pools?.map((ele, index) => (
-                <Pool key={`${ele.canisterId}-${index}`} stakedOnly={stakedOnly} pool={ele} />
+                <Pool
+                  key={`${ele.canisterId}-${index}`}
+                  stakedOnly={stakeOnly === "true"}
+                  pool={ele}
+                  updatePoolStaked={handleUpdatePoolStaked}
+                  filterState={__state}
+                />
               ))}
             </Box>
           ) : null}
-          {(showNoData || !pools?.length) && !loading && <NoData />}
+          {noData && !loading && <NoData />}
           {loading ? <StaticLoading loading /> : null}
         </Box>
       </MainCard>

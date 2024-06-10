@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { open, close, updateStepDetails, updateKey, closeAll } from "./actions";
+import { open, close, updateStepDetails, updateKey, closeAll, updateData } from "./actions";
 import { initialState } from "./state";
 
 export default createReducer(initialState, (builder) => {
@@ -25,5 +25,11 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateKey, (state) => {
       state.key += 1;
+    })
+    .addCase(updateData, (state, { payload }) => {
+      state.data = {
+        ...state.data,
+        [payload.key]: payload.data,
+      };
     });
 });

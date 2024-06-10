@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button, Typography, Grid, Box, CircularProgress } from "@mui/material";
 import { t, Trans } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, numberToString, formatTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import Identity, { CallbackProps } from "components/Identity";
 import MaxButton from "components/MaxButton";
-import type { ActorIdentity, StakingPoolControllerPoolInfo } from "@icpswap/types";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useToken } from "hooks/useCurrency";
 import { Modal, NumberTextField } from "components/index";
 import { isUseTransfer } from "utils/token";
@@ -17,6 +16,7 @@ export interface StakingProps {
   token: Token;
   amount: string;
   id: string;
+  rewardToken: Token;
 }
 
 export interface StakingModalProps {
@@ -34,17 +34,23 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
 
   const { result: _balance } = useTokenBalance(pool.stakingToken.address, principal);
   const [, token] = useToken(pool.stakingToken.address);
-  const balance = parseTokenAmount(String(_balance ?? 0), token?.decimals);
+  const [, rewardToken] = useToken(pool.rewardToken.address);
 
-  const handleSubmit = async (identity: ActorIdentity) => {
+  const balance = useMemo(() => {
+    if (isNullArgs(_balance) || isNullArgs(token)) return undefined;
+    return parseTokenAmount(_balance, token.decimals);
+  }, [_balance, token]);
+
+  const handleSubmit = async () => {
     setLoading(true);
 
-    if (!identity || loading || !token || !principal || !amount) return;
+    if (loading || !token || !principal || !amount || !rewardToken) return;
 
     await onStaking({
       token,
       amount: numberToString(formatTokenAmount(amount, token.decimals)),
       id: pool.canisterId.toString(),
+      rewardToken,
     });
 
     setLoading(false);
@@ -96,7 +102,7 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
 
         <Grid container alignItems="center" sx={{ margin: "10px 0" }}>
           <Typography>
-            <Trans>Balance</Trans>: {balance?.toFormat()} {pool.stakingTokenSymbol}
+            <Trans>Balance</Trans>: {balance ? balance.toFormat() : "--"} {pool.stakingTokenSymbol}
           </Typography>
 
           <MaxButton
@@ -108,20 +114,16 @@ export default function StakingModal({ open, onClose, onStakingSuccess, pool, on
         </Grid>
 
         <Box mt={2}>
-          <Identity onSubmit={handleSubmit}>
-            {({ submit }: CallbackProps) => (
-              <Button
-                disabled={loading || !new BigNumber(String(balance)).toNumber() || !!errorMessage}
-                variant="contained"
-                fullWidth
-                onClick={submit}
-                size="large"
-                startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
-              >
-                {errorMessage || t`Confirm`}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            disabled={loading || !new BigNumber(String(balance)).toNumber() || !!errorMessage}
+            variant="contained"
+            fullWidth
+            onClick={handleSubmit}
+            size="large"
+            startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
+          >
+            {errorMessage || t`Confirm`}
+          </Button>
         </Box>
       </Grid>
     </Modal>

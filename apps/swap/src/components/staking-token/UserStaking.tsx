@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { parseTokenAmount, toSignificantWithGroupSeparator, nonNullArgs, isNullArgs } from "@icpswap/utils";
 import type { StakingPoolUserInfo, StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
@@ -74,29 +74,28 @@ export default function UserStaking({
     return 0;
   }, [ICPPrice, totalDeposit, poolData, rewardToken, rewardTokenPrice, stakingTokenPrice, stakingToken]);
 
-  const stakingAmount = useMemo(() => {
-    if (!userStakingInfo || !stakingToken) return undefined;
+  const { stakingAmount, stakingUSDValue } = useMemo(() => {
+    if (!userStakingInfo || !stakingToken) return {};
 
-    return parseTokenAmount(userStakingInfo.amount, stakingToken.decimals).toNumber();
-  }, [userStakingInfo, stakingToken]);
+    const stakingAmount = parseTokenAmount(userStakingInfo.stakeAmount, stakingToken.decimals).toNumber();
 
-  const stakingUSDValue = useMemo(() => {
-    if (!stakingAmount || !stakingTokenPrice) return undefined;
+    const stakingUSDValue = isNullArgs(stakingTokenPrice)
+      ? undefined
+      : new BigNumber(stakingAmount).multipliedBy(stakingTokenPrice).toNumber();
 
-    return new BigNumber(stakingAmount).multipliedBy(stakingTokenPrice).toNumber();
-  }, [rewardTokenPrice, stakingAmount]);
+    return { stakingAmount, stakingUSDValue };
+  }, [userStakingInfo, stakingToken, rewardTokenPrice]);
 
-  const pendingReward = useMemo(() => {
-    if (!rewardToken || !userStakingInfo) return undefined;
+  const { pendingReward, pendingRewardUSD } = useMemo(() => {
+    if (!rewardToken || !userStakingInfo) return {};
 
-    return parseTokenAmount(userStakingInfo.pendingReward, rewardToken.decimals).toNumber();
-  }, [userStakingInfo, rewardToken]);
+    const pendingReward = parseTokenAmount(userStakingInfo.pendingReward, rewardToken.decimals).toNumber();
+    const pendingRewardUSD = isNullArgs<string | number>(rewardTokenPrice)
+      ? undefined
+      : new BigNumber(pendingReward).multipliedBy(rewardTokenPrice).toNumber();
 
-  const pendingRewardUSD = useMemo(() => {
-    if (!rewardTokenPrice || !pendingReward) return undefined;
-
-    return new BigNumber(pendingReward).multipliedBy(rewardTokenPrice).toNumber();
-  }, [pendingReward, rewardTokenPrice]);
+    return { pendingReward, pendingRewardUSD };
+  }, [userStakingInfo, rewardToken, rewardTokenPrice]);
 
   const walletIsConnected = useConnectorStateConnected();
 
@@ -123,12 +122,12 @@ export default function UserStaking({
 
         <Box>
           <Typography sx={{ textAlign: "right", color: "text.primary", fontWeight: 600 }}>
-            {totalDeposit && rewardToken
+            {nonNullArgs<number>(totalDeposit) && rewardToken
               ? `${toSignificantWithGroupSeparator(totalDeposit, 6)} ${rewardToken.symbol}`
               : "--"}
           </Typography>
           <Typography sx={{ textAlign: "right", color: "text.primary", fontWeight: 600 }}>
-            {totalDepositUSD ? `~${new BigNumber(totalDepositUSD).toFormat(2)}` : "--"}
+            {nonNullArgs<number>(totalDepositUSD) ? `~${new BigNumber(totalDepositUSD).toFormat(2)}` : "--"}
           </Typography>
         </Box>
       </Flex>
@@ -157,26 +156,17 @@ export default function UserStaking({
         </Box>
       </Flex>
 
-      <Grid item container xs={12} direction="row" justifyContent="space-between" alignItems="flex-start">
-        <Grid item container>
-          <Box sx={{ marginBottom: "14px" }}>
-            <Typography>
-              <Trans>{pool?.rewardTokenSymbol} Earned</Trans>
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid
-          item
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          wrap="nowrap"
-          spacing={2}
-        >
-          <Grid item xs={9}>
+      <Box>
+        <Box sx={{ marginBottom: "14px" }}>
+          <Typography>
+            <Trans>{pool ? pool.rewardTokenSymbol : "--"} Earned</Trans>
+          </Typography>
+        </Box>
+
+        <Flex justify="space-between" align="flex-start">
+          <Box>
             <Typography color="text.primary">
-              {pendingReward ? (
+              {nonNullArgs<number>(pendingReward) ? (
                 <CountUp
                   style={{ fontSize: 24 }}
                   preserveValue
@@ -190,7 +180,7 @@ export default function UserStaking({
               )}
             </Typography>
             <Typography color="text.primary">
-              {pendingRewardUSD ? (
+              {nonNullArgs<number>(pendingRewardUSD) ? (
                 <CountUp
                   style={{ fontSize: 14 }}
                   preserveValue
@@ -204,12 +194,11 @@ export default function UserStaking({
                 "--"
               )}
             </Typography>
-          </Grid>
-          <Grid item>
-            <Harvest rewardToken={rewardToken} reward={pendingReward} pool={pool} />
-          </Grid>
-        </Grid>
-      </Grid>
+          </Box>
+
+          <Harvest rewardToken={rewardToken} reward={pendingReward} pool={pool} />
+        </Flex>
+      </Box>
 
       <Grid item xs={12}>
         <Box sx={{ marginBottom: "14px" }}>
@@ -221,7 +210,7 @@ export default function UserStaking({
         <Flex justify="space-between" align="center">
           <Box>
             <Typography color="text.primary">
-              {stakingAmount ? (
+              {stakingAmount !== undefined ? (
                 <CountUp
                   style={{ fontSize: 24 }}
                   preserveValue

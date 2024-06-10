@@ -1,8 +1,5 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
 import {
-  stakingPoolDeposit,
-  stakingPoolDepositFrom,
-  stakingPoolClaimRewards,
   getStakingPools,
   usePaginationAllData,
   getStakingTokenUserInfo,
@@ -11,56 +8,12 @@ import {
   useInterval,
 } from "@icpswap/hooks";
 import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { t } from "@lingui/macro";
-import { isUseTransfer } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { UnusedBalance } from "types/staking-token";
 import { Principal } from "@dfinity/principal";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
-import { getSteps } from "views/staking-token/components/Step";
-import { useStepContentManager } from "store/steps/hooks";
-import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { SubAccount } from "@dfinity/ledger-icp";
-
-export function useStakingTokenDeposit() {
-  const [openTip] = useTips();
-  const principal = useAccountPrincipal();
-
-  return useCallback(
-    async (token: Token, amount: string, poolId: string) => {
-      const useTransfer = isUseTransfer(token);
-
-      let status: ResultStatus = ResultStatus.ERROR;
-      let message = "";
-
-      if (useTransfer) {
-        const { status: _status, message: _message } = await stakingPoolDeposit(poolId);
-        await stakingPoolClaimRewards(poolId, principal);
-        status = _status;
-        message = _message;
-      } else {
-        const { status: _status, message: _message } = await stakingPoolDepositFrom(poolId, BigInt(amount));
-        await stakingPoolClaimRewards(poolId, principal);
-        status = _status;
-        message = _message;
-      }
-
-      if (status === "err") {
-        openTip(`Failed to deposit ${token.symbol}: ${message}`, MessageTypes.error);
-        return false;
-      }
-
-      openTip(t`Stake successfully`, MessageTypes.success);
-
-      return true;
-    },
-    [principal],
-  );
-}
 
 export async function getAllTokenPools() {
   const call = async (offset: number, limit: number) => {
@@ -136,59 +89,6 @@ export function useUserUnusedTokens(reload?: boolean) {
       result: balances,
     };
   }, [poolsLoading, loading, balances]);
-}
-
-type StakingProps = {
-  token: Token;
-  amount: string;
-  poolId: string;
-};
-
-function useSteps() {
-  const initialAndUpdateDetails = useStepContentManager();
-
-  return useCallback((key: string, { token, amount }: StakingProps) => {
-    const content = getSteps({
-      token,
-      amount,
-    });
-
-    initialAndUpdateDetails(String(key), {
-      content,
-      title: t`Staking Details`,
-    });
-  }, []);
-}
-
-function useCalls() {
-  const approveOrTransfer = useTokenTransferOrApprove();
-  const deposit = useStakingTokenDeposit();
-
-  return useCallback(({ token, amount, poolId }: StakingProps) => {
-    const firstCall = async () => await approveOrTransfer(token, amount, poolId);
-    const secondCall = async () => await deposit(token, amount, poolId);
-
-    return [firstCall, secondCall];
-  }, []);
-}
-
-export function useStakingToken() {
-  const updateStep = useSteps();
-  const formatCall = useStepCalls();
-  const getCalls = useCalls();
-
-  return useCallback(
-    ({ token, amount, poolId }: StakingProps) => {
-      const key = newStepKey();
-      const calls = getCalls({ token, amount, poolId });
-      const { call, reset, retry } = formatCall(calls, key);
-
-      updateStep(key, { token, amount, poolId });
-
-      return { call, reset, retry, key };
-    },
-    [getCalls, formatCall, updateStep],
-  );
 }
 
 export function useUserStakingInfo(
