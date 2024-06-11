@@ -1,66 +1,148 @@
-import { useMemo, useState } from "react";
-import SwapModal from "components/modal/swap";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
+import { useState } from "react";
+import { Modal } from "@icpswap/ui";
+import { Typography, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { NoData, LoadingRow } from "components/index";
+import { NoData, LoadingRow, TabPanel, type TabPanelProps, TokenImage, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { UnusedBalance } from "types/staking-token";
-import { TokenInfo } from "types/token";
-import { CheckboxGroup, Checkbox } from "components/Checkbox";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { Identity as CallIdentity } from "types/global";
+import { useTips, MessageTypes, useFullscreenLoading } from "hooks/useTips";
 import { useUserUnusedTokens } from "hooks/staking-token/index";
-import { stakingPoolClaim } from "@icpswap/hooks";
+import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
+import { usePendingRewards } from "hooks/staking-token/usePendingRewards";
 
-export function BalanceItem({
-  token,
-  balance,
-  name,
-  border = true,
-  pool,
-}: {
-  pool: string;
-  border?: boolean;
-  token?: TokenInfo;
+interface ReclaimItemProps {
+  tokenId: string;
+  poolId: string;
   balance: bigint;
-  name: string | undefined;
-}) {
+  onReclaim: (poolId: string, balance: bigint) => void;
+}
+
+function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) {
+  const { result: token } = useTokenInfo(tokenId);
+
   return (
-    <Grid container alignItems="center" sx={{ borderBottom: !border ? "none" : "1px solid #313A5A", height: "64px" }}>
-      <Avatar src={token?.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
-        &nbsp;
-      </Avatar>
-      <Typography color="text.primary">{parseTokenAmount(balance, token?.decimals).toFormat()}</Typography>
-      <Grid item xs>
-        <Grid container alignItems="center" justifyContent="flex-end">
-          <Typography color="text.primary" sx={{ margin: "0 32px 0 0" }}>
-            {name}
+    <Flex justify="space-between" sx={{ padding: "16px 0" }}>
+      <Flex gap="0 12px">
+        <TokenImage logo={token?.logo} size="32px" />
+        <Box>
+          <Typography sx={{ fontSize: "18px", fontWeight: 600, color: "text.primary" }}>
+            {parseTokenAmount(balance, token?.decimals).toFormat()}
           </Typography>
-          <Checkbox value={`${pool}_${token?.canisterId}`} radio />
-        </Grid>
-      </Grid>
-    </Grid>
+          <Typography sx={{ margin: "8px 0 0 0" }}>{token?.symbol ?? "--"}</Typography>
+        </Box>
+      </Flex>
+
+      <Box>
+        <Button size="small" variant="contained" onClick={() => onReclaim(poolId, balance)}>
+          <Trans>Reclaim</Trans>
+        </Button>
+      </Box>
+    </Flex>
   );
 }
 
-export function BalancesItem({ balance, end }: { end: boolean; balance: UnusedBalance }) {
-  const { result: token0 } = useTokenInfo(balance.stakingToken.address);
+function PendingRewards() {
+  const [openTip] = useTips();
+  const [trigger, setTrigger] = useState(0);
+  const [openFullscreen, closeFullscreen] = useFullscreenLoading();
+  const { loading, result } = usePendingRewards(trigger);
 
-  const name = token0 ? `${token0.symbol}` : "--";
+  const handleReclaim = async (poolId: string, balance: bigint) => {
+    openFullscreen();
 
-  return (
-    <BalanceItem
-      pool={balance.canisterId.toString()}
-      token={token0}
-      balance={balance.balance}
-      name={name}
-      border={!end}
-    />
+    const { status, message } = await stakingPoolWithdraw(poolId, false, balance);
+
+    if (status === ResultStatus.ERROR) {
+      openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+    } else {
+      openTip("Reclaim successfully", MessageTypes.success);
+      setTrigger(trigger + 1);
+    }
+
+    closeFullscreen();
+  };
+
+  return loading ? (
+    <Box sx={{ padding: "20px 0" }}>
+      <LoadingRow>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </LoadingRow>
+    </Box>
+  ) : result.length === 0 ? (
+    <NoData />
+  ) : (
+    <Box>
+      {result.map((ele) => (
+        <ReclaimItem
+          key={ele.poolId}
+          poolId={ele.poolId}
+          balance={ele.amount}
+          tokenId={ele.rewardTokenId}
+          onReclaim={handleReclaim}
+        />
+      ))}
+    </Box>
+  );
+}
+
+function FailedStakedTokens() {
+  const [openTip] = useTips();
+  const [trigger, setTrigger] = useState(0);
+  const [openFullscreen, closeFullscreen] = useFullscreenLoading();
+  const { loading, result } = useUserUnusedTokens(trigger);
+
+  const handleReclaim = async (poolId: string) => {
+    openFullscreen();
+
+    const { status, message } = await stakingPoolClaim(poolId);
+
+    if (status === ResultStatus.ERROR) {
+      openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+    } else {
+      openTip("Reclaim successfully", MessageTypes.success);
+      setTrigger(trigger + 1);
+    }
+
+    closeFullscreen();
+  };
+
+  return loading ? (
+    <Box sx={{ padding: "20px 0" }}>
+      <LoadingRow>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </LoadingRow>
+    </Box>
+  ) : result.length === 0 ? (
+    <NoData />
+  ) : (
+    <Box>
+      {result.map((ele) => (
+        <ReclaimItem
+          key={ele.poolId}
+          poolId={ele.poolId}
+          balance={ele.balance}
+          tokenId={ele.rewardTokenId}
+          onReclaim={handleReclaim}
+        />
+      ))}
+    </Box>
   );
 }
 
@@ -71,108 +153,35 @@ export interface WithdrawTokensModalProps {
 
 export default function WithdrawUnusedTokens({ open, onClose }: WithdrawTokensModalProps) {
   const theme = useTheme() as Theme;
+  const [tab, setTab] = useState<"subaccount" | "reward">("subaccount");
 
-  const [keys, setKeys] = useState<string[]>([]);
-  const [reload, setReloadBalance] = useState(false);
+  const tabs = [
+    { key: "subaccount", value: "Failed Staked Tokens" },
+    {
+      key: "reward",
+      value: "Pending Reward Tokens",
+    },
+  ];
 
-  const { loading, result: balances } = useUserUnusedTokens(reload);
-
-  const [openTip, closeTip] = useTips();
-
-  const _balances = useMemo(() => {
-    if (!balances) return [];
-
-    return balances.filter((balance) => balance.balance !== BigInt(0));
-  }, [balances]);
-
-  const handleCheckChange = (checked: string[]) => {
-    setKeys(checked);
-  };
-
-  const handleClaim = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
-    const loadingKey = openTip("Reclaim your tokens", MessageTypes.loading);
-    const calls: Promise<void>[] = [];
-
-    for (let i = 0; i < keys.length; i++) {
-      const temp = keys[i].split("_");
-      const pool = temp[0];
-
-      const balance = _balances.filter((balance) => balance.canisterId.toString() === pool)[0];
-
-      if (balance) {
-        const amount = balance.balance;
-
-        if (amount !== BigInt(0)) {
-          calls.push(
-            stakingPoolClaim(pool).then(async (result) => {
-              if (result.status === ResultStatus.OK) {
-                openTip(`Reclaim ${balance.stakingTokenSymbol} successfully`, MessageTypes.success);
-              } else {
-                openTip(result.message ?? `Failed to reclaim ${balance.stakingTokenSymbol}`, MessageTypes.error);
-              }
-            }),
-          );
-        }
-      }
-    }
-    await Promise.all(calls);
-    closeLoading();
-    closeTip(loadingKey);
-    setReloadBalance(!reload);
+  const handleTabChange: TabPanelProps["onChange"] = (tab) => {
+    setTab(tab.key);
   };
 
   return (
-    <SwapModal open={open} title={t`Reclaim your tokens`} onClose={onClose}>
-      {loading ? (
-        <LoadingRow>
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </LoadingRow>
-      ) : _balances.length > 0 ? (
-        <>
-          <CheckboxGroup onChange={handleCheckChange}>
-            <Box
-              sx={{
-                background: theme.palette.background.level3,
-                borderRadius: "12px",
-                border: `1px solid ${theme.palette.background.level4}`,
-                padding: "0 24px",
-                maxHeight: "348px",
-                overflow: "auto",
-              }}
-            >
-              {_balances.map((balance, index) => (
-                <BalancesItem key={index} balance={balance} end={index === _balances.length - 1} />
-              ))}
-            </Box>
-            <Box mt="24px">
-              <Identity onSubmit={handleClaim} fullScreenLoading>
-                {({ submit, loading }: CallbackProps) => (
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    disabled={!keys.length || loading}
-                    onClick={submit}
-                    startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-                  >
-                    <Trans>Withdraw</Trans>
-                  </Button>
-                )}
-              </Identity>
-            </Box>
-          </CheckboxGroup>
-        </>
-      ) : (
-        <NoData />
-      )}
-    </SwapModal>
+    <Modal open={open} title={t`Reclaim`} onClose={onClose} background={theme.palette.background.level1}>
+      <TabPanel
+        active={tab}
+        tabs={tabs}
+        fullWidth
+        bg0={theme.palette.background.level3}
+        bg1={theme.palette.background.level1}
+        fontNormal
+        fontSize="16px"
+        onChange={handleTabChange}
+      />
+
+      {tab === "subaccount" ? <FailedStakedTokens /> : null}
+      {tab === "reward" ? <PendingRewards /> : null}
+    </Modal>
   );
 }

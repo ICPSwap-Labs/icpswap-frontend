@@ -31,7 +31,7 @@ export function useStakingTokenAllPools() {
   return usePaginationAllData(call, 500);
 }
 
-export function useUserUnusedTokens(reload?: boolean) {
+export function useUserUnusedTokens(reload?: boolean | number) {
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState<UnusedBalance[]>([]);
   const principal = useAccountPrincipal();
@@ -46,49 +46,51 @@ export function useUserUnusedTokens(reload?: boolean) {
   useEffect(() => {
     const call = async () => {
       if (pools && principal) {
-        setLoading(true);
+        if (pools.length === 0) {
+          setLoading(false);
+        } else {
+          const calls = pools.map(async (ele) => {
+            return await getTokenBalance(
+              ele.stakingToken.address,
+              Principal.fromText(ele.canisterId.toString()),
+              SubAccount.fromPrincipal(principal).toUint8Array(),
+            );
+          });
 
-        const calls = pools.map(async (ele) => {
-          return await getTokenBalance(
-            ele.stakingToken.address,
-            Principal.fromText(ele.canisterId.toString()),
-            SubAccount.fromPrincipal(principal).toUint8Array(),
-          );
-        });
+          const _result = await Promise.all(calls);
 
-        const _result = await Promise.all(calls);
+          const data = _result
+            .map((ele, index) => {
+              if (ele.status === ResultStatus.OK && ele.data) {
+                const pool = pools[index];
 
-        const data = _result
-          .map((ele, index) => {
-            if (ele.status === ResultStatus.OK && ele.data) {
-              return {
-                balance: ele.data,
-                ...pools[index],
-              } as UnusedBalance;
-            }
-            return null;
-          })
-          .filter((ele) => !!ele) as UnusedBalance[];
+                return {
+                  balance: ele.data,
+                  poolId: pool.canisterId.toString(),
+                  rewardTokenId: pool.rewardToken.address,
+                  ...pool,
+                } as UnusedBalance;
+              }
+              return null;
+            })
+            .filter((ele) => !!ele) as UnusedBalance[];
 
-        setBalances(data);
+          setBalances(data);
 
-        setLoading(false);
+          setLoading(false);
+        }
       }
     };
 
     call();
-
-    if (!poolsLoading && !pools) {
-      setLoading(false);
-    }
-  }, [pools, principal, poolsLoading, reload]);
+  }, [pools, principal, reload]);
 
   return useMemo(() => {
     return {
       loading: poolsLoading || loading,
       result: balances,
     };
-  }, [poolsLoading, loading, balances]);
+  }, [loading, poolsLoading, balances]);
 }
 
 export function useUserStakingInfo(
