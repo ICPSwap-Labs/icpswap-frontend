@@ -55,6 +55,7 @@ export default function UserStaking({
     };
   }, [poolData, stakingToken, stakingTokenPrice]);
 
+  // apr = (amountPerSecond * 3600  * 24 * 365) / totalStakedAmount * 100 * (rewardTokenPrice / stakedTokenPrice)
   const apr = useMemo(() => {
     if (poolData?.rewardPerTime && stakingToken && rewardToken && totalDeposit) {
       const poolInfoPerSecond = Number(poolData.rewardPerTime);
