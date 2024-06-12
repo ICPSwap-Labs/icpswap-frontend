@@ -27,6 +27,7 @@ const Farms = Loadable(lazy(() => import("views/staking-farm/index")));
 const FarmsDetails = Loadable(lazy(() => import("views/staking-farm/Details")));
 const StakingToken = Loadable(lazy(() => import("views/staking-token/index")));
 const StakingTokenDetails = Loadable(lazy(() => import("views/staking-token/Details")));
+const V1StakingTokenDetails = Loadable(lazy(() => import("views/staking-token/v1/Details")));
 
 const TokenTransactions = Loadable(lazy(() => import("../views/token-list/Transactions")));
 const UserTokenTransactions = Loadable(lazy(() => import("../views/token-list/UserTransactions")));
@@ -68,6 +69,7 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
 
   "/staking-token": StakingToken,
   "/staking-token/details/:poolId/:state": StakingTokenDetails,
+  "/staking-token-v1/details/:poolId/:state": V1StakingTokenDetails,
   "/farm": Farms,
   "/farm/details/:farmId": FarmsDetails,
   "/marketplace": NFTMarket,

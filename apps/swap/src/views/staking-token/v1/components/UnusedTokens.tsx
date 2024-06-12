@@ -15,7 +15,7 @@ import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity
 import { useTips, MessageTypes } from "hooks/useTips";
 import { Identity as CallIdentity } from "types/global";
 import { useUserUnusedTokens } from "hooks/staking-token/index";
-import { stakingTokenClaim } from "hooks/staking-token/v1";
+import { v1StakingTokenClaim } from "@icpswap/hooks";
 
 export function BalanceItem({
   token,
@@ -105,7 +105,7 @@ export default function WithdrawUnusedTokens({ open, onClose }: WithdrawTokensMo
 
         if (amount !== BigInt(0)) {
           calls.push(
-            stakingTokenClaim(pool, identity).then(async (result) => {
+            v1StakingTokenClaim(pool, identity).then(async (result) => {
               if (result.status === ResultStatus.OK) {
                 openTip(`Withdrew ${balance.stakingTokenSymbol} successfully`, MessageTypes.success);
               } else {

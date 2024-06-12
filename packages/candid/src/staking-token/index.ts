@@ -18,7 +18,7 @@ export type {
 export { idlFactory as V1TokenPoolInterfaceFactory } from "./V1TokenPool.did";
 export type {
   _SERVICE as V1TokenPool,
-  PublicPoolInfo as V1StakingPoolInfo,
+  PublicTokenPoolInfo as V1StakingPoolInfo,
   PublicUserInfo as V1StakingPoolUserInfo,
 } from "./V1TokenPool";
 
@@ -26,6 +26,7 @@ export { idlFactory as V1TokenPoolControllerInterfaceFactory } from "./V1TokenPo
 export type {
   _SERVICE as V1TokenPoolController,
   InitRequest as V1StakingPoolCreateArgs,
+  TokenPoolInfo as V1StakingPoolControllerPoolInfo,
 } from "./V1TokenPoolController";
 
 export { idlFactory as V1TokenPoolStorageInterfaceFactory } from "./V1TokenPoolStorage.did";

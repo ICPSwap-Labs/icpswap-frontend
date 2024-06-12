@@ -1,5 +1,15 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { usePaginationAllData, getPaginationAllData, useCallsData } from "@icpswap/hooks";
+import {
+  usePaginationAllData,
+  getPaginationAllData,
+  getV1StakingTokenPools,
+  v1StakingTokenDeposit,
+  v1StakingTokenDepositFrom,
+  v1StakingTokenHarvest,
+  v1StakingTokenWithdraw,
+  getV1StakingTokenUserInfo,
+  getV1StakingTokenPool,
+} from "@icpswap/hooks";
 
 import { TOKEN_STANDARD, ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -22,17 +32,7 @@ import type {
 } from "types/staking-token-v1/index";
 import { SubAccount } from "@dfinity/ledger-icp";
 
-import {
-  getStakingTokenGlobalData,
-  stakingTokenDeposit,
-  stakingTokenDepositFrom,
-  getStakingTokenPools,
-  getStakingTokenCycles,
-  stakingTokenWithdraw,
-  stakingTokenHarvest,
-  getStakingTokenUserInfo,
-  getStakingTokenPool,
-} from "./index";
+import { getStakingTokenGlobalData } from "./index";
 
 export function useStakingGlobalData(): [StakingPoolGlobalData | undefined, () => void] {
   const [forceUpdate, setForceUpdate] = useState<number>(0);
@@ -69,11 +69,11 @@ export function useStakingTokenDeposit() {
     let message = "";
 
     if (useTransfer) {
-      const { status: _status, message: _message } = await stakingTokenDeposit(poolId, identity);
+      const { status: _status, message: _message } = await v1StakingTokenDeposit(poolId, identity);
       status = _status;
       message = _message;
     } else {
-      const { status: _status, message: _message } = await stakingTokenDepositFrom(poolId, identity, BigInt(amount));
+      const { status: _status, message: _message } = await v1StakingTokenDepositFrom(poolId, identity, BigInt(amount));
       status = _status;
       message = _message;
     }
@@ -89,7 +89,7 @@ export function useStakingTokenDeposit() {
 
 export async function getAllTokenPools() {
   const call = async (offset: number, limit: number) => {
-    return await getStakingTokenPools(undefined, offset, limit);
+    return await getV1StakingTokenPools(undefined, offset, limit);
   };
 
   return getPaginationAllData(call, 500);
@@ -97,7 +97,7 @@ export async function getAllTokenPools() {
 
 export function useStakingTokenAllPools() {
   const call = useCallback(async (offset: number, limit: number) => {
-    return await getStakingTokenPools(undefined, offset, limit);
+    return await getV1StakingTokenPools(undefined, offset, limit);
   }, []);
 
   return usePaginationAllData(call, 500);
@@ -163,15 +163,6 @@ export function useUserUnusedTokens(reload?: boolean) {
   }, [poolsLoading, loading, balances]);
 }
 
-export function usePoolCycles(canisterId: string | undefined, version: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return (await getStakingTokenCycles(canisterId))?.balance;
-    }, [canisterId, version]),
-  );
-}
-
 type StakingProps = {
   token: Token;
   amount: string;
@@ -227,11 +218,11 @@ export function useStakingToken() {
 }
 
 export async function withdraw(poolId: string, amount: bigint) {
-  return await stakingTokenWithdraw(poolId, true, amount);
+  return await v1StakingTokenWithdraw(poolId, true, amount);
 }
 
 export async function harvest(poolId: string) {
-  return await stakingTokenHarvest(poolId, true);
+  return await v1StakingTokenHarvest(poolId, true);
 }
 
 export function useUserStakingInfo(
@@ -250,7 +241,7 @@ export function useUserStakingInfo(
     const call = async () => {
       if (!poolId || !account) return;
 
-      const result = await getStakingTokenUserInfo(poolId, account);
+      const result = await getV1StakingTokenUserInfo(poolId, account);
 
       if (result) {
         setUserInfo({
@@ -282,7 +273,7 @@ export function useStakingPoolData(
   useEffect(() => {
     const call = async () => {
       if (!poolId) return;
-      const data = await getStakingTokenPool(poolId);
+      const data = await getV1StakingTokenPool(poolId);
       setPoolData(data);
     };
 

@@ -32,7 +32,7 @@ export const stakingPool = (canisterId: string, identity?: ActorIdentity) =>
 /* v1 staking token pool */
 export const v1StakingTokenController = (identity?: ActorIdentity) =>
   actor.create<V1TokenPoolController>({
-    actorName: ActorName.V1TokenPoolController,
+    canisterId: "o5xzb-ryaaa-aaaak-aejmq-cai",
     identity,
     idlFactory: V1TokenPoolControllerInterfaceFactory,
   });

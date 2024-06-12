@@ -4,8 +4,8 @@ import { Grid, Box, Typography } from "@mui/material";
 import { NoData, MainCard, StaticLoading, TextButton } from "components/index";
 import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
-import { useParsedQueryString } from "@icpswap/hooks";
-import { useStakingTokenPools, useStakingPoolInfoFromController } from "hooks/staking-token/v1";
+import { useParsedQueryString, useV1StakingTokenPools } from "@icpswap/hooks";
+import { useStakingPoolInfoFromController } from "hooks/staking-token/v1";
 import { STATE } from "types/staking-token";
 import { getStakingTokenPoolState } from "utils/staking-v1";
 import UnusedTokens from "./components/UnusedTokens";
@@ -81,7 +81,7 @@ function Pools() {
 
   const state = useMemo(() => getStateValue((filter ?? STATE.LIVE) as STATE), [filter]);
 
-  const { result, loading } = useStakingTokenPools(state, 0, 100);
+  const { result, loading } = useV1StakingTokenPools(state, 0, 100);
 
   // when filter is FINISHED, sort pools by stakingToken symbol
   const pools = useMemo(() => {

@@ -2,11 +2,10 @@ import React, { useMemo } from "react";
 import { Grid, Box, Collapse, Typography, Link } from "@mui/material";
 import { INFO_URL } from "constants/index";
 import { WRAPPED_ICP } from "constants/tokens";
-import { useStakingTokenPool } from "hooks/staking-token/v1/index";
+import { useV1StakingTokenPool, useV1StakingTokenCycles } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { useTheme } from "@mui/styles";
-import { usePoolCycles } from "hooks/staking-token/v1/calls";
 import { Trans } from "@lingui/macro";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
@@ -72,16 +71,7 @@ export default function StakingPoolDetails({
       .toNumber();
   }, [poolTokenBalance, stakingTokenPrice]);
 
-  // const totalStakingDeposit = useMemo(() => {
-  //   if (!poolData || !stakingToken) return 0;
-  //   return parseTokenAmount(poolData.totalDeposit, stakingToken.decimals).toNumber();
-  // }, [poolData?.totalDeposit, stakingToken]);
-
-  // const totalStakingUSDValue = useMemo(() => {
-  //   return new BigNumber(totalStakingDeposit).multipliedBy(stakingTokenPrice ?? 0).toNumber();
-  // }, [totalStakingDeposit, stakingTokenPrice]);
-
-  const { result: stakingTokenPoolInfo } = useStakingTokenPool(pool?.canisterId);
+  const { result: stakingTokenPoolInfo } = useV1StakingTokenPool(pool?.canisterId);
 
   const totalRewardDeposit = useMemo(() => {
     if (!rewardToken || !poolData) return 0;
@@ -104,7 +94,7 @@ export default function StakingPoolDetails({
     }
   };
 
-  const { result: cycles } = usePoolCycles(pool?.canisterId, pool?.version);
+  const { result: cycles } = useV1StakingTokenCycles(pool?.canisterId);
 
   return (
     <>
@@ -267,7 +257,7 @@ export default function StakingPoolDetails({
 
             <Grid container direction="row" justifyContent="flex-end">
               <Typography color="text.primary">
-                <Link href={`${INFO_URL}/staking-token/details/${pool?.canisterId}/${state}`} target="_blank">
+                <Link href={`${INFO_URL}/staking-token-v1/details/${pool?.canisterId}/${state}`} target="_blank">
                   Token Pools Info
                 </Link>
               </Typography>
