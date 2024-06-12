@@ -44,8 +44,12 @@ export const routes: Route[] = [
   },
   {
     key: "staking-token",
-    name: `Stake`,
-    path: `/staking-token`,
+    name: `Stake V2`,
+    path: "/staking-token",
+    subMenus: [
+      { key: "staking-token", name: `Stake V2`, path: "/staking-token" },
+      { key: "stake-v1", name: `Stake V1`, path: "/stake-v1" },
+    ],
   },
   {
     key: "farm",

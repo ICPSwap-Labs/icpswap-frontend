@@ -8,6 +8,7 @@ const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 
 const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
+const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
@@ -71,6 +72,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
 
   "/staking-token": StakingToken,
   "/staking-token/create": StakingTokenCreate,
+  "/stake-v1": StakingTokenV1,
   "/farm": Farm,
   "/farm/create": CreateFarm,
 
