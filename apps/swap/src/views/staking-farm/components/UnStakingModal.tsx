@@ -39,11 +39,12 @@ export default function UnStakingModal({
 
     setConfirmLoading(true);
     const { status, message } = await farmUnstake(farmId, BigInt(selectedPositionId));
-    openTip(getLocaleMessage(message), status);
 
     if (status === ResultStatus.OK) {
-      const { status: withdrawStatus, message: withdrawMessage } = await farmWithdraw(farmId);
-      openTip(getLocaleMessage(withdrawMessage) ?? t`Failed to withdraw`, withdrawStatus);
+      await farmWithdraw(farmId);
+      openTip(getLocaleMessage(message) ?? t`Unstake successfully`, ResultStatus.OK);
+    } else {
+      openTip(getLocaleMessage(message) ?? t`Failed to unstake`, ResultStatus.ERROR);
     }
 
     setConfirmLoading(false);
