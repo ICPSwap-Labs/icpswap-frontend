@@ -30,6 +30,8 @@ import {
   farmWithdraw,
   useSwapPoolMetadata,
   useFarmCycles,
+  useFarmUserRewards,
+  farmWithdraw,
 } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
@@ -130,6 +132,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
   const { result: swapPoolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
+  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs) return undefined;
