@@ -1,10 +1,17 @@
-import { explorerLink } from "@icpswap/utils";
+import { explorerLink, principalToAccount } from "@icpswap/utils";
 import { t } from "@lingui/macro";
-import { useAccount } from "store/global/hooks";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { AddressSection } from "./Address";
 
 export function AccountSection() {
-  const account = useAccount();
+  const principal = useAccountPrincipalString();
 
-  return <AddressSection address={account} label={t`Account ID`} labelColor="#E3F2FD" link={explorerLink(account)} />;
+  return (
+    <AddressSection
+      address={principal ? principalToAccount(principal) : ""}
+      label={t`Account ID`}
+      labelColor="#E3F2FD"
+      link={principal ? explorerLink(principal) : ""}
+    />
+  );
 }
