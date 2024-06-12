@@ -116,7 +116,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-            <Typography color="text.theme_secondary">{tokenId}</Typography>
+            <Typography color="text.theme-secondary">{tokenId}</Typography>
             <Copy content={tokenId} />
           </Box>
         </Box>

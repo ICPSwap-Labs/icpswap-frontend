@@ -69,8 +69,8 @@ export function themePalette(theme: { [key: string]: any }) {
       orangeWarning: theme.colors.orangeWarning,
       level1: isDark ? theme.colors.darkLevel1 : theme.colors.primaryLight,
       400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
-      theme_primary: theme.colors.darkPrimaryMain,
-      theme_secondary: theme.colors.darkSecondaryMain,
+      "theme-primary": theme.colors.darkPrimaryMain,
+      "theme-secondary": theme.colors.darkSecondaryMain,
     },
     background: {
       paper: theme.paper,

@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
-import { Grid, CardActions, CardContent, Collapse, Typography, Link, Box } from "@mui/material";
+import { CardActions, CardContent, Link } from "@mui/material";
+import { Grid, Box, Collapse, Button, Typography, CircularProgress } from "components/Mui";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { MainCard, TokenImage, Flex, Tooltip } from "components/index";
+import { MainCard, TokenImage, Flex, Tooltip, Modal, NoData } from "components/index";
 import { useIntervalUserRewardInfo, useIntervalUserFarmInfo, useFarmUSDValue } from "hooks/staking-farm";
 import CountUp from "react-countup";
 import { makeStyles, useTheme } from "@mui/styles";
@@ -24,15 +25,18 @@ import {
   useFarmInitArgs,
   useSwapUserPositions,
   useFarmCycles,
+  useFarmUserRewards,
+  farmWithdraw,
 } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-farm";
-import type { FarmTvl } from "@icpswap/types";
+import { ResultStatus, type FarmTvl } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { Principal } from "@dfinity/principal";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useTips, MessageTypes } from "hooks/useTips";
 
 import FarmContext from "../context";
 import OptionStaking from "./OptionStaking";
@@ -99,8 +103,11 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
 
+  const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
+  const [reclaimOpen, setReclaimOpen] = React.useState(false);
+  const [openTip] = useTips();
 
   const { farmId } = useMemo(() => {
     return { farmId: farmTVL[0].toString(), tvl: farmTVL[1] };
@@ -114,6 +121,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     forceUpdate,
   );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
+  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions) return undefined;
@@ -201,6 +209,20 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
     return `${val}%`;
   }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
+
+  const handleReclaim = async () => {
+    setWithdrawLoading(true);
+
+    const { status, message } = await farmWithdraw(farmId);
+
+    if (status === ResultStatus.OK) {
+      openTip(t`Withdraw successfully`, MessageTypes.success);
+    } else {
+      openTip(message !== "" ? message : t`Failed to withdraw`, MessageTypes.error);
+    }
+
+    setWithdrawLoading(false);
+  };
 
   return (
     <MainCard
@@ -546,17 +568,51 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
                 </Typography>
               </Grid>
 
-              <Grid item container justifyContent="flex-end">
+              <Flex justify="space-between">
+                <Typography
+                  sx={{ cursor: "pointer" }}
+                  color="text.theme-secondary"
+                  onClick={() => setReclaimOpen(true)}
+                >
+                  <Trans>Reclaim</Trans>
+                </Typography>
+
                 <Typography color="text.primary">
                   <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank">
                     <Trans>Farm Info</Trans>
                   </Link>
                 </Typography>
-              </Grid>
+              </Flex>
             </Box>
           </CardContent>
         </Collapse>
       </Box>
+
+      <Modal open={reclaimOpen} title="Reclaim" onClose={() => setReclaimOpen(false)}>
+        {unclaimedRewards && unclaimedRewards > BigInt(0) ? (
+          <Flex justify="space-between">
+            <Flex gap="0 12px">
+              <TokenImage tokenId={rewardToken?.address} logo={rewardToken?.logo} size="32px" />
+              <Typography color="text.primary">
+                {rewardToken
+                  ? `${parseTokenAmount(unclaimedRewards, rewardToken.decimals).toFormat()} ${rewardToken.symbol}`
+                  : "--"}
+              </Typography>
+            </Flex>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleReclaim}
+              disabled={withdrawLoading}
+              startIcon={withdrawLoading ? <CircularProgress color="inherit" size={20} /> : null}
+            >
+              <Trans>Reclaim</Trans>
+            </Button>
+          </Flex>
+        ) : (
+          <NoData />
+        )}
+      </Modal>
     </MainCard>
   );
 }

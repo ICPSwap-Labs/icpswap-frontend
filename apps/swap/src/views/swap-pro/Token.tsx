@@ -100,7 +100,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
       <Box sx={{ padding: !(tokenListInfo && token && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
         <Typography color="text.primary" fontWeight={600}>
           <Trans>Token Name</Trans>
-          <Typography component="span" color="text.theme_secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
+          <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
             {token?.name}
           </Typography>
         </Typography>
@@ -113,7 +113,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
             sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
           >
             <Trans>Token</Trans>
-            <Typography component="span" color="text.theme_secondary" fontSize="12px">
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
               {token ? shorten(token.address, 5) : "--"}
             </Typography>
             <Copy content={tokenId} />
@@ -126,7 +126,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
             sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
           >
             <Trans>Pool</Trans>
-            <Typography component="span" color="text.theme_secondary" fontSize="12px">
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
               {tradePoolId ? shorten(tradePoolId) : "--"}
             </Typography>
             <Copy content={tradePoolId} />
@@ -282,7 +282,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                 textOverflow: "ellipsis",
               }}
             >
-              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme_secondary", fontWeight: 600 }}>
+              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme-secondary", fontWeight: 600 }}>
                 {token?.symbol}
               </Typography>
               {tokenListInfo.introduction}

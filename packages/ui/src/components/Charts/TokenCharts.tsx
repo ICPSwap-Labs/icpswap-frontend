@@ -237,7 +237,7 @@ export function TokenCharts({ canisterId, volume, borderRadius, priceToggles, ba
               {priceToggles.map((e, index) => (
                 <Typography
                   key={e.id}
-                  color={priceChartTokenId === e.id ? "text.theme_secondary" : "text.secondary"}
+                  color={priceChartTokenId === e.id ? "text.theme-secondary" : "text.secondary"}
                   fontWeight={500}
                   sx={{
                     cursor: "pointer",

@@ -250,3 +250,29 @@ export async function farmWithdraw(farmId: string) {
   const result = await (await farm(farmId, true)).withdraw();
   return resultFormat<bigint>(result);
 }
+
+/**
+ * @description Get user unclaimed rewards
+ * @param farmId farm pool canister id
+ * @param principal user principal ID
+ * @returns user unclaimed rewards amount
+ */
+export async function getFarmUserRewards(farmId: string, principal: Principal) {
+  const result = await (await farm(farmId, true)).getUserRewardBalance(principal);
+  return resultFormat<bigint>(result).data;
+}
+
+/**
+ * @description Use user unclaimed rewards
+ * @param farmId farm pool canister id
+ * @param principal user principal ID
+ * @returns user unclaimed rewards amount
+ */
+export function useFarmUserRewards(farmId: string | undefined, principal: Principal | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!farmId || !principal) return undefined;
+      return await getFarmUserRewards(farmId, principal);
+    }, [farmId, principal]),
+  );
+}
