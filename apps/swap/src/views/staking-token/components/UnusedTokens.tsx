@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Modal } from "@icpswap/ui";
 import { Typography, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/styles";
@@ -50,6 +50,10 @@ function PendingRewards() {
   const [openFullscreen, closeFullscreen] = useFullscreenLoading();
   const { loading, result } = usePendingRewards(trigger);
 
+  const claimableRewards = useMemo(() => {
+    return result.filter((e) => e.rewardAmount !== BigInt(0));
+  }, [result]);
+
   const handleReclaim = async (poolId: string, balance: bigint) => {
     openFullscreen();
 
@@ -78,15 +82,15 @@ function PendingRewards() {
         <div />
       </LoadingRow>
     </Box>
-  ) : result.length === 0 ? (
+  ) : claimableRewards.length === 0 ? (
     <NoData />
   ) : (
     <Box>
-      {result.map((ele) => (
+      {claimableRewards.map((ele) => (
         <ReclaimItem
           key={ele.poolId}
           poolId={ele.poolId}
-          balance={ele.amount}
+          balance={ele.rewardAmount}
           tokenId={ele.rewardTokenId}
           onReclaim={handleReclaim}
         />
@@ -100,6 +104,11 @@ function FailedStakedTokens() {
   const [trigger, setTrigger] = useState(0);
   const [openFullscreen, closeFullscreen] = useFullscreenLoading();
   const { loading, result } = useUserUnusedTokens(trigger);
+  const { loading: stakingBalanceLoading, result: pendingRewards } = usePendingRewards(trigger);
+
+  const claimableStakingAmount = useMemo(() => {
+    return pendingRewards.filter((e) => e.stakingAmount !== BigInt(0));
+  }, [pendingRewards]);
 
   const handleReclaim = async (poolId: string) => {
     openFullscreen();
@@ -116,7 +125,22 @@ function FailedStakedTokens() {
     closeFullscreen();
   };
 
-  return loading ? (
+  const handleWithdraw = async (poolId: string, balance: bigint) => {
+    openFullscreen();
+
+    const { status, message } = await stakingPoolWithdraw(poolId, true, balance);
+
+    if (status === ResultStatus.ERROR) {
+      openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+    } else {
+      openTip("Reclaim successfully", MessageTypes.success);
+      setTrigger(trigger + 1);
+    }
+
+    closeFullscreen();
+  };
+
+  return loading || stakingBalanceLoading ? (
     <Box sx={{ padding: "20px 0" }}>
       <LoadingRow>
         <div />
@@ -129,7 +153,7 @@ function FailedStakedTokens() {
         <div />
       </LoadingRow>
     </Box>
-  ) : result.length === 0 ? (
+  ) : result.length === 0 && claimableStakingAmount.length === 0 ? (
     <NoData />
   ) : (
     <Box>
@@ -138,8 +162,18 @@ function FailedStakedTokens() {
           key={ele.poolId}
           poolId={ele.poolId}
           balance={ele.balance}
-          tokenId={ele.rewardTokenId}
+          tokenId={ele.stakingToken.address}
           onReclaim={handleReclaim}
+        />
+      ))}
+
+      {claimableStakingAmount.map((ele) => (
+        <ReclaimItem
+          key={`${ele.poolId}_staking_token`}
+          poolId={ele.poolId}
+          balance={ele.stakingAmount}
+          tokenId={ele.stakeTokenId}
+          onReclaim={handleWithdraw}
         />
       ))}
     </Box>

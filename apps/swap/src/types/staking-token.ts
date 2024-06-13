@@ -16,5 +16,5 @@ export type PoolData = StakingPoolInfo | V1Pool;
 
 export type UserPendingRewards = Override<
   StakingPoolUserInfo,
-  { poolId: string; amount: bigint; rewardTokenId: string }
+  { poolId: string; rewardAmount: bigint; stakingAmount: bigint; rewardTokenId: string; stakeTokenId: string }
 >;

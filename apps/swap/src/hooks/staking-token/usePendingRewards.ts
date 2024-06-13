@@ -41,6 +41,7 @@ export function usePendingRewards(refresh?: number | boolean) {
 
         const poolId = pool.canisterId.toString();
         const rewardTokenId = pool.rewardToken.address;
+        const stakeTokenId = pool.stakingToken.address;
 
         const result = await getStakingTokenUserInfo(poolId, principal);
         if (!result) return undefined;
@@ -49,7 +50,9 @@ export function usePendingRewards(refresh?: number | boolean) {
           ...result,
           poolId,
           rewardTokenId,
-          amount: result.rewardTokenBalance + result.stakeTokenBalance,
+          stakeTokenId,
+          stakingAmount: result.stakeTokenBalance,
+          rewardAmount: result.rewardTokenBalance,
         } as UserPendingRewards;
       } catch (err) {
         console.error(err);
@@ -86,7 +89,7 @@ export function usePendingRewards(refresh?: number | boolean) {
           }
 
           if (new_index === stake_pending_reward_fetch_index) {
-            setData((allResult.filter((e) => !!e) as UserPendingRewards[]).filter((e) => e.amount !== BigInt(0)));
+            setData(allResult.filter((e) => !!e) as UserPendingRewards[]);
             setLoading(false);
           }
         }
