@@ -104,6 +104,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const principal = useAccountPrincipal();
 
   const [withdrawLoading, setWithdrawLoading] = useState(false);
+  const [refreshRewardsTrigger, setRefreshRewardsTrigger] = useState(0);
   const [expanded, setExpanded] = React.useState(false);
   const [forceUpdate, setForceUpdate] = useState(false);
   const [reclaimOpen, setReclaimOpen] = React.useState(false);
@@ -121,7 +122,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     forceUpdate,
   );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
-  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal);
+  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions) return undefined;
@@ -211,12 +212,16 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
 
   const handleReclaim = async () => {
+    if (withdrawLoading) return;
+
     setWithdrawLoading(true);
 
     const { status, message } = await farmWithdraw(farmId);
 
     if (status === ResultStatus.OK) {
       openTip(t`Withdraw successfully`, MessageTypes.success);
+      setRefreshRewardsTrigger(refreshRewardsTrigger + 1);
+      setReclaimOpen(false);
     } else {
       openTip(message !== "" ? message : t`Failed to withdraw`, MessageTypes.error);
     }

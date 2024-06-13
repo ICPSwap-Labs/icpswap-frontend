@@ -268,11 +268,12 @@ export async function getFarmUserRewards(farmId: string, principal: Principal) {
  * @param principal user principal ID
  * @returns user unclaimed rewards amount
  */
-export function useFarmUserRewards(farmId: string | undefined, principal: Principal | undefined) {
+export function useFarmUserRewards(farmId: string | undefined, principal: Principal | undefined, refresh?: number) {
   return useCallsData(
     useCallback(async () => {
       if (!farmId || !principal) return undefined;
       return await getFarmUserRewards(farmId, principal);
     }, [farmId, principal]),
+    refresh,
   );
 }
