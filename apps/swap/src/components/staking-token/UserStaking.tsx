@@ -24,6 +24,7 @@ export interface UserStakingProps {
   rewardTokenPrice: string | number | undefined | null;
   stakingTokenPrice: string | number | undefined | null;
   state: STATE | undefined;
+  refreshTrigger: number;
 }
 
 export default function UserStaking({
@@ -36,11 +37,12 @@ export default function UserStaking({
   rewardTokenPrice,
   stakingTokenPrice,
   state,
+  refreshTrigger,
 }: UserStakingProps) {
   const principal = useAccountPrincipalString();
   const ICPPrice = useICPPrice();
 
-  const { result: userStakeTokenBalance } = useTokenBalance(pool?.stakingToken.address, principal);
+  const { result: userStakeTokenBalance } = useTokenBalance(pool?.stakingToken.address, principal, refreshTrigger);
 
   const { totalDeposit, totalDepositUSD } = useMemo(() => {
     if (!poolData || !stakingToken) return {};

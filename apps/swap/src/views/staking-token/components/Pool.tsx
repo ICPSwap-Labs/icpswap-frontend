@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -103,6 +103,7 @@ export interface StakingPoolProps {
 export default function StakingPool({ stakedOnly, pool, filterState, updatePoolStaked }: StakingPoolProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [poolData] = useStakingPoolData(pool?.canisterId.toString());
   const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
 
@@ -116,6 +117,7 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
 
   const resetData = () => {
     updateUserStakingInfo();
+    setRefreshTrigger(refreshTrigger + 1);
   };
 
   useEffect(() => {
@@ -150,6 +152,7 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
 
       <Box sx={{ background: theme.palette.background.level1 }}>
         <UserStaking
+          refreshTrigger={refreshTrigger}
           state={state}
           pool={pool}
           poolData={poolData}
