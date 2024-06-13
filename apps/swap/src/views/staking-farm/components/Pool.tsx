@@ -132,7 +132,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
   const { result: swapPoolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
-  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal);
+  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs) return undefined;
