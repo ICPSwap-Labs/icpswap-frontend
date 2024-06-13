@@ -72,7 +72,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
 
   "/staking-token": StakingToken,
   "/staking-token/create": StakingTokenCreate,
-  "/stake-v1": StakingTokenV1,
+  "/staking-token/v1": StakingTokenV1,
   "/farm": Farm,
   "/farm/create": CreateFarm,
 
