@@ -161,8 +161,8 @@ export default function DecreaseLiquidity() {
     setLoading(true);
 
     const { key, call } = getDecreaseLiquidityCall({
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
     });
 

@@ -184,8 +184,8 @@ export default function IncreaseLiquidity() {
         poolId,
         position,
         positionId,
-        openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-          openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+        openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
+          openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
         },
       });
 

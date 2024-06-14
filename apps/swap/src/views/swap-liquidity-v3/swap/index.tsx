@@ -135,8 +135,8 @@ export default function Swap() {
       trade,
       subAccountTokenBalance: subAccountTokenBalance as BigNumber,
       swapInTokenUnusedBalance: swapTokenUnusedBalance as bigint,
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
     });
 

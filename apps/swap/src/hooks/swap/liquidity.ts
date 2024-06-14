@@ -125,7 +125,7 @@ function useDecreaseLiquidityCalls() {
         if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
 
         return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey });
+          openExternalTip({ message, tipKey, poolId });
         });
       };
 
@@ -137,7 +137,7 @@ function useDecreaseLiquidityCalls() {
         if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
 
         return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey });
+          openExternalTip({ message, tipKey, poolId });
         });
       };
 

@@ -66,8 +66,8 @@ export default function CollectFees({
       positionId: BigInt(positionId),
       currencyFeeAmount0,
       currencyFeeAmount1,
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
     });
 
