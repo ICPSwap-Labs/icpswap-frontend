@@ -71,7 +71,7 @@ export interface TextButtonProps {
   to?: string;
   sx?: any;
   arrow?: boolean;
-  color?: "primary" | "write" | "secondary";
+  color?: "primary" | "white" | "secondary";
   textDecoration?: "underline" | "none";
 }
 
@@ -104,7 +104,7 @@ export function TextButton({
 
   return (
     <Typography
-      color={color === "primary" ? "primary" : color === "write" ? "#ffffff" : "secondary"}
+      color={color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
       sx={{
         cursor: "pointer",
         userSelect: "none",

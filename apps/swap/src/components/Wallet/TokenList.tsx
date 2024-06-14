@@ -11,12 +11,14 @@ import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
 import { AlertCircle, X } from "react-feather";
 import { Trans } from "@lingui/macro";
-import { Flex } from "@icpswap/ui";
+import { Flex, TextButton } from "@icpswap/ui";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import WalletContext from "./context";
 
 export default function WalletTokenList() {
   const theme = useTheme();
+  const principal = useAccountPrincipal();
   const [showTip, setShowTip] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [isHideSmallBalances, setIsHideSmallBalances] = useUpdateHideSmallBalanceManager();
@@ -99,7 +101,14 @@ export default function WalletTokenList() {
 
               <Typography color="text.primary">
                 <Trans>
-                  Click '+' on the right to add tokens and display their balance. You can also check 'Wallet Valuation'
+                  Click '+' on the right to add tokens and display their balance. You can also check &nbsp;
+                  <TextButton
+                    color="white"
+                    sx={{ textDecoration: "underline" }}
+                    link={`https://info.icpswap.com/swap-scan/valuation?principal=${principal?.toString()}`}
+                  >
+                    'Wallet Valuation'
+                  </TextButton>{" "}
                   to view all your tokens.
                 </Trans>
               </Typography>
