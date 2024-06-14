@@ -37,7 +37,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
           Join ICP's 3rd Anniversary on ICPSwap with liquidity mining and trading competition.{" "}
           <TextButton
             link="https://x.com/ICPSwap/status/1795078197165379886"
-            color="write"
+            color="white"
             textDecoration="underline"
             sx={{
               "@media(max-width: 640px)": { fontSize: "12px" },
@@ -47,7 +47,7 @@ export function GlobalTips({ onClose }: GlobalTipsProps) {
           </TextButton>
           <TextButton
             link="https://app.icpswap.com/farm"
-            color="write"
+            color="white"
             textDecoration="underline"
             sx={{
               "@media(max-width: 640px)": { fontSize: "12px" },
