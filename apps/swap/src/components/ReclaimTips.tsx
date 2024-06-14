@@ -7,15 +7,23 @@ export interface ReclaimTipsProps {
   message: string | undefined;
   onReclaimClick?: () => void;
   tipKey: string | undefined;
+  poolId?: string;
+  tokenId?: string;
 }
 
-export function ReclaimTips({ message, onReclaimClick, tipKey }: ReclaimTipsProps) {
+export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }: ReclaimTipsProps) {
   const history = useHistory();
 
   const closeStep = useCloseStep();
 
   const handleClick = () => {
-    history.push("/swap/reclaim");
+    const to = poolId
+      ? `/swap/reclaim?type=pair&poolId=${poolId}`
+      : tokenId
+      ? `/swap/reclaim?type=token&tokenId=${tokenId}`
+      : "/swap/reclaim";
+
+    history.push(to);
     if (onReclaimClick) onReclaimClick();
     closeStep(tipKey);
   };

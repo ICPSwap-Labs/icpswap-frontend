@@ -160,7 +160,7 @@ export function useSwapCalls() {
               }
 
               return await deposit(route.input.wrapped, userInputAmount, poolId, ({ message }: ExternalTipArgs) => {
-                openExternalTip({ message, tipKey: stepKey });
+                openExternalTip({ message, tipKey: stepKey, poolId });
               });
             };
 
@@ -177,7 +177,11 @@ export function useSwapCalls() {
 
               if (status === ResultStatus.ERROR) {
                 if (openExternalTip) {
-                  openExternalTip({ message: getLocaleMessage(message), tipKey: stepKey });
+                  openExternalTip({
+                    message: getLocaleMessage(message),
+                    tipKey: stepKey,
+                    poolId,
+                  });
                 } else {
                   openErrorTip(getLocaleMessage(message));
                 }
@@ -203,7 +207,7 @@ export function useSwapCalls() {
                   poolId,
                   swapOutAmount.toString(),
                   ({ message }: ExternalTipArgs) => {
-                    openExternalTip({ message, tipKey: stepKey });
+                    openExternalTip({ message, tipKey: stepKey, tokenId: outputAmount.currency.address });
                   },
                 );
               }

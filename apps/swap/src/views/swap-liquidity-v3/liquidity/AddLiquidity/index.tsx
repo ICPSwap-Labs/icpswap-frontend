@@ -223,8 +223,8 @@ export default function AddLiquidity() {
       needPayForPCM,
       pcmToken,
       principal: principal.toString(),
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
       },
     });
 

@@ -8,7 +8,7 @@ import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getIncreaseLiquiditySteps } from "components/swap/IncreaseLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer } from "hooks/swap/index";
-import { isUseTransfer , actualAmountToPool } from "utils/token/index";
+import { isUseTransfer, actualAmountToPool } from "utils/token/index";
 import { useSuccessTip } from "hooks/useTips";
 import { increaseLiquidity } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
@@ -66,7 +66,7 @@ export function useIncreaseLiquidityCalls() {
         const amount0Desired = position.mintAmounts.amount0.toString();
         if (amount0Desired !== "0") {
           return await deposit(position.pool.token0, amount0Desired, poolId, ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey });
+            openExternalTip({ message, tipKey: stepKey, poolId });
           });
         }
         return true;
@@ -77,7 +77,7 @@ export function useIncreaseLiquidityCalls() {
         const amount1Desired = position.mintAmounts.amount1.toString();
         if (amount1Desired !== "0") {
           return await deposit(position.pool.token1, amount1Desired, poolId, ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey });
+            openExternalTip({ message, tipKey: stepKey, poolId });
           });
         }
         return true;
@@ -88,8 +88,8 @@ export function useIncreaseLiquidityCalls() {
 
         const identity = await getActorIdentity();
 
-        const {token0} = position.pool;
-        const {token1} = position.pool;
+        const { token0 } = position.pool;
+        const { token1 } = position.pool;
 
         const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
         const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());
