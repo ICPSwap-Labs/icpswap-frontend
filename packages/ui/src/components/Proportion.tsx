@@ -5,6 +5,8 @@ import BigNumber from "bignumber.js";
 export interface ProportionProps {
   value: bigint | number | string | undefined | null;
   align?: "right" | "left" | "inherit" | "center" | "justify" | undefined;
+  fontSize?: string;
+  showArrow?: boolean;
 }
 
 function isUp(value: bigint | number | string | undefined | null) {
@@ -43,7 +45,7 @@ function ProportionIcon({ type }: ProportionIconProps) {
   ) : null;
 }
 
-export function Proportion({ value, ...props }: ProportionProps) {
+export function Proportion({ value, fontSize, showArrow = true, ...props }: ProportionProps) {
   const type = isUp(value) ? ProportionType.UP : isDown(value) ? ProportionType.DOWN : ProportionType.EQUAL;
   const proportion = isZero(value) ? "0.00%" : value ? `${new BigNumber(Number(value)).toFixed(2)}%` : undefined;
 
@@ -55,11 +57,12 @@ export function Proportion({ value, ...props }: ProportionProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",
+        fontSize: fontSize ?? "inherit",
       }}
     >
       {proportion ? (
         <>
-          <ProportionIcon type={type} /> {proportion}
+          {showArrow ? <ProportionIcon type={type} /> : null} {proportion}
         </>
       ) : (
         "--"
