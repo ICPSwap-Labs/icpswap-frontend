@@ -17,14 +17,9 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "idb": "8.0.0",
-    "numbro": "^2.3.6",
     "@icpswap/types": "workspace:*",
     "@icpswap/actor": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "@icpswap/candid": "workspace:*",
-    "big.js": "^6.1.1",
-    "decimal.js-light": "^2.5.1",
-    "toformat": "^2.0.0"
+    "@icpswap/candid": "workspace:*"
   }
 }

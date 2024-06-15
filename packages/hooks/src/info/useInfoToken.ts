@@ -25,7 +25,7 @@ export function useInfoAllTokens() {
   return useMemo(() => data, data);
 }
 
-export function useInfoToken(tokenId: string | undefined) {
+export function useInfoToken(tokenId: string | undefined): PublicTokenOverview | undefined {
   const { data } = useSWRImmutable<PublicTokenOverview[] | undefined>(["info_all_tokens"]);
 
   return useMemo(() => {

@@ -17,8 +17,6 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "idb": "8.0.0",
-    "numbro": "^2.3.6",
     "@icpswap/candid": "workspace:*"
   }
 }

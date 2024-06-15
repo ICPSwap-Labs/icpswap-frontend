@@ -66,7 +66,6 @@
     "lint-staged": ">=10",
     "node-inspect-extracted": "^1.0.7",
     "node-vibrant": "^3.1.5",
-    "numbro": "^2.3.5",
     "polished": "^3.3.2",
     "process": "0.11.10",
     "qs": "^6.9.4",

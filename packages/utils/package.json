@@ -22,7 +22,7 @@
     "big.js": "^6.1.1",
     "decimal.js-light": "^2.5.1",
     "idb": "8.0.0",
-    "numbro": "^2.3.6",
+    "numbro": "^2.5.0",
     "toformat": "^2.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   }
