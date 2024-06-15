@@ -57,17 +57,6 @@ export function isAvailablePageArgs(offset: number, limit: number): boolean {
   return (!!offset || offset === 0) && !!limit;
 }
 
-export function mockALinkAndOpen(url: string, id: string): void {
-  const a = document.createElement("a");
-  a.setAttribute("href", url);
-  a.setAttribute("target", "_blank");
-  a.setAttribute("id", id);
-  if (!document.getElementById(id)) {
-    document.body.appendChild(a);
-  }
-  a.click();
-}
-
 export function getExplorerPrincipalLink(principalId: string): string {
   return explorerLink(principalId);
 }

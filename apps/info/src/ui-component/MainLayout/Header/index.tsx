@@ -1,11 +1,12 @@
 import { Box, Grid, Typography, ButtonBase } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { mockALinkAndOpen } from "utils";
-import { useICPPrice } from "store/global/hooks";
 import { APP_LINK } from "constants/index";
 import { Theme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import Logo from "ui-component/Logo";
+import { useInfoToken } from "@icpswap/hooks";
+import { ICP } from "@icpswap/tokens";
+import { mockALinkAndOpen, formatDollarAmount } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
@@ -55,7 +56,8 @@ export function APP() {
 
 export default function Header() {
   const classes = useStyles();
-  const ICPPrice = useICPPrice();
+
+  const icpInfo = useInfoToken(ICP.address);
 
   return (
     <Grid
@@ -73,7 +75,7 @@ export default function Header() {
           </ButtonBase>
         </Box>
         <Box className={classes.price} ml="10px">
-          <Typography color="text.primary">ICP: ${ICPPrice ?? "0.00"}</Typography>
+          <Typography color="text.primary">ICP: {icpInfo ? formatDollarAmount(icpInfo.priceUSD) : "--"}</Typography>
         </Box>
       </Box>
       <Grid item xs>

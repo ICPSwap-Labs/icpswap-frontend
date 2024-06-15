@@ -1,11 +1,12 @@
 import { Box, Grid, Avatar, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { cycleValueFormat, mockALinkAndOpen } from "utils";
+import { cycleValueFormat } from "utils";
 import { Trans } from "@lingui/macro";
 import type { NFTCanisterInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import ExplorerLink from "ui-component/ExternalLink/ExplorerLink";
 import { APP_LINK } from "constants/index";
+import { mockALinkAndOpen } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {

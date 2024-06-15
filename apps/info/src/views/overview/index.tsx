@@ -3,16 +3,16 @@ import { Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { t } from "@lingui/macro";
 import { WRAPPED_ICP } from "@icpswap/tokens";
-import { parseTokenAmount, formatAmount, formatDollarAmount } from "@icpswap/utils";
+import { parseTokenAmount, formatAmount, formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useSwapPools, useSwapProtocolData, useNFTTradeData } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
-import { mockALinkAndOpen } from "utils/index";
 import { useStakingGlobalData, useStakingTokenAllPools } from "hooks/staking-token/index";
 import { useAllFarmPools, useFarmGlobalTVL } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
+
 import ICPPriceChart from "./ICPPriceChart";
 
 const useStyles = makeStyles((theme: Theme) => ({
