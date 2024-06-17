@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { makeStyles } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
+import { makeStyles, useTheme } from "@mui/styles";
+import { Box, Grid, useMediaQuery } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override } from "@icpswap/types";
@@ -12,6 +12,7 @@ import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
+import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
   return {
@@ -37,9 +38,10 @@ export type HeaderType = {
 export interface PoolTableHeaderProps {
   onSortChange: (sortField: string, sortDirection: SortDirection) => void;
   defaultSortFiled?: string;
+  align: "right" | "left";
 }
 
-export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeaderProps) {
+export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTableHeaderProps) {
   const classes = useStyles();
 
   const headers: HeaderType[] = [
@@ -58,7 +60,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
           key={header.key}
           field={header.key}
           isSort={header.sort}
-          align={header.key !== "#" && header.key !== "pool" ? "right" : "left"}
+          align={header.key !== "#" && header.key !== "pool" ? align : "left"}
         >
           {header.label}
         </HeaderCell>
@@ -67,7 +69,13 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
   );
 }
 
-export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
+interface PoolItemProps {
+  pool: PoolData;
+  index: number;
+  align: "right" | "left";
+}
+
+export function PoolItem({ pool, index, align }: PoolItemProps) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -95,10 +103,10 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
           <FeeTierLabel feeTier={pool.feeTier} />
         </Grid>
       </BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.volumeUSD)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
     </TableRow>
   );
 }
@@ -112,6 +120,8 @@ export interface PoolsProps {
 }
 
 export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
+  const theme = useTheme() as Theme;
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
@@ -159,12 +169,17 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     setSortField(sortField);
   };
 
+  const align = useMemo(() => {
+    if (matchDownMD) return "left";
+    return "right";
+  }, [matchDownMD]);
+
   return (
     <>
-      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
+      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" align={align} />
 
       {(sortedPools ?? []).map((pool, index) => (
-        <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} />
+        <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} align={align} />
       ))}
 
       {sortedPools?.length === 0 && !loading ? (
