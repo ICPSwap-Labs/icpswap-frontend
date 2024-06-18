@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { t } from "@lingui/macro";
 import { ButtonChip } from "components/ButtonChip";
 import { Flex } from "components/index";
@@ -8,10 +8,10 @@ import { Theme } from "@mui/material/styles";
 
 const READ_CLAIM = "READ_CLAIM";
 
-function getReadClaim() {
-  const val = window.localStorage.getItem(READ_CLAIM);
-  return val === "true";
-}
+// function getReadClaim() {
+//   const val = window.localStorage.getItem(READ_CLAIM);
+//   return val === "true";
+// }
 
 function setReadClaim() {
   window.localStorage.setItem(READ_CLAIM, "true");
@@ -21,7 +21,7 @@ export default function TokenClaim() {
   const history = useHistory();
   const theme = useTheme() as Theme;
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isRead, setIsRead] = useState(false);
+  const [isRead, setIsRead] = useState(true);
 
   const handleTokenClaim = () => {
     setReadClaim();
@@ -29,10 +29,10 @@ export default function TokenClaim() {
     history.push("/token-claim");
   };
 
-  useEffect(() => {
-    const isRead = getReadClaim();
-    setIsRead(isRead);
-  }, []);
+  // useEffect(() => {
+  //   const isRead = getReadClaim();
+  //   setIsRead(isRead);
+  // }, []);
 
   return (
     <>
