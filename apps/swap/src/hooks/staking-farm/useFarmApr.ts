@@ -51,7 +51,7 @@ export interface UseUserAprArgs {
   farmInitArgs: InitFarmArgs | undefined;
   rewardToken: Token | undefined;
   rewardTokenPrice: string | number | undefined;
-  rewardMetadata: FarmRewardMetadata | undefined;
+  rewardAmount: string | undefined;
   positionValue: string | undefined;
   deposits: FarmDepositArgs[] | undefined;
 }
@@ -63,16 +63,16 @@ export function useUserApr({
   rewardToken,
   rewardTokenPrice,
   farmInitArgs,
-  rewardMetadata,
   positionValue,
   deposits,
+  rewardAmount,
 }: UseUserAprArgs) {
   return useMemo(() => {
     if (
       !farmTvlValue ||
       !rewardTokenPrice ||
       !farmInitArgs ||
-      !rewardMetadata ||
+      !rewardAmount ||
       !rewardToken ||
       !positionValue ||
       !deposits ||
@@ -92,7 +92,7 @@ export function useUserApr({
     const now = nowInSeconds();
     const stakedSeconds = new BigNumber(String(BigInt(now) - depositTime)).toString();
 
-    const val = parseTokenAmount(rewardMetadata.totalReward, rewardToken.decimals)
+    const val = new BigNumber(rewardAmount)
       .multipliedBy(rewardTokenPrice)
       .dividedBy(positionValue)
       .multipliedBy(3600 * 24 * 360)
@@ -101,5 +101,5 @@ export function useUserApr({
       .toFixed(2);
 
     return `${val}%`;
-  }, [farmTvlValue, state, rewardTokenPrice, farmInitArgs, rewardMetadata, rewardToken, positionValue, deposits]);
+  }, [farmTvlValue, state, rewardTokenPrice, farmInitArgs, rewardToken, positionValue, deposits]);
 }

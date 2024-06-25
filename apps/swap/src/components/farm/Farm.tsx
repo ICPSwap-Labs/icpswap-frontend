@@ -134,10 +134,10 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     rewardToken,
     rewardTokenPrice,
     farmInitArgs,
-    rewardMetadata,
     farmTvlValue,
     positionValue: stakedPositionValue,
     deposits,
+    rewardAmount: userRewardAmount,
   });
 
   const handleSuccess = () => {
