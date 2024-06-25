@@ -35,6 +35,13 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
   `;
 
   return {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          lineHeight: 1,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

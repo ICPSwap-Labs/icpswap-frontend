@@ -25,13 +25,10 @@ import {
   useFarmUserPositions,
   useFarmInitArgs,
   useSwapUserPositions,
-  useFarmCycles,
   useFarmUserRewards,
   farmWithdraw,
   useSwapPoolMetadata,
   useFarmCycles,
-  useFarmUserRewards,
-  farmWithdraw,
 } from "@icpswap/hooks";
 import Countdown from "react-countdown";
 import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
@@ -42,6 +39,7 @@ import upperFirst from "lodash/upperFirst";
 import { Principal } from "@dfinity/principal";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useTips, MessageTypes } from "hooks/useTips";
+import { useFarmApr } from "hooks/staking-farm/useFarmApr";
 
 import FarmContext from "../context";
 import OptionStaking from "./OptionStaking";
@@ -127,7 +125,6 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
     forceUpdate,
   );
   const { result: userStakedPositions } = useFarmUserPositions(farmId, principal?.toString(), forceUpdate);
-  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
   const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;
@@ -158,23 +155,21 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const _userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
   const userRewardAmount = useMemo(() => {
-    if (!farmInitArgs || !_userRewardAmount) return undefined;
+    if (!farmInitArgs || !_userRewardAmount || !rewardToken) return undefined;
 
     const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
-
-    return new BigNumber(_userRewardAmount.toString()).multipliedBy(userRewardRatio);
-  }, [_userRewardAmount, farmInitArgs]);
+    return parseTokenAmount(_userRewardAmount, rewardToken.decimals).multipliedBy(userRewardRatio).toString();
+  }, [_userRewardAmount, farmInitArgs, rewardToken]);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { poolTvl, userTvl, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
+  const { farmTvlValue, userTvl, userRewardUSD, parsedUserRewardAmount } = useFarmUSDValue({
     token0,
     token1,
     rewardToken,
     userRewardAmount,
     userFarmInfo,
     farmId,
-    rewardTokenPrice,
   });
 
   const handleExpandClick = () => {
@@ -202,30 +197,14 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
   const { result: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useFarmCycles(farmId);
 
-  // (Reward token amount each cycles * reward token price / Total valued staked ) * (3600*24*360/seconds each cycle) *100%
-  const apr = useMemo(() => {
-    if (!poolTvl) return undefined;
-
-    if (
-      !rewardTokenPrice ||
-      !farmInitArgs ||
-      !farmRewardMetadata ||
-      !rewardToken ||
-      new BigNumber(poolTvl).isEqualTo(0)
-    )
-      return undefined;
-
-    if (state !== STATE.LIVE) return undefined;
-
-    const val = parseTokenAmount(farmRewardMetadata.rewardPerCycle, rewardToken.decimals)
-      .multipliedBy(rewardTokenPrice)
-      .dividedBy(poolTvl)
-      .multipliedBy(new BigNumber(3600 * 24 * 360).dividedBy(farmInitArgs.secondPerCycle.toString()))
-      .multipliedBy(100)
-      .toFixed(2);
-
-    return `${val}%`;
-  }, [poolTvl, state, rewardTokenPrice, farmInitArgs, farmRewardMetadata, rewardToken]);
+  const apr = useFarmApr({
+    state,
+    rewardToken,
+    rewardTokenPrice,
+    farmInitArgs,
+    rewardMetadata: farmRewardMetadata,
+    farmTvlValue,
+  });
 
   const handleReclaim = async () => {
     if (withdrawLoading) return;
@@ -361,7 +340,7 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
               <Trans>Total Value Staked</Trans>
             </Typography>
             <Typography color="text.primary" fontWeight={600}>
-              {poolTvl ? `${formatDollarAmount(poolTvl)}` : "--"}
+              {farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : "--"}
             </Typography>
           </Flex>
 
@@ -374,7 +353,13 @@ export default function FarmPool({ farmTVL, state, stakeOnly }: FarmPoolProps) {
 
             <Flex vertical align="flex-end">
               <Typography color="text.primary">
-                <CountUp preserveValue end={parsedUserRewardAmount ?? 0} decimals={6} duration={1} separator="," />
+                <CountUp
+                  preserveValue
+                  end={Number(parsedUserRewardAmount ?? 0)}
+                  decimals={6}
+                  duration={1}
+                  separator=","
+                />
               </Typography>
               <Typography color="text.primary">
                 <CountUp preserveValue end={userRewardUSD ?? 0} decimals={2} duration={1} separator="," prefix="~$" />

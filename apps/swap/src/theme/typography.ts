@@ -57,6 +57,7 @@ export function themeTypography(theme: { [key: string]: any }) {
       fontWeight: 400,
       lineHeight: "1.5em",
       color: theme.textSecondary,
+      fontSize: "16px",
     },
     customInput: {
       marginTop: 8,

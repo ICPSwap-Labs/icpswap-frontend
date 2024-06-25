@@ -88,11 +88,56 @@ export interface Page_2 {
   limit: bigint;
   totalElements: bigint;
 }
+export type Result = { ok: string } | { err: Error };
 export type Result_1 = { ok: bigint } | { err: Error };
-export type Result_10 = { ok: Array<Deposit> } | { err: Error };
-export type Result_11 = { ok: TVL } | { err: Error };
-export type Result_12 = { ok: Page_1 } | { err: string };
+export type Result_10 = { ok: Array<bigint> } | { err: Error };
+export type Result_11 =
+  | {
+      ok: {
+        poolToken0Symbol: string;
+        poolToken1Symbol: string;
+        poolToken1Decimals: bigint;
+        poolToken0Decimals: bigint;
+        poolToken0: { address: string; standard: string };
+        poolToken1: { address: string; standard: string };
+      };
+    }
+  | { err: Error };
+export type Result_12 =
+  | {
+      ok: {
+        poolToken0Amount: bigint;
+        totalLiquidity: bigint;
+        poolToken1Amount: bigint;
+      };
+    }
+  | { err: Error };
 export type Result_13 =
+  | {
+      ok: {
+        priceInsideLimit: boolean;
+        positionNumLimit: bigint;
+        token0AmountLimit: bigint;
+        token1AmountLimit: bigint;
+      };
+    }
+  | { err: Error };
+export type Result_14 = { ok: InitFarmArgs } | { err: Error };
+export type Result_15 = { ok: FarmInfo } | { err: Error };
+export type Result_16 = { ok: Page_2 } | { err: string };
+export type Result_17 = { ok: Deposit } | { err: Error };
+export type Result_18 = { ok: CycleInfo } | { err: Error };
+export type Result_2 =
+  | {
+      ok: { poolToken0: TokenAmount; poolToken1: TokenAmount };
+    }
+  | { err: Error };
+export type Result_3 = { ok: Page } | { err: Error };
+export type Result_4 = { ok: Array<Deposit> } | { err: Error };
+export type Result_5 = { ok: Array<TransferLog> } | { err: Error };
+export type Result_6 = { ok: TVL } | { err: Error };
+export type Result_7 = { ok: Page_1 } | { err: string };
+export type Result_8 =
   | {
       ok: {
         secondPerCycle: bigint;
@@ -107,51 +152,7 @@ export type Result_13 =
       };
     }
   | { err: Error };
-export type Result_14 = { ok: Array<bigint> } | { err: Error };
-export type Result_15 =
-  | {
-      ok: {
-        poolToken0Symbol: string;
-        poolToken1Symbol: string;
-        poolToken1Decimals: bigint;
-        poolToken0Decimals: bigint;
-        poolToken0: { address: string; standard: string };
-        poolToken1: { address: string; standard: string };
-      };
-    }
-  | { err: Error };
-export type Result_16 =
-  | {
-      ok: {
-        poolToken0Amount: bigint;
-        totalLiquidity: bigint;
-        poolToken1Amount: bigint;
-      };
-    }
-  | { err: Error };
-export type Result_17 =
-  | {
-      ok: {
-        priceInsideLimit: boolean;
-        positionNumLimit: bigint;
-        token0AmountLimit: bigint;
-        token1AmountLimit: bigint;
-      };
-    }
-  | { err: Error };
-export type Result_18 = { ok: InitFarmArgs } | { err: Error };
-export type Result_19 = { ok: FarmInfo } | { err: Error };
-export type Result_20 = { ok: Page_2 } | { err: string };
-export type Result_21 = { ok: Deposit } | { err: Error };
-export type Result_3 = { ok: CycleInfo } | { err: Error };
-export type Result_5 = { ok: Array<Principal> } | { err: Error };
-export type Result_7 = { ok: string } | { err: Error };
-export type Result_8 =
-  | {
-      ok: { poolToken0: TokenAmount; poolToken1: TokenAmount };
-    }
-  | { err: Error };
-export type Result_9 = { ok: Page } | { err: Error };
+export type Result_9 = { ok: Array<Principal> } | { err: Error };
 export interface StakeRecord {
   to: Principal;
   transType: TransType;
@@ -181,42 +182,59 @@ export type TransType =
   | { unstake: null }
   | { stake: null }
   | { harvest: null };
+export interface TransferLog {
+  to: Principal;
+  fee: bigint;
+  result: string;
+  token: Token;
+  action: string;
+  daysFrom19700101: bigint;
+  owner: Principal;
+  from: Principal;
+  fromSubaccount: [] | [Uint8Array | number[]];
+  timestamp: bigint;
+  index: bigint;
+  amount: bigint;
+  errorMsg: string;
+}
 export interface _SERVICE {
   clearErrorLog: ActorMethod<[], undefined>;
-  close: ActorMethod<[], Result_7>;
-  finishManually: ActorMethod<[], Result_7>;
-  getAdmins: ActorMethod<[], Result_5>;
-  getCycleInfo: ActorMethod<[], Result_3>;
-  getDeposit: ActorMethod<[bigint], Result_21>;
-  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_20>;
+  close: ActorMethod<[], Result>;
+  finishManually: ActorMethod<[], Result>;
+  getAdmins: ActorMethod<[], Result_9>;
+  getCycleInfo: ActorMethod<[], Result_18>;
+  getDeposit: ActorMethod<[bigint], Result_17>;
+  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_16>;
   getErrorLog: ActorMethod<[], Array<string>>;
-  getFarmInfo: ActorMethod<[string], Result_19>;
-  getInitArgs: ActorMethod<[], Result_18>;
-  getLimitInfo: ActorMethod<[], Result_17>;
-  getLiquidityInfo: ActorMethod<[], Result_16>;
+  getFarmInfo: ActorMethod<[string], Result_15>;
+  getInitArgs: ActorMethod<[], Result_14>;
+  getLimitInfo: ActorMethod<[], Result_13>;
+  getLiquidityInfo: ActorMethod<[], Result_12>;
   getPoolMeta: ActorMethod<[], { sqrtPriceX96: bigint; tick: bigint }>;
-  getPoolTokenMeta: ActorMethod<[], Result_15>;
-  getPositionIds: ActorMethod<[], Result_14>;
+  getPoolTokenMeta: ActorMethod<[], Result_11>;
+  getPositionIds: ActorMethod<[], Result_10>;
+  getPrincipalRecord: ActorMethod<[], Result_9>;
   getRewardInfo: ActorMethod<[Array<bigint>], Result_1>;
-  getRewardMeta: ActorMethod<[], Result_13>;
+  getRewardMeta: ActorMethod<[], Result_8>;
   getRewardTokenBalance: ActorMethod<[], bigint>;
-  getStakeRecord: ActorMethod<[bigint, bigint, string], Result_12>;
-  getTVL: ActorMethod<[], Result_11>;
-  getUserDeposits: ActorMethod<[Principal], Result_10>;
+  getStakeRecord: ActorMethod<[bigint, bigint, string], Result_7>;
+  getTVL: ActorMethod<[], Result_6>;
+  getTransferLogs: ActorMethod<[], Result_5>;
+  getUserDeposits: ActorMethod<[Principal], Result_4>;
   getUserRewardBalance: ActorMethod<[Principal], Result_1>;
-  getUserRewardBalances: ActorMethod<[bigint, bigint], Result_9>;
-  getUserTVL: ActorMethod<[Principal], Result_8>;
+  getUserRewardBalances: ActorMethod<[bigint, bigint], Result_3>;
+  getUserTVL: ActorMethod<[Principal], Result_2>;
   getVersion: ActorMethod<[], string>;
   init: ActorMethod<[], undefined>;
   removeErrorTransferLog: ActorMethod<[bigint, boolean], undefined>;
-  restartManually: ActorMethod<[], Result_7>;
-  sendRewardManually: ActorMethod<[], Result_7>;
+  restartManually: ActorMethod<[], Result>;
+  sendRewardManually: ActorMethod<[], Result>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setLimitInfo: ActorMethod<[bigint, bigint, bigint, boolean], undefined>;
-  stake: ActorMethod<[bigint], Result_7>;
-  unstake: ActorMethod<[bigint], Result_7>;
+  stake: ActorMethod<[bigint], Result>;
+  unstake: ActorMethod<[bigint], Result>;
   withdraw: ActorMethod<[], Result_1>;
-  withdrawRewardFee: ActorMethod<[], Result_7>;
+  withdrawRewardFee: ActorMethod<[], Result>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

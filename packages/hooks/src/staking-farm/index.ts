@@ -50,13 +50,17 @@ export async function getFarmUserPositions(canisterId: string, principal: string
     .data;
 }
 
-export function useFarmUserPositions(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {
+export function useFarmUserPositions(
+  canisterId: string | undefined,
+  principal: string | undefined,
+  refresh?: number | boolean,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
       return await getFarmUserPositions(canisterId, principal);
     }, [canisterId, principal]),
-    reload,
+    refresh,
   );
 }
 
@@ -277,3 +281,5 @@ export function useFarmUserRewards(farmId: string | undefined, principal: Princi
     refresh,
   );
 }
+
+export * from "./useFarmState";

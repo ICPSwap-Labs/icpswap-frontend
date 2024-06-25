@@ -1,34 +1,58 @@
 import { useCallback, useMemo, useState } from "react";
 import { Grid, Box, Typography } from "@mui/material";
-import { NoData, StaticLoading, MainCard } from "components/index";
-import Switch from "components/switch";
+import { useTheme } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import { NoData, MainCard, Flex } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import { STATE } from "types/staking-farm";
-import { useFarms, useParsedQueryString } from "@icpswap/hooks";
+import { FilterState } from "types/staking-farm";
+import { useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
+import { LoadingRow } from "@icpswap/ui";
+import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
+import { useFarms } from "hooks/staking-farm/index";
 
-import Pool from "./components/Pool";
-import GlobalData from "./components/GlobalData";
 import FarmContext from "./context";
 
 const Tabs = [
-  { label: t`Live`, state: STATE.LIVE },
-  { label: t`Unstart`, state: STATE.NOT_STARTED },
-  { label: t`Finished`, state: STATE.FINISHED },
-  { label: t`Closure`, state: STATE.CLOSED },
+  { label: t`All Farms`, state: FilterState.ALL },
+  { label: t`Live`, state: FilterState.LIVE },
+  { label: t`Unstart`, state: FilterState.NOT_STARTED },
+  { label: t`Finished`, state: FilterState.FINISHED },
+  { label: t`Your Farms`, state: FilterState.YOUR },
 ];
 
 function MainContent() {
+  const theme = useTheme() as Theme;
   const history = useHistory();
 
-  const { state: __state, stakeOnly } = useParsedQueryString() as { state: STATE; stakeOnly: "true" | undefined };
-  const state = useMemo(() => __state ?? STATE.LIVE, [__state]);
+  const { state: _state, stakeOnly } = useParsedQueryString() as {
+    state: FilterState | undefined;
+    stakeOnly: "true" | undefined;
+  };
 
-  // TODO: page
-  const { result: farms, loading } = useFarms(state);
+  const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
+
+  const state = useMemo(() => {
+    switch (__state) {
+      case FilterState.ALL:
+        return undefined;
+      case FilterState.NOT_STARTED:
+        return "NOT_STARTED";
+      case FilterState.LIVE:
+        return "LIVE";
+      case FilterState.FINISHED:
+        return "FINISHED";
+      case FilterState.YOUR:
+        return undefined;
+      default:
+        return undefined;
+    }
+  }, [__state]);
+
+  const { result: farms, loading } = useFarms({ state, filter: __state });
 
   const handleToggle = useCallback(
-    (value: { label: string; state: STATE }) => {
+    (value: { label: string; state: FilterState }) => {
       if (stakeOnly === "true") {
         history.push(`/farm?state=${value.state}&stakeOnly=true`);
         return;
@@ -55,18 +79,12 @@ function MainContent() {
     });
   };
 
-  const handleStakeOnly = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked;
-
-      if (checked) {
-        history.push(`/farm?state=${state}&stakeOnly=true`);
-      } else {
-        history.push(`/farm?state=${state}`);
-      }
-    },
-    [state],
-  );
+  const { showState, gridTemplateColumns } = useMemo(() => {
+    return {
+      showState: state === undefined,
+      gridTemplateColumns: state === undefined ? "220px 220px 1fr 1fr 1fr 180px" : "220px 220px 1fr 1fr 1fr",
+    };
+  }, [state]);
 
   return (
     <FarmContext.Provider
@@ -76,11 +94,12 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <MainCard padding="24px">
+      <MainCard padding="0">
         <Grid
           container
           justifyContent="space-between"
           sx={{
+            padding: "24px",
             "@media (max-width:640px)": {
               flexDirection: "column",
               gap: "24px 0",
@@ -96,7 +115,7 @@ function MainContent() {
             {Tabs.map((tab) => (
               <Typography
                 key={tab.state}
-                color={state === tab.state ? "textPrimary" : "textTertiary"}
+                color={__state === tab.state ? "text.primary" : "textTertiary"}
                 onClick={() => handleToggle(tab)}
                 sx={{
                   fontSize: "20px",
@@ -112,44 +131,81 @@ function MainContent() {
               </Typography>
             ))}
           </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0 10px",
-              "@media (max-width:640px)": {
-                justifyContent: "flex-start",
-              },
-            }}
-          >
-            <Typography display="inline">
-              <Trans>Staked only</Trans>
-            </Typography>
-            <Switch checked={stakeOnly === "true"} onChange={handleStakeOnly} />
-          </Box>
         </Grid>
+
+        <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box
           sx={{
-            position: "relative",
-            minHeight: "440px",
-            margin: "50px 0 0 0",
+            display: "grid",
+            padding: "12px 24px",
+            gridTemplateColumns,
           }}
         >
-          {!loading ? (
-            <Grid container justifyContent="center" sx={{ gap: "20px" }}>
-              {farms?.map((ele) => (
-                <Pool key={ele[0].toString()} stakeOnly={stakeOnly === "true"} state={state} farmTVL={ele} />
-              ))}
-            </Grid>
+          <Typography variant="body2">
+            <Trans>Staked Position</Trans>
+          </Typography>
+          <Typography variant="body2">
+            <Trans>Reward Token</Trans>
+          </Typography>
+          <Flex justify="flex-end">
+            <Typography variant="body2">
+              <Trans>APR</Trans>
+            </Typography>
+          </Flex>
+          <Flex justify="flex-end">
+            <Typography variant="body2">
+              <Trans>Your Available to Stake</Trans>
+            </Typography>
+          </Flex>
+          <Flex justify="flex-end">
+            <Typography variant="body2">
+              <Trans>Total Staked</Trans>
+            </Typography>
+          </Flex>
+          {showState ? (
+            <Flex justify="flex-end">
+              <Typography variant="body2">
+                <Trans>Status</Trans>
+              </Typography>
+            </Flex>
           ) : null}
-
-          {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
-            <NoData />
-          )}
-          {loading ? <StaticLoading loading={loading} /> : null}
         </Box>
+
+        {loading ? (
+          <Box sx={{ padding: "24px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : (
+          <>
+            {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
+              <NoData />
+            )}
+
+            {farms?.map((farm) => (
+              <FarmListCard
+                key={farm[0].toString()}
+                farmId={farm[0].toString()}
+                farmTvl={farm[1]}
+                wrapperSx={{
+                  display: "grid",
+                  padding: "12px 24px",
+                  gridTemplateColumns,
+                }}
+                showState={showState}
+              />
+            ))}
+          </>
+        )}
       </MainCard>
     </FarmContext.Provider>
   );
@@ -157,11 +213,29 @@ function MainContent() {
 
 export default function Farms() {
   return (
-    <>
-      <GlobalData />
-      <Box sx={{ margin: "20px 0 0 0" }}>
-        <MainContent />
+    <Flex sx={{ width: "100%" }} justify="center">
+      <Box sx={{ maxWidth: "1440px", width: "100%" }}>
+        <Box>
+          <Typography color="text.primary" sx={{ fontSize: "36px", fontWeight: 600, margin: "40px 0 0 0" }}>
+            <Trans>Farm</Trans>
+          </Typography>
+          <Typography fontSize={18} mt="24px">
+            <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
+          </Typography>
+        </Box>
+
+        <Box mt="88px">
+          <GlobalData />
+        </Box>
+
+        <Box mt="58px">
+          <TopLiveFarms />
+        </Box>
+
+        <Box sx={{ margin: "20px 0 0 0" }}>
+          <MainContent />
+        </Box>
       </Box>
-    </>
+    </Flex>
   );
 }

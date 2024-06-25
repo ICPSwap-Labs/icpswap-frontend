@@ -13,6 +13,7 @@ export interface FlexProps {
   gap?: BoxProps["gap"];
   vertical?: boolean;
   sx?: BoxProps["sx"];
+  fullWidth?: boolean;
 }
 
 export function Flex({
@@ -27,6 +28,7 @@ export function Flex({
   borderRadius,
   margin,
   sx,
+  fullWidth,
 }: FlexProps) {
   return (
     <Box
@@ -34,7 +36,7 @@ export function Flex({
         flexDirection: vertical ? "column" : "row",
         gridAutoRows: "auto",
         display: "flex",
-        width: width ?? "auto",
+        width: width || (fullWidth ? "100%" : "auto"),
         alignItems: align ?? "center",
         justifyContent: justify ?? "flex-start",
         padding: padding ?? 0,
