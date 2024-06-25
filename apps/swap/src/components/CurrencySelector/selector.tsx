@@ -233,21 +233,21 @@ export default function Selector({
               </Box>
             </Box>
 
-            <Box mt={searchKeyword ? "0px" : "16px"}>
+            <Box mt={searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
               {searchKeyword ? null : (
                 <Typography className={classes.wrapper} fontSize="16px">
                   <Trans>Token List</Trans>
                 </Typography>
               )}
 
-              <Box mt={searchKeyword ? "0px" : "16px"}>
+              <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
                 {searchKeyword ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
                     <Trans>SNS Tokens</Trans>
                   </Typography>
                 )}
 
-                <Box mt={searchKeyword ? "0px" : "16px"}>
+                <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
                   {(snsTokens ?? []).map((tokenId) => (
                     <TokenItem
                       key={tokenId}
@@ -262,14 +262,14 @@ export default function Selector({
                 </Box>
               </Box>
 
-              <Box mt={searchKeyword ? "0px" : "16px"}>
+              <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
                 {searchKeyword ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
                     <Trans>Other Tokens</Trans>
                   </Typography>
                 )}
 
-                <Box mt={searchKeyword ? "0px" : "16px"}>
+                <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
                   {(noneSnsTokens ?? []).map((tokenId) => (
                     <TokenItem
                       key={tokenId}
