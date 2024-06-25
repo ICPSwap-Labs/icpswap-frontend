@@ -88,6 +88,10 @@ export function addLiquidityLink(canisterId: string) {
   return `${APP_LINK}/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
 }
 
+export function swapLinkOfPool(token0Id: string, token1Id: string) {
+  return `${APP_LINK}/swap?input=${token0Id}&output=${token1Id}`;
+}
+
 export function toFormat(value: string | number | undefined) {
   if (value === undefined) return "";
   return new BigNumber(value).toFormat();

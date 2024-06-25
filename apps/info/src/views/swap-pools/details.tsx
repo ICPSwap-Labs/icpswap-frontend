@@ -12,7 +12,7 @@ import { GridAutoRows, Proportion } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
-import { swapLink, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
+import { swapLinkOfPool, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
@@ -57,9 +57,7 @@ export default function SwapPoolDetails() {
 
   const handleToSwap = () => {
     if (!token0 || !token1) return;
-    const canisterId = token0.canisterId === ICP_TOKEN_INFO.canisterId ? token1.canisterId : token0.canisterId;
-
-    mockALinkAndOpen(swapLink(canisterId), "to_swap");
+    mockALinkAndOpen(swapLinkOfPool(token0.canisterId, token1.canisterId), "to_swap");
   };
 
   const handleToAddLiquidity = () => {
