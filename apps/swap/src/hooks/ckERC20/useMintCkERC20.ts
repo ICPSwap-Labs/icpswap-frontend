@@ -6,6 +6,7 @@ import { useERC20MinterHelperContract } from "hooks/web3/useContract";
 import { formatTokenAmount } from "@icpswap/utils";
 import { ERC20Token } from "@icpswap/swap-sdk";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
+import { t } from "@lingui/macro";
 
 export function useMintCkERC20Callback(helperContractAddress: string | undefined) {
   const principal = useAccountPrincipalString();
@@ -35,7 +36,10 @@ export function useMintCkERC20Callback(helperContractAddress: string | undefined
         });
 
         if (response) {
-          openTip("ckETH minting in progress: Transaction submitted and pending confirmation.", MessageTypes.success);
+          openTip(
+            t`ck${erc20.symbol} minting in progress: Transaction submitted and pending confirmation.`,
+            MessageTypes.success,
+          );
         }
 
         return response;
