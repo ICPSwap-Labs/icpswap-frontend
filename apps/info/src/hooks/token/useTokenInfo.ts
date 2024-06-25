@@ -7,6 +7,8 @@ import { IdbStorage } from "@icpswap/utils";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
+// import { generateLogoUrl } from "hooks/token/useTokenLogo";
+
 import { getTokenBaseInfo } from "./info-calls";
 import { useLocalTokens } from "./useLocalTokens";
 
@@ -176,6 +178,7 @@ export function useTokensInfo(
           [tokenId]: {
             name: storageInfo.name,
             logo: storageInfo.logo,
+            // logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
@@ -218,6 +221,7 @@ export function useTokensInfo(
           ...prevState,
           [tokenId]: {
             ...tokenInfo,
+            // logo: generateLogoUrl(tokenId),
             transFee: BigInt(tokenInfo.transFee.toString()),
             decimals: Number(tokenInfo.decimals),
             standardType: tokenStandard ?? tokenInfo.standardType,

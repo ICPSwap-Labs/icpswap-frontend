@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { Select, type MenuProps } from "components/Select/ForToken";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { useAllTokensOfSwap } from "@icpswap/hooks";
@@ -30,11 +30,13 @@ function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
     return isTokenHide(tokenInfo, search);
   }, [search, tokenInfo]);
 
-  const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
-
   return hide ? null : (
     <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-      <TokenImage logo={token?.logo} size="24px" tokenId={tokenInfo.ledger_id.toString()} />
+      <TokenImage
+        logo={generateLogoUrl(tokenInfo.ledger_id.toString())}
+        size="24px"
+        tokenId={tokenInfo.ledger_id.toString()}
+      />
       <Typography component="span">{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
     </Box>
   );

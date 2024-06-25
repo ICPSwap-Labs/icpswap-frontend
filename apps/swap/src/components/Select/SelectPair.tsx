@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { Select, type MenuProps } from "components/Select/ForToken";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenPair } from "components/TokenPair";
 import { useSwapPools, useAllTokensOfSwap } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { useTokenLogo } from "hooks/token/useTokenLogo";
 
 function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
   if (!search) return false;
@@ -27,8 +27,8 @@ interface PairItemProps {
 }
 
 function PairMenuItem({ token0, token1, select }: PairItemProps) {
-  const { result: token0Info } = useTokenInfo(token0?.ledger_id.toString());
-  const { result: token1Info } = useTokenInfo(token1?.ledger_id.toString());
+  const token0Logo = useTokenLogo(token0?.ledger_id.toString());
+  const token1Logo = useTokenLogo(token1?.ledger_id.toString());
 
   return (
     <Box
@@ -44,8 +44,8 @@ function PairMenuItem({ token0, token1, select }: PairItemProps) {
       }
     >
       <TokenPair
-        token0Logo={token0Info?.logo}
-        token1Logo={token1Info?.logo}
+        token0Logo={token0Logo}
+        token1Logo={token1Logo}
         token0Symbol={token0?.symbol}
         token1Symbol={token1?.symbol}
         token0Id={token0?.ledger_id.toString()}

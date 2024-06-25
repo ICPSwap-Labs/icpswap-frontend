@@ -7,6 +7,7 @@ import { IdbStorage } from "@icpswap/utils";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+// import { generateLogoUrl } from "hooks/token/useTokenLogo";
 
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
@@ -147,6 +148,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           [tokenId]: {
             name: storageInfo.name,
             logo: storageInfo.logo,
+            // logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
@@ -174,6 +176,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       if (tokenInfo) {
         await setStorageTokenInfo({
           ...tokenInfo,
+          // logo: generateLogoUrl(tokenId),
           transFee: tokenInfo.transFee.toString(),
           totalSupply: "0",
         });
