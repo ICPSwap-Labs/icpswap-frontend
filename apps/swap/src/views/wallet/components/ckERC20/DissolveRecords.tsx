@@ -24,9 +24,13 @@ function ListItem({ transaction, minterInfo }: ListItemProps) {
   const { ledger_id } = useMemo(() => {
     if (!minterInfo) return {};
 
-    const ckerc20_token = minterInfo.supported_ckerc20_tokens.find((e) => {
-      return e[0].ckerc20_token_symbol === transaction.token_symbol;
-    })?.[0];
+    const supported_tokens = minterInfo.supported_ckerc20_tokens[0];
+
+    if (!supported_tokens) return {};
+
+    const ckerc20_token = supported_tokens.find((supported_token) => {
+      return supported_token.ckerc20_token_symbol === transaction.token_symbol;
+    });
 
     if (!ckerc20_token) return {};
 
