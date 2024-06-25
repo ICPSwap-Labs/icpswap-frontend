@@ -105,6 +105,13 @@ export function FarmPositionCard({
 
   const state = useFarmState(farmInfo);
 
+  const disabled = useMemo(() => {
+    if (state === "NOT_STARTED") return true;
+    if (state === "FINISHED" && !unstake) return true;
+
+    return false;
+  }, [state, unstake]);
+
   return (
     <>
       <MainCard borderRadius="16px" level={2} padding="16px">
@@ -122,12 +129,7 @@ export function FarmPositionCard({
             <Typography>{token0Amount && token0 ? `${token0Amount} ${token0.symbol}` : "--"}</Typography>
             <Typography>{token1Amount && token1 ? `${token1Amount} ${token1.symbol}` : "--"}</Typography>
           </Box>
-          <Button
-            variant="contained"
-            sx={{ width: "120px", height: "48px" }}
-            onClick={handleClick}
-            disabled={state !== "LIVE"}
-          >
+          <Button variant="contained" sx={{ width: "120px", height: "48px" }} onClick={handleClick} disabled={disabled}>
             {unstake ? <Trans>Unstake</Trans> : <Trans>Stake</Trans>}
           </Button>
         </Flex>
