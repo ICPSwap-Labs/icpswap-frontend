@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import { NoData, MainCard, Flex } from "components/index";
@@ -24,6 +24,7 @@ const Tabs = [
 function MainContent() {
   const theme = useTheme() as Theme;
   const history = useHistory();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { state: _state, stakeOnly } = useParsedQueryString() as {
     state: FilterState | undefined;
@@ -82,9 +83,15 @@ function MainContent() {
   const { showState, gridTemplateColumns } = useMemo(() => {
     return {
       showState: state === undefined,
-      gridTemplateColumns: state === undefined ? "220px 220px 1fr 1fr 1fr 180px" : "220px 220px 1fr 1fr 1fr",
+      gridTemplateColumns: matchDownSM
+        ? state === undefined
+          ? "220px 220px 120px 220px 180px 180px"
+          : "220px 220px 120px 220px 180px"
+        : state === undefined
+        ? "220px 220px 1fr 1fr 1fr 180px"
+        : "220px 220px 1fr 1fr 1fr",
     };
-  }, [state]);
+  }, [state, matchDownSM]);
 
   return (
     <FarmContext.Provider
@@ -94,7 +101,14 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <MainCard padding="0">
+      <MainCard
+        padding="0"
+        sx={{
+          "@media(max-width: 640px)": {
+            padding: "0",
+          },
+        }}
+      >
         <Grid
           container
           justifyContent="space-between"
@@ -103,6 +117,7 @@ function MainContent() {
             "@media (max-width:640px)": {
               flexDirection: "column",
               gap: "24px 0",
+              padding: "16px",
             },
           }}
         >
@@ -110,6 +125,9 @@ function MainContent() {
             sx={{
               display: "flex",
               gap: "0 20px",
+              "@media (max-width:640px)": {
+                gap: "0 9px",
+              },
             }}
           >
             {Tabs.map((tab) => (
@@ -123,7 +141,7 @@ function MainContent() {
                   cursor: "pointer",
                   textTransform: "capitalize",
                   "@media (max-width:640px)": {
-                    fontSize: "16px",
+                    fontSize: "14px",
                   },
                 }}
               >
@@ -135,77 +153,79 @@ function MainContent() {
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
-        <Box
-          sx={{
-            display: "grid",
-            padding: "12px 24px",
-            gridTemplateColumns,
-          }}
-        >
-          <Typography variant="body2">
-            <Trans>Staked Position</Trans>
-          </Typography>
-          <Typography variant="body2">
-            <Trans>Reward Token</Trans>
-          </Typography>
-          <Flex justify="flex-end">
-            <Typography variant="body2">
-              <Trans>APR</Trans>
+        <Box sx={{ width: "100%", overflow: "auto hidden" }}>
+          <Box
+            sx={{
+              display: "grid",
+              padding: "16px 24px",
+              gridTemplateColumns,
+            }}
+          >
+            <Typography variant="body2" color="text.400">
+              <Trans>Staked Position</Trans>
             </Typography>
-          </Flex>
-          <Flex justify="flex-end">
-            <Typography variant="body2">
-              <Trans>Your Available to Stake</Trans>
+            <Typography variant="body2" color="text.400">
+              <Trans>Reward Token</Trans>
             </Typography>
-          </Flex>
-          <Flex justify="flex-end">
-            <Typography variant="body2">
-              <Trans>Total Staked</Trans>
-            </Typography>
-          </Flex>
-          {showState ? (
             <Flex justify="flex-end">
-              <Typography variant="body2">
-                <Trans>Status</Trans>
+              <Typography variant="body2" color="text.400">
+                <Trans>APR</Trans>
               </Typography>
             </Flex>
-          ) : null}
-        </Box>
-
-        {loading ? (
-          <Box sx={{ padding: "24px" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
+            <Flex justify="flex-end">
+              <Typography variant="body2" color="text.400">
+                <Trans>Your Available to Stake</Trans>
+              </Typography>
+            </Flex>
+            <Flex justify="flex-end">
+              <Typography variant="body2" color="text.400">
+                <Trans>Total Staked</Trans>
+              </Typography>
+            </Flex>
+            {showState ? (
+              <Flex justify="flex-end">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Status</Trans>
+                </Typography>
+              </Flex>
+            ) : null}
           </Box>
-        ) : (
-          <>
-            {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
-              <NoData />
-            )}
 
-            {farms?.map((farm) => (
-              <FarmListCard
-                key={farm[0].toString()}
-                farmId={farm[0].toString()}
-                farmTvl={farm[1]}
-                wrapperSx={{
-                  display: "grid",
-                  padding: "12px 24px",
-                  gridTemplateColumns,
-                }}
-                showState={showState}
-              />
-            ))}
-          </>
-        )}
+          {loading ? (
+            <Box sx={{ padding: "24px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : (
+            <>
+              {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
+                <NoData />
+              )}
+
+              {farms?.map((farm) => (
+                <FarmListCard
+                  key={farm[0].toString()}
+                  farmId={farm[0].toString()}
+                  farmTvl={farm[1]}
+                  wrapperSx={{
+                    display: "grid",
+                    padding: matchDownSM ? "24px" : "12px 24px",
+                    gridTemplateColumns,
+                  }}
+                  showState={showState}
+                />
+              ))}
+            </>
+          )}
+        </Box>
       </MainCard>
     </FarmContext.Provider>
   );
@@ -224,11 +244,25 @@ export default function Farms() {
           </Typography>
         </Box>
 
-        <Box mt="88px">
+        <Box
+          sx={{
+            margin: "88px 0 0 0",
+            "@media(max-width: 640px)": {
+              margin: "40px 0 0 0",
+            },
+          }}
+        >
           <GlobalData />
         </Box>
 
-        <Box mt="58px">
+        <Box
+          sx={{
+            margin: "58px 0 0 0",
+            "@media(max-width: 640px)": {
+              margin: "40px 0 0 0",
+            },
+          }}
+        >
           <TopLiveFarms />
         </Box>
 

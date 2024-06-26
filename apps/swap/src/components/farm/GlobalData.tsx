@@ -27,7 +27,14 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
         </Typography>
       </Box>
 
-      <Box mt="50px">
+      <Box
+        sx={{
+          margin: "50px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "29px 0 0 0",
+          },
+        }}
+      >
         <Flex gap="0 4px">
           <Typography>{label1}</Typography>
           {tooltip1 ? <Tooltip tips={tooltip1} /> : null}
@@ -52,8 +59,8 @@ export function GlobalData() {
         gap: "0 56px",
         gridTemplateColumns: "290px 290px",
         "@media(max-width: 960px)": {
-          flexDirection: "column",
-          gap: "24px 0",
+          gridTemplateColumns: "1fr",
+          gap: "29px 0",
         },
       }}
     >

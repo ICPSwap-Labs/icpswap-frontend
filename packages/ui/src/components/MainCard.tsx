@@ -71,9 +71,12 @@ export function MainCard({ border, level, onClick, padding, children, sx, border
         backgroundColor: cardStyles.background,
         ...(cardStyles.border ? { border: cardStyles.border } : {}),
         borderRadius: borderRadius ?? "16px",
-        padding: padding ?? "16px",
+        padding: padding ?? "24px",
         width: "100%",
         overflow: "hidden",
+        "@media(max-width: 640px)": {
+          padding: "16px",
+        },
         ...sx,
       }}
       onClick={onClick}

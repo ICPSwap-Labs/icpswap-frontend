@@ -43,7 +43,7 @@ export default function Farm() {
 
   return (
     <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ width: "100%", maxWidth: "1120px" }}>
+      <Box sx={{ width: "100%", maxWidth: "1120px", margin: "10px 0 0 0" }}>
         <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="/farm" />
 
         <Flex sx={{ margin: "30px 0 0 0", width: "100%" }} justify="center" align="center" vertical>

@@ -80,7 +80,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
     <MainCard level={2} padding="16px">
       <Flex vertical gap="16px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
-          <Typography sx={{ fontWeight: 500, color: "text.primary" }}>
+          <Typography sx={{ fontWeight: 500, color: "text.primary", fontSize: "16px" }}>
             {token0 && token1 ? `${token0.symbol}/${token1.symbol}(#${positionId.toString()})` : "--"}
           </Typography>
 

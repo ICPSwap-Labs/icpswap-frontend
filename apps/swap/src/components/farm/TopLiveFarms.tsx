@@ -84,7 +84,14 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   };
 
   return (
-    <MainCard level={1} padding="20px 16px" sx={{ cursor: "pointer" }} onClick={handleClick}>
+    <MainCard
+      level={1}
+      padding="20px 16px"
+      sx={{
+        cursor: "pointer",
+      }}
+      onClick={handleClick}
+    >
       <Flex justify="space-between">
         <FarmTokenImages rewardToken={rewardToken} token0={token0} token1={token1} />
         <Typography fontSize={12}>
@@ -103,7 +110,14 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
-          <Typography fontSize={24} fontWeight={500} color="text.primary">
+          <Typography
+            sx={{
+              fontSize: "24px",
+              fontWeight: 500,
+              color: "text.primary",
+              margin: "6px 0 0 0",
+            }}
+          >
             {rewardToken ? rewardToken.symbol : "--"}
           </Typography>
         </Box>
@@ -112,7 +126,15 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           <Typography fontSize={12} align="right">
             <Trans>APR</Trans>
           </Typography>
-          <Typography fontSize={24} fontWeight={500} color="text.primary" align="right">
+          <Typography
+            align="right"
+            sx={{
+              fontSize: "24px",
+              fontWeight: 500,
+              color: "text.primary",
+              margin: "6px 0 0 0",
+            }}
+          >
             {apr ?? "--"}
           </Typography>
         </Box>
@@ -175,7 +197,7 @@ export function TopLiveFarms() {
   }, [allLiveFarms]);
 
   return (
-    <MainCard padding="24px">
+    <MainCard>
       <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500 }}>
         <Trans>Top Live Farms</Trans>
       </Typography>
@@ -199,6 +221,10 @@ export function TopLiveFarms() {
               display: "grid",
               gap: "0 20px",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              "@media(max-width: 640px)": {
+                gridTemplateColumns: "1fr",
+                gap: "20px 0",
+              },
             }}
           >
             {topLiveFarms?.map((farm) => (

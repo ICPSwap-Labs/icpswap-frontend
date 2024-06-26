@@ -147,7 +147,16 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   return (
     <>
       <Box mt="16px">
-        <MainCard padding="24px 0" level={2} border="level4">
+        <MainCard
+          padding="24px 0"
+          level={2}
+          border="level4"
+          sx={{
+            "@media(max-width: 640px)": {
+              padding: "24px 0",
+            },
+          }}
+        >
           <Box sx={{ padding: "0 16px" }}>
             <Flex gap="0 4px" align="center">
               <Typography>
@@ -164,7 +173,17 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
           </Box>
 
           <Box mt="32px">
-            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", padding: "0 16px" }}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                padding: "0 16px",
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                  gap: "24px 0",
+                },
+              }}
+            >
               <Box>
                 <Typography>
                   <Trans>Total Reward</Trans>
@@ -211,7 +230,17 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
               }}
             />
 
-            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", padding: "0 16px" }}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                padding: "0 16px",
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                  gap: "24px 0",
+                },
+              }}
+            >
               <Box>
                 <Flex gap="0 4px">
                   <Typography>
@@ -299,7 +328,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                   {`${token0.symbol}/${token1.symbol}`}
                 </Typography>
 
-                <Flex sx={{ margin: "10px 0 0 0" }} justify="space-between" align="flex-start">
+                <Flex sx={{ margin: "10px 0 0 0" }} justify="space-between" align="center">
                   <Flex sx={{ lineHeight: "16px" }} vertical gap="4px 0">
                     {userAvailablePositions.map((e) => (
                       <Typography key={e.id.toString()}>(#{e.id.toString()})</Typography>

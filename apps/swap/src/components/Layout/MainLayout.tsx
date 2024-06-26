@@ -35,8 +35,7 @@ const useStyles = makeStyles((theme: Theme) => {
         minHeight: "calc(100vh - 60px)",
       },
       [theme.breakpoints.down("sm")]: {
-        padding: "10px",
-        marginRight: "10px",
+        padding: "12px",
         backgroundColor: "transparent",
       },
     },
