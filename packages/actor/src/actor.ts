@@ -2,6 +2,10 @@ import { HttpAgent, ActorSubclass } from "@dfinity/agent";
 import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
 import { ic_host } from "@icpswap/constants";
+import { Principal } from "@dfinity/principal";
+import { Signer, PromiseTransport } from "@slide-computer/signer";
+import { SignerAgent } from "@slide-computer/signer-agent";
+
 import { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
 
@@ -67,8 +71,14 @@ export class Actor {
 
   public log = false;
 
+  public owner: string | null = null;
+
   public setConnector(connector: Connector) {
     this.connector = connector;
+  }
+
+  public setOwner(owner: string) {
+    this.owner = owner;
   }
 
   public async create<T>({
@@ -82,6 +92,7 @@ export class Actor {
     let id = canisterId;
     if (!id && actorName) id = cachedCanisterIds[actorName];
     if (!id) throw new Error("No canister id");
+    if (identity && !this.owner) throw new Error("actor: no owner");
 
     const _host = host ?? this.host;
 
@@ -94,7 +105,7 @@ export class Actor {
     // catch create infinity actor rejected
     let createActorError: null | string = null;
 
-    if (identity) {
+    if (identity && this.connector !== Connector.PLUG) {
       try {
         actor = await window.icConnector.createActor<T>({
           canisterId: id,
@@ -103,6 +114,29 @@ export class Actor {
       } catch (error) {
         createActorError = String(error);
       }
+    } else if (identity && this.connector === Connector.PLUG) {
+      const transport = new PromiseTransport({
+        call(data) {
+          // @ts-ignore
+          return window.ic.plug.request(data);
+        },
+      });
+
+      const signer = new Signer({ transport });
+
+      const signerAgent = new SignerAgent({
+        signer,
+        getPrincipal: () => {
+          return Principal.fromText(this.owner);
+        },
+      });
+
+      actor = await createBaseActor<T>({
+        canisterId: id,
+        interfaceFactory: idlFactory,
+        agent: signerAgent,
+        fetchRootKey: _host !== ic_host,
+      });
     } else {
       actor = await createBaseActor<T>({
         canisterId: id,
@@ -115,9 +149,10 @@ export class Actor {
     const _actor: any = {};
 
     serviceClass._fields.forEach((ele) => {
-      const key = ele[0];
+      const method = ele[0];
+      // const funcClass = ele[1];
 
-      _actor[key] = async (...args) => {
+      _actor[method] = async (...args) => {
         if (createActorError)
           return {
             err: `${createActorError}. Please try reconnecting your wallet and ensure the account inside matches the account displayed on the ICPSwap page.`,
@@ -135,7 +170,7 @@ export class Actor {
           if (this.beforeSubmit) {
             const checkResult = await this.beforeSubmit({
               canisterId: id ?? "",
-              method: key,
+              method,
               identity,
               connector: this.connector,
             });
@@ -145,8 +180,8 @@ export class Actor {
             }
           }
 
-          const result = actor[key](...args) as Promise<any>;
-          return await result;
+          const result = (await actor[method](...args)) as any;
+          return result;
         } catch (error) {
           const _error = String(error);
 
@@ -162,13 +197,13 @@ export class Actor {
           if (this.log) {
             console.log("Actor =====================>");
             console.log("canister: ", id);
-            console.log("method: ", key);
+            console.log("method: ", method);
             console.log("rejected: ", message);
             console.log("Actor =====================>");
           }
 
           this.errorCallbacks.forEach((call) => {
-            call({ canisterId: id ?? "", method: key, message });
+            call({ canisterId: id ?? "", method, message });
           });
 
           return { err: message };
@@ -191,13 +226,13 @@ export class Actor {
       if (this.connector === Connector.PLUG) {
         await window.ic.plug.createAgent({ whitelist: [canisterId], host });
         return window.ic.plug.agent;
-      } if (this.connector === Connector.INFINITY) {
+      }
+      if (this.connector === Connector.INFINITY) {
         return new HttpAgent({
           host,
         });
-      } 
-        return window.icConnector.httpAgent;
-      
+      }
+      return window.icConnector.httpAgent;
     }
 
     return new HttpAgent({

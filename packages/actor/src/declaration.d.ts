@@ -3,23 +3,20 @@ import { IDL } from "@dfinity/candid";
 
 declare module "toformat";
 
+interface PlugRequestArgs {
+  method: string;
+  params: any;
+  id: number;
+}
+
 declare global {
   interface Window {
     ic: {
       plug: {
-        createAgent: ({
-          whitelist,
-          host,
-        }: {
-          whitelist: string[];
-          host: string;
-        }) => Promise<boolean>;
+        request: <T>({ method, params, id }: PlugRequestArgs) => Promise<T>;
+        createAgent: ({ whitelist, host }: { whitelist: string[]; host: string }) => Promise<boolean>;
         agent: HttpAgent;
-        requestConnect: ({
-          whitelist,
-        }: {
-          whitelist?: string[];
-        }) => Promise<any>;
+        requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;
         fetchRootKey: () => Promise<void>;
         createActor: <T>({
           canisterId,
@@ -30,11 +27,7 @@ declare global {
         }) => Promise<ActorSubclass<T>>;
       };
       infinityWallet: {
-        requestConnect: ({
-          whitelist,
-        }: {
-          whitelist?: string[];
-        }) => Promise<any>;
+        requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;
         createActor: <T>({
           canisterId,
           interfaceFactory,

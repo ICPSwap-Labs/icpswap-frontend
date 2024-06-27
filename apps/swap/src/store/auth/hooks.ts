@@ -92,11 +92,12 @@ export async function updateAuth({ walletType }: UpdateAuthProps) {
 
 export function setActorHttpAgent() {
   const { auth } = store.getState();
-  const { walletType } = auth;
+  const { walletType, principal } = auth;
 
   if (!walletType) return;
 
   actor.setConnector(walletType);
+  actor.setOwner(principal);
 }
 
 export function updateLockStatus(locked: boolean) {
