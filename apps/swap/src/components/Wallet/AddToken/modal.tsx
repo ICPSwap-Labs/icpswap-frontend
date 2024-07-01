@@ -177,7 +177,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
             position: "relative",
           }}
         >
-          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px" }}>
+          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "8px 0 0 0" }}>
             <Typography sx={{ fontSize: "12px" }}>
               Do your own research before investing. While we've collected known information about tokens on the list,
               it's essential to conduct your research.
