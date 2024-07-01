@@ -8,12 +8,11 @@ export interface LogoProps {
   type: "mint" | "dissolve";
 }
 
-export default function Logo({ type, token, erc20Token }: LogoProps) {
+export default function Logo({ type }: LogoProps) {
   return (
     <Logos
-      logo0={type === "mint" ? erc20Token?.logo : token?.logo}
-      logo1={type === "mint" ? token?.logo : erc20Token?.logo}
-      erc20={type === "mint" ? "logo0" : "logo1"}
+      logo0={type === "mint" ? "/images/chain/eth.png" : "/images/chain/icp.png"}
+      logo1={type === "mint" ? "/images/chain/icp.png" : "/images/chain/eth.png"}
     />
   );
 }
