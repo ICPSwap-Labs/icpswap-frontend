@@ -5,6 +5,7 @@ const useStyles = makeStyles(() => ({
   logo: {
     width: "64px",
     height: "64px",
+    position: "relative",
   },
 }));
 
@@ -24,24 +25,43 @@ function Arrow() {
   );
 }
 
+function Erc20Label() {
+  return (
+    <img
+      src="/images/erc20_label.png"
+      alt=""
+      width="100%"
+      height="100%"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+      }}
+    />
+  );
+}
+
 export interface LogosProps {
   logo0: string | undefined;
   logo1: string | undefined;
+  erc20?: "logo0" | "logo1";
 }
 
-export function Logos({ logo0, logo1 }: LogosProps) {
+export function Logos({ logo0, logo1, erc20 }: LogosProps) {
   const classes = useStyles();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 37px", justifyContent: "center" }}>
       <Box className={classes.logo}>
-        <img src={logo0} alt="" width="100%" height="100%" />
+        {logo0 ? <img src={logo0} alt="" width="100%" height="100%" style={{ borderRadius: "50%" }} /> : null}
+        {erc20 === "logo0" ? <Erc20Label /> : null}
       </Box>
 
       <Arrow />
 
       <Box className={classes.logo}>
-        <img src={logo1} alt="" width="100%" height="100%" />
+        {logo1 ? <img src={logo1} alt="" width="100%" height="100%" style={{ borderRadius: "50%" }} /> : null}
+        {erc20 === "logo1" ? <Erc20Label /> : null}
       </Box>
     </Box>
   );
