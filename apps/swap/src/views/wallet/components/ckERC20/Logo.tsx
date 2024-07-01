@@ -13,6 +13,7 @@ export default function Logo({ type, token, erc20Token }: LogoProps) {
     <Logos
       logo0={type === "mint" ? erc20Token?.logo : token?.logo}
       logo1={type === "mint" ? token?.logo : erc20Token?.logo}
+      erc20={type === "mint" ? "logo0" : "logo1"}
     />
   );
 }

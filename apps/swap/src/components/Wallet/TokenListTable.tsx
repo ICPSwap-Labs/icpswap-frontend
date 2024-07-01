@@ -15,7 +15,7 @@ import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, ckETH, ckBTC, TOKEN_STANDARD } from "constants/tokens";
-import { ckLink, ckSepoliaUSDC, ckUSDC, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
@@ -23,7 +23,7 @@ import { useHistory } from "react-router-dom";
 import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
-
+import { Erc20MinterInfo } from "@icpswap/types";
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
 
@@ -94,16 +94,9 @@ type ckTOKEN = {
   dissolvePath: string;
 };
 
-const ckERC20Tokens = [ckUSDC, ckSepoliaUSDC, ckLink];
-
 const ckTokens: ckTOKEN[] = [
   { id: ckBTC.address, mintPath: "/wallet/ckBTC?type=mint", dissolvePath: "/wallet/ckBTC?type=dissolve" },
   { id: ckETH.address, mintPath: "/wallet/ckETH?type=mint", dissolvePath: "/wallet/ckETH?type=dissolve" },
-  ...ckERC20Tokens.map((token) => ({
-    id: token.address,
-    mintPath: `/wallet/ckToken?type=mint&tokenId=${token.address}`,
-    dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${token.address}`,
-  })),
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
@@ -131,9 +124,15 @@ export interface TokenListItemProps {
   isHideSmallBalances: boolean;
   searchValue: string;
   canisterId: string;
+  chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: TokenListItemProps) {
+export function TokenListItem({
+  canisterId,
+  isHideSmallBalances,
+  searchValue,
+  chainKeyMinterInfo,
+}: TokenListItemProps) {
   const classes = useStyles();
   const account = useAccount();
   const theme = useTheme() as Theme;
@@ -295,6 +294,24 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
     setReceiveOpen(true);
   };
 
+  const allSupportMintTokens = useMemo(() => {
+    if (!chainKeyMinterInfo) return ckTokens;
+    if (!chainKeyMinterInfo.supported_ckerc20_tokens[0]) return ckTokens;
+    if (chainKeyMinterInfo.supported_ckerc20_tokens[0].length === 0) return ckTokens;
+
+    return ckTokens.concat(
+      chainKeyMinterInfo.supported_ckerc20_tokens[0].map((token) => {
+        const ledger_id = token.ledger_canister_id.toString();
+
+        return {
+          id: ledger_id,
+          mintPath: `/wallet/ckToken?type=mint&tokenId=${ledger_id}`,
+          dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ledger_id}`,
+        };
+      }),
+    );
+  }, [ckTokens, chainKeyMinterInfo]);
+
   return (
     <Box
       sx={{
@@ -375,7 +392,7 @@ export function TokenListItem({ canisterId, isHideSmallBalances, searchValue }: 
             </>
           ) : null}
 
-          {ckTokens
+          {allSupportMintTokens
             .filter((ele) => ele.id === tokenInfo?.canisterId)
             .map((ele) => (
               <ChainKeyTokenButtons key={ele.id} ckToken={ele} />
@@ -427,9 +444,16 @@ export interface TokenListProps {
   loading?: boolean;
   isHideSmallBalances: boolean;
   searchValue: string;
+  chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export default function TokenList({ tokens, loading, isHideSmallBalances, searchValue }: TokenListProps) {
+export default function TokenList({
+  tokens,
+  loading,
+  isHideSmallBalances,
+  searchValue,
+  chainKeyMinterInfo,
+}: TokenListProps) {
   return (
     <Box
       sx={{
@@ -454,6 +478,7 @@ export default function TokenList({ tokens, loading, isHideSmallBalances, search
             canisterId={canisterId}
             isHideSmallBalances={isHideSmallBalances}
             searchValue={searchValue}
+            chainKeyMinterInfo={chainKeyMinterInfo}
           />
         );
       })}

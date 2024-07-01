@@ -1,25 +1,24 @@
-import { ERC20Token, Token } from "@icpswap/swap-sdk";
-import { USDC, SepoliaUSDC, ckUSDC, ckSepoliaUSDC, ckLink, LINK } from "@icpswap/tokens";
 import { useMemo } from "react";
+import type { Erc20MinterInfo } from "@icpswap/types";
+import { useTokenFromActiveNetwork } from "web3/hooks/useTokenFromNetwork";
 
-const TOKENS_MAP: [Token, ERC20Token][] = [
-  [ckLink, LINK],
-  [ckUSDC, USDC],
-  [ckSepoliaUSDC, SepoliaUSDC],
-];
-
-// TODO: Use token from network
-export function useERC20Token(contractAddress: string | undefined) {
-  return useMemo(() => {
-    if (!contractAddress) return undefined;
-    return TOKENS_MAP.find((e) => e[1].address === contractAddress)?.[1];
-  }, [contractAddress]);
+export function useERC20Token(tokenAddress: string | undefined) {
+  return useTokenFromActiveNetwork(tokenAddress);
 }
 
-export function useERC20TokenByChainKeyId(tokenId: string | undefined) {
-  return useMemo(() => {
-    if (!tokenId) return undefined;
+export function useERC20TokenByChainKeyId(
+  tokenId: string | undefined,
+  chainKeyMinterInfo: Erc20MinterInfo | undefined,
+) {
+  const tokenAddress = useMemo(() => {
+    if (!tokenId || !chainKeyMinterInfo || !chainKeyMinterInfo.supported_ckerc20_tokens[0]) return undefined;
 
-    return TOKENS_MAP.find((e) => e[0].address === tokenId)?.[1];
-  }, [tokenId]);
+    const chainKeyInfo = chainKeyMinterInfo.supported_ckerc20_tokens[0].find(
+      (token) => token.ledger_canister_id.toString() === tokenId,
+    );
+
+    return chainKeyInfo?.erc20_contract_address;
+  }, [tokenId, chainKeyMinterInfo]);
+
+  return useTokenFromActiveNetwork(tokenAddress);
 }

@@ -13,7 +13,8 @@ import { AlertCircle, X } from "react-feather";
 import { Trans } from "@lingui/macro";
 import { Flex, TextButton } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
-
+import { MINTER_CANISTER_ID } from "constants/ckERC20";
+import { useChainKeyMinterInfo } from "@icpswap/hooks";
 import WalletContext from "./context";
 
 export default function WalletTokenList() {
@@ -26,6 +27,7 @@ export default function WalletTokenList() {
   const { allTokenUSDMap, noUSDTokens, sort } = useContext(WalletContext);
 
   const globalTokenList = useGlobalTokenList();
+  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const tokens = useMemo(() => {
     const tokenIds = [
@@ -120,7 +122,12 @@ export default function WalletTokenList() {
           </Flex>
         ) : null}
 
-        <TokenListTable isHideSmallBalances={isHideSmallBalances} tokens={sortedTokens} searchValue={searchValue} />
+        <TokenListTable
+          isHideSmallBalances={isHideSmallBalances}
+          tokens={sortedTokens}
+          searchValue={searchValue}
+          chainKeyMinterInfo={chainKeyMinterInfo}
+        />
       </Box>
     </>
   );

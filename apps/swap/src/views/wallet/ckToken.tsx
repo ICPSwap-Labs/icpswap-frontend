@@ -27,11 +27,13 @@ export default function ckToken() {
   const history = useHistory();
 
   const [active, setActive] = useState("");
-
   const { type, tokenId } = useParsedQueryString() as { type: string; tokenId: string };
 
+  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
   const [, token] = useToken(tokenId);
-  const erc20Token = useERC20TokenByChainKeyId(tokenId);
+  const erc20Token = useERC20TokenByChainKeyId(tokenId, chainKeyMinterInfo);
+
+  useFetchBlockNumber();
 
   useEffect(() => {
     if (type) setActive(type);
@@ -41,9 +43,6 @@ export default function ckToken() {
     setActive(button.key);
     history.push(`/wallet/ckToken?type=${button.key}&tokenId=${tokenId}`);
   };
-
-  useFetchBlockNumber();
-  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   return (
     <Wrapper>
