@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useInfoAllTokens, useFarms, useInterval } from "@icpswap/hooks";
+import { useInfoAllTokens, useFarms, useInterval, useFarmTotalAmount } from "@icpswap/hooks";
 import { _getTokenInfo } from "hooks/token/index";
 
 interface GlobalData {
@@ -19,6 +19,7 @@ export function useFarmGlobalData() {
   const { result: allLiveFarms } = useFarms("LIVE", refreshTrigger);
   const { result: allFinishedFarms } = useFarms("FINISHED", refreshTrigger);
   const { result: allClosedFarms } = useFarms("CLOSED", refreshTrigger);
+  const { result: farmTotalAmount } = useFarmTotalAmount();
 
   const [data, setData] = useState<GlobalData>({
     stakeTokenTVL: "0",
@@ -128,7 +129,7 @@ export function useFarmGlobalData() {
   useInterval<void>(update);
 
   return useMemo(
-    () => ({ ...data, poolsNumber, rewardedTokenTVL, stakedTokenTVL }),
-    [data, poolsNumber, rewardedTokenTVL, stakedTokenTVL],
+    () => ({ ...data, poolsNumber, rewardedTokenTVL, stakedTokenTVL, ...farmTotalAmount }),
+    [data, poolsNumber, rewardedTokenTVL, stakedTokenTVL, farmTotalAmount],
   );
 }

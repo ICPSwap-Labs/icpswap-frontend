@@ -7,8 +7,8 @@ import React from "react";
 interface ItemProps {
   label0: React.ReactNode;
   value0: React.ReactNode;
-  label1: React.ReactNode;
-  value1: React.ReactNode;
+  label1?: React.ReactNode;
+  value1?: React.ReactNode;
   tooltip0?: string;
   tooltip1?: string;
 }
@@ -27,23 +27,25 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          margin: "50px 0 0 0",
-          "@media(max-width: 640px)": {
-            margin: "29px 0 0 0",
-          },
-        }}
-      >
-        <Flex gap="0 4px">
-          <Typography>{label1}</Typography>
-          {tooltip1 ? <Tooltip tips={tooltip1} /> : null}
-        </Flex>
+      {label0 && label1 ? (
+        <Box
+          sx={{
+            margin: "50px 0 0 0",
+            "@media(max-width: 640px)": {
+              margin: "35px 0 0 0",
+            },
+          }}
+        >
+          <Flex gap="0 4px">
+            <Typography>{label1}</Typography>
+            {tooltip1 ? <Tooltip tips={tooltip1} /> : null}
+          </Flex>
 
-        <Typography sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}>
-          {value1}
-        </Typography>
-      </Box>
+          <Typography sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}>
+            {value1}
+          </Typography>
+        </Box>
+      ) : null}
     </Box>
   );
 }
@@ -57,10 +59,10 @@ export function GlobalData() {
         width: "100%",
         display: "grid",
         gap: "0 56px",
-        gridTemplateColumns: "290px 290px",
+        gridTemplateColumns: "290px 290px 290px",
         "@media(max-width: 960px)": {
           gridTemplateColumns: "1fr",
-          gap: "29px 0",
+          gap: "35px 0",
         },
       }}
     >
@@ -80,6 +82,12 @@ export function GlobalData() {
         label1={<Trans>Total Pools</Trans>}
         value1={globalData?.poolsNumber ?? "--"}
         tooltip1={t`The total number of farming pools, including those that are unstart, live, and finished.`}
+      />
+
+      <Item
+        label0={<Trans>Total Staker</Trans>}
+        value0={globalData.principalAmount?.toString() ?? "--"}
+        tooltip0={t`The total number of unique accounts that have staked in the pools.`}
       />
     </Box>
   );

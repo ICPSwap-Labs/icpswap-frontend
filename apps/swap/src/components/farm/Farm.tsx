@@ -422,25 +422,27 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             <Tooltip tips={t`There are currently N positions staked.`} />
           </Flex>
 
-          <Flex vertical gap="24px 0" sx={{ margin: "8px 0 0 0" }}>
-            {deposits?.map((ele) => (
-              <FarmPositionCard
-                key={ele.positionId.toString()}
-                farmInfo={farmInfo}
-                farmId={farmId}
-                positionInfo={{
-                  id: ele.positionId,
-                  tickLower: ele.tickLower,
-                  tickUpper: ele.tickUpper,
-                  liquidity: ele.liquidity,
-                }}
-                unstake
-                farmInitArgs={farmInitArgs}
-                rewardToken={rewardToken}
-                resetData={handleSuccess}
-              />
-            ))}
-          </Flex>
+          {deposits && deposits.length > 0 ? (
+            <Flex vertical gap="24px 0" sx={{ margin: "8px 0 0 0" }}>
+              {deposits.map((ele) => (
+                <FarmPositionCard
+                  key={ele.positionId.toString()}
+                  farmInfo={farmInfo}
+                  farmId={farmId}
+                  positionInfo={{
+                    id: ele.positionId,
+                    tickLower: ele.tickLower,
+                    tickUpper: ele.tickUpper,
+                    liquidity: ele.liquidity,
+                  }}
+                  unstake
+                  farmInitArgs={farmInitArgs}
+                  rewardToken={rewardToken}
+                  resetData={handleSuccess}
+                />
+              ))}
+            </Flex>
+          ) : null}
         </Box>
       </Box>
     </>

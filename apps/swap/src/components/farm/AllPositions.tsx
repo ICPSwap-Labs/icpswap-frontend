@@ -37,7 +37,7 @@ export function AllPositions({
           <Trans>{positions.length} Position Available To Stake</Trans>
         </Typography>
 
-        <Box sx={{ margin: "8px 0 0 0", height: "425px", overflow: "hidden auto" }}>
+        <Box sx={{ margin: "8px 0 0 0", maxHeight: "432px", overflow: "hidden auto" }}>
           {positions.map((ele) => (
             <Box
               key={ele.id.toString()}

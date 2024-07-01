@@ -206,7 +206,7 @@ export function useFarmUSDValue({
     const token0Tvl = parseTokenAmount(poolToken0.amount, token0.decimals).multipliedBy(token0Price);
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
-    return token0Tvl.plus(token1Tvl).toFixed(3);
+    return token0Tvl.plus(token1Tvl).toString();
   }, [userTvl, icpPrice, infoAllTokens]);
 
   return useMemo(

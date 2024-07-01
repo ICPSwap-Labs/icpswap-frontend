@@ -112,7 +112,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
             <Trans>Current Price</Trans>
           </Typography>
 
-          <Typography color="text.primary">
+          <Typography color="text.primary" textAlign="right">
             {!!token1 && !!token0 && pool
               ? pool.priceOf(token1)
                 ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
@@ -126,7 +126,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
             <Trans>Price Range</Trans>
           </Typography>
 
-          <Typography color="text.primary">
+          <Typography color="text.primary" textAlign="right">
             {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
               priceUpper,
               tickAtLimit,

@@ -58,7 +58,7 @@ export default function Farm() {
             <MainCard
               borderRadius="16px"
               level={1}
-              padding="40px 24px"
+              padding="40px 24px 24px 24px"
               sx={{
                 width: "100%",
                 overflow: "hidden",

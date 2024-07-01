@@ -283,3 +283,4 @@ export function useFarmUserRewards(farmId: string | undefined, principal: Princi
 }
 
 export * from "./useFarmState";
+export * from "./useFarmTotalAmount";
