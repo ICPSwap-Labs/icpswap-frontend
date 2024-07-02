@@ -85,11 +85,11 @@ function MainContent() {
       showState: state === undefined,
       gridTemplateColumns: matchDownSM
         ? state === undefined
-          ? "220px 220px 120px 220px 180px 180px"
-          : "220px 220px 120px 220px 180px"
+          ? "220px 220px 100px 240px 180px 180px"
+          : "220px 220px 100px 240px 180px"
         : state === undefined
-        ? "220px 220px 1fr 1fr 1fr 180px"
-        : "220px 220px 1fr 1fr 1fr",
+        ? "220px 220px 120px 1fr 1fr 180px"
+        : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM]);
 
@@ -136,7 +136,7 @@ function MainContent() {
                 color={__state === tab.state ? "text.primary" : "textTertiary"}
                 onClick={() => handleToggle(tab)}
                 sx={{
-                  fontSize: "20px",
+                  fontSize: "18px",
                   fontWeight: 500,
                   cursor: "pointer",
                   textTransform: "capitalize",
@@ -157,33 +157,41 @@ function MainContent() {
           <Box
             sx={{
               display: "grid",
-              padding: "16px 24px",
               gridTemplateColumns,
+              "& .row-item": {
+                padding: "16px 0",
+                "&:first-of-type": {
+                  padding: "16px 0 16px 24px",
+                },
+                "&:last-of-type": {
+                  padding: "16px 24px 16px 0",
+                },
+              },
             }}
           >
-            <Typography variant="body2" color="text.400">
+            <Typography variant="body2" color="text.400" className="row-item">
               <Trans>Staked Position</Trans>
             </Typography>
-            <Typography variant="body2" color="text.400">
+            <Typography variant="body2" color="text.400" className="row-item">
               <Trans>Reward Token</Trans>
             </Typography>
             <Flex justify="flex-end">
-              <Typography variant="body2" color="text.400">
+              <Typography variant="body2" color="text.400" className="row-item">
                 <Trans>APR</Trans>
               </Typography>
             </Flex>
-            <Flex justify="flex-end">
+            <Flex justify="flex-end" className="row-item">
               <Typography variant="body2" color="text.400">
                 <Trans>Your Available to Stake</Trans>
               </Typography>
             </Flex>
-            <Flex justify="flex-end">
+            <Flex justify="flex-end" className="row-item">
               <Typography variant="body2" color="text.400">
                 <Trans>Total Staked</Trans>
               </Typography>
             </Flex>
             {showState ? (
-              <Flex justify="flex-end">
+              <Flex justify="flex-end" className="row-item">
                 <Typography variant="body2" color="text.400">
                   <Trans>Status</Trans>
                 </Typography>
@@ -217,7 +225,6 @@ function MainContent() {
                   farmTvl={farm[1]}
                   wrapperSx={{
                     display: "grid",
-                    padding: matchDownSM ? "24px" : "12px 24px",
                     gridTemplateColumns,
                   }}
                   showState={showState}
@@ -236,19 +243,19 @@ export default function Farms() {
     <Flex sx={{ width: "100%" }} justify="center">
       <Box sx={{ maxWidth: "1440px", width: "100%" }}>
         <Box>
-          <Typography color="text.primary" sx={{ fontSize: "36px", fontWeight: 600, margin: "40px 0 0 0" }}>
+          <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
             <Trans>Farm</Trans>
           </Typography>
-          <Typography fontSize={18} mt="24px">
+          <Typography fontSize={16} mt="16px">
             <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
           </Typography>
         </Box>
 
         <Box
           sx={{
-            margin: "88px 0 0 0",
+            margin: "44px 0 0 0",
             "@media(max-width: 640px)": {
-              margin: "40px 0 0 0",
+              margin: "20px 0 0 0",
             },
           }}
         >

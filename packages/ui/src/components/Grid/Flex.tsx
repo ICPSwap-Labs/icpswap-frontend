@@ -14,6 +14,7 @@ export interface FlexProps {
   vertical?: boolean;
   sx?: BoxProps["sx"];
   fullWidth?: boolean;
+  className?: string;
 }
 
 export function Flex({
@@ -29,6 +30,7 @@ export function Flex({
   margin,
   sx,
   fullWidth,
+  className,
 }: FlexProps) {
   return (
     <Box
@@ -46,6 +48,7 @@ export function Flex({
         gap,
         ...sx,
       }}
+      className={className}
     >
       {children}
     </Box>

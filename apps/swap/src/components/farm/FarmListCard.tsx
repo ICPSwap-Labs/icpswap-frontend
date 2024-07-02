@@ -99,15 +99,25 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
       sx={{
         ...wrapperSx,
         cursor: "pointer",
-        padding: "20px 24px",
-        borderTop: `1px solid ${theme.palette.background.level1}`,
         "&:hover": {
-          background: theme.palette.background.level1,
+          "& .row-item": {
+            background: theme.palette.background.level1,
+          },
+        },
+        "& .row-item": {
+          borderTop: `1px solid ${theme.palette.background.level1}`,
+          padding: "20px 0",
+          "&:first-of-type": {
+            padding: "20px 0 20px 24px",
+          },
+          "&:last-of-type": {
+            padding: "20px 24px 20px 0",
+          },
         },
       }}
       onClick={handelToDetails}
     >
-      <Flex gap="0 8px">
+      <Flex gap="0 8px" className="row-item">
         <Flex>
           <TokenImage logo={token0?.logo} tokenId={token0?.address} size="24px" />
           <TokenImage logo={token1?.logo} tokenId={token1?.address} size="24px" />
@@ -118,20 +128,20 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
         </Typography>
       </Flex>
 
-      <Flex gap="0 8px">
+      <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {rewardToken ? `${rewardToken.symbol} ` : "--"}
         </Typography>
       </Flex>
 
-      <Flex justify="flex-end">
+      <Flex justify="flex-end" className="row-item">
         <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>
 
-      <Flex gap="0 4px" justify="flex-end">
+      <Flex gap="0 4px" justify="flex-end" className="row-item">
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
         </Typography>
@@ -152,14 +162,14 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
         ) : null}
       </Flex>
 
-      <Flex justify="flex-end">
+      <Flex justify="flex-end" className="row-item">
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
         </Typography>
       </Flex>
 
       {showState ? (
-        <Flex justify="flex-end">
+        <Flex justify="flex-end" className="row-item">
           {state ? (
             <Flex gap="0 8px">
               <Box sx={{ width: "8px", height: "8px", borderRadius: "50%", background: stateColor }} />

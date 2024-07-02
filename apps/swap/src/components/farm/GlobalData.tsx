@@ -22,17 +22,17 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
           {tooltip0 ? <Tooltip tips={tooltip0} /> : null}
         </Flex>
 
-        <Typography sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}>
+        <Typography sx={{ margin: "16px 0 0 0", fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
           {value0}
         </Typography>
       </Box>
 
-      {label0 && label1 ? (
+      {value1 && label1 ? (
         <Box
           sx={{
-            margin: "50px 0 0 0",
+            margin: "32px 0 0 0",
             "@media(max-width: 640px)": {
-              margin: "35px 0 0 0",
+              margin: "18px 0 0 0",
             },
           }}
         >
@@ -60,9 +60,10 @@ export function GlobalData() {
         display: "grid",
         gap: "0 56px",
         gridTemplateColumns: "290px 290px 290px",
+        alignItems: "flex-end",
         "@media(max-width: 960px)": {
           gridTemplateColumns: "1fr",
-          gap: "35px 0",
+          gap: "16px 0",
         },
       }}
     >
