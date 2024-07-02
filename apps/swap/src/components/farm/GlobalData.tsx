@@ -86,9 +86,9 @@ export function GlobalData() {
       />
 
       <Item
-        label0={<Trans>Total Staker</Trans>}
+        label0={<Trans>Total Stakers</Trans>}
         value0={globalData.principalAmount?.toString() ?? "--"}
-        tooltip0={t`The total number of unique accounts that have staked in the pools.`}
+        tooltip0={t`The total number of unique accounts that have staked in the farming pools.`}
       />
     </Box>
   );

@@ -127,7 +127,7 @@ export function FarmDetails({
               <Typography color="text.primary">{farmInfo ? farmInfo.numberOfStakes.toString() : "--"}</Typography>
             </Flex>
 
-            <Flex fullWidth justify="space-between">
+            <Flex fullWidth justify="space-between" align="flex-start">
               <Typography>
                 <Trans>Claimed Rewards</Trans>
               </Typography>
@@ -156,7 +156,7 @@ export function FarmDetails({
               </Flex>
             </Flex>
 
-            <Flex fullWidth justify="space-between">
+            <Flex fullWidth justify="space-between" align="flex-start">
               <Typography>
                 <Trans>Unclaimed Rewards</Trans>
               </Typography>

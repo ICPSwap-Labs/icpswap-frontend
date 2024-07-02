@@ -175,8 +175,8 @@ function MainContent() {
             <Typography variant="body2" color="text.400" className="row-item">
               <Trans>Reward Token</Trans>
             </Typography>
-            <Flex justify="flex-end">
-              <Typography variant="body2" color="text.400" className="row-item">
+            <Flex justify="flex-end" className="row-item">
+              <Typography variant="body2" color="text.400">
                 <Trans>APR</Trans>
               </Typography>
             </Flex>

@@ -18,22 +18,23 @@ import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
 import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     details: {
-      display: "grid",
+      display: "flex",
       gap: "20px 0",
-      gridTemplateColumns: "repeat(2, 1fr)",
-      [theme.breakpoints.down("md")]: {
-        gridTemplateColumns: "repeat(2, 1fr)",
+      flexWrap: "wrap",
+      "& .row-item": {
+        flex: "50%",
       },
-      [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "repeat(1, 1fr)",
+      "@media(max-width: 640px)": {
+        "& .row-item": {
+          flex: "100%",
+        },
       },
     },
   };
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export function PoolDetailItem({ label, value }: { value: ReactNode; label: ReactNode }) {
   return (
-    <Box>
+    <Box className="row-item">
       <Typography component="span">{label}</Typography>{" "}
       <Typography component="span" color="text.primary">
         {value}

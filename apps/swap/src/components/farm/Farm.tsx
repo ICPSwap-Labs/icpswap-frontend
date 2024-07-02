@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Box, Typography, Button } from "components/Mui";
-import { MainCard, Flex, Tooltip } from "components/index";
+import { MainCard, Flex, Tooltip, Link } from "components/index";
 import { useIntervalUserRewardInfo, useFarmUSDValue, useUserPositionsValue } from "hooks/staking-farm";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -385,15 +385,13 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                   {`${token0.symbol}/${token1.symbol}`}
                 </Typography>
                 <Box mt="16px">
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    size="large"
-                    href={`/liquidity/add/${token0.address}/${token1.address}`}
-                    sx={{ height: "48px" }}
-                  >
-                    <Trans>Add Liquidity</Trans>
-                  </Button>
+                  <Box mt="24px">
+                    <Link to={`/liquidity/add/${token0.address}/${token1.address}`}>
+                      <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
+                        <Trans>Add Liquidity</Trans>
+                      </Button>
+                    </Link>
+                  </Box>
                 </Box>
               </MainCard>
             )
@@ -449,15 +447,11 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
       {token0 && token1 && (userAvailablePositions?.length ?? 0) > 0 ? (
         <Box mt="24px">
-          <Button
-            fullWidth
-            variant="contained"
-            size="large"
-            href={`/liquidity/add/${token0.address}/${token1.address}`}
-            sx={{ height: "48px" }}
-          >
-            <Trans>Add Liquidity</Trans>
-          </Button>
+          <Link to={`/liquidity/add/${token0.address}/${token1.address}`}>
+            <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
+              <Trans>Add Liquidity</Trans>
+            </Button>
+          </Link>
         </Box>
       ) : null}
     </>
