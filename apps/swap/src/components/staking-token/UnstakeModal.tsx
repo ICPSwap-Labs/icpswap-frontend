@@ -6,7 +6,7 @@ import { BigNumber, parseTokenAmount, formatTokenAmount, isNullArgs } from "@icp
 import MaxButton from "components/MaxButton";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useUnstakeCall } from "hooks/staking-token/useUnstake";
-import { useUserStakingInfo } from "hooks/staking-token/index";
+// import { useUserStakingInfo } from "hooks/staking-token/index";
 import { useLoadingTip } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useToken } from "hooks/useCurrency";
@@ -22,9 +22,9 @@ export default function UnstakeModal({ open, onClose, pool, onStakingSuccess }: 
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
-  const [userInfo] = useUserStakingInfo(pool.canisterId.toString(), principal);
+  // const [userInfo] = useUserStakingInfo(pool.canisterId.toString(), principal);
 
-  const userStakingAmount = useMemo(() => userInfo?.stakeAmount, [userInfo]);
+  const userStakingAmount = "0";
 
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | number | undefined>(undefined);

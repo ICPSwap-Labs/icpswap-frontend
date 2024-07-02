@@ -6,7 +6,8 @@ const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 const Farm = Loadable(lazy(() => import("../views/staking-farm/index")));
 const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 
-const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
+const Staking = Loadable(lazy(() => import("../views/staking-token")));
+const StakingDetails = Loadable(lazy(() => import("../views/staking-token/details")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
@@ -70,9 +71,10 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/wallet/nft/view/:canisterId/:tokenId": WalletNFTView,
   "/wallet/nft/canister/details/:id": NFTCanisterDetails,
 
-  "/staking-token": StakingToken,
-  "/staking-token/create": StakingTokenCreate,
-  "/staking-token/v1": StakingTokenV1,
+  "/stake": Staking,
+  "/stake/details/:id": StakingDetails,
+  "/stake/create": StakingTokenCreate,
+  "/stake/v1": StakingTokenV1,
   "/farm": Farm,
   "/farm/create": CreateFarm,
 

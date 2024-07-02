@@ -128,7 +128,7 @@ function Pools() {
   };
 
   const handleLoad = (value: Page) => {
-    history.push(`/staking-token/v1?filter=${value.key}`);
+    history.push(`/stake/v1?filter=${value.key}`);
   };
 
   const handleWithdrawUnusedTokens = () => {

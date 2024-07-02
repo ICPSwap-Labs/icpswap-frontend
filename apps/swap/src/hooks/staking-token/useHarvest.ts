@@ -1,10 +1,9 @@
 import { useCallback } from "react";
 import { stakingPoolHarvest } from "@icpswap/hooks";
-import { useTips, MessageTypes } from "hooks/useTips";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { useUpdateStepData } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
-
+import { useTips, MessageTypes } from "hooks/useTips";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 import { useHarvestSteps } from "./useHarvestSteps";
 

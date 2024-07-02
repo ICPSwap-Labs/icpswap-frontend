@@ -70,6 +70,8 @@ export function themePalette(theme: { [key: string]: any }) {
       400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
       theme_primary: theme.colors.darkPrimaryMain,
       theme_secondary: theme.colors.darkSecondaryMain,
+      "theme-primary": theme.colors.darkPrimaryMain,
+      "theme-secondary": theme.colors.darkSecondaryMain,
     },
     background: {
       paper: theme.paper,

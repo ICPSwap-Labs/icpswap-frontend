@@ -190,7 +190,7 @@ export default function Overview() {
           </Box>
 
           <Box className={classes.card}>
-            <Title title="Staking Pool" to="/staking-token" />
+            <Title title="Staking Pool" to="/stake" />
 
             <Box className={classes.itemMargin}>
               <Item

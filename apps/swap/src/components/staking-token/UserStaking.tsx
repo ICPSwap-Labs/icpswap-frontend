@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { parseTokenAmount, toSignificantWithGroupSeparator, nonNullArgs, isNullArgs } from "@icpswap/utils";
-import type { StakingPoolUserInfo, StakingPoolControllerPoolInfo } from "@icpswap/types";
+import type { StakingPoolUserInfo, StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import CountUp from "react-countup";
@@ -9,14 +9,14 @@ import { Trans } from "@lingui/macro";
 import { useConnectorStateConnected, useAccountPrincipalString } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useICPPrice } from "store/global/hooks";
-import { PoolData, STATE } from "types/staking-token";
+import { STATE } from "types/staking-token";
 import Harvest from "components/staking-token/Harvest";
 import { Flex } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 
 export interface UserStakingProps {
   pool: StakingPoolControllerPoolInfo | undefined | null;
-  poolData: PoolData | undefined | null;
+  poolData: StakingPoolInfo | undefined | null;
   StakingAndClaim: React.ReactNode;
   userStakingInfo: StakingPoolUserInfo | undefined | null;
   rewardToken: Token | undefined | null;

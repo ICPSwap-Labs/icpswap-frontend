@@ -1,6 +1,5 @@
 import { Slider, Tooltip, tooltipClasses, SliderProps } from "@mui/material";
 import { styled, makeStyles } from "@mui/styles";
-import { isDarkTheme } from "utils";
 import { Theme } from "@mui/material/styles";
 
 const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];
@@ -8,27 +7,33 @@ const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { valu
 const useStyle = makeStyles((theme: Theme) => {
   return {
     root: {
-      color: theme.colors.secondaryMain,
+      color: "#54C081",
       "& .MuiSlider-rail": {
         height: "4px",
-        backgroundColor: isDarkTheme(theme) ? theme.palette.background.level4 : "#fff",
+        backgroundColor: "#4F5A84",
       },
       "& .MuiSlider-thumb": {
         width: "16px",
         height: "16px",
-        border: "2px solid #fff",
+        border: "2px solid #8492C4",
         marginLeft: "5px",
+        color: "#111936",
+        "&:hover": {
+          boxShadow: "none",
+        },
+        "&.Mui-focusVisible": {
+          boxShadow: "none",
+        },
       },
       "& .MuiSlider-mark": {
-        width: "12px",
+        width: "2px",
         height: "12px",
-        borderRadius: "50%",
         backgroundColor: theme.palette.background.level4,
         top: "50%",
         transform: "translate(0, -50%)",
         opacity: 1,
         "&.MuiSlider-markActive": {
-          backgroundColor: theme.colors.secondaryMain,
+          backgroundColor: theme.palette.background.level4,
         },
       },
     },
@@ -37,14 +42,15 @@ const useStyle = makeStyles((theme: Theme) => {
 });
 
 const LightTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
-  ({ theme }: { theme: Theme }) => ({
+  () => ({
     [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: theme.colors.secondaryMain,
-      color: "#fff",
-      fontWeight: 700,
+      backgroundColor: "#ffffff",
+      color: "#000",
+      fontWeight: 500,
+      fontSize: "12px",
     },
     "& .MuiTooltip-arrow": {
-      color: theme.colors.secondaryMain,
+      color: "#ffffff",
     },
   }),
 );

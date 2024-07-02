@@ -14,6 +14,7 @@ import { Principal } from "@dfinity/principal";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { SubAccount } from "@dfinity/ledger-icp";
+import { useIntervalFetch } from "hooks/useIntervalFetch";
 
 export async function getAllTokenPools() {
   const call = async (offset: number, limit: number) => {
@@ -93,27 +94,20 @@ export function useUserUnusedTokens(reload?: boolean | number) {
   }, [loading, poolsLoading, balances]);
 }
 
-export function useUserStakingInfo(
+export function useIntervalUserPoolInfo(
   poolId: string | undefined,
   principal: Principal | undefined,
-): [StakingPoolUserInfo | undefined, () => void] {
-  const [forceUpdate, setForceUpdate] = useState<number>(0);
-
-  const update = useCallback(() => {
-    setForceUpdate((prevState) => prevState + 1);
-  }, []);
-
+  refresh?: number | boolean,
+) {
   const callback = useCallback(async () => {
     if (!poolId || !principal) return;
     return await getStakingTokenUserInfo(poolId, principal);
   }, [poolId, principal]);
 
-  const userStakingInfo = useInterval<StakingPoolUserInfo | undefined>(callback, forceUpdate);
-
-  return [userStakingInfo, update];
+  return useIntervalFetch<StakingPoolUserInfo | undefined>(callback, refresh);
 }
 
-export function useStakingPoolData(poolId: string | undefined): [StakingPoolInfo | undefined, () => void] {
+export function useIntervalStakingPoolInfo(poolId: string | undefined): [StakingPoolInfo | undefined, () => void] {
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
@@ -129,3 +123,6 @@ export function useStakingPoolData(poolId: string | undefined): [StakingPoolInfo
 
   return [poolInfo, update];
 }
+
+export * from "./useStateColors";
+export * from "./usePools";

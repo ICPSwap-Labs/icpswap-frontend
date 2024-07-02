@@ -67,9 +67,9 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/nft/canister/details/:id": NFTCanisterDetails,
   "/nft/view/:canisterId/:tokenId": NFTView,
 
-  "/staking-token": StakingToken,
-  "/staking-token/details/:poolId/:state": StakingTokenDetails,
-  "/staking-token-v1/details/:poolId/:state": V1StakingTokenDetails,
+  "/stake": StakingToken,
+  "/stake/details/:poolId/:state": StakingTokenDetails,
+  "/stake-v1/details/:poolId/:state": V1StakingTokenDetails,
   "/farm": Farms,
   "/farm/details/:farmId": FarmsDetails,
   "/marketplace": NFTMarket,

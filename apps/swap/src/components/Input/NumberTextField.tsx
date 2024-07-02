@@ -61,6 +61,7 @@ export default function NumberTextField(props: NumberTextFieldProps) {
           thousandSeparator: numericProps.thousandSeparator,
           value: props.value,
         },
+        autoComplete: "off",
       }}
     />
   );

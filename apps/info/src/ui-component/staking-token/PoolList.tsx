@@ -56,7 +56,7 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
         </Grid>
       </TableCell>
       <TableCell>
-        <TextButton to={`/staking-token/details/${pool.canisterId}/${statusText}`} sx={{ fontSize: "16px" }}>
+        <TextButton to={`/stake/details/${pool.canisterId}/${statusText}`} sx={{ fontSize: "16px" }}>
           <Trans>Details</Trans>
         </TextButton>
       </TableCell>

@@ -31,3 +31,6 @@ export type {
 
 export { idlFactory as V1TokenPoolStorageInterfaceFactory } from "./V1TokenPoolStorage.did";
 export type { _SERVICE as V1TokenPoolStorage, Record as V1StakingPoolTransaction } from "./V1TokenPoolStorage";
+
+export { idlFactory as StakingUserStorageInterfaceFactor } from "./StakingUserStorage.did";
+export type { _SERVICE as StakingUserStorage, UserPool as StakingUserStoragePoolInfo } from "./StakingUserStorage";

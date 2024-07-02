@@ -7,10 +7,6 @@ import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-token";
 import upperFirst from "lodash/upperFirst";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
-import PoolDetails from "components/staking-token/PoolDetails";
-import UserStaking from "components/staking-token/UserStaking";
-import StakingAndClaim from "components/staking-token/StakingAndClaim";
-import { useStakingPoolData, useUserStakingInfo } from "hooks/staking-token/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -104,8 +100,8 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [poolData] = useStakingPoolData(pool?.canisterId.toString());
-  const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
+  // const [poolData] = useStakingPoolData(pool?.canisterId.toString());
+  // const [userStakingInfo, updateUserStakingInfo] = useUserStakingInfo(pool?.canisterId.toString(), principal);
 
   const state = useCalcPoolState({ pool });
 
@@ -116,15 +112,15 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
   const stakingTokenPrice = useUSDPrice(stakingToken);
 
   const resetData = () => {
-    updateUserStakingInfo();
+    // updateUserStakingInfo();
     setRefreshTrigger(refreshTrigger + 1);
   };
 
-  useEffect(() => {
-    if (userStakingInfo && pool && updatePoolStaked && state === STATE.LIVE) {
-      updatePoolStaked(pool.canisterId.toString(), userStakingInfo.stakeAmount !== BigInt(0));
-    }
-  }, [userStakingInfo, pool, updatePoolStaked, state]);
+  // useEffect(() => {
+  //   if (userStakingInfo && pool && updatePoolStaked && state === STATE.LIVE) {
+  //     updatePoolStaked(pool.canisterId.toString(), userStakingInfo.stakeAmount !== BigInt(0));
+  //   }
+  // }, [userStakingInfo, pool, updatePoolStaked, state]);
 
   return (
     <Box
@@ -133,14 +129,7 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
         borderRadius: "4px",
         overflow: "hidden",
         height: "fit-content",
-        display:
-          filterState !== STATE.LIVE
-            ? "block"
-            : !stakedOnly
-            ? "block"
-            : userStakingInfo?.stakeAmount
-            ? "block"
-            : "none",
+        display: filterState !== STATE.LIVE ? "block" : !stakedOnly ? "block" : true ? "block" : "none",
         "@media (max-width: 520px)": {
           width: "340px",
         },
@@ -150,7 +139,7 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
     >
       <PoolInfo state={state} pool={pool} rewardToken={rewardToken} stakingToken={stakingToken} />
 
-      <Box sx={{ background: theme.palette.background.level1 }}>
+      {/* <Box sx={{ background: theme.palette.background.level1 }}>
         <UserStaking
           refreshTrigger={refreshTrigger}
           state={state}
@@ -165,9 +154,9 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
             <StakingAndClaim userStakingInfo={userStakingInfo} onStakingSuccess={resetData} pool={pool} state={state} />
           }
         />
-      </Box>
+      </Box> */}
 
-      <PoolDetails
+      {/* <PoolDetails
         pool={pool}
         state={state}
         poolData={poolData}
@@ -175,7 +164,7 @@ export default function StakingPool({ stakedOnly, pool, filterState, updatePoolS
         stakingToken={stakingToken}
         stakingTokenPrice={stakingTokenPrice}
         rewardTokenPrice={rewardTokenPrice}
-      />
+      /> */}
     </Box>
   );
 }

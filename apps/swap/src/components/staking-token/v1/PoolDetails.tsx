@@ -257,7 +257,7 @@ export default function StakingPoolDetails({
 
             <Grid container direction="row" justifyContent="flex-end">
               <Typography color="text.primary">
-                <Link href={`${INFO_URL}/staking-token-v1/details/${pool?.canisterId}/${state}`} target="_blank">
+                <Link href={`${INFO_URL}/stake/v1/details/${pool?.canisterId}/${state}`} target="_blank">
                   Token Pools Info
                 </Link>
               </Typography>
