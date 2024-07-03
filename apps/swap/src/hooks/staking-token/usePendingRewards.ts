@@ -112,3 +112,33 @@ export function usePendingRewards(refresh?: number | boolean) {
 
   return useMemo(() => ({ loading, result: data }), [loading, data]);
 }
+
+export function usePendingRewardsByPool(poolId: string | undefined, refresh?: number | boolean) {
+  const principal = useAccountPrincipal();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<UserPendingRewards | null>(null);
+
+  useEffect(() => {
+    async function call() {
+      if (!poolId || !principal) return;
+
+      setData(null);
+      setLoading(true);
+
+      const result = await getStakingTokenUserInfo(poolId, principal);
+      if (!result) return undefined;
+
+      setData({
+        ...result,
+        poolId,
+        stakingAmount: result.stakeTokenBalance,
+        rewardAmount: result.rewardTokenBalance,
+      } as UserPendingRewards);
+      setLoading(false);
+    }
+
+    call();
+  }, [principal, refresh, poolId]);
+
+  return useMemo(() => ({ loading, result: data }), [loading, data]);
+}

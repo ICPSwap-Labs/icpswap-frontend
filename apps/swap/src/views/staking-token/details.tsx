@@ -134,7 +134,12 @@ export default function StakeDetail() {
                 </Box>
 
                 <Box sx={{ display: tabKey === "reclaim" ? "block" : "none" }}>
-                  <Reclaim onReclaimSuccess={handleRefresh} />
+                  <Reclaim
+                    poolId={poolId}
+                    onReclaimSuccess={handleRefresh}
+                    rewardToken={rewardToken}
+                    stakeToken={stakeToken}
+                  />
                 </Box>
               </MainCard>
 

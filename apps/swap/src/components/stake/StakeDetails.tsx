@@ -220,7 +220,10 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
                 <Typography color="text.primary">
                   {!poolInfo || !stakeToken
                     ? "--"
-                    : `${toSignificantWithGroupSeparator(poolInfo.totalStaked, 8)} ${stakeToken.symbol}`}
+                    : `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toString(),
+                        8,
+                      )} ${stakeToken.symbol}`}
                 </Typography>
               </Flex>
             </Flex>

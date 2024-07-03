@@ -43,7 +43,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
 
     const { call, key } = getStakeCall({
       token: stakeToken,
-      amount: formatTokenAmount(amount, stakeToken.decimals).toString(),
+      amount: formatTokenAmount(amount, stakeToken.decimals).toFixed(0),
       poolId,
       standard: poolInfo.stakingToken.standard as TOKEN_STANDARD,
       rewardToken,
@@ -164,7 +164,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
         <Flex justify="space-between" sx={{ margin: "8px 0 0 0", width: "100%" }}>
           <Flex gap="0 5px">
             <Typography>
-              <Trans>Balance:</Trans>
+              <Trans>Balance:</Trans>&nbsp;
               {balance && stakeToken
                 ? toSignificantWithGroupSeparator(parseTokenAmount(balance, stakeToken.decimals).toString(), 8)
                 : "--"}

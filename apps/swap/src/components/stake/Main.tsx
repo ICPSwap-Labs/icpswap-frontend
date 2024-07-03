@@ -36,7 +36,6 @@ export function MainContent({
   const principal = useAccountPrincipal();
 
   const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);
-  const { result: poolStakeTokenBalance } = useTokenBalance(stakeToken?.address, poolId, refreshTrigger);
 
   const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
 
@@ -71,7 +70,7 @@ export function MainContent({
               </Typography>
               <Tooltip
                 iconSize="14px"
-                tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
+                tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
               />
             </Flex>
             <Typography sx={{ color: "text.theme-secondary", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
@@ -126,9 +125,9 @@ export function MainContent({
                   <Trans>Total Staked</Trans>
                 </Typography>
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
-                  {poolInfo && stakeToken && poolStakeTokenBalance ? (
+                  {poolInfo && stakeToken ? (
                     <>
-                      {parseTokenAmount(poolStakeTokenBalance, stakeToken.decimals).toFormat()}&nbsp;
+                      {parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toFormat()}&nbsp;
                       {stakeToken.symbol}
                     </>
                   ) : (
@@ -137,9 +136,9 @@ export function MainContent({
                 </Typography>
 
                 <Typography sx={{ margin: "8px 0 0 0" }}>
-                  {poolInfo && stakeToken && stakeTokenPrice && poolStakeTokenBalance
+                  {poolInfo && stakeToken && stakeTokenPrice
                     ? `~${formatDollarAmount(
-                        parseTokenAmount(poolStakeTokenBalance, stakeToken.decimals)
+                        parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals)
                           .multipliedBy(stakeTokenPrice)
                           .toString(),
                       )}`
@@ -165,7 +164,7 @@ export function MainContent({
                   </Typography>
 
                   <Tooltip
-                    tips={t`You will receive the reward tokens you have earned after unstaking the staked positions.`}
+                    tips={t`You will receive the reward tokens you have earned after harvest the staked tokens.`}
                   />
                 </Flex>
 

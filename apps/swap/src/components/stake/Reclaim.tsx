@@ -6,9 +6,11 @@ import { ResultStatus } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTips, MessageTypes, useFullscreenLoading } from "hooks/useTips";
-import { useUserUnusedTokens } from "hooks/staking-token/index";
+import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
-import { usePendingRewards } from "hooks/staking-token/usePendingRewards";
+import { usePendingRewardsByPool } from "hooks/staking-token/usePendingRewards";
+import { Token } from "@icpswap/swap-sdk";
+
 import { ReclaimContext } from "./reclaimContext";
 
 interface ReclaimItemProps {
@@ -44,21 +46,28 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
 
 export interface ReclaimProps {
   onReclaimSuccess?: () => void;
+  poolId: string | undefined;
+  rewardToken: Token | undefined;
+  stakeToken: Token | undefined;
 }
 
-export function Reclaim({ onReclaimSuccess }: ReclaimProps) {
+export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: ReclaimProps) {
   const [openTip] = useTips();
   const { setReclaimable } = useContext(ReclaimContext);
   const [trigger, setTrigger] = useState(0);
   const [openFullscreen, closeFullscreen] = useFullscreenLoading();
-  const { loading: unusedLoading, result: unusedTokens } = useUserUnusedTokens(trigger);
-  const { loading: pendingRewardLoading, result: pendingRewards } = usePendingRewards(trigger);
+  const { loading: unusedLoading, result: unusedToken } = useUserUnusedTokenByPool(
+    poolId,
+    stakeToken?.address,
+    trigger,
+  );
+  const { loading: pendingRewardLoading, result: pendingRewards } = usePendingRewardsByPool(poolId, trigger);
 
   const { claimableStakingAmount, claimableRewards } = useMemo(() => {
     if (!pendingRewards) return {};
 
-    const claimableStakingAmount = pendingRewards.filter((e) => e.stakingAmount !== BigInt(0));
-    const claimableRewards = pendingRewards.filter((e) => e.rewardAmount !== BigInt(0));
+    const claimableStakingAmount = pendingRewards.stakingAmount;
+    const claimableRewards = pendingRewards.rewardAmount;
 
     return { claimableStakingAmount, claimableRewards };
   }, [pendingRewards]);
@@ -97,15 +106,15 @@ export function Reclaim({ onReclaimSuccess }: ReclaimProps) {
 
   useEffect(() => {
     if (
-      (unusedTokens && unusedTokens.length > 0) ||
-      (claimableRewards && claimableRewards.length > 0) ||
-      (claimableStakingAmount && claimableStakingAmount.length > 0)
+      (unusedToken && (unusedToken.balance ?? BigInt(0)) > BigInt(0)) ||
+      (claimableRewards && claimableRewards > BigInt(0)) ||
+      (claimableStakingAmount && claimableStakingAmount > BigInt(0))
     ) {
       setReclaimable(true);
     } else {
       setReclaimable(false);
     }
-  }, [unusedTokens, claimableRewards, claimableStakingAmount]);
+  }, [unusedToken, claimableRewards, claimableStakingAmount]);
 
   return (
     <>
@@ -132,39 +141,36 @@ export function Reclaim({ onReclaimSuccess }: ReclaimProps) {
               <div />
             </LoadingRow>
           </Box>
-        ) : unusedTokens.length === 0 && claimableStakingAmount?.length === 0 && claimableRewards?.length === 0 ? (
+        ) : unusedToken && unusedToken.balance === BigInt(0) && !claimableStakingAmount && !claimableRewards ? (
           <NoData />
         ) : (
           <Box>
-            {unusedTokens.map((ele) => (
+            {unusedToken && unusedToken?.balance && unusedToken?.balance > BigInt(0) && poolId && stakeToken ? (
               <ReclaimItem
-                key={ele.poolId}
-                poolId={ele.poolId}
-                balance={ele.balance}
-                tokenId={ele.stakingToken.address}
+                poolId={poolId}
+                balance={unusedToken.balance}
+                tokenId={stakeToken.address}
                 onReclaim={handleReclaim}
               />
-            ))}
+            ) : null}
 
-            {claimableStakingAmount?.map((ele) => (
+            {claimableStakingAmount && claimableStakingAmount > BigInt(0) && poolId && stakeToken ? (
               <ReclaimItem
-                key={`${ele.poolId}_staking_token`}
-                poolId={ele.poolId}
-                balance={ele.stakingAmount}
-                tokenId={ele.stakeTokenId}
+                poolId={poolId}
+                balance={claimableStakingAmount}
+                tokenId={stakeToken.address}
                 onReclaim={handleWithdraw}
               />
-            ))}
+            ) : null}
 
-            {claimableRewards?.map((ele) => (
+            {claimableRewards && claimableRewards > BigInt(0) && poolId && rewardToken ? (
               <ReclaimItem
-                key={`${ele.poolId}_rewards`}
-                poolId={ele.poolId}
-                balance={ele.rewardAmount}
-                tokenId={ele.rewardTokenId}
+                poolId={poolId}
+                balance={claimableRewards}
+                tokenId={rewardToken.address}
                 onReclaim={handleReclaim}
               />
-            ))}
+            ) : null}
           </Box>
         )}
       </>

@@ -38,15 +38,11 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
   const state = useStakingPoolState(poolInfo);
 
   const { result: userStakeTokenBalance } = useTokenBalance(poolInfo.stakingToken.address, principal);
-  const { result: poolStakeTokenBalance } = useTokenBalance(
-    poolInfo.stakingToken.address,
-    poolInfo.canisterId.toString(),
-  );
 
   const poolStakeTvl = useMemo(() => {
-    if (!poolStakeTokenBalance || !stakeToken || !stakeTokenPrice) return undefined;
-    return parseTokenAmount(poolStakeTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString();
-  }, [poolStakeTokenBalance, stakeToken, stakeTokenPrice]);
+    if (!stakeToken || !stakeTokenPrice || !stakingPoolInfo) return undefined;
+    return parseTokenAmount(stakingPoolInfo.totalDeposit, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString();
+  }, [stakeToken, stakeTokenPrice, stakingPoolInfo]);
 
   const apr = useApr({
     poolInfo: stakingPoolInfo,

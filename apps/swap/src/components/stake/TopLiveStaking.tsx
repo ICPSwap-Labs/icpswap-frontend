@@ -30,12 +30,11 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
   const [poolInfo] = useIntervalStakingPoolInfo(pool?.canisterId.toString());
   const { result: stakeTokenBalance } = useTokenBalance(pool.stakingToken.address, principal?.toString());
-  const { result: totalStakedBalance } = useTokenBalance(pool.stakingToken.address, pool.canisterId.toString());
 
   const totalStakedValue = useMemo(() => {
-    if (!totalStakedBalance || !rewardTokenPrice || !stakeToken) return undefined;
-    return parseTokenAmount(totalStakedBalance, stakeToken.decimals).multipliedBy(rewardTokenPrice).toString();
-  }, [totalStakedBalance, rewardTokenPrice, stakeToken]);
+    if (!rewardTokenPrice || !stakeToken || !poolInfo) return undefined;
+    return parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).multipliedBy(rewardTokenPrice).toString();
+  }, [rewardTokenPrice, stakeToken, poolInfo]);
 
   const apr = useApr({
     poolInfo,
@@ -134,7 +133,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
               textAlign: "right",
             }}
           >
-            {totalStakedValue && stakeToken ? `${formatDollarAmount(totalStakedValue)} ${stakeToken.symbol}` : "--"}
+            {totalStakedValue ? `${formatDollarAmount(totalStakedValue)}` : "--"}
           </Typography>
         </Box>
       </Flex>

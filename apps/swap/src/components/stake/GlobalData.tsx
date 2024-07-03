@@ -56,14 +56,20 @@ export function GlobalData() {
   const icpPrice = useICPPrice();
   const { data } = useStakeIntervalGlobalData();
 
-  const { tvl, rewardedValue, rewardingValue, totalPools } = useMemo(() => {
+  const { tvl, rewardedValue, rewardingValue, totalPools, totalStaker } = useMemo(() => {
     if (!data || !icpPrice) return {};
 
     const tvl = formatDollarAmount(new BigNumber(data.valueOfStaking).times(icpPrice).toNumber());
     const rewardedValue = formatDollarAmount(new BigNumber(data.valueOfRewarded).times(icpPrice).toNumber());
     const rewardingValue = formatDollarAmount(new BigNumber(data.valueOfRewardsInProgress).times(icpPrice).toNumber());
 
-    return { tvl, rewardedValue, rewardingValue, totalPools: data.totalPools.toString() };
+    return {
+      tvl,
+      rewardedValue,
+      rewardingValue,
+      totalPools: data.totalPools.toString(),
+      totalStaker: data.totalStaker,
+    };
   }, [data, icpPrice]);
 
   return (
@@ -100,7 +106,7 @@ export function GlobalData() {
 
       <Item
         label0={<Trans>Total Stakers</Trans>}
-        value0={rewardingValue ?? "--"}
+        value0={totalStaker?.toString() ?? "--"}
         tooltip0={t`The total number of unique accounts that have staked in the pools.`}
       />
     </Box>
