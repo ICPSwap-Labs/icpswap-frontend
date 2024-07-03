@@ -22,7 +22,7 @@
     "@types/react-dom": "17.0.2"
   },
   "dependencies": {
-    "@slide-computer/signer": "^1.7.0",
-    "@slide-computer/signer-agent": "^1.7.0"
+    "@slide-computer/signer": "^2.6.2",
+    "@slide-computer/signer-agent": "^2.6.2"
   }
 }

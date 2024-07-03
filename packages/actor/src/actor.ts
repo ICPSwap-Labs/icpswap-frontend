@@ -3,11 +3,12 @@ import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
 import { ic_host } from "@icpswap/constants";
 import { Principal } from "@dfinity/principal";
-import { Signer, PromiseTransport } from "@slide-computer/signer";
+import { Signer } from "@slide-computer/signer";
 import { SignerAgent } from "@slide-computer/signer-agent";
 
 import { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
+import { PlugTransport } from "./channel/PlugChannel";
 
 let cachedCanisterIds: { [key: string]: string } = {};
 
@@ -115,20 +116,13 @@ export class Actor {
         createActorError = String(error);
       }
     } else if (identity && this.connector === Connector.PLUG) {
-      const transport = new PromiseTransport({
-        call(data) {
-          // @ts-ignore
-          return window.ic.plug.request(data);
-        },
-      });
+      const transport = new PlugTransport();
 
       const signer = new Signer({ transport });
 
       const signerAgent = new SignerAgent({
         signer,
-        getPrincipal: () => {
-          return Principal.fromText(this.owner);
-        },
+        account: Principal.fromText(this.owner),
       });
 
       actor = await createBaseActor<T>({
@@ -150,7 +144,6 @@ export class Actor {
 
     serviceClass._fields.forEach((ele) => {
       const method = ele[0];
-      // const funcClass = ele[1];
 
       _actor[method] = async (...args) => {
         if (createActorError)

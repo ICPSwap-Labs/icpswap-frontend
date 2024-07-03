@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AuthClient } from "@honopu/auth-client";
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
 import type { Identity } from "@dfinity/agent";
