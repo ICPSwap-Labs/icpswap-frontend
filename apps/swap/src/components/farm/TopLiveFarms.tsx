@@ -211,7 +211,7 @@ export function TopLiveFarms() {
             <div />
             <div />
           </LoadingRow>
-        ) : allLiveFarms?.length === 0 ? (
+        ) : !allLiveFarms || allLiveFarms?.length === 0 ? (
           <Flex justify="center">
             <NoData />
           </Flex>

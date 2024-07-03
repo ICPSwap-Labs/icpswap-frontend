@@ -241,7 +241,7 @@ function MainContent() {
 export default function Farms() {
   return (
     <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ maxWidth: "1440px", width: "100%" }}>
+      <Box sx={{ maxWidth: "1200px", width: "100%" }}>
         <Box>
           <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
             <Trans>Farm</Trans>

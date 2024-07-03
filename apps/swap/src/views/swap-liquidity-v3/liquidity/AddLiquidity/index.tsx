@@ -141,9 +141,9 @@ export default function AddLiquidity() {
 
   const resetMintState = useResetMintState();
 
-  const handleBackToPosition = useCallback(() => {
+  const handleBack = useCallback(() => {
     resetMintState();
-    history.push("/liquidity");
+    history.goBack();
   }, [history, resetMintState]);
 
   const onTokenAChange = (token: TokenInfo) => {
@@ -243,7 +243,7 @@ export default function AddLiquidity() {
 
     closeLoadingTip(loadingTipKey);
 
-    handleBackToPosition();
+    handleBack();
   };
 
   const handleOnCancel = useCallback(() => {
@@ -301,7 +301,7 @@ export default function AddLiquidity() {
                       sx={{
                         cursor: "pointer",
                       }}
-                      onClick={handleBackToPosition}
+                      onClick={handleBack}
                     />
                   </Grid>
                   <Grid item xs={6} container justifyContent="center" alignItems="center">
