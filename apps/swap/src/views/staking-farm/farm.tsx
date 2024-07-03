@@ -25,7 +25,7 @@ export default function Farm() {
 
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
 
-  const { farmId } = useParams<{ farmId: string }>();
+  const { id: farmId } = useParams<{ id: string }>();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
 

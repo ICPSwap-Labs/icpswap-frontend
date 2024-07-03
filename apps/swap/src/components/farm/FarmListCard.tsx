@@ -91,7 +91,7 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
   const stateColor = useStateColors(state);
 
   const handelToDetails = useCallback(() => {
-    history.push(`/farm/${farmId}`);
+    history.push(`/farm/details/${farmId}`);
   }, [history, farmId]);
 
   return (

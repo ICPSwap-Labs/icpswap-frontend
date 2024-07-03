@@ -25,16 +25,22 @@ import { useTokenInfo } from "hooks/token";
 const useStyles = makeStyles(() => {
   return {
     details: {
-      display: "grid",
+      display: "flex",
       gap: "20px 0",
-      gridTemplateColumns: "1fr 1fr",
-      "& .row-item": {
+      "& .columns": {
         flex: "50%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px 0",
       },
       "@media(max-width: 640px)": {
-        gridTemplateColumns: "1fr",
-        "& .row-item": {
+        flexDirection: "column",
+
+        "& .columns": {
           flex: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px 0",
         },
       },
     },
@@ -99,7 +105,7 @@ export default function FarmDetails() {
             </Grid>
           </Box>
           <Box mt="30px" className={classes.details}>
-            <Box>
+            <Box className="columns">
               <PoolDetailItem
                 label={t`Canister ID:`}
                 value={
@@ -173,7 +179,7 @@ export default function FarmDetails() {
               />
             </Box>
 
-            <Box>
+            <Box className="columns">
               <PoolDetailItem
                 label={t`Amount per Distribution:`}
                 value={

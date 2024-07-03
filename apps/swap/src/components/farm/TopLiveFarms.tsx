@@ -80,7 +80,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   });
 
   const handleClick = () => {
-    history.push(`/farm/${farmId}`);
+    history.push(`/farm/details/${farmId}`);
   };
 
   return (
