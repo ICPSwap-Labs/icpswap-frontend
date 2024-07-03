@@ -386,7 +386,11 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 </Typography>
                 <Box mt="16px">
                   <Box mt="24px">
-                    <Link to={`/liquidity/add/${token0.address}/${token1.address}`}>
+                    <Link
+                      to={`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(
+                        `/farm/details/${farmId}`,
+                      )}`}
+                    >
                       <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
                         <Trans>Add Liquidity</Trans>
                       </Button>
@@ -447,7 +451,9 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
       {token0 && token1 && (userAvailablePositions?.length ?? 0) > 0 ? (
         <Box mt="24px">
-          <Link to={`/liquidity/add/${token0.address}/${token1.address}`}>
+          <Link
+            to={`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
+          >
             <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
               <Trans>Add Liquidity</Trans>
             </Button>

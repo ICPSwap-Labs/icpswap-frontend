@@ -72,7 +72,7 @@ export function AllPositions({
           fullWidth
           variant="contained"
           size="large"
-          href={`/liquidity/add/${token0?.address}/${token1?.address}`}
+          href={`/liquidity/add/${token0?.address}/${token1?.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
         >
           <Trans>Add Liquidity</Trans>
         </Button>

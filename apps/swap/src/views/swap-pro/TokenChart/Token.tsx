@@ -1,8 +1,7 @@
 import { useContext, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Theme } from "@mui/material/styles";
-import { TokenImage } from "components/index";
+import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
@@ -159,7 +158,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
         ) : null}
 
         <Box sx={{ display: "flex", gap: "0 10px" }}>
-          <Link to={`/liquidity/add/${ICP.address}/${tokenId}`} style={{ textDecoration: "none" }}>
+          <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
             <Box
               sx={{
                 width: "121px",

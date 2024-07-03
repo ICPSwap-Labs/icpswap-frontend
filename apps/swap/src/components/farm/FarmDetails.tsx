@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { Box, Collapse, Typography, Link } from "components/Mui";
-import { MainCard, Flex } from "components/index";
+import { Box, Collapse, Typography } from "components/Mui";
+import { MainCard, Flex, Link } from "components/index";
 import { useTheme } from "@mui/styles";
 import { INFO_URL } from "constants/index";
 import { t, Trans } from "@lingui/macro";
@@ -104,8 +105,14 @@ export function FarmDetails({
             <Flex gap="0 4px">
               {token0 && token1 ? (
                 <>
-                  <Link href={`/liquidity/add/${token0.address}/${token1.address}`} color="text.secondary">
-                    Get Position
+                  <Link
+                    to={`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(
+                      `/farm/details/${farmId}`,
+                    )}`}
+                  >
+                    <Typography color="text.secondary">
+                      <Trans>Get Position</Trans>
+                    </Typography>
                   </Link>
 
                   <ICRocksLoadIcon
@@ -207,8 +214,8 @@ export function FarmDetails({
               </Typography>
               <Typography color="text.primary" component="div">
                 {farmInfo ? (
-                  <Link href={explorerLink(farmInfo.pool.toString())} target="_blank" color="text.theme-secondary">
-                    {shorten(farmInfo.pool.toString())}
+                  <Link link={explorerLink(farmInfo.pool.toString())}>
+                    <Typography color="text.theme-secondary">{shorten(farmInfo.pool.toString())}</Typography>
                   </Link>
                 ) : (
                   "--"
@@ -222,8 +229,8 @@ export function FarmDetails({
               </Typography>
               <Typography color="text.primary" component="div">
                 {rewardToken ? (
-                  <Link href={explorerLink(rewardToken.address)} target="_blank" color="text.theme-secondary">
-                    {shorten(rewardToken.address)}
+                  <Link link={explorerLink(rewardToken.address)}>
+                    <Typography color="text.theme-secondary">{shorten(rewardToken.address)}</Typography>
                   </Link>
                 ) : (
                   "--"
@@ -274,8 +281,8 @@ export function FarmDetails({
               </Typography>
               <Typography color="text.primary.main">
                 {farmInfo ? (
-                  <Link href={explorerLink(farmInfo.creator.toString())} target="_blank" color="text.theme-secondary">
-                    {shorten(farmInfo.creator.toString())}
+                  <Link link={explorerLink(farmInfo.creator.toString())}>
+                    <Typography color="text.theme-secondary">{shorten(farmInfo.creator.toString())}</Typography>
                   </Link>
                 ) : (
                   "--"
@@ -288,8 +295,8 @@ export function FarmDetails({
                 <Trans>Canister ID</Trans>
               </Typography>
               <Typography color="text.primary">
-                <Link href={explorerLink(farmId)} target="_blank" color="text.theme-secondary">
-                  {shorten(farmId)}
+                <Link link={explorerLink(farmId)}>
+                  <Typography color="text.theme-secondary"> {shorten(farmId)}</Typography>
                 </Link>
               </Typography>
             </Flex>
@@ -302,8 +309,10 @@ export function FarmDetails({
             </Flex>
 
             <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
-              <Link href={`${INFO_URL}/farm/details/${farmId}`} target="_blank" color="text.theme-secondary">
-                <Trans>Farm Info</Trans>
+              <Link link={`${INFO_URL}/farm/details/${farmId}`}>
+                <Typography color="text.theme-secondary">
+                  <Trans>Farm Info</Trans>
+                </Typography>
               </Link>
               <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
             </Flex>
