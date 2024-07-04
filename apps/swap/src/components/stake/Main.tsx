@@ -205,7 +205,7 @@ export function MainContent({
         </MainCard>
       </Box>
 
-      <MainCard padding="0" level={2} sx={{ margin: "8px 0 0 0", "@media(max-width: 640px)": { padding: "0" } }}>
+      <MainCard padding="0" level={1} sx={{ margin: "8px 0 0 0", "@media(max-width: 640px)": { padding: "0" } }}>
         <Stake
           poolId={poolId}
           poolInfo={poolInfo}
@@ -215,7 +215,7 @@ export function MainContent({
           onStakeSuccess={handleRefresh}
         />
 
-        <Box sx={{ padding: "16px" }}>
+        <MainCard level={2} padding="16px" borderRadius="0px 0px 16px 16px" sx={{ margin: "2px 0 0 0" }}>
           <Flex justify="space-between">
             <Box>
               <Typography>
@@ -249,7 +249,7 @@ export function MainContent({
               stakeTokenPrice={stakeTokenPrice}
             />
           </Flex>
-        </Box>
+        </MainCard>
       </MainCard>
     </>
   );

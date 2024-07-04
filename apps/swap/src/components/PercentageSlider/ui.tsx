@@ -36,6 +36,9 @@ const useStyle = makeStyles((theme: Theme) => {
           backgroundColor: theme.palette.background.level4,
         },
       },
+      "& .MuiSlider-mark[data-index='0']": {
+        display: "none",
+      },
     },
     tooltip: {},
   };

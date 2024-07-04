@@ -38,32 +38,6 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   const [openTip] = useTips();
   const getStakeCall = useStakeCall();
 
-  const handleStaking = async () => {
-    if (!stakeToken || !principal || !poolInfo || !amount || !rewardToken || !poolId) return;
-
-    const { call, key } = getStakeCall({
-      token: stakeToken,
-      amount: formatTokenAmount(amount, stakeToken.decimals).toFixed(0),
-      poolId,
-      standard: poolInfo.stakingToken.standard as TOKEN_STANDARD,
-      rewardToken,
-    });
-
-    const loadingTipKey = openLoadingTip(`Staking ${stakeToken.symbol}`, {
-      extraContent: <StepViewButton step={key} />,
-    });
-
-    const result = await call();
-
-    if (result) {
-      openTip(t`Stake successfully`, MessageTypes.success);
-      if (onStakeSuccess) onStakeSuccess();
-      setAmount("");
-    }
-
-    closeLoadingTip(loadingTipKey);
-  };
-
   const handleMax = useCallback(() => {
     if (balance && stakeToken) {
       if (!balance.isLessThan(stakeToken.transFee * 3)) {
@@ -83,6 +57,12 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   const handleAmountChange = useCallback(
     (amount: string) => {
       setAmount(amount);
+
+      if (amount === "") {
+        setPercent(0);
+        return;
+      }
+
       if (balance && stakeToken) {
         const _balance = parseTokenAmount(balance, stakeToken.decimals);
 
@@ -107,6 +87,32 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     },
     [balance, stakeToken],
   );
+
+  const handleStaking = async () => {
+    if (!stakeToken || !principal || !poolInfo || !amount || !rewardToken || !poolId) return;
+
+    const { call, key } = getStakeCall({
+      token: stakeToken,
+      amount: formatTokenAmount(amount, stakeToken.decimals).toFixed(0),
+      poolId,
+      standard: poolInfo.stakingToken.standard as TOKEN_STANDARD,
+      rewardToken,
+    });
+
+    const loadingTipKey = openLoadingTip(`Staking ${stakeToken.symbol}`, {
+      extraContent: <StepViewButton step={key} />,
+    });
+
+    const result = await call();
+
+    if (result) {
+      openTip(t`Stake successfully`, MessageTypes.success);
+      if (onStakeSuccess) onStakeSuccess();
+      handleAmountChange("");
+    }
+
+    closeLoadingTip(loadingTipKey);
+  };
 
   const error = useMemo(() => {
     if (!stakeToken || !balance) return t`Stake`;

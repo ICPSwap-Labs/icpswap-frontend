@@ -19,13 +19,14 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
 
   useEffect(() => {
     async function call() {
-      if (!principal || !isAvailablePageArgs(offset, limit)) return;
+      if (!isAvailablePageArgs(offset, limit)) return;
 
       const state = getStateValueByFilterState(filterState);
 
       setLoading(true);
 
       if (filterState === FilterState.YOUR) {
+        if (!principal) return;
         const poolsResult = await getStakingUserPools(principal.toString(), offset, limit);
         const pools = poolsResult?.content ?? [];
 

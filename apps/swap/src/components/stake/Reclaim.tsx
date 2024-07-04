@@ -78,7 +78,11 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
     const { status, message } = await stakingPoolClaim(poolId);
 
     if (status === ResultStatus.ERROR) {
-      openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+      if (message === "The claim amount is less than the transfer fee of the staking token") {
+        openTip(t`The claim seems to have been successful. Please refresh the page and try again.`, MessageTypes.error);
+      } else {
+        openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+      }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
       setTrigger(trigger + 1);
@@ -128,7 +132,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
 
   return (
     <>
-      <Typography sx={{ margin: "16px 0", fontSize: "12px" }}>
+      <Typography sx={{ margin: "16px 0", fontSize: "12px", lineHeight: "18px" }}>
         <Trans>
           For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your staked or reward
           tokens, we've implemented the 'Reclaim' feature. You can use this feature in case of issues during staking,

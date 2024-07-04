@@ -124,7 +124,11 @@ export function UnstakeModal({
           id="reward"
           name="reward"
           type="text"
-          style={{ marginBottom: 6 }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              fontSize: "16px",
+            },
+          }}
           value={amount}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAmount(event.target.value)}
           fullWidth
