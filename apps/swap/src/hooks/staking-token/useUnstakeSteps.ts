@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { t } from "@lingui/macro";
-import { getUnstakeSteps } from "views/staking-token/components/UnstakeSteps";
+import { getUnstakeSteps } from "components/stake/UnstakeSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
 

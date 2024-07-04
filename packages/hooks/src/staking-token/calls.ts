@@ -132,6 +132,11 @@ export function useStakingPoolCycles(canisterId: string | undefined, reload?: bo
   );
 }
 
+/**
+ * @description claim the failed deposit token
+ * @param canisterId - pool canister id
+ * @returns
+ */
 export async function stakingPoolClaim(canisterId: string) {
   return resultFormat<string>(await (await stakingPool(canisterId, true)).claim());
 }
@@ -152,6 +157,14 @@ export async function stakingTokenStake(canisterId: string) {
   return resultFormat<bigint>(await (await stakingPool(canisterId, true)).stake());
 }
 
+/**
+ * @description withdraw the token for staked token and reward token
+ * @export
+ * @param {string} canisterId - pool canister id
+ * @param {boolean} isStakeToken - staked token is true, reward token is false
+ * @param {bigint} amount - withdraw amount
+ * @return {*}
+ */
 export async function stakingPoolWithdraw(canisterId: string, isStakeToken: boolean, amount: bigint) {
   return resultFormat<string>(await (await stakingPool(canisterId, true)).withdraw(isStakeToken, amount));
 }

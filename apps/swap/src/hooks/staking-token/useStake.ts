@@ -7,7 +7,7 @@ import { t } from "@lingui/macro";
 import { isUseTransferByStandard } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
-import { getSteps } from "views/staking-token/components/Step";
+import { getSteps } from "components/stake/StakeStep";
 import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";

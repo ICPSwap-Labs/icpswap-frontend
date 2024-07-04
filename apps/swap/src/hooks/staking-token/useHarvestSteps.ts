@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { t } from "@lingui/macro";
-import { getHarvestSteps } from "views/staking-token/components/HarvestSteps";
+import { getHarvestSteps } from "components/stake/HarvestSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
 

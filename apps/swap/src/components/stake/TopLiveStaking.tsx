@@ -152,7 +152,7 @@ export function TopLiveStaking() {
 
   return (
     <MainCard>
-      <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500 }}>
+      <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
         <Trans>Top Live Pools</Trans>
       </Typography>
 

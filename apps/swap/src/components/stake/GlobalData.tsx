@@ -24,7 +24,7 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
           {tooltip0 ? <Tooltip tips={tooltip0} /> : null}
         </Flex>
 
-        <Typography sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}>
+        <Typography sx={{ margin: "16px 0 0 0", fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
           {value0}
         </Typography>
       </Box>
@@ -32,9 +32,9 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
       {value1 ? (
         <Box
           sx={{
-            margin: "50px 0 0 0",
+            margin: "32px 0 0 0",
             "@media(max-width: 640px)": {
-              margin: "29px 0 0 0",
+              margin: "16px 0 0 0",
             },
           }}
         >

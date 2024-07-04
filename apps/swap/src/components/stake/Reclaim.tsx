@@ -88,13 +88,23 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
     closeFullscreen();
   };
 
-  const handleWithdraw = async (poolId: string, balance: bigint) => {
+  const handleWithdraw = async (poolId: string, balance: bigint, isStakeToken: boolean) => {
     openFullscreen();
 
-    const { status, message } = await stakingPoolWithdraw(poolId, true, balance);
+    const { status, message } = await stakingPoolWithdraw(poolId, isStakeToken, balance);
 
     if (status === ResultStatus.ERROR) {
-      openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+      if (
+        message === "The withdraw amount is less than the transfer fee of the staking token" ||
+        message === "The withdraw amount is less than the transfer fee of the reward token"
+      ) {
+        openTip(
+          t`The withdrawal seems to have been successful. Please refresh the page and try again.`,
+          MessageTypes.error,
+        );
+      } else {
+        openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+      }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
       setTrigger(trigger + 1);
@@ -159,7 +169,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
                 poolId={poolId}
                 balance={claimableStakingAmount}
                 tokenId={stakeToken.address}
-                onReclaim={handleWithdraw}
+                onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, true)}
               />
             ) : null}
 
@@ -168,7 +178,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
                 poolId={poolId}
                 balance={claimableRewards}
                 tokenId={rewardToken.address}
-                onReclaim={handleReclaim}
+                onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, false)}
               />
             ) : null}
           </Box>

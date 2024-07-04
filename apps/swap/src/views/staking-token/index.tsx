@@ -88,7 +88,7 @@ function MainContent() {
               color={__state === tab.state ? "text.primary" : "textTertiary"}
               onClick={() => handleToggle(tab)}
               sx={{
-                fontSize: "20px",
+                fontSize: "18px",
                 fontWeight: 500,
                 cursor: "pointer",
                 textTransform: "capitalize",
@@ -201,23 +201,23 @@ function V2Icon() {
 export default function Staking() {
   return (
     <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ maxWidth: "1440px", width: "100%" }}>
-        <Flex sx={{ margin: "40px 0 0 0" }} gap="0 12px">
-          <Typography sx={{ fontSize: "36px", color: "text.primary", fontWeight: 600 }}>
+      <Box sx={{ maxWidth: "1200px", width: "100%" }}>
+        <Flex sx={{ margin: "32px 0 0 0" }} gap="0 12px">
+          <Typography sx={{ fontSize: "32px", color: "text.primary", fontWeight: 600 }}>
             <Trans>Staking Pool</Trans>
           </Typography>
           <V2Icon />
         </Flex>
 
-        <Typography sx={{ fontSize: "18px", margin: "24px 0 0 0" }}>
+        <Typography sx={{ fontSize: "16px", margin: "24px 0 0 0" }}>
           <Trans>Stake Your Tokens Now, Reap the Rewards Next Moment!</Trans>
         </Typography>
 
         <Box
           sx={{
-            margin: "88px 0 0 0",
+            margin: "44px 0 0 0",
             "@media(max-width: 640px)": {
-              margin: "40px 0 0 0",
+              margin: "20px 0 0 0",
             },
           }}
         >
@@ -226,9 +226,9 @@ export default function Staking() {
 
         <Box
           sx={{
-            margin: "58px 0 0 0",
+            margin: "44px 0 0 0",
             "@media(max-width: 640px)": {
-              margin: "40px 0 0 0",
+              margin: "28px 0 0 0",
             },
           }}
         >
