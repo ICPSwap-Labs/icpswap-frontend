@@ -21,6 +21,14 @@
     "fetch-tokens": "ts-node-esm ./scripts/pre-fetch-tokens.ts",
     "check-local-tokens": "ts-node-esm ./scripts/check-tokens-metadata.ts"
   },
+  "resolutions": {
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
+    "react-error-overlay": "6.0.11",
+    "@dfinity/agent": "1.4.0",
+    "@dfinity/candid": "1.4.0",
+    "@dfinity/principal": "1.4.0"
+  },
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.202",

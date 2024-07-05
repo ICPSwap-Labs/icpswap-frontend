@@ -88,6 +88,12 @@ export class WalletConnector {
     return isConnectedSuccessfully;
   }
 
+  public async signer() {
+    if (this.connector && this.connector.signer) {
+      this.connector.signer();
+    }
+  }
+
   public async isConnected() {
     const isConnected = await this.connector?.isConnected();
     return isConnected;

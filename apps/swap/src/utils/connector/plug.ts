@@ -1,5 +1,11 @@
 import { ActorSubclass } from "@dfinity/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
+import { Principal } from "@dfinity/principal";
+import { Signer } from "@slide-computer/signer";
+import { SignerAgent } from "@slide-computer/signer-agent";
+import { actor } from "@icpswap/actor";
+
+import { PlugTransport } from "./channel/PlugChannel";
 import { type CreateActorArgs, IConnector, ConnectorType, type WalletConnectorConfig } from "./connectors";
 
 const MAX_PLUG_WHITELIST_NUMBER = 200;
@@ -50,11 +56,15 @@ export class PlugConnector implements IConnector {
       return false;
     }
 
+    let isConnected = false;
+
     if (window.ic && window.ic.plug) {
-      return await window.ic.plug.isConnected();
+      isConnected = await window.ic.plug.isConnected();
     }
 
-    return false;
+    this.principal = window.ic.plug.principalId;
+
+    return isConnected;
   }
 
   async connect() {
@@ -73,7 +83,17 @@ export class PlugConnector implements IConnector {
             : this.config.whitelist,
       });
       this.principal = window.ic.plug.principalId;
+
+      const transport = new PlugTransport();
+      const signer = new Signer({ transport });
+      await signer.requestPermissions([
+        { method: "icrc27_accounts" },
+        { method: "icrc49_call_canister" },
+        { method: "icrc34_delegation" },
+      ]);
     }
+
+    await this.signer();
 
     return true;
   }
@@ -84,5 +104,21 @@ export class PlugConnector implements IConnector {
 
   async expired() {
     return false;
+  }
+
+  async signer() {
+    const transport = new PlugTransport();
+    const signer = new Signer({ transport });
+
+    if (!this.principal) {
+      throw new Error("No principal when initial signer");
+    }
+
+    const signerAgent = new SignerAgent({
+      signer,
+      account: Principal.fromText(this.principal),
+    });
+
+    actor.setAgent(signerAgent);
   }
 }

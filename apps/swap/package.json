@@ -16,11 +16,6 @@
     "contracts:compile": "pnpm run contracts:compile:abi",
     "clean": "rm -rf build && rm -rf node_modules"
   },
-  "resolutions": {
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2",
-    "react-error-overlay": "6.0.9"
-  },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.20.7",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -95,6 +90,8 @@
     "@sentry/core": "7.80.0",
     "@sentry/react": "7.80.0",
     "@sentry/types": "7.80.0",
+    "@slide-computer/signer": "^2.6.2",
+    "@slide-computer/signer-agent": "^2.6.2",
     "@tabler/icons": "^1.39.1",
     "@types/react-router": "^5.1.20",
     "@web3-react/core": "^8.2.0",

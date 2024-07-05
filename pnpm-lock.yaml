@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@types/react': 17.0.2
+  '@types/react-dom': 17.0.2
+  react-error-overlay: 6.0.11
+  '@dfinity/agent': 1.4.0
+  '@dfinity/candid': 1.4.0
+  '@dfinity/principal': 1.4.0
+
 importers:
 
   .:
@@ -320,8 +328,8 @@ importers:
         specifier: 17.0.2
         version: 17.0.2
       '@types/react-dom':
-        specifier: ^16.9.7
-        version: 16.9.24
+        specifier: 17.0.2
+        version: 17.0.2
       '@types/react-is':
         specifier: ^18.2.4
         version: 18.2.4
@@ -408,7 +416,7 @@ importers:
         version: 0.3.4(@types/react@17.0.2)(react-dom@17.0.2)(react-native@0.74.1)(react@17.0.2)(rollup@2.79.1)
       '@honopu/auth-client':
         specifier: 1.0.13
-        version: 1.0.13(@dfinity/agent@1.0.1)(@dfinity/candid@0.19.3)(@dfinity/identity@1.0.1)(@dfinity/principal@1.0.1)
+        version: 1.0.13(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0)
       '@icpswap/actor':
         specifier: workspace:*
         version: link:../../packages/actor
@@ -469,6 +477,12 @@ importers:
       '@sentry/types':
         specifier: 7.80.0
         version: 7.80.0
+      '@slide-computer/signer':
+        specifier: ^2.6.2
+        version: 2.6.2(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0)
+      '@slide-computer/signer-agent':
+        specifier: ^2.6.2
+        version: 2.6.2(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0)(@slide-computer/signer@2.6.2)
       '@tabler/icons':
         specifier: ^1.39.1
         version: 1.119.0(react-dom@17.0.2)(react@17.0.2)
@@ -516,7 +530,7 @@ importers:
         version: 5.7.2
       ic-stoic-identity:
         specifier: ^2.0.0
-        version: 2.0.0(@dfinity/candid@0.19.3)
+        version: 2.0.0(@dfinity/candid@1.4.0)
       js-sha256:
         specifier: ^0.9.0
         version: 0.9.0
@@ -988,10 +1002,10 @@ packages:
   /@astrox/sdk-core@0.1.41(@peculiar/webcrypto@1.4.3)(@types/node@13.13.52)(babel-plugin-macros@3.1.0):
     resolution: {integrity: sha512-vyPM0/Pdf2bxvY8uHwhB/Nxeyj54qxDTNAyUCVHTrJflUnZ09iD/LaPp5KGdh5Hp3KUaIEDp+LmA9cq+Zm8zrg==}
     dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3)(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.4.3)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 0.19.3(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
+      '@dfinity/principal': 1.4.0
       '@types/jest': 29.5.11
       borc: 2.1.2
       jest: 29.7.0(@types/node@13.13.52)(babel-plugin-macros@3.1.0)
@@ -1008,10 +1022,10 @@ packages:
   /@astrox/sdk-core@0.1.41(@peculiar/webcrypto@1.4.3)(@types/node@18.19.3)(babel-plugin-macros@3.1.0):
     resolution: {integrity: sha512-vyPM0/Pdf2bxvY8uHwhB/Nxeyj54qxDTNAyUCVHTrJflUnZ09iD/LaPp5KGdh5Hp3KUaIEDp+LmA9cq+Zm8zrg==}
     dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3)(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.4.3)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 0.19.3(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
+      '@dfinity/principal': 1.4.0
       '@types/jest': 29.5.11
       borc: 2.1.2
       jest: 29.7.0(@types/node@18.19.3)(babel-plugin-macros@3.1.0)
@@ -1029,10 +1043,10 @@ packages:
     resolution: {integrity: sha512-aViE/L5h3yM0/4JOyq/EyXYS1ZVRFf3XGlrnyVG+9h8mzWcTFO6ivEgTX32qsMBRWNVjplS4rKI9WsFf6VHbHA==}
     dependencies:
       '@astrox/sdk-core': 0.1.41(@peculiar/webcrypto@1.4.3)(@types/node@13.13.52)(babel-plugin-macros@3.1.0)
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3)(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.4.3)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 0.19.3(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
+      '@dfinity/principal': 1.4.0
       '@types/crc': 3.8.3
       '@types/jest': 29.5.11
       buffer: 6.0.3
@@ -1070,10 +1084,10 @@ packages:
     dependencies:
       '@astrox/sdk-core': 0.1.41(@peculiar/webcrypto@1.4.3)(@types/node@18.19.3)(babel-plugin-macros@3.1.0)
       '@astrox/sdk-webview-bridge': 0.1.41(@types/node@18.19.3)(babel-plugin-macros@3.1.0)
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@1.0.1)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3)(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.4.3)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 0.19.3(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
+      '@dfinity/principal': 1.4.0
       '@types/jest': 29.5.11
       '@types/node': 18.19.3
       borc: 2.1.2
@@ -3184,56 +3198,11 @@ packages:
       '@date-io/core': 2.17.0
     dev: false
 
-  /@dfinity/agent@0.10.4(@dfinity/candid@0.19.3)(@dfinity/principal@0.10.4):
-    resolution: {integrity: sha512-/O1443GWkQ6GngrXos/ShAbnF9IgUlWclzaQn/qEsGJIey6S7tty+iOa5yZqOS1BtOTnDe+TYh8GeERZZn7vvg==}
-    peerDependencies:
-      '@dfinity/candid': ^0.10.4
-      '@dfinity/principal': ^0.10.4
-    dependencies:
-      '@dfinity/candid': 0.19.3(@dfinity/principal@1.0.1)
-      '@dfinity/principal': 0.10.4
-      base64-arraybuffer: 0.2.0
-      bignumber.js: 9.1.2
-      borc: 2.1.2
-      js-sha256: 0.9.0
-      simple-cbor: 0.4.1
-    dev: false
-
-  /@dfinity/agent@0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3):
-    resolution: {integrity: sha512-q410aNLoOA1ZkwdAMgSo6t++pjISn9TfSybRXhPRI5Ume7eG6+6qYr/rlvcXy7Nb2+Ar7LTsHNn34IULfjni7w==}
-    peerDependencies:
-      '@dfinity/candid': ^0.19.3
-      '@dfinity/principal': ^0.19.3
-    dependencies:
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/principal': 0.19.3
-      '@noble/hashes': 1.4.0
-      base64-arraybuffer: 0.2.0
-      borc: 2.1.2
-      simple-cbor: 0.4.1
-    dev: false
-
-  /@dfinity/agent@1.0.1(@dfinity/candid@0.19.3)(@dfinity/principal@1.0.1):
-    resolution: {integrity: sha512-QoCiKIWEgsXoaiHpb76M2qLXYDS9IdfvC81dLJYvX9KVXRq8Ojo4S82tBqBFGtM0j0EKEC6mIAJV/bqhOJTtjQ==}
-    peerDependencies:
-      '@dfinity/candid': ^1.0.1
-      '@dfinity/principal': ^1.0.1
-    dependencies:
-      '@dfinity/candid': 0.19.3(@dfinity/principal@1.0.1)
-      '@dfinity/principal': 1.0.1
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
-      base64-arraybuffer: 0.2.0
-      borc: 2.1.2
-      buffer: 6.0.3
-      simple-cbor: 0.4.1
-    dev: false
-
   /@dfinity/agent@1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-/zgGajZpxtbu+kLXtFx2e9V2+HbMUjrtGWx9ZEwtVwhVxKgVi/2kGQpFRPEDFJ461V7wdTwCig4OkMxVU4shTw==}
     peerDependencies:
-      '@dfinity/candid': ^1.4.0
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/candid': 1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
       '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
       '@dfinity/principal': 1.4.0
@@ -3248,9 +3217,9 @@ packages:
   /@dfinity/auth-client@1.4.0(@dfinity/agent@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-9ImeOAw61SQvHJ+w4RHIuKKUL2xAQDLoce+JhmH3DbJuVvNbZIM5xMW8gHTZVlXaMw3Vhip+a1DPJIGy95r9pA==}
     peerDependencies:
-      '@dfinity/agent': ^1.4.0
+      '@dfinity/agent': 1.4.0
       '@dfinity/identity': ^1.4.0
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
       '@dfinity/identity': 1.4.0(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
@@ -3258,79 +3227,48 @@ packages:
       idb: 7.1.1
     dev: false
 
-  /@dfinity/candid@0.19.3(@dfinity/principal@0.19.3):
-    resolution: {integrity: sha512-yXfbLSWTeRd4G0bLLxYoDqpXH3Jim0P+1PPZOoktXNC1X1hB+ea3yrZebX75t4GVoQK7123F7mxWHiPjuV2tQQ==}
-    peerDependencies:
-      '@dfinity/principal': ^0.19.3
-    dependencies:
-      '@dfinity/principal': 0.19.3
-    dev: false
-
-  /@dfinity/candid@0.19.3(@dfinity/principal@1.0.1):
-    resolution: {integrity: sha512-yXfbLSWTeRd4G0bLLxYoDqpXH3Jim0P+1PPZOoktXNC1X1hB+ea3yrZebX75t4GVoQK7123F7mxWHiPjuV2tQQ==}
-    peerDependencies:
-      '@dfinity/principal': ^0.19.3
-    dependencies:
-      '@dfinity/principal': 1.0.1
-    dev: false
-
   /@dfinity/candid@1.4.0(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-PsTJVn63ZM4A/6Xs5coI0zMFevSwJ8hcyh38LdH/92n6wi9UOTis1yc4qL5MZvvRCUAD0c3rVjELL+49E9sPyA==}
     peerDependencies:
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
       '@dfinity/principal': 1.4.0
     dev: false
 
-  /@dfinity/identity@0.10.4(@dfinity/agent@0.10.4)(@dfinity/principal@0.10.4):
+  /@dfinity/identity@0.10.4(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-b4WsaD70Ts75JlJcf4+E04B140hQN5u/GnCvjhaHqN2++bwWO56Paxtv0UfAc58LMwJZj4iOyZoahnT56LhC9A==}
     peerDependencies:
-      '@dfinity/agent': ^0.10.4
-      '@dfinity/principal': ^0.10.4
+      '@dfinity/agent': 1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3)(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/principal': 1.4.0
       borc: 2.1.2
       js-sha256: 0.9.0
       secp256k1: 4.0.3
       tweetnacl: 1.0.3
     dev: false
 
-  /@dfinity/identity@0.19.3(@dfinity/agent@0.19.3)(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.4.3):
+  /@dfinity/identity@0.19.3(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3):
     resolution: {integrity: sha512-6XHrkNQ8tVN6+MERyXPy+avGHTd2zoX3l47bu6gSwreDdOZQnAnXpHVzLcXhnUptkBVetcC70YQEKCmqtuLriA==}
     peerDependencies:
-      '@dfinity/agent': ^0.19.3
-      '@dfinity/principal': ^0.19.3
+      '@dfinity/agent': 1.4.0
+      '@dfinity/principal': 1.4.0
       '@peculiar/webcrypto': ^1.4.0
     dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3)(@dfinity/principal@0.19.3)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/principal': 1.4.0
       '@noble/hashes': 1.4.0
       '@peculiar/webcrypto': 1.4.3
       borc: 2.1.2
       tweetnacl: 1.0.3
     dev: false
 
-  /@dfinity/identity@1.0.1(@dfinity/agent@1.0.1)(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.4.3):
-    resolution: {integrity: sha512-ArajyKSkiA4LjOq/ocGLMd66svgMVntF9j9P7irZScrzTCPcEXk5c7VteAqRGMwHCpI4LRipjmuZA1agwmUzRw==}
-    peerDependencies:
-      '@dfinity/agent': ^1.0.1
-      '@dfinity/principal': ^1.0.1
-      '@peculiar/webcrypto': ^1.4.0
-    dependencies:
-      '@dfinity/agent': 1.0.1(@dfinity/candid@0.19.3)(@dfinity/principal@1.0.1)
-      '@dfinity/principal': 1.0.1
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
-      '@peculiar/webcrypto': 1.4.3
-      borc: 2.1.2
-    dev: false
-
   /@dfinity/identity@1.4.0(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3):
     resolution: {integrity: sha512-4WmMsQSuzfWXmm4s+0FYGbFiQcMGE88Ztg6yFq7aTMtRWuAjhz66Dy1+jRCrXxsoxvDdUvPzsyjkOSpr1AuUYQ==}
     peerDependencies:
-      '@dfinity/agent': ^1.4.0
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/agent': 1.4.0
+      '@dfinity/principal': 1.4.0
       '@peculiar/webcrypto': ^1.4.0
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
@@ -3344,10 +3282,10 @@ packages:
   /@dfinity/ledger-icp@2.2.0(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.4.0)(@dfinity/utils@2.1.1):
     resolution: {integrity: sha512-4Nn5/wAX8XMTb8GJ2LftsuEwGznM1v7lAgbUl+DdnERTIQ2btfP8LWFG+45PQKM7NjWZFFTp5JDbW1gEKM1KbQ==}
     peerDependencies:
-      '@dfinity/agent': ^0.20.2
-      '@dfinity/candid': ^0.20.2
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
       '@dfinity/nns-proto': ^1.0.1
-      '@dfinity/principal': ^0.20.2
+      '@dfinity/principal': 1.4.0
       '@dfinity/utils': ^2.1.1
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
@@ -3366,11 +3304,11 @@ packages:
   /@dfinity/nns@4.0.2(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/ledger-icp@2.2.0)(@dfinity/nns-proto@1.0.1)(@dfinity/principal@1.4.0)(@dfinity/utils@2.1.1):
     resolution: {integrity: sha512-cX6c8JCGAcfdvS2l+JT3u63dIZtVcAUdOKodeFOdN1ADyuC0zu05uurZVHpCmt+uaDM3ahf9LsAC1RxAImd7UQ==}
     peerDependencies:
-      '@dfinity/agent': ^1.0.1
-      '@dfinity/candid': ^1.0.1
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
       '@dfinity/ledger-icp': ^2.2.2
       '@dfinity/nns-proto': ^1.0.1
-      '@dfinity/principal': ^1.0.1
+      '@dfinity/principal': 1.4.0
       '@dfinity/utils': ^2.1.3
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
@@ -3383,22 +3321,6 @@ packages:
       randombytes: 2.1.0
     dev: false
 
-  /@dfinity/principal@0.10.4:
-    resolution: {integrity: sha512-qwzpmq5wfyeKMBspRZmuYvTxu1dqN+IY0ThACHTRh6D58QjnVQNCD3Hq9d5eEDu0qyNcY22cJEWwzrzZaaoVmw==}
-    dev: false
-
-  /@dfinity/principal@0.19.3:
-    resolution: {integrity: sha512-+nixVvdGt7ECxRvLXDXsvU9q9sSPssBtDQ4bXa149SK6gcYcmZ6lfWIi3DJNqj3tGROxILVBsguel9tECappsA==}
-    dependencies:
-      '@noble/hashes': 1.4.0
-    dev: false
-
-  /@dfinity/principal@1.0.1:
-    resolution: {integrity: sha512-pCAuTLcvZEZ8fYgVzTVhfUfFGadxeWN4v2z8Q0rizeiqcHKhbJVfWUiXXjzPGG5lNz2DxKyUHQ/WS4UTbTaxvg==}
-    dependencies:
-      '@noble/hashes': 1.4.0
-    dev: false
-
   /@dfinity/principal@1.4.0:
     resolution: {integrity: sha512-SuTBVlc71ub89ji0WN5/T100zUG2uIMn5x4+We4vS4nJ0R3/Xt89XJsHepjd5SQTSQPOvP7eQ+S8cQKWRz/RkA==}
     dependencies:
@@ -3408,9 +3330,9 @@ packages:
   /@dfinity/utils@2.1.1(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-H4WEG4gEuQlAH/vKRbkvnUggoFkF4ffLSGQEh2aekThffm+iSaKwVQ9AnAvwFGaGBbSR3rLhHMIpPnZxchj+rA==}
     peerDependencies:
-      '@dfinity/agent': ^0.20.2
-      '@dfinity/candid': ^0.20.2
-      '@dfinity/principal': ^0.20.2
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
       '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
@@ -4396,18 +4318,18 @@ packages:
       '@hapi/hoek': 9.3.0
     dev: false
 
-  /@honopu/auth-client@1.0.13(@dfinity/agent@1.0.1)(@dfinity/candid@0.19.3)(@dfinity/identity@1.0.1)(@dfinity/principal@1.0.1):
+  /@honopu/auth-client@1.0.13(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-37GahZjPP4cSNwGKntQMuhzVsbX39XRpkhXweIPMtzUyyZgab4k4gBGtxz8RSpsY29dhu/qhc1BM9PLXbw440Q==, tarball: https://npm.pkg.github.com/download/@honopu/auth-client/1.0.13/059e7051379b9fecd03627bcfb53fc8c7209dc62}
     peerDependencies:
-      '@dfinity/agent': 1.0.1
-      '@dfinity/candid': 1.0.1
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
       '@dfinity/identity': 1.0.1
-      '@dfinity/principal': 1.0.1
+      '@dfinity/principal': 1.4.0
     dependencies:
-      '@dfinity/agent': 1.0.1(@dfinity/candid@0.19.3)(@dfinity/principal@1.0.1)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@1.0.1)
-      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1)(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.4.3)
-      '@dfinity/principal': 1.0.1
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 1.4.0(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)(@peculiar/webcrypto@1.4.3)
+      '@dfinity/principal': 1.4.0
       idb: 8.0.0
     dev: false
 
@@ -5542,7 +5464,7 @@ packages:
     resolution: {integrity: sha512-LinacyjmZOS+roUqCyhrcbNIW7TlRf1U+15ETGwMn6biNXI9YEVgcc1Kak08CRtjM0yczxxzLWetiAjHMCVSjQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^16.8.6 || ^17.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0
       react-dom: ^17.0.0
     peerDependenciesMeta:
@@ -5565,7 +5487,7 @@ packages:
     resolution: {integrity: sha512-duL37qxihT1N0pW/gyXVezP7SttLkF+cLAs/y6g6ubEFmVadjbnZ45SeF12/vAiKzqwf5M0uFH1cczIPXFZygA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
@@ -5588,7 +5510,7 @@ packages:
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
-      '@types/react': ^16.8.6 || ^17.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0
     peerDependenciesMeta:
       '@types/react':
@@ -5604,7 +5526,7 @@ packages:
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
-      '@types/react': ^16.8.6 || ^17.0.0
+      '@types/react': 17.0.2
       date-fns: ^2.25.0
       dayjs: ^1.10.7
       luxon: ^1.28.0 || ^2.0.0
@@ -5651,7 +5573,7 @@ packages:
     peerDependencies:
       '@emotion/react': ^11.5.0
       '@emotion/styled': ^11.3.0
-      '@types/react': ^16.8.6 || ^17.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0
       react-dom: ^17.0.0
     peerDependenciesMeta:
@@ -5685,7 +5607,7 @@ packages:
     resolution: {integrity: sha512-wTbzuy5KjSvCPE9UVJktWHJ0b/tD5biavY9wvF+OpYDLPpdXK52vc1hTDxSbdkHIFMkJExzrwO9GvpVAHZBnFQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
       '@types/react':
@@ -5724,7 +5646,7 @@ packages:
     resolution: {integrity: sha512-elRM9/1t8jJJc2X/T/Yau40sQ3+IxM8sdxA9CbHas/EU4DJ2LjkdmmmnSv2lXG32SWUIPU1Pjr6Jy3KPt2NoUw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^16.8.6 || ^17.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0
     peerDependenciesMeta:
       '@types/react':
@@ -5756,7 +5678,7 @@ packages:
     peerDependencies:
       '@emotion/react': ^11.5.0
       '@emotion/styled': ^11.3.0
-      '@types/react': ^17.0.0 || ^18.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
       '@emotion/react':
@@ -5783,7 +5705,7 @@ packages:
   /@mui/types@7.2.11(@types/react@17.0.2):
     resolution: {integrity: sha512-KWe/QTEsFFlFSH+qRYf3zoFEj3z67s+qAuSnMMg+gFwbxG7P96Hm6g300inQL1Wy///gSRb8juX7Wafvp93m3w==}
     peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
+      '@types/react': 17.0.2
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -5795,7 +5717,7 @@ packages:
     resolution: {integrity: sha512-V1/d0E3Bju5YdB59HJf2G0tnHrFEvWLN+f8hAXp9+JSNy/LC2zKyqUfPPahflR6qsI681P8G9r4mEZte/SrrYA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
+      '@types/react': 17.0.2
       react: ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
       '@types/react':
@@ -6358,7 +6280,7 @@ packages:
     resolution: {integrity: sha512-rmaLeE34rj7py4FxTod7iMTC7BAsm+HrGA8WxYmEJeyTV7WSaxAkosKoYBz8038mOiwnG9VwA/7FrB6bEQvn1A==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@types/react': ^18.2.6
+      '@types/react': 17.0.2
       react: '*'
       react-native: '*'
     peerDependenciesMeta:
@@ -6615,10 +6537,10 @@ packages:
   /@slide-computer/signer-agent@2.6.2(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0)(@slide-computer/signer@2.6.2):
     resolution: {integrity: sha512-GYB3kmlfUkwnXuL86Ej+mdMYDnu4kvnNXvZlf9tICupGTN6GSofOypYW3+fra51jhI1nsQs/4xCBqSV6inN4MQ==}
     peerDependencies:
-      '@dfinity/agent': ^1.4.0
-      '@dfinity/candid': ^1.4.0
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
       '@dfinity/identity': ^1.4.0
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/principal': 1.4.0
       '@slide-computer/signer': ^2.6.2
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
@@ -6631,10 +6553,10 @@ packages:
   /@slide-computer/signer@2.6.2(@dfinity/agent@1.4.0)(@dfinity/candid@1.4.0)(@dfinity/identity@1.4.0)(@dfinity/principal@1.4.0):
     resolution: {integrity: sha512-nRgsUHcZcOkmQmkPt1aQ6A1rf1byueibQefj0nFwfHa0Gt+cRG8vVL+kk0CgJ4UFmMnJI+cCbfLu3GFMpmrmJA==}
     peerDependencies:
-      '@dfinity/agent': ^1.4.0
-      '@dfinity/candid': ^1.4.0
+      '@dfinity/agent': 1.4.0
+      '@dfinity/candid': 1.4.0
       '@dfinity/identity': ^1.4.0
-      '@dfinity/principal': ^1.4.0
+      '@dfinity/principal': 1.4.0
     dependencies:
       '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
       '@dfinity/candid': 1.4.0(@dfinity/principal@1.4.0)
@@ -7398,7 +7320,7 @@ packages:
   /@types/qrcode.react@1.0.5:
     resolution: {integrity: sha512-BghPtnlwvrvq8QkGa1H25YnN+5OIgCKFuQruncGWLGJYOzeSKiix/4+B9BtfKF2wf5ja8yfyWYA3OXju995G8w==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
     dev: true
 
   /@types/qs@6.9.10:
@@ -7413,12 +7335,6 @@ packages:
   /@types/range-parser@1.2.7:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
 
-  /@types/react-dom@16.9.24:
-    resolution: {integrity: sha512-Gcmq2JTDheyWn/1eteqyzzWKSqDjYU6KYsIvH7thb7CR5OYInAWOX+7WnKf6PaU/cbdOc4szJItcDEJO7UGmfA==}
-    dependencies:
-      '@types/react': 16.14.54
-    dev: true
-
   /@types/react-dom@17.0.2:
     resolution: {integrity: sha512-Icd9KEgdnFfJs39KyRyr0jQ7EKhq8U6CcHRMGAS45fp5qgUvxL3ujUCfWFttUK2UErqZNj97t9gsVPNAqcwoCg==}
     dependencies:
@@ -7428,14 +7344,14 @@ packages:
   /@types/react-is@18.2.4:
     resolution: {integrity: sha512-wBc7HgmbCcrvw0fZjxbgz/xrrlZKzEqmABBMeSvpTvdm25u6KI6xdIi9pRE2G0C1Lw5ETFdcn4UbYZ4/rpqUYw==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
     dev: true
 
   /@types/react-redux@7.1.33:
     resolution: {integrity: sha512-NF8m5AjWCkert+fosDsN3hAlHzpjSiXlVy9EgQEmLoBhaNXbmyeGs/aj5dQzKuF+/q+S7JQagorGDW8pJ28Hmg==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.5
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
       hoist-non-react-statics: 3.3.2
       redux: 4.2.1
 
@@ -7451,31 +7367,24 @@ packages:
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
 
   /@types/react-transition-group@4.4.10:
     resolution: {integrity: sha512-hT/+s0VQs2ojCX823m60m5f0sL5idt9SO6Tj6Dg+rdphGPIeJbJ6CxvBYkgkGKrYeDjvIpKTR38UzmtHJOGW3Q==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
 
   /@types/react-virtualized-auto-sizer@1.0.4:
     resolution: {integrity: sha512-nhYwlFiYa8M3S+O2T9QO/e1FQUYMr/wJENUdf/O0dhRi1RS/93rjrYQFYdbUqtdFySuhrtnEDX29P6eKOttY+A==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
     dev: true
 
   /@types/react-window@1.8.8:
     resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
     dev: true
-
-  /@types/react@16.14.54:
-    resolution: {integrity: sha512-54MOeVbxTlC8U6XBy2sLhLaHg/QGP0gPEWIpl1E5tNTJDz/SdFktT3OuvAfKxpSXATUmKXDozHvxbT3XohJgDQ==}
-    dependencies:
-      '@types/prop-types': 15.7.11
-      '@types/scheduler': 0.16.8
-      csstype: 3.1.3
 
   /@types/react@17.0.2:
     resolution: {integrity: sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==}
@@ -7486,7 +7395,7 @@ packages:
   /@types/rebass@4.0.14:
     resolution: {integrity: sha512-WBqyrPLdaOsfp6/mLE51LTMxbr5SfAQmLFQwwl6CNUeiaMLdRg0hOk+R9DokkzamHEN9gB87KZBd6YXlOIlqxQ==}
     dependencies:
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
       '@types/styled-components': 5.1.34
       '@types/styled-system': 5.1.22
       '@types/styled-system__css': 5.0.21
@@ -7513,9 +7422,6 @@ packages:
 
   /@types/retry@0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
-
-  /@types/scheduler@0.16.8:
-    resolution: {integrity: sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==}
 
   /@types/secp256k1@4.0.6:
     resolution: {integrity: sha512-hHxJU6PAEUn0TP4S/ZOzuTUvJWuZ6eIKeNKb5RBpODvSl6hp1Wrw4s7ATY50rklRCScUDpHzVA/DQdSjJ3UoYQ==}
@@ -7564,7 +7470,7 @@ packages:
     resolution: {integrity: sha512-mmiVvwpYklFIv9E8qfxuPyIt/OuyIrn6gMOAMOFUO3WJfSrSE+sGUoa4PiZj77Ut7bKZpaa6o1fBKS/4TOEvnA==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.5
-      '@types/react': 16.14.54
+      '@types/react': 17.0.2
       csstype: 3.1.3
     dev: true
 
@@ -13497,12 +13403,12 @@ packages:
       '@babel/runtime': 7.23.6
     dev: false
 
-  /ic-stoic-identity@2.0.0(@dfinity/candid@0.19.3):
+  /ic-stoic-identity@2.0.0(@dfinity/candid@1.4.0):
     resolution: {integrity: sha512-0lvtX+lWR0LaEo076SFTKYDds+WKByQZfn3iU8ap5iCgc+OEBt/g/0jHwsnH3e7tI46JLiNaxSQIp223BEj81Q==}
     dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3)(@dfinity/principal@0.10.4)
-      '@dfinity/identity': 0.10.4(@dfinity/agent@0.10.4)(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
+      '@dfinity/agent': 1.4.0(@dfinity/candid@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/identity': 0.10.4(@dfinity/agent@1.4.0)(@dfinity/principal@1.4.0)
+      '@dfinity/principal': 1.4.0
       buffer: 6.0.3
     transitivePeerDependencies:
       - '@dfinity/candid'
@@ -19035,7 +18941,7 @@ packages:
   /react-markdown@6.0.3(@types/react@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-kQbpWiMoBHnj9myLlmZG9T1JdoT/OEyHK7hqM6CqFT14MAkgWiWBUYijLyBmxbntaN6dCDicPcUhWhci1QYodg==}
     peerDependencies:
-      '@types/react': '>=16'
+      '@types/react': 17.0.2
       react: '>=16'
     dependencies:
       '@types/hast': 2.3.8
@@ -19074,7 +18980,7 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
-      '@types/react': ^18.2.6
+      '@types/react': 17.0.2
       react: 18.2.0
     peerDependenciesMeta:
       '@types/react':
@@ -23306,7 +23212,7 @@ packages:
     resolution: {integrity: sha512-2dq6wq4dSxbiPTamGar0NlIG/av0wpyWZJGeQYtUOLegIUvhM2Bf86ekPlmgpUtS5uR7HyetSiktYrGsdsyZgQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
-      '@types/react': '>=16.8'
+      '@types/react': 17.0.2
       immer: '>=9.0'
       react: '>=16.8'
     peerDependenciesMeta:

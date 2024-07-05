@@ -2,13 +2,10 @@ import { HttpAgent, ActorSubclass } from "@dfinity/agent";
 import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
 import { ic_host } from "@icpswap/constants";
-import { Principal } from "@dfinity/principal";
-import { Signer } from "@slide-computer/signer";
 import { SignerAgent } from "@slide-computer/signer-agent";
 
 import { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
-import { PlugTransport } from "./channel/PlugChannel";
 
 let cachedCanisterIds: { [key: string]: string } = {};
 
@@ -62,7 +59,7 @@ export function isMeConnector(connector: Connector) {
 export class Actor {
   private connector: Connector = Connector.ICPSwap;
 
-  private agent: null | HttpAgent = null;
+  private agent: null | HttpAgent | SignerAgent = null;
 
   private host: string = ic_host;
 
@@ -87,7 +84,7 @@ export class Actor {
     host,
     idlFactory,
     identity,
-    agent,
+
     actorName,
   }: ActorConstructor): Promise<ActorSubclass<T>> {
     let id = canisterId;
@@ -116,19 +113,10 @@ export class Actor {
         createActorError = String(error);
       }
     } else if (identity && this.connector === Connector.PLUG) {
-      const transport = new PlugTransport();
-
-      const signer = new Signer({ transport });
-
-      const signerAgent = new SignerAgent({
-        signer,
-        account: Principal.fromText(this.owner),
-      });
-
       actor = await createBaseActor<T>({
         canisterId: id,
         interfaceFactory: idlFactory,
-        agent: signerAgent,
+        agent: this.agent,
         fetchRootKey: _host !== ic_host,
       });
     } else {
@@ -233,7 +221,7 @@ export class Actor {
     });
   }
 
-  public setAgent(agent: HttpAgent | null) {
+  public setAgent(agent: HttpAgent | SignerAgent | null) {
     this.agent = agent;
   }
 

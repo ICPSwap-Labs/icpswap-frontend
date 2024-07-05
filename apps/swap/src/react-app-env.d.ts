@@ -68,9 +68,16 @@ interface CreateActorArgs {
   interfaceFactory: IDL.interfaceFactory;
 }
 
+interface PlugRequestArgs {
+  method: string;
+  params: any;
+  id: number;
+}
+
 interface Window {
   ic: {
     plug: {
+      request: <T>({ method, params, id }: PlugRequestArgs) => Promise<T>;
       createAgent: ({ whitelist, host }: { whitelist: string[]; host: string }) => Promise<boolean>;
       agent: HttpAgent;
       requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;

@@ -24,6 +24,7 @@ export interface IConnector {
   getPrincipal: string | undefined;
   type: Connector;
   expired: () => Promise<boolean>;
+  signer?: () => Promise<void>;
 }
 
 export { Connector as ConnectorType };

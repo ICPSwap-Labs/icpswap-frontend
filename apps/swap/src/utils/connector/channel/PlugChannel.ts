@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-
 import { type Channel, type JsonRequest, type JsonResponse, type JsonRPC, Transport } from "@slide-computer/signer";
 
 type WalletChannelOptions = {

@@ -28,10 +28,13 @@ export function useConnectorType() {
 export async function connectToConnector(connectorType: Connector) {
   await connector.init(connectorType);
 
-  if (!(await connector.isConnected())) {
+  const isConnected = await connector.isConnected();
+
+  if (!isConnected) {
     await connector.connect();
   } else if (connector.connector) {
     window.icConnector = connector.connector;
+    await connector.signer();
   }
 
   return await getConnectorIsConnected();
