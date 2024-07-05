@@ -23,10 +23,11 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
 
       const state = getStateValueByFilterState(filterState);
 
-      setLoading(true);
-
       if (filterState === FilterState.YOUR) {
         if (!principal) return;
+
+        setLoading(true);
+
         const poolsResult = await getStakingUserPools(principal.toString(), offset, limit);
         const pools = poolsResult?.content ?? [];
 
@@ -40,6 +41,7 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
 
         setPools(infos);
       } else {
+        setLoading(true);
         const result = await getStakingPools(state, offset, limit);
         const pools = result?.content;
         setPools(pools);
