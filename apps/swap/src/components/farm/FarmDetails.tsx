@@ -101,7 +101,7 @@ export function FarmDetails({
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Box sx={{ width: "100%", height: "12px" }} />
 
-          <Flex vertical gap="12px 0" align="flex-start">
+          <Flex vertical gap="16px 0" align="flex-start">
             <Flex gap="0 4px">
               {token0 && token1 ? (
                 <>
