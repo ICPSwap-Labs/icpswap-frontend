@@ -22,6 +22,7 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
       if (!isAvailablePageArgs(offset, limit)) return;
 
       const state = getStateValueByFilterState(filterState);
+      setPools(null);
 
       if (filterState === FilterState.YOUR) {
         if (!principal) return;

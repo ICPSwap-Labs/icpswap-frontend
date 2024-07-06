@@ -23,6 +23,13 @@ interface ReclaimItemProps {
 function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) {
   const { result: token } = useTokenInfo(tokenId);
 
+  const error = useMemo(() => {
+    if (!token || !balance) return t`Reclaim`;
+    if (balance <= token.transFee) return t`Reclaim`;
+
+    return undefined;
+  }, [token, balance]);
+
   return (
     <Flex justify="space-between" sx={{ padding: "16px 0" }}>
       <Flex gap="0 12px">
@@ -36,8 +43,8 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
       </Flex>
 
       <Box>
-        <Button size="small" variant="contained" onClick={() => onReclaim(poolId, balance)}>
-          <Trans>Reclaim</Trans>
+        <Button size="small" variant="contained" onClick={() => onReclaim(poolId, balance)} disabled={!!error}>
+          {error ?? <Trans>Reclaim</Trans>}
         </Button>
       </Box>
     </Flex>
