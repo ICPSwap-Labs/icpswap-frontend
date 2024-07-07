@@ -246,7 +246,9 @@ export function MainContent({
               stakeToken={stakeToken}
               onUnStakeSuccess={handleRefresh}
               stakeAmount={userPoolInfo?.stakeAmount}
+              rewardAmount={userPoolInfo?.pendingReward}
               stakeTokenPrice={stakeTokenPrice}
+              rewardTokenPrice={rewardTokenPrice}
             />
           </Flex>
         </MainCard>

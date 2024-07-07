@@ -139,6 +139,7 @@ export default function StakeDetail() {
                     onReclaimSuccess={handleRefresh}
                     rewardToken={rewardToken}
                     stakeToken={stakeToken}
+                    refresh={tabKey === "reclaim"}
                   />
                 </Box>
               </MainCard>

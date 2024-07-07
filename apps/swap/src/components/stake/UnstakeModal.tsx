@@ -21,9 +21,10 @@ export interface ClaimModalProps {
   poolId: string | undefined;
   onUnStakeSuccess?: () => void;
   stakeAmount: bigint | undefined;
+  rewardAmount: bigint | undefined;
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
-  stakeTokenPrice: string | number | undefined;
+  rewardTokenPrice: string | number | undefined;
 }
 
 export function UnstakeModal({
@@ -31,10 +32,11 @@ export function UnstakeModal({
   onClose,
   poolId,
   stakeAmount,
+  rewardAmount,
   stakeToken,
   rewardToken,
   onUnStakeSuccess,
-  stakeTokenPrice,
+  rewardTokenPrice,
 }: ClaimModalProps) {
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
@@ -100,19 +102,21 @@ export function UnstakeModal({
         <Tooltip tips={t`You will receive the reward tokens you have earned after harvest the staked tokens.`} />
       </Flex>
 
-      {stakeAmount && stakeToken ? (
+      {rewardAmount && rewardToken ? (
         <>
           <Typography sx={{ margin: "12px 0 0 0", fontSize: "20px", fontWeight: 600, color: "text.primary" }}>
             {`${toSignificantWithGroupSeparator(
-              parseTokenAmount(stakeAmount.toString(), stakeToken.decimals).toString(),
+              parseTokenAmount(rewardAmount.toString(), rewardToken.decimals).toString(),
             )} 
-          ${stakeToken.symbol}`}
+          ${rewardToken.symbol}`}
           </Typography>
 
-          {stakeTokenPrice ? (
+          {rewardTokenPrice ? (
             <Typography sx={{ margin: "8px 0 0 0" }}>
               {formatDollarAmount(
-                parseTokenAmount(stakeAmount.toString(), stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
+                parseTokenAmount(rewardAmount.toString(), rewardToken.decimals)
+                  .multipliedBy(rewardTokenPrice)
+                  .toString(),
               )}
             </Typography>
           ) : null}

@@ -56,9 +56,10 @@ export interface ReclaimProps {
   poolId: string | undefined;
   rewardToken: Token | undefined;
   stakeToken: Token | undefined;
+  refresh?: boolean;
 }
 
-export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: ReclaimProps) {
+export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuccess }: ReclaimProps) {
   const [openTip] = useTips();
   const { setReclaimable } = useContext(ReclaimContext);
   const [trigger, setTrigger] = useState(0);
@@ -136,6 +137,10 @@ export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: R
       setReclaimable(false);
     }
   }, [unusedToken, claimableRewards, claimableStakingAmount]);
+
+  useEffect(() => {
+    setTrigger(trigger + 1);
+  }, [refresh]);
 
   return (
     <>

@@ -10,8 +10,10 @@ export interface UnstakeProps {
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
   stakeAmount: bigint | undefined;
+  rewardAmount: bigint | undefined;
   onUnStakeSuccess?: () => void;
   stakeTokenPrice: string | number | undefined;
+  rewardTokenPrice: string | number | undefined;
 }
 
 export function Unstake({
@@ -20,7 +22,8 @@ export function Unstake({
   stakeAmount,
   rewardToken,
   onUnStakeSuccess,
-  stakeTokenPrice,
+  rewardTokenPrice,
+  rewardAmount,
 }: UnstakeProps) {
   const [unStakeOpen, setUnstakeOpen] = useState(false);
 
@@ -48,7 +51,8 @@ export function Unstake({
         stakeToken={stakeToken}
         poolId={poolId}
         onUnStakeSuccess={onUnStakeSuccess}
-        stakeTokenPrice={stakeTokenPrice}
+        rewardTokenPrice={rewardTokenPrice}
+        rewardAmount={rewardAmount}
       />
     </>
   );
