@@ -1,13 +1,19 @@
 import { useHistory } from "react-router-dom";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { Box, Typography, Tooltip } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as QuestionIcon } from "assets/icons/question.svg";
+import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
+import { swapContext } from "components/swap/index";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { ReclaimForSinglePool } from "components/swap/ReclaimForSinglePool";
+import type { UserSwapPoolsBalance } from "@icpswap/types";
 
-export interface ReclaimLinkProps {
+interface LinkProps {
   fontSize?: "12px" | "14px";
 }
 
-export function ReclaimLink({ fontSize = "14px" }: ReclaimLinkProps) {
+function ReclaimLink({ fontSize }: LinkProps) {
   const history = useHistory();
 
   return (
@@ -52,5 +58,73 @@ export function ReclaimLink({ fontSize = "14px" }: ReclaimLinkProps) {
         </Box>
       </Tooltip>
     </Typography>
+  );
+}
+
+interface BalancesProps {
+  reclaim: UserSwapPoolsBalance;
+  index: number;
+  onReclaimSuccess?: () => void;
+}
+
+function Balances({ reclaim, index, onReclaimSuccess }: BalancesProps) {
+  return (
+    <>
+      {reclaim.balance0 !== BigInt(0) ? (
+        <ReclaimForSinglePool
+          poolId={reclaim.canisterId.toString()}
+          balance={reclaim.balance0}
+          tokenId={reclaim.token0.address}
+          type={reclaim.type}
+          viewAll={index === 0}
+          onReclaimSuccess={onReclaimSuccess}
+        />
+      ) : null}
+      {reclaim.balance1 !== BigInt(0) ? (
+        <ReclaimForSinglePool
+          poolId={reclaim.canisterId.toString()}
+          balance={reclaim.balance1}
+          tokenId={reclaim.token1.address}
+          type={reclaim.type}
+          viewAll={index === 0 && reclaim.balance0 === BigInt(0)}
+          onReclaimSuccess={onReclaimSuccess}
+        />
+      ) : null}
+    </>
+  );
+}
+
+export interface ReclaimLinkProps {
+  fontSize?: "12px" | "14px";
+}
+
+export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const { selectedPool } = useContext(swapContext);
+  const principal = useAccountPrincipal();
+  const { balances } = useSwapUserUnusedTokenByPool(selectedPool, principal, refreshTrigger);
+
+  const __balances = useMemo(() => {
+    return balances.filter((e) => !(e.balance0 === BigInt(0) && e.balance1 === BigInt(0)));
+  }, [balances]);
+
+  const hasBalance = useMemo(() => {
+    return !!balances.find((e) => e.balance0 !== BigInt(0) || e.balance1 !== BigInt(0));
+  }, [balances]);
+
+  const handleClaimSuccess = useCallback(() => {
+    setRefreshTrigger(refreshTrigger + 1);
+  }, [refreshTrigger]);
+
+  return (
+    <Box>
+      {hasBalance ? (
+        __balances.map((e, index) => (
+          <Balances index={index} key={e.canisterId.toString()} reclaim={e} onReclaimSuccess={handleClaimSuccess} />
+        ))
+      ) : (
+        <ReclaimLink fontSize={fontSize} />
+      )}
+    </Box>
   );
 }

@@ -6,8 +6,8 @@ import SwapSettingIcon from "components/swap/SettingIcon";
 import SwapUIWrapper from "components/swap/SwapUIWrapper";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import { SwapWrapper } from "components/swap/SwapWrapper";
-import { ReclaimLink } from "components/swap/ReclaimLink";
+import { SwapWrapper, Reclaim, swapContext } from "components/swap/index";
+import { Pool } from "@icpswap/swap-sdk";
 
 import SwapTransactions from "./swap/Transactions";
 
@@ -39,6 +39,7 @@ const SWITCH_BUTTONS = [
 export function SwapMain() {
   const classes = useStyles();
   const [activeSwitch, setActiveSwitch] = useState(1);
+  const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
 
   const ActiveComponent = () => {
     const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
@@ -46,72 +47,74 @@ export function SwapMain() {
   };
 
   return (
-    <SwapUIWrapper>
-      <Grid container justifyContent="center">
-        <Grid item className={classes.outerBox}>
-          <MainCard
-            level={1}
-            sx={{
-              minHeight: "380px",
-              padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
-              paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
-              overflow: "visible",
-              "@media(max-width: 640px)": {
-                padding: activeSwitch === 2 ? "16px 0 0 0" : "16px",
-                paddingBottom: activeSwitch === 2 ? "0!important" : "16px",
-              },
-            }}
-          >
-            <Box
+    <swapContext.Provider value={{ selectedPool, setSelectedPool }}>
+      <SwapUIWrapper>
+        <Grid container justifyContent="center">
+          <Grid item className={classes.outerBox}>
+            <MainCard
+              level={1}
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                position: "relative",
-                padding: activeSwitch === 2 ? "0 24px" : "0",
+                minHeight: "380px",
+                padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
+                paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
+                overflow: "visible",
                 "@media(max-width: 640px)": {
-                  padding: activeSwitch === 2 ? "0 16px" : "0",
+                  padding: activeSwitch === 2 ? "16px 0 0 0" : "16px",
+                  paddingBottom: activeSwitch === 2 ? "0!important" : "16px",
                 },
               }}
             >
-              <Box>
-                {SWITCH_BUTTONS.map((item) => (
-                  <Box
-                    key={item.id}
-                    sx={{
-                      display: "inline-block",
-                      marginRight: "32px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => setActiveSwitch(item.id)}
-                  >
-                    <Typography
-                      className={item.id === activeSwitch ? classes.activeTypography : ""}
-                      color={activeSwitch === item.id ? "textPrimary" : "textSecondary"}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  position: "relative",
+                  padding: activeSwitch === 2 ? "0 24px" : "0",
+                  "@media(max-width: 640px)": {
+                    padding: activeSwitch === 2 ? "0 16px" : "0",
+                  },
+                }}
+              >
+                <Box>
+                  {SWITCH_BUTTONS.map((item) => (
+                    <Box
+                      key={item.id}
+                      sx={{
+                        display: "inline-block",
+                        marginRight: "32px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setActiveSwitch(item.id)}
                     >
-                      {item.value}
-                    </Typography>
-                  </Box>
-                ))}
+                      <Typography
+                        className={item.id === activeSwitch ? classes.activeTypography : ""}
+                        color={activeSwitch === item.id ? "textPrimary" : "textSecondary"}
+                      >
+                        {item.value}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+                <SwapSettingIcon type="swap" />
               </Box>
-              <SwapSettingIcon type="swap" />
-            </Box>
-            <Box mt={3}>{ActiveComponent()}</Box>
-          </MainCard>
+              <Box mt={3}>{ActiveComponent()}</Box>
+            </MainCard>
 
-          <Box
-            mt="8px"
-            sx={{
-              background: "#111936",
-              padding: "16px",
-              borderRadius: "12px",
-            }}
-          >
-            <ReclaimLink />
-          </Box>
+            <Box
+              mt="8px"
+              sx={{
+                background: "#111936",
+                padding: "16px",
+                borderRadius: "12px",
+              }}
+            >
+              <Reclaim />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </SwapUIWrapper>
+      </SwapUIWrapper>
+    </swapContext.Provider>
   );
 }
 

@@ -159,6 +159,7 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
     tradePoolId: Trade?.tradePoolId,
+    routes: Trade?.routes,
     currencyBalances,
     userSlippageTolerance,
     inputCurrency,

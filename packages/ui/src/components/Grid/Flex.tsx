@@ -13,6 +13,7 @@ export interface FlexProps {
   gap?: BoxProps["gap"];
   vertical?: boolean;
   sx?: BoxProps["sx"];
+  onClick?: BoxProps["onClick"];
 }
 
 export function Flex({
@@ -27,6 +28,7 @@ export function Flex({
   borderRadius,
   margin,
   sx,
+  onClick,
 }: FlexProps) {
   return (
     <Box
@@ -44,6 +46,7 @@ export function Flex({
         gap,
         ...sx,
       }}
+      onClick={onClick}
     >
       {children}
     </Box>

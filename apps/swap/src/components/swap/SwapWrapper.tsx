@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { Grid, Box, Typography, CircularProgress } from "@mui/material";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
@@ -26,10 +26,10 @@ import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
-import { ReclaimLink } from "components/swap/ReclaimLink";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
+import { Reclaim, swapContext } from "components/swap/index";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -50,6 +50,7 @@ export function SwapWrapper({
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
   const history = useHistory();
+  const { setSelectedPool } = useContext(swapContext);
 
   useLoadDefaultParams();
 
@@ -63,6 +64,7 @@ export function SwapWrapper({
     parsedAmount,
     trade,
     tradePoolId,
+    routes,
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
@@ -78,6 +80,13 @@ export function SwapWrapper({
     if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
   }, [tradePoolId, outputCurrency, inputCurrency]);
+
+  useEffect(() => {
+    const pool = routes[0]?.pools[0];
+    if (pool) {
+      setSelectedPool(pool);
+    }
+  }, [routes]);
 
   const parsedAmounts = useMemo(
     () => ({
@@ -307,7 +316,7 @@ export function SwapWrapper({
           ))}
       </Button>
 
-      {ui === "pro" ? <ReclaimLink fontSize="12px" /> : null}
+      {ui === "pro" ? <Reclaim fontSize="12px" /> : null}
 
       {confirmModalShow && trade && (
         <Identity onSubmit={handleSwapConfirm}>
