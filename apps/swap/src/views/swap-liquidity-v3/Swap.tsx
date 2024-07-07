@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MainCard } from "components/index";
@@ -40,14 +40,39 @@ export function SwapMain() {
   const classes = useStyles();
   const [activeSwitch, setActiveSwitch] = useState(1);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
+  const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
 
   const ActiveComponent = () => {
     const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
     return <Component />;
   };
 
+  const handleAddKeys = useCallback(
+    (key: string) => {
+      setUnavailableBalanceKeys([...new Set([...unavailableBalanceKeys, key])]);
+    },
+    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+  );
+
+  const handleRemoveKeys = useCallback(
+    (key: string) => {
+      const newKeys = [...unavailableBalanceKeys];
+      newKeys.splice(newKeys.indexOf(key), 1);
+      setUnavailableBalanceKeys(newKeys);
+    },
+    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+  );
+
   return (
-    <swapContext.Provider value={{ selectedPool, setSelectedPool }}>
+    <swapContext.Provider
+      value={{
+        selectedPool,
+        setSelectedPool,
+        unavailableBalanceKeys,
+        setUnavailableBalanceKey: handleAddKeys,
+        removeUnavailableBalanceKey: handleRemoveKeys,
+      }}
+    >
       <SwapUIWrapper>
         <Grid container justifyContent="center">
           <Grid item className={classes.outerBox}>

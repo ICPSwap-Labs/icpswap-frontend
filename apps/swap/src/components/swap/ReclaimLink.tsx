@@ -72,6 +72,7 @@ function Balances({ reclaim, index, onReclaimSuccess }: BalancesProps) {
     <>
       {reclaim.balance0 !== BigInt(0) ? (
         <ReclaimForSinglePool
+          id={`balance0_${reclaim.canisterId.toString()}_${reclaim.type}`}
           poolId={reclaim.canisterId.toString()}
           balance={reclaim.balance0}
           tokenId={reclaim.token0.address}
@@ -80,8 +81,10 @@ function Balances({ reclaim, index, onReclaimSuccess }: BalancesProps) {
           onReclaimSuccess={onReclaimSuccess}
         />
       ) : null}
+
       {reclaim.balance1 !== BigInt(0) ? (
         <ReclaimForSinglePool
+          id={`balance1_${reclaim.canisterId.toString()}_${reclaim.type}`}
           poolId={reclaim.canisterId.toString()}
           balance={reclaim.balance1}
           tokenId={reclaim.token1.address}
@@ -100,7 +103,7 @@ export interface ReclaimLinkProps {
 
 export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
-  const { selectedPool } = useContext(swapContext);
+  const { selectedPool, unavailableBalanceKeys } = useContext(swapContext);
   const principal = useAccountPrincipal();
   const { balances } = useSwapUserUnusedTokenByPool(selectedPool, principal, refreshTrigger);
 
@@ -108,8 +111,22 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
     return balances.filter((e) => !(e.balance0 === BigInt(0) && e.balance1 === BigInt(0)));
   }, [balances]);
 
-  const hasBalance = useMemo(() => {
-    return !!balances.find((e) => e.balance0 !== BigInt(0) || e.balance1 !== BigInt(0));
+  const balanceNumber = useMemo(() => {
+    let number = 0;
+
+    for (let i = 0; i < balances.length; i++) {
+      const e = balances[i];
+
+      if (e.balance0 !== BigInt(0)) {
+        number += 1;
+      }
+
+      if (e.balance1 !== BigInt(0)) {
+        number += 1;
+      }
+    }
+
+    return number;
   }, [balances]);
 
   const handleClaimSuccess = useCallback(() => {
@@ -118,7 +135,7 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
 
   return (
     <Box>
-      {hasBalance ? (
+      {balanceNumber !== 0 && unavailableBalanceKeys.length !== balanceNumber ? (
         __balances.map((e, index) => (
           <Balances index={index} key={e.canisterId.toString()} reclaim={e} onReclaimSuccess={handleClaimSuccess} />
         ))

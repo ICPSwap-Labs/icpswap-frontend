@@ -4,16 +4,18 @@ import { useTokenInfo } from "hooks/token";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { useReclaim } from "hooks/swap/useReclaim";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import { ArrowUpRight } from "react-feather";
 import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
+import { swapContext } from "components/swap/index";
 
 export interface ReclaimForSinglePoolProps {
   balance: bigint;
   poolId: string;
   tokenId: string;
   type: "unUsed" | "unDeposit";
+  id: string;
   viewAll?: boolean;
   onReclaimSuccess?: () => void;
 }
@@ -25,11 +27,13 @@ export function ReclaimForSinglePool({
   tokenId,
   onReclaimSuccess,
   viewAll = false,
+  id,
 }: ReclaimForSinglePoolProps) {
   const history = useHistory();
   const theme = useTheme() as Theme;
   const [loading, setLoading] = useState(false);
   const { result: tokenInfo } = useTokenInfo(tokenId);
+  const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(swapContext);
 
   const reclaim = useReclaim();
 
@@ -51,7 +55,21 @@ export function ReclaimForSinglePool({
     history.push("/swap/reclaim");
   }, [history]);
 
-  return tokenInfo ? (
+  const hide = useMemo(() => {
+    if (!tokenInfo) return false;
+
+    return tokenInfo.transFee >= balance;
+  }, [tokenInfo, balance]);
+
+  useEffect(() => {
+    if (hide) {
+      setUnavailableBalanceKey(id);
+    } else {
+      removeUnavailableBalanceKey(id);
+    }
+  }, [hide, id]);
+
+  return tokenInfo && !hide ? (
     <Box
       sx={{
         width: "100%",
