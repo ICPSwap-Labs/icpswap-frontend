@@ -68,7 +68,11 @@ export function useCleanSwapState() {
   return useCallback(() => dispatch(clearSwapState()), [dispatch]);
 }
 
-export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
+export interface UseSwapInfoArgs {
+  refresh?: number | boolean;
+}
+
+export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const account = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
@@ -84,8 +88,8 @@ export function useSwapInfo({ refreshBalance }: { refreshBalance?: boolean }) {
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
-  const { result: inputCurrencyBalance } = useCurrencyBalance(account, inputCurrency, refreshBalance);
-  const { result: outputCurrencyBalance } = useCurrencyBalance(account, outputCurrency, refreshBalance);
+  const { result: inputCurrencyBalance } = useCurrencyBalance(account, inputCurrency, refresh);
+  const { result: outputCurrencyBalance } = useCurrencyBalance(account, outputCurrency, refresh);
 
   const currencyBalances = {
     [SWAP_FIELD.INPUT]: inputCurrencyBalance,

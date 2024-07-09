@@ -14,7 +14,6 @@ import { warningSeverity } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import TradePrice from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
-import Identity, { CallbackProps } from "components/Identity";
 import Button from "components/authentication/ButtonConnector";
 import { MainCard } from "components/index";
 import StepViewButton from "components/Steps/View";
@@ -53,7 +52,7 @@ export default function Swap() {
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-  } = useSwapInfo({ refreshBalance });
+  } = useSwapInfo({ refresh: refreshBalance });
 
   const parsedAmounts = useMemo(
     () => ({
@@ -281,18 +280,14 @@ export default function Swap() {
       </Box>
 
       {confirmModalShow && trade && (
-        <Identity onSubmit={handleSwapConfirm}>
-          {({ submit }: CallbackProps) => (
-            <SwapConfirm
-              trade={trade}
-              open={confirmModalShow}
-              onClose={() => setConfirmModalShow(false)}
-              onConfirm={submit}
-              slippageTolerance={userSlippageTolerance}
-              loading={swapLoading}
-            />
-          )}
-        </Identity>
+        <SwapConfirm
+          trade={trade}
+          open={confirmModalShow}
+          onClose={() => setConfirmModalShow(false)}
+          onConfirm={handleSwapConfirm}
+          slippageTolerance={userSlippageTolerance}
+          loading={swapLoading}
+        />
       )}
     </Box>
   );

@@ -33,7 +33,7 @@ export function ReclaimForSinglePool({
   const theme = useTheme() as Theme;
   const [loading, setLoading] = useState(false);
   const { result: tokenInfo } = useTokenInfo(tokenId);
-  const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(swapContext);
+  const { setUnavailableBalanceKey, removeUnavailableBalanceKey, setRefreshTrigger } = useContext(swapContext);
 
   const reclaim = useReclaim();
 
@@ -46,10 +46,11 @@ export function ReclaimForSinglePool({
 
     if (claimSuccess) {
       if (onReclaimSuccess) onReclaimSuccess();
+      setRefreshTrigger();
     }
 
     setLoading(false);
-  }, [tokenInfo, loading, reclaim]);
+  }, [tokenInfo, loading, reclaim, setRefreshTrigger]);
 
   const handleViewAll = useCallback(() => {
     history.push("/swap/reclaim");

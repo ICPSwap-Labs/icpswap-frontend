@@ -41,6 +41,7 @@ export function SwapMain() {
   const [activeSwitch, setActiveSwitch] = useState(1);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const ActiveComponent = () => {
     const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
@@ -49,7 +50,7 @@ export function SwapMain() {
 
   const handleAddKeys = useCallback(
     (key: string) => {
-      setUnavailableBalanceKeys([...new Set([...unavailableBalanceKeys, key])]);
+      setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
     },
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
@@ -63,6 +64,10 @@ export function SwapMain() {
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
 
+  const handleUpdateRefreshTrigger = useCallback(() => {
+    setRefreshTrigger(refreshTrigger + 1);
+  }, [refreshTrigger, setRefreshTrigger]);
+
   return (
     <swapContext.Provider
       value={{
@@ -71,6 +76,8 @@ export function SwapMain() {
         unavailableBalanceKeys,
         setUnavailableBalanceKey: handleAddKeys,
         removeUnavailableBalanceKey: handleRemoveKeys,
+        refreshTrigger,
+        setRefreshTrigger: handleUpdateRefreshTrigger,
       }}
     >
       <SwapUIWrapper>

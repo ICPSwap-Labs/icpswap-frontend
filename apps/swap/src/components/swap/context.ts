@@ -7,6 +7,8 @@ export interface SwapContextProps {
   unavailableBalanceKeys: string[];
   setUnavailableBalanceKey: (key: string) => void;
   removeUnavailableBalanceKey: (key: string) => void;
+  refreshTrigger: number;
+  setRefreshTrigger: () => void;
 }
 
 export const swapContext = createContext<SwapContextProps>({} as SwapContextProps);

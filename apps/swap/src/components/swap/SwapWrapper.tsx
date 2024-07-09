@@ -45,12 +45,11 @@ export function SwapWrapper({
   onTradePoolIdChange,
 }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
-  const [refreshBalance, setRefreshBalance] = useState(false);
 
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
   const history = useHistory();
-  const { setSelectedPool } = useContext(swapContext);
+  const { setSelectedPool, refreshTrigger, setRefreshTrigger } = useContext(swapContext);
 
   useLoadDefaultParams();
 
@@ -72,7 +71,7 @@ export function SwapWrapper({
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-  } = useSwapInfo({ refreshBalance });
+  } = useSwapInfo({ refresh: refreshTrigger });
 
   // For swap pro
   useEffect(() => {
@@ -83,10 +82,10 @@ export function SwapWrapper({
 
   useEffect(() => {
     const pool = routes[0]?.pools[0];
-    if (pool) {
+    if (pool && setSelectedPool) {
       setSelectedPool(pool);
     }
-  }, [routes]);
+  }, [routes, setSelectedPool]);
 
   const parsedAmounts = useMemo(
     () => ({
@@ -156,8 +155,9 @@ export function SwapWrapper({
     canisterId: inputTokenAddress,
     address: tradePoolId,
     sub,
+    reload: refreshTrigger,
   });
-  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal);
+  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal, refreshTrigger);
   const swapTokenUnusedBalance = useMemo(() => {
     if (!tradePool || !unusedBalance || !inputCurrency) return undefined;
     return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
@@ -199,9 +199,9 @@ export function SwapWrapper({
 
     if (result) {
       openSuccessTip(t`Swapped Successfully`);
-      setRefreshBalance(true);
+      setRefreshTrigger();
       setTimeout(() => {
-        setRefreshBalance(false);
+        setRefreshTrigger();
       }, 1000);
     }
   }, [swapCallback, swapLoading, setSwapLoading, trade, subAccountTokenBalance, swapTokenUnusedBalance]);
