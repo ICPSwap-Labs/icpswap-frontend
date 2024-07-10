@@ -33,7 +33,7 @@ export const stakingPool = (canisterId: string, identity?: ActorIdentity) =>
 
 export const stakingUserStorage = (identity?: ActorIdentity) =>
   actor.create<StakingUserStorage>({
-    actorName: ActorName.StakingUserStorage,
+    actorName: ActorName.StakingPoolUserIndex,
     identity,
     idlFactory: StakingUserStorageInterfaceFactor,
   });
