@@ -89,44 +89,38 @@ export function useLiquidityTicks(canisterId: string | undefined, limit?: number
   );
 }
 
-export async function deposit(identity: ActorIdentity, canisterId: string, token: string, amount: bigint, fee: bigint) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).deposit({ token, amount, fee }));
+export async function deposit(canisterId: string, token: string, amount: bigint, fee: bigint) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).deposit({ token, amount, fee }));
 }
 
-export async function depositFrom(
-  identity: ActorIdentity,
-  canisterId: string,
-  token: string,
-  amount: bigint,
-  fee: bigint,
-) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).depositFrom({ token, amount, fee }));
+export async function depositFrom(canisterId: string, token: string, amount: bigint, fee: bigint) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).depositFrom({ token, amount, fee }));
 }
 
-export async function mint(canisterId: string, identity: ActorIdentity, args: MintArgs) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).mint(args));
+export async function mint(canisterId: string, args: MintArgs) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).mint(args));
 }
 
-export async function increaseLiquidity(identity: ActorIdentity, poolId: string, args: IncreaseLiquidityArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).increaseLiquidity(args));
+export async function increaseLiquidity(poolId: string, args: IncreaseLiquidityArgs) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).increaseLiquidity(args));
 }
 
-export async function decreaseLiquidity(identity: ActorIdentity, poolId: string, args: DecreaseLiquidityArgs) {
+export async function decreaseLiquidity(poolId: string, args: DecreaseLiquidityArgs) {
   return resultFormat<{ amount0: bigint; amount1: bigint }>(
-    await (await swapPool(poolId, identity)).decreaseLiquidity(args),
+    await (await swapPool(poolId, true)).decreaseLiquidity(args),
   );
 }
 
-export async function withdraw(identity: ActorIdentity, poolId: string, token: string, fee: bigint, amount: bigint) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).withdraw({ token, fee, amount }));
+export async function withdraw(poolId: string, token: string, fee: bigint, amount: bigint) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).withdraw({ token, fee, amount }));
 }
 
 export async function quote(poolId: string, args: SwapArgs) {
   return resultFormat<bigint>(await (await swapPool(poolId)).quote(args)).data;
 }
 
-export async function swap(poolId: string, identity: ActorIdentity, args: SwapArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).swap(args));
+export async function swap(poolId: string, args: SwapArgs) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).swap(args));
 }
 
 export async function collect(poolId: string, identity: ActorIdentity, args: ClaimArgs) {

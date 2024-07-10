@@ -7,12 +7,11 @@ import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks"
 import { usePoolCanisterIdManager } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { PositionDetail } from "types/swap";
-import type { SwapNFTTokenMetadata } from "@icpswap/types";
-import { getActorIdentity } from "components/Identity";
+import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { isUseTransfer } from "utils/token/index";
+import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
 import { SubAccount } from "@dfinity/ledger-icp";
@@ -146,20 +145,25 @@ export function usePositionsFromNFTs(data: SwapNFTTokenMetadata[] | undefined) {
   return useMemo(() => ({ loading, result: positions }), [positions, loading]);
 }
 
+export interface UseSwapDepositArgs {
+  token: Token;
+  amount: string;
+  poolId: string;
+  openExternalTip?: OpenExternalTip;
+  standard: TOKEN_STANDARD;
+}
+
 export function useSwapDeposit() {
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(async (token: Token, amount: string, poolId: string, openExternalTip?: OpenExternalTip) => {
-    const identity = await getActorIdentity();
-
-    const useTransfer = isUseTransfer(token);
+  return useCallback(async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
+    const useTransfer = isUseTransferByStandard(standard);
 
     let status: ResultStatus = ResultStatus.ERROR;
     let message = "";
 
     if (useTransfer) {
       const { status: _status, message: _message } = await deposit(
-        identity,
         poolId,
         token.address,
         BigInt(amount),
@@ -169,7 +173,6 @@ export function useSwapDeposit() {
       message = _message;
     } else {
       const { status: _status, message: _message } = await depositFrom(
-        identity,
         poolId,
         token.address,
         BigInt(amount),
@@ -232,9 +235,7 @@ export function useSwapWithdraw() {
   const [openErrorTip] = useErrorTip();
 
   return useCallback(async (token: Token, poolId: string, amount: string, openExternalTip?: OpenExternalTip) => {
-    const identity = await getActorIdentity();
-
-    const { status, message } = await withdraw(identity, poolId, token.address, BigInt(token.transFee), BigInt(amount));
+    const { status, message } = await withdraw(poolId, token.address, BigInt(token.transFee), BigInt(amount));
 
     if (status === "err") {
       if (openExternalTip) {
