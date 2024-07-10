@@ -17,11 +17,14 @@ export function useFarms({ state, filter }: UseFarmsArgs) {
 
   useEffect(() => {
     async function call() {
-      if (!principal) return;
-
-      setLoading(true);
-
       if (filter === FilterState.YOUR) {
+        if (!principal) {
+          setFarms(null);
+          return;
+        }
+
+        setLoading(true);
+
         const farms = await getFarms(undefined);
 
         const result = (
@@ -43,6 +46,7 @@ export function useFarms({ state, filter }: UseFarmsArgs) {
 
         setFarms(stakedFarms);
       } else {
+        setLoading(true);
         const farms = await getFarms(state);
         setFarms(farms);
       }

@@ -26,9 +26,8 @@ function MainContent() {
   const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { state: _state, stakeOnly } = useParsedQueryString() as {
+  const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;
-    stakeOnly: "true" | undefined;
   };
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
@@ -52,16 +51,9 @@ function MainContent() {
 
   const { result: farms, loading } = useFarms({ state, filter: __state });
 
-  const handleToggle = useCallback(
-    (value: { label: string; state: FilterState }) => {
-      if (stakeOnly === "true") {
-        history.push(`/farm?state=${value.state}&stakeOnly=true`);
-        return;
-      }
-      history.push(`/farm?state=${value.state}`);
-    },
-    [stakeOnly],
-  );
+  const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
+    history.push(`/farm?state=${value.state}`);
+  }, []);
 
   const [unStakedFarms, setUnStakedFarms] = useState<string[]>([]);
 
@@ -214,9 +206,7 @@ function MainContent() {
             </Box>
           ) : (
             <>
-              {((unStakedFarms.length === farms?.length && stakeOnly === "true") || !farms?.length) && !loading && (
-                <NoData />
-              )}
+              {(unStakedFarms.length === farms?.length || !farms?.length) && !loading && <NoData />}
 
               {farms?.map((farm) => (
                 <FarmListCard
