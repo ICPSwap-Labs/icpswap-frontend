@@ -1,10 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useICPPrice } from "hooks/useUSDPrice";
-import { resultFormat, parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { Token } from "@icpswap/swap-sdk";
 import {
-  useCallsData,
   getUserFarmInfo,
   getV3UserFarmRewardInfo,
   getFarmTVL,
@@ -13,17 +12,19 @@ import {
   useFarms,
   useInterval,
 } from "@icpswap/hooks";
-import { farm } from "@icpswap/actor";
 import type { FarmInfo } from "@icpswap/types";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { _getTokenInfo } from "hooks/token/index";
+import { useFarmTvlValue } from "./useFarmTvlValue";
 
 type GlobalData = { stakeTokenTVL: string; rewardTokenTVL: string };
 
 export function useFarmGlobalTVL() {
+  const [poolsNumber, setPoolsNumber] = useState<null | number>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  const { result: allFarms } = useFarms(undefined, refreshTrigger);
   const { result: allLiveFarms } = useFarms("LIVE", refreshTrigger);
 
   const [data, setData] = useState<GlobalData>({
@@ -77,13 +78,19 @@ export function useFarmGlobalTVL() {
     call();
   }, [infoAllTokens, allLiveFarms]);
 
+  useEffect(() => {
+    if (allFarms) {
+      setPoolsNumber(allFarms.length);
+    }
+  }, [allFarms]);
+
   const update = useCallback(async () => {
     setRefreshTrigger((prevState) => prevState + 1);
   }, []);
 
   useInterval<void>(update);
 
-  return useMemo(() => data, [data]);
+  return useMemo(() => ({ ...data, poolsNumber }), [data, poolsNumber]);
 }
 
 export function useIntervalUserFarmInfo(canisterId: string | undefined, user: string | undefined, force?: boolean) {
@@ -130,46 +137,16 @@ export function useIntervalUserRewardInfo(
   return useIntervalFetch(call, force);
 }
 
-export async function stake(farmId: string, positionIndex: bigint) {
-  const result = await (await farm(farmId, true)).stake(positionIndex);
-  return resultFormat<string>(result);
-}
-
-export async function unStake(farmId: string, tokenId: bigint) {
-  const result = await (await farm(farmId, true)).unstake(tokenId);
-  return resultFormat<string>(result);
-}
-
-export function usePoolCycles(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint }>(await (await farm(canisterId)).getCycleInfo()).data?.balance;
-    }, [canisterId]),
-  );
-}
-
-export function useV3StakingCycles(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return resultFormat<{ balance: bigint; available: bigint }>(await (await farm(canisterId)).getCycleInfo()).data;
-    }, [canisterId]),
-  );
-}
-
 export interface useFarmUSDValueArgs {
   token0?: Token | undefined;
   token1?: Token | undefined;
   rewardToken: Token | undefined;
   userFarmInfo: FarmInfo | undefined;
-  userRewardAmount: BigNumber | undefined;
-  rewardTokenPrice: string | number | undefined;
+  userRewardAmount: string | undefined;
   farmId: string;
 }
 
 export function useFarmUSDValue({
-  rewardTokenPrice,
   farmId,
   rewardToken,
   userFarmInfo,
@@ -182,23 +159,13 @@ export function useFarmUSDValue({
 
   const principal = useAccountPrincipalString();
 
-  const farmTvl = userIntervalFarmTVL(farmId);
+  const farmTvlValue = useFarmTvlValue({ farmId, token0, token1 });
 
-  const poolTvl = useMemo(() => {
-    if (!farmTvl || !infoAllTokens || !token0 || !token1) return undefined;
+  const rewardTokenPrice = useMemo(() => {
+    if (!rewardToken || !infoAllTokens) return undefined;
 
-    const { poolToken0, poolToken1 } = farmTvl;
-
-    const token0Price = infoAllTokens.find((e) => e.address === token0.address)?.priceUSD;
-    const token1Price = infoAllTokens.find((e) => e.address === token1.address)?.priceUSD;
-
-    if (!token0Price || !token1Price) return undefined;
-
-    const token0Tvl = parseTokenAmount(poolToken0.amount, token0.decimals).multipliedBy(token0Price);
-    const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
-
-    return token0Tvl.plus(token1Tvl).toFixed(3);
-  }, [farmTvl, token0, infoAllTokens]);
+    return infoAllTokens.find((token) => token.address === rewardToken.address)?.priceUSD;
+  }, [infoAllTokens, rewardToken]);
 
   const totalRewardUSD = useMemo(() => {
     if (!rewardToken || !rewardTokenPrice || !userFarmInfo) {
@@ -215,15 +182,13 @@ export function useFarmUSDValue({
       return 0;
     }
 
-    return new BigNumber(rewardTokenPrice)
-      .multipliedBy(parseTokenAmount(userRewardAmount, rewardToken.decimals))
-      .toNumber();
+    return new BigNumber(rewardTokenPrice).multipliedBy(userRewardAmount).toNumber();
   }, [rewardToken, rewardTokenPrice, userRewardAmount]);
 
   const parsedUserRewardAmount = useMemo(() => {
     if (!rewardToken || !userRewardAmount) return undefined;
 
-    return parseTokenAmount(userRewardAmount, rewardToken.decimals).toNumber();
+    return userRewardAmount;
   }, [rewardToken, userRewardAmount]);
 
   const userTvl = userIntervalFarmUserTVL(farmId, principal);
@@ -241,17 +206,24 @@ export function useFarmUSDValue({
     const token0Tvl = parseTokenAmount(poolToken0.amount, token0.decimals).multipliedBy(token0Price);
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
-    return token0Tvl.plus(token1Tvl).toFixed(3);
+    return token0Tvl.plus(token1Tvl).toString();
   }, [userTvl, icpPrice, infoAllTokens]);
 
   return useMemo(
     () => ({
-      poolTvl,
+      farmTvlValue,
       totalRewardUSD,
       userRewardUSD,
       parsedUserRewardAmount,
       userTvl: userTvlUSD,
     }),
-    [poolTvl, userTvlUSD, userRewardUSD, totalRewardUSD, parsedUserRewardAmount],
+    [farmTvlValue, userTvlUSD, userRewardUSD, totalRewardUSD, parsedUserRewardAmount],
   );
 }
+
+export * from "./useFarmApr";
+export * from "./useUserPositionValue";
+export * from "./useFarmTvlValue";
+export * from "./useStateColors";
+export * from "./useFarmGlobalData";
+export * from "./useFarms";

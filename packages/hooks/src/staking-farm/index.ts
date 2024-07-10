@@ -50,13 +50,17 @@ export async function getFarmUserPositions(canisterId: string, principal: string
     .data;
 }
 
-export function useFarmUserPositions(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {
+export function useFarmUserPositions(
+  canisterId: string | undefined,
+  principal: string | undefined,
+  refresh?: number | boolean,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
       return await getFarmUserPositions(canisterId, principal);
     }, [canisterId, principal]),
-    reload,
+    refresh,
   );
 }
 
@@ -222,8 +226,6 @@ export function useV3FarmDistributeRecords(
   );
 }
 
-/* v3 farm storage */
-
 export function useFarmCycles(farmId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
@@ -232,3 +234,53 @@ export function useFarmCycles(farmId: string | undefined) {
     }, [farmId]),
   );
 }
+
+export async function farmStake(farmId: string, positionIndex: bigint) {
+  const result = await (await farm(farmId, true)).stake(positionIndex);
+  return resultFormat<string>(result);
+}
+
+export async function farmUnstake(farmId: string, positionIndex: bigint) {
+  const result = await (await farm(farmId, true)).unstake(positionIndex);
+  return resultFormat<string>(result);
+}
+
+/**
+ * @description withdraw the total reward of user
+ * @param {string} farmId farm pool canister id
+ * @return {*}
+ */
+export async function farmWithdraw(farmId: string) {
+  const result = await (await farm(farmId, true)).withdraw();
+  return resultFormat<bigint>(result);
+}
+
+/**
+ * @description Get user unclaimed rewards
+ * @param farmId farm pool canister id
+ * @param principal user principal ID
+ * @returns user unclaimed rewards amount
+ */
+export async function getFarmUserRewards(farmId: string, principal: Principal) {
+  const result = await (await farm(farmId, true)).getUserRewardBalance(principal);
+  return resultFormat<bigint>(result).data;
+}
+
+/**
+ * @description Use user unclaimed rewards
+ * @param farmId farm pool canister id
+ * @param principal user principal ID
+ * @returns user unclaimed rewards amount
+ */
+export function useFarmUserRewards(farmId: string | undefined, principal: Principal | undefined, refresh?: number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!farmId || !principal) return undefined;
+      return await getFarmUserRewards(farmId, principal);
+    }, [farmId, principal]),
+    refresh,
+  );
+}
+
+export * from "./useFarmState";
+export * from "./useFarmTotalAmount";

@@ -18,22 +18,30 @@ import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
 import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     details: {
-      display: "grid",
+      display: "flex",
       gap: "20px 0",
-      gridTemplateColumns: "repeat(2, 1fr)",
-      [theme.breakpoints.down("md")]: {
-        gridTemplateColumns: "repeat(2, 1fr)",
+      "& .columns": {
+        flex: "50%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px 0",
       },
-      [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "repeat(1, 1fr)",
+      "@media(max-width: 640px)": {
+        flexDirection: "column",
+
+        "& .columns": {
+          flex: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px 0",
+        },
       },
     },
   };
@@ -41,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export function PoolDetailItem({ label, value }: { value: ReactNode; label: ReactNode }) {
   return (
-    <Box>
+    <Box className="row-item">
       <Typography component="span">{label}</Typography>{" "}
       <Typography component="span" color="text.primary">
         {value}
@@ -97,106 +105,114 @@ export default function FarmDetails() {
             </Grid>
           </Box>
           <Box mt="30px" className={classes.details}>
-            <PoolDetailItem
-              label={t`Canister ID:`}
-              value={
-                <Copy content={farmId}>
-                  <Typography color="text.primary">{shorten(farmId, 8)}</Typography>
-                </Copy>
-              }
-            />
-            <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
-            <PoolDetailItem
-              label={t`Reward Token Amount:`}
-              value={
-                <Typography component="span" color="text.primary">
-                  {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
-                  <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
-                    &nbsp;{`${rewardToken?.symbol ?? "--"}`}
-                  </Link>
-                </Typography>
-              }
-            />
-            <PoolDetailItem
-              label={t`Claimed Rewards:`}
-              value={
-                farmMetadata && rewardToken ? (
-                  <>
-                    {toSignificantWithGroupSeparator(
-                      parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
-                      8,
-                    )}
+            <Box className="columns">
+              <PoolDetailItem
+                label={t`Canister ID:`}
+                value={
+                  <Copy content={farmId}>
+                    <Typography color="text.primary">{shorten(farmId, 8)}</Typography>
+                  </Copy>
+                }
+              />
+              <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
+              <PoolDetailItem
+                label={t`Reward Token Amount:`}
+                value={
+                  <Typography component="span" color="text.primary">
+                    {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
                     <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
-                      &nbsp;{rewardToken.symbol}
+                      &nbsp;{`${rewardToken?.symbol ?? "--"}`}
                     </Link>
-                  </>
-                ) : (
-                  "--"
-                )
-              }
-            />
-            <PoolDetailItem
-              label={t`Unclaimed Rewards:`}
-              value={
-                farmMetadata && rewardToken ? (
-                  <>
-                    {toSignificantWithGroupSeparator(
-                      parseTokenAmount(farmMetadata.totalRewardUnharvested.toString(), rewardToken.decimals).toString(),
-                      8,
-                    )}
-                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
-                      &nbsp;{rewardToken.symbol}
-                    </Link>
-                  </>
-                ) : (
-                  "--"
-                )
-              }
-            />
-            <PoolDetailItem
-              label={t`Distribution Interval:`}
-              value={
-                farmMetadata ? (
-                  <>
-                    {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
-                  </>
-                ) : (
-                  "--"
-                )
-              }
-            />
-            <PoolDetailItem
-              label={t`Amount per Distribution:`}
-              value={
-                farmMetadata && rewardToken ? (
-                  <>
-                    {toSignificantWithGroupSeparator(
-                      parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
-                      8,
-                    )}
-                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
-                      &nbsp;{rewardToken.symbol}
-                    </Link>
-                  </>
-                ) : (
-                  "--"
-                )
-              }
-            />
-            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
-            <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
-            <PoolDetailItem
-              label={t`Creator:`}
-              value={
-                <Copy content={farmInfo?.creator.toString() ?? ""}>
-                  <Typography color="text.primary">{shorten(farmInfo?.creator.toString() ?? "", 8)}</Typography>
-                </Copy>
-              }
-            />
-            <PoolDetailItem
-              label={t`Cycles left:`}
-              value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
-            />
+                  </Typography>
+                }
+              />
+              <PoolDetailItem
+                label={t`Claimed Rewards:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem
+                label={t`Unclaimed Rewards:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(
+                          farmMetadata.totalRewardUnharvested.toString(),
+                          rewardToken.decimals,
+                        ).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem
+                label={t`Distribution Interval:`}
+                value={
+                  farmMetadata ? (
+                    <>
+                      {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+            </Box>
+
+            <Box className="columns">
+              <PoolDetailItem
+                label={t`Amount per Distribution:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
+              <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
+              <PoolDetailItem
+                label={t`Creator:`}
+                value={
+                  <Copy content={farmInfo?.creator.toString() ?? ""}>
+                    <Typography color="text.primary">{shorten(farmInfo?.creator.toString() ?? "", 8)}</Typography>
+                  </Copy>
+                }
+              />
+              <PoolDetailItem
+                label={t`Cycles left:`}
+                value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

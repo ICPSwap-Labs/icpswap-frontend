@@ -34,6 +34,7 @@
     "unstake",
     "craco",
     "typechain",
-    "Sepolia"
+    "Sepolia",
+    "Unstart"
   ]
 }

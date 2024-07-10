@@ -15,7 +15,6 @@ import {
   useRangeCallbacks,
   useResetMintState,
 } from "store/swap/liquidity/hooks";
-import { useSlippageManager } from "store/swap/cache/hooks";
 import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
@@ -34,7 +33,7 @@ import StepViewButton from "components/Steps/View";
 import AddLiquidityButton from "components/swap/AddLiquidityButton";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
-import { usePCMMetadata, useUserPCMBalance } from "@icpswap/hooks";
+import { usePCMMetadata, useParsedQueryString, useUserPCMBalance } from "@icpswap/hooks";
 import SetPriceRange from "./SetPriceRange";
 
 const DISABLED_STYLE = {
@@ -91,12 +90,11 @@ export default function AddLiquidity() {
   const principal = useAccountPrincipal();
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
+  const { path: backPath } = useParsedQueryString() as { path: string };
 
   if (!currencyIdA) currencyIdA = DEFAULT_SWAP_INPUT_ID;
 
   const [confirmModalShow, setConfirmModalShow] = useState(false);
-
-  const [slippageTolerance] = useSlippageManager("mint");
 
   const feeAmount = feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
 
@@ -141,35 +139,62 @@ export default function AddLiquidity() {
 
   const resetMintState = useResetMintState();
 
-  const handleBackToPosition = useCallback(() => {
+  const handleBack = useCallback(() => {
     resetMintState();
-    history.push("/liquidity");
-  }, [history, resetMintState]);
+
+    if (backPath) {
+      try {
+        const path = window.atob(backPath);
+        history.push(path);
+      } catch (error) {
+        console.warn(error);
+      }
+    } else {
+      history.push("/liquidity");
+    }
+  }, [history, resetMintState, backPath]);
+
+  const handleUrlChange = useCallback(
+    (path: string) => {
+      if (backPath) {
+        history.push(`${path}?path=${backPath}`);
+        return;
+      }
+      history.push(path);
+    },
+    [backPath],
+  );
 
   const onTokenAChange = (token: TokenInfo) => {
     const tokenId = token.canisterId.toString();
+    let path = "";
 
     if (tokenId === currencyIdB || !currencyIdB) {
-      history.push(`/liquidity/add/${tokenId}`);
+      path = `/liquidity/add/${tokenId}`;
     } else {
-      history.push(`/liquidity/add/${tokenId}/${currencyIdB}`);
+      path = `/liquidity/add/${tokenId}/${currencyIdB}`;
     }
+
+    handleUrlChange(path);
   };
 
   const onTokenBChange = (token: TokenInfo) => {
     const tokenId = token.canisterId.toString();
+    let path = "";
 
     if (tokenId === currencyIdA || !currencyIdA) {
-      history.push(`/liquidity/add/${tokenId}`);
+      path = `/liquidity/add/${tokenId}`;
     } else {
-      history.push(`/liquidity/add/${currencyIdA}/${tokenId}`);
+      path = `/liquidity/add/${currencyIdA}/${tokenId}`;
     }
+
+    handleUrlChange(path);
   };
 
   const handleFeeChange = useCallback(
     (feeValue) => {
       if (currencyIdA && currencyIdB) {
-        history.push(`/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
+        handleUrlChange(`/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
       }
     },
     [currencyIdA, currencyIdB],
@@ -180,7 +205,7 @@ export default function AddLiquidity() {
     onFieldBInput("");
     onLeftRangeInput("");
     onRightRangeInput("");
-    history.push(`/liquidity/add`);
+    handleUrlChange("/liquidity/add");
   }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
 
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
@@ -243,7 +268,7 @@ export default function AddLiquidity() {
 
     closeLoadingTip(loadingTipKey);
 
-    handleBackToPosition();
+    handleBack();
   };
 
   const handleOnCancel = useCallback(() => {
@@ -263,7 +288,7 @@ export default function AddLiquidity() {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
+    handleUrlChange(`/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
   };
 
   const handleCurrencyAMax = () => {
@@ -301,7 +326,7 @@ export default function AddLiquidity() {
                       sx={{
                         cursor: "pointer",
                       }}
-                      onClick={handleBackToPosition}
+                      onClick={handleBack}
                     />
                   </Grid>
                   <Grid item xs={6} container justifyContent="center" alignItems="center">

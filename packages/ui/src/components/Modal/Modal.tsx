@@ -128,7 +128,9 @@ export function Modal({
         },
         ...{
           "& .MuiPaper-root": {
-            ...(background ? { backgroundColor: background } : { backgroundColor: theme.palette.background.level2 }),
+            ...(background
+              ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
+              : { backgroundColor: theme.palette.background.level2 }),
           },
           ...(dialogProps?.sx || {}),
         },

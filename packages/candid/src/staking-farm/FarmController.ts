@@ -27,13 +27,19 @@ export type Error =
 export type FarmStatus = { LIVE: null } | { NOT_STARTED: null } | { CLOSED: null } | { FINISHED: null };
 export type Result =
   | {
+      ok: { farmAmount: bigint; principalAmount: bigint };
+    }
+  | { err: Error };
+export type Result_1 = { ok: Array<Principal> } | { err: Error };
+export type Result_2 =
+  | {
       ok: { governanceCid: [] | [Principal]; feeReceiverCid: Principal };
     }
   | { err: Error };
-export type Result_1 = { ok: bigint } | { err: Error };
-export type Result_2 = { ok: Array<[Principal, TVL]> } | { err: string };
-export type Result_3 = { ok: CycleInfo } | { err: Error };
-export type Result_4 =
+export type Result_3 = { ok: bigint } | { err: Error };
+export type Result_4 = { ok: Array<[Principal, TVL]> } | { err: string };
+export type Result_5 = { ok: CycleInfo } | { err: Error };
+export type Result_6 =
   | {
       ok: {
         LIVE: Array<[Principal, TVL]>;
@@ -43,8 +49,7 @@ export type Result_4 =
       };
     }
   | { err: string };
-export type Result_5 = { ok: Array<Principal> } | { err: Error };
-export type Result_6 = { ok: string } | { err: string };
+export type Result_7 = { ok: string } | { err: string };
 export interface TVL {
   rewardToken: TokenAmount;
   poolToken0: TokenAmount;
@@ -61,20 +66,23 @@ export interface TokenAmount {
 }
 export interface _SERVICE {
   addFarmControllers: ActorMethod<[Principal, Array<Principal>], undefined>;
-  create: ActorMethod<[CreateFarmArgs], Result_6>;
-  getAdmins: ActorMethod<[], Result_5>;
-  getAllFarmId: ActorMethod<[], Result_5>;
-  getAllFarms: ActorMethod<[], Result_4>;
-  getCycleInfo: ActorMethod<[], Result_3>;
-  getFarms: ActorMethod<[[] | [FarmStatus]], Result_2>;
-  getFee: ActorMethod<[], Result_1>;
-  getInitArgs: ActorMethod<[], Result>;
+  create: ActorMethod<[CreateFarmArgs], Result_7>;
+  getAdmins: ActorMethod<[], Result_1>;
+  getAllFarmId: ActorMethod<[], Result_1>;
+  getAllFarms: ActorMethod<[], Result_6>;
+  getCycleInfo: ActorMethod<[], Result_5>;
+  getFarms: ActorMethod<[[] | [FarmStatus]], Result_4>;
+  getFee: ActorMethod<[], Result_3>;
+  getInitArgs: ActorMethod<[], Result_2>;
+  getPrincipalRecord: ActorMethod<[], Result_1>;
+  getTotalAmount: ActorMethod<[], Result>;
   getVersion: ActorMethod<[], string>;
   removeFarmControllers: ActorMethod<[Principal, Array<Principal>], undefined>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setFarmAdmins: ActorMethod<[Principal, Array<Principal>], undefined>;
   setFee: ActorMethod<[bigint], undefined>;
   updateFarmInfo: ActorMethod<[FarmStatus, TVL], undefined>;
+  updatePrincipalRecord: ActorMethod<[Array<Principal>], undefined>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

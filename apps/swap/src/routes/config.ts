@@ -3,7 +3,8 @@ import Loadable from "../components/Loading/Loadable";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
-const Farm = Loadable(lazy(() => import("../views/staking-farm/index")));
+const Farms = Loadable(lazy(() => import("../views/staking-farm/index")));
+const Farm = Loadable(lazy(() => import("../views/staking-farm/farm")));
 const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 
 const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
@@ -71,7 +72,8 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
 
   "/staking-token": StakingToken,
   "/staking-token/create": StakingTokenCreate,
-  "/farm": Farm,
+  "/farm": Farms,
+  "/farm/details/:id": Farm,
   "/farm/create": CreateFarm,
 
   "/swap": Swap,

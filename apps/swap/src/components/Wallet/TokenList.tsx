@@ -15,6 +15,7 @@ import { Flex, TextButton } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
+
 import WalletContext from "./context";
 
 export default function WalletTokenList() {
