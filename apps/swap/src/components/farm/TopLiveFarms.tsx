@@ -198,7 +198,7 @@ export function TopLiveFarms() {
 
   return (
     <MainCard>
-      <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500 }}>
+      <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
         <Trans>Top Live Farms</Trans>
       </Typography>
 
