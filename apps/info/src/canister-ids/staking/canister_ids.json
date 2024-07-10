@@ -1,17 +1,14 @@
 {
-  "LockServer": {
-    "ic": "z7znl-qqaaa-aaaah-ab4xa-cai"
-  },
-  "Scheduler": {
-    "ic": "zyyl7-5iaaa-aaaah-ab4xq-cai"
-  },
-  "StakingTokenController": {
-    "ic": "o5xzb-ryaaa-aaaak-aejmq-cai"
-  },
   "SwapStakerController": {
     "ic": "b7vqf-maaaa-aaaan-qanra-cai"
   },
   "FarmController": {
     "ic": "c5jrt-yaaaa-aaaag-qb5ra-cai"
+  },
+  "StakingTokenController": {
+    "ic": "34ovl-syaaa-aaaag-qkanq-cai"
+  },
+  "StakingPoolUserIndex": {
+    "ic": "3jjeg-tqaaa-aaaag-qkaoa-cai"
   }
 }

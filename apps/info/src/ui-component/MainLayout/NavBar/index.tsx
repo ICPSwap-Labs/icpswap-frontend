@@ -123,7 +123,7 @@ export default function NavBar() {
       path: "/token/list",
     },
     {
-      key: "staking",
+      key: "stake",
       name: t`Stake`,
       path: "/stake",
     },
