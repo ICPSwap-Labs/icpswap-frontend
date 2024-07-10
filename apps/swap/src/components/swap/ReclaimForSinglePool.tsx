@@ -1,13 +1,10 @@
-import { Box, Typography, useTheme, CircularProgress } from "components/Mui";
+import { Box, Typography, CircularProgress } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { useCallback, useEffect, useMemo, useState, useContext } from "react";
-import { ArrowUpRight } from "react-feather";
-import { Theme } from "@mui/material/styles";
-import { useHistory } from "react-router-dom";
 import { swapContext } from "components/swap/index";
 
 export interface ReclaimForSinglePoolProps {
@@ -26,11 +23,8 @@ export function ReclaimForSinglePool({
   type,
   tokenId,
   onReclaimSuccess,
-  viewAll = false,
   id,
 }: ReclaimForSinglePoolProps) {
-  const history = useHistory();
-  const theme = useTheme() as Theme;
   const [loading, setLoading] = useState(false);
   const { result: tokenInfo } = useTokenInfo(tokenId);
   const { setUnavailableBalanceKey, removeUnavailableBalanceKey, setRefreshTrigger } = useContext(swapContext);
@@ -52,10 +46,6 @@ export function ReclaimForSinglePool({
     setLoading(false);
   }, [tokenInfo, loading, reclaim, setRefreshTrigger]);
 
-  const handleViewAll = useCallback(() => {
-    history.push("/swap/reclaim");
-  }, [history]);
-
   const hide = useMemo(() => {
     if (!tokenInfo) return false;
 
@@ -73,7 +63,6 @@ export function ReclaimForSinglePool({
   return tokenInfo && !hide ? (
     <Box
       sx={{
-        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -96,15 +85,6 @@ export function ReclaimForSinglePool({
 
         {loading ? <CircularProgress size={14} sx={{ color: "#ffffff" }} /> : null}
       </Flex>
-
-      {viewAll ? (
-        <Flex gap="0 8px" sx={{ cursor: "pointer" }} onClick={handleViewAll}>
-          <Typography color="secondary">
-            <Trans>View All</Trans>
-          </Typography>
-          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
-        </Flex>
-      ) : null}
     </Box>
   ) : null;
 }
