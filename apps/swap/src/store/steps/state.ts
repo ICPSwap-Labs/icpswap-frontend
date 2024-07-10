@@ -19,10 +19,12 @@ export interface StepsState {
   steps: { [key: string]: StepDetailsProps };
   opened: string[];
   key: number;
+  data: { [key: string]: any };
 }
 
 export const initialState: StepsState = {
   steps: {},
   opened: [],
   key: 0,
+  data: {},
 };

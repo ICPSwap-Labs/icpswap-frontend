@@ -8,5 +8,4 @@ export const ledgerService = (identity?: Identity) =>
   actor.create<LedgerService>({ idlFactory: LedgerIdlFactory, canisterId: LEDGER_CANISTER_ID, identity });
 
 export * from "./token";
-export * from "./staking-token";
 export * from "./swap";

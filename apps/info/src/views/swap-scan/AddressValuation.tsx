@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
-import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber, explorerLink } from "@icpswap/utils";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow } from "@icpswap/ui";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { getAllTokens } from "store/allTokens";
@@ -12,7 +12,7 @@ import { TokenInfo } from "types/token";
 import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP } from "@icpswap/tokens";
-import { getExplorerPrincipalLink } from "utils/index";
+
 import { SwapScanTabPanels } from "./components/TabPanels";
 
 const useStyles = makeStyles(() => {
@@ -87,7 +87,7 @@ function UserTokenBalance({
       <BodyCell>{tokenUSDPrice ? `$${toSignificant(tokenUSDPrice, 6, { groupSeparator: "," })}` : "--"}</BodyCell>
 
       <BodyCell>
-        <Link href={getExplorerPrincipalLink(tokenInfo.canisterId)} target="_blank">
+        <Link href={explorerLink(tokenInfo.canisterId)} target="_blank">
           {tokenInfo.canisterId}
         </Link>
       </BodyCell>

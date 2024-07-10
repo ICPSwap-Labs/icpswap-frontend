@@ -191,13 +191,13 @@ export class Actor {
       if (this.connector === Connector.PLUG) {
         await window.ic.plug.createAgent({ whitelist: [canisterId], host });
         return window.ic.plug.agent;
-      } if (this.connector === Connector.INFINITY) {
+      }
+      if (this.connector === Connector.INFINITY) {
         return new HttpAgent({
           host,
         });
-      } 
-        return window.icConnector.httpAgent;
-      
+      }
+      return window.icConnector.httpAgent;
     }
 
     return new HttpAgent({

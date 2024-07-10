@@ -1,23 +1,27 @@
 import { useState, useEffect, useMemo } from "react";
 
-export function useInterval<T>(call: (() => Promise<T | undefined>) | undefined, force = false, interval = 5000) {
+export function useInterval<T>(
+  callback: (() => Promise<T | undefined>) | undefined,
+  force: boolean | number = false,
+  interval = 5000,
+): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);
   const [tick, setTick] = useState<number>(0);
 
   useEffect(() => {
-    async function _call() {
-      if (call) {
-        const result = await call();
+    async function __callback() {
+      if (callback) {
+        const result = await callback();
         setData(result);
       }
     }
 
-    _call();
-  }, [tick, call, force]);
+    __callback();
+  }, [tick, callback, force]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (call) {
+      if (callback) {
         setTick((prevState) => prevState + 1);
       }
     }, interval);
@@ -25,7 +29,7 @@ export function useInterval<T>(call: (() => Promise<T | undefined>) | undefined,
     return () => {
       clearInterval(timer);
     };
-  }, [interval, call]);
+  }, [interval, callback]);
 
   return useMemo(() => data, [data]);
 }

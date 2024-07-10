@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 
 export function useIntervalFetch<T>(
   call: (() => Promise<T | undefined>) | undefined,
-  force = false,
+  force: boolean | number = false,
   interval = 5000,
 ) {
   const [data, setData] = useState<T | undefined>(undefined);

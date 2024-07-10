@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { open, close, updateStepDetails, updateKey, closeAll } from "./actions";
+import { open, close, updateStepDetails, updateKey, closeAll, updateData } from "./actions";
 import { StepDetails } from "./state";
 import store from "../index";
 
@@ -97,4 +97,23 @@ export function useOpenedSteps() {
 
 export function useStepDetails(key: string) {
   return useAppSelector((state) => state.step.steps[key]);
+}
+
+export function useStepData<T>(key: string) {
+  return useAppSelector((state) => state.step.data[key]) as T;
+}
+
+export function getStepData<T>(key: string) {
+  return store.getState().step.data[key] as T;
+}
+
+export function useUpdateStepData() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (key: string, data: any) => {
+      dispatch(updateData({ key, data }));
+    },
+    [dispatch],
+  );
 }

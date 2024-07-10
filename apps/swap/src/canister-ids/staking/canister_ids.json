@@ -2,7 +2,10 @@
   "FarmController": {
     "ic": "c5jrt-yaaaa-aaaag-qb5ra-cai"
   },
-  "TokenPoolController": {
-    "ic": "o5xzb-ryaaa-aaaak-aejmq-cai"
+  "StakingTokenController": {
+    "ic": "34ovl-syaaa-aaaag-qkanq-cai"
+  },
+  "StakingPoolUserIndex": {
+    "ic": "3jjeg-tqaaa-aaaag-qkaoa-cai"
   }
 }

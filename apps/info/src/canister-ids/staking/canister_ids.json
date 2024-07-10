@@ -5,7 +5,7 @@
   "Scheduler": {
     "ic": "zyyl7-5iaaa-aaaah-ab4xq-cai"
   },
-  "TokenPoolController": {
+  "StakingTokenController": {
     "ic": "o5xzb-ryaaa-aaaak-aejmq-cai"
   },
   "SwapStakerController": {

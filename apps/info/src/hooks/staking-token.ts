@@ -1,21 +1,14 @@
 import { useCallback, useState, useEffect } from "react";
-import {
-  useCallsData,
-  getV1StakingTokenUserInfo,
-  getStakingTokenUserInfo,
-  getStakingTokenCycles,
-  getV1StakingTokenCycles,
-  getStakingTokenPool,
-  getV1StakingTokenPool,
-} from "@icpswap/hooks";
-import { PoolData, UserStakingInfo, V1PoolData } from "types/staking-token";
+import { useCallsData, getStakingTokenUserInfo, getStakingPoolCycles, getStakingTokenPool } from "@icpswap/hooks";
+import { PoolData } from "types/staking-token";
+import { Principal } from "@dfinity/principal";
+import { type StakingPoolUserInfo } from "@icpswap/types";
 
 export function useUserStakingInfo(
   poolId: string | undefined,
-  version: string | undefined,
-  account: string | undefined,
-): [UserStakingInfo | undefined, () => void] {
-  const [userInfo, setUserInfo] = useState<UserStakingInfo | undefined>(undefined);
+  principal: Principal | undefined,
+): [StakingPoolUserInfo | undefined, () => void] {
+  const [userInfo, setUserInfo] = useState<StakingPoolUserInfo | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
   const update = useCallback(() => {
@@ -24,47 +17,24 @@ export function useUserStakingInfo(
 
   useEffect(() => {
     const call = async () => {
-      if (!poolId || !account) return;
+      if (!poolId || !principal) return;
 
-      const result = await getStakingTokenUserInfo(poolId, account);
+      const result = await getStakingTokenUserInfo(poolId, principal);
 
       if (result) {
-        setUserInfo({
-          amount: result.amount,
-          reward: result.pendingReward,
-        } as UserStakingInfo);
+        setUserInfo(result);
       }
     };
 
-    const v1Call = async () => {
-      if (!poolId || !account) return;
-
-      const result = await getV1StakingTokenUserInfo(poolId, account);
-
-      if (result) {
-        setUserInfo({
-          amount: result.amount,
-          reward: result.pendingReward,
-        } as UserStakingInfo);
-      }
-    };
-
-    if (account && poolId && version) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+    if (principal && poolId) {
+      call();
     }
-  }, [poolId, account, forceUpdate, version]);
+  }, [poolId, principal, forceUpdate]);
 
   return [userInfo, update];
 }
 
-export function useStakingPoolData(
-  poolId: string | undefined,
-  version: string | undefined,
-): [PoolData | undefined, () => void] {
+export function useStakingPoolData(poolId: string | undefined): [PoolData | undefined, () => void] {
   const [poolData, setPoolData] = useState<PoolData | undefined>(undefined);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
 
@@ -79,43 +49,19 @@ export function useStakingPoolData(
       setPoolData(data);
     };
 
-    const v1Call = async () => {
-      if (!poolId) return;
-      const data = await getV1StakingTokenPool(poolId);
-      if (data) {
-        setPoolData({
-          ...data,
-          stakingToken: {
-            address: data?.stakingToken,
-            standard: data?.stakingStandard,
-          },
-          rewardToken: {
-            address: data?.rewardToken,
-            standard: data?.rewardStandard,
-          },
-          storageCid: data.storageCanisterId,
-        } as V1PoolData);
-      }
-    };
-
     if (poolId) {
-      if (version === "1.0") {
-        v1Call();
-      } else {
-        call();
-      }
+      call();
     }
-  }, [poolId, version, forceUpdate]);
+  }, [poolId, forceUpdate]);
 
   return [poolData, update];
 }
 
-export function usePoolCycles(canisterId: string | undefined, version: string | undefined) {
+export function usePoolCycles(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      if (version === "1.0") return await getV1StakingTokenCycles(canisterId);
-      return (await getStakingTokenCycles(canisterId))?.balance;
-    }, [canisterId, version]),
+      return (await getStakingPoolCycles(canisterId))?.balance;
+    }, [canisterId]),
   );
 }

@@ -3,7 +3,7 @@ import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount, explorerLink } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
 import { usePoolLatestTVL } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
@@ -12,7 +12,7 @@ import { GridAutoRows, Proportion } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
-import { swapLinkOfPool, addLiquidityLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
+import { swapLinkOfPool, addLiquidityLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
@@ -106,7 +106,7 @@ export default function SwapPoolDetails() {
                 sx={{
                   margin: "0 0 0 6px",
                 }}
-                link={getExplorerPrincipalLink(canisterId)}
+                link={explorerLink(canisterId)}
               >
                 {canisterId}
               </TextButton>

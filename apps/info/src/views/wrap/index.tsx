@@ -4,8 +4,8 @@ import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import DetailItem from "ui-component/DetailItem";
 import { WICPCanisterId } from "constants/canister";
-import { cycleValueFormat, getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
+import { cycleValueFormat } from "utils/index";
+import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampFormat, explorerLink } from "@icpswap/utils";
 import { useWrapOverview } from "hooks/useWICPCalls";
 import { useWrapTransactions } from "@icpswap/hooks";
 import { NoData, Pagination, Copy, LoadingRow, PaginationType, MainCard, MainContainer } from "ui-component/index";
@@ -85,7 +85,7 @@ export default function Wrap() {
               <DetailItem
                 title={t`Canister ID`}
                 value={
-                  <Link href={getExplorerPrincipalLink(WICPCanisterId)} target="_blank">
+                  <Link href={explorerLink(WICPCanisterId)} target="_blank">
                     {WICPCanisterId}
                   </Link>
                 }

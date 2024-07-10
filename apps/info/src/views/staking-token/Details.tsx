@@ -7,14 +7,15 @@ import MainContainer from "ui-component/MainContainer";
 import { MainCard } from "ui-component/index";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
-import { t } from "@lingui/macro";
-import { parseTokenAmount, shorten } from "@icpswap/utils";
+import { Trans, t } from "@lingui/macro";
+import { parseTokenAmount, shorten, explorerLink, cycleValueFormat } from "@icpswap/utils";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { getExplorerPrincipalLink } from "utils";
 import { useStakingPoolData } from "hooks/staking-token";
 import { Theme } from "@mui/material/styles";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useTokenInfo } from "hooks/token";
+import { useStakingPoolCycles } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -35,10 +36,8 @@ const useStyles = makeStyles((theme: Theme) => {
 export function PoolDetailItem({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
     <Box>
-      <Typography fontSize="12px" component="span">
-        {label}
-      </Typography>{" "}
-      <Typography fontSize="12px" component="span" color="text.primary">
+      <Typography component="span">{label}</Typography>{" "}
+      <Typography component="span" color="text.primary">
         {value}
       </Typography>
     </Box>
@@ -51,12 +50,14 @@ export function timeFormatter(dateTime: bigint | undefined) {
 
 export default function PoolsDetails() {
   const classes = useStyles();
-  const { state, poolId, version } = useParams<{ poolId: string; state: string; version: string }>();
-  const [pool] = useStakingPoolData(poolId, version);
+  const { state, poolId } = useParams<{ poolId: string; state: string }>();
+  const [pool] = useStakingPoolData(poolId);
 
   const [recordType, setRecordType] = useState("transactions");
 
+  const { result: cycles } = useStakingPoolCycles(poolId);
   const { result: poolTokenBalance } = useTokenBalance(pool?.stakingToken.address, poolId);
+  const { result: rewardToken } = useTokenInfo(pool?.rewardToken.address);
 
   return (
     <MainContainer>
@@ -92,37 +93,68 @@ export default function PoolsDetails() {
               label={t`Canister ID:`}
               value={
                 <Copy content={poolId ?? ""}>
-                  <Typography fontSize="12px" color="text.primary">
-                    {shorten(poolId, 8)}
-                  </Typography>
+                  <Typography color="text.primary">{shorten(poolId, 8)}</Typography>
                 </Copy>
               }
             />
             <PoolDetailItem
               label={t`Pool Balance:`}
               value={
-                <Typography fontSize="12px" component="span" color="text.primary">
-                  {parseTokenAmount(poolTokenBalance, pool?.stakingTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.stakingToken.address ?? "")} target="_blank">
-                    &nbsp;{`${pool?.stakingTokenSymbol ?? "--"}`}
-                  </Link>
-                </Typography>
+                poolTokenBalance && pool ? (
+                  <Typography component="span" color="text.primary">
+                    {parseTokenAmount(poolTokenBalance, pool.stakingTokenDecimals).toFormat()}
+                    <Link href={explorerLink(pool.stakingToken.address)} target="_blank">
+                      &nbsp;{`${pool.stakingTokenSymbol}`}
+                    </Link>
+                  </Typography>
+                ) : (
+                  "--"
+                )
               }
             />
             <PoolDetailItem
-              label={t`Reward Token Amount:`}
+              label={t`Total Rewards:`}
               value={
-                <Typography fontSize="12px" component="span" color="text.primary">
+                <Typography component="span" color="text.primary">
                   {parseTokenAmount(pool?.rewardDebt, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.rewardToken.address ?? "")} target="_blank">
+                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
                   </Link>
                 </Typography>
               }
             />
-
-            <PoolDetailItem label={t`Last Reward Time:`} value={timeFormatter(pool?.lastRewardTime)} />
+            <PoolDetailItem
+              label={t`Reward Per Second:`}
+              value={
+                <>
+                  {pool && rewardToken
+                    ? parseTokenAmount(pool.rewardPerTime.toString(), rewardToken.decimals).toFormat()
+                    : "--"}
+                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
+                    &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
+                  </Link>
+                </>
+              }
+            />
+            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(pool?.startTime)} />
             <PoolDetailItem label={t`End Time:`} value={timeFormatter(pool?.bonusEndTime)} />
+            <PoolDetailItem label={t`Last Reward Time:`} value={timeFormatter(pool?.lastRewardTime)} />
+            <PoolDetailItem
+              label={t`Creator:`}
+              value={
+                pool ? (
+                  <Link href={explorerLink(pool.creator.toString())} target="_blank">
+                    {shorten(pool.creator.toString(), 8)}
+                  </Link>
+                ) : (
+                  "--"
+                )
+              }
+            />
+            <PoolDetailItem
+              label={t`Cycles Left:`}
+              value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
+            />
           </Box>
         </Box>
       </Box>
@@ -139,7 +171,7 @@ export default function PoolsDetails() {
                 cursor: "pointer",
               }}
             >
-              Staked Tokens
+              <Trans>Staked Tokens</Trans>
             </Typography>
             <Typography
               color={recordType !== "transactions" ? "text.primary" : ""}
@@ -150,15 +182,11 @@ export default function PoolsDetails() {
                 cursor: "pointer",
               }}
             >
-              Reward Tokens
+              <Trans>Reward Tokens</Trans>
             </Typography>
           </Grid>
-          <Grid item container justifyContent="center">
-            {recordType === "transactions" ? (
-              <Transactions id={pool?.storageCid} />
-            ) : (
-              <ClaimRecords id={pool?.storageCid} />
-            )}
+          <Grid item container justifyContent="center" mt="20px">
+            {recordType === "transactions" ? <Transactions id={poolId} /> : <ClaimRecords id={poolId} />}
           </Grid>
         </MainCard>
       </Box>

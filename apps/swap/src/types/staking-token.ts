@@ -1,7 +1,9 @@
-import { Override, StakingPoolControllerPoolInfo, StakingTokenPoolInfo } from "@icpswap/types";
-import type { PublicPoolInfo as V1Pool } from "candid/swap-v2/SingleSmartChef.did";
+import { Override, StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
 
-export type UnusedBalance = Override<StakingPoolControllerPoolInfo, { balance: bigint }>;
+export type UnusedBalance = Override<
+  StakingPoolControllerPoolInfo,
+  { poolId: string; balance: bigint; rewardTokenId: string }
+>;
 
 export enum STATE {
   LIVE = "LIVE",
@@ -9,14 +11,16 @@ export enum STATE {
   FINISHED = "FINISHED",
 }
 
-export enum STAKING_POOL_VERSION {
-  version1 = "1.0",
-  version2 = "2.0",
+export enum FilterState {
+  "ALL" = "ALL",
+  "NOT_STARTED" = "NOT_STARTED",
+  "LIVE" = "LIVE",
+  "FINISHED" = "FINISHED",
+  "CLOSED" = "CLOSED",
+  "YOUR" = "YOUR",
 }
 
-export type PoolData = StakingTokenPoolInfo | V1Pool;
-
-export type UserStakingInfo = {
-  amount: bigint;
-  reward: bigint;
-};
+export type UserPendingRewards = Override<
+  StakingPoolUserInfo,
+  { poolId: string; rewardAmount: bigint; stakingAmount: bigint; rewardTokenId: string; stakeTokenId: string }
+>;

@@ -4,7 +4,7 @@ import { useTheme } from "@mui/styles";
 import { useParams, useHistory } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans, t } from "@lingui/macro";
-import { mockALinkAndOpen, formatDollarAmount, formatAmount } from "@icpswap/utils";
+import { mockALinkAndOpen, formatDollarAmount, formatAmount, explorerLink } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { MainCard, TextButton, Breadcrumbs } from "ui-component/index";
 import { useGraphPool, useGraphPoolTVLChartData } from "hooks/v2";
@@ -18,7 +18,7 @@ import PoolTransactions from "ui-component/analytic-v2/PoolTransactions";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import { TokenInfo } from "types/token";
 import LoadingImage from "assets/images/loading.png";
-import { swapLink, getExplorerPrincipalLink, cycleValueFormat } from "utils/index";
+import { swapLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
@@ -301,7 +301,7 @@ export default function SwapPoolDetails() {
                 sx={{
                   margin: "0 0 0 6px",
                 }}
-                link={getExplorerPrincipalLink(canisterId)}
+                link={explorerLink(canisterId)}
               >
                 {canisterId}
               </TextButton>

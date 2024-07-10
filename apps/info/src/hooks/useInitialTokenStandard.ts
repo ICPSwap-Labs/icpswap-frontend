@@ -6,6 +6,7 @@ import { useSwapPools, useTokensFromList } from "@icpswap/hooks";
 import { useSwapPools as useV2SwapPools } from "hooks/swap/v2/calls";
 import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { updateTokens } from "store/allTokens";
+import { useStakingTokenAllPools } from "hooks/staking-token/useAllStakingPools";
 
 export const TOKENS = [
   { canisterId: "utozz-siaaa-aaaam-qaaxq-cai", standard: TOKEN_STANDARD.DIP20_WICP },
@@ -18,11 +19,13 @@ export function useInitialTokenStandard() {
   const { result: pools } = useSwapPools();
   const { result: tokenList, loading: fetchListLoading } = useTokensFromList();
   const [tokenListLoading, setTokenListLoading] = useState(true);
+  const [stakingPoolsLoading, setStakingPoolsLoading] = useState(true);
   const updateTokenStandard = useUpdateTokenStandards();
   const updatePoolTokenStandard = useUpdatePoolTokenStandardCallback();
   const tokenStandards = useTokenStandards();
 
   const { result: v2Pools } = useV2SwapPools();
+  const { result: allStakingPools } = useStakingTokenAllPools();
 
   useEffect(() => {
     if (network === NETWORK.IC) {
@@ -31,6 +34,23 @@ export function useInitialTokenStandard() {
       });
     }
   }, [network, NETWORK]);
+
+  useEffect(() => {
+    if (allStakingPools) {
+      allStakingPools.forEach((stakingPool) => {
+        updateTokenStandard({
+          canisterId: stakingPool.stakingToken.address,
+          standard: stakingPool.stakingToken.standard as TOKEN_STANDARD,
+        });
+        updateTokenStandard({
+          canisterId: stakingPool.rewardToken.address,
+          standard: stakingPool.rewardToken.standard as TOKEN_STANDARD,
+        });
+      });
+
+      setStakingPoolsLoading(false);
+    }
+  }, [allStakingPools]);
 
   useEffect(() => {
     const call = async () => {
@@ -94,10 +114,10 @@ export function useInitialTokenStandard() {
   }, [tokenList, setTokenListLoading, fetchListLoading]);
 
   useEffect(() => {
-    if (!tokenListLoading) {
+    if (!tokenListLoading && !stakingPoolsLoading) {
       setLoading(false);
     }
-  }, [tokenListLoading]);
+  }, [tokenListLoading, stakingPoolsLoading]);
 
   return {
     loading,
