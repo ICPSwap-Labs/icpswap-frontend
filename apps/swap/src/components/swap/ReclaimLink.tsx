@@ -36,7 +36,7 @@ export function ReclaimLink({ fontSize = "14px" }: ReclaimLinkProps) {
         }}
         title={
           <Box>
-            <Typography color="text.400" fontSize="14px">
+            <Typography color="text.400" fontSize="14px" sx={{ lineHeight: "16px" }}>
               <Trans>
                 For your funds' safety on ICPSwap, we've implemented the 'Reclaim Your Tokens' feature. If issues arise
                 with the token canister during swaps, liquidity withdrawals, or fee claims, or if significant slippage
@@ -47,7 +47,7 @@ export function ReclaimLink({ fontSize = "14px" }: ReclaimLinkProps) {
         }
         arrow
       >
-        <Box sx={{ width: "16px", height: "16px" }}>
+        <Box sx={{ width: "12px", height: "12px" }}>
           <QuestionIcon />
         </Box>
       </Tooltip>

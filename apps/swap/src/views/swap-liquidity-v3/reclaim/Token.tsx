@@ -182,7 +182,7 @@ export function ReclaimWithToken() {
 
       {tokenId === ICP.address && !isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography>
+          <Typography lineHeight="18px">
             <Trans>
               Selecting ICP may require querying all trading pairs associated with it, leading to longer wait times.
               This process could take approximately 2-3 minutes. Please be patient.

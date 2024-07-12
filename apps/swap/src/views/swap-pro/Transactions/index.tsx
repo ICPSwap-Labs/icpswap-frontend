@@ -64,7 +64,7 @@ export default function Transactions() {
               className={e.value === active ? "active" : ""}
               sx={{
                 cursor: "pointer",
-                padding: "6px 10px",
+                padding: "10px 10px",
                 borderRadius: "12px",
                 "&.active": {
                   background: theme.palette.background.level3,
