@@ -98,7 +98,7 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
 
         <Typography sx={{ color: "text.primary", margin: "10px 0 0 0" }}>{title}</Typography>
 
-        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word" }}>
+        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "16px" }}>
           {summary ? shortenString(summary, 150) : "--"}
         </Typography>
 

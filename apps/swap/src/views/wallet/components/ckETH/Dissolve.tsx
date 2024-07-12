@@ -179,7 +179,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
                 />
 
                 <Box sx={{ margin: "5px 0 0 0", display: "flex", justifyContent: "space-between" }}>
-                  <Typography sx={{ fontSize: "12px" }}>
+                  <Typography sx={{ fontSize: "12px", lineHeight: "16px" }}>
                     Important: Please enter the address of a non-custodial wallet only. Avoid using deposit addresses
                     from centralized exchanges (CEX) like Binance or Coinbase. Using a CEX address could result in the
                     loss of your Ethereum (ETH) in the event of any discrepancies or exceptions.

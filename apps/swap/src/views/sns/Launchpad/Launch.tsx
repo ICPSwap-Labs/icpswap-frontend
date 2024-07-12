@@ -55,7 +55,7 @@ export default function Launch() {
                     {sns.meta.name}
                   </Typography>
                 </Box>
-                <Typography sx={{ margin: "10px 0 0 0" }}>{sns.meta.description}</Typography>
+                <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>{sns.meta.description}</Typography>
                 <Typography sx={{ margin: "10px 0 0 0", display: "flex" }} component="div">
                   <TextButton link={sns.meta.url}>{sns.meta.url}</TextButton>
                   <TextButton link={`https://dashboard.internetcomputer.org/sns/${root_id}`}>ICP Dashboard</TextButton>

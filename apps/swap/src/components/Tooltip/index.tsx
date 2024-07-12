@@ -46,7 +46,7 @@ export default function SwapTooltip({
         },
       }}
       title={
-        <Typography color="#111936" fontSize={12} component="div">
+        <Typography color="#111936" fontSize={12} component="div" lineHeight="16px">
           {tips}
         </Typography>
       }
