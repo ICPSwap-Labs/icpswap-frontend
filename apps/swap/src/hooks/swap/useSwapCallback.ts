@@ -47,9 +47,15 @@ export function useInitialSwapSteps() {
     const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
     const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
+    const pool = trade.route.pools[0];
+    const token0 = pool.token0;
+    const token1 = pool.token1;
+    const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+    const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+
     const content = getSwapStep({
-      inputCurrency: trade.inputAmount.currency,
-      outputCurrency: trade.outputAmount.currency,
+      inputCurrency,
+      outputCurrency,
       amount0,
       amount1,
       key: key.toString(),
