@@ -208,11 +208,10 @@ function MainContent() {
             <>
               {(unStakedFarms.length === farms?.length || !farms?.length) && !loading && <NoData />}
 
-              {farms?.map((farm) => (
+              {farms?.map((farmId) => (
                 <FarmListCard
-                  key={farm[0].toString()}
-                  farmId={farm[0].toString()}
-                  farmTvl={farm[1]}
+                  key={farmId.toString()}
+                  farmId={farmId.toString()}
                   wrapperSx={{
                     display: "grid",
                     gridTemplateColumns,

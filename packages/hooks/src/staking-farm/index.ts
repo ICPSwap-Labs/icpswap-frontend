@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
-import { farm, farmController } from "@icpswap/actor";
+import { farm, farmController, farmIndex } from "@icpswap/actor";
 import type {
   FarmDepositArgs,
   FarmInfo,
@@ -11,10 +11,11 @@ import type {
   FarmRewardMetadata,
   PaginationResult,
   FarmTvl,
-  FarmState,
-  FarmStatusArgs,
   InitFarmArgs,
   FarmUserTvl,
+  FarmFilterCondition,
+  FarmState,
+  FarmStatusArgs,
 } from "@icpswap/types";
 import { AnonymousPrincipal } from "@icpswap/constants";
 
@@ -137,19 +138,47 @@ export async function createV3Farm(args: CreateFarmArgs) {
   return resultFormat<string>(await (await farmController(true)).create(args));
 }
 
-export async function getFarms(state: FarmState | undefined) {
-  return resultFormat<Array<[Principal, FarmTvl]>>(
+export async function getFarms(condition: FarmFilterCondition) {
+  return resultFormat<Principal[]>(await (await farmIndex()).getFarmsByConditions(condition)).data;
+}
+
+export function useFarms(condition: FarmFilterCondition | undefined, reload?: boolean | number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!condition) return undefined;
+      return await getFarms(condition);
+    }, [condition]),
+    reload,
+  );
+}
+
+export async function getFarmsByState(state: FarmState | undefined) {
+  return resultFormat<Array<Principal>>(
     await (
-      await farmController()
+      await farmIndex()
     ).getFarms(availableArgsNull<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
   ).data;
 }
 
-export function useFarms(state: FarmState | undefined, reload?: boolean | number) {
+export function useFarmsByState(state: FarmState | undefined, reload?: boolean | number) {
   return useCallsData(
     useCallback(async () => {
-      return await getFarms(state);
+      if (!state) return undefined;
+      return await getFarmsByState(state);
     }, [state]),
+    reload,
+  );
+}
+
+export async function getAllFarms() {
+  return resultFormat<Principal[]>(await (await farmController()).getAllFarms()).data;
+}
+
+export function useAllFarms(reload?: boolean | number) {
+  return useCallsData(
+    useCallback(async () => {
+      return await getAllFarms();
+    }, []),
     reload,
   );
 }
@@ -284,3 +313,6 @@ export function useFarmUserRewards(farmId: string | undefined, principal: Princi
 
 export * from "./useFarmState";
 export * from "./useFarmTotalAmount";
+export * from "./useFarmInfo";
+export * from "./useUserFarms";
+export * from "./useFarmsByPool";

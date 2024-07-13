@@ -8,11 +8,9 @@ import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
-import type { FarmTvl } from "@icpswap/types";
 import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
-import { Principal } from "@dfinity/principal";
 
 const useStyles = makeStyles(() => {
   return {
@@ -28,15 +26,11 @@ const useStyles = makeStyles(() => {
 });
 
 export interface PoolItemProps {
-  farmTVL: [Principal, FarmTvl];
+  farmId: string;
 }
 
-export function PoolItem({ farmTVL }: PoolItemProps) {
+export function PoolItem({ farmId }: PoolItemProps) {
   const classes = useStyles();
-
-  const { farmId } = useMemo(() => {
-    return { farmId: farmTVL[0].toString() };
-  }, [farmTVL]);
 
   const { result: farmInfo, loading } = useFarmInfo(farmId);
   const { status, statusText } = getFarmPoolStatus(farmInfo) ?? { status: "", statusText: "" };
@@ -145,7 +139,7 @@ export default function PoolList() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {result?.map((farm) => <PoolItem key={farm[0].toString()} farmTVL={farm} />)}
+      {result?.map((id) => <PoolItem key={id.toString()} farmId={id.toString()} />)}
 
       {result?.length === 0 && !loading ? <NoData /> : null}
 

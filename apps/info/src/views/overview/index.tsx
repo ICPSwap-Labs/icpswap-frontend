@@ -5,11 +5,17 @@ import { t } from "@lingui/macro";
 import { WRAPPED_ICP } from "@icpswap/tokens";
 import { parseTokenAmount, formatAmount, formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useSwapPools, useSwapProtocolData, useNFTTradeData, useStakeIntervalGlobalData } from "@icpswap/hooks";
+import {
+  useSwapPools,
+  useSwapProtocolData,
+  useNFTTradeData,
+  useAllFarms,
+  useStakeIntervalGlobalData,
+} from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { useStakingTokenAllPools } from "hooks/staking-token/index";
-import { useAllFarmPools, useFarmGlobalTVL } from "hooks/staking-farm/index";
+import { useFarmGlobalTVL } from "hooks/staking-farm/index";
 import { useICPPrice } from "store/global/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
 
@@ -147,7 +153,7 @@ export default function Overview() {
   const { result: stakingTokenAllPools } = useStakingTokenAllPools();
 
   const farmGlobalTvl = useFarmGlobalTVL();
-  const { result: farmAllPools } = useAllFarmPools();
+  const { result: farmAllPools } = useAllFarms();
 
   const { result: swapGlobalData } = useSwapGlobalData();
   const { result: allSwapPools } = useSwapPools();

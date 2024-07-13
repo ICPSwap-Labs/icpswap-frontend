@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useFarms, useInfoAllTokens, useInterval } from "@icpswap/hooks";
+import { useFarmsByState, useInfoAllTokens, useInterval } from "@icpswap/hooks";
 import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { getTokenInfo } from "hooks/token/index";
@@ -9,7 +9,7 @@ type GlobalData = { stakeTokenTVL: string; rewardTokenTVL: string };
 export function useFarmGlobalTVL() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const { result: allLiveFarms } = useFarms("LIVE", refreshTrigger);
+  const { result: allLiveFarms } = useFarmsByState("LIVE", refreshTrigger);
 
   const [data, setData] = useState<GlobalData>({
     stakeTokenTVL: "0",

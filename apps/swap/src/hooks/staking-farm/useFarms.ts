@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { FilterState } from "types/staking-farm";
-import { getFarms, getFarmUserPositions } from "@icpswap/hooks";
+import { getFarmUserPositions, getFarmsByState } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
-import { FarmState, FarmTvl } from "@icpswap/types";
+import { FarmState } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface UseFarmsArgs {
@@ -13,7 +13,7 @@ export interface UseFarmsArgs {
 export function useFarms({ state, filter }: UseFarmsArgs) {
   const principal = useAccountPrincipal();
   const [loading, setLoading] = useState<boolean>(false);
-  const [farms, setFarms] = useState<null | Array<[Principal, FarmTvl]>>(null);
+  const [farms, setFarms] = useState<null | Array<Principal>>(null);
 
   useEffect(() => {
     async function call() {
@@ -25,21 +25,19 @@ export function useFarms({ state, filter }: UseFarmsArgs) {
 
         setLoading(true);
 
-        const farms = await getFarms(undefined);
+        const farms = await getFarmsByState(undefined);
 
         const result = (
           await Promise.all(
-            farms.map(async (farm) => {
-              const positions = await getFarmUserPositions(farm[0].toString(), principal.toString());
-              return { id: farm[0].toString(), positions };
+            farms.map(async (farmId) => {
+              const positions = await getFarmUserPositions(farmId.toString(), principal.toString());
+              return { id: farmId.toString(), positions };
             }),
           )
         ).flat();
 
-        const stakedFarms = farms.filter((farm) => {
-          const id = farm[0].toString();
-
-          const positions = result.find((e) => e.id === id)?.positions;
+        const stakedFarms = farms.filter((farmId) => {
+          const positions = result.find((e) => e.id === farmId.toString())?.positions;
 
           return positions && positions.length > 0;
         });
@@ -47,7 +45,7 @@ export function useFarms({ state, filter }: UseFarmsArgs) {
         setFarms(stakedFarms);
       } else {
         setLoading(true);
-        const farms = await getFarms(state);
+        const farms = await getFarmsByState(state);
         setFarms(farms);
       }
 

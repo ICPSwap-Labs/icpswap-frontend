@@ -2,14 +2,8 @@ import { Typography, Box, BoxProps } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useTheme } from "@mui/styles";
 import { useCallback, useMemo } from "react";
-import { type FarmTvl } from "@icpswap/types";
-import {
-  useIntervalUserFarmInfo,
-  useFarmApr,
-  useUserPositionsValue,
-  useFarmTvlValue,
-  useStateColors,
-} from "hooks/staking-farm";
+import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
+import { useUserPositionsValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -28,7 +22,6 @@ import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
 
 interface FarmListCardProps {
-  farmTvl: FarmTvl;
   farmId: string;
   wrapperSx?: BoxProps["sx"];
   showState: boolean;

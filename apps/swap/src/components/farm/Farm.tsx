@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Box, Typography, Button } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
-import { useIntervalUserRewardInfo, useFarmUSDValue, useUserPositionsValue } from "hooks/staking-farm";
+import { useIntervalUserRewardInfo, useFarmUSDValue } from "hooks/staking-farm";
+import { useUserPositionsValue } from "hooks/swap/index";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";

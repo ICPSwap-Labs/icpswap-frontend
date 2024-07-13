@@ -57,6 +57,7 @@ export interface InitFarmArgs {
   status: FarmStatus;
   secondPerCycle: bigint;
   creator: Principal;
+  farmIndexCid: Principal;
   rewardToken: Token;
   endTime: bigint;
   pool: Principal;
@@ -64,7 +65,6 @@ export interface InitFarmArgs {
   governanceCid: [] | [Principal];
   priceInsideLimit: boolean;
   token0AmountLimit: bigint;
-  rewardPool: Principal;
   token1AmountLimit: bigint;
   totalReward: bigint;
   farmFactoryCid: Principal;
@@ -90,8 +90,7 @@ export interface Page_2 {
 }
 export type Result = { ok: string } | { err: Error };
 export type Result_1 = { ok: bigint } | { err: Error };
-export type Result_10 = { ok: Array<bigint> } | { err: Error };
-export type Result_11 =
+export type Result_10 =
   | {
       ok: {
         poolToken0Symbol: string;
@@ -103,7 +102,7 @@ export type Result_11 =
       };
     }
   | { err: Error };
-export type Result_12 =
+export type Result_11 =
   | {
       ok: {
         poolToken0Amount: bigint;
@@ -112,7 +111,7 @@ export type Result_12 =
       };
     }
   | { err: Error };
-export type Result_13 =
+export type Result_12 =
   | {
       ok: {
         priceInsideLimit: boolean;
@@ -122,11 +121,12 @@ export type Result_13 =
       };
     }
   | { err: Error };
-export type Result_14 = { ok: InitFarmArgs } | { err: Error };
-export type Result_15 = { ok: FarmInfo } | { err: Error };
-export type Result_16 = { ok: Page_2 } | { err: string };
-export type Result_17 = { ok: Deposit } | { err: Error };
-export type Result_18 = { ok: CycleInfo } | { err: Error };
+export type Result_13 = { ok: InitFarmArgs } | { err: Error };
+export type Result_14 = { ok: FarmInfo } | { err: Error };
+export type Result_15 = { ok: Page_2 } | { err: string };
+export type Result_16 = { ok: Deposit } | { err: Error };
+export type Result_17 = { ok: CycleInfo } | { err: Error };
+export type Result_18 = { ok: Array<Principal> } | { err: Error };
 export type Result_2 =
   | {
       ok: { poolToken0: TokenAmount; poolToken1: TokenAmount };
@@ -145,6 +145,7 @@ export type Result_8 =
         totalRewardBalance: bigint;
         totalRewardFee: bigint;
         rewardPerCycle: bigint;
+        rewardTokenFee: bigint;
         totalCycleCount: bigint;
         totalRewardUnharvested: bigint;
         currentCycleCount: bigint;
@@ -152,7 +153,7 @@ export type Result_8 =
       };
     }
   | { err: Error };
-export type Result_9 = { ok: Array<Principal> } | { err: Error };
+export type Result_9 = { ok: Array<bigint> } | { err: Error };
 export interface StakeRecord {
   to: Principal;
   transType: TransType;
@@ -163,7 +164,6 @@ export interface StakeRecord {
   amount: bigint;
 }
 export interface TVL {
-  rewardToken: TokenAmount;
   poolToken0: TokenAmount;
   poolToken1: TokenAmount;
 }
@@ -201,19 +201,18 @@ export interface _SERVICE {
   clearErrorLog: ActorMethod<[], undefined>;
   close: ActorMethod<[], Result>;
   finishManually: ActorMethod<[], Result>;
-  getAdmins: ActorMethod<[], Result_9>;
-  getCycleInfo: ActorMethod<[], Result_18>;
-  getDeposit: ActorMethod<[bigint], Result_17>;
-  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_16>;
+  getAdmins: ActorMethod<[], Result_18>;
+  getCycleInfo: ActorMethod<[], Result_17>;
+  getDeposit: ActorMethod<[bigint], Result_16>;
+  getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_15>;
   getErrorLog: ActorMethod<[], Array<string>>;
-  getFarmInfo: ActorMethod<[string], Result_15>;
-  getInitArgs: ActorMethod<[], Result_14>;
-  getLimitInfo: ActorMethod<[], Result_13>;
-  getLiquidityInfo: ActorMethod<[], Result_12>;
+  getFarmInfo: ActorMethod<[string], Result_14>;
+  getInitArgs: ActorMethod<[], Result_13>;
+  getLimitInfo: ActorMethod<[], Result_12>;
+  getLiquidityInfo: ActorMethod<[], Result_11>;
   getPoolMeta: ActorMethod<[], { sqrtPriceX96: bigint; tick: bigint }>;
-  getPoolTokenMeta: ActorMethod<[], Result_11>;
-  getPositionIds: ActorMethod<[], Result_10>;
-  getPrincipalRecord: ActorMethod<[], Result_9>;
+  getPoolTokenMeta: ActorMethod<[], Result_10>;
+  getPositionIds: ActorMethod<[], Result_9>;
   getRewardInfo: ActorMethod<[Array<bigint>], Result_1>;
   getRewardMeta: ActorMethod<[], Result_8>;
   getRewardTokenBalance: ActorMethod<[], bigint>;

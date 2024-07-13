@@ -21,6 +21,7 @@ export enum ActorName {
   FarmController = "FarmController",
   Farm = "Farm",
   FarmStorage = "FarmStorage",
+  FarmIndex = "FarmIndex",
 
   NFTCanisterController = "V3NFTCanisterController",
   NFTCanister = "NFTDynamicCanister",

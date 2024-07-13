@@ -29,9 +29,9 @@ function transformedKeyToKey(transformedKey: TransformedKey) {
   return `${transformedKey.token0}_${transformedKey.token1}_${transformedKey.fee}`;
 }
 
-export function usePools(
-  poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][],
-): [PoolState, Pool | null][] {
+export type PoolKey = [Token | undefined, Token | undefined, FeeAmount | undefined];
+
+export function usePools(poolKeys: PoolKey[]): [PoolState, Pool | null][] {
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 

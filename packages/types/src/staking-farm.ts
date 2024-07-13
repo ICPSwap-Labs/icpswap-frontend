@@ -5,9 +5,11 @@ export type {
   StakingFarmDistributeTransaction,
   StakingFarmStakeTransaction,
   FarmInfo,
-  FarmStatusArgs,
   InitFarmArgs,
   FarmUserTvl,
+  FarmStatusArgs,
+  FarmFilterCondition,
+  FarmRewardInfo,
 } from "@icpswap/candid";
 
 export type FarmRewardMetadata = {
