@@ -29,10 +29,10 @@ export function useReclaim() {
 
     if (amount !== BigInt(0)) {
       if (type === "unDeposit") {
-        const result = await deposit(true, poolId, token.canisterId, amount, token.transFee);
+        const result = await deposit(poolId, token.canisterId, amount, token.transFee);
 
         if (result.status === ResultStatus.OK) {
-          const result = await withdraw(true, poolId, token.canisterId, token.transFee, amount - token.transFee);
+          const result = await withdraw(poolId, token.canisterId, token.transFee, amount - token.transFee);
           if (result.status === ResultStatus.OK) {
             openTip(t`Withdrew ${name ?? ""} ${token.symbol} successfully`, MessageTypes.success);
             reclaimSuccessfully = true;
@@ -43,7 +43,7 @@ export function useReclaim() {
           openTip(`Failed to Withdraw: ${result.message ?? ""}`, MessageTypes.error);
         }
       } else {
-        const result = await withdraw(true, poolId, token.canisterId, token.transFee, amount);
+        const result = await withdraw(poolId, token.canisterId, token.transFee, amount);
 
         if (result.status === ResultStatus.OK) {
           openTip(`Withdrew ${name ?? ""} ${token?.symbol} successfully`, MessageTypes.success);
