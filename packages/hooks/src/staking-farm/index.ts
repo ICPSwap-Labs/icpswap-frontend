@@ -171,18 +171,18 @@ export function useFarmsByState(state: FarmState | undefined, reload?: boolean |
   );
 }
 
-export async function getAllFarms() {
-  return resultFormat<Principal[]>(await (await farmController()).getAllFarms()).data;
-}
+// export async function getAllFarms() {
+//   return resultFormat<Principal[]>(await (await farmController()).getAllFarms()).data;
+// }
 
-export function useAllFarms(reload?: boolean | number) {
-  return useCallsData(
-    useCallback(async () => {
-      return await getAllFarms();
-    }, []),
-    reload,
-  );
-}
+// export function useAllFarms(reload?: boolean | number) {
+//   return useCallsData(
+//     useCallback(async () => {
+//       return await getAllFarms();
+//     }, []),
+//     reload,
+//   );
+// }
 
 export async function getV3FarmRewardMetadata(canisterId: string) {
   return resultFormat<FarmRewardMetadata>(await (await farm(canisterId)).getRewardMeta()).data;
@@ -324,7 +324,13 @@ export async function getFarmsByFilter({ state, pair, token, user }: GetFarmsByF
     await (
       await farmIndex()
     ).getFarmsByConditions({
-      status: state ? availableArgsNull<FarmStatusArgs[]>([{ [state]: null }] as FarmStatusArgs[]) : [],
+      status: state
+        ? availableArgsNull<FarmStatusArgs[]>(
+            state === "FINISHED"
+              ? ([{ FINISHED: null }, { CLOSED: null }] as FarmStatusArgs[])
+              : ([{ [state]: null }] as FarmStatusArgs[]),
+          )
+        : [],
       rewardToken: token ? availableArgsNull<Principal>(Principal.fromText(token)) : [],
       pool: pair ? availableArgsNull<Principal>(Principal.fromText(pair)) : [],
       user: user ? availableArgsNull<Principal>(Principal.fromText(user)) : [],

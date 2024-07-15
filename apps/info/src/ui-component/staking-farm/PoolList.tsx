@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Grid, Box, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";

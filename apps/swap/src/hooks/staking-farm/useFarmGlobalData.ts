@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useInfoAllTokens, useFarmsByState, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
+import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
 import { _getTokenInfo } from "hooks/token/index";
 import { useFarmUserAllPositions } from "hooks/staking-farm/useUserAllPositions";
 import { useUserStakedPositions } from "hooks/staking-farm/useUserStakedPositions";
