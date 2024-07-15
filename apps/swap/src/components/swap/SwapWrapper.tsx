@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { Grid, Box, Typography, CircularProgress } from "@mui/material";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
@@ -26,10 +26,10 @@ import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
-import { ReclaimLink } from "components/swap/ReclaimLink";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
+import { Reclaim, swapContext } from "components/swap/index";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -45,11 +45,11 @@ export function SwapWrapper({
   onTradePoolIdChange,
 }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
-  const [refreshBalance, setRefreshBalance] = useState(false);
 
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
   const history = useHistory();
+  const { setSelectedPool, refreshTrigger, setRefreshTrigger } = useContext(swapContext);
 
   useLoadDefaultParams();
 
@@ -63,6 +63,7 @@ export function SwapWrapper({
     parsedAmount,
     trade,
     tradePoolId,
+    routes,
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
@@ -70,7 +71,7 @@ export function SwapWrapper({
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-  } = useSwapInfo({ refreshBalance });
+  } = useSwapInfo({ refresh: refreshTrigger });
 
   // For swap pro
   useEffect(() => {
@@ -78,6 +79,13 @@ export function SwapWrapper({
     if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
   }, [tradePoolId, outputCurrency, inputCurrency]);
+
+  useEffect(() => {
+    const pool = routes[0]?.pools[0];
+    if (pool && setSelectedPool) {
+      setSelectedPool(pool);
+    }
+  }, [routes, setSelectedPool]);
 
   const parsedAmounts = useMemo(
     () => ({
@@ -147,8 +155,9 @@ export function SwapWrapper({
     canisterId: inputTokenAddress,
     address: tradePoolId,
     sub,
+    reload: refreshTrigger,
   });
-  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal);
+  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal, refreshTrigger);
   const swapTokenUnusedBalance = useMemo(() => {
     if (!tradePool || !unusedBalance || !inputCurrency) return undefined;
     return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
@@ -190,9 +199,9 @@ export function SwapWrapper({
 
     if (result) {
       openSuccessTip(t`Swapped Successfully`);
-      setRefreshBalance(true);
+      setRefreshTrigger();
       setTimeout(() => {
-        setRefreshBalance(false);
+        setRefreshTrigger();
       }, 1000);
     }
   }, [swapCallback, swapLoading, setSwapLoading, trade, subAccountTokenBalance, swapTokenUnusedBalance]);
@@ -307,7 +316,7 @@ export function SwapWrapper({
           ))}
       </Button>
 
-      {ui === "pro" ? <ReclaimLink fontSize="12px" /> : null}
+      {ui === "pro" ? <Reclaim fontSize="12px" /> : null}
 
       {confirmModalShow && trade && (
         <Identity onSubmit={handleSwapConfirm}>

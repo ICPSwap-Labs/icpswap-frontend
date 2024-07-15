@@ -15,7 +15,7 @@ import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { useHistory } from "react-router-dom";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import type { PCMMetadata } from "@icpswap/types";
+import type { PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 
@@ -61,11 +61,16 @@ function useAddLiquidityCalls() {
               (pcmMetadata.passcodePrice + BigInt(pcmToken.transFee)).toString(),
               PassCodeManagerId,
             )
-          : await approve(pcmToken, pcmMetadata.passcodePrice.toString(), PassCodeManagerId);
+          : await approve({ token: pcmToken, amount: pcmMetadata.passcodePrice.toString(), poolId: PassCodeManagerId });
       };
 
       const depositPCMToken = async () => {
-        return await deposit(pcmToken, pcmMetadata.passcodePrice.toString(), PassCodeManagerId);
+        return await deposit({
+          token: pcmToken,
+          amount: pcmMetadata.passcodePrice.toString(),
+          poolId: PassCodeManagerId,
+          standard: pcmToken.standard as TOKEN_STANDARD,
+        });
       };
 
       const requestPCMCode = async () => {
@@ -114,10 +119,16 @@ function useAddLiquidityCalls() {
       const approveToken0 = async () => {
         if (!position || !principal) return false;
         const poolId = getPoolId();
+        const token0 = position.pool.token0;
 
         const amount0Desired = position.mintAmounts.amount0.toString();
         if (amount0Desired !== "0") {
-          return await approve(position.pool.token0, amount0Desired, poolId);
+          return await approve({
+            token: token0,
+            amount: amount0Desired,
+            poolId,
+            standard: token0.standard as TOKEN_STANDARD,
+          });
         }
         return true;
       };
@@ -125,10 +136,18 @@ function useAddLiquidityCalls() {
       const approveToken1 = async () => {
         if (!position || !principal) return false;
         const poolId = getPoolId();
+        const token1 = position.pool.token1;
         const amount1Desired = position.mintAmounts.amount1.toString();
+
         if (amount1Desired !== "0") {
-          return await approve(position.pool.token1, amount1Desired, poolId);
+          return await approve({
+            token: token1,
+            amount: amount1Desired,
+            poolId,
+            standard: token1.standard as TOKEN_STANDARD,
+          });
         }
+
         return true;
       };
 
@@ -158,10 +177,18 @@ function useAddLiquidityCalls() {
         if (!position || !principal) return false;
 
         const poolId = getPoolId();
+        const token0 = position.pool.token0;
         const amount0Desired = position.mintAmounts.amount0.toString();
+
         if (amount0Desired === "0") return true;
-        return await deposit(position.pool.token0, amount0Desired, poolId, ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey: stepKey, poolId });
+        return await deposit({
+          token: token0,
+          amount: amount0Desired,
+          poolId,
+          openExternalTip: ({ message }: ExternalTipArgs) => {
+            openExternalTip({ message, tipKey: stepKey, poolId });
+          },
+          standard: token0.standard as TOKEN_STANDARD,
         });
       };
 
@@ -169,10 +196,18 @@ function useAddLiquidityCalls() {
         if (!position || !principal) return false;
 
         const poolId = getPoolId();
+        const token1 = position.pool.token1;
         const amount1Desired = position.mintAmounts.amount1.toString();
+
         if (amount1Desired === "0") return true;
-        return await deposit(position.pool.token1, amount1Desired, poolId, ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey: stepKey, poolId });
+        return await deposit({
+          token: token1,
+          amount: amount1Desired,
+          poolId,
+          openExternalTip: ({ message }: ExternalTipArgs) => {
+            openExternalTip({ message, tipKey: stepKey, poolId });
+          },
+          standard: token1.standard as TOKEN_STANDARD,
         });
       };
 
@@ -180,13 +215,12 @@ function useAddLiquidityCalls() {
         if (!position || !principal) return false;
 
         const poolId = getPoolId();
-        const identity = await getActorIdentity();
         const { token0 } = position.pool;
         const { token1 } = position.pool;
         const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
         const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());
 
-        const { status, message } = await _mint(poolId, identity, {
+        const { status, message } = await _mint(poolId, {
           token0: token0.address,
           token1: token1.address,
           fee: BigInt(position.pool.fee),

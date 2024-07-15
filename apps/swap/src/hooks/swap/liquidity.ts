@@ -4,7 +4,6 @@ import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
@@ -65,7 +64,6 @@ function useDecreaseLiquidityCalls() {
   const [openErrorTip] = useErrorTip();
 
   const withdraw = useSwapWithdraw();
-
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
 
@@ -84,8 +82,6 @@ function useDecreaseLiquidityCalls() {
       const _decreaseLiquidity = async () => {
         if (!position || !liquidityToRemove || !principal) return false;
 
-        const identity = await getActorIdentity();
-
         const partialPosition = new Position({
           pool: position.pool,
           liquidity: liquidityToRemove.multiply(position.liquidity).quotient,
@@ -93,7 +89,7 @@ function useDecreaseLiquidityCalls() {
           tickUpper: position.tickUpper,
         });
 
-        const { status, message, data } = await decreaseLiquidity(identity, poolId, {
+        const { status, message, data } = await decreaseLiquidity(poolId, {
           positionId,
           liquidity: partialPosition.liquidity.toString(),
         });

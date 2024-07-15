@@ -8,7 +8,7 @@ import LogoSection from "../../LogoSection";
 import ProfileSection from "./ProfileSection";
 import Navbar from "../Navbar";
 import MobileNavbar from "../Navbar/mobile/Navbar";
-import TokenClaim from "./TokenClaim";
+// import TokenClaim from "./TokenClaim";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -54,7 +54,7 @@ export default function Header() {
             "@media(max-width: 640px)": { gap: "0 8px" },
           }}
         >
-          <TokenClaim />
+          {/* <TokenClaim /> */}
           <ProfileSection />
         </Flex>
 

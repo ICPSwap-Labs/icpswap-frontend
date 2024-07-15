@@ -65,7 +65,9 @@ function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }:
       <Collapse appear={false} in={open}>
         <Box sx={{ margin: "10px 0 0 0" }}>
           <Box>
-            <Typography sx={{ fontSize: "12px" }}>{func.description}</Typography>
+            <Typography sx={{ fontSize: "12px" }} lineHeight="16px">
+              {func.description}
+            </Typography>
           </Box>
 
           {following && following.length > 0 ? (
@@ -135,7 +137,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
         <Trans>Following</Trans>
       </Typography>
 
-      <Typography fontSize="12px" sx={{ margin: "10px 0 0 0" }}>
+      <Typography fontSize="12px" sx={{ margin: "10px 0 0 0", lineHeight: "16px" }}>
         <Trans>
           Following allows you to delegate your votes to another neuron holder. You still earn rewards if you delegate
           your voting rights. You can change your following at any time.
@@ -153,7 +155,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       </Button>
 
       <Modal open={open} onClose={() => setOpen(false)} title={t`Follow neurons`}>
-        <Typography fontSize="12px">
+        <Typography fontSize="12px" lineHeight="16px">
           <Trans>
             Follow neurons to automate your voting, and receive the maximum voting rewards. You can follow neurons on
             specific topics or all topics.

@@ -117,7 +117,7 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
         <Trans>Hotkeys</Trans>
       </Typography>
 
-      <Typography fontSize="12px" sx={{ margin: "10px 0 0 0" }}>
+      <Typography fontSize="12px" sx={{ margin: "10px 0 0 0", lineHeight: "16px" }}>
         <Trans>
           To vote with this neuron from another dapp, add the principal id you have in the other dapp as a hotkey.
         </Trans>

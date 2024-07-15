@@ -138,12 +138,33 @@ export function usePools(
 
         if (!token0 || !token1) return [PoolState.NOT_EXISTS, null];
 
+        // Renew token that standard from the pool metadata
+        const __token0 = new Token({
+          address: token0.address,
+          decimals: token0.decimals,
+          symbol: token0.symbol,
+          name: token0.name,
+          standard: token0.address === metadata.token0.address ? metadata.token0.standard : metadata.token1.standard,
+          logo: token0.logo,
+          transFee: token0.transFee,
+        });
+
+        const __token1 = new Token({
+          address: token1.address,
+          decimals: token1.decimals,
+          symbol: token1.symbol,
+          name: token1.name,
+          standard: token1.address === metadata.token1.address ? metadata.token1.standard : metadata.token0.standard,
+          logo: token1.logo,
+          transFee: token1.transFee,
+        });
+
         return [
           checked ? PoolState.EXISTS : PoolState.NOT_CHECK,
           new Pool(
             id,
-            token0.wrapped,
-            token1.wrapped,
+            __token0,
+            __token1,
             Number(fee),
             numberToString(sqrtPriceX96),
             numberToString(liquidity),

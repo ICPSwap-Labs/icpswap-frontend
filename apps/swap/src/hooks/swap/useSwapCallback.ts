@@ -1,5 +1,5 @@
 import { TradeType } from "@icpswap/constants";
-import { ResultStatus } from "@icpswap/types";
+import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
@@ -10,7 +10,6 @@ import { swap } from "hooks/swap/v3Calls";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
-import { getActorIdentity } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
 import { useErrorTip } from "hooks/useTips";
 import { t } from "@lingui/macro";
@@ -48,9 +47,15 @@ export function useInitialSwapSteps() {
     const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
     const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
+    const pool = trade.route.pools[0];
+    const token0 = pool.token0;
+    const token1 = pool.token1;
+    const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+    const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+
     const content = getSwapStep({
-      inputCurrency: trade.inputAmount.currency,
-      outputCurrency: trade.outputAmount.currency,
+      inputCurrency,
+      outputCurrency,
       amount0,
       amount1,
       key: key.toString(),
@@ -120,14 +125,18 @@ export function useSwapCalls() {
           if (singleHop) {
             const tokenIn = route.tokenPath[0];
             const tokenOut = route.tokenPath[1];
-            const poolId = route.pools[0].id;
+            const pool = route.pools[0];
+            const poolId = pool.id;
+            const token0 = pool.token0;
+            const token1 = pool.token1;
+            const tokenInputOfPool = token0.address === tokenIn.address ? token0 : token1;
 
             updateSwapOutAmount(stepKey, undefined);
 
             // Amount that user input
             const userInputAmount = actualSwapAmount
-              ? isUseTransfer(tokenIn)
-                ? new BigNumber(actualSwapAmount).plus(tokenIn.transFee).toString()
+              ? isUseTransfer(tokenInputOfPool)
+                ? new BigNumber(actualSwapAmount).plus(tokenInputOfPool.transFee).toString()
                 : actualSwapAmount
               : undefined;
 
@@ -139,16 +148,21 @@ export function useSwapCalls() {
                 return true;
               }
 
-              if (isUseTransfer(tokenIn)) {
+              if (isUseTransfer(tokenInputOfPool)) {
                 // Skip transfer if unDeposit token balance is greater than or equal to user input amount
                 if (!subAccountTokenBalance.isLessThan(userInputAmount)) {
                   return true;
                 }
 
-                return await transfer(route.input.wrapped, userInputAmount, poolId);
+                return await transfer(tokenInputOfPool, userInputAmount, poolId);
               }
 
-              return await approve(route.input.wrapped, userInputAmount, poolId);
+              return await approve({
+                token: tokenInputOfPool,
+                amount: userInputAmount,
+                poolId,
+                standard: tokenInputOfPool.standard as TOKEN_STANDARD,
+              });
             };
 
             const step1 = async () => {
@@ -159,17 +173,21 @@ export function useSwapCalls() {
                 return true;
               }
 
-              return await deposit(route.input.wrapped, userInputAmount, poolId, ({ message }: ExternalTipArgs) => {
-                openExternalTip({ message, tipKey: stepKey, poolId });
+              return await deposit({
+                token: tokenInputOfPool,
+                amount: userInputAmount,
+                poolId,
+                openExternalTip: ({ message }: ExternalTipArgs) => {
+                  openExternalTip({ message, tipKey: stepKey, poolId });
+                },
+                standard: tokenInputOfPool.standard as TOKEN_STANDARD,
               });
             };
 
             const step2 = async () => {
               if (!principal || !actualSwapAmount || !amountOut) return false;
 
-              const identity = await getActorIdentity();
-
-              const { status, message, data } = await swap(poolId, identity, {
+              const { status, message, data } = await swap(poolId, {
                 zeroForOne: tokenIn.address < tokenOut.address,
                 amountIn: actualSwapAmount,
                 amountOutMinimum: amountOut,

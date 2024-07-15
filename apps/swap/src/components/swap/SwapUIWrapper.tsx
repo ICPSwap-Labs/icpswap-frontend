@@ -2,7 +2,6 @@ import { Box, Typography, Grid } from "@mui/material";
 import { t } from "@lingui/macro";
 import { Wrapper, TabPanel } from "components/index";
 import React from "react";
-// import { INFO_URL } from "constants/index";
 
 function LinkIcon() {
   return (
@@ -70,28 +69,5 @@ export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 export default function _SwapWrapper({ children }: { children: React.ReactNode }) {
-  // const buttons = [
-  //   { id: 1, value: t`Swap V3`, path: "/swap", key: "/swap" },
-  //   {
-  //     id: 2,
-  //     key: "/liquidity",
-  //     value: t`Liquidity`,
-  //     path: "/liquidity",
-  //   },
-  //   {
-  //     id: 3,
-  //     key: "info",
-  //     value: (
-  //       <Grid container>
-  //         <Typography>Info</Typography>
-  //         <Box sx={{ margin: "0 0 0 3px", position: "relative", top: "-4px" }}>
-  //           <LinkIcon />
-  //         </Box>
-  //       </Grid>
-  //     ),
-  //     link: INFO_URL,
-  //   },
-  // ];
-
   return <SwapWrapper>{children}</SwapWrapper>;
 }

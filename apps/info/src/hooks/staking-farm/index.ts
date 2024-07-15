@@ -1,2 +1,2 @@
 export * from "./useAllPools";
-export * from "./useGlobal";
+export * from "./useFarmGlobalData";

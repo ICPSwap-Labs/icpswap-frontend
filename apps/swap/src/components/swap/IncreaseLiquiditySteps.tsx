@@ -1,6 +1,6 @@
 import { Box, Avatar } from "@mui/material";
 import { Position } from "@icpswap/swap-sdk";
-import { parseTokenAmount , toSignificant } from "@icpswap/utils";
+import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer, actualAmountToPool } from "utils/token/index";
 import { StepDetails } from "components/Steps/types";
@@ -13,8 +13,7 @@ export interface IncreaseLiquidityStepsProps {
 }
 
 export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseLiquidityStepsProps) {
-  const {token0} = position.pool;
-  const {token1} = position.pool;
+  const { token0, token1 } = position.pool;
 
   const amount0 = toSignificant(
     parseTokenAmount(

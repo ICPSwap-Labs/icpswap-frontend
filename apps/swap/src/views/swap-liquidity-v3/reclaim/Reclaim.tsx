@@ -83,7 +83,7 @@ export default function SwapReclaim() {
 
           {!isMobile ? (
             <>
-              <Typography sx={{ margin: "10px 0 0 0" }}>
+              <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
                 <Trans>
                   For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens, we've
                   implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues during swaps,
@@ -92,7 +92,7 @@ export default function SwapReclaim() {
                 </Trans>
               </Typography>
 
-              <Typography sx={{ margin: "20px 0 0 0" }}>
+              <Typography sx={{ margin: "20px 0 0 0", lineHeight: "18px" }}>
                 <Trans>
                   When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
                   excessive slippage, significant token price fluctuations, and so on.

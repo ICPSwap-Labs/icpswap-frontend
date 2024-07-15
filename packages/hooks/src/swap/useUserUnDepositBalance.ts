@@ -14,7 +14,7 @@ export function useUserUnDepositBalance(
   principal: string,
   _pools: SwapPoolData[] | undefined,
   selectedTokenId?: string,
-  reload?: boolean,
+  reload?: boolean | number,
 ) {
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState<(UserSwapPoolsBalance | undefined)[]>([]);
