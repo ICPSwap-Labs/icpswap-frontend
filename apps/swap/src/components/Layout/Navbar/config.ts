@@ -23,7 +23,7 @@ export type Route = {
 
 export type SubMenu = Route;
 
-export const MAX_NUMBER = 7;
+export const MAX_NUMBER = 6;
 
 export const MOBILE_MAX_NUMBER = 7;
 
@@ -56,11 +56,7 @@ export const routes: Route[] = [
     name: `Farm`,
     path: `/farm`,
   },
-  {
-    key: "marketplace",
-    name: `Marketplace`,
-    path: "/marketplace/collections",
-  },
+
   {
     key: "wallet",
     name: `Wallet`,
@@ -70,6 +66,16 @@ export const routes: Route[] = [
     key: "info",
     name: `Info`,
     link: INFO_URL,
+  },
+  {
+    key: "marketplace",
+    name: `NFT`,
+    path: "/marketplace/collections",
+  },
+  {
+    key: "/token-claim",
+    name: `Claim`,
+    path: "/token-claim",
   },
   {
     key: "sns",

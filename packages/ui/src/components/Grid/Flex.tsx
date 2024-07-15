@@ -15,6 +15,8 @@ export interface FlexProps {
   sx?: BoxProps["sx"];
   fullWidth?: boolean;
   className?: string;
+  wrap?: BoxProps["flexWrap"];
+  onClick?: BoxProps["onClick"];
 }
 
 export function Flex({
@@ -31,6 +33,8 @@ export function Flex({
   sx,
   fullWidth,
   className,
+  wrap,
+  onClick,
 }: FlexProps) {
   return (
     <Box
@@ -41,6 +45,7 @@ export function Flex({
         width: width || (fullWidth ? "100%" : "auto"),
         alignItems: align ?? "center",
         justifyContent: justify ?? "flex-start",
+        flexWrap: wrap,
         padding: padding ?? 0,
         border,
         borderRadius,
@@ -49,6 +54,7 @@ export function Flex({
         ...sx,
       }}
       className={className}
+      onClick={onClick}
     >
       {children}
     </Box>

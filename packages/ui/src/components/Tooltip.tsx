@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Tooltip } from "@mui/material";
+import { Typography, Tooltip as MuiToolTip } from "@mui/material";
 import { AlertCircle } from "react-feather";
 
 export interface TooltipProps {
@@ -10,13 +10,7 @@ export interface TooltipProps {
   maxWidth?: string;
 }
 
-export default function SwapTooltip({
-  tips,
-  background,
-  maxWidth,
-  iconSize = "16px",
-  iconColor = "#8492C4",
-}: TooltipProps) {
+export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconColor = "#8492C4" }: TooltipProps) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -24,7 +18,7 @@ export default function SwapTooltip({
   };
 
   return (
-    <Tooltip
+    <MuiToolTip
       open={open}
       TransitionProps={{
         timeout: 300,
@@ -46,7 +40,7 @@ export default function SwapTooltip({
         },
       }}
       title={
-        <Typography color="#111936" fontSize={12} component="div" lineHeight="16px">
+        <Typography color="#111936" fontSize={12} component="div">
           {tips}
         </Typography>
       }
@@ -60,6 +54,6 @@ export default function SwapTooltip({
         onMouseLeave={() => setOpen(false)}
         style={{ cursor: "pointer" }}
       />
-    </Tooltip>
+    </MuiToolTip>
   );
 }

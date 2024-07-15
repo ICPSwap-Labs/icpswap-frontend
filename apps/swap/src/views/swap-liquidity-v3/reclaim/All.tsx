@@ -157,7 +157,7 @@ export function ReclaimAll() {
 
       {!isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
               If you select All, please note that selecting it may involve querying all trading pairs, resulting in
               longer wait times. This process may take around 5 minutes. Thank you for your patience.

@@ -158,7 +158,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
           {moreInformation ? (
             <Card>
               <Box sx={{ display: "flex", gap: "0 16px" }}>
-                <Box sx={{ padding: "0 0 0 8px" }}>
+                <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                   <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
                     <Trans>TVL</Trans>
                   </Typography>
@@ -177,14 +177,14 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
 
           {moreInformation ? (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              <Card title={t`Total Supply`}>
+              <Card title={t`Total Supply`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && token
                     ? formatAmount(parseTokenAmount(tokenSupply.toString(), token.decimals).toNumber())
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Transfer Fee`}>
+              <Card title={t`Transfer Fee`} fontSize="12px">
                 <Typography
                   color="text.primary"
                   sx={{
@@ -220,7 +220,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                   </Typography>
                 </Typography>
               </Card>
-              <Card title={t`FDV (USD)`}>
+              <Card title={t`FDV (USD)`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && token && tokenPrice
                     ? formatDollarAmount(
@@ -229,7 +229,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`FDV (ICP)`}>
+              <Card title={t`FDV (ICP)`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenSupply && token && tokenPrice && icpPrice
                     ? formatAmount(
@@ -241,22 +241,22 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Volume 24H`}>
+              <Card title={t`Volume 24H`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Volume 7D`}>
+              <Card title={t`Volume 7D`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Decimals`}>
+              <Card title={t`Decimals`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {token ? token.decimals : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Holders`}>
+              <Card title={t`Holders`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenHolders ? tokenHolders.toString() : "--"}
                 </Typography>
@@ -280,6 +280,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                lineHeight: "16px",
               }}
             >
               <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme-secondary", fontWeight: 600 }}>

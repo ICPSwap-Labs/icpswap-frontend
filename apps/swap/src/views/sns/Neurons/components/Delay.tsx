@@ -244,7 +244,7 @@ export function SetDissolveDelay({
             <Typography color="text.primary">
               <Trans>Dissolve Delay</Trans>
             </Typography>
-            <Typography sx={{ padding: "5px", fontSize: "12px" }}>
+            <Typography sx={{ padding: "5px", fontSize: "12px", lineHeight: "16px" }}>
               <Trans>
                 Dissolve delay is the minimum amount of time you have to wait for the neuron to unlock, and ICS to be
                 available again. Note, that dissolve delay only decreases when the neuron is in a dissolving state.

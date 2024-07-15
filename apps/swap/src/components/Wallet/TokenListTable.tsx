@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, useEffect } from "react";
+import { useState, useContext, useMemo, useEffect, useCallback } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
@@ -135,40 +135,33 @@ export function TokenListItem({
 }: TokenListItemProps) {
   const classes = useStyles();
   const account = useAccount();
+  const history = useHistory();
   const theme = useTheme() as Theme;
   const principal = useAccountPrincipal();
-
   const walletType = useConnectorType();
 
-  const history = useHistory();
+  const [XTCTopUpShow, setXTCTopUpShow] = useState(false);
+  const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
+  const [open, setOpen] = useState(false);
+  const [receiveOpen, setReceiveOpen] = useState(false);
+  const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
 
   const infoTokenAddress = useMemo(() => {
     if (canisterId === WRAPPED_ICP.address) return ICP.address;
     return canisterId;
   }, [canisterId]);
 
-  const infoToken = useInfoToken(infoTokenAddress);
-
-  const tokenUSDPrice = useMemo(() => {
-    return infoToken?.priceUSD;
-  }, [infoToken]);
-
-  const { result: tokenInfo } = useTokenInfo(canisterId);
-  const [XTCTopUpShow, setXTCTopUpShow] = useState(false);
-
-  const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
-
-  const [open, setOpen] = useState(false);
-  const [receiveOpen, setReceiveOpen] = useState(false);
-  const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
-
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
-
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;
   }, [refreshInnerCounter, refreshCounter]);
 
+  const infoToken = useInfoToken(infoTokenAddress);
+  const { result: tokenInfo } = useTokenInfo(canisterId);
   const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
+  const tokenUSDPrice = useMemo(() => {
+    return infoToken?.priceUSD;
+  }, [infoToken]);
 
   useEffect(() => {
     if (
@@ -207,6 +200,24 @@ export function TokenListItem({
     }
   }, [tokenInfo, tokenBalance, tokenBalanceLoading, infoToken]);
 
+  const allSupportedErc20Tokens = useMemo(() => {
+    if (!chainKeyMinterInfo) return ckTokens;
+    if (!chainKeyMinterInfo.supported_ckerc20_tokens[0]) return ckTokens;
+    if (chainKeyMinterInfo.supported_ckerc20_tokens[0].length === 0) return ckTokens;
+
+    return ckTokens.concat(
+      chainKeyMinterInfo.supported_ckerc20_tokens[0].map((token) => {
+        const ledger_id = token.ledger_canister_id.toString();
+
+        return {
+          id: ledger_id,
+          mintPath: `/wallet/ckToken?type=mint&tokenId=${ledger_id}`,
+          dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ledger_id}`,
+        };
+      }),
+    );
+  }, [ckTokens, chainKeyMinterInfo]);
+
   const handleCloseModal = async () => {
     setOpen(false);
   };
@@ -227,28 +238,29 @@ export function TokenListItem({
 
   const root_canister_id = useSNSTokenRootId(canisterId);
 
-  const handleToTransactions = () => {
+  const handleToTransactions = useCallback(() => {
     if (!tokenInfo || !principal) return;
 
     const { canisterId, standardType, symbol } = tokenInfo;
 
+    const isErc20MintToken = !!allSupportedErc20Tokens.find((e) => e.id === tokenInfo.canisterId);
+
+    let url = "";
+
     if (symbol === ICP.symbol) {
-      mockALinkAndOpen(`https://dashboard.internetcomputer.org/account//${account}`, "TOKEN_TRANSACTIONS");
+      url = `https://dashboard.internetcomputer.org/account/${account}`;
     } else if (root_canister_id) {
-      mockALinkAndOpen(
-        `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`,
-        "TOKEN_TRANSACTIONS",
-      );
+      url = `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`;
+    } else if (isErc20MintToken) {
+      url = `https://dashboard.internetcomputer.org/ethereum/${tokenInfo.canisterId}/account/${principal.toString()}`;
     } else if (tokenInfo.standardType === TOKEN_STANDARD.ICRC1 || tokenInfo.standardType === TOKEN_STANDARD.ICRC2) {
-      const url = isHouseUserTokenTransactions(tokenInfo.canisterId, principal?.toString());
-      mockALinkAndOpen(url, "TOKEN_TRANSACTIONS");
+      url = isHouseUserTokenTransactions(tokenInfo.canisterId, principal?.toString());
     } else {
-      mockALinkAndOpen(
-        `${INFO_URL}/token/transactions/${canisterId}/${principal?.toString()}?standard=${standardType}`,
-        "TOKEN_TRANSACTIONS",
-      );
+      url = `${INFO_URL}/token/transactions/${canisterId}/${principal?.toString()}?standard=${standardType}`;
     }
-  };
+
+    mockALinkAndOpen(url, "TOKEN_TRANSACTIONS");
+  }, [tokenInfo, principal, root_canister_id, allSupportedErc20Tokens]);
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
@@ -294,24 +306,6 @@ export function TokenListItem({
     setReceiveOpen(true);
   };
 
-  const allSupportMintTokens = useMemo(() => {
-    if (!chainKeyMinterInfo) return ckTokens;
-    if (!chainKeyMinterInfo.supported_ckerc20_tokens[0]) return ckTokens;
-    if (chainKeyMinterInfo.supported_ckerc20_tokens[0].length === 0) return ckTokens;
-
-    return ckTokens.concat(
-      chainKeyMinterInfo.supported_ckerc20_tokens[0].map((token) => {
-        const ledger_id = token.ledger_canister_id.toString();
-
-        return {
-          id: ledger_id,
-          mintPath: `/wallet/ckToken?type=mint&tokenId=${ledger_id}`,
-          dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ledger_id}`,
-        };
-      }),
-    );
-  }, [ckTokens, chainKeyMinterInfo]);
-
   return (
     <Box
       sx={{
@@ -326,8 +320,8 @@ export function TokenListItem({
         },
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", gap: "0 10px" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: "0 10px", alignItems: "center" }}>
           <TokenImage size="40px" logo={tokenInfo?.logo} tokenId={tokenInfo?.canisterId} />
           <Box>
             <Typography
@@ -347,10 +341,10 @@ export function TokenListItem({
       <Box sx={{ display: "flex", margin: "12px 0 0 0" }}>
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Balance</Typography>
-          <Typography color="textPrimary" sx={{ margin: "4px 0 0 0" }}>
+          <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
             {parseTokenAmount(tokenBalance, tokenInfo?.decimals).toFormat()}
           </Typography>
-          <Typography className={classes.tokenAssets}>
+          <Typography className={classes.tokenAssets} sx={{ margin: "4px 0 0 0" }}>
             {tokenUSDPrice && tokenBalance
               ? `≈
               ${formatDollarAmount(
@@ -364,7 +358,7 @@ export function TokenListItem({
         </Box>
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Price</Typography>
-          <Typography color="textPrimary" sx={{ margin: "4px 0 0 0" }}>
+          <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
             {tokenUSDPrice ? formatDollarAmount(tokenUSDPrice) : "--"}
           </Typography>
         </Box>
@@ -392,7 +386,7 @@ export function TokenListItem({
             </>
           ) : null}
 
-          {allSupportMintTokens
+          {allSupportedErc20Tokens
             .filter((ele) => ele.id === tokenInfo?.canisterId)
             .map((ele) => (
               <ChainKeyTokenButtons key={ele.id} ckToken={ele} />

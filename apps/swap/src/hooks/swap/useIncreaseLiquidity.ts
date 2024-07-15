@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
@@ -13,6 +12,7 @@ import { useSuccessTip } from "hooks/useTips";
 import { increaseLiquidity } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap";
+import { TOKEN_STANDARD } from "@icpswap/types";
 
 export interface IncreaseLiquidityArgs {
   positionId: bigint;
@@ -36,14 +36,16 @@ export function useIncreaseLiquidityCalls() {
       const approveToken0 = async () => {
         if (!position) return false;
         const amount0Desired = position.mintAmounts.amount0.toString();
-        if (amount0Desired !== "0") return await approve(position.pool.token0, amount0Desired, poolId);
+        if (amount0Desired !== "0")
+          return await approve({ token: position.pool.token0, amount: amount0Desired, poolId });
         return true;
       };
 
       const approveToken1 = async () => {
         if (!position) return false;
         const amount1Desired = position.mintAmounts.amount1.toString();
-        if (amount1Desired !== "0") return await approve(position.pool.token1, amount1Desired, poolId);
+        if (amount1Desired !== "0")
+          return await approve({ token: position.pool.token1, amount: amount1Desired, poolId });
         return true;
       };
 
@@ -65,8 +67,14 @@ export function useIncreaseLiquidityCalls() {
         if (!position) return false;
         const amount0Desired = position.mintAmounts.amount0.toString();
         if (amount0Desired !== "0") {
-          return await deposit(position.pool.token0, amount0Desired, poolId, ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, poolId });
+          return await deposit({
+            token: position.pool.token0,
+            amount: amount0Desired,
+            poolId,
+            openExternalTip: ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, poolId });
+            },
+            standard: position.pool.token0.standard as TOKEN_STANDARD,
           });
         }
         return true;
@@ -76,8 +84,14 @@ export function useIncreaseLiquidityCalls() {
         if (!position) return false;
         const amount1Desired = position.mintAmounts.amount1.toString();
         if (amount1Desired !== "0") {
-          return await deposit(position.pool.token1, amount1Desired, poolId, ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, poolId });
+          return await deposit({
+            token: position.pool.token1,
+            amount: amount1Desired,
+            poolId,
+            openExternalTip: ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, poolId });
+            },
+            standard: position.pool.token1.standard as TOKEN_STANDARD,
           });
         }
         return true;
@@ -86,15 +100,13 @@ export function useIncreaseLiquidityCalls() {
       const _increaseLiquidity = async () => {
         if (!position || !principal) return false;
 
-        const identity = await getActorIdentity();
-
         const { token0 } = position.pool;
         const { token1 } = position.pool;
 
         const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
         const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());
 
-        const { status, message } = await increaseLiquidity(identity, poolId, {
+        const { status, message } = await increaseLiquidity(poolId, {
           positionId,
           amount0Desired,
           amount1Desired,

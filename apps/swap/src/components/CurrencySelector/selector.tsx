@@ -16,7 +16,9 @@ import { TokenListMetadata } from "types/token-list";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
+
 import { TokenItem } from "./TokenItem";
+import { BaseTokens } from "./BaseToken";
 
 const useStyles = makeStyles(() => {
   return {
@@ -165,7 +167,7 @@ export default function Selector({
           }}
         >
           <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "12px 0 0 0" }}>
-            <Typography sx={{ fontSize: "12px" }}>
+            <Typography sx={{ fontSize: "12px", lineHeight: "18px" }}>
               Do your own research before investing. While we've collected known information about tokens on the list,
               it's essential to conduct your research.
             </Typography>
@@ -197,9 +199,11 @@ export default function Selector({
             />
           </Box>
 
+          <BaseTokens onTokenClick={handleTokenClick} />
+
           <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
 
-          <Box sx={{ height: "386px", overflow: "hidden auto" }}>
+          <Box sx={{ height: "315px", overflow: "hidden auto" }}>
             {noData ? <NoData /> : null}
 
             {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (

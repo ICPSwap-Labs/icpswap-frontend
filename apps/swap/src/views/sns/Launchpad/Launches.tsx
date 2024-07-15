@@ -2,7 +2,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useEffect, useMemo } from "react";
-import { LoadingRow } from "components/index";
+import { Flex, LoadingRow } from "components/index";
 import type { SnsTokensInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import AvatarImage from "components/Image/Avatar";
@@ -49,12 +49,12 @@ function Launchpad({ sns }: LaunchpadProps) {
       }}
       onClick={() => history.push(`/sns/launch/${root_id}`)}
     >
-      <Box sx={{ display: "flex", gap: "0 10px" }}>
+      <Flex gap="0 10px">
         <AvatarImage src={sns.meta.logo} />
         <Typography color="text.primary" fontSize="18px" fontWeight={500}>
           {sns.meta.name}
         </Typography>
-      </Box>
+      </Flex>
 
       <Typography
         sx={{
@@ -64,6 +64,7 @@ function Launchpad({ sns }: LaunchpadProps) {
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          lineHeight: "18px",
         }}
       >
         {sns.meta.description}
