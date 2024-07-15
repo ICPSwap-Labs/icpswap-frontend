@@ -4,7 +4,7 @@ import { Box, Typography, Tooltip, useTheme } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as QuestionIcon } from "assets/icons/question.svg";
 import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
-import { swapContext } from "components/swap/index";
+import { SwapContext } from "components/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { ReclaimForSinglePool } from "components/swap/ReclaimForSinglePool";
 import type { UserSwapPoolsBalance } from "@icpswap/types";
@@ -68,9 +68,11 @@ interface BalancesProps {
   reclaim: UserSwapPoolsBalance;
   index: number;
   onReclaimSuccess?: () => void;
+  fontSize?: string;
+  margin?: string;
 }
 
-function Balances({ reclaim, onReclaimSuccess }: BalancesProps) {
+function Balances({ reclaim, onReclaimSuccess, fontSize, margin }: BalancesProps) {
   return (
     <>
       {reclaim.balance0 !== BigInt(0) ? (
@@ -81,6 +83,8 @@ function Balances({ reclaim, onReclaimSuccess }: BalancesProps) {
           tokenId={reclaim.token0.address}
           type={reclaim.type}
           onReclaimSuccess={onReclaimSuccess}
+          fontSize={fontSize}
+          margin={margin}
         />
       ) : null}
 
@@ -92,6 +96,8 @@ function Balances({ reclaim, onReclaimSuccess }: BalancesProps) {
           tokenId={reclaim.token1.address}
           type={reclaim.type}
           onReclaimSuccess={onReclaimSuccess}
+          fontSize={fontSize}
+          margin={margin}
         />
       ) : null}
     </>
@@ -100,13 +106,14 @@ function Balances({ reclaim, onReclaimSuccess }: BalancesProps) {
 
 export interface ReclaimLinkProps {
   fontSize?: "12px" | "14px";
+  margin?: string;
 }
 
-export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
+export function Reclaim({ fontSize = "14px", margin }: ReclaimLinkProps) {
   const history = useHistory();
   const theme = useTheme() as Theme;
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
-  const { selectedPool, unavailableBalanceKeys } = useContext(swapContext);
+  const { selectedPool, unavailableBalanceKeys } = useContext(SwapContext);
   const principal = useAccountPrincipal();
   const { balances } = useSwapUserUnusedTokenByPool(selectedPool, principal, refreshTrigger);
 
@@ -146,12 +153,19 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
         <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
           <Box>
             {__balances.map((e, index) => (
-              <Balances index={index} key={e.canisterId.toString()} reclaim={e} onReclaimSuccess={handleClaimSuccess} />
+              <Balances
+                index={index}
+                key={e.canisterId.toString()}
+                reclaim={e}
+                onReclaimSuccess={handleClaimSuccess}
+                fontSize={fontSize}
+                margin={margin}
+              />
             ))}
           </Box>
 
-          <Flex gap="0 8px" sx={{ cursor: "pointer", width: "fit-content" }} onClick={handleViewAll}>
-            <Typography color="secondary">
+          <Flex gap="0 4px" sx={{ cursor: "pointer", width: "fit-content" }} onClick={handleViewAll}>
+            <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px" }}>
               <Trans>View All</Trans>
             </Typography>
             <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />

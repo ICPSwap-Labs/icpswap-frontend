@@ -29,7 +29,7 @@ import SwapConfirm from "components/swap/SwapConfirm";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { Reclaim, swapContext } from "components/swap/index";
+import { Reclaim, SwapContext } from "components/swap/index";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -49,7 +49,7 @@ export function SwapWrapper({
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
   const history = useHistory();
-  const { setSelectedPool, refreshTrigger, setRefreshTrigger } = useContext(swapContext);
+  const { setSelectedPool, refreshTrigger, setRefreshTrigger } = useContext(SwapContext);
 
   useLoadDefaultParams();
 
@@ -316,7 +316,7 @@ export function SwapWrapper({
           ))}
       </Button>
 
-      {ui === "pro" ? <Reclaim fontSize="12px" /> : null}
+      {ui === "pro" ? <Reclaim fontSize="12px" margin="9px" /> : null}
 
       {confirmModalShow && trade && (
         <Identity onSubmit={handleSwapConfirm}>

@@ -11,4 +11,4 @@ export interface SwapContextProps {
   setRefreshTrigger: () => void;
 }
 
-export const swapContext = createContext<SwapContextProps>({} as SwapContextProps);
+export const SwapContext = createContext<SwapContextProps>({} as SwapContextProps);

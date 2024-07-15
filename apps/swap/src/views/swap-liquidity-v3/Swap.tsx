@@ -6,7 +6,7 @@ import SwapSettingIcon from "components/swap/SettingIcon";
 import SwapUIWrapper from "components/swap/SwapUIWrapper";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import { SwapWrapper, Reclaim, swapContext } from "components/swap/index";
+import { SwapWrapper, Reclaim, SwapContext } from "components/swap/index";
 import { Pool } from "@icpswap/swap-sdk";
 
 import SwapTransactions from "./swap/Transactions";
@@ -69,7 +69,7 @@ export function SwapMain() {
   }, [refreshTrigger, setRefreshTrigger]);
 
   return (
-    <swapContext.Provider
+    <SwapContext.Provider
       value={{
         selectedPool,
         setSelectedPool,
@@ -146,7 +146,7 @@ export function SwapMain() {
           </Grid>
         </Grid>
       </SwapUIWrapper>
-    </swapContext.Provider>
+    </SwapContext.Provider>
   );
 }
 
