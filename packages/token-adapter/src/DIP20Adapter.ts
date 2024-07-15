@@ -124,31 +124,6 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   }
 
   public async transactions({ canisterId, params }: TransactionRequest) {
-    let cap_id: string | undefined = params.capId;
-
-    if (!cap_id) {
-      cap_id = (await params.getCapRootId(canisterId))?.toString();
-    }
-
-    if (cap_id) {
-      if (!params.offset && params.offset !== 0) throw Error("no cap offset");
-
-      if (params.user?.principal) {
-        return resultFormat<PaginationResult<Transaction>>(
-          await params.getCapUserTransactions(
-            cap_id.toString(),
-            params.user?.principal,
-            params.witness ?? false,
-            params.offset,
-          ),
-        );
-      }
-
-      return resultFormat<PaginationResult<Transaction>>(
-        await params.getCapTransactions(cap_id.toString(), params.witness ?? false, params.offset),
-      );
-    }
-
     return resultFormat<PaginationResult<Transaction>>({
       Ok: {
         content: [],

@@ -92,9 +92,9 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       }}
       onClick={handleClick}
     >
-      <Flex justify="space-between">
+      <Flex justify="space-between" gap="0 20px">
         <FarmTokenImages rewardToken={rewardToken} token0={token0} token1={token1} />
-        <Typography fontSize={12}>
+        <Typography fontSize={12} textAlign="right" lineHeight="18px">
           {rewardToken && token0 && token1 ? (
             <Trans>
               Stake {token0.symbol}/{token1.symbol} to earn {rewardToken.symbol}

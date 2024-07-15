@@ -237,7 +237,7 @@ export default function Overview() {
         </Box>
 
         <Box className={classes.card}>
-          <Title title="Farms" to="/farm" />
+          <Title title="Farm" to="/farm" />
 
           <Box className={classes.itemMargin}>
             <Item label={t`TVL`} value={farmGlobalTvl.stakeTokenTVL} />

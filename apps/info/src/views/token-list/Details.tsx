@@ -18,7 +18,6 @@ import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { TextButton } from "@icpswap/ui";
-// import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 
 const useStyles = makeStyles({
@@ -80,12 +79,6 @@ export function TokenDetail() {
         }}
       >
         <Box sx={{ width: "100%", overflow: "hidden", display: "grid", gap: "20px 0" }}>
-          {/* <Breadcrumbs
-            prevLink={`/token/list`}
-            prevLabel={<Trans>Token List</Trans>}
-            currentLabel={<Trans>Details</Trans>}
-         /> */}
-
           <MainCard>
             <Typography fontSize="20px" fontWeight="700">
               <Trans>Token Details</Trans>

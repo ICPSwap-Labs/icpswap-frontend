@@ -155,18 +155,20 @@ export function Transactions() {
           {list.length === 0 && !loading ? <NoData /> : null}
 
           {loading ? (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
+            <Box sx={{ padding: "16px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
           ) : null}
         </Box>
 
