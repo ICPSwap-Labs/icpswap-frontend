@@ -1,4 +1,4 @@
-export const idlFactory = ({ IDL }: any) => {
+export const idlFactory = ({ IDL }) => {
   const Token = IDL.Record({ address: IDL.Text, standard: IDL.Text });
   const AddFarmIndexArgs = IDL.Record({
     rewardToken: Token,
@@ -65,6 +65,7 @@ export const idlFactory = ({ IDL }: any) => {
     err: IDL.Text,
   });
   const SearchCondition = IDL.Record({
+    status: IDL.Opt(IDL.Vec(FarmStatus)),
     rewardToken: IDL.Opt(IDL.Principal),
     pool: IDL.Opt(IDL.Principal),
     user: IDL.Opt(IDL.Principal),
@@ -105,7 +106,6 @@ export const idlFactory = ({ IDL }: any) => {
     getFarmsByConditions: IDL.Func([SearchCondition], [Result], ["query"]),
     getFarmsByPool: IDL.Func([IDL.Principal], [Result], ["query"]),
     getFarmsByRewardToken: IDL.Func([IDL.Principal], [Result], ["query"]),
-    getFarmsByStatusAndConditions: IDL.Func([FarmStatus, SearchCondition], [Result], ["query"]),
     getLiveFarmsByPools: IDL.Func([IDL.Vec(IDL.Principal)], [Result_3], ["query"]),
     getPrincipalRecord: IDL.Func([], [Result], ["query"]),
     getRewardInfoByStatus: IDL.Func([FarmStatus], [Result_2], ["query"]),

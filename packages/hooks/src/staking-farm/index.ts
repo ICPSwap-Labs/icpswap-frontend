@@ -16,6 +16,7 @@ import type {
   FarmFilterCondition,
   FarmState,
   FarmStatusArgs,
+  Null,
 } from "@icpswap/types";
 import { AnonymousPrincipal } from "@icpswap/constants";
 
@@ -308,6 +309,34 @@ export function useFarmUserRewards(farmId: string | undefined, principal: Princi
       return await getFarmUserRewards(farmId, principal);
     }, [farmId, principal]),
     refresh,
+  );
+}
+
+export interface GetFarmsByFilterArgs {
+  state: FarmState | Null;
+  pair: string | Null;
+  token: string | Null;
+  user: string | Null;
+}
+
+export async function getFarmsByFilter({ state, pair, token, user }: GetFarmsByFilterArgs) {
+  return resultFormat<Array<Principal>>(
+    await (
+      await farmIndex()
+    ).getFarmsByConditions({
+      status: state ? availableArgsNull<FarmStatusArgs[]>([{ [state]: null }] as FarmStatusArgs[]) : [],
+      rewardToken: token ? availableArgsNull<Principal>(Principal.fromText(token)) : [],
+      pool: pair ? availableArgsNull<Principal>(Principal.fromText(pair)) : [],
+      user: user ? availableArgsNull<Principal>(Principal.fromText(user)) : [],
+    }),
+  ).data;
+}
+
+export function useFarmsByFilter({ state, pair, token, user }: GetFarmsByFilterArgs) {
+  return useCallsData(
+    useCallback(async () => {
+      return await getFarmsByFilter({ state, pair, token, user });
+    }, [state, pair, token, user]),
   );
 }
 

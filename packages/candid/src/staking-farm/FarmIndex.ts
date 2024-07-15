@@ -63,6 +63,7 @@ export type Result_9 =
     }
   | { err: string };
 export interface SearchCondition {
+  status: [] | [Array<FarmStatus>];
   rewardToken: [] | [Principal];
   pool: [] | [Principal];
   user: [] | [Principal];
@@ -95,7 +96,6 @@ export interface _SERVICE {
   getFarmsByConditions: ActorMethod<[SearchCondition], Result>;
   getFarmsByPool: ActorMethod<[Principal], Result>;
   getFarmsByRewardToken: ActorMethod<[Principal], Result>;
-  getFarmsByStatusAndConditions: ActorMethod<[FarmStatus, SearchCondition], Result>;
   getLiveFarmsByPools: ActorMethod<[Array<Principal>], Result_3>;
   getPrincipalRecord: ActorMethod<[], Result>;
   getRewardInfoByStatus: ActorMethod<[FarmStatus], Result_2>;

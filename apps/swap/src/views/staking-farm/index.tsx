@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Grid, Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
 import { NoData, MainCard, Flex } from "components/index";
@@ -10,6 +10,10 @@ import { useHistory } from "react-router-dom";
 import { LoadingRow } from "@icpswap/ui";
 import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
+import { SelectToken } from "components/Select/SelectToken";
+import { SelectPair } from "components/Select/SelectPair";
+import { Null } from "@icpswap/types";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import FarmContext from "./context";
 
@@ -24,11 +28,15 @@ const Tabs = [
 function MainContent() {
   const theme = useTheme() as Theme;
   const history = useHistory();
+  const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;
   };
+
+  const [filterPair, setFilterPair] = useState<string | Null>(null);
+  const [filterToken, setFilterToken] = useState<string | Null>(null);
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
 
@@ -49,7 +57,20 @@ function MainContent() {
     }
   }, [__state]);
 
-  const { result: farms, loading } = useFarms({ state, filter: __state });
+  const filterUser = useMemo(() => {
+    if (__state === FilterState.YOUR) {
+      return principal?.toString();
+    }
+    return null;
+  }, [__state, principal]);
+
+  const { result: farms, loading } = useFarms({
+    state,
+    filter: __state,
+    pair: filterPair,
+    token: filterToken,
+    user: filterUser,
+  });
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
     history.push(`/farm?state=${value.state}`);
@@ -85,6 +106,14 @@ function MainContent() {
     };
   }, [state, matchDownSM]);
 
+  const handlePairChange = (pairId: string | undefined) => {
+    setFilterPair(pairId);
+  };
+
+  const handleTokenChange = (tokenId: string | undefined) => {
+    setFilterToken(tokenId);
+  };
+
   return (
     <FarmContext.Provider
       value={{
@@ -101,15 +130,15 @@ function MainContent() {
           },
         }}
       >
-        <Grid
-          container
-          justifyContent="space-between"
+        <Flex
+          justify="space-between"
           sx={{
             padding: "24px",
             "@media (max-width:640px)": {
               flexDirection: "column",
               gap: "24px 0",
               padding: "16px",
+              alignItems: "flex-start",
             },
           }}
         >
@@ -141,7 +170,45 @@ function MainContent() {
               </Typography>
             ))}
           </Box>
-        </Grid>
+
+          <Flex justify="flex-end" sx={{ flex: 1 }} gap="0 20px">
+            <Flex sx={{ width: "fit-content" }} gap="0 4px">
+              <Typography>
+                <Trans>Select a Pair:</Trans>
+              </Typography>
+
+              <SelectPair
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Pair</Trans>
+                  </Typography>
+                }
+                onPairChange={handlePairChange}
+              />
+            </Flex>
+
+            <Flex sx={{ width: "fit-content" }} gap="0 4px">
+              <Typography>
+                <Trans>Reward Token: </Trans>
+              </Typography>
+
+              <SelectToken
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Token</Trans>
+                  </Typography>
+                }
+                onTokenChange={handleTokenChange}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
