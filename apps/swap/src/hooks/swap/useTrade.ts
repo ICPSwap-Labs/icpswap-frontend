@@ -86,6 +86,7 @@ export function useBestTrade(
         state: TradeState.INVALID,
         trade: null,
         tradePoolId,
+        routes,
       };
     }
 
@@ -94,6 +95,7 @@ export function useBestTrade(
         state: TradeState.LOADING,
         trade: null,
         tradePoolId,
+        routes,
       };
     }
 
@@ -129,6 +131,7 @@ export function useBestTrade(
         state: TradeState.NO_ROUTE_FOUND,
         trade: null,
         tradePoolId,
+        routes,
       };
     }
 
@@ -142,6 +145,7 @@ export function useBestTrade(
         outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, amountOut.toString()),
       }),
       tradePoolId,
+      routes,
     };
   }, [
     inputCurrency,
