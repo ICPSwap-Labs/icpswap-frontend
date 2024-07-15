@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
+import { useTheme } from "components/Mui";
 import { ICP, ICS, ckBTC, ckETH, ckUSDC } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenInfo } from "types/token";
@@ -14,6 +15,8 @@ export interface BaseTokenProps {
 }
 
 export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
+  const theme = useTheme();
+
   const { result: tokenInfo } = useTokenInfo(token.address);
 
   const handleClick = useCallback(() => {
@@ -29,12 +32,24 @@ export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
         border: "1px solid #29314F",
         borderRadius: "50px",
         cursor: "pointer",
+        "&:hover": {
+          background: theme.palette.background.level3,
+        },
       }}
       gap="0 8px"
       onClick={handleClick}
     >
       <TokenImage logo={token.logo} size="24px" />
-      <Typography fontSize="16px" fontWeight={500} color="text.primary">
+      <Typography
+        sx={{
+          color: "text.primary",
+          fontWeight: 500,
+          fontSize: "16px",
+          "@media(max-width: 640px)": {
+            fontSize: "14px",
+          },
+        }}
+      >
         {token.symbol}
       </Typography>
     </Flex>
