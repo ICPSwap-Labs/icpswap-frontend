@@ -21,7 +21,7 @@ export function TokenPair({
   color,
 }: TokenPairProps) {
   return (
-    <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
+    <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
       <TokenImage logo={token0Logo} tokenId={token0Id} size="24px" />
       <TokenImage logo={token1Logo} tokenId={token1Id} size="24px" sx={{ margin: "0 0 0 -8px" }} />
       <Typography color={color === "primary" ? "text.primary" : "text.secondary"}>

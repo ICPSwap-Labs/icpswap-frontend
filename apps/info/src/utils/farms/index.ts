@@ -17,7 +17,6 @@ export function getFarmPoolStatus(pool: FarmInfo | undefined) {
 
   let statusText = "";
   let statusClassName = "";
-  const status = "";
 
   if (state === "NOT_STARTED") {
     statusText = t`Unstart`;

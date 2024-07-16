@@ -120,7 +120,6 @@ export function SelectPair({
         .map((ele) => ({
           value: ele.poolId,
           label: <PairMenuItem token0={ele.additional.token0} token1={ele.additional.token1} />,
-          selectLabel: <PairMenuItem token0={ele.additional.token0} token1={ele.additional.token1} select />,
           additional: JSON.stringify(ele.additional),
         }))
         .filter((ele) => !!ele.label);

@@ -171,7 +171,18 @@ function MainContent() {
             ))}
           </Box>
 
-          <Flex justify="flex-end" sx={{ flex: 1 }} gap="0 20px">
+          <Flex
+            justify="flex-end"
+            sx={{
+              flex: 1,
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "16px 0",
+                alignItems: "flex-start",
+              },
+            }}
+            gap="0 20px"
+          >
             <Flex sx={{ width: "fit-content" }} gap="0 4px">
               <Typography>
                 <Trans>Select a Pair:</Trans>
