@@ -1,54 +1,41 @@
 import BigNumber from "bignumber.js";
 import { t } from "@lingui/macro";
-
+import { getFarmState } from "@icpswap/hooks";
 import type { StakingPoolControllerPoolInfo, FarmInfo } from "@icpswap/types";
 
-export const POOL_STATUS = {
-  ONGOING: "ongoing",
-  UPCOMING: "upcoming",
-  FINISHED: "finished",
-  Closure: "closure",
-};
-
 export const POOL_STATUS_COLORS = {
-  [POOL_STATUS.UPCOMING]: "#5669DC",
-  [POOL_STATUS.ONGOING]: "#54C081",
-  [POOL_STATUS.FINISHED]: "#8492C4",
-  [POOL_STATUS.Closure]: "#8492C4",
+  NOT_STARTED: "#5669DC",
+  LIVE: "#54C081",
+  FINISHED: "#8492C4",
+  CLOSED: "#8492C4",
 };
 
 export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   if (!pool) return undefined;
 
-  if ("CLOSED" in pool.status) {
-    return {
-      statusText: "Closure",
-      status: POOL_STATUS.Closure,
-      statusClassName: "closure",
-    };
-  }
+  const state = getFarmState(pool);
 
   let statusText = "";
   let statusClassName = "";
-  let status = "";
+  const status = "";
 
-  if ("NOT_STARTED" in pool.status) {
+  if (state === "NOT_STARTED") {
     statusText = t`Unstart`;
     statusClassName = "upcoming";
-    status = POOL_STATUS.UPCOMING;
-  } else if ("LIVE" in pool.status) {
+  } else if (state === "LIVE") {
     statusText = t`Live`;
     statusClassName = "ongoing";
-    status = POOL_STATUS.ONGOING;
-  } else if ("FINISHED" in pool.status) {
+  } else if (state === "FINISHED") {
     statusText = t`Finished`;
     statusClassName = "finished";
-    status = POOL_STATUS.FINISHED;
+  } else if (state === "CLOSED") {
+    statusText = "Closure";
+    statusClassName = "closure";
   }
 
   return {
     statusText,
-    status,
+    status: state,
     statusClassName,
   };
 }
@@ -63,15 +50,15 @@ export function getTokenPoolStatus(pool: StakingPoolControllerPoolInfo | undefin
   if (new BigNumber(Number(pool.startTime)).multipliedBy(1000).isGreaterThan(new Date().getTime())) {
     statusText = t`Unstart`;
     statusClassName = "upcoming";
-    status = POOL_STATUS.UPCOMING;
+    status = "NOT_STARTED";
   } else if (new BigNumber(Number(pool.bonusEndTime)).multipliedBy(1000).isLessThan(new Date().getTime())) {
     statusText = t`Finished`;
     statusClassName = "finished";
-    status = POOL_STATUS.FINISHED;
+    status = "FINISHED";
   } else {
     statusText = t`Live`;
     statusClassName = "ongoing";
-    status = POOL_STATUS.ONGOING;
+    status = "LIVE";
   }
 
   return {
