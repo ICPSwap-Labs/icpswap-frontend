@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
-import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
+import { useFarmInfo, useSwapPoolMetadata, useAllFarms } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
 
@@ -106,7 +106,7 @@ export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useFarms(undefined);
+  const { result, loading } = useAllFarms();
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);

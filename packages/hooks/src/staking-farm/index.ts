@@ -153,6 +153,15 @@ export function useFarms(condition: FarmFilterCondition | undefined, reload?: bo
   );
 }
 
+export function useAllFarms(reload?: boolean | number) {
+  return useCallsData(
+    useCallback(async () => {
+      return await getFarms({ user: [], pool: [], status: [], rewardToken: [] });
+    }, []),
+    reload,
+  );
+}
+
 export async function getFarmsByState(state: FarmState | undefined) {
   return resultFormat<Array<Principal>>(
     await (

@@ -33,7 +33,7 @@ export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   let status = "";
 
   if ("NOT_STARTED" in pool.status) {
-    statusText = t`Upcoming`;
+    statusText = t`Unstart`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
   } else if ("LIVE" in pool.status) {
@@ -61,7 +61,7 @@ export function getTokenPoolStatus(pool: StakingPoolControllerPoolInfo | undefin
   let status = "";
 
   if (new BigNumber(Number(pool.startTime)).multipliedBy(1000).isGreaterThan(new Date().getTime())) {
-    statusText = t`Upcoming`;
+    statusText = t`Unstart`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
   } else if (new BigNumber(Number(pool.bonusEndTime)).multipliedBy(1000).isLessThan(new Date().getTime())) {
