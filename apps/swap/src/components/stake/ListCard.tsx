@@ -104,10 +104,10 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
 
       <Flex gap="0 4px" justify="flex-end" className="row-item">
         <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {userStakeTokenBalance && rewardToken
+          {userStakeTokenBalance && stakeToken
             ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(userStakeTokenBalance, rewardToken.decimals).toString(),
-              )} ${rewardToken.symbol}`
+                parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
+              )} ${stakeToken.symbol}`
             : "--"}
         </Typography>
       </Flex>
