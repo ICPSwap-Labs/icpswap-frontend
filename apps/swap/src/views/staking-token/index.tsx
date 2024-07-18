@@ -122,7 +122,7 @@ function MainContent() {
           }}
         >
           <Typography variant="body2" color="text.400" className="row-item">
-            <Trans>Staked Position</Trans>
+            <Trans>Staked Token</Trans>
           </Typography>
           <Typography variant="body2" color="text.400" className="row-item">
             <Trans>Reward Token</Trans>

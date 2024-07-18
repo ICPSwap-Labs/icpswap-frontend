@@ -53,7 +53,7 @@ export default function LogoutConfirmModal({
       <DialogContent>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Typography>
+            <Typography lineHeight="1.15rem">
               <Trans>
                 When you log out, your account information will be cleared for asset security. Please ensure that you
                 have safely backed up your wallet's mnemonic phrase.

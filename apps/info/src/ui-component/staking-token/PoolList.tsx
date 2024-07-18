@@ -3,14 +3,16 @@ import { Grid, Table, TableHead, TableCell, TableContainer, TableRow, TableBody,
 import { Trans } from "@lingui/macro";
 import { getTokenPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
-import { useStakingPools } from "@icpswap/hooks";
+import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
 import { pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { TextButton, Pagination, NoData, ListLoading, PaginationType } from "ui-component/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { HeaderCell, BodyCell } from "@icpswap/ui";
+import upperFirst from "lodash/upperFirst";
 
 export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
-  const { status, statusText } = getTokenPoolStatus(pool) ?? { status: "", statusText: "" };
+  const { status } = getTokenPoolStatus(pool) ?? { status: "" };
+  const state = useStakingPoolState(pool);
 
   return (
     <TableRow>
@@ -51,12 +53,12 @@ export function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
               color: POOL_STATUS_COLORS[status],
             }}
           >
-            {statusText}
+            {state ? (state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())) : "--"}
           </BodyCell>
         </Grid>
       </TableCell>
       <TableCell>
-        <TextButton to={`/stake/details/${pool.canisterId}/${statusText}`} sx={{ fontSize: "16px" }}>
+        <TextButton to={`/stake/details/${pool.canisterId}`} sx={{ fontSize: "16px" }}>
           <Trans>Details</Trans>
         </TextButton>
       </TableCell>

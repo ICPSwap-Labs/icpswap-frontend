@@ -9,9 +9,7 @@ export enum STATE {
   FINISHED = "FINISHED",
 }
 
-export type V2PoolData = StakingPoolInfo;
-
-export type PoolData = V2PoolData;
+export type PoolData = StakingPoolInfo;
 
 export type UserStakingInfo = {
   amount: bigint;
