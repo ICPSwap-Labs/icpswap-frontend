@@ -32,9 +32,9 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
   const { result: stakeTokenBalance } = useTokenBalance(pool.stakingToken.address, principal?.toString());
 
   const totalStakedValue = useMemo(() => {
-    if (!rewardTokenPrice || !stakeToken || !poolInfo) return undefined;
-    return parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).multipliedBy(rewardTokenPrice).toString();
-  }, [rewardTokenPrice, stakeToken, poolInfo]);
+    if (!stakeTokenPrice || !stakeToken || !poolInfo) return undefined;
+    return parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString();
+  }, [stakeTokenPrice, stakeToken, poolInfo]);
 
   const apr = useApr({
     poolInfo,

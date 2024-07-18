@@ -43,11 +43,9 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
 
   const handleMax = useCallback(() => {
     if (balance && stakeToken) {
-      if (!balance.isLessThan(stakeToken.transFee * 3)) {
+      if (!balance.isLessThan(stakeToken.transFee)) {
         const _balance = parseTokenAmount(balance, stakeToken.decimals);
-        const amount = parseTokenAmount(balance, stakeToken.decimals)
-          .minus(parseTokenAmount(stakeToken.transFee, stakeToken.decimals).multipliedBy(3))
-          .toString();
+        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals).toString();
 
         setAmount(amount);
         setPercent(Number(new BigNumber(amount).dividedBy(_balance).multipliedBy(100).toFixed(0)));
@@ -84,17 +82,11 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
       setPercent(value);
 
       if (balance && stakeToken) {
-        let amount = parseTokenAmount(balance, stakeToken.decimals).multipliedBy(value).dividedBy(100);
+        if (balance.isLessThan(stakeToken.transFee)) return;
 
-        if (
-          parseTokenAmount(balance, stakeToken.decimals)
-            .minus(amount)
-            .isLessThan(parseTokenAmount(stakeToken.transFee, stakeToken.decimals).multipliedBy(3))
-        ) {
-          amount = parseTokenAmount(balance, stakeToken.decimals).minus(
-            parseTokenAmount(stakeToken.transFee, stakeToken.decimals).multipliedBy(3),
-          );
-        }
+        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals)
+          .multipliedBy(value)
+          .dividedBy(100);
 
         setAmount(amount.toString());
       }
@@ -136,7 +128,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     if (new BigNumber(amount).isEqualTo(0)) return t`Amount must be greater than 0`;
     if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount)) return t`Insufficient balance`;
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))
-      return t`Amount must be greater than trans fee`;
+      return t`Amount must be greater than the transfer fee`;
 
     return null;
   }, [amount, balance, stakeToken, state]);

@@ -99,7 +99,7 @@ export function UnstakeModal({
           <Trans>Reward Token</Trans>
         </Typography>
 
-        <Tooltip tips={t`You will receive the reward tokens you have earned after harvest the staked tokens.`} />
+        {/* <Tooltip tips={t`You will receive the reward tokens you have earned after harvesting the staked tokens.`} /> */}
       </Flex>
 
       {rewardAmount && rewardToken ? (
