@@ -18,9 +18,9 @@ export interface UseTokenSubAccountTransferArgs {
 }
 
 export function useTokenSubAccountTransfer() {
-  const [openErrorTip] = useErrorTip();
-
   const principal = useAccountPrincipal();
+
+  const [openErrorTip] = useErrorTip();
 
   return useCallback(
     async ({ token, address, amount, options }: UseTokenSubAccountTransferArgs) => {

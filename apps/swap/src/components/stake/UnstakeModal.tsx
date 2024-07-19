@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Button, Typography, Box, CircularProgress } from "@mui/material";
 import { t, Trans } from "@lingui/macro";
-import { Flex, Modal, NumberTextField, StepViewButton, Tooltip, MaxButton } from "components/index";
+import { Flex, Modal, NumberTextField, StepViewButton, MaxButton } from "components/index";
 import {
   BigNumber,
   parseTokenAmount,
@@ -11,7 +11,7 @@ import {
   formatDollarAmount,
 } from "@icpswap/utils";
 import { useUnstakeCall } from "hooks/staking-token/useUnstake";
-import { useLoadingTip } from "hooks/useTips";
+import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Token } from "@icpswap/swap-sdk";
 
@@ -40,7 +40,7 @@ export function UnstakeModal({
 }: ClaimModalProps) {
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-
+  const [openTip] = useTips();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | number | undefined>(undefined);
 
@@ -64,10 +64,14 @@ export function UnstakeModal({
       extraContent: <StepViewButton step={key} />,
     });
 
-    await call();
+    const result = await call();
+
+    if (result) {
+      openTip(t`Unstake successfully`, MessageTypes.success);
+      if (onUnStakeSuccess) onUnStakeSuccess();
+    }
 
     closeLoadingTip(loadingTipKey);
-    if (onUnStakeSuccess) onUnStakeSuccess();
     setLoading(false);
   };
 
