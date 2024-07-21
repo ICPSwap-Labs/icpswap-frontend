@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Typography, Box, CircularProgress } from "@mui/material";
 import { t, Trans } from "@lingui/macro";
 import { Flex, Modal, NumberTextField, StepViewButton, MaxButton } from "components/index";
@@ -86,6 +86,11 @@ export function UnstakeModal({
       setAmount(tokenAmount.toNumber());
     }
   };
+
+  // Reset amount
+  useEffect(() => {
+    setAmount("");
+  }, [open]);
 
   const errorMessage = useMemo(() => {
     if (!stakeToken || !stakeAmount) return t`Confirm`;
