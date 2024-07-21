@@ -165,6 +165,7 @@ export default function DissolveCkERC20({
                     maxLength: 255,
                   }}
                   placeholder={t`Enter the address`}
+                  multiline
                 />
               </Box>
 

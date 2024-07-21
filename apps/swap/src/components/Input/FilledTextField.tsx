@@ -232,9 +232,11 @@ function FilledTextField(
                 <TextField
                   sx={{
                     "& input": {
+                      lineHeight: "1.15rem",
                       fontSize: props.fontSize ?? "16px",
                     },
                     "& textarea": {
+                      lineHeight: "1.15rem",
                       fontSize: props.fontSize ?? "16px",
                     },
                     "& input::placeholder": {

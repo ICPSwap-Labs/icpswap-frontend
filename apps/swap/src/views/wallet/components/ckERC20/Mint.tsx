@@ -44,7 +44,7 @@ function DeadContent({ content }: DeadContentProps) {
         background: theme.palette.background.level4,
       }}
     >
-      <Typography sx={{ wordBreak: "break-all", fontWeight: 500 }}>
+      <Typography sx={{ wordBreak: "break-all", fontWeight: 500, lineHeight: "1.15rem" }}>
         {content || <Typography height="10px" width="2px" />}
       </Typography>
     </Box>
