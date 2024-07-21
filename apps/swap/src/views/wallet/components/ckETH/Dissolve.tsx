@@ -139,6 +139,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
                   inputProps={{
                     maxLength: 255,
                   }}
+                  multiline
                 />
               </Box>
 

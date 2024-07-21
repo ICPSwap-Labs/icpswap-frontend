@@ -145,6 +145,7 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
                     inputProps={{
                       maxLength: 255,
                     }}
+                    multiline
                   />
                 </Box>
 
