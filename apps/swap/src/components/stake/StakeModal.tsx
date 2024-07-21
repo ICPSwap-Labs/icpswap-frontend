@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Typography, Grid, Box, CircularProgress } from "@mui/material";
 import { t, Trans } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -58,6 +58,10 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
     if (onStakingSuccess) onStakingSuccess();
     if (onClose) onClose();
   };
+
+  useEffect(() => {
+    setAmount("");
+  }, [open]);
 
   let errorMessage = "";
   if (amount && balance && balance.isLessThan(new BigNumber(amount))) errorMessage = t`Insufficient balance`;
