@@ -11,7 +11,7 @@ import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL } from "@icpswap/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
@@ -20,9 +20,9 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gridGap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "20px 2fr repeat(4, 1fr)",
+      gridTemplateColumns: "20px 2fr 1fr repeat(4, 1fr)",
       "@media screen and (max-width: 500px)": {
-        gridTemplateColumns: "20px 1fr repeat(4, 1fr)",
+        gridTemplateColumns: "20px 1fr 1fr repeat(4, 1fr)",
       },
     },
   };
@@ -48,6 +48,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: 
     { label: "#", key: "#", sort: false },
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
+    { label: t`APR(24H)`, key: "apr", sort: true },
     { label: t`Volume 24H`, key: "volumeUSD", sort: true },
     { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
     { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },
@@ -86,6 +87,18 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
 
+  const apr = useMemo(() => {
+    if (!pool) return undefined;
+
+    const fee24h = (pool.volumeUSD * 3) / 1000;
+
+    return `${new BigNumber(fee24h)
+      .dividedBy(pool.tvlUSD)
+      .multipliedBy(360 * 0.8)
+      .multipliedBy(100)
+      .toFixed(2)}%`;
+  }, [pool]);
+
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
@@ -104,6 +117,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
+      <BodyCell align={align}>{apr ?? "--"}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>

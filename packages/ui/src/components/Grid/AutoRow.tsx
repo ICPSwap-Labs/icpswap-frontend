@@ -13,6 +13,7 @@ export function GridAutoRows({ gap, children }: GridAutoRowsProps) {
         display: "grid",
         gridAutoRows: "auto",
         rowGap: gap,
+        height: "fit-content",
       }}
     >
       {children}
