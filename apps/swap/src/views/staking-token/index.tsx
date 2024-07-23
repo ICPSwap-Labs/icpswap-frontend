@@ -7,7 +7,14 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { GlobalData, TopLiveStaking, PoolListCard } from "components/stake/index";
+import {
+  GlobalData,
+  TopLiveStaking,
+  PoolListCard,
+  PoolListHeader,
+  YourPoolListHeader,
+  YourPoolListCard,
+} from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
 import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
@@ -42,15 +49,20 @@ function MainContent() {
   const { showState, gridTemplateColumns } = useMemo(() => {
     return {
       showState: state === undefined,
-      gridTemplateColumns: matchDownSM
-        ? state === undefined
-          ? "220px 220px 100px 240px 180px 180px"
-          : "220px 220px 100px 240px 180px"
-        : state === undefined
-        ? "220px 220px 120px 1fr 1fr 180px"
-        : "220px 220px 120px 1fr 1fr",
+      gridTemplateColumns:
+        __state === FilterState.YOUR
+          ? matchDownSM
+            ? "180px 180px 120px 240px 180px 180px 100px"
+            : "180px 180px 120px 1fr 180px 180px 100px"
+          : matchDownSM
+          ? state === undefined
+            ? "220px 220px 100px 240px 180px 180px"
+            : "220px 220px 100px 240px 180px"
+          : state === undefined
+          ? "220px 220px 120px 1fr 1fr 180px"
+          : "220px 220px 120px 1fr 1fr",
     };
-  }, [state, matchDownSM]);
+  }, [state, matchDownSM, __state]);
 
   return (
     <MainCard
@@ -106,50 +118,11 @@ function MainContent() {
       <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
       <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns,
-            "& .row-item": {
-              padding: "16px 0",
-              "&:first-of-type": {
-                padding: "16px 0 16px 24px",
-              },
-              "&:last-of-type": {
-                padding: "16px 24px 16px 0",
-              },
-            },
-          }}
-        >
-          <Typography variant="body2" color="text.400" className="row-item">
-            <Trans>Staked Token</Trans>
-          </Typography>
-          <Typography variant="body2" color="text.400" className="row-item">
-            <Trans>Reward Token</Trans>
-          </Typography>
-          <Flex justify="flex-end" className="row-item">
-            <Typography variant="body2" color="text.400">
-              <Trans>APR</Trans>
-            </Typography>
-          </Flex>
-          <Flex justify="flex-end" className="row-item">
-            <Typography variant="body2" color="text.400">
-              <Trans>Your Available to Stake</Trans>
-            </Typography>
-          </Flex>
-          <Flex justify="flex-end" className="row-item">
-            <Typography variant="body2" color="text.400">
-              <Trans>Total Staked</Trans>
-            </Typography>
-          </Flex>
-          {showState ? (
-            <Flex justify="flex-end">
-              <Typography variant="body2" color="text.400" className="row-item">
-                <Trans>Status</Trans>
-              </Typography>
-            </Flex>
-          ) : null}
-        </Box>
+        {__state === FilterState.YOUR ? (
+          <YourPoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
+        ) : (
+          <PoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
+        )}
 
         {loading ? (
           <Box sx={{ padding: "24px" }}>
@@ -168,17 +141,29 @@ function MainContent() {
           <>
             {!pools?.length && !loading && <NoData />}
 
-            {pools?.map((pool) => (
-              <PoolListCard
-                key={pool.canisterId.toString()}
-                poolInfo={pool}
-                showState={showState}
-                wrapperSx={{
-                  display: "grid",
-                  gridTemplateColumns,
-                }}
-              />
-            ))}
+            {pools?.map((pool) =>
+              __state === FilterState.YOUR ? (
+                <YourPoolListCard
+                  key={pool.canisterId.toString()}
+                  poolInfo={pool}
+                  showState={showState}
+                  wrapperSx={{
+                    display: "grid",
+                    gridTemplateColumns,
+                  }}
+                />
+              ) : (
+                <PoolListCard
+                  key={pool.canisterId.toString()}
+                  poolInfo={pool}
+                  showState={showState}
+                  wrapperSx={{
+                    display: "grid",
+                    gridTemplateColumns,
+                  }}
+                />
+              ),
+            )}
           </>
         )}
       </Box>
