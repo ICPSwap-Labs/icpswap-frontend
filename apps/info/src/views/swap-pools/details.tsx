@@ -3,7 +3,14 @@ import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount, explorerLink } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  mockALinkAndOpen,
+  parseTokenAmount,
+  explorerLink,
+  BigNumber,
+} from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
 import { usePoolLatestTVL } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
@@ -41,12 +48,10 @@ export default function SwapPoolDetails() {
   const poolTvlUsd = useMemo(() => {
     if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return undefined;
 
-    return formatDollarAmount(
-      parseTokenAmount(poolTVLToken1, token1.decimals)
-        .multipliedBy(token1Price)
-        .plus(parseTokenAmount(poolTVLToken0, token0.decimals).multipliedBy(token0Price))
-        .toString(),
-    );
+    return parseTokenAmount(poolTVLToken1, token1.decimals)
+      .multipliedBy(token1Price)
+      .plus(parseTokenAmount(poolTVLToken0, token0.decimals).multipliedBy(token0Price))
+      .toString();
   }, [poolTVLToken0, poolTVLToken1, token0Price, token1Price, token0, token1]);
 
   const { result: latestTVL } = usePoolLatestTVL(canisterId);
@@ -75,6 +80,18 @@ export default function SwapPoolDetails() {
   };
 
   const { result: cycles } = useSwapPoolCycles(canisterId);
+
+  const apr = useMemo(() => {
+    if (!pool || !poolTvlUsd) return undefined;
+
+    const fee24h = (pool.volumeUSD * 3) / 1000;
+
+    return `${new BigNumber(fee24h)
+      .dividedBy(poolTvlUsd)
+      .multipliedBy(360 * 0.8)
+      .multipliedBy(100)
+      .toFixed(2)}%`;
+  }, [poolTvlUsd, pool]);
 
   return (
     <Wrapper>
@@ -246,67 +263,90 @@ export default function SwapPoolDetails() {
               </GridAutoRows>
             </MainCard>
 
-            <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>TVL (Real-Time)</Trans>
-              </Typography>
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "24px",
-                }}
-              >
-                {poolTvlUsd ?? "--"}
-              </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "20px 0",
+              }}
+            >
+              <GridAutoRows gap="4px">
+                <Typography>
+                  <Trans>TVL (Real-Time)</Trans>
+                </Typography>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "24px",
+                  }}
+                >
+                  {poolTvlUsd ? formatDollarAmount(poolTvlUsd) : "--"}
+                </Typography>
 
-              <Proportion value={latestTVL?.tvlUSDChange} />
-            </GridAutoRows>
+                <Proportion value={latestTVL?.tvlUSDChange} />
+              </GridAutoRows>
 
-            <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>Volume 24H</Trans>
-              </Typography>
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "24px",
-                }}
-              >
-                {formatDollarAmount(pool?.volumeUSD)}
-              </Typography>
-            </GridAutoRows>
+              <GridAutoRows gap="4px">
+                <Typography>
+                  <Trans>Volume 24H</Trans>
+                </Typography>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "24px",
+                  }}
+                >
+                  {formatDollarAmount(pool?.volumeUSD)}
+                </Typography>
+              </GridAutoRows>
 
-            <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>Volume 7D</Trans>
-              </Typography>
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "24px",
-                }}
-              >
-                {formatDollarAmount(pool?.volumeUSD7d)}
-              </Typography>
-            </GridAutoRows>
+              <GridAutoRows gap="4px">
+                <Typography>
+                  <Trans>Volume 7D</Trans>
+                </Typography>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "24px",
+                  }}
+                >
+                  {formatDollarAmount(pool?.volumeUSD7d)}
+                </Typography>
+              </GridAutoRows>
 
-            <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>Fee 24H</Trans>
-              </Typography>
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: "24px",
-                }}
-              >
-                {pool?.volumeUSD ? formatDollarAmount((pool.volumeUSD * 3) / 1000) : "--"}
-              </Typography>
-            </GridAutoRows>
+              <GridAutoRows gap="4px">
+                <Typography>
+                  <Trans>Fee 24H</Trans>
+                </Typography>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "24px",
+                  }}
+                >
+                  {pool?.volumeUSD ? formatDollarAmount((pool.volumeUSD * 3) / 1000) : "--"}
+                </Typography>
+              </GridAutoRows>
+
+              <GridAutoRows gap="4px">
+                <Typography>
+                  <Trans>APR 24H</Trans>
+                </Typography>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "24px",
+                  }}
+                >
+                  {apr ?? "--"}
+                </Typography>
+              </GridAutoRows>
+            </Box>
           </GridAutoRows>
         </MainCard>
 
