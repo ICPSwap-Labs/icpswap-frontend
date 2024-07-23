@@ -7,12 +7,6 @@ const SwapPoolDetails = Loadable(lazy(() => import("../views/swap-pools/details"
 const SwapToken = Loadable(lazy(() => import("../views/swap-tokens/index")));
 const SwapTokenDetails = Loadable(lazy(() => import("../views/swap-tokens/details")));
 
-const V2Swap = Loadable(lazy(() => import("../views/swap-v2/index")));
-const V2SwapPools = Loadable(lazy(() => import("../views/swap-pools-v2/index")));
-const V2SwapPoolDetails = Loadable(lazy(() => import("../views/swap-pools-v2/details")));
-const V2SwapTokens = Loadable(lazy(() => import("../views/swap-tokens-v2/index")));
-const V2SwapTokenDetails = Loadable(lazy(() => import("../views/swap-tokens-v2/details")));
-
 const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
@@ -56,12 +50,6 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/swap/pool/details/:canisterId": SwapPoolDetails,
   "/swap/token": SwapToken,
   "/swap/token/details/:canisterId": SwapTokenDetails,
-
-  "/swap/v2": V2Swap,
-  "/swap/v2/pool": V2SwapPools,
-  "/swap/v2/pool/details/:canisterId": V2SwapPoolDetails,
-  "/swap/v2/token": V2SwapTokens,
-  "/swap/v2/token/details/:canisterId": V2SwapTokenDetails,
 
   "/nft/canisters": NFTCanisterList,
   "/nft/canister/details/:id": NFTCanisterDetails,
