@@ -19,7 +19,7 @@ import { TokenPrices } from "./components/TokenPrice";
 export default function TokenDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
 
-  const { path } = useParsedQueryString() as { path: string | undefined };
+  const { path, page } = useParsedQueryString() as { path: string | undefined; page: string | undefined };
 
   const token = useToken(canisterId);
   const { result: tokenInfo } = useTokenInfo(token?.address);
@@ -49,7 +49,7 @@ export default function TokenDetails() {
     <Wrapper>
       <Breadcrumbs
         prevLink={path ? atob(path) : "/swap"}
-        prevLabel={<Trans>Tokens</Trans>}
+        prevLabel={page ? atob(page) : <Trans>Swap Tokens</Trans>}
         currentLabel={<Trans>Details</Trans>}
       />
 

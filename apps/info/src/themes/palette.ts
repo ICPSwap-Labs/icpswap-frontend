@@ -71,6 +71,8 @@ export function themePalette(theme: ThemeOption) {
       dark: theme.textDark,
       light: theme.textLight,
       hint: theme.colors.grey100,
+      "theme-primary": theme.colors.darkPrimaryMain,
+      "theme-secondary": theme.colors.darkSecondaryMain,
     },
     background: {
       paper: theme.paper,
