@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
-import { useTokenLatestTVL } from "@icpswap/hooks";
+import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
 import { GridAutoRows, Proportion, TokenCharts } from "@icpswap/ui";
@@ -18,6 +18,8 @@ import { TokenPrices } from "./components/TokenPrice";
 
 export default function TokenDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
+
+  const { path } = useParsedQueryString() as { path: string | undefined };
 
   const token = useToken(canisterId);
   const { result: tokenInfo } = useTokenInfo(token?.address);
@@ -45,9 +47,11 @@ export default function TokenDetails() {
 
   return (
     <Wrapper>
-      <Box>
-        <Breadcrumbs prevLink="/swap" prevLabel={<Trans>Tokens</Trans>} currentLabel={<Trans>Details</Trans>} />
-      </Box>
+      <Breadcrumbs
+        prevLink={path ? atob(path) : "/swap"}
+        prevLabel={<Trans>Tokens</Trans>}
+        currentLabel={<Trans>Details</Trans>}
+      />
 
       <Box mt="20px">
         <Grid container alignItems="center">
