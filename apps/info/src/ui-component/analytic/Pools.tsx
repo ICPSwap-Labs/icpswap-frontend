@@ -117,7 +117,9 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell align={align}>{apr ?? "--"}</BodyCell>
+      <BodyCell align={align} color="text.theme-secondary">
+        {apr ?? "--"}
+      </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>

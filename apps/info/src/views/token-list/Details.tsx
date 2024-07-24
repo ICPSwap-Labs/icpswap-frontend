@@ -176,7 +176,9 @@ export function TokenDetail() {
                         </Typography>
                       </Box>
                       <TextButton
-                        to={`/swap/token/details/${canisterId}?path=${window.btoa(`/token/details/${canisterId}`)}`}
+                        to={`/swap/token/details/${canisterId}?path=${window.btoa(`/token/list`)}&page=${btoa(
+                          t`Tokens`,
+                        )}`}
                         sx={{ padding: "0 40px 0 0" }}
                       >
                         <Trans>Details</Trans>
