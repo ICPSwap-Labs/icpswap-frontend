@@ -9,6 +9,8 @@ export interface SwapContextProps {
   removeUnavailableBalanceKey: (key: string) => void;
   refreshTrigger: number;
   setRefreshTrigger: () => void;
+  usdValueChange: string | null;
+  setUSDValueChange: (change: string | null) => void;
 }
 
 export const SwapContext = createContext<SwapContextProps>({} as SwapContextProps);

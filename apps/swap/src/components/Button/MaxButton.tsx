@@ -10,7 +10,7 @@ export interface MaxButtonProps {
 export function MaxButton({ onClick, background }: MaxButtonProps) {
   return (
     <SmallButton onClick={onClick} background={background}>
-      <Trans>Max</Trans>
+      <Trans>MAX</Trans>
     </SmallButton>
   );
 }

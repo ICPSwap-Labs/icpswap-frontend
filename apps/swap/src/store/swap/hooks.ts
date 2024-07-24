@@ -115,7 +115,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const Trade = useBestTrade(
     inputCurrency,
     outputCurrency,
-    !actualSwapValue || actualSwapValue === "0" ? undefined : debouncedTypedValue,
+    !actualSwapValue || actualSwapValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
   let inputError: null | string = null;

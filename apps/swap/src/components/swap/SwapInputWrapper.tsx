@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useContext, useEffect } from "react";
 import { Box } from "@mui/material";
 import SwitchIcon from "assets/images/swap/switch";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
@@ -7,6 +7,8 @@ import BigNumber from "bignumber.js";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { TokenInfo } from "types/token";
+import { SwapContext } from "components/swap/index";
+
 import { SwapInputCurrency } from "./SwapInputCurrency";
 
 export interface SwapInputWrapperProps {
@@ -49,14 +51,14 @@ export function SwapInputWrapper({
   ui = "normal",
 }: SwapInputWrapperProps) {
   const { independentField, typedValue } = useSwapState();
-
+  const { setUSDValueChange } = useContext(SwapContext);
   const { onSwitchTokens } = useSwapHandlers();
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? "",
+    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
   };
 
   const inputBalanceUSDValue = useMemo(() => {
@@ -71,14 +73,19 @@ export function SwapInputWrapper({
     return new BigNumber(amount).multipliedBy(tokenBPrice).toNumber();
   }, [tokenBPrice, formattedAmounts]);
 
-  const USDChange =
-    !!outputBalanceUSDValue && !!inputBalanceUSDValue
+  const USDChange = useMemo(() => {
+    return !!outputBalanceUSDValue && !!inputBalanceUSDValue
       ? new BigNumber(outputBalanceUSDValue)
           .minus(inputBalanceUSDValue)
           .dividedBy(inputBalanceUSDValue)
           .multipliedBy(100)
           .toFixed(2)
       : null;
+  }, [outputBalanceUSDValue, inputBalanceUSDValue]);
+
+  useEffect(() => {
+    setUSDValueChange(USDChange);
+  }, [setUSDValueChange, USDChange]);
 
   return (
     <Box>

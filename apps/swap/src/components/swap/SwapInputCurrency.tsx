@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography } from "components/Mui";
 import CurrencySelector from "components/CurrencySelector";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount } from "@icpswap/utils";
@@ -12,6 +12,8 @@ import { TokenInfo } from "types/token";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInput } from "components/swap/SwapInput";
 import { useTheme } from "@emotion/react";
+import { MaxButton } from "components/index";
+import { impactColor } from "utils/swap/prices";
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
@@ -19,7 +21,7 @@ export interface SwapInputCurrencyProps {
   currencyState: UseCurrencyState;
   currency: Token | undefined;
   currencyPrice: string | undefined | number;
-  formatAmount: string;
+  formatAmount: string | undefined;
   onInput: (value: string) => void;
   currencyBalance: CurrencyAmount<Token> | undefined;
   parsedAmount: CurrencyAmount<Token> | undefined;
@@ -59,7 +61,15 @@ export function SwapInputCurrency({
     return new BigNumber(amount).multipliedBy(currencyPrice).toNumber();
   }, [currencyPrice, formatAmount]);
 
-  const USDChangeColor = !new BigNumber(usdChange ?? 0).isLessThan(0) ? "#54C081" : "#D3625B";
+  const impactTier = impactColor(usdChange);
+
+  const USDChangeColor = !new BigNumber(usdChange ?? 0).isLessThan(0)
+    ? "#54C081"
+    : impactTier === 3
+    ? "#D7331A"
+    : impactTier === 2
+    ? "#D3625B"
+    : "#F7B231";
 
   return (
     <Box
@@ -85,32 +95,17 @@ export function SwapInputCurrency({
         </Box>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formatAmount} currency={currency} onUserInput={onInput} disabled={disabled} />
+          <SwapInput value={formatAmount ?? ""} currency={currency} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 
       {currency ? (
         <Grid container alignItems="center" mt="12px">
-          <Typography>
+          <Typography sx={{ margin: "0 4px 0 0" }}>
             <Trans>Balance: {currencyBalance ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}</Trans>
           </Typography>
 
-          {!!showMaxButton && !!onMax ? (
-            <Typography
-              fontSize="12px"
-              sx={{
-                padding: "1px 3px",
-                cursor: "pointer",
-                borderRadius: "2px",
-                backgroundColor: theme.colors.secondaryMain,
-                color: "#ffffff",
-                marginLeft: "4px",
-              }}
-              onClick={onMax}
-            >
-              <Trans>MAX</Trans>
-            </Typography>
-          ) : null}
+          {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
 
           {currencyBalanceUSDValue ? (
             <Grid item xs>

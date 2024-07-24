@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useContext } from "react";
-import { Grid, Box, Typography, CircularProgress } from "@mui/material";
+import { Grid, Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { toSignificant, isNullArgs } from "@icpswap/utils";
@@ -10,13 +10,12 @@ import { maxAmountFormat } from "utils/swap/index";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { ExternalTipArgs } from "types/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
-import { warningSeverity } from "utils/swap/prices";
+import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import TradePrice from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
-import Identity, { CallbackProps } from "components/Identity";
 import Button from "components/authentication/ButtonConnector";
-import { MainCard } from "@icpswap/ui";
+import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -45,11 +44,16 @@ export function SwapWrapper({
   onTradePoolIdChange,
 }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
+  const [swapLoading, setSwapLoading] = useState(false);
+  const [openSuccessTip] = useSuccessTip();
+  const [openErrorTip] = useErrorTip();
+  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
+  const [impactChecked, setImpactChecked] = useState(false);
 
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
   const history = useHistory();
-  const { setSelectedPool, refreshTrigger, setRefreshTrigger } = useContext(SwapContext);
+  const { setSelectedPool, refreshTrigger, setRefreshTrigger, usdValueChange } = useContext(SwapContext);
 
   useLoadDefaultParams();
 
@@ -80,6 +84,20 @@ export function SwapWrapper({
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
   }, [tradePoolId, outputCurrency, inputCurrency]);
 
+  const isLoadingRoute = swapState === TradeState.LOADING;
+  const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
+  const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
+  const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
+
+  const inputTokenAddress = inputCurrency?.address;
+  const tradePool = trade?.route.pools[0];
+  const sub = useMemo(() => {
+    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
+  }, [principal]);
+
+  const inputCurrencyInterfacePrice = useUSDPrice(inputCurrency);
+  const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
+
   useEffect(() => {
     const pool = routes[0]?.pools[0];
     if (pool && setSelectedPool) {
@@ -92,7 +110,7 @@ export function SwapWrapper({
       [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
       [SWAP_FIELD.OUTPUT]: independentField === SWAP_FIELD.OUTPUT ? parsedAmount : trade?.outputAmount,
     }),
-    [independentField, parsedAmount],
+    [independentField, parsedAmount, trade],
   );
 
   const handleSwap = () => {
@@ -133,24 +151,6 @@ export function SwapWrapper({
     }
   };
 
-  const isLoadingRoute = swapState === TradeState.LOADING;
-  const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
-  const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
-  const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
-
-  const swapCallback = useSwapCallback();
-
-  const [swapLoading, setSwapLoading] = useState(false);
-  const [openSuccessTip] = useSuccessTip();
-  const [openErrorTip] = useErrorTip();
-  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-
-  const inputTokenAddress = inputCurrency?.address;
-  const tradePool = trade?.route.pools[0];
-  const sub = useMemo(() => {
-    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
-  }, [principal]);
-
   const { result: subAccountTokenBalance } = useTokenBalance({
     canisterId: inputTokenAddress,
     address: tradePoolId,
@@ -163,8 +163,22 @@ export function SwapWrapper({
     return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
   }, [tradePool, inputCurrency, unusedBalance]);
 
+  const needImpactConfirm = useMemo(() => {
+    if (!usdValueChange) return false;
+    return getImpactConfirm(usdValueChange);
+  }, [usdValueChange]);
+
+  const swapCallback = useSwapCallback();
+
   const handleSwapConfirm = useCallback(async () => {
-    if (swapLoading || !trade || isNullArgs(subAccountTokenBalance) || isNullArgs(swapTokenUnusedBalance)) return;
+    if (
+      (needImpactConfirm && !impactChecked) ||
+      swapLoading ||
+      !trade ||
+      isNullArgs(subAccountTokenBalance) ||
+      isNullArgs(swapTokenUnusedBalance)
+    )
+      return;
 
     const { call, key } = swapCallback({
       trade,
@@ -204,7 +218,16 @@ export function SwapWrapper({
         setRefreshTrigger();
       }, 1000);
     }
-  }, [swapCallback, swapLoading, setSwapLoading, trade, subAccountTokenBalance, swapTokenUnusedBalance]);
+  }, [
+    needImpactConfirm,
+    impactChecked,
+    swapCallback,
+    swapLoading,
+    setSwapLoading,
+    trade,
+    subAccountTokenBalance,
+    swapTokenUnusedBalance,
+  ]);
 
   const maxInputAmount = useMaxAmountSpend({
     currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
@@ -217,25 +240,12 @@ export function SwapWrapper({
     }
   }, [maxInputAmount, onUserInput]);
 
-  // const fiatValueInput = useUSDValue(parsedAmounts[SWAP_FIELD.INPUT]);
-  // const fiatValueOutput = useUSDValue(parsedAmounts[SWAP_FIELD.OUTPUT]);
-  // const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput);
-  const priceImpact = undefined;
-
   const priceImpactSeverity = useMemo(() => {
     const executionPriceImpact = trade?.priceImpact;
-
-    return warningSeverity(
-      executionPriceImpact && !!priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact)
-          ? executionPriceImpact
-          : priceImpact
-        : executionPriceImpact ?? priceImpact,
-    );
-  }, [priceImpact, trade]);
+    return warningSeverity(executionPriceImpact);
+  }, [trade]);
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode;
-  // const priceImpactTooHigh = priceImpactSeverity > 3;
 
   useEffect(() => {
     return () => {
@@ -243,8 +253,9 @@ export function SwapWrapper({
     };
   }, []);
 
-  const inputCurrencyInterfacePrice = useUSDPrice(inputCurrency);
-  const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
+  const handleCheck = useCallback((check: boolean) => {
+    setImpactChecked(check);
+  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "22px 0" }}>
@@ -298,7 +309,7 @@ export function SwapWrapper({
         variant="contained"
         size="large"
         onClick={handleSwap}
-        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked}
+        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
       >
         {swapInputError ||
           (isLoadingRoute ? (
@@ -316,21 +327,45 @@ export function SwapWrapper({
           ))}
       </Button>
 
+      {needImpactConfirm ? (
+        <Box
+          sx={{ padding: ui === "pro" ? "10px" : "16px", background: "rgba(211, 98, 91, 0.15)", borderRadius: "16px" }}
+        >
+          <Flex gap="0 8px" align="flex-start">
+            <Box>
+              <Checkbox checked={impactChecked} onCheckedChange={handleCheck} />
+            </Box>
+
+            <Typography
+              style={{
+                color: "#D3625B",
+                lineHeight: "15px",
+                fontSize: "12px",
+                cursor: "pointer",
+                userSelect: "none",
+              }}
+              onClick={() => handleCheck(!impactChecked)}
+            >
+              <Trans>
+                Price impact is too high. You will lose a big portion of your funds in this trade. Please check the box
+                if you wish to Swap.
+              </Trans>
+            </Typography>
+          </Flex>
+        </Box>
+      ) : null}
+
       {ui === "pro" ? <Reclaim fontSize="12px" margin="9px" /> : null}
 
       {confirmModalShow && trade && (
-        <Identity onSubmit={handleSwapConfirm}>
-          {({ submit }: CallbackProps) => (
-            <SwapConfirm
-              trade={trade}
-              open={confirmModalShow}
-              onClose={() => setConfirmModalShow(false)}
-              onConfirm={submit}
-              slippageTolerance={userSlippageTolerance}
-              loading={swapLoading}
-            />
-          )}
-        </Identity>
+        <SwapConfirm
+          trade={trade}
+          open={confirmModalShow}
+          onClose={() => setConfirmModalShow(false)}
+          onConfirm={handleSwapConfirm}
+          slippageTolerance={userSlippageTolerance}
+          loading={swapLoading}
+        />
       )}
     </Box>
   );

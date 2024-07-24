@@ -15,9 +15,9 @@ export function SmallButton({ children, onClick, background }: SmallButtonProps)
   return (
     <Typography
       sx={{
-        padding: "1px 3px",
+        padding: "3px",
         cursor: "pointer",
-        borderRadius: "2px",
+        borderRadius: "4px",
         backgroundColor: background ?? theme.colors.secondaryMain,
         color: "#ffffff",
         fontSize: "12px",

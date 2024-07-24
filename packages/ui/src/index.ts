@@ -23,3 +23,4 @@ export * from "./components/SimplePagination";
 export * from "./components/Modal";
 export * from "./components/Input";
 export * from "./components/Tooltip";
+export * from "./components/Checkbox";

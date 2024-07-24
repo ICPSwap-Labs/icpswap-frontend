@@ -39,6 +39,7 @@ const SWITCH_BUTTONS = [
 export function SwapMain() {
   const classes = useStyles();
   const [activeSwitch, setActiveSwitch] = useState(1);
+  const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
@@ -78,6 +79,8 @@ export function SwapMain() {
         removeUnavailableBalanceKey: handleRemoveKeys,
         refreshTrigger,
         setRefreshTrigger: handleUpdateRefreshTrigger,
+        usdValueChange,
+        setUSDValueChange,
       }}
     >
       <SwapUIWrapper>

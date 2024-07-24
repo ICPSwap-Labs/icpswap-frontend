@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => {
 });
 
 export interface SwapInputProps {
-  value: string | number;
+  value: string | number | undefined;
   currency: Token | undefined;
   onUserInput: (value: string) => void;
   disabled?: boolean;
