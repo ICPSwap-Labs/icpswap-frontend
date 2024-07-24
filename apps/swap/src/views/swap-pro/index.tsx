@@ -21,10 +21,10 @@ export default function SwapPro() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
-
   const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
   const [outputToken, setOutputToken] = useState<Token | undefined>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
@@ -83,6 +83,8 @@ export default function SwapPro() {
         removeUnavailableBalanceKey: handleRemoveKeys,
         refreshTrigger,
         setRefreshTrigger: handleUpdateRefreshTrigger,
+        usdValueChange,
+        setUSDValueChange,
       }}
     >
       <SwapProContext.Provider
