@@ -1,6 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatTokenAmount,
+  uint8ArrayToBigInt,
+  toSignificantWithGroupSeparator,
+  formatDollarAmount,
+} from "@icpswap/utils";
 import { splitNeuron } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -11,6 +17,7 @@ import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
 import randomBytes from "randombytes";
+import { useUSDPriceById } from "hooks";
 
 export interface SplitNeuronProps {
   open: boolean;
@@ -38,6 +45,8 @@ export function SplitNeuron({
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
+
+  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
 
   const neuron_minimum_stake = useMemo(() => {
     if (!neuronSystemParameters) return undefined;
@@ -164,12 +173,14 @@ export function SplitNeuron({
 
           <Grid container alignItems="center">
             <Typography>
-              {token ? (
+              {token && tokenUSDPrice ? (
                 <Trans>
                   Balance:{" "}
-                  {`${new BigNumber(
+                  {`${toSignificantWithGroupSeparator(
                     parseTokenAmount(neuron_stake, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                  ).toFormat()}`}
+                  )} ${token.symbol} (${formatDollarAmount(
+                    parseTokenAmount(neuron_stake, token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                  )})`}
                 </Trans>
               ) : (
                 "--"
