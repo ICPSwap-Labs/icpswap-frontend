@@ -6,7 +6,7 @@ import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
 import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useStakingPoolState } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -59,19 +59,20 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       sx={{
         ...wrapperSx,
         cursor: "pointer",
+        height: "64px",
         "&:hover": {
           "& .row-item": {
             background: theme.palette.background.level1,
           },
         },
         "& .row-item": {
-          padding: "20px 0",
+          height: "64px",
           borderTop: `1px solid ${theme.palette.background.level1}`,
           "&:first-of-type": {
-            padding: "20px 0 20px 24px",
+            padding: "0 0 0 24px",
           },
           "&:last-of-type": {
-            padding: "20px 24px 20px 0",
+            padding: "0 24px 0 0",
           },
         },
       }}
@@ -108,24 +109,50 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
         </Typography>
       </Flex>
 
-      <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {userPoolInfo && stakeToken
-            ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
-              )} ${stakeToken.symbol}`
-            : "--"}
-        </Typography>
+      <Flex vertical gap="5px 0" className="row-item" justify="center">
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {userPoolInfo && stakeToken
+              ? `${toSignificantWithGroupSeparator(
+                  parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
+                )} ${stakeToken.symbol}`
+              : "--"}
+          </Typography>
+        </Flex>
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography sx={{ fontSize: "12px" }}>
+            {userPoolInfo && stakeToken && stakeTokenPrice
+              ? `${formatDollarAmount(
+                  parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals)
+                    .multipliedBy(stakeTokenPrice)
+                    .toString(),
+                )}`
+              : "--"}
+          </Typography>
+        </Flex>
       </Flex>
 
-      <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {userPoolInfo && rewardToken
-            ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
-              )} ${rewardToken.symbol}`
-            : "--"}
-        </Typography>
+      <Flex vertical gap="5px 0" className="row-item" justify="center">
+        <Flex justify="flex-end" fullWidth>
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {userPoolInfo && rewardToken
+              ? `${toSignificantWithGroupSeparator(
+                  parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
+                )} ${rewardToken.symbol}`
+              : "--"}
+          </Typography>
+        </Flex>
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography sx={{ fontSize: "12px" }}>
+            {userPoolInfo && rewardToken && rewardTokenPrice
+              ? `${formatDollarAmount(
+                  parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals)
+                    .multipliedBy(rewardTokenPrice)
+                    .toString(),
+                )}`
+              : "--"}
+          </Typography>
+        </Flex>
       </Flex>
 
       {showState ? (
