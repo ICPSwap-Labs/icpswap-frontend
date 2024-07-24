@@ -175,7 +175,10 @@ export function TokenDetail() {
                             : "--"}
                         </Typography>
                       </Box>
-                      <TextButton to={`/swap/token/details/${canisterId}`} sx={{ padding: "0 40px 0 0" }}>
+                      <TextButton
+                        to={`/swap/token/details/${canisterId}?path=${window.btoa(`/token/details/${canisterId}`)}`}
+                        sx={{ padding: "0 40px 0 0" }}
+                      >
                         <Trans>Details</Trans>
                       </TextButton>
                     </Grid>
