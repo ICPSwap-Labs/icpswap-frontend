@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
+import { Button, Typography, Box, InputAdornment } from "components/Mui";
+import { parseTokenAmount, formatTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import { claimOrRefreshNeuron } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import BigNumber from "bignumber.js";
@@ -12,6 +12,7 @@ import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useUSDPriceById } from "hooks";
 
 export interface StakeProps {
   open: boolean;
@@ -31,6 +32,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
+  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
   const { result: balance } = useTokenBalance(token?.canisterId, principal);
 
   const handleSubmit = async () => {
@@ -103,20 +105,21 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
             }}
           />
 
-          <Grid container alignItems="center">
-            <Typography>
-              {token && balance ? (
-                <Trans>
-                  Balance:&nbsp;
-                  {`${new BigNumber(
-                    parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                  ).toFormat()}`}
-                </Trans>
-              ) : (
-                "--"
-              )}
-            </Typography>
-          </Grid>
+          <Typography>
+            {token && balance && tokenUSDPrice ? (
+              <Trans>
+                Balance:&nbsp;
+                {`${new BigNumber(
+                  parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
+                ).toFormat()} ${token.symbol} (${formatDollarAmount(
+                  parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                )})`}
+              </Trans>
+            ) : (
+              "--"
+            )}
+          </Typography>
+
           <Typography>
             {token ? (
               <>
