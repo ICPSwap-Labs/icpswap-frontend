@@ -5,7 +5,7 @@ import TokenListHeader from "components/Wallet/TokenListHeader";
 import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { useTaggedTokenManager, useUpdateHideSmallBalanceManager } from "store/wallet/hooks";
+import { useTaggedTokenManager, useUpdateHideSmallBalanceManager, useWalletSortManager } from "store/wallet/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
@@ -25,7 +25,8 @@ export default function WalletTokenList() {
   const [searchValue, setSearchValue] = useState("");
   const [isHideSmallBalances, setIsHideSmallBalances] = useUpdateHideSmallBalanceManager();
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens, sort } = useContext(WalletContext);
+  const { allTokenUSDMap, noUSDTokens } = useContext(WalletContext);
+  const { sort } = useWalletSortManager();
 
   const globalTokenList = useGlobalTokenList();
   const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);

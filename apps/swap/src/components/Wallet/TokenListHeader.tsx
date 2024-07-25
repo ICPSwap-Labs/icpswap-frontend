@@ -3,9 +3,7 @@ import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { Trans } from "@lingui/macro";
 import { SelectSortType } from "components/Wallet/SelectSortType";
-import { useContext } from "react";
-
-import WalletContext from "./context";
+import { useWalletSortManager } from "store/wallet/hooks";
 
 interface HideSmallBalanceProps {
   onHideSmallBalances: (checked: boolean) => void;
@@ -35,8 +33,7 @@ export interface TokenHeaderProps {
 export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalances }: TokenHeaderProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const { setSort, sort } = useContext(WalletContext);
+  const { sort, updateWalletSortType } = useWalletSortManager();
 
   return (
     <Box>
@@ -52,7 +49,7 @@ export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalanc
           {!matchDownSM ? (
             <>
               <Box>
-                <SelectSortType value={sort} onChange={setSort} />
+                <SelectSortType value={sort} onChange={updateWalletSortType} />
               </Box>
 
               <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
@@ -66,7 +63,7 @@ export default function TokenListHeader({ onHideSmallBalances, isHideSmallBalanc
       {matchDownSM ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", justifyContent: "space-between" }}>
           <Box>
-            <SelectSortType value={sort} onChange={setSort} />
+            <SelectSortType value={sort} onChange={updateWalletSortType} />
           </Box>
           <HideSmallBalance onHideSmallBalances={onHideSmallBalances} isHideSmallBalances={isHideSmallBalances} />
         </Box>
