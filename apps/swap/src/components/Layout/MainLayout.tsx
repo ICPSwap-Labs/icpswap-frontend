@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     mainContent: {
       paddingTop: "64px",
+      "&.pro": {
+        background: theme.palette.background.level1,
+      },
       [theme.breakpoints.down("md")]: {
         paddingTop: "60px",
       },
@@ -83,7 +86,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </Grid>
       </AppBar>
 
-      <Box className={classes.mainContent}>
+      <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
         {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
         {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}

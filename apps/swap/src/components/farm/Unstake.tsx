@@ -82,7 +82,9 @@ export function Unstake({
       </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", color: "text.primary", fontSize: "20px", fontWeight: 600 }}>
-        {userRewardAmount ? toSignificantWithGroupSeparator(userRewardAmount) : "--"}
+        {userRewardAmount && rewardToken
+          ? `${toSignificantWithGroupSeparator(userRewardAmount)} ${rewardToken.symbol}`
+          : "--"}
       </Typography>
 
       <Typography sx={{ margin: "8px 0 0 0" }}>
