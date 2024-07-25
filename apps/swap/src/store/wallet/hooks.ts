@@ -2,12 +2,14 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
+import { WalletSortType } from "types/index";
 import {
   updateTaggedTokens,
   deleteTaggedTokens,
   updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
 } from "./actions";
 
 export function toHexString(byteArray: number[]) {
@@ -141,4 +143,22 @@ export function useUserTxs(principal: string | undefined) {
 
     return undefined;
   }, [principal, states]);
+}
+
+export function useWalletSortType() {
+  return useAppSelector((state) => state.wallet.sort);
+}
+
+export function useWalletSortManager() {
+  const sortType = useWalletSortType();
+  const dispatch = useAppDispatch();
+
+  const update = useCallback(
+    (val: WalletSortType) => {
+      dispatch(updateWalletSortType(val));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => ({ sort: sortType, updateWalletSortType: update }), [update, sortType]);
 }

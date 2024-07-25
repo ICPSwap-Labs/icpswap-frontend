@@ -5,6 +5,7 @@ import {
   updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -60,5 +61,8 @@ export default createReducer(initialState, (builder) => {
       });
 
       state.retrieveState[`${payload.principal}`] = _states;
+    })
+    .addCase(updateWalletSortType, (state, { payload }) => {
+      state.sort = payload;
     });
 });
