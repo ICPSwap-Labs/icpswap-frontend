@@ -347,8 +347,8 @@ export function SwapWrapper({
               onClick={() => handleCheck(!impactChecked)}
             >
               <Trans>
-                Price impact is too high. You will lose a big portion of your funds in this trade. Please check the box
-                if you wish to Swap.
+                Price impact is too high. You would lose a significant portion of your funds in this trade. Please
+                confirm if you wish to proceed with the swap.
               </Trans>
             </Typography>
           </Flex>

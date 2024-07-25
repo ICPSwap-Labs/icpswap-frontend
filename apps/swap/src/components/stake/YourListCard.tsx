@@ -99,14 +99,25 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
         </Typography>
       </Flex>
 
-      <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {userTokenBalance && stakeToken
-            ? `${toSignificantWithGroupSeparator(parseTokenAmount(userTokenBalance, stakeToken.decimals).toString())} ${
-                stakeToken.symbol
-              }`
-            : "--"}
-        </Typography>
+      <Flex vertical gap="5px 0" className="row-item" justify="center">
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {userTokenBalance && stakeToken
+              ? `${toSignificantWithGroupSeparator(
+                  parseTokenAmount(userTokenBalance, stakeToken.decimals).toString(),
+                )} ${stakeToken.symbol}`
+              : "--"}
+          </Typography>
+        </Flex>
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography sx={{ fontSize: "12px" }}>
+            {userTokenBalance && stakeToken && stakeTokenPrice
+              ? `${formatDollarAmount(
+                  parseTokenAmount(userTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
+                )}`
+              : "--"}
+          </Typography>
+        </Flex>
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">
