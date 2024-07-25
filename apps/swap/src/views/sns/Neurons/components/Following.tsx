@@ -1,14 +1,16 @@
 import { Trans, t } from "@lingui/macro";
 import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
-import { Modal } from "@icpswap/ui";
+import { Flex, Modal } from "@icpswap/ui";
 import { Copy } from "components/index";
-import { Button, Box, Typography, Collapse } from "components/Mui";
+import { Button, Box, Typography, Collapse, Checkbox } from "components/Mui";
 import { Neuron, NervousSystemFunction } from "@icpswap/types";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { shorten, toHexString } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 
+import { AddFolloweeModal } from "./AddFolloweeModal";
+import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
 import { AddFollowee } from "./AddFollowee";
 import { DeleteFollowee } from "./DeleteFollowee";
 
@@ -18,9 +20,19 @@ interface FollowNeuronProps {
   governance_id: string | undefined;
   neuron: Neuron | undefined;
   refreshNeuron: () => void;
+  onCheckChange: (checked: boolean, func_id: bigint) => void;
+  checkedFunc: bigint[];
 }
 
-function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }: FollowNeuronProps) {
+function FollowNeuron({
+  neuron,
+  checkedFunc,
+  func,
+  neuron_id,
+  governance_id,
+  refreshNeuron,
+  onCheckChange,
+}: FollowNeuronProps) {
   const [open, setOpen] = useState(false);
 
   const following = useMemo(() => {
@@ -36,6 +48,13 @@ function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }:
     refreshNeuron();
   };
 
+  const handleCheckChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      onCheckChange(checked, func.id);
+    },
+    [func, onCheckChange],
+  );
+
   return (
     <Box>
       <Box
@@ -48,7 +67,14 @@ function FollowNeuron({ neuron, func, neuron_id, governance_id, refreshNeuron }:
         }}
         onClick={() => setOpen(!open)}
       >
-        <Typography color="text.primary">{func.name}</Typography>
+        <Flex gap="0 10px">
+          <Checkbox
+            checked={checkedFunc.includes(func.id)}
+            onClick={(event) => event.stopPropagation()}
+            onChange={handleCheckChange}
+          />
+          <Typography color="text.primary">{func.name}</Typography>
+        </Flex>
         <Box
           sx={{
             display: "flex",
@@ -126,10 +152,51 @@ export interface FollowingProps {
 
 export function Followings({ governance_id, neuron_id, disabled }: FollowingProps) {
   const [open, setOpen] = useState(false);
+  const [addFolloweeOpen, setAddFolloweeOpen] = useState(false);
+  const [deleteFolloweeOpen, setDeleteFolloweeOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [checkedFunc, setCheckedFunc] = useState<bigint[]>([]);
 
   const { result: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
   const { result: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
+
+  const handleCheckAll = useCallback(() => {
+    if (!neuron_system_functions) return;
+    const func_ids = neuron_system_functions.functions.map((e) => e.id);
+
+    if (func_ids.length === checkedFunc.length) {
+      setCheckedFunc([]);
+      return;
+    }
+
+    setCheckedFunc([...func_ids]);
+  }, [neuron_system_functions, checkedFunc]);
+
+  const handleCheckChange = useCallback(
+    (checked: boolean, func_id: bigint) => {
+      if (checked) {
+        setCheckedFunc([...new Set([...checkedFunc, func_id])]);
+      } else {
+        const index = checkedFunc.findIndex((e) => e === func_id);
+        if (index !== -1) {
+          const __checkedFunc = [...checkedFunc];
+          __checkedFunc.splice(index, 1);
+          setCheckedFunc([...__checkedFunc]);
+        }
+      }
+    },
+    [checkedFunc],
+  );
+
+  const handleAddFollowee = useCallback(() => {
+    if (checkedFunc.length === 0) return;
+    setAddFolloweeOpen(true);
+  }, [checkedFunc]);
+
+  const handleDeleteFollowee = useCallback(() => {
+    if (checkedFunc.length === 0) return;
+    setDeleteFolloweeOpen(true);
+  }, [checkedFunc]);
 
   return (
     <Box>
@@ -162,7 +229,28 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
           </Trans>
         </Typography>
 
-        <Box sx={{ margin: "40px 0 0 0", display: "flex", flexDirection: "column", gap: "20px 0" }}>
+        <Flex justify="flex-end" sx={{ margin: "20px 0 0 0" }} gap="0 10px">
+          <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleCheckAll}>
+            <Trans>Select All</Trans>
+          </Typography>
+          <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleAddFollowee}>
+            <Trans>Add Followee</Trans>
+          </Typography>
+          <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleDeleteFollowee}>
+            <Trans>Delete Followee</Trans>
+          </Typography>
+        </Flex>
+
+        <Box
+          sx={{
+            margin: "30px 0 0 0",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px 0",
+            maxHeight: "420px",
+            overflow: "auto",
+          }}
+        >
           {neuron_system_functions?.functions.map((func) => (
             <FollowNeuron
               key={func.id.toString()}
@@ -171,10 +259,33 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
               governance_id={governance_id}
               neuron={neuron}
               refreshNeuron={() => setRefreshTrigger(refreshTrigger + 1)}
+              onCheckChange={handleCheckChange}
+              checkedFunc={checkedFunc}
             />
           ))}
         </Box>
       </Modal>
+
+      <AddFolloweeModal
+        open={addFolloweeOpen}
+        governance_id={governance_id}
+        onClose={() => setAddFolloweeOpen(false)}
+        onFollowSuccess={() => setRefreshTrigger(refreshTrigger + 1)}
+        neuron={neuron}
+        neuron_id={neuron_id}
+        func_ids={checkedFunc}
+      />
+
+      <DeleteFolloweeModal
+        open={deleteFolloweeOpen}
+        onClose={() => setDeleteFolloweeOpen(false)}
+        func_ids={checkedFunc}
+        governance_id={governance_id}
+        neuron={neuron}
+        neuron_id={neuron_id}
+        follow_ids="all"
+        onDeleteSuccess={() => setRefreshTrigger(refreshTrigger + 1)}
+      />
     </Box>
   );
 }
