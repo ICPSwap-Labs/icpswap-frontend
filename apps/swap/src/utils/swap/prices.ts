@@ -64,7 +64,7 @@ export function impactColor(priceImpact: string | number | null | undefined) {
   let impact = IMPACT_COLORS_TIERS.length;
 
   for (const impactLevel of IMPACT_COLORS_TIERS) {
-    if (new BigNumber(impactLevel).isLessThan(priceImpact)) return impact;
+    if (new BigNumber(impactLevel).isLessThan(Math.abs(Number(priceImpact)))) return impact;
     impact--;
   }
 
