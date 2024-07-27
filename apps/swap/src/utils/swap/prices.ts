@@ -56,7 +56,7 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
   return 0;
 }
 
-const IMPACT_COLORS_TIERS = [30, 15, 5];
+const IMPACT_COLORS_TIERS = [30, 15, 1];
 
 export function impactColor(priceImpact: string | number | null | undefined) {
   if (!priceImpact) return 0;
