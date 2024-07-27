@@ -69,7 +69,9 @@ export function SwapInputCurrency({
     ? "#D7331A"
     : impactTier === 2
     ? "#D3625B"
-    : "#F7B231";
+    : impactTier === 1
+    ? "#F7B231"
+    : "#8492c4";
 
   return (
     <Box

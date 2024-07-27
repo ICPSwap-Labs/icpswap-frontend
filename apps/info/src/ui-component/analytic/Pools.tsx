@@ -48,7 +48,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: 
     { label: "#", key: "#", sort: false },
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
-    { label: t`APR(24H)`, key: "apr", sort: true },
+    { label: t`APR(24H)`, key: "apr", sort: false },
     { label: t`Volume 24H`, key: "volumeUSD", sort: true },
     { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
     { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },

@@ -5,7 +5,7 @@ import { Copy } from "components/index";
 import { Button, Box, Typography, Collapse, Checkbox } from "components/Mui";
 import { Neuron, NervousSystemFunction } from "@icpswap/types";
 import { useCallback, useMemo, useState } from "react";
-import { shorten, toHexString } from "@icpswap/utils";
+import { BigNumber, shorten, toHexString } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 
@@ -198,6 +198,23 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
     setDeleteFolloweeOpen(true);
   }, [checkedFunc]);
 
+  const isSelectedAll = useMemo(() => {
+    if (!neuron_system_functions) return false;
+    return neuron_system_functions.functions.length === checkedFunc.length;
+  }, [neuron, checkedFunc]);
+
+  const disableDeleteFollowee = useMemo(() => {
+    if (!isSelectedAll || !neuron) return false;
+
+    const followeesCount = neuron.followees
+      .reduce((prev, curr) => {
+        return prev.plus(curr[1].followees.length);
+      }, new BigNumber(0))
+      .toNumber();
+
+    return followeesCount === 0;
+  }, [isSelectedAll, neuron]);
+
   return (
     <Box>
       <Typography color="text.primary" fontSize="16px" fontWeight={600}>
@@ -231,13 +248,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
 
         <Flex justify="flex-end" sx={{ margin: "20px 0 0 0" }} gap="0 10px">
           <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleCheckAll}>
-            <Trans>Select All</Trans>
-          </Typography>
-          <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleAddFollowee}>
-            <Trans>Add Followee</Trans>
-          </Typography>
-          <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleDeleteFollowee}>
-            <Trans>Delete Followee</Trans>
+            {isSelectedAll ? <Trans>Cancel</Trans> : <Trans>Select All</Trans>}
           </Typography>
         </Flex>
 
@@ -247,7 +258,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
             display: "flex",
             flexDirection: "column",
             gap: "20px 0",
-            maxHeight: "420px",
+            maxHeight: "380px",
             overflow: "auto",
           }}
         >
@@ -264,6 +275,24 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
             />
           ))}
         </Box>
+
+        {isSelectedAll ? (
+          <Flex fullWidth gap="0 24px" justify="center" margin="32px 0 0 0">
+            <Button
+              fullWidth
+              size="large"
+              sx={{ height: "48px" }}
+              variant="outlined"
+              onClick={handleDeleteFollowee}
+              disabled={disableDeleteFollowee}
+            >
+              <Trans>Delete Followee</Trans>
+            </Button>
+            <Button fullWidth size="large" sx={{ height: "48px" }} variant="contained" onClick={handleAddFollowee}>
+              <Trans>Add Followee</Trans>
+            </Button>
+          </Flex>
+        ) : null}
       </Modal>
 
       <AddFolloweeModal
