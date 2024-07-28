@@ -284,22 +284,22 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const isHidden = useMemo(() => {
     let hiddenBySmallBalance = false;
 
-    if (tokenBalance && tokenInfo) {
-      const parsedBalance = parseTokenAmount(tokenBalance, tokenInfo.decimals);
+    if (tokenBalance && tokenInfo && tokenUSDPrice) {
+      const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
 
       if (sortBalance === SortBalanceEnum.TEN) {
-        hiddenBySmallBalance = parsedBalance.isLessThan(10);
+        hiddenBySmallBalance = tokenUSDValue.isLessThan(10);
       } else if (sortBalance === SortBalanceEnum.ONE) {
-        hiddenBySmallBalance = parsedBalance.isLessThan(1);
+        hiddenBySmallBalance = tokenUSDValue.isLessThan(1);
       } else if (sortBalance === SortBalanceEnum.ZERO) {
-        hiddenBySmallBalance = parsedBalance.isEqualTo(0);
+        hiddenBySmallBalance = tokenUSDValue.isEqualTo(0);
       }
     }
 
     if (NO_HIDDEN_TOKENS.includes(canisterId)) return false;
 
     return hiddenBySmallBalance;
-  }, [sortBalance, tokenBalance, canisterId, tokenInfo]);
+  }, [sortBalance, tokenBalance, canisterId, tokenInfo, tokenUSDPrice]);
 
   const handleToSwap = () => {
     history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
