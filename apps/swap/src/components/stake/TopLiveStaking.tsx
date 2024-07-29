@@ -1,5 +1,5 @@
 import { Typography, Box } from "components/Mui";
-import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
+import { Flex, LoadingRow, MainCard, NoData, TextOverflowTip } from "@icpswap/ui";
 import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
@@ -59,7 +59,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
     >
       <Flex justify="space-between" gap="0 20px">
         <StakingTokenImages stakeToken={stakeToken} rewardToken={rewardToken} />
-        <Typography fontSize={12} textAlign="right">
+        <Typography fontSize={12} textAlign="right" lineHeight="18px">
           {rewardToken && stakeToken && rewardToken ? (
             <Trans>
               Stake {stakeToken.symbol} to earn {rewardToken.symbol}
@@ -75,19 +75,21 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
           <Typography fontSize={12}>
             <Trans>Reward Token</Trans>
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "24px",
-              fontWeight: 500,
-              color: "text.primary",
-              margin: "6px 0 0 0",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {rewardToken ? rewardToken.symbol : "--"}
-          </Typography>
+          <TextOverflowTip tips={rewardToken?.symbol ?? ""}>
+            <Typography
+              sx={{
+                fontSize: "24px",
+                fontWeight: 500,
+                color: "text.primary",
+                margin: "6px 0 0 0",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {rewardToken ? rewardToken.symbol : "--"}
+            </Typography>
+          </TextOverflowTip>
         </Box>
 
         <Box>

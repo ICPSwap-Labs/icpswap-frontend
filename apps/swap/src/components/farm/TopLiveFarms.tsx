@@ -1,5 +1,5 @@
 import { Typography, Box } from "components/Mui";
-import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
+import { Flex, LoadingRow, MainCard, NoData, TextOverflowTip } from "@icpswap/ui";
 import { useTheme } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
@@ -110,19 +110,22 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "24px",
-              fontWeight: 500,
-              color: "text.primary",
-              margin: "6px 0 0 0",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {rewardToken ? rewardToken.symbol : "--"}
-          </Typography>
+
+          <TextOverflowTip tips={rewardToken?.symbol ?? ""}>
+            <Typography
+              sx={{
+                fontSize: "24px",
+                fontWeight: 500,
+                color: "text.primary",
+                margin: "6px 0 0 0",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {rewardToken ? rewardToken.symbol : "--"}
+            </Typography>
+          </TextOverflowTip>
         </Box>
 
         <Box>
