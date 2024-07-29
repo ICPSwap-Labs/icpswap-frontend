@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
@@ -23,7 +23,9 @@ window.onerror = (msg, url, row, col, error) => {
 // Fix astrox me wallet's bug
 window.process = {};
 
-ReactDOM.render(
+const root = document.getElementById("root") as HTMLElement;
+
+createRoot(root).render(
   // @ts-ignore TODO:FIX
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -34,7 +36,6 @@ ReactDOM.render(
       </BrowserRouter>
     </PersistGate>
   </Provider>,
-  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change

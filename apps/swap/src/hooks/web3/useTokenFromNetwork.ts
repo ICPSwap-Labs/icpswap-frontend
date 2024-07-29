@@ -1,13 +1,11 @@
 import { ERC20Token } from "@icpswap/swap-sdk";
 import { useCallback, useMemo } from "react";
-import { useERC20Contract } from "hooks/web3/useContract";
-import { useCallsData } from "@icpswap/hooks";
-import { useWeb3React } from "@web3-react/core";
+import { useERC20Contract, useSupportedActiveChain, useWeb3CallsData, useActiveChain } from "hooks/web3/index";
 
 export function useTokenName(tokenAddress: string | undefined) {
   const contract = useERC20Contract(tokenAddress, false);
 
-  return useCallsData<string>(
+  return useWeb3CallsData<string>(
     useCallback(async () => {
       if (!tokenAddress || !contract) return undefined;
       return await contract.name();
@@ -18,7 +16,7 @@ export function useTokenName(tokenAddress: string | undefined) {
 export function useTokenSymbol(tokenAddress: string | undefined) {
   const contract = useERC20Contract(tokenAddress, false);
 
-  return useCallsData<string>(
+  return useWeb3CallsData<string>(
     useCallback(async () => {
       if (!tokenAddress || !contract) return undefined;
       return await contract.symbol();
@@ -29,7 +27,7 @@ export function useTokenSymbol(tokenAddress: string | undefined) {
 export function useTokenDecimals(tokenAddress: string | undefined) {
   const contract = useERC20Contract(tokenAddress, false);
 
-  return useCallsData<number>(
+  return useWeb3CallsData<number>(
     useCallback(async () => {
       if (!tokenAddress || !contract) return undefined;
       return await contract.decimals();
@@ -38,7 +36,7 @@ export function useTokenDecimals(tokenAddress: string | undefined) {
 }
 
 export function useTokenLogo(tokenAddress: string | undefined) {
-  return useCallsData<string>(
+  return useWeb3CallsData<string>(
     useCallback(async () => {
       if (!tokenAddress) return undefined;
       return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${tokenAddress}/logo.png`;
@@ -52,7 +50,8 @@ export function useTokenLogo(tokenAddress: string | undefined) {
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC20Token | undefined {
-  const { chainId } = useWeb3React();
+  const chainId = useActiveChain();
+  const supportedActiveChain = useSupportedActiveChain();
 
   // TODO (WEB-1709): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
@@ -64,12 +63,11 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== "string" || !tokenAddress) return undefined;
-    if (!chainId) return undefined;
 
     if ((!decimals && decimals !== 0) || !symbol || !name) {
       return undefined;
     }
 
     return new ERC20Token({ address: tokenAddress, decimals, name, symbol, logo });
-  }, [tokenAddress, chainId, name, symbol, decimals, logo]);
+  }, [tokenAddress, chainId, name, symbol, decimals, logo, supportedActiveChain]);
 }

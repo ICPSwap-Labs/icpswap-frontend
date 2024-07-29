@@ -12,7 +12,7 @@ export type IdentityProps = {
     { loading, closeLoading }: SubmitLoadingProps,
     params?: any,
   ) => Promise<void>;
-  children?: React.ReactNode;
+  children?: React.ReactNode | (({ submit }: CallbackProps) => JSX.Element);
   fullScreenLoading?: boolean;
 };
 

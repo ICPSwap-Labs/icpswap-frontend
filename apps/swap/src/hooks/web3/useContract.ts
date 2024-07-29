@@ -1,15 +1,18 @@
 import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { chain } from "constants/web3";
+import { chain, SUPPORTED_CHAINS } from "constants/web3";
 import { useMemo } from "react";
 import { getContract } from "utils/web3/index";
 import { ckETH_MINTER_CONTRACT } from "constants/ckETH";
 import { MULTICALL_ADDRESSES } from "@icpswap/constants";
+
 import type { UniswapInterfaceMulticall, CkETH, ERC20, ERC20Helper } from "abis/types";
 import UniswapInterfaceMulticallJson from "abis/UniswapInterfaceMulticall.json";
 import ABI from "abis/ckETH.json";
 import ERC20ABI from "abis/ERC20.json";
 import ERC20HelperAbi from "abis/ERC20Helper.json";
+
+import { useEthersWeb3Provider } from "./useEthersProvider";
 
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson;
 
@@ -20,16 +23,24 @@ export function useContract<T extends Contract = Contract>(
   withSignerIfPossible = true,
 ): T | null {
   const { provider, account } = useWeb3React();
+  const ethersProvider = useEthersWeb3Provider();
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !provider) return null;
+    if (!addressOrAddressMap || !ABI) return null;
     let address: string | undefined;
     if (typeof addressOrAddressMap === "string") address = addressOrAddressMap;
     else address = addressOrAddressMap[chain];
     if (!address) return null;
 
     try {
-      return getContract(address, ABI, provider, withSignerIfPossible && account ? account : undefined);
+      return getContract(
+        address,
+        ABI,
+        provider && provider?.network?.chainId && SUPPORTED_CHAINS.includes(provider?.network?.chainId)
+          ? provider
+          : ethersProvider,
+        withSignerIfPossible && account ? account : undefined,
+      );
     } catch (error) {
       console.error("Failed to get contract", error);
       return null;

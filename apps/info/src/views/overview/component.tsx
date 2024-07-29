@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { mockALinkAndOpen } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
 import { useHistory } from "react-router-dom";
 import { Flex, Tooltip } from "@icpswap/ui";
 
@@ -15,7 +14,7 @@ export function Row({ children }: RowProps) {
 
 export interface ItemProps {
   label: ReactNode;
-  value: number | string | BigNumber | bigint | undefined;
+  value: number | string | undefined;
   tooltip?: string;
 }
 

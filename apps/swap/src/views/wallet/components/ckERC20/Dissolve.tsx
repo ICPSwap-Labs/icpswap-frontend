@@ -15,6 +15,7 @@ import { useDissolveCkERC20 } from "hooks/ckERC20/index";
 import { ckETH } from "constants/ckETH";
 import { useChainKeyTransactionPrice } from "@icpswap/hooks";
 import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useActiveChain } from "hooks/web3/index";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -48,7 +49,8 @@ export default function DissolveCkERC20({
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
-  const { account, chainId } = useWeb3React();
+  const { account } = useWeb3React();
+  const chainId = useActiveChain();
 
   useEffect(() => {
     if (account) {

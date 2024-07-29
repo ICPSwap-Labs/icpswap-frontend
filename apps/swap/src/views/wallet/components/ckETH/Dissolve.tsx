@@ -13,6 +13,7 @@ import { isAddress } from "utils/web3/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
+import { useActiveChain } from "hooks/web3/index";
 import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
 
@@ -36,7 +37,9 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
-  const { account, chainId } = useWeb3React();
+  const { account } = useWeb3React();
+
+  const chainId = useActiveChain();
 
   useEffect(() => {
     if (account) {

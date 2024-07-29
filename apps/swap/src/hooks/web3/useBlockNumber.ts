@@ -1,14 +1,16 @@
 import { useWeb3React } from "@web3-react/core";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
+import { useSupportedActiveChain } from "hooks/web3/index";
 
 export function useFetchBlockNumber() {
   const { provider } = useWeb3React();
+  const supportedActiveChain = useSupportedActiveChain();
 
   const { data } = useSwr(
-    provider ? ["ethBlockNumber"] : undefined,
+    provider && supportedActiveChain ? ["ethBlockNumber"] : undefined,
     async () => {
-      if (provider) {
+      if (provider && supportedActiveChain) {
         const blockNumber = await provider.getBlockNumber();
         return blockNumber;
       }

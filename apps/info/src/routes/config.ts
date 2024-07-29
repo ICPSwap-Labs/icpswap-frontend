@@ -1,6 +1,9 @@
 import { lazy } from "react";
 import Loadable from "ui-component/Loading/Loadable";
 
+const Overview = Loadable(lazy(() => import("../views/overview")));
+const Wrap = Loadable(lazy(() => import("../views/wrap")));
+
 const Swap = Loadable(lazy(() => import("../views/swap/index")));
 const SwapPool = Loadable(lazy(() => import("../views/swap-pools/index")));
 const SwapPoolDetails = Loadable(lazy(() => import("../views/swap-pools/details")));
@@ -12,8 +15,6 @@ const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDeta
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const NFTMarket = Loadable(lazy(() => import("../views/marketplace/index")));
 
-const Overview = Loadable(lazy(() => import("../views/overview")));
-const Wrap = Loadable(lazy(() => import("../views/wrap")));
 const TokenList = Loadable(lazy(() => import("../views/token-list")));
 const TokenDetail = Loadable(lazy(() => import("../views/token-list/Details")));
 

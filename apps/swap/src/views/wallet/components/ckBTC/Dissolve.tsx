@@ -10,7 +10,6 @@ import { FilledTextField, NumberFilledTextField, type Tab } from "components/ind
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import Identity, { CallbackProps } from "components/Identity";
 import { ResultStatus } from "@icpswap/types";
 import { validate } from "bitcoin-address-validation";
 import { MessageTypes, useTips } from "hooks/useTips";
@@ -195,20 +194,16 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
                   </Box>
 
                   <Box sx={{ width: "100%", margin: "32px 0 0 0" }}>
-                    <Identity onSubmit={handleSubmit}>
-                      {({ submit }: CallbackProps) => (
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          size="large"
-                          onClick={submit}
-                          disabled={!!error || loading}
-                        >
-                          {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-                          {error || <Trans>Dissolve ckBTC</Trans>}
-                        </Button>
-                      )}
-                    </Identity>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      size="large"
+                      onClick={handleSubmit}
+                      disabled={!!error || loading}
+                    >
+                      {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
+                      {error || <Trans>Dissolve ckBTC</Trans>}
+                    </Button>
                   </Box>
                 </Box>
               </Box>
