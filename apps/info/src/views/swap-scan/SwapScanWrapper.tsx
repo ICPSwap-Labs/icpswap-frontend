@@ -17,7 +17,7 @@ enum TabPanelValue {
 }
 
 export interface SwapScanWrapperProps {
-  children: ReactNode;
+  children: ReactNode | ((props: any) => JSX.Element);
 }
 
 export interface ScanChildrenProps {

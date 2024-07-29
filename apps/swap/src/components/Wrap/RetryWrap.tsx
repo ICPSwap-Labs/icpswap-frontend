@@ -11,7 +11,13 @@ import { TextButton, TextFieldNumberComponent, FilledTextField, Modal, AuthButto
 import { useAccount } from "store/global/hooks";
 import isNumber from "lodash/isNumber";
 
-export default function RetryWrap({ children, onRetrySuccess }: { children: ReactNode; onRetrySuccess: () => void }) {
+export default function RetryWrap({
+  children,
+  onRetrySuccess,
+}: {
+  children: ReactNode | ((val: any) => JSX.Element);
+  onRetrySuccess: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [blockHeight, setBlockHeight] = useState<null | bigint>(null);
   const account = useAccount();

@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Grid, Button, Typography, Box, CircularProgress } from "@mui/material";
 import { Wrapper, MainCard, FilledTextField } from "components/index";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as CallIdentity } from "types/global";
 import { Trans, t } from "@lingui/macro";
 import Upload from "components/upload/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
@@ -10,7 +8,6 @@ import { createVotingCanister } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TOKEN_STANDARD } from "constants/tokens";
-// import { standardCheck } from "utils/token/standardCheck";
 
 export type Values = {
   name: string;
@@ -28,7 +25,7 @@ export const TokenStandards = [
 export default function CreateVotingProject() {
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
-
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<Values>({
     name: "",
     logo: "",
@@ -44,17 +41,12 @@ export default function CreateVotingProject() {
     });
   };
 
-  const handleCreateProject = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
+  const handleCreateProject = async () => {
     if (loading) return;
 
-    // const { valid } = await standardCheck(values.tokenId, values.standard as TOKEN_STANDARD);
+    setLoading(true);
 
-    // if (valid === false) {
-    //   openErrorTip(t`This token id did not match the token standard ${values.standard}`);
-    //   return;
-    // }
-
-    const { status, message } = await createVotingCanister(identity, {
+    const { status, message } = await createVotingCanister({
       logo: values.logo,
       name: values.name,
       managerAddress: { principal: Principal.fromText(values.manager) },
@@ -68,6 +60,8 @@ export default function CreateVotingProject() {
     } else {
       openErrorTip(message);
     }
+
+    setLoading(false);
   };
 
   let errorMessage = "";
@@ -154,20 +148,16 @@ export default function CreateVotingProject() {
               </Box>
 
               <Box mt="20px">
-                <Identity onSubmit={handleCreateProject}>
-                  {({ submit, loading }: CallbackProps) => (
-                    <Button
-                      onClick={submit}
-                      disabled={loading || !!errorMessage}
-                      fullWidth
-                      variant="contained"
-                      size="large"
-                      startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
-                    >
-                      {errorMessage || t`Create voting project`}
-                    </Button>
-                  )}
-                </Identity>
+                <Button
+                  onClick={handleCreateProject}
+                  disabled={loading || !!errorMessage}
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
+                >
+                  {errorMessage || t`Create voting project`}
+                </Button>
               </Box>
             </Box>
           </Box>

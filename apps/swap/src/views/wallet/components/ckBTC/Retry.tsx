@@ -4,7 +4,6 @@ import { Typography, Box, Button, CircularProgress } from "@mui/material";
 import { numberToString, parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
-import Identity, { CallbackProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { DISSOLVE_FEE } from "constants/ckBTC";
 import { FilledTextField } from "components/index";
@@ -105,20 +104,16 @@ export default function RetryDissolve({ open, onClose, unDissolveBalance, token 
           </Box>
 
           <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
-            <Identity onSubmit={handleSubmit}>
-              {({ submit }: CallbackProps) => (
-                <Button
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  onClick={submit}
-                  disabled={!!error || loading || !unDissolveBalance}
-                >
-                  {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-                  {error || <Trans>Dissolve ckBTC</Trans>}
-                </Button>
-              )}
-            </Identity>
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              onClick={handleSubmit}
+              disabled={!!error || loading || !unDissolveBalance}
+            >
+              {loading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
+              {error || <Trans>Dissolve ckBTC</Trans>}
+            </Button>
           </Box>
         </Box>
       </Box>

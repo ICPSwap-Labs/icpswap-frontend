@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Grid, Typography, Box, CircularProgress } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { valueofUser , timestampFormat, pageArgsFormat } from "@icpswap/utils";
+import { valueofUser, timestampFormat, pageArgsFormat } from "@icpswap/utils";
 import { getVotingTransactions } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { UserVoteRecord } from "@icpswap/types";
@@ -175,7 +175,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
 
               <Box>
                 <Typography>
-                  <Trans>{record.usedProof} Votes</Trans>
+                  <Trans>{record.usedProof.toString()} Votes</Trans>
                 </Typography>
               </Box>
             </Box>

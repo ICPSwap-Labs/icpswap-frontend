@@ -5,7 +5,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useMemo, useState } from "react";
 import { NumberFilledTextField, type Tab } from "components/index";
 import { principalToBytes32 } from "utils/ic/index";
-import { useERC20MinterHelperContract } from "hooks/web3/useContract";
+import { useERC20MinterHelperContract, useActiveChain } from "hooks/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { useERC20Balance } from "hooks/web3/useERC20Balance";
 import { formatTokenAmount, parseTokenAmount, toSignificant } from "@icpswap/utils";
@@ -62,7 +62,8 @@ export interface MintProps {
 
 export default function MintCkERC20({ buttons, handleChange, active, token, erc20Token, minterInfo }: MintProps) {
   const principal = useAccountPrincipalString();
-  const { account, chainId } = useWeb3React();
+  const { account } = useWeb3React();
+  const chainId = useActiveChain();
 
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
