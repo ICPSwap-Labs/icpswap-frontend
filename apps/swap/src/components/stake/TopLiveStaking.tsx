@@ -57,9 +57,9 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
       }}
       onClick={handleClick}
     >
-      <Flex justify="space-between">
+      <Flex justify="space-between" gap="0 20px">
         <StakingTokenImages stakeToken={stakeToken} rewardToken={rewardToken} />
-        <Typography fontSize={12}>
+        <Typography fontSize={12} textAlign="right">
           {rewardToken && stakeToken && rewardToken ? (
             <Trans>
               Stake {stakeToken.symbol} to earn {rewardToken.symbol}
@@ -70,8 +70,8 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
         </Typography>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box>
+      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 20px">
+        <Box style={{ width: "50%" }}>
           <Typography fontSize={12}>
             <Trans>Reward Token</Trans>
           </Typography>
@@ -81,6 +81,9 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {rewardToken ? rewardToken.symbol : "--"}
