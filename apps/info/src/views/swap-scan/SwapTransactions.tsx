@@ -7,7 +7,7 @@ import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
@@ -139,11 +139,13 @@ function Transactions({ address }: TransactionsProps) {
                 <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
                 <BodyCell>
-                  {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
+                  {formatAmount(transaction.token0ChangeAmount, 6)}{" "}
+                  <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
                 </BodyCell>
 
                 <BodyCell>
-                  {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
+                  {formatAmount(transaction.token1ChangeAmount, 6)}{" "}
+                  <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
                 </BodyCell>
 
                 <BodyCell>

@@ -413,7 +413,7 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
         {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
 
         {loading ? (
-          <Box sx={{ padding: "0 16px" }}>
+          <Box sx={{ padding: "24px" }}>
             <LoadingRow>
               <div />
               <div />

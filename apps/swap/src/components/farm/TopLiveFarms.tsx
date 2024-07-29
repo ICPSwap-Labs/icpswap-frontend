@@ -106,7 +106,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       </Flex>
 
       <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box>
+        <Box sx={{ width: "100%" }}>
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
@@ -116,6 +116,9 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {rewardToken ? rewardToken.symbol : "--"}

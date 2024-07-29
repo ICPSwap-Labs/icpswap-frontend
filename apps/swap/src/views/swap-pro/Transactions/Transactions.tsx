@@ -214,16 +214,18 @@ export default function Transactions({
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
-        <LoadingRow>
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </LoadingRow>
+        <Box sx={{ padding: "24px" }}>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        </Box>
       ) : null}
 
       <Box mt="20px">

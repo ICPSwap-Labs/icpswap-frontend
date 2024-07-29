@@ -5,9 +5,9 @@ import { SortBalanceEnum } from "types/index";
 
 const menus: { label: string; value: SortBalanceEnum }[] = [
   { label: t`All Balance`, value: SortBalanceEnum.ALL },
+  { label: t`Hide <$10 Balance`, value: SortBalanceEnum.TEN },
   { label: t`Hide <$1 Balance`, value: SortBalanceEnum.ONE },
   { label: t`Hide $0 Balance`, value: SortBalanceEnum.ZERO },
-  { label: t`Hide <$10 Balance`, value: SortBalanceEnum.TEN },
 ];
 
 export interface SortBalanceProps {
