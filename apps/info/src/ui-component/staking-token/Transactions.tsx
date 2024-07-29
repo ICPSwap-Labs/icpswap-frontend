@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { PaginationType, Pagination, NoData, ListLoading, AddressFormat } from "ui-component/index";
@@ -10,6 +10,26 @@ import upperFirst from "lodash/upperFirst";
 import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
+  const tokenType = useMemo(() => {
+    if ("stakeToken" in transactions.transTokenType) {
+      return "stakeToken";
+    }
+
+    return "rewardToken";
+  }, [transactions]);
+
+  const tokenAmount = useMemo(() => {
+    if (tokenType === "rewardToken") {
+      return `${parseTokenAmount(transactions.amount, transactions.rewardTokenDecimals).toFormat()} ${
+        transactions.rewardTokenSymbol
+      }`;
+    }
+
+    return `${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
+      transactions.stakingTokenSymbol
+    }`;
+  }, [tokenType]);
+
   return (
     <TableRow>
       <TableCell>
@@ -25,9 +45,7 @@ export function PoolItem({ transactions }: { transactions: StakingPoolTransactio
         <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
       <TableCell>
-        <BodyCell>{`${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
-          transactions.stakingTokenSymbol
-        }`}</BodyCell>
+        <BodyCell>{tokenAmount}</BodyCell>
       </TableCell>
     </TableRow>
   );
