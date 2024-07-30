@@ -22,6 +22,7 @@ interface FollowNeuronProps {
   refreshNeuron: () => void;
   onCheckChange: (checked: boolean, func_id: bigint) => void;
   checkedFunc: bigint[];
+  showCheckbox: boolean;
 }
 
 function FollowNeuron({
@@ -32,6 +33,7 @@ function FollowNeuron({
   governance_id,
   refreshNeuron,
   onCheckChange,
+  showCheckbox,
 }: FollowNeuronProps) {
   const [open, setOpen] = useState(false);
 
@@ -68,11 +70,13 @@ function FollowNeuron({
         onClick={() => setOpen(!open)}
       >
         <Flex gap="0 10px">
-          <Checkbox
-            checked={checkedFunc.includes(func.id)}
-            onClick={(event) => event.stopPropagation()}
-            onChange={handleCheckChange}
-          />
+          {showCheckbox ? (
+            <Checkbox
+              checked={checkedFunc.includes(func.id)}
+              onClick={(event) => event.stopPropagation()}
+              onChange={handleCheckChange}
+            />
+          ) : null}
           <Typography color="text.primary">{func.name}</Typography>
         </Flex>
         <Box
@@ -152,6 +156,7 @@ export interface FollowingProps {
 
 export function Followings({ governance_id, neuron_id, disabled }: FollowingProps) {
   const [open, setOpen] = useState(false);
+  const [selectAllOpen, setSelectAllOpen] = useState(false);
   const [addFolloweeOpen, setAddFolloweeOpen] = useState(false);
   const [deleteFolloweeOpen, setDeleteFolloweeOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -162,15 +167,16 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
 
   const handleCheckAll = useCallback(() => {
     if (!neuron_system_functions) return;
-    const func_ids = neuron_system_functions.functions.map((e) => e.id);
 
-    if (func_ids.length === checkedFunc.length) {
+    if (selectAllOpen) {
       setCheckedFunc([]);
-      return;
+      setSelectAllOpen(false);
+    } else {
+      const func_ids = neuron_system_functions.functions.map((e) => e.id);
+      setCheckedFunc([...func_ids]);
+      setSelectAllOpen(true);
     }
-
-    setCheckedFunc([...func_ids]);
-  }, [neuron_system_functions, checkedFunc]);
+  }, [neuron_system_functions, checkedFunc, selectAllOpen]);
 
   const handleCheckChange = useCallback(
     (checked: boolean, func_id: bigint) => {
@@ -198,13 +204,8 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
     setDeleteFolloweeOpen(true);
   }, [checkedFunc]);
 
-  const isSelectedAll = useMemo(() => {
-    if (!neuron_system_functions) return false;
-    return neuron_system_functions.functions.length === checkedFunc.length;
-  }, [neuron, checkedFunc]);
-
   const disableDeleteFollowee = useMemo(() => {
-    if (!isSelectedAll || !neuron) return false;
+    if (checkedFunc.length === 0 || !neuron) return false;
 
     const followeesCount = neuron.followees
       .reduce((prev, curr) => {
@@ -213,7 +214,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       .toNumber();
 
     return followeesCount === 0;
-  }, [isSelectedAll, neuron]);
+  }, [neuron]);
 
   return (
     <Box>
@@ -248,7 +249,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
 
         <Flex justify="flex-end" sx={{ margin: "20px 0 0 0" }} gap="0 10px">
           <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleCheckAll}>
-            {isSelectedAll ? <Trans>Cancel</Trans> : <Trans>Select All</Trans>}
+            {selectAllOpen ? <Trans>Cancel</Trans> : <Trans>Select All</Trans>}
           </Typography>
         </Flex>
 
@@ -272,11 +273,12 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
               refreshNeuron={() => setRefreshTrigger(refreshTrigger + 1)}
               onCheckChange={handleCheckChange}
               checkedFunc={checkedFunc}
+              showCheckbox={selectAllOpen}
             />
           ))}
         </Box>
 
-        {isSelectedAll ? (
+        {selectAllOpen ? (
           <Flex fullWidth gap="0 24px" justify="center" margin="32px 0 0 0">
             <Button
               fullWidth
