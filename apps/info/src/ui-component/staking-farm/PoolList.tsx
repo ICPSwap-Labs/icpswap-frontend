@@ -7,7 +7,7 @@ import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
+import { LoadingRow, TextButton, PaginationType, Pagination } from "ui-component/index";
 import type { FarmTvl } from "@icpswap/types";
 import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
@@ -111,12 +111,25 @@ export function PoolItem({ farmTVL }: PoolItemProps) {
 export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useFarms(undefined);
+  const { result: allFarms, loading } = useFarms(undefined);
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);
   };
+
+  const farms = useMemo(() => {
+    if (!allFarms) return undefined;
+
+    const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
+    const length = pagination.pageSize;
+
+    return [...allFarms].slice(offset, offset + length);
+  }, [allFarms, pagination]);
+
+  const totalElements = useMemo(() => {
+    if (!allFarms) return 0;
+    return allFarms.length;
+  }, [allFarms]);
 
   return (
     <Box sx={{ overflow: "auto" }}>
@@ -145,9 +158,9 @@ export default function PoolList() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {result?.map((farm) => <PoolItem key={farm[0].toString()} farmTVL={farm} />)}
+      {farms?.map((farm) => <PoolItem key={farm[0].toString()} farmTVL={farm} />)}
 
-      {result?.length === 0 && !loading ? <NoData /> : null}
+      {farms?.length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
         <Box sx={{ padding: "16px" }}>
@@ -167,9 +180,9 @@ export default function PoolList() {
         </Box>
       ) : null}
 
-      {/* {Number(totalElements) > 0 ? (
+      {Number(totalElements) > 0 ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
-      ) : null} */}
+      ) : null}
     </Box>
   );
 }
