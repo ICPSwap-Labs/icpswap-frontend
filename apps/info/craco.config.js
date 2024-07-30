@@ -127,6 +127,7 @@ module.exports = {
           // - react-markdown requires path
           path: require.resolve("path-browserify"),
           os: require.resolve("os-browserify/browser"),
+          buffer: require.resolve("buffer/"),
         },
       });
 
