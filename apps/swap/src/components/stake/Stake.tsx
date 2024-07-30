@@ -44,11 +44,10 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   const handleMax = useCallback(() => {
     if (balance && stakeToken) {
       if (!balance.isLessThan(stakeToken.transFee)) {
-        const _balance = parseTokenAmount(balance, stakeToken.decimals);
         const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals).toString();
 
         setAmount(amount);
-        setPercent(Number(new BigNumber(amount).dividedBy(_balance).multipliedBy(100).toFixed(0)));
+        setPercent(100);
       } else {
         setAmount(parseTokenAmount(balance, stakeToken.decimals).toString());
       }
