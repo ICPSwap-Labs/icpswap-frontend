@@ -22,7 +22,7 @@ export function getFarmPoolStatus(pool: FarmInfo | undefined) {
 
   if ("CLOSED" in pool.status) {
     return {
-      statusText: "Closure",
+      statusText: "Finished",
       status: POOL_STATUS.Closure,
       statusClassName: "closure",
     };
@@ -33,7 +33,7 @@ export function getFarmPoolStatus(pool: FarmInfo | undefined) {
   let status = "";
 
   if ("NOT_STARTED" in pool.status) {
-    statusText = t`Upcoming`;
+    statusText = t`Unstart`;
     statusClassName = "upcoming";
     status = POOL_STATUS.UPCOMING;
   } else if ("LIVE" in pool.status) {
