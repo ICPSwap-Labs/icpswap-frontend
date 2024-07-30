@@ -3,10 +3,8 @@ import { type NFTTokenMetadata } from "@icpswap/types";
 import { useNFTMetadata as _userNFTMetadata } from "@icpswap/hooks";
 import { usePositionNFTSvg } from "./useNFTSvg";
 
-export function useNFTMetadata(canisterId: string, tokenId: number, reload?: boolean): NFTTokenMetadata {
-  const { result } = _userNFTMetadata(canisterId, tokenId, reload);
-
-  const metadata = result ?? ({} as NFTTokenMetadata);
+export function useNFTMetadata(canisterId: string, tokenId: number, reload?: boolean) {
+  const { result: metadata } = _userNFTMetadata(canisterId, tokenId, reload);
 
   const { isPositionNFT, positionSVG } = usePositionNFTSvg(metadata);
 
@@ -15,8 +13,9 @@ export function useNFTMetadata(canisterId: string, tokenId: number, reload?: boo
       return {
         ...metadata,
         filePath: positionSVG.image,
-      };
+      } as NFTTokenMetadata;
     }
+
     return metadata;
   }, [positionSVG, metadata, isPositionNFT]);
 }
