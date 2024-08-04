@@ -396,6 +396,8 @@ export default function TransferPosition({
   const handleTransfer = async () => {
     if (!principal || !position || !userPrincipal) return;
 
+    onClose();
+
     setLoading(true);
 
     const poolId = position.pool.id;
