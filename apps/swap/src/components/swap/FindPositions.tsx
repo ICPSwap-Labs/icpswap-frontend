@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Modal } from "components/index";
 import { getPool } from "hooks/swap/v3Calls";
 import { useTheme, Typography, Box, Avatar, CircularProgress, Button } from "@mui/material";
@@ -133,6 +133,12 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
     setError("");
   };
 
+  const handleClose = useCallback(() => {
+    onClose();
+    setTokenA(null);
+    setTokenB(null);
+  }, [onClose, setTokenA, setTokenB]);
+
   const selectedTokenIds = useMemo(() => {
     return [tokenA?.canisterId, tokenB?.canisterId].filter((ele) => !!ele) as string[];
   }, [tokenA, tokenB]);
@@ -168,14 +174,14 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
 
     setLoading(false);
 
-    onClose();
+    handleClose();
   };
 
   return (
     <Modal
       open={open}
       title={t`Select a trading pair`}
-      onClose={onClose}
+      onClose={handleClose}
       background={theme.palette.background.level1}
       dialogProps={{
         sx: {
