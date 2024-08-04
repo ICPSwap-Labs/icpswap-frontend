@@ -1,4 +1,4 @@
-export const idlFactory = ({ IDL }) => {
+export const idlFactory = ({ IDL }: any) => {
   const Error = IDL.Variant({
     CommonError: IDL.Null,
     InternalError: IDL.Text,
@@ -6,10 +6,24 @@ export const idlFactory = ({ IDL }) => {
     InsufficientFunds: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Text, err: Error });
-  const Result_18 = IDL.Variant({
+  const Result_21 = IDL.Variant({
+    ok: IDL.Record({
+      token0DecimalsConst: IDL.Float64,
+      token1DecimalsConst: IDL.Float64,
+      rewardTokenDecimalsConst: IDL.Float64,
+      timeConst: IDL.Float64,
+    }),
+    err: Error,
+  });
+  const Result_20 = IDL.Variant({
+    ok: IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Float64)),
+    err: Error,
+  });
+  const Result_19 = IDL.Variant({
     ok: IDL.Vec(IDL.Principal),
     err: Error,
   });
+  const Result_18 = IDL.Variant({ ok: IDL.Float64, err: Error });
   const CycleInfo = IDL.Record({ balance: IDL.Nat, available: IDL.Nat });
   const Result_17 = IDL.Variant({ ok: CycleInfo, err: Error });
   const Deposit = IDL.Record({
@@ -73,6 +87,7 @@ export const idlFactory = ({ IDL }) => {
     status: FarmStatus,
     secondPerCycle: IDL.Nat,
     creator: IDL.Principal,
+    nodeIndexCid: IDL.Principal,
     farmIndexCid: IDL.Principal,
     rewardToken: Token,
     endTime: IDL.Nat,
@@ -135,6 +150,7 @@ export const idlFactory = ({ IDL }) => {
       totalRewardUnharvested: IDL.Nat,
       currentCycleCount: IDL.Nat,
       totalReward: IDL.Nat,
+      rewardTokenDecimals: IDL.Nat,
     }),
     err: Error,
   });
@@ -206,7 +222,10 @@ export const idlFactory = ({ IDL }) => {
     clearErrorLog: IDL.Func([], [], []),
     close: IDL.Func([], [Result], []),
     finishManually: IDL.Func([], [Result], []),
-    getAdmins: IDL.Func([], [Result_18], ["query"]),
+    getAPRConst: IDL.Func([], [Result_21], ["query"]),
+    getAPRRecord: IDL.Func([], [Result_20], ["query"]),
+    getAdmins: IDL.Func([], [Result_19], ["query"]),
+    getAvgAPR: IDL.Func([], [Result_18], ["query"]),
     getCycleInfo: IDL.Func([], [Result_17], []),
     getDeposit: IDL.Func([IDL.Nat], [Result_16], ["query"]),
     getDistributeRecord: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text], [Result_15], ["query"]),

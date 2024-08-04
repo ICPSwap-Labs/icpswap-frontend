@@ -360,3 +360,4 @@ export * from "./useFarmTotalAmount";
 export * from "./useFarmInfo";
 export * from "./useUserFarms";
 export * from "./useFarmsByPool";
+export * from "./useFarmAprChart";

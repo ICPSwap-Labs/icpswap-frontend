@@ -57,6 +57,7 @@ export interface InitFarmArgs {
   status: FarmStatus;
   secondPerCycle: bigint;
   creator: Principal;
+  nodeIndexCid: Principal;
   farmIndexCid: Principal;
   rewardToken: Token;
   endTime: bigint;
@@ -126,10 +127,22 @@ export type Result_14 = { ok: FarmInfo } | { err: Error };
 export type Result_15 = { ok: Page_2 } | { err: string };
 export type Result_16 = { ok: Deposit } | { err: Error };
 export type Result_17 = { ok: CycleInfo } | { err: Error };
-export type Result_18 = { ok: Array<Principal> } | { err: Error };
+export type Result_18 = { ok: number } | { err: Error };
+export type Result_19 = { ok: Array<Principal> } | { err: Error };
 export type Result_2 =
   | {
       ok: { poolToken0: TokenAmount; poolToken1: TokenAmount };
+    }
+  | { err: Error };
+export type Result_20 = { ok: Array<[bigint, number]> } | { err: Error };
+export type Result_21 =
+  | {
+      ok: {
+        token0DecimalsConst: number;
+        token1DecimalsConst: number;
+        rewardTokenDecimalsConst: number;
+        timeConst: number;
+      };
     }
   | { err: Error };
 export type Result_3 = { ok: Page } | { err: Error };
@@ -150,6 +163,7 @@ export type Result_8 =
         totalRewardUnharvested: bigint;
         currentCycleCount: bigint;
         totalReward: bigint;
+        rewardTokenDecimals: bigint;
       };
     }
   | { err: Error };
@@ -201,7 +215,10 @@ export interface _SERVICE {
   clearErrorLog: ActorMethod<[], undefined>;
   close: ActorMethod<[], Result>;
   finishManually: ActorMethod<[], Result>;
-  getAdmins: ActorMethod<[], Result_18>;
+  getAPRConst: ActorMethod<[], Result_21>;
+  getAPRRecord: ActorMethod<[], Result_20>;
+  getAdmins: ActorMethod<[], Result_19>;
+  getAvgAPR: ActorMethod<[], Result_18>;
   getCycleInfo: ActorMethod<[], Result_17>;
   getDeposit: ActorMethod<[bigint], Result_16>;
   getDistributeRecord: ActorMethod<[bigint, bigint, string], Result_15>;

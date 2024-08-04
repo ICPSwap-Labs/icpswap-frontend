@@ -12,7 +12,7 @@ import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
-import { FarmTokenImages, FarmDetails, FarmMain, Reclaim } from "components/farm/index";
+import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
 
 const tabs = [
   { key: "stake", value: "Stake" },
@@ -46,7 +46,21 @@ export default function Farm() {
       <Box sx={{ width: "100%", maxWidth: "1120px", margin: "10px 0 0 0" }}>
         <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="/farm" />
 
-        <Flex sx={{ margin: "30px 0 0 0", width: "100%" }} justify="center" align="center" vertical>
+        <Flex
+          sx={{
+            margin: "30px 0 0 0",
+            width: "100%",
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              gap: "12px 0",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            },
+          }}
+          justify="center"
+          align="flex-start"
+          gap="0 12px"
+        >
           <Box
             sx={{
               width: "548px",
@@ -124,6 +138,8 @@ export default function Farm() {
               rewardMetadata={farmRewardMetadata}
             />
           </Box>
+
+          <FarmAprCharts farmId={farmId} />
         </Flex>
       </Box>
     </Flex>

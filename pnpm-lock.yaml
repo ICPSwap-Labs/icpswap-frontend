@@ -589,6 +589,9 @@ importers:
       react-scripts:
         specifier: 5.0.1
         version: 5.0.1(@babel/plugin-syntax-flow@7.24.6)(@babel/plugin-transform-react-jsx@7.23.4)(eslint@8.57.0)(react@17.0.2)(typescript@4.9.5)
+      recharts:
+        specifier: ^2.1.12
+        version: 2.10.3(prop-types@15.8.1)(react-dom@17.0.2)(react@17.0.2)
       redux:
         specifier: ^4.0.5
         version: 4.2.1
