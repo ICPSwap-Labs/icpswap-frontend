@@ -52,7 +52,7 @@ export default function ckETH() {
       <Box sx={{ height: "20px" }} />
 
       {type === "dissolve" ? (
-        <DissolveETH handleChange={handleChange} buttons={Buttons} active={active} />
+        <DissolveETH handleChange={handleChange} buttons={Buttons} active={active} minterInfo={minterInfo} />
       ) : (
         <MintCkETH handleChange={handleChange} buttons={Buttons} active={active} minterInfo={minterInfo} />
       )}

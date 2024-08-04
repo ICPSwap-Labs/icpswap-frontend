@@ -3,7 +3,7 @@ import { Trans, t } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
-import { HeaderCell, BodyCell, LoadingRow } from "@icpswap/ui";
+import { HeaderCell, BodyCell, LoadingRow, Flex } from "@icpswap/ui";
 import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hooks";
 import type { WithdrawalSearchParameter, WithdrawalDetail, Erc20MinterInfo } from "@icpswap/types";
 import { useMemo } from "react";
@@ -123,9 +123,10 @@ function ListItem({ transaction, minterInfo }: ListItemProps) {
 export interface DissolveRecordsProps {
   refresh?: boolean | number;
   token: Token | undefined;
+  blockNumber: number | undefined;
 }
 
-export default function DissolveRecords({ refresh, token }: DissolveRecordsProps) {
+export default function DissolveRecords({ refresh, blockNumber, token }: DissolveRecordsProps) {
   const principal = useAccountPrincipalString();
   const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
@@ -170,25 +171,43 @@ export default function DissolveRecords({ refresh, token }: DissolveRecordsProps
 
   return (
     <MainCard>
-      <Box sx={{ display: "flex", justifyItems: "center" }}>
-        <Typography color="#ffffff">
-          <Trans>Retrieved:</Trans>
+      <Flex vertical gap="12px 0" align="flex-start">
+        <Typography color="text.primary" fontSize="18px" fontWeight={500}>
+          <Trans>Network state</Trans>
         </Typography>
-      </Box>
+
+        <Typography>
+          <Trans>Ethereum network block height:</Trans>&nbsp;
+          <Typography component="span" color="text.primary">
+            {blockNumber ?? "--"}
+          </Typography>
+        </Typography>
+
+        {minterInfo ? (
+          <Typography>
+            <Trans>Last ERC20 synced block number:</Trans>&nbsp;
+            <Typography component="span" color="text.primary">
+              {minterInfo.last_erc20_scraped_block_number[0]?.toString()}
+            </Typography>
+          </Typography>
+        ) : null}
+      </Flex>
 
       <Box sx={{ margin: "0 0 3px 0" }}>
         {loading ? (
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
+          <Box sx={{ padding: "24px 0" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
         ) : (
           <TableContainer>
             <Table>

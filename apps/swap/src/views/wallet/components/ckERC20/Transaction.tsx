@@ -8,7 +8,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
 import { useTransaction } from "hooks/web3/useTransaction";
-import { HeaderCell, BodyCell } from "@icpswap/ui";
+import { HeaderCell, BodyCell, Flex } from "@icpswap/ui";
 import type { Erc20MinterInfo } from "@icpswap/types";
 
 export interface ListItemProps {
@@ -131,21 +131,28 @@ export default function Transactions({ blockNumber, ledger, minterInfo }: Transa
 
   return (
     <MainCard>
-      <Box sx={{ display: "flex", justifyItems: "center" }}>
-        <Typography color="#ffffff" sx={{ margin: "0 5px 0 0" }}>
-          <Trans>Network state:</Trans>
+      <Flex vertical gap="12px 0" align="flex-start">
+        <Typography color="text.primary" fontSize="18px" fontWeight={500}>
+          <Trans>Network state</Trans>
         </Typography>
-      </Box>
-      <Typography color="#ffffff" sx={{ margin: "5px 0 0 0" }}>
-        <Trans>Ethereum network block height:</Trans>&nbsp;
-        {blockNumber}
-      </Typography>
-      {minterInfo ? (
-        <Typography color="#ffffff" sx={{ margin: "5px 0 0 0" }}>
-          <Trans>Last ERC20 synced block number:</Trans>&nbsp;
-          {minterInfo.last_erc20_scraped_block_number[0]?.toString()}
+
+        <Typography>
+          <Trans>Ethereum network block height:</Trans>&nbsp;
+          <Typography component="span" color="text.primary">
+            {blockNumber ?? "--"}
+          </Typography>
         </Typography>
-      ) : null}
+
+        {minterInfo ? (
+          <Typography>
+            <Trans>Last ERC20 synced block number:</Trans>&nbsp;
+            <Typography component="span" color="text.primary">
+              {minterInfo.last_erc20_scraped_block_number[0]?.toString()}
+            </Typography>
+          </Typography>
+        ) : null}
+      </Flex>
+
       <Box sx={{ margin: "20px 0 3px 0" }}>
         <TableContainer>
           <Table>

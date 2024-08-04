@@ -4,8 +4,8 @@ import { withdraw_eth, useFetchUserTxStates } from "hooks/ck-eth";
 import { useApprove, useTokenInfo, useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { ckETH_MINTER_ID, MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
-import { ckETH } from "constants/tokens";
-import { useState, useEffect } from "react";
+import { ckETH, ICP } from "@icpswap/tokens";
+import { useState, useEffect, useCallback } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
 import { parseTokenAmount, formatTokenAmount, numberToString, toSignificant } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
@@ -13,9 +13,11 @@ import { isAddress } from "utils/web3/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { useWeb3React } from "@web3-react/core";
-import { useActiveChain } from "hooks/web3/index";
+import { useActiveChain, useBlockNumber } from "hooks/web3/index";
 import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
+import type { Erc20MinterInfo } from "@icpswap/types";
+import { useHistory } from "react-router-dom";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -28,15 +30,17 @@ export interface DissolveETHProps {
   buttons: { key: string; value: string }[];
   handleChange: (tab: Tab) => void;
   active: string;
+  minterInfo?: Erc20MinterInfo;
 }
 
-export default function DissolveETH({ buttons, handleChange, active }: DissolveETHProps) {
+export default function DissolveETH({ buttons, handleChange, active, minterInfo }: DissolveETHProps) {
   const principal = useAccountPrincipalString();
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
+  const history = useHistory();
   const { account } = useWeb3React();
 
   const chainId = useActiveChain();
@@ -49,6 +53,7 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
 
   const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal, reload);
   const { result: token } = useTokenInfo(ckETH.address);
+  const blockNumber = useBlockNumber();
 
   const updateUserTx = useUpdateUserWithdrawTx();
   const [openTip] = useTips();
@@ -100,6 +105,10 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
         .toFixed(token.decimals - 1),
     );
   };
+
+  const handleBuy = useCallback(() => {
+    history.push(`/swap?input=${ICP.address}&output=${ckETH.address}`);
+  }, [history, ckETH, ICP]);
 
   let error = "";
 
@@ -240,10 +249,16 @@ export default function DissolveETH({ buttons, handleChange, active }: DissolveE
                 ckETH
               </Typography>
             </Typography>
+
+            <Box sx={{ margin: "10px 0 0 0" }}>
+              <Button variant="outlined" onClick={handleBuy}>
+                <Trans>Buy ckETH</Trans>
+              </Button>
+            </Box>
           </Box>
         </LogosWrapper>
       }
-      transactions={<DissolveRecords />}
+      transactions={<DissolveRecords minterInfo={minterInfo} blockNumber={blockNumber} />}
     />
   );
 }

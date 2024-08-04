@@ -7,7 +7,8 @@ import { StoredWithdrawTxValue } from "types/ckETH";
 import { parseTokenAmount } from "@icpswap/utils";
 import { EXPLORER_TX_LINK } from "constants/ckETH";
 import { ckETH } from "constants/tokens";
-import { HeaderCell, BodyCell } from "@icpswap/ui";
+import { HeaderCell, BodyCell, Flex } from "@icpswap/ui";
+import type { Erc20MinterInfo } from "@icpswap/types";
 
 function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
   return (
@@ -47,7 +48,12 @@ function ListItem({ tx }: { tx: StoredWithdrawTxValue }) {
   );
 }
 
-export default function DissolveRecords() {
+export interface DissolveRecordsProps {
+  blockNumber: number | undefined;
+  minterInfo?: Erc20MinterInfo;
+}
+
+export default function DissolveRecords({ blockNumber, minterInfo }: DissolveRecordsProps) {
   const principal = useAccountPrincipalString();
   const userTxs = useUserWithdrawTxs(principal);
 
@@ -60,11 +66,27 @@ export default function DissolveRecords() {
 
   return (
     <MainCard>
-      <Box sx={{ display: "flex", justifyItems: "center" }}>
-        <Typography color="#ffffff">
-          <Trans>Retrieved:</Trans>
+      <Flex vertical gap="12px 0" align="flex-start">
+        <Typography fontSize="18px" fontWeight={500} color="text.primary">
+          <Trans>Network state</Trans>
         </Typography>
-      </Box>
+
+        <Typography>
+          <Trans>Ethereum network block height:</Trans>&nbsp;
+          <Typography component="span" color="text.primary">
+            {blockNumber ?? "--"}
+          </Typography>
+        </Typography>
+
+        {minterInfo ? (
+          <Typography>
+            <Trans>Last ETH synced block number:</Trans>&nbsp;
+            <Typography component="span" color="text.primary">
+              {minterInfo.last_eth_scraped_block_number[0]?.toString()}
+            </Typography>
+          </Typography>
+        ) : null}
+      </Flex>
 
       <Box sx={{ margin: "0 0 3px 0" }}>
         <TableContainer>
