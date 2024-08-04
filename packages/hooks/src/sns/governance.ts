@@ -397,16 +397,18 @@ export async function neuronRemovePermissions(
 }
 
 export async function neuronMakeProposal(governance_id: string, neuron_id: Uint8Array | number[], proposal: Proposal) {
-  return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
-      subaccount: [...neuron_id],
-      command: [
-        {
-          MakeProposal: proposal,
-        },
-      ],
-    }),
-  );
+  const make_proposal_result = await (
+    await sns_governance(governance_id, true)
+  ).manage_neuron({
+    subaccount: [...neuron_id],
+    command: [
+      {
+        MakeProposal: proposal,
+      },
+    ],
+  });
+
+  console.log("make_proposal_result:", make_proposal_result);
+
+  return resultFormat<ManageNeuronResponse>(make_proposal_result);
 }

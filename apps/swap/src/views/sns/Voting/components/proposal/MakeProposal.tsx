@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 import { useTheme } from "@mui/material";
 import { Box, CircularProgress, Typography, Button } from "components/Mui";
 import { Theme } from "@mui/material/styles";
@@ -98,6 +99,8 @@ export function MakeProposal({ governanceId, open, onClose }: MakeProposalProps)
 
     setLoading(true);
 
+    console.log("governanceId:", governanceId);
+    console.log("neuron hex:", hexToBytes(values.neuronId));
     console.log("Make proposal args: ", {
       url: values.url ?? "",
       title: values.title,
@@ -105,17 +108,23 @@ export function MakeProposal({ governanceId, open, onClose }: MakeProposalProps)
       summary: values.summary ?? "",
     });
 
-    const { status, message } = await neuronMakeProposal(governanceId, hexToBytes(values.neuronId), {
+    const { status, data, message } = await neuronMakeProposal(governanceId, hexToBytes(values.neuronId), {
       url: values.url ?? "",
       title: values.title,
       action: availableArgsNull<ProposalAction>(args),
       summary: values.summary ?? "",
     });
 
-    if (status === ResultStatus.OK) {
-      openTip(t`Make proposal successfully`, MessageTypes.success);
+    if (data && data.command[0] && "Error" in data.command[0]) {
+      const __message = data.command[0].Error.error_message;
+      const __type = data.command[0].Error.error_type;
+      openTip(t`Failed to make proposal: ${__type}, ${__message}` ?? t`Failed to make proposal`, MessageTypes.error);
     } else {
-      openTip(message ?? t`Failed to make proposal`, MessageTypes.error);
+      if (status === ResultStatus.OK) {
+        openTip(t`Make proposal successfully`, MessageTypes.success);
+      } else {
+        openTip(message ?? t`Failed to make proposal`, MessageTypes.error);
+      }
     }
 
     setLoading(false);
