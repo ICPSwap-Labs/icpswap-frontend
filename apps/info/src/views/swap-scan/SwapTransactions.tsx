@@ -3,13 +3,15 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { LoadingRow, SelectPair, Pagination, PaginationType, Copy, NoData } from "ui-component/index";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip, Flex } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
+import { useSwapScanTransactionDownload } from "hooks/info/useSwapScanDownloadTransaction";
+
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
@@ -66,6 +68,8 @@ function Transactions({ address }: TransactionsProps) {
 
   const { pair } = useParsedQueryString() as { pair: string };
 
+  const { download, loading: downloadLoading } = useSwapScanTransactionDownload({ pair, principal: address });
+
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -98,11 +102,31 @@ function Transactions({ address }: TransactionsProps) {
 
   return (
     <>
-      <Box sx={{ display: "flex", margin: "10px 0 0 0", gap: "0 16px", alignItems: "center" }}>
-        <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-          <SelectPair value={pair} onPairChange={handlePairChange} />
-        </Box>
-        {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+      <Box
+        sx={{
+          display: "flex",
+          margin: "10px 0 0 0",
+          gap: "0 16px",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Flex gap="0 16px">
+          <Box sx={{ width: "fit-content", minWidth: "214px" }}>
+            <SelectPair value={pair} onPairChange={handlePairChange} search />
+          </Box>
+          {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+        </Flex>
+        <Flex>
+          <Button
+            variant="contained"
+            onClick={download}
+            disabled={downloadLoading}
+            startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
+          >
+            <Trans>Download: Excel Export</Trans>
+          </Button>
+        </Flex>
       </Box>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
