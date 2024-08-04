@@ -192,7 +192,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
     >
       <Box
         sx={{
-          padding: "0 22px 20px 22px",
+          padding: "20px 22px",
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
