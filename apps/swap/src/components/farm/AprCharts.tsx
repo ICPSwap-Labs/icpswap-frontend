@@ -34,7 +34,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
 
   const color = "#5669dc";
 
-  return (
+  return aprCharts && aprCharts.length > 0 ? (
     <Box
       sx={{
         width: "470px",
@@ -146,5 +146,5 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
         </Box>
       </MainCard>
     </Box>
-  );
+  ) : null;
 }
