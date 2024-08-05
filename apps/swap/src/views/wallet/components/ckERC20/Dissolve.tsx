@@ -111,8 +111,8 @@ export default function DissolveCkERC20({
 
   const handleBuy = useCallback(() => {
     if (!token) return;
-    history.push(`/swap?input=${ICP.address}&output=${token.address}`);
-  }, [ICP, token, history]);
+    history.push(`/swap?input=${ICP.address}&output=${ckETH.address}`);
+  }, [ICP, ckETH, history]);
 
   const error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
@@ -298,7 +298,7 @@ export default function DissolveCkERC20({
 
             <Box sx={{ margin: "10px 0 0 0" }}>
               <Button variant="outlined" onClick={handleBuy}>
-                <Trans>Buy {token?.symbol ?? "--"}</Trans>
+                <Trans>Buy ckETH</Trans>
               </Button>
             </Box>
           </Box>
