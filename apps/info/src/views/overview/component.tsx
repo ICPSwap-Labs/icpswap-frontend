@@ -22,8 +22,14 @@ export function Item({ label, value, tooltip }: ItemProps) {
   return (
     <Box sx={{ flex: 1 }}>
       <Flex gap="0 5px">
-        <Typography>{label}</Typography>
-        {tooltip ? <Tooltip tips={tooltip} /> : null}
+        <Typography component="div">
+          {label}
+          {tooltip ? (
+            <Box component="span" sx={{ position: "relative", top: "3px", margin: "0 0 0 3px" }}>
+              <Tooltip tips={tooltip} />
+            </Box>
+          ) : null}
+        </Typography>
       </Flex>
       <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500, margin: "10px 0 0 0" }}>
         {value}
