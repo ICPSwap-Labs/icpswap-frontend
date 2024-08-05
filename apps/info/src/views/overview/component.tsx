@@ -9,7 +9,20 @@ export interface RowProps {
 }
 
 export function Row({ children }: RowProps) {
-  return <Flex sx={{ margin: "0 0 32px 0" }}>{children}</Flex>;
+  return (
+    <Flex
+      sx={{
+        margin: "0 0 32px 0",
+        "@media(max-width: 640px)": {
+          flexDirection: "column",
+          gap: "32px 0",
+          alignItems: "flex-start",
+        },
+      }}
+    >
+      {children}
+    </Flex>
+  );
 }
 
 export interface ItemProps {
@@ -22,14 +35,8 @@ export function Item({ label, value, tooltip }: ItemProps) {
   return (
     <Box sx={{ flex: 1 }}>
       <Flex gap="0 5px">
-        <Typography component="div">
-          {label}
-          {tooltip ? (
-            <Box component="span" sx={{ position: "relative", top: "3px", margin: "0 0 0 3px" }}>
-              <Tooltip tips={tooltip} />
-            </Box>
-          ) : null}
-        </Typography>
+        <Typography component="div">{label}</Typography>
+        {tooltip ? <Tooltip tips={tooltip} /> : null}
       </Flex>
       <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500, margin: "10px 0 0 0" }}>
         {value}

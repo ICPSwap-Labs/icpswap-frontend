@@ -74,7 +74,7 @@ export default function Overview() {
               />
             </Row>
 
-            <Box sx={{ display: "flex" }}>
+            <Row>
               <Item
                 label={t`Transactions`}
                 value={formatAmount(new BigNumber(marketplaceTrade?.totalVolume.toString() ?? 0).toNumber())}
@@ -83,7 +83,7 @@ export default function Overview() {
                 label={t`Listings`}
                 value={formatAmount(new BigNumber(marketplaceTrade?.listSize.toString() ?? 0).toNumber())}
               />
-            </Box>
+            </Row>
           </Card>
         </Flex>
 
@@ -104,13 +104,13 @@ export default function Overview() {
               />
             </Row>
 
-            <Box sx={{ display: "flex" }}>
+            <Row>
               <Item label={t`Total Trading Pairs`} value={allSwapPools ? formatAmount(allSwapPools.length) : "--"} />
               <Item
                 label={t`Total Users`}
                 value={swapGlobalData?.totalUser === undefined ? "--" : formatAmount(Number(swapGlobalData.totalUser))}
               />
-            </Box>
+            </Row>
           </Card>
 
           <Staking />
