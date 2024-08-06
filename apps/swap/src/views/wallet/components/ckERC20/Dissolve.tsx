@@ -110,7 +110,6 @@ export default function DissolveCkERC20({
   }, [tokenBalance, token]);
 
   const handleBuy = useCallback(() => {
-    if (!token) return;
     history.push(`/swap?input=${ICP.address}&output=${ckETH.address}`);
   }, [ICP, ckETH, history]);
 
