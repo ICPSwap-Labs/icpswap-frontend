@@ -14,6 +14,8 @@ import { BigNumber } from "@icpswap/utils";
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 
+const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
+
 export interface FarmAprChartsProps {
   farmId: string | undefined;
 }
@@ -80,9 +82,9 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
             }}
           >
             {label
-              ? `${dayjs(Number(label) * 1000).format("MMM D, YYYY")}`
+              ? `${dayjs(Number(label) * 1000).format(DAYJS_FORMAT)}`
               : aprCharts
-              ? `${dayjs(Number(aprCharts[aprCharts.length - 1][0]) * 1000).format("MMM D, YYYY")}`
+              ? `${dayjs(Number(aprCharts[aprCharts.length - 1][0]) * 1000).format(DAYJS_FORMAT)}`
               : "--"}
           </Typography>
         </Box>
@@ -122,7 +124,6 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
                   dataKey="value"
                   axisLine={false}
                   tickLine={false}
-                  // tickFormatter={(time) => dayjs(time).format("DD/MM/YYYY")}
                   minTickGap={10}
                   tick={{ fill: theme.palette.text.secondary }}
                 />
