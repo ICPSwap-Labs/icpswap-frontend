@@ -137,6 +137,12 @@ export default function Swap() {
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
+      refresh: () => {
+        setRefreshBalance(true);
+        setTimeout(() => {
+          setRefreshBalance(false);
+        }, 1000);
+      },
     });
 
     setSwapLoading(true);

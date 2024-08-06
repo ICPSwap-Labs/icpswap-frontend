@@ -187,6 +187,12 @@ export function SwapWrapper({
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
       },
+      refresh: () => {
+        setRefreshTrigger();
+        setTimeout(() => {
+          setRefreshTrigger();
+        }, 1000);
+      },
     });
 
     setSwapLoading(true);
@@ -213,10 +219,10 @@ export function SwapWrapper({
 
     if (result) {
       openSuccessTip(t`Swapped Successfully`);
-      setRefreshTrigger();
-      setTimeout(() => {
-        setRefreshTrigger();
-      }, 1000);
+      // setRefreshTrigger();
+      // setTimeout(() => {
+      //   setRefreshTrigger();
+      // }, 1000);
     }
   }, [
     needImpactConfirm,
