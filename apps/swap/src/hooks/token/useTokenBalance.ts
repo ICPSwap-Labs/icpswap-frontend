@@ -7,7 +7,7 @@ import { ICP } from "@icpswap/tokens";
 import { isPrincipal, isValidPrincipal, isOkSubAccount, principalToAccount, BigNumber } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useLatestDataCall } from "../useCallsData";
+import { useLatestDataCall } from "@icpswap/hooks";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -152,18 +152,26 @@ export function useCurrencyBalance(
   currency: Token | undefined,
   refresh?: boolean | number,
 ) {
+  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
+
   const { loading, result } = useTokenBalance(currency?.address, account, refresh);
 
+  useEffect(() => {
+    if (result) {
+      setStoreResult(result);
+    }
+  }, [result]);
+
   return useMemo(() => {
-    if (!currency || !result || loading || isNaN(result.toNumber()))
+    if (!currency || !storeResult || loading || isNaN(storeResult.toNumber()))
       return {
         loading,
-        result: undefined,
+        result: storeResult && currency ? CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()) : undefined,
       };
 
     return {
       loading,
-      result: CurrencyAmount.fromRawAmount(currency, result.toNumber()),
+      result: CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()),
     };
-  }, [loading, result, currency]);
+  }, [loading, storeResult, currency]);
 }

@@ -12,7 +12,7 @@ const StakingDetails = Loadable(lazy(() => import("../views/staking-token/detail
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
 const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
-const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
+const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 export function useInterval<T>(
-  callback: (() => Promise<T | undefined>) | undefined,
+  callback: (() => Promise<T | undefined>) | (() => void) | undefined,
   force: boolean | number = false,
   interval = 5000,
 ): T | undefined {
@@ -12,7 +12,10 @@ export function useInterval<T>(
     async function __callback() {
       if (callback) {
         const result = await callback();
-        setData(result);
+
+        if (result) {
+          setData(result);
+        }
       }
     }
 

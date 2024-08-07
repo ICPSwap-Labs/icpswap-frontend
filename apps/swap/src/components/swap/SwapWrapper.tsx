@@ -49,6 +49,7 @@ export function SwapWrapper({
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [impactChecked, setImpactChecked] = useState(false);
+  const [balanceRefreshTrigger, setBalanceRefreshTrigger] = useState(0);
 
   const [isExpertMode] = useExpertModeManager();
   const principal = useAccountPrincipal();
@@ -75,7 +76,7 @@ export function SwapWrapper({
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-  } = useSwapInfo({ refresh: refreshTrigger });
+  } = useSwapInfo({ refresh: refreshTrigger | balanceRefreshTrigger });
 
   // For swap pro
   useEffect(() => {
@@ -83,6 +84,17 @@ export function SwapWrapper({
     if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
   }, [tradePoolId, outputCurrency, inputCurrency]);
+
+  // Auto refresh token balance 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBalanceRefreshTrigger(balanceRefreshTrigger + 1);
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [setBalanceRefreshTrigger, balanceRefreshTrigger]);
 
   const isLoadingRoute = swapState === TradeState.LOADING;
   const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -155,7 +167,7 @@ export function SwapWrapper({
     canisterId: inputTokenAddress,
     address: tradePoolId,
     sub,
-    reload: refreshTrigger,
+    refresh: refreshTrigger,
   });
   const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal, refreshTrigger);
   const swapTokenUnusedBalance = useMemo(() => {
