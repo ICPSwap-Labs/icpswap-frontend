@@ -8,8 +8,8 @@ import { useTokenInfo } from "hooks/token/index";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
 import FeeTierLabel from "ui-component/FeeTierLabel";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, usePoolsForToken } from "@icpswap/hooks";
-import { PoolData, usePoolsDataOfTokenByPools } from "hooks/info/usePoolsOfToken";
+import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools } from "@icpswap/hooks";
+import { PoolData } from "hooks/info/usePoolsOfToken";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
@@ -49,7 +49,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
     { label: t`TVL`, key: "tvlUSD", sort: true },
     { label: t`APR(24H)`, key: "apr", sort: false },
     { label: t`Volume 24H`, key: "volumeUSD", sort: true },
-    { label: t`Volume 7D`, key: "volume7D", sort: true },
+    { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
     { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },
   ];
 
@@ -118,7 +118,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell color="text.theme-secondary">{apr ?? "--"}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
-      <BodyCell>{formatDollarAmount(pool.volume7D)}</BodyCell>
+      <BodyCell>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
     </TableRow>
   );
@@ -139,38 +139,49 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: tokenList } = useTokensFromList();
-  const { result: allPoolsOfToken, loading } = usePoolsForToken(canisterId);
+  const { result: allSwapPools, loading } = useNodeInfoAllPools();
 
-  const filteredPools = useMemo(() => {
-    if (!allPoolsOfToken || !tokenList) return undefined;
+  const allPoolsOfToken = useMemo(() => {
+    if (!allSwapPools || !tokenList) return undefined;
 
     const tokenListIds = tokenList.map((token) => token.canisterId).concat(ICP.address);
 
-    return allPoolsOfToken
+    return allSwapPools
       .filter((pool) => {
-        return pool.token0Price !== 0 && pool.token1Price !== 0;
+        return (
+          (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
+          pool.token0Price !== 0 &&
+          pool.token1Price !== 0 &&
+          pool.feeTier === BigInt(3000)
+        );
       })
       .filter((pool) => {
         if (checked) return tokenListIds.includes(pool.token0Id) && tokenListIds.includes(pool.token1Id);
         return !!pool;
-      })
-      .filter((pool) => pool.feeTier === BigInt(3000));
-  }, [allPoolsOfToken, allPoolsTVL, tokenList, checked]);
+      });
+  }, [allSwapPools, canisterId, tokenList, checked]);
 
   const slicedPoolsOfToken = useMemo(() => {
-    if (!filteredPools) return undefined;
-    return [...filteredPools].slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page);
-  }, [filteredPools, page, sortField, sortDirection]);
+    if (!allPoolsOfToken || !allPoolsTVL) return undefined;
 
-  const { result: poolsData, loading: poolsDataLoading } = usePoolsDataOfTokenByPools(slicedPoolsOfToken);
+    return allPoolsOfToken
+      .map((pool) => {
+        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
+        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as PoolData;
+      })
+      .sort((a, b) => {
+        if (a && b && !!sortField) {
+          const bool =
+            a[sortField as keyof PoolData] > b[sortField as keyof PoolData]
+              ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+              : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
-  const formattedPoolsData = useMemo(() => {
-    if (!poolsData || !allPoolsTVL) return undefined;
-    return poolsData.map((pool) => {
-      const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-      return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 };
-    });
-  }, [poolsData, allPoolsTVL, page, sortField, sortDirection]);
+          return bool;
+        }
+        return 0;
+      })
+      .slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page);
+  }, [allPoolsOfToken, allPoolsTVL, page, sortField, sortDirection]);
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
@@ -201,22 +212,22 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
       </Box>
 
       <Box mt="20px">
-        {formattedPoolsData && formattedPoolsData.length > 0 ? (
+        {slicedPoolsOfToken && slicedPoolsOfToken.length > 0 ? (
           <>
             <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
-            {(formattedPoolsData ?? []).map((pool, index) => (
+            {(slicedPoolsOfToken ?? []).map((pool, index) => (
               <PoolItem key={pool.pool} index={(page - 1) * PAGE_SIZE + index + 1} pool={pool} />
             ))}
           </>
-        ) : loading || poolsDataLoading ? (
-          <StaticLoading loading={loading || poolsDataLoading} />
+        ) : loading ? (
+          <StaticLoading loading={loading} />
         ) : (
           <NoData />
         )}
 
         <Box mt="20px">
-          {!loading && !poolsDataLoading && filteredPools && filteredPools.length > 0 ? (
-            <Pagination maxItems={PAGE_SIZE} length={filteredPools?.length ?? 0} onPageChange={setPage} page={page} />
+          {!loading && allPoolsOfToken && allPoolsOfToken.length > 0 ? (
+            <Pagination maxItems={PAGE_SIZE} length={allPoolsOfToken?.length ?? 0} onPageChange={setPage} page={page} />
           ) : null}
         </Box>
       </Box>
