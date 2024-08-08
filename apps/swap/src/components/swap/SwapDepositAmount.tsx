@@ -1,8 +1,7 @@
-import { Box, Grid, Typography, Chip } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { makeStyles, useTheme, Box, Grid, Typography, Chip } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import LockIcon from "assets/images/swap/Lock";
-import { NumberTextField, TokenImage } from "components/index";
+import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { isDarkTheme } from "utils";
@@ -44,18 +43,15 @@ const useStyle = makeStyles((theme: Theme) => {
         paddingLeft: "18px",
       },
     },
-    maxButton: {
-      padding: "1px 3px",
-      cursor: "pointer",
-      borderRadius: "2px",
-      backgroundColor: theme.colors.secondaryMain,
-      color: "#ffffff",
-    },
   };
 });
 
-const LockMask = ({ type }: { type: string | undefined }) => {
-  const theme = useTheme() as Theme;
+interface LockMaskProps {
+  type: string | undefined;
+}
+
+const LockMask = ({ type }: LockMaskProps) => {
+  const theme = useTheme();
 
   return (
     <Box
@@ -153,19 +149,11 @@ export default function SwapDepositAmount({
           />
         </Grid>
       </Grid>
-      <Grid container mt={1}>
-        <Grid item mr={1}>
-          <Typography>
-            <Trans>Balance:</Trans> {currency ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}
-          </Typography>
-        </Grid>
-        {showMaxButton && (
-          <Grid>
-            <Typography fontSize={12} className={classes.maxButton} onClick={onMax}>
-              <Trans>Max</Trans>
-            </Typography>
-          </Grid>
-        )}
+      <Grid container mt={1} gap="0 4px" alignItems="center">
+        <Typography>
+          <Trans>Balance:</Trans> {currency ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}
+        </Typography>
+        {showMaxButton && <MaxButton onClick={onMax} />}
       </Grid>
       {locked && <LockMask type={type} />}
     </Box>
