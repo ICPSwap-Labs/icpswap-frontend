@@ -1,6 +1,6 @@
 import { Box, Avatar } from "@mui/material";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { formatTokenAmount , shorten } from "@icpswap/utils";
+import { formatTokenAmount, shorten } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { Principal } from "@dfinity/principal";
@@ -73,32 +73,18 @@ export function getCollectFeeSteps({
       ],
     },
     {
-      title: withdrawAmountALessThanZero ? t`Unable to withdraw ${tokenA.symbol}` : t`Withdraw ${tokenA.symbol}`,
+      title:
+        withdrawAmountALessThanZero && withdrawAmountBLessThanZero
+          ? t`Unable to withdraw ${tokenA.symbol} and ${tokenB.symbol}`
+          : t`Withdraw ${tokenA.symbol} and ${tokenB.symbol}`,
       step: 1,
       children: [
         {
-          label: t`Amount`,
+          label: t`Amount0`,
           value: <TokenAmount amount={withdrawAmountA} logo={tokenA.logo} />,
         },
-        { label: t`Principal ID`, value: principalString },
-      ],
-      errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-        <TextButton onClick={retry}>
-          <Trans>Retry</Trans>
-        </TextButton>,
-      ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
-      skipError: withdrawAmountALessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
-    },
-    {
-      title: withdrawAmountBLessThanZero ? t`Unable to withdraw ${tokenB.symbol}` : t`Withdraw ${tokenB.symbol}`,
-      step: 2,
-      children: [
         {
-          label: t`Amount`,
+          label: t`Amount1`,
           value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
         },
         { label: t`Principal ID`, value: principalString },
@@ -112,7 +98,10 @@ export function getCollectFeeSteps({
         </TextButton>,
       ],
       errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
-      skipError: withdrawAmountBLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
+      skipError:
+        withdrawAmountALessThanZero && withdrawAmountBLessThanZero
+          ? t`The amount of withdrawal is less than the transfer fee`
+          : undefined,
     },
   ];
 }
