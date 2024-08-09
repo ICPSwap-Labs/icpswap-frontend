@@ -21,7 +21,7 @@ export { default as NumberTextField, TextFieldNumberComponent } from "./Input/Nu
 export { default as FilledTextField } from "./Input/FilledTextField";
 export * from "./Input/NumberFilledTextField";
 export * from "./ReclaimTips";
-export { default as SwapTooltip } from "./Tooltip";
+export * from "./Tooltip/index";
 export { default as Copy } from "./Copy/index";
 export * from "./TabPanel";
 export * from "./Image/index";
@@ -30,4 +30,3 @@ export { default as Switch } from "./switch";
 export * from "./Button/index";
 export { default as AuthButton } from "./authentication/ButtonConnector";
 export * from "./Link";
-export { default as Tooltip } from "./Tooltip";

@@ -4,7 +4,7 @@ import { Typography, Box, Button, CircularProgress, useMediaQuery } from "@mui/m
 import { makeStyles, useTheme } from "@mui/styles";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
-import Tooltip from "components/Tooltip";
+import { SwapTooltip } from "components/Tooltip/index";
 import { numberToString } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
@@ -133,7 +133,7 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
               <Flex gap="8px 0" vertical align="flex-start">
                 <Flex gap="0 4px">
                   <Typography>You pay</Typography>
-                  <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
+                  <SwapTooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
                 </Flex>
 
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
@@ -184,13 +184,13 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
           <DetailItem
             label={t`Liquidity Provider Fee`}
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
-            tooltip={<Tooltip background="#ffffff" tips={t`For each trade a 0.3% fee is paid.`} />}
+            tooltip={<SwapTooltip background="#ffffff" tips={t`For each trade a 0.3% fee is paid.`} />}
           />
           <DetailItem
             label={t`Price Impact`}
             value={FormattedPriceImpact({ priceImpact })}
             tooltip={
-              <Tooltip
+              <SwapTooltip
                 background="#ffffff"
                 tips={t`The difference between the market price and your price due to trade size.`}
               />
@@ -200,7 +200,7 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
             label={t`Slippage tolerance`}
             value={`${slippageTolerance?.toFixed(2)}%`}
             tooltip={
-              <Tooltip
+              <SwapTooltip
                 background="#ffffff"
                 tips={t`Your transaction will revert if the price changes unfavorably
               by more than this percentage.`}
@@ -212,7 +212,7 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
             value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${trade
               ?.outputAmount.currency.symbol}`}
             tooltip={
-              <Tooltip
+              <SwapTooltip
                 background="#ffffff"
                 tips="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
               />
@@ -242,7 +242,7 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
                 </Typography>
               </Box>
             }
-            tooltip={<Tooltip background="#ffffff" tips={t`Swapping a too small amount might lead to failure!`} />}
+            tooltip={<SwapTooltip background="#ffffff" tips={t`Swapping a too small amount might lead to failure!`} />}
           />
         </Box>
 
