@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Theme } from "@mui/material/styles";
 import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { SwapTooltip } from "components/index";
+import { Tooltip } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
@@ -149,7 +149,7 @@ export function ReclaimItem({
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
           {unavailableClaim ? (
-            <SwapTooltip tips="Claim amount is below the transaction fee, making it unclaimable." iconSize="24px" />
+            <Tooltip tips="Claim amount is below the transaction fee, making it unclaimable." iconSize="24px" />
           ) : null}
 
           <Button

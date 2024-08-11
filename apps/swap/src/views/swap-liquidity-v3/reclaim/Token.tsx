@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
-import { NoData, LoadingRow, SelectToken, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, SelectToken, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -136,7 +136,7 @@ export function ReclaimWithToken() {
             </Typography>
 
             {isMobile && tokenId === ICP.address ? (
-              <SwapTooltip
+              <Tooltip
                 tips={
                   <Trans>
                     Selecting ICP may require querying all trading pairs associated with it, leading to longer wait

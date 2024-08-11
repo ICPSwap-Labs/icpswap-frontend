@@ -1,5 +1,5 @@
 import { Typography, Box } from "@mui/material";
-import { Wrapper, Breadcrumbs, TabPanel, SwapTooltip } from "components/index";
+import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -56,7 +56,7 @@ export default function SwapReclaim() {
             </Typography>
 
             {isMobile ? (
-              <SwapTooltip
+              <Tooltip
                 maxWidth="calc(100% - 60px)"
                 tips={
                   <>

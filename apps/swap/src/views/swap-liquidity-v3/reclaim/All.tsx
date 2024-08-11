@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -116,7 +116,7 @@ export function ReclaimAll() {
           </Typography>
 
           {isMobile ? (
-            <SwapTooltip
+            <Tooltip
               tips={
                 <Trans>
                   If you select All, please note that selecting it may involve querying all trading pairs, resulting in

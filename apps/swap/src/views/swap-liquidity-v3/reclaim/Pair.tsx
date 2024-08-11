@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
-import { NoData, LoadingRow, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -129,7 +129,7 @@ export function ReclaimWithPair() {
               <Trans>Select a pair</Trans>
             </Typography>
 
-            {isMobile ? <SwapTooltip tips={<Trans>Select the trading pair you wish to reclaim.</Trans>} /> : null}
+            {isMobile ? <Tooltip tips={<Trans>Select the trading pair you wish to reclaim.</Trans>} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
