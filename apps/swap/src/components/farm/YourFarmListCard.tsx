@@ -9,19 +9,17 @@ import {
   useUserPositionsValue,
   useFarmTvlValue,
   useStateColors,
-  useIntervalUserRewardInfo,
 } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { formatDollarAmount } from "@icpswap/utils";
 import {
   useV3FarmRewardMetadata,
   useFarmInitArgs,
   useSwapUserPositions,
   useSwapPoolMetadata,
   useFarmState,
-  useFarmUserPositions,
 } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -29,15 +27,14 @@ import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
 
-interface FarmListCardProps {
+interface YourFarmListCardProps {
   farmTvl: FarmTvl;
   farmId: string;
   wrapperSx?: BoxProps["sx"];
   showState: boolean;
-  filter?: "YOUR" | undefined;
 }
 
-export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListCardProps) {
+export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListCardProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
   const history = useHistory();
@@ -49,19 +46,6 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
   const [, token1] = useToken(userFarmInfo?.poolToken1.address);
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address);
   const { result: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
-  const { result: deposits } = useFarmUserPositions(farmId, principal?.toString());
-
-  const positionIds = useMemo(() => {
-    return deposits?.map((position) => position.positionId) ?? [];
-  }, [deposits]);
-
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
-
-  const userRewardAmount = useMemo(() => {
-    if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;
-    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
-    return parseTokenAmount(__userRewardAmount, rewardToken.decimals).multipliedBy(userRewardRatio).toString();
-  }, [__userRewardAmount, farmInitArgs, rewardToken]);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs || !poolMetadata) return undefined;
@@ -177,30 +161,6 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
           </Typography>
         ) : null}
       </Flex>
-
-      {filter ? (
-        <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
-          <Flex justify="flex-end">
-            <Typography variant="body2" sx={{ color: "text.primary" }}>
-              {userRewardAmount && rewardToken ? (
-                <>
-                  {toSignificantWithGroupSeparator(userRewardAmount, 4)}&nbsp;
-                  {rewardToken.symbol}
-                </>
-              ) : (
-                "--"
-              )}
-            </Typography>
-          </Flex>
-          <Flex justify="flex-end">
-            <Typography sx={{ fontSize: "12px" }}>
-              {userRewardAmount && rewardTokenPrice
-                ? `~${formatDollarAmount(new BigNumber(userRewardAmount).multipliedBy(rewardTokenPrice).toString())}`
-                : "--"}
-            </Typography>
-          </Flex>
-        </Flex>
-      ) : null}
 
       <Flex justify="flex-end" className="row-item">
         <Typography variant="body2" sx={{ color: "text.primary" }}>

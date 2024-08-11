@@ -101,7 +101,7 @@ export function YourPoolListHeader({ showState, gridTemplateColumns }: YourPoolL
       </Flex>
       <Flex justify="flex-end" className="row-item">
         <Typography variant="body2" color="text.400">
-          <Trans>Reward Token</Trans>
+          <Trans>Your Rewards</Trans>
         </Typography>
       </Flex>
       {showState ? (

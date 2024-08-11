@@ -8,7 +8,7 @@ import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
 import { LoadingRow } from "@icpswap/ui";
-import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
+import { FarmListCard, GlobalData, TopLiveFarms, FarmListHeader, YourFarmListHeader } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 
 import FarmContext from "./context";
@@ -77,13 +77,17 @@ function MainContent() {
       showState: state === undefined,
       gridTemplateColumns: matchDownSM
         ? state === undefined
-          ? "220px 220px 100px 240px 180px 180px"
+          ? __state === FilterState.YOUR
+            ? "180px 180px 80px 220px 160px 160px 160px"
+            : "220px 220px 100px 240px 180px 180px"
           : "220px 220px 100px 240px 180px"
         : state === undefined
-        ? "220px 220px 120px 1fr 1fr 180px"
+        ? __state === FilterState.YOUR
+          ? "180px 180px 80px 1fr 1fr 1fr 100px"
+          : "220px 220px 120px 1fr 1fr 180px"
         : "220px 220px 120px 1fr 1fr",
     };
-  }, [state, matchDownSM]);
+  }, [state, matchDownSM, __state]);
 
   return (
     <FarmContext.Provider
@@ -146,50 +150,7 @@ function MainContent() {
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns,
-              "& .row-item": {
-                padding: "16px 0",
-                "&:first-of-type": {
-                  padding: "16px 0 16px 24px",
-                },
-                "&:last-of-type": {
-                  padding: "16px 24px 16px 0",
-                },
-              },
-            }}
-          >
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Staked Position</Trans>
-            </Typography>
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Reward Token</Trans>
-            </Typography>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>APR</Trans>
-              </Typography>
-            </Flex>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>Your Available to Stake</Trans>
-              </Typography>
-            </Flex>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>Total Staked</Trans>
-              </Typography>
-            </Flex>
-            {showState ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Status</Trans>
-                </Typography>
-              </Flex>
-            ) : null}
-          </Box>
+          {__state === FilterState.YOUR ? <YourFarmListHeader /> : <FarmListHeader state={state} />}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>
@@ -218,6 +179,7 @@ function MainContent() {
                     gridTemplateColumns,
                   }}
                   showState={showState}
+                  filter={__state === FilterState.YOUR ? "YOUR" : undefined}
                 />
               ))}
             </>
