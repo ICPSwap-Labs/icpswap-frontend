@@ -11,13 +11,14 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getLocaleMessage } from "locales/services";
-import { useErrorTip } from "hooks/useTips";
+import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
+import { parseTokenAmount, sleep, toSignificantWithGroupSeparator } from "@icpswap/utils";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -92,7 +93,7 @@ export function useSwapCalls() {
 
   const updateSwapOutAmount = useUpdateSwapOutAmount();
 
-  const [openErrorTip] = useErrorTip();
+  const [openTip] = useTips();
 
   const initialAndUpdateSwapStep = useInitialSwapSteps();
 
@@ -186,7 +187,7 @@ export function useSwapCalls() {
               });
             };
 
-            const step3 = async () => {
+            const withdraw_step = async () => {
               const swapOutAmount = getSwapOutAmount(stepKey);
 
               if (swapOutAmount !== undefined) {
@@ -194,6 +195,13 @@ export function useSwapCalls() {
                 if (new BigNumber(swapOutAmount.toString()).minus(outputAmount.currency.transFee).isLessThan(0)) {
                   return "skip";
                 }
+
+                openTip(
+                  `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(swapOutAmount, outputAmount.currency.decimals).toString(),
+                  )} ${outputAmount.currency.symbol} withdrawal submitted`,
+                  MessageTypes.success,
+                );
 
                 const withdrawResult = await withdraw(
                   outputAmount.currency.wrapped,
@@ -229,7 +237,7 @@ export function useSwapCalls() {
                     poolId,
                   });
                 } else {
-                  openErrorTip(getLocaleMessage(message));
+                  openTip(getLocaleMessage(message), MessageTypes.error);
                 }
               } else {
                 updateSwapOutAmount(stepKey, data);
@@ -239,13 +247,18 @@ export function useSwapCalls() {
               const swapOk = status === ResultStatus.OK;
 
               if (swapOk) {
-                step3();
+                withdraw_step();
               }
 
               return swapOk;
             };
 
-            calls = [step0, step1, step2];
+            const step3 = async () => {
+              await sleep(2000);
+              return true;
+            };
+
+            calls = [step0, step1, step2, step3];
           }
         }
       }

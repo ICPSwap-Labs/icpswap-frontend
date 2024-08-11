@@ -1,9 +1,9 @@
 import { Box, Avatar } from "@mui/material";
 import { Token } from "@icpswap/swap-sdk";
-// import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
-// import { getSwapOutAmount } from "store/swap/hooks";
+import { getSwapOutAmount } from "store/swap/hooks";
 import { TextButton } from "components/index";
 
 export interface GetStepsArgs {
@@ -16,14 +16,14 @@ export interface GetStepsArgs {
   handleReclaim: () => void;
 }
 
-export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, handleReclaim }: GetStepsArgs) {
+export function getSwapStep({ inputCurrency, outputCurrency, key, amount0, amount1, handleReclaim }: GetStepsArgs) {
   const symbol0 = inputCurrency.symbol;
   const symbol1 = outputCurrency.symbol;
   const address0 = inputCurrency.wrapped.address;
   const logo0 = inputCurrency.logo;
   const logo1 = outputCurrency.logo;
 
-  // const outAmount = getSwapOutAmount(key);
+  const outAmount = getSwapOutAmount(key);
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -43,18 +43,18 @@ export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, h
     </Box>
   );
 
-  // const outAmountValue = (
-  //   <Box sx={{ display: "flex", alignItems: "center" }}>
-  //     <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo1}>
-  //       &nbsp;
-  //     </Avatar>
-  //     {outAmount ? parseTokenAmount(outAmount, outputCurrency.decimals).toFormat() : "--"}
-  //   </Box>
-  // );
+  const outAmountValue = (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo1}>
+        &nbsp;
+      </Avatar>
+      {outAmount ? parseTokenAmount(outAmount, outputCurrency.decimals).toFormat() : "--"}
+    </Box>
+  );
 
-  // const withdrawAmountLessThanZero = outAmount
-  //   ? new BigNumber(outAmount.toString()).minus(outputCurrency.transFee).isLessThan(0)
-  //   : false;
+  const withdrawAmountLessThanZero = outAmount
+    ? new BigNumber(outAmount.toString()).minus(outputCurrency.transFee).isLessThan(0)
+    : false;
 
   const isTokenInUseTransfer = isUseTransfer(inputCurrency.wrapped);
 
@@ -93,18 +93,18 @@ export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, h
         { label: symbol1, value: amount1Value },
       ],
     },
-    // {
-    //   title: withdrawAmountLessThanZero ? t`Unable to withdraw ${symbol1}` : t`Withdraw ${symbol1}`,
-    //   step: 3,
-    //   children: [{ label: symbol1, value: outAmountValue }],
-    //   skipError: withdrawAmountLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
-    //   errorActions: [
-    //     <TextButton onClick={handleReclaim}>
-    //       <Trans>Reclaim</Trans>
-    //     </TextButton>,
-    //   ],
-    //   errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
-    // },
+    {
+      title: !outAmount
+        ? t`Withdraw ${symbol1}`
+        : withdrawAmountLessThanZero
+        ? t`Unable to withdraw ${symbol1}`
+        : t`${toSignificantWithGroupSeparator(
+            parseTokenAmount(outAmount, outputCurrency.decimals).toString(),
+          )} ${symbol1} withdrawal submitted`,
+      step: 3,
+      children: [{ label: symbol1, value: outAmountValue }],
+      skipError: withdrawAmountLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
+    },
   ];
 
   return steps;

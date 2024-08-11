@@ -9,7 +9,7 @@ import { TradeState } from "hooks/swap/useTrade";
 import { maxAmountFormat } from "utils/swap/index";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { ExternalTipArgs } from "types/index";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
+import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import TradePrice from "components/swap/TradePrice";
@@ -45,7 +45,6 @@ export function SwapWrapper({
 }: SwapWrapperProps) {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [swapLoading, setSwapLoading] = useState(false);
-  const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [impactChecked, setImpactChecked] = useState(false);
@@ -225,17 +224,9 @@ export function SwapWrapper({
     handleInput("", "input");
     handleInput("", "output");
 
-    const result = await call();
+    await call();
 
     closeLoadingTip(loadingKey);
-
-    if (result) {
-      openSuccessTip(t`Swapped Successfully`);
-      // setRefreshTrigger();
-      // setTimeout(() => {
-      //   setRefreshTrigger();
-      // }, 1000);
-    }
   }, [
     needImpactConfirm,
     impactChecked,
