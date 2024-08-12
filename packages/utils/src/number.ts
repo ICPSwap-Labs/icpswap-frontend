@@ -8,6 +8,10 @@ export const formatDollarAmount = (num: number | string | undefined, digits = 3,
   if (_num === 0 || _num === "0") return "$0.00";
   if (!_num) return "-";
 
+  if (new BigNumber(_num).isLessThan(1)) {
+    return `$${toSignificant(_num, digits)}`;
+  }
+
   if (new BigNumber(_num).isLessThan(0.01)) {
     if (ab && new BigNumber(_num).isLessThan(ab)) return `<$${ab}`;
     return `$${toSignificant(_num, digits)}`;

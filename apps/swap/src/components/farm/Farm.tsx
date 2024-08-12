@@ -294,7 +294,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
       <Box mt="40px">
         <Box>
           <Typography>
-            <Trans>Your positions available to stake</Trans>
+            <Trans>Your Positions Available To Stake</Trans>
           </Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>

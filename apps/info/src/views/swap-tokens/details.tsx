@@ -106,7 +106,7 @@ export default function TokenDetails() {
                 lineHeight: "0.8",
               }}
             >
-              {formatDollarAmount(token?.priceUSD, 4)}
+              {formatDollarAmount(token?.priceUSD)}
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
