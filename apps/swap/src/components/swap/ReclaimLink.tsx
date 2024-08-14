@@ -20,6 +20,9 @@ import { KeepTokenInPoolsConfirmModal } from "components/swap/KeepTokenInPoolsCo
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     padding: "16px",
+    "&.pro": {
+      padding: "12px",
+    },
     "&.border": {
       borderBottom: `1px solid ${theme.palette.background.level3}`,
     },
@@ -30,14 +33,17 @@ interface DepositButtonProps {
   token: Token | undefined;
   pool: Pool | null | undefined;
   onDepositSuccess: () => void;
+  fontSize?: string;
 }
 
-function DepositButton({ token, pool, onDepositSuccess }: DepositButtonProps) {
+function DepositButton({ token, pool, fontSize, onDepositSuccess }: DepositButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <TextButton onClick={() => setOpen(true)}>Deposit</TextButton>
+      <TextButton onClick={() => setOpen(true)} sx={{ fontSize }}>
+        Deposit
+      </TextButton>
       {open && pool && token ? (
         <DepositModal
           open={open}
@@ -96,7 +102,9 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
 
   return (
     <Flex gap="0 8px">
-      <TextButton onClick={handleWithdraw}>Withdraw</TextButton>
+      <TextButton onClick={handleWithdraw} sx={{ fontSize }}>
+        Withdraw
+      </TextButton>
       {loading ? <CircularProgress size={fontSize === "14px" ? 14 : 12} sx={{ color: "#ffffff" }} /> : null}
     </Flex>
   );
@@ -105,9 +113,10 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
 export interface ReclaimLinkProps {
   fontSize?: "12px" | "14px";
   margin?: string;
+  ui?: "pro" | "normal";
 }
 
-export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
+export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles();
@@ -177,7 +186,7 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
     <Box>
       <Flex align="center" justify="space-between" sx={{ cursor: "pointer" }} onClick={handleCollapse}>
         <Flex align="center" gap="0 3px">
-          <Typography>
+          <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
             <Trans>
               Your {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool Balances
             </Trans>
@@ -197,7 +206,7 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
       </Flex>
 
       <Collapse in={open}>
-        <Flex justify="space-between" align="center" sx={{ margin: "18px 0 0 0" }}>
+        <Flex justify="space-between" align="center" sx={{ margin: ui === "pro" ? "12px 0 0 0" : "18px 0 0 0" }}>
           <Flex
             sx={{ width: "fit-content", cursor: "pointer", userSelect: "none" }}
             gap="0 4px"
@@ -206,7 +215,7 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
           >
             <Checkbox size="small" onChange={handleCheckChange} checked={keepInPools} />
 
-            <Typography>
+            <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
               <Trans>Keep your swapped tokens in Swap Pool</Trans>
             </Typography>
           </Flex>
@@ -214,9 +223,9 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
         </Flex>
 
         <Box sx={{ background: theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
-          <Box className={`${classes.wrapper} border`}>
+          <Box className={`${classes.wrapper} ${ui} border`}>
             <Flex justify="space-between">
-              <Typography>
+              <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
                 <Trans>
                   {token0?.symbol ?? "--"} Amount:{" "}
                   {token0TotalAmount && token0
@@ -224,32 +233,44 @@ export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
                     : "--"}
                 </Trans>
               </Typography>
-              <Flex gap="0 16px">
-                <DepositButton pool={selectedPool} token={token0} onDepositSuccess={handleRefresh} />
+              <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
+                <DepositButton
+                  pool={selectedPool}
+                  token={token0}
+                  onDepositSuccess={handleRefresh}
+                  fontSize={ui === "pro" ? "12px" : "14px"}
+                />
                 <WithdrawButton
                   pool={selectedPool}
                   token={token0}
                   balances={balances}
                   onReclaimSuccess={handleRefresh}
+                  fontSize={ui === "pro" ? "12px" : "14px"}
                 />
               </Flex>
             </Flex>
           </Box>
-          <Box className={classes.wrapper}>
+          <Box className={`${classes.wrapper} ${ui}`}>
             <Flex justify="space-between">
-              <Typography>
+              <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
                 {token1?.symbol ?? "--"} Amount:{" "}
                 {token1TotalAmount && token1
                   ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
                   : "--"}
               </Typography>
-              <Flex gap="0 16px">
-                <DepositButton pool={selectedPool} token={token1} onDepositSuccess={handleRefresh} />
+              <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
+                <DepositButton
+                  pool={selectedPool}
+                  token={token1}
+                  onDepositSuccess={handleRefresh}
+                  fontSize={ui === "pro" ? "12px" : "14px"}
+                />
                 <WithdrawButton
                   pool={selectedPool}
                   token={token1}
                   balances={balances}
                   onReclaimSuccess={handleRefresh}
+                  fontSize={ui === "pro" ? "12px" : "14px"}
                 />
               </Flex>
             </Flex>
