@@ -5,10 +5,11 @@ import { TokenInfo } from "types/token";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { withdraw, deposit } from "hooks/swap/v3Calls";
 import { t } from "@lingui/macro";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface ReclaimArgs {
   poolId: string;
-  token: TokenInfo;
+  token: TokenInfo | Token;
   name?: string;
   type: "unDeposit" | "unUsed";
   balance: bigint;
@@ -27,12 +28,15 @@ export function useReclaim() {
 
     const amount = balance;
 
+    const tokenId = "canisterId" in token ? token.canisterId : token.address;
+    const tokenFee = BigInt(token.transFee);
+
     if (amount !== BigInt(0)) {
       if (type === "unDeposit") {
-        const result = await deposit(poolId, token.canisterId, amount, token.transFee);
+        const result = await deposit(poolId, tokenId, amount, tokenFee);
 
         if (result.status === ResultStatus.OK) {
-          const result = await withdraw(poolId, token.canisterId, token.transFee, amount - token.transFee);
+          const result = await withdraw(poolId, tokenId, tokenFee, amount - tokenFee);
           if (result.status === ResultStatus.OK) {
             openTip(t`Withdrew ${name ?? ""} ${token.symbol} successfully`, MessageTypes.success);
             reclaimSuccessfully = true;
@@ -43,7 +47,7 @@ export function useReclaim() {
           openTip(`Failed to Withdraw: ${result.message ?? ""}`, MessageTypes.error);
         }
       } else {
-        const result = await withdraw(poolId, token.canisterId, token.transFee, amount);
+        const result = await withdraw(poolId, tokenId, tokenFee, amount);
 
         if (result.status === ResultStatus.OK) {
           openTip(`Withdrew ${name ?? ""} ${token?.symbol} successfully`, MessageTypes.success);

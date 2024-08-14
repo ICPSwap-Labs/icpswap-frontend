@@ -1,18 +1,13 @@
 import { ReactNode } from "react";
-import { type StepDetails as Details } from "components/Steps/types";
+import { type StepContents } from "types/step";
 
 export interface StepDetailsProps {
   title: ReactNode;
   onClose?: () => void;
-  content: Details[];
+  content: StepContents[];
   activeStep: number;
   errorStep: number | undefined;
-}
-
-export interface StepDetails {
-  title: ReactNode;
-  onClose?: () => void;
-  content: Details[];
+  description?: string;
 }
 
 export interface StepsState {

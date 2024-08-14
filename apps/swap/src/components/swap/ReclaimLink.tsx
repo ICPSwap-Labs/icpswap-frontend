@@ -1,106 +1,104 @@
 import { useHistory } from "react-router-dom";
 import { useCallback, useContext, useMemo, useState } from "react";
-import { Box, Typography, Tooltip, useTheme } from "@mui/material";
-import { Trans } from "@lingui/macro";
-import { ReactComponent as QuestionIcon } from "assets/icons/question.svg";
+import { Box, Typography, useTheme, Collapse, Checkbox, makeStyles, CircularProgress } from "components/Mui";
+import { Tooltip } from "components/index";
+import { Trans, t } from "@lingui/macro";
 import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
 import { SwapContext } from "components/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { ReclaimForSinglePool } from "components/swap/ReclaimForSinglePool";
 import type { UserSwapPoolsBalance } from "@icpswap/types";
-import { Flex } from "@icpswap/ui";
-import { ArrowUpRight } from "react-feather";
+import { Flex, TextButton } from "@icpswap/ui";
+import { ArrowUpRight, ChevronDown, RotateCcw } from "react-feather";
 import { Theme } from "@mui/material/styles";
+import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { DepositModal } from "components/swap/DepositModal";
+import { Pool, Token } from "@icpswap/swap-sdk";
+import { useReclaim } from "hooks/swap/useReclaim";
+import { KeepTokenInPoolsConfirmModal } from "components/swap/KeepTokenInPoolsConfirm";
 
-interface LinkProps {
-  fontSize?: "12px" | "14px";
+const useStyles = makeStyles((theme: Theme) => ({
+  wrapper: {
+    padding: "16px",
+    "&.border": {
+      borderBottom: `1px solid ${theme.palette.background.level3}`,
+    },
+  },
+}));
+
+interface DepositButtonProps {
+  token: Token | undefined;
+  pool: Pool | null | undefined;
+  onDepositSuccess: () => void;
 }
 
-function ReclaimLink({ fontSize }: LinkProps) {
-  const history = useHistory();
+function DepositButton({ token, pool, onDepositSuccess }: DepositButtonProps) {
+  const [open, setOpen] = useState(false);
 
-  return (
-    <Typography
-      component="div"
-      sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
-      onClick={() => history.push("/swap/reclaim")}
-    >
-      <Typography color="secondary" mr="5px" sx={{ fontSize }}>
-        <Trans>Unreceived tokens after swap? Reclaim here</Trans>
-      </Typography>
-
-      <Tooltip
-        PopperProps={{
-          // @ts-ignore
-          sx: {
-            "& .MuiTooltip-tooltip": {
-              background: "#ffffff",
-              borderRadius: "8px",
-              padding: "12px 16px",
-              "& .MuiTooltip-arrow": {
-                color: "#ffffff",
-              },
-            },
-          },
-        }}
-        title={
-          <Box>
-            <Typography color="text.400" fontSize="14px" sx={{ lineHeight: "16px" }}>
-              <Trans>
-                For your funds' safety on ICPSwap, we've implemented the 'Reclaim Your Tokens' feature. If issues arise
-                with the token canister during swaps, liquidity withdrawals, or fee claims, or if significant slippage
-                causes swap failures, utilize this feature to directly reclaim your tokens.
-              </Trans>
-            </Typography>
-          </Box>
-        }
-        arrow
-      >
-        <Box sx={{ width: "12px", height: "12px" }}>
-          <QuestionIcon />
-        </Box>
-      </Tooltip>
-    </Typography>
-  );
-}
-
-interface BalancesProps {
-  reclaim: UserSwapPoolsBalance;
-  index: number;
-  onReclaimSuccess?: () => void;
-  fontSize?: string;
-  margin?: string;
-}
-
-function Balances({ reclaim, onReclaimSuccess, fontSize, margin }: BalancesProps) {
   return (
     <>
-      {reclaim.balance0 !== BigInt(0) ? (
-        <ReclaimForSinglePool
-          id={`balance0_${reclaim.canisterId.toString()}_${reclaim.type}`}
-          poolId={reclaim.canisterId.toString()}
-          balance={reclaim.balance0}
-          tokenId={reclaim.token0.address}
-          type={reclaim.type}
-          onReclaimSuccess={onReclaimSuccess}
-          fontSize={fontSize}
-          margin={margin}
-        />
-      ) : null}
-
-      {reclaim.balance1 !== BigInt(0) ? (
-        <ReclaimForSinglePool
-          id={`balance1_${reclaim.canisterId.toString()}_${reclaim.type}`}
-          poolId={reclaim.canisterId.toString()}
-          balance={reclaim.balance1}
-          tokenId={reclaim.token1.address}
-          type={reclaim.type}
-          onReclaimSuccess={onReclaimSuccess}
-          fontSize={fontSize}
-          margin={margin}
+      <TextButton onClick={() => setOpen(true)}>Deposit</TextButton>
+      {open && pool && token ? (
+        <DepositModal
+          open={open}
+          onClose={() => setOpen(false)}
+          pool={pool}
+          token={token}
+          onDepositSuccess={onDepositSuccess}
         />
       ) : null}
     </>
+  );
+}
+
+interface WithdrawButtonProps {
+  token: Token | undefined;
+  pool: Pool | null | undefined;
+  balances: UserSwapPoolsBalance[];
+  onReclaimSuccess: () => void;
+  fontSize?: string;
+}
+
+function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: WithdrawButtonProps) {
+  const [loading, setLoading] = useState(false);
+
+  const __balances = useMemo(() => {
+    if (!token || balances.length === 0) return [];
+    return balances
+      .reduce(
+        (prev, curr) => {
+          return prev.concat([
+            curr.token0.address === token.address ? [curr.balance0, curr.type] : [curr.balance1, curr.type],
+          ]);
+        },
+        [] as Array<[bigint, "unDeposit" | "unUsed"]>,
+      )
+      .filter(([balance]) => balance > token.transFee);
+  }, [token, balances]);
+
+  const reclaim = useReclaim();
+
+  const handleWithdraw = useCallback(async () => {
+    if (!token || loading || !pool || __balances.length === 0) return;
+
+    setLoading(true);
+
+    await Promise.all(
+      __balances.map(async ([balance, type]) => {
+        return await reclaim({ token, poolId: pool.id, type, balance });
+      }),
+    );
+
+    onReclaimSuccess();
+
+    setLoading(false);
+  }, [__balances, loading, token, pool]);
+
+  return (
+    <Flex gap="0 8px">
+      <TextButton onClick={handleWithdraw}>Withdraw</TextButton>
+      {loading ? <CircularProgress size={fontSize === "14px" ? 14 : 12} sx={{ color: "#ffffff" }} /> : null}
+    </Flex>
   );
 }
 
@@ -109,71 +107,168 @@ export interface ReclaimLinkProps {
   margin?: string;
 }
 
-export function Reclaim({ fontSize = "14px", margin }: ReclaimLinkProps) {
+export function Reclaim({ fontSize = "14px" }: ReclaimLinkProps) {
   const history = useHistory();
-  const theme = useTheme() as Theme;
-  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
-  const { selectedPool, unavailableBalanceKeys } = useContext(SwapContext);
+  const theme = useTheme();
+  const classes = useStyles();
   const principal = useAccountPrincipal();
+
+  const [open, setOpen] = useState(true);
+  const [checkOpen, setCheckOpen] = useState(false);
+
+  const { selectedPool, refreshTrigger, setRefreshTrigger } = useContext(SwapContext);
+  const [keepInPools, updateKeepInPools] = useSwapKeepTokenInPoolsManager();
   const { balances } = useSwapUserUnusedTokenByPool(selectedPool, principal, refreshTrigger);
 
-  const __balances = useMemo(() => {
-    return balances.filter((e) => !(e.balance0 === BigInt(0) && e.balance1 === BigInt(0)));
-  }, [balances]);
+  const { token0, token1 } = useMemo(() => {
+    if (!selectedPool) return {};
 
-  const balanceNumber = useMemo(() => {
-    let number = 0;
+    return { token0: selectedPool.token0, token1: selectedPool.token1 };
+  }, [selectedPool]);
 
-    for (let i = 0; i < balances.length; i++) {
-      const e = balances[i];
+  const { token0TotalAmount, token1TotalAmount } = useMemo(() => {
+    if (!token0 || !token1 || !balances || balances.length === 0) return {};
 
-      if (e.balance0 !== BigInt(0)) {
-        number += 1;
-      }
+    const { token0TotalAmount, token1TotalAmount } = balances.reduce(
+      (prev, curr) => {
+        return {
+          token0TotalAmount: prev.token0TotalAmount + curr.balance0,
+          token1TotalAmount: prev.token1TotalAmount + curr.balance1,
+        };
+      },
+      { token0TotalAmount: BigInt(0), token1TotalAmount: BigInt(0) },
+    );
 
-      if (e.balance1 !== BigInt(0)) {
-        number += 1;
-      }
-    }
-
-    return number;
-  }, [balances]);
-
-  const handleClaimSuccess = useCallback(() => {
-    setRefreshTrigger(refreshTrigger + 1);
-  }, [refreshTrigger]);
+    return { token0TotalAmount: token0TotalAmount.toString(), token1TotalAmount: token1TotalAmount.toString() };
+  }, [token0, token1, balances]);
 
   const handleViewAll = useCallback(() => {
     history.push("/swap/reclaim");
   }, [history]);
 
+  const handleCollapse = useCallback(() => {
+    setOpen(!open);
+  }, [setOpen, open]);
+
+  const handleCheckChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    if (checked) {
+      setCheckOpen(true);
+    }
+  }, []);
+
+  const handleToggleCheck = useCallback(() => {
+    if (!keepInPools) {
+      setCheckOpen(true);
+    } else {
+      updateKeepInPools(false);
+    }
+  }, [setCheckOpen, keepInPools, updateKeepInPools]);
+
+  const handleRefresh = useCallback(() => {
+    setRefreshTrigger();
+  }, [setRefreshTrigger]);
+
+  const handleCheckConfirm = useCallback(() => {
+    updateKeepInPools(true);
+    setCheckOpen(false);
+  }, [updateKeepInPools, setCheckOpen]);
+
   return (
     <Box>
-      {balanceNumber !== 0 && unavailableBalanceKeys.length !== balanceNumber ? (
-        <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
-          <Box>
-            {__balances.map((e, index) => (
-              <Balances
-                index={index}
-                key={e.canisterId.toString()}
-                reclaim={e}
-                onReclaimSuccess={handleClaimSuccess}
-                fontSize={fontSize}
-                margin={margin}
-              />
-            ))}
-          </Box>
-
-          <Flex gap="0 4px" sx={{ cursor: "pointer", width: "fit-content" }} onClick={handleViewAll}>
-            <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px" }}>
-              <Trans>View All</Trans>
-            </Typography>
-            <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
-          </Flex>
+      <Flex align="center" justify="space-between" sx={{ cursor: "pointer" }} onClick={handleCollapse}>
+        <Flex align="center" gap="0 3px">
+          <Typography>
+            <Trans>
+              Your {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool Balances
+            </Trans>
+          </Typography>
+          <Tooltip
+            tips={t`Pre-depositing tokens into the swap pool lets you initiate swap anytime, reducing the risk of sandwich attacks by bots. You can keep swapped tokens in the pool for future use. This process removes deposit wait times and may lower transfer fees. You can manage your balance anytime, with options to deposit or withdraw as needed.`}
+          />
         </Flex>
-      ) : (
-        <ReclaimLink fontSize={fontSize} />
-      )}
+
+        <ChevronDown
+          size={16}
+          style={{
+            transform: open ? "rotate(180deg)" : "rotate(0)",
+            transition: "all 300ms",
+          }}
+        />
+      </Flex>
+
+      <Collapse in={open}>
+        <Flex justify="space-between" align="center" sx={{ margin: "18px 0 0 0" }}>
+          <Flex
+            sx={{ width: "fit-content", cursor: "pointer", userSelect: "none" }}
+            gap="0 4px"
+            onClick={handleToggleCheck}
+            align="center"
+          >
+            <Checkbox size="small" onChange={handleCheckChange} checked={keepInPools} />
+
+            <Typography>
+              <Trans>Keep your swapped tokens in Swap Pool</Trans>
+            </Typography>
+          </Flex>
+          <RotateCcw size={14} style={{ cursor: "pointer" }} onClick={handleRefresh} />
+        </Flex>
+
+        <Box sx={{ background: theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
+          <Box className={`${classes.wrapper} border`}>
+            <Flex justify="space-between">
+              <Typography>
+                <Trans>
+                  {token0?.symbol ?? "--"} Amount:{" "}
+                  {token0TotalAmount && token0
+                    ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
+                    : "--"}
+                </Trans>
+              </Typography>
+              <Flex gap="0 16px">
+                <DepositButton pool={selectedPool} token={token0} onDepositSuccess={handleRefresh} />
+                <WithdrawButton
+                  pool={selectedPool}
+                  token={token0}
+                  balances={balances}
+                  onReclaimSuccess={handleRefresh}
+                />
+              </Flex>
+            </Flex>
+          </Box>
+          <Box className={classes.wrapper}>
+            <Flex justify="space-between">
+              <Typography>
+                {token1?.symbol ?? "--"} Amount:{" "}
+                {token1TotalAmount && token1
+                  ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
+                  : "--"}
+              </Typography>
+              <Flex gap="0 16px">
+                <DepositButton pool={selectedPool} token={token1} onDepositSuccess={handleRefresh} />
+                <WithdrawButton
+                  pool={selectedPool}
+                  token={token1}
+                  balances={balances}
+                  onReclaimSuccess={handleRefresh}
+                />
+              </Flex>
+            </Flex>
+          </Box>
+        </Box>
+
+        <Flex gap="0 4px" sx={{ cursor: "pointer", margin: "12px 0 0 0" }} onClick={handleViewAll} justify="center">
+          <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px" }}>
+            <Trans>View All</Trans>
+          </Typography>
+          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
+        </Flex>
+      </Collapse>
+
+      <KeepTokenInPoolsConfirmModal
+        open={checkOpen}
+        onCancel={() => setCheckOpen(false)}
+        onConfirm={handleCheckConfirm}
+      />
     </Box>
   );
 }

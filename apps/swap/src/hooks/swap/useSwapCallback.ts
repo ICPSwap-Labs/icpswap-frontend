@@ -3,7 +3,7 @@ import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
-import { useSlippageManager } from "store/swap/cache/hooks";
+import { useSlippageManager, useSwapKeepTokenInPools } from "store/swap/cache/hooks";
 import { useUpdateSwapOutAmount, getSwapOutAmount } from "store/swap/hooks";
 import { slippageToPercent } from "constants/index";
 import { swap } from "hooks/swap/v3Calls";
@@ -36,39 +36,45 @@ export function useInitialSwapSteps() {
   const updateStep = useStepContentManager();
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
+  const keepTokenInPools = useSwapKeepTokenInPools();
 
   const handleReclaim = () => {
     history.push("/swap/reclaim");
     closeAllSteps();
   };
 
-  return useCallback(({ trade, key, retry }: InitialSwapStepsArgs) => {
-    if (!trade) return undefined;
+  return useCallback(
+    ({ trade, key, retry }: InitialSwapStepsArgs) => {
+      if (!trade) return undefined;
 
-    const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
-    const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const pool = trade.route.pools[0];
-    const token0 = pool.token0;
-    const token1 = pool.token1;
-    const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
-    const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+      const pool = trade.route.pools[0];
+      const token0 = pool.token0;
+      const token1 = pool.token1;
+      const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+      const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
 
-    const content = getSwapStep({
-      inputCurrency,
-      outputCurrency,
-      amount0,
-      amount1,
-      key: key.toString(),
-      retry,
-      handleReclaim,
-    });
+      const content = getSwapStep({
+        inputCurrency,
+        outputCurrency,
+        amount0,
+        amount1,
+        key: key.toString(),
+        retry,
+        handleReclaim,
+        keepTokenInPools,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t`Swap Details`,
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t`Swap Details`,
+        description: t`You can swap directly without depositing, because you have sufficient balance in the Swap pool.`,
+      });
+    },
+    [keepTokenInPools],
+  );
 }
 
 export interface SwapCallsCallbackArgs {
@@ -85,6 +91,7 @@ export function useSwapCalls() {
 
   const [allowedSlippage] = useSlippageManager("swap");
   const slippageTolerance = slippageToPercent(allowedSlippage);
+  const keepTokenInPools = useSwapKeepTokenInPools();
 
   const approve = useSwapApprove();
   const deposit = useSwapDeposit();
@@ -143,8 +150,15 @@ export function useSwapCalls() {
                 : actualSwapAmount
               : undefined;
 
+            const transferAmount = userInputAmount
+              ? new BigNumber(userInputAmount)
+                  .minus(subAccountTokenBalance)
+                  .minus(swapInTokenUnusedBalance.toString())
+                  .toString()
+              : null;
+
             const step0 = async () => {
-              if (!userInputAmount) return false;
+              if (!userInputAmount || !transferAmount) return false;
 
               // Skip transfer if unused token balance is greater than or equal to actual swap amount
               if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount)) {
@@ -157,7 +171,7 @@ export function useSwapCalls() {
                   return true;
                 }
 
-                return await transfer(tokenInputOfPool, userInputAmount, poolId);
+                return await transfer(tokenInputOfPool, transferAmount, poolId);
               }
 
               return await approve({
@@ -169,16 +183,19 @@ export function useSwapCalls() {
             };
 
             const step1 = async () => {
-              if (!userInputAmount) return false;
+              if (!userInputAmount || !transferAmount) return false;
+
+              const depositAllTokens = subAccountTokenBalance.isGreaterThan(userInputAmount);
+              const depositAmount = depositAllTokens ? subAccountTokenBalance.toString() : transferAmount;
 
               // Skip transfer if unused token balance is greater than or equal to actual swap amount
-              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount)) {
+              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount) && !depositAllTokens) {
                 return true;
               }
 
               return await deposit({
                 token: tokenInputOfPool,
-                amount: userInputAmount,
+                amount: depositAmount,
                 poolId,
                 openExternalTip: ({ message }: ExternalTipArgs) => {
                   openExternalTip({ message, tipKey: stepKey, poolId });
@@ -246,8 +263,12 @@ export function useSwapCalls() {
 
               const swapOk = status === ResultStatus.OK;
 
-              if (swapOk) {
+              if (swapOk && !keepTokenInPools) {
                 withdraw_step();
+              }
+
+              if (swapOk && keepTokenInPools) {
+                refresh();
               }
 
               return swapOk;
@@ -258,14 +279,18 @@ export function useSwapCalls() {
               return true;
             };
 
-            calls = [step0, step1, step2, step3];
+            if (keepTokenInPools) {
+              calls = [step0, step1, step2];
+            } else {
+              calls = [step0, step1, step2, step3];
+            }
           }
         }
       }
 
       return calls;
     },
-    [principal, slippageTolerance, allowedSlippage],
+    [principal, slippageTolerance, allowedSlippage, keepTokenInPools],
   );
 }
 

@@ -19,9 +19,9 @@ import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
-import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
+// import { useAccountPrincipal } from "store/auth/hooks";
+// import { SubAccount } from "@dfinity/ledger-icp";
+// import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
@@ -48,10 +48,9 @@ export function SwapWrapper({
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [impactChecked, setImpactChecked] = useState(false);
-  const [balanceRefreshTrigger, setBalanceRefreshTrigger] = useState(0);
+  // const [balanceRefreshTrigger, setBalanceRefreshTrigger] = useState(0);
 
   const [isExpertMode] = useExpertModeManager();
-  const principal = useAccountPrincipal();
   const history = useHistory();
   const { setSelectedPool, refreshTrigger, setRefreshTrigger, usdValueChange } = useContext(SwapContext);
 
@@ -75,7 +74,9 @@ export function SwapWrapper({
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-  } = useSwapInfo({ refresh: refreshTrigger | balanceRefreshTrigger });
+    swapTokenUnusedBalance,
+    subAccountTokenBalance,
+  } = useSwapInfo({ refresh: refreshTrigger });
 
   // For swap pro
   useEffect(() => {
@@ -85,26 +86,20 @@ export function SwapWrapper({
   }, [tradePoolId, outputCurrency, inputCurrency]);
 
   // Auto refresh token balance 5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setBalanceRefreshTrigger(balanceRefreshTrigger + 1);
-    }, 5000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setBalanceRefreshTrigger(balanceRefreshTrigger + 1);
+  //   }, 5000);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [setBalanceRefreshTrigger, balanceRefreshTrigger]);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, [setBalanceRefreshTrigger, balanceRefreshTrigger]);
 
   const isLoadingRoute = swapState === TradeState.LOADING;
   const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
   const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
   const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
-
-  const inputTokenAddress = inputCurrency?.address;
-  const tradePool = trade?.route.pools[0];
-  const sub = useMemo(() => {
-    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
-  }, [principal]);
 
   const inputCurrencyInterfacePrice = useUSDPrice(inputCurrency);
   const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
@@ -161,18 +156,6 @@ export function SwapWrapper({
       onUserInput(SWAP_FIELD.OUTPUT, value);
     }
   };
-
-  const { result: subAccountTokenBalance } = useTokenBalance({
-    canisterId: inputTokenAddress,
-    address: tradePoolId,
-    sub,
-    refresh: refreshTrigger,
-  });
-  const { result: unusedBalance } = useUserUnusedBalance(tradePoolId, principal, refreshTrigger);
-  const swapTokenUnusedBalance = useMemo(() => {
-    if (!tradePool || !unusedBalance || !inputCurrency) return undefined;
-    return tradePool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
-  }, [tradePool, inputCurrency, unusedBalance]);
 
   const needImpactConfirm = useMemo(() => {
     if (!usdValueChange) return false;

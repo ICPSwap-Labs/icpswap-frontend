@@ -5,7 +5,7 @@ import { Trans, t } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { toFormat } from "utils/index";
 import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { StepDetails, StepContent } from "components/Steps/types";
+import { StepContents, StepContent } from "types/step";
 import type { PCMMetadata } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 
@@ -34,8 +34,8 @@ export function getAddLiquidityStepDetails({
 }: GetAddLiquidityStepDetails) {
   if (!position) return [];
 
-  const {token0} = position.pool;
-  const {token1} = position.pool;
+  const { token0 } = position.pool;
+  const { token1 } = position.pool;
 
   const symbol0 = position.pool.token0.symbol;
   const symbol1 = position.pool.token1.symbol;
@@ -178,5 +178,5 @@ export function getAddLiquidityStepDetails({
 
   return originSteps
     .filter((step) => step !== undefined)
-    .map((step, index) => ({ ...step, step: index }) as StepDetails);
+    .map((step, index) => ({ ...step, step: index }) as StepContents);
 }
