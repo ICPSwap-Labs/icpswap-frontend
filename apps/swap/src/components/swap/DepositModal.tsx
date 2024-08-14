@@ -105,6 +105,14 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     setLoading(false);
   }, [openTip, closeTip, depositCallback, amount, onClose, token, pool, loading, setLoading, onDepositSuccess]);
 
+  const error = useMemo(() => {
+    if (amount === "") return t`Please enter the amount`;
+    if (!balance || !token || !maxDepositAmount) return t`Confirm`;
+    if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t`Insufficient balance`;
+
+    return undefined;
+  }, [amount, balance, token, maxDepositAmount]);
+
   return (
     <SwapModal open={open} title={t`Deposit`} onClose={onClose}>
       <NumberTextField
@@ -118,6 +126,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
         value={amount}
         onChange={handleAmountChange}
       />
+
       <Flex sx={{ margin: "12px 0 0 0" }} gap="0 4px">
         <Typography>
           Balance: {balance && token ? parseTokenAmount(balance, token.decimals).toFormat() : "--"}
@@ -129,8 +138,15 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
         <PercentageSlider value={percent} onChange={handleSliderChange} />
       </Box>
 
-      <Button size="large" variant="contained" fullWidth sx={{ margin: "20px 0 0 0 " }} onClick={handleDeposit}>
-        Confirm
+      <Button
+        size="large"
+        variant="contained"
+        fullWidth
+        sx={{ margin: "20px 0 0 0 " }}
+        onClick={handleDeposit}
+        disabled={error !== undefined}
+      >
+        {error ?? t`Confirm`}
       </Button>
     </SwapModal>
   );
