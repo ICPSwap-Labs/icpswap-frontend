@@ -64,6 +64,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           },
         },
         containedPrimary: {
+          padding: "11px 22px",
           background: globalButtonBackground,
         },
         containedSecondary: {
@@ -252,9 +253,8 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         root: {
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
           borderRadius: `${theme.borderRadius}px`,
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor:
-              theme.customization.mode === "dark" ? theme.colors.textPrimary + 28 : theme.colors.lightGray200,
+          "& fieldset": {
+            borderColor: theme.colors.darkTextSecondary,
           },
           "&:hover $notchedOutline": {
             borderColor: theme.colors.primaryLight,
@@ -279,6 +279,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           paddingLeft: 4,
         },
         notchedOutline: {
+          borderColor: theme.colors.secondary,
           borderRadius: `${theme.borderRadius}px`,
         },
       },

@@ -3,7 +3,7 @@ import { Position } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { StepDetails } from "components/Steps/types";
+import { StepContents } from "types/step";
 import { TextButton } from "components/index";
 
 export interface IncreaseLiquidityStepsProps {
@@ -128,5 +128,5 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       ],
       errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
     },
-  ] as StepDetails[];
+  ] as StepContents[];
 }

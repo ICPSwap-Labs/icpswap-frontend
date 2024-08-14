@@ -78,6 +78,7 @@ export interface ModalProps {
   dialogProps?: any;
   type?: string;
   background?: string;
+  contentPadding?: string;
   [key: string]: any;
 }
 
@@ -99,6 +100,7 @@ export default function Modal({
   type,
   background,
   dialogProps,
+  contentPadding,
 }: ModalProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
@@ -123,8 +125,7 @@ export default function Modal({
         },
         "& .MuiDialogContent-root": {
           position: "relative",
-          padding: "24px",
-          paddingTop: "24px!important",
+          padding: contentPadding ? `${contentPadding}!important` : "24px!important",
           ...(matchDownMD ? { padding: "12px", paddingTop: "12px!important" } : {}),
         },
         ...{

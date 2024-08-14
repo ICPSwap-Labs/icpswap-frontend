@@ -21,3 +21,5 @@ export const updateUserPositionPools = createAction<string[]>("swapCache/updateU
 export const updateUserMultipleApprove = createAction<number>("swapCache/updateUserMultipleApprove");
 
 export const updateSwapProAutoRefresh = createAction<boolean>("global/updateSwapProAutoRefresh");
+
+export const updateKeepTokenInPools = createAction<boolean>("swapCache/updateKeepTokenInPools");

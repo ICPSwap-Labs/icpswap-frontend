@@ -2,7 +2,7 @@ import StepDetails from "components/Steps/Details";
 import { useOpenedSteps, useStepDetails } from "store/steps/hooks";
 
 function StepItem({ step }: { step: string }) {
-  const { activeStep, errorStep, content, onClose, title } = useStepDetails(step);
+  const { activeStep, errorStep, content, onClose, title, description } = useStepDetails(step);
 
   return (
     <StepDetails
@@ -12,6 +12,7 @@ function StepItem({ step }: { step: string }) {
       errorStep={errorStep}
       content={content}
       onClose={onClose}
+      description={description}
     />
   );
 }
