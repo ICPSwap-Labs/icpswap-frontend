@@ -188,7 +188,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
         <Flex align="center" gap="0 3px">
           <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
             <Trans>
-              Your {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool Balances
+              Your Balance in {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool
             </Trans>
           </Typography>
           <Tooltip
@@ -215,7 +215,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
           >
             <Checkbox size="small" onChange={handleCheckChange} checked={keepInPools} />
 
-            <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
+            <Typography sx={{ fontSize: "12px" }}>
               <Trans>Keep your swapped tokens in Swap Pool</Trans>
             </Typography>
           </Flex>

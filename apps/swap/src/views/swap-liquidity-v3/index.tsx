@@ -8,6 +8,7 @@ import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { SwapWrapper, Reclaim, SwapContext } from "components/swap/index";
 import { Pool } from "@icpswap/swap-sdk";
+import { useConnectorStateConnected } from "store/auth/hooks";
 
 import SwapTransactions from "./swap/Transactions";
 
@@ -43,6 +44,8 @@ export function SwapMain() {
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  const isConnected = useConnectorStateConnected();
 
   const ActiveComponent = () => {
     const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
@@ -136,16 +139,18 @@ export function SwapMain() {
               <Box mt={3}>{ActiveComponent()}</Box>
             </MainCard>
 
-            <Box
-              mt="8px"
-              sx={{
-                background: "#111936",
-                padding: "16px",
-                borderRadius: "12px",
-              }}
-            >
-              <Reclaim />
-            </Box>
+            {isConnected ? (
+              <Box
+                mt="8px"
+                sx={{
+                  background: "#111936",
+                  padding: "16px",
+                  borderRadius: "12px",
+                }}
+              >
+                <Reclaim />
+              </Box>
+            ) : null}
           </Grid>
         </Grid>
       </SwapUIWrapper>

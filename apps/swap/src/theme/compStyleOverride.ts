@@ -239,11 +239,17 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     },
     MuiInputBase: {
       styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            fontSize: "16px",
+          },
+        },
         input: {
           color: theme.textDark,
           "&::placeholder": {
             color: theme.textSecondary,
             fontSize: "0.875rem",
+            fontWeight: 400,
           },
         },
       },
