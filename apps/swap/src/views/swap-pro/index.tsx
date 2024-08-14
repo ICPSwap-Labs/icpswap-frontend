@@ -132,6 +132,7 @@ export default function SwapPro() {
                 }}
               >
                 <Swap />
+
                 {matchDownSM ? (
                   <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 ) : null}

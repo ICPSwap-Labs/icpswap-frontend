@@ -19,16 +19,13 @@ import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
-// import { useAccountPrincipal } from "store/auth/hooks";
-// import { SubAccount } from "@dfinity/ledger-icp";
-// import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
 import SwapConfirm from "components/swap/SwapConfirm";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { Reclaim, SwapContext } from "components/swap/index";
+import { SwapContext } from "components/swap/index";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -346,8 +343,6 @@ export function SwapWrapper({
           </Flex>
         </Box>
       ) : null}
-
-      {ui === "pro" ? <Reclaim fontSize="12px" margin="9px" /> : null}
 
       {confirmModalShow && trade && (
         <SwapConfirm
