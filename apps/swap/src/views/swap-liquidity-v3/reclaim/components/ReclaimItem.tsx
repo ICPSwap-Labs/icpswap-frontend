@@ -61,7 +61,7 @@ export function ReclaimItem({
     setLoading(true);
 
     const loadingKey = openTip(
-      `Reclaim your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
+      `Withdraw your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
       MessageTypes.loading,
     );
 
@@ -149,7 +149,10 @@ export function ReclaimItem({
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
           {unavailableClaim ? (
-            <Tooltip tips="Claim amount is below the transaction fee, making it unclaimable." iconSize="24px" />
+            <Tooltip
+              tips="The withdrawal amount is less than the transfer fee, so the withdrawal cannot be processed."
+              iconSize="24px"
+            />
           ) : null}
 
           <Button
@@ -160,7 +163,7 @@ export function ReclaimItem({
             onClick={handleClaim}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            <Trans>Reclaim</Trans>
+            <Trans>Withdraw</Trans>
           </Button>
         </Box>
       </Box>

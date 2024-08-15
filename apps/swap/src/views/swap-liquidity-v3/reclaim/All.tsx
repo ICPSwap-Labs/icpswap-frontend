@@ -149,7 +149,7 @@ export function ReclaimAll() {
             />
 
             <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide unclaimable tokens.</Trans>
+              <Trans>Hide non-withdrawable tokens.</Trans>
             </Typography>
           </Box>
         </Box>

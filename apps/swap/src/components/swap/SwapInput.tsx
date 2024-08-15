@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => {
     input: {
       "& input": {
         textAlign: "right",
-        fontSize: "20px",
+        fontSize: "20px!important",
         fontWeight: 700,
       },
       "& input::placeholder": {

@@ -22,7 +22,7 @@ export function useReclaim() {
     let reclaimSuccessfully = false;
 
     const loadingKey = openTip(
-      `Reclaim your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
+      `Withdraw your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
       MessageTypes.loading,
     );
 

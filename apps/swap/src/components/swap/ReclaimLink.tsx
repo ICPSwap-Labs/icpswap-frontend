@@ -70,6 +70,7 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
 
   const __balances = useMemo(() => {
     if (!token || balances.length === 0) return [];
+
     return balances
       .reduce(
         (prev, curr) => {
@@ -100,12 +101,27 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
     setLoading(false);
   }, [__balances, loading, token, pool]);
 
+  const disabled = useMemo(() => {
+    if (!__balances || __balances.length === 0 || !token) return true;
+    return false;
+  }, [__balances, token]);
+
   return (
     <Flex gap="0 8px">
-      <TextButton onClick={handleWithdraw} sx={{ fontSize }}>
+      <TextButton onClick={handleWithdraw} sx={{ fontSize }} disabled={disabled}>
         Withdraw
       </TextButton>
       {loading ? <CircularProgress size={fontSize === "14px" ? 14 : 12} sx={{ color: "#ffffff" }} /> : null}
+    </Flex>
+  );
+}
+
+function DotLoading() {
+  return (
+    <Flex gap="0 5px">
+      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
+      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
+      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
     </Flex>
   );
 }
@@ -131,7 +147,6 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
 
   const { token0, token1 } = useMemo(() => {
     if (!selectedPool) return {};
-
     return { token0: selectedPool.token0, token1: selectedPool.token1 };
   }, [selectedPool]);
 
@@ -186,14 +201,20 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
     <Box>
       <Flex align="center" justify="space-between" sx={{ cursor: "pointer" }} onClick={handleCollapse}>
         <Flex align="center" gap="0 3px">
-          <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
-            <Trans>
-              Your Balance in {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool
-            </Trans>
-          </Typography>
-          <Tooltip
-            tips={t`Pre-depositing tokens into the swap pool lets you initiate swap anytime, reducing the risk of sandwich attacks by bots. You can keep swapped tokens in the pool for future use. This process removes deposit wait times and may lower transfer fees. You can manage your balance anytime, with options to deposit or withdraw as needed.`}
-          />
+          {!selectedPool ? (
+            <DotLoading />
+          ) : (
+            <>
+              <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
+                <Trans>
+                  Your Balance in {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool
+                </Trans>
+              </Typography>
+              <Tooltip
+                tips={t`Pre-depositing tokens into the swap pool lets you initiate swap anytime, reducing the risk of sandwich attacks by bots. You can keep swapped tokens in the pool for future use. This process removes deposit wait times and may lower transfer fees. You can manage your balance anytime, with options to deposit or withdraw as needed.`}
+              />
+            </>
+          )}
         </Flex>
 
         <ChevronDown
@@ -225,14 +246,18 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
         <Box sx={{ background: theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
           <Box className={`${classes.wrapper} ${ui} border`}>
             <Flex justify="space-between">
-              <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
-                <Trans>
-                  {token0?.symbol ?? "--"} Amount:{" "}
-                  {token0TotalAmount && token0
-                    ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
-                    : "--"}
-                </Trans>
-              </Typography>
+              {selectedPool ? (
+                <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
+                  <Trans>
+                    {token0?.symbol ?? "--"} Amount:{" "}
+                    {token0TotalAmount && token0
+                      ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
+                      : "--"}
+                  </Trans>
+                </Typography>
+              ) : (
+                <DotLoading />
+              )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
                 <DepositButton
                   pool={selectedPool}
@@ -252,12 +277,16 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
           </Box>
           <Box className={`${classes.wrapper} ${ui}`}>
             <Flex justify="space-between">
-              <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
-                {token1?.symbol ?? "--"} Amount:{" "}
-                {token1TotalAmount && token1
-                  ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
-                  : "--"}
-              </Typography>
+              {selectedPool ? (
+                <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
+                  {token1?.symbol ?? "--"} Amount:{" "}
+                  {token1TotalAmount && token1
+                    ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
+                    : "--"}
+                </Typography>
+              ) : (
+                <DotLoading />
+              )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
                 <DepositButton
                   pool={selectedPool}

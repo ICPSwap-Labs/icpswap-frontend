@@ -73,6 +73,8 @@ export default {
   darkTextFourth: "#29314F",
   darkTextFifth: "#212946",
 
+  disable: "#4F5A84",
+
   lightPrimaryMain: "#8672FF",
 
   lightTextTitle: "#212121",
