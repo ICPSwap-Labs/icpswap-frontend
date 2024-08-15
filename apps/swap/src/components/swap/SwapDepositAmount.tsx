@@ -19,7 +19,7 @@ const useStyle = makeStyles((theme: Theme) => {
     input: {
       "& input": {
         textAlign: "right",
-        fontSize: "20px",
+        fontSize: "20px!important",
         fontWeight: 700,
         // color: theme.textPrimary,
         [theme.breakpoints.down("sm")]: {

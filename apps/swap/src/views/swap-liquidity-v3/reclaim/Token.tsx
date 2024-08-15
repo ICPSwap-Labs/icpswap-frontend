@@ -139,8 +139,9 @@ export function ReclaimWithToken() {
               <Tooltip
                 tips={
                   <Trans>
-                    Selecting ICP may require querying all trading pairs associated with it, leading to longer wait
-                    times. This process could take approximately 2-3 minutes. Please be patient.
+                    Select the token you want to reclaim. If you select ICP, please note that selecting it may involve
+                    querying all associated trading pairs, resulting in longer wait times. This process may take around
+                    2-3 minutes. Thank you for your patience.
                   </Trans>
                 }
               />
@@ -174,7 +175,7 @@ export function ReclaimWithToken() {
             />
 
             <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide unclaimable tokens.</Trans>
+              <Trans>Hide non-withdrawable tokens.</Trans>
             </Typography>
           </Box>
         </Box>
@@ -184,8 +185,9 @@ export function ReclaimWithToken() {
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography lineHeight="18px">
             <Trans>
-              Selecting ICP may require querying all trading pairs associated with it, leading to longer wait times.
-              This process could take approximately 2-3 minutes. Please be patient.
+              Select the token you want to reclaim. If you select ICP, please note that selecting it may involve
+              querying all associated trading pairs, resulting in longer wait times. This process may take around 2-3
+              minutes. Thank you for your patience.
             </Trans>
           </Typography>
         </Box>

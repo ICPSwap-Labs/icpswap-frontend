@@ -103,9 +103,7 @@ export function SwapWrapper({
 
   useEffect(() => {
     const pool = routes[0]?.pools[0];
-    if (pool && setSelectedPool) {
-      setSelectedPool(pool);
-    }
+    setSelectedPool(pool);
   }, [routes, setSelectedPool]);
 
   const parsedAmounts = useMemo(

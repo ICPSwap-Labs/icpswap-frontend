@@ -159,7 +159,7 @@ export function ReclaimWithPair() {
             />
 
             <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide unclaimable tokens.</Trans>
+              <Trans>Hide non-withdrawable tokens.</Trans>
             </Typography>
           </Box>
         </Box>
@@ -168,7 +168,7 @@ export function ReclaimWithPair() {
       {!isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography>
-            <Trans>Select the trading pair you wish to reclaim.</Trans>
+            <Trans>Select the trading pair you wish to withdraw.</Trans>
           </Typography>
         </Box>
       ) : null}
