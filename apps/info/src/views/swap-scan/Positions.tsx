@@ -247,7 +247,7 @@ function Positions({ address }: PositionsProps) {
     <>
       <Box sx={{ display: "flex", gap: "0 16px", alignItems: "center", margin: "10px 0 0 0" }}>
         <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-          <SelectPair value={pair} onPairChange={handlePairChange} />
+          <SelectPair value={pair} onPairChange={handlePairChange} search />
         </Box>
         {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
       </Box>
