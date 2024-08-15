@@ -18,10 +18,10 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
 
   const handleClick = () => {
     const to = poolId
-      ? `/swap/reclaim?type=pair&poolId=${poolId}`
+      ? `/swap/withdraw?type=pair&poolId=${poolId}`
       : tokenId
-      ? `/swap/reclaim?type=token&tokenId=${tokenId}`
-      : "/swap/reclaim";
+      ? `/swap/withdraw?type=token&tokenId=${tokenId}`
+      : "/swap/withdraw";
 
     history.push(to);
     if (onReclaimClick) onReclaimClick();

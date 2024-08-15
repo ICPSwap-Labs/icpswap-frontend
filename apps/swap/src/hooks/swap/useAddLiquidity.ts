@@ -278,7 +278,7 @@ function useInitialAddLiquiditySteps() {
   const closeAllSteps = useCloseAllSteps();
 
   const handleReclaim = () => {
-    history.push("/swap/reclaim");
+    history.push("/swap/withdraw");
     closeAllSteps();
   };
 

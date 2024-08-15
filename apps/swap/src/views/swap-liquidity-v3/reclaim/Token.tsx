@@ -91,15 +91,15 @@ export function ReclaimWithToken() {
 
   const handleTokenChange = (tokenId: string) => {
     if (tokenId) {
-      history.push(`/swap/reclaim?type=token&tokenId=${tokenId}`);
+      history.push(`/swap/withdraw?type=token&tokenId=${tokenId}`);
     } else {
-      history.push(`/swap/reclaim?type=token`);
+      history.push(`/swap/withdraw?type=token`);
     }
   };
 
   useEffect(() => {
     if (!tokenId) {
-      history.push(`/swap/reclaim?type=token&tokenId=${ICP.address}`);
+      history.push(`/swap/withdraw?type=token&tokenId=${ICP.address}`);
     }
   }, [tokenId]);
 
@@ -139,7 +139,7 @@ export function ReclaimWithToken() {
               <Tooltip
                 tips={
                   <Trans>
-                    Select the token you want to reclaim. If you select ICP, please note that selecting it may involve
+                    Select the token you want to withdraw. If you select ICP, please note that selecting it may involve
                     querying all associated trading pairs, resulting in longer wait times. This process may take around
                     2-3 minutes. Thank you for your patience.
                   </Trans>
@@ -185,7 +185,7 @@ export function ReclaimWithToken() {
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography lineHeight="18px">
             <Trans>
-              Select the token you want to reclaim. If you select ICP, please note that selecting it may involve
+              Select the token you want to withdraw. If you select ICP, please note that selecting it may involve
               querying all associated trading pairs, resulting in longer wait times. This process may take around 2-3
               minutes. Thank you for your patience.
             </Trans>

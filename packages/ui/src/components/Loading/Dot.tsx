@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
   const translateLength = 5;

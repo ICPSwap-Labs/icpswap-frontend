@@ -86,7 +86,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
   "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
 
-  "/swap/reclaim": SwapReclaim,
+  "/swap/withdraw": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,
   "/swap/pcm/reclaim": PCMReclaim,

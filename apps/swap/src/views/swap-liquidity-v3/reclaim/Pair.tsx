@@ -91,9 +91,9 @@ export function ReclaimWithPair() {
 
   const handlePairChange = (poolId: string | undefined) => {
     if (poolId) {
-      history.push(`/swap/reclaim?type=pair&poolId=${poolId}`);
+      history.push(`/swap/withdraw?type=pair&poolId=${poolId}`);
     } else {
-      history.push(`/swap/reclaim?type=pair`);
+      history.push(`/swap/withdraw?type=pair`);
     }
   };
 

@@ -39,7 +39,7 @@ export function useInitialSwapSteps() {
   const keepTokenInPools = useSwapKeepTokenInPools();
 
   const handleReclaim = () => {
-    history.push("/swap/reclaim");
+    history.push("/swap/withdraw");
     closeAllSteps();
   };
 
