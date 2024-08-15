@@ -2,7 +2,7 @@ import { Typography, Box, BoxProps } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useTheme } from "@mui/styles";
 import { useCallback, useMemo } from "react";
-import { type FarmTvl } from "@icpswap/types";
+import type { FarmTvl } from "@icpswap/types";
 import {
   useIntervalUserFarmInfo,
   useFarmApr,
@@ -51,6 +51,8 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
   const { result: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
   const { result: deposits } = useFarmUserPositions(farmId, principal?.toString());
 
+  const state = useFarmState(userFarmInfo);
+
   const positionIds = useMemo(() => {
     return deposits?.map((position) => position.positionId) ?? [];
   }, [deposits]);
@@ -65,6 +67,8 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs || !poolMetadata) return undefined;
+    // No need positions if farm is finished or closed
+    if (!state || state === "FINISHED" || state === "CLOSED") return undefined;
 
     if (farmInitArgs.priceInsideLimit === false) {
       return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
@@ -76,7 +80,7 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
         const outOfRange = poolMetadata.tick < position.tickLower || poolMetadata.tick >= position.tickUpper;
         return !outOfRange;
       });
-  }, [userAllPositions, farmInitArgs, poolMetadata]);
+  }, [userAllPositions, farmInitArgs, poolMetadata, state]);
 
   const allAvailablePositionValue = useUserPositionsValue({
     metadata: poolMetadata,
@@ -92,8 +96,6 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
   });
 
   const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
-
-  const state = useFarmState(userFarmInfo);
 
   const apr = useFarmApr({
     farmTvlValue,
@@ -158,24 +160,32 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
       </Flex>
 
       <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
-        </Typography>
-        {userAvailablePositions ? (
-          <Typography
-            fontSize={12}
-            fontWeight={500}
-            color="text.primary"
-            sx={{
-              width: "fit-content",
-              background: theme.palette.background.level4,
-              padding: "2px 8px",
-              borderRadius: "44px",
-            }}
-          >
-            {userAvailablePositions.length}
+        {state === "FINISHED" || state === "CLOSED" ? (
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            --
           </Typography>
-        ) : null}
+        ) : (
+          <>
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
+            </Typography>
+            {userAvailablePositions ? (
+              <Typography
+                fontSize={12}
+                fontWeight={500}
+                color="text.primary"
+                sx={{
+                  width: "fit-content",
+                  background: theme.palette.background.level4,
+                  padding: "2px 8px",
+                  borderRadius: "44px",
+                }}
+              >
+                {userAvailablePositions.length}
+              </Typography>
+            ) : null}
+          </>
+        )}
       </Flex>
 
       {filter ? (
