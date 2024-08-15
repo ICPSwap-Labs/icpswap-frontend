@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Box, Typography, useTheme, Collapse, Checkbox, makeStyles, CircularProgress } from "components/Mui";
-import { Tooltip } from "components/index";
+import { Tooltip, DotLoading } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
 import { SwapContext } from "components/swap/index";
@@ -116,16 +116,6 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
   );
 }
 
-function DotLoading() {
-  return (
-    <Flex gap="0 5px">
-      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
-      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
-      <Box sx={{ width: "4px", height: "4px", background: "#ffffff", borderRadius: "50%" }} />
-    </Flex>
-  );
-}
-
 export interface ReclaimLinkProps {
   fontSize?: "12px" | "14px";
   margin?: string;
@@ -167,7 +157,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
   }, [token0, token1, balances]);
 
   const handleViewAll = useCallback(() => {
-    history.push("/swap/reclaim");
+    history.push("/swap/withdraw");
   }, [history]);
 
   const handleCollapse = useCallback(() => {
@@ -202,7 +192,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
       <Flex align="center" justify="space-between" sx={{ cursor: "pointer" }} onClick={handleCollapse}>
         <Flex align="center" gap="0 3px">
           {!selectedPool ? (
-            <DotLoading />
+            <DotLoading loading size="3px" color="#ffffff" />
           ) : (
             <>
               <Typography sx={{ fontSize: ui === "pro" ? "12px" : "14px" }}>
@@ -256,7 +246,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
                   </Trans>
                 </Typography>
               ) : (
-                <DotLoading />
+                <DotLoading loading size="3px" color="#ffffff" />
               )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
                 <DepositButton
@@ -285,7 +275,7 @@ export function Reclaim({ fontSize = "14px", ui }: ReclaimLinkProps) {
                     : "--"}
                 </Typography>
               ) : (
-                <DotLoading />
+                <DotLoading loading size="3px" color="#ffffff" />
               )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
                 <DepositButton

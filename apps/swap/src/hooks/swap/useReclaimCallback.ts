@@ -7,7 +7,7 @@ export function useReclaimCallback() {
   const closeAllSteps = useCloseAllSteps();
 
   return useCallback(() => {
-    history.push("/swap/reclaim");
+    history.push("/swap/withdraw");
     closeAllSteps();
   }, [history, closeAllSteps]);
 }

@@ -13,17 +13,17 @@ import { ReclaimAll } from "./All";
 const Tabs = [
   {
     key: "pair",
-    path: "/swap/reclaim?type=pair",
+    path: "/swap/withdraw?type=pair",
     value: "Trading Pair",
   },
   {
     key: "token",
-    path: "/swap/reclaim?type=token",
+    path: "/swap/withdraw?type=token",
     value: "Token",
   },
   {
     key: "all",
-    path: "/swap/reclaim?type=all",
+    path: "/swap/withdraw?type=all",
     value: "All",
   },
 ];
@@ -34,7 +34,7 @@ export default function SwapReclaim() {
 
   useEffect(() => {
     if (location.search === "") {
-      history.push("/swap/reclaim?type=pair");
+      history.push("/swap/withdraw?type=pair");
     }
   }, [location, history]);
 
