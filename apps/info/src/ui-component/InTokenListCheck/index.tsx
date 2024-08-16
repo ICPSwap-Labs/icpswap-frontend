@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
-import { Box, Checkbox, Typography, Tooltip } from "@mui/material";
-import { HelpCircle } from "react-feather";
+import { Box, Checkbox, Typography } from "@mui/material";
+import { Tooltip } from "@icpswap/ui";
 
 export interface InTokenListCheckProps {
   onChange?: (checked: boolean) => void;
@@ -43,23 +43,9 @@ export default function InTokenListCheck({ checked: _checked, onChange }: InToke
       </Box>
 
       <Tooltip
-        enterTouchDelay={0}
-        PopperProps={{
-          // @ts-ignore
-          sx: {
-            "& .MuiTooltip-tooltip": {
-              background: "#ffffff",
-              borderRadius: "8px",
-              padding: "12px 16px",
-              "& .MuiTooltip-arrow": {
-                color: "#ffffff",
-              },
-            },
-          },
-        }}
-        title={
+        tips={
           <Box>
-            <Typography color="text.400" fontSize="14px">
+            <Typography color="#111936" fontSize="12px">
               <Trans>
                 In the decentralized world, anyone can create a token and add liquidity, using any name and logo. This
                 includes the creation of fake versions of existing tokens and tokens that claim to represent projects
@@ -67,7 +53,7 @@ export default function InTokenListCheck({ checked: _checked, onChange }: InToke
               </Trans>
             </Typography>
 
-            <Typography color="text.400" mt="10px" fontSize="14px">
+            <Typography color="#111936" mt="10px" fontSize="12px">
               <Trans>
                 Such risks are inherent in decentralized. If you decide to invest in these tokens, there is a
                 possibility of losing your assets. It is essential to "Do Your Own Research" (DYOR) before making any
@@ -76,10 +62,7 @@ export default function InTokenListCheck({ checked: _checked, onChange }: InToke
             </Typography>
           </Box>
         }
-        arrow
-      >
-        <HelpCircle size={14} style={{ cursor: "pointer" }} />
-      </Tooltip>
+      />
     </Box>
   );
 }
