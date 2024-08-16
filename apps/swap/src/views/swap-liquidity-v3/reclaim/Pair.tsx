@@ -129,7 +129,7 @@ export function ReclaimWithPair() {
               <Trans>Select a pair</Trans>
             </Typography>
 
-            {isMobile ? <Tooltip tips={<Trans>Select the trading pair you wish to reclaim.</Trans>} /> : null}
+            {isMobile ? <Tooltip tips={<Trans>Select the trading pair you wish to withdraw.</Trans>} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
