@@ -23,14 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 enum TabPanelValue {
   TRANSACTIONS = "transactions",
   POSITIONS = "positions",
-  RECLAIM = "reclaims",
+  RECLAIM = "pool-balances",
   VALUATION = "valuation",
 }
 
 const TabPanels = [
   { label: t`Transactions`, value: TabPanelValue.TRANSACTIONS, link: "/swap-scan/transactions" },
   { label: t`Positions`, value: TabPanelValue.POSITIONS, link: "/swap-scan/positions" },
-  { label: t`Reclaim`, value: TabPanelValue.RECLAIM, link: "/swap-scan/reclaims" },
+  { label: t`Users’ Pool Balances`, value: TabPanelValue.RECLAIM, link: "/swap-scan/pool-balances" },
   { label: t`Wallet Valuation`, value: TabPanelValue.VALUATION, link: "/swap-scan/valuation" },
 ];
 

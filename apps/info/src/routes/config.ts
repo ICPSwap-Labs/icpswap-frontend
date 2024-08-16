@@ -66,6 +66,6 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/token-claim/transactions/:id": TokenClaimTransactions,
   "/swap-scan/transactions": SwapScanTransactions,
   "/swap-scan/positions": SwapScanPositions,
-  "/swap-scan/reclaims": SwapScanReclaims,
+  "/swap-scan/pool-balances": SwapScanReclaims,
   "/swap-scan/valuation": SwapScanValuation,
 };
