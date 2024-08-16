@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trans } from "@lingui/macro";
 import { Box, Checkbox, Typography, Tooltip } from "@mui/material";
-import { QuestionMark } from "assets/icons/QuestionMark";
+import { HelpCircle } from "react-feather";
 
 export interface InTokenListCheckProps {
   onChange?: (checked: boolean) => void;
@@ -78,9 +78,7 @@ export default function InTokenListCheck({ checked: _checked, onChange }: InToke
         }
         arrow
       >
-        <Box sx={{ width: "16px", height: "16px", cursor: "pointer" }}>
-          <QuestionMark />
-        </Box>
+        <HelpCircle size={14} style={{ cursor: "pointer" }} />
       </Tooltip>
     </Box>
   );

@@ -12,7 +12,7 @@ import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import SwapAnalyticLoading from "ui-component/analytic/Loading";
 import { useHistory } from "react-router-dom";
-import { QuestionMark } from "assets/icons/QuestionMark";
+import { HelpCircle } from "react-feather";
 import { useChartData } from "hooks/info/useSwapChartData";
 import ChartDateButton from "ui-component/ChartDateButton";
 import { VolumeWindow } from "types/analytic";
@@ -188,7 +188,7 @@ export default function SwapOverview() {
                         arrow
                       >
                         <Box sx={{ width: "16px", height: "16px", cursor: "pointer" }}>
-                          <QuestionMark />
+                          <HelpCircle size={14} />
                         </Box>
                       </Tooltip>
                     </Box>
@@ -279,7 +279,7 @@ export default function SwapOverview() {
                         arrow
                       >
                         <Box sx={{ width: "16px", height: "16px", cursor: "pointer" }}>
-                          <QuestionMark />
+                          <HelpCircle size={14} />
                         </Box>
                       </Tooltip>
                     </Box>

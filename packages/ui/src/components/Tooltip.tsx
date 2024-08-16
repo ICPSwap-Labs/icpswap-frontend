@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Typography, Tooltip as MuiToolTip } from "@mui/material";
-import { AlertCircle } from "react-feather";
+import { HelpCircle } from "react-feather";
 
 export interface TooltipProps {
   background?: string;
@@ -46,7 +46,7 @@ export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconCol
       }
       arrow
     >
-      <AlertCircle
+      <HelpCircle
         size={iconSize}
         color={iconColor}
         onClick={handleClick}
