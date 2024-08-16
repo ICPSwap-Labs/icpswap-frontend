@@ -44,7 +44,7 @@ export default function SwapReclaim() {
         <Breadcrumbs
           prevLink="/swap"
           prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>Withdraw Your Tokens</Trans>}
+          currentLabel={<Trans>View Your Pool Balances</Trans>}
         />
       </Box>
 
