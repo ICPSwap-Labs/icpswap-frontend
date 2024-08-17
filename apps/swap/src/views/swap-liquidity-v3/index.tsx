@@ -145,7 +145,7 @@ export function SwapMain() {
                 sx={{
                   background: "#111936",
                   padding: "16px",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                 }}
               >
                 <Reclaim />
