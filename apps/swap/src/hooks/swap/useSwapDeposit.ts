@@ -23,7 +23,7 @@ export function useSwapDepositTokenBalance() {
     async ({ amount, token, pool }: SwapDepositTokenBalanceArgs) => {
       if (!principal) return undefined;
 
-      const __amount = formatTokenAmount(amount, token.decimals).toString();
+      const __amount = formatTokenAmount(amount, token.decimals).toFixed(0);
 
       const poolId = pool.id;
 
