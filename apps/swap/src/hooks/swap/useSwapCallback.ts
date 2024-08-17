@@ -152,7 +152,7 @@ export function useSwapCalls() {
 
             const transferAmount = userInputAmount
               ? new BigNumber(userInputAmount)
-                  .minus(subAccountTokenBalance)
+                  .minus(subAccountTokenBalance.toString())
                   .minus(swapInTokenUnusedBalance.toString())
                   .toString()
               : null;

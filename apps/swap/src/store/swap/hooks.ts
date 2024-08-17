@@ -125,6 +125,8 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   const poolId = useMemo(() => Trade?.tradePoolId, [Trade]);
 
+  // DIP20 not support subaccount balance
+  // So useTokenBalance is 0 by default if standard is DIP20
   const { result: subAccountTokenBalance } = useTokenBalance({
     canisterId: inputCurrency?.address,
     address: poolId,

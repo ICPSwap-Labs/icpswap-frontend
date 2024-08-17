@@ -87,6 +87,11 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
 
   public async balance({ canisterId, params }: BalanceRequest) {
     if (params.user.principal) {
+      // DIP20 not support subaccount balance
+      if (params.subaccount) {
+        return resultFormat<bigint>(BigInt(0));
+      }
+
       let balance = BigInt(0);
 
       try {
