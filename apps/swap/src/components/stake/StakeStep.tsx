@@ -65,7 +65,7 @@ export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps
         data && Number(data) < rewardToken.transFee
           ? t`The amount of withdrawal is less than the transfer fee`
           : undefined,
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
   ];
 

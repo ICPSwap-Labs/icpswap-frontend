@@ -89,7 +89,7 @@ export function getAddLiquidityStepDetails({
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: isUseTransfer(token1) ? `Transfer ${symbol1}` : `Approve ${symbol1}`,
@@ -114,7 +114,7 @@ export function getAddLiquidityStepDetails({
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: `Add liquidity ${token0.symbol} and ${token1.symbol}`,
@@ -130,7 +130,7 @@ export function getAddLiquidityStepDetails({
           <Trans>Retry</Trans>
         </TextButton>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
   ];
 
@@ -170,7 +170,7 @@ export function getAddLiquidityStepDetails({
               </TextButton>
             </>,
           ],
-          errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
         });
       }
     }
