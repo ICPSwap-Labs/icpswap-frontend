@@ -91,7 +91,10 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
 
     setLoading(true);
 
-    const key = openTip(t`Deposit ${amount} ${token.symbol}`, MessageTypes.loading);
+    const key = openTip(
+      t`Deposit ${new BigNumber(amount).toFormat(token.decimals)} ${token.symbol}`,
+      MessageTypes.loading,
+    );
 
     const result = await depositCallback({ amount, token, pool });
 
