@@ -20,6 +20,7 @@ import TransactionsUpdater from "store/transactions/updater";
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DisableIframe } from "components/DisableIframe";
 
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
@@ -51,38 +52,40 @@ export default function App() {
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <StyledEngineProvider injectFirst>
-          <Web3Provider>
-            <Route component={GoogleAnalytics} />
-            <TransactionsUpdater />
-            <ThemeProvider theme={theme(customization)}>
-              <SnackbarProvider maxSnack={100}>
-                <GlobalContext.Provider value={{ AllPools }}>
-                  <ActorInitial>
-                    <CssBaseline />
-                    <NavigationScroll>
-                      {isInitialStandardLoading ? (
-                        <Loader />
-                      ) : (
-                        <ErrorBoundary>
-                          <Routes />
-                        </ErrorBoundary>
-                      )}
-                      <Snackbar />
-                      <FullscreenLoading />
-                      <GlobalSteps />
-                      {isConnected ? <RiskStatement /> : null}
-                      {walletConnectorOpen ? <WalletConnector /> : null}
-                    </NavigationScroll>
-                  </ActorInitial>
-                </GlobalContext.Provider>
-              </SnackbarProvider>
-            </ThemeProvider>
-          </Web3Provider>
-        </StyledEngineProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <DisableIframe>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <StyledEngineProvider injectFirst>
+            <Web3Provider>
+              <Route component={GoogleAnalytics} />
+              <TransactionsUpdater />
+              <ThemeProvider theme={theme(customization)}>
+                <SnackbarProvider maxSnack={100}>
+                  <GlobalContext.Provider value={{ AllPools }}>
+                    <ActorInitial>
+                      <CssBaseline />
+                      <NavigationScroll>
+                        {isInitialStandardLoading ? (
+                          <Loader />
+                        ) : (
+                          <ErrorBoundary>
+                            <Routes />
+                          </ErrorBoundary>
+                        )}
+                        <Snackbar />
+                        <FullscreenLoading />
+                        <GlobalSteps />
+                        {isConnected ? <RiskStatement /> : null}
+                        {walletConnectorOpen ? <WalletConnector /> : null}
+                      </NavigationScroll>
+                    </ActorInitial>
+                  </GlobalContext.Provider>
+                </SnackbarProvider>
+              </ThemeProvider>
+            </Web3Provider>
+          </StyledEngineProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </DisableIframe>
   );
 }
