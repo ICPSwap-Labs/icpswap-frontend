@@ -61,18 +61,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function CanisterHeader({
-  details,
-  cycles,
-}: {
-  details: NFTCanisterInfo;
+export interface NFTCanisterHeaderProps {
+  details: NFTCanisterInfo | undefined;
   cycles: number | bigint;
   count: number | bigint;
-}) {
+}
+
+export default function CanisterHeader({ details, cycles }: NFTCanisterHeaderProps) {
   const classes = useStyles();
 
   const handleToMarketplace = () => {
-    if (!details.cid) return;
+    if (!details?.cid) return;
     mockALinkAndOpen(`${APP_LINK}/marketplace/NFT/${details.cid}`, "NFT_Marketplace_load");
   };
 
@@ -80,7 +79,7 @@ export default function CanisterHeader({
     <>
       <Box className={classes.wrapper}>
         <Avatar
-          src={details.image}
+          src={details?.image}
           sx={{
             width: "85px",
             height: "85px",
@@ -90,22 +89,24 @@ export default function CanisterHeader({
         </Avatar>
 
         <Box className={classes.content}>
-          <Typography className={classes.name}>{details.name}</Typography>
+          <Typography className={classes.name}>{details?.name}</Typography>
 
           <Box mt="20px">
             <Grid sx={{ width: "100%" }} container alignItems="center">
               <Typography color="text.primary">
                 <Trans>Canister ID:</Trans>
               </Typography>
-              <Grid item xs ml="5px">
-                <ExplorerLink label={details.cid} value={details.cid} />
-              </Grid>
+              {details ? (
+                <Grid item xs ml="5px">
+                  <ExplorerLink label={details.cid} value={details.cid} />
+                </Grid>
+              ) : null}
             </Grid>
           </Box>
 
           <Box mt={1}>
             <Typography color="text.tertiary" className={classes.description}>
-              {details.introduction}
+              {details?.introduction}
             </Typography>
           </Box>
 

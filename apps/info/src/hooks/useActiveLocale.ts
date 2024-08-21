@@ -1,7 +1,6 @@
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "constants/locales";
 import { useMemo } from "react";
 import { useUserLocale } from "store/global/hooks";
-// import useParsedQueryString from "./useParsedQueryString";
 
 function parseLocale(maybeSupportedLocale: string) {
   const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase();
@@ -22,19 +21,6 @@ export function navigatorLocale() {
 
   return parseLocale(language);
 }
-
-// export function useSetLocaleFromUrl() {
-//   const parsed = useParsedQueryString();
-//   const [userLocale, setUserLocale] = useUserLocaleManager();
-
-//   useEffect(() => {
-//     const urlLocale =
-//       typeof parsed.lng === "string" ? parseLocale(parsed.lng) : undefined;
-//     if (urlLocale && urlLocale !== userLocale) {
-//       setUserLocale(urlLocale);
-//     }
-//   }, [parsed.lng, setUserLocale, userLocale]);
-// }
 
 export function useActiveLocale() {
   const userLocale = useUserLocale();

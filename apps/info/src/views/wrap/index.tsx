@@ -149,17 +149,19 @@ export default function Wrap() {
               {content.length === 0 && !loading ? <NoData /> : null}
 
               {loading ? (
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
+                <Box sx={{ padding: "24px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
+                </Box>
               ) : null}
 
               {Number(totalElements ?? 0) > 0 ? (

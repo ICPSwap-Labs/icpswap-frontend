@@ -1,5 +1,5 @@
 import { Typography, Box } from "@mui/material";
-import { Wrapper, Breadcrumbs, TabPanel, SwapTooltip } from "components/index";
+import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -13,17 +13,17 @@ import { ReclaimAll } from "./All";
 const Tabs = [
   {
     key: "pair",
-    path: "/swap/reclaim?type=pair",
+    path: "/swap/withdraw?type=pair",
     value: "Trading Pair",
   },
   {
     key: "token",
-    path: "/swap/reclaim?type=token",
+    path: "/swap/withdraw?type=token",
     value: "Token",
   },
   {
     key: "all",
-    path: "/swap/reclaim?type=all",
+    path: "/swap/withdraw?type=all",
     value: "All",
   },
 ];
@@ -34,7 +34,7 @@ export default function SwapReclaim() {
 
   useEffect(() => {
     if (location.search === "") {
-      history.push("/swap/reclaim?type=pair");
+      history.push("/swap/withdraw?type=pair");
     }
   }, [location, history]);
 
@@ -44,7 +44,7 @@ export default function SwapReclaim() {
         <Breadcrumbs
           prevLink="/swap"
           prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>Reclaim Your Tokens</Trans>}
+          currentLabel={<Trans>View Your Pool Balances</Trans>}
         />
       </Box>
 
@@ -52,29 +52,31 @@ export default function SwapReclaim() {
         <Box sx={{ width: "800px" }}>
           <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
-              <Trans>Reclaim Your Tokens</Trans>
+              <Trans>Check Your Balances in Swap Pool</Trans>
             </Typography>
 
             {isMobile ? (
-              <SwapTooltip
+              <Tooltip
                 maxWidth="calc(100% - 60px)"
                 tips={
                   <>
                     <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
                       <Trans>
-                        For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens,
-                        we've implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues
-                        during swaps, liquidity withdrawals/additions, fee claims, or transaction failures due to
-                        significant slippage. It allows you to retrieve and reclaim your tokens when issues occur!
+                        You can check your balance in various Swap pools by selecting a trading pair or a specific
+                        Token, and you can withdraw at any time. If a Swap doesn’t meet your slippage criteria or if
+                        there’s an issue with the pool during withdrawal, your Tokens will automatically be returned to
+                        your balance. This allows you to initiate a new Swap without needing to redeposit or withdraw
+                        directly to your wallet. Additionally, you can keep your swapped Tokens in the Swap pool for
+                        future transactions.
                       </Trans>
                     </Typography>
 
-                    <Typography sx={{ margin: "20px 0 0 0", color: "#111936", fontSize: "12px", lineHeight: "18px" }}>
+                    {/* <Typography sx={{ margin: "20px 0 0 0", color: "#111936", fontSize: "12px", lineHeight: "18px" }}>
                       <Trans>
                         When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
                         excessive slippage, significant token price fluctuations, and so on.
                       </Trans>
-                    </Typography>
+                    </Typography> */}
                   </>
                 }
               />
@@ -85,17 +87,11 @@ export default function SwapReclaim() {
             <>
               <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
                 <Trans>
-                  For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your tokens, we've
-                  implemented the 'Reclaim Your Tokens feature. You can use this feature in case of issues during swaps,
-                  liquidity withdrawals/additions, fee claims, or transaction failures due to significant slippage. It
-                  allows you to retrieve and reclaim your tokens when issues occur!
-                </Trans>
-              </Typography>
-
-              <Typography sx={{ margin: "20px 0 0 0", lineHeight: "18px" }}>
-                <Trans>
-                  When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
-                  excessive slippage, significant token price fluctuations, and so on.
+                  You can check your balance in various Swap pools by selecting a trading pair or a specific Token, and
+                  you can withdraw at any time. If a Swap doesn’t meet your slippage criteria or if there’s an issue
+                  with the pool during withdrawal, your Tokens will automatically be returned to your balance. This
+                  allows you to initiate a new Swap without needing to redeposit or withdraw directly to your wallet.
+                  Additionally, you can keep your swapped Tokens in the Swap pool for future transactions.
                 </Trans>
               </Typography>
             </>

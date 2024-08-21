@@ -9,7 +9,7 @@ export function Farm() {
 
   return (
     <Card>
-      <Title title="Farms" to="/farm" />
+      <Title title="Farm" to="/farm" />
 
       <Row>
         <Item

@@ -16,6 +16,7 @@ export default function MaxButton(props: TypographyProps) {
         backgroundColor: theme.colors.secondaryMain,
         color: "#ffffff",
         fontSize: "12px",
+        lineHeight: "1.15rem",
         ...(props.sx ?? {}),
       }}
     >

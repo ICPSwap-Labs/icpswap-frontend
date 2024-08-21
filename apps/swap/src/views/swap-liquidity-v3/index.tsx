@@ -6,8 +6,9 @@ import SwapSettingIcon from "components/swap/SettingIcon";
 import SwapUIWrapper from "components/swap/SwapUIWrapper";
 import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import { SwapWrapper, Reclaim, swapContext } from "components/swap/index";
+import { SwapWrapper, Reclaim, SwapContext } from "components/swap/index";
 import { Pool } from "@icpswap/swap-sdk";
+import { useConnectorStateConnected } from "store/auth/hooks";
 
 import SwapTransactions from "./swap/Transactions";
 
@@ -39,9 +40,12 @@ const SWITCH_BUTTONS = [
 export function SwapMain() {
   const classes = useStyles();
   const [activeSwitch, setActiveSwitch] = useState(1);
+  const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  const isConnected = useConnectorStateConnected();
 
   const ActiveComponent = () => {
     const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
@@ -69,7 +73,7 @@ export function SwapMain() {
   }, [refreshTrigger, setRefreshTrigger]);
 
   return (
-    <swapContext.Provider
+    <SwapContext.Provider
       value={{
         selectedPool,
         setSelectedPool,
@@ -78,6 +82,8 @@ export function SwapMain() {
         removeUnavailableBalanceKey: handleRemoveKeys,
         refreshTrigger,
         setRefreshTrigger: handleUpdateRefreshTrigger,
+        usdValueChange,
+        setUSDValueChange,
       }}
     >
       <SwapUIWrapper>
@@ -133,20 +139,22 @@ export function SwapMain() {
               <Box mt={3}>{ActiveComponent()}</Box>
             </MainCard>
 
-            <Box
-              mt="8px"
-              sx={{
-                background: "#111936",
-                padding: "16px",
-                borderRadius: "12px",
-              }}
-            >
-              <Reclaim />
-            </Box>
+            {isConnected ? (
+              <Box
+                mt="8px"
+                sx={{
+                  background: "#111936",
+                  padding: "16px",
+                  borderRadius: "16px",
+                }}
+              >
+                <Reclaim />
+              </Box>
+            ) : null}
           </Grid>
         </Grid>
       </SwapUIWrapper>
-    </swapContext.Provider>
+    </SwapContext.Provider>
   );
 }
 

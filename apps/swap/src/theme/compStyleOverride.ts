@@ -65,6 +65,9 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         },
         containedPrimary: {
           background: globalButtonBackground,
+          "&.MuiButton-sizeLarge": {
+            padding: "11px 22px",
+          },
         },
         containedSecondary: {
           background: isDark ? theme.colors.darkLevel4 : "#EFEFFF",
@@ -238,11 +241,17 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     },
     MuiInputBase: {
       styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            fontSize: "16px",
+          },
+        },
         input: {
           color: theme.textDark,
           "&::placeholder": {
             color: theme.textSecondary,
             fontSize: "0.875rem",
+            fontWeight: 400,
           },
         },
       },
@@ -252,9 +261,8 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         root: {
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
           borderRadius: `${theme.borderRadius}px`,
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor:
-              theme.customization.mode === "dark" ? theme.colors.textPrimary + 28 : theme.colors.lightGray200,
+          "& fieldset": {
+            borderColor: theme.colors.darkTextSecondary,
           },
           "&:hover $notchedOutline": {
             borderColor: theme.colors.primaryLight,
@@ -279,6 +287,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           paddingLeft: 4,
         },
         notchedOutline: {
+          borderColor: theme.colors.secondary,
           borderRadius: `${theme.borderRadius}px`,
         },
       },

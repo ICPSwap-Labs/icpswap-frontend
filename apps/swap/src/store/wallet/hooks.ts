@@ -2,12 +2,14 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
+import { SortBalanceEnum, WalletSortType } from "types/index";
 import {
   updateTaggedTokens,
   deleteTaggedTokens,
-  updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
+  updateSortBalance,
 } from "./actions";
 
 export function toHexString(byteArray: number[]) {
@@ -51,23 +53,6 @@ export function useTaggedTokenManager() {
   return useMemo(
     () => ({ taggedTokens, updateTaggedTokens, deleteTaggedTokens }),
     [taggedTokens, updateTaggedTokens, deleteTaggedTokens],
-  );
-}
-
-export function useUpdateHideSmallBalanceManager(): [boolean, (hide: boolean) => void] {
-  const dispatch = useAppDispatch();
-  const hideSmallBalance = useAppSelector((state) => state.wallet.hideSmallBalance);
-
-  const updateHideSmallBalanceCallback = useCallback(
-    (hideSmallBalance) => {
-      dispatch(updateHideSmallBalance(hideSmallBalance));
-    },
-    [dispatch],
-  );
-
-  return useMemo(
-    () => [hideSmallBalance, updateHideSmallBalanceCallback],
-    [hideSmallBalance, updateHideSmallBalanceCallback],
   );
 }
 
@@ -141,4 +126,40 @@ export function useUserTxs(principal: string | undefined) {
 
     return undefined;
   }, [principal, states]);
+}
+
+export function useWalletSortType() {
+  return useAppSelector((state) => state.wallet.sort);
+}
+
+export function useWalletSortManager() {
+  const sortType = useWalletSortType();
+  const dispatch = useAppDispatch();
+
+  const update = useCallback(
+    (val: WalletSortType) => {
+      dispatch(updateWalletSortType(val));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => ({ sort: sortType, updateWalletSortType: update }), [update, sortType]);
+}
+
+export function useSortBalanceValue() {
+  return useAppSelector((state) => state.wallet.sortBalance);
+}
+
+export function useSortBalanceManager() {
+  const sortBalance = useSortBalanceValue();
+  const dispatch = useAppDispatch();
+
+  const update = useCallback(
+    (val: SortBalanceEnum) => {
+      dispatch(updateSortBalance(val));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => ({ sortBalance, updateSortBalance: update }), [update, sortBalance]);
 }

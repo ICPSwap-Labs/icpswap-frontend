@@ -1,4 +1,4 @@
-import { Typography, Box, useTheme } from "@mui/material";
+import { Typography, Box, useTheme } from "components/Mui";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { enumToString } from "@icpswap/utils";
@@ -10,8 +10,8 @@ import { DAYJS_FORMAT, INFO_URL } from "constants/index";
 import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { mockALinkAndOpen } from "utils/index";
-import { t } from "@lingui/macro";
 import { ArrowUpRight } from "react-feather";
+import { SwapTransactionPriceTip } from "@icpswap/ui";
 
 export const RECORD_TYPE: { [key: string]: string } = {
   swap: "Swap",
@@ -66,10 +66,18 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
             {dayjs(Number(transaction.timestamp * BigInt(1000))).format(DAYJS_FORMAT)}
           </Typography>
         </Box>
-        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "4px 0 0 0" }}>
-          {enumToString(transaction.action) === "swap"
-            ? t`${amount0} ${symbol0} to ${amount1} ${symbol1}`
-            : `${amount0} ${symbol0} and ${amount1} ${symbol1}`}
+        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
+          {enumToString(transaction.action) === "swap" ? (
+            <>
+              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to {amount1}{" "}
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+            </>
+          ) : (
+            <>
+              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and {amount1}{" "}
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+            </>
+          )}
         </Typography>
       </Box>
     </Box>
@@ -80,8 +88,8 @@ export default function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme() as Theme;
 
-  const { loading, result } = useUserSwapTransactions(principal, 0, 500);
-  const list = !principal ? undefined : result?.content;
+  const { loading, result } = useUserSwapTransactions(principal, 0, 100);
+  const transactions = !principal ? undefined : result?.content;
 
   const handleViewMore = () => {
     mockALinkAndOpen(`${INFO_URL}/swap-scan/transactions?principal=${principal}`, "SWAP_TRANSACTIONS_VIEW_MORE");
@@ -90,8 +98,8 @@ export default function SwapTransactions() {
   return (
     <>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
-        {list?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
-        {(list?.length === 0 || !list) && !loading ? <NoData /> : null}
+        {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
+        {(transactions?.length === 0 || !transactions) && !loading ? <NoData /> : null}
 
         {loading ? (
           <Box sx={{ padding: "0 24px" }}>
@@ -112,7 +120,7 @@ export default function SwapTransactions() {
         ) : null}
       </Box>
 
-      {!loading && !!list ? (
+      {!loading && !!transactions ? (
         <Typography
           sx={{
             display: "flex",

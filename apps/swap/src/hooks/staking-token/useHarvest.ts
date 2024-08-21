@@ -43,12 +43,15 @@ function useCalls() {
   const harvest = useHarvestCallback();
   const withdraw = useRewardTokenWithdrawCall();
 
-  return useCallback(({ token, key, poolId }: UnstakeCallsArgs) => {
-    const call0 = async () => await harvest({ token, poolId, key });
-    const call1 = async () => await withdraw({ token, poolId, key });
+  return useCallback(
+    ({ token, key, poolId }: UnstakeCallsArgs) => {
+      const call0 = async () => await harvest({ token, poolId, key });
+      const call1 = async () => await withdraw({ token, poolId, key });
 
-    return [call0, call1];
-  }, []);
+      return [call0, call1];
+    },
+    [withdraw, harvest],
+  );
 }
 
 export interface UnstakeCallArgs {

@@ -8,6 +8,7 @@ const useStyle = makeStyles((theme: Theme) => {
   return {
     root: {
       color: "#54C081",
+      padding: "8px 0",
       "& .MuiSlider-rail": {
         height: "4px",
         backgroundColor: "#4F5A84",
@@ -27,7 +28,7 @@ const useStyle = makeStyles((theme: Theme) => {
       },
       "& .MuiSlider-mark": {
         width: "2px",
-        height: "12px",
+        height: "8px",
         backgroundColor: theme.palette.background.level4,
         top: "50%",
         transform: "translate(0, -50%)",

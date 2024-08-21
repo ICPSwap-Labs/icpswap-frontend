@@ -4,7 +4,6 @@ import { Typography, Box, Button, CircularProgress, useMediaQuery } from "@mui/m
 import { makeStyles, useTheme } from "@mui/styles";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
-import Tooltip from "components/Tooltip";
 import { numberToString } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
@@ -12,7 +11,7 @@ import { t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { isElement } from "react-is";
 import { useSwapFeeTip } from "hooks/swap/useSwapFeeTip";
-import { Flex, TokenImage } from "components/index";
+import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 
 import FormattedPriceImpact from "./FormattedPriceImpact";

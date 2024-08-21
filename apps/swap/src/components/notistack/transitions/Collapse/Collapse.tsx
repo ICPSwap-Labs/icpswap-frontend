@@ -119,6 +119,7 @@ const Collapse = React.forwardRef<HTMLDivElement | null, TransitionProps>((props
   };
 
   return (
+    // @ts-ignore
     <TransitionComponent
       // @ts-ignore
       in={inProp}

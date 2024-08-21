@@ -16,6 +16,7 @@ import {
   updateUserPositionPools,
   updateUserMultipleApprove,
   updateSwapProAutoRefresh,
+  updateKeepTokenInPools,
 } from "./actions";
 
 export function useIsExpertMode() {
@@ -231,4 +232,22 @@ export function useSwapProAutoRefreshManager(): [boolean, (autoRefresh: boolean)
   );
 
   return useMemo(() => [swapProAutoRefresh, callback], [swapProAutoRefresh, callback]);
+}
+
+export function useSwapKeepTokenInPools() {
+  return useAppSelector((state) => state.swapCache.keepTokenInPools);
+}
+
+export function useSwapKeepTokenInPoolsManager(): [boolean, (autoRefresh: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const keepTokenInPools = useSwapKeepTokenInPools();
+
+  const callback = useCallback(
+    (keepTokenInPools: boolean) => {
+      dispatch(updateKeepTokenInPools(keepTokenInPools));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [keepTokenInPools, callback], [keepTokenInPools, callback]);
 }

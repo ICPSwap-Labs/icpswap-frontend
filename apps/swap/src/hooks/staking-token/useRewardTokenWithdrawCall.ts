@@ -16,8 +16,8 @@ export function useRewardTokenWithdrawCall() {
   return useCallback(async ({ token, poolId, key }: UseWithdrawCallbackArgs) => {
     const harvestAmount = getStepData<bigint | undefined>(key);
 
-    // Skip withdraw is amount is 0 or undefined
-    if (harvestAmount === undefined || harvestAmount === BigInt(0)) {
+    // Skip withdraw is amount is 0 or undefined or amount is less than transfer fee
+    if (harvestAmount === undefined || harvestAmount === BigInt(0) || harvestAmount <= token.transFee) {
       return "skip";
     }
 

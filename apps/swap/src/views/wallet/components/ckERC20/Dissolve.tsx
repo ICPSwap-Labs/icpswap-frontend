@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Typography, InputAdornment } from "@mui/
 import { Trans, t } from "@lingui/macro";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
 import { parseTokenAmount, formatTokenAmount, toSignificant } from "@icpswap/utils";
 import { ResultStatus, Erc20MinterInfo } from "@icpswap/types";
@@ -15,6 +15,10 @@ import { useDissolveCkERC20 } from "hooks/ckERC20/index";
 import { ckETH } from "constants/ckETH";
 import { useChainKeyTransactionPrice } from "@icpswap/hooks";
 import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useActiveChain } from "hooks/web3/index";
+import { useBlockNumber } from "hooks/web3/useBlockNumber";
+import { useHistory } from "react-router-dom";
+import { ICP } from "@icpswap/tokens";
 
 import Logo from "./Logo";
 import Links from "./Links";
@@ -48,7 +52,10 @@ export default function DissolveCkERC20({
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
-  const { account, chainId } = useWeb3React();
+  const { account } = useWeb3React();
+  const chainId = useActiveChain();
+  const blockNumber = useBlockNumber();
+  const history = useHistory();
 
   useEffect(() => {
     if (account) {
@@ -101,6 +108,10 @@ export default function DissolveCkERC20({
     if (!tokenBalance || !token) return false;
     return !tokenBalance.isLessThan(token.transFee);
   }, [tokenBalance, token]);
+
+  const handleBuy = useCallback(() => {
+    history.push(`/swap?input=${ICP.address}&output=${ckETH.address}`);
+  }, [ICP, ckETH, history]);
 
   const error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
@@ -165,6 +176,7 @@ export default function DissolveCkERC20({
                     maxLength: 255,
                   }}
                   placeholder={t`Enter the address`}
+                  multiline
                 />
               </Box>
 
@@ -282,10 +294,16 @@ export default function DissolveCkERC20({
                 &nbsp;{ckETH?.symbol ?? "--"}
               </Typography>
             </Typography>
+
+            <Box sx={{ margin: "10px 0 0 0" }}>
+              <Button variant="outlined" onClick={handleBuy}>
+                <Trans>Buy ckETH</Trans>
+              </Button>
+            </Box>
           </Box>
         </LogosWrapper>
       }
-      transactions={<DissolveRecords refresh={refreshTrigger} token={token} />}
+      transactions={<DissolveRecords refresh={refreshTrigger} token={token} blockNumber={blockNumber} />}
     />
   );
 }

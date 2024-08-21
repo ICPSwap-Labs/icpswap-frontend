@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
-import { NoData, LoadingRow, SelectToken, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, SelectToken, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -91,15 +91,15 @@ export function ReclaimWithToken() {
 
   const handleTokenChange = (tokenId: string) => {
     if (tokenId) {
-      history.push(`/swap/reclaim?type=token&tokenId=${tokenId}`);
+      history.push(`/swap/withdraw?type=token&tokenId=${tokenId}`);
     } else {
-      history.push(`/swap/reclaim?type=token`);
+      history.push(`/swap/withdraw?type=token`);
     }
   };
 
   useEffect(() => {
     if (!tokenId) {
-      history.push(`/swap/reclaim?type=token&tokenId=${ICP.address}`);
+      history.push(`/swap/withdraw?type=token&tokenId=${ICP.address}`);
     }
   }, [tokenId]);
 
@@ -136,11 +136,12 @@ export function ReclaimWithToken() {
             </Typography>
 
             {isMobile && tokenId === ICP.address ? (
-              <SwapTooltip
+              <Tooltip
                 tips={
                   <Trans>
-                    Selecting ICP may require querying all trading pairs associated with it, leading to longer wait
-                    times. This process could take approximately 2-3 minutes. Please be patient.
+                    Select the token you want to withdraw. If you select ICP, please note that selecting it may involve
+                    querying all associated trading pairs, resulting in longer wait times. This process may take around
+                    2-3 minutes. Thank you for your patience.
                   </Trans>
                 }
               />
@@ -174,7 +175,7 @@ export function ReclaimWithToken() {
             />
 
             <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide unclaimable tokens.</Trans>
+              <Trans>Hide non-withdrawable tokens.</Trans>
             </Typography>
           </Box>
         </Box>
@@ -184,8 +185,9 @@ export function ReclaimWithToken() {
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography lineHeight="18px">
             <Trans>
-              Selecting ICP may require querying all trading pairs associated with it, leading to longer wait times.
-              This process could take approximately 2-3 minutes. Please be patient.
+              Select the token you want to withdraw. If you select ICP, please note that selecting it may involve
+              querying all associated trading pairs, resulting in longer wait times. This process may take around 2-3
+              minutes. Thank you for your patience.
             </Trans>
           </Typography>
         </Box>

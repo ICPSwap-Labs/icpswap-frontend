@@ -18,10 +18,10 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
 
   const handleClick = () => {
     const to = poolId
-      ? `/swap/reclaim?type=pair&poolId=${poolId}`
+      ? `/swap/withdraw?type=pair&poolId=${poolId}`
       : tokenId
-      ? `/swap/reclaim?type=token&tokenId=${tokenId}`
-      : "/swap/reclaim";
+      ? `/swap/withdraw?type=token&tokenId=${tokenId}`
+      : "/swap/withdraw";
 
     history.push(to);
     if (onReclaimClick) onReclaimClick();
@@ -30,13 +30,14 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
 
   const msg = message?.includes("please withdraw your unused token") ? (
     <>
-      {message.replace("please withdraw your unused token", "")}.&nbsp; Please click&nbsp;
-      <TextButton onClick={handleClick}>Reclaim your tokens</TextButton> if they've transferred to the swap pool.
+      {message.replace("please withdraw your unused token", "")}.&nbsp; Please{" "}
+      <TextButton onClick={handleClick}>check your balance in the Swap Pool</TextButton> to see if tokens have been
+      transferred to the Swap Pool.
     </>
   ) : (
     <>
-      {message}.&nbsp; Please click <TextButton onClick={handleClick}>Reclaim your tokens</TextButton> if they've
-      transferred to the swap pool.
+      {message}.&nbsp; Please <TextButton onClick={handleClick}>check your balance in the Swap Pool</TextButton> to see
+      if tokens have been transferred to the Swap Pool.
     </>
   );
 

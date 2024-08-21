@@ -24,6 +24,9 @@ import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { Erc20MinterInfo } from "@icpswap/types";
+import { useSortBalanceManager } from "store/wallet/hooks";
+import { SortBalanceEnum } from "types/index";
+
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
 
@@ -121,18 +124,11 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
 const SWAP_BUTTON_EXCLUDE = [ICP.address, WRAPPED_ICP.address];
 
 export interface TokenListItemProps {
-  isHideSmallBalances: boolean;
-  searchValue: string;
   canisterId: string;
   chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export function TokenListItem({
-  canisterId,
-  isHideSmallBalances,
-  searchValue,
-  chainKeyMinterInfo,
-}: TokenListItemProps) {
+export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
   const classes = useStyles();
   const account = useAccount();
   const history = useHistory();
@@ -146,6 +142,7 @@ export function TokenListItem({
   const [receiveOpen, setReceiveOpen] = useState(false);
   const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
   const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
+  const { sortBalance } = useSortBalanceManager();
 
   const infoTokenAddress = useMemo(() => {
     if (canisterId === WRAPPED_ICP.address) return ICP.address;
@@ -285,18 +282,24 @@ export function TokenListItem({
   };
 
   const isHidden = useMemo(() => {
-    const hiddenBySmallBalance = isHideSmallBalances && !!tokenBalance && !tokenBalance?.isGreaterThan(0);
+    let hiddenBySmallBalance = false;
 
-    const hiddenBySearchValue = searchValue
-      ? !tokenInfo?.symbol
-        ? true
-        : !tokenInfo?.symbol.toLowerCase().includes(searchValue.toLowerCase())
-      : false;
+    if (tokenBalance && tokenInfo && tokenUSDPrice) {
+      const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
+
+      if (sortBalance === SortBalanceEnum.TEN) {
+        hiddenBySmallBalance = tokenUSDValue.isLessThan(10);
+      } else if (sortBalance === SortBalanceEnum.ONE) {
+        hiddenBySmallBalance = tokenUSDValue.isLessThan(1);
+      } else if (sortBalance === SortBalanceEnum.ZERO) {
+        hiddenBySmallBalance = tokenUSDValue.isEqualTo(0);
+      }
+    }
 
     if (NO_HIDDEN_TOKENS.includes(canisterId)) return false;
 
-    return hiddenBySmallBalance || hiddenBySearchValue;
-  }, [isHideSmallBalances, tokenBalance, canisterId, searchValue, tokenInfo]);
+    return hiddenBySmallBalance;
+  }, [sortBalance, tokenBalance, canisterId, tokenInfo, tokenUSDPrice]);
 
   const handleToSwap = () => {
     history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
@@ -436,18 +439,10 @@ export function TokenListItem({
 export interface TokenListProps {
   tokens: string[];
   loading?: boolean;
-  isHideSmallBalances: boolean;
-  searchValue: string;
   chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export default function TokenList({
-  tokens,
-  loading,
-  isHideSmallBalances,
-  searchValue,
-  chainKeyMinterInfo,
-}: TokenListProps) {
+export default function TokenList({ tokens, loading, chainKeyMinterInfo }: TokenListProps) {
   return (
     <Box
       sx={{
@@ -466,15 +461,7 @@ export default function TokenList({
       }}
     >
       {tokens.map((canisterId) => {
-        return (
-          <TokenListItem
-            key={canisterId}
-            canisterId={canisterId}
-            isHideSmallBalances={isHideSmallBalances}
-            searchValue={searchValue}
-            chainKeyMinterInfo={chainKeyMinterInfo}
-          />
-        );
+        return <TokenListItem key={canisterId} canisterId={canisterId} chainKeyMinterInfo={chainKeyMinterInfo} />;
       })}
 
       {tokens.length === 0 && !loading ? <NoData /> : null}

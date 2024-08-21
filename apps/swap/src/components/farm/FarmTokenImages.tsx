@@ -1,5 +1,5 @@
-import { Grid, Box } from "components/Mui";
-import { TokenImage } from "components/index";
+import { Box } from "components/Mui";
+import { Flex, TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
 
 export interface FarmTokenImagesProps {
@@ -18,24 +18,15 @@ export function FarmTokenImages({
   stakeTokenSize = "16px",
 }: FarmTokenImagesProps) {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        "& .poolImageBox": {
-          left: "calc(50% + 5px)",
-          bottom: 0,
-          position: "absolute",
-        },
-      }}
-    >
+    <Flex align="flex-end">
       <TokenImage size={rewardTokenSize} logo={rewardToken?.logo} tokenId={rewardToken?.address} />
 
-      <Grid container className="poolImageBox">
+      <Flex sx={{ position: "relative", left: "calc(-20% )" }}>
         <Box sx={{ display: "flex" }}>
           <TokenImage size={stakeTokenSize} logo={token0?.logo} tokenId={token0?.address} />
           <TokenImage size={stakeTokenSize} logo={token1?.logo} tokenId={token1?.address} />
         </Box>
-      </Grid>
-    </Box>
+      </Flex>
+    </Flex>
   );
 }

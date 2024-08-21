@@ -3,7 +3,7 @@ import { Position } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { StepDetails } from "components/Steps/types";
+import { StepContents } from "types/step";
 import { TextButton } from "components/index";
 
 export interface IncreaseLiquidityStepsProps {
@@ -83,7 +83,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: isToken1UseTransfer ? t`Transfer ${symbol1}` : t`Approve ${symbol1}`,
@@ -110,7 +110,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: t`Increase liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
@@ -126,7 +126,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
-  ] as StepDetails[];
+  ] as StepContents[];
 }

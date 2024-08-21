@@ -94,19 +94,21 @@ export default function TokenClaimTransactions() {
             {result?.content?.length === 0 && !loading ? <NoData /> : null}
 
             {loading ? (
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
+              <Box sx={{ padding: "16px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
             ) : null}
 
             {totalElements > 0 ? (

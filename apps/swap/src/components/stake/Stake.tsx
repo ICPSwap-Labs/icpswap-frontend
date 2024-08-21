@@ -11,12 +11,13 @@ import {
   formatTokenAmount,
 } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingPoolInfo } from "@icpswap/types";
+import { StakingPoolInfo, StakingState } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { useStakeCall } from "hooks/staking-token/useStake";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import PercentageSlider from "components/PercentageSlider/ui";
+import { useStakingPoolState } from "@icpswap/hooks";
 
 export interface StakeProps {
   poolId: string | undefined;
@@ -38,16 +39,15 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   const [openTip] = useTips();
   const getStakeCall = useStakeCall();
 
+  const state = useStakingPoolState(poolInfo);
+
   const handleMax = useCallback(() => {
     if (balance && stakeToken) {
-      if (!balance.isLessThan(stakeToken.transFee * 3)) {
-        const _balance = parseTokenAmount(balance, stakeToken.decimals);
-        const amount = parseTokenAmount(balance, stakeToken.decimals)
-          .minus(parseTokenAmount(stakeToken.transFee, stakeToken.decimals).multipliedBy(3))
-          .toString();
+      if (!balance.isLessThan(stakeToken.transFee)) {
+        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals).toString();
 
         setAmount(amount);
-        setPercent(Number(new BigNumber(amount).dividedBy(_balance).multipliedBy(100).toFixed(0)));
+        setPercent(100);
       } else {
         setAmount(parseTokenAmount(balance, stakeToken.decimals).toString());
       }
@@ -81,7 +81,12 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
       setPercent(value);
 
       if (balance && stakeToken) {
-        const amount = parseTokenAmount(balance, stakeToken.decimals).multipliedBy(value).dividedBy(100);
+        if (balance.isLessThan(stakeToken.transFee)) return;
+
+        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals)
+          .multipliedBy(value)
+          .dividedBy(100);
+
         setAmount(amount.toString());
       }
     },
@@ -115,15 +120,17 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   };
 
   const error = useMemo(() => {
+    if (!state) return t`Stake`;
+    if (state !== StakingState.LIVE) return t`Stake`;
     if (!stakeToken || !balance) return t`Stake`;
     if (!amount) return t`Enter the amount`;
     if (new BigNumber(amount).isEqualTo(0)) return t`Amount must be greater than 0`;
     if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount)) return t`Insufficient balance`;
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))
-      return t`Amount must be greater than trans fee`;
+      return t`Amount must be greater than the transfer fee`;
 
     return null;
-  }, [amount, balance, stakeToken]);
+  }, [amount, balance, stakeToken, state]);
 
   return (
     <>

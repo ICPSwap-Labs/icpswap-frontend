@@ -219,7 +219,7 @@ export default function SwapRevokeApprove() {
             <Trans>Revoke Token Approval</Trans>
           </Typography>
 
-          <Typography sx={{ margin: "10px 0 0 0" }}>
+          <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
             <Trans>
               ICRC2 standard tokens require an approval step when using swap. You can revoke this approval based on your
               security needs.

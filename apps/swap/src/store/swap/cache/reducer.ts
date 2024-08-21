@@ -11,6 +11,7 @@ import {
   updateUserPositionPools,
   updateUserMultipleApprove,
   updateSwapProAutoRefresh,
+  updateKeepTokenInPools,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -52,5 +53,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateSwapProAutoRefresh, (state, { payload }) => {
       state.swapProAutoRefresh = payload;
+    })
+    .addCase(updateKeepTokenInPools, (state, { payload }) => {
+      state.keepTokenInPools = payload;
     });
 });

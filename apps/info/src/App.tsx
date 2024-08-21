@@ -4,6 +4,7 @@ import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import Loader from "ui-component/Loading/LinearLoader";
 import { useInitialXDR2USD } from "hooks/useXDR2USD";
 import { useFetchInfoAllTokens } from "hooks/info/useInfoTokens";
+
 import Routes from "./routes";
 import { theme } from "./themes";
 import NavigationScroll from "./ui-component/NavigationScroll";

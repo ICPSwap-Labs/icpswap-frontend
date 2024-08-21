@@ -7,18 +7,20 @@ import {
   useFarmTvlValue,
   useStateColors,
   useUserTvlValue,
+  useIntervalUserRewardInfo,
 } from "hooks/staking-farm";
 import { useUserPositionsValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import {
   useV3FarmRewardMetadata,
   useFarmInitArgs,
   useSwapUserPositions,
   useSwapPoolMetadata,
   useFarmState,
+  useFarmUserPositions,
 } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
@@ -44,9 +46,26 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
   const [, token1] = useToken(userFarmInfo?.poolToken1.address);
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address);
   const { result: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
+  const { result: deposits } = useFarmUserPositions(farmId, principal?.toString());
+
+  const state = useFarmState(userFarmInfo);
+
+  const positionIds = useMemo(() => {
+    return deposits?.map((position) => position.positionId) ?? [];
+  }, [deposits]);
+
+  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
+
+  const userRewardAmount = useMemo(() => {
+    if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;
+    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
+    return parseTokenAmount(__userRewardAmount, rewardToken.decimals).multipliedBy(userRewardRatio).toString();
+  }, [__userRewardAmount, farmInitArgs, rewardToken]);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs || !poolMetadata) return undefined;
+    // No need positions if farm is finished or closed
+    if (!state || state === "FINISHED" || state === "CLOSED") return undefined;
 
     if (farmInitArgs.priceInsideLimit === false) {
       return userAllPositions.filter((position) => position.liquidity !== BigInt(0));
@@ -58,7 +77,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
         const outOfRange = poolMetadata.tick < position.tickLower || poolMetadata.tick >= position.tickUpper;
         return !outOfRange;
       });
-  }, [userAllPositions, farmInitArgs, poolMetadata]);
+  }, [userAllPositions, farmInitArgs, poolMetadata, state]);
 
   const allAvailablePositionValue = useUserPositionsValue({
     metadata: poolMetadata,
@@ -75,8 +94,6 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
   const userTvlValue = useUserTvlValue({ farmId, token0, token1 });
 
   const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
-
-  const state = useFarmState(userFarmInfo);
 
   const apr = useFarmApr({
     farmTvlValue,
@@ -141,25 +158,57 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
       </Flex>
 
       <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
-        </Typography>
-        {userAvailablePositions ? (
-          <Typography
-            fontSize={12}
-            fontWeight={500}
-            color="text.primary"
-            sx={{
-              width: "fit-content",
-              background: theme.palette.background.level4,
-              padding: "2px 8px",
-              borderRadius: "44px",
-            }}
-          >
-            {userAvailablePositions.length}
+        {state === "FINISHED" || state === "CLOSED" ? (
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            --
           </Typography>
-        ) : null}
+        ) : (
+          <>
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
+            </Typography>
+            {userAvailablePositions ? (
+              <Typography
+                fontSize={12}
+                fontWeight={500}
+                color="text.primary"
+                sx={{
+                  width: "fit-content",
+                  background: theme.palette.background.level4,
+                  padding: "2px 8px",
+                  borderRadius: "44px",
+                }}
+              >
+                {userAvailablePositions.length}
+              </Typography>
+            ) : null}
+          </>
+        )}
       </Flex>
+
+      {your ? (
+        <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
+          <Flex justify="flex-end">
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              {userRewardAmount && rewardToken ? (
+                <>
+                  {toSignificantWithGroupSeparator(userRewardAmount, 4)}&nbsp;
+                  {rewardToken.symbol}
+                </>
+              ) : (
+                "--"
+              )}
+            </Typography>
+          </Flex>
+          <Flex justify="flex-end">
+            <Typography sx={{ fontSize: "12px" }}>
+              {userRewardAmount && rewardTokenPrice
+                ? `~${formatDollarAmount(new BigNumber(userRewardAmount).multipliedBy(rewardTokenPrice).toString())}`
+                : "--"}
+            </Typography>
+          </Flex>
+        </Flex>
+      ) : null}
 
       {your ? (
         <Flex justify="flex-end" className="row-item">

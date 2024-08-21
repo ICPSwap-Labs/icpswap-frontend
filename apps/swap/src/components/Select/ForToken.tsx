@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo, ReactNode } from "react";
 import { Box } from "components/Mui";
 
 import { Panel } from "./Panel";
@@ -30,7 +30,7 @@ export interface SelectProps {
   minMenuWidth?: string;
   valueColor?: string;
   panelPadding?: string;
-  panel?: (menu: MenuProps | null | undefined) => void;
+  panel?: (menu: MenuProps | null | undefined) => ReactNode;
 }
 
 export function Select({

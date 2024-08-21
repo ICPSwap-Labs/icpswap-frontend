@@ -21,7 +21,7 @@ const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
     },
     input: {
       "& input": {
-        fontSize: "20px",
+        fontSize: "20px!important",
         fontWeight: 700,
         textAlign: "center",
         height: "28px",

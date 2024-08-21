@@ -155,7 +155,10 @@ export function TokenItem({
                 >
                   {tokenInfo?.symbol}
                 </Typography>
-                <Typography fontSize="12px" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <Typography
+                  fontSize="12px"
+                  sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", margin: "4px 0 0 0" }}
+                >
                   {tokenInfo?.name}
                 </Typography>
               </Box>
@@ -191,6 +194,7 @@ export function TokenItem({
               <Typography
                 align="right"
                 sx={{
+                  margin: "4px 0 0 0",
                   "@media (max-width: 580px)": {
                     fontSize: "12px",
                   },

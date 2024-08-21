@@ -5,7 +5,7 @@ import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/util
 import { Flex } from "@icpswap/ui";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { useCallback, useEffect, useMemo, useState, useContext } from "react";
-import { swapContext } from "components/swap/index";
+import { SwapContext } from "components/swap/index";
 
 export interface ReclaimForSinglePoolProps {
   balance: bigint;
@@ -15,6 +15,8 @@ export interface ReclaimForSinglePoolProps {
   id: string;
   viewAll?: boolean;
   onReclaimSuccess?: () => void;
+  fontSize?: string;
+  margin?: string;
 }
 
 export function ReclaimForSinglePool({
@@ -24,10 +26,12 @@ export function ReclaimForSinglePool({
   tokenId,
   onReclaimSuccess,
   id,
+  fontSize = "14px",
+  margin = "12px",
 }: ReclaimForSinglePoolProps) {
   const [loading, setLoading] = useState(false);
   const { result: tokenInfo } = useTokenInfo(tokenId);
-  const { setUnavailableBalanceKey, removeUnavailableBalanceKey, setRefreshTrigger } = useContext(swapContext);
+  const { setUnavailableBalanceKey, removeUnavailableBalanceKey, setRefreshTrigger } = useContext(SwapContext);
 
   const reclaim = useReclaim();
 
@@ -66,24 +70,24 @@ export function ReclaimForSinglePool({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        margin: "0 0 12px 0",
+        margin: `0 0 ${margin} 0`,
         "&:last-of-type": {
           margin: "0",
         },
       }}
     >
       <Flex gap="0 8px">
-        <Typography component="div">
+        <Typography component="div" sx={{ fontSize }}>
           <Trans>
             Your {toSignificantWithGroupSeparator(parseTokenAmount(balance, tokenInfo.decimals).toString())}{" "}
             {tokenInfo.symbol} to{" "}
-            <Typography color="secondary" component="span" sx={{ cursor: "pointer" }} onClick={handleClaim}>
+            <Typography color="secondary" component="span" sx={{ cursor: "pointer", fontSize }} onClick={handleClaim}>
               <Trans>Reclaim</Trans>
             </Typography>
           </Trans>
         </Typography>
 
-        {loading ? <CircularProgress size={14} sx={{ color: "#ffffff" }} /> : null}
+        {loading ? <CircularProgress size={fontSize === "14px" ? 14 : 12} sx={{ color: "#ffffff" }} /> : null}
       </Flex>
     </Box>
   ) : null;

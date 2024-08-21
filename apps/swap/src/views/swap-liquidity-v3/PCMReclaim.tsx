@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Theme } from "@mui/material/styles";
 import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { NoData, LoadingRow, Wrapper, Breadcrumbs, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, Wrapper, Breadcrumbs, Tooltip } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
@@ -70,7 +70,7 @@ export function BalanceItem({
     setLoading(true);
 
     const loadingKey = openTip(
-      `Reclaim your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
+      `Withdraw your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
       MessageTypes.loading,
     );
 
@@ -157,7 +157,10 @@ export function BalanceItem({
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
           {unavailableClaim ? (
-            <SwapTooltip tips="Claim amount is below the transaction fee, making it unclaimable." iconSize="24px" />
+            <Tooltip
+              tips="The withdrawal amount is less than the transfer fee, so the withdrawal cannot be processed."
+              iconSize="24px"
+            />
           ) : null}
 
           <Button
@@ -168,7 +171,7 @@ export function BalanceItem({
             onClick={handleClaim}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            <Trans>Reclaim</Trans>
+            <Trans>Withdraw</Trans>
           </Button>
         </Box>
       </Box>

@@ -15,7 +15,8 @@ import { useStakingPoolData } from "hooks/staking-token";
 import { Theme } from "@mui/material/styles";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token";
-import { useStakingPoolCycles } from "@icpswap/hooks";
+import { useStakingPoolCycles, useStakingPoolState } from "@icpswap/hooks";
+import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -50,7 +51,7 @@ export function timeFormatter(dateTime: bigint | undefined) {
 
 export default function PoolsDetails() {
   const classes = useStyles();
-  const { state, poolId } = useParams<{ poolId: string; state: string }>();
+  const { poolId } = useParams<{ poolId: string }>();
   const [pool] = useStakingPoolData(poolId);
 
   const [recordType, setRecordType] = useState("transactions");
@@ -58,6 +59,8 @@ export default function PoolsDetails() {
   const { result: cycles } = useStakingPoolCycles(poolId);
   const { result: poolTokenBalance } = useTokenBalance(pool?.stakingToken.address, poolId);
   const { result: rewardToken } = useTokenInfo(pool?.rewardToken.address);
+
+  const state = useStakingPoolState(pool);
 
   return (
     <MainContainer>
@@ -85,7 +88,9 @@ export default function PoolsDetails() {
             }}
           >
             <Grid container alignItems="center" sx={{ height: "100%" }}>
-              <Typography color="text.primary">{state ?? "--"}</Typography>
+              <Typography color="text.primary">
+                {state ? (state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())) : "--"}
+              </Typography>
             </Grid>
           </Box>
           <Box mt="30px" className={classes.details}>

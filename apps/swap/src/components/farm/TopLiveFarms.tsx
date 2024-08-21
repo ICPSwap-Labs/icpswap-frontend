@@ -91,9 +91,9 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       }}
       onClick={handleClick}
     >
-      <Flex justify="space-between">
+      <Flex justify="space-between" gap="0 20px">
         <FarmTokenImages rewardToken={rewardToken} token0={token0} token1={token1} />
-        <Typography fontSize={12}>
+        <Typography fontSize={12} textAlign="right" lineHeight="18px">
           {rewardToken && token0 && token1 ? (
             <Trans>
               Stake {token0.symbol}/{token1.symbol} to earn {rewardToken.symbol}
@@ -105,17 +105,22 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       </Flex>
 
       <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box>
+        <Box sx={{ width: "100%" }}>
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
+
           <Typography
             sx={{
               fontSize: "24px",
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={rewardToken?.symbol ?? ""}
           >
             {rewardToken ? rewardToken.symbol : "--"}
           </Typography>

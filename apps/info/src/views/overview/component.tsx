@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { mockALinkAndOpen } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
 import { useHistory } from "react-router-dom";
 import { Flex, Tooltip } from "@icpswap/ui";
 
@@ -10,12 +9,25 @@ export interface RowProps {
 }
 
 export function Row({ children }: RowProps) {
-  return <Flex sx={{ margin: "0 0 32px 0" }}>{children}</Flex>;
+  return (
+    <Flex
+      sx={{
+        margin: "0 0 32px 0",
+        "@media(max-width: 640px)": {
+          flexDirection: "column",
+          gap: "32px 0",
+          alignItems: "flex-start",
+        },
+      }}
+    >
+      {children}
+    </Flex>
+  );
 }
 
 export interface ItemProps {
   label: ReactNode;
-  value: number | string | BigNumber | bigint | undefined;
+  value: number | string | undefined;
   tooltip?: string;
 }
 
@@ -23,7 +35,7 @@ export function Item({ label, value, tooltip }: ItemProps) {
   return (
     <Box sx={{ flex: 1 }}>
       <Flex gap="0 5px">
-        <Typography>{label}</Typography>
+        <Typography component="div">{label}</Typography>
         {tooltip ? <Tooltip tips={tooltip} /> : null}
       </Flex>
       <Typography color="text.primary" sx={{ fontSize: "20px", fontWeight: 500, margin: "10px 0 0 0" }}>

@@ -9,8 +9,12 @@ import {
   useConnectorStateConnected,
   useUserLogout,
   useWalletConnectorManager,
+  useConnectorType,
 } from "store/auth/hooks";
 import { Theme } from "@mui/material/styles";
+import { Flex } from "@icpswap/ui";
+import { Connector } from "constants/wallet";
+
 import { AccountSection } from "./Account";
 import Principal from "./Principal";
 import LogoutIcon from "./LogoutIcon";
@@ -98,12 +102,16 @@ export default function ProfileSection() {
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-  const principal = useAccountPrincipal();
-  const isConnected = useConnectorStateConnected();
+
   const [open, setOpen] = useState(false);
+
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const prevOpen = useRef(open);
+
+  const principal = useAccountPrincipal();
+  const isConnected = useConnectorStateConnected();
   const logout = useUserLogout();
+  const connectorType = useConnectorType();
 
   const [, walletManager] = useWalletConnectorManager();
 
@@ -167,12 +175,42 @@ export default function ProfileSection() {
                 <ClickAwayListener onClickAway={handleClose}>
                   <List component="nav" className={classes.navContainer}>
                     <Box sx={{ padding: "12px", boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)" }}>
-                      <Box sx={{ marginBottom: "12px" }}>
-                        <AccountSection />
-                      </Box>
-                      <Box>
-                        <Principal />
-                      </Box>
+                      <Flex vertical gap="4px 0">
+                        <Box sx={{ padding: "12px", background: "#FAFAFA", borderRadius: "8px" }}>
+                          <Typography
+                            sx={{
+                              color: "#4F5A84",
+                              lineHeight: "18px",
+                              fontSize: "12px",
+                            }}
+                          >
+                            <Trans>Copy Account ID for sending from exchanges and Principal ID for lCP network.</Trans>
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <AccountSection />
+                        </Box>
+                        <Box>
+                          <Principal />
+                        </Box>
+                        {connectorType === Connector.IC ? (
+                          <Box sx={{ padding: "12px", background: "rgb(255 210 76 / 15%)", borderRadius: "8px" }}>
+                            <Typography
+                              sx={{
+                                color: "#E8AE00",
+                                lineHeight: "16px",
+                                fontSize: "12px",
+                              }}
+                            >
+                              <Trans>
+                                Internet Identity generates unique Principal IDs and Account IDs for each Dapp. This
+                                feature ensures that user identities and account information are isolated across
+                                different applications, enhancing security and privacy protection.
+                              </Trans>
+                            </Typography>
+                          </Box>
+                        ) : null}
+                      </Flex>
                     </Box>
 
                     <LogOutSection onLogout={() => setOpen(false)}>

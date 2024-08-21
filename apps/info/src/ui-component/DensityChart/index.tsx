@@ -39,6 +39,22 @@ const initialState = {
   refAreaRight: "",
 };
 
+interface CustomBarProps {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  fill: string;
+}
+
+function CustomBar({ x, y, width, height, fill }: CustomBarProps) {
+  return (
+    <g>
+      <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
+    </g>
+  );
+}
+
 type TickChartData = {
   index: number;
   isCurrent: boolean;
@@ -162,37 +178,6 @@ export default function DensityChart({ address, token0Price }: DensityChartProps
     }
   }, [feeTier, formattedData, setLoading, loading, _pool, poolTickData, token0, token1]);
 
-  // const atZoomMax = zoomState.left + ZOOM_INTERVAL >= zoomState.right - ZOOM_INTERVAL - 1;
-  // const atZoomMin = zoomState.left - ZOOM_INTERVAL < 0;
-
-  // const handleZoomIn = useCallback(() => {
-  //   !atZoomMax &&
-  //     setZoomState({
-  //       ...zoomState,
-  //       left: zoomState.left + ZOOM_INTERVAL,
-  //       right: zoomState.right - ZOOM_INTERVAL,
-  //     });
-  // }, [zoomState, atZoomMax]);
-
-  // const handleZoomOut = useCallback(() => {
-  //   if (atZoomMin) {
-  //     setLoading(true);
-  //     setTicksToFetch(ticksToFetch + ZOOM_INTERVAL);
-  //     setFormattedData(undefined);
-  //     setZoomState({
-  //       ...zoomState,
-  //       left: 0,
-  //       right: amountTicks,
-  //     });
-  //   } else {
-  //     setZoomState({
-  //       ...zoomState,
-  //       left: zoomState.left - ZOOM_INTERVAL,
-  //       right: zoomState.right + ZOOM_INTERVAL,
-  //     });
-  //   }
-  // }, [amountTicks, atZoomMin, ticksToFetch, zoomState]);
-
   const zoomedData = useMemo(() => {
     if (formattedData) {
       return formattedData.slice(zoomState.left, zoomState.right);
@@ -204,26 +189,6 @@ export default function DensityChart({ address, token0Price }: DensityChartProps
   useEffect(() => {
     setFormattedData(undefined);
   }, [address]);
-
-  const CustomBar = ({
-    x,
-    y,
-    width,
-    height,
-    fill,
-  }: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    fill: string;
-  }) => {
-    return (
-      <g>
-        <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
-      </g>
-    );
-  };
 
   return (
     <Box
@@ -300,14 +265,6 @@ export default function DensityChart({ address, token0Price }: DensityChartProps
           <img width="80px" height="80px" src={LoadingImage} alt="" />
         </Box>
       )}
-      {/* <ControlsWrapper>
-        <ActionButton disabled={false} onClick={handleZoomOut}>
-          -
-        </ActionButton>
-        <ActionButton disabled={atZoomMax} onClick={handleZoomIn}>
-          +
-        </ActionButton>
-      </ControlsWrapper> */}
     </Box>
   );
 }

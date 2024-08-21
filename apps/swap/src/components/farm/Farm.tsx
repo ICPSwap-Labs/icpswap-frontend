@@ -289,7 +289,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
       <Box mt="40px">
         <Box>
           <Typography>
-            <Trans>Your Total Value Available Stake</Trans>
+            <Trans>Your Positions Available To Stake</Trans>
           </Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>
@@ -301,7 +301,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
           <Flex gap="0 4px">
             <Typography>
               <Trans>
-                {userAvailablePositions ? userAvailablePositions.length : "--"} Position Available For Farming
+                {userAvailablePositions ? userAvailablePositions.length : "--"} Position Available For Staking
               </Trans>
             </Typography>
 
@@ -414,7 +414,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         <Box mt="24px">
           <Flex gap="0 4px">
             <Typography>
-              <Trans>{deposits ? deposits.length : "--"} Position Farmed</Trans>
+              <Trans>{deposits ? deposits.length : "--"} Staked Positions</Trans>
             </Typography>
 
             <Tooltip tips={t`There are currently N positions staked.`} />

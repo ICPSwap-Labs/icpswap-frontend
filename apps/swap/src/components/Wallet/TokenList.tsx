@@ -5,7 +5,7 @@ import TokenListHeader from "components/Wallet/TokenListHeader";
 import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { useTaggedTokenManager, useUpdateHideSmallBalanceManager } from "store/wallet/hooks";
+import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
@@ -22,10 +22,9 @@ export default function WalletTokenList() {
   const theme = useTheme();
   const principal = useAccountPrincipal();
   const [showTip, setShowTip] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
-  const [isHideSmallBalances, setIsHideSmallBalances] = useUpdateHideSmallBalanceManager();
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens, sort } = useContext(WalletContext);
+  const { allTokenUSDMap, noUSDTokens } = useContext(WalletContext);
+  const { sort } = useWalletSortManager();
 
   const globalTokenList = useGlobalTokenList();
   const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
@@ -56,14 +55,6 @@ export default function WalletTokenList() {
     });
   }, [tokens, allTokenUSDMap, noUSDTokens, sort]);
 
-  const handleSearchValue = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const hideSmallBalances = (hideOrNot: boolean) => {
-    setIsHideSmallBalances(hideOrNot);
-  };
-
   const handleCloseTip = () => {
     setShowTip(false);
   };
@@ -81,11 +72,7 @@ export default function WalletTokenList() {
           },
         }}
       >
-        <TokenListHeader
-          onHideSmallBalances={hideSmallBalances}
-          onSearchValue={handleSearchValue}
-          isHideSmallBalances={isHideSmallBalances}
-        />
+        <TokenListHeader />
 
         {showTip ? (
           <Flex
@@ -123,12 +110,7 @@ export default function WalletTokenList() {
           </Flex>
         ) : null}
 
-        <TokenListTable
-          isHideSmallBalances={isHideSmallBalances}
-          tokens={sortedTokens}
-          searchValue={searchValue}
-          chainKeyMinterInfo={chainKeyMinterInfo}
-        />
+        <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
       </Box>
     </>
   );

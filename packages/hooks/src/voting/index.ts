@@ -1,13 +1,9 @@
 import { useCallback } from "react";
-import {
-  isAvailablePageArgs,
-  availableArgsNull,
-  resultFormat,
-} from "@icpswap/utils";
-import { useCallsData } from "../useCallData";
+import { isAvailablePageArgs, availableArgsNull, resultFormat } from "@icpswap/utils";
 import { votingCanister, votingController, votingFile } from "@icpswap/actor";
-import type { ActorIdentity, PaginationResult } from "@icpswap/types";
 import type {
+  ActorIdentity,
+  PaginationResult,
   ProjectInfo,
   ProposalInfo,
   UserVotePowersInfo,
@@ -17,21 +13,15 @@ import type {
   ProposalCreateInfo,
 } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
+import { useCallsData } from "../useCallData";
 
-export async function createVotingCanister(
-  identity: ActorIdentity,
-  args: ProjectInfo
-) {
-  return resultFormat<boolean>(
-    await (await votingController(identity)).create(args)
-  );
+export async function createVotingCanister(args: ProjectInfo) {
+  return resultFormat<boolean>(await (await votingController(true)).create(args));
 }
 
 export async function getVotingProjects(offset: number, limit: number) {
   return resultFormat<PaginationResult<ProjectInfo>>(
-    await (
-      await votingController()
-    ).findProjectPage(BigInt(offset), BigInt(limit))
+    await (await votingController()).findProjectPage(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -40,14 +30,12 @@ export function useVotingProjects(offset: number, limit: number) {
     useCallback(async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getVotingProjects(offset, limit);
-    }, [offset, limit])
+    }, [offset, limit]),
   );
 }
 
 export async function getVotingProjectDetails(canisterId: string) {
-  return resultFormat<ProjectInfo>(
-    await (await votingCanister(canisterId)).getProject()
-  ).data;
+  return resultFormat<ProjectInfo>(await (await votingCanister(canisterId)).getProject()).data;
 }
 
 export function useVotingProjectDetails(canisterId: string | undefined) {
@@ -55,52 +43,29 @@ export function useVotingProjectDetails(canisterId: string | undefined) {
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getVotingProjectDetails(canisterId);
-    }, [canisterId])
+    }, [canisterId]),
   );
 }
 
-export async function createVotingProposal(
-  identity: ActorIdentity,
-  canisterId: string,
-  args: ProposalCreateInfo
-) {
-  return resultFormat<string>(
-    await (await votingCanister(canisterId, identity)).create(args)
-  );
+export async function createVotingProposal(canisterId: string, args: ProposalCreateInfo) {
+  return resultFormat<string>(await (await votingCanister(canisterId, true)).create(args));
 }
 
-export async function deleteVotingProposal(
-  identity: ActorIdentity,
-  canisterId: string,
-  proposalId: string
-) {
-  return resultFormat<boolean>(
-    await (
-      await votingCanister(canisterId, identity)
-    ).deleteProposal(proposalId)
-  );
+export async function deleteVotingProposal(identity: ActorIdentity, canisterId: string, proposalId: string) {
+  return resultFormat<boolean>(await (await votingCanister(canisterId, identity)).deleteProposal(proposalId));
 }
 
-export async function getVotingProposal(
-  canisterId: string,
-  proposalId: string
-) {
-  return resultFormat<ProposalInfo>(
-    await (await votingCanister(canisterId)).getProposal(proposalId)
-  ).data;
+export async function getVotingProposal(canisterId: string, proposalId: string) {
+  return resultFormat<ProposalInfo>(await (await votingCanister(canisterId)).getProposal(proposalId)).data;
 }
 
-export function useVotingProposal(
-  canisterId: string | undefined,
-  proposalId: string | undefined,
-  reload?: boolean
-) {
+export function useVotingProposal(canisterId: string | undefined, proposalId: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !proposalId) return undefined;
       return await getVotingProposal(canisterId, proposalId);
     }, [proposalId, canisterId]),
-    reload
+    reload,
   );
 }
 
@@ -109,19 +74,17 @@ export async function getVotingProposals(
   address: string | undefined,
   state: number | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return resultFormat<PaginationResult<ProposalInfo>>(
     await (
       await votingCanister(canisterId)
     ).findPage(
       availableArgsNull<string>(address),
-      availableArgsNull<bigint>(
-        !!state || state === 0 ? BigInt(state) : undefined
-      ),
+      availableArgsNull<bigint>(!!state || state === 0 ? BigInt(state) : undefined),
       BigInt(offset),
-      BigInt(limit)
-    )
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -130,47 +93,23 @@ export function useVotingProposals(
   address: string | undefined,
   state: number | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
 
-      return await getVotingProposals(
-        canisterId,
-        address,
-        state,
-        offset,
-        limit
-      );
-    }, [canisterId, address, state, offset, limit])
+      return await getVotingProposals(canisterId, address, state, offset, limit);
+    }, [canisterId, address, state, offset, limit]),
   );
 }
 
-export async function setVotingProposalState(
-  identity: ActorIdentity,
-  canisterId: string,
-  proposalId: string,
-  state: number
-) {
-  return resultFormat<boolean>(
-    await (
-      await votingCanister(canisterId, identity)
-    ).setState(proposalId, BigInt(state))
-  );
+export async function setVotingProposalState(canisterId: string, proposalId: string, state: number) {
+  return resultFormat<boolean>(await (await votingCanister(canisterId, true)).setState(proposalId, BigInt(state)));
 }
 
-export async function setVotingProposalPowers(
-  identity: ActorIdentity,
-  canisterId: string,
-  proposalId: string,
-  powers: UserVotePowersInfo[]
-) {
-  return resultFormat<boolean>(
-    await (
-      await votingCanister(canisterId, identity)
-    ).setVotePower(proposalId, powers)
-  );
+export async function setVotingProposalPowers(canisterId: string, proposalId: string, powers: UserVotePowersInfo[]) {
+  return resultFormat<boolean>(await (await votingCanister(canisterId, true)).setVotePower(proposalId, powers));
 }
 
 export async function voting(
@@ -178,25 +117,16 @@ export async function voting(
   canisterId: string,
   proposalId: string,
   value: string,
-  powers: number
+  powers: number,
 ) {
   return resultFormat<boolean>(
-    await (
-      await votingCanister(canisterId, identity)
-    ).vote(proposalId, value, BigInt(powers))
+    await (await votingCanister(canisterId, identity)).vote(proposalId, value, BigInt(powers)),
   );
 }
 
-export async function getVotingTransactions(
-  canisterId: string,
-  proposalId: string,
-  offset: number,
-  limit: number
-) {
+export async function getVotingTransactions(canisterId: string, proposalId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<UserVoteRecord>>(
-    await (
-      await votingCanister(canisterId)
-    ).findRecordPage(proposalId, BigInt(offset), BigInt(limit))
+    await (await votingCanister(canisterId)).findRecordPage(proposalId, BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -204,20 +134,14 @@ export function useVotingTransactions(
   canisterId: string | undefined,
   proposalId: string | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (!isAvailablePageArgs(offset, limit) || !canisterId || !proposalId)
-        return undefined;
+      if (!isAvailablePageArgs(offset, limit) || !canisterId || !proposalId) return undefined;
 
-      return await getVotingTransactions(
-        canisterId!,
-        proposalId!,
-        offset,
-        limit
-      );
-    }, [offset, limit, proposalId, canisterId])
+      return await getVotingTransactions(canisterId!, proposalId!, offset, limit);
+    }, [offset, limit, proposalId, canisterId]),
   );
 }
 
@@ -226,7 +150,7 @@ export async function getUserVotingPowers(
   proposalId: string | undefined,
   address: string | undefined,
   offset: number,
-  limit: number
+  limit: number,
 ) {
   return resultFormat<PaginationResult<UserVotePowersInfo>>(
     await (
@@ -235,8 +159,8 @@ export async function getUserVotingPowers(
       availableArgsNull<string>(proposalId),
       availableArgsNull<string>(address),
       BigInt(offset),
-      BigInt(limit)
-    )
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -246,53 +170,29 @@ export function useUserVotingPowers(
   address: string | undefined,
   offset: number,
   limit: number,
-  reload?: boolean
+  reload?: boolean,
 ) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
 
-      return await getUserVotingPowers(
-        canisterId!,
-        proposalId,
-        address,
-        offset,
-        limit
-      );
+      return await getUserVotingPowers(canisterId!, proposalId, address, offset, limit);
     }, [canisterId, address, proposalId, offset, limit]),
-    reload
+    reload,
   );
 }
 
-export async function addVotingAuthorityUsers(
-  identity: ActorIdentity,
-  canisterId: string,
-  user: Principal
-) {
-  return resultFormat<boolean>(
-    await (await votingCanister(canisterId, identity)).addAdmin(user)
-  );
+export async function addVotingAuthorityUsers(identity: ActorIdentity, canisterId: string, user: Principal) {
+  return resultFormat<boolean>(await (await votingCanister(canisterId, identity)).addAdmin(user));
 }
 
-export async function deleteVotingAuthorityUsers(
-  identity: ActorIdentity,
-  canisterId: string,
-  user: Principal
-) {
-  return resultFormat<boolean>(
-    await (await votingCanister(canisterId, identity)).deleteAdmin(user)
-  );
+export async function deleteVotingAuthorityUsers(identity: ActorIdentity, canisterId: string, user: Principal) {
+  return resultFormat<boolean>(await (await votingCanister(canisterId, identity)).deleteAdmin(user));
 }
 
-export async function getVotingAuthorityUsers(
-  canisterId: string,
-  offset: number,
-  limit: number
-) {
+export async function getVotingAuthorityUsers(canisterId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<Principal>>(
-    await (
-      await votingCanister(canisterId)
-    ).getAdminList(BigInt(offset), BigInt(limit))
+    await (await votingCanister(canisterId)).getAdminList(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -300,24 +200,20 @@ export function useVotingAuthorityUsers(
   canisterId: string | undefined,
   offset: number,
   limit: number,
-  reload?: boolean
+  reload?: boolean,
 ) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getVotingAuthorityUsers(canisterId!, offset, limit);
     }, [canisterId, offset, limit]),
-    reload
+    reload,
   );
 }
 
 // -------------- Voting file --------------
 
-export async function createVotingBatch(
-  identity: ActorIdentity,
-  canisterId: string,
-  projectId: string
-) {
+export async function createVotingBatch(identity: ActorIdentity, canisterId: string, projectId: string) {
   return resultFormat<{
     batch_id: bigint;
   }>(await (await votingFile(canisterId, identity)).create_batch(projectId));
@@ -327,28 +223,22 @@ export async function createVotingChunk(
   identity: ActorIdentity,
   canisterId: string,
   chunk: VotingFileChunk,
-  projectId: string
+  projectId: string,
 ) {
   return resultFormat<{
     chunk_id: bigint;
-  }>(
-    await (
-      await votingFile(canisterId, identity)
-    ).create_chunk(chunk, projectId)
-  );
+  }>(await (await votingFile(canisterId, identity)).create_chunk(chunk, projectId));
 }
 
 export async function commitVotingChunk(
   identity: ActorIdentity,
   canisterId: string,
   args: CommitBatchArgs,
-  projectId: string
+  projectId: string,
 ) {
-  const result = await (
-    await votingFile(canisterId, identity)
-  ).commit_batch(args, projectId);
+  const result = await (await votingFile(canisterId, identity)).commit_batch(args, projectId);
 
-  return resultFormat<boolean>(result === undefined ? true : false);
+  return resultFormat<boolean>(result === undefined);
 }
 
 // -------------- Voting file --------------

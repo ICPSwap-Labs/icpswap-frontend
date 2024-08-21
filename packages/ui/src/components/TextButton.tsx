@@ -104,7 +104,7 @@ export function TextButton({
 
   return (
     <Typography
-      color={color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
+      color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
       sx={{
         cursor: "pointer",
         userSelect: "none",

@@ -6,12 +6,10 @@ import { useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { NumberFilledTextField, type Tab } from "components/index";
 import { principalToBytes32 } from "utils/ic/index";
-import { useETHContract } from "hooks/web3/useContract";
+import { useETHContract, useETHBalance, useBlockNumber, useActiveChain } from "hooks/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { toHexString } from "utils/web3/index";
-import { useETHBalance } from "hooks/web3/useETHBalance";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
-import { useBlockNumber } from "hooks/web3/useBlockNumber";
 import { useUpdateTX } from "store/web3/hooks";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { Web3ButtonConnector } from "components/web3/index";
@@ -44,7 +42,7 @@ function DeadContent({ content }: DeadContentProps) {
         background: theme.palette.background.level4,
       }}
     >
-      <Typography sx={{ wordBreak: "break-all", fontWeight: 500 }}>
+      <Typography sx={{ wordBreak: "break-all", fontWeight: 500, lineHeight: "1.15rem" }}>
         {content || <Typography height="10px" width="2px" />}
       </Typography>
     </Box>
@@ -60,7 +58,8 @@ export interface MintProps {
 
 export default function MintCkETH({ buttons, handleChange, active, minterInfo }: MintProps) {
   const principal = useAccountPrincipalString();
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider } = useWeb3React();
+  const chainId = useActiveChain();
 
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);

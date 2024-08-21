@@ -12,12 +12,12 @@ import { SwapScanTabPanels } from "./components/TabPanels";
 enum TabPanelValue {
   TRANSACTIONS = "transactions",
   POSITIONS = "positions",
-  RECLAIM = "reclaims",
+  RECLAIM = "pool-balances",
   VALUATION = "valuation",
 }
 
 export interface SwapScanWrapperProps {
-  children: ReactNode;
+  children: ReactNode | ((props: any) => JSX.Element);
 }
 
 export interface ScanChildrenProps {
@@ -92,7 +92,7 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
                     : activeTab === TabPanelValue.POSITIONS
                     ? "positions"
                     : activeTab === TabPanelValue.RECLAIM
-                    ? "reclaims"
+                    ? "users’ Pool Balances"
                     : "valuation"
                 }`,
                 sx: {

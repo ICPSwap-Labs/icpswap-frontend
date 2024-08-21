@@ -221,7 +221,7 @@ export function TokenCharts({ canisterId, volume, borderRadius, priceToggles, ba
           {latestValue || latestValue === 0
             ? chartView === ChartView.TRANSACTIONS
               ? latestValue
-              : formatDollarAmount(latestValue, 2)
+              : formatDollarAmount(latestValue)
             : chartView === ChartView.VOL
             ? volume
               ? formatDollarAmount(volume)
@@ -229,7 +229,7 @@ export function TokenCharts({ canisterId, volume, borderRadius, priceToggles, ba
             : chartView === ChartView.TVL
             ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
             : priceChartData
-            ? formatDollarAmount(priceChartData[priceChartData.length - 1]?.close, 2)
+            ? formatDollarAmount(priceChartData[priceChartData.length - 1]?.close)
             : "--"}
 
           {chartView === ChartView.PRICE && priceToggles ? (

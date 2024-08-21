@@ -9,7 +9,7 @@ export interface MinButtonProps {
 export function MinButton({ onClick }: MinButtonProps) {
   return (
     <SmallButton onClick={onClick}>
-      <Trans>Min</Trans>
+      <Trans>MIN</Trans>
     </SmallButton>
   );
 }

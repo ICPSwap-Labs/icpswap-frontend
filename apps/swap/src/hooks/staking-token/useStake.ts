@@ -124,21 +124,24 @@ function useStakeCalls() {
   const stake = useStakeCallback();
   const withdraw = useRewardTokenWithdrawCall();
 
-  return useCallback(({ token, amount, poolId, standard, key, rewardToken }: UseStakeCallsArgs) => {
-    const call0 = async () =>
-      await approveOrTransfer({
-        token,
-        amount,
-        to_owner: poolId,
-        standard,
-      });
+  return useCallback(
+    ({ token, amount, poolId, standard, key, rewardToken }: UseStakeCallsArgs) => {
+      const call0 = async () =>
+        await approveOrTransfer({
+          token,
+          amount,
+          to_owner: poolId,
+          standard,
+        });
 
-    const call1 = async () => await deposit({ token, amount, poolId, standard });
-    const call2 = async () => await stake({ token, amount, poolId, standard, key, rewardToken });
-    const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
+      const call1 = async () => await deposit({ token, amount, poolId, standard });
+      const call2 = async () => await stake({ token, amount, poolId, standard, key, rewardToken });
+      const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
 
-    return [call0, call1, call2, call3];
-  }, []);
+      return [call0, call1, call2, call3];
+    },
+    [approveOrTransfer, deposit, stake, withdraw],
+  );
 }
 
 export interface UseStakeCallArgs {

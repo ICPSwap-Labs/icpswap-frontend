@@ -11,9 +11,10 @@ import { t } from "@lingui/macro";
 import { useActualSwapAmount } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
-import { CurrencyAmount } from "@icpswap/swap-sdk";
-import { useParsedQueryString } from "@icpswap/hooks";
-import { isValidPrincipal } from "@icpswap/utils";
+import { useParsedQueryString, useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
+import { isValidPrincipal, BigNumber, parseTokenAmount, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { SubAccount } from "@dfinity/ledger-icp";
+
 import {
   selectCurrency,
   switchCurrencies,
@@ -73,8 +74,12 @@ export interface UseSwapInfoArgs {
 }
 
 export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
-  const account = useAccountPrincipal();
+  const principal = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
+
+  const sub = useMemo(() => {
+    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
+  }, [principal]);
 
   const {
     independentField,
@@ -88,8 +93,8 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
-  const { result: inputCurrencyBalance } = useCurrencyBalance(account, inputCurrency, refresh);
-  const { result: outputCurrencyBalance } = useCurrencyBalance(account, outputCurrency, refresh);
+  const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputCurrency, refresh);
+  const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputCurrency, refresh);
 
   const currencyBalances = {
     [SWAP_FIELD.INPUT]: inputCurrencyBalance,
@@ -115,8 +120,27 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const Trade = useBestTrade(
     inputCurrency,
     outputCurrency,
-    !actualSwapValue || actualSwapValue === "0" ? undefined : debouncedTypedValue,
+    !actualSwapValue || actualSwapValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
+
+  const poolId = useMemo(() => Trade?.tradePoolId, [Trade]);
+
+  // DIP20 not support subaccount balance
+  // So useTokenBalance is 0 by default if standard is DIP20
+  const { result: subAccountTokenBalance } = useTokenBalance({
+    canisterId: inputCurrency?.address,
+    address: poolId,
+    sub,
+    refresh,
+  });
+  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  const swapTokenUnusedBalance = useMemo(() => {
+    if (!poolId || !unusedBalance || !inputCurrency) return undefined;
+
+    const pool = Trade.routes[0].pools[0];
+
+    return pool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
+  }, [Trade, inputCurrency, unusedBalance]);
 
   let inputError: null | string = null;
 
@@ -137,12 +161,26 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     userSlippageTolerance ? Trade?.trade?.maximumAmountIn(userSlippageTolerance) : undefined,
   ];
 
+  if (!subAccountTokenBalance || isNullArgs(swapTokenUnusedBalance)) {
+    inputError = inputError ?? `Swap`;
+  }
+
   if (
     balanceIn &&
     amountIn &&
-    balanceIn.lessThan(
-      amountIn.add(CurrencyAmount.fromRawAmount(amountIn.currency.wrapped, amountIn.currency.transFee)),
-    )
+    subAccountTokenBalance &&
+    swapTokenUnusedBalance &&
+    new BigNumber(subAccountTokenBalance)
+      .plus(swapTokenUnusedBalance.toString())
+      .plus(formatTokenAmount(balanceIn.toExact(), amountIn.currency.decimals))
+      .isLessThan(
+        formatTokenAmount(
+          new BigNumber(amountIn.toExact()).plus(
+            parseTokenAmount(amountIn.currency.transFee, amountIn.currency.decimals),
+          ),
+          amountIn.currency.decimals,
+        ),
+      )
   ) {
     inputError = inputError ?? `Insufficient ${amountIn.currency.symbol} balance`;
   }
@@ -171,6 +209,8 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     inputCurrencyState,
     outputCurrencyState,
     actualSwapValue,
+    swapTokenUnusedBalance,
+    subAccountTokenBalance,
   };
 }
 

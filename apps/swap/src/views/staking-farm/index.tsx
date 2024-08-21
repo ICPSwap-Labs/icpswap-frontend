@@ -100,13 +100,17 @@ function MainContent() {
       showState: state === undefined,
       gridTemplateColumns: matchDownSM
         ? state === undefined
-          ? "220px 220px 100px 240px 180px 180px"
+          ? __state === FilterState.YOUR
+            ? "180px 180px 80px 220px 160px 160px 160px"
+            : "220px 220px 100px 240px 180px 180px"
           : "220px 220px 100px 240px 180px"
         : state === undefined
-        ? "220px 220px 120px 1fr 1fr 180px"
+        ? __state === FilterState.YOUR
+          ? "180px 180px 80px 1fr 1fr 1fr 120px"
+          : "220px 220px 120px 1fr 1fr 180px"
         : "220px 220px 120px 1fr 1fr",
     };
-  }, [state, matchDownSM]);
+  }, [state, matchDownSM, __state]);
 
   const handlePairChange = (pairId: string | undefined) => {
     setFilterPair(pairId);
@@ -257,6 +261,13 @@ function MainContent() {
                 <Trans>Your Available to Stake</Trans>
               </Typography>
             </Flex>
+            {your ? (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Your Rewards</Trans>
+                </Typography>
+              </Flex>
+            ) : null}
             {your ? (
               <Flex justify="flex-end" className="row-item">
                 <Typography variant="body2" color="text.400">

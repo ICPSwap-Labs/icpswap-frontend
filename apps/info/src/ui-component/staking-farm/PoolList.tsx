@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Grid, Box, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
@@ -7,8 +7,8 @@ import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { LoadingRow, TextButton, PaginationType } from "ui-component/index";
-import { useFarmInfo, useSwapPoolMetadata, useAllFarms } from "@icpswap/hooks";
+import { LoadingRow, TextButton, PaginationType, Pagination } from "ui-component/index";
+import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
 
@@ -105,12 +105,25 @@ export function PoolItem({ farmId }: PoolItemProps) {
 export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useAllFarms();
+  const { result: allFarms, loading } = useFarms(undefined);
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);
   };
+
+  const farms = useMemo(() => {
+    if (!allFarms) return undefined;
+
+    const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
+    const length = pagination.pageSize;
+
+    return [...allFarms].slice(offset, offset + length);
+  }, [allFarms, pagination]);
+
+  const totalElements = useMemo(() => {
+    if (!allFarms) return 0;
+    return allFarms.length;
+  }, [allFarms]);
 
   return (
     <Box sx={{ overflow: "auto" }}>
@@ -139,29 +152,31 @@ export default function PoolList() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {result?.map((id) => <PoolItem key={id.toString()} farmId={id.toString()} />)}
+      {farms?.map((farm) => <PoolItem key={farm.toString()} farmId={farm.toString()} />)}
 
-      {result?.length === 0 && !loading ? <NoData /> : null}
+      {farms?.length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
-        <LoadingRow>
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </LoadingRow>
+        <Box sx={{ padding: "16px" }}>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        </Box>
       ) : null}
 
-      {/* {Number(totalElements) > 0 ? (
+      {Number(totalElements) > 0 ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
-      ) : null} */}
+      ) : null}
     </Box>
   );
 }

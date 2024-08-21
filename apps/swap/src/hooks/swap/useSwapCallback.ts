@@ -3,7 +3,7 @@ import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
-import { useSlippageManager } from "store/swap/cache/hooks";
+import { useSlippageManager, useSwapKeepTokenInPools } from "store/swap/cache/hooks";
 import { useUpdateSwapOutAmount, getSwapOutAmount } from "store/swap/hooks";
 import { slippageToPercent } from "constants/index";
 import { swap } from "hooks/swap/v3Calls";
@@ -11,13 +11,14 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getLocaleMessage } from "locales/services";
-import { useErrorTip } from "hooks/useTips";
+import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
+import { parseTokenAmount, sleep, toSignificantWithGroupSeparator } from "@icpswap/utils";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -35,39 +36,45 @@ export function useInitialSwapSteps() {
   const updateStep = useStepContentManager();
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
+  const keepTokenInPools = useSwapKeepTokenInPools();
 
   const handleReclaim = () => {
-    history.push("/swap/reclaim");
+    history.push("/swap/withdraw");
     closeAllSteps();
   };
 
-  return useCallback(({ trade, key, retry }: InitialSwapStepsArgs) => {
-    if (!trade) return undefined;
+  return useCallback(
+    ({ trade, key, retry }: InitialSwapStepsArgs) => {
+      if (!trade) return undefined;
 
-    const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
-    const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const pool = trade.route.pools[0];
-    const token0 = pool.token0;
-    const token1 = pool.token1;
-    const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
-    const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+      const pool = trade.route.pools[0];
+      const token0 = pool.token0;
+      const token1 = pool.token1;
+      const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+      const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
 
-    const content = getSwapStep({
-      inputCurrency,
-      outputCurrency,
-      amount0,
-      amount1,
-      key: key.toString(),
-      retry,
-      handleReclaim,
-    });
+      const content = getSwapStep({
+        inputCurrency,
+        outputCurrency,
+        amount0,
+        amount1,
+        key: key.toString(),
+        retry,
+        handleReclaim,
+        keepTokenInPools,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t`Swap Details`,
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t`Swap Details`,
+        description: t`You can swap directly without depositing, because you have sufficient balance in the Swap pool.`,
+      });
+    },
+    [keepTokenInPools],
+  );
 }
 
 export interface SwapCallsCallbackArgs {
@@ -76,6 +83,7 @@ export interface SwapCallsCallbackArgs {
   openExternalTip: OpenExternalTip;
   subAccountTokenBalance: BigNumber;
   swapInTokenUnusedBalance: bigint;
+  refresh: () => void;
 }
 
 export function useSwapCalls() {
@@ -83,6 +91,7 @@ export function useSwapCalls() {
 
   const [allowedSlippage] = useSlippageManager("swap");
   const slippageTolerance = slippageToPercent(allowedSlippage);
+  const keepTokenInPools = useSwapKeepTokenInPools();
 
   const approve = useSwapApprove();
   const deposit = useSwapDeposit();
@@ -91,7 +100,7 @@ export function useSwapCalls() {
 
   const updateSwapOutAmount = useUpdateSwapOutAmount();
 
-  const [openErrorTip] = useErrorTip();
+  const [openTip] = useTips();
 
   const initialAndUpdateSwapStep = useInitialSwapSteps();
 
@@ -102,6 +111,7 @@ export function useSwapCalls() {
       swapInTokenUnusedBalance,
       subAccountTokenBalance,
       openExternalTip,
+      refresh,
     }: SwapCallsCallbackArgs) => {
       if (!trade || !principal) return undefined;
 
@@ -140,8 +150,15 @@ export function useSwapCalls() {
                 : actualSwapAmount
               : undefined;
 
+            const transferAmount = userInputAmount
+              ? new BigNumber(userInputAmount)
+                  .minus(subAccountTokenBalance.toString())
+                  .minus(swapInTokenUnusedBalance.toString())
+                  .toString()
+              : null;
+
             const step0 = async () => {
-              if (!userInputAmount) return false;
+              if (!userInputAmount || !transferAmount) return false;
 
               // Skip transfer if unused token balance is greater than or equal to actual swap amount
               if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount)) {
@@ -154,7 +171,7 @@ export function useSwapCalls() {
                   return true;
                 }
 
-                return await transfer(tokenInputOfPool, userInputAmount, poolId);
+                return await transfer(tokenInputOfPool, transferAmount, poolId);
               }
 
               return await approve({
@@ -166,22 +183,58 @@ export function useSwapCalls() {
             };
 
             const step1 = async () => {
-              if (!userInputAmount) return false;
+              if (!userInputAmount || !transferAmount) return false;
+
+              const depositAllTokens = subAccountTokenBalance.isGreaterThan(userInputAmount);
+              const depositAmount = depositAllTokens ? subAccountTokenBalance.toString() : transferAmount;
 
               // Skip transfer if unused token balance is greater than or equal to actual swap amount
-              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount)) {
+              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount) && !depositAllTokens) {
                 return true;
               }
 
               return await deposit({
                 token: tokenInputOfPool,
-                amount: userInputAmount,
+                amount: depositAmount,
                 poolId,
                 openExternalTip: ({ message }: ExternalTipArgs) => {
                   openExternalTip({ message, tipKey: stepKey, poolId });
                 },
                 standard: tokenInputOfPool.standard as TOKEN_STANDARD,
               });
+            };
+
+            const withdraw_step = async () => {
+              const swapOutAmount = getSwapOutAmount(stepKey);
+
+              if (swapOutAmount !== undefined) {
+                // skip with error
+                if (new BigNumber(swapOutAmount.toString()).minus(outputAmount.currency.transFee).isLessThan(0)) {
+                  return "skip";
+                }
+
+                openTip(
+                  `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(swapOutAmount, outputAmount.currency.decimals).toString(),
+                  )} ${outputAmount.currency.symbol} withdrawal submitted`,
+                  MessageTypes.success,
+                );
+
+                const withdrawResult = await withdraw(
+                  outputAmount.currency.wrapped,
+                  poolId,
+                  swapOutAmount.toString(),
+                  ({ message }: ExternalTipArgs) => {
+                    openExternalTip({ message, tipKey: stepKey, tokenId: outputAmount.currency.address });
+                  },
+                );
+
+                refresh();
+
+                return withdrawResult;
+              }
+
+              return false;
             };
 
             const step2 = async () => {
@@ -201,45 +254,43 @@ export function useSwapCalls() {
                     poolId,
                   });
                 } else {
-                  openErrorTip(getLocaleMessage(message));
+                  openTip(getLocaleMessage(message), MessageTypes.error);
                 }
               } else {
                 updateSwapOutAmount(stepKey, data);
                 initialAndUpdateSwapStep({ trade, key: stepKey });
               }
 
-              return status === ResultStatus.OK;
+              const swapOk = status === ResultStatus.OK;
+
+              if (swapOk && !keepTokenInPools) {
+                withdraw_step();
+              }
+
+              if (swapOk && keepTokenInPools) {
+                refresh();
+              }
+
+              return swapOk;
             };
 
             const step3 = async () => {
-              const swapOutAmount = getSwapOutAmount(stepKey);
-
-              if (swapOutAmount !== undefined) {
-                // skip with error
-                if (new BigNumber(swapOutAmount.toString()).minus(outputAmount.currency.transFee).isLessThan(0)) {
-                  return "skip";
-                }
-
-                return await withdraw(
-                  outputAmount.currency.wrapped,
-                  poolId,
-                  swapOutAmount.toString(),
-                  ({ message }: ExternalTipArgs) => {
-                    openExternalTip({ message, tipKey: stepKey, tokenId: outputAmount.currency.address });
-                  },
-                );
-              }
-              return false;
+              await sleep(2000);
+              return true;
             };
 
-            calls = [step0, step1, step2, step3];
+            if (keepTokenInPools) {
+              calls = [step0, step1, step2];
+            } else {
+              calls = [step0, step1, step2, step3];
+            }
           }
         }
       }
 
       return calls;
     },
-    [principal, slippageTolerance, allowedSlippage],
+    [principal, slippageTolerance, allowedSlippage, keepTokenInPools],
   );
 }
 
@@ -248,6 +299,7 @@ export interface SwapCallbackArgs {
   openExternalTip: OpenExternalTip;
   subAccountTokenBalance: BigNumber;
   swapInTokenUnusedBalance: bigint;
+  refresh: () => void;
 }
 
 export function useSwapCallback() {
@@ -256,7 +308,7 @@ export function useSwapCallback() {
   const initialSteps = useInitialSwapSteps();
 
   return useCallback(
-    ({ trade, openExternalTip, swapInTokenUnusedBalance, subAccountTokenBalance }: SwapCallbackArgs) => {
+    ({ trade, openExternalTip, swapInTokenUnusedBalance, subAccountTokenBalance, refresh }: SwapCallbackArgs) => {
       const key = newStepKey();
 
       const calls = createSwapCalls({
@@ -265,6 +317,7 @@ export function useSwapCallback() {
         stepKey: key,
         subAccountTokenBalance,
         openExternalTip,
+        refresh,
       });
       const { call, reset, retry } = createSwapCall(calls, key.toString());
 

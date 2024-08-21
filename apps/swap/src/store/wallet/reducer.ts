@@ -2,9 +2,10 @@ import { createReducer } from "@reduxjs/toolkit";
 import {
   updateTaggedTokens,
   deleteTaggedTokens,
-  updateHideSmallBalance,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
+  updateSortBalance,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -25,9 +26,6 @@ export default createReducer(initialState, (builder) => {
         ...state,
         taggedTokens: newTaggedTokens,
       };
-    })
-    .addCase(updateHideSmallBalance, (state, { payload }) => {
-      state.hideSmallBalance = payload;
     })
     .addCase(updateCK_BTCAddresses, (state, { payload }) => {
       state.ckBTCAddresses = {
@@ -60,5 +58,11 @@ export default createReducer(initialState, (builder) => {
       });
 
       state.retrieveState[`${payload.principal}`] = _states;
+    })
+    .addCase(updateWalletSortType, (state, { payload }) => {
+      state.sort = payload;
+    })
+    .addCase(updateSortBalance, (state, { payload }) => {
+      state.sortBalance = payload;
     });
 });

@@ -2,7 +2,7 @@ import { useCallback, useState, useMemo } from "react";
 import BigNumber from "bignumber.js";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { formatDollarAmount } from "@icpswap/utils";
-import { Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
+import { Typography, Grid, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";

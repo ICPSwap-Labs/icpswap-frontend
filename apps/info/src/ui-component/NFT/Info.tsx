@@ -4,10 +4,16 @@ import { useTheme, makeStyles } from "@mui/styles";
 import Copy from "ui-component/copy/copy";
 import NFTVerifyLabel from "ui-component/NFT/VerifyLabel";
 import LazyImage from "ui-component/LazyImage";
-import { isICPSwapOfficial , encodeTokenIdentifier, arrayBufferToString } from "utils/index";
+import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useTradeOrder } from "@icpswap/hooks";
-import { openBase64ImageInNewWindow, mockALinkAndOpen , shorten, timestampFormat, formatDollarAmount } from "@icpswap/utils";
+import {
+  openBase64ImageInNewWindow,
+  mockALinkAndOpen,
+  shorten,
+  timestampFormat,
+  formatDollarAmount,
+} from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
@@ -89,8 +95,8 @@ export type NFTMetadata2 = { k: string; v: string };
 
 export type NFTMetadata = NFTMetadata1 | NFTMetadata2;
 
-export function metadataFormat(metadata: NFTTokenMetadata): NFTMetadata[] {
-  if (!!metadata.metadata && !!metadata.metadata[0]) {
+export function metadataFormat(metadata: NFTTokenMetadata | undefined): NFTMetadata[] {
+  if (metadata && !!metadata.metadata && !!metadata.metadata[0]) {
     return JSON.parse(arrayBufferToString(Uint8Array.from(metadata.metadata[0])));
   }
 
@@ -102,7 +108,12 @@ export function isMetadata1(metadata: any): metadata is NFTMetadata1 {
   return false;
 }
 
-export const DetailsItem = ({ label, value }: { label: string; value: undefined | string | number | ReactElement }) => {
+interface DetailsItemProps {
+  label: string;
+  value: undefined | string | number | ReactElement;
+}
+
+export const DetailsItem = ({ label, value }: DetailsItemProps) => {
   return (
     <Grid item>
       <Grid container alignItems="top">
@@ -162,15 +173,13 @@ export type PositionSVG = {
   image: string;
 };
 
-export default function NFTInfo({
-  canisterId,
-  tokenId,
-  isView,
-}: {
+export interface NFTInfoProps {
   canisterId: string;
   tokenId: number;
   isView?: boolean;
-}) {
+}
+
+export default function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
   const theme = useTheme() as Theme;
   const classes = useStyles();
 
@@ -185,7 +194,7 @@ export default function NFTInfo({
   const NFTUSDValue = useUSDValueFromICPAmount(orderInfo?.price);
 
   const handleImageClick = () => {
-    if (!metadata.filePath) return;
+    if (!metadata || !metadata.filePath) return;
 
     if (metadata.filePath.includes("base64")) {
       openBase64ImageInNewWindow(metadata.filePath);
@@ -208,19 +217,21 @@ export default function NFTInfo({
               container
               justifyContent="center"
             >
-              <LazyImage
-                src={metadata.filePath}
-                showDefault={metadata?.fileType !== "image"}
-                CustomImage={
-                  metadata?.fileType !== "image" && !!metadata?.fileType ? (
-                    <FileImage fileType={metadata?.fileType ?? ""} />
-                  ) : null
-                }
-                onClick={handleImageClick}
-                boxSX={{
-                  cursor: "pointer",
-                }}
-              />
+              {metadata ? (
+                <LazyImage
+                  src={metadata.filePath}
+                  showDefault={metadata.fileType !== "image"}
+                  CustomImage={
+                    metadata?.fileType !== "image" && !!metadata?.fileType ? (
+                      <FileImage fileType={metadata.fileType ?? ""} />
+                    ) : null
+                  }
+                  onClick={handleImageClick}
+                  boxSX={{
+                    cursor: "pointer",
+                  }}
+                />
+              ) : null}
             </Grid>
           </Box>
 
@@ -269,7 +280,7 @@ export default function NFTInfo({
               <Typography component="span" sx={{ marginRight: "5px" }}>
                 <Trans>Owned by</Trans>
               </Typography>
-              <TextButton>{shorten(metadata.owner, 12)}</TextButton>
+              <TextButton>{shorten(metadata?.owner, 12)}</TextButton>
             </Box>
             {Boolean(orderInfo?.price) && (
               <Grid container mt="25px" alignItems="end">
@@ -304,10 +315,12 @@ export default function NFTInfo({
                 <DetailsItem
                   label={t`Token ID`}
                   value={
-                    !!metadata.cId && !!metadata.tokenId ? encodeTokenIdentifier(metadata.cId, metadata.tokenId) : "--"
+                    metadata && !!metadata.cId && !!metadata.tokenId
+                      ? encodeTokenIdentifier(metadata.cId, metadata.tokenId)
+                      : "--"
                   }
                 />
-                {!metadata.filePath?.includes("base64") ? (
+                {metadata && !metadata.filePath?.includes("base64") ? (
                   <DetailsItem
                     label={t`File Link`}
                     value={
@@ -323,12 +336,19 @@ export default function NFTInfo({
                     }
                   />
                 ) : null}
-                <DetailsItem label={t`Mint Time`} value={timestampFormat(metadata.mintTime)} />
+                <DetailsItem
+                  label={t`Mint Time`}
+                  value={metadata ? timestampFormat(metadata.mintTime?.toString() ?? "--") : "--"}
+                />
                 <DetailsItem
                   label={t`Minter`}
-                  value={<Copy content={metadata.minter ?? ""}>{shorten(metadata.minter, 12)}</Copy>}
+                  value={
+                    <Copy content={metadata ? metadata.minter : ""}>
+                      {metadata ? shorten(metadata.minter, 12) : "--"}
+                    </Copy>
+                  }
                 />
-                <DetailsItem label={t`NFT Description`} value={`${metadata.introduction}`} />
+                <DetailsItem label={t`NFT Description`} value={`${metadata ? metadata.introduction : "--"}`} />
               </Grid>
             </DetailsToggle>
           </Box>
@@ -338,7 +358,9 @@ export default function NFTInfo({
               <Grid container flexDirection="column" spacing="15px">
                 <DetailsItem
                   label={t`NFT Canister ID`}
-                  value={<ExplorerLink label={metadata.cId} value={metadata.cId} />}
+                  value={
+                    <ExplorerLink label={metadata ? metadata.cId : "--"} value={metadata ? metadata.cId ?? "" : "--"} />
+                  }
                 />
                 <DetailsItem label={t`Collections Description`} value={canisterMetadata?.introduction} />
                 <DetailsItem

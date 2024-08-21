@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { t } from "@lingui/macro";
+import { WalletSortType } from "types/index";
 
-import { WalletTokenSortType } from "./types";
-
-const menus: { label: string; value: WalletTokenSortType }[] = [
+const menus: { label: string; value: WalletSortType }[] = [
   { label: t`Highest value`, value: "High" },
   { label: t`Lowest value`, value: "Low" },
   { label: t`Default`, value: "Default" },
@@ -12,14 +11,14 @@ const menus: { label: string; value: WalletTokenSortType }[] = [
 
 export interface SelectSortTypeProps {
   border?: boolean;
-  value?: WalletTokenSortType;
-  onChange?: (value: WalletTokenSortType) => void;
+  value?: WalletSortType;
+  onChange?: (value: WalletSortType) => void;
   filled?: boolean;
   fullHeight?: boolean;
 }
 
 export function SelectSortType({ value: sortType, onChange, border, filled, fullHeight }: SelectSortTypeProps) {
-  const [value, setValue] = useState<WalletTokenSortType | null>(null);
+  const [value, setValue] = useState<WalletSortType | null>(null);
 
   useEffect(() => {
     if (sortType) {
@@ -27,7 +26,7 @@ export function SelectSortType({ value: sortType, onChange, border, filled, full
     }
   }, [sortType]);
 
-  const handleValueChange = (value: WalletTokenSortType) => {
+  const handleValueChange = (value: WalletSortType) => {
     setValue(value);
     if (onChange) {
       onChange(value);

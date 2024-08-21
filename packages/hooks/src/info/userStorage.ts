@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { userStorage } from "@icpswap/actor";
-import { UserStorageTransaction , PaginationResult } from "@icpswap/types";
+import { UserStorageTransaction, PaginationResult } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
 /**

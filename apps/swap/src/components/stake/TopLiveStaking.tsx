@@ -32,9 +32,9 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
   const { result: stakeTokenBalance } = useTokenBalance(pool.stakingToken.address, principal?.toString());
 
   const totalStakedValue = useMemo(() => {
-    if (!rewardTokenPrice || !stakeToken || !poolInfo) return undefined;
-    return parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).multipliedBy(rewardTokenPrice).toString();
-  }, [rewardTokenPrice, stakeToken, poolInfo]);
+    if (!stakeTokenPrice || !stakeToken || !poolInfo) return undefined;
+    return parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString();
+  }, [stakeTokenPrice, stakeToken, poolInfo]);
 
   const apr = useApr({
     poolInfo,
@@ -57,9 +57,9 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
       }}
       onClick={handleClick}
     >
-      <Flex justify="space-between">
+      <Flex justify="space-between" gap="0 20px">
         <StakingTokenImages stakeToken={stakeToken} rewardToken={rewardToken} />
-        <Typography fontSize={12}>
+        <Typography fontSize={12} textAlign="right" lineHeight="18px">
           {rewardToken && stakeToken && rewardToken ? (
             <Trans>
               Stake {stakeToken.symbol} to earn {rewardToken.symbol}
@@ -70,8 +70,8 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
         </Typography>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box>
+      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 20px">
+        <Box style={{ width: "50%" }}>
           <Typography fontSize={12}>
             <Trans>Reward Token</Trans>
           </Typography>
@@ -81,7 +81,11 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={rewardToken?.symbol ?? ""}
           >
             {rewardToken ? rewardToken.symbol : "--"}
           </Typography>

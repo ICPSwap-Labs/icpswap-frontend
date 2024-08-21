@@ -5,7 +5,7 @@ import Toggle from "components/Toggle";
 import { useExpertModeManager, useSlippageManager, useMultipleApproveManager } from "store/swap/cache/hooks";
 import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
 import BigNumber from "bignumber.js";
-import { SwapTooltip, NumberTextField, TextButton } from "components/index";
+import { Tooltip, NumberTextField, TextButton } from "components/index";
 import { isDarkTheme } from "utils";
 import { Theme } from "@mui/material/styles";
 import { Trans } from "@lingui/macro";
@@ -158,7 +158,7 @@ function SwapUserSetting({ type }: UserSettingProps) {
           <Typography mr={1} color="textPrimary">
             Slippage tolerance
           </Typography>
-          <SwapTooltip
+          <Tooltip
             tips="Your transaction will revert if the price changes unfavorably
                   by more than this percentage."
           />
@@ -211,7 +211,7 @@ function SwapUserSetting({ type }: UserSettingProps) {
           <Typography mr={1} color="textPrimary">
             <Trans>Toggle Expert Mode</Trans>
           </Typography>
-          <SwapTooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
+          <Tooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
         </Grid>
         <Box mt={1}>
           <Toggle isActive={expertMode} onToggleChange={toggleExpertMode} />

@@ -5,7 +5,6 @@ import NFTList from "ui-component/NFT/NFTList";
 import CanisterHeader from "ui-component/NFT/CanisterHeader";
 import { useNFTCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/calls";
 import { t, Trans } from "@lingui/macro";
-import { type NFTCanisterInfo } from "@icpswap/types";
 import { Wrapper, LoadingRow, Breadcrumbs } from "ui-component/index";
 import { MainCard } from "@icpswap/ui";
 
@@ -53,11 +52,7 @@ export default function NFTCanisterDetails() {
               <div />
             </LoadingRow>
           ) : (
-            <CanisterHeader
-              details={metadata ?? ({} as NFTCanisterInfo)}
-              cycles={cycles ?? BigInt(0)}
-              count={count ?? BigInt(0)}
-            />
+            <CanisterHeader details={metadata} cycles={cycles ?? BigInt(0)} count={count ?? BigInt(0)} />
           )}
         </Box>
 

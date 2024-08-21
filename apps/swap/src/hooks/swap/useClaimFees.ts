@@ -49,49 +49,54 @@ function useCollectFeeCalls() {
         return false;
       };
 
-      const withdrawCurrencyA = async () => {
-        if (!currencyFeeAmount0 || !pool) return false;
+      const __withdraw = async () => {
+        const withdrawCurrencyA = async () => {
+          if (!currencyFeeAmount0 || !pool) return false;
 
-        if (
-          !new BigNumber(currencyFeeAmount0.quotient.toString())
-            .minus(currencyFeeAmount0.currency.transFee)
-            .isGreaterThan(0)
-        )
-          return true;
+          if (
+            !new BigNumber(currencyFeeAmount0.quotient.toString())
+              .minus(currencyFeeAmount0.currency.transFee)
+              .isGreaterThan(0)
+          )
+            return true;
 
-        return await withdraw(
-          currencyFeeAmount0.currency,
-          pool.id,
-          currencyFeeAmount0.quotient.toString(),
-          ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
-          },
-        );
+          return await withdraw(
+            currencyFeeAmount0.currency,
+            pool.id,
+            currencyFeeAmount0.quotient.toString(),
+            ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
+            },
+          );
+        };
+
+        const withdrawCurrencyB = async () => {
+          if (!currencyFeeAmount1 || !pool) return false;
+
+          if (
+            !new BigNumber(currencyFeeAmount1.quotient.toString())
+              .minus(currencyFeeAmount1.currency.transFee)
+              .isGreaterThan(0)
+          )
+            return true;
+
+          const result = await withdraw(
+            currencyFeeAmount1.currency,
+            pool.id,
+            currencyFeeAmount1.quotient.toString(),
+            ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
+            },
+          );
+
+          return result;
+        };
+
+        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]);
+        return !result.includes(false);
       };
 
-      const withdrawCurrencyB = async () => {
-        if (!currencyFeeAmount1 || !pool) return false;
-
-        if (
-          !new BigNumber(currencyFeeAmount1.quotient.toString())
-            .minus(currencyFeeAmount1.currency.transFee)
-            .isGreaterThan(0)
-        )
-          return true;
-
-        const result = await withdraw(
-          currencyFeeAmount1.currency,
-          pool.id,
-          currencyFeeAmount1.quotient.toString(),
-          ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
-          },
-        );
-
-        return result;
-      };
-
-      return [_collect, withdrawCurrencyA, withdrawCurrencyB];
+      return [_collect, __withdraw];
     },
     [principal],
   );

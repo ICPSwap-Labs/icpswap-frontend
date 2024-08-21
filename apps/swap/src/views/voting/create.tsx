@@ -5,8 +5,7 @@ import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input,
 import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { type StatusResult, type ActorIdentity } from "@icpswap/types";
+import { type StatusResult } from "@icpswap/types";
 import { Trans, t } from "@lingui/macro";
 import { timeParser } from "utils/index";
 import AddIcon from "@mui/icons-material/Add";
@@ -57,6 +56,7 @@ export default function VotingCreateProposal() {
   const [openErrorTip] = useErrorTip();
 
   const [importLoading, setImportLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(false);
 
   const defaultValues = {
@@ -110,10 +110,12 @@ export default function VotingCreateProposal() {
     });
   };
 
-  const handleCreateVote = async (identity: ActorIdentity, { loading }: SubmitLoadingProps) => {
+  const handleCreateVote = async () => {
     if (loading || !principal || !account || !values.startDateTime || !values.endDateTime) return;
 
-    const { status, message, data } = await createVotingProposal(identity, canisterId, {
+    setLoading(true);
+
+    const { status, message, data } = await createVotingProposal(canisterId, {
       title: values.title,
       beginTime: BigInt(millisecond2Nanosecond(values.startDateTime.getTime())),
       endTime: BigInt(millisecond2Nanosecond(values.endDateTime.getTime())),
@@ -136,7 +138,7 @@ export default function VotingCreateProposal() {
 
       for (let i = 0; i < powers.length; i += 20000) {
         const _powers = powers.slice(i, i + 20000);
-        promises.push(setVotingProposalPowers(identity, canisterId, data, _powers));
+        promises.push(setVotingProposalPowers(canisterId, data, _powers));
       }
 
       await Promise.all(promises).catch((err) => {
@@ -151,6 +153,8 @@ export default function VotingCreateProposal() {
     } else {
       openErrorTip(message);
     }
+
+    setLoading(false);
   };
 
   const handleImportPowers = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -479,20 +483,16 @@ export default function VotingCreateProposal() {
               </Box>
 
               <Box mt="20px">
-                <Identity onSubmit={handleCreateVote}>
-                  {({ submit, loading }: CallbackProps) => (
-                    <Button
-                      onClick={submit}
-                      disabled={loading || !!errorMessage}
-                      fullWidth
-                      variant="contained"
-                      size="large"
-                      startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-                    >
-                      {errorMessage || t`Create proposal`}
-                    </Button>
-                  )}
-                </Identity>
+                <Button
+                  onClick={handleCreateVote}
+                  disabled={loading || !!errorMessage}
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+                >
+                  {errorMessage || t`Create proposal`}
+                </Button>
               </Box>
             </Box>
           </Box>

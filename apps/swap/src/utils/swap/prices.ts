@@ -7,6 +7,7 @@ import {
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
 } from "constants/misc";
+import { BigNumber } from "@icpswap/utils";
 
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000));
 
@@ -53,4 +54,27 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
     impact--;
   }
   return 0;
+}
+
+const IMPACT_COLORS_TIERS = [30, 15, 1];
+
+export function impactColor(priceImpact: string | number | null | undefined) {
+  if (!priceImpact) return 0;
+
+  let impact = IMPACT_COLORS_TIERS.length;
+
+  for (const impactLevel of IMPACT_COLORS_TIERS) {
+    if (new BigNumber(impactLevel).isLessThan(Math.abs(Number(priceImpact)))) return impact;
+    impact--;
+  }
+
+  return 0;
+}
+
+export function getImpactConfirm(priceImpact: string | number | undefined) {
+  if (!priceImpact) return false;
+  if (new BigNumber(priceImpact).isLessThan(0)) {
+    return new BigNumber(15).isLessThan(Math.abs(Number(priceImpact)));
+  }
+  return false;
 }

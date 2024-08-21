@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
+import { Button, Typography, Box, InputAdornment } from "components/Mui";
+import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAmount } from "@icpswap/utils";
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import BigNumber from "bignumber.js";
@@ -16,6 +16,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import randomBytes from "randombytes";
 import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
+import { useUSDPriceById } from "hooks";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
@@ -32,6 +33,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
+  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
   const { result: balance } = useTokenBalance(token?.canisterId, principal);
 
   const { neuron_minimum_stake_e8s } = useMemo(() => {
@@ -142,20 +144,23 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
             }}
           />
 
-          <Grid container alignItems="center">
-            <Typography>
-              {token && balance ? (
+          <Typography>
+            {token && balance && tokenUSDPrice ? (
+              <>
                 <Trans>
                   Balance:&nbsp;
                   {`${new BigNumber(
                     parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                  ).toFormat()}`}
+                  ).toFormat()} ${token.symbol} (${formatDollarAmount(
+                    parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                  )})`}
                 </Trans>
-              ) : (
-                "--"
-              )}
-            </Typography>
-          </Grid>
+              </>
+            ) : (
+              "--"
+            )}
+          </Typography>
+
           <Typography>
             {token ? (
               <>

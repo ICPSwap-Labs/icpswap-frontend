@@ -84,14 +84,34 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="24px" />
 
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.primary",
+            width: "150px",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+          title={stakeToken?.symbol ?? ""}
+        >
           {stakeToken ? `${stakeToken.symbol} ` : "--"}
         </Typography>
       </Flex>
 
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.primary",
+            width: "150px",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+          title={rewardToken?.symbol ?? ""}
+        >
           {rewardToken ? `${rewardToken.symbol} ` : "--"}
         </Typography>
       </Flex>
@@ -102,14 +122,41 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
         </Typography>
       </Flex>
 
-      <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {userStakeTokenBalance && rewardToken
-            ? `${toSignificantWithGroupSeparator(
-                parseTokenAmount(userStakeTokenBalance, rewardToken.decimals).toString(),
-              )} ${rewardToken.symbol}`
-            : "--"}
-        </Typography>
+      <Flex vertical gap="5px 0" className="row-item" justify="center">
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.primary",
+              maxWidth: "230px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+            title={
+              userStakeTokenBalance && stakeToken
+                ? `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
+                  )} ${stakeToken.symbol}`
+                : ""
+            }
+          >
+            {userStakeTokenBalance && stakeToken
+              ? `${toSignificantWithGroupSeparator(
+                  parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
+                )} ${stakeToken.symbol}`
+              : "--"}
+          </Typography>
+        </Flex>
+        <Flex gap="0 4px" justify="flex-end" fullWidth>
+          <Typography sx={{ fontSize: "12px" }}>
+            {userStakeTokenBalance && stakeToken && stakeTokenPrice
+              ? `${formatDollarAmount(
+                  parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
+                )}`
+              : "--"}
+          </Typography>
+        </Flex>
       </Flex>
 
       <Flex justify="flex-end" className="row-item">

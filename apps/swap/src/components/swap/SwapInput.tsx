@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => {
     input: {
       "& input": {
         textAlign: "right",
-        fontSize: "20px",
+        fontSize: "20px!important",
         fontWeight: 700,
       },
       "& input::placeholder": {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => {
 });
 
 export interface SwapInputProps {
-  value: string | number;
+  value: string | number | undefined;
   currency: Token | undefined;
   onUserInput: (value: string) => void;
   disabled?: boolean;

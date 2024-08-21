@@ -163,9 +163,7 @@ export function MainContent({
                     <Trans>Reward Token</Trans>
                   </Typography>
 
-                  <Tooltip
-                    tips={t`You will receive the reward tokens you have earned after harvest the staked tokens.`}
-                  />
+                  {/* <Tooltip tips={t`Click harvest button to receive your earned reward tokens.`} /> */}
                 </Flex>
 
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>

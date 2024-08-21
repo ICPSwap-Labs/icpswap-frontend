@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
-import { NoData, LoadingRow, SwapTooltip } from "components/index";
+import { NoData, LoadingRow, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -91,9 +91,9 @@ export function ReclaimWithPair() {
 
   const handlePairChange = (poolId: string | undefined) => {
     if (poolId) {
-      history.push(`/swap/reclaim?type=pair&poolId=${poolId}`);
+      history.push(`/swap/withdraw?type=pair&poolId=${poolId}`);
     } else {
-      history.push(`/swap/reclaim?type=pair`);
+      history.push(`/swap/withdraw?type=pair`);
     }
   };
 
@@ -129,7 +129,7 @@ export function ReclaimWithPair() {
               <Trans>Select a pair</Trans>
             </Typography>
 
-            {isMobile ? <SwapTooltip tips={<Trans>Select the trading pair you wish to reclaim.</Trans>} /> : null}
+            {isMobile ? <Tooltip tips={<Trans>Select the trading pair you wish to withdraw.</Trans>} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
@@ -159,7 +159,7 @@ export function ReclaimWithPair() {
             />
 
             <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide unclaimable tokens.</Trans>
+              <Trans>Hide non-withdrawable tokens.</Trans>
             </Typography>
           </Box>
         </Box>
@@ -168,7 +168,7 @@ export function ReclaimWithPair() {
       {!isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
           <Typography>
-            <Trans>Select the trading pair you wish to reclaim.</Trans>
+            <Trans>Select the trading pair you wish to withdraw.</Trans>
           </Typography>
         </Box>
       ) : null}
