@@ -8,7 +8,14 @@ import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
-import { StakingTokenImages, MainContent, StakeDetails, Reclaim, ReclaimContext } from "components/stake/index";
+import {
+  StakingTokenImages,
+  MainContent,
+  StakeDetails,
+  Reclaim,
+  ReclaimContext,
+  AprChart,
+} from "components/stake/index";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token";
 
 function ReclaimTab() {
@@ -72,7 +79,21 @@ export default function StakeDetail() {
         <Box sx={{ width: "100%", maxWidth: "1120px", margin: "10px 0 0 0" }}>
           <Breadcrumbs prevLabel={t`Stake`} currentLabel={t`Stake Token`} prevLink="/stake" />
 
-          <Flex sx={{ margin: "30px 0 0 0", width: "100%" }} justify="center" align="center" vertical>
+          <Flex
+            sx={{
+              margin: "30px 0 0 0",
+              width: "100%",
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "12px 0",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              },
+            }}
+            justify="center"
+            align="flex-start"
+            gap="0 12px"
+          >
             <Box
               sx={{
                 width: "548px",
@@ -152,6 +173,8 @@ export default function StakeDetail() {
                 rewardTokenPrice={rewardTokenPrice}
               />
             </Box>
+
+            <AprChart canisterId={poolId} />
           </Flex>
         </Box>
       </Flex>

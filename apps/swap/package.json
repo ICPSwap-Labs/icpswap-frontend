@@ -87,6 +87,7 @@
     "@sentry/react": "7.80.0",
     "@sentry/types": "7.80.0",
     "@tabler/icons": "^1.39.1",
+    "@tanstack/react-query": "5.28.14",
     "@types/react-router": "^5.1.20",
     "@web3-react/core": "^8.2.0",
     "@web3-react/metamask": "^8.2.1",
@@ -122,6 +123,7 @@
     "react-markdown": "^6.0.0",
     "react-number-format": "5.3.1",
     "react-scripts": "5.0.1",
+    "recharts": "2.1.12",
     "redux-localstorage-simple": "^2.3.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
@@ -136,7 +138,6 @@
     "toformat": "^2.0.0",
     "viem": "^2.18.4",
     "wagmi": "2.5.19",
-    "@tanstack/react-query": "5.28.14",
     "web3": "1.8.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   },
