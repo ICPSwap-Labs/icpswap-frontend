@@ -1,8 +1,13 @@
-import { Typography, Box, BoxProps } from "components/Mui";
+import { Typography, Box, BoxProps, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
 import { useCallback, useMemo } from "react";
-import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
+import {
+  useIntervalUserFarmInfo,
+  useFarmApr,
+  useFarmTvlValue,
+  useStateColors,
+  useUserTvlValue,
+} from "hooks/staking-farm";
 import { useUserPositionsValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
@@ -15,7 +20,6 @@ import {
   useSwapPoolMetadata,
   useFarmState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
@@ -25,11 +29,12 @@ interface FarmListCardProps {
   farmId: string;
   wrapperSx?: BoxProps["sx"];
   showState: boolean;
+  your?: boolean;
 }
 
-export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps) {
+export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCardProps) {
   const principal = useAccountPrincipal();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
@@ -67,6 +72,7 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
     token1,
     farmId,
   });
+  const userTvlValue = useUserTvlValue({ farmId, token0, token1 });
 
   const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
 
@@ -155,11 +161,19 @@ export function FarmListCard({ farmId, wrapperSx, showState }: FarmListCardProps
         ) : null}
       </Flex>
 
-      <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
-        </Typography>
-      </Flex>
+      {your ? (
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {userTvlValue ? formatDollarAmount(userTvlValue) : "--"}
+          </Typography>
+        </Flex>
+      ) : (
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
+          </Typography>
+        </Flex>
+      )}
 
       {showState ? (
         <Flex justify="flex-end" className="row-item">

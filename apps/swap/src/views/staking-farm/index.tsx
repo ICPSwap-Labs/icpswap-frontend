@@ -57,12 +57,14 @@ function MainContent() {
     }
   }, [__state]);
 
+  const your = useMemo(() => {
+    return __state === FilterState.YOUR;
+  }, [__state, FilterState]);
+
   const filterUser = useMemo(() => {
-    if (__state === FilterState.YOUR) {
-      return principal?.toString();
-    }
+    if (your) return principal?.toString();
     return null;
-  }, [__state, principal]);
+  }, [your, principal]);
 
   const { result: farms, loading } = useFarms({
     state,
@@ -255,11 +257,19 @@ function MainContent() {
                 <Trans>Your Available to Stake</Trans>
               </Typography>
             </Flex>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>Total Staked</Trans>
-              </Typography>
-            </Flex>
+            {your ? (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Your Staked</Trans>
+                </Typography>
+              </Flex>
+            ) : (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Total Staked</Trans>
+                </Typography>
+              </Flex>
+            )}
             {showState ? (
               <Flex justify="flex-end" className="row-item">
                 <Typography variant="body2" color="text.400">
@@ -295,6 +305,7 @@ function MainContent() {
                     gridTemplateColumns,
                   }}
                   showState={showState}
+                  your={your}
                 />
               ))}
             </>
