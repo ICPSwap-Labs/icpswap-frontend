@@ -37,13 +37,13 @@ export function Farm() {
         />
       </Row>
 
-      <Box sx={{ display: "flex" }}>
+      {/* <Box sx={{ display: "flex" }}>
         <Item
           label={t`Total Stakers`}
           value={globalData.principalAmount?.toString() ?? "--"}
           tooltip={t`The total number of unique accounts that have staked in the farming pools.`}
         />
-      </Box>
+      </Box> */}
     </Card>
   );
 }
