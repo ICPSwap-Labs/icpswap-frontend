@@ -1,16 +1,20 @@
-import { Box, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { Select, type MenuProps } from "components/Select/ForToken";
+import { Box, Typography } from "components/Mui";
+import { useEffect, useMemo, useState, ReactNode } from "react";
+import { Select } from "components/Select/ForToken";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { useAllTokensOfSwap } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { Principal } from "@dfinity/principal";
+
+import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
 interface TokenMenuItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
   symbol?: string;
   search?: string;
+  color?: "primary" | "secondary";
 }
 
 function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
@@ -25,7 +29,7 @@ function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefi
   return false;
 }
 
-function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
+function TokenMenuItem({ tokenInfo, symbol, search, color }: TokenMenuItemProps) {
   const hide = useMemo(() => {
     return isTokenHide(tokenInfo, search);
   }, [search, tokenInfo]);
@@ -37,7 +41,9 @@ function TokenMenuItem({ tokenInfo, symbol, search }: TokenMenuItemProps) {
         size="24px"
         tokenId={tokenInfo.ledger_id.toString()}
       />
-      <Typography component="span">{symbol ?? tokenInfo?.symbol ?? "--"}</Typography>
+      <Typography color={color === "primary" ? "text.primary" : "text.secondary"} component="span">
+        {symbol ?? tokenInfo?.symbol ?? "--"}
+      </Typography>
     </Box>
   );
 }
@@ -50,6 +56,10 @@ export interface SelectTokenProps {
   search?: boolean;
   filled?: boolean;
   fullHeight?: boolean;
+  showBackground?: boolean;
+  showClean?: boolean;
+  panelPadding?: string;
+  defaultPanel?: ReactNode;
 }
 
 export function SelectToken({
@@ -60,6 +70,10 @@ export function SelectToken({
   search: hasSearch,
   filled,
   fullHeight,
+  showBackground,
+  showClean,
+  panelPadding,
+  defaultPanel,
 }: SelectTokenProps) {
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
@@ -103,6 +117,7 @@ export function SelectToken({
     <Select
       placeholder="Select a token"
       menus={menus}
+      minMenuWidth="180px"
       menuMaxHeight="240px"
       onChange={handleValueChange}
       value={value}
@@ -112,6 +127,22 @@ export function SelectToken({
       menuFilter={handleFilterMenu}
       filled={filled}
       fullHeight={fullHeight}
+      showBackground={showBackground}
+      showClean={showClean}
+      panelPadding={panelPadding}
+      panel={(menu: MenuProps | null | undefined) => {
+        if (!menu) return defaultPanel;
+        if (!menu.additional) return null;
+
+        const additional = JSON.parse(menu.additional) as StringifyAllTokenOfSwapTokenInfo;
+
+        const tokenInfo = {
+          ...additional,
+          ledger_id: Principal.fromText(additional.ledger_id.__principal__),
+        } as AllTokenOfSwapTokenInfo;
+
+        return <TokenMenuItem tokenInfo={tokenInfo} color="primary" />;
+      }}
     />
   );
 }

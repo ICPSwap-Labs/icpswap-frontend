@@ -8,14 +8,25 @@ interface TokenPairProps {
   token1Symbol: string | undefined;
   token0Id: string | undefined;
   token1Id: string | undefined;
+  color?: "primary" | "secondary";
 }
 
-export function TokenPair({ token0Logo, token1Id, token0Id, token0Symbol, token1Logo, token1Symbol }: TokenPairProps) {
+export function TokenPair({
+  token0Logo,
+  token1Id,
+  token0Id,
+  token0Symbol,
+  token1Logo,
+  token1Symbol,
+  color,
+}: TokenPairProps) {
   return (
-    <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
+    <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
       <TokenImage logo={token0Logo} tokenId={token0Id} size="24px" />
       <TokenImage logo={token1Logo} tokenId={token1Id} size="24px" sx={{ margin: "0 0 0 -8px" }} />
-      <Typography>{token0Symbol && token1Symbol ? `${token0Symbol}/${token1Symbol}` : "--"}</Typography>
+      <Typography color={color === "primary" ? "text.primary" : "text.secondary"}>
+        {token0Symbol && token1Symbol ? `${token0Symbol}/${token1Symbol}` : "--"}
+      </Typography>
     </Box>
   );
 }

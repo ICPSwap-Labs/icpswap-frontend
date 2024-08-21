@@ -46,7 +46,7 @@ export function SelectSortType({ value: sortType, onChange, border, filled, full
       showClean={false}
       showBackground={false}
       valueColor="text.secondary"
-      padding="9px 0"
+      panelPadding="9px 0"
     />
   );
 }

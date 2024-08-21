@@ -1,10 +1,13 @@
 import { Box } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { Select, type MenuProps } from "components/Select/ForToken";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
 import { useSwapPools, useAllTokensOfSwap } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
+import { Principal } from "@dfinity/principal";
+
+import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
 function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
   if (!search) return false;
@@ -24,9 +27,10 @@ interface PairItemProps {
   token0: AllTokenOfSwapTokenInfo | undefined;
   token1: AllTokenOfSwapTokenInfo | undefined;
   select?: boolean;
+  color?: "primary" | "secondary";
 }
 
-function PairMenuItem({ token0, token1, select }: PairItemProps) {
+function PairMenuItem({ token0, token1, select, color }: PairItemProps) {
   const token0Logo = useTokenLogo(token0?.ledger_id.toString());
   const token1Logo = useTokenLogo(token1?.ledger_id.toString());
 
@@ -50,6 +54,7 @@ function PairMenuItem({ token0, token1, select }: PairItemProps) {
         token1Symbol={token1?.symbol}
         token0Id={token0?.ledger_id.toString()}
         token1Id={token1?.ledger_id.toString()}
+        color={color}
       />
     </Box>
   );
@@ -63,6 +68,10 @@ export interface SelectPairProps {
   search?: boolean;
   filled?: boolean;
   fullHeight?: boolean;
+  showBackground?: boolean;
+  showClean?: boolean;
+  panelPadding?: string;
+  defaultPanel?: ReactNode;
 }
 
 export function SelectPair({
@@ -73,6 +82,10 @@ export function SelectPair({
   search: hasSearch,
   filled,
   fullHeight,
+  showBackground = true,
+  showClean = true,
+  panelPadding,
+  defaultPanel,
 }: SelectPairProps) {
   const [value, setValue] = useState<string | null | undefined>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
@@ -107,7 +120,6 @@ export function SelectPair({
         .map((ele) => ({
           value: ele.poolId,
           label: <PairMenuItem token0={ele.additional.token0} token1={ele.additional.token1} />,
-          selectLabel: <PairMenuItem token0={ele.additional.token0} token1={ele.additional.token1} select />,
           additional: JSON.stringify(ele.additional),
         }))
         .filter((ele) => !!ele.label);
@@ -142,6 +154,7 @@ export function SelectPair({
     <Select
       placeholder="Select a pair"
       menus={menus}
+      minMenuWidth="214px"
       menuMaxHeight="240px"
       onChange={handleValueChange}
       value={value}
@@ -151,6 +164,30 @@ export function SelectPair({
       menuFilter={handleFilterMenu}
       filled={filled}
       fullHeight={fullHeight}
+      showBackground={showBackground}
+      showClean={showClean}
+      panelPadding={panelPadding}
+      panel={(menu: MenuProps | null | undefined) => {
+        if (!menu) return defaultPanel;
+        if (!menu.additional) return null;
+
+        const additional = JSON.parse(menu.additional) as {
+          token0: StringifyAllTokenOfSwapTokenInfo;
+          token1: StringifyAllTokenOfSwapTokenInfo;
+        };
+
+        const token0 = {
+          ...additional.token0,
+          ledger_id: Principal.fromText(additional.token0.ledger_id.__principal__),
+        } as AllTokenOfSwapTokenInfo;
+
+        const token1 = {
+          ...additional.token1,
+          ledger_id: Principal.fromText(additional.token1.ledger_id.__principal__),
+        } as AllTokenOfSwapTokenInfo;
+
+        return <PairMenuItem token0={token0} token1={token1} select color="primary" />;
+      }}
     />
   );
 }

@@ -47,7 +47,7 @@ export function SortBalance({ value, onChange, border, filled, fullHeight }: Sor
       showClean={false}
       showBackground={false}
       valueColor="text.secondary"
-      padding="9px 0"
+      panelPadding="9px 0"
     />
   );
 }
