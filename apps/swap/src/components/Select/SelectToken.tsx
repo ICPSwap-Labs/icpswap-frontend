@@ -15,6 +15,7 @@ interface TokenMenuItemProps {
   symbol?: string;
   search?: string;
   color?: "primary" | "secondary";
+  panel?: boolean;
 }
 
 function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
@@ -29,13 +30,13 @@ function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefi
   return false;
 }
 
-function TokenMenuItem({ tokenInfo, symbol, search, color }: TokenMenuItemProps) {
+function TokenMenuItem({ tokenInfo, symbol, search, color, panel }: TokenMenuItemProps) {
   const hide = useMemo(() => {
     return isTokenHide(tokenInfo, search);
   }, [search, tokenInfo]);
 
   return hide ? null : (
-    <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
+    <Box sx={{ display: "flex", gap: panel ? "0 4px" : "0 8px", alignItems: "center" }}>
       <TokenImage
         logo={generateLogoUrl(tokenInfo.ledger_id.toString())}
         size="24px"
@@ -141,7 +142,7 @@ export function SelectToken({
           ledger_id: Principal.fromText(additional.ledger_id.__principal__),
         } as AllTokenOfSwapTokenInfo;
 
-        return <TokenMenuItem tokenInfo={tokenInfo} color="primary" />;
+        return <TokenMenuItem tokenInfo={tokenInfo} color="primary" panel />;
       }}
     />
   );

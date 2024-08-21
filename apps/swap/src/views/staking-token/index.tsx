@@ -135,8 +135,38 @@ function MainContent() {
         </Box>
 
         <Flex gap="0 20px">
-          <SelectToken search onTokenChange={handleStakeTokenChange} />
-          <SelectToken search onTokenChange={handleRewardTokenChange} />
+          <Flex gap="0 4px">
+            <Typography>
+              <Trans>Staked Token:</Trans>
+            </Typography>
+            <SelectToken
+              showBackground={false}
+              search
+              panelPadding="0px"
+              defaultPanel={
+                <Typography color="text.primary">
+                  <Trans>All Token</Trans>
+                </Typography>
+              }
+              onTokenChange={handleStakeTokenChange}
+            />
+          </Flex>
+          <Flex gap="0 4px">
+            <Typography>
+              <Trans>Reward Token:</Trans>
+            </Typography>
+            <SelectToken
+              showBackground={false}
+              search
+              panelPadding="0px"
+              defaultPanel={
+                <Typography color="text.primary">
+                  <Trans>All Token</Trans>
+                </Typography>
+              }
+              onTokenChange={handleRewardTokenChange}
+            />
+          </Flex>
         </Flex>
       </Flex>
 
