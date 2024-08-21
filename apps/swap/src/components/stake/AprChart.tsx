@@ -6,7 +6,7 @@ import { useStakeAprChartData } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
-import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { toSignificantWithGroupSeparator } from "@icpswap/utils";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -41,7 +41,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const { result: aprCharts } = useStakeAprChartData(canisterId, start_time, end_time);
 
   const chartData = useMemo(() => {
-    if (!aprCharts) return undefined;
+    if (!aprCharts || aprCharts.length === 0) return undefined;
 
     return aprCharts.map((e) => ({ time: e.time.toString(), value: e.apr }));
   }, [aprCharts]);
@@ -49,7 +49,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const color = "#5669dc";
 
   const defaultAprData = useMemo(() => {
-    if (!aprCharts) return {};
+    if (!aprCharts || aprCharts.length === 0) return {};
 
     const latestData = aprCharts[aprCharts.length - 1];
 

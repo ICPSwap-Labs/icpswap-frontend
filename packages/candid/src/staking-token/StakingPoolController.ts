@@ -44,10 +44,14 @@ export type Result_10 = { ok: Array<TokenGlobalDataInfo> } | { err: string };
 export type Result_11 = { ok: Principal } | { err: string };
 export type Result_2 = { ok: boolean } | { err: string };
 export type Result_3 = { ok: TokenGlobalDataInfo } | { err: string };
-export type Result_4 = { ok: [string, bigint, bigint, boolean] } | { err: string };
+export type Result_4 = { ok: [string, string, bigint, bigint, boolean] } | { err: string };
 export type Result_5 =
   | {
-      ok: { governanceCid: [] | [Principal]; feeReceiverCid: Principal };
+      ok: {
+        governanceCid: [] | [Principal];
+        userIndexCid: Principal;
+        feeReceiverCid: Principal;
+      };
     }
   | { err: Error };
 export type Result_6 = { ok: GlobalDataInfo } | { err: string };
@@ -86,10 +90,12 @@ export interface TokenGlobalDataInfo {
   rewardTokenAmount: bigint;
 }
 export interface _SERVICE {
+  addStakingPoolControllers: ActorMethod<[Principal, Array<Principal>], undefined>;
   createStakingPool: ActorMethod<[InitRequest], Result_11>;
   deleteStakingPool: ActorMethod<[Principal], Result_2>;
   findPoolStatInfo: ActorMethod<[], Result_10>;
   findStakingPoolPage: ActorMethod<[[] | [bigint], bigint, bigint], Result_9>;
+  findStakingPoolPageV2: ActorMethod<[[] | [bigint], bigint, bigint, [] | [string], [] | [string]], Result_9>;
   getAdmins: ActorMethod<[], Result_8>;
   getCycleInfo: ActorMethod<[], Result_7>;
   getGlobalData: ActorMethod<[], Result_6>;
@@ -98,11 +104,13 @@ export interface _SERVICE {
   getPoolStatInfo: ActorMethod<[Principal], Result_3>;
   getStakingPool: ActorMethod<[Principal], Result_1>;
   getVersion: ActorMethod<[], string>;
+  removeStakingPoolControllers: ActorMethod<[Principal, Array<Principal>], undefined>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setRewardFee: ActorMethod<[bigint], Result_2>;
+  setStakingPoolAdmins: ActorMethod<[Principal, Array<Principal>], undefined>;
   setStakingPoolTime: ActorMethod<[Principal, bigint, bigint], Result_1>;
-  setTokenPriceCanister: ActorMethod<[Principal], Result_2>;
   setUpdateGlobalDataState: ActorMethod<[boolean], Result_2>;
+  setUserIndexCanister: ActorMethod<[Principal], Result_2>;
   stopStakingPool: ActorMethod<[Principal], Result_1>;
   stopTimer: ActorMethod<[], undefined>;
   unclaimdRewardFee: ActorMethod<[Principal], Result>;

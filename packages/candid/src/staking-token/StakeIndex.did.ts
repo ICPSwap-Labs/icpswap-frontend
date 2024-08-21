@@ -73,6 +73,13 @@ export const idlFactory = ({ IDL }: any) => {
     totalElements: IDL.Nat,
   });
   const Result_2 = IDL.Variant({ ok: Page, err: IDL.Text });
+  const UserStakedToken = IDL.Record({
+    ledgerId: IDL.Principal,
+    value: IDL.Float64,
+    price: IDL.Float64,
+    amount: IDL.Float64,
+    poolId: IDL.Principal,
+  });
   const Result = IDL.Variant({ ok: IDL.Bool, err: IDL.Text });
   return IDL.Service({
     computeStakingPool: IDL.Func([], [Result_1], []),
@@ -83,6 +90,7 @@ export const idlFactory = ({ IDL }: any) => {
     queryIndexInfo: IDL.Func([], [Result_4], ["query"]),
     queryPool: IDL.Func([IDL.Principal, IDL.Nat, IDL.Nat, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)], [Result_3], ["query"]),
     queryStakingPool: IDL.Func([IDL.Nat, IDL.Nat], [Result_2], ["query"]),
+    queryUserStakedTokens: IDL.Func([IDL.Principal], [IDL.Vec(UserStakedToken)], ["query"]),
     syncStakingPool: IDL.Func([], [Result_1], []),
     updateUser: IDL.Func([IDL.Principal, PublicUserInfo], [Result], []),
   });

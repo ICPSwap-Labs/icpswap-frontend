@@ -8,6 +8,7 @@ export type {
   StakingPoolControllerPoolInfo,
   StakeIndexPoolInfo,
   StakeAprInfo,
+  StakeUserStakeInfo,
 } from "@icpswap/candid";
 
 export enum StakingState {

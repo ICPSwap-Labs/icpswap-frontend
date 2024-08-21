@@ -36,6 +36,45 @@ export function useStakingPools(state: bigint | undefined, offset: number, limit
   );
 }
 
+export interface GetStakePoolsProps {
+  state: bigint | undefined;
+  offset: number;
+  limit: number;
+  rewardTokenId?: string | null;
+  stakeTokenId?: string | null;
+}
+
+export async function getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: GetStakePoolsProps) {
+  return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
+    await (
+      await stakingPoolController()
+    ).findStakingPoolPageV2(
+      availableArgsNull<bigint>(state),
+      BigInt(offset),
+      BigInt(limit),
+      availableArgsNull<string>(stakeTokenId),
+      availableArgsNull<string>(rewardTokenId),
+    ),
+  ).data;
+}
+
+export interface UseStakePoolsProps {
+  state: bigint | undefined;
+  offset: number;
+  limit: number;
+  rewardTokenId?: string | null;
+  stakeTokenId?: string | null;
+}
+
+export function useStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: UseStakePoolsProps) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!isAvailablePageArgs(offset, limit)) return undefined;
+      return await getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId });
+    }, [offset, limit, state, rewardTokenId, stakeTokenId]),
+  );
+}
+
 export async function getStakingPoolGlobalData() {
   return resultFormat<StakingPoolGlobalData>(await (await stakingPoolController()).getGlobalData()).data;
 }

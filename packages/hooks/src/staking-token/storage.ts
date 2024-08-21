@@ -1,22 +1,36 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, isNullArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isNullArgs, availableArgsNull } from "@icpswap/utils";
 import { stakeIndex } from "@icpswap/actor";
-import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo } from "@icpswap/types";
+import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 
 import { useCallsData } from "../useCallData";
 
-export async function getStakingUserPools(principal: string, offset: number, limit: number) {
+export async function getUserStakePools(
+  principal: string,
+  offset: number,
+  limit: number,
+  stakeTokenId?: string | undefined | null,
+  rewardTokenId?: string | undefined | null,
+) {
   return resultFormat<PaginationResult<StakeIndexPoolInfo>>(
-    await (await stakeIndex()).queryPool(Principal.fromText(principal), BigInt(offset), BigInt(limit), [], []),
+    await (
+      await stakeIndex()
+    ).queryPool(
+      Principal.fromText(principal),
+      BigInt(offset),
+      BigInt(limit),
+      availableArgsNull<string>(stakeTokenId),
+      availableArgsNull<string>(rewardTokenId),
+    ),
   ).data;
 }
 
-export function useStakingUserPools(principal: string | undefined, offset: number, limit: number) {
+export function useUserStakePools(principal: string | undefined, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingUserPools(principal, offset, limit);
+      return await getUserStakePools(principal, offset, limit);
     }, [offset, limit, principal]),
   );
 }
@@ -37,5 +51,21 @@ export function useStakeAprChartData(
       if (isNullArgs(start_time) || isNullArgs(principal) || isNullArgs(end_time)) return undefined;
       return await getStakeAprChartData(principal, start_time, end_time);
     }, [start_time, end_time, principal]),
+  );
+}
+
+export async function getUserStakedTokens(principal: string) {
+  return resultFormat<Array<StakeUserStakeInfo>>(
+    await (await stakeIndex()).queryUserStakedTokens(Principal.fromText(principal)),
+  ).data;
+}
+
+export function useUserStakedTokens(principal: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (isNullArgs(principal)) return undefined;
+
+      return await getUserStakedTokens(principal);
+    }, [principal]),
   );
 }

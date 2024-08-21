@@ -33,4 +33,9 @@ export { idlFactory as V1TokenPoolStorageInterfaceFactory } from "./V1TokenPoolS
 export type { _SERVICE as V1TokenPoolStorage, Record as V1StakingPoolTransaction } from "./V1TokenPoolStorage";
 
 export { idlFactory as StakeIndexInterfaceFactor } from "./StakeIndex.did";
-export type { _SERVICE as StakeIndex, UserPool as StakeIndexPoolInfo, APRInfo as StakeAprInfo } from "./StakeIndex";
+export type {
+  _SERVICE as StakeIndex,
+  UserPool as StakeIndexPoolInfo,
+  APRInfo as StakeAprInfo,
+  UserStakedToken as StakeUserStakeInfo,
+} from "./StakeIndex";

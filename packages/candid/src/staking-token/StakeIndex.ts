@@ -79,6 +79,13 @@ export interface UserPool {
   owner: Principal;
   stakingPool: Principal;
 }
+export interface UserStakedToken {
+  ledgerId: Principal;
+  value: number;
+  price: number;
+  amount: number;
+  poolId: Principal;
+}
 export interface _SERVICE {
   computeStakingPool: ActorMethod<[], Result_1>;
   getCycleInfo: ActorMethod<[], Result_6>;
@@ -88,6 +95,7 @@ export interface _SERVICE {
   queryIndexInfo: ActorMethod<[], Result_4>;
   queryPool: ActorMethod<[Principal, bigint, bigint, [] | [string], [] | [string]], Result_3>;
   queryStakingPool: ActorMethod<[bigint, bigint], Result_2>;
+  queryUserStakedTokens: ActorMethod<[Principal], Array<UserStakedToken>>;
   syncStakingPool: ActorMethod<[], Result_1>;
   updateUser: ActorMethod<[Principal, PublicUserInfo], Result>;
 }
