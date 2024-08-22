@@ -40,7 +40,14 @@ export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconCol
         },
       }}
       title={
-        <Typography color="#111936" fontSize={12} component="div">
+        <Typography
+          component="div"
+          sx={{
+            color: "#111936",
+            fontSize: "12px",
+            lineHeight: "18px",
+          }}
+        >
           {tips}
         </Typography>
       }

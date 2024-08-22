@@ -1,8 +1,8 @@
 import { Typography, Box, BoxProps } from "components/Mui";
-import { Flex } from "@icpswap/ui";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { useTheme } from "@mui/styles";
 import { useCallback, useMemo } from "react";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
 import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -16,6 +16,10 @@ import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
+import dayjs from "dayjs";
+
+const DAYJS_FORMAT0 = "MMMM D, YYYY";
+const DAYJS_FORMAT1 = "h:mm A";
 
 interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];
@@ -123,40 +127,62 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">
-        <Flex gap="0 4px" justify="flex-end" fullWidth>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "text.primary",
-              maxWidth: "230px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-            title={
-              userStakeTokenBalance && stakeToken
-                ? `${toSignificantWithGroupSeparator(
-                    parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
-                  )} ${stakeToken.symbol}`
-                : ""
-            }
-          >
-            {userStakeTokenBalance && stakeToken
-              ? `${toSignificantWithGroupSeparator(
-                  parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
-                )} ${stakeToken.symbol}`
-              : "--"}
-          </Typography>
-        </Flex>
-        <Flex gap="0 4px" justify="flex-end" fullWidth>
-          <Typography sx={{ fontSize: "12px" }}>
-            {userStakeTokenBalance && stakeToken && stakeTokenPrice
-              ? `${formatDollarAmount(
-                  parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
-                )}`
-              : "--"}
-          </Typography>
-        </Flex>
+        {state === StakingState.FINISHED ? (
+          <Flex fullWidth justify="flex-end">
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              --
+            </Typography>
+          </Flex>
+        ) : (
+          <>
+            <Flex gap="0 4px" justify="flex-end" fullWidth>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.primary",
+                  maxWidth: "230px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+                title={
+                  userStakeTokenBalance && stakeToken
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
+                      )} ${stakeToken.symbol}`
+                    : ""
+                }
+              >
+                {userStakeTokenBalance && stakeToken
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
+                    )} ${stakeToken.symbol}`
+                  : "--"}
+              </Typography>
+
+              {state === StakingState.NOT_STARTED ? (
+                <Tooltip
+                  tips={`
+                  As soon as the Farm goes live on ${dayjs(Number(poolInfo.startTime) * 1000).format(
+                    DAYJS_FORMAT0,
+                  )} at ${dayjs(Number(poolInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
+                  iconSize="14px"
+                />
+              ) : null}
+            </Flex>
+            <Flex gap="0 4px" justify="flex-end" fullWidth>
+              <Typography sx={{ fontSize: "12px" }}>
+                {userStakeTokenBalance && stakeToken && stakeTokenPrice
+                  ? `${formatDollarAmount(
+                      parseTokenAmount(userStakeTokenBalance, stakeToken.decimals)
+                        .multipliedBy(stakeTokenPrice)
+                        .toString(),
+                    )}`
+                  : "--"}
+              </Typography>
+            </Flex>
+          </>
+        )}
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
