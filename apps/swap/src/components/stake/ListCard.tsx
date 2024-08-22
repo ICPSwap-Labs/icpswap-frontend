@@ -163,7 +163,7 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
               {state === StakingState.NOT_STARTED ? (
                 <Tooltip
                   tips={`
-                  As soon as the Farm goes live on ${dayjs(Number(poolInfo.startTime) * 1000).format(
+                  As soon as the Staking Pool goes live on ${dayjs(Number(poolInfo.startTime) * 1000).format(
                     DAYJS_FORMAT0,
                   )} at ${dayjs(Number(poolInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
                   iconSize="14px"
