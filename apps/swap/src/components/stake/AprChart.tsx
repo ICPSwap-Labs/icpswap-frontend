@@ -43,18 +43,18 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const chartData = useMemo(() => {
     if (!aprCharts || aprCharts.length === 0) return undefined;
 
-    return aprCharts.map((e) => ({ time: e.time.toString(), value: e.apr }));
+    return aprCharts.map((e) => ({ time: e.time.toString(), value: e.apr * 100 }));
   }, [aprCharts]);
 
   const color = "#5669dc";
 
   const defaultAprData = useMemo(() => {
-    if (!aprCharts || aprCharts.length === 0) return {};
+    if (!chartData || chartData.length === 0) return {};
 
-    const latestData = aprCharts[aprCharts.length - 1];
+    const latestData = chartData[chartData.length - 1];
 
-    return { time: latestData.time.toString(), value: latestData.apr };
-  }, [aprCharts]);
+    return { time: latestData.time, value: latestData.value };
+  }, [chartData]);
 
   return aprCharts && aprCharts.length > 0 ? (
     <Box
