@@ -19,20 +19,23 @@ export function useFarmUserAllPositions() {
   >(null);
 
   const { result: userPositionsPools } = useUserPositionPools(account);
+
   const { result: farms } = useFarmsByPool(userPositionsPools);
 
   useEffect(() => {
     async function call() {
       if (farms && principal) {
+        // One pool could have multiple farms, so remove the duplicate pool
+        const allPoolIds = [...new Set(farms.map((farm) => farm[0].toString()))];
+
         const result = (
           await Promise.all(
-            farms.map(async (ele) => {
-              const poolId = ele[0].toString();
-
+            allPoolIds.map(async (poolId) => {
               const metadata = await getSwapPoolMeta(poolId);
               const positions = await getSwapUserPositions(poolId, principal.toString());
 
-              return { metadata, positions };
+              // Filter the invalid position
+              return { metadata, positions: positions.filter((position) => position.liquidity !== BigInt(0)) };
             }),
           )
         ).flat();
@@ -42,7 +45,7 @@ export function useFarmUserAllPositions() {
         }, new BigNumber(0));
 
         setPositionAmount(positionAmount.toNumber());
-        setPositionResult(result);
+        setPositionResult(result.filter((e) => e.positions.length > 0));
       }
     }
 
@@ -52,10 +55,12 @@ export function useFarmUserAllPositions() {
   const positionInfos = useMemo(() => {
     if (!positionResult) return [];
 
-    return positionResult.map((e) => ({
+    const __positionInfos = positionResult.map((e) => ({
       metadata: e.metadata,
       positionInfos: e.positions,
     }));
+
+    return __positionInfos;
   }, [positionResult]);
 
   const allPositionUSDValue = useUserPositionsValues(positionInfos);

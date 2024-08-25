@@ -19,9 +19,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
   const { tokenIds } = useMemo(() => {
     const tokenIds: string[] = [];
 
-    args.forEach((arg) => {
-      const metadata = arg.metadata;
-
+    args.forEach(({ metadata }) => {
       if (metadata) {
         if (!tokenIds.includes(metadata.token0.address)) {
           tokenIds.push(metadata.token0.address);
@@ -34,14 +32,12 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return { tokenIds };
-  }, [args]);
+  }, [JSON.stringify(args)]);
 
   const tokens = useTokens(tokenIds);
 
   const poolKeys = useMemo(() => {
-    return args.map((arg) => {
-      const metadata = arg.metadata;
-
+    return args.map(({ metadata }) => {
       if (!metadata) return [undefined, undefined, undefined] as PoolKey;
 
       const tokenA = tokens.find((e) => {
@@ -54,7 +50,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
 
       return [tokenA ? tokenA[1] : undefined, tokenB ? tokenB[1] : undefined, Number(metadata.fee)] as PoolKey;
     });
-  }, [args, tokens]);
+  }, [JSON.stringify(args), tokens]);
 
   const pools = usePools(poolKeys);
 
@@ -78,5 +74,5 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return positions;
-  }, [args, pools]);
+  }, [JSON.stringify(args), pools]);
 }

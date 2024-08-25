@@ -16,8 +16,9 @@ export function useUserPositionsValues(args: UseUserPositionsValuesArgs[]) {
 
   return useMemo(() => {
     if (!allTokenInfos || !positions) return undefined;
+    if (allTokenInfos.length === 0 || positions.length === 0) return undefined;
 
-    let totalValue = new BigNumber(0);
+    let totalValue: BigNumber | undefined;
 
     positions.flat().forEach((position) => {
       if (position) {
@@ -28,15 +29,15 @@ export function useUserPositionsValues(args: UseUserPositionsValuesArgs[]) {
         const token1Price = allTokenInfos.find((info) => info.address === position.pool.token1.address)?.priceUSD;
 
         if (token0Price !== undefined && token1Price !== undefined) {
-          totalValue = totalValue
+          totalValue = (totalValue ?? new BigNumber(0))
             .plus(new BigNumber(token0Amount).multipliedBy(token0Price))
             .plus(new BigNumber(token1Amount).multipliedBy(token1Price));
         }
       }
     });
 
-    return totalValue.toString();
-  }, [positions, allTokenInfos]);
+    return totalValue?.toString();
+  }, [JSON.stringify(positions), allTokenInfos]);
 }
 
 export interface UseUserPositionsValueArgs {
