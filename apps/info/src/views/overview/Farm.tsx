@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { useFarmGlobalData } from "hooks/staking-farm/index";
 

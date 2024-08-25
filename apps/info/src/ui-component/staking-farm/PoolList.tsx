@@ -3,14 +3,15 @@ import { Grid, Box, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
-import { getFarmPoolStatus, POOL_STATUS_COLORS } from "utils/farms/index";
+import { POOL_STATUS_COLORS } from "utils/farms/index";
 import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType, Pagination } from "ui-component/index";
-import { useFarmInfo, useSwapPoolMetadata, useAllFarms } from "@icpswap/hooks";
+import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
+import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,7 +34,7 @@ export function PoolItem({ farmId }: PoolItemProps) {
   const classes = useStyles();
 
   const { result: farmInfo, loading } = useFarmInfo(farmId);
-  const { status, statusText } = getFarmPoolStatus(farmInfo) ?? { status: "", statusText: "" };
+  const state = useFarmState(farmInfo);
   const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
   const { result: token0 } = useTokenInfo(swapPool?.token0.address);
   const { result: token1 } = useTokenInfo(swapPool?.token1.address);
@@ -76,24 +77,28 @@ export function PoolItem({ farmId }: PoolItemProps) {
           : "--"}
       </BodyCell>
       <BodyCell>
-        <Grid container alignItems="center">
-          <Box
-            sx={{
-              width: "6px",
-              height: "6px",
-              borderRadius: "50%",
-              background: POOL_STATUS_COLORS[status],
-              marginRight: "8px",
-            }}
-          />
-          <BodyCell
-            sx={{
-              color: POOL_STATUS_COLORS[status],
-            }}
-          >
-            {statusText}
-          </BodyCell>
-        </Grid>
+        {state ? (
+          <Grid container alignItems="center">
+            <Box
+              sx={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: POOL_STATUS_COLORS[state],
+                marginRight: "8px",
+              }}
+            />
+            <BodyCell
+              sx={{
+                color: POOL_STATUS_COLORS[state],
+              }}
+            >
+              {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
+            </BodyCell>
+          </Grid>
+        ) : (
+          <BodyCell>--</BodyCell>
+        )}
       </BodyCell>
       <BodyCell>
         <TextButton to={`/farm/details/${farmId}`} sx={{ fontSize: "16px" }}>
