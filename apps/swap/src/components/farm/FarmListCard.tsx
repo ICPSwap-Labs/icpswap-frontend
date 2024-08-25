@@ -1,5 +1,5 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import {
   useIntervalUserFarmInfo,
@@ -23,9 +23,13 @@ import {
   useFarmUserPositions,
 } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { TokenImage } from "components/Image";
+import { TokenImage } from "components/index";
 import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
+import dayjs from "dayjs";
+
+const DAYJS_FORMAT0 = "MMMM D, YYYY";
+const DAYJS_FORMAT1 = "h:mm A";
 
 interface FarmListCardProps {
   farmId: string;
@@ -181,6 +185,16 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
               >
                 {userAvailablePositions.length}
               </Typography>
+            ) : null}
+
+            {state === "NOT_STARTED" && userFarmInfo ? (
+              <Tooltip
+                tips={`
+                  As soon as the Farm goes live on ${dayjs(Number(userFarmInfo.startTime) * 1000).format(
+                    DAYJS_FORMAT0,
+                  )} at ${dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
+                iconSize="14px"
+              />
             ) : null}
           </>
         )}
