@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { LoadingRow, TextButton, PaginationType, Pagination } from "ui-component/index";
-import { useFarmInfo, useSwapPoolMetadata, useFarms } from "@icpswap/hooks";
+import { useFarmInfo, useSwapPoolMetadata, useAllFarms } from "@icpswap/hooks";
 import { useFarmTvl } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData } from "@icpswap/ui";
 
@@ -42,12 +42,14 @@ export function PoolItem({ farmId }: PoolItemProps) {
   const { tvl } = useFarmTvl(farmId);
 
   return loading ? (
-    <LoadingRow>
-      <div />
-      <div />
-      <div />
-      <div />
-    </LoadingRow>
+    <Box sx={{ padding: "16px" }}>
+      <LoadingRow>
+        <div />
+        <div />
+        <div />
+        <div />
+      </LoadingRow>
+    </Box>
   ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell>
@@ -105,7 +107,7 @@ export function PoolItem({ farmId }: PoolItemProps) {
 export default function PoolList() {
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const { result: allFarms, loading } = useFarms(undefined);
+  const { result: allFarms, loading } = useAllFarms();
 
   const handlePageChange = (pagination: PaginationType) => {
     setPagination(pagination);
