@@ -1,10 +1,8 @@
-import { Box, Typography } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, Tooltip } from "components/index";
-import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { StakingPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -32,7 +30,7 @@ export function MainContent({
   rewardToken,
   handleRefresh,
 }: StakeMainProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
 
   const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);

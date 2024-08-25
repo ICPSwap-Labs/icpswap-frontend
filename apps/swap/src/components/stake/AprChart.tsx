@@ -6,7 +6,7 @@ import { useStakeAprChartData } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
-import { toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -89,9 +89,9 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
             }}
           >
             {value
-              ? `${toSignificantWithGroupSeparator(value, 3)}%`
+              ? `${new BigNumber(value).toFixed(2)}%`
               : aprCharts
-              ? `${defaultAprData.value ? toSignificantWithGroupSeparator(defaultAprData.value, 3) : "--"}%`
+              ? `${defaultAprData.value ? new BigNumber(defaultAprData.value).toFixed(2) : "--"}%`
               : "--"}
           </Typography>
 

@@ -1,10 +1,8 @@
 import { useState, useContext } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, TabPanel, type Tab } from "components/index";
-import { useTheme } from "@mui/styles";
 import { useToken } from "hooks/useCurrency";
 import { t, Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
@@ -50,7 +48,7 @@ const tabs = [
 ];
 
 export default function StakeDetail() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const [reclaimable, setReclaimable] = useState(false);
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
@@ -94,6 +92,8 @@ export default function StakeDetail() {
             align="flex-start"
             gap="0 12px"
           >
+            <AprChart canisterId={poolId} />
+
             <Box
               sx={{
                 width: "548px",
@@ -173,8 +173,6 @@ export default function StakeDetail() {
                 rewardTokenPrice={rewardTokenPrice}
               />
             </Box>
-
-            <AprChart canisterId={poolId} />
           </Flex>
         </Box>
       </Flex>

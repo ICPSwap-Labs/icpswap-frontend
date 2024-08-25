@@ -1,8 +1,6 @@
 import { useMemo } from "react";
-import { parseTokenAmount } from "@icpswap/utils";
+import { isNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
-import { useICPPrice } from "store/global/hooks";
 import { StakingPoolInfo } from "@icpswap/types";
 
 export interface UserStakingProps {
@@ -13,11 +11,9 @@ export interface UserStakingProps {
   stakeTokenPrice: string | number | undefined | null;
 }
 
-// apr = (amountPerSecond * 3600  * 24 * 365) / totalStakedAmount * 100 * (rewardTokenPrice / stakedTokenPrice)
+// apr = (amountPerSecond  * rewardTokenPrice* 3600  * 24 * 360) / (totalStakedAmount * stakedTokenPrice))
 export function useApr({ poolInfo, rewardToken, stakeToken, rewardTokenPrice, stakeTokenPrice }: UserStakingProps) {
-  const ICPPrice = useICPPrice();
-
-  const { totalDeposit } = useMemo(() => {
+  const { totalDepositUSD } = useMemo(() => {
     if (!poolInfo || !stakeToken) return {};
 
     const totalDeposit = parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toNumber();
@@ -31,19 +27,21 @@ export function useApr({ poolInfo, rewardToken, stakeToken, rewardTokenPrice, st
   }, [poolInfo, stakeToken, stakeTokenPrice]);
 
   return useMemo(() => {
-    if (poolInfo?.rewardPerTime && stakeToken && rewardToken && totalDeposit) {
-      const poolInfoPerSecond = Number(poolInfo.rewardPerTime);
-      if (ICPPrice && rewardTokenPrice && stakeTokenPrice && rewardToken.decimals && poolInfoPerSecond > 0) {
-        const perSecond = parseTokenAmount(poolInfoPerSecond, rewardToken.decimals).toNumber();
-        const apr =
-          ((perSecond * 3600 * 24 * 365) / totalDeposit) *
-          100 *
-          new BigNumber(rewardTokenPrice).dividedBy(stakeTokenPrice).toNumber();
+    if (isNullArgs(totalDepositUSD) || isNullArgs(poolInfo) || isNullArgs(stakeToken) || isNullArgs(rewardToken))
+      return undefined;
 
-        return Number.isFinite(apr) ? `${new BigNumber(apr).toFixed(2)}%` : undefined;
-      }
+    const poolInfoPerSecond = Number(poolInfo.rewardPerTime);
+    if (rewardTokenPrice && rewardToken.decimals && poolInfoPerSecond > 0) {
+      const perSecond = parseTokenAmount(poolInfoPerSecond, rewardToken.decimals).toNumber();
+
+      const apr = new BigNumber(perSecond)
+        .multipliedBy(rewardTokenPrice)
+        .multipliedBy(3600 * 24 * 360)
+        .dividedBy(totalDepositUSD)
+        .multipliedBy(100)
+        .toNumber();
+
+      return Number.isFinite(apr) ? `${new BigNumber(apr).toFixed(2)}%` : undefined;
     }
-
-    return undefined;
-  }, [ICPPrice, totalDeposit, poolInfo, rewardToken, rewardTokenPrice, stakeTokenPrice, stakeToken]);
+  }, [totalDepositUSD, poolInfo, rewardToken, rewardTokenPrice, stakeToken]);
 }
