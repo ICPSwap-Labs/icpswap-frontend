@@ -61,6 +61,8 @@ export default function Farm() {
           align="flex-start"
           gap="0 12px"
         >
+          <FarmAprCharts farmId={farmId} />
+
           <Box
             sx={{
               width: "548px",
@@ -138,8 +140,6 @@ export default function Farm() {
               rewardMetadata={farmRewardMetadata}
             />
           </Box>
-
-          <FarmAprCharts farmId={farmId} />
         </Flex>
       </Box>
     </Flex>
