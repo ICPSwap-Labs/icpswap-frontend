@@ -1,31 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
 import { FilterState } from "types/staking-farm";
-import { getFarmsByFilter } from "@icpswap/hooks";
+import { getUserFarms } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
-import { FarmState } from "@icpswap/types";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface UseFarmsArgs {
-  state: FarmState | undefined;
   filter: FilterState;
-  pair?: string | null;
-  token?: string | null;
-  user?: string | null;
 }
 
-export function useFarms({ state, filter, pair, token, user }: UseFarmsArgs) {
+export function useYourFarms({ filter }: UseFarmsArgs) {
+  const principal = useAccountPrincipal();
   const [loading, setLoading] = useState<boolean>(false);
   const [farms, setFarms] = useState<null | Array<Principal>>(null);
 
   useEffect(() => {
     async function call() {
+      if (!principal || filter !== FilterState.YOUR) {
+        setFarms(null);
+        return;
+      }
+
       setLoading(true);
-      const farms = await getFarmsByFilter({ state, pair, token, user });
+      const farms = await getUserFarms(principal.toString());
       setFarms(farms);
       setLoading(false);
     }
 
     call();
-  }, [filter, state, user, pair, token]);
+  }, [principal]);
 
   return useMemo(() => ({ loading, result: farms }), [loading, farms]);
 }

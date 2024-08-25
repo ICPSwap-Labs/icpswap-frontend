@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Box, Typography, Button } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
-import { useIntervalUserRewardInfo, useFarmUSDValue, useUserPositionsValue } from "hooks/staking-farm";
+import { useIntervalUserRewardInfo, useFarmTvlValue, useUserTvlValue } from "hooks/staking-farm";
+import { useUserPositionsValue } from "hooks/swap/index";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
@@ -111,14 +112,8 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { farmTvlValue, userTvl } = useFarmUSDValue({
-    token0,
-    token1,
-    rewardToken,
-    userRewardAmount,
-    userFarmInfo: farmInfo,
-    farmId,
-  });
+  const farmTvlValue = useFarmTvlValue({ farmId, token0, token1 });
+  const userTvlValue = useUserTvlValue({ farmId, token0, token1 });
 
   const apr = useFarmApr({
     state,
@@ -412,7 +407,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
           </Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>
-            {userTvl ? `${formatDollarAmount(userTvl)}` : "--"}
+            {userTvlValue ? `${formatDollarAmount(userTvlValue)}` : "--"}
           </Typography>
         </Box>
 

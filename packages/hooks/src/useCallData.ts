@@ -95,9 +95,8 @@ export function usePaginationAllData<T>(
         const result = await callback(0, 1);
         if (result) {
           return result.totalElements;
-        } 
-          return BigInt(0);
-        
+        }
+        return BigInt(0);
       }
 
       return BigInt(0);

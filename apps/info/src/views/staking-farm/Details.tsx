@@ -14,13 +14,13 @@ import {
   toSignificantWithGroupSeparator,
   cycleValueFormat,
 } from "@icpswap/utils";
-import { getFarmPoolStatus } from "utils/farms/index";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles } from "@icpswap/hooks";
+import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
+import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles(() => {
   return {
@@ -69,7 +69,7 @@ export default function FarmDetails() {
   const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useFarmCycles(farmId);
 
-  const { statusText } = getFarmPoolStatus(farmInfo) ?? { statusText: "" };
+  const state = useFarmState(farmInfo);
 
   const [recordType, setRecordType] = useState("transactions");
 
@@ -101,7 +101,9 @@ export default function FarmDetails() {
             }}
           >
             <Grid container alignItems="center" sx={{ height: "100%" }}>
-              <Typography color="text.primary">{statusText}</Typography>
+              <Typography color="text.primary">
+                {state ? (state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())) : "--"}
+              </Typography>
             </Grid>
           </Box>
           <Box mt="30px" className={classes.details}>

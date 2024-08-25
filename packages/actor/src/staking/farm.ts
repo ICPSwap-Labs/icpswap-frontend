@@ -6,6 +6,8 @@ import {
   FarmControllerInterfaceFactory,
   FarmStorage,
   FarmStorageInterfaceFactory,
+  FarmIndex,
+  FarmIndexInterfaceFactory,
 } from "@icpswap/candid";
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
@@ -31,4 +33,11 @@ export const farmStorage = (canisterId: string, identity?: ActorIdentity) =>
     canisterId,
     identity,
     idlFactory: FarmStorageInterfaceFactory,
+  });
+
+export const farmIndex = (identity?: ActorIdentity) =>
+  actor.create<FarmIndex>({
+    actorName: ActorName.FarmIndex,
+    identity,
+    idlFactory: FarmIndexInterfaceFactory,
   });

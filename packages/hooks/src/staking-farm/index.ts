@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
-import { farm, farmController } from "@icpswap/actor";
+import { farm, farmController, farmIndex } from "@icpswap/actor";
 import type {
   FarmDepositArgs,
   FarmInfo,
@@ -11,10 +11,12 @@ import type {
   FarmRewardMetadata,
   PaginationResult,
   FarmTvl,
-  FarmState,
-  FarmStatusArgs,
   InitFarmArgs,
   FarmUserTvl,
+  FarmFilterCondition,
+  FarmState,
+  FarmStatusArgs,
+  Null,
 } from "@icpswap/types";
 import { AnonymousPrincipal } from "@icpswap/constants";
 
@@ -137,22 +139,59 @@ export async function createV3Farm(args: CreateFarmArgs) {
   return resultFormat<string>(await (await farmController(true)).create(args));
 }
 
-export async function getFarms(state: FarmState | undefined) {
-  return resultFormat<Array<[Principal, FarmTvl]>>(
+export async function getFarms(condition: FarmFilterCondition) {
+  return resultFormat<Principal[]>(await (await farmIndex()).getFarmsByConditions(condition)).data;
+}
+
+export function useFarms(condition: FarmFilterCondition | undefined, reload?: boolean | number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!condition) return undefined;
+      return await getFarms(condition);
+    }, [condition]),
+    reload,
+  );
+}
+
+export function useAllFarms(reload?: boolean | number) {
+  return useCallsData(
+    useCallback(async () => {
+      return await getFarms({ user: [], pool: [], status: [], rewardToken: [] });
+    }, []),
+    reload,
+  );
+}
+
+export async function getFarmsByState(state: FarmState | undefined) {
+  return resultFormat<Array<Principal>>(
     await (
-      await farmController()
+      await farmIndex()
     ).getFarms(availableArgsNull<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
   ).data;
 }
 
-export function useFarms(state: FarmState | undefined, reload?: boolean | number) {
+export function useFarmsByState(state: FarmState | undefined, reload?: boolean | number) {
   return useCallsData(
     useCallback(async () => {
-      return await getFarms(state);
+      if (!state) return undefined;
+      return await getFarmsByState(state);
     }, [state]),
     reload,
   );
 }
+
+// export async function getAllFarms() {
+//   return resultFormat<Principal[]>(await (await farmController()).getAllFarms()).data;
+// }
+
+// export function useAllFarms(reload?: boolean | number) {
+//   return useCallsData(
+//     useCallback(async () => {
+//       return await getAllFarms();
+//     }, []),
+//     reload,
+//   );
+// }
 
 export async function getV3FarmRewardMetadata(canisterId: string) {
   return resultFormat<FarmRewardMetadata>(await (await farm(canisterId)).getRewardMeta()).data;
@@ -282,5 +321,43 @@ export function useFarmUserRewards(farmId: string | undefined, principal: Princi
   );
 }
 
+export interface GetFarmsByFilterArgs {
+  state: FarmState | Null;
+  pair: string | Null;
+  token: string | Null;
+  user: string | Null;
+}
+
+export async function getFarmsByFilter({ state, pair, token, user }: GetFarmsByFilterArgs) {
+  return resultFormat<Array<Principal>>(
+    await (
+      await farmIndex()
+    ).getFarmsByConditions({
+      status: state
+        ? availableArgsNull<FarmStatusArgs[]>(
+            state === "FINISHED"
+              ? ([{ FINISHED: null }, { CLOSED: null }] as FarmStatusArgs[])
+              : ([{ [state]: null }] as FarmStatusArgs[]),
+          )
+        : [],
+      rewardToken: token ? availableArgsNull<Principal>(Principal.fromText(token)) : [],
+      pool: pair ? availableArgsNull<Principal>(Principal.fromText(pair)) : [],
+      user: user ? availableArgsNull<Principal>(Principal.fromText(user)) : [],
+    }),
+  ).data;
+}
+
+export function useFarmsByFilter({ state, pair, token, user }: GetFarmsByFilterArgs) {
+  return useCallsData(
+    useCallback(async () => {
+      return await getFarmsByFilter({ state, pair, token, user });
+    }, [state, pair, token, user]),
+  );
+}
+
 export * from "./useFarmState";
 export * from "./useFarmTotalAmount";
+export * from "./useFarmInfo";
+export * from "./useUserFarms";
+export * from "./useFarmsByPool";
+export * from "./useFarmAprChart";

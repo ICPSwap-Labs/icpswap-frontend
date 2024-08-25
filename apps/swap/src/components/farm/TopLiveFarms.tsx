@@ -5,8 +5,8 @@ import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
-import { type FarmTvl } from "@icpswap/types";
-import { useIntervalUserFarmInfo, useFarmApr, useUserPositionsValue, useFarmTvlValue } from "hooks/staking-farm";
+import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
+import { useUserPositionsValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -16,14 +16,13 @@ import {
   useFarmInitArgs,
   useSwapUserPositions,
   useSwapPoolMetadata,
-  useFarms,
+  useFarmsByState,
 } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { STATE } from "types/staking-farm";
 
 interface TopLiveFarmCardProps {
-  farmTvl: FarmTvl;
   farmId: string;
 }
 
@@ -193,7 +192,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 }
 
 export function TopLiveFarms() {
-  const { result: allLiveFarms, loading } = useFarms("LIVE");
+  const { result: allLiveFarms, loading } = useFarmsByState("LIVE");
 
   const topLiveFarms = useMemo(() => {
     if (!allLiveFarms) return undefined;
@@ -232,9 +231,7 @@ export function TopLiveFarms() {
               },
             }}
           >
-            {topLiveFarms?.map((farm) => (
-              <TopLiveFarmCard key={farm[0].toString()} farmId={farm[0].toString()} farmTvl={farm[1]} />
-            ))}
+            {topLiveFarms?.map((farmId) => <TopLiveFarmCard key={farmId.toString()} farmId={farmId.toString()} />)}
           </Box>
         )}
       </Box>

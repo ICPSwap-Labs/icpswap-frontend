@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { useInfoAllTokens, useFarms, useInterval, useFarmTotalAmount } from "@icpswap/hooks";
+import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
 import { getTokenInfo } from "hooks/token/index";
 
 interface GlobalData {
@@ -10,16 +10,15 @@ interface GlobalData {
 }
 
 export function useFarmGlobalData() {
-  const [poolsNumber, setPoolsNumber] = useState<null | number>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [stakedTokenTVL, setStakedTokenTVL] = useState("0");
   const [rewardedTokenTVL, setRewardedTokenTVL] = useState("0");
 
-  const { result: allFarms } = useFarms(undefined, refreshTrigger);
-  const { result: allLiveFarms } = useFarms("LIVE", refreshTrigger);
-  const { result: allFinishedFarms } = useFarms("FINISHED", refreshTrigger);
-  const { result: allClosedFarms } = useFarms("CLOSED", refreshTrigger);
   const { result: farmTotalAmount } = useFarmTotalAmount();
+
+  const { result: allLiveFarmsInfos } = useFarmRewardInfos("LIVE", refreshTrigger);
+  const { result: allFinishedFarmsInfos } = useFarmRewardInfos("FINISHED", refreshTrigger);
+  const { result: allClosedFarmsInfos } = useFarmRewardInfos("CLOSED", refreshTrigger);
 
   const [data, setData] = useState<GlobalData>({
     stakeTokenTVL: "0",
@@ -30,30 +29,35 @@ export function useFarmGlobalData() {
 
   useMemo(() => {
     async function call() {
-      if (allLiveFarms && infoAllTokens && infoAllTokens.length > 0) {
+      if (allLiveFarmsInfos && infoAllTokens && infoAllTokens.length > 0) {
         let stakedTVL = new BigNumber(0);
         let rewardTVL = new BigNumber(0);
 
-        for (let i = 0; i < allLiveFarms.length; i++) {
-          const farm = allLiveFarms[i];
+        for (let i = 0; i < allLiveFarmsInfos.length; i++) {
+          const farmInfo = allLiveFarmsInfos[i];
 
-          const { poolToken0, poolToken1, rewardToken } = farm[1];
+          const { poolToken0TVL, poolToken1TVL, totalReward } = farmInfo[1];
 
-          const token0Price = infoAllTokens.find((token) => token.address === poolToken0.address)?.priceUSD;
-          const token1Price = infoAllTokens.find((token) => token.address === poolToken1.address)?.priceUSD;
-          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardToken.address)?.priceUSD;
+          const { address: token0Principal, amount: token0Amount } = poolToken0TVL;
+          const { address: token1Principal, amount: token1Amount } = poolToken1TVL;
+          const { address: rewardTokenPrincipal, amount: rewardAmount } = totalReward;
 
-          const token0Info = await getTokenInfo(poolToken0.address);
-          const token1Info = await getTokenInfo(poolToken1.address);
-          const rewardTokenInfo = await getTokenInfo(rewardToken.address);
+          const token0Price = infoAllTokens.find((token) => token.address === token0Principal.toString())?.priceUSD;
+          const token1Price = infoAllTokens.find((token) => token.address === token1Principal.toString())?.priceUSD;
+          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
+            ?.priceUSD;
+
+          const token0Info = await getTokenInfo(token0Principal.toString());
+          const token1Info = await getTokenInfo(token1Principal.toString());
+          const rewardTokenInfo = await getTokenInfo(rewardTokenPrincipal.toString());
 
           if (!token0Price || !token1Price || !rewardTokenPrice || !token0Info || !token1Info || !rewardTokenInfo) {
             stakedTVL = stakedTVL.plus(0);
             rewardTVL = rewardTVL.plus(0);
           } else {
-            const stakedToken0TVL = parseTokenAmount(poolToken0.amount, token0Info.decimals).multipliedBy(token0Price);
-            const stakedToken1TVL = parseTokenAmount(poolToken1.amount, token1Info.decimals).multipliedBy(token1Price);
-            const rewardTokenTVL = parseTokenAmount(rewardToken.amount, rewardTokenInfo.decimals).multipliedBy(
+            const stakedToken0TVL = parseTokenAmount(token0Amount, token0Info.decimals).multipliedBy(token0Price);
+            const stakedToken1TVL = parseTokenAmount(token1Amount, token1Info.decimals).multipliedBy(token1Price);
+            const rewardTokenTVL = parseTokenAmount(rewardAmount, rewardTokenInfo.decimals).multipliedBy(
               rewardTokenPrice,
             );
 
@@ -70,36 +74,41 @@ export function useFarmGlobalData() {
     }
 
     call();
-  }, [infoAllTokens, allLiveFarms]);
+  }, [infoAllTokens, allLiveFarmsInfos]);
 
   useMemo(() => {
     async function call() {
-      if (allClosedFarms && allFinishedFarms && infoAllTokens && infoAllTokens.length > 0) {
-        const allFarms = [...allClosedFarms, ...allFinishedFarms];
+      if (allClosedFarmsInfos && allFinishedFarmsInfos && infoAllTokens && infoAllTokens.length > 0) {
+        const allFarms = [...allClosedFarmsInfos, ...allFinishedFarmsInfos];
 
         let stakedTVL = new BigNumber(0);
         let rewardTVL = new BigNumber(0);
 
         for (let i = 0; i < allFarms.length; i++) {
-          const farm = allFarms[i];
+          const farmInfo = allFarms[i];
 
-          const { poolToken0, poolToken1, rewardToken } = farm[1];
+          const { poolToken0TVL, poolToken1TVL, totalReward } = farmInfo[1];
 
-          const token0Price = infoAllTokens.find((token) => token.address === poolToken0.address)?.priceUSD;
-          const token1Price = infoAllTokens.find((token) => token.address === poolToken1.address)?.priceUSD;
-          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardToken.address)?.priceUSD;
+          const { address: token0Principal, amount: token0Amount } = poolToken0TVL;
+          const { address: token1Principal, amount: token1Amount } = poolToken1TVL;
+          const { address: rewardTokenPrincipal, amount: rewardAmount } = totalReward;
 
-          const token0Info = await getTokenInfo(poolToken0.address);
-          const token1Info = await getTokenInfo(poolToken1.address);
-          const rewardTokenInfo = await getTokenInfo(rewardToken.address);
+          const token0Price = infoAllTokens.find((token) => token.address === token0Principal.toString())?.priceUSD;
+          const token1Price = infoAllTokens.find((token) => token.address === token1Principal.toString())?.priceUSD;
+          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
+            ?.priceUSD;
+
+          const token0Info = await getTokenInfo(token0Principal.toString());
+          const token1Info = await getTokenInfo(token1Principal.toString());
+          const rewardTokenInfo = await getTokenInfo(rewardTokenPrincipal.toString());
 
           if (!token0Price || !token1Price || !rewardTokenPrice || !token0Info || !token1Info || !rewardTokenInfo) {
             stakedTVL = stakedTVL.plus(0);
             rewardTVL = rewardTVL.plus(0);
           } else {
-            const stakedToken0TVL = parseTokenAmount(poolToken0.amount, token0Info.decimals).multipliedBy(token0Price);
-            const stakedToken1TVL = parseTokenAmount(poolToken1.amount, token1Info.decimals).multipliedBy(token1Price);
-            const rewardTokenTVL = parseTokenAmount(rewardToken.amount, rewardTokenInfo.decimals).multipliedBy(
+            const stakedToken0TVL = parseTokenAmount(token0Amount, token0Info.decimals).multipliedBy(token0Price);
+            const stakedToken1TVL = parseTokenAmount(token1Amount, token1Info.decimals).multipliedBy(token1Price);
+            const rewardTokenTVL = parseTokenAmount(rewardAmount, rewardTokenInfo.decimals).multipliedBy(
               rewardTokenPrice,
             );
 
@@ -114,13 +123,7 @@ export function useFarmGlobalData() {
     }
 
     call();
-  }, [infoAllTokens, allClosedFarms, allFinishedFarms]);
-
-  useEffect(() => {
-    if (allFarms) {
-      setPoolsNumber(allFarms.length);
-    }
-  }, [allFarms]);
+  }, [infoAllTokens, allClosedFarmsInfos, allFinishedFarmsInfos]);
 
   const update = useCallback(async () => {
     setRefreshTrigger((prevState) => prevState + 1);
@@ -129,7 +132,12 @@ export function useFarmGlobalData() {
   useInterval<void>(update);
 
   return useMemo(
-    () => ({ ...data, poolsNumber, rewardedTokenTVL, stakedTokenTVL, ...farmTotalAmount }),
-    [data, poolsNumber, rewardedTokenTVL, stakedTokenTVL, farmTotalAmount],
+    () => ({
+      ...data,
+      rewardedTokenTVL,
+      stakedTokenTVL,
+      ...farmTotalAmount,
+    }),
+    [data, rewardedTokenTVL, stakedTokenTVL, farmTotalAmount],
   );
 }

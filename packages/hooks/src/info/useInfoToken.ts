@@ -13,7 +13,7 @@ export function useFetchInfoAllTokens() {
       return await getNodeInfoAllTokens();
     },
     {
-      refreshInterval: 30000,
+      refreshInterval: 300000,
     },
   );
 
