@@ -89,7 +89,7 @@ export function GlobalData() {
             "--"
           )
         }
-        tooltip0={t`The cumulative value of positions staked across all live farming pools.`}
+        tooltip0={t`The number of positions currently available in your account for staking.`}
         label1={<Trans>Your Staked Positions</Trans>}
         value1={
           nonNullArgs(globalData.userStakedFarms) && nonNullArgs(globalData.userStakedTvl) ? (
