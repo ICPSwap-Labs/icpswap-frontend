@@ -46,6 +46,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
   const handleConfirm = async () => {
     if (loading || !governance_id || !neuron_id) return;
 
+    setOpen(false);
     setLoading(true);
     openFullscreenLoading();
 
@@ -73,6 +74,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
   const handleDisburseMaturity = async () => {
     if (loading || !governance_id || !neuron_id) return;
 
+    setDisburseOpen(false);
     setLoading(true);
     openFullscreenLoading();
 
