@@ -13,6 +13,7 @@ import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL } from "@icpswap/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { Theme } from "@mui/material/styles";
+import { HIDDEN_POOLS } from "constants/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -152,7 +153,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     return _pools
       .slice()
       .filter((pool) => {
-        return pool.token0Price !== 0 && pool.token1Price !== 0;
+        return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
       })
       .map((pool) => {
         const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);

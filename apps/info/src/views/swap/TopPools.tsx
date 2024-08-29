@@ -7,6 +7,7 @@ import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo } from "react";
 import { ICP } from "@icpswap/tokens";
 import { MainCard } from "@icpswap/ui";
+import { HIDDEN_POOLS } from "constants/index";
 
 export default function TopPools() {
   const [onlyTokenList, setOnlyTokenList] = useState(true);
@@ -33,7 +34,7 @@ export default function TopPools() {
 
         return pool;
       })
-      .filter((pool) => pool.feeTier === BigInt(3000))
+      .filter((pool) => pool.feeTier === BigInt(3000) && !HIDDEN_POOLS.includes(pool.pool))
       .filter((pool) => {
         if (!selectedPair) return true;
 

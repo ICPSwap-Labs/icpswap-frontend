@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData } from "@icpswap/types";
+import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 
 import dayjs from "dayjs";
@@ -22,6 +22,46 @@ import { MainCard } from "../MainCard";
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
+
+function priceChartFormat(data: InfoPriceChartData[]) {
+  return data
+    .filter((d) => {
+      // ICVC
+      if (d.id === "m6xut-mqaaa-aaaaq-aadua-cai") {
+        const time = new Date("2024-08-29").getTime();
+        return new BigNumber(d.time).multipliedBy(1000).isGreaterThan(time);
+      }
+
+      // SNS1
+      if (d.id === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
+        const time = new Date("2024-03-12").getTime();
+        return !new BigNumber(d.time).multipliedBy(1000).isLessThan(time);
+      }
+
+      return true;
+    })
+    .map((d, index) => {
+      return {
+        ...d,
+        open: d.timestamp.toString() === "1686787200" ? data[index - 1].close : d.open,
+        close:
+          d.timestamp.toString() === "1686787200" || d.timestamp.toString() === "1686873600"
+            ? data[index + 1]?.open ?? d.close
+            : d.close,
+        low:
+          d.timestamp.toString() === "1686787200"
+            ? data[index - 1].close > (data[index + 1]?.open ?? 0)
+              ? data[index + 1]?.open ?? data[index - 1]?.close ?? 0
+              : data[index - 1].close
+            : d.timestamp.toString() === "1686873600"
+            ? data[index - 2].close > (data[index + 1]?.open ?? 0)
+              ? data[index + 1]?.open ?? 0
+              : data[index - 2]?.close ?? 0
+            : d.low,
+        timestamp: undefined,
+      };
+    });
+}
 
 export const chartViews = [
   { label: `Volume`, key: ChartView.VOL },
@@ -111,23 +151,15 @@ export function TokenCharts({ canisterId, volume, borderRadius, priceToggles, ba
   const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-  const { priceChartData: _priceChartData, loading: priceChartLoading } = useTokenPriceChart(
+  const { priceChartData: __priceChartData, loading: priceChartLoading } = useTokenPriceChart(
     priceChartTokenId ?? canisterId,
   );
 
   const priceChartData = useMemo(() => {
-    if (!_priceChartData) return undefined;
+    if (!__priceChartData) return undefined;
 
-    // SNS1
-    if (canisterId === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
-      return _priceChartData.filter((e) => {
-        const time = new Date("2024-03-12").getTime();
-        return !new BigNumber(e.time).multipliedBy(1000).isLessThan(time);
-      });
-    }
-
-    return _priceChartData;
-  }, [_priceChartData]);
+    return priceChartFormat(__priceChartData);
+  }, [__priceChartData]);
 
   const { result: tvlChartData } = useTokenTvlChart(canisterId);
 

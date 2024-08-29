@@ -13,6 +13,7 @@ import { PoolData } from "hooks/info/usePoolsOfToken";
 import InTokenListCheck from "ui-component/InTokenListCheck";
 import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { HIDDEN_POOLS } from "constants/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -152,7 +153,8 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
           (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
           pool.token0Price !== 0 &&
           pool.token1Price !== 0 &&
-          pool.feeTier === BigInt(3000)
+          pool.feeTier === BigInt(3000) &&
+          !HIDDEN_POOLS.includes(pool.pool)
         );
       })
       .filter((pool) => {
