@@ -28,7 +28,7 @@ function priceChartFormat(data: InfoPriceChartData[]) {
     .filter((d) => {
       // ICVC
       if (d.id === "m6xut-mqaaa-aaaaq-aadua-cai") {
-        const time = new Date("2024-08-29").getTime();
+        const time = new Date("2024-08-28").getTime();
         return new BigNumber(d.time).multipliedBy(1000).isGreaterThan(time);
       }
 
