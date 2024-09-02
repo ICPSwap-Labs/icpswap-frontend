@@ -99,8 +99,8 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
   const handleConfirm = () => {
     if (!metadata) return;
 
-    updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
-    registerTokens({ canisterIds: [values.id], standard: values.standard as TOKEN_STANDARD });
+    updateTokenStandard([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
+    registerTokens([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
     openSuccessTip(t`Imported successfully`);
     saveTokenToWallet([values.id]);
     if (onImportSuccessfully) onImportSuccessfully();

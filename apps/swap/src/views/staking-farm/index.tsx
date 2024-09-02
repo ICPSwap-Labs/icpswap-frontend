@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { NoData, MainCard, Flex } from "components/index";
+import { NoData, MainCard, Flex, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -329,43 +329,41 @@ function MainContent() {
 
 export default function Farms() {
   return (
-    <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ maxWidth: "1200px", width: "100%" }}>
-        <Box>
-          <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
-            <Trans>Farm</Trans>
-          </Typography>
-          <Typography fontSize={16} mt="16px">
-            <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            margin: "44px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "20px 0 0 0",
-            },
-          }}
-        >
-          <GlobalData />
-        </Box>
-
-        <Box
-          sx={{
-            margin: "58px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "40px 0 0 0",
-            },
-          }}
-        >
-          <TopLiveFarms />
-        </Box>
-
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <MainContent />
-        </Box>
+    <Wrapper>
+      <Box>
+        <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
+          <Trans>Farm</Trans>
+        </Typography>
+        <Typography fontSize={16} mt="16px">
+          <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
+        </Typography>
       </Box>
-    </Flex>
+
+      <Box
+        sx={{
+          margin: "44px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "20px 0 0 0",
+          },
+        }}
+      >
+        <GlobalData />
+      </Box>
+
+      <Box
+        sx={{
+          margin: "58px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "40px 0 0 0",
+          },
+        }}
+      >
+        <TopLiveFarms />
+      </Box>
+
+      <Box sx={{ margin: "20px 0 0 0" }}>
+        <MainContent />
+      </Box>
+    </Wrapper>
   );
 }

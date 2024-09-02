@@ -1,18 +1,15 @@
 import { useState, useMemo } from "react";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Box, Grid, useMediaQuery } from "@mui/material";
+import { Box, Grid, useMediaQuery, makeStyles, useTheme, Theme } from "ui-component/Mui";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override } from "@icpswap/types";
-import { NoData, StaticLoading, TokenImage } from "ui-component/index";
+import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { PublicPoolOverView } from "types/analytic";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
-import FeeTierLabel from "ui-component/FeeTierLabel";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL } from "@icpswap/hooks";
-import { formatDollarAmount, BigNumber } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
+import { useAllPoolsTVL, usePoolApr24h } from "@icpswap/hooks";
+import { formatDollarAmount } from "@icpswap/utils";
 import { HIDDEN_POOLS } from "constants/index";
 
 const useStyles = makeStyles(() => {
@@ -88,17 +85,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
 
-  const apr = useMemo(() => {
-    if (!pool) return undefined;
-
-    const fee24h = (pool.volumeUSD * 3) / 1000;
-
-    return `${new BigNumber(fee24h)
-      .dividedBy(pool.tvlUSD)
-      .multipliedBy(360 * 0.8)
-      .multipliedBy(100)
-      .toFixed(2)}%`;
-  }, [pool]);
+  const apr24h = usePoolApr24h({ volumeUSD: pool.volumeUSD, poolTvlUSD: pool.tvlUSD });
 
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
@@ -114,12 +101,12 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
             {pool.token0Symbol} / {pool.token1Symbol}
           </BodyCell>
 
-          <FeeTierLabel feeTier={pool.feeTier} />
+          <FeeTierPercentLabel feeTier={pool.feeTier} />
         </Grid>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell align={align} color="text.theme-secondary">
-        {apr ?? "--"}
+        {apr24h ?? "--"}
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
@@ -205,7 +192,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
         />
       ) : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && (pools?.length ?? 0) > 0 ? (

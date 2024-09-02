@@ -1,15 +1,14 @@
 import { useMemo, useState } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box } from "components/Mui";
 import { useParams } from "react-router-dom";
 import NFTList from "components/NFT/NFTList";
 import CollectionUserTransactions from "components/NFT/CollectionUserTransactions";
 import CanisterHeader from "components/NFT/CanisterHeader";
 import { useCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
-import { MainCard, Breadcrumbs } from "components/index";
+import { MainCard, Breadcrumbs, Wrapper } from "components/index";
 import { t, Trans } from "@lingui/macro";
 import { useAccount } from "store/global/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
-import Wrapper from "components/Wrapper";
 import { useEXTManager } from "store/nft/hooks";
 
 import { ExtNftCollectionDetail } from "./ExtCanisterDetails";

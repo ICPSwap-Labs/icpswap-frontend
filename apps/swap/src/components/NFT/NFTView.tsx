@@ -1,12 +1,11 @@
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, Grid, Box } from "components/Mui";
-import { MainCard, Breadcrumbs } from "components/index";
+import { MainCard, Breadcrumbs, Wrapper } from "components/index";
 import NFTTransactions from "components/NFT/NFTTransactions";
 import NFTActivity from "components/NFT/NFTActivity";
 import NFTInfo from "components/NFT/Info";
 import { Trans, t } from "@lingui/macro";
-import Wrapper from "components/Wrapper";
 
 export type Tab = {
   key: string;

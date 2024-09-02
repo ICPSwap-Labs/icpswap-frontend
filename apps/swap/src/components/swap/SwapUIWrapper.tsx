@@ -1,4 +1,4 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid } from "components/Mui";
 import { t } from "@lingui/macro";
 import { Wrapper, TabPanel } from "components/index";
 import React from "react";
@@ -27,7 +27,7 @@ function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons
   return (
     <Wrapper>
       {buttons ? <TabPanel tabs={buttons} /> : null}
-      <Box mt={4}>{children}</Box>
+      <Box>{children}</Box>
     </Wrapper>
   );
 }
@@ -68,6 +68,6 @@ export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
   return <SwapWrapper buttons={buttons}>{children}</SwapWrapper>;
 }
 
-export default function _SwapWrapper({ children }: { children: React.ReactNode }) {
+export function SwapUIWrapper({ children }: { children: React.ReactNode }) {
   return <SwapWrapper>{children}</SwapWrapper>;
 }

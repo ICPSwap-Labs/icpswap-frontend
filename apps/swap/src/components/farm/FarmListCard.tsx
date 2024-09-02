@@ -102,7 +102,6 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
   const apr = useFarmApr({
     farmTvlValue,
     rewardToken,
-    rewardTokenPrice,
     rewardMetadata,
     farmInitArgs,
     state,

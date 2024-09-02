@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { LoadingRow, Copy } from "components/index";
+import { LoadingRow, Copy, Wrapper } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
 import { Theme } from "@mui/material/styles";
@@ -239,83 +239,81 @@ export default function Neurons() {
   const { result: tokenInfo } = useTokenInfo(ledger_id);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Box sx={{ maxWidth: "1400px", width: "100%" }}>
-        <Tabs />
+    <Wrapper>
+      <Tabs />
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            margin: "20px 0 0 0",
-            width: "100%",
-            "@media(max-width: 640px)": {
-              flexDirection: "column",
-              gap: "10px 0",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            },
-          }}
-        >
-          <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
-          <Box>
-            <StakeToCreateNeuron
-              onStakeSuccess={handleRefresh}
-              token={tokenInfo}
-              governance_id={governance_id}
-              neuronSystemParameters={neuronSystemParameters}
-            />
-          </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margin: "20px 0 0 0",
+          width: "100%",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "10px 0",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+          },
+        }}
+      >
+        <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
+        <Box>
+          <StakeToCreateNeuron
+            onStakeSuccess={handleRefresh}
+            token={tokenInfo}
+            governance_id={governance_id}
+            neuronSystemParameters={neuronSystemParameters}
+          />
         </Box>
-
-        {!loading ? (
-          filteredNeurons && filteredNeurons?.length > 0 ? (
-            <Box
-              sx={{
-                display: "grid",
-                gap: "20px",
-                margin: "20px 0 0 0",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                "@media (max-width:1088px)": {
-                  gridTemplateColumns: "1fr 1fr",
-                },
-                "@media (max-width:640px)": {
-                  gridTemplateColumns: "1fr",
-                },
-              }}
-            >
-              {filteredNeurons?.map((neuron, index) => (
-                <NeuronItem
-                  key={index}
-                  neuron={neuron}
-                  ledger_id={ledger_id}
-                  root_id={selectedNeuron}
-                  governance_id={governance_id}
-                  neuronSystemParameters={neuronSystemParameters}
-                  refreshTrigger={handleRefresh}
-                  token={tokenInfo}
-                />
-              ))}
-            </Box>
-          ) : (
-            <Typography sx={{ margin: "20px 0 0 0" }}>No Neurons</Typography>
-          )
-        ) : (
-          <Box sx={{ margin: "20px 0 0 0" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          </Box>
-        )}
       </Box>
-    </Box>
+
+      {!loading ? (
+        filteredNeurons && filteredNeurons?.length > 0 ? (
+          <Box
+            sx={{
+              display: "grid",
+              gap: "20px",
+              margin: "20px 0 0 0",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              "@media (max-width:1088px)": {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              "@media (max-width:640px)": {
+                gridTemplateColumns: "1fr",
+              },
+            }}
+          >
+            {filteredNeurons?.map((neuron, index) => (
+              <NeuronItem
+                key={index}
+                neuron={neuron}
+                ledger_id={ledger_id}
+                root_id={selectedNeuron}
+                governance_id={governance_id}
+                neuronSystemParameters={neuronSystemParameters}
+                refreshTrigger={handleRefresh}
+                token={tokenInfo}
+              />
+            ))}
+          </Box>
+        ) : (
+          <Typography sx={{ margin: "20px 0 0 0" }}>No Neurons</Typography>
+        )
+      ) : (
+        <Box sx={{ margin: "20px 0 0 0" }}>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        </Box>
+      )}
+    </Wrapper>
   );
 }

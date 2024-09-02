@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TOKEN_STANDARD , registerTokens } from "@icpswap/token-adapter";
+import { TOKEN_STANDARD, registerTokens } from "@icpswap/token-adapter";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandards, useTokenStandards } from "store/token/cache/hooks";
 import { useSwapPools, useTokensFromList } from "@icpswap/hooks";
@@ -90,9 +90,12 @@ export function useInitialTokenStandard() {
 
   useEffect(() => {
     if (tokenStandards) {
-      Object.keys(tokenStandards).forEach((canisterId) => {
-        registerTokens({ canisterIds: [canisterId], standard: tokenStandards[canisterId] });
-      });
+      const allTokenStandards = Object.keys(tokenStandards).map((key) => ({
+        canisterId: key,
+        standard: tokenStandards[key],
+      }));
+
+      registerTokens(allTokenStandards);
     }
   }, [tokenStandards]);
 

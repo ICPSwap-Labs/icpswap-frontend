@@ -8,7 +8,15 @@ import { useUpdateSwapOutAmount, getSwapOutAmount } from "store/swap/hooks";
 import { slippageToPercent } from "constants/index";
 import { swap } from "hooks/swap/v3Calls";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useSwapApprove, useSwapDeposit, useSwapTransfer, useSwapWithdraw } from "hooks/swap/index";
+import {
+  useSwapApprove,
+  useSwapDeposit,
+  useSwapTransfer,
+  useSwapWithdraw,
+  getTokenActualTransferRawAmount,
+  getTokenActualDepositRawAmount,
+  getTokenInsufficient,
+} from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getLocaleMessage } from "locales/services";
 import { MessageTypes, useTips } from "hooks/useTips";
@@ -18,7 +26,7 @@ import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
-import { parseTokenAmount, sleep, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { isNullArgs, parseTokenAmount, sleep, toSignificantWithGroupSeparator } from "@icpswap/utils";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -81,8 +89,9 @@ export interface SwapCallsCallbackArgs {
   trade: Trade<Token, Token, TradeType> | Trade<Token, Token, TradeType>[] | undefined | null;
   stepKey: string | number;
   openExternalTip: OpenExternalTip;
-  subAccountTokenBalance: BigNumber;
-  swapInTokenUnusedBalance: bigint;
+  subAccountBalance: BigNumber;
+  balance: BigNumber;
+  unusedBalance: bigint;
   refresh: () => void;
 }
 
@@ -108,8 +117,9 @@ export function useSwapCalls() {
     ({
       trade,
       stepKey: _stepKey,
-      swapInTokenUnusedBalance,
-      subAccountTokenBalance,
+      subAccountBalance,
+      unusedBalance,
+      balance,
       openExternalTip,
       refresh,
     }: SwapCallsCallbackArgs) => {
@@ -139,68 +149,63 @@ export function useSwapCalls() {
             const poolId = pool.id;
             const token0 = pool.token0;
             const token1 = pool.token1;
-            const tokenInputOfPool = token0.address === tokenIn.address ? token0 : token1;
+            const inputToken = token0.address === tokenIn.address ? token0 : token1;
 
             updateSwapOutAmount(stepKey, undefined);
 
             // Amount that user input
-            const userInputAmount = actualSwapAmount
-              ? isUseTransfer(tokenInputOfPool)
-                ? new BigNumber(actualSwapAmount).plus(tokenInputOfPool.transFee).toString()
-                : actualSwapAmount
-              : undefined;
+            // Now the swap amount is the amount that user input
+            const userInputAmount = actualSwapAmount;
 
-            const transferAmount = userInputAmount
-              ? new BigNumber(userInputAmount)
-                  .minus(subAccountTokenBalance.toString())
-                  .minus(swapInTokenUnusedBalance.toString())
-                  .toString()
-              : null;
+            const tokenInsufficient = getTokenInsufficient({
+              token: inputToken,
+              subAccountBalance,
+              unusedBalance,
+              balance,
+              formatTokenAmount: userInputAmount,
+            });
 
             const step0 = async () => {
-              if (!userInputAmount || !transferAmount) return false;
+              if (isNullArgs(tokenInsufficient)) return false;
 
-              // Skip transfer if unused token balance is greater than or equal to actual swap amount
-              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount)) {
-                return true;
-              }
+              if (tokenInsufficient === "NO_TRANSFER_APPROVE" || tokenInsufficient === "NEED_DEPOSIT") return true;
 
-              if (isUseTransfer(tokenInputOfPool)) {
-                // Skip transfer if unDeposit token balance is greater than or equal to user input amount
-                if (!subAccountTokenBalance.isLessThan(userInputAmount)) {
-                  return true;
-                }
+              if (isUseTransfer(inputToken)) {
+                const needTransferAmount = new BigNumber(userInputAmount)
+                  .minus(unusedBalance.toString())
+                  .minus(subAccountBalance)
+                  .toString();
 
-                return await transfer(tokenInputOfPool, transferAmount, poolId);
+                return await transfer(
+                  inputToken,
+                  getTokenActualTransferRawAmount(needTransferAmount, inputToken),
+                  poolId,
+                );
               }
 
               return await approve({
-                token: tokenInputOfPool,
+                token: inputToken,
                 amount: userInputAmount,
                 poolId,
-                standard: tokenInputOfPool.standard as TOKEN_STANDARD,
+                standard: inputToken.standard as TOKEN_STANDARD,
               });
             };
 
             const step1 = async () => {
-              if (!userInputAmount || !transferAmount) return false;
+              if (isNullArgs(tokenInsufficient)) return false;
 
-              const depositAllTokens = subAccountTokenBalance.isGreaterThan(userInputAmount);
-              const depositAmount = depositAllTokens ? subAccountTokenBalance.toString() : transferAmount;
+              if (tokenInsufficient === "NO_TRANSFER_APPROVE") return true;
 
-              // Skip transfer if unused token balance is greater than or equal to actual swap amount
-              if (swapInTokenUnusedBalance >= BigInt(actualSwapAmount) && !depositAllTokens) {
-                return true;
-              }
+              const needDepositAmount = new BigNumber(userInputAmount).minus(unusedBalance.toString()).toString();
 
               return await deposit({
-                token: tokenInputOfPool,
-                amount: depositAmount,
+                token: inputToken,
+                amount: getTokenActualDepositRawAmount(needDepositAmount, inputToken),
                 poolId,
                 openExternalTip: ({ message }: ExternalTipArgs) => {
                   openExternalTip({ message, tipKey: stepKey, poolId });
                 },
-                standard: tokenInputOfPool.standard as TOKEN_STANDARD,
+                standard: inputToken.standard as TOKEN_STANDARD,
               });
             };
 
@@ -297,8 +302,9 @@ export function useSwapCalls() {
 export interface SwapCallbackArgs {
   trade: Trade<Token, Token, TradeType> | undefined | null;
   openExternalTip: OpenExternalTip;
-  subAccountTokenBalance: BigNumber;
-  swapInTokenUnusedBalance: bigint;
+  unusedBalance: bigint;
+  subAccountBalance: BigNumber;
+  balance: BigNumber;
   refresh: () => void;
 }
 
@@ -308,14 +314,15 @@ export function useSwapCallback() {
   const initialSteps = useInitialSwapSteps();
 
   return useCallback(
-    ({ trade, openExternalTip, swapInTokenUnusedBalance, subAccountTokenBalance, refresh }: SwapCallbackArgs) => {
+    ({ trade, openExternalTip, subAccountBalance, unusedBalance, balance, refresh }: SwapCallbackArgs) => {
       const key = newStepKey();
 
       const calls = createSwapCalls({
         trade,
-        swapInTokenUnusedBalance,
+        subAccountBalance,
         stepKey: key,
-        subAccountTokenBalance,
+        unusedBalance,
+        balance,
         openExternalTip,
         refresh,
       });

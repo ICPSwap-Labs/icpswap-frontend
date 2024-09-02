@@ -37,8 +37,11 @@ export interface UserTokenBalanceArgs {
   refresh?: boolean | number;
 }
 
-export function useTokenBalance({ canisterId, address, sub, refresh }: UserTokenBalanceArgs) {
-  return useLatestDataCall(
+export function useTokenBalance({ canisterId, address, sub, refresh }: UserTokenBalanceArgs): {
+  result: BigNumber | undefined;
+  loading: boolean;
+} {
+  return useLatestDataCall<BigNumber | undefined>(
     useCallback(async () => {
       if (!address || !canisterId) return undefined;
       const balance = await getTokenBalance({ canisterId, sub, address });

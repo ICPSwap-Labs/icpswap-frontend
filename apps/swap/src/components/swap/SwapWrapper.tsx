@@ -1,9 +1,8 @@
 import { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { Grid, Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import BigNumber from "bignumber.js";
-import { toSignificant, isNullArgs } from "@icpswap/utils";
-import { SWAP_FIELD } from "constants/swap";
+import { toSignificant, isNullArgs, BigNumber } from "@icpswap/utils";
+import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { maxAmountFormat } from "utils/swap/index";
@@ -26,6 +25,7 @@ import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { SwapContext } from "components/swap/index";
+import { useGlobalContext, useRefreshTrigger } from "hooks/index";
 
 export interface SwapWrapperProps {
   ui?: "pro" | "normal";
@@ -40,23 +40,23 @@ export function SwapWrapper({
   onOutputTokenChange,
   onTradePoolIdChange,
 }: SwapWrapperProps) {
-  const [confirmModalShow, setConfirmModalShow] = useState(false);
-  const [swapLoading, setSwapLoading] = useState(false);
+  const history = useHistory();
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-  const [impactChecked, setImpactChecked] = useState(false);
-  // const [balanceRefreshTrigger, setBalanceRefreshTrigger] = useState(0);
-
   const [isExpertMode] = useExpertModeManager();
-  const history = useHistory();
-  const { setSelectedPool, refreshTrigger, setRefreshTrigger, usdValueChange } = useContext(SwapContext);
+  const { setSelectedPool, usdValueChange } = useContext(SwapContext);
+  const { setRefreshTriggers } = useGlobalContext();
+  const { onUserInput } = useSwapHandlers();
+  const handleClearSwapState = useCleanSwapState();
+  const refreshTrigger = useRefreshTrigger(SWAP_REFRESH_KEY);
+
+  const [impactChecked, setImpactChecked] = useState(false);
+  const [confirmModalShow, setConfirmModalShow] = useState(false);
+  const [swapLoading, setSwapLoading] = useState(false);
 
   useLoadDefaultParams();
 
   const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
-
-  const { onUserInput } = useSwapHandlers();
-  const handleClearSwapState = useCleanSwapState();
 
   const {
     inputError: swapInputError,
@@ -67,20 +67,21 @@ export function SwapWrapper({
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
-    inputCurrency,
+    inputToken,
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
     swapTokenUnusedBalance,
     subAccountTokenBalance,
+    inputTokenBalance,
   } = useSwapInfo({ refresh: refreshTrigger });
 
   // For swap pro
   useEffect(() => {
-    if (onInputTokenChange) onInputTokenChange(inputCurrency);
+    if (onInputTokenChange) onInputTokenChange(inputToken);
     if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
-  }, [tradePoolId, outputCurrency, inputCurrency]);
+  }, [tradePoolId, outputCurrency, inputToken]);
 
   // Auto refresh token balance 5 seconds
   // useEffect(() => {
@@ -98,7 +99,7 @@ export function SwapWrapper({
   const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
   const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
-  const inputCurrencyInterfacePrice = useUSDPrice(inputCurrency);
+  const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
   const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
 
   useEffect(() => {
@@ -165,21 +166,23 @@ export function SwapWrapper({
       swapLoading ||
       !trade ||
       isNullArgs(subAccountTokenBalance) ||
-      isNullArgs(swapTokenUnusedBalance)
+      isNullArgs(swapTokenUnusedBalance) ||
+      isNullArgs(inputTokenBalance)
     )
       return;
 
     const { call, key } = swapCallback({
       trade,
-      subAccountTokenBalance: subAccountTokenBalance as BigNumber,
-      swapInTokenUnusedBalance: swapTokenUnusedBalance as bigint,
+      subAccountBalance: subAccountTokenBalance as BigNumber,
+      unusedBalance: swapTokenUnusedBalance as bigint,
+      balance: inputTokenBalance,
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
       },
       refresh: () => {
-        setRefreshTrigger();
+        setRefreshTriggers(SWAP_REFRESH_KEY);
         setTimeout(() => {
-          setRefreshTrigger();
+          setRefreshTriggers(SWAP_REFRESH_KEY);
         }, 1000);
       },
     });
@@ -190,7 +193,7 @@ export function SwapWrapper({
     const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
     const loadingKey = openLoadingTip(
-      t`Swap ${amount0} ${inputCurrency?.symbol} to ${amount1} ${outputCurrency?.symbol}`,
+      t`Swap ${amount0} ${inputToken?.symbol} to ${amount1} ${outputCurrency?.symbol}`,
       {
         extraContent: <StepViewButton step={key} />,
       },
@@ -214,6 +217,8 @@ export function SwapWrapper({
     trade,
     subAccountTokenBalance,
     swapTokenUnusedBalance,
+    setRefreshTriggers,
+    inputTokenBalance,
   ]);
 
   const maxInputAmount = useMaxAmountSpend({
@@ -245,7 +250,7 @@ export function SwapWrapper({
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "22px 0" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "16px 0" }}>
       <SwapInputWrapper
         onMaxInput={handleMaxInput}
         onInput={handleInput}
@@ -253,7 +258,7 @@ export function SwapWrapper({
         onTokenBChange={handleTokenBChange}
         tokenAPrice={inputCurrencyInterfacePrice}
         tokenBPrice={outputCurrencyInterfacePrice}
-        inputCurrency={inputCurrency}
+        inputCurrency={inputToken}
         outputCurrency={outputCurrency}
         inputCurrencyState={inputCurrencyState}
         outputCurrencyState={outputCurrencyState}
@@ -280,7 +285,7 @@ export function SwapWrapper({
               <TradePrice
                 poolId={trade.swaps[0].route.pools[0].id}
                 price={trade.executionPrice}
-                token0={inputCurrency}
+                token0={inputToken}
                 token1={outputCurrency}
                 token0PriceUSDValue={toSignificant(inputCurrencyInterfacePrice ?? 0, 18)}
                 token1PriceUSDValue={toSignificant(outputCurrencyInterfacePrice ?? 0, 18)}
@@ -290,29 +295,6 @@ export function SwapWrapper({
           </Box>
         </MainCard>
       ) : null}
-
-      <Button
-        fullWidth
-        variant="contained"
-        size="large"
-        onClick={handleSwap}
-        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
-      >
-        {swapInputError ||
-          (isLoadingRoute ? (
-            <Trans>Swap</Trans>
-          ) : isNoRouteFound ? (
-            <Trans>Insufficient liquidity for this trade.</Trans>
-          ) : isPoolNotChecked ? (
-            <Trans>Waiting for verifying the pool...</Trans>
-          ) : priceImpactTooHigh ? (
-            <Trans>High Price Impact</Trans>
-          ) : priceImpactSeverity > 2 ? (
-            <Trans>Swap Anyway</Trans>
-          ) : (
-            <Trans>Swap</Trans>
-          ))}
-      </Button>
 
       {needImpactConfirm ? (
         <Box
@@ -341,6 +323,29 @@ export function SwapWrapper({
           </Flex>
         </Box>
       ) : null}
+
+      <Button
+        fullWidth
+        variant="contained"
+        size="large"
+        onClick={handleSwap}
+        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
+      >
+        {swapInputError ||
+          (isLoadingRoute ? (
+            <Trans>Swap</Trans>
+          ) : isNoRouteFound ? (
+            <Trans>Insufficient liquidity for this trade.</Trans>
+          ) : isPoolNotChecked ? (
+            <Trans>Waiting for verifying the pool...</Trans>
+          ) : priceImpactTooHigh ? (
+            <Trans>High Price Impact</Trans>
+          ) : priceImpactSeverity > 2 ? (
+            <Trans>Swap Anyway</Trans>
+          ) : (
+            <Trans>Swap</Trans>
+          ))}
+      </Button>
 
       {confirmModalShow && trade && (
         <SwapConfirm

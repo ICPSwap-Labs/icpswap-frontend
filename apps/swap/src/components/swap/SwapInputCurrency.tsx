@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Grid, Box, Typography } from "components/Mui";
-import CurrencySelector from "components/CurrencySelector";
+import { CurrencySelector } from "components/swap/index";
 import BigNumber from "bignumber.js";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";

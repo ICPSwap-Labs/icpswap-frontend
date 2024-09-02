@@ -3,7 +3,7 @@ export {
   MainCard,
   DotLoading,
   LoadingRow,
-  StaticLoading,
+  ImageLoading,
   NoData,
   TextButton,
   Breadcrumbs,

@@ -1,29 +1,39 @@
 import React, { useState, useCallback, useMemo, useEffect, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Chip, Button, useMediaQuery, Box, Popper } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import {
+  Typography,
+  Grid,
+  Chip,
+  Button,
+  useMediaQuery,
+  Box,
+  Popper,
+  Theme,
+  useTheme,
+  makeStyles,
+} from "components/Mui";
 import CurrenciesAvatar from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
-import { feeAmountToPercentage } from "utils/swap/index";
-import CollectFeesModal from "components/swap/CollectFeesModal";
+import { feeAmountToPercentage, PositionState } from "utils/swap/index";
+import { CollectFeesModal } from "components/swap/CollectFeesModal";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { numberToString, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme, toFormat } from "utils";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import PositionContext from "components/swap/PositionContext";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
+import { PositionRangeState } from "components/swap/index";
 
-import PositionStatus from "./PositionRangeState";
+import { usePositionState } from "hooks/liquidity";
 import TransferPosition from "./TransferPosition";
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -100,6 +110,7 @@ export interface PositionDetailsProps {
   show: boolean | undefined;
   token0USDPrice: number | undefined;
   token1USDPrice: number | undefined;
+  state: PositionState | undefined;
 }
 
 export function PositionDetails({
@@ -112,6 +123,7 @@ export function PositionDetails({
   show,
   token0USDPrice,
   token1USDPrice,
+  state,
 }: PositionDetailsProps) {
   const classes = useStyle();
   const history = useHistory();
@@ -123,7 +135,7 @@ export function PositionDetails({
   const [transferPopperShow, setTransferPopperShow] = useState(false);
   const [transferShow, setTransferShow] = useState(false);
 
-  const { updateCounter } = useContext(PositionContext);
+  const { setRefreshTrigger } = useContext(PositionContext);
 
   const noLiquidity = position?.liquidity.toString() === "0";
 
@@ -204,7 +216,7 @@ export function PositionDetails({
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleTransferSuccess = () => {
-    updateCounter();
+    setRefreshTrigger();
   };
 
   return (
@@ -254,7 +266,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Unclaimed fees`}
+          label={t`Uncollected fees`}
           value={
             <Box>
               <Typography
@@ -325,7 +337,7 @@ export function PositionDetails({
             )}
             {hasUnclaimedFees ? (
               <Button fullWidth variant="outlined" size={matchDownSM ? "medium" : "medium"} onClick={handleCollectFee}>
-                <Trans>Claim fees</Trans>
+                <Trans>Collect fees</Trans>
               </Button>
             ) : null}
             {!invalid ? (
@@ -416,12 +428,12 @@ export function PositionDetails({
 
       {transferShow ? (
         <TransferPosition
-          closed={closed}
           open={transferShow}
           position={position}
           positionId={positionId}
           onClose={() => setTransferShow(false)}
           onTransferSuccess={handleTransferSuccess}
+          state={state}
         />
       ) : null}
     </>
@@ -475,10 +487,7 @@ export default function PositionItem({
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
 
-  const outOfRange =
-    pool && (tickUpper || tickUpper === 0) && (tickLower || tickLower === 0)
-      ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper
-      : false;
+  const positionState = usePositionState(position);
 
   const token0USDPrice = useUSDPriceById(position?.pool.token0.address);
   const token1USDPrice = useUSDPriceById(position?.pool.token1.address);
@@ -552,7 +561,7 @@ export default function PositionItem({
 
         <Grid item>
           <Grid container>
-            <PositionStatus closed={closed} outOfRange={outOfRange} />
+            <PositionRangeState state={positionState} />
             <Grid item ml={matchDownMD ? "5px" : "10px"}>
               <Grid container alignItems="center">
                 {detailShow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -573,6 +582,7 @@ export default function PositionItem({
           show={detailShow}
           token0USDPrice={token0USDPrice}
           token1USDPrice={token1USDPrice}
+          state={positionState}
         />
       )}
     </>

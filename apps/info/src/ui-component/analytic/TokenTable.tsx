@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
-import { NoData, StaticLoading, TokenImage } from "ui-component/index";
+import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion } from "@icpswap/ui";
@@ -168,7 +168,7 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
         />
       ) : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && (tokens?.length ?? 0) > 0 ? (

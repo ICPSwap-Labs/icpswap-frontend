@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography } from "@mui/material";
-import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-// import SwapSettingIcon from "components/swap/SettingIcon";
+import { Grid, Typography } from "components/Mui";
+import { ArrowLeft } from "react-feather";
 
 export interface HeaderTabProps {
   showArrow?: boolean;
@@ -26,7 +25,7 @@ export default function SwapHeader({ showArrow = false, title, onBack }: HeaderT
   return (
     <Grid container>
       <Grid item xs={2} container justifyContent="flex-start">
-        {showArrow && <ArrowBackIcon sx={{ cursor: "pointer" }} onClick={handleBack} />}
+        {showArrow && <ArrowLeft style={{ cursor: "pointer" }} onClick={handleBack} />}
       </Grid>
       <Grid item xs container justifyContent="center">
         <Typography color="textPrimary" variant="h3">

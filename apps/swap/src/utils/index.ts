@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 
 import JSBI from "jsbi";
-import { toSignificant, explorerLink } from "@icpswap/utils";
+import { explorerLink } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 
 // @ts-ignore  hijack bigint
@@ -117,10 +117,6 @@ export function toFormat(value: string | number | BigNumber | undefined) {
   return new BigNumber(value).toFormat();
 }
 
-export function toSignificantFormatted(val: number | string, dig = 8) {
-  return toSignificant(val, dig, { groupSeparator: "," });
-}
-
 export function isHouseUserTokenTransactions(canisterId: string, principal: string) {
   return `https://637g5-siaaa-aaaaj-aasja-cai.raw.ic0.app/address/${canisterId}${principal ? `/${principal}` : ""}`;
 }
@@ -133,3 +129,4 @@ export function timeParser(time: any): Date {
 
 export * from "./type";
 export * from "./nft";
+export * from "./swap";

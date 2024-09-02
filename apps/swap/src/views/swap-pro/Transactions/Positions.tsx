@@ -1,5 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography, useTheme, useMediaQuery, Theme } from "components/Mui";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useTickAtLimit } from "@icpswap/hooks";
@@ -19,10 +19,10 @@ import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
-import CollectFeesModal from "components/swap/CollectFeesModal";
+import { CollectFeesModal } from "components/swap/CollectFeesModal";
 import TransferPosition from "components/swap/TransferPosition";
 import { useHistory } from "react-router-dom";
-import { Theme } from "@mui/material/styles";
+import { usePositionState } from "hooks/liquidity";
 
 import { SwapProContext } from "../context";
 
@@ -109,6 +109,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     };
   }, [nonInvertedTicksAtLimit, inverted]);
 
+  const positionState = usePositionState(position);
+
   const pairName = useMemo(() => {
     if (!currencyQuote || !currencyBase) return undefined;
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
@@ -161,7 +163,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         background: showButtons ? theme.palette.background.level2 : "none",
       }}
     >
-      <TableRow className={classes.wrapper} border="none">
+      <TableRow className={classes.wrapper} borderBottom="none">
         <BodyCell>{positionInfo.index}</BodyCell>
 
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount0.toExact(), 6)} ` : "--"}</BodyCell>
@@ -279,7 +281,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               <>
                 <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
                   <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                    <Trans>Claim Fees</Trans>
+                    <Trans>Collect Fees</Trans>
                   </Button>
                   <Button
                     size={matchSM ? "small" : "medium"}
@@ -315,7 +317,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                   <Trans>Remove Liquidity</Trans>
                 </Button>
                 <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                  <Trans>Claim Fees</Trans>
+                  <Trans>Collect Fees</Trans>
                 </Button>
                 <Button
                   size={matchSM ? "small" : "medium"}
@@ -346,8 +348,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           onClose={() => setTransferOpen(false)}
           position={position}
           positionId={BigInt(positionInfo.index)}
-          closed={false}
           onTransferSuccess={handleTransferSuccess}
+          state={positionState}
         />
       ) : null}
     </Box>
@@ -398,7 +400,7 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
           </HeaderCell>
 
           <HeaderCell field="unclaimedFees">
-            <Trans>Unclaimed Fees</Trans>
+            <Trans>Uncollected Fees</Trans>
           </HeaderCell>
 
           <HeaderCell>&nbsp;</HeaderCell>

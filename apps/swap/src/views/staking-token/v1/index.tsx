@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography } from "@mui/material";
-import { NoData, MainCard, StaticLoading, TextButton } from "components/index";
+import { NoData, MainCard, ImageLoading, TextButton } from "components/index";
 import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString, useV1StakingTokenPools } from "@icpswap/hooks";
@@ -192,7 +192,7 @@ function Pools() {
             </Box>
           ) : null}
           {(showNoData || !pools?.length) && !loading && <NoData />}
-          {loading ? <StaticLoading loading /> : null}
+          {loading ? <ImageLoading loading /> : null}
         </Box>
       </MainCard>
 

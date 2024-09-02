@@ -1,6 +1,5 @@
-import { Typography, Box } from "components/Mui";
+import { Typography, Box, Theme, useTheme } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
@@ -18,8 +17,6 @@ import {
   useSwapPoolMetadata,
   useFarmsByState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
-import { useUSDPrice } from "hooks/useUSDPrice";
 import { STATE } from "types/staking-farm";
 
 interface TopLiveFarmCardProps {
@@ -59,8 +56,6 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
     positionInfos: userAvailablePositions,
   });
 
-  const rewardTokenPrice = useUSDPrice(rewardToken);
-
   const farmTvlValue = useFarmTvlValue({
     token0,
     token1,
@@ -72,7 +67,6 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   const apr = useFarmApr({
     farmTvlValue,
     rewardToken,
-    rewardTokenPrice,
     rewardMetadata,
     farmInitArgs,
     state: STATE.LIVE,
@@ -191,7 +185,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   );
 }
 
-export function TopLiveFarms() {
+function MainContent() {
   const { result: allLiveFarms, loading } = useFarmsByState("LIVE");
 
   const topLiveFarms = useMemo(() => {
@@ -201,7 +195,7 @@ export function TopLiveFarms() {
   }, [allLiveFarms]);
 
   return (
-    <MainCard>
+    <>
       <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
         <Trans>Top Live Farms</Trans>
       </Typography>
@@ -235,6 +229,22 @@ export function TopLiveFarms() {
           </Box>
         )}
       </Box>
+    </>
+  );
+}
+
+interface TopLiveFarmsProps {
+  noWrapper?: boolean;
+}
+
+export function TopLiveFarms({ noWrapper = false }: TopLiveFarmsProps) {
+  return noWrapper ? (
+    <Box>
+      <MainContent />
+    </Box>
+  ) : (
+    <MainCard>
+      <MainContent />
     </MainCard>
   );
 }

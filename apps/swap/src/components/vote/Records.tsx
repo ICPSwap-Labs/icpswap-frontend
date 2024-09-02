@@ -5,7 +5,7 @@ import { valueofUser, timestampFormat, pageArgsFormat } from "@icpswap/utils";
 import { getVotingTransactions } from "@icpswap/hooks";
 import { Trans } from "@lingui/macro";
 import { UserVoteRecord } from "@icpswap/types";
-import { NoData, StaticLoading, MainCard } from "components/index";
+import { NoData, ImageLoading, MainCard } from "components/index";
 import { Theme } from "@mui/material/styles";
 import { useDownloadVotes } from "hooks/voting/useDownloadVotes";
 
@@ -203,7 +203,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
             </Grid>
           )}
 
-          {loading ? <StaticLoading loading={loading} /> : null}
+          {loading ? <ImageLoading loading={loading} /> : null}
 
           {records.length === 0 && !loading ? <NoData /> : null}
         </Box>

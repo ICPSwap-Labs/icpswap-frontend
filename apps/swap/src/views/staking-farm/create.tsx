@@ -98,10 +98,12 @@ export default function CreateProject() {
   const handleFieldChange = (value: string | number | Date, field: string) => {
     if (field === "rewardStandard" || field === "rewardToken") {
       if (values.rewardToken && values.rewardStandard) {
-        updateTokenStandard({
-          canisterId: values.rewardToken,
-          standard: values.rewardStandard as TOKEN_STANDARD,
-        });
+        updateTokenStandard([
+          {
+            canisterId: values.rewardToken,
+            standard: values.rewardStandard as TOKEN_STANDARD,
+          },
+        ]);
       }
     }
 

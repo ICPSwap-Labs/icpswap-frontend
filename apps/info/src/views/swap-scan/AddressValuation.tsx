@@ -4,8 +4,7 @@ import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber, explorerLink } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow } from "@icpswap/ui";
-import InTokenListCheck from "ui-component/InTokenListCheck";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, OnlyTokenList } from "@icpswap/ui";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
@@ -280,7 +279,7 @@ export default function SwapScanValuation() {
             </Trans>
           </Typography>
           <Box>
-            <InTokenListCheck onChange={handleCheckChange} checked={checked} />
+            <OnlyTokenList onChange={handleCheckChange} checked={checked} />
           </Box>
         </Box>
 

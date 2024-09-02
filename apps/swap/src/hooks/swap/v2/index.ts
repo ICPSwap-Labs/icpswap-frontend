@@ -1,8 +1,7 @@
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { parseTokenAmount, formatTokenAmount, numberToString } from "@icpswap/utils";
 import { type NumberType } from "@icpswap/types";
-import { getTokenStandard, useUpdateTokenStandard } from "store/token/cache/hooks";
-import { getPoolTokenStandard, getPoolCanisterId } from "hooks/swap/v2/useSwapCalls";
+import { getPoolCanisterId } from "hooks/swap/v2/useSwapCalls";
 import { FeeAmount, Token } from "@icpswap/swap-sdk";
 
 export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
@@ -17,17 +16,6 @@ export function useActualSwapAmount(amount: NumberType | undefined, currency: To
     }
     return "0";
   }, [amount, currency]);
-}
-
-export function useUpdatePoolTokenStandardCallback() {
-  const updateTokenStandard = useUpdateTokenStandard();
-
-  return useCallback(async (poolId: string, tokenId: string) => {
-    if (!getTokenStandard(tokenId)) {
-      const standard = await getPoolTokenStandard(poolId, tokenId);
-      updateTokenStandard({ canisterId: tokenId, standard });
-    }
-  }, []);
 }
 
 export function usePoolCanisterId(

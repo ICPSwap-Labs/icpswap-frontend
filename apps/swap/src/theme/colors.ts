@@ -112,4 +112,6 @@ export default {
   defaultGradientEnd: "#8572ff",
 
   border0: "#4F5A84",
+
+  apr: "#54C081",
 };

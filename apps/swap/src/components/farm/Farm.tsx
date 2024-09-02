@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { Box, Typography, Button } from "components/Mui";
+import { Box, Typography, Button, Theme } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
-import { useIntervalUserRewardInfo, useFarmTvlValue, useUserTvlValue } from "hooks/staking-farm";
+import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
 import { useUserPositionsValue } from "hooks/swap/index";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, BigNumber, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import {
   useFarmUserPositions,
   useFarmInitArgs,
@@ -14,7 +14,6 @@ import {
   useSwapPoolMetadata,
   useFarmState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useFarmApr, useUserApr } from "hooks/staking-farm/useFarmApr";
 import { FarmPositionCard } from "components/farm/index";
@@ -102,13 +101,13 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     return deposits?.map((position) => position.positionId) ?? [];
   }, [deposits]);
 
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
-
-  const userRewardAmount = useMemo(() => {
-    if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;
-    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
-    return parseTokenAmount(__userRewardAmount, rewardToken.decimals).multipliedBy(userRewardRatio).toString();
-  }, [__userRewardAmount, farmInitArgs, rewardToken]);
+  const { userRewardAmount, userRewardValue } = useFarmUserRewardAmountAndValue({
+    farmId,
+    positionIds,
+    refresh: refreshRewardsTrigger,
+    rewardToken,
+    farmInitArgs,
+  });
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
@@ -118,7 +117,6 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   const apr = useFarmApr({
     state,
     rewardToken,
-    rewardTokenPrice,
     farmInitArgs,
     rewardMetadata,
     farmTvlValue,
@@ -127,7 +125,6 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   const userApr = useUserApr({
     state,
     rewardToken,
-    rewardTokenPrice,
     farmInitArgs,
     farmTvlValue,
     positionValue: stakedPositionValue,
@@ -259,11 +256,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 </Typography>
 
                 <Typography sx={{ margin: "8px 0 0 0" }}>
-                  {userRewardAmount && rewardTokenPrice
-                    ? `~${formatDollarAmount(
-                        new BigNumber(userRewardAmount).multipliedBy(rewardTokenPrice).toString(),
-                      )}`
-                    : "--"}
+                  {userRewardValue ? `~${formatDollarAmount(userRewardValue)}` : "--"}
                 </Typography>
               </Box>
 

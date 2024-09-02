@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
-import { useUserPositionPools, useFarmsByPool, getSwapUserPositions, getSwapPoolMeta } from "@icpswap/hooks";
+import { useUserPositionPools, useLiveFarmsByPoolIds, getSwapUserPositions, getSwapPoolMeta } from "@icpswap/hooks";
 import { useAccount, useAccountPrincipal } from "store/auth/hooks";
 import { UserPositionInfoWithId, PoolMetadata } from "@icpswap/types";
 import { useUserPositionsValues } from "hooks/swap/index";
@@ -19,8 +19,7 @@ export function useFarmUserAllPositions() {
   >(null);
 
   const { result: userPositionsPools } = useUserPositionPools(account);
-
-  const { result: farms } = useFarmsByPool(userPositionsPools);
+  const { result: farms } = useLiveFarmsByPoolIds(userPositionsPools);
 
   useEffect(() => {
     async function call() {

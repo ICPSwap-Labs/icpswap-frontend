@@ -31,7 +31,7 @@ function transformedKeyToKey(transformedKey: TransformedKey) {
 
 export type PoolKey = [Token | undefined, Token | undefined, FeeAmount | undefined];
 
-export function usePools(poolKeys: PoolKey[]): [PoolState, Pool | null][] {
+export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState, Pool | null][] {
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 
@@ -70,7 +70,7 @@ export function usePools(poolKeys: PoolKey[]): [PoolState, Pool | null][] {
               id: pool.canisterId.toString(),
               metadata: poolMetadata,
               ticks: [],
-              checked: false,
+              checked: !!withoutVerify,
             };
           }),
         );
@@ -87,36 +87,38 @@ export function usePools(poolKeys: PoolKey[]): [PoolState, Pool | null][] {
         setLoading(false);
 
         // Use update call to verify the pool.
-        transformedPoolKeys.map(async (element) => {
-          if (!element) return;
+        if (withoutVerify === false) {
+          transformedPoolKeys.map(async (element) => {
+            if (!element) return;
 
-          const pool = await getPool_update_call(element.token0, element.token1, element.fee);
+            const pool = await getPool_update_call(element.token0, element.token1, element.fee);
 
-          if (!pool) {
-            setPools((prevState) => ({
-              ...prevState,
-              [transformedKeyToKey(element)]: null,
-            }));
-          } else {
-            const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
+            if (!pool) {
+              setPools((prevState) => ({
+                ...prevState,
+                [transformedKeyToKey(element)]: null,
+              }));
+            } else {
+              const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
 
-            setPools((prevState) => ({
-              ...prevState,
-              [transformedKeyToKey(element)]: {
-                key: transformedKeyToKey(element),
-                id: pool.canisterId.toString(),
-                metadata: poolMetadata,
-                ticks: [],
-                checked: true,
-              },
-            }));
-          }
-        });
+              setPools((prevState) => ({
+                ...prevState,
+                [transformedKeyToKey(element)]: {
+                  key: transformedKeyToKey(element),
+                  id: pool.canisterId.toString(),
+                  metadata: poolMetadata,
+                  ticks: [],
+                  checked: true,
+                },
+              }));
+            }
+          });
+        }
       }
     }
 
     call();
-  }, [JSON.stringify(transformedPoolKeys)]);
+  }, [JSON.stringify(transformedPoolKeys), withoutVerify]);
 
   return useMemo(() => {
     return transformedPoolKeys.map((transformedKey, index) => {
@@ -179,13 +181,18 @@ export function usePools(poolKeys: PoolKey[]): [PoolState, Pool | null][] {
   }, [JSON.stringify(pools), loading, poolKeys, JSON.stringify(transformedPoolKeys)]);
 }
 
-export function usePool(currencyA: Token | undefined, currencyB: Token | undefined, feeAmount: FeeAmount | undefined) {
+export function usePool(
+  currencyA: Token | undefined,
+  currencyB: Token | undefined,
+  feeAmount: FeeAmount | undefined,
+  withoutVerify = false,
+) {
   const poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
     [currencyA, currencyB, feeAmount],
   );
 
-  return usePools(poolKeys)[0];
+  return usePools(poolKeys, withoutVerify)[0];
 }
 
 export function useTokenSwapPools(tokens: string[] | undefined) {

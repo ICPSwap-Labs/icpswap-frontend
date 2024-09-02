@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { TokenInfo } from "types/token";
 import { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/useCurrency";
+
 import Selector from "./selector";
 import CurrencySelectButton from "./button";
 
@@ -15,7 +16,7 @@ export interface CurrencySelectorProps {
   activeCurrencies?: Token[];
 }
 
-export default function CurrencySelector({
+export function CurrencySelector({
   currencyId,
   onChange,
   disabledCurrency,
@@ -59,6 +60,7 @@ export default function CurrencySelector({
         loading={loading}
         disabled
       />
+
       {selectorShow && (
         <Selector
           open={selectorShow}

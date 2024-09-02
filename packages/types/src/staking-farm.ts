@@ -1,3 +1,6 @@
+import type { FarmInfo } from "@icpswap/candid";
+import { Override } from "./global";
+
 export type {
   CreateFarmArgs,
   FarmTvl,
@@ -23,5 +26,7 @@ export type FarmRewardMetadata = {
   currentCycleCount: bigint;
   totalReward: bigint;
 };
+
+export type FarmInfoWithId = Override<FarmInfo, { id: string }>;
 
 export type FarmState = "LIVE" | "NOT_STARTED" | "CLOSED" | "FINISHED";

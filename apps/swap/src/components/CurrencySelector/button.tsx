@@ -1,13 +1,12 @@
 import { useCallback } from "react";
-import { Grid, Typography, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Typography, Box, Theme, makeStyles } from "components/Mui";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { isDarkTheme } from "utils";
 import Loading from "components/Loading";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
+import { Flex } from "@icpswap/ui";
 
 const useStyle = (bgGray: boolean) =>
   makeStyles((theme: Theme) => {
@@ -66,13 +65,19 @@ export default function CurrencySelectorButton({
   }, [loading, onClick]);
 
   return currency ? (
-    <Grid container className={classes.selectButton} alignItems="center" onClick={handleButtonClick}>
-      <Grid item mr={1} xs>
-        <Grid container alignItems="center" gap="0 8px">
-          <TokenImage logo={currency.logo} size="28px" tokenId={currency.address} />
-          <Typography component="span">{currency.symbol}</Typography>
-        </Grid>
-      </Grid>
+    <Flex className={classes.selectButton} onClick={handleButtonClick}>
+      <Flex gap="0 8px">
+        <TokenImage logo={currency.logo} size="28px" tokenId={currency.address} />
+        <Typography
+          sx={{
+            color: "text.primary",
+            fontSize: "16px",
+          }}
+        >
+          {currency.symbol}
+        </Typography>
+      </Flex>
+
       {!disabled && (
         <KeyboardArrowDown
           className={classes.arrow}
@@ -82,7 +87,7 @@ export default function CurrencySelectorButton({
         />
       )}
       {loading && <Loading loading={loading} circularSize={20} />}
-    </Grid>
+    </Flex>
   ) : (
     <Box className={classes.selectButtonActive} onClick={handleButtonClick}>
       <Grid container alignItems="center">

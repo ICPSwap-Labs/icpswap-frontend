@@ -40,7 +40,7 @@ export default function Unclaimed({ position, positionId, invalid = false }: Unc
 
   return (
     <Box>
-      <Typography color="text.primary">Unclaimed fees</Typography>
+      <Typography color="text.primary">Uncollected fees</Typography>
       <Box mt="12px" className={classes.wrapper}>
         <Grid container alignItems="center">
           <Avatar sx={{ width: "32px", height: "32px", marginRight: "12px", bgcolor: "#273155" }} src={token0?.logo}>

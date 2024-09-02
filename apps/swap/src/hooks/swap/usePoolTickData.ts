@@ -1,10 +1,10 @@
-import { tickToPrice, TICK_SPACINGS, Token, FeeAmount, TickMath } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
+import { tickToPrice, TICK_SPACINGS, Token, FeeAmount, TickMath, computeSurroundingTicks } from "@icpswap/swap-sdk";
 import { JSBI } from "utils/index";
 import { useMemo } from "react";
-import computeSurroundingTicks from "utils/computeSurroundingTicks";
 import { useSwapAllTicks } from "@icpswap/hooks";
 import { usePoolCanisterId } from "hooks/swap/index";
+import { isNullArgs, BigNumber } from "@icpswap/utils";
+
 import { PoolState, usePool } from "./usePools";
 
 const PRICE_FIXED_DIGITS = 8;
@@ -27,7 +27,7 @@ type Tick = {
 export function useAllTicks(token0: Token | undefined, token1: Token | undefined, feeAmount: FeeAmount) {
   const poolId = usePoolCanisterId(token0?.address, token1?.address, feeAmount);
 
-  const { result: allTicks, loading } = useSwapAllTicks(poolId);
+  const { result: allTicks, loading } = useSwapAllTicks(poolId, 5000);
 
   const ticks = useMemo(() => {
     const ticks: Tick[] = [];
@@ -57,6 +57,41 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
   return { loading, result: ticks };
 }
 
+export function useLiquidityAllTicks(token0: Token | undefined, token1: Token | undefined, feeAmount: FeeAmount) {
+  const poolId = usePoolCanisterId(token0?.address, token1?.address, feeAmount);
+
+  const { result: allTicks, loading } = useSwapAllTicks(poolId, 5000);
+
+  const ticks = useMemo(() => {
+    if (allTicks) {
+      return allTicks.map((tick) => {
+        const sqrtRatioX = TickMath.getSqrtRatioAtTick(Number(tick.id));
+        const __price0 = BigInt(sqrtRatioX.toString()); // Nat.pow(sqrtRatioX, 2) * Nat.pow(10, 100);
+        const __price1 = BigInt(JSBI.divide(JSBI.BigInt(1), sqrtRatioX).toString()); // Nat.pow(Nat.pow(10, 100) / sqrtRatioX, 2);
+        const price0Decimal = 1; // Nat.pow(10, 100);
+        const price1Decimal = 1; // Nat.pow(Nat.pow(10, 100), 2);
+
+        const price0 = new BigNumber(__price0.toString()).div(price0Decimal).toString();
+        const price1 = new BigNumber(__price1.toString()).div(price1Decimal.toString()).toString();
+
+        return {
+          liquidityGross: tick.liquidityGross,
+          liquidityNet: tick.liquidityNet.toString(),
+          price0,
+          price1,
+          tickIdx: Number(tick.id),
+          price0Decimal,
+          price1Decimal,
+        };
+      });
+    }
+
+    return undefined;
+  }, [allTicks]);
+
+  return { loading, result: ticks };
+}
+
 export function usePoolActiveLiquidity(
   currencyA: Token | undefined,
   currencyB: Token | undefined,
@@ -65,53 +100,32 @@ export function usePoolActiveLiquidity(
   const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
   const token0 = isSorted ? currencyA?.wrapped : currencyB?.wrapped;
   const token1 = isSorted ? currencyB?.wrapped : currencyA?.wrapped;
-  const [poolState, pool] = usePool(currencyA, currencyB, feeAmount);
+  const [poolState, pool] = usePool(currencyA, currencyB, feeAmount, true);
 
   const tickCurrent = pool?.tickCurrent;
 
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(tickCurrent, feeAmount), [tickCurrent, feeAmount]);
 
-  const { loading: isLoading, result: ticks } = useAllTicks(token0, token1, feeAmount);
+  const { loading: isLoading, result: ticks } = useLiquidityAllTicks(token0, token1, feeAmount);
 
   const sortedTicks = useMemo(() => {
     if (!ticks) return [];
 
-    return ticks
-      .map((item) => {
-        const price0 = new BigNumber(String(item.price0))
-          .div(String(item.price0Decimal))
-          .toFormat({ groupSeparator: "" });
-        const price1 = new BigNumber(String(item.price1))
-          .div(String(item.price1Decimal))
-          .toFormat({ groupSeparator: "" });
-
-        return {
-          ...item,
-          price0,
-          price1,
-          tickIdx: Number(item.tickIndex),
-          _price0: item.price0,
-          _price1: item.price1,
-          liquidityNet: item.liquidityNet.toString(),
-        };
-      })
-      .sort((a, b) => {
-        if (a.tickIdx < b.tickIdx) return -1;
-        if (a.tickIdx > b.tickIdx) return 1;
-        return 0;
-      });
-  }, [ticks, isLoading]);
+    return ticks.sort((a, b) => {
+      if (a.tickIdx < b.tickIdx) return -1;
+      if (a.tickIdx > b.tickIdx) return 1;
+      return 0;
+    });
+  }, [ticks]);
 
   return useMemo(() => {
     const isUninitialized = poolState === PoolState.NOT_EXISTS;
 
     if (
-      !currencyA ||
-      !currencyB ||
       !token0 ||
       !token1 ||
-      activeTick === undefined ||
+      isNullArgs(activeTick) ||
       poolState !== PoolState.EXISTS ||
       !sortedTicks ||
       sortedTicks.length === 0 ||
@@ -158,9 +172,7 @@ export function usePoolActiveLiquidity(
     }));
 
     const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, formatTicks, pivot, true);
-
     const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, formatTicks, pivot, false);
-
     const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks);
 
     return {

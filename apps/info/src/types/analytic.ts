@@ -1,9 +1,3 @@
-export enum VolumeWindow {
-  daily,
-  weekly,
-  monthly,
-}
-
 export interface ChartDayVolumeData {
   date: number;
   volumeUSD: number;

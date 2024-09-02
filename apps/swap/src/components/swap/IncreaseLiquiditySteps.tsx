@@ -1,8 +1,8 @@
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar } from "components/Mui";
 import { Position } from "@icpswap/swap-sdk";
-import { parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
-import { isUseTransfer, actualAmountToPool } from "utils/token/index";
+import { isUseTransfer } from "utils/token/index";
 import { StepContents } from "types/step";
 import { TextButton } from "components/index";
 
@@ -15,22 +15,14 @@ export interface IncreaseLiquidityStepsProps {
 export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseLiquidityStepsProps) {
   const { token0, token1 } = position.pool;
 
-  const amount0 = toSignificant(
-    parseTokenAmount(
-      actualAmountToPool(token0, position.mintAmounts.amount0.toString()),
-      position.pool.token0.decimals,
-    ).toString(),
+  const amount0 = toSignificantWithGroupSeparator(
+    parseTokenAmount(position.mintAmounts.amount0.toString(), position.pool.token0.decimals).toString(),
     8,
-    { groupSeparator: "," },
   );
 
-  const amount1 = toSignificant(
-    parseTokenAmount(
-      actualAmountToPool(token1, position.mintAmounts.amount1.toString()),
-      position.pool.token1.decimals,
-    ).toString(),
+  const amount1 = toSignificantWithGroupSeparator(
+    parseTokenAmount(position.mintAmounts.amount1.toString(), position.pool.token1.decimals).toString(),
     8,
-    { groupSeparator: "," },
   );
 
   const symbol0 = token0.symbol;

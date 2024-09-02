@@ -276,7 +276,7 @@ function Positions({ address }: PositionsProps) {
             </HeaderCell>
 
             <HeaderCell field="UnclaimedFees">
-              <Trans>Unclaimed fees</Trans>
+              <Trans>Uncollected fees</Trans>
             </HeaderCell>
           </Header>
 

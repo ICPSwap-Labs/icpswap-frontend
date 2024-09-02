@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
 import { useAccount } from "store/global/hooks";
 import { slippageToPercent } from "constants/index";
-import { toHex } from "utils/swap/index";
 import { exactInputSingle, exactOutputSingle } from "hooks/swap/v2/useSwapCalls";
 import { useApprove } from "hooks/token/useApprove";
 import { useErrorTip } from "hooks/useTips";
@@ -163,7 +162,7 @@ export function useSwapArguments(
 
     return {
       callData,
-      value: toHex(totalValue.quotient),
+      value: totalValue.quotient.toString(),
     };
   }, [trade, recipient, deadline, principal]);
 }

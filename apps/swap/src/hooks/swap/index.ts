@@ -16,22 +16,45 @@ import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
 import { SubAccount } from "@dfinity/ledger-icp";
 
-export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
-  return useMemo(() => {
-    if (!amount || !currency) return undefined;
+// Now the amount that user input is the final amount swap/add/increase
+// Amount is the value that the subaccount balance when use transfer, 1 token fees should be added on the amount
+// And if use approve, amount is the value that the pool unused balance
+export function getTokenActualTransferAmount(amount: NumberType, token: Token): string {
+  const typedValue = formatTokenAmount(amount, token.decimals);
+  const fee = token.transFee;
 
-    const typedValue = formatTokenAmount(amount, currency.decimals);
-    const fee = currency.transFee;
+  // And 1 token fees will be subtracted by token canister,
+  // so user balance should be equal to or greater than typeValue + token.fee * 2 if use transfer
+  // typeValue + token.fee if use approve
+  return isUseTransfer(token)
+    ? parseTokenAmount(typedValue.plus(fee), token.decimals).toString()
+    : parseTokenAmount(typedValue, token.decimals).toString();
+}
 
-    if (typedValue.isGreaterThan(currency.transFee)) {
-      // When token use transfer, 1 trans fee will be subtracted by endpoint
-      return isUseTransfer(currency.wrapped)
-        ? parseTokenAmount(typedValue.minus(fee), currency.decimals).toString()
-        : parseTokenAmount(typedValue, currency.decimals).toString();
-    }
+export function getTokenActualTransferRawAmount(rawAmount: NumberType, token: Token): string {
+  const fee = token.transFee;
 
-    return "0";
-  }, [amount, currency]);
+  // And 1 token fees will be subtracted by token canister,
+  // so user balance should be equal to or greater than typeValue + token.fee * 2 if use transfer
+  // typeValue + token.fee if use approve
+  return isUseTransfer(token) ? new BigNumber(rawAmount.toString()).plus(fee).toString() : rawAmount.toString();
+}
+
+export function getTokenActualDepositAmount(amount: NumberType, token: Token): string {
+  const typedValue = formatTokenAmount(amount, token.decimals);
+  const fee = token.transFee;
+
+  return isUseTransfer(token)
+    ? parseTokenAmount(typedValue.plus(fee), token.decimals).toString()
+    : parseTokenAmount(typedValue, token.decimals).toString();
+}
+
+export function getTokenActualDepositRawAmount(rawAmount: NumberType, token: Token): string {
+  const fee = token.transFee;
+
+  return isUseTransfer(token)
+    ? new BigNumber(rawAmount.toString()).plus(fee).toString()
+    : new BigNumber(rawAmount.toString()).toString();
 }
 
 export function usePoolCanisterId(
@@ -256,3 +279,8 @@ export function useSwapWithdraw() {
 export * from "./useReclaimCallback";
 export * from "./useSwapApprove";
 export * from "./useUserPositionValue";
+export * from "./useWithdrawPCMBalance";
+export * from "./useSortedPositions";
+export * from "./useTokenInsufficient";
+export * from "./useSwapPositions";
+export * from "./usePCMBalances";

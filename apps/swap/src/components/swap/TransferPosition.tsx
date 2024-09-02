@@ -6,7 +6,7 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
-import { feeAmountToPercentage } from "utils/swap/index";
+import { feeAmountToPercentage, PositionState } from "utils/swap/index";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useAccountPrincipal } from "store/auth/hooks";
 import {
@@ -31,7 +31,7 @@ import { isElement } from "react-is";
 import SwapModal from "components/modal/swap";
 import { Principal } from "@dfinity/principal";
 
-import PositionStatus from "./PositionRangeState";
+import { PositionRangeState } from "components/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -242,7 +242,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Unclaimed fees`}
+          label={t`Uncollected fees`}
           value={
             <Box>
               <Typography
@@ -321,10 +321,10 @@ export interface TransferPositionProps {
   invalid?: boolean;
   showButtons?: boolean;
   position: Position | undefined;
-  closed: boolean;
   open: boolean;
   onClose: () => void;
   onTransferSuccess?: () => void;
+  state: PositionState | undefined;
 }
 
 export default function TransferPosition({
@@ -332,10 +332,10 @@ export default function TransferPosition({
   showButtons,
   positionId,
   invalid = false,
-  closed,
   open,
   onClose,
   onTransferSuccess,
+  state,
 }: TransferPositionProps) {
   const classes = useStyle();
   const theme = useTheme() as Theme;
@@ -351,7 +351,7 @@ export default function TransferPosition({
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { pool, tickLower, tickUpper } = position || {};
+  const { pool } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
@@ -370,11 +370,6 @@ export default function TransferPosition({
 
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
-
-  const outOfRange =
-    pool && (tickUpper || tickUpper === 0) && (tickLower || tickLower === 0)
-      ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper
-      : false;
 
   const token0USDPrice = useUSDPriceById(position?.pool.token0.address);
   const token1USDPrice = useUSDPriceById(position?.pool.token1.address);
@@ -473,7 +468,7 @@ export default function TransferPosition({
 
         <Grid item>
           <Grid container>
-            <PositionStatus closed={closed} outOfRange={outOfRange} />
+            <PositionRangeState state={state} />
           </Grid>
         </Grid>
       </Grid>

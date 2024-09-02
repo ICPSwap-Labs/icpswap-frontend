@@ -1,14 +1,12 @@
 import { useState, memo, useCallback } from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
 import { MainCard } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
-import SwapUIWrapper from "components/swap/SwapUIWrapper";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
-import { SwapWrapper, Reclaim, SwapContext } from "components/swap/index";
+import { SwapWrapper, Reclaim, SwapContext, SwapUIWrapper } from "components/swap/index";
 import { Pool } from "@icpswap/swap-sdk";
 import { useConnectorStateConnected } from "store/auth/hooks";
+import { SWAP_REFRESH_KEY } from "constants/index";
 
 import SwapTransactions from "./swap/Transactions";
 
@@ -43,7 +41,6 @@ export function SwapMain() {
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
-  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const isConnected = useConnectorStateConnected();
 
@@ -68,10 +65,6 @@ export function SwapMain() {
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
 
-  const handleUpdateRefreshTrigger = useCallback(() => {
-    setRefreshTrigger(refreshTrigger + 1);
-  }, [refreshTrigger, setRefreshTrigger]);
-
   return (
     <SwapContext.Provider
       value={{
@@ -80,8 +73,6 @@ export function SwapMain() {
         unavailableBalanceKeys,
         setUnavailableBalanceKey: handleAddKeys,
         removeUnavailableBalanceKey: handleRemoveKeys,
-        refreshTrigger,
-        setRefreshTrigger: handleUpdateRefreshTrigger,
         usdValueChange,
         setUSDValueChange,
       }}
@@ -148,7 +139,7 @@ export function SwapMain() {
                   borderRadius: "16px",
                 }}
               >
-                <Reclaim />
+                <Reclaim pool={selectedPool} refreshKey={SWAP_REFRESH_KEY} />
               </Box>
             ) : null}
           </Grid>

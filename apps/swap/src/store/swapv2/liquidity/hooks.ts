@@ -1,19 +1,17 @@
 /* eslint-disable no-inner-declarations */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
+import { Bound, FIELD } from "constants/swap";
 import { resultFormat } from "@icpswap/utils";
 import {
   FeeAmount,
   TickMath,
-  tickToPrice,
   TICK_SPACINGS,
   priceToClosestTick,
   encodeSqrtRatioX96,
   Pool,
   Position,
   Token,
-  Rounding,
   Price,
   CurrencyAmount,
   nearestUsableTick,
@@ -24,13 +22,12 @@ import { getTickToPrice } from "utils/swap/getTickToPrice";
 import { usePool, PoolState } from "hooks/swap/v2/usePools";
 import { JSBI } from "utils/index";
 import { useUserTokens, useUserV1Tokens, useUserInvalidTokens } from "hooks/swap/v2/useSwapCalls";
-import { swapPositionManager, swapFactory, swapPositionManagerV1, swapFactoryV1 } from "actor/swapV2";
+import { swapPositionManager, swapPositionManagerV1 } from "actor/swapV2";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { maxAmountSpend } from "utils/swap/maxAmountSpend";
 import { t } from "@lingui/macro";
 import { PositionResult, UserPosition } from "types/swapv2";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useUpdatePoolTokenStandardCallback } from "hooks/swap/v2/index";
 import { DISABLE_ADD_LIQUIDITY_IDS } from "constants/v2";
 import {
   updateUserPositions,
@@ -38,13 +35,11 @@ import {
   updateLeftRange,
   updateRightRange,
   updateStartPrice,
-  updateFullRange,
   resetMintState,
 } from "./actions";
 
 export function useUserV1Positions() {
   const [loading, setLoading] = useState(true);
-  const updateTokenStandard = useUpdatePoolTokenStandardCallback();
   const { result: tokenIds } = useUserV1Tokens();
 
   const [positions, setPositions] = useState<(UserPosition | undefined)[]>([]);
@@ -81,13 +76,6 @@ export function useUserV1Positions() {
           .positions(tokenId)
           .then(async (result: any) => {
             const pool = resultFormat<PositionResult>(result).data;
-            if (pool) {
-              const poolId = await (
-                await swapFactoryV1()
-              ).getPool(`${pool?.token0}_${pool?.token1}_${String(pool?.fee)}`);
-              await updateTokenStandard(poolId, pool.token0);
-              await updateTokenStandard(poolId, pool.token1);
-            }
             positions[index] = pool;
             done++;
             trigger();
@@ -117,7 +105,6 @@ export function useUserV1Positions() {
 export function useQueryUserPositions() {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
-  const updateTokenStandard = useUpdatePoolTokenStandardCallback();
   const { result: tokenIds } = useUserTokens();
 
   useEffect(() => {
@@ -151,15 +138,6 @@ export function useQueryUserPositions() {
           .positions(tokenId)
           .then(async (result: any) => {
             const pool = resultFormat<PositionResult>(result).data;
-
-            if (pool) {
-              const poolId = await (
-                await swapFactory()
-              ).getPool(`${pool?.token0}_${pool?.token1}_${String(pool?.fee)}`);
-
-              await updateTokenStandard(poolId, pool.token0);
-              await updateTokenStandard(poolId, pool.token1);
-            }
 
             positions[index] = pool;
             done++;
@@ -527,10 +505,10 @@ export function useMintInfo(
     // mark as 0 if disabled because out of range
     const amount0 = !deposit0Disabled
       ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? FIELD.CURRENCY_A : FIELD.CURRENCY_B]?.quotient
-      : BIG_INT_ZERO;
+      : JSBI.BigInt(0);
     const amount1 = !deposit1Disabled
       ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? FIELD.CURRENCY_B : FIELD.CURRENCY_A]?.quotient
-      : BIG_INT_ZERO;
+      : JSBI.BigInt(0);
 
     if (amount0 !== undefined && amount1 !== undefined) {
       return Position.fromAmounts({
@@ -692,83 +670,5 @@ export function useMintHandlers(noLiquidity: boolean) {
     onLeftRangeInput,
     onRightRangeInput,
     onStartPriceInput,
-  };
-}
-
-export function useRangeCallbacks(
-  baseCurrency: Token | undefined,
-  quoteCurrency: Token | undefined,
-  feeAmount: FeeAmount,
-  tickLower: number | undefined,
-  tickUpper: number | undefined,
-  pool: Pool | undefined | null,
-) {
-  const dispatch = useAppDispatch();
-
-  const baseToken = useMemo(() => baseCurrency?.wrapped, [baseCurrency]);
-  const quoteToken = useMemo(() => quoteCurrency?.wrapped, [quoteCurrency]);
-
-  const getDecrementLower = useCallback(() => {
-    if (baseToken && quoteToken && typeof tickLower === "number" && feeAmount) {
-      const newPrice = tickToPrice(baseToken, quoteToken, tickLower - TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    // use pool current tick as starting tick if we have pool but no tick input
-    if (!(typeof tickLower === "number") && baseToken && quoteToken && feeAmount && pool) {
-      const newPrice = tickToPrice(baseToken, quoteToken, pool.tickCurrent - TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    return "";
-  }, [baseToken, quoteToken, tickLower, feeAmount, pool]);
-
-  const getIncrementLower = useCallback(() => {
-    if (baseToken && quoteToken && typeof tickLower === "number" && feeAmount) {
-      const newPrice = tickToPrice(baseToken, quoteToken, tickLower + TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    // use pool current tick as starting tick if we have pool but no tick input
-    if (!(typeof tickLower === "number") && baseToken && quoteToken && feeAmount && pool) {
-      const newPrice = tickToPrice(baseToken, quoteToken, pool.tickCurrent + TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    return "";
-  }, [baseToken, quoteToken, tickLower, feeAmount, pool]);
-
-  const getDecrementUpper = useCallback(() => {
-    if (baseToken && quoteToken && typeof tickUpper === "number" && feeAmount) {
-      const newPrice = tickToPrice(baseToken, quoteToken, tickUpper - TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    // use pool current tick as starting tick if we have pool but no tick input
-    if (!(typeof tickUpper === "number") && baseToken && quoteToken && feeAmount && pool) {
-      const newPrice = tickToPrice(baseToken, quoteToken, pool.tickCurrent - TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    return "";
-  }, [baseToken, quoteToken, tickUpper, feeAmount, pool]);
-
-  const getIncrementUpper = useCallback(() => {
-    if (baseToken && quoteToken && typeof tickUpper === "number" && feeAmount) {
-      const newPrice = tickToPrice(baseToken, quoteToken, tickUpper + TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    // use pool current tick as starting tick if we have pool but no tick input
-    if (!(typeof tickUpper === "number") && baseToken && quoteToken && feeAmount && pool) {
-      const newPrice = tickToPrice(baseToken, quoteToken, pool.tickCurrent + TICK_SPACINGS[feeAmount]);
-      return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP);
-    }
-    return "";
-  }, [baseToken, quoteToken, tickUpper, feeAmount, pool]);
-
-  const getSetFullRange = useCallback(() => {
-    dispatch(updateFullRange());
-  }, [dispatch]);
-
-  return {
-    getDecrementLower,
-    getIncrementLower,
-    getDecrementUpper,
-    getIncrementUpper,
-    getSetFullRange,
   };
 }

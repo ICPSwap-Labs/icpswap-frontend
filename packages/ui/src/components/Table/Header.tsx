@@ -10,6 +10,7 @@ export type HeaderProps = Override<
     onSortChange?: (sortField: string, sortDirection: SortDirection) => void;
     defaultSortFiled?: string;
     defaultSortDirection?: SortDirection;
+    borderBottom?: string;
   }
 >;
 
@@ -18,6 +19,7 @@ export default function Header({
   onSortChange,
   defaultSortFiled = "",
   defaultSortDirection = SortDirection.DESC,
+  borderBottom,
   ...props
 }: HeaderProps) {
   const [sortField, setSortField] = useState(defaultSortFiled);
@@ -36,7 +38,7 @@ export default function Header({
         {...props}
         sx={{
           padding: "20px 0",
-          borderBottom: "1px solid rgba(189, 200, 240, 0.082)",
+          borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
           ...(props.sx ?? {}),
         }}
       >

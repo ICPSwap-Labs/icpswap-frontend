@@ -192,14 +192,12 @@ export function useUpdateUserPositionPools() {
 
 export function useInitialUserPositionPools() {
   const account = useAccount();
+  const storeUserPositionPools = useStoreUserPositionPools();
+  const updateStoreUserPositionPools = useUpdateUserPositionPools();
 
   const [initialLoading, setInitialLoading] = useState(true);
 
   const { result: positionPools, loading } = useUserPositionPools(account);
-
-  const storeUserPositionPools = useStoreUserPositionPools();
-
-  const updateStoreUserPositionPools = useUpdateUserPositionPools();
 
   useEffect(() => {
     if (positionPools) {

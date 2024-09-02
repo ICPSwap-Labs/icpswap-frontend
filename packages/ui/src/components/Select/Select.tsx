@@ -1,19 +1,13 @@
 import React, { useEffect, useState, useRef, ReactNode, useMemo } from "react";
-import {
-  Typography,
-  Box,
-  Checkbox,
-  Popper,
-  InputAdornment,
-} from "@mui/material";
+import { Typography, Box, Checkbox, Popper, InputAdornment } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseIcon from "@mui/icons-material/Close";
 import { Theme } from "@mui/material/styles";
-import { NoData } from "../NoData";
-import FilledTextField from "../FilledTextField";
-import { SearchIcon } from "../../assets/icons/Search";
 import { ClickAwayListener } from "@mui/base";
+import { NoData } from "../NoData";
+import { FilledTextField } from "../Input";
+import { SearchIcon } from "../../assets/icons/Search";
 
 const useStyles = (contained: boolean, fullHeight?: boolean) => {
   return makeStyles((theme: Theme) => {
@@ -167,9 +161,7 @@ export function Select({
     setShowClose(false);
   };
 
-  const handleEmptyValue = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ) => {
+  const handleEmptyValue = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     event.stopPropagation();
     if (onChange) onChange(undefined);
   };
@@ -191,11 +183,7 @@ export function Select({
         {contained && label && (
           <Box>
             {required && (
-              <Typography
-                sx={{ color: "#D3625B" }}
-                fontSize={12}
-                component="span"
-              >
+              <Typography sx={{ color: "#D3625B" }} fontSize={12} component="span">
                 *
               </Typography>
             )}
@@ -215,7 +203,7 @@ export function Select({
           }}
         >
           <Box>
-            {!!value ? (
+            {value ? (
               <Typography color="textPrimary" component="div">
                 {selectedMenu?.selectLabel ?? selectedMenu?.label}
               </Typography>
@@ -226,15 +214,12 @@ export function Select({
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {showClose && !!value ? (
-              <CloseIcon
-                sx={{ cursor: "pointer" }}
-                onClick={handleEmptyValue}
-              />
+              <CloseIcon sx={{ cursor: "pointer" }} onClick={handleEmptyValue} />
             ) : (
               <KeyboardArrowDownIcon
                 sx={{
                   transition: "all 300ms",
-                  rotate: Boolean(anchorEl) ? "180deg" : "0deg",
+                  rotate: anchorEl ? "180deg" : "0deg",
                   cursor: "pointer",
                 }}
               />
@@ -243,7 +228,7 @@ export function Select({
         </Box>
       </Box>
 
-      {Boolean(anchorEl) ? (
+      {anchorEl ? (
         <Popper
           id="Select-popper"
           open={Boolean(anchorEl)}
@@ -260,9 +245,7 @@ export function Select({
             {/* @ts-ignore */}
             <Box>
               {hasSearch ? (
-                <Box
-                  sx={{ margin: "8px 0", padding: "0 12px", height: "40px" }}
-                >
+                <Box sx={{ margin: "8px 0", padding: "0 12px", height: "40px" }}>
                   <FilledTextField
                     value={search}
                     fullHeight
@@ -289,10 +272,7 @@ export function Select({
               >
                 {menus.map((menu, index) => {
                   return customLabel ? (
-                    <Box
-                      key={`${menu.value}_${index}`}
-                      onClick={() => handleMenuItemClick(menu)}
-                    >
+                    <Box key={`${menu.value}_${index}`} onClick={() => handleMenuItemClick(menu)}>
                       {menu.label}
                     </Box>
                   ) : (
@@ -311,10 +291,9 @@ export function Select({
                         <Box sx={{ margin: "0 5px 0 0" }}>
                           <Checkbox
                             sx={{ padding: 0 }}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>,
-                              checked: boolean
-                            ) => handleCheckboxChange(checked, menu.value)}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                              handleCheckboxChange(checked, menu.value)
+                            }
                             checked={value?.includes(menu.value)}
                           />
                         </Box>
@@ -324,13 +303,7 @@ export function Select({
                   );
                 })}
 
-                {menus.length === 0 ? (
-                  !!CustomNoData ? (
-                    CustomNoData
-                  ) : (
-                    <NoData />
-                  )
-                ) : null}
+                {menus.length === 0 ? CustomNoData || <NoData /> : null}
               </Box>
             </Box>
           </ClickAwayListener>

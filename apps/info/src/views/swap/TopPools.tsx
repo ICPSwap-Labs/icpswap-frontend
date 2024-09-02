@@ -3,10 +3,9 @@ import { Trans } from "@lingui/macro";
 import { SelectPair } from "ui-component/index";
 import { useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
 import Pools from "ui-component/analytic/Pools";
-import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo } from "react";
 import { ICP } from "@icpswap/tokens";
-import { MainCard } from "@icpswap/ui";
+import { MainCard, OnlyTokenList } from "@icpswap/ui";
 import { HIDDEN_POOLS } from "constants/index";
 
 export default function TopPools() {
@@ -87,7 +86,7 @@ export default function TopPools() {
             <SelectPair value={selectedPair} onPairChange={handlePairChange} />
           </Box>
 
-          <InTokenListCheck onChange={handleCheckChange} checked={onlyTokenList} />
+          <OnlyTokenList onChange={handleCheckChange} checked={onlyTokenList} />
         </Box>
       </Box>
 

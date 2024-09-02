@@ -1,7 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Theme } from "@mui/material/styles";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, Tooltip } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
@@ -41,7 +39,7 @@ export function BalanceItem({
   metadata,
   code,
 }: BalanceItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const { hideUnavailableClaim } = useHideUnavailableClaimManager();
 
   const [openTip, closeTip] = useTips();

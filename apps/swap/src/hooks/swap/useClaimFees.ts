@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import BigNumber from "bignumber.js";
 import { Pool, CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
@@ -14,9 +13,7 @@ import { collect } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
-  const identity = await getActorIdentity();
-
-  return await collect(pool, identity, {
+  return await collect(pool, {
     positionId,
   });
 }
@@ -128,7 +125,7 @@ function useCollectFeeSteps() {
 
       stepContentManage(String(key), {
         content,
-        title: t`Claim Fees Details`,
+        title: t`Collect Fees Details`,
       });
     },
     [principal],

@@ -72,8 +72,8 @@ export function ConfirmImport({
       __standard = TOKEN_STANDARD.ICRC2;
     }
 
-    updateTokenStandard({ canisterId, standard: __standard });
-    registerTokens({ canisterIds: [canisterId], standard: __standard });
+    updateTokenStandard([{ canisterId, standard: __standard }]);
+    registerTokens([{ canisterId, standard: __standard }]);
     openSuccessTip(t`Imported successfully`);
     updateTaggedTokens([canisterId]);
     if (onImportSuccessfully) onImportSuccessfully();

@@ -1,12 +1,5 @@
 import { useCallback } from "react";
-import {
-  numberToString,
-  BigNumber,
-  isValidPrincipal,
-  resultFormat,
-  isAvailablePageArgs,
-  parseTokenAmount,
-} from "@icpswap/utils";
+import { BigNumber, isValidPrincipal, resultFormat, isAvailablePageArgs, parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
@@ -84,7 +77,7 @@ export async function tokenTransfer({
       params: {
         from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
         to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
-        amount: BigInt(numberToString(amount)),
+        amount: BigInt(amount.toString()),
         subaccount,
         memo,
       },
@@ -96,7 +89,7 @@ export async function tokenTransfer({
       params: {
         from: isValidPrincipal(from) ? { principal: Principal.fromText(from) } : { address: from },
         to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
-        amount: BigInt(numberToString(amount)),
+        amount: BigInt(amount.toString()),
         subaccount,
         memo,
         fee: fee !== undefined ? BigInt(fee) : undefined,
