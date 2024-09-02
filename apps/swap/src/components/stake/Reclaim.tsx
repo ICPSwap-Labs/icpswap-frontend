@@ -1,11 +1,11 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Typography, Box, Button } from "@mui/material";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { NoData, LoadingRow, TokenImage, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useTips, MessageTypes, useFullscreenLoading } from "hooks/useTips";
+import { useTips, MessageTypes } from "hooks/useTips";
 import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
 import { usePendingRewardsByPool } from "hooks/staking-token/usePendingRewards";
@@ -17,10 +17,11 @@ interface ReclaimItemProps {
   tokenId: string;
   poolId: string;
   balance: bigint;
-  onReclaim: (poolId: string, balance: bigint) => void;
+  onReclaim: (poolId: string, balance: bigint) => Promise<void>;
 }
 
 function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) {
+  const [loading, setLoading] = useState(false);
   const { result: token } = useTokenInfo(tokenId);
 
   const error = useMemo(() => {
@@ -29,6 +30,12 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
 
     return undefined;
   }, [token, balance]);
+
+  const handleClaim = useCallback(async () => {
+    setLoading(true);
+    await onReclaim(poolId, balance);
+    setLoading(false);
+  }, [loading, setLoading]);
 
   return (
     <Flex justify="space-between" sx={{ padding: "16px 0" }}>
@@ -43,7 +50,13 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
       </Flex>
 
       <Box>
-        <Button size="small" variant="contained" onClick={() => onReclaim(poolId, balance)} disabled={!!error}>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={handleClaim}
+          disabled={!!error || loading}
+          startIcon={loading ? <CircularProgress color="inherit" size={18} /> : null}
+        >
           {error ?? <Trans>Reclaim</Trans>}
         </Button>
       </Box>
@@ -63,7 +76,6 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
   const [openTip] = useTips();
   const { setReclaimable } = useContext(ReclaimContext);
   const [trigger, setTrigger] = useState(0);
-  const [openFullscreen, closeFullscreen] = useFullscreenLoading();
   const { loading: unusedLoading, result: unusedToken } = useUserUnusedTokenByPool(
     poolId,
     stakeToken?.address,
@@ -81,8 +93,6 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
   }, [pendingRewards]);
 
   const handleReclaim = async (poolId: string) => {
-    openFullscreen();
-
     const { status, message } = await stakingPoolClaim(poolId);
 
     if (status === ResultStatus.ERROR) {
@@ -96,13 +106,9 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
       setTrigger(trigger + 1);
       if (onReclaimSuccess) onReclaimSuccess();
     }
-
-    closeFullscreen();
   };
 
   const handleWithdraw = async (poolId: string, balance: bigint, isStakeToken: boolean) => {
-    openFullscreen();
-
     const { status, message } = await stakingPoolWithdraw(poolId, isStakeToken, balance);
 
     if (status === ResultStatus.ERROR) {
@@ -122,8 +128,6 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
       setTrigger(trigger + 1);
       if (onReclaimSuccess) onReclaimSuccess();
     }
-
-    closeFullscreen();
   };
 
   useEffect(() => {
