@@ -1,10 +1,8 @@
-import { Box, Typography } from "components/Mui";
+import { Box, Typography, useTheme, Theme } from "components/Mui";
 import { MainCard, Flex, Tooltip } from "components/index";
-import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
+import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { StakingPoolInfo } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -12,8 +10,7 @@ import { useTokenBalance } from "hooks/token";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalUserPoolInfo } from "hooks/staking-token";
 import { Stake } from "components/stake/Stake";
-import { Harvest } from "components/stake/Harvest";
-import { Unstake } from "components/stake/Unstake";
+import { Harvest, Unstake } from "components/stake/index";
 
 export interface StakeMainProps {
   poolId: string | undefined;
@@ -98,9 +95,7 @@ export function MainContent({
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
                   {stakeToken && userStakeTokenBalance ? (
                     <>
-                      {toSignificantWithGroupSeparator(
-                        parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
-                      )}
+                      {formatAmount(parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString())}
                       &nbsp;
                       {stakeToken.symbol}
                     </>
@@ -127,7 +122,8 @@ export function MainContent({
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
                   {poolInfo && stakeToken ? (
                     <>
-                      {parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toFormat()}&nbsp;
+                      {formatAmount(parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toString())}
+                      &nbsp;
                       {stakeToken.symbol}
                     </>
                   ) : (
