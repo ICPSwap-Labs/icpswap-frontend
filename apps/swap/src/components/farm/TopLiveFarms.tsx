@@ -81,6 +81,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       level={1}
       padding="20px 16px"
       sx={{
+        minWidth: "273px",
         cursor: "pointer",
       }}
       onClick={handleClick}
@@ -98,8 +99,8 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
         </Typography>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box sx={{ width: "100%" }}>
+      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 8px">
+        <Box sx={{ maxWidth: "123px" }}>
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
@@ -127,24 +128,38 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           <Typography
             align="right"
             sx={{
+              maxWidth: "108px",
               fontSize: "24px",
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={apr ?? ""}
           >
             {apr ?? "--"}
           </Typography>
         </Box>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }}>
-        <Box>
+      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }} gap="0 8px">
+        <Box sx={{ maxWidth: "150px" }}>
           <Typography fontSize={12}>
             <Trans>Your Available to Stake</Trans>
           </Typography>
           <Flex gap="0 2px" sx={{ margin: "6px 0 0 0" }}>
-            <Typography fontSize={16} color="text.primary">
+            <Typography
+              sx={{
+                color: "text.primary",
+                fontSize: "16px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : ""}
+            >
               {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
             </Typography>
             {userAvailablePositions ? (
@@ -165,7 +180,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           </Flex>
         </Box>
 
-        <Box>
+        <Box sx={{ maxWidth: "81px" }}>
           <Typography fontSize={12} align="right">
             <Trans>Total Staked</Trans>
           </Typography>
@@ -175,7 +190,11 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
               color: "text.primary",
               margin: "6px 0 0 0",
               textAlign: "right",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : ""}
           >
             {farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : "--"}
           </Typography>
@@ -219,6 +238,7 @@ function MainContent() {
               display: "grid",
               gap: "0 20px",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              flexWrap: "wrap",
               "@media(max-width: 640px)": {
                 gridTemplateColumns: "1fr",
                 gap: "20px 0",

@@ -138,7 +138,18 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
         <Flex justify="space-between" sx={{ width: "100%" }}>
           <Flex gap="0 8px">
             <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="28px" />
-            <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "text.primary" }}>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontWeight: 500,
+                color: "text.primary",
+                maxWidth: "100px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              title={stakeToken ? stakeToken.symbol : ""}
+            >
               {stakeToken ? stakeToken.symbol : "--"}
             </Typography>
           </Flex>

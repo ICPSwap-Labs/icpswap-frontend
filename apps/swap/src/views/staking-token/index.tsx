@@ -1,12 +1,10 @@
 import { useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Box, Typography, useMediaQuery } from "@mui/material";
+import { Grid, Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import {
   GlobalData,
   TopLiveStaking,
@@ -28,7 +26,7 @@ const Tabs = [
 ];
 
 function MainContent() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 

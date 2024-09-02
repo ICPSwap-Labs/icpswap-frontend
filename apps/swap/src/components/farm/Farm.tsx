@@ -159,7 +159,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
               />
             </Flex>
-            <Typography sx={{ color: "text.theme-secondary", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
             </Typography>
           </Box>

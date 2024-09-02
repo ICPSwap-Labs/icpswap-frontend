@@ -117,7 +117,7 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.apr" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>

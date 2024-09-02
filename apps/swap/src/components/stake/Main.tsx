@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme, Theme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, Tooltip } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
@@ -29,7 +29,7 @@ export function MainContent({
   rewardToken,
   handleRefresh,
 }: StakeMainProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
 
   const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);
@@ -70,7 +70,7 @@ export function MainContent({
                 tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
               />
             </Flex>
-            <Typography sx={{ color: "text.theme-secondary", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
             </Typography>
           </Box>
@@ -87,12 +87,29 @@ export function MainContent({
                 },
               }}
             >
-              <Box>
+              <Box sx={{ maxWidth: "270px", "@media(max-width: 640px)": { maxWidth: "360px" } }}>
                 <Typography>
                   <Trans>Your Available to Stake</Trans>
                 </Typography>
 
-                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
+                <Typography
+                  sx={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    margin: "12px 0 0 0",
+                    color: "text.primary",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                  title={
+                    stakeToken && userStakeTokenBalance
+                      ? `${formatAmount(parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString())} ${
+                          stakeToken.symbol
+                        }`
+                      : ""
+                  }
+                >
                   {stakeToken && userStakeTokenBalance ? (
                     <>
                       {formatAmount(parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString())}
@@ -115,11 +132,28 @@ export function MainContent({
                 </Typography>
               </Box>
 
-              <Box>
+              <Box sx={{ maxWidth: "194px", "@media(max-width: 640px)": { maxWidth: "360px" } }}>
                 <Typography>
                   <Trans>Total Staked</Trans>
                 </Typography>
-                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
+                <Typography
+                  sx={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    margin: "12px 0 0 0",
+                    color: "text.primary",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                  title={
+                    poolInfo && stakeToken
+                      ? `${formatAmount(parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toString())} ${
+                          stakeToken.symbol
+                        }`
+                      : ""
+                  }
+                >
                   {poolInfo && stakeToken ? (
                     <>
                       {formatAmount(parseTokenAmount(poolInfo.totalDeposit, stakeToken.decimals).toString())}
@@ -158,11 +192,28 @@ export function MainContent({
                   <Typography>
                     <Trans>Reward Token</Trans>
                   </Typography>
-
-                  {/* <Tooltip tips={t`Click harvest button to receive your earned reward tokens.`} /> */}
                 </Flex>
 
-                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
+                <Typography
+                  sx={{
+                    fontSize: "20px",
+                    fontWeight: 600,
+                    margin: "12px 0 0 0",
+                    color: "text.primary",
+                    maxWidth: "190px",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                  title={
+                    userPoolInfo && rewardToken
+                      ? `${toSignificantWithGroupSeparator(
+                          parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
+                          4,
+                        )} ${rewardToken.symbol}`
+                      : ""
+                  }
+                >
                   {userPoolInfo && rewardToken ? (
                     <>
                       {toSignificantWithGroupSeparator(
@@ -216,21 +267,40 @@ export function MainContent({
                 <Trans>Your Staked</Trans>
               </Typography>
 
-              <Typography sx={{ fontWeight: 500, fontSize: "20px", margin: "12px 0 0 0", color: "text.primary" }}>
-                {stakeToken && userPoolInfo
-                  ? `${toSignificantWithGroupSeparator(
-                      parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
-                    )} ${stakeToken.symbol}`
-                  : "--"}
-              </Typography>
-              <Typography sx={{ margin: "8px 0 0 0" }}>
-                {stakeToken && userPoolInfo && stakeTokenPrice
-                  ? `~${formatDollarAmount(
-                      parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals)
-                        .multipliedBy(stakeTokenPrice)
-                        .toString(),
-                    )}`
-                  : "--"}
+              <Typography component="div" sx={{ "@media(max-width: 640px)": { maxWidth: "220px" } }}>
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "20px",
+                    margin: "12px 0 0 0",
+                    color: "text.primary",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                  title={
+                    stakeToken && userPoolInfo
+                      ? `${toSignificantWithGroupSeparator(
+                          parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
+                        )} ${stakeToken.symbol}`
+                      : ""
+                  }
+                >
+                  {stakeToken && userPoolInfo
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
+                      )} ${stakeToken.symbol}`
+                    : "--"}
+                </Typography>
+                <Typography sx={{ margin: "8px 0 0 0" }}>
+                  {stakeToken && userPoolInfo && stakeTokenPrice
+                    ? `~${formatDollarAmount(
+                        parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals)
+                          .multipliedBy(stakeTokenPrice)
+                          .toString(),
+                      )}`
+                    : "--"}
+                </Typography>
               </Typography>
             </Box>
 

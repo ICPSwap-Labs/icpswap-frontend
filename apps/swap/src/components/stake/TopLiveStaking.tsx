@@ -70,8 +70,8 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
         </Typography>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 20px">
-        <Box style={{ width: "50%" }}>
+      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 8px">
+        <Box style={{ maxWidth: "123px" }}>
           <Typography fontSize={12}>
             <Trans>Reward Token</Trans>
           </Typography>
@@ -98,24 +98,44 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
           <Typography
             align="right"
             sx={{
+              maxWidth: "108px",
               fontSize: "24px",
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={apr ?? ""}
           >
             {apr ?? "--"}
           </Typography>
         </Box>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }}>
-        <Box>
+      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }} gap="0 8px">
+        <Box sx={{ maxWidth: "150px" }}>
           <Typography fontSize={12}>
             <Trans>Your Available to Stake</Trans>
           </Typography>
           <Flex gap="0 2px" sx={{ margin: "6px 0 0 0" }}>
-            <Typography fontSize={16} color="text.primary">
+            <Typography
+              sx={{
+                color: "text.primary",
+                fontSize: "16px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={
+                stakeTokenBalance && stakeToken
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(stakeTokenBalance, stakeToken.decimals).toString(),
+                    )} ${stakeToken.symbol}`
+                  : ""
+              }
+            >
               {stakeTokenBalance && stakeToken
                 ? `${toSignificantWithGroupSeparator(
                     parseTokenAmount(stakeTokenBalance, stakeToken.decimals).toString(),
@@ -125,7 +145,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
           </Flex>
         </Box>
 
-        <Box>
+        <Box sx={{ maxWidth: "81px" }}>
           <Typography fontSize={12} align="right">
             <Trans>Total Staked</Trans>
           </Typography>
@@ -135,7 +155,11 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
               color: "text.primary",
               margin: "6px 0 0 0",
               textAlign: "right",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={totalStakedValue ? `${formatDollarAmount(totalStakedValue)}` : ""}
           >
             {totalStakedValue ? `${formatDollarAmount(totalStakedValue)}` : "--"}
           </Typography>

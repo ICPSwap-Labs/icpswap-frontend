@@ -155,7 +155,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.apr" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>
