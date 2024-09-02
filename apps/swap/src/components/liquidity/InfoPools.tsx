@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { Typography, Box, Grid, makeStyles, InputAdornment, useTheme, Button } from "components/Mui";
+import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Button } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import { NoData, TokenImage, TabPanel, type Tab } from "components/index";
@@ -37,8 +37,9 @@ const useStyles = makeStyles((theme: Theme) => {
       gridGap: "1em",
       alignItems: "center",
       gridTemplateColumns: "20px 1.5fr 1fr repeat(3, 1fr) 180px",
-      "@media screen and (max-width: 500px)": {
-        gridTemplateColumns: "20px 220px 1fr repeat(3, 1fr) 180px",
+      "@media screen and (max-width: 640px)": {
+        // gridTemplateColumns: "20px 220px 1fr repeat(3, 1fr) 180px",
+        gridTemplateColumns: "1fr 120px",
       },
       "&.body": {
         "&:hover": {
@@ -79,21 +80,27 @@ export interface PoolTableHeaderProps {
 export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase }: PoolTableHeaderProps) {
   const classes = useStyles();
   const theme = useTheme();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const headers: HeaderType[] = [
-    { label: "#", key: "#", sort: false },
-    { label: t`Pairs`, key: "pool", sort: false },
-    { label: t`TVL`, key: "tvlUSD", sort: true, align: "right" },
-    { label: timeBase === "24H" ? t`APR 24H` : t`APR 7D`, key: "apr", sort: false, align: "right" },
-    { label: timeBase === "24H" ? t`Fees 24H` : t`Fees 7D`, key: "fees24", sort: false, align: "right" },
-    {
-      label: timeBase === "24H" ? t`Total Volume 24H` : t`Total Volume 7D`,
-      key: "volumeUSD",
-      sort: true,
-      align: "right",
-    },
-    { label: t`Action`, key: "", sort: false, align: "right" },
-  ];
+  const headers: HeaderType[] = matchDownSM
+    ? [
+        { label: t`Pairs`, key: "pool", sort: false },
+        { label: t`Action`, key: "", sort: false, align: "right" },
+      ]
+    : [
+        { label: "#", key: "#", sort: false },
+        { label: t`Pairs`, key: "pool", sort: false },
+        { label: t`TVL`, key: "tvlUSD", sort: true, align: "right" },
+        { label: timeBase === "24H" ? t`APR 24H` : t`APR 7D`, key: "apr", sort: false, align: "right" },
+        { label: timeBase === "24H" ? t`Fees 24H` : t`Fees 7D`, key: "fees24", sort: false, align: "right" },
+        {
+          label: timeBase === "24H" ? t`Total Volume 24H` : t`Total Volume 7D`,
+          key: "volumeUSD",
+          sort: true,
+          align: "right",
+        },
+        { label: t`Action`, key: "", sort: false, align: "right" },
+      ];
 
   return (
     <Header
@@ -166,42 +173,82 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
     <>
       <TableRow
         className={`${classes.wrapper} body`}
-        sx={{ padding: "20px 24px" }}
+        sx={{
+          padding: "20px 24px",
+          "@media(max-width: 640px)": {
+            padding: "12px 16px",
+          },
+        }}
         borderBottom={`1px solid ${theme.palette.background.level1}`}
       >
-        <BodyCell>{index}</BodyCell>
+        <BodyCell sx={{ "@media(max-width: 640px)": { display: "none" } }}>{index}</BodyCell>
         <BodyCell>
-          <Grid container alignItems="center">
-            <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} />
-            <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} />
+          <Flex
+            align="center"
+            gap="0 8px"
+            sx={{
+              "@media(max-width: 640px)": {
+                gap: "0 4px",
+              },
+            }}
+          >
+            <Flex align="center">
+              <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} size="24px" />
+              <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} size="24px" />
+            </Flex>
 
-            <Typography
+            <Flex
+              gap="0 8px"
               sx={{
-                margin: "0 8px 0 8px",
-                "@media screen and (max-width: 500px)": {
-                  fontSize: "12px",
+                "@media(max-width: 640px)": {
+                  flexDirection: "column",
+                  gap: "4px 0",
+                  alignItems: "flex-start",
                 },
               }}
-              color="text.primary"
             >
-              {pool.token0Symbol} / {pool.token1Symbol}
-            </Typography>
+              <Typography
+                sx={{
+                  maxWidth: "140px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  "@media screen and (max-width: 640px)": {
+                    fontSize: "12px",
+                  },
+                }}
+                color="text.primary"
+                title={`${pool.token0Symbol} / ${pool.token1Symbol}`}
+              >
+                {pool.token0Symbol} / {pool.token1Symbol}
+              </Typography>
 
-            <FeeTierPercentLabel feeTier={pool.feeTier} />
-          </Grid>
+              <FeeTierPercentLabel feeTier={pool.feeTier} />
+            </Flex>
+          </Flex>
         </BodyCell>
-        <BodyCell align="right">{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-        <BodyCell align="right" color="text.apr">
+        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+          {formatDollarAmount(pool.tvlUSD)}
+        </BodyCell>
+        <BodyCell align="right" color="text.apr" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
           {apr ?? "--"}
         </BodyCell>
-        <BodyCell align="right">{formatDollarAmount(fees)}</BodyCell>
-        <BodyCell align="right">{formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}</BodyCell>
+        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+          {formatDollarAmount(fees)}
+        </BodyCell>
+        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+          {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}
+        </BodyCell>
         <BodyCell>
           <Flex gap="0 5px" justify="flex-end">
             <Box className={`${classes.button} outlined`} onClick={handleChart}>
               <Trans>Chart</Trans>
             </Box>
-            <Box className={`${classes.button} outlined`} onClick={handleSwap}>
+            <Box
+              className={`${classes.button} outlined`}
+              onClick={handleSwap}
+              sx={{ "@media(max-width: 640px)": { display: "none" } }}
+            >
               <Trans>Swap</Trans>
             </Box>
             <Box className={`${classes.button} primary`} onClick={handleAdd}>
@@ -403,7 +450,15 @@ export function InfoPools() {
       </Box>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
-        <Box sx={{ minWidth: "1200px" }}>
+        <Box
+          sx={{
+            minWidth: "1200px",
+            "@media(max-width: 640px)": {
+              width: "100%",
+              minWidth: "auto",
+            },
+          }}
+        >
           <InfiniteScroll
             dataLength={slicedPools?.length ?? 0}
             next={handleScrollNext}
