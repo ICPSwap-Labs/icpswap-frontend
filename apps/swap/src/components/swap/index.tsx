@@ -7,3 +7,5 @@ export * from "./SwapDepositAmount";
 export * from "./SwapUIWrapper";
 export * from "./AddLiquidityButton";
 export * from "./PositionRangeState";
+export * from "./SwapInputWrapper";
+export * from "./SwapConfirm";

@@ -148,35 +148,17 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     unusedBalance: swapTokenUnusedBalance,
   });
 
-  let inputError: null | string = null;
+  const inputError = useMemo(() => {
+    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) return t`Select a token`;
+    if (!parsedAmount) return t`Enter an amount`;
+    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (!subAccountTokenBalance || isNullArgs(swapTokenUnusedBalance)) return t`Swap`;
+    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
+    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
 
-  if (inputNumberCheck(typedValue) === false) {
-    inputError = inputError ?? t`Amount exceeds limit`;
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? t`Enter an amount`;
-  }
-
-  if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) {
-    inputError = inputError ?? t`Select a token`;
-  }
-
-  if (!subAccountTokenBalance || isNullArgs(swapTokenUnusedBalance)) {
-    inputError = inputError ?? `Swap`;
-  }
-
-  if (tokenInsufficient === "INSUFFICIENT") {
-    inputError = inputError ?? `Insufficient ${inputToken?.symbol} balance`;
-  }
-
-  if (!typedValue || typedValue === "0") {
-    inputError = inputError ?? t`Amount should large than trans fee`;
-  }
-
-  if (typeof Trade.available === "boolean" && !Trade.available) {
-    inputError = inputError ?? t`This pool is not available now`;
-  }
+    return null;
+  }, [typedValue, parsedAmount, currencies, subAccountTokenBalance, swapTokenUnusedBalance, Trade, tokenInsufficient]);
 
   return {
     currencies,

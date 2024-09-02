@@ -284,3 +284,4 @@ export * from "./useSortedPositions";
 export * from "./useTokenInsufficient";
 export * from "./useSwapPositions";
 export * from "./usePCMBalances";
+export * from "./useSwapTokenFeeCost";

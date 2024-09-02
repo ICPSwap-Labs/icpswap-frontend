@@ -19,12 +19,10 @@ import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
-import { SwapInputWrapper } from "components/swap/SwapInputWrapper";
-import SwapConfirm from "components/swap/SwapConfirm";
+import { SwapInputWrapper, SwapConfirmModal, SwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { SwapContext } from "components/swap/index";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
 
 export interface SwapWrapperProps {
@@ -348,13 +346,16 @@ export function SwapWrapper({
       </Button>
 
       {confirmModalShow && trade && (
-        <SwapConfirm
+        <SwapConfirmModal
           trade={trade}
           open={confirmModalShow}
           onClose={() => setConfirmModalShow(false)}
           onConfirm={handleSwapConfirm}
           slippageTolerance={userSlippageTolerance}
           loading={swapLoading}
+          swapTokenUnusedBalance={swapTokenUnusedBalance}
+          subAccountTokenBalance={subAccountTokenBalance}
+          inputTokenBalance={inputTokenBalance}
         />
       )}
     </Box>
