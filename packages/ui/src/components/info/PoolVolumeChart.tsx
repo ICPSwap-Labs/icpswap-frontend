@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -69,7 +69,9 @@ export interface PoolChartProps {
   volumeWindow?: VolumeWindow;
   noData?: React.ReactNode;
   setLatestValue?: (value: number) => void;
+  setValue: (value: number) => void;
   loadingBackground?: string;
+  needUpdateValue?: boolean;
 }
 
 export function PoolVolumeChart({
@@ -78,6 +80,8 @@ export function PoolVolumeChart({
   canisterId,
   setLatestValue: __setLatestValue,
   loadingBackground,
+  needUpdateValue = true,
+  setValue,
 }: PoolChartProps) {
   const { result: allChartsData, loading } = usePoolAllChartData(canisterId);
 
@@ -139,6 +143,14 @@ export function PoolVolumeChart({
     }
   }, [__setLatestValue, formattedVolumeData]);
 
+  const handleSetValue = useCallback(
+    (value: number) => {
+      setValue(value);
+      setLatestValue(value);
+    },
+    [setValue, setLatestValue],
+  );
+
   return loading ? (
     <Box
       sx={{
@@ -160,7 +172,7 @@ export function PoolVolumeChart({
     <BarChartAlt
       data={formattedVolumeData}
       minHeight={340}
-      setValue={setLatestValue}
+      setValue={handleSetValue}
       setLabel={setValueLabel}
       value={latestValue}
       label={valueLabel}

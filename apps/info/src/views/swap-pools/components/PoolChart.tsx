@@ -32,7 +32,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
   const [chartView, setChartView] = useState<ChartView>(ChartView.VOL);
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [latestVolumeValue, setLatestVolumeValue] = useState<number | undefined>();
+  const [volumeValue, setVolumeValue] = useState<number | undefined>();
 
   const { result: poolChartTVl } = usePoolTvlChartData(canisterId);
 
@@ -69,16 +69,21 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
             },
           }}
         >
-          {latestValue || latestValue === 0
-            ? formatDollarAmount(latestValue)
-            : chartView === ChartView.VOL
-            ? volume24H
+          {chartView === ChartView.VOL
+            ? volumeValue
+              ? formatDollarAmount(volumeValue)
+              : volume24H
               ? formatDollarAmount(volume24H)
-              : formatDollarAmount(latestVolumeValue)
+              : ""
+            : chartView === ChartView.TVL
+            ? latestValue || latestValue === 0
+              ? formatDollarAmount(latestValue)
+              : null
             : chartView === ChartView.LIQUIDITY
             ? ""
-            : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{" "}
+            : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}
         </Typography>
+
         <Typography
           color="text.primary"
           fontWeight={500}
@@ -122,7 +127,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
             canisterId={canisterId}
             volumeWindow={volumeWindow}
             noData={<Box sx={{ height: "340px", width: "auto" }} />}
-            setLatestValue={setLatestVolumeValue}
+            setValue={setVolumeValue}
           />
         ) : chartView === ChartView.TVL ? (
           <PoolTvlChart

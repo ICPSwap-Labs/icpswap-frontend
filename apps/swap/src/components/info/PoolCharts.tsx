@@ -33,6 +33,7 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
   const [latestVolumeValue, setLatestVolumeValue] = useState<number | undefined>();
+  const [volumeValue, setVolumeValue] = useState<number | undefined>();
 
   const { result: poolChartTVl } = usePoolTvlChartData(canisterId);
 
@@ -71,6 +72,8 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
             : chartView === ChartView.VOL
             ? volume24H
               ? formatDollarAmount(volume24H)
+              : volumeValue
+              ? formatDollarAmount(volumeValue)
               : formatDollarAmount(latestVolumeValue)
             : chartView === ChartView.LIQUIDITY
             ? ""
@@ -120,6 +123,7 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
             volumeWindow={volumeWindow}
             noData={<Box sx={{ height: "340px", width: "auto" }} />}
             setLatestValue={setLatestVolumeValue}
+            setValue={setVolumeValue}
           />
         ) : chartView === ChartView.TVL ? (
           <PoolTvlChart
