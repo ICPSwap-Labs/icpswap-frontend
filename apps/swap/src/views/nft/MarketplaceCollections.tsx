@@ -122,13 +122,7 @@ export default function MarketplaceCollections() {
 
   return (
     <Wrapper>
-      {/* <Breadcrumbs
-        prevLink="/marketplace/NFT"
-        prevLabel={<Trans>Marketplace</Trans>}
-        currentLabel={<Trans>Collections</Trans>}
-      /> */}
-
-      <Box sx={{ margin: "60px 0 40px 0" }}>
+      <Box sx={{ margin: "0 0 40px 0" }}>
         <Typography color="text.primary" fontWeight="700" fontSize="30px">
           <Trans>Collections</Trans>
         </Typography>

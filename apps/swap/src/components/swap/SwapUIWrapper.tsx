@@ -26,7 +26,11 @@ type Button = {
 function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons?: Button[] }) {
   return (
     <Wrapper>
-      {buttons ? <TabPanel tabs={buttons} /> : null}
+      {buttons ? (
+        <Box sx={{ margin: "0 0 16px 0" }}>
+          <TabPanel tabs={buttons} />
+        </Box>
+      ) : null}
       <Box>{children}</Box>
     </Wrapper>
   );

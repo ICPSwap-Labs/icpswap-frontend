@@ -331,7 +331,7 @@ export default function Farms() {
   return (
     <Wrapper>
       <Box>
-        <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
+        <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600 }}>
           <Trans>Farm</Trans>
         </Typography>
         <Typography fontSize={16} mt="16px">

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex } from "components/index";
+import { NoData, MainCard, Flex, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
@@ -183,45 +183,43 @@ function V2Icon() {
 
 export default function Staking() {
   return (
-    <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ maxWidth: "1200px", width: "100%" }}>
-        <Flex sx={{ margin: "32px 0 0 0" }} gap="0 12px">
-          <Typography sx={{ fontSize: "32px", color: "text.primary", fontWeight: 600 }}>
-            <Trans>Staking Pool</Trans>
-          </Typography>
-          <V2Icon />
-        </Flex>
-
-        <Typography sx={{ fontSize: "16px", margin: "24px 0 0 0" }}>
-          <Trans>Stake Your Tokens Now, Reap the Rewards Next Moment!</Trans>
+    <Wrapper>
+      <Flex gap="0 12px">
+        <Typography sx={{ fontSize: "32px", color: "text.primary", fontWeight: 600 }}>
+          <Trans>Staking Pool</Trans>
         </Typography>
+        <V2Icon />
+      </Flex>
 
-        <Box
-          sx={{
-            margin: "44px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "20px 0 0 0",
-            },
-          }}
-        >
-          <GlobalData />
-        </Box>
+      <Typography sx={{ fontSize: "16px", margin: "24px 0 0 0" }}>
+        <Trans>Stake Your Tokens Now, Reap the Rewards Next Moment!</Trans>
+      </Typography>
 
-        <Box
-          sx={{
-            margin: "44px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "28px 0 0 0",
-            },
-          }}
-        >
-          <TopLiveStaking />
-        </Box>
-
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <MainContent />
-        </Box>
+      <Box
+        sx={{
+          margin: "44px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "20px 0 0 0",
+          },
+        }}
+      >
+        <GlobalData />
       </Box>
-    </Flex>
+
+      <Box
+        sx={{
+          margin: "44px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "28px 0 0 0",
+          },
+        }}
+      >
+        <TopLiveStaking />
+      </Box>
+
+      <Box sx={{ margin: "20px 0 0 0" }}>
+        <MainContent />
+      </Box>
+    </Wrapper>
   );
 }
