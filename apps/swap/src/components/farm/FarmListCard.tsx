@@ -9,7 +9,7 @@ import {
   useUserTvlValue,
   useIntervalUserRewardInfo,
 } from "hooks/staking-farm";
-import { useUserPositionsValue } from "hooks/swap/index";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -83,7 +83,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
       });
   }, [userAllPositions, farmInitArgs, poolMetadata, state]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });

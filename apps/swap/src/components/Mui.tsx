@@ -16,7 +16,7 @@ export { default as Popper } from "@mui/material/Popper";
 export { default as useMediaQuery } from "@mui/material/useMediaQuery";
 export { default as CircularProgress } from "@mui/material/CircularProgress";
 export { default as InputAdornment } from "@mui/material/InputAdornment";
-export { default as Avatar } from "@mui/material/Avatar";
+export { default as Avatar, type AvatarProps } from "@mui/material/Avatar";
 export { default as Link } from "@mui/material/Link";
 export { default as makeStyles } from "@mui/styles/makeStyles";
 export { default as Tooltip } from "@mui/material/Tooltip";

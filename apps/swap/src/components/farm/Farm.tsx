@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Box, Typography, Button, Theme } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
 import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
-import { useUserPositionsValue } from "hooks/swap/index";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
@@ -77,7 +77,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [userAvailablePositions]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: swapPoolMetadata,
     positionInfos: availablePositionsInfo,
   });
@@ -92,7 +92,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [deposits]);
 
-  const stakedPositionValue = useUserPositionsValue({
+  const stakedPositionValue = usePositionsValueByInfos({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });

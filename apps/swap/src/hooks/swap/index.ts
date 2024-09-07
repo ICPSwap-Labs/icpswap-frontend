@@ -278,10 +278,11 @@ export function useSwapWithdraw() {
 
 export * from "./useReclaimCallback";
 export * from "./useSwapApprove";
-export * from "./useUserPositionValue";
+export * from "./usePositionValue";
 export * from "./useWithdrawPCMBalance";
 export * from "./useSortedPositions";
 export * from "./useTokenInsufficient";
 export * from "./useSwapPositions";
 export * from "./usePCMBalances";
 export * from "./useSwapTokenFeeCost";
+export * from "./useLiquidityLocksImage";

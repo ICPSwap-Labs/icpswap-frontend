@@ -52,4 +52,6 @@ export enum ActorName {
   GlobalIndex = "GlobalIndex",
   NodeIndex = "NodeIndex",
   BaseIndex = "BaseIndex",
+
+  LiquidityLocks = "LiquidityLocks",
 }

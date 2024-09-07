@@ -1,7 +1,7 @@
 import { useState, ReactNode } from "react";
 import { Grid, Box, useTheme } from "components/Mui";
 import { useHistory, useLocation } from "react-router-dom";
-import { mockALinkAndOpen } from "utils/index";
+import { mockALinkAndOpen } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 
 export interface Tab {

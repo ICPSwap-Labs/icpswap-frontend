@@ -29,3 +29,5 @@ export * from "./components/OnlyTokenList";
 export * from "./components/info/index";
 export * from "./components/NumberLabel";
 export * from "./components/APR";
+export * from "./components/swap";
+export * from "./components/Image";

@@ -8,7 +8,7 @@ import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/inde
 import { usePoolLatestTVL, usePoolApr24h } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, FeeTierPercentLabel } from "@icpswap/ui";
+import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import { swapLinkOfPool, addLiquidityLink, cycleValueFormat } from "utils/index";
@@ -23,6 +23,7 @@ import { useMemo } from "react";
 
 import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
+import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 export default function SwapPoolDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
@@ -189,22 +190,19 @@ export default function SwapPoolDetails() {
                   <Trans>Total Tokens Locked</Trans>
                 </Typography>
 
-                <Grid container alignItems="center">
-                  <Grid item xs>
-                    <Grid container alignItems="center">
-                      <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
+                <Flex justify="space-between">
+                  <Flex gap="0 8px">
+                    <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
 
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        color="text.primary"
-                      >
-                        {token0?.symbol}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                      }}
+                      color="text.primary"
+                    >
+                      {token0?.symbol}
+                    </Typography>
+                  </Flex>
 
                   <Typography
                     sx={{
@@ -214,24 +212,21 @@ export default function SwapPoolDetails() {
                   >
                     {formatAmount(parseTokenAmount(poolTVLToken0, token0?.decimals).toNumber())}
                   </Typography>
-                </Grid>
+                </Flex>
 
-                <Grid container alignItems="center">
-                  <Grid item xs>
-                    <Grid container alignItems="center">
-                      <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
+                <Flex justify="space-between">
+                  <Flex gap="0 8px">
+                    <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
 
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        color="text.primary"
-                      >
-                        {token1?.symbol}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                      }}
+                      color="text.primary"
+                    >
+                      {token1?.symbol}
+                    </Typography>
+                  </Flex>
 
                   <Typography
                     sx={{
@@ -241,8 +236,12 @@ export default function SwapPoolDetails() {
                   >
                     {formatAmount(parseTokenAmount(poolTVLToken1, token1?.decimals).toNumber())}
                   </Typography>
-                </Grid>
+                </Flex>
               </GridAutoRows>
+
+              <Box sx={{ width: "100%", height: "1px", margin: "20px 0 ", background: theme.colors.border1 }} />
+
+              <LiquidityLocksWrapper poolId={canisterId} />
             </MainCard>
 
             <Box

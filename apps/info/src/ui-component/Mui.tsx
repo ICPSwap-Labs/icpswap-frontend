@@ -22,6 +22,7 @@ export { default as makeStyles } from "@mui/styles/makeStyles";
 export { default as Tooltip } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as ButtonBase } from "@mui/material/ButtonBase";
+export { ClickAwayListener } from "@mui/base/ClickAwayListener";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

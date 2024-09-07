@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { useUserPositionPools, useLiveFarmsByPoolIds, getSwapUserPositions, getSwapPoolMeta } from "@icpswap/hooks";
 import { useAccount, useAccountPrincipal } from "store/auth/hooks";
 import { UserPositionInfoWithId, PoolMetadata } from "@icpswap/types";
-import { useUserPositionsValues } from "hooks/swap/index";
+import { usePositionsValuesByInfos } from "hooks/swap/index";
 
 export function useFarmUserAllPositions() {
   const account = useAccount();
@@ -62,7 +62,7 @@ export function useFarmUserAllPositions() {
     return __positionInfos;
   }, [positionResult]);
 
-  const allPositionUSDValue = useUserPositionsValues(positionInfos);
+  const allPositionUSDValue = usePositionsValuesByInfos(positionInfos);
 
   return useMemo(
     () => ({ positionsValue: allPositionUSDValue, positionAmount }),

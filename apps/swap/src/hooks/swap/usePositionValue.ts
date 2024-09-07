@@ -9,7 +9,7 @@ export interface UseUserPositionsValuesArgs {
   metadata: PoolMetadata | undefined;
 }
 
-export function useUserPositionsValues(args: UseUserPositionsValuesArgs[]) {
+export function usePositionsValuesByInfos(args: UseUserPositionsValuesArgs[]) {
   const allTokenInfos = useInfoAllTokens();
 
   const positions = useMultiplePositions(args);
@@ -45,6 +45,6 @@ export interface UseUserPositionsValueArgs {
   metadata: PoolMetadata | undefined;
 }
 
-export function useUserPositionsValue({ metadata, positionInfos }: UseUserPositionsValueArgs) {
-  return useUserPositionsValues([{ metadata, positionInfos }]);
+export function usePositionsValueByInfos({ metadata, positionInfos }: UseUserPositionsValueArgs) {
+  return usePositionsValuesByInfos([{ metadata, positionInfos }]);
 }

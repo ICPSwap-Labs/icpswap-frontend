@@ -10,6 +10,7 @@ import { theme } from "./themes";
 import NavigationScroll from "./ui-component/NavigationScroll";
 import Snackbar from "./ui-component/Snackbar";
 import { useICPPrices, useFetchSNSTokenRootIds } from "./store/global/hooks";
+import { useFetchSnsAllTokensInfo } from "./store/sns/hooks";
 
 export default function App() {
   const { loading: initialTokenStandardLoading } = useInitialTokenStandard();
@@ -18,6 +19,7 @@ export default function App() {
   useInitialXDR2USD();
   useFetchSNSTokenRootIds();
   useFetchInfoAllTokens();
+  useFetchSnsAllTokensInfo();
 
   return (
     <StyledEngineProvider injectFirst>

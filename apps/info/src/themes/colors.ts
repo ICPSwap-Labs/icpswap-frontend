@@ -110,4 +110,9 @@ export default {
 
   defaultGradientStart: "#5569db",
   defaultGradientEnd: "#8572ff",
+
+  "text.success": "#54C081",
+
+  border0: "#4F5A84",
+  border1: "#353C5D",
 };

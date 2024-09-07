@@ -25,7 +25,7 @@ import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
 import { useFarmUserRewardAmountAndValue, useUserApr, useFarmTvlValue } from "hooks/staking-farm/index";
-import { useUserPositionsValue } from "hooks/swap/index";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { PositionDetails } from "./PositionDetails";
@@ -246,7 +246,7 @@ export function PositionCardForFarm({
     }));
   }, [deposits]);
 
-  const stakedPositionValue = useUserPositionsValue({
+  const stakedPositionValue = usePositionsValueByInfos({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });
