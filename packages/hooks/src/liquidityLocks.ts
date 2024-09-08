@@ -43,16 +43,21 @@ export function useAllLiquidityLocks(
 
   const { result: lockIds } = useLiquidityLockIds(tokenIds);
 
-  const governanceIds = useMemo(() => {
+  const ledgerIds = useMemo(() => {
     if (!lockIds) return undefined;
-
     return lockIds.map(({ governance_id, ledger_id, alias }) => {
       if (alias[0] && alias[0].includes("Governance")) return governance_id[0]?.toString();
       return ledger_id.toString();
     });
   }, [lockIds]);
 
-  const { result: positionInfos } = useMultiPositionInfos(poolId, governanceIds);
+  const { result: positionInfos } = useMultiPositionInfos(poolId, ledgerIds);
+
+  useEffect(() => {
+    if (poolId) {
+      setLoading(true);
+    }
+  }, [poolId]);
 
   useEffect(() => {
     async function call() {
@@ -65,11 +70,7 @@ export function useAllLiquidityLocks(
 
             if (!alias) return undefined;
 
-            return [positionInfos, lockIds[index].governance_id.toString(), alias] as [
-              UserPositionInfoWithId[],
-              string,
-              string,
-            ];
+            return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];
           })
           .filter((e) => !!e) as [UserPositionInfoWithId[], string, string][];
 
@@ -103,7 +104,7 @@ export function useAllLiquidityLocks(
     }
 
     call();
-  }, [positionInfos]);
+  }, [positionInfos, lockIds, ledgerIds]);
 
   const multiPositions = useMemo(() => {
     if (!result || !pool) return null;

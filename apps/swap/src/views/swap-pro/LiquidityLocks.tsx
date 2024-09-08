@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
@@ -67,6 +67,13 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
   const { selectedPool } = useContext(SwapContext);
 
   const poolTvlValue = usePoolTVLValue({ pool: selectedPool });
+
+  useEffect(() => {
+    // Reset locks value if pool changed
+    if (poolId) {
+      setLocksValue(null);
+    }
+  }, [poolId]);
 
   const tokenIds = useMemo(() => {
     return selectedPool ? [selectedPool.token0.address, selectedPool.token1.address] : undefined;

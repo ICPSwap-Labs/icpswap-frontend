@@ -53,6 +53,11 @@ export function LiquidityLock({
       return;
     }
 
+    if (name === "Black Hole") {
+      mockALinkAndOpen(`${INFO_URL}/swap-scan/positions?pair=${poolId}&principal=aaaaa-aa`, "liquidity-locks");
+      return;
+    }
+
     mockALinkAndOpen(`${INFO_URL}/swap-scan/positions?pair=${poolId}&principal=${principalId}`, "liquidity-locks");
   }, [name, principalId, poolId]);
 

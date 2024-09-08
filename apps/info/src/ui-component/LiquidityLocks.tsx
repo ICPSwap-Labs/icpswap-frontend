@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "ui-component/Mui";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
@@ -65,6 +65,13 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
     poolId,
     pool,
   );
+
+  useEffect(() => {
+    // Reset locks value if pool changed
+    if (poolId) {
+      setLocksValue(null);
+    }
+  }, [poolId]);
 
   const handleLocksValue = useCallback(
     (name: string, value: string) => {
