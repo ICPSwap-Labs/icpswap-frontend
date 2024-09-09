@@ -117,15 +117,11 @@ export function Transactions() {
       <Box sx={{ height: "20px" }} />
 
       <MainCard>
-        <Grid container mb="20px">
-          <Grid item xs>
-            <Typography variant="h3">
-              <Trans>Transactions</Trans>
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="h3">
+          <Trans>Transactions</Trans>
+        </Typography>
 
-        <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative", margin: "20px 0 0 0", overflow: "auto" }}>
           <Header className={classes.wrapper}>
             <HeaderCell>
               <Trans>Type</Trans>
