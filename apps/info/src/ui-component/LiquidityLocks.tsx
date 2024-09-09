@@ -113,8 +113,8 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
       const aLockValue = locksValue[a[2]];
       const bLockValue = locksValue[b[2]];
 
-      if (aLockValue < bLockValue) return 1;
-      if (aLockValue > bLockValue) return -1;
+      if (new BigNumber(aLockValue).isLessThan(bLockValue)) return 1;
+      if (new BigNumber(aLockValue).isGreaterThan(bLockValue)) return -1;
 
       return 0;
     });
