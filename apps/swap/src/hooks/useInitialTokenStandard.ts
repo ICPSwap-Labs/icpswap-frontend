@@ -69,12 +69,13 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
             standard: pool.token1.standard as TOKEN_STANDARD,
           });
 
-          registerTokens(allTokenStandards);
-
           setAllPools(allSwapPools);
 
           updatePoolCanisterId({ key: pool.key, id: pool.canisterId.toString() });
         });
+
+        registerTokens(allTokenStandards);
+        updateTokenStandard(allTokenStandards);
 
         updateCanisters(
           [
