@@ -19,7 +19,8 @@ export function useUserAvailableTokensValue() {
 
   const allAvailableStakeTokens = useMemo(() => {
     if (!pools) return [];
-    return pools.content.map((e) => e.stakingToken.address);
+    // Filter the same token id
+    return [...new Set(pools.content.map((e) => e.stakingToken.address))];
   }, [pools]);
 
   const allTokensInfo = useTokensInfo(allAvailableStakeTokens);
