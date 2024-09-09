@@ -5,19 +5,18 @@ import { useTheme, makeStyles } from "@mui/styles";
 import Copy from "components/Copy";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import LazyImage from "components/LazyImage";
-import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow , shorten, timestampFormat } from "@icpswap/utils";
-import { isICPSwapOfficial , encodeTokenIdentifier, arrayBufferToString } from "utils/index";
+import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow, shorten, timestampFormat } from "@icpswap/utils";
+import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { Theme } from "@mui/material/styles";
 import FileImage from "components/NFT/FileImage";
-import { TextButton } from "components/index";
+import { TextButton, Wrapper } from "components/index";
 import DetailsToggle from "components/NFT/DetailsToggle";
 import { type NFTTokenMetadata } from "@icpswap/types";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import CollectionIcons from "components/NFT/collectionsIcon";
 import NFTCanisterLink from "components/info/NFTCanisterLink";
-import Wrapper from "components/Wrapper";
 import Logo from "components/Logo";
 
 const useStyles = makeStyles((theme: Theme) => {

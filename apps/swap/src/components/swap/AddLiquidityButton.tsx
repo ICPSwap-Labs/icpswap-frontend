@@ -6,7 +6,7 @@ export interface AddLiquidityButtonProps {
   error: string | undefined | null;
 }
 
-export default function AddLiquidityButton(props: Override<ButtonConnectorProps, AddLiquidityButtonProps>) {
+export function AddLiquidityButton(props: Override<ButtonConnectorProps, AddLiquidityButtonProps>) {
   const { error } = props;
 
   return (

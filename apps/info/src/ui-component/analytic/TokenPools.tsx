@@ -3,16 +3,15 @@ import { makeStyles } from "@mui/styles";
 import { Typography, Box, Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { NoData, StaticLoading, TokenImage } from "ui-component/index";
+import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
-import FeeTierLabel from "ui-component/FeeTierLabel";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel, OnlyTokenList } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools } from "@icpswap/hooks";
-import { PoolData } from "hooks/info/usePoolsOfToken";
-import InTokenListCheck from "ui-component/InTokenListCheck";
+import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolApr24h } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount } from "@icpswap/utils";
+import type { InfoPublicPoolWithTvl } from "@icpswap/types";
+import { HIDDEN_POOLS } from "constants/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -65,7 +64,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
 }
 
 export interface PoolItemProps {
-  pool: PoolData;
+  pool: InfoPublicPoolWithTvl;
   index: number;
 }
 
@@ -80,17 +79,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
 
-  const apr = useMemo(() => {
-    if (!pool) return undefined;
-
-    const fee24h = (pool.volumeUSD * 3) / 1000;
-
-    return `${new BigNumber(fee24h)
-      .dividedBy(pool.tvlUSD)
-      .multipliedBy(360 * 0.8)
-      .multipliedBy(100)
-      .toFixed(2)}%`;
-  }, [pool]);
+  const apr = usePoolApr24h({ volumeUSD: pool.volumeUSD, poolTvlUSD: pool.tvlUSD });
 
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
@@ -112,7 +101,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
             {pool.token0Symbol} / {pool.token1Symbol}
           </Typography>
 
-          <FeeTierLabel feeTier={pool.feeTier} />
+          <FeeTierPercentLabel feeTier={pool.feeTier} />
         </Grid>
       </BodyCell>
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
@@ -152,7 +141,8 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
           (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
           pool.token0Price !== 0 &&
           pool.token1Price !== 0 &&
-          pool.feeTier === BigInt(3000)
+          pool.feeTier === BigInt(3000) &&
+          !HIDDEN_POOLS.includes(pool.pool)
         );
       })
       .filter((pool) => {
@@ -167,12 +157,12 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
     return allPoolsOfToken
       .map((pool) => {
         const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as PoolData;
+        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as InfoPublicPoolWithTvl;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
           const bool =
-            a[sortField as keyof PoolData] > b[sortField as keyof PoolData]
+            a[sortField as keyof InfoPublicPoolWithTvl] > b[sortField as keyof InfoPublicPoolWithTvl]
               ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
               : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
@@ -208,7 +198,7 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
           <Trans>Pools</Trans>
         </Typography>
 
-        <InTokenListCheck onChange={handleCheckChange} checked={checked} />
+        <OnlyTokenList onChange={handleCheckChange} checked={checked} />
       </Box>
 
       <Box mt="20px">
@@ -220,7 +210,7 @@ export default function TokenPools({ canisterId }: TokenPoolsProps) {
             ))}
           </>
         ) : loading ? (
-          <StaticLoading loading={loading} />
+          <ImageLoading loading={loading} />
         ) : (
           <NoData />
         )}

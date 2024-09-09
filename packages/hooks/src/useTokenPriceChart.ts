@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { type InfoPriceChartData } from "@icpswap/types";
+
 import { useInfoTokenPriceChart, useInfoTokenStorageIds } from "./info";
 
 export function useTokenPriceChart(canisterId: string | undefined) {
@@ -12,41 +14,20 @@ export function useTokenPriceChart(canisterId: string | undefined) {
     1000,
   );
 
-  const priceChart = useMemo(() => {
+  const priceChart: InfoPriceChartData[] = useMemo(() => {
     return priceChartData
       ?.map((data) => ({
         ...data,
         time: Number(data.timestamp),
-        id: undefined,
+        id: canisterId,
       }))
       .filter((ele) => ele.time !== 0)
       .sort((a, b) => {
         if (a.time < b.time) return -1;
         if (a.time > b.time) return 1;
         return 0;
-      })
-      .map((d, index) => {
-        return {
-          ...d,
-          open: d.timestamp.toString() === "1686787200" ? priceChartData[index - 1].close : d.open,
-          close:
-            d.timestamp.toString() === "1686787200" || d.timestamp.toString() === "1686873600"
-              ? priceChartData[index + 1]?.open ?? d.close
-              : d.close,
-          low:
-            d.timestamp.toString() === "1686787200"
-              ? priceChartData[index - 1].close > (priceChartData[index + 1]?.open ?? 0)
-                ? priceChartData[index + 1]?.open ?? priceChartData[index - 1]?.close ?? 0
-                : priceChartData[index - 1].close
-              : d.timestamp.toString() === "1686873600"
-              ? priceChartData[index - 2].close > (priceChartData[index + 1]?.open ?? 0)
-                ? priceChartData[index + 1]?.open ?? 0
-                : priceChartData[index - 2]?.close ?? 0
-              : d.low,
-          timestamp: undefined,
-        };
       });
-  }, [priceChartData]);
+  }, [priceChartData, canisterId]);
 
   return useMemo(() => ({ loading, priceChartData: priceChart }), [priceChart, loading]);
 }

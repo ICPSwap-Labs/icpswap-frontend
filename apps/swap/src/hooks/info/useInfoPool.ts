@@ -1,7 +1,6 @@
-import { useInfoPoolStorageIds, useInfoPool } from "@icpswap/hooks";
+import { useInfoPoolStorageIds, useInfoPool as __useInfoPool } from "@icpswap/hooks";
 
-export function usePool(poolId: string | undefined) {
+export function useInfoPool(poolId: string | undefined) {
   const { result: storageId } = useInfoPoolStorageIds(poolId);
-
-  return useInfoPool(storageId ? storageId[0] : undefined, poolId);
+  return __useInfoPool(storageId ? storageId[0] : undefined, poolId);
 }

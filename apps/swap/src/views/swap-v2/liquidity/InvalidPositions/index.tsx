@@ -5,7 +5,7 @@ import { usePositionInfo } from "hooks/swap/v2/usePosition";
 import { useUserInvalidPositions } from "store/swapv2/liquidity/hooks";
 import { t } from "@lingui/macro";
 import Modal from "components/modal/swap";
-import { StaticLoading as Loading, NoData } from "components/index";
+import { ImageLoading as Loading, NoData } from "components/index";
 import { UserPosition } from "types/swapv2";
 
 function hasLiquidity(position: UserPosition | undefined) {
@@ -17,13 +17,7 @@ function PositionItem({ position: positionDetail }: { position: UserPosition | u
   const noLiquidity = !hasLiquidity(positionDetail);
 
   return noLiquidity ? null : (
-    <PositionItemComponent
-      position={position}
-      positionId={positionDetail?.id}
-      showButtons
-      invalid
-      closed={noLiquidity}
-    />
+    <PositionItemComponent position={position} positionId={positionDetail?.id} showButtons invalid />
   );
 }
 

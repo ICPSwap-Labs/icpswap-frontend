@@ -29,3 +29,5 @@ export * from "./nowInSeconds";
 export * from "./converter";
 export * from "./formatPercentage";
 export * from "./classes";
+export * from "./feeAmountToPercent";
+export * from "./swap";

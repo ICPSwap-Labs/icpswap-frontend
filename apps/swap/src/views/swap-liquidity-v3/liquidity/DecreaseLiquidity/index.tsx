@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, makeStyles } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import PercentageSlider from "components/PercentageSlider";
@@ -21,7 +20,8 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
-import { ReclaimTips, LoadingRow, MainCard } from "components/index";
+import { ReclaimTips, LoadingRow, MainCard, Wrapper } from "components/index";
+
 import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
 import ConfirmRemoveLiquidityModal from "./Confirm";
@@ -136,7 +136,7 @@ export default function DecreaseLiquidity() {
 
   const handleBack = useCallback(() => {
     resetBurnState();
-    history.push("/liquidity");
+    history.goBack();
   }, [history, resetBurnState]);
 
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));
@@ -193,7 +193,7 @@ export default function DecreaseLiquidity() {
   }, [setConfirmModalShow]);
 
   return (
-    <>
+    <Wrapper>
       <Grid container justifyContent="center">
         <MainCard level={1} className={`${classes.container} lightGray200`}>
           <HeaderTab title={t`Remove Liquidity`} showArrow showUserSetting slippageType="burn" onBack={handleBack} />
@@ -287,6 +287,6 @@ export default function DecreaseLiquidity() {
           formattedAmounts={formattedAmounts}
         />
       )}
-    </>
+    </Wrapper>
   );
 }

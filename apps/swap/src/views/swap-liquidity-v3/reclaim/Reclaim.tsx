@@ -39,14 +39,12 @@ export default function SwapReclaim() {
   }, [location, history]);
 
   return (
-    <Wrapper>
-      <Box sx={{ margin: "10px 0 0 0" }}>
-        <Breadcrumbs
-          prevLink="/swap"
-          prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>View Your Pool Balances</Trans>}
-        />
-      </Box>
+    <Wrapper sx={{ padding: "16px 0" }}>
+      <Breadcrumbs
+        prevLink="/swap"
+        prevLabel={<Trans>Swap</Trans>}
+        currentLabel={<Trans>View Your Pool Balances</Trans>}
+      />
 
       <Box sx={{ display: "flex", justifyContent: "center", margin: "40px 0 0 0" }}>
         <Box sx={{ width: "800px" }}>

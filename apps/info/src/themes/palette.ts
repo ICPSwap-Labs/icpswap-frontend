@@ -73,6 +73,7 @@ export function themePalette(theme: ThemeOption) {
       hint: theme.colors.grey100,
       "theme-primary": theme.colors.darkPrimaryMain,
       "theme-secondary": theme.colors.darkSecondaryMain,
+      success: theme.colors["text.success"],
     },
     background: {
       paper: theme.paper,

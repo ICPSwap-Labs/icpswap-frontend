@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import SwapModal from "components/modal/swap";
 import { Typography, Button, Box } from "components/Mui";
 import { MaxButton, NumberTextField } from "components/index";
-import { BigNumber, parseTokenAmount } from "@icpswap/utils";
+import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
@@ -92,7 +92,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     setLoading(true);
 
     const key = openTip(
-      t`Deposit ${new BigNumber(amount).toFormat(token.decimals)} ${token.symbol}`,
+      t`Deposit ${toSignificantWithGroupSeparator(amount, token.decimals)} ${token.symbol}`,
       MessageTypes.loading,
     );
 

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, memo } from "react";
+import { useState, useMemo, memo } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
@@ -140,11 +140,7 @@ export interface SwapFeeSelectorProps {
   onSelect: (value: FeeAmount) => void;
 }
 
-export default function SwapFeeSelector({
-  currencyA,
-  currencyB,
-  defaultActiveFee = FeeAmount.MEDIUM,
-}: SwapFeeSelectorProps) {
+export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount.MEDIUM }: SwapFeeSelectorProps) {
   const classes = useStyle();
 
   const [activeFee] = useState<FeeAmount>(defaultActiveFee);
@@ -194,31 +190,31 @@ export default function SwapFeeSelector({
   //   setFeeToggleShow(!feeShow);
   // };
 
-  const totalValueLocked = fees.reduce(
-    (accumulator, currentValue) => {
-      return [
-        new BigNumber(accumulator[0]).plus(currentValue.balance0 ?? 0),
-        new BigNumber(accumulator[1]).plus(currentValue.balance1 ?? 0),
-      ];
-    },
-    [new BigNumber(0), new BigNumber(0)],
-  );
+  // const totalValueLocked = fees.reduce(
+  //   (accumulator, currentValue) => {
+  //     return [
+  //       new BigNumber(accumulator[0]).plus(currentValue.balance0 ?? 0),
+  //       new BigNumber(accumulator[1]).plus(currentValue.balance1 ?? 0),
+  //     ];
+  //   },
+  //   [new BigNumber(0), new BigNumber(0)],
+  // );
 
-  const getPercentage = useCallback(
-    (fee: FeeItem) => {
-      if (!totalValueLocked) return "NO_LIQUIDITY";
-      if (new BigNumber(fee.balance0 ?? 0).isEqualTo(0)) return "NO_LIQUIDITY";
+  // const getPercentage = useCallback(
+  //   (fee: FeeItem) => {
+  //     if (!totalValueLocked) return "NO_LIQUIDITY";
+  //     if (new BigNumber(fee.balance0 ?? 0).isEqualTo(0)) return "NO_LIQUIDITY";
 
-      return `${new BigNumber(fee.balance0 ?? 0)
-        .plus(fee.balance1 ?? 0)
-        .div(new BigNumber(totalValueLocked[0]).plus(totalValueLocked[1]))
-        .multipliedBy(100)
-        .toFixed(0, 4)}%`;
-    },
-    [totalValueLocked],
-  );
+  //     return `${new BigNumber(fee.balance0 ?? 0)
+  //       .plus(fee.balance1 ?? 0)
+  //       .div(new BigNumber(totalValueLocked[0]).plus(totalValueLocked[1]))
+  //       .multipliedBy(100)
+  //       .toFixed(0, 4)}%`;
+  //   },
+  //   [totalValueLocked],
+  // );
 
-  const currentLiquidityPercentage = getPercentage(activeFeeObject);
+  // const currentLiquidityPercentage = getPercentage(activeFeeObject);
 
   return (
     <>
@@ -227,11 +223,11 @@ export default function SwapFeeSelector({
           <Typography variant="h4" color="textPrimary">
             <Trans>{feeFormat(activeFeeObject.feeTier)} fee</Trans>
           </Typography>
-          <Box mt={1}>
+          {/* <Box mt={1}>
             <Typography className={classes.button} component="span" color="textPrimary" fontSize="12px">
               {currentLiquidityPercentage === NO_LIQUIDITY ? t`Not created` : t`${currentLiquidityPercentage} selected`}
             </Typography>
-          </Box>
+          </Box> */}
         </Grid>
         {/* <Grid item xs={4} container justifyContent="flex-end" alignItems="center">
           <button

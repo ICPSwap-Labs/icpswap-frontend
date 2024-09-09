@@ -27,6 +27,8 @@ export type AdapterRequest<T> = T;
 
 export type AdapterIdentityRequest<T> = Override<T, { identity: ActorIdentity }>;
 
+export type RegisterProps = { canisterId: string; standard: TOKEN_STANDARD }[];
+
 export class TokenAdapter {
   public canisterAdapters = new Map<string, TOKEN_STANDARD>();
 
@@ -56,8 +58,8 @@ export class TokenAdapter {
     this.adapters.set(name, adapter);
   }
 
-  public register({ canisterIds, standard }: { canisterIds: string[]; standard: TOKEN_STANDARD }) {
-    canisterIds.forEach((canisterId) => {
+  public register(standards: RegisterProps) {
+    standards.forEach(({ standard, canisterId }) => {
       this.canisterAdapters.set(canisterId, standard);
     });
   }
@@ -192,8 +194,7 @@ export class TokenAdapter {
 
 export const tokenAdapter = new TokenAdapter();
 
-export const registerTokens = ({ canisterIds, standard }: { canisterIds: string[]; standard: TOKEN_STANDARD }) =>
-  tokenAdapter.register({ canisterIds, standard });
+export const registerTokens = (standards: RegisterProps) => tokenAdapter.register(standards);
 
 tokenAdapter.initialAdapter(TOKEN_STANDARD.EXT, EXTAdapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.DIP20, DIP20Adapter);

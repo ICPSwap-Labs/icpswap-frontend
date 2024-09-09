@@ -1,38 +1,26 @@
 import { useMemo } from "react";
-import { parseTokenAmount, BigNumber, nowInSeconds } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, nowInSeconds, isNullArgs } from "@icpswap/utils";
 import type { InitFarmArgs, FarmRewardMetadata, FarmState, FarmDepositArgs } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { useUSDPriceById } from "hooks/useUSDPrice";
 
 export interface UseFarmAprArgs {
   farmTvlValue: string | undefined;
   state: FarmState | undefined;
   farmInitArgs: InitFarmArgs | undefined;
   rewardToken: Token | undefined;
-  rewardTokenPrice: string | number | undefined;
   rewardMetadata: FarmRewardMetadata | undefined;
 }
 
 // (Reward token amount each cycles * reward token price / Total valued staked ) * (360 * 24 * 3600/seconds each cycle) *100%
-export function useFarmApr({
-  farmTvlValue,
-  state,
-  rewardToken,
-  rewardTokenPrice,
-  farmInitArgs,
-  rewardMetadata,
-}: UseFarmAprArgs) {
+export function useFarmApr({ farmTvlValue, state, rewardToken, farmInitArgs, rewardMetadata }: UseFarmAprArgs) {
+  const rewardTokenPrice = useUSDPriceById(rewardToken?.address);
+
   return useMemo(() => {
-    if (
-      !farmTvlValue ||
-      !rewardTokenPrice ||
-      !farmInitArgs ||
-      !rewardMetadata ||
-      !rewardToken ||
-      new BigNumber(farmTvlValue).isEqualTo(0)
-    )
+    if (!farmTvlValue || !farmInitArgs || !rewardMetadata || !rewardToken || new BigNumber(farmTvlValue).isEqualTo(0))
       return undefined;
 
-    if (state !== "LIVE") return undefined;
+    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
 
     const val = parseTokenAmount(rewardMetadata.rewardPerCycle, rewardToken.decimals)
       .multipliedBy(rewardTokenPrice)
@@ -42,7 +30,7 @@ export function useFarmApr({
       .toFixed(2);
 
     return `${val}%`;
-  }, [farmTvlValue, state, rewardTokenPrice, farmInitArgs, rewardMetadata, rewardToken]);
+  }, [farmTvlValue, state, farmInitArgs, rewardMetadata, rewardToken]);
 }
 
 export interface UseUserAprArgs {
@@ -50,7 +38,6 @@ export interface UseUserAprArgs {
   state: FarmState | undefined;
   farmInitArgs: InitFarmArgs | undefined;
   rewardToken: Token | undefined;
-  rewardTokenPrice: string | number | undefined;
   rewardAmount: string | undefined;
   positionValue: string | undefined;
   deposits: FarmDepositArgs[] | undefined;
@@ -61,16 +48,16 @@ export function useUserApr({
   farmTvlValue,
   state,
   rewardToken,
-  rewardTokenPrice,
   farmInitArgs,
   positionValue,
   deposits,
   rewardAmount,
 }: UseUserAprArgs) {
+  const rewardTokenPrice = useUSDPriceById(rewardToken?.address);
+
   return useMemo(() => {
     if (
       !farmTvlValue ||
-      !rewardTokenPrice ||
       !farmInitArgs ||
       !rewardAmount ||
       !rewardToken ||
@@ -80,7 +67,7 @@ export function useUserApr({
     )
       return undefined;
 
-    if (state !== "LIVE") return undefined;
+    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
 
     const depositTime = deposits.reduce((prev, curr) => {
       if (prev === BigInt(0)) return curr.initTime;
@@ -101,5 +88,5 @@ export function useUserApr({
       .toFixed(2);
 
     return `${val}%`;
-  }, [farmTvlValue, state, rewardTokenPrice, farmInitArgs, rewardToken, positionValue, deposits]);
+  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposits]);
 }

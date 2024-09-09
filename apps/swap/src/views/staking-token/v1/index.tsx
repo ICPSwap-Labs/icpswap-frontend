@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography } from "@mui/material";
-import { NoData, MainCard, StaticLoading, TextButton } from "components/index";
+import { NoData, MainCard, ImageLoading, TextButton } from "components/index";
 import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString, useV1StakingTokenPools } from "@icpswap/hooks";
@@ -83,16 +83,13 @@ function Pools() {
 
   const { result, loading } = useV1StakingTokenPools(state, 0, 100);
 
+  const POOL_IDS = ["mbl7t-vyaaa-aaaak-ae5xq-cai", "p7oyq-tiaaa-aaaak-afh6a-cai", "mpjs3-oiaaa-aaaak-ae5wq-cai"];
+
   // when filter is FINISHED, sort pools by stakingToken symbol
   const pools = useMemo(() => {
     if (result?.content) {
       if (!!filter && filter === STATE.FINISHED) {
-        // return result?.content.sort((a, b) => {
-        //   if (a.stakingTokenSymbol < b.stakingTokenSymbol) return -1;
-        //   if (a.stakingTokenSymbol > b.stakingTokenSymbol) return 1;
-        //   return 0;
-        // });
-        return result?.content.filter((e) => e.canisterId.toString() === "p7oyq-tiaaa-aaaak-afh6a-cai");
+        return result?.content.filter((e) => POOL_IDS.includes(e.canisterId.toString()));
       }
 
       return result?.content;
@@ -195,7 +192,7 @@ function Pools() {
             </Box>
           ) : null}
           {(showNoData || !pools?.length) && !loading && <NoData />}
-          {loading ? <StaticLoading loading /> : null}
+          {loading ? <ImageLoading loading /> : null}
         </Box>
       </MainCard>
 

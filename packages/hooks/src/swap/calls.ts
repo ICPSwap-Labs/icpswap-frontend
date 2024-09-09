@@ -22,10 +22,11 @@ import type {
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
-import { useCallsData, getPaginationAllData, usePaginationAllData } from "../useCallData";
 
-export async function createSwapPool(identity: ActorIdentity, args: CreatePoolArgs) {
-  return resultFormat<SwapPoolData>(await (await swapFactory(identity)).createPool(args));
+import { useCallsData, getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
+
+export async function createSwapPool(args: CreatePoolArgs) {
+  return resultFormat<SwapPoolData>(await (await swapFactory(true)).createPool(args));
 }
 
 export async function getSwapPool(args: GetPoolArgs) {
@@ -66,25 +67,25 @@ export function useSwapPoolMetadata(canisterId: string | undefined) {
   );
 }
 
-export async function getSwapPoolTicks(canisterId: string, offset: number, limit: number) {
+export async function getSwapTickInfos(canisterId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<TickLiquidityInfo>>(
     await (await swapPool(canisterId)).getTickInfos(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export async function getSwapPoolAllTicks(poolId: string, limit = 500) {
+export async function getSwapPoolAllTickInfos(poolId: string, limit = 500) {
   const callback = async (offset: number, limit: number) => {
-    return await getSwapPoolTicks(poolId, offset, limit);
+    return await getSwapTickInfos(poolId, offset, limit);
   };
 
   return await getPaginationAllData<TickLiquidityInfo>(callback, limit);
 }
 
-export function useLiquidityTicks(canisterId: string | undefined, limit?: number) {
+export function useLiquidityTickInfos(canisterId: string | undefined, limit?: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getSwapPoolAllTicks(canisterId, limit);
+      return await getSwapPoolAllTickInfos(canisterId, limit);
     }, [canisterId, limit]),
   );
 }
@@ -123,8 +124,8 @@ export async function swap(poolId: string, args: SwapArgs) {
   return resultFormat<bigint>(await (await swapPool(poolId, true)).swap(args));
 }
 
-export async function collect(poolId: string, identity: ActorIdentity, args: ClaimArgs) {
-  return resultFormat<{ amount0: bigint; amount1: bigint }>(await (await swapPool(poolId, identity)).claim(args));
+export async function collect(poolId: string, args: ClaimArgs) {
+  return resultFormat<{ amount0: bigint; amount1: bigint }>(await (await swapPool(poolId, true)).claim(args));
 }
 
 export async function getUserUnusedBalance(canisterId: string, user: Principal) {
@@ -372,9 +373,8 @@ export function useSwapPoolAllPositions(canisterId: string | undefined, limit?: 
 }
 
 export async function getSwapTicks(canisterId: string, offset: number, limit: number) {
-  return resultFormat<PaginationResult<TickInfoWithId>>(
-    await (await swapPool(canisterId)).getTicks(BigInt(offset), BigInt(limit)),
-  ).data;
+  const result = await (await swapPool(canisterId)).getTicks(BigInt(offset), BigInt(limit));
+  return resultFormat<PaginationResult<TickInfoWithId>>(result).data;
 }
 
 export async function getSwapAllTicks(canisterId: string, limit = 1000) {
@@ -382,7 +382,7 @@ export async function getSwapAllTicks(canisterId: string, limit = 1000) {
     return await getSwapTicks(canisterId, offset, limit);
   };
 
-  return await getPaginationAllData<TickInfoWithId>(callback, limit);
+  return await getPaginationAllDataLimit<TickInfoWithId>(callback, limit);
 }
 
 export function useSwapAllTicks(canisterId: string | undefined, limit?: number) {

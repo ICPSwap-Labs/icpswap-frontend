@@ -78,10 +78,12 @@ export default function CreateStakingTokenPool() {
           return;
         }
 
-        updateTokenStandard({
-          canisterId: values.rewardToken,
-          standard: values.rewardStandard as TOKEN_STANDARD,
-        });
+        updateTokenStandard([
+          {
+            canisterId: values.rewardToken,
+            standard: values.rewardStandard as TOKEN_STANDARD,
+          },
+        ]);
 
         const rewardTokenInfo = await getTokenInfo(values.rewardToken);
 
@@ -107,10 +109,12 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    updateTokenStandard({
-      canisterId: values.rewardToken,
-      standard: values.rewardStandard as TOKEN_STANDARD,
-    });
+    updateTokenStandard([
+      {
+        canisterId: values.rewardToken,
+        standard: values.rewardStandard as TOKEN_STANDARD,
+      },
+    ]);
 
     const rewardTokenInfo = await getTokenInfo(values.rewardToken);
 
@@ -131,10 +135,12 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    updateTokenStandard({
-      canisterId: values.stakingToken,
-      standard: values.stakingStandard as TOKEN_STANDARD,
-    });
+    updateTokenStandard([
+      {
+        canisterId: values.stakingToken,
+        standard: values.stakingStandard as TOKEN_STANDARD,
+      },
+    ]);
 
     const stakingTokenInfo = await getTokenInfo(values.stakingToken);
 

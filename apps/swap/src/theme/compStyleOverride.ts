@@ -1,6 +1,8 @@
 import { isDarkTheme } from "utils/index";
 import { createTheme, keyframes } from "@mui/material";
 
+import colors from "./colors";
+
 const MuiTheme = createTheme({});
 
 export function componentStyleOverrides(theme: { [key: string]: any }) {
@@ -54,6 +56,10 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
             "&:hover": {
               background: "rgba(86, 105, 220, 0.1)",
             },
+            "&.secondary": {
+              border: `1px solid ${colors.darkLevel4}`,
+              color: "#ffffff",
+            },
           },
           "&.MuiButton-contained.Mui-disabled": {
             ...(isDark
@@ -61,6 +67,12 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                   background: "#4F5A84",
                 }
               : { color: "#9E9E9E", background: "#E0E0E0" }),
+          },
+          "&.MuiButton-contained": {
+            "&.secondary": {
+              background: colors.darkLevel4,
+              boxShadow: "none",
+            },
           },
         },
         containedPrimary: {

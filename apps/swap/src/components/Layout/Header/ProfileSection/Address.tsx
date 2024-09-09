@@ -1,11 +1,10 @@
 import { useRef } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme, Theme } from "components/Mui";
 import Copy, { CopyRef } from "components/Copy";
-import { mockALinkAndOpen } from "utils/index";
 import { ReactComponent as ExternalLink } from "assets/icons/external-link.svg";
 import { Connector } from "constants/wallet";
 import { useConnectorType } from "store/auth/hooks";
+import { mockALinkAndOpen } from "@icpswap/utils";
 
 const ConnectorIcon: { [key: string]: string } = {
   [Connector.IC]: "/images/connect/InternetIdentity.svg",

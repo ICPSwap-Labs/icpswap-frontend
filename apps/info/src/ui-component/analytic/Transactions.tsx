@@ -7,7 +7,7 @@ import { Header, HeaderCell, TableRow, BodyCell, SortDirection, SwapTransactionP
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
 import dayjs from "dayjs";
-import { StaticLoading, Copy, NoData } from "ui-component/index";
+import { ImageLoading, Copy, NoData } from "ui-component/index";
 import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
@@ -206,7 +206,7 @@ export default function Transactions({
 
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && !!filteredTransactions?.length ? (

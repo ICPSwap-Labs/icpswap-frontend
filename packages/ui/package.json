@@ -24,6 +24,7 @@
     "@icpswap/hooks": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
+    "@icpswap/swap-sdk": "workspace:*",
     "lightweight-charts": "3.8.0",
     "polished": "^3.3.2",
     "react-feather": "^2.0.8",

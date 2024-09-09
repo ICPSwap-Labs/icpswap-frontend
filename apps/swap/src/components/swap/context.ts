@@ -7,8 +7,6 @@ export interface SwapContextProps {
   unavailableBalanceKeys: string[];
   setUnavailableBalanceKey: (key: string) => void;
   removeUnavailableBalanceKey: (key: string) => void;
-  refreshTrigger: number;
-  setRefreshTrigger: () => void;
   usdValueChange: string | null;
   setUSDValueChange: (change: string | null) => void;
 }

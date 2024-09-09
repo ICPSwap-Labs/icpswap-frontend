@@ -1,6 +1,6 @@
-import { Pagination, NoData, ListLoading, MainCard , TextButton } from "components/index";
-import { useUserCanisterList , useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
-import { pageArgsFormat, cycleValueFormat , timestampFormat } from "@icpswap/utils";
+import { Pagination, NoData, ListLoading, MainCard, TextButton, Wrapper } from "components/index";
+import { useUserCanisterList, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
+import { pageArgsFormat, cycleValueFormat, timestampFormat } from "@icpswap/utils";
 import { useState } from "react";
 import {
   Grid,
@@ -21,7 +21,6 @@ import { useAccount } from "store/global/hooks";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo } from "@icpswap/types";
-import Wrapper from "components/Wrapper";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import CanSVG from "assets/images/nft/CanSVG";
 

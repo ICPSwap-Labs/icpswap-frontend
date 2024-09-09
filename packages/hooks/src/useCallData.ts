@@ -5,15 +5,15 @@ import { pageArgsFormat, sleep } from "@icpswap/utils";
 export type Call<T> = () => Promise<ApiResult<T>>;
 
 export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean): CallResult<T> {
-  const [result, setResult] = useState<ApiResult<T>>(undefined);
+  const result = useRef<T | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (fn) {
-      setResult(undefined);
+      result.current = undefined;
       setLoading(true);
-      fn().then((result) => {
-        setResult(result);
+      fn().then((res) => {
+        result.current = res;
         setLoading(false);
       });
     }
@@ -21,7 +21,7 @@ export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean)
 
   return useMemo(
     () => ({
-      result,
+      result: result.current,
       loading,
     }),
     [result, loading],
@@ -95,9 +95,8 @@ export function usePaginationAllData<T>(
         const result = await callback(0, 1);
         if (result) {
           return result.totalElements;
-        } 
-          return BigInt(0);
-        
+        }
+        return BigInt(0);
       }
 
       return BigInt(0);
@@ -186,4 +185,36 @@ export async function getPaginationAllData<T>(
     .reduce((prev, curr) => {
       return prev.concat(curr?.content ?? []);
     }, [] as T[]);
+}
+
+export async function getPaginationAllDataLimit<T>(
+  callback: (offset: number, limit: number) => Promise<PaginationResult<T> | undefined>,
+  limit: number,
+) {
+  const fetch = async (offset: number, limit: number) => {
+    return await callback(offset, limit);
+  };
+
+  const __result = await fetch(0, limit);
+  const totalElements = Number(__result?.totalElements ?? 0);
+  const totalPage =
+    totalElements % limit === 0 ? parseInt(String(totalElements / limit)) : parseInt(String(totalElements / limit)) + 1;
+
+  const promise: Promise<PaginationResult<T> | undefined>[] = [];
+
+  for (let i = 2; i < totalPage + 1; i++) {
+    const [offset] = pageArgsFormat(i, limit);
+    promise.push(fetch(offset, limit));
+  }
+
+  const result = await Promise.all(promise);
+
+  return result
+    .filter((res) => !!res)
+    .reduce(
+      (prev, curr) => {
+        return prev.concat(curr?.content ?? []);
+      },
+      __result.content ?? ([] as T[]),
+    );
 }

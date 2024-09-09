@@ -1,6 +1,5 @@
-import { Typography, Box, BoxProps } from "components/Mui";
+import { Typography, Box, BoxProps, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
 import { useCallback } from "react";
 import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
@@ -8,7 +7,6 @@ import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useStakingPoolState } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
@@ -25,7 +23,7 @@ interface FarmListCardProps {
 
 export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardProps) {
   const principal = useAccountPrincipal();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
 
   const [, stakeToken] = useToken(poolInfo.stakingToken.address);
@@ -114,7 +112,7 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.apr" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>

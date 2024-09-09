@@ -1,61 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { FilterState } from "types/staking-farm";
-import { getFarms, getFarmUserPositions } from "@icpswap/hooks";
+import { getFarmsByFilter } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
-import { FarmState, FarmTvl } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { FarmState } from "@icpswap/types";
 
 export interface UseFarmsArgs {
   state: FarmState | undefined;
   filter: FilterState;
+  pair?: string | null;
+  token?: string | null;
+  user?: string | null;
 }
 
-export function useFarms({ state, filter }: UseFarmsArgs) {
-  const principal = useAccountPrincipal();
+export function useFarms({ state, filter, pair, token, user }: UseFarmsArgs) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [farms, setFarms] = useState<null | Array<[Principal, FarmTvl]>>(null);
+  const [farms, setFarms] = useState<null | Array<Principal>>(null);
 
   useEffect(() => {
     async function call() {
-      if (filter === FilterState.YOUR) {
-        if (!principal) {
-          setFarms(null);
-          return;
-        }
-
-        setLoading(true);
-
-        const farms = await getFarms(undefined);
-
-        const result = (
-          await Promise.all(
-            farms.map(async (farm) => {
-              const positions = await getFarmUserPositions(farm[0].toString(), principal.toString());
-              return { id: farm[0].toString(), positions };
-            }),
-          )
-        ).flat();
-
-        const stakedFarms = farms.filter((farm) => {
-          const id = farm[0].toString();
-
-          const positions = result.find((e) => e.id === id)?.positions;
-
-          return positions && positions.length > 0;
-        });
-
-        setFarms(stakedFarms);
-      } else {
-        setLoading(true);
-        const farms = await getFarms(state);
-        setFarms(farms);
-      }
-
+      setLoading(true);
+      const farms = await getFarmsByFilter({ state, pair, token, user });
+      setFarms(farms);
       setLoading(false);
     }
 
     call();
-  }, [filter, state, principal]);
+  }, [filter, state, user, pair, token]);
 
   return useMemo(() => ({ loading, result: farms }), [loading, farms]);
 }

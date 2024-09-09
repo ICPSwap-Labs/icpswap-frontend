@@ -23,6 +23,7 @@ export function Disburse({ onDisburseSuccess, governance_id, neuron_id, disabled
 
     setLoading(true);
     openFullscreenLoading();
+    setOpen(false);
 
     const { data, message, status } = await disburseNeuron(governance_id, neuron_id);
 

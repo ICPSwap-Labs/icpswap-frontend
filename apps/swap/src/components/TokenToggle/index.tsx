@@ -23,15 +23,13 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function TokenToggle({
-  currencyA,
-  currencyB,
-  handleToggle,
-}: {
+export interface TokenToggleProps {
   currencyA: Token | undefined;
   currencyB: Token | undefined;
   handleToggle: () => void;
-}) {
+}
+
+export function TokenToggle({ currencyA, currencyB, handleToggle }: TokenToggleProps) {
   const classes = useStyle();
 
   const isSorted = currencyA && currencyB && currencyA.sortsBefore(currencyB);

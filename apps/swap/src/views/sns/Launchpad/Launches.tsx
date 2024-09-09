@@ -1,10 +1,9 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Theme } from "components/Mui";
 import { useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useEffect, useMemo } from "react";
-import { Flex, LoadingRow } from "components/index";
+import { Flex, LoadingRow, Wrapper } from "components/index";
 import type { SnsTokensInfo } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
@@ -118,23 +117,60 @@ export default function LaunchpadList() {
       listedSNS.instances.forEach((e) => {
         const leger_id = e.ledger_canister_id[0]?.toString();
         if (leger_id) {
-          updateTokenStandard({ canisterId: leger_id, standard: TOKEN_STANDARD.ICRC1 });
+          updateTokenStandard([{ canisterId: leger_id, standard: TOKEN_STANDARD.ICRC1 }]);
         }
       });
     }
   }, [listedSNS]);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Box sx={{ maxWidth: "1400px", width: "100%" }}>
-        <Tabs />
+    <Wrapper>
+      <Tabs />
 
-        <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "10px 0 20px 0" }} color="text.primary">
-          <Trans>Current Launches</Trans>
+      <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "10px 0 20px 0" }} color="text.primary">
+        <Trans>Current Launches</Trans>
+      </Typography>
+
+      {!loading ? (
+        openedLaunches && openedLaunches?.length > 0 ? (
+          <Box
+            sx={{
+              display: "grid",
+              gap: "20px",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              "@media (max-width:1088px)": {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              "@media (max-width:640px)": {
+                gridTemplateColumns: "1fr",
+              },
+            }}
+          >
+            {openedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+          </Box>
+        ) : (
+          <Typography>No Launches</Typography>
+        )
+      ) : (
+        <LoadingRow>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </LoadingRow>
+      )}
+
+      <Box sx={{ margin: "30px 0 0 0" }}>
+        <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
+          <Trans>Upcoming Launches</Trans>
         </Typography>
 
         {!loading ? (
-          openedLaunches && openedLaunches?.length > 0 ? (
+          upcomingLaunches && upcomingLaunches.length > 0 ? (
             <Box
               sx={{
                 display: "grid",
@@ -148,10 +184,10 @@ export default function LaunchpadList() {
                 },
               }}
             >
-              {openedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+              {upcomingLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
             </Box>
           ) : (
-            <Typography>No Launches</Typography>
+            <Typography>No Upcoming Launches</Typography>
           )
         ) : (
           <LoadingRow>
@@ -165,81 +201,42 @@ export default function LaunchpadList() {
             <div />
           </LoadingRow>
         )}
-
-        <Box sx={{ margin: "30px 0 0 0" }}>
-          <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-            <Trans>Upcoming Launches</Trans>
-          </Typography>
-
-          {!loading ? (
-            upcomingLaunches && upcomingLaunches.length > 0 ? (
-              <Box
-                sx={{
-                  display: "grid",
-                  gap: "20px",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  "@media (max-width:1088px)": {
-                    gridTemplateColumns: "1fr 1fr",
-                  },
-                  "@media (max-width:640px)": {
-                    gridTemplateColumns: "1fr",
-                  },
-                }}
-              >
-                {upcomingLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
-              </Box>
-            ) : (
-              <Typography>No Upcoming Launches</Typography>
-            )
-          ) : (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          )}
-        </Box>
-
-        <Box sx={{ margin: "30px 0 0 0" }}>
-          <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-            <Trans>Launched</Trans>
-          </Typography>
-
-          {!loading ? (
-            <Box
-              sx={{
-                display: "grid",
-                gap: "20px",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                "@media (max-width:1088px)": {
-                  gridTemplateColumns: "1fr 1fr",
-                },
-                "@media (max-width:640px)": {
-                  gridTemplateColumns: "1fr",
-                },
-              }}
-            >
-              {completedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
-            </Box>
-          ) : (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          )}
-        </Box>
       </Box>
-    </Box>
+
+      <Box sx={{ margin: "30px 0 0 0" }}>
+        <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
+          <Trans>Launched</Trans>
+        </Typography>
+
+        {!loading ? (
+          <Box
+            sx={{
+              display: "grid",
+              gap: "20px",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              "@media (max-width:1088px)": {
+                gridTemplateColumns: "1fr 1fr",
+              },
+              "@media (max-width:640px)": {
+                gridTemplateColumns: "1fr",
+              },
+            }}
+          >
+            {completedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+          </Box>
+        ) : (
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        )}
+      </Box>
+    </Wrapper>
   );
 }

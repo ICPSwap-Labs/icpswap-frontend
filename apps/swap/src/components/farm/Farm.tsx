@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { Box, Typography, Button } from "components/Mui";
+import { Box, Typography, Button, Theme } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
-import { useIntervalUserRewardInfo, useFarmUSDValue, useUserPositionsValue } from "hooks/staking-farm";
+import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, BigNumber, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import {
   useFarmUserPositions,
   useFarmInitArgs,
@@ -13,7 +14,6 @@ import {
   useSwapPoolMetadata,
   useFarmState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useFarmApr, useUserApr } from "hooks/staking-farm/useFarmApr";
 import { FarmPositionCard } from "components/farm/index";
@@ -77,7 +77,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [userAvailablePositions]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: swapPoolMetadata,
     positionInfos: availablePositionsInfo,
   });
@@ -92,7 +92,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [deposits]);
 
-  const stakedPositionValue = useUserPositionsValue({
+  const stakedPositionValue = usePositionsValueByInfos({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });
@@ -101,29 +101,22 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     return deposits?.map((position) => position.positionId) ?? [];
   }, [deposits]);
 
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
-
-  const userRewardAmount = useMemo(() => {
-    if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;
-    const userRewardRatio = new BigNumber(1).minus(new BigNumber(farmInitArgs.fee.toString()).dividedBy(1000));
-    return parseTokenAmount(__userRewardAmount, rewardToken.decimals).multipliedBy(userRewardRatio).toString();
-  }, [__userRewardAmount, farmInitArgs, rewardToken]);
+  const { userRewardAmount, userRewardValue } = useFarmUserRewardAmountAndValue({
+    farmId,
+    positionIds,
+    refresh: refreshRewardsTrigger,
+    rewardToken,
+    farmInitArgs,
+  });
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { farmTvlValue, userTvl } = useFarmUSDValue({
-    token0,
-    token1,
-    rewardToken,
-    userRewardAmount,
-    userFarmInfo: farmInfo,
-    farmId,
-  });
+  const farmTvlValue = useFarmTvlValue({ farmId, token0, token1 });
+  const userTvlValue = useUserTvlValue({ farmId, token0, token1 });
 
   const apr = useFarmApr({
     state,
     rewardToken,
-    rewardTokenPrice,
     farmInitArgs,
     rewardMetadata,
     farmTvlValue,
@@ -132,7 +125,6 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   const userApr = useUserApr({
     state,
     rewardToken,
-    rewardTokenPrice,
     farmInitArgs,
     farmTvlValue,
     positionValue: stakedPositionValue,
@@ -167,7 +159,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
               />
             </Flex>
-            <Typography sx={{ color: "text.theme-secondary", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
             </Typography>
           </Box>
@@ -264,11 +256,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 </Typography>
 
                 <Typography sx={{ margin: "8px 0 0 0" }}>
-                  {userRewardAmount && rewardTokenPrice
-                    ? `~${formatDollarAmount(
-                        new BigNumber(userRewardAmount).multipliedBy(rewardTokenPrice).toString(),
-                      )}`
-                    : "--"}
+                  {userRewardValue ? `~${formatDollarAmount(userRewardValue)}` : "--"}
                 </Typography>
               </Box>
 
@@ -412,7 +400,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
           </Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>
-            {userTvl ? `${formatDollarAmount(userTvl)}` : "--"}
+            {userTvlValue ? `${formatDollarAmount(userTvlValue)}` : "--"}
           </Typography>
         </Box>
 

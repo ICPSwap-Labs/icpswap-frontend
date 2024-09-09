@@ -21,10 +21,11 @@ const useStyle = makeStyles((theme: Theme) => {
     },
     input: {
       "& input": {
-        textAlign: "right",
-        fontSize: "20px",
-        fontWeight: 700,
-        // color: theme.textPrimary,
+        "&.MuiInputBase-input": {
+          textAlign: "right",
+          fontSize: "20px",
+          fontWeight: 700,
+        },
       },
       "& input::placeholder": {
         fontSize: "20px",

@@ -3,6 +3,7 @@ import { useFarmGlobalData } from "hooks/staking-farm";
 import { Trans, t } from "@lingui/macro";
 import { Tooltip, Flex } from "components/index";
 import React from "react";
+import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
 
 interface ItemProps {
   label0: React.ReactNode;
@@ -65,7 +66,7 @@ export function GlobalData() {
         width: "100%",
         display: "grid",
         gap: "0 56px",
-        gridTemplateColumns: "290px 290px 290px",
+        gridTemplateColumns: "repeat(4, 1fr)",
         alignItems: "flex-end",
         "@media(max-width: 960px)": {
           gridTemplateColumns: "1fr",
@@ -73,6 +74,44 @@ export function GlobalData() {
         },
       }}
     >
+      <Item
+        label0={<Trans>Your Available Positions</Trans>}
+        value0={
+          nonNullArgs(globalData.userPositionAmount) && nonNullArgs(globalData.userPositionValue) ? (
+            <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
+              <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
+                {formatDollarAmount(globalData.userPositionValue)}
+              </Typography>
+              &nbsp;in&nbsp;
+              <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
+                {globalData.userPositionAmount}
+              </Typography>
+              &nbsp;positions
+            </Typography>
+          ) : (
+            "--"
+          )
+        }
+        tooltip0={t`The number of positions currently available in your account for staking.`}
+        label1={<Trans>Your Staked Positions</Trans>}
+        value1={
+          nonNullArgs(globalData.userStakedFarms) && nonNullArgs(globalData.userStakedTvl) ? (
+            <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
+              <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
+                {formatDollarAmount(globalData.userStakedTvl)}
+              </Typography>
+              &nbsp;in&nbsp;
+              <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
+                {globalData.userStakedFarms.length}
+              </Typography>
+              &nbsp;farms
+            </Typography>
+          ) : (
+            "--"
+          )
+        }
+      />
+
       <Item
         label0={<Trans>TVL</Trans>}
         value0={globalData?.stakeTokenTVL ?? "--"}
@@ -84,18 +123,18 @@ export function GlobalData() {
 
       <Item
         label0={<Trans>Total Rewarding Value</Trans>}
-        value0={globalData?.rewardTokenTVL ?? "--"}
+        value0={globalData.rewardTokenTVL ?? "--"}
         tooltip0={t`The total value of rewards distributed by live farming pools.`}
         label1={<Trans>Total Pools</Trans>}
-        value1={globalData?.poolsNumber ?? "--"}
+        value1={globalData.farmAmount?.toString() ?? "--"}
         tooltip1={t`The total number of farming pools, including those that are unstart, live, and finished.`}
       />
 
-      <Item
+      {/* <Item
         label0={<Trans>Total Stakers</Trans>}
         value0={globalData.principalAmount?.toString() ?? "--"}
         tooltip0={t`The total number of unique accounts that have staked in the farming pools.`}
-      />
+      /> */}
     </Box>
   );
 }

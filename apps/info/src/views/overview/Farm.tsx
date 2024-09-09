@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { useFarmGlobalData } from "hooks/staking-farm/index";
 
@@ -32,18 +31,18 @@ export function Farm() {
         />
         <Item
           label={t`Total Pools`}
-          value={globalData?.poolsNumber ?? "--"}
+          value={globalData?.farmAmount?.toString() ?? "--"}
           tooltip={t`The total number of farming pools, including those that are unstart, live, and finished.`}
         />
       </Row>
 
-      <Box sx={{ display: "flex" }}>
+      {/* <Box sx={{ display: "flex" }}>
         <Item
           label={t`Total Stakers`}
           value={globalData.principalAmount?.toString() ?? "--"}
           tooltip={t`The total number of unique accounts that have staked in the farming pools.`}
         />
-      </Box>
+      </Box> */}
     </Card>
   );
 }

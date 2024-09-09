@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { t, Trans } from "@lingui/macro";
-import { Wrapper, Breadcrumbs, MainCard, Pagination, PaginationType, StaticLoading, NoData } from "components/index";
+import { Wrapper, Breadcrumbs, MainCard, Pagination, PaginationType, ImageLoading, NoData } from "components/index";
 import { Header, HeaderCell, BodyCell, Row } from "components/Table/index";
 import { useUserClaimEventTransactions } from "@icpswap/hooks";
 import { ClaimTransaction } from "@icpswap/types";
@@ -97,7 +97,7 @@ export default function TokenClaimTransactions() {
                   height: "100%",
                 }}
               >
-                <StaticLoading mask loading={loading} />
+                <ImageLoading mask loading={loading} />
               </Box>
             ) : null}
 

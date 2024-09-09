@@ -31,7 +31,7 @@ export function ReclaimForSinglePool({
 }: ReclaimForSinglePoolProps) {
   const [loading, setLoading] = useState(false);
   const { result: tokenInfo } = useTokenInfo(tokenId);
-  const { setUnavailableBalanceKey, removeUnavailableBalanceKey, setRefreshTrigger } = useContext(SwapContext);
+  const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(SwapContext);
 
   const reclaim = useReclaim();
 
@@ -44,11 +44,10 @@ export function ReclaimForSinglePool({
 
     if (claimSuccess) {
       if (onReclaimSuccess) onReclaimSuccess();
-      setRefreshTrigger();
     }
 
     setLoading(false);
-  }, [tokenInfo, loading, reclaim, setRefreshTrigger]);
+  }, [tokenInfo, loading, reclaim]);
 
   const hide = useMemo(() => {
     if (!tokenInfo) return false;

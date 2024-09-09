@@ -1,15 +1,12 @@
-import { Typography, Box, useTheme } from "components/Mui";
+import { Typography, Box, useTheme, Theme } from "components/Mui";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { enumToString, BigNumber, mockALinkAndOpen } from "@icpswap/utils";
 import { LoadingRow, NoData, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT, INFO_URL } from "constants/index";
-import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { mockALinkAndOpen } from "utils/index";
 import { ArrowUpRight } from "react-feather";
 import { SwapTransactionPriceTip } from "@icpswap/ui";
 

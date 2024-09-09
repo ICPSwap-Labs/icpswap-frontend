@@ -4,29 +4,34 @@ import store from "store/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { ICP } from "@icpswap/tokens";
 import { registerTokens } from "@icpswap/token-adapter";
-import { updateTokenStandard, updateAllTokenIds } from "./actions";
+import { updateTokenStandards } from "./actions";
+
+interface useUpdateTokenStandardProps {
+  canisterId: string;
+  standard: TOKEN_STANDARD;
+}
 
 export function useUpdateTokenStandard() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    ({ canisterId, standard }: { canisterId: string; standard: TOKEN_STANDARD }) => {
-      if (canisterId) {
+    (standards: useUpdateTokenStandardProps[]) => {
+      const __standards = standards.map(({ standard, canisterId }) => {
         // Register icp as icrc2 token
         if (canisterId === ICP.address) {
-          dispatch(updateTokenStandard({ canisterId, standard: TOKEN_STANDARD.ICRC2 }));
-          registerTokens({ canisterIds: [canisterId], standard: TOKEN_STANDARD.ICRC2 });
+          return { canisterId, standard: TOKEN_STANDARD.ICRC2 };
           // Register usdc as icrc2 token
-        } else if (canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" || canisterId === "yfumr-cyaaa-aaaar-qaela-cai") {
-          dispatch(updateTokenStandard({ canisterId, standard: TOKEN_STANDARD.ICRC2 }));
-          registerTokens({ canisterIds: [canisterId], standard: TOKEN_STANDARD.ICRC2 });
-        } else {
-          dispatch(updateTokenStandard({ canisterId, standard }));
-          registerTokens({ canisterIds: [canisterId], standard });
         }
 
-        dispatch(updateAllTokenIds(canisterId));
-      }
+        if (canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" || canisterId === "yfumr-cyaaa-aaaar-qaela-cai") {
+          return { canisterId, standard: TOKEN_STANDARD.ICRC2 };
+        }
+
+        return { canisterId, standard };
+      });
+
+      dispatch(updateTokenStandards(__standards));
+      registerTokens(__standards);
     },
     [dispatch],
   );

@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
-import { farmController } from "@icpswap/actor";
+import { farmIndex } from "@icpswap/actor";
 
 import { useCallsData } from "../useCallData";
 
 export async function getFarmTotalAmount() {
-  const farmResult = await (await farmController()).getTotalAmount();
+  const farmResult = await (await farmIndex()).getTotalAmount();
   return resultFormat<{ farmAmount: bigint; principalAmount: bigint }>(farmResult).data;
 }
 

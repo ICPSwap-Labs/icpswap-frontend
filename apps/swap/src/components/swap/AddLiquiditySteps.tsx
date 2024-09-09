@@ -4,7 +4,7 @@ import { Position, Token } from "@icpswap/swap-sdk";
 import { Trans, t } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { toFormat } from "utils/index";
-import { isUseTransfer, actualAmountToPool } from "utils/token/index";
+import { isUseTransfer } from "utils/token/index";
 import { StepContents, StepContent } from "types/step";
 import type { PCMMetadata } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
@@ -40,12 +40,8 @@ export function getAddLiquidityStepDetails({
   const symbol0 = position.pool.token0.symbol;
   const symbol1 = position.pool.token1.symbol;
 
-  const amount0 = toFormat(
-    parseTokenAmount(actualAmountToPool(token0, position.mintAmounts.amount0.toString()), token0.decimals).toString(),
-  );
-  const amount1 = toFormat(
-    parseTokenAmount(actualAmountToPool(token1, position.mintAmounts.amount1.toString()), token1.decimals).toString(),
-  );
+  const amount0 = toFormat(parseTokenAmount(position.mintAmounts.amount0.toString(), token0.decimals).toString());
+  const amount1 = toFormat(parseTokenAmount(position.mintAmounts.amount1.toString(), token1.decimals).toString());
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center" }}>

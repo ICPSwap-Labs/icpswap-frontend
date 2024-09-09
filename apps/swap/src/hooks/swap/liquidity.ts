@@ -42,7 +42,7 @@ function useUpdateStepContent() {
 
     updateStep(String(key), {
       content,
-      title: t`Decrease Liquidity Details`,
+      title: t`Remove Liquidity Details`,
     });
   }, []);
 }
@@ -205,7 +205,7 @@ export function useDecreaseLiquidityCallback({
 
       stepContentManage(String(key), {
         content,
-        title: t`Decrease Liquidity Details`,
+        title: t`Remove Liquidity Details`,
       });
 
       return { call, reset, retry, key };

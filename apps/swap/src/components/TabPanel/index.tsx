@@ -1,34 +1,8 @@
 import { useState, ReactNode } from "react";
-import { Grid, Box, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, useTheme } from "components/Mui";
 import { useHistory, useLocation } from "react-router-dom";
-import { mockALinkAndOpen } from "utils";
-import { Theme } from "@mui/material/styles";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    switchButton: {
-      minWidth: "90px",
-      padding: "0 20px",
-      height: "45px",
-      color: theme.themeOption.textSecondary,
-      cursor: "pointer",
-      borderRadius: "12px",
-      fontWeight: 600,
-      "&.active": {
-        color: theme.themeOption.textPrimary,
-      },
-      "&.fontNormal": {
-        fontWeight: 400,
-      },
-      "@media (max-width: 640px)": {
-        minWidth: "76px",
-        padding: "0 15px",
-        fontSize: "12px",
-      },
-    },
-  };
-});
+import { mockALinkAndOpen } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 
 export interface Tab {
   key: string | any;
@@ -47,6 +21,7 @@ export interface TabPanelProps {
   activeWithSearch?: boolean;
   bg0?: string;
   bg1?: string;
+  size?: "small" | "large" | "medium";
 }
 
 export function TabPanel({
@@ -59,9 +34,9 @@ export function TabPanel({
   fontSize = "14px",
   bg0,
   bg1,
+  size,
 }: TabPanelProps) {
-  const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const location = useLocation();
 
@@ -106,7 +81,7 @@ export function TabPanel({
           display: "grid",
           width: fullWidth ? "100%" : "auto",
           backgroundColor: bg0 ?? theme.colors.darkLevel1,
-          borderRadius: "15px",
+          borderRadius: size === "small" ? "8px" : "15px",
           padding: "4px",
           gridTemplateColumns: fullWidth ? `repeat(${tabs.length}, 1fr)` : `repeat(${tabs.length}, auto)`,
         }}
@@ -114,18 +89,34 @@ export function TabPanel({
         {tabs.map((tab) => (
           <Box
             key={tab.key}
-            className={`${classes.switchButton}${fontNormal ? " fontNormal" : ""}${isActive(tab) ? " active" : ""}`}
+            className={`${fontNormal ? " fontNormal" : ""} ${isActive(tab) ? "active" : ""}`}
             onClick={() => loadPage(tab)}
             sx={{
               fontSize,
+              minWidth: size === "small" ? "auto" : "90px",
+              padding: size === "small" ? "0 12px" : "0 20px",
+              height: size === "small" ? "32px" : "45px",
+              color: theme.themeOption.textSecondary,
+              cursor: "pointer",
+              borderRadius: size === "small" ? "6px" : "12px",
+              fontWeight: 600,
               "&.active": {
+                color: theme.themeOption.textPrimary,
                 background: bg1 ?? theme.colors.darkLevel3,
+              },
+              "&.fontNormal": {
+                fontWeight: 400,
+              },
+              "@media (max-width: 640px)": {
+                minWidth: size === "small" ? "auto" : "76px",
+                padding: size === "small" ? "0 12px" : "0 15px",
+                fontSize: "12px",
               },
             }}
           >
-            <Grid container justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
+            <Flex justify="center" sx={{ height: "100%" }}>
               {tab.value}
-            </Grid>
+            </Flex>
           </Box>
         ))}
       </Box>

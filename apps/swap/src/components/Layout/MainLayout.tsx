@@ -19,23 +19,23 @@ const useStyles = makeStyles((theme: Theme) => {
       width: "100%",
       minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
-      padding: "16px",
+      padding: "0 16px",
       borderRadius: "8px",
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       "&.small-padding": {
-        padding: "8px 12px",
+        padding: "0 12px",
       },
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
       [theme.breakpoints.down("md")]: {
-        padding: "16px",
+        padding: "0 16px",
         minHeight: "calc(100vh - 60px)",
       },
       [theme.breakpoints.down("sm")]: {
-        padding: "12px",
+        padding: "0 12px",
         backgroundColor: "transparent",
       },
     },

@@ -5,6 +5,8 @@ export enum ResultStatus {
 
 export type ApiResult<T> = undefined | T;
 
+export type Null = null | undefined;
+
 export type Override<P, S> = Omit<P, keyof S> & S;
 
 export type ActorIdentity = true;

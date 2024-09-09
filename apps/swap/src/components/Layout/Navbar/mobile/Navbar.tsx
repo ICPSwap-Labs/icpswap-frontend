@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { mockALinkAndOpen } from "utils/index";
+import { mockALinkAndOpen } from "@icpswap/utils";
 import { XCircle } from "react-feather";
 import { ReactComponent as Logo } from "assets/images/logo1.svg";
 import { Box, Collapse } from "components/Mui";

@@ -38,6 +38,7 @@ export function DisburseMaturity({
   const handleDisburseMaturity = async () => {
     if (loading || !governance_id || !neuron_id) return;
 
+    setDisburseOpen(false);
     setLoading(true);
     openFullscreenLoading();
 

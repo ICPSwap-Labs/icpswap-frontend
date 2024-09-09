@@ -14,3 +14,4 @@ export * from "./tickList";
 export * from "./getPriceOrderingFromPositionForUI";
 export * from "./format";
 export * from "./invert";
+export * from "./computeSurroundingTicks";

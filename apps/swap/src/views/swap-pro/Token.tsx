@@ -16,6 +16,7 @@ import { Token } from "@icpswap/swap-sdk";
 
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { SwapProContext } from "./context";
+import { LiquidityLocks } from "./LiquidityLocks";
 
 interface TokenTvlProps {
   token: Token | undefined;
@@ -155,25 +156,25 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
             </Card>
           ) : null}
 
-          {moreInformation ? (
-            <Card>
-              <Box sx={{ display: "flex", gap: "0 16px" }}>
-                <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                  <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
-                    <Trans>TVL</Trans>
-                  </Typography>
-                  <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
-                    {totalTVL ?? "--"}
-                  </Typography>
-                </Box>
-                <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
-                  <TokenTvl token={inputToken} tvlUsd={token0UsdTvl} balance={token0Balance} />
-                  <TokenTvl token={outputToken} tvlUsd={token1UsdTvl} balance={token1Balance} />
-                </Box>
+          <Card>
+            <Box sx={{ display: "flex", gap: "0 16px" }}>
+              <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
+                  <Trans>TVL</Trans>
+                </Typography>
+                <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
+                  {totalTVL ?? "--"}
+                </Typography>
               </Box>
-            </Card>
-          ) : null}
+              <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+                <TokenTvl token={inputToken} tvlUsd={token0UsdTvl} balance={token0Balance} />
+                <TokenTvl token={outputToken} tvlUsd={token1UsdTvl} balance={token1Balance} />
+              </Box>
+            </Box>
+          </Card>
+
+          <LiquidityLocks poolId={tradePoolId} />
 
           {moreInformation ? (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>

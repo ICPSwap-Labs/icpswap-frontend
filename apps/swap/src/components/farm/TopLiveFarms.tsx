@@ -1,12 +1,11 @@
-import { Typography, Box } from "components/Mui";
+import { Typography, Box, Theme, useTheme } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
-import { type FarmTvl } from "@icpswap/types";
-import { useIntervalUserFarmInfo, useFarmApr, useUserPositionsValue, useFarmTvlValue } from "hooks/staking-farm";
+import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -16,14 +15,11 @@ import {
   useFarmInitArgs,
   useSwapUserPositions,
   useSwapPoolMetadata,
-  useFarms,
+  useFarmsByState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
-import { useUSDPrice } from "hooks/useUSDPrice";
 import { STATE } from "types/staking-farm";
 
 interface TopLiveFarmCardProps {
-  farmTvl: FarmTvl;
   farmId: string;
 }
 
@@ -55,12 +51,10 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       });
   }, [userAllPositions, farmInitArgs, poolMetadata]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });
-
-  const rewardTokenPrice = useUSDPrice(rewardToken);
 
   const farmTvlValue = useFarmTvlValue({
     token0,
@@ -73,7 +67,6 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   const apr = useFarmApr({
     farmTvlValue,
     rewardToken,
-    rewardTokenPrice,
     rewardMetadata,
     farmInitArgs,
     state: STATE.LIVE,
@@ -88,6 +81,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       level={1}
       padding="20px 16px"
       sx={{
+        minWidth: "273px",
         cursor: "pointer",
       }}
       onClick={handleClick}
@@ -105,8 +99,8 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
         </Typography>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }}>
-        <Box sx={{ width: "100%" }}>
+      <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 8px">
+        <Box sx={{ maxWidth: "123px" }}>
           <Typography fontSize={12}>
             <Trans>Farm</Trans>
           </Typography>
@@ -134,24 +128,38 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           <Typography
             align="right"
             sx={{
+              maxWidth: "108px",
               fontSize: "24px",
               fontWeight: 500,
               color: "text.primary",
               margin: "6px 0 0 0",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={apr ?? ""}
           >
             {apr ?? "--"}
           </Typography>
         </Box>
       </Flex>
 
-      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }}>
-        <Box>
+      <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }} gap="0 8px">
+        <Box sx={{ maxWidth: "150px" }}>
           <Typography fontSize={12}>
             <Trans>Your Available to Stake</Trans>
           </Typography>
           <Flex gap="0 2px" sx={{ margin: "6px 0 0 0" }}>
-            <Typography fontSize={16} color="text.primary">
+            <Typography
+              sx={{
+                color: "text.primary",
+                fontSize: "16px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : ""}
+            >
               {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
             </Typography>
             {userAvailablePositions ? (
@@ -172,7 +180,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
           </Flex>
         </Box>
 
-        <Box>
+        <Box sx={{ maxWidth: "81px" }}>
           <Typography fontSize={12} align="right">
             <Trans>Total Staked</Trans>
           </Typography>
@@ -182,7 +190,11 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
               color: "text.primary",
               margin: "6px 0 0 0",
               textAlign: "right",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
+            title={farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : ""}
           >
             {farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : "--"}
           </Typography>
@@ -192,8 +204,8 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   );
 }
 
-export function TopLiveFarms() {
-  const { result: allLiveFarms, loading } = useFarms("LIVE");
+function MainContent() {
+  const { result: allLiveFarms, loading } = useFarmsByState("LIVE");
 
   const topLiveFarms = useMemo(() => {
     if (!allLiveFarms) return undefined;
@@ -202,7 +214,7 @@ export function TopLiveFarms() {
   }, [allLiveFarms]);
 
   return (
-    <MainCard>
+    <>
       <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
         <Trans>Top Live Farms</Trans>
       </Typography>
@@ -226,18 +238,33 @@ export function TopLiveFarms() {
               display: "grid",
               gap: "0 20px",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              flexWrap: "wrap",
               "@media(max-width: 640px)": {
                 gridTemplateColumns: "1fr",
                 gap: "20px 0",
               },
             }}
           >
-            {topLiveFarms?.map((farm) => (
-              <TopLiveFarmCard key={farm[0].toString()} farmId={farm[0].toString()} farmTvl={farm[1]} />
-            ))}
+            {topLiveFarms?.map((farmId) => <TopLiveFarmCard key={farmId.toString()} farmId={farmId.toString()} />)}
           </Box>
         )}
       </Box>
+    </>
+  );
+}
+
+interface TopLiveFarmsProps {
+  noWrapper?: boolean;
+}
+
+export function TopLiveFarms({ noWrapper = false }: TopLiveFarmsProps) {
+  return noWrapper ? (
+    <Box>
+      <MainContent />
+    </Box>
+  ) : (
+    <MainCard>
+      <MainContent />
     </MainCard>
   );
 }

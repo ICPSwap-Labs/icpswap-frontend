@@ -12,8 +12,7 @@ import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { StakingPoolControllerPoolInfo, STATE, PoolData } from "types/staking-token-v1";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat } from "@icpswap/utils";
-import { getExplorerPrincipalLink } from "utils/index";
+import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
@@ -238,7 +237,7 @@ export default function StakingPoolDetails({
               <Grid item>
                 <Typography color="text.primary">
                   {pool ? (
-                    <Link href={getExplorerPrincipalLink(pool.canisterId)} target="_blank">
+                    <Link href={explorerLink(pool.canisterId)} target="_blank">
                       {pool?.canisterId ? shorten(pool?.canisterId) : "--"}
                     </Link>
                   ) : null}

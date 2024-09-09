@@ -1,7 +1,6 @@
-import { tickToPrice, TICK_SPACINGS, FeeAmount, Token } from "@icpswap/swap-sdk";
+import { tickToPrice, TICK_SPACINGS, FeeAmount, Token, computeSurroundingTicks } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
 import { useMemo } from "react";
-import computeSurroundingTicks from "utils/computeSurroundingTicks";
 import { useLiquidityTicks, useSwapPoolIdByKey } from "hooks/swap/v2/calls";
 import JSBI from "jsbi";
 import BigNumber from "bignumber.js";

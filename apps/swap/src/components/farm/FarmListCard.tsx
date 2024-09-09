@@ -1,16 +1,15 @@
-import { Typography, Box, BoxProps } from "components/Mui";
-import { Flex } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, BoxProps, useTheme } from "components/Mui";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
-import type { FarmTvl } from "@icpswap/types";
 import {
   useIntervalUserFarmInfo,
   useFarmApr,
-  useUserPositionsValue,
   useFarmTvlValue,
   useStateColors,
+  useUserTvlValue,
   useIntervalUserRewardInfo,
 } from "hooks/staking-farm";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -23,23 +22,25 @@ import {
   useFarmState,
   useFarmUserPositions,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { TokenImage } from "components/Image";
+import { TokenImage } from "components/index";
 import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
+import dayjs from "dayjs";
+
+const DAYJS_FORMAT0 = "MMMM D, YYYY";
+const DAYJS_FORMAT1 = "h:mm A";
 
 interface FarmListCardProps {
-  farmTvl: FarmTvl;
   farmId: string;
   wrapperSx?: BoxProps["sx"];
   showState: boolean;
-  filter?: "YOUR" | undefined;
+  your?: boolean;
 }
 
-export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListCardProps) {
+export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCardProps) {
   const principal = useAccountPrincipal();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
@@ -82,7 +83,7 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
       });
   }, [userAllPositions, farmInitArgs, poolMetadata, state]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });
@@ -94,13 +95,13 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
     token1,
     farmId,
   });
+  const userTvlValue = useUserTvlValue({ farmId, token0, token1 });
 
   const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
 
   const apr = useFarmApr({
     farmTvlValue,
     rewardToken,
-    rewardTokenPrice,
     rewardMetadata,
     farmInitArgs,
     state,
@@ -154,7 +155,7 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.apr" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>
@@ -184,11 +185,21 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
                 {userAvailablePositions.length}
               </Typography>
             ) : null}
+
+            {state === "NOT_STARTED" && userFarmInfo ? (
+              <Tooltip
+                tips={`
+                  As soon as the Farm goes live on ${dayjs(Number(userFarmInfo.startTime) * 1000).format(
+                    DAYJS_FORMAT0,
+                  )} at ${dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
+                iconSize="14px"
+              />
+            ) : null}
           </>
         )}
       </Flex>
 
-      {filter ? (
+      {your ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
           <Flex justify="flex-end">
             <Typography variant="body2" sx={{ color: "text.primary" }}>
@@ -212,11 +223,19 @@ export function FarmListCard({ farmId, wrapperSx, filter, showState }: FarmListC
         </Flex>
       ) : null}
 
-      <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
-        </Typography>
-      </Flex>
+      {your ? (
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {userTvlValue ? formatDollarAmount(userTvlValue) : "--"}
+          </Typography>
+        </Flex>
+      ) : (
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" sx={{ color: "text.primary" }}>
+            {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
+          </Typography>
+        </Flex>
+      )}
 
       {showState ? (
         <Flex justify="flex-end" className="row-item">

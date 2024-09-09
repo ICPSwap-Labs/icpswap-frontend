@@ -5,7 +5,7 @@ import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
-import { useActualSwapAmount } from "hooks/swap/index";
+
 import { useAllRoutes } from "./useAllRoutes";
 
 export enum TradeState {
@@ -22,7 +22,7 @@ export function useBestTrade(
   outputCurrency: Token | undefined,
   typedValue: string | undefined,
 ) {
-  const actualSwapValue = useActualSwapAmount(typedValue, inputCurrency);
+  const actualSwapValue = typedValue;
 
   // reload when typeValue is changed
   const { routes, loading: routesLoading, checked } = useAllRoutes(inputCurrency, outputCurrency);

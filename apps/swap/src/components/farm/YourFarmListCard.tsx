@@ -1,15 +1,9 @@
-import { Typography, Box, BoxProps } from "components/Mui";
+import { Typography, Box, BoxProps, useTheme, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
 import { useCallback, useMemo } from "react";
 import { type FarmTvl } from "@icpswap/types";
-import {
-  useIntervalUserFarmInfo,
-  useFarmApr,
-  useUserPositionsValue,
-  useFarmTvlValue,
-  useStateColors,
-} from "hooks/staking-farm";
+import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
+import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -21,8 +15,6 @@ import {
   useSwapPoolMetadata,
   useFarmState,
 } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
-import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
@@ -62,12 +54,10 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
       });
   }, [userAllPositions, farmInitArgs, poolMetadata]);
 
-  const allAvailablePositionValue = useUserPositionsValue({
+  const allAvailablePositionValue = usePositionsValueByInfos({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });
-
-  const rewardTokenPrice = useUSDPrice(rewardToken);
 
   const farmTvlValue = useFarmTvlValue({
     token0,
@@ -82,7 +72,6 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
   const apr = useFarmApr({
     farmTvlValue,
     rewardToken,
-    rewardTokenPrice,
     rewardMetadata,
     farmInitArgs,
     state,
@@ -136,7 +125,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.theme-secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.apr" }}>
           {apr ?? "--"}
         </Typography>
       </Flex>

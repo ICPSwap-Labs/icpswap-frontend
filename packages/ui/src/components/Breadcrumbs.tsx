@@ -15,6 +15,10 @@ export function Breadcrumbs({ prevLabel, currentLabel, prevLink, fontSize = "12p
   const history = useHistory();
 
   const handleClick = () => {
+    if (prevLink === "back") {
+      history.goBack();
+      return;
+    }
     history.push(prevLink);
   };
 

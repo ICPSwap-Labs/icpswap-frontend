@@ -1,7 +1,6 @@
-import { BigintIsh, Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { JSBI } from "utils/index";
+import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { SAFE_INTEGER_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
 
 export function tryParseAmount<T extends Token>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
   if (!value || !currency) {
@@ -13,7 +12,7 @@ export function tryParseAmount<T extends Token>(value?: string, currency?: T): C
       .toFormat({ groupSeparator: "" });
 
     if (typedValueParsed !== "0") {
-      return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed));
+      return CurrencyAmount.fromRawAmount(currency, typedValueParsed);
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -21,15 +20,6 @@ export function tryParseAmount<T extends Token>(value?: string, currency?: T): C
   }
   // necessary for all paths to return a value
   return undefined;
-}
-
-export function toHex(bigintIsh: BigintIsh) {
-  const bigInt = JSBI.BigInt(bigintIsh);
-  let hex = bigInt.toString(16);
-  if (hex.length % 2 !== 0) {
-    hex = `0${hex}`;
-  }
-  return `0x${hex}`;
 }
 
 export function feeAmountToPercentage(feeAmount: number | string): string {
@@ -54,3 +44,5 @@ export function inputNumberCheck(num: string | number): boolean {
 export * from "./maxAmountFormat";
 export * from "./maxAmountSpend";
 export * from "./sortToken";
+export * from "./liquidity";
+export * from "./mint";

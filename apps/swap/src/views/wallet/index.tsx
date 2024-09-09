@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import WalletAccount from "components/Wallet/WalletAccount";
 import TokenList from "components/Wallet/TokenList";
 import NFTList from "components/Wallet/NFTList";
 import WalletContext, { TokenBalance, Page } from "components/Wallet/context";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/ConnectWallet";
+import { Wrapper } from "components/index";
 
 export default function Wallet() {
   const [refreshCounter, setRefreshCounter] = useState<number>(0);
@@ -62,19 +63,17 @@ export default function Wallet() {
         setNoUSDTokens: handleSetNoUSDTokens,
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Box sx={{ width: "100%", maxWidth: "1400px" }}>
-          <WalletAccount />
-          <Box sx={{ margin: "30px 0 0 0" }}>
-            <Box sx={{ display: page === "token" ? "block" : "none" }}>
-              <TokenList />
-            </Box>
-            <Box sx={{ display: page === "nft" ? "block" : "none" }}>
-              <NFTList />
-            </Box>
+      <Wrapper>
+        <WalletAccount />
+        <Box sx={{ margin: "30px 0 0 0" }}>
+          <Box sx={{ display: page === "token" ? "block" : "none" }}>
+            <TokenList />
+          </Box>
+          <Box sx={{ display: page === "nft" ? "block" : "none" }}>
+            <NFTList />
           </Box>
         </Box>
-      </Box>
+      </Wrapper>
     </WalletContext.Provider>
   ) : (
     <ConnectWallet />

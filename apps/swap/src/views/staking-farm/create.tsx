@@ -69,7 +69,6 @@ type Values = {
   startDateTime: Date;
   endDateTime: Date;
   reward?: number;
-  rewardPool: string;
   token0AmountLimit: number;
   token1AmountLimit: number;
   priceInsideLimit: string;
@@ -99,10 +98,12 @@ export default function CreateProject() {
   const handleFieldChange = (value: string | number | Date, field: string) => {
     if (field === "rewardStandard" || field === "rewardToken") {
       if (values.rewardToken && values.rewardStandard) {
-        updateTokenStandard({
-          canisterId: values.rewardToken,
-          standard: values.rewardStandard as TOKEN_STANDARD,
-        });
+        updateTokenStandard([
+          {
+            canisterId: values.rewardToken,
+            standard: values.rewardStandard as TOKEN_STANDARD,
+          },
+        ]);
       }
     }
 
@@ -143,7 +144,6 @@ export default function CreateProject() {
       pool: Principal.fromText(values.pool),
       secondPerCycle: BigInt(values.secondPerCycle),
       rewardAmount: BigInt(formatTokenAmount(values.reward, rewardTokenInfo.decimals).toString()),
-      rewardPool: Principal.fromText(values.rewardPool),
       refunder: Principal.fromText(values.refunder),
       token0AmountLimit: BigInt(formatTokenAmount(values.token0AmountLimit, poolToken0.decimals).toString()),
       token1AmountLimit: BigInt(formatTokenAmount(values.token1AmountLimit, poolToken1.decimals).toString()),
@@ -163,7 +163,6 @@ export default function CreateProject() {
   if (!values.rewardToken) errorMsg = t`Enter the reward token`;
   if (!values.rewardStandard) errorMsg = t`Enter the reward standard`;
   if (!rewardTokenInfo) errorMsg = t`Invalid reward token`;
-  if (!values.rewardPool) errorMsg = t`Enter reward token swap pool id`;
   if (!values.pool) errorMsg = t`Enter the pool`;
   if (!values.refunder) errorMsg = t`Enter the refunder`;
   if (!values.reward) errorMsg = t`Enter the reward`;
@@ -191,12 +190,6 @@ export default function CreateProject() {
                 placeholder={t`Select the reward token standard`}
                 onChange={(value) => handleFieldChange(value, "rewardStandard")}
                 value={values.rewardStandard}
-              />
-              <FilledTextField
-                label="Reward token swap pool id "
-                placeholder={t`Enter reward token swap pool id`}
-                onChange={(value) => handleFieldChange(value, "rewardPool")}
-                value={values.rewardPool}
               />
               <FilledTextField
                 label="Pool id"

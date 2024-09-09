@@ -97,6 +97,7 @@ export default function StakeDetail() {
             <Box
               sx={{
                 width: "548px",
+                padding: "0 0 16px 0",
                 "@media (max-width: 520px)": {
                   width: "100%",
                 },

@@ -3,22 +3,14 @@ import { useTheme } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
-import {
-  formatDollarAmount,
-  formatAmount,
-  mockALinkAndOpen,
-  parseTokenAmount,
-  explorerLink,
-  BigNumber,
-} from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount, explorerLink } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
-import { usePoolLatestTVL } from "@icpswap/hooks";
+import { usePoolLatestTVL, usePoolApr24h } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion } from "@icpswap/ui";
+import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
-import FeeTierLabel from "ui-component/FeeTierLabel";
 import { swapLinkOfPool, addLiquidityLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
@@ -31,6 +23,7 @@ import { useMemo } from "react";
 
 import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
+import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 export default function SwapPoolDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
@@ -45,7 +38,7 @@ export default function SwapPoolDetails() {
   const token0Price = useUSDPrice(pool?.token0Id);
   const token1Price = useUSDPrice(pool?.token1Id);
 
-  const poolTvlUsd = useMemo(() => {
+  const poolTvlUSD = useMemo(() => {
     if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return undefined;
 
     return parseTokenAmount(poolTVLToken1, token1.decimals)
@@ -81,17 +74,7 @@ export default function SwapPoolDetails() {
 
   const { result: cycles } = useSwapPoolCycles(canisterId);
 
-  const apr = useMemo(() => {
-    if (!pool || !poolTvlUsd) return undefined;
-
-    const fee24h = (pool.volumeUSD * 3) / 1000;
-
-    return `${new BigNumber(fee24h)
-      .dividedBy(poolTvlUsd)
-      .multipliedBy(360 * 0.8)
-      .multipliedBy(100)
-      .toFixed(2)}%`;
-  }, [poolTvlUsd, pool]);
+  const apr = usePoolApr24h({ volumeUSD: pool?.volumeUSD, poolTvlUSD });
 
   return (
     <Wrapper>
@@ -113,7 +96,7 @@ export default function SwapPoolDetails() {
               <Typography color="text.primary" sx={{ margin: "0 8px 0 8px" }} fontWeight={500}>
                 {pool?.token0Symbol} / {pool?.token1Symbol}
               </Typography>
-              <FeeTierLabel feeTier={pool?.feeTier} />
+              <FeeTierPercentLabel feeTier={pool?.feeTier} />
             </Grid>
           </Box>
 
@@ -207,22 +190,19 @@ export default function SwapPoolDetails() {
                   <Trans>Total Tokens Locked</Trans>
                 </Typography>
 
-                <Grid container alignItems="center">
-                  <Grid item xs>
-                    <Grid container alignItems="center">
-                      <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
+                <Flex justify="space-between">
+                  <Flex gap="0 8px">
+                    <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
 
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        color="text.primary"
-                      >
-                        {token0?.symbol}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                      }}
+                      color="text.primary"
+                    >
+                      {token0?.symbol}
+                    </Typography>
+                  </Flex>
 
                   <Typography
                     sx={{
@@ -232,24 +212,21 @@ export default function SwapPoolDetails() {
                   >
                     {formatAmount(parseTokenAmount(poolTVLToken0, token0?.decimals).toNumber())}
                   </Typography>
-                </Grid>
+                </Flex>
 
-                <Grid container alignItems="center">
-                  <Grid item xs>
-                    <Grid container alignItems="center">
-                      <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
+                <Flex justify="space-between">
+                  <Flex gap="0 8px">
+                    <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
 
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        color="text.primary"
-                      >
-                        {token1?.symbol}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                      }}
+                      color="text.primary"
+                    >
+                      {token1?.symbol}
+                    </Typography>
+                  </Flex>
 
                   <Typography
                     sx={{
@@ -259,8 +236,12 @@ export default function SwapPoolDetails() {
                   >
                     {formatAmount(parseTokenAmount(poolTVLToken1, token1?.decimals).toNumber())}
                   </Typography>
-                </Grid>
+                </Flex>
               </GridAutoRows>
+
+              <Box sx={{ width: "100%", height: "1px", margin: "20px 0 ", background: theme.colors.border1 }} />
+
+              <LiquidityLocksWrapper poolId={canisterId} />
             </MainCard>
 
             <Box
@@ -281,7 +262,7 @@ export default function SwapPoolDetails() {
                     fontSize: "24px",
                   }}
                 >
-                  {poolTvlUsd ? formatDollarAmount(poolTvlUsd) : "--"}
+                  {poolTvlUSD ? formatDollarAmount(poolTvlUSD) : "--"}
                 </Typography>
 
                 <Proportion value={latestTVL?.tvlUSDChange} />

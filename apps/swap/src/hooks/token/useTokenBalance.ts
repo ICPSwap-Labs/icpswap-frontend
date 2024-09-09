@@ -175,3 +175,32 @@ export function useCurrencyBalance(
     };
   }, [loading, storeResult, currency]);
 }
+
+export function useStoreTokenBalance(
+  account: string | Principal | undefined,
+  token: Token | undefined,
+  refresh?: boolean | number,
+) {
+  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
+
+  const { loading, result } = useTokenBalance(token?.address, account, refresh);
+
+  useEffect(() => {
+    if (result) {
+      setStoreResult(result);
+    }
+  }, [result]);
+
+  return useMemo(() => {
+    if (!token || !storeResult || loading || isNaN(storeResult.toNumber()))
+      return {
+        loading,
+        result: storeResult && token ? storeResult : undefined,
+      };
+
+    return {
+      loading,
+      result: storeResult,
+    };
+  }, [loading, storeResult, token]);
+}

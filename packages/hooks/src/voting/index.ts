@@ -1,7 +1,9 @@
 import { useCallback } from "react";
 import { isAvailablePageArgs, availableArgsNull, resultFormat } from "@icpswap/utils";
 import { votingCanister, votingController, votingFile } from "@icpswap/actor";
-import type { ActorIdentity, PaginationResult ,
+import type {
+  ActorIdentity,
+  PaginationResult,
   ProjectInfo,
   ProposalInfo,
   UserVotePowersInfo,

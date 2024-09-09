@@ -18,7 +18,6 @@ import type { PaginationResult, SwapPoolData, UserStorageTransaction } from "@ic
 import BigNumber from "bignumber.js";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
-import { Identity } from "types/global";
 import { Principal } from "@dfinity/principal";
 import { useStateCallsData } from "hooks/useCallsData";
 import { sortToken } from "utils/swap";
@@ -47,13 +46,7 @@ export async function getPool_update_call(token0: string, token1: string, fee: F
   ).data;
 }
 
-export async function createPool(
-  identity: Identity,
-  token0: string,
-  token1: string,
-  fee: FeeAmount,
-  sqrtPriceX96: string,
-) {
+export async function createPool(token0: string, token1: string, fee: FeeAmount, sqrtPriceX96: string) {
   let _token0 = token0;
   let _token1 = token1;
 
@@ -62,7 +55,7 @@ export async function createPool(
     _token1 = token0;
   }
 
-  return await createSwapPool(identity, {
+  return await createSwapPool({
     fee: BigInt(fee),
     token0: getSwapTokenArgs(_token0),
     token1: getSwapTokenArgs(_token1),

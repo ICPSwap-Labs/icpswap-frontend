@@ -10,6 +10,7 @@ import { TokenCacheState } from "./token/cache/states";
 import { LoadingState } from "./loadingReducer";
 import { CallState } from "./call/states";
 import { SnackbarState } from "./snackbarReducer";
+import { SnsState } from "./sns/states";
 
 export interface AllState {
   global: GlobalState;
@@ -17,13 +18,14 @@ export interface AllState {
   loading: LoadingState;
   call: CallState;
   snackbar: SnackbarState;
+  sns: SnsState;
 }
 
 const rootPersistConfig = {
   key: "root",
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ["global", "loading", "snackbar", "swap", "token"],
+  blacklist: ["global", "loading", "snackbar", "swap", "token", "sns"],
   migrate: (state: any) => {
     let newState = { _persist: state?._persist ?? {} };
 

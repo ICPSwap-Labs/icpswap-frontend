@@ -8,11 +8,11 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import { t } from "@lingui/macro";
-import { useActualSwapAmount } from "hooks/swap/index";
+import { getTokenInsufficient } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
 import { useParsedQueryString, useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
-import { isValidPrincipal, BigNumber, parseTokenAmount, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 
 import {
@@ -88,12 +88,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     [SWAP_FIELD.OUTPUT]: { currencyId: outputCurrencyId },
   } = useSwapState();
 
-  const [inputCurrencyState, inputCurrency] = useToken(inputCurrencyId);
+  const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
   const [outputCurrencyState, outputCurrency] = useToken(outputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
-  const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputCurrency, refresh);
+  const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputToken, refresh);
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputCurrency, refresh);
 
   const currencyBalances = {
@@ -101,16 +101,14 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
   };
 
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined);
+  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputCurrency) ?? undefined);
 
   const currencies = {
-    [SWAP_FIELD.INPUT]: inputCurrency ?? undefined,
+    [SWAP_FIELD.INPUT]: inputToken ?? undefined,
     [SWAP_FIELD.OUTPUT]: outputCurrency ?? undefined,
   };
 
-  const actualSwapValue = useActualSwapAmount(typedValue, isExactIn ? inputCurrency : outputCurrency);
-
-  const otherCurrency = (isExactIn ? outputCurrency : inputCurrency) ?? undefined;
+  const otherCurrency = (isExactIn ? outputCurrency : inputToken) ?? undefined;
 
   const [debouncedTypedValue] = useDebounce(
     useMemo(() => [typedValue, otherCurrency], [typedValue, otherCurrency]),
@@ -118,9 +116,9 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   );
 
   const Trade = useBestTrade(
-    inputCurrency,
+    inputToken,
     outputCurrency,
-    !actualSwapValue || actualSwapValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
+    !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
   const poolId = useMemo(() => Trade?.tradePoolId, [Trade]);
@@ -128,70 +126,39 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
   const { result: subAccountTokenBalance } = useTokenBalance({
-    canisterId: inputCurrency?.address,
+    canisterId: inputToken?.address,
     address: poolId,
     sub,
     refresh,
   });
   const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const swapTokenUnusedBalance = useMemo(() => {
-    if (!poolId || !unusedBalance || !inputCurrency) return undefined;
+    if (!poolId || !unusedBalance || !inputToken) return undefined;
 
     const pool = Trade.routes[0].pools[0];
 
-    return pool.token0.address === inputCurrency.address ? unusedBalance.balance0 : unusedBalance.balance1;
-  }, [Trade, inputCurrency, unusedBalance]);
+    return pool.token0.address === inputToken.address ? unusedBalance.balance0 : unusedBalance.balance1;
+  }, [Trade, inputToken, unusedBalance]);
 
-  let inputError: null | string = null;
+  const tokenInsufficient = getTokenInsufficient({
+    token: inputToken,
+    subAccountBalance: subAccountTokenBalance,
+    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals),
+    formatTokenAmount: formatTokenAmount(typedValue, inputToken?.decimals).toString(),
+    unusedBalance: swapTokenUnusedBalance,
+  });
 
-  if (inputNumberCheck(typedValue) === false) {
-    inputError = inputError ?? t`Amount exceeds limit`;
-  }
+  const inputError = useMemo(() => {
+    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) return t`Select a token`;
+    if (!parsedAmount) return t`Enter an amount`;
+    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (!subAccountTokenBalance || isNullArgs(swapTokenUnusedBalance)) return t`Swap`;
+    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
+    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
 
-  if (!parsedAmount) {
-    inputError = inputError ?? t`Enter an amount`;
-  }
-
-  if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) {
-    inputError = inputError ?? t`Select a token`;
-  }
-
-  const [balanceIn, amountIn] = [
-    currencyBalances[SWAP_FIELD.INPUT],
-    userSlippageTolerance ? Trade?.trade?.maximumAmountIn(userSlippageTolerance) : undefined,
-  ];
-
-  if (!subAccountTokenBalance || isNullArgs(swapTokenUnusedBalance)) {
-    inputError = inputError ?? `Swap`;
-  }
-
-  if (
-    balanceIn &&
-    amountIn &&
-    subAccountTokenBalance &&
-    swapTokenUnusedBalance &&
-    new BigNumber(subAccountTokenBalance)
-      .plus(swapTokenUnusedBalance.toString())
-      .plus(formatTokenAmount(balanceIn.toExact(), amountIn.currency.decimals))
-      .isLessThan(
-        formatTokenAmount(
-          new BigNumber(amountIn.toExact()).plus(
-            parseTokenAmount(amountIn.currency.transFee, amountIn.currency.decimals),
-          ),
-          amountIn.currency.decimals,
-        ),
-      )
-  ) {
-    inputError = inputError ?? `Insufficient ${amountIn.currency.symbol} balance`;
-  }
-
-  if (!actualSwapValue || actualSwapValue === "0") {
-    inputError = inputError ?? t`Amount should large than trans fee`;
-  }
-
-  if (typeof Trade.available === "boolean" && !Trade.available) {
-    inputError = inputError ?? t`This pool is not available now`;
-  }
+    return null;
+  }, [typedValue, parsedAmount, currencies, subAccountTokenBalance, swapTokenUnusedBalance, Trade, tokenInsufficient]);
 
   return {
     currencies,
@@ -204,13 +171,13 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     routes: Trade?.routes,
     currencyBalances,
     userSlippageTolerance,
-    inputCurrency,
+    inputToken,
     outputCurrency,
     inputCurrencyState,
     outputCurrencyState,
-    actualSwapValue,
     swapTokenUnusedBalance,
     subAccountTokenBalance,
+    inputTokenBalance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals),
   };
 }
 

@@ -1,4 +1,4 @@
-import { makeStyles, useTheme, Box, Grid, Typography, Chip } from "components/Mui";
+import { makeStyles, useTheme, Box, Grid, Typography, Theme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import LockIcon from "assets/images/swap/Lock";
 import { NumberTextField, TokenImage, MaxButton } from "components/index";
@@ -6,12 +6,13 @@ import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { isDarkTheme } from "utils";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Flex } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
     box: {
       position: "relative",
+      width: "100%",
       borderRadius: `${theme.radius}px`,
       backgroundColor: theme.palette.background.level3,
       border: theme.palette.border.gray200,
@@ -21,7 +22,6 @@ const useStyle = makeStyles((theme: Theme) => {
         textAlign: "right",
         fontSize: "20px!important",
         fontWeight: 700,
-        // color: theme.textPrimary,
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },
@@ -38,7 +38,7 @@ const useStyle = makeStyles((theme: Theme) => {
       padding: "0 10px",
       height: "44px",
       backgroundColor: isDarkTheme(theme) ? theme.palette.background.level2 : theme.colors.lightGray200,
-      borderRadius: `${theme.radius}px`,
+      borderRadius: `12px`,
       "& .MuiChip-label": {
         paddingLeft: "18px",
       },
@@ -108,7 +108,7 @@ export interface SwapDepositAmountProps {
   currencyBalance: CurrencyAmount<Token> | undefined;
 }
 
-export default function SwapDepositAmount({
+export function SwapDepositAmount({
   currency,
   value,
   locked = false,
@@ -125,11 +125,18 @@ export default function SwapDepositAmount({
   return (
     <Box sx={{ p: 2 }} className={classes.box}>
       <Grid container alignItems="center">
-        <Chip
-          className={classes.chip}
-          label={currency?.symbol}
-          avatar={<TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} />}
-        />
+        <Flex gap="0 8px" className={classes.chip}>
+          <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} />
+          <Typography
+            sx={{
+              color: "text.primary",
+              fontSize: "16px",
+            }}
+          >
+            {currency?.symbol}
+          </Typography>
+        </Flex>
+
         <Grid item xs>
           <NumberTextField
             value={value}
@@ -149,6 +156,7 @@ export default function SwapDepositAmount({
           />
         </Grid>
       </Grid>
+
       <Grid container mt={1} gap="0 4px" alignItems="center">
         <Typography>
           <Trans>Balance:</Trans> {currency ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}

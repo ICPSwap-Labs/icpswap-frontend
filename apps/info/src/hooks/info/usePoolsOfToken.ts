@@ -1,16 +1,10 @@
 import { getInfoPool, getInfoPoolStorageIds, usePoolsForToken, getPromisesAwait } from "@icpswap/hooks";
 import { useState, useMemo, useEffect } from "react";
-import { Override } from "@icpswap/types";
-import type { PublicPoolOverView } from "types/analytic";
-
-export type PoolData = Override<
-  PublicPoolOverView,
-  { tvlUSD: number; feeTier: bigint; volumeUSD: number; totalVolumeUSD: number; volume7D: number }
->;
+import type { PublicPoolOverView, InfoPublicPoolWithTvl } from "@icpswap/types";
 
 export function usePoolsOfToken(canisterId: string | undefined) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [pools, setPools] = useState<PoolData[]>([]);
+  const [pools, setPools] = useState<InfoPublicPoolWithTvl[]>([]);
 
   const { result: poolsOfToken, loading: poolsOfTokenLoading } = usePoolsForToken(canisterId);
 
@@ -49,7 +43,7 @@ export function usePoolsOfToken(canisterId: string | undefined) {
             volume7D: poolInfo.volumeUSD7d,
           };
         })
-        .filter((pool) => !!pool) as PoolData[];
+        .filter((pool) => !!pool) as InfoPublicPoolWithTvl[];
 
       setPools(pools);
 
@@ -64,7 +58,7 @@ export function usePoolsOfToken(canisterId: string | undefined) {
 
 export function usePoolsDataOfTokenByPools(poolsOfToken: PublicPoolOverView[] | undefined) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [pools, setPools] = useState<PoolData[]>([]);
+  const [pools, setPools] = useState<InfoPublicPoolWithTvl[]>([]);
 
   const fetch_info_of_pool = async (pool: PublicPoolOverView) => {
     const storageIds = await getInfoPoolStorageIds(pool.pool);
@@ -100,7 +94,7 @@ export function usePoolsDataOfTokenByPools(poolsOfToken: PublicPoolOverView[] | 
             volume7D: poolInfo.volumeUSD7d,
           };
         })
-        .filter((pool) => !!pool) as PoolData[];
+        .filter((pool) => !!pool) as InfoPublicPoolWithTvl[];
 
       setPools(pools);
 

@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { UserPosition } from "types/swap";
 import { useStoreUserPositionPools } from "store/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { isNullArgs } from "@icpswap/utils";
+
 import { getUserPositionIds } from "./useUserPositionIds";
 
 type UserPositions = {
@@ -10,57 +12,59 @@ type UserPositions = {
   poolId: string;
 };
 
-export function useUserAllPositions(refresh?: number) {
-  const [loading, setLoading] = useState(true);
-  const [positions, setPositions] = useState<UserPosition[]>([]);
+export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refresh?: number) {
+  const [loading, setLoading] = useState(false);
+  const [positions, setPositions] = useState<UserPosition[] | undefined>(undefined);
 
   const principal = useAccountPrincipal();
 
-  const userPositionPools = useStoreUserPositionPools();
-
   useEffect(() => {
     async function call() {
-      if (userPositionPools && !!principal) {
-        if (userPositionPools.length === 0) {
-          setLoading(false);
-          setPositions([]);
-        } else {
-          const userPositionsResult = (
-            await Promise.all(
-              userPositionPools.map(async (poolId: string) => {
-                return await getUserPositionIds(poolId, principal.toString());
-              }),
-            )
-          )
-            .map((positions, index) => (positions ? { positions, poolId: userPositionPools[index] } : undefined))
-            .filter((ele) => !!ele) as UserPositions[];
-
-          const positions = await Promise.all(
-            userPositionsResult
-              .reduce(
-                (prev, curr) => {
-                  return prev.concat(curr.positions.map((index) => [curr.poolId, index]));
-                },
-                [] as [string, bigint][],
-              )
-              .map(async ([canisterId, index]) => {
-                const position = await getSwapPosition(canisterId, index);
-                return { ...position, id: canisterId, index: Number(index) };
-              }),
-          );
-
-          setPositions(positions.filter((position) => !!position) as UserPosition[]);
-          setLoading(false);
-        }
-      } else if (!principal) {
+      if (isNullArgs(poolIds) || isNullArgs(principal)) return;
+      if (poolIds.length === 0) {
         setPositions([]);
+        return;
       }
+
+      setLoading(true);
+
+      const userPositionsResult = (
+        await Promise.all(
+          poolIds.map(async (poolId: string) => {
+            return await getUserPositionIds(poolId, principal.toString());
+          }),
+        )
+      )
+        .map((positions, index) => (positions ? { positions, poolId: poolIds[index] } : undefined))
+        .filter((ele) => !!ele) as UserPositions[];
+
+      const positions = await Promise.all(
+        userPositionsResult
+          .reduce(
+            (prev, curr) => {
+              return prev.concat(curr.positions.map((index) => [curr.poolId, index]));
+            },
+            [] as [string, bigint][],
+          )
+          .map(async ([canisterId, index]) => {
+            const position = await getSwapPosition(canisterId, index);
+            return { ...position, id: canisterId, index: Number(index) };
+          }),
+      );
+
+      setPositions(positions.filter((position) => !!position) as UserPosition[]);
+      setLoading(false);
     }
 
     call();
-  }, [userPositionPools, principal, refresh]);
+  }, [poolIds, principal, refresh]);
 
   return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+}
+
+export function useUserAllPositions(refresh?: number) {
+  const userPositionPools = useStoreUserPositionPools();
+  return useUserAllPositionsByPoolIds(userPositionPools, refresh);
 }
 
 export function useUserPoolPositions(poolId: string | undefined, refresh?: number) {

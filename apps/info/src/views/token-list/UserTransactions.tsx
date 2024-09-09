@@ -17,7 +17,7 @@ import TransferDetail from "ui-component/transfer-detail";
 import {
   Pagination,
   Copy,
-  StaticLoading,
+  ImageLoading,
   NoData,
   PaginationType,
   MainCard,
@@ -189,7 +189,7 @@ export function TransactionsMain({
           </Table>
           {list.length === 0 && !loading ? <NoData /> : null}
         </TableContainer>
-        <StaticLoading loading={loading} />
+        <ImageLoading loading={loading} />
       </Box>
       {list.length ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />

@@ -1,12 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import {
-  updateXDR2USD,
-  updateICPPriceList,
-  updateUserLocale,
-  updateTokenList,
-  updatePoolStandardInitialed,
-  updateAllSwapTokens,
-} from "./actions";
+import { updateXDR2USD, updateICPPriceList, updateUserLocale, updateTokenList, updateAllSwapTokens } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
@@ -22,9 +15,6 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateTokenList, (state, { payload }) => {
       state.tokenList = payload;
-    })
-    .addCase(updatePoolStandardInitialed, (state, { payload }) => {
-      state.poolStandardUpdated = payload;
     })
     .addCase(updateAllSwapTokens, (state, { payload }) => {
       state.allSwapTokens = payload;

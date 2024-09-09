@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
@@ -33,6 +34,7 @@ import Routes from "./routes";
 initGoogleAnalytics();
 
 export default function App() {
+  const [refreshTriggers, setRefreshTriggers] = useState<{ [key: string]: number }>({});
   const customization = useAppSelector((state) => state.customization);
 
   useFetchXDR2USD();
@@ -51,6 +53,13 @@ export default function App() {
 
   const queryClient = new QueryClient();
 
+  const handleRefreshTriggers = useCallback(
+    (key: string) => {
+      setRefreshTriggers({ ...refreshTriggers, [key]: (refreshTriggers[key] ?? 0) + 1 });
+    },
+    [refreshTriggers, setRefreshTriggers],
+  );
+
   return (
     <DisableIframe>
       <WagmiProvider config={wagmiConfig}>
@@ -61,7 +70,9 @@ export default function App() {
               <TransactionsUpdater />
               <ThemeProvider theme={theme(customization)}>
                 <SnackbarProvider maxSnack={100}>
-                  <GlobalContext.Provider value={{ AllPools }}>
+                  <GlobalContext.Provider
+                    value={{ AllPools, refreshTriggers, setRefreshTriggers: handleRefreshTriggers }}
+                  >
                     <ActorInitial>
                       <CssBaseline />
                       <NavigationScroll>

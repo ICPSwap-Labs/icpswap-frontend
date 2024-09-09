@@ -26,12 +26,12 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export interface StaticLoadingProps {
+export interface ImageLoadingProps {
   loading: boolean;
   mask?: boolean;
 }
 
-export default ({ loading, mask = false }: StaticLoadingProps) => {
+export default ({ loading, mask = false }: ImageLoadingProps) => {
   const classes = useStyles();
 
   return loading ? (

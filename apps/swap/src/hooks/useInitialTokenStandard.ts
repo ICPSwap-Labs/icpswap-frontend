@@ -37,35 +37,39 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         getAllTokenPools().catch(() => undefined),
         getAllClaimEvents().catch(() => undefined),
       ]).then(([allSwapPools, allTokenPools, allClaimEvents]) => {
+        const allTokenStandards: { canisterId: string; standard: TOKEN_STANDARD }[] = [];
+
         allTokenPools?.forEach((pool) => {
-          updateTokenStandard({
+          allTokenStandards.push({
             canisterId: pool.stakingToken.address,
             standard: pool.stakingToken.standard as TOKEN_STANDARD,
           });
 
-          updateTokenStandard({
+          allTokenStandards.push({
             canisterId: pool.rewardToken.address,
             standard: pool.rewardToken.standard as TOKEN_STANDARD,
           });
         });
 
         allClaimEvents?.forEach((event) => {
-          updateTokenStandard({
+          allTokenStandards.push({
             canisterId: event.tokenCid,
             standard: event.tokenStandard as TOKEN_STANDARD,
           });
         });
 
         allSwapPools?.forEach((pool) => {
-          updateTokenStandard({
+          allTokenStandards.push({
             canisterId: pool.token0.address,
             standard: pool.token0.standard as TOKEN_STANDARD,
           });
 
-          updateTokenStandard({
+          allTokenStandards.push({
             canisterId: pool.token1.address,
             standard: pool.token1.standard as TOKEN_STANDARD,
           });
+
+          registerTokens(allTokenStandards);
 
           setAllPools(allSwapPools);
 
@@ -94,12 +98,15 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
   useEffect(() => {
     if (globalTokenList && globalTokenList.length > 0) {
-      globalTokenList.forEach((token) => {
-        updateTokenStandard({
+      const allTokenStandards = globalTokenList.map((token) => {
+        return {
           canisterId: token.canisterId,
           standard: token.standard as TOKEN_STANDARD,
-        });
+        };
       });
+
+      updateTokenStandard(allTokenStandards);
+
       setTokensLoading(false);
 
       updateCanisters(globalTokenList.map((ele) => ele.canisterId));
@@ -111,26 +118,33 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
   useEffect(() => {
     if (network === NETWORK.IC) {
       Tokens.forEach((token) => {
-        updateTokenStandard({
-          canisterId: token.address,
-          standard: token.standard as TOKEN_STANDARD,
-        });
+        updateTokenStandard([
+          {
+            canisterId: token.address,
+            standard: token.standard as TOKEN_STANDARD,
+          },
+        ]);
       });
 
       updateCanisters(Tokens.map((ele) => ele.address));
     }
 
-    registerTokens({ canisterIds: [WRAPPED_ICP.address], standard: WRAPPED_ICP.standard as TOKEN_STANDARD });
-    registerTokens({ canisterIds: [ICP.address], standard: ICP.standard as TOKEN_STANDARD });
+    registerTokens([
+      { canisterId: WRAPPED_ICP.address, standard: WRAPPED_ICP.standard as TOKEN_STANDARD },
+      { canisterId: ICP.address, standard: ICP.standard as TOKEN_STANDARD },
+    ]);
   }, []);
 
   // All token's standards, includes the local cached tokens
   const tokenStandards = useTokenStandards();
   useEffect(() => {
     if (tokenStandards) {
-      Object.keys(tokenStandards).forEach((key) => {
-        registerTokens({ canisterIds: [key], standard: tokenStandards[key] });
-      });
+      const allStandards = Object.keys(tokenStandards).map((key) => ({
+        canisterId: key,
+        standard: tokenStandards[key],
+      }));
+
+      registerTokens(allStandards);
     }
   }, [tokenStandards]);
 

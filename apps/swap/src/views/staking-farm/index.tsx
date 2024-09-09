@@ -1,15 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
-import { Grid, Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { NoData, MainCard, Flex } from "components/index";
+import { NoData, MainCard, Flex, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { useHistory } from "react-router-dom";
 import { LoadingRow } from "@icpswap/ui";
-import { FarmListCard, GlobalData, TopLiveFarms, FarmListHeader, YourFarmListHeader } from "components/farm/index";
+import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
+import { SelectToken } from "components/Select/SelectToken";
+import { SelectPair } from "components/Select/SelectPair";
+import { Null } from "@icpswap/types";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import FarmContext from "./context";
 
@@ -24,11 +28,15 @@ const Tabs = [
 function MainContent() {
   const theme = useTheme() as Theme;
   const history = useHistory();
+  const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;
   };
+
+  const [filterPair, setFilterPair] = useState<string | Null>(null);
+  const [filterToken, setFilterToken] = useState<string | Null>(null);
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
 
@@ -49,7 +57,22 @@ function MainContent() {
     }
   }, [__state]);
 
-  const { result: farms, loading } = useFarms({ state, filter: __state });
+  const your = useMemo(() => {
+    return __state === FilterState.YOUR;
+  }, [__state, FilterState]);
+
+  const filterUser = useMemo(() => {
+    if (your) return principal?.toString();
+    return null;
+  }, [your, principal]);
+
+  const { result: farms, loading } = useFarms({
+    state,
+    filter: __state,
+    pair: filterPair,
+    token: filterToken,
+    user: filterUser,
+  });
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
     history.push(`/farm?state=${value.state}`);
@@ -83,11 +106,19 @@ function MainContent() {
           : "220px 220px 100px 240px 180px"
         : state === undefined
         ? __state === FilterState.YOUR
-          ? "180px 180px 80px 1fr 1fr 1fr 100px"
+          ? "180px 180px 80px 1fr 1fr 1fr 120px"
           : "220px 220px 120px 1fr 1fr 180px"
         : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);
+
+  const handlePairChange = (pairId: string | undefined) => {
+    setFilterPair(pairId);
+  };
+
+  const handleTokenChange = (tokenId: string | undefined) => {
+    setFilterToken(tokenId);
+  };
 
   return (
     <FarmContext.Provider
@@ -105,15 +136,15 @@ function MainContent() {
           },
         }}
       >
-        <Grid
-          container
-          justifyContent="space-between"
+        <Flex
+          justify="space-between"
           sx={{
             padding: "24px",
             "@media (max-width:640px)": {
               flexDirection: "column",
               gap: "24px 0",
               padding: "16px",
+              alignItems: "flex-start",
             },
           }}
         >
@@ -145,12 +176,119 @@ function MainContent() {
               </Typography>
             ))}
           </Box>
-        </Grid>
+
+          <Flex
+            justify="flex-end"
+            sx={{
+              flex: 1,
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "16px 0",
+                alignItems: "flex-start",
+              },
+            }}
+            gap="0 20px"
+          >
+            <Flex sx={{ width: "fit-content" }} gap="0 4px">
+              <Typography>
+                <Trans>Select a Pair:</Trans>
+              </Typography>
+
+              <SelectPair
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Pair</Trans>
+                  </Typography>
+                }
+                onPairChange={handlePairChange}
+              />
+            </Flex>
+
+            <Flex sx={{ width: "fit-content" }} gap="0 4px">
+              <Typography>
+                <Trans>Reward Token: </Trans>
+              </Typography>
+
+              <SelectToken
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Token</Trans>
+                  </Typography>
+                }
+                onTokenChange={handleTokenChange}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          {__state === FilterState.YOUR ? <YourFarmListHeader /> : <FarmListHeader state={state} />}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns,
+              "& .row-item": {
+                padding: "16px 0",
+                "&:first-of-type": {
+                  padding: "16px 0 16px 24px",
+                },
+                "&:last-of-type": {
+                  padding: "16px 24px 16px 0",
+                },
+              },
+            }}
+          >
+            <Typography variant="body2" color="text.400" className="row-item">
+              <Trans>Staked Position</Trans>
+            </Typography>
+            <Typography variant="body2" color="text.400" className="row-item">
+              <Trans>Reward Token</Trans>
+            </Typography>
+            <Flex justify="flex-end" className="row-item">
+              <Typography variant="body2" color="text.400">
+                <Trans>APR</Trans>
+              </Typography>
+            </Flex>
+            <Flex justify="flex-end" className="row-item">
+              <Typography variant="body2" color="text.400">
+                <Trans>Your Available to Stake</Trans>
+              </Typography>
+            </Flex>
+            {your ? (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Your Rewards</Trans>
+                </Typography>
+              </Flex>
+            ) : null}
+            {your ? (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Your Staked</Trans>
+                </Typography>
+              </Flex>
+            ) : (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Total Staked</Trans>
+                </Typography>
+              </Flex>
+            )}
+            {showState ? (
+              <Flex justify="flex-end" className="row-item">
+                <Typography variant="body2" color="text.400">
+                  <Trans>Status</Trans>
+                </Typography>
+              </Flex>
+            ) : null}
+          </Box>
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>
@@ -169,17 +307,16 @@ function MainContent() {
             <>
               {(unStakedFarms.length === farms?.length || !farms?.length) && !loading && <NoData />}
 
-              {farms?.map((farm) => (
+              {farms?.map((farmId) => (
                 <FarmListCard
-                  key={farm[0].toString()}
-                  farmId={farm[0].toString()}
-                  farmTvl={farm[1]}
+                  key={farmId.toString()}
+                  farmId={farmId.toString()}
                   wrapperSx={{
                     display: "grid",
                     gridTemplateColumns,
                   }}
                   showState={showState}
-                  filter={__state === FilterState.YOUR ? "YOUR" : undefined}
+                  your={your}
                 />
               ))}
             </>
@@ -192,43 +329,41 @@ function MainContent() {
 
 export default function Farms() {
   return (
-    <Flex sx={{ width: "100%" }} justify="center">
-      <Box sx={{ maxWidth: "1200px", width: "100%" }}>
-        <Box>
-          <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600, margin: "32px 0 0 0" }}>
-            <Trans>Farm</Trans>
-          </Typography>
-          <Typography fontSize={16} mt="16px">
-            <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            margin: "44px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "20px 0 0 0",
-            },
-          }}
-        >
-          <GlobalData />
-        </Box>
-
-        <Box
-          sx={{
-            margin: "58px 0 0 0",
-            "@media(max-width: 640px)": {
-              margin: "40px 0 0 0",
-            },
-          }}
-        >
-          <TopLiveFarms />
-        </Box>
-
-        <Box sx={{ margin: "20px 0 0 0" }}>
-          <MainContent />
-        </Box>
+    <Wrapper>
+      <Box>
+        <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600 }}>
+          <Trans>Farm</Trans>
+        </Typography>
+        <Typography fontSize={16} mt="16px">
+          <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
+        </Typography>
       </Box>
-    </Flex>
+
+      <Box
+        sx={{
+          margin: "44px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "20px 0 0 0",
+          },
+        }}
+      >
+        <GlobalData />
+      </Box>
+
+      <Box
+        sx={{
+          margin: "58px 0 0 0",
+          "@media(max-width: 640px)": {
+            margin: "40px 0 0 0",
+          },
+        }}
+      >
+        <TopLiveFarms />
+      </Box>
+
+      <Box sx={{ margin: "20px 0 0 0" }}>
+        <MainContent />
+      </Box>
+    </Wrapper>
   );
 }

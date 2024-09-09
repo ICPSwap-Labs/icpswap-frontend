@@ -28,10 +28,10 @@ export function useMaxAmountSpend({ currencyAmount, poolId }: UseMaxAmountSpendA
   return useMemo(() => {
     if (!currencyAmount) return undefined;
 
-    // The tokens use transfer to deposit, 1 trans fee is needed
+    // The tokens use transfer to deposit, 2 token fee is needed, 1 for deposit, 1 for token canister
     if (allowanceCanisterId === undefined) {
       return currencyAmount.subtract(
-        CurrencyAmount.fromRawAmount(currencyAmount.currency, currencyAmount.currency.transFee),
+        CurrencyAmount.fromRawAmount(currencyAmount.currency, currencyAmount.currency.transFee * 2),
       );
     }
 

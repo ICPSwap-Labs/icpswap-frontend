@@ -6,15 +6,14 @@ import { Wrapper } from "ui-component/index";
 import { useSwapProtocolData, useTransformedVolumeData } from "@icpswap/hooks";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { GridAutoRows, MainCard, BarChartAlt, LineChartAlt, Tooltip } from "@icpswap/ui";
+import { GridAutoRows, MainCard, BarChartAlt, LineChartAlt, Tooltip, ChartDateButtons } from "@icpswap/ui";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import SwapAnalyticLoading from "ui-component/analytic/Loading";
 import { useHistory } from "react-router-dom";
 import { useChartData } from "hooks/info/useSwapChartData";
-import ChartDateButton from "ui-component/ChartDateButton";
-import { VolumeWindow } from "types/analytic";
+import { VolumeWindow } from "@icpswap/types";
 
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
@@ -220,7 +219,7 @@ export default function SwapOverview() {
                       marginTop: "8px",
                     }}
                   >
-                    <ChartDateButton volume={volumeWindow} onChange={setVolumeWindow} />
+                    <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
                   </Box>
                 }
                 topLeft={

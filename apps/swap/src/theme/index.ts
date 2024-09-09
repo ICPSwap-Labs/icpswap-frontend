@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { DynamicObject } from "types/index";
+
 import { componentStyleOverrides } from "./compStyleOverride";
 import { themePalette } from "./palette";
 import { themeTypography } from "./typography";

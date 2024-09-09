@@ -103,7 +103,7 @@ export default function CreateTokenClaim() {
         return;
       }
 
-      updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
+      updateTokenStandard([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
 
       setTokenId(values.id);
     }

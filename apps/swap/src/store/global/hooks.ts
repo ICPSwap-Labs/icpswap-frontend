@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { AppState } from "store/index";
@@ -12,13 +12,7 @@ import {
 } from "@icpswap/hooks";
 import { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 
-import {
-  updateXDR2USD,
-  updateICPPriceList,
-  updateTokenList,
-  updatePoolStandardInitialed,
-  updateAllSwapTokens,
-} from "./actions";
+import { updateXDR2USD, updateICPPriceList, updateTokenList, updateAllSwapTokens } from "./actions";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -134,20 +128,6 @@ export function useFetchGlobalTokenList() {
     loading,
     result: tokens,
   };
-}
-
-export function usePoolStandardManager(): [boolean, (value: boolean) => void] {
-  const isInitialed = useAppSelector((state: AppState) => state.global.poolStandardUpdated);
-  const dispatch = useAppDispatch();
-
-  const call = useCallback(
-    (value: boolean) => {
-      dispatch(updatePoolStandardInitialed(value));
-    },
-    [dispatch],
-  );
-
-  return [isInitialed, call];
 }
 
 export function useTokenIsInTokenList(tokenId: string | undefined) {

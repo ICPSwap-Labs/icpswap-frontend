@@ -4,7 +4,7 @@ import { Grid, Typography, Avatar, Box } from "@mui/material";
 import { pageArgsFormat, shortenString } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { ProposalInfo, ProjectInfo } from "@icpswap/types";
-import { Pagination, PaginationType, NoData, StaticLoading, MainCard } from "components/index";
+import { Pagination, PaginationType, NoData, ImageLoading, MainCard } from "components/index";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
 import { Select } from "components/Select";
 import { useAccount } from "store/auth/hooks";
@@ -130,7 +130,7 @@ export default function Proposals({ project }: { project: ProjectInfo }) {
 
         {loading ? (
           <Box sx={{ position: "absolute", width: "100%", top: "0", left: 0 }}>
-            <StaticLoading loading={loading} />
+            <ImageLoading loading={loading} />
           </Box>
         ) : null}
 

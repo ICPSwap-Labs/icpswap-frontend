@@ -2,15 +2,20 @@ import { useCallback } from "react";
 import { updateUserPositionPoolId, getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getAddLiquidityStepDetails } from "components/swap/AddLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { useSwapApprove, useSwapDeposit, useSwapTransfer } from "hooks/swap/index";
-import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { createPool, mint as _mint } from "hooks/swap/v3Calls";
+import {
+  useSwapApprove,
+  useSwapDeposit,
+  useSwapTransfer,
+  getTokenInsufficient,
+  getTokenActualTransferRawAmount,
+  getTokenActualDepositRawAmount,
+} from "hooks/swap/index";
+import { isUseTransfer } from "utils/token/index";
+import { createPool, mint as __mint } from "hooks/swap/v3Calls";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { useHistory } from "react-router-dom";
@@ -18,10 +23,12 @@ import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import type { PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
+import { BigNumber } from "@icpswap/utils";
 
 let SwapPoolId: undefined | string;
 
 interface AddLiquidityCallsArgs {
+  principal: string;
   noLiquidity: boolean;
   position: Position;
   openExternalTip: OpenExternalTip;
@@ -30,10 +37,17 @@ interface AddLiquidityCallsArgs {
   pcmToken: Token;
   hasPassCode: boolean;
   needPayForPCM: boolean;
+  token0Balance: BigNumber;
+  token1Balance: BigNumber;
+  token0SubAccountBalance: BigNumber;
+  token1SubAccountBalance: BigNumber;
+  unusedBalance: {
+    balance0: bigint;
+    balance1: bigint;
+  };
 }
 
 function useAddLiquidityCalls() {
-  const principal = useAccountPrincipal();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
 
@@ -53,6 +67,11 @@ function useAddLiquidityCalls() {
       openExternalTip,
       stepKey,
       needPayForPCM,
+      token0Balance,
+      token1Balance,
+      token0SubAccountBalance,
+      token1SubAccountBalance,
+      unusedBalance,
     }: AddLiquidityCallsArgs) => {
       const approveOrTransferPCMToken = async () => {
         return isUseTransfer(pcmToken)
@@ -90,12 +109,9 @@ function useAddLiquidityCalls() {
       };
 
       const _createPool = async () => {
-        const identity = await getActorIdentity();
-
         const { token0, token1, fee, sqrtRatioX96 } = position.pool;
 
         const { status, message, data } = await createPool(
-          identity,
           token0.address,
           token1.address,
           fee,
@@ -116,12 +132,32 @@ function useAddLiquidityCalls() {
         return !noLiquidity ? position.pool.id : SwapPoolId ?? position.pool.id;
       };
 
+      const { token0, token1 } = position.pool;
+      const amount0Desired = position.mintAmounts.amount0.toString();
+      const amount1Desired = position.mintAmounts.amount1.toString();
+
+      const token0Insufficient = getTokenInsufficient({
+        token: token0,
+        subAccountBalance: token0SubAccountBalance,
+        balance: token0Balance,
+        formatTokenAmount: amount0Desired,
+        unusedBalance: unusedBalance.balance0,
+      });
+
+      const token1Insufficient = getTokenInsufficient({
+        token: token1,
+        subAccountBalance: token1SubAccountBalance,
+        balance: token1Balance,
+        formatTokenAmount: amount1Desired,
+        unusedBalance: unusedBalance.balance1,
+      });
+
       const approveToken0 = async () => {
-        if (!position || !principal) return false;
         const poolId = getPoolId();
         const token0 = position.pool.token0;
 
-        const amount0Desired = position.mintAmounts.amount0.toString();
+        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+
         if (amount0Desired !== "0") {
           return await approve({
             token: token0,
@@ -130,14 +166,14 @@ function useAddLiquidityCalls() {
             standard: token0.standard as TOKEN_STANDARD,
           });
         }
+
         return true;
       };
 
       const approveToken1 = async () => {
-        if (!position || !principal) return false;
         const poolId = getPoolId();
-        const token1 = position.pool.token1;
-        const amount1Desired = position.mintAmounts.amount1.toString();
+
+        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
 
         if (amount1Desired !== "0") {
           return await approve({
@@ -152,38 +188,62 @@ function useAddLiquidityCalls() {
       };
 
       const transferToken0 = async () => {
-        if (!position || !principal) return false;
         const poolId = getPoolId();
 
-        const amount0Desired = position.mintAmounts.amount0.toString();
+        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+
         if (amount0Desired !== "0") {
-          return await transfer(position.pool.token0, amount0Desired, poolId);
+          return await transfer(
+            token0,
+            getTokenActualTransferRawAmount(
+              new BigNumber(amount0Desired)
+                .minus(unusedBalance.balance0.toString())
+                .minus(token0SubAccountBalance)
+                .toString(),
+              token0,
+            ),
+            poolId,
+          );
         }
+
         return true;
       };
 
       const transferToken1 = async () => {
-        if (!position || !principal) return false;
         const poolId = getPoolId();
 
-        const amount1Desired = position.mintAmounts.amount1.toString();
+        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+
         if (amount1Desired !== "0") {
-          return await transfer(position.pool.token1, amount1Desired, poolId);
+          return await transfer(
+            token1,
+            getTokenActualDepositRawAmount(
+              new BigNumber(amount1Desired)
+                .minus(unusedBalance.balance1.toString())
+                .minus(token1SubAccountBalance)
+                .toString(),
+              token1,
+            ),
+            poolId,
+          );
         }
+
         return true;
       };
 
       const depositToken0 = async () => {
-        if (!position || !principal) return false;
-
         const poolId = getPoolId();
-        const token0 = position.pool.token0;
-        const amount0Desired = position.mintAmounts.amount0.toString();
 
+        if (token0Insufficient === "NO_TRANSFER_APPROVE") return true;
         if (amount0Desired === "0") return true;
+
+        // Mins 1 token fee by backend, so the deposit amount should add 1 token fee if use deposit
         return await deposit({
           token: token0,
-          amount: amount0Desired,
+          amount: getTokenActualDepositRawAmount(
+            new BigNumber(amount0Desired).minus(unusedBalance.balance0.toString()).toString(),
+            token0,
+          ),
           poolId,
           openExternalTip: ({ message }: ExternalTipArgs) => {
             openExternalTip({ message, tipKey: stepKey, poolId });
@@ -193,16 +253,17 @@ function useAddLiquidityCalls() {
       };
 
       const depositToken1 = async () => {
-        if (!position || !principal) return false;
-
         const poolId = getPoolId();
-        const token1 = position.pool.token1;
-        const amount1Desired = position.mintAmounts.amount1.toString();
 
+        if (token1Insufficient === "NO_TRANSFER_APPROVE") return true;
         if (amount1Desired === "0") return true;
+
         return await deposit({
           token: token1,
-          amount: amount1Desired,
+          amount: getTokenActualDepositRawAmount(
+            new BigNumber(amount1Desired).minus(unusedBalance.balance1.toString()).toString(),
+            token1,
+          ),
           poolId,
           openExternalTip: ({ message }: ExternalTipArgs) => {
             openExternalTip({ message, tipKey: stepKey, poolId });
@@ -212,15 +273,9 @@ function useAddLiquidityCalls() {
       };
 
       const mint = async () => {
-        if (!position || !principal) return false;
-
         const poolId = getPoolId();
-        const { token0 } = position.pool;
-        const { token1 } = position.pool;
-        const amount0Desired = actualAmountToPool(token0, position.mintAmounts.amount0.toString());
-        const amount1Desired = actualAmountToPool(token1, position.mintAmounts.amount1.toString());
 
-        const { status, message } = await _mint(poolId, {
+        const { status, message } = await __mint(poolId, {
           token0: token0.address,
           token1: token1.address,
           fee: BigInt(position.pool.fee),
@@ -258,7 +313,7 @@ function useAddLiquidityCalls() {
         mint,
       ].filter((fn) => fn !== undefined) as (() => Promise<boolean>)[];
     },
-    [principal],
+    [],
   );
 }
 
@@ -321,6 +376,14 @@ export interface AddLiquidityCallProps {
   pcmToken: Token;
   principal: string;
   needPayForPCM: boolean;
+  token0Balance: BigNumber;
+  token1Balance: BigNumber;
+  token0SubAccountBalance: BigNumber;
+  token1SubAccountBalance: BigNumber;
+  unusedBalance: {
+    balance0: bigint;
+    balance1: bigint;
+  };
 }
 
 export function useAddLiquidityCall() {
@@ -337,6 +400,11 @@ export function useAddLiquidityCall() {
       pcmToken,
       openExternalTip,
       needPayForPCM,
+      token0Balance,
+      token1Balance,
+      token0SubAccountBalance,
+      token1SubAccountBalance,
+      unusedBalance,
     }: AddLiquidityCallProps) => {
       let hasPassCode = false;
 
@@ -355,6 +423,7 @@ export function useAddLiquidityCall() {
 
       const key = newStepKey();
       const calls = getCalls({
+        principal,
         position,
         pcmMetadata,
         pcmToken,
@@ -363,6 +432,11 @@ export function useAddLiquidityCall() {
         noLiquidity,
         stepKey: key,
         needPayForPCM,
+        token0Balance,
+        token1Balance,
+        token0SubAccountBalance,
+        token1SubAccountBalance,
+        unusedBalance,
       });
       const { call, reset, retry } = formatCall(calls, key);
 
