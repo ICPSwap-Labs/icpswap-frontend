@@ -6,7 +6,7 @@ import { useStakeAprChartData } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
-import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber } from "@icpswap/utils";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
