@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 
 import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
@@ -9,6 +8,7 @@ import { PoolTransactions } from "./PoolTransactions";
 import { UserTransactions } from "./UserTransactions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
+import { AddLiquidity } from "./AddLiquidity";
 
 enum TransactionPart {
   All = "all",
@@ -25,8 +25,8 @@ const Menus = [
 let AUTO_REFRESH_COUNTER = 0;
 
 export default function Transactions() {
-  const theme = useTheme() as Theme;
-  const { tradePoolId } = useContext(SwapProContext);
+  const theme = useTheme();
+  const { tradePoolId, inputToken, outputToken } = useContext(SwapProContext);
 
   const [active, setActive] = useState<TransactionPart>(TransactionPart.All);
   const [autoRefresh, setAutoRefresh] = useState(0);
@@ -94,6 +94,7 @@ export default function Transactions() {
         </Box>
 
         {active === TransactionPart.All ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
+        {active === TransactionPart.POSITIONS ? <AddLiquidity token0={inputToken} token1={outputToken} /> : null}
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
