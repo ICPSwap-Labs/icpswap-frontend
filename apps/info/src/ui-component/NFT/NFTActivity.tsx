@@ -8,15 +8,13 @@ import { useNFTTradeTransactions } from "@icpswap/hooks";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 
-export default function NFTActivity({
-  canisterId,
-  tokenId,
-  reload,
-}: {
+export interface NFTActivityProps {
   canisterId: string;
   tokenId: number;
   reload?: boolean;
-}) {
+}
+
+export default function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 

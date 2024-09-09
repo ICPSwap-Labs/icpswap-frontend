@@ -110,68 +110,78 @@ export default function Wrap() {
             <Trans>Transactions</Trans>
           </Typography>
 
-          <Box mt="20px">
-            <>
-              <Header className={classes.wrapper}>
-                <HeaderCell>
-                  <Trans>Time</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>From</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>To</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>Type</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>Amount</Trans>
-                </HeaderCell>
-              </Header>
+          <Box sx={{ width: "100%", overflow: "auto" }}>
+            <Box
+              sx={{
+                margin: "20px 0 0 0",
+                overflow: "auto",
+                "@media(max-width: 640px)": {
+                  minWidth: "1200px",
+                },
+              }}
+            >
+              <>
+                <Header className={classes.wrapper}>
+                  <HeaderCell>
+                    <Trans>Time</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>From</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>To</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>Type</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>Amount</Trans>
+                  </HeaderCell>
+                </Header>
 
-              {(loading ? [] : content).map((row, index) => (
-                <TableRow key={index} className={classes.wrapper}>
-                  <BodyCell>{timestampFormat(row.date)}</BodyCell>
-                  <Copy content={row.from}>
-                    <BodyCell color="primary.main">{shorten(row.from, 10)}</BodyCell>
-                  </Copy>
-                  <Copy content={row.to}>
-                    <BodyCell color="primary.main">{shorten(row.to, 10)}</BodyCell>
-                  </Copy>
-                  <BodyCell>
-                    {upperFirst(ExchangeTypes[enumToString(row.wrapType)] ?? enumToString(row.wrapType))}
-                  </BodyCell>
-                  <BodyCell>{parseTokenAmount(row.amount, WRAPPED_ICP.decimals).toFormat()}</BodyCell>
-                </TableRow>
-              ))}
+                {(loading ? [] : content).map((row, index) => (
+                  <TableRow key={index} className={classes.wrapper}>
+                    <BodyCell>{timestampFormat(row.date)}</BodyCell>
+                    <Copy content={row.from}>
+                      <BodyCell color="primary.main">{shorten(row.from, 10)}</BodyCell>
+                    </Copy>
+                    <Copy content={row.to}>
+                      <BodyCell color="primary.main">{shorten(row.to, 10)}</BodyCell>
+                    </Copy>
+                    <BodyCell>
+                      {upperFirst(ExchangeTypes[enumToString(row.wrapType)] ?? enumToString(row.wrapType))}
+                    </BodyCell>
+                    <BodyCell>{parseTokenAmount(row.amount, WRAPPED_ICP.decimals).toFormat()}</BodyCell>
+                  </TableRow>
+                ))}
 
-              {content.length === 0 && !loading ? <NoData /> : null}
+                {content.length === 0 && !loading ? <NoData /> : null}
 
-              {loading ? (
-                <Box sx={{ padding: "24px" }}>
-                  <LoadingRow>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </LoadingRow>
-                </Box>
-              ) : null}
+                {loading ? (
+                  <Box sx={{ padding: "24px" }}>
+                    <LoadingRow>
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                    </LoadingRow>
+                  </Box>
+                ) : null}
 
-              {Number(totalElements ?? 0) > 0 ? (
-                <Pagination
-                  total={Number(totalElements ?? 0)}
-                  num={pagination.pageNum}
-                  onPageChange={handlePageChange}
-                />
-              ) : null}
-            </>
+                {Number(totalElements ?? 0) > 0 ? (
+                  <Pagination
+                    total={Number(totalElements ?? 0)}
+                    num={pagination.pageNum}
+                    onPageChange={handlePageChange}
+                  />
+                ) : null}
+              </>
+            </Box>
           </Box>
         </MainCard>
       </Box>
