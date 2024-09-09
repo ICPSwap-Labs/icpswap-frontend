@@ -77,12 +77,13 @@ export const idlFactory = ({ IDL }: any) => {
   const Result_5 = IDL.Variant({
     ok: IDL.Record({
       governanceCid: IDL.Opt(IDL.Principal),
+      userIndexCid: IDL.Principal,
       feeReceiverCid: IDL.Principal,
     }),
     err: Error,
   });
   const Result_4 = IDL.Variant({
-    ok: IDL.Tuple(IDL.Text, IDL.Nat, IDL.Nat, IDL.Bool),
+    ok: IDL.Tuple(IDL.Text, IDL.Text, IDL.Nat, IDL.Nat, IDL.Bool),
     err: IDL.Text,
   });
   const Result_3 = IDL.Variant({
@@ -92,23 +93,31 @@ export const idlFactory = ({ IDL }: any) => {
   const Result_1 = IDL.Variant({ ok: StakingPoolInfo, err: IDL.Text });
   const Result = IDL.Variant({ ok: IDL.Nat, err: IDL.Text });
   return IDL.Service({
+    addStakingPoolControllers: IDL.Func([IDL.Principal, IDL.Vec(IDL.Principal)], [], []),
     createStakingPool: IDL.Func([InitRequest], [Result_11], []),
     deleteStakingPool: IDL.Func([IDL.Principal], [Result_2], []),
     findPoolStatInfo: IDL.Func([], [Result_10], ["query"]),
     findStakingPoolPage: IDL.Func([IDL.Opt(IDL.Nat), IDL.Nat, IDL.Nat], [Result_9], ["query"]),
+    findStakingPoolPageV2: IDL.Func(
+      [IDL.Opt(IDL.Nat), IDL.Nat, IDL.Nat, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [Result_9],
+      ["query"],
+    ),
     getAdmins: IDL.Func([], [Result_8], ["query"]),
     getCycleInfo: IDL.Func([], [Result_7], []),
     getGlobalData: IDL.Func([], [Result_6], ["query"]),
     getInitArgs: IDL.Func([], [Result_5], ["query"]),
-    getOperationInfo: IDL.Func([], [Result_4], []),
+    getOperationInfo: IDL.Func([], [Result_4], ["query"]),
     getPoolStatInfo: IDL.Func([IDL.Principal], [Result_3], ["query"]),
     getStakingPool: IDL.Func([IDL.Principal], [Result_1], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
+    removeStakingPoolControllers: IDL.Func([IDL.Principal, IDL.Vec(IDL.Principal)], [], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
     setRewardFee: IDL.Func([IDL.Nat], [Result_2], []),
+    setStakingPoolAdmins: IDL.Func([IDL.Principal, IDL.Vec(IDL.Principal)], [], []),
     setStakingPoolTime: IDL.Func([IDL.Principal, IDL.Nat, IDL.Nat], [Result_1], []),
-    setTokenPriceCanister: IDL.Func([IDL.Principal], [Result_2], []),
     setUpdateGlobalDataState: IDL.Func([IDL.Bool], [Result_2], []),
+    setUserIndexCanister: IDL.Func([IDL.Principal], [Result_2], []),
     stopStakingPool: IDL.Func([IDL.Principal], [Result_1], []),
     stopTimer: IDL.Func([], [], []),
     unclaimdRewardFee: IDL.Func([IDL.Principal], [Result], []),

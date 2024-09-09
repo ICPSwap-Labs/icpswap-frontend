@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { FilterState } from "types/staking-token";
-import { getStakingPools, getStakingUserPools, getStakingPoolFromController } from "@icpswap/hooks";
+import { getStakePools, getUserStakePools, getStakingPoolFromController } from "@icpswap/hooks";
 import { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isAvailablePageArgs } from "@icpswap/utils";
@@ -10,9 +10,11 @@ export interface UsePoolsArgs {
   filterState: FilterState;
   offset: number;
   limit: number;
+  stakeTokenId: string | undefined | null;
+  rewardTokenId: string | undefined | null;
 }
 
-export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
+export function usePools({ filterState, stakeTokenId, rewardTokenId, offset, limit }: UsePoolsArgs) {
   const principal = useAccountPrincipal();
   const [loading, setLoading] = useState<boolean>(false);
   const [pools, setPools] = useState<null | Array<StakingPoolControllerPoolInfo>>(null);
@@ -29,7 +31,7 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
 
         setLoading(true);
 
-        const poolsResult = await getStakingUserPools(principal.toString(), offset, limit);
+        const poolsResult = await getUserStakePools(principal.toString(), offset, limit, stakeTokenId, rewardTokenId);
         const pools = poolsResult?.content ?? [];
 
         const infos = (
@@ -43,7 +45,7 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
         setPools(infos);
       } else {
         setLoading(true);
-        const result = await getStakingPools(state, offset, limit);
+        const result = await getStakePools({ state, offset, limit, stakeTokenId, rewardTokenId });
         const pools = result?.content;
         setPools(pools);
       }
@@ -52,7 +54,7 @@ export function usePools({ filterState, offset, limit }: UsePoolsArgs) {
     }
 
     call();
-  }, [filterState, principal, offset, limit]);
+  }, [filterState, principal, offset, limit, stakeTokenId, rewardTokenId]);
 
   return useMemo(() => ({ loading, result: pools }), [loading, pools]);
 }

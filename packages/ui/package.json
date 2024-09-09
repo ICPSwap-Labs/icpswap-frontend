@@ -29,6 +29,6 @@
     "polished": "^3.3.2",
     "react-feather": "^2.0.8",
     "react-is": "18.2.0",
-    "recharts": "^2.1.12"
+    "recharts": "2.1.12"
   }
 }

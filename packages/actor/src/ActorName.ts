@@ -43,7 +43,7 @@ export enum ActorName {
   StakingTokenController = "StakingTokenController",
   TokenPool = "TokenPool",
   TokenPoolStorage = "TokenPoolStorage",
-  StakingPoolUserIndex = "StakingPoolUserIndex",
+  StakeIndex = "StakeIndex",
 
   V1TokenPoolController = "V1TokenPoolController",
   V1TokenPool = "V1TokenPool",

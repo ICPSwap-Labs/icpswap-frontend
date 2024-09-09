@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, Wrapper } from "components/index";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { NoData, MainCard, Flex, SelectToken, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
@@ -30,6 +30,9 @@ function MainContent() {
   const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [stakeTokenId, setStakeTokenId] = useState<string | undefined | null>(null);
+  const [rewardTokenId, setRewardTokenId] = useState<string | undefined | null>(null);
+
   const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;
   };
@@ -38,7 +41,13 @@ function MainContent() {
 
   const state = getStateValueByFilterState(__state);
 
-  const { result: pools, loading } = usePools({ filterState: __state, offset: 0, limit: 100 });
+  const { result: pools, loading } = usePools({
+    filterState: __state,
+    stakeTokenId,
+    rewardTokenId,
+    offset: 0,
+    limit: 100,
+  });
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
     history.push(`/stake?state=${value.state}`);
@@ -50,8 +59,8 @@ function MainContent() {
       gridTemplateColumns:
         __state === FilterState.YOUR
           ? matchDownSM
-            ? "180px 180px 120px 240px 180px 180px 100px"
-            : "180px 180px 120px 1fr 180px 180px 100px"
+            ? "180px 180px 120px 240px 180px 180px 120px"
+            : "180px 180px 120px 1fr 180px 180px 120px"
           : matchDownSM
           ? state === undefined
             ? "220px 220px 100px 240px 180px 180px"
@@ -62,6 +71,20 @@ function MainContent() {
     };
   }, [state, matchDownSM, __state]);
 
+  const handleStakeTokenChange = useCallback(
+    (tokenId: string | undefined) => {
+      setStakeTokenId(tokenId);
+    },
+    [setStakeTokenId],
+  );
+
+  const handleRewardTokenChange = useCallback(
+    (tokenId: string | undefined) => {
+      setRewardTokenId(tokenId);
+    },
+    [setRewardTokenId],
+  );
+
   return (
     <MainCard
       padding="0"
@@ -71,9 +94,8 @@ function MainContent() {
         },
       }}
     >
-      <Grid
-        container
-        justifyContent="space-between"
+      <Flex
+        justify="space-between"
         sx={{
           padding: "24px",
           "@media (max-width:640px)": {
@@ -111,7 +133,42 @@ function MainContent() {
             </Typography>
           ))}
         </Box>
-      </Grid>
+
+        <Flex gap="0 20px">
+          <Flex gap="0 4px">
+            <Typography>
+              <Trans>Staked Token:</Trans>
+            </Typography>
+            <SelectToken
+              showBackground={false}
+              search
+              panelPadding="0px"
+              defaultPanel={
+                <Typography color="text.primary">
+                  <Trans>All Token</Trans>
+                </Typography>
+              }
+              onTokenChange={handleStakeTokenChange}
+            />
+          </Flex>
+          <Flex gap="0 4px">
+            <Typography>
+              <Trans>Reward Token:</Trans>
+            </Typography>
+            <SelectToken
+              showBackground={false}
+              search
+              panelPadding="0px"
+              defaultPanel={
+                <Typography color="text.primary">
+                  <Trans>All Token</Trans>
+                </Typography>
+              }
+              onTokenChange={handleRewardTokenChange}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
 
       <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 

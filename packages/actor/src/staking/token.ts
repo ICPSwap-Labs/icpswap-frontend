@@ -10,8 +10,8 @@ import {
   V1TokenPoolControllerInterfaceFactory,
   V1TokenPoolStorage,
   V1TokenPoolStorageInterfaceFactory,
-  StakingUserStorage,
-  StakingUserStorageInterfaceFactor,
+  StakeIndex,
+  StakeIndexInterfaceFactor,
 } from "@icpswap/candid";
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
@@ -31,11 +31,11 @@ export const stakingPool = (canisterId: string, identity?: ActorIdentity) =>
     idlFactory: TokenPoolInterfaceFactory,
   });
 
-export const stakingUserStorage = (identity?: ActorIdentity) =>
-  actor.create<StakingUserStorage>({
-    actorName: ActorName.StakingPoolUserIndex,
+export const stakeIndex = (identity?: ActorIdentity) =>
+  actor.create<StakeIndex>({
+    actorName: ActorName.StakeIndex,
     identity,
-    idlFactory: StakingUserStorageInterfaceFactor,
+    idlFactory: StakeIndexInterfaceFactor,
   });
 
 /* v1 staking token pool */

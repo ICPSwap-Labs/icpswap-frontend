@@ -59,13 +59,13 @@ export function Staking() {
         />
       </Row>
 
-      <Box sx={{ display: "flex" }}>
+      {/* <Box sx={{ display: "flex" }}>
         <Item
           label={t`Total Stakers`}
           value={totalStaker?.toString() ?? "--"}
           tooltip={t`The total number of unique accounts that have staked in the pools.`}
         />
-      </Box>
+      </Box> */}
     </Card>
   );
 }

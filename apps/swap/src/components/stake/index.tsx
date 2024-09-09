@@ -10,4 +10,5 @@ export * from "./Reclaim";
 export * from "./reclaimContext";
 export * from "./ListHeader";
 export * from "./YourListCard";
+export * from "./AprChart";
 export * from "./Harvest";

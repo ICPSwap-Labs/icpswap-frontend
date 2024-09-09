@@ -41,11 +41,14 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
           }}
         >
           <Flex gap="0 4px">
-            <Typography>{label1}</Typography>
+            <Typography component="div">{label1}</Typography>
             {tooltip1 ? <Tooltip tips={tooltip1} /> : null}
           </Flex>
 
-          <Typography sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}>
+          <Typography
+            sx={{ margin: "16px 0 0 0", fontSize: "28px", fontWeight: 500, color: "text.primary" }}
+            component="div"
+          >
             {value1}
           </Typography>
         </Box>

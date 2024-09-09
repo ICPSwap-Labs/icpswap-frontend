@@ -6,7 +6,9 @@ export type {
   StakingPoolTransaction,
   StakingPoolGlobalData,
   StakingPoolControllerPoolInfo,
-  StakingUserStoragePoolInfo,
+  StakeIndexPoolInfo,
+  StakeAprInfo,
+  StakeUserStakeInfo,
 } from "@icpswap/candid";
 
 export enum StakingState {

@@ -1,7 +1,7 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useCallback } from "react";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
 import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -118,40 +118,50 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">
-        <Flex gap="0 4px" justify="flex-end" fullWidth>
-          <Typography
-            variant="body2"
-            sx={{
-              color: "text.primary",
-              maxWidth: "230px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-            title={
-              userTokenBalance && stakeToken
-                ? `${toSignificantWithGroupSeparator(
-                    parseTokenAmount(userTokenBalance, stakeToken.decimals).toString(),
-                  )} ${stakeToken.symbol}`
-                : ""
-            }
-          >
-            {userTokenBalance && stakeToken
-              ? `${toSignificantWithGroupSeparator(
-                  parseTokenAmount(userTokenBalance, stakeToken.decimals).toString(),
-                )} ${stakeToken.symbol}`
-              : "--"}
-          </Typography>
-        </Flex>
-        <Flex gap="0 4px" justify="flex-end" fullWidth>
-          <Typography sx={{ fontSize: "12px" }}>
-            {userTokenBalance && stakeToken && stakeTokenPrice
-              ? `${formatDollarAmount(
-                  parseTokenAmount(userTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
-                )}`
-              : "--"}
-          </Typography>
-        </Flex>
+        {state === StakingState.FINISHED ? (
+          <Flex fullWidth justify="flex-end">
+            <Typography variant="body2" sx={{ color: "text.primary" }}>
+              --
+            </Typography>
+          </Flex>
+        ) : (
+          <>
+            <Flex gap="0 4px" justify="flex-end" fullWidth>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.primary",
+                  maxWidth: "230px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+                title={
+                  userTokenBalance && stakeToken
+                    ? `${toSignificantWithGroupSeparator(
+                        parseTokenAmount(userTokenBalance, stakeToken.decimals).toString(),
+                      )} ${stakeToken.symbol}`
+                    : ""
+                }
+              >
+                {userTokenBalance && stakeToken
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(userTokenBalance, stakeToken.decimals).toString(),
+                    )} ${stakeToken.symbol}`
+                  : "--"}
+              </Typography>
+            </Flex>
+            <Flex gap="0 4px" justify="flex-end" fullWidth>
+              <Typography sx={{ fontSize: "12px" }}>
+                {userTokenBalance && stakeToken && stakeTokenPrice
+                  ? `${formatDollarAmount(
+                      parseTokenAmount(userTokenBalance, stakeToken.decimals).multipliedBy(stakeTokenPrice).toString(),
+                    )}`
+                  : "--"}
+              </Typography>
+            </Flex>
+          </>
+        )}
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">
