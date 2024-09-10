@@ -31,3 +31,4 @@ export * from "./components/NumberLabel";
 export * from "./components/APR";
 export * from "./components/swap";
 export * from "./components/Image";
+export * from "./components/button";

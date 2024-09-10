@@ -4,7 +4,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/useCurrency";
 
 import Selector from "./selector";
-import CurrencySelectButton from "./button";
+import { CurrencySelectorButton } from "./button";
 
 export interface CurrencySelectorProps {
   currencyId: string | undefined;
@@ -50,7 +50,7 @@ export function CurrencySelector({
 
   return (
     <>
-      <CurrencySelectButton
+      <CurrencySelectorButton
         currency={token}
         onClick={() => {
           if (disabled) return;
@@ -58,7 +58,7 @@ export function CurrencySelector({
         }}
         bgGray={bgGray}
         loading={loading}
-        disabled
+        disabled={disabled}
       />
 
       {selectorShow && (

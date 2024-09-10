@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-import { Typography, Tooltip as MuiToolTip } from "@mui/material";
+import { ReactElement, ReactNode, useState } from "react";
+import { Typography, Tooltip as MuiToolTip, Box } from "@mui/material";
 import { HelpCircle } from "react-feather";
 
 export interface TooltipProps {
   background?: string;
-  tips: React.ReactChild;
+  tips: ReactNode;
   iconSize?: string;
   iconColor?: string;
   maxWidth?: string;
+  children?: ReactElement;
 }
 
-export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconColor = "#8492C4" }: TooltipProps) {
+export function Tooltip({
+  children,
+  tips,
+  background,
+  maxWidth,
+  iconSize = "16px",
+  iconColor = "#8492C4",
+}: TooltipProps) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -53,14 +61,25 @@ export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconCol
       }
       arrow
     >
-      <HelpCircle
-        size={iconSize}
-        color={iconColor}
-        onClick={handleClick}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        style={{ cursor: "pointer" }}
-      />
+      {children ? (
+        <Box
+          sx={{ cursor: "pointer", display: "inline-block" }}
+          onClick={handleClick}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          {children}
+        </Box>
+      ) : (
+        <HelpCircle
+          size={iconSize}
+          color={iconColor}
+          onClick={handleClick}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          style={{ cursor: "pointer" }}
+        />
+      )}
     </MuiToolTip>
   );
 }

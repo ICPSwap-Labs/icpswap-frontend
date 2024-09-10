@@ -8,7 +8,7 @@ import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenImage } from "components/index";
 import { useICPPrice } from "hooks/useUSDPrice";
-import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
+import type { Null, PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { ChevronDown } from "react-feather";
 import { Copy } from "components/Copy/icon";
@@ -19,8 +19,8 @@ import { SwapProContext } from "./context";
 import { LiquidityLocks } from "./LiquidityLocks";
 
 interface TokenTvlProps {
-  token: Token | undefined;
-  balance: BigNumber | undefined;
+  token: Token | Null;
+  balance: BigNumber | Null;
   tvlUsd: string | undefined;
 }
 

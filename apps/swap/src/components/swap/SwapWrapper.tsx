@@ -18,7 +18,6 @@ import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
-import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 import { SwapInputWrapper, SwapConfirmModal, SwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
@@ -42,7 +41,7 @@ export function SwapWrapper({
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [isExpertMode] = useExpertModeManager();
-  const { setSelectedPool, usdValueChange } = useContext(SwapContext);
+  const { setSelectedPool, setNoLiquidity, usdValueChange, setInputToken, setOutputToken } = useContext(SwapContext);
   const { setRefreshTriggers } = useGlobalContext();
   const { onUserInput } = useSwapHandlers();
   const handleClearSwapState = useCleanSwapState();
@@ -66,20 +65,24 @@ export function SwapWrapper({
     currencyBalances,
     userSlippageTolerance,
     inputToken,
-    outputCurrency,
+    outputToken,
     inputCurrencyState,
     outputCurrencyState,
-    swapTokenUnusedBalance,
-    subAccountTokenBalance,
+    inputTokenUnusedBalance,
+    inputTokenSubBalance,
+    outputTokenSubBalance,
+    outputTokenUnusedBalance,
     inputTokenBalance,
+    maxInputAmount,
+    noLiquidity,
   } = useSwapInfo({ refresh: refreshTrigger });
 
   // For swap pro
   useEffect(() => {
     if (onInputTokenChange) onInputTokenChange(inputToken);
-    if (onOutputTokenChange) onOutputTokenChange(outputCurrency);
+    if (onOutputTokenChange) onOutputTokenChange(outputToken);
     if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
-  }, [tradePoolId, outputCurrency, inputToken]);
+  }, [tradePoolId, outputToken, inputToken]);
 
   // Auto refresh token balance 5 seconds
   // useEffect(() => {
@@ -98,12 +101,18 @@ export function SwapWrapper({
   const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
   const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
-  const outputCurrencyInterfacePrice = useUSDPrice(outputCurrency);
+  const outputCurrencyInterfacePrice = useUSDPrice(outputToken);
 
   useEffect(() => {
     const pool = routes[0]?.pools[0];
     setSelectedPool(pool);
-  }, [routes, setSelectedPool]);
+    setNoLiquidity(noLiquidity);
+  }, [routes, setSelectedPool, noLiquidity]);
+
+  useEffect(() => {
+    setInputToken(inputToken);
+    setOutputToken(outputToken);
+  }, [inputToken, outputToken, setInputToken, setOutputToken]);
 
   const parsedAmounts = useMemo(
     () => ({
@@ -163,16 +172,16 @@ export function SwapWrapper({
       (needImpactConfirm && !impactChecked) ||
       swapLoading ||
       !trade ||
-      isNullArgs(subAccountTokenBalance) ||
-      isNullArgs(swapTokenUnusedBalance) ||
+      isNullArgs(inputTokenSubBalance) ||
+      isNullArgs(inputTokenUnusedBalance) ||
       isNullArgs(inputTokenBalance)
     )
       return;
 
     const { call, key } = swapCallback({
       trade,
-      subAccountBalance: subAccountTokenBalance as BigNumber,
-      unusedBalance: swapTokenUnusedBalance as bigint,
+      subAccountBalance: inputTokenSubBalance as BigNumber,
+      unusedBalance: inputTokenUnusedBalance as bigint,
       balance: inputTokenBalance,
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
@@ -190,12 +199,9 @@ export function SwapWrapper({
     const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
     const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const loadingKey = openLoadingTip(
-      t`Swap ${amount0} ${inputToken?.symbol} to ${amount1} ${outputCurrency?.symbol}`,
-      {
-        extraContent: <StepViewButton step={key} />,
-      },
-    );
+    const loadingKey = openLoadingTip(t`Swap ${amount0} ${inputToken?.symbol} to ${amount1} ${outputToken?.symbol}`, {
+      extraContent: <StepViewButton step={key} />,
+    });
 
     setConfirmModalShow(false);
     setSwapLoading(false);
@@ -213,16 +219,11 @@ export function SwapWrapper({
     swapLoading,
     setSwapLoading,
     trade,
-    subAccountTokenBalance,
-    swapTokenUnusedBalance,
+    inputTokenSubBalance,
+    inputTokenUnusedBalance,
     setRefreshTriggers,
     inputTokenBalance,
   ]);
-
-  const maxInputAmount = useMaxAmountSpend({
-    currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
-    poolId: tradePoolId,
-  });
 
   const handleMaxInput = useCallback(() => {
     if (maxInputAmount) {
@@ -248,7 +249,7 @@ export function SwapWrapper({
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "16px 0" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "6px 0" : "6px 0" }}>
       <SwapInputWrapper
         onMaxInput={handleMaxInput}
         onInput={handleInput}
@@ -256,14 +257,20 @@ export function SwapWrapper({
         onTokenBChange={handleTokenBChange}
         tokenAPrice={inputCurrencyInterfacePrice}
         tokenBPrice={outputCurrencyInterfacePrice}
-        inputCurrency={inputToken}
-        outputCurrency={outputCurrency}
+        inputToken={inputToken}
+        outputToken={outputToken}
         inputCurrencyState={inputCurrencyState}
         outputCurrencyState={outputCurrencyState}
         currencyBalances={currencyBalances}
         parsedAmounts={parsedAmounts}
         tradePoolId={tradePoolId}
         ui={ui}
+        inputTokenSubBalance={inputTokenSubBalance}
+        outputTokenSubBalance={outputTokenSubBalance}
+        inputTokenUnusedBalance={inputTokenUnusedBalance}
+        outputTokenUnusedBalance={outputTokenUnusedBalance}
+        maxInputAmount={maxInputAmount}
+        noLiquidity={noLiquidity}
       />
 
       {isLoadingRoute || (!isLoadingRoute && !!trade) ? (
@@ -284,7 +291,7 @@ export function SwapWrapper({
                 poolId={trade.swaps[0].route.pools[0].id}
                 price={trade.executionPrice}
                 token0={inputToken}
-                token1={outputCurrency}
+                token1={outputToken}
                 token0PriceUSDValue={toSignificant(inputCurrencyInterfacePrice ?? 0, 18)}
                 token1PriceUSDValue={toSignificant(outputCurrencyInterfacePrice ?? 0, 18)}
                 fontSize={ui === "pro" ? "12px" : undefined}
@@ -328,6 +335,9 @@ export function SwapWrapper({
         size="large"
         onClick={handleSwap}
         disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
+        sx={{
+          borderRadius: "16px",
+        }}
       >
         {swapInputError ||
           (isLoadingRoute ? (
@@ -353,8 +363,8 @@ export function SwapWrapper({
           onConfirm={handleSwapConfirm}
           slippageTolerance={userSlippageTolerance}
           loading={swapLoading}
-          swapTokenUnusedBalance={swapTokenUnusedBalance}
-          subAccountTokenBalance={subAccountTokenBalance}
+          inputTokenUnusedBalance={inputTokenUnusedBalance}
+          inputTokenSubBalance={inputTokenSubBalance}
           inputTokenBalance={inputTokenBalance}
         />
       )}

@@ -3,7 +3,7 @@ import { useMemo, useEffect, useState } from "react";
 import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
-import type { PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
+import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
 import { NETWORK, network } from "constants/index";
 import { ICP } from "@icpswap/tokens";
 
@@ -29,7 +29,7 @@ function transformedKeyToKey(transformedKey: TransformedKey) {
   return `${transformedKey.token0}_${transformedKey.token1}_${transformedKey.fee}`;
 }
 
-export type PoolKey = [Token | undefined, Token | undefined, FeeAmount | undefined];
+export type PoolKey = [Token | Null, Token | Null, FeeAmount | undefined];
 
 export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState, Pool | null][] {
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
@@ -182,12 +182,12 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 }
 
 export function usePool(
-  currencyA: Token | undefined,
-  currencyB: Token | undefined,
+  currencyA: Token | Null,
+  currencyB: Token | Null,
   feeAmount: FeeAmount | undefined,
   withoutVerify = false,
 ) {
-  const poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][] = useMemo(
+  const poolKeys: [Token | Null, Token | Null, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
     [currencyA, currencyB, feeAmount],
   );
