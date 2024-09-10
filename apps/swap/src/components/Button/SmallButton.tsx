@@ -7,6 +7,7 @@ export interface SmallButtonProps {
   children: React.ReactNode;
   onClick: TypographyProps["onClick"];
   background?: string;
+  color?: string;
 }
 
 export function SmallButton({ children, onClick, background }: SmallButtonProps) {

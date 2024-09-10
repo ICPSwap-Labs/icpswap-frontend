@@ -39,13 +39,13 @@ export function computeAllRoutes(
 }
 
 export function useAllRoutes(currencyIn: Token | undefined, currencyOut: Token | undefined) {
-  const { pools, loading: poolsLoading, checked } = useSwapPools(currencyIn, currencyOut);
+  const { pools, loading: poolsLoading, checked, noLiquidity } = useSwapPools(currencyIn, currencyOut);
 
   const singleHopOnly = useIsSingleHop();
 
   return useMemo(() => {
     if (poolsLoading || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [], checked: false };
     const routes = computeAllRoutes(currencyIn, currencyOut, pools, [], [], currencyIn, singleHopOnly ? 1 : 2);
-    return { loading: false, routes, checked };
-  }, [currencyIn, currencyOut, pools, poolsLoading, singleHopOnly, checked]);
+    return { loading: false, routes, checked, noLiquidity };
+  }, [currencyIn, currencyOut, pools, poolsLoading, singleHopOnly, checked, noLiquidity]);
 }

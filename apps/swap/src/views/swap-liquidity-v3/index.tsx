@@ -1,34 +1,15 @@
 import { useState, memo, useCallback } from "react";
-import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
+import { Grid, Box, Typography } from "components/Mui";
 import { MainCard } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
 import { t } from "@lingui/macro";
-import { SwapWrapper, Reclaim, SwapContext, SwapUIWrapper } from "components/swap/index";
-import { Pool } from "@icpswap/swap-sdk";
+import { SwapWrapper, Reclaim, SwapContext, SwapUIWrapper, CreatePool } from "components/swap/index";
+import { Pool, Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import { SWAP_REFRESH_KEY } from "constants/index";
 
 import SwapTransactions from "./swap/Transactions";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    outerBox: {
-      width: "570px",
-    },
-    activeTypography: {
-      position: "relative",
-      "&:after": {
-        content: '""',
-        position: "absolute",
-        bottom: "-6px",
-        left: 0,
-        width: "100%",
-        height: "4px",
-        backgroundColor: theme.colors.secondaryMain,
-      },
-    },
-  };
-});
 
 const SWITCH_BUTTONS = [
   { id: 1, value: t`Swap`, component: SwapWrapper },
@@ -36,10 +17,12 @@ const SWITCH_BUTTONS = [
 ];
 
 export function SwapMain() {
-  const classes = useStyles();
   const [activeSwitch, setActiveSwitch] = useState(1);
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
-  const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
+  const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
+  const [inputToken, setInputToken] = useState<Token | Null>(null);
+  const [outputToken, setOutputToken] = useState<Token | Null>(null);
+  const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
 
   const isConnected = useConnectorStateConnected();
@@ -75,15 +58,25 @@ export function SwapMain() {
         removeUnavailableBalanceKey: handleRemoveKeys,
         usdValueChange,
         setUSDValueChange,
+        setNoLiquidity,
+        noLiquidity,
+        inputToken,
+        setInputToken,
+        outputToken,
+        setOutputToken,
       }}
     >
       <SwapUIWrapper>
         <Grid container justifyContent="center">
-          <Grid item className={classes.outerBox}>
+          <Grid
+            item
+            sx={{
+              width: "570px",
+            }}
+          >
             <MainCard
               level={1}
               sx={{
-                minHeight: "380px",
                 padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
                 paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
                 overflow: "visible",
@@ -111,26 +104,31 @@ export function SwapMain() {
                       key={item.id}
                       sx={{
                         display: "inline-block",
-                        marginRight: "32px",
+                        margin: "0 32px 0 0",
                         cursor: "pointer",
                       }}
                       onClick={() => setActiveSwitch(item.id)}
                     >
                       <Typography
-                        className={item.id === activeSwitch ? classes.activeTypography : ""}
-                        color={activeSwitch === item.id ? "textPrimary" : "textSecondary"}
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: activeSwitch === item.id ? 600 : 400,
+                          color: activeSwitch === item.id ? "text.primary" : "text.secondary",
+                        }}
                       >
                         {item.value}
                       </Typography>
                     </Box>
                   ))}
                 </Box>
+
                 <SwapSettingIcon type="swap" />
               </Box>
-              <Box mt={3}>{ActiveComponent()}</Box>
+
+              <Box sx={{ margin: "16px 0 0 0" }}>{ActiveComponent()}</Box>
             </MainCard>
 
-            {isConnected ? (
+            {isConnected && noLiquidity === false ? (
               <Box
                 mt="8px"
                 sx={{
@@ -141,6 +139,10 @@ export function SwapMain() {
               >
                 <Reclaim pool={selectedPool} refreshKey={SWAP_REFRESH_KEY} />
               </Box>
+            ) : null}
+
+            {isConnected && noLiquidity === true ? (
+              <CreatePool inputToken={inputToken} outputToken={outputToken} />
             ) : null}
           </Grid>
         </Grid>

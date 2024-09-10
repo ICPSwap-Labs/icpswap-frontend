@@ -1,9 +1,10 @@
 import { useMemo, useState, useCallback } from "react";
-import { Box, useTheme, useMediaQuery } from "@mui/material";
+import { Box, useTheme, useMediaQuery } from "components/Mui";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTokenListTokenInfo } from "@icpswap/hooks";
 import { Token, Pool } from "@icpswap/swap-sdk";
+import { type Null } from "@icpswap/types";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
@@ -23,9 +24,10 @@ export default function SwapPro() {
 
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
+  const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
-  const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
-  const [outputToken, setOutputToken] = useState<Token | undefined>(undefined);
+  const [inputToken, setInputToken] = useState<Token | Null>(undefined);
+  const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
@@ -78,6 +80,12 @@ export default function SwapPro() {
         removeUnavailableBalanceKey: handleRemoveKeys,
         usdValueChange,
         setUSDValueChange,
+        noLiquidity,
+        setNoLiquidity,
+        inputToken,
+        setInputToken,
+        outputToken,
+        setOutputToken,
       }}
     >
       <SwapProContext.Provider

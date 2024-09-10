@@ -30,6 +30,7 @@ export function useSwapPools(currencyIn: Token | undefined, currencyOut: Token |
         .map(([, pool]) => pool),
       loading: pools.some(([state]) => state === PoolState.LOADING),
       checked: !pools.some(([state]) => state === PoolState.NOT_CHECK),
+      noLiquidity: !!pools.find((tuple) => tuple[0] === PoolState.NOT_EXISTS),
     };
   }, [pools]);
 }

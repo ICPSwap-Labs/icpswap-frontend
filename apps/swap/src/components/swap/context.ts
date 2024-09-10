@@ -1,9 +1,16 @@
 import { createContext } from "react";
-import { Pool } from "@icpswap/swap-sdk";
+import { Pool, Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
 
 export interface SwapContextProps {
   selectedPool: Pool | undefined | null;
   setSelectedPool: (pool: Pool) => void;
+  inputToken: Token | Null;
+  setInputToken: (token: Token | Null) => void;
+  outputToken: Token | Null;
+  setOutputToken: (token: Token | Null) => void;
+  noLiquidity: boolean | Null;
+  setNoLiquidity: (noLiquidity: boolean | Null) => void;
   unavailableBalanceKeys: string[];
   setUnavailableBalanceKey: (key: string) => void;
   removeUnavailableBalanceKey: (key: string) => void;

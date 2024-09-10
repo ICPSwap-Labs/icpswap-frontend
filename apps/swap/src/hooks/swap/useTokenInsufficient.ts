@@ -1,5 +1,7 @@
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { Null } from "@icpswap/types";
+import { isUseTransfer } from "utils/token";
 
 export interface GetTokenInsufficientProps {
   token: Token | undefined;
@@ -7,6 +9,7 @@ export interface GetTokenInsufficientProps {
   unusedBalance: bigint | undefined;
   balance: BigNumber | undefined;
   formatTokenAmount: string | undefined;
+  allowance?: bigint | Null;
 }
 
 export function getTokenInsufficient({
@@ -15,6 +18,7 @@ export function getTokenInsufficient({
   unusedBalance,
   balance,
   formatTokenAmount,
+  allowance,
 }: GetTokenInsufficientProps) {
   if (
     isNullArgs(token) ||
@@ -43,7 +47,15 @@ export function getTokenInsufficient({
     !new BigNumber(unusedBalance.toString())
       .plus(subAccountBalance)
       .plus(balance)
-      .isLessThan(new BigNumber(formatTokenAmount).plus(token.transFee * 2))
+      .isLessThan(
+        new BigNumber(formatTokenAmount).plus(
+          isUseTransfer(token) || !allowance
+            ? token.transFee * 2
+            : !new BigNumber(allowance?.toString()).isLessThan(formatTokenAmount)
+            ? token.transFee
+            : token.transFee * 2,
+        ),
+      )
   )
     return "NEED_TRANSFER_APPROVE";
 

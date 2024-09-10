@@ -25,7 +25,7 @@ export function useBestTrade(
   const actualSwapValue = typedValue;
 
   // reload when typeValue is changed
-  const { routes, loading: routesLoading, checked } = useAllRoutes(inputCurrency, outputCurrency);
+  const { routes, loading: routesLoading, checked, noLiquidity } = useAllRoutes(inputCurrency, outputCurrency);
 
   const zeroForOne =
     inputCurrency && outputCurrency ? inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped) : undefined;
@@ -87,6 +87,7 @@ export function useBestTrade(
         trade: null,
         tradePoolId,
         routes,
+        noLiquidity,
       };
     }
 
@@ -96,6 +97,7 @@ export function useBestTrade(
         trade: null,
         tradePoolId,
         routes,
+        noLiquidity,
       };
     }
 
@@ -132,6 +134,7 @@ export function useBestTrade(
         trade: null,
         tradePoolId,
         routes,
+        noLiquidity,
       };
     }
 
@@ -146,6 +149,7 @@ export function useBestTrade(
       }),
       tradePoolId,
       routes,
+      noLiquidity,
     };
   }, [
     inputCurrency,
@@ -157,5 +161,6 @@ export function useBestTrade(
     available,
     checked,
     tradePoolId,
+    noLiquidity,
   ]);
 }

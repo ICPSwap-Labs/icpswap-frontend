@@ -89,8 +89,8 @@ export interface SwapConfirmModalProps {
   onClose: () => void;
   slippageTolerance: Percent | null;
   trade: Trade<Token, Token, TradeType> | null;
-  subAccountTokenBalance: BigNumber | undefined;
-  swapTokenUnusedBalance: bigint | undefined;
+  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenUnusedBalance: bigint | undefined;
   inputTokenBalance: BigNumber | undefined;
 }
 
@@ -102,8 +102,8 @@ export function SwapConfirmModal({
   onConfirm,
   onClose,
   inputTokenBalance,
-  swapTokenUnusedBalance,
-  subAccountTokenBalance,
+  inputTokenUnusedBalance,
+  inputTokenSubBalance,
 }: SwapConfirmModalProps) {
   const classes = useStyle();
 
@@ -134,9 +134,9 @@ export function SwapConfirmModal({
 
   const swapTokenFee = useSwapTokenFeeCost({
     token: inputToken,
-    subAccountBalance: subAccountTokenBalance,
+    subAccountBalance: inputTokenSubBalance,
     tokenBalance: inputTokenBalance,
-    unusedBalance: swapTokenUnusedBalance,
+    unusedBalance: inputTokenUnusedBalance,
     amount: formatTokenAmount(inputAmount, inputToken?.decimals).toString(),
   });
 

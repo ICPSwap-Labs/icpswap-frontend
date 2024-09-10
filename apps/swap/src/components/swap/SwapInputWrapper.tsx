@@ -1,13 +1,14 @@
-import { useMemo, useContext, useEffect } from "react";
-import { Box } from "@mui/material";
-import SwitchIcon from "assets/images/swap/switch";
+import { useMemo, useContext, useEffect, useCallback } from "react";
+import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState, useSwapHandlers } from "store/swap/hooks";
-import BigNumber from "bignumber.js";
+import { BigNumber, isNullArgs, parseTokenAmount } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { TokenInfo } from "types/token";
 import { SwapContext } from "components/swap/index";
+import { Image } from "@icpswap/ui";
+import { Null } from "@icpswap/types";
 
 import { SwapInputCurrency } from "./SwapInputCurrency";
 
@@ -27,11 +28,17 @@ export interface SwapInputWrapperProps {
     INPUT: CurrencyAmount<Token> | undefined;
     OUTPUT: CurrencyAmount<Token> | undefined;
   };
-  inputCurrency: Token | undefined;
-  outputCurrency: Token | undefined;
+  inputToken: Token | undefined;
+  outputToken: Token | undefined;
   inputCurrencyState: UseCurrencyState;
   outputCurrencyState: UseCurrencyState;
   ui?: "pro" | "normal";
+  inputTokenUnusedBalance: bigint | Null;
+  outputTokenUnusedBalance: bigint | Null;
+  inputTokenSubBalance: BigNumber | Null;
+  outputTokenSubBalance: BigNumber | Null;
+  maxInputAmount: CurrencyAmount<Token> | undefined;
+  noLiquidity?: boolean;
 }
 
 export function SwapInputWrapper({
@@ -42,14 +49,20 @@ export function SwapInputWrapper({
   tokenAPrice,
   tokenBPrice,
   parsedAmounts,
-  tradePoolId,
   currencyBalances,
-  inputCurrency,
-  outputCurrency,
+  inputToken,
+  outputToken,
   inputCurrencyState,
   outputCurrencyState,
+  inputTokenUnusedBalance,
+  outputTokenUnusedBalance,
+  inputTokenSubBalance,
+  outputTokenSubBalance,
   ui = "normal",
+  maxInputAmount,
+  noLiquidity,
 }: SwapInputWrapperProps) {
+  const theme = useTheme();
   const { independentField, typedValue } = useSwapState();
   const { setUSDValueChange } = useContext(SwapContext);
   const { onSwitchTokens } = useSwapHandlers();
@@ -87,21 +100,53 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
+  const handleWalletBalanceClick = useCallback(() => {
+    if (!inputToken || !currencyBalances[SWAP_FIELD.INPUT]) return undefined;
+
+    onInput(
+      new BigNumber(currencyBalances[SWAP_FIELD.INPUT].toExact())
+        .minus(parseTokenAmount(inputToken.transFee, inputToken.decimals))
+        .toString(),
+      "input",
+    );
+  }, [inputToken, onInput, currencyBalances[SWAP_FIELD.INPUT]]);
+
+  const handleCanisterBalanceClick = useCallback(() => {
+    if (!inputToken || isNullArgs(inputTokenSubBalance) || isNullArgs(inputTokenUnusedBalance)) return undefined;
+
+    if (inputTokenSubBalance.isEqualTo(0)) {
+      onInput(parseTokenAmount(inputTokenUnusedBalance, inputToken.decimals).toString(), "input");
+    } else {
+      onInput(
+        parseTokenAmount(inputTokenUnusedBalance, inputToken.decimals)
+          .plus(parseTokenAmount(inputTokenSubBalance.minus(inputToken.transFee), inputToken.decimals))
+          .toString(),
+        "input",
+      );
+    }
+  }, [inputToken, onInput, inputTokenSubBalance, inputTokenUnusedBalance]);
+
   return (
     <Box>
       <Box sx={{ position: "relative" }}>
         <SwapInputCurrency
-          currency={inputCurrency}
+          noLiquidity={noLiquidity}
+          currency={inputToken}
           currencyPrice={tokenAPrice}
-          formatAmount={formattedAmounts[SWAP_FIELD.INPUT]}
+          formattedAmount={formattedAmounts[SWAP_FIELD.INPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.INPUT]}
           onMax={onMaxInput}
           onInput={(value: string) => onInput(value, "input")}
           onTokenChange={onTokenAChange}
-          tradePoolId={tradePoolId}
           currencyState={inputCurrencyState}
           parsedAmount={parsedAmounts[SWAP_FIELD.INPUT]}
           background={ui === "pro" ? "level1" : "level3"}
+          unusedBalance={inputTokenUnusedBalance}
+          subBalance={inputTokenSubBalance}
+          isInput
+          onWalletBalanceClick={handleWalletBalanceClick}
+          onCanisterBalanceClick={handleCanisterBalanceClick}
+          maxInputAmount={maxInputAmount}
         />
 
         <Box
@@ -110,31 +155,40 @@ export function SwapInputWrapper({
             bottom: "-17px",
             left: "50%",
             transform: "translate(-50%, 0)",
-            width: "30px",
-            height: "31px",
             cursor: "pointer",
             overflow: "hidden",
+            width: "32px",
+            height: "32px",
+            background: ui === "pro" ? theme.palette.background.level3 : theme.palette.background.level1,
+            borderRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           onClick={onSwitchTokens}
         >
-          <SwitchIcon />
+          <Image
+            src={ui === "pro" ? "/images/icon_exchange_pro.png" : "/images/icon_exchange.png"}
+            sx={{ width: "28px", height: "28px" }}
+          />
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: "8px" }}>
+      <Box sx={{ marginTop: "6px" }}>
         <SwapInputCurrency
-          currency={outputCurrency}
+          currency={outputToken}
           currencyPrice={tokenBPrice}
-          formatAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
+          formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
           onInput={(value: string) => onInput(value, "output")}
           onTokenChange={onTokenBChange}
-          tradePoolId={tradePoolId}
           currencyState={outputCurrencyState}
           parsedAmount={parsedAmounts[SWAP_FIELD.OUTPUT]}
           usdChange={USDChange}
           background={ui === "pro" ? "level1" : "level3"}
           disabled
+          unusedBalance={outputTokenUnusedBalance}
+          subBalance={outputTokenSubBalance}
         />
       </Box>
     </Box>

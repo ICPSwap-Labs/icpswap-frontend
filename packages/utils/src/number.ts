@@ -1,6 +1,7 @@
 import numbro from "numbro";
+
 import { BigNumber } from "./bignumber";
-import { toSignificant } from "./toSignificant";
+import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 
 // using a currency library here in case we want to add more in future
 export const formatDollarAmount = (num: number | string | undefined, digits = 3, round = true, ab?: number) => {
@@ -33,8 +34,12 @@ export const formatAmount = (num: number | string | undefined, digits = 2) => {
 
   if (!num) return "-";
 
-  if (Number(num) < 0.001) {
-    return "<0.001";
+  if (new BigNumber(num).isLessThan(0.0001)) {
+    return "<0.0001";
+  }
+
+  if (new BigNumber(num).isLessThan(0.001)) {
+    return toSignificantWithGroupSeparator(num, 4);
   }
 
   return numbro(num).format({
@@ -46,3 +51,11 @@ export const formatAmount = (num: number | string | undefined, digits = 2) => {
     },
   });
 };
+
+export function percentToNum(val: string) {
+  return new BigNumber(val.replace("%", "")).dividedBy(100).toNumber();
+}
+
+export function numToPercent(num: string | number | BigNumber) {
+  return `${new BigNumber(num).multipliedBy(100).toString()}%`;
+}

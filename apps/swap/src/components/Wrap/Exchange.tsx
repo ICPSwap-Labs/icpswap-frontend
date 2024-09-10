@@ -1,19 +1,16 @@
 import { useState, useCallback, useMemo, useContext, useEffect } from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import SwitchIcon from "assets/images/swap/switch";
+import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
 import { SwapInput } from "components/swap/SwapInput";
 import { SWAP_FIELD, WRAPPED_ICP as WICP } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
 import { Trans, t } from "@lingui/macro";
-import CurrencySelectButton from "components/CurrencySelector/button";
+import { CurrencySelectorButton } from "components/CurrencySelector/button";
 import { useAccount } from "store/global/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatTokenAmount, parseTokenAmount, principalToAccount } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber, formatTokenAmount, parseTokenAmount, principalToAccount } from "@icpswap/utils";
 import ConfirmModal from "components/Wrap/ConfirmModal";
 import { wrapICP, unwrapICP } from "hooks/useWICPCalls";
 import { tokenTransfer } from "hooks/token/calls";
@@ -21,12 +18,12 @@ import { getLocaleMessage } from "locales/services";
 import Identity, { CallbackProps } from "components/Identity";
 import WrapContext from "components/Wrap/context";
 import Button from "components/authentication/ButtonConnector";
-import { Theme } from "@mui/material/styles";
 import { WICPCanisterId } from "constants/canister";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { StatusResult } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
+import { Image } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -287,7 +284,7 @@ export default function Exchange() {
             <Box>
               <Grid container alignItems="center">
                 <Grid mr={1}>
-                  <CurrencySelectButton currency={inputCurrency} bgGray disabled />
+                  <CurrencySelectorButton currency={inputCurrency} bgGray disabled />
                 </Grid>
               </Grid>
             </Box>
@@ -336,7 +333,7 @@ export default function Exchange() {
           }}
           onClick={onSwitchTokens}
         >
-          <SwitchIcon />
+          <Image src="/images/icon_exchange.png" sx={{ width: "28px", height: "28px" }} />
         </Box>
       </Box>
 
@@ -346,7 +343,7 @@ export default function Exchange() {
             <Box>
               <Grid container alignItems="center">
                 <Grid mr={1}>
-                  <CurrencySelectButton currency={outputCurrency} bgGray disabled />
+                  <CurrencySelectorButton currency={outputCurrency} bgGray disabled />
                 </Grid>
               </Grid>
             </Box>
