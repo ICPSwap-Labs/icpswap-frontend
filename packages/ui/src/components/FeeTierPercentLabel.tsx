@@ -1,4 +1,4 @@
-import { formatPercentage, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, nonNullArgs } from "@icpswap/utils";
 
 import { Typography, Box, useTheme } from "./Mui";
 
@@ -12,7 +12,7 @@ export function FeeTierPercentLabel({ feeTier }: FeeTierLabelProps) {
   return (
     <Box sx={{ background: theme.palette.background.level4, borderRadius: "8px", padding: "6px 8px" }}>
       <Typography color="text.primary" sx={{ fontSize: "12px" }}>
-        {nonNullArgs(feeTier) ? formatPercentage(feeTier) : "--"}
+        {nonNullArgs(feeTier) ? `${new BigNumber(feeTier.toString()).dividedBy(10000).toString()}%` : "--"}
       </Typography>
     </Box>
   );
