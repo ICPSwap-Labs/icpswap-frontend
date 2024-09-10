@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => {
       alignItems: "center",
       gridTemplateColumns: "20px 2fr 1fr repeat(4, 1fr)",
       "@media screen and (max-width: 500px)": {
-        gridTemplateColumns: "20px 1fr 1fr repeat(4, 1fr)",
+        gridTemplateColumns: "20px 260px 1fr repeat(4, 1fr)",
       },
     },
   };
