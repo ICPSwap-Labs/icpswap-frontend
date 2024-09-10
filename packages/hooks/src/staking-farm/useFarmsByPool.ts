@@ -5,6 +5,11 @@ import { farmIndex } from "@icpswap/actor";
 
 import { useCallsData } from "../useCallData";
 
+/**
+ *
+ * @param poolIds
+ * @returns [Principal, Principal]: [poolId, farmId]
+ */
 export async function getLiveFarmsByPoolIds(poolIds: string[]) {
   const result = await (await farmIndex()).getLiveFarmsByPools(poolIds.map((poolId) => Principal.fromText(poolId)));
   return resultFormat<Array<[Principal, Principal]>>(result).data;

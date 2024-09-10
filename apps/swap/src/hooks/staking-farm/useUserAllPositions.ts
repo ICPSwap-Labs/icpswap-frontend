@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
-import { useUserPositionPools, useLiveFarmsByPoolIds, getSwapUserPositions, getSwapPoolMeta } from "@icpswap/hooks";
+import {
+  useUserPositionPools,
+  useLiveFarmsByPoolIds,
+  getSwapUserPositions,
+  getSwapPoolMeta,
+  getFarmInitArgs,
+} from "@icpswap/hooks";
 import { useAccount, useAccountPrincipal } from "store/auth/hooks";
-import { UserPositionInfoWithId, PoolMetadata } from "@icpswap/types";
+import { UserPositionInfoWithId, PoolMetadata, InitFarmArgs } from "@icpswap/types";
 import { usePositionsValuesByInfos } from "hooks/swap/index";
 
 export function useFarmUserAllPositions() {
@@ -26,12 +32,37 @@ export function useFarmUserAllPositions() {
       if (farms && principal) {
         // One pool could have multiple farms, so remove the duplicate pool
         const allPoolIds = [...new Set(farms.map((farm) => farm[0].toString()))];
+        const allFarmIds = [...new Set(farms.map((farm) => farm[1].toString()))];
+
+        const allFarmInitArgs: Array<[InitFarmArgs, string]> = await Promise.all(
+          allFarmIds.map(async (farmId) => {
+            const farmInitArgs = await getFarmInitArgs(farmId);
+            return [farmInitArgs, farmId];
+          }),
+        );
 
         const result = (
           await Promise.all(
             allPoolIds.map(async (poolId) => {
               const metadata = await getSwapPoolMeta(poolId);
               const positions = await getSwapUserPositions(poolId, principal.toString());
+
+              const farmInitArgs = allFarmInitArgs.find(([, farmId]) => {
+                return farms.find((farm) => farm[1].toString() === farmId && farm[0].toString() === poolId);
+              });
+
+              if (farmInitArgs && farmInitArgs[0].priceInsideLimit) {
+                // Filter the invalid position and in range position
+                return {
+                  metadata,
+                  positions: positions.filter(
+                    (position) =>
+                      position.liquidity !== BigInt(0) &&
+                      position.tickLower < metadata.tick &&
+                      position.tickUpper > metadata.tick,
+                  ),
+                };
+              }
 
               // Filter the invalid position
               return { metadata, positions: positions.filter((position) => position.liquidity !== BigInt(0)) };
@@ -65,7 +96,7 @@ export function useFarmUserAllPositions() {
   const allPositionUSDValue = usePositionsValuesByInfos(positionInfos);
 
   return useMemo(
-    () => ({ positionsValue: allPositionUSDValue, positionAmount }),
-    [allPositionUSDValue, positionAmount],
+    () => ({ positionsValue: positionInfos?.length === 0 ? "0" : allPositionUSDValue, positionAmount }),
+    [allPositionUSDValue, positionAmount, positionInfos],
   );
 }
