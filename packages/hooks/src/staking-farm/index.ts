@@ -37,6 +37,10 @@ export function useV3UserFarmInfo(canisterId: string | undefined, principal: str
   );
 }
 
+export async function getFarmInfo(canisterId: string) {
+  return await getUserFarmInfo(canisterId, AnonymousPrincipal);
+}
+
 export function useFarmInfo(canisterId: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
