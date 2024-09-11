@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useCallback, useRef } from "react";
+import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { SwapWrapper } from "components/swap/SwapWrapper";
+import { SwapWrapper, type SwapWrapperRef } from "components/swap/SwapWrapper";
 import SwapSettings from "components/swap/SettingIcon";
 import { Reclaim, SwapContext } from "components/swap/index";
 import { MainCard } from "components/index";
@@ -12,9 +13,17 @@ import { SwapProContext } from "./context";
 export default function Swap() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const swapWrapperRef = useRef<SwapWrapperRef>(null);
+  const { setTradePoolId, inputToken, setInputToken, setOutputToken } = useContext(SwapProContext);
+  const { selectedPool, noLiquidity } = useContext(SwapContext);
 
-  const { setTradePoolId, setInputToken, setOutputToken } = useContext(SwapProContext);
-  const { selectedPool } = useContext(SwapContext);
+  const handleInputTokenClick = useCallback(
+    (tokenAmount: string) => {
+      if (!inputToken) return;
+      swapWrapperRef.current?.setInputAmount(parseTokenAmount(tokenAmount, inputToken.decimals).toString());
+    },
+    [swapWrapperRef, inputToken],
+  );
 
   return (
     <>
@@ -29,6 +38,7 @@ export default function Swap() {
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           <SwapWrapper
+            ref={swapWrapperRef}
             ui="pro"
             onOutputTokenChange={setOutputToken}
             onTradePoolIdChange={setTradePoolId}
@@ -36,9 +46,19 @@ export default function Swap() {
           />
         </Box>
 
-        <MainCard level={1} sx={{ margin: "8px 0 0 0" }} padding="10px" borderRadius="12px">
-          <Reclaim fontSize="12px" margin="9px" ui="pro" pool={selectedPool} refreshKey={SWAP_REFRESH_KEY} />
-        </MainCard>
+        {noLiquidity === false ? (
+          <MainCard level={1} sx={{ margin: "8px 0 0 0" }} padding="10px" borderRadius="12px">
+            <Reclaim
+              fontSize="12px"
+              margin="9px"
+              ui="pro"
+              pool={selectedPool}
+              refreshKey={SWAP_REFRESH_KEY}
+              inputToken={inputToken}
+              onInputTokenClick={handleInputTokenClick}
+            />
+          </MainCard>
+        ) : null}
       </SwapProCardWrapper>
     </>
   );

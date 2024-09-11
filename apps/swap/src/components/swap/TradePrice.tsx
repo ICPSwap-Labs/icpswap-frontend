@@ -1,7 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
-import BigNumber from "bignumber.js";
 import { Price, Token } from "@icpswap/swap-sdk";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { Typography, Grid, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton } from "components/index";
@@ -141,7 +140,7 @@ export default function TradePrice({
               ({formatDollarAmount(usdValue)})
             </Typography>
           ) : null}
-          <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+          <SyncAltIcon style={{ fontSize: "1rem", margin: "0 0 0 4px", cursor: "pointer" }} onClick={flipPrice} />
         </Grid>
       </Grid>
 

@@ -1,7 +1,14 @@
 import { useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { CurrencySelector } from "components/swap/index";
-import { formatDollarAmount, formatAmount, BigNumber, nonNullArgs, parseTokenAmount } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  BigNumber,
+  nonNullArgs,
+  parseTokenAmount,
+  formatTokenAmount,
+} from "@icpswap/utils";
 import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { UseCurrencyState } from "hooks/useCurrency";
@@ -171,7 +178,7 @@ export function SwapInputCurrency({
           <SwapBalances
             amount={formattedAmount}
             token={currency}
-            balance={currencyBalance?.toExact()}
+            balance={formatTokenAmount(currencyBalance?.toExact(), currency.decimals).toString()}
             unusedBalance={unusedBalance}
             subAccountBalance={subBalance}
             maxSpentAmount={maxInputAmount?.toExact()}

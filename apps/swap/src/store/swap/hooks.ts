@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { SWAP_FIELD } from "constants/swap";
 import { useToken } from "hooks/useCurrency";
-import { tryParseAmount, inputNumberCheck } from "utils/swap";
+import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
@@ -15,7 +15,6 @@ import { useParsedQueryString, useUserUnusedBalance, useTokenBalance } from "@ic
 import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
-import { isUseTransfer } from "utils/token";
 import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
 
 import {
