@@ -1,23 +1,36 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useRef } from "react";
 import { Grid, Box, Typography } from "components/Mui";
 import { MainCard } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
 import { t } from "@lingui/macro";
-import { SwapWrapper, Reclaim, SwapContext, SwapUIWrapper, CreatePool } from "components/swap/index";
+import {
+  SwapWrapper,
+  type SwapWrapperRef,
+  Reclaim,
+  SwapContext,
+  SwapUIWrapper,
+  CreatePool,
+} from "components/swap/index";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import { SWAP_REFRESH_KEY } from "constants/index";
+import { parseTokenAmount } from "@icpswap/utils";
 
-import SwapTransactions from "./swap/Transactions";
+import { SwapTransactions } from "./swap/Transactions";
 
-const SWITCH_BUTTONS = [
-  { id: 1, value: t`Swap`, component: SwapWrapper },
-  { id: 2, value: t`Transactions`, component: SwapTransactions },
+enum TABS {
+  SWAP = "Swap",
+  TRANSACTIONS = "Transactions",
+}
+
+const Tabs = [
+  { value: TABS.SWAP, label: t`Swap`, component: SwapWrapper },
+  { value: TABS.TRANSACTIONS, label: t`Transactions`, component: SwapTransactions },
 ];
 
 export function SwapMain() {
-  const [activeSwitch, setActiveSwitch] = useState(1);
+  const [activeTab, setActiveTab] = useState<TABS>(TABS.SWAP);
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
   const [inputToken, setInputToken] = useState<Token | Null>(null);
@@ -26,11 +39,6 @@ export function SwapMain() {
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
 
   const isConnected = useConnectorStateConnected();
-
-  const ActiveComponent = () => {
-    const Component = SWITCH_BUTTONS.filter((item) => item.id === activeSwitch)[0]?.component;
-    return <Component />;
-  };
 
   const handleAddKeys = useCallback(
     (key: string) => {
@@ -46,6 +54,16 @@ export function SwapMain() {
       setUnavailableBalanceKeys(newKeys);
     },
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
+  );
+
+  const swapWrapperRef = useRef<SwapWrapperRef>(null);
+
+  const handleInputTokenClick = useCallback(
+    (tokenAmount: string) => {
+      if (!inputToken) return;
+      swapWrapperRef.current?.setInputAmount(parseTokenAmount(tokenAmount, inputToken.decimals).toString());
+    },
+    [swapWrapperRef, inputToken],
   );
 
   return (
@@ -77,12 +95,12 @@ export function SwapMain() {
             <MainCard
               level={1}
               sx={{
-                padding: activeSwitch === 2 ? "24px 0 0 0" : "24px",
-                paddingBottom: activeSwitch === 2 ? "0!important" : "24px",
+                padding: activeTab === TABS.TRANSACTIONS ? "24px 0 0 0" : "24px",
+                paddingBottom: activeTab === TABS.TRANSACTIONS ? "0!important" : "24px",
                 overflow: "visible",
                 "@media(max-width: 640px)": {
-                  padding: activeSwitch === 2 ? "16px 0 0 0" : "16px",
-                  paddingBottom: activeSwitch === 2 ? "0!important" : "16px",
+                  padding: activeTab === TABS.TRANSACTIONS ? "16px 0 0 0" : "16px",
+                  paddingBottom: activeTab === TABS.TRANSACTIONS ? "0!important" : "16px",
                 },
               }}
             >
@@ -92,31 +110,31 @@ export function SwapMain() {
                   alignItems: "center",
                   justifyContent: "space-between",
                   position: "relative",
-                  padding: activeSwitch === 2 ? "0 24px" : "0",
+                  padding: activeTab === TABS.TRANSACTIONS ? "0 24px" : "0",
                   "@media(max-width: 640px)": {
-                    padding: activeSwitch === 2 ? "0 16px" : "0",
+                    padding: activeTab === TABS.TRANSACTIONS ? "0 16px" : "0",
                   },
                 }}
               >
                 <Box>
-                  {SWITCH_BUTTONS.map((item) => (
+                  {Tabs.map((tab) => (
                     <Box
-                      key={item.id}
+                      key={tab.value}
                       sx={{
                         display: "inline-block",
                         margin: "0 32px 0 0",
                         cursor: "pointer",
                       }}
-                      onClick={() => setActiveSwitch(item.id)}
+                      onClick={() => setActiveTab(tab.value)}
                     >
                       <Typography
                         sx={{
                           fontSize: "16px",
-                          fontWeight: activeSwitch === item.id ? 600 : 400,
-                          color: activeSwitch === item.id ? "text.primary" : "text.secondary",
+                          fontWeight: activeTab === tab.value ? 600 : 400,
+                          color: activeTab === tab.value ? "text.primary" : "text.secondary",
                         }}
                       >
-                        {item.value}
+                        {tab.label}
                       </Typography>
                     </Box>
                   ))}
@@ -125,7 +143,10 @@ export function SwapMain() {
                 <SwapSettingIcon type="swap" />
               </Box>
 
-              <Box sx={{ margin: "16px 0 0 0" }}>{ActiveComponent()}</Box>
+              <Box sx={{ margin: "16px 0 0 0" }}>
+                {activeTab === TABS.SWAP ? <SwapWrapper ref={swapWrapperRef} /> : null}
+                {activeTab === TABS.TRANSACTIONS ? <SwapTransactions /> : null}
+              </Box>
             </MainCard>
 
             {isConnected && noLiquidity === false ? (
@@ -137,7 +158,12 @@ export function SwapMain() {
                   borderRadius: "16px",
                 }}
               >
-                <Reclaim pool={selectedPool} refreshKey={SWAP_REFRESH_KEY} />
+                <Reclaim
+                  pool={selectedPool}
+                  refreshKey={SWAP_REFRESH_KEY}
+                  onInputTokenClick={handleInputTokenClick}
+                  inputToken={inputToken}
+                />
               </Box>
             ) : null}
 

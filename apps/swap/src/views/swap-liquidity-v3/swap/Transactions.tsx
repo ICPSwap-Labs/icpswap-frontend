@@ -81,7 +81,7 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
   );
 }
 
-export default function SwapTransactions() {
+export function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme() as Theme;
 

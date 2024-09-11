@@ -9,7 +9,7 @@ import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
 import { ArrowUpRight, ChevronDown, RotateCcw } from "react-feather";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
-import { nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { DepositModal } from "components/swap/DepositModal";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
@@ -120,9 +120,20 @@ export interface ReclaimLinkProps {
   refreshKey?: string;
   keepInPool?: boolean;
   bg1?: string;
+  onInputTokenClick?: (amount: string) => void;
+  inputToken?: Token | Null;
 }
 
-export function Reclaim({ pool, keepInPool = true, fontSize = "14px", ui, refreshKey, bg1 }: ReclaimLinkProps) {
+export function Reclaim({
+  pool,
+  keepInPool = true,
+  fontSize = "14px",
+  ui,
+  refreshKey,
+  bg1,
+  onInputTokenClick,
+  inputToken,
+}: ReclaimLinkProps) {
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles();
@@ -199,6 +210,17 @@ export function Reclaim({ pool, keepInPool = true, fontSize = "14px", ui, refres
     return fontSize;
   }, [fontSize, ui]);
 
+  const handleTokenClick = useCallback(
+    (token: Token, tokenAmount: string | undefined) => {
+      if (isNullArgs(inputToken) || isNullArgs(tokenAmount)) return;
+
+      if (inputToken.address === token.address) {
+        if (onInputTokenClick) onInputTokenClick(tokenAmount);
+      }
+    },
+    [inputToken],
+  );
+
   return (
     <Box>
       <Flex align="center" justify="space-between" sx={{ cursor: "pointer" }} onClick={handleCollapse}>
@@ -251,7 +273,10 @@ export function Reclaim({ pool, keepInPool = true, fontSize = "14px", ui, refres
           <Box className={`${classes.wrapper} ${ui} border`}>
             <Flex justify="space-between">
               {pool ? (
-                <Typography sx={{ fontSize: __fontSize }}>
+                <Typography
+                  sx={{ fontSize: __fontSize }}
+                  onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
+                >
                   <Trans>
                     {token0?.symbol ?? "--"} Amount:{" "}
                     {token0TotalAmount && token0
@@ -277,7 +302,10 @@ export function Reclaim({ pool, keepInPool = true, fontSize = "14px", ui, refres
           <Box className={`${classes.wrapper} ${ui}`}>
             <Flex justify="space-between">
               {pool ? (
-                <Typography sx={{ fontSize: __fontSize }}>
+                <Typography
+                  sx={{ fontSize: __fontSize }}
+                  onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
+                >
                   {token1?.symbol ?? "--"} Amount:{" "}
                   {token1TotalAmount && token1
                     ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
