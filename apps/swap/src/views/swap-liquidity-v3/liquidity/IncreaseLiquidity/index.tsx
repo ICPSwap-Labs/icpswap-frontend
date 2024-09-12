@@ -9,7 +9,6 @@ import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "s
 import { usePosition } from "hooks/swap/usePosition";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import Loading from "components/Loading/Static";
 import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
@@ -24,6 +23,7 @@ import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
 import { maxAmountFormat } from "utils/swap";
 import { useRefreshTrigger } from "hooks/index";
+import { LoadingRow } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -235,83 +235,142 @@ export default function IncreaseLiquidity() {
         <Grid container justifyContent="center">
           <Box sx={{ width: "100%", maxWidth: "612px", position: "relative" }}>
             <MainCard level={1} className={`${classes.container} lightGray200`}>
-              <HeaderTab
-                title="Increase Liquidity"
-                showArrow
-                showUserSetting
-                slippageType="mint"
-                onBack={loadLiquidityPage}
-              />
-
-              <Box mt="20px">
-                <LiquidityInfo position={existingPosition} positionId={positionId} />
-              </Box>
-
-              <Box mt={3}>
-                <Typography variant="h5" color="textPrimary">
-                  <Trans>Increase more liquidity</Trans>
-                </Typography>
-                <Box mt="12px">
-                  <SwapDepositAmount
-                    currency={token0}
-                    onUserInput={onFieldAInput}
-                    value={formattedAmounts[FIELD.CURRENCY_A]}
-                    locked={depositADisabled}
-                    type="addLiquidity"
-                    currencyBalance={currencyBalances?.[FIELD.CURRENCY_A]}
-                    showMaxButton={
-                      !atMaxAmounts[FIELD.CURRENCY_A] &&
-                      new BigNumber(maxAmounts[FIELD.CURRENCY_A]?.toExact() ?? 0).isGreaterThan(0)
-                    }
-                    onMax={handleCurrencyAMax}
+              {positionLoading === false ? (
+                <>
+                  <HeaderTab
+                    title="Increase Liquidity"
+                    showArrow
+                    showUserSetting
+                    slippageType="mint"
+                    onBack={loadLiquidityPage}
                   />
-                  <Box mt="16px">
-                    <SwapDepositAmount
-                      currency={token1}
-                      onUserInput={onFieldBInput}
-                      value={formattedAmounts[FIELD.CURRENCY_B]}
-                      locked={depositBDisabled}
-                      type="addLiquidity"
-                      currencyBalance={currencyBalances?.[FIELD.CURRENCY_B]}
-                      showMaxButton={
-                        !atMaxAmounts[FIELD.CURRENCY_B] &&
-                        new BigNumber(maxAmounts[FIELD.CURRENCY_B]?.toExact() ?? 0).isGreaterThan(0)
-                      }
-                      onMax={handleCurrencyBMax}
+
+                  <Box mt="20px">
+                    <LiquidityInfo position={existingPosition} positionId={positionId} />
+                  </Box>
+
+                  <Box mt={3}>
+                    <Typography variant="h5" color="textPrimary">
+                      <Trans>Increase more liquidity</Trans>
+                    </Typography>
+
+                    <Box mt="12px">
+                      <SwapDepositAmount
+                        noLiquidity={false}
+                        currency={token0}
+                        onUserInput={onFieldAInput}
+                        value={formattedAmounts[FIELD.CURRENCY_A]}
+                        locked={depositADisabled}
+                        type="addLiquidity"
+                        currencyBalance={currencyBalances?.[FIELD.CURRENCY_A]}
+                        showMaxButton={
+                          !atMaxAmounts[FIELD.CURRENCY_A] &&
+                          new BigNumber(maxAmounts[FIELD.CURRENCY_A]?.toExact() ?? 0).isGreaterThan(0)
+                        }
+                        onMax={handleCurrencyAMax}
+                        unusedBalance={
+                          token0 && pool
+                            ? token0.address === pool.token0.address
+                              ? unusedBalance.balance0
+                              : unusedBalance.balance1
+                            : undefined
+                        }
+                        subAccountBalance={
+                          token0 && pool
+                            ? token0.address === pool.token0.address
+                              ? token0SubAccountBalance
+                              : token1SubAccountBalance
+                            : undefined
+                        }
+                        maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
+                      />
+                      <Box mt="16px">
+                        <SwapDepositAmount
+                          noLiquidity={false}
+                          currency={token1}
+                          onUserInput={onFieldBInput}
+                          value={formattedAmounts[FIELD.CURRENCY_B]}
+                          locked={depositBDisabled}
+                          type="addLiquidity"
+                          currencyBalance={currencyBalances?.[FIELD.CURRENCY_B]}
+                          showMaxButton={
+                            !atMaxAmounts[FIELD.CURRENCY_B] &&
+                            new BigNumber(maxAmounts[FIELD.CURRENCY_B]?.toExact() ?? 0).isGreaterThan(0)
+                          }
+                          onMax={handleCurrencyBMax}
+                          unusedBalance={
+                            token1 && pool
+                              ? token1.address === pool.token0.address
+                                ? unusedBalance.balance0
+                                : unusedBalance.balance1
+                              : undefined
+                          }
+                          subAccountBalance={
+                            token1 && pool
+                              ? token1.address === pool.token0.address
+                                ? token0SubAccountBalance
+                                : token1SubAccountBalance
+                              : undefined
+                          }
+                          maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      margin: "12px 0 0 0",
+                      background: theme.palette.background.level3,
+                      borderRadius: "12px",
+                      padding: "16px",
+                    }}
+                  >
+                    <Reclaim
+                      pool={pool}
+                      keepInPool={false}
+                      fontSize="12px"
+                      refreshKey={INCREASE_LIQUIDITY_REFRESH_KEY}
                     />
                   </Box>
+
+                  <Box sx={{ margin: "20px 0 0 0" }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      disabled={!isValid}
+                      size="large"
+                      onClick={() => setConfirmModalShow(true)}
+                    >
+                      {isValid ? t`Add` : errorMessage}
+                    </Button>
+                  </Box>
+                </>
+              ) : null}
+
+              {positionLoading && (
+                <Box sx={{ width: "100%", height: "100%", minHeight: "570px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
                 </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  margin: "12px 0 0 0",
-                  background: theme.palette.background.level3,
-                  borderRadius: "12px",
-                  padding: "16px",
-                }}
-              >
-                <Reclaim pool={pool} keepInPool={false} fontSize="12px" refreshKey={INCREASE_LIQUIDITY_REFRESH_KEY} />
-              </Box>
-
-              <Box sx={{ margin: "20px 0 0 0" }}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  disabled={!isValid}
-                  size="large"
-                  onClick={() => setConfirmModalShow(true)}
-                >
-                  {isValid ? t`Add` : errorMessage}
-                </Button>
-              </Box>
+              )}
             </MainCard>
-
-            {positionLoading && (
-              <Box sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
-                <Loading loading={positionLoading} mask />
-              </Box>
-            )}
           </Box>
         </Grid>
 

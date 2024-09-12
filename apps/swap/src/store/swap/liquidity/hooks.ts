@@ -19,12 +19,12 @@ import {
 } from "@icpswap/swap-sdk";
 import { getTickToPrice } from "utils/swap/getTickToPrice";
 import { usePool, PoolState, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
-import { JSBI, maxAmountSpend, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
+import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
 import { t } from "@lingui/macro";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
-import { getTokenInsufficient } from "hooks/swap/index";
+import { getTokenInsufficient, useMaxAmountSpend } from "hooks/swap/index";
 import { useTokenAllBalance } from "hooks/liquidity/index";
 
 import {
@@ -379,15 +379,38 @@ export function useMintInfo(
     tickUpper,
   ]);
 
-  const maxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
-    (accumulator, field) => {
-      return {
-        ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field]),
-      };
-    },
-    {},
-  );
+  const currencyAMaxSpentAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalances[FIELD.CURRENCY_A],
+    poolId,
+    subBalance:
+      currencyBalances[FIELD.CURRENCY_A]?.currency.address === token0?.address
+        ? token0SubAccountBalance
+        : token1SubAccountBalance,
+    unusedBalance:
+      currencyBalances[FIELD.CURRENCY_A]?.currency.address === token0?.address
+        ? unusedBalance.balance0
+        : unusedBalance.balance1,
+  });
+
+  const currencyBMaxSpentAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalances[FIELD.CURRENCY_B],
+    poolId,
+    subBalance:
+      currencyBalances[FIELD.CURRENCY_B]?.currency.address === token0?.address
+        ? token0SubAccountBalance
+        : token1SubAccountBalance,
+    unusedBalance:
+      currencyBalances[FIELD.CURRENCY_B]?.currency.address === token0?.address
+        ? unusedBalance.balance0
+        : unusedBalance.balance1,
+  });
+
+  const maxAmounts = useMemo(() => {
+    return {
+      [FIELD.CURRENCY_A]: currencyAMaxSpentAmount,
+      [FIELD.CURRENCY_B]: currencyBMaxSpentAmount,
+    };
+  }, [currencyAMaxSpentAmount, currencyBMaxSpentAmount]);
 
   const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {

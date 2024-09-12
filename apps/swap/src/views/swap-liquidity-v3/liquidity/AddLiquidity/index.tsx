@@ -458,6 +458,7 @@ export default function AddLiquidity() {
               </Typography>
 
               <SwapDepositAmount
+                noLiquidity={noLiquidity}
                 currency={baseCurrency}
                 value={formattedAmounts[FIELD.CURRENCY_A]}
                 onUserInput={onFieldAInput}
@@ -468,9 +469,25 @@ export default function AddLiquidity() {
                   new BigNumber(maxAmounts[FIELD.CURRENCY_A]?.toExact() ?? 0).isGreaterThan(0)
                 }
                 onMax={handleCurrencyAMax}
+                unusedBalance={
+                  baseCurrency && pool
+                    ? baseCurrency.address === pool.token0.address
+                      ? unusedBalance.balance0
+                      : unusedBalance.balance1
+                    : undefined
+                }
+                subAccountBalance={
+                  baseCurrency && pool
+                    ? baseCurrency.address === pool.token0.address
+                      ? token0SubAccountBalance
+                      : token1SubAccountBalance
+                    : undefined
+                }
+                maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
               />
 
               <SwapDepositAmount
+                noLiquidity={noLiquidity}
                 currency={quoteCurrency}
                 value={formattedAmounts[FIELD.CURRENCY_B]}
                 onUserInput={onFieldBInput}
@@ -481,6 +498,21 @@ export default function AddLiquidity() {
                   new BigNumber(maxAmounts[FIELD.CURRENCY_B]?.toExact() ?? 0).isGreaterThan(0)
                 }
                 onMax={handleCurrencyBMax}
+                unusedBalance={
+                  quoteCurrency && pool
+                    ? quoteCurrency.address === pool.token0.address
+                      ? unusedBalance.balance0
+                      : unusedBalance.balance1
+                    : undefined
+                }
+                subAccountBalance={
+                  quoteCurrency && pool
+                    ? quoteCurrency.address === pool.token0.address
+                      ? token0SubAccountBalance
+                      : token1SubAccountBalance
+                    : undefined
+                }
+                maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
               />
 
               {!noLiquidity ? (

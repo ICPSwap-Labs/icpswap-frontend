@@ -80,7 +80,7 @@ export interface SwapBalancesProps {
   subAccountBalance: BigNumber | Null;
   unusedBalance: bigint | Null;
   token: Token | Null;
-  amount: string | Null;
+  amount: string | number | Null;
   maxSpentAmount: string | Null;
   onAmountChange: (amount: string) => void;
 }

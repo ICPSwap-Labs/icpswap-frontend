@@ -286,3 +286,4 @@ export * from "./useSwapPositions";
 export * from "./usePCMBalances";
 export * from "./useSwapTokenFeeCost";
 export * from "./useLiquidityLocksImage";
+export * from "./useMaxAmountSpend";
