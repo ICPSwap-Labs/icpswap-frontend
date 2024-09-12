@@ -17,10 +17,12 @@ interface getBalancePercentProps {
 }
 
 function getBalancePercent({ unusedBalance, balance, subAccountBalance }: getBalancePercentProps) {
-  const balancePercent = `${new BigNumber(balance)
-    .dividedBy(new BigNumber(balance).plus(subAccountBalance).plus(unusedBalance.toString()))
-    .multipliedBy(100)}%`;
-  const canisterPercent = new BigNumber(subAccountBalance).plus(unusedBalance.toString()).isEqualTo(0)
+  const totalBalance = new BigNumber(balance).plus(subAccountBalance).plus(unusedBalance.toString());
+
+  const balancePercent = totalBalance.isEqualTo(0)
+    ? "0%"
+    : `${new BigNumber(balance).dividedBy(totalBalance).multipliedBy(100)}%`;
+  const canisterPercent = totalBalance.isEqualTo(0)
     ? "0%"
     : `${new BigNumber(1).minus(percentToNum(balancePercent)).multipliedBy(100)}%`;
 
@@ -362,6 +364,9 @@ export function SwapBalances({
     [setMouseDown],
   );
 
+  console.log("balancePercent: ", balancePercent);
+  console.log("canisterPercent: ", canisterPercent);
+
   return (
     <Box
       ref={ref}
@@ -370,7 +375,10 @@ export function SwapBalances({
         height: "12px",
       }}
     >
-      {nonNullArgs(balancePercent) && nonNullArgs(canisterPercent) ? (
+      {nonNullArgs(balancePercent) &&
+      nonNullArgs(canisterPercent) &&
+      !new BigNumber(percentToNum(balancePercent)).isEqualTo(0) &&
+      !new BigNumber(percentToNum(canisterPercent)).isEqualTo(0) ? (
         <>
           <Flex
             fullWidth
