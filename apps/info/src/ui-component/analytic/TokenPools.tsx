@@ -105,7 +105,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell color="text.theme-secondary">{apr ?? "--"}</BodyCell>
+      <BodyCell color="text.apr">{apr ?? "--"}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
