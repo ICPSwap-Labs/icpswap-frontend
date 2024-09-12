@@ -300,7 +300,7 @@ export function SwapBalances({
         const amount = new BigNumber(maxSpentAmount)
           .multipliedBy(percentToNum(canisterPercent))
           .plus(
-            remainBalanceWidth.isLessThan(0)
+            !remainBalanceWidth.isGreaterThan(0)
               ? 0
               : new BigNumber(maxSpentAmount)
                   .multipliedBy(percentToNum(balancePercent))
@@ -374,8 +374,8 @@ export function SwapBalances({
     >
       {nonNullArgs(balancePercent) &&
       nonNullArgs(canisterPercent) &&
-      !new BigNumber(percentToNum(balancePercent)).isEqualTo(0) &&
-      !new BigNumber(percentToNum(canisterPercent)).isEqualTo(0) ? (
+      (new BigNumber(percentToNum(balancePercent)).isGreaterThan(0) ||
+        new BigNumber(percentToNum(canisterPercent)).isGreaterThan(0)) ? (
         <>
           <Flex
             fullWidth
