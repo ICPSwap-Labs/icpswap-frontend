@@ -29,8 +29,10 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const { start_time, end_time } = useMemo(() => {
     const now = parseInt(String(new Date().getTime() / 1000));
 
-    const start_time = now - 30 * 24 * 3600;
+    let start_time = now - 30 * 24 * 3600;
     const end_time = now;
+
+    if (start_time < 1725883800) start_time = 1725883800;
 
     return {
       start_time,
