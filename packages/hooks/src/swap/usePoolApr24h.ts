@@ -13,10 +13,12 @@ export function usePoolApr24h({ volumeUSD, poolTvlUSD }: UsePoolApr24hProps) {
 
     const fee24h = calcFee24h(volumeUSD);
 
-    return `${new BigNumber(fee24h)
-      .dividedBy(poolTvlUSD)
-      .multipliedBy(360 * 0.8)
-      .multipliedBy(100)
-      .toFixed(2)}%`;
+    return new BigNumber(fee24h).isEqualTo(0) || new BigNumber(volumeUSD).isEqualTo(0)
+      ? undefined
+      : `${new BigNumber(fee24h)
+          .dividedBy(poolTvlUSD)
+          .multipliedBy(360 * 0.8)
+          .multipliedBy(100)
+          .toFixed(2)}%`;
   }, [poolTvlUSD, volumeUSD]);
 }
