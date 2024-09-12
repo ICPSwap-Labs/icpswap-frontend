@@ -44,11 +44,11 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
     >
       <Flex align="center" justify="space-between" gap="0 20px">
         <Typography sx={{ fontSize: __fontSize, maxWidth: "280px", lineHeight: "20px" }}>
-          <Trans>The trading pair has not been created. You can create this trading pair</Trans>
+          <Trans>No liquidity available. You can add initial liquidity to earning fees.</Trans>
         </Typography>
 
         <Button sx={{ minWidth: "98px" }} variant="contained" size="small" onClick={handleCreatePool}>
-          <Trans>Create Pool</Trans>
+          <Trans>Add Liquidity</Trans>
         </Button>
       </Flex>
     </Box>

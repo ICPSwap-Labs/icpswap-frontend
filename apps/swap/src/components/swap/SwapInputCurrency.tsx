@@ -119,29 +119,37 @@ export function SwapInputCurrency({
         <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
           <Flex gap="0 8px">
             {noLiquidity === false ? (
-              <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={onCanisterBalanceClick}>
-                <CanisterIcon />
+              nonNullArgs(unusedBalance) &&
+              nonNullArgs(subBalance) &&
+              currency &&
+              parseTokenAmount(
+                new BigNumber(unusedBalance.toString()).plus(subBalance),
+                currency.decimals,
+              ).isGreaterThan(0) ? (
+                <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={onCanisterBalanceClick}>
+                  <CanisterIcon />
 
-                <Typography title={t`Swap Pool Balances`}>
-                  {nonNullArgs(unusedBalance) && nonNullArgs(subBalance) && currency
-                    ? formatAmount(
+                  <Tooltip tips={t`Swap Pool Balances`}>
+                    <Typography>
+                      {formatAmount(
                         parseTokenAmount(
                           new BigNumber(unusedBalance.toString()).plus(subBalance),
                           currency.decimals,
                         ).toString(),
                         4,
-                      )
-                    : "--"}
-                </Typography>
-              </Flex>
+                      )}
+                    </Typography>
+                  </Tooltip>
+                </Flex>
+              ) : null
             ) : null}
 
             <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={onWalletBalanceClick}>
               <WalletIcon />
 
-              <Typography title={t`Wallet Balances`}>
-                {currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}
-              </Typography>
+              <Tooltip tips={t`Wallet Balances`}>
+                <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}</Typography>
+              </Tooltip>
             </Flex>
 
             {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
@@ -153,11 +161,38 @@ export function SwapInputCurrency({
               {usdChange ? (
                 <Tooltip
                   tips={
-                    <Trans>
-                      Value difference = (Received value - Paid value) / Paid value When you trade a certain amount of
-                      tokens, it affects the liquidity pool's depth. This will affect the overall availability and price
-                      of the tokens, leading to noticeable price differences.
-                    </Trans>
+                    <Typography
+                      component="div"
+                      sx={{
+                        color: "#111936",
+                        fontSize: "12px",
+                        lineHeight: "18px",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: "#111936",
+                          fontSize: "12px",
+                          lineHeight: "18px",
+                        }}
+                      >
+                        <Trans>Value difference = (Received value - Paid value) / Paid value</Trans>
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          color: "#111936",
+                          fontSize: "12px",
+                          lineHeight: "18px",
+                        }}
+                      >
+                        <Trans>
+                          When you trade a certain amount of tokens, it affects the liquidity pool's depth. This will
+                          affect the overall availability and price of the tokens, leading to noticeable price
+                          differences.
+                        </Trans>
+                      </Typography>
+                    </Typography>
                   }
                 >
                   <Typography

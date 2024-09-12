@@ -364,9 +364,6 @@ export function SwapBalances({
     [setMouseDown],
   );
 
-  console.log("balancePercent: ", balancePercent);
-  console.log("canisterPercent: ", canisterPercent);
-
   return (
     <Box
       ref={ref}
@@ -385,8 +382,6 @@ export function SwapBalances({
             gap={`0 ${GAP}px`}
             sx={{
               height: "4px",
-              borderRadius: "10px",
-              background: theme.palette.background.level4,
             }}
           >
             {nonNullArgs(canisterPercent) && new BigNumber(percentToNum(canisterPercent)).isGreaterThan(0) ? (
