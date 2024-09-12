@@ -467,7 +467,7 @@ export function PositionDetails({
                 onClick={handleCollectFee}
                 disabled={feeIsZero}
               >
-                <Trans>Collect fees</Trans>
+                <Trans>Collect Fees</Trans>
               </Button>
             ) : null}
 

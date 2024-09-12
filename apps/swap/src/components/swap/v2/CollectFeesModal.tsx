@@ -41,7 +41,7 @@ export default function CollectFeesModal({
   const classes = useStyles();
 
   return (
-    <SwapModal open={open} onClose={onClose} title={t`Collect fees`}>
+    <SwapModal open={open} onClose={onClose} title={t`Collect Fees`}>
       <>
         <Box className={classes.feeBox}>
           <Grid container alignItems="center">
