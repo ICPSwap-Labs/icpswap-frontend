@@ -72,6 +72,9 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
             "&.secondary": {
               background: colors.darkLevel4,
               boxShadow: "none",
+              "&.Mui-disabled": {
+                color: colors.darkTextTertiary,
+              },
             },
           },
         },

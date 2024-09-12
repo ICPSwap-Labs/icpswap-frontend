@@ -141,8 +141,12 @@ export function PositionDetails({
 
   const hasUnclaimedFees = useMemo(() => {
     if (!feeAmount0 && !feeAmount1) return false;
-
     return true;
+  }, [feeAmount0, feeAmount1]);
+
+  const feeIsZero = useMemo(() => {
+    if (!feeAmount0 || !feeAmount1) return true;
+    return new BigNumber(feeAmount0.toExact()).plus(feeAmount1.toExact()).isEqualTo(0);
   }, [feeAmount0, feeAmount1]);
 
   useEffect(() => {
@@ -454,12 +458,14 @@ export function PositionDetails({
                 <Trans>Remove Liquidity</Trans>
               </Button>
             ) : null}
+
             {hasUnclaimedFees && !staked ? (
               <Button
                 variant="contained"
                 className="secondary"
                 size={matchDownSM ? "small" : "medium"}
                 onClick={handleCollectFee}
+                disabled={feeIsZero}
               >
                 <Trans>Collect fees</Trans>
               </Button>

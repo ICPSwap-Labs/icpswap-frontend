@@ -135,23 +135,23 @@ function Transactions({ address }: TransactionsProps) {
             <Header className={classes.wrapper}>
               <HeaderCell>#</HeaderCell>
 
-              <HeaderCell field="amountUSD" isSort>
+              <HeaderCell field="amountUSD">
                 <Trans>Total Value</Trans>
               </HeaderCell>
 
-              <HeaderCell field="amountToken0" isSort>
+              <HeaderCell field="amountToken0">
                 <Trans>Token Amount</Trans>
               </HeaderCell>
 
-              <HeaderCell field="amountToken1" isSort>
+              <HeaderCell field="amountToken1">
                 <Trans>Token Amount</Trans>
               </HeaderCell>
 
-              <HeaderCell field="sender" isSort>
+              <HeaderCell field="sender">
                 <Trans>Account</Trans>
               </HeaderCell>
 
-              <HeaderCell field="timestamp" isSort>
+              <HeaderCell field="timestamp">
                 <Trans>Time</Trans>
               </HeaderCell>
             </Header>
