@@ -310,7 +310,7 @@ export function PositionDetails({
             {hasUnclaimedFees && (
               <Grid item xs={buttonGridXS}>
                 <Button fullWidth variant="outlined" size="large" onClick={handleCollectFee}>
-                  <Trans>Collect fees</Trans>
+                  <Trans>Collect Fees</Trans>
                 </Button>
               </Grid>
             )}

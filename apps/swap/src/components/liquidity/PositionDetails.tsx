@@ -461,7 +461,7 @@ export function PositionDetails({
                 size={matchDownSM ? "small" : "medium"}
                 onClick={handleCollectFee}
               >
-                <Trans>Collect fees</Trans>
+                <Trans>Collect Fees</Trans>
               </Button>
             ) : null}
 

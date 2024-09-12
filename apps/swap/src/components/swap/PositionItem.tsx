@@ -337,7 +337,7 @@ export function PositionDetails({
             )}
             {hasUnclaimedFees ? (
               <Button fullWidth variant="outlined" size={matchDownSM ? "medium" : "medium"} onClick={handleCollectFee}>
-                <Trans>Collect fees</Trans>
+                <Trans>Collect Fees</Trans>
               </Button>
             ) : null}
             {!invalid ? (
