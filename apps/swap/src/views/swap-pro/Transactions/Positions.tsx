@@ -179,7 +179,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               </BodyCell>
             ) : (
               <BodyCell>
-                ${pool.priceOf(token0).toSignificant(6)}
+                {pool.priceOf(token0).toSignificant(6)}
                 <BodyCell>{pairName ?? ""}</BodyCell>
               </BodyCell>
             )

@@ -6,7 +6,7 @@ export { default as ImageLoading } from "./Loading/Static";
 export { default as Loading } from "./Loading/index";
 export * from "./Loading/Dot";
 export { default as FullscreenLoading } from "./Loading/Fullscreen";
-export { TextButton, ALink } from "@icpswap/ui";
+export { TextButton, ALink, MaxButton } from "@icpswap/ui";
 export * from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as LoadingRow } from "./Loading/LoadingRow";
