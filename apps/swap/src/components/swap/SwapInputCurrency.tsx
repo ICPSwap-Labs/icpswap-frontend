@@ -100,7 +100,7 @@ export function SwapInputCurrency({
       }}
     >
       <Box sx={{ display: "flex", gap: "0 8px" }}>
-        <Box>
+        <Flex align="center">
           <CurrencySelector
             currencyId={currency?.address}
             onChange={onTokenChange}
@@ -108,7 +108,7 @@ export function SwapInputCurrency({
             bgGray
             loading={currencyState === UseCurrencyState.LOADING}
           />
-        </Box>
+        </Flex>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
           <SwapInput value={formattedAmount ?? ""} currency={currency} onUserInput={onInput} disabled={disabled} />

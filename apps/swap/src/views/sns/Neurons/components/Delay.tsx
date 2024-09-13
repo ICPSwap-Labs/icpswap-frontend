@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
-import { Button, Typography, Box, useTheme } from "@mui/material";
+import { Button, Typography, Box, useTheme, Theme } from "components/Mui";
 import {
   parseTokenAmount,
   toHexString,
   toSignificantWithGroupSeparator,
   secondsToDays,
   daysToSeconds,
+  BigNumber,
 } from "@icpswap/utils";
 import { increaseNeuronDelay } from "@icpswap/hooks";
-import BigNumber from "bignumber.js";
+import { MaxButton } from "@icpswap/ui";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { NervousSystemParameters, Neuron } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
@@ -16,8 +17,7 @@ import { Trans, t } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import { secondsToDissolveDelayDuration, getSnsDelayTimeInSeconds, neuronFormat } from "utils/sns/index";
-import { MaxButton, MinButton } from "components/Button";
-import { Theme } from "@mui/material/styles";
+import { MinButton } from "components/Button";
 
 export interface SetDissolveDelayProps {
   open: boolean;
