@@ -274,7 +274,7 @@ export function Reclaim({
             <Flex justify="space-between">
               {pool ? (
                 <Typography
-                  sx={{ fontSize: __fontSize }}
+                  sx={{ fontSize: __fontSize, cursor: "pointer" }}
                   onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
                 >
                   <Trans>
@@ -303,7 +303,7 @@ export function Reclaim({
             <Flex justify="space-between">
               {pool ? (
                 <Typography
-                  sx={{ fontSize: __fontSize }}
+                  sx={{ fontSize: __fontSize, cursor: "pointer" }}
                   onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
                 >
                   {token1?.symbol ?? "--"} Amount:{" "}

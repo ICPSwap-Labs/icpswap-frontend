@@ -122,7 +122,7 @@ export function SwapMain() {
                       key={tab.value}
                       sx={{
                         display: "inline-block",
-                        margin: "0 32px 0 0",
+                        margin: "0 24px 0 0",
                         cursor: "pointer",
                       }}
                       onClick={() => setActiveTab(tab.value)}

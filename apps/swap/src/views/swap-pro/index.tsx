@@ -122,7 +122,7 @@ export default function SwapPro() {
             >
               <Box
                 sx={{
-                  width: "350px",
+                  width: "380px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px 0",
