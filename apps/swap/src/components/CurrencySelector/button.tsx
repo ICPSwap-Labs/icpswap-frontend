@@ -45,7 +45,7 @@ export function CurrencySelectorButton({ currency, onClick, bgGray = false, load
         <Typography
           sx={{
             color: "text.primary",
-            fontSize: "16px",
+            fontSize: "18px",
             fontWeight: 500,
           }}
         >

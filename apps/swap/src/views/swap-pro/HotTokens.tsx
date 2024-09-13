@@ -141,8 +141,8 @@ export default function HotTokens() {
         width: "100%",
         borderRadius: "50px",
         height: "40px",
-        padding: "0 15px 0 0",
-        background: theme.colors.darkPrimaryDark,
+        // padding: "0 15px 0 0",
+        // background: theme.colors.darkPrimaryDark,
       }}
     >
       <Box
@@ -206,7 +206,7 @@ export default function HotTokens() {
         </Box>
       </Box>
 
-      <Box
+      {/* <Box
         sx={{
           width: "60px",
           borderRadius: "50px",
@@ -218,7 +218,7 @@ export default function HotTokens() {
         <Typography color="text.primary">
           <Trans>Tokens</Trans>
         </Typography>
-      </Box>
+      </Box> */}
     </Box>
   ) : null;
 }

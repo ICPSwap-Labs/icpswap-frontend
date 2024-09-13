@@ -66,7 +66,7 @@ export default function Wrap() {
                       key={item.id}
                       sx={{
                         display: "inline-block",
-                        marginRight: "32px",
+                        margin: "0 24px 0 0",
                         cursor: "pointer",
                       }}
                       onClick={() => setActiveSwitch(item.id)}

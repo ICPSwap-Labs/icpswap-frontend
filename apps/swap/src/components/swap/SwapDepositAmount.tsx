@@ -26,15 +26,15 @@ const useStyle = makeStyles((theme: Theme) => {
     input: {
       "& input": {
         textAlign: "right",
-        fontSize: "20px!important",
-        fontWeight: 700,
+        fontSize: "28px!important",
+        fontWeight: 600,
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },
       },
       "& input::placeholder": {
-        fontSize: "20px",
-        fontWeight: 700,
+        fontSize: "28px",
+        fontWeight: 600,
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },
@@ -42,7 +42,7 @@ const useStyle = makeStyles((theme: Theme) => {
     },
     chip: {
       padding: "0 10px",
-      height: "44px",
+      height: "40px",
       backgroundColor: isDarkTheme(theme) ? theme.palette.background.level2 : theme.colors.lightGray200,
       borderRadius: `12px`,
       "& .MuiChip-label": {
@@ -159,7 +159,7 @@ export function SwapDepositAmount({
     <Box sx={{ p: 2 }} className={classes.box}>
       <Grid container alignItems="center">
         <Flex gap="0 8px" className={classes.chip}>
-          <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} />
+          <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} size="24px" />
           <Typography
             sx={{
               color: "text.primary",
@@ -190,9 +190,9 @@ export function SwapDepositAmount({
         </Grid>
       </Grid>
 
-      <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }}>
+      <Flex gap="0 4px" sx={{ margin: "12px 0 0 0" }}>
         {currency ? (
-          <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
+          <Flex fullWidth justify="space-between">
             <Flex gap="0 8px">
               {noLiquidity === false ? (
                 nonNullArgs(unusedBalance) &&
