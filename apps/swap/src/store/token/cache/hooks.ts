@@ -23,8 +23,16 @@ export function useUpdateTokenStandard() {
           // Register usdc as icrc2 token
         }
 
-        if (canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" || canisterId === "yfumr-cyaaa-aaaar-qaela-cai") {
+        if (
+          canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" ||
+          canisterId === "yfumr-cyaaa-aaaar-qaela-cai" ||
+          canisterId === "vgqnj-miaaa-aaaal-qaapa-cai"
+        ) {
           return { canisterId, standard: TOKEN_STANDARD.ICRC2 };
+        }
+
+        if (canisterId === "qfr6e-biaaa-aaaak-qafuq-cai") {
+          return { canisterId, standard: TOKEN_STANDARD.ICRC1 };
         }
 
         return { canisterId, standard };
