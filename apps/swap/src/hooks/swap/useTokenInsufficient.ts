@@ -33,6 +33,7 @@ export function getTokenInsufficient({
   // console.log("xxxx subAccountBalance:", subAccountBalance.toString());
   // console.log("xxxx formatTokenAmount: ", formatTokenAmount);
   // console.log("xxxx balance:", balance.toString());
+  // console.log("allowance:", allowance);
 
   if (!new BigNumber(unusedBalance.toString()).isLessThan(formatTokenAmount)) return "NO_TRANSFER_APPROVE";
 
@@ -51,7 +52,9 @@ export function getTokenInsufficient({
         new BigNumber(formatTokenAmount).plus(
           isUseTransfer(token) || !allowance
             ? token.transFee * 2
-            : !new BigNumber(allowance?.toString()).isLessThan(formatTokenAmount)
+            : // formatTokenAmount is the total amount, includes the unused balance
+            // The approve amount is the user balance
+            !new BigNumber(allowance?.toString()).isLessThan(balance)
             ? token.transFee
             : token.transFee * 2,
         ),
