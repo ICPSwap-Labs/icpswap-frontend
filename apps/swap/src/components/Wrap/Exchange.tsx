@@ -333,7 +333,7 @@ export default function Exchange() {
           }}
           onClick={onSwitchTokens}
         >
-          <Image src="/images/icon_exchange.png" sx={{ width: "28px", height: "28px" }} />
+          <Image src="/images/icon_exchange.svg" sx={{ width: "28px", height: "28px" }} />
         </Box>
       </Box>
 
