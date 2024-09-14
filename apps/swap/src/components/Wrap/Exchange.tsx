@@ -291,7 +291,7 @@ export default function Exchange() {
             <Grid item xs container alignItems="center">
               <SwapInput
                 value={formattedAmounts[SWAP_FIELD.INPUT]}
-                currency={inputCurrency}
+                token={inputCurrency}
                 onUserInput={debouncedTypeInput}
               />
             </Grid>
@@ -350,7 +350,7 @@ export default function Exchange() {
             <Grid item xs container alignItems="center">
               <SwapInput
                 value={formattedAmounts[SWAP_FIELD.OUTPUT]}
-                currency={outputCurrency}
+                token={outputCurrency}
                 onUserInput={debouncedTypeOutput}
               />
             </Grid>

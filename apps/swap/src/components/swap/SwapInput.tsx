@@ -5,13 +5,13 @@ import { NumberTextField } from "components/index";
 
 export interface SwapInputProps {
   value: string | number | undefined;
-  currency: Token | undefined;
+  token: Token | undefined;
   onUserInput: (value: string) => void;
   disabled?: boolean;
 }
 
-export const SwapInput = memo(({ value, currency, onUserInput, disabled }: SwapInputProps) => {
-  const decimal = currency?.decimals ?? SAFE_DECIMALS_LENGTH;
+export const SwapInput = memo(({ value, token, onUserInput, disabled }: SwapInputProps) => {
+  const decimal = token?.decimals ?? SAFE_DECIMALS_LENGTH;
 
   return (
     <NumberTextField
@@ -22,6 +22,7 @@ export const SwapInput = memo(({ value, currency, onUserInput, disabled }: SwapI
           textAlign: "right",
           fontSize: "28px!important",
           fontWeight: 600,
+          padding: "0px",
         },
         "& input::placeholder": {
           fontSize: "28px",

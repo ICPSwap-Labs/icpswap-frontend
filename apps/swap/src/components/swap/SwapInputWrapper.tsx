@@ -1,8 +1,8 @@
-import { useMemo, useContext, useEffect, useCallback } from "react";
+import { useMemo, useContext, useEffect } from "react";
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { BigNumber, isNullArgs, parseTokenAmount } from "@icpswap/utils";
+import { BigNumber } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { TokenInfo } from "types/token";
@@ -23,7 +23,7 @@ export interface SwapInputWrapperProps {
     INPUT: CurrencyAmount<Token> | undefined;
     OUTPUT: CurrencyAmount<Token> | undefined;
   };
-  tradePoolId: string | undefined;
+  poolId: string | undefined;
   currencyBalances: {
     INPUT: CurrencyAmount<Token> | undefined;
     OUTPUT: CurrencyAmount<Token> | undefined;
@@ -61,6 +61,7 @@ export function SwapInputWrapper({
   ui = "normal",
   maxInputAmount,
   noLiquidity,
+  poolId,
 }: SwapInputWrapperProps) {
   const theme = useTheme();
   const { independentField, typedValue } = useSwapState();
@@ -100,38 +101,12 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
-  const handleWalletBalanceClick = useCallback(() => {
-    if (!inputToken || !currencyBalances[SWAP_FIELD.INPUT]) return undefined;
-
-    onInput(
-      new BigNumber(currencyBalances[SWAP_FIELD.INPUT].toExact())
-        .minus(parseTokenAmount(inputToken.transFee, inputToken.decimals))
-        .toString(),
-      "input",
-    );
-  }, [inputToken, onInput, currencyBalances[SWAP_FIELD.INPUT]]);
-
-  const handleCanisterBalanceClick = useCallback(() => {
-    if (!inputToken || isNullArgs(inputTokenSubBalance) || isNullArgs(inputTokenUnusedBalance)) return undefined;
-
-    if (inputTokenSubBalance.isEqualTo(0)) {
-      onInput(parseTokenAmount(inputTokenUnusedBalance, inputToken.decimals).toString(), "input");
-    } else {
-      onInput(
-        parseTokenAmount(inputTokenUnusedBalance, inputToken.decimals)
-          .plus(parseTokenAmount(inputTokenSubBalance.minus(inputToken.transFee), inputToken.decimals))
-          .toString(),
-        "input",
-      );
-    }
-  }, [inputToken, onInput, inputTokenSubBalance, inputTokenUnusedBalance]);
-
   return (
     <Box>
       <Box sx={{ position: "relative" }}>
         <SwapInputCurrency
           noLiquidity={noLiquidity}
-          currency={inputToken}
+          token={inputToken}
           currencyPrice={tokenAPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.INPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.INPUT]}
@@ -144,9 +119,8 @@ export function SwapInputWrapper({
           unusedBalance={inputTokenUnusedBalance}
           subBalance={inputTokenSubBalance}
           isInput
-          onWalletBalanceClick={handleWalletBalanceClick}
-          onCanisterBalanceClick={handleCanisterBalanceClick}
           maxInputAmount={maxInputAmount}
+          poolId={poolId}
         />
 
         <Box
@@ -176,7 +150,7 @@ export function SwapInputWrapper({
 
       <Box sx={{ marginTop: "6px" }}>
         <SwapInputCurrency
-          currency={outputToken}
+          token={outputToken}
           currencyPrice={tokenBPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
@@ -189,6 +163,8 @@ export function SwapInputWrapper({
           disabled
           unusedBalance={outputTokenUnusedBalance}
           subBalance={outputTokenSubBalance}
+          poolId={poolId}
+          noLiquidity={noLiquidity}
         />
       </Box>
     </Box>

@@ -1,12 +1,11 @@
 import { useContext, useMemo } from "react";
-import { Box, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, useTheme } from "components/Mui";
 import { TokenCharts } from "@icpswap/ui";
 
 import { SwapProContext } from "../context";
 
 export default function TokenChartInfo() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const { inputToken, outputToken, token } = useContext(SwapProContext);
 

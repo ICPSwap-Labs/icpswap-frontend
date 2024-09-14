@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { CurrencySelector } from "components/swap/index";
 import {
@@ -8,6 +8,7 @@ import {
   nonNullArgs,
   parseTokenAmount,
   formatTokenAmount,
+  isNullArgs,
 } from "@icpswap/utils";
 import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
@@ -17,16 +18,18 @@ import { TokenInfo } from "types/token";
 import { SwapInput } from "components/swap/SwapInput";
 import { impactColor } from "utils/swap/prices";
 import { Null } from "@icpswap/types";
+import { useBalanceMaxSpend, usePoolBalanceMaxSpend } from "hooks/swap";
+import { maxAmountFormat } from "utils/index";
 
-import { SwapBalances } from "./SwapBalances";
-import { WalletIcon } from "./icons/WalletIcon";
 import { CanisterIcon } from "./icons/CanisterIcon";
+import { WalletIcon } from "./icons/WalletIcon";
+import { SwapBalances } from "./SwapBalances";
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
   onTokenChange: (token: TokenInfo) => void;
   currencyState: UseCurrencyState;
-  currency: Token | undefined;
+  token: Token | undefined;
   currencyPrice: string | undefined | number;
   formattedAmount: string | undefined;
   onInput: (value: string) => void;
@@ -38,17 +41,16 @@ export interface SwapInputCurrencyProps {
   unusedBalance: bigint | Null;
   subBalance: BigNumber | Null;
   isInput?: boolean;
-  onWalletBalanceClick?: () => void;
-  onCanisterBalanceClick?: () => void;
   maxInputAmount?: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
+  poolId: string | Null;
 }
 
 export function SwapInputCurrency({
   onMax,
   currencyState,
   onTokenChange,
-  currency,
+  token,
   currencyPrice,
   formattedAmount,
   onInput,
@@ -60,10 +62,9 @@ export function SwapInputCurrency({
   unusedBalance,
   subBalance,
   isInput = false,
-  onWalletBalanceClick,
-  onCanisterBalanceClick,
   maxInputAmount,
   noLiquidity,
+  poolId,
 }: SwapInputCurrencyProps) {
   const theme = useTheme();
 
@@ -87,6 +88,23 @@ export function SwapInputCurrency({
     ? "#F7B231"
     : "#8492c4";
 
+  const maxWalletBalanceSpent = useBalanceMaxSpend({
+    token,
+    balance: formatTokenAmount(currencyBalance?.toExact(), token?.decimals).toString(),
+    poolId,
+  });
+  const maxPoolBalanceSpent = usePoolBalanceMaxSpend({ token, subBalance, unusedBalance });
+
+  const handleWalletBalanceClick = useCallback(() => {
+    if (!isInput || isNullArgs(maxWalletBalanceSpent) || isNullArgs(token)) return;
+    onInput(maxAmountFormat(maxWalletBalanceSpent.toExact(), token.decimals));
+  }, [onInput, isInput, maxWalletBalanceSpent, token]);
+
+  const handleCanisterBalanceClick = useCallback(() => {
+    if (isInput !== true || isNullArgs(maxPoolBalanceSpent) || isNullArgs(token)) return undefined;
+    onInput(maxAmountFormat(maxPoolBalanceSpent.toExact(), token.decimals));
+  }, [onInput, maxPoolBalanceSpent, isInput, token]);
+
   return (
     <Box
       sx={{
@@ -102,31 +120,30 @@ export function SwapInputCurrency({
       <Box sx={{ display: "flex", gap: "0 8px" }}>
         <Flex align="center">
           <CurrencySelector
-            currencyId={currency?.address}
+            currencyId={token?.address}
             onChange={onTokenChange}
-            disabledCurrency={currency ? [currency] : []}
+            disabledCurrency={token ? [token] : []}
             bgGray
             loading={currencyState === UseCurrencyState.LOADING}
           />
         </Flex>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formattedAmount ?? ""} currency={currency} onUserInput={onInput} disabled={disabled} />
+          <SwapInput value={formattedAmount ?? ""} token={token} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 
-      {currency ? (
+      {token ? (
         <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
           <Flex gap="0 8px">
             {noLiquidity === false ? (
               nonNullArgs(unusedBalance) &&
               nonNullArgs(subBalance) &&
-              currency &&
-              parseTokenAmount(
-                new BigNumber(unusedBalance.toString()).plus(subBalance),
-                currency.decimals,
-              ).isGreaterThan(0) ? (
-                <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={onCanisterBalanceClick}>
+              token &&
+              parseTokenAmount(new BigNumber(unusedBalance.toString()).plus(subBalance), token.decimals).isGreaterThan(
+                0,
+              ) ? (
+                <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleCanisterBalanceClick}>
                   <CanisterIcon />
 
                   <Tooltip tips={t`Swap Pool Balances`}>
@@ -134,7 +151,7 @@ export function SwapInputCurrency({
                       {formatAmount(
                         parseTokenAmount(
                           new BigNumber(unusedBalance.toString()).plus(subBalance),
-                          currency.decimals,
+                          token.decimals,
                         ).toString(),
                         4,
                       )}
@@ -144,7 +161,7 @@ export function SwapInputCurrency({
               ) : null
             ) : null}
 
-            <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={onWalletBalanceClick}>
+            <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleWalletBalanceClick}>
               <WalletIcon />
 
               <Tooltip tips={t`Wallet Balances`}>
@@ -208,12 +225,12 @@ export function SwapInputCurrency({
         </Flex>
       ) : null}
 
-      {currency && isInput ? (
+      {token && isInput ? (
         <Box sx={{ width: "50%", margin: "8px 0 0 0" }}>
           <SwapBalances
             amount={formattedAmount}
-            token={currency}
-            balance={formatTokenAmount(currencyBalance?.toExact(), currency.decimals).toString()}
+            token={token}
+            balance={formatTokenAmount(currencyBalance?.toExact(), token.decimals).toString()}
             unusedBalance={unusedBalance}
             subAccountBalance={subBalance}
             maxSpentAmount={maxInputAmount?.toExact()}
