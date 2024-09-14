@@ -168,7 +168,7 @@ export function SwapInputWrapper({
           onClick={onSwitchTokens}
         >
           <Image
-            src={ui === "pro" ? "/images/icon_exchange_pro.png" : "/images/icon_exchange.png"}
+            src={ui === "pro" ? "/images/icon_exchange_pro.svg" : "/images/icon_exchange.svg"}
             sx={{ width: "28px", height: "28px" }}
           />
         </Box>
