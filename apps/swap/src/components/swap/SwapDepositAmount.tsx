@@ -28,6 +28,7 @@ const useStyle = makeStyles((theme: Theme) => {
         textAlign: "right",
         fontSize: "28px!important",
         fontWeight: 600,
+        padding: "0px",
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },

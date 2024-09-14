@@ -1,5 +1,5 @@
 import type { Principal } from "@dfinity/principal";
-import { Override } from "@icpswap/types";
+import { Null, Override } from "@icpswap/types";
 
 export type { TokenHolder, TokenHolderArgs } from "@icpswap/candid";
 
@@ -56,9 +56,9 @@ export type TokenTransferRequest = TransferRequest;
 
 export type TokenAllowanceRequest = {
   owner: User;
-  subaccount?: number[];
+  subaccount?: number[] | Null;
   spender: Principal;
-  spenderSub?: number[];
+  spenderSub?: number[] | Null;
 };
 
 export type Metadata = {

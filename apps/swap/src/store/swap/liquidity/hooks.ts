@@ -24,7 +24,7 @@ import { t } from "@lingui/macro";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
-import { getTokenInsufficient, useMaxAmountSpend } from "hooks/swap/index";
+import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
 import { useTokenAllBalance } from "hooks/liquidity/index";
 
 import {
@@ -379,33 +379,25 @@ export function useMintInfo(
     tickUpper,
   ]);
 
-  const currencyAMaxSpentAmount = useMaxAmountSpend({
-    currencyAmount: currencyBalances[FIELD.CURRENCY_A],
+  const currencyAMaxSpentAmount = useAllBalanceMaxSpend({
+    token: tokenA,
+    balance: tokenA?.address === token0?.address ? token0Balance?.toString() : token1Balance?.toString(),
     poolId,
-    subBalance:
-      currencyBalances[FIELD.CURRENCY_A]?.currency.address === token0?.address
-        ? token0SubAccountBalance
-        : token1SubAccountBalance,
-    unusedBalance:
-      currencyBalances[FIELD.CURRENCY_A]?.currency.address === token0?.address
-        ? unusedBalance.balance0
-        : unusedBalance.balance1,
+    subBalance: tokenA?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
+    unusedBalance: tokenA?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
   });
 
-  const currencyBMaxSpentAmount = useMaxAmountSpend({
-    currencyAmount: currencyBalances[FIELD.CURRENCY_B],
+  const currencyBMaxSpentAmount = useAllBalanceMaxSpend({
+    token: tokenB,
+    balance: tokenB?.address === token0?.address ? token0Balance?.toString() : token1Balance?.toString(),
     poolId,
-    subBalance:
-      currencyBalances[FIELD.CURRENCY_B]?.currency.address === token0?.address
-        ? token0SubAccountBalance
-        : token1SubAccountBalance,
-    unusedBalance:
-      currencyBalances[FIELD.CURRENCY_B]?.currency.address === token0?.address
-        ? unusedBalance.balance0
-        : unusedBalance.balance1,
+    subBalance: tokenB?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
+    unusedBalance: tokenB?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
   });
 
   const maxAmounts = useMemo(() => {
+    if (!currencyAMaxSpentAmount || !currencyBMaxSpentAmount) return {};
+
     return {
       [FIELD.CURRENCY_A]: currencyAMaxSpentAmount,
       [FIELD.CURRENCY_B]: currencyBMaxSpentAmount,
@@ -416,7 +408,8 @@ export function useMintInfo(
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0"),
+        [field]:
+          maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0") : false,
       };
     },
     {},

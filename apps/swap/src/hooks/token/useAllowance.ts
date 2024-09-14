@@ -1,15 +1,16 @@
 import { Principal } from "@dfinity/principal";
-import { isValidPrincipal } from "@icpswap/utils";
+import { isNullArgs, isValidPrincipal } from "@icpswap/utils";
 import { useCallback } from "react";
 import { useCallsData } from "@icpswap/hooks";
 import { tokenAdapter } from "@icpswap/token-adapter";
+import { Null } from "@icpswap/types";
 
 export interface AllowanceArgs {
   canisterId: string;
   spender: string;
-  spenderSub?: number[];
+  spenderSub?: number[] | Null;
   owner: string;
-  ownerSub?: number[];
+  ownerSub?: number[] | Null;
 }
 
 export async function allowance({ canisterId, owner, spender, spenderSub, ownerSub }: AllowanceArgs) {
@@ -27,17 +28,17 @@ export async function allowance({ canisterId, owner, spender, spenderSub, ownerS
 }
 
 export interface useAllowanceArgs {
-  canisterId: string | undefined;
-  spender: string | undefined;
+  canisterId: string | Null;
+  spender: string | Null;
   spenderSub?: number[];
-  owner: string | undefined;
+  owner: string | Null;
   ownerSub?: number[];
 }
 
 export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub }: useAllowanceArgs) {
   return useCallsData(
     useCallback(async () => {
-      if (!spender || !owner || canisterId === undefined) return undefined;
+      if (!spender || !owner || isNullArgs(canisterId)) return undefined;
       return await allowance({
         spender,
         spenderSub,

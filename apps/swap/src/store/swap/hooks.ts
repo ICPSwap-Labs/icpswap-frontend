@@ -15,7 +15,7 @@ import { useParsedQueryString, useUserUnusedBalance, useTokenBalance } from "@ic
 import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
-import { useMaxAmountSpend } from "hooks/swap/useMaxAmountSpend";
+import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 
 import {
   selectCurrency,
@@ -127,18 +127,28 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
-  const { result: inputTokenSubBalance } = useTokenBalance({
+  const { result: __inputTokenSubBalance } = useTokenBalance({
     canisterId: inputToken?.address,
     address: poolId,
     sub,
     refresh,
   });
-  const { result: outputTokenSubBalance } = useTokenBalance({
+  const { result: __outputTokenSubBalance } = useTokenBalance({
     canisterId: outputToken?.address,
     address: poolId,
     sub,
     refresh,
   });
+
+  const inputTokenSubBalance = useMemo(() => {
+    if (!principal) return undefined;
+    return __inputTokenSubBalance;
+  }, [__inputTokenSubBalance, principal]);
+
+  const outputTokenSubBalance = useMemo(() => {
+    if (!principal) return undefined;
+    return __outputTokenSubBalance;
+  }, [__outputTokenSubBalance]);
 
   const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
@@ -175,8 +185,9 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     allowance,
   });
 
-  const maxInputAmount = useMaxAmountSpend({
-    currencyAmount: currencyBalances[SWAP_FIELD.INPUT],
+  const maxInputAmount = useAllBalanceMaxSpend({
+    token: inputToken,
+    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
     poolId: Trade?.tradePoolId,
     subBalance: inputTokenSubBalance,
     unusedBalance: inputTokenUnusedBalance,
