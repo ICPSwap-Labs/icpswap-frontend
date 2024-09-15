@@ -5,14 +5,13 @@ import LockIcon from "assets/images/swap/Lock";
 import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
-import { nonNullArgs, formatAmount, parseTokenAmount, BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { SwapBalances } from "components/swap/SwapBalances";
+import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount } from "@icpswap/utils";
+import { Trans } from "@lingui/macro";
+import { Flex } from "@icpswap/ui";
+import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
 import { Null } from "@icpswap/types";
-
-import { WalletIcon } from "./icons/WalletIcon";
-import { CanisterIcon } from "./icons/CanisterIcon";
+import { WalletBalance } from "components/swap/WalletBalance";
+import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -158,7 +157,7 @@ export function SwapDepositAmount({
 
   return (
     <Box sx={{ p: 2 }} className={classes.box}>
-      <Grid container alignItems="center">
+      <Flex fullWidth gap="0 8px">
         <Flex gap="0 8px" className={classes.chip}>
           <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} size="24px" />
           <Typography
@@ -171,7 +170,7 @@ export function SwapDepositAmount({
           </Typography>
         </Flex>
 
-        <Grid item xs>
+        <Box sx={{ flex: 1 }}>
           <NumberTextField
             value={value}
             fullWidth
@@ -188,8 +187,8 @@ export function SwapDepositAmount({
               onUserInput(e.target.value);
             }}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Flex>
 
       <Flex gap="0 4px" sx={{ margin: "12px 0 0 0" }}>
         {currency ? (
@@ -203,31 +202,16 @@ export function SwapDepositAmount({
                   new BigNumber(unusedBalance.toString()).plus(subAccountBalance),
                   currency.decimals,
                 ).isGreaterThan(0) ? (
-                  <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleCanisterBalanceClick}>
-                    <CanisterIcon />
-
-                    <Tooltip tips={t`Swap Pool Balances`}>
-                      <Typography>
-                        {formatAmount(
-                          parseTokenAmount(
-                            new BigNumber(unusedBalance.toString()).plus(subAccountBalance),
-                            currency.decimals,
-                          ).toString(),
-                          4,
-                        )}
-                      </Typography>
-                    </Tooltip>
-                  </Flex>
+                  <SwapPoolBalance
+                    onClick={handleCanisterBalanceClick}
+                    token={currency}
+                    subAccountBalance={subAccountBalance}
+                    unusedBalance={unusedBalance}
+                  />
                 ) : null
               ) : null}
 
-              <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleWalletBalanceClick}>
-                <WalletIcon />
-
-                <Tooltip tips={t`Wallet Balances`}>
-                  <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}</Typography>
-                </Tooltip>
-              </Flex>
+              <WalletBalance onClick={handleWalletBalanceClick} currencyBalance={currencyBalance} />
 
               {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
             </Flex>
@@ -237,7 +221,7 @@ export function SwapDepositAmount({
 
       {currency ? (
         <Box sx={{ margin: "8px 0 0 0", width: "50%" }}>
-          <SwapBalances
+          <SwapBalancesSlider
             token={currency}
             unusedBalance={unusedBalance}
             subAccountBalance={subAccountBalance}

@@ -3,7 +3,6 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { CurrencySelector } from "components/swap/index";
 import {
   formatDollarAmount,
-  formatAmount,
   BigNumber,
   nonNullArgs,
   parseTokenAmount,
@@ -21,9 +20,9 @@ import { Null } from "@icpswap/types";
 import { useBalanceMaxSpend, usePoolBalanceMaxSpend } from "hooks/swap";
 import { maxAmountFormat } from "utils/index";
 
-import { CanisterIcon } from "./icons/CanisterIcon";
-import { WalletIcon } from "./icons/WalletIcon";
-import { SwapBalances } from "./SwapBalances";
+import { SwapBalancesSlider } from "./SwapBalancesSlider";
+import { SwapPoolBalance } from "./SwapPoolBalance";
+import { WalletBalance } from "./WalletBalance";
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
@@ -143,31 +142,16 @@ export function SwapInputCurrency({
               parseTokenAmount(new BigNumber(unusedBalance.toString()).plus(subBalance), token.decimals).isGreaterThan(
                 0,
               ) ? (
-                <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleCanisterBalanceClick}>
-                  <CanisterIcon />
-
-                  <Tooltip tips={t`Swap Pool Balances`}>
-                    <Typography>
-                      {formatAmount(
-                        parseTokenAmount(
-                          new BigNumber(unusedBalance.toString()).plus(subBalance),
-                          token.decimals,
-                        ).toString(),
-                        4,
-                      )}
-                    </Typography>
-                  </Tooltip>
-                </Flex>
+                <SwapPoolBalance
+                  onClick={handleCanisterBalanceClick}
+                  subAccountBalance={subBalance}
+                  unusedBalance={unusedBalance}
+                  token={token}
+                />
               ) : null
             ) : null}
 
-            <Flex gap="0 3px" sx={{ cursor: "pointer" }} onClick={handleWalletBalanceClick}>
-              <WalletIcon />
-
-              <Tooltip tips={t`Wallet Balances`}>
-                <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}</Typography>
-              </Tooltip>
-            </Flex>
+            <WalletBalance currencyBalance={currencyBalance} onClick={handleWalletBalanceClick} />
 
             {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
           </Flex>
@@ -226,8 +210,8 @@ export function SwapInputCurrency({
       ) : null}
 
       {token && isInput ? (
-        <Box sx={{ width: "50%", margin: "8px 0 0 0" }}>
-          <SwapBalances
+        <Box sx={{ width: "40%", margin: "8px 0 0 0" }}>
+          <SwapBalancesSlider
             amount={formattedAmount}
             token={token}
             balance={formatTokenAmount(currencyBalance?.toExact(), token.decimals).toString()}

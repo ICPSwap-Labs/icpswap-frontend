@@ -75,7 +75,7 @@ function onXChange({ x, width, unusedBalance, balance, subAccountBalance, token,
   };
 }
 
-export interface SwapBalancesProps {
+export interface SwapBalancesSliderProps {
   balance: string | Null;
   subAccountBalance: BigNumber | Null;
   unusedBalance: bigint | Null;
@@ -85,7 +85,7 @@ export interface SwapBalancesProps {
   onAmountChange: (amount: string) => void;
 }
 
-export function SwapBalances({
+export function SwapBalancesSlider({
   amount,
   token,
   balance,
@@ -93,7 +93,7 @@ export function SwapBalances({
   unusedBalance,
   maxSpentAmount,
   onAmountChange,
-}: SwapBalancesProps) {
+}: SwapBalancesSliderProps) {
   const theme = useTheme();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -293,6 +293,13 @@ export function SwapBalances({
       const canisterWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(canisterPercent));
       const balanceWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(balancePercent));
       const arrowLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(position));
+
+      // Only wallet balance or swap pool balance
+      if (canisterWidth.isEqualTo(0) || balanceWidth.isEqualTo(0)) {
+        const amount = new BigNumber(maxSpentAmount).multipliedBy(percentToNum(position)).toFixed(token.decimals);
+        onAmountChange(amount);
+        return;
+      }
 
       if (new BigNumber(arrowLeft).isGreaterThan(canisterWidth)) {
         const remainBalanceWidth = arrowLeft.minus(canisterWidth).minus(GAP);
