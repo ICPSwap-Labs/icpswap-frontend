@@ -11,7 +11,7 @@ import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
-import { useParsedQueryString, useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
+import { useParsedQueryString, useUserUnusedBalance, useTokenBalance, useDebouncedChangeHandler } from "@icpswap/hooks";
 import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
@@ -47,6 +47,8 @@ export function useSwapHandlers() {
     dispatch(switchCurrencies());
   }, [dispatch]);
 
+  const [, debouncedSwitchTokens] = useDebouncedChangeHandler<any>(undefined, onSwitchTokens, 500);
+
   const onUserInput = useCallback(
     (field: SWAP_FIELD, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }));
@@ -56,7 +58,7 @@ export function useSwapHandlers() {
 
   return {
     onCurrencySelection,
-    onSwitchTokens,
+    onSwitchTokens: debouncedSwitchTokens,
     onUserInput,
   };
 }

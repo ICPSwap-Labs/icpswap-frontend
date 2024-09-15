@@ -12,7 +12,7 @@ import {
 import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { UseCurrencyState } from "hooks/useCurrency";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { SwapInput } from "components/swap/SwapInput";
 import { impactColor } from "utils/swap/prices";

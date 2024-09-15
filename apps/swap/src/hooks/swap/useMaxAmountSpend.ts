@@ -110,7 +110,8 @@ export function useAllBalanceMaxSpend({
   const maxPoolBalanceSpent = usePoolBalanceMaxSpend({ token, subBalance, unusedBalance });
 
   return useMemo(() => {
-    if (isNullArgs(maxBalanceSpend) || isNullArgs(maxPoolBalanceSpent)) return undefined;
+    if (isNullArgs(maxBalanceSpend) || isNullArgs(maxPoolBalanceSpent) || isNullArgs(token)) return undefined;
+    if (!maxBalanceSpend.currency.equals(maxPoolBalanceSpent.currency)) return undefined;
 
     return maxBalanceSpend.add(maxPoolBalanceSpent);
   }, [maxBalanceSpend, maxPoolBalanceSpent]);
