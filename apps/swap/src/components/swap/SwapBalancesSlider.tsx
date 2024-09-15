@@ -173,6 +173,20 @@ export function SwapBalancesSlider({
     )
       return "0%";
 
+    // If only have canister balance
+    if (new BigNumber(percentToNum(balancePercent)).isEqualTo(0)) {
+      return `${new BigNumber(percentToNum(canisterWidth))
+        .multipliedBy(percentToNum(canisterPercent))
+        .multipliedBy(100)}%`;
+    }
+
+    // If only have wallet balance
+    if (new BigNumber(percentToNum(canisterPercent)).isEqualTo(0)) {
+      return `${new BigNumber(percentToNum(balanceWidth))
+        .multipliedBy(percentToNum(balancePercent))
+        .multipliedBy(100)}%`;
+    }
+
     // If only canister balances used
     if (new BigNumber(percentToNum(balanceWidth)).isEqualTo(0))
       return `${new BigNumber(percentToNum(canisterWidth))
@@ -292,6 +306,7 @@ export function SwapBalancesSlider({
     ) {
       const canisterWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(canisterPercent));
       const balanceWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(balancePercent));
+      // The arrow's left includes the GAP width
       const arrowLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(position));
 
       // Only wallet balance or swap pool balance
