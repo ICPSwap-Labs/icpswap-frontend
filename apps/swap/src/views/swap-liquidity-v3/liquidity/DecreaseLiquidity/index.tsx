@@ -5,7 +5,7 @@ import { CurrencyAmount } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
-import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
 import { BURN_FIELD } from "constants/swap";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export function useDebouncedChangeHandler<T>(
   value: T,
   onChange: (newValue: T) => void,
-  debouncedMs = 100
+  debouncedMs = 100,
 ): [T, (value: T) => void] {
   const [inner, setInner] = useState<T>(() => value);
   const timer = useRef<ReturnType<typeof setTimeout>>();
@@ -19,7 +19,7 @@ export function useDebouncedChangeHandler<T>(
         timer.current = undefined;
       }, debouncedMs);
     },
-    [debouncedMs, onChange]
+    [debouncedMs, onChange],
   );
 
   useEffect(() => {
