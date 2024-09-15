@@ -19,6 +19,13 @@ export function useFarms({ state, filter, pair, token, user }: UseFarmsArgs) {
   useEffect(() => {
     async function call() {
       setLoading(true);
+
+      if (filter === FilterState.YOUR && !user) {
+        setFarms([]);
+        setLoading(false);
+        return;
+      }
+
       const farms = await getFarmsByFilter({ state, pair, token, user });
       setFarms(farms);
       setLoading(false);
