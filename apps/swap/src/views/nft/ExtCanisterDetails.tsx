@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NFTList from "components/NFT/ext/NFTList";
-import { MainCard, Breadcrumbs, Wrapper } from "components/index";
+import { MainCard, Breadcrumbs, Wrapper, LoadingRow } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
@@ -9,7 +9,6 @@ import { makeStyles } from "@mui/styles";
 import { useAccount } from "store/global/hooks";
 import type { EXTCollection } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
-import LoadingRow from "components/Loading/LoadingRow";
 import Avatar from "components/Image/Avatar";
 
 const useStyles = makeStyles((theme: Theme) => ({

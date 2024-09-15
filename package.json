@@ -21,6 +21,9 @@
     "fetch-tokens": "ts-node-esm ./scripts/pre-fetch-tokens.ts",
     "check-local-tokens": "ts-node-esm ./scripts/check-tokens-metadata.ts"
   },
+  "resolutions": {
+    "@babel/runtime": "7.25.0"
+  },
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.202",

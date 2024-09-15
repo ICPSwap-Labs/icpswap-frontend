@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@babel/runtime': 7.25.0
+
 importers:
 
   .:
@@ -5834,10 +5837,10 @@ packages:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.0)(@types/react@18.2.0)(react@18.2.0)
       '@mui/base': 5.0.0-alpha.71(@types/react@18.2.0)(react-dom@17.0.2)(react@18.2.0)
       '@mui/system': 5.16.5(@emotion/react@11.13.0)(@emotion/styled@11.13.0)(@types/react@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.15(@types/react@18.2.0)
+      '@mui/types': 7.2.16(@types/react@18.2.0)
       '@mui/utils': 5.16.5(@types/react@18.2.0)(react@18.2.0)
       '@types/react': 18.2.0
-      '@types/react-transition-group': 4.4.10
+      '@types/react-transition-group': 4.4.11
       clsx: 1.2.1
       csstype: 3.1.3
       hoist-non-react-statics: 3.3.2
@@ -5868,10 +5871,10 @@ packages:
       '@babel/runtime': 7.25.0
       '@mui/base': 5.0.0-alpha.71(@types/react@18.2.0)(react-dom@18.2.0)(react@18.2.0)
       '@mui/system': 5.16.5(@emotion/react@11.13.0)(@emotion/styled@11.13.0)(@types/react@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.15(@types/react@18.2.0)
+      '@mui/types': 7.2.16(@types/react@18.2.0)
       '@mui/utils': 5.16.5(@types/react@18.2.0)(react@18.2.0)
       '@types/react': 18.2.0
-      '@types/react-transition-group': 4.4.10
+      '@types/react-transition-group': 4.4.11
       clsx: 1.2.1
       csstype: 3.1.3
       hoist-non-react-statics: 3.3.2
@@ -5934,7 +5937,7 @@ packages:
       '@babel/runtime': 7.25.0
       '@emotion/hash': 0.8.0
       '@mui/private-theming': 5.16.5(@types/react@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.15(@types/react@18.2.0)
+      '@mui/types': 7.2.16(@types/react@18.2.0)
       '@mui/utils': 5.16.5(@types/react@18.2.0)(react@18.2.0)
       '@types/react': 18.2.0
       clsx: 1.2.1
@@ -5973,7 +5976,7 @@ packages:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.0)(@types/react@18.2.0)(react@18.2.0)
       '@mui/private-theming': 5.16.5(@types/react@18.2.0)(react@18.2.0)
       '@mui/styled-engine': 5.16.4(@emotion/react@11.13.0)(@emotion/styled@11.13.0)(react@18.2.0)
-      '@mui/types': 7.2.15(@types/react@18.2.0)
+      '@mui/types': 7.2.16(@types/react@18.2.0)
       '@mui/utils': 5.16.5(@types/react@18.2.0)(react@18.2.0)
       '@types/react': 18.2.0
       clsx: 2.1.1
@@ -5986,6 +5989,17 @@ packages:
     resolution: {integrity: sha512-nbo7yPhtKJkdf9kcVOF8JZHPZTmqXjJ/tI0bdWgHg5tp9AnIN4Y7f7wm9T+0SyGYJk76+GYZ8Q5XaTYAsUHN0Q==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.2.0
+    dev: false
+
+  /@mui/types@7.2.16(@types/react@18.2.0):
+    resolution: {integrity: sha512-qI8TV3M7ShITEEc8Ih15A2vLzZGLhD+/UPNwck/hcls2gwg7dyRjNGXcQYHKLB5Q7PuTRfrTkAoPa2VV1s67Ag==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -7962,6 +7976,12 @@ packages:
     resolution: {integrity: sha512-hT/+s0VQs2ojCX823m60m5f0sL5idt9SO6Tj6Dg+rdphGPIeJbJ6CxvBYkgkGKrYeDjvIpKTR38UzmtHJOGW3Q==}
     dependencies:
       '@types/react': 18.2.0
+
+  /@types/react-transition-group@4.4.11:
+    resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
+    dependencies:
+      '@types/react': 18.2.0
+    dev: false
 
   /@types/react-virtualized-auto-sizer@1.0.4:
     resolution: {integrity: sha512-nhYwlFiYa8M3S+O2T9QO/e1FQUYMr/wJENUdf/O0dhRi1RS/93rjrYQFYdbUqtdFySuhrtnEDX29P6eKOttY+A==}
@@ -20971,20 +20991,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-transition-group: 2.9.0(react-dom@18.2.0)(react@18.2.0)
-    dev: false
-
-  /react-transition-group@2.9.0(react-dom@17.0.2)(react@18.2.0):
-    resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
-    peerDependencies:
-      react: '>=15.0.0'
-      react-dom: '>=15.0.0'
-    dependencies:
-      dom-helpers: 3.4.0
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 17.0.2(react@18.2.0)
-      react-lifecycles-compat: 3.0.4
     dev: false
 
   /react-transition-group@2.9.0(react-dom@17.0.2)(react@18.2.0):

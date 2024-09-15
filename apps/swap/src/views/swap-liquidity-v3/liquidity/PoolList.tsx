@@ -1,11 +1,9 @@
 import { useMemo } from "react";
-import { Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, makeStyles, Theme } from "components/Mui";
 import { isDarkTheme } from "utils/index";
-import { Theme } from "@mui/material/styles";
-import LoadingRow from "components/Loading/LoadingRow";
 import PoolCard from "components/swap/PoolCard";
 import { useAllPoolsTVL, useNodeInfoAllPools } from "@icpswap/hooks";
+import { LoadingRow } from "components/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   const bgOpacity = isDarkTheme(theme) ? "0.34" : "0.7";
