@@ -185,12 +185,12 @@ export default function Transactions({
           <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
           <BodyCell>
-            {formatAmount(transaction.token0ChangeAmount, 6)}{" "}
+            {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
             <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
           </BodyCell>
 
           <BodyCell>
-            {formatAmount(transaction.token1ChangeAmount, 6)}{" "}
+            {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
             <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
           </BodyCell>
 
