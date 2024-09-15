@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "100px repeat(5, 1fr) 30px",
+      gridTemplateColumns: "100px repeat(4, 1fr) 30px",
       padding: "20px 16px",
     },
   };
@@ -170,7 +170,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount1.toExact(), 6)} ` : "--"}</BodyCell>
 
-        <BodyCell>
+        {/* <BodyCell>
           {!!token1 && !!token0 && pool ? (
             inverted ? (
               <BodyCell>
@@ -186,7 +186,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           ) : (
             "--"
           )}
-        </BodyCell>
+        </BodyCell> */}
 
         <BodyCell>
           {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
@@ -391,9 +391,9 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
             <Trans>{pool?.token1.symbol} Amount</Trans>
           </HeaderCell>
 
-          <HeaderCell field="currentPrice">
+          {/* <HeaderCell field="currentPrice">
             <Trans>Current Price</Trans>
-          </HeaderCell>
+          </HeaderCell> */}
 
           <HeaderCell field="priceRange">
             <Trans>Price Range</Trans>
