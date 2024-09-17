@@ -20,6 +20,7 @@ import { MultipleSmallButtons, ChartView } from "./ChartViewButton";
 
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
+import { TextButton } from "../TextButton";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -141,6 +142,7 @@ export interface TokenChartsProps {
   borderRadius?: string;
   priceToggles?: PriceToggle[];
   showPrice?: boolean;
+  showDexScreener?: boolean;
 }
 
 export function TokenCharts({
@@ -150,6 +152,7 @@ export function TokenCharts({
   priceToggles,
   showPrice = true,
   background = 2,
+  showDexScreener,
 }: TokenChartsProps) {
   const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
 
@@ -310,7 +313,7 @@ export function TokenCharts({
           right: "20px",
         }}
       >
-        <Flex gap="0 8px">
+        <Flex gap="0 8px" wrap="wrap-reverse" justify="flex-end" sx={{ "@media(max-width: 640px)": { gap: "8px 0" } }}>
           {chartView === ChartView.PRICE && priceToggles ? (
             <MultipleSmallButtons
               buttons={priceToggles.map((e) => ({ label: e.label, value: e.id }))}
@@ -319,18 +322,28 @@ export function TokenCharts({
             />
           ) : null}
 
+          {chartView === ChartView.PRICE && showDexScreener ? (
+            <Flex gap="0 4px">
+              <Typography sx={{ fontSize: "12px" }}>
+                Detailed Chart on{" "}
+                <TextButton link={`https://dexscreener.com/icp/${canisterId}`}>DEXScreener</TextButton>
+              </Typography>
+              <img src="/images/dex_screener.svg" alt="" />
+            </Flex>
+          ) : null}
+
           <MultipleSmallButtons
             buttons={chartViews}
             active={chartView}
             onClick={(chartView) => setChartView(chartView.value)}
           />
-
-          {chartView === ChartView.VOL ? (
-            <Box sx={{ margin: "15px 0 0 0" }}>
-              <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
-            </Box>
-          ) : null}
         </Flex>
+
+        {chartView === ChartView.VOL ? (
+          <Box sx={{ margin: "15px 0 0 0" }}>
+            <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
+          </Box>
+        ) : null}
       </Box>
 
       <Box mt="20px">

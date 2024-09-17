@@ -1,6 +1,5 @@
 import { useContext, useMemo } from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme, useMediaQuery } from "components/Mui";
 import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
@@ -18,7 +17,7 @@ interface MediasProps {
 }
 
 function Medias({ mediaLinks }: MediasProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return mediaLinks ? (
     <Box
@@ -56,7 +55,7 @@ export interface TokenChartInfoProps {
 }
 
 export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { token } = useContext(SwapProContext);
 
@@ -69,12 +68,16 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
 
     const links = [
       { k: "Dashboard", v: `https://dashboard.internetcomputer.org/canister/${tokenId}` },
+      tokenId ? { k: "DexScreener", v: `https://dexscreener.com/icp/${tokenId}` } : undefined,
       { k: "ICScan", v: `https://icscan.io/canister/${tokenId}` },
-    ];
+    ] as {
+      k: string;
+      v: string;
+    }[];
 
-    return links.concat(
-      (tokenListInfo.mediaLinks ?? []).map((mediaLink) => ({ k: mediaLink.mediaType, v: mediaLink.link })),
-    );
+    return links
+      .concat((tokenListInfo.mediaLinks ?? []).map((mediaLink) => ({ k: mediaLink.mediaType, v: mediaLink.link })))
+      .filter((e) => !!e);
   }, [tokenId, tokenListInfo]);
 
   return (
