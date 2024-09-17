@@ -1,6 +1,7 @@
 import { ReactNode, ReactElement } from "react";
-import { Typography, Tooltip as MuiToolTip, Box } from "@mui/material";
 import { HelpCircle } from "react-feather";
+
+import { Typography, Tooltip as MuiToolTip } from "./Mui";
 
 export interface TooltipProps {
   background?: string;
@@ -50,11 +51,7 @@ export function Tooltip({
       }
       arrow
     >
-      {children ? (
-        <Box sx={{ cursor: "pointer", display: "inline-block" }}>{children}</Box>
-      ) : (
-        <HelpCircle size={iconSize} color={iconColor} style={{ cursor: "pointer" }} />
-      )}
+      {children || <HelpCircle size={iconSize} color={iconColor} style={{ cursor: "pointer" }} />}
     </MuiToolTip>
   );
 }
