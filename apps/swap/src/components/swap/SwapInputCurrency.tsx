@@ -198,7 +198,12 @@ export function SwapInputCurrency({
                 >
                   <Typography
                     component="span"
-                    sx={{ color: USDChangeColor, textDecoration: "underline", textDecorationStyle: "dashed" }}
+                    sx={{
+                      color: USDChangeColor,
+                      textDecoration: "underline",
+                      textDecorationStyle: "dashed",
+                      cursor: "pointer",
+                    }}
                   >
                     ({usdChange}%)
                   </Typography>

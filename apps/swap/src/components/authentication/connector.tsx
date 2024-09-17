@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme, makeStyles } from "components/Mui";
+import { t, Trans } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
 import { useWalletConnectorManager } from "store/auth/hooks";
+import { Flex, TextButton, Tooltip } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -34,12 +33,13 @@ export interface ConnectorProps {
   label: string;
   value: ConnectorType;
   logo: string;
+  disabled?: boolean;
 }
 
-export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
+export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
   const [, walletConnectorManager] = useWalletConnectorManager();
 
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();
 
@@ -57,6 +57,8 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
   }, []);
 
   const handleConnect = async () => {
+    if (disabled) return;
+
     try {
       if (loading || !value || !selfConnector) return;
 
@@ -104,9 +106,28 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
       }}
       onClick={handleConnect}
     >
-      <Typography color="text.primary" fontSize="14px" fontWeight={700}>
-        {label}
-      </Typography>
+      <Flex gap="0 8px">
+        <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+          {label}
+        </Typography>
+
+        {value === ConnectorType.STOIC ? (
+          <Tooltip
+            tips={
+              <Trans>
+                This wallet is no longer supported. You can import your Stoic seed phrase into Plug, which will allow
+                you to log in to IPSwap. Please refer to the{" "}
+                <TextButton link="https://iloveics.gitbook.io/icpswap/products/wallet/how-to-import-stoic-seed-phrase-into-plug">
+                  tutorial
+                </TextButton>{" "}
+                for guidance.
+              </Trans>
+            }
+          >
+            <img src="/images/notice_icon.svg" alt="" width="16px" height="16px" style={{ cursor: "pointer" }} />
+          </Tooltip>
+        ) : null}
+      </Flex>
 
       <Box className={`${classes.loadingWrapper}${loading ? " loading" : ""}`}>
         <img width="40px" height="40px" src={logo} alt="" />
