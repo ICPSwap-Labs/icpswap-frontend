@@ -23,11 +23,17 @@ export default function TokenChartInfo() {
         borderBottomRightRadius: "12px",
         overflow: "hidden",
         "@media(max-width: 640px)": {
-          margin: "0",
+          margin: "16px 0 0 0",
         },
       }}
     >
-      <TokenCharts canisterId={token?.address} background={3} borderRadius="0px" priceToggles={priceToggles} />
+      <TokenCharts
+        canisterId={token?.address}
+        background={3}
+        borderRadius="0px"
+        priceToggles={priceToggles}
+        showPrice={false}
+      />
     </Box>
   );
 }

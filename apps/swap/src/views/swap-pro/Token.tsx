@@ -1,7 +1,6 @@
 import React, { useContext, useMemo, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
 import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
@@ -61,7 +60,7 @@ export interface TokenProps {
 }
 
 export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const { token, tradePoolId, inputToken, outputToken, inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
   const [moreInformation, setMoreInformation] = useState(true);
 

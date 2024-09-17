@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { Override } from "@icpswap/types";
 
 import { Box, Typography, BoxProps, useTheme } from "../Mui";
@@ -12,15 +12,15 @@ export enum ChartView {
   TRANSACTIONS,
 }
 
-export type ChartViewsProps = { label: string; key: ChartView };
+export type ButtonElementProps = { label: string; value: any };
 
-export interface ChartViewButtonProps {
+export interface MultipleSmallButtonProps {
   children: ReactNode;
   active?: boolean;
   onClick: React.MouseEventHandler<HTMLSpanElement>;
 }
 
-export function ChartViewButton({ children, active, onClick }: ChartViewButtonProps) {
+export function MultipleSmallButton({ children, active, onClick }: MultipleSmallButtonProps) {
   const theme = useTheme();
 
   return (
@@ -29,12 +29,14 @@ export function ChartViewButton({ children, active, onClick }: ChartViewButtonPr
       color={active ? "text.primary" : "text.secondary"}
       sx={{
         background: active ? theme.palette.background.level3 : "transparent",
-        borderRadius: "12px",
+        borderRadius: "50px",
         display: "flex",
         justifyContent: "center",
         fontSize: "12px",
         fontWeight: 500,
-        padding: "2px 10px",
+        padding: "0 10px",
+        height: "24px",
+        lineHeight: "24px",
       }}
       onClick={onClick}
     >
@@ -43,17 +45,24 @@ export function ChartViewButton({ children, active, onClick }: ChartViewButtonPr
   );
 }
 
-export type ChartViewButtonsProps = Override<
+export type MultipleSmallButtonsProps = Override<
   BoxProps,
   {
-    setActiveChartView: (view: ChartView) => void;
-    activeView: ChartView;
-    chartViews: ChartViewsProps[];
+    onClick: (ele: ButtonElementProps) => void;
+    active: any;
+    buttons: ButtonElementProps[];
   }
 >;
 
-export function ChartViewButtons({ setActiveChartView, activeView, chartViews, ...rest }: ChartViewButtonsProps) {
+export function MultipleSmallButtons({ onClick, active, buttons, ...rest }: MultipleSmallButtonsProps) {
   const theme = useTheme();
+
+  const handleClick = useCallback(
+    (button: ButtonElementProps) => {
+      onClick(button);
+    },
+    [onClick],
+  );
 
   return (
     <Box
@@ -61,20 +70,16 @@ export function ChartViewButtons({ setActiveChartView, activeView, chartViews, .
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
-        padding: "1px",
+        padding: "2px",
         background: theme.palette.background.level4,
-        borderRadius: "12px",
+        borderRadius: "50px",
         ...(rest.sx ?? {}),
       }}
     >
-      {chartViews.map((chartView) => (
-        <ChartViewButton
-          key={chartView.key}
-          active={chartView.key === activeView}
-          onClick={() => setActiveChartView(chartView.key)}
-        >
-          {chartView.label}
-        </ChartViewButton>
+      {buttons.map((button) => (
+        <MultipleSmallButton key={button.value} active={button.value === active} onClick={() => handleClick(button)}>
+          {button.label}
+        </MultipleSmallButton>
       ))}
     </Box>
   );
