@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { type UserPositionInfoWithId } from "@icpswap/types";
+import { type UserPositionInfoWithId, type UserPositionInfo } from "@icpswap/types";
 
-import { getSwapUserPositions } from "./calls";
+import { getSwapUserPositions, getSwapPosition } from "./calls";
 
 export function useMultiPositionInfos(
   poolId: string | undefined,
@@ -36,6 +36,49 @@ export function useMultiPositionInfos(
 
     call();
   }, [principals, poolId]);
+
+  return useMemo(
+    () => ({
+      loading,
+      result,
+    }),
+    [result, loading],
+  );
+}
+
+export function useMultiPositionInfosByIds(
+  poolId: string | undefined,
+  positionIds: (bigint | undefined)[] | undefined,
+): {
+  loading: boolean;
+  result: Array<UserPositionInfo | undefined> | null;
+} {
+  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState<null | Array<UserPositionInfo>>(null);
+
+  useEffect(() => {
+    async function call() {
+      setResult(null);
+
+      if (positionIds && poolId) {
+        const allResult: Array<UserPositionInfo | undefined> = await Promise.all(
+          positionIds.map(async (positionId) => {
+            if (!positionId) return undefined;
+            return await getSwapPosition(poolId, positionId);
+          }),
+        );
+
+        setResult(allResult);
+        setLoading(false);
+      }
+
+      if (positionIds && positionIds.length === 0 && poolId) {
+        setLoading(false);
+      }
+    }
+
+    call();
+  }, [positionIds, poolId]);
 
   return useMemo(
     () => ({
