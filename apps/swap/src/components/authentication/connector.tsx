@@ -116,11 +116,14 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
             tips={
               <Trans>
                 This wallet is no longer supported. You can import your Stoic seed phrase into Plug, which will allow
-                you to log in to IPSwap. Please refer to the{" "}
-                <TextButton link="https://iloveics.gitbook.io/icpswap/products/wallet/how-to-import-stoic-seed-phrase-into-plug">
-                  tutorial
-                </TextButton>{" "}
-                for guidance.
+                you to log in to ICPSwap. Please refer to the tutorial (
+                <TextButton
+                  sx={{ fontSize: "12px" }}
+                  link="https://iloveics.gitbook.io/icpswap/products/wallet/how-to-import-stoic-seed-phrase-into-plug"
+                >
+                  How to Import Stoic Seed Phrase into Plug | ICPSwap
+                </TextButton>
+                ) for guidance.
               </Trans>
             }
           >
