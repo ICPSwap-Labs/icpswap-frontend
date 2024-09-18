@@ -152,6 +152,27 @@ export function useCurrencyBalance(
   currency: Token | undefined,
   refresh?: boolean | number,
 ) {
+  const { loading, result } = useTokenBalance(currency?.address, account, refresh);
+
+  return useMemo(() => {
+    if (!result || loading || !currency)
+      return {
+        loading,
+        result: undefined,
+      };
+
+    return {
+      loading,
+      result: CurrencyAmount.fromRawAmount(currency, result.toNumber()),
+    };
+  }, [loading, result, currency]);
+}
+
+export function useCurrencyBalanceV1(
+  account: string | Principal | undefined,
+  currency: Token | undefined,
+  refresh?: boolean | number,
+) {
   const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
 
   const { loading, result } = useTokenBalance(currency?.address, account, refresh);
@@ -174,6 +195,24 @@ export function useCurrencyBalance(
       result: CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()),
     };
   }, [loading, storeResult, currency]);
+}
+
+export interface UseTokenBalanceProps {
+  canisterId: string | undefined;
+  address: string | Principal | undefined;
+  sub?: Uint8Array;
+  refresh?: boolean | number;
+}
+
+export function useTokenBalanceV2({ canisterId, address, sub, refresh }: UseTokenBalanceProps) {
+  return useLatestDataCall(
+    useCallback(async () => {
+      if (!address || !canisterId) return undefined;
+      const result = await getTokenBalance(canisterId, address, sub);
+      return new BigNumber(result ? result.data?.toString() ?? 0 : 0);
+    }, [address, canisterId, sub]),
+    refresh,
+  );
 }
 
 export function useStoreTokenBalance(
