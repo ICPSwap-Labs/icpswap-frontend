@@ -1,19 +1,9 @@
 import { useState } from "react";
-import { makeStyles } from "@mui/styles";
-import { MenuList, MenuItem, Popper, Typography } from "@mui/material";
-import { ClickAwayListener } from "@mui/base";
 import { Link } from "components/index";
+import { MenuWrapper, MenuItem } from "@icpswap/ui";
 
 import { Route } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
-
-const useStyles = makeStyles(() => {
-  return {
-    popper: {
-      zIndex: 1101,
-    },
-  };
-});
 
 export interface ExceedRoutesPopperProps {
   routes: Route[];
@@ -24,8 +14,6 @@ export interface ExceedRoutesPopperProps {
 }
 
 export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickAway }: ExceedRoutesPopperProps) {
-  const classes = useStyles();
-
   const [subMenuOpenKey, setSubMenuOpenKey] = useState<string | null>(null);
   const [subMenuTarget, setSubMenuTarget] = useState<any>(undefined);
 
@@ -52,47 +40,27 @@ export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickA
   };
 
   return (
-    <Popper
-      open={open}
-      anchorEl={anchor}
-      placement="bottom"
-      popperOptions={{
-        modifiers: [
-          {
-            name: "offset",
-            options: {
-              offset: [0, 0],
-            },
-          },
-        ],
-      }}
-      className={classes.popper}
-    >
-      <ClickAwayListener onClickAway={onClickAway}>
-        <MenuList autoFocusItem={open} className="customize-menu-list style1">
-          {routes.map((route, index) => (
-            <Link key={route.path ?? index} to={route.path} link={route.link}>
-              <MenuItem
-                onClick={() => handleMenuClick(route)}
-                onMouseEnter={({ target }) => handleSubMenuMouseEnter(route, target)}
-                onMouseLeave={handleSubMenuMouseLeave}
-                disabled={!!route.disabled}
-                className={route.disabled ? "opacity1" : ""}
-              >
-                <Typography className="customize-label">{route.name}</Typography>
-
-                <SubMenuPopper
-                  route={route}
-                  onClickAway={handleSubMenuClose}
-                  onMenuClick={handleMenuClick}
-                  anchor={subMenuTarget}
-                  subMenuKey={subMenuOpenKey}
-                />
-              </MenuItem>
-            </Link>
-          ))}
-        </MenuList>
-      </ClickAwayListener>
-    </Popper>
+    <MenuWrapper open={open} anchor={anchor} placement="bottom-start" onClickAway={onClickAway}>
+      {routes.map((route, index) => (
+        <Link key={route.path ?? index} to={route.path} link={route.link}>
+          <MenuItem
+            value={route}
+            label={route.name}
+            onMenuClick={() => handleMenuClick(route)}
+            onMouseEnter={({ target }) => handleSubMenuMouseEnter(route, target)}
+            onMouseLeave={handleSubMenuMouseLeave}
+            disabled={route.disabled === true}
+          >
+            <SubMenuPopper
+              route={route}
+              onClickAway={handleSubMenuClose}
+              onMenuClick={handleMenuClick}
+              anchor={subMenuTarget}
+              subMenuKey={subMenuOpenKey}
+            />
+          </MenuItem>
+        </Link>
+      ))}
+    </MenuWrapper>
   );
 }

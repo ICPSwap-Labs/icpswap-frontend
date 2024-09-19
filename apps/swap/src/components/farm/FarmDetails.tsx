@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { Box, Collapse, Typography } from "components/Mui";
-import { MainCard, Flex, Link } from "components/index";
-import { useTheme } from "@mui/styles";
+import { Box, Collapse, Typography, Theme, useTheme } from "components/Mui";
+import { MainCard, Flex, Link, Image } from "components/index";
 import { INFO_URL } from "constants/index";
 import { t, Trans } from "@lingui/macro";
 import {
@@ -16,8 +15,6 @@ import {
 } from "@icpswap/utils";
 import { useFarmInitArgs, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import Countdown from "react-countdown";
-import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
-import { Theme } from "@mui/material/styles";
 import { STATE } from "types/staking-farm";
 import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
@@ -115,14 +112,7 @@ export function FarmDetails({
                     </Typography>
                   </Link>
 
-                  <ICRocksLoadIcon
-                    fontSize="24"
-                    sx={{
-                      position: "relative",
-                      cursor: "pointer",
-                      color: theme.colors.secondaryMain,
-                    }}
-                  />
+                  <Image src="/images/external-link.svg" sx={{ width: "24px", height: "24px", cursor: "pointer" }} />
                 </>
               ) : null}
             </Flex>

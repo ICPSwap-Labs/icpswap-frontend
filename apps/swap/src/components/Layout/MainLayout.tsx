@@ -1,19 +1,15 @@
 import React, { useState, useMemo } from "react";
-import { makeStyles, useTheme } from "@mui/styles";
-import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import Background from "components/Background";
-import { GlobalTips } from "@icpswap/ui";
+import { makeStyles, useTheme, Box, Theme } from "components/Mui";
+import { Flex, GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
+import Background from "components/Background";
+
 import V3Event from "./V3Event";
 import Header from "./Header";
 import { SnsTips } from "./SnsTips";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    appBar: {
-      backgroundColor: "#0B132F",
-    },
     content: {
       background: "transparent",
       width: "100%",
@@ -68,23 +64,22 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <CssBaseline />
-
-      <AppBar position="fixed" color="inherit" elevation={0} className={classes.appBar}>
-        <Grid
-          container
-          alignItems="center"
-          sx={{
-            padding: "0 20px",
-            height: "64px",
-            [theme.breakpoints.down("md")]: {
-              height: "60px",
-            },
-          }}
-        >
-          <Header />
-        </Grid>
-      </AppBar>
+      <Flex
+        fullWidth
+        sx={{
+          position: "fixed",
+          top: 0,
+          padding: "0 20px",
+          height: "64px",
+          backgroundColor: "#0B132F",
+          zIndex: 2,
+          [theme.breakpoints.down("md")]: {
+            height: "60px",
+          },
+        }}
+      >
+        <Header />
+      </Flex>
 
       <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}

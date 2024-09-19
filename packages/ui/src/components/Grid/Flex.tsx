@@ -17,6 +17,8 @@ export interface FlexProps {
   className?: string;
   wrap?: BoxProps["flexWrap"];
   onClick?: BoxProps["onClick"];
+  onMouseEnter?: BoxProps["onMouseEnter"];
+  onMouseLeave?: BoxProps["onMouseLeave"];
 }
 
 export function Flex({
@@ -35,6 +37,8 @@ export function Flex({
   className,
   wrap,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
 }: FlexProps) {
   return (
     <Box
@@ -55,6 +59,8 @@ export function Flex({
       }}
       className={className}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {children}
     </Box>

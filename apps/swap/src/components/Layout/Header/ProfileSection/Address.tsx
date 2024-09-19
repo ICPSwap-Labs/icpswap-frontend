@@ -1,32 +1,17 @@
 import { useRef } from "react";
-import { Box, Typography, useTheme, Theme } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import Copy, { CopyRef } from "components/Copy";
-import { ReactComponent as ExternalLink } from "assets/icons/external-link.svg";
-import { Connector } from "constants/wallet";
-import { useConnectorType } from "store/auth/hooks";
-import { mockALinkAndOpen } from "@icpswap/utils";
-
-const ConnectorIcon: { [key: string]: string } = {
-  [Connector.IC]: "/images/connect/InternetIdentity.svg",
-  [Connector.ME]: "/images/connect/AstroX.svg",
-  [Connector.ICPSwap]: "/images/connect/icpswap.svg",
-  [Connector.INFINITY]: "/images/connect/Infinity.svg",
-  [Connector.Metamask]: "/images/connect/metamask.svg",
-  [Connector.NFID]: "/images/connect/NFID.svg",
-  [Connector.PLUG]: "/images/connect/Plug.svg",
-  [Connector.STOIC]: "/images/connect/stoic.svg",
-};
+import { Image } from "components/index";
+import { mockALinkAndOpen, shorten } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 
 export interface AddressSectionProps {
   label: string;
   link: string | undefined;
   address: string | undefined;
-  labelColor: "#E3F2FD" | "#EFEFFF";
 }
 
-export function AddressSection({ label, link, address, labelColor }: AddressSectionProps) {
-  const theme = useTheme() as Theme;
-
+export function AddressSection({ label, link, address }: AddressSectionProps) {
   const copyRef = useRef<CopyRef>(null);
 
   const handleCopy = () => {
@@ -40,33 +25,19 @@ export function AddressSection({ label, link, address, labelColor }: AddressSect
     mockALinkAndOpen(link, "explorers_address");
   };
 
-  const connector = useConnectorType();
-
   return (
-    <Box
-      sx={{
-        wordBreak: "break-all",
-        padding: "12px",
-        textAlign: "left",
-        border: "1px solid #EFEFFF",
-        borderRadius: "8px",
-      }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px", margin: "0 0 8px 0" }}>
-        <Box
-          sx={{
-            padding: "3px 6px ",
-            background: labelColor,
-            borderRadius: "30px",
-            color: "#111936",
-            fontSize: "10px",
-          }}
-          component="span"
-        >
-          {label}
-        </Box>
-
-        {connector ? <img style={{ width: "20px", height: "20px" }} src={ConnectorIcon[connector]} alt="" /> : null}
+    <Flex gap="0 6px">
+      <Box
+        sx={{
+          padding: "3px 6px",
+          background: "#3B425B",
+          borderRadius: "30px",
+          color: "#fffff",
+          fontSize: "10px",
+        }}
+        component="span"
+      >
+        {label}
       </Box>
 
       <Typography
@@ -74,29 +45,21 @@ export function AddressSection({ label, link, address, labelColor }: AddressSect
         sx={{
           whiteSpace: "break-spaces",
           cursor: "pointer",
-          color: "#111936",
+          color: "text.primary",
+          fontSize: "12px",
         }}
         onClick={handleCopy}
       >
-        {address}
+        {shorten(address)}
       </Typography>
 
       <Copy content={address ?? ""} hide ref={copyRef} />
 
-      <Box
-        component="span"
-        ml="5px"
-        sx={{
-          cursor: "pointer",
-          position: "relative",
-          top: "1px",
-          overflow: "hidden",
-          fontSize: "18px",
-          color: theme.colors.secondaryMain,
-        }}
-      >
-        <ExternalLink width="14px" height="14px" onClick={handleToExplorer} />
-      </Box>
-    </Box>
+      <Image
+        src="/images/external-link.svg"
+        sx={{ width: "18px", height: "18px", cursor: "pointer" }}
+        onClick={handleToExplorer}
+      />
+    </Flex>
   );
 }

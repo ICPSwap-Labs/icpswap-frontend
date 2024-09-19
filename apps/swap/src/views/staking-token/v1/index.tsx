@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography } from "components/Mui";
 import { NoData, MainCard, ImageLoading, TextButton } from "components/index";
 import Switch from "components/switch";
 import { Trans, t } from "@lingui/macro";
@@ -205,9 +205,9 @@ export default function StakingTokens() {
   const { poolId } = useParsedQueryString() as { poolId: string };
 
   return (
-    <>
+    <Box sx={{ padding: "32px 0 0  0" }}>
       <GlobalData />
       <Box mt="16px">{poolId ? <SinglePool /> : <Pools />}</Box>
-    </>
+    </Box>
   );
 }

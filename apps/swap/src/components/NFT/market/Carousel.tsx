@@ -1,24 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
-import { createTheme , Theme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
-import CarouselArrow from "assets/images/nft/CarouselArrow";
+import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
 import { useMarketplaceRecommendCanisters } from "hooks/nft/tradeData";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
-import CollectionAvatar from "../CollectionAvatar";
+import CarouselArrow from "assets/images/nft/CarouselArrow";
 
-const customizeTheme = createTheme({
-  breakpoints: {
-    values: {
-      sm: 680,
-      1200: 1200,
-      md: 1400,
-    },
-  },
-});
+import CollectionAvatar from "../CollectionAvatar";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -51,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => {
       overflow: "hidden",
       filter: "brightness(90%)",
 
-      [customizeTheme.breakpoints.down("1200")]: {
+      "@media(max-width: 1200px)": {
         "&.diff0": {
           filter: "brightness(100%)",
           "& .collection": {

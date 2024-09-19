@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
-import { makeStyles } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { makeStyles, Box, Grid, Theme } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 
 import { Route, MAX_NUMBER } from "./config";
 import { ExceedRoutesPopper } from "./ExceedRoutesPopper";
@@ -86,11 +85,11 @@ export function ExceedRoutes({ routes, onMenuClick }: ExceedRoutesProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Grid container alignItems="center" justifyContent="center" sx={{ height: "100%" }}>
+      <Flex fullWidth justify="center" sx={{ height: "100%" }}>
         <Box component="span" className={`${classes.dot} dot`} />
         <Box component="span" className={`${classes.dot} dot`} />
         <Box component="span" className={`${classes.dot} dot`} />
-      </Grid>
+      </Flex>
 
       <ExceedRoutesPopper
         open={open}

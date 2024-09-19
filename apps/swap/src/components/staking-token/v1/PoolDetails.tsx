@@ -4,16 +4,15 @@ import { INFO_URL } from "constants/index";
 import { WRAPPED_ICP } from "constants/tokens";
 import { useV1StakingTokenPool, useV1StakingTokenCycles } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
 import { useTheme } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import Countdown from "react-countdown";
-import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
 import { Theme } from "@mui/material/styles";
 import { StakingPoolControllerPoolInfo, STATE, PoolData } from "types/staking-token-v1";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink } from "@icpswap/utils";
+import { shorten, timestampFormat, parseTokenAmount, cycleValueFormat, explorerLink, BigNumber } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
+import { Image } from "components/index";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const nowTime = parseInt(String(Date.now() / 1000));
@@ -122,15 +121,9 @@ export default function StakingPoolDetails({
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
               <Typography sx={{ cursor: "pointer" }} onClick={handleGetToken}>
                 Get {pool?.stakingTokenSymbol}
-                <ICRocksLoadIcon
-                  fontSize="24"
-                  sx={{
-                    position: "relative",
-                    top: "3px",
-                    cursor: "pointer",
-                    marginLeft: "5px",
-                    color: theme.colors.secondaryMain,
-                  }}
+                <Image
+                  src="/images/external-link.svg"
+                  sx={{ width: "24px", height: "24px", margin: "0 0 0 5px", cursor: "pointer" }}
                 />
               </Typography>
             </Grid>

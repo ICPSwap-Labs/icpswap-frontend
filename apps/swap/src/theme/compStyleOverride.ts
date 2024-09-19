@@ -655,9 +655,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                 },
               },
             },
-            "& .Mui-disabled.opacity1": {
-              opacity: 1,
-            },
           },
           "&.customize-menu-list-light": {
             padding: 0,
