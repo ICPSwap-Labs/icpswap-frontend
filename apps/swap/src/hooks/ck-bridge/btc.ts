@@ -1,9 +1,8 @@
 import { useCallsData } from "@icpswap/hooks";
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckBTCMinterActor } from "actor/ckBTC";
 import { Principal } from "@dfinity/principal";
-import { getActorIdentity } from "components/Identity";
 import { UtxoStatus } from "candid/ckBTCMint";
 import {
   useUserBTCDepositAddress,
@@ -15,26 +14,34 @@ import {
 } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { TxState } from "types/ckBTC";
+import { Null } from "@icpswap/types";
+
 import { useIntervalFetch } from "../useIntervalFetch";
 
 export function isEndedState(state: TxState) {
   return !(state !== "Confirmed" && state !== "AmountTooLow");
 }
 
-export function useBTCDepositAddress(principal: string | undefined, subaccount?: Uint8Array) {
+export function useBtcDepositAddress(principal: string | undefined, subaccount?: Uint8Array) {
+  const [address, setAddress] = useState<Null | string>(null);
+  const [loading, setLoading] = useState(false);
+
   const storeUserDepositAddress = useUserBTCDepositAddress(principal);
   const updateUserBTCAddress = useUpdateUserBTCDepositAddress();
 
-  return useCallsData(
-    useCallback(async () => {
-      if (!principal) return undefined;
-      if (storeUserDepositAddress) return storeUserDepositAddress;
+  useEffect(() => {
+    async function call() {
+      if (!principal) return;
+      if (storeUserDepositAddress) {
+        setAddress(storeUserDepositAddress);
+        return;
+      }
 
-      const identity = await getActorIdentity();
+      setLoading(true);
 
       const address = resultFormat<string>(
         await (
-          await ckBTCMinterActor(identity)
+          await ckBTCMinterActor(true)
         ).get_btc_address({
           owner: availableArgsNull(Principal.fromText(principal)),
           subaccount: availableArgsNull<Uint8Array>(subaccount),
@@ -45,18 +52,21 @@ export function useBTCDepositAddress(principal: string | undefined, subaccount?:
         updateUserBTCAddress(principal, address);
       }
 
-      return address;
-    }, [principal, subaccount, storeUserDepositAddress]),
-  );
+      setAddress(address);
+      setLoading(false);
+    }
+
+    call();
+  }, [principal, subaccount, storeUserDepositAddress]);
+
+  return useMemo(() => ({ result: address, loading }), [address, loading]);
 }
 
-export function useUpdateBalanceCallback() {
+export function useRefreshBtcBalanceCallback() {
   return useCallback(async (principal: string, subaccount?: Uint8Array) => {
-    const identity = await getActorIdentity();
-
     return resultFormat<Array<UtxoStatus>>(
       await (
-        await ckBTCMinterActor(identity)
+        await ckBTCMinterActor(true)
       ).update_balance({
         owner: availableArgsNull<Principal>(Principal.fromText(principal)),
         subaccount: availableArgsNull<Uint8Array>(subaccount),
@@ -65,7 +75,7 @@ export function useUpdateBalanceCallback() {
   }, []);
 }
 
-export function useBTCWithdrawAddress() {
+export function useBtcWithdrawAddress() {
   const principal = useAccountPrincipalString();
   const storeAddress = useUserBTCWithdrawAddress(principal);
   const updateUserWithdrawAddress = useUpdateUserBTCWithdrawAddress();
@@ -74,10 +84,8 @@ export function useBTCWithdrawAddress() {
     useCallback(async () => {
       if (!principal) return undefined;
 
-      const identity = await getActorIdentity();
-
       const address = resultFormat<{ owner: Principal; subaccount: [] | Uint8Array[] }>(
-        await (await ckBTCMinterActor(identity)).get_withdrawal_account(),
+        await (await ckBTCMinterActor(true)).get_withdrawal_account(),
       ).data;
 
       if (address) {
@@ -128,7 +136,7 @@ export type BTCTx = {
   vin: VIn[];
 };
 
-export function useBTCTransactions(address: string | undefined | null, reload?: boolean) {
+export function useBtcTransactions(address: string | undefined | null, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!address) return undefined;
@@ -144,7 +152,7 @@ export function useBTCTransactions(address: string | undefined | null, reload?: 
   );
 }
 
-export function useBTCTransaction(tx: string | undefined, reload?: boolean) {
+export function useBtcTransaction(tx: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!tx) return undefined;
@@ -190,7 +198,7 @@ export function useFetchUserTxStates() {
   }, [txs, principal]);
 }
 
-export function useBTCCurrentBlock() {
+export function useBtcCurrentBlock() {
   const call = async () => {
     try {
       const result = await fetch(`https://blockchain.info/q/getblockcount`);

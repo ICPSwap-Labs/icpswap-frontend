@@ -2,7 +2,7 @@ import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import QRCode from "components/qrcode";
-import { useBTCDepositAddress, useUpdateBalanceCallback } from "hooks/ck-btc/useBTCCalls";
+import { useBtcDepositAddress, useRefreshBtcBalanceCallback } from "hooks/ck-bridge/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import Copy, { CopyRef } from "components/Copy";
 import { useState, useRef } from "react";
@@ -61,9 +61,9 @@ export default function MintCkBTC({ buttons, handleChange, active, block }: Mint
   const { result: balance } = useTokenBalance(ckBTC_ID, principal, reload);
   const { result: token } = useTokenInfo(ckBTC_ID);
 
-  const { result: btc_address, loading } = useBTCDepositAddress(principal);
+  const { result: btc_address, loading } = useBtcDepositAddress(principal);
 
-  const updateBalance = useUpdateBalanceCallback();
+  const updateBalance = useRefreshBtcBalanceCallback();
 
   const handelUpdateBalance = async () => {
     if (!principal) return;

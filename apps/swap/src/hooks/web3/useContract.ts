@@ -48,7 +48,7 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, provider, withSignerIfPossible, account]) as T;
 }
 
-export function useETHContract(withSignerIfPossible?: boolean) {
+export function useEthMinterContract(withSignerIfPossible?: boolean) {
   return useContract<CkETH>(ckETH_MINTER_CONTRACT, ABI, withSignerIfPossible);
 }
 

@@ -1,6 +1,6 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { Trans, t } from "@lingui/macro";
-import { useBTCWithdrawAddress, useFetchUserTxStates } from "hooks/ck-btc/useBTCCalls";
+import { useBtcWithdrawAddress, useFetchUserTxStates } from "hooks/ck-bridge/index";
 import { retrieveBTC, useApprove } from "hooks/ck-btc";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { ckBTC_ID, DISSOLVE_FEE } from "constants/ckBTC";
@@ -51,7 +51,7 @@ export default function DissolveBTC({ buttons, handleChange, active }: DissolveB
 
   const [openTip] = useTips();
 
-  const { result: btc_withdraw_address } = useBTCWithdrawAddress();
+  const { result: btc_withdraw_address } = useBtcWithdrawAddress();
 
   const withdrawAddress = useMemo(
     () => ({

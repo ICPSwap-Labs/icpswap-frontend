@@ -13,9 +13,19 @@ interface UseStylesProps {
   border?: string | boolean;
   multiline?: boolean;
   background?: string | "level3";
+  inputPadding?: string;
 }
 
-const useStyles = ({ contained, background, fullHeight, multiline, borderRadius, label, border }: UseStylesProps) => {
+const useStyles = ({
+  inputPadding,
+  contained,
+  background,
+  fullHeight,
+  multiline,
+  borderRadius,
+  label,
+  border,
+}: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
@@ -34,13 +44,13 @@ const useStyles = ({ contained, background, fullHeight, multiline, borderRadius,
             : background
           : theme.palette.background.level4,
         borderRadius,
-        padding: contained ? `7px 12px` : "3px 12px",
+        padding: inputPadding ?? (contained ? `7px 12px` : "3px 12px"),
         gap: "0 5px",
         height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
         ...(multiline ? { minHeight: "48px" } : {}),
         margin: label ? "12px 0 0 0" : "0",
         "@media(max-width: 640px)": {
-          padding: contained ? `4px 6px` : "0 6px",
+          padding: inputPadding ?? contained ? `4px 6px` : "0 6px",
         },
         "& input": {
           color: theme.palette.text.primary,
@@ -83,6 +93,7 @@ export interface FilledTextFieldProps {
   fontSize?: string;
   placeholderSize?: string;
   background?: string;
+  inputPadding?: string;
   [x: string]: any;
 }
 
@@ -166,11 +177,21 @@ function FilledTextField(
     border,
     background,
     labelSize,
+    inputPadding,
     ...props
   }: FilledTextFieldProps,
   ref,
 ) {
-  const classes = useStyles({ contained, background, fullHeight, borderRadius, border, label: !!label, multiline })();
+  const classes = useStyles({
+    inputPadding,
+    contained,
+    background,
+    fullHeight,
+    borderRadius,
+    border,
+    label: !!label,
+    multiline,
+  })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
   const outerBoxRef = useRef<HTMLElement | null>(null);

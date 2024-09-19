@@ -1,5 +1,5 @@
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
 import { formatTokenAmount } from "@icpswap/utils";
@@ -12,9 +12,11 @@ import { t } from "@lingui/macro";
 import { withdrawErc20Token } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 
-export function useDissolveCkERC20() {
+export function useDissolveCallback() {
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
+
+  const [loading, setLoading] = useState(false);
 
   const bytes32 = useMemo(() => {
     if (principal) return principalToBytes32(principal);
@@ -23,9 +25,11 @@ export function useDissolveCkERC20() {
 
   const approve = useApprove();
 
-  return useCallback(
+  const dissolve_call = useCallback(
     async (ckErc20Token: Token, rawAmount: string | number, recipient: string) => {
       if (!bytes32) return undefined;
+
+      setLoading(true);
 
       const amount = formatTokenAmount(rawAmount, ckErc20Token.decimals).toString();
 
@@ -40,6 +44,7 @@ export function useDissolveCkERC20() {
 
       if (ckETHApproveResult.status === ResultStatus.ERROR) {
         openTip(ckETHApproveResult.message ?? t`Failed to approve ${ckETH.symbol}`, MessageTypes.error);
+        setLoading(false);
         return;
       }
 
@@ -52,6 +57,7 @@ export function useDissolveCkERC20() {
 
       if (erc20TokenApproveResult.status === ResultStatus.ERROR) {
         openTip(erc20TokenApproveResult.message ?? t`Failed to approve ${ckErc20Token.symbol}`, MessageTypes.error);
+        setLoading(false);
         return;
       }
 
@@ -72,8 +78,12 @@ export function useDissolveCkERC20() {
         openTip(t`Withdraw ${rawAmount} ${ckErc20Token.symbol} successfully`, MessageTypes.success);
       }
 
-      return result;
+      setLoading(false);
+
+      return result.status === ResultStatus.OK;
     },
-    [bytes32, principal],
+    [bytes32, principal, setLoading],
   );
+
+  return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);
 }

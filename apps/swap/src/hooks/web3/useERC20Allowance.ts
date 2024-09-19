@@ -1,5 +1,6 @@
 import { useCallsData } from "@icpswap/hooks";
 import { ERC20Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
 import { useERC20Contract } from "hooks/web3/useContract";
 import { useCallback, useMemo } from "react";
 
@@ -9,9 +10,9 @@ export interface UseTokenAllowanceArgs {
 }
 
 export function useERC20TokenAllowance(
-  token?: ERC20Token,
-  owner?: string,
-  spender?: string,
+  token?: ERC20Token | Null,
+  owner?: string | Null,
+  spender?: string | Null,
   reload?: number | boolean,
 ): UseTokenAllowanceArgs {
   const contract = useERC20Contract(token?.address, false);

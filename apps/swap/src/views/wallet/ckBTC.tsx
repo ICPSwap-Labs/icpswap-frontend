@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
 import { Wrapper, Breadcrumbs, type Tab } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { useBTCCurrentBlock } from "hooks/ck-btc/useBTCCalls";
+import { useBtcCurrentBlock } from "hooks/ck-bridge/index";
 import MintBTC from "./components/ckBTC/Mint";
 import DissolveBTC from "./components/ckBTC/Dissolve";
 
@@ -35,7 +35,7 @@ export default function ckBTC() {
     history.push(`/wallet/ckBTC?type=${button.key}`);
   };
 
-  const block = useBTCCurrentBlock();
+  const block = useBtcCurrentBlock();
 
   return (
     <Wrapper>

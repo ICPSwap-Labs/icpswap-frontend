@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { ERC20Token } from "@icpswap/swap-sdk";
 
+import { Null } from "@icpswap/types";
 import { addTransaction, cancelTransaction, removeTransaction } from "./reducer";
 import { TransactionDetails, TransactionInfo, TransactionType } from "./types";
 
@@ -115,7 +116,7 @@ function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000;
 }
 
-function usePendingApprovalAmount(token?: ERC20Token, spender?: string): BigNumber | undefined {
+function usePendingApprovalAmount(token: ERC20Token | Null, spender: string | Null): BigNumber | undefined {
   const allTransactions = useAllTransactions();
   return useMemo(() => {
     if (typeof token?.address !== "string" || typeof spender !== "string") {
@@ -133,7 +134,7 @@ function usePendingApprovalAmount(token?: ERC20Token, spender?: string): BigNumb
 }
 
 // returns whether a token has a pending approval transaction
-export function useHasPendingApproval(token?: ERC20Token, spender?: string): boolean {
+export function useHasPendingApproval(token?: ERC20Token | Null, spender?: string | Null): boolean {
   return usePendingApprovalAmount(token, spender)?.gt(0) ?? false;
 }
 

@@ -5,13 +5,13 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { FilledTextField, NumberFilledTextField, type Tab } from "components/index";
 import { parseTokenAmount, formatTokenAmount, toSignificant } from "@icpswap/utils";
-import { ResultStatus, Erc20MinterInfo } from "@icpswap/types";
+import { Erc20MinterInfo } from "@icpswap/types";
 import { isAddress } from "utils/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
-import { useDissolveCkERC20 } from "hooks/ckERC20/index";
+import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { ckETH } from "constants/ckETH";
 import { useChainKeyTransactionPrice } from "@icpswap/hooks";
 import { useInfoToken } from "hooks/info/useInfoTokens";
@@ -48,7 +48,6 @@ export default function DissolveCkERC20({
 }: DissolveETHProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
 
@@ -77,21 +76,17 @@ export default function DissolveCkERC20({
   const { result: transactionPrice } = useChainKeyTransactionPrice(minterAddress);
   const ckETHInfoToken = useInfoToken(ckETH.address);
 
-  const dissolveErc20 = useDissolveCkERC20();
+  const { loading, dissolve_call } = useDissolveCallback();
 
   const handleSubmit = async () => {
     if (!amount || !principal || !token || !address) return;
 
-    setLoading(true);
+    const success = await dissolve_call(token, amount, address);
 
-    const withdrawResult = await dissolveErc20(token, amount, address);
-
-    if (withdrawResult?.status === ResultStatus.OK) {
+    if (success) {
       setRefreshTrigger(refreshTrigger + 1);
       setAmount("");
     }
-
-    setLoading(false);
   };
 
   const handleMax = () => {

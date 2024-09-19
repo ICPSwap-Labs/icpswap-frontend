@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
 import { useERC20TokenAllowance } from "hooks/web3/useERC20Allowance";
 import BigNumber from "bignumber.js";
+import { Null } from "@icpswap/types";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",
@@ -17,10 +18,10 @@ export enum ApprovalState {
 }
 
 function useApprovalStateForSpender(
-  amountToApprove: string | undefined,
-  token: ERC20Token | undefined,
-  spender: string | undefined,
-  useIsPendingApproval: (token?: ERC20Token, spender?: string) => boolean,
+  amountToApprove: string | Null,
+  token: ERC20Token | Null,
+  spender: string | Null,
+  useIsPendingApproval: (token?: ERC20Token | Null, spender?: string | Null) => boolean,
 ): ApprovalState {
   const { account } = useWeb3React();
 
@@ -43,10 +44,10 @@ function useApprovalStateForSpender(
 }
 
 export function useApproval(
-  amountToApprove: string | undefined,
-  token: ERC20Token | undefined,
-  spender: string | undefined,
-  useIsPendingApproval: (token?: ERC20Token, spender?: string) => boolean,
+  amountToApprove: string | Null,
+  token: ERC20Token | Null,
+  spender: string | Null,
+  useIsPendingApproval: (token?: ERC20Token | Null, spender?: string | Null) => boolean,
 ): [
   ApprovalState,
   () => Promise<

@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { NumberFilledTextField, type Tab } from "components/index";
 import { principalToBytes32 } from "utils/ic/index";
-import { useETHContract, useETHBalance, useBlockNumber, useActiveChain } from "hooks/web3/index";
+import { useEthMinterContract, useETHBalance, useBlockNumber, useActiveChain } from "hooks/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { toHexString } from "utils/web3/index";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
@@ -82,7 +82,7 @@ export default function MintCkETH({ buttons, handleChange, active, minterInfo }:
     setReload(!reload);
   };
 
-  const ethMinter = useETHContract();
+  const ethMinter = useEthMinterContract();
 
   const updateUserTx = useUpdateTX();
 

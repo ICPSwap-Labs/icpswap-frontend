@@ -21,3 +21,13 @@ export function useRefreshTrigger(key: string | undefined) {
     return refreshTriggers[key];
   }, [refreshTriggers, key]);
 }
+
+export function useRefreshTriggerManager(key: string | undefined): [undefined | number, () => void] {
+  const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
+
+  return useMemo(() => {
+    if (!key) return [undefined, () => setRefreshTriggers("Global_key")];
+
+    return [refreshTriggers[key], () => setRefreshTriggers(key)];
+  }, [refreshTriggers, key, setRefreshTriggers]);
+}

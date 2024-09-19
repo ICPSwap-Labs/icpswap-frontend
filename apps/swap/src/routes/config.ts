@@ -61,6 +61,8 @@ const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
 const SnsVotes = Loadable(lazy(() => import("../views/sns/Voting/index")));
 const SnsVoting = Loadable(lazy(() => import("../views/sns/Voting/Voting")));
 
+const CkBridge = Loadable(lazy(() => import("../views/ck-bridge")));
+
 export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any } = {
   "/wallet": Wallet,
 
@@ -121,4 +123,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/sns/voting/:governance_id/:proposal_id": SnsVoting,
   "/sns/launches": SNSLaunches,
   "/sns/launch/:root_id": SNSLaunch,
+
+  "/ck-bridge": CkBridge,
 };

@@ -4,6 +4,7 @@ import { useHasPendingApproval, useTransactionAdder } from "store/transactions/h
 import { TransactionType } from "store/transactions/types";
 import type { TransactionResponse } from "@ethersproject/providers";
 
+import { Null } from "@icpswap/types";
 import { ApprovalState, useApproval } from "./useERC20Approve";
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {
@@ -29,7 +30,7 @@ function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: string,
-  token?: ERC20Token,
+  token?: ERC20Token | Null,
   spender?: string,
 ): [
   ApprovalState,

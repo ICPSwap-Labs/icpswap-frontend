@@ -35,7 +35,7 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
   };
 
   return (
-    <Button sx={{ maxWidth: "100%" }} variant="contained" fullWidth size="large" onClick={handleConnect}>
+    <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect}>
       Connect to Metamask
     </Button>
   );

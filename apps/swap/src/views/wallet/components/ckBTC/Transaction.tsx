@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableRow, TableContainer, TableHead } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, ListLoading, NoData, ALink } from "components/index";
-import { useBTCTransactions, BTCTx } from "hooks/ck-btc/useBTCCalls";
+import { useBtcTransactions, BTCTx } from "hooks/ck-bridge/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { BodyCell, HeaderCell } from "@icpswap/ui";
@@ -151,7 +151,7 @@ export interface TransactionsProps {
 export default function Transactions({ address, block }: TransactionsProps) {
   const [reload, setReload] = useState(false);
 
-  const { result: list, loading } = useBTCTransactions(address, reload);
+  const { result: list, loading } = useBtcTransactions(address, reload);
 
   const data = useMemo(() => {
     if (!address) return [];

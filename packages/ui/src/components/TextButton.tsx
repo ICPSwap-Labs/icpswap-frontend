@@ -9,6 +9,7 @@ export interface ALinkProps {
   color?: string;
   textDecorationColor?: "primary" | "secondary" | "text.secondary";
   fontSize?: string;
+  align?: "right";
 }
 
 export function ALink({
@@ -17,6 +18,7 @@ export function ALink({
   textDecorationColor = "text.secondary",
   color = "",
   fontSize = "14px",
+  align,
 }: ALinkProps) {
   return (
     <a
@@ -33,6 +35,7 @@ export function ALink({
             ? "rgb(86, 105, 220)"
             : "#8492c4",
         color,
+        textAlign: align,
       }}
     >
       <Typography
