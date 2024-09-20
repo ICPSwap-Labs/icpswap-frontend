@@ -95,7 +95,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           {account ? (
-            <Typography sx={{ fontSize: "16px", color: "text.primary" }}>{account}</Typography>
+            <Typography sx={{ fontSize: "16px", color: "text.primary", wordBreak: "break-all" }}>{account}</Typography>
           ) : (
             <Web3ButtonConnector />
           )}

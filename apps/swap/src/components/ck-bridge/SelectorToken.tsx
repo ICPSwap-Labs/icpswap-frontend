@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useTheme, Typography, Box, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useERC20Balance, useETHBalance } from "hooks/web3/index";
@@ -267,9 +267,18 @@ export interface SelectorTokenProps {
   hidden?: boolean;
   chain: ckBridgeChain;
   minterInfo: Erc20MinterInfo | Null;
+  updateTokenHide: (tokenId: string, hidden: boolean) => void;
 }
 
-export function SelectorToken({ tokenId, onClick, searchWord, hidden, chain, minterInfo }: SelectorTokenProps) {
+export function SelectorToken({
+  tokenId,
+  onClick,
+  searchWord,
+  hidden,
+  chain,
+  minterInfo,
+  updateTokenHide,
+}: SelectorTokenProps) {
   const [, token] = useToken(tokenId);
 
   const isHidden = useMemo(() => {
@@ -282,7 +291,11 @@ export function SelectorToken({ tokenId, onClick, searchWord, hidden, chain, min
     return !symbol.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase());
   }, [searchWord, token, hidden]);
 
-  return tokenId === ckBTC.address && chain === ckBridgeChain.eth ? (
+  useEffect(() => {
+    updateTokenHide(tokenId, isHidden);
+  }, [updateTokenHide, tokenId, isHidden]);
+
+  return tokenId === ckBTC.address && chain === ckBridgeChain.btc ? (
     <SelectorTokenForBtc hidden={isHidden} onClick={onClick} chain={chain} token={token} />
   ) : tokenId === ckETH.address && chain === ckBridgeChain.eth ? (
     <SelectorTokenForEth hidden={isHidden} onClick={onClick} chain={chain} token={token} />

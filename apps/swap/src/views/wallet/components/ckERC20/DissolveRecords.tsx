@@ -185,7 +185,7 @@ export default function DissolveRecords({ refresh, blockNumber, token }: Dissolv
 
         {minterInfo ? (
           <Typography>
-            <Trans>Last ERC20 synced block number:</Trans>&nbsp;
+            <Trans>Last Ethereum synced block number:</Trans>&nbsp;
             <Typography component="span" color="text.primary">
               {minterInfo.last_erc20_scraped_block_number[0]?.toString()}
             </Typography>

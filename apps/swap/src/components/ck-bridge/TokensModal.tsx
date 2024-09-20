@@ -26,7 +26,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [hiddenCanisterIds] = useState<string[]>([]);
+  const [hiddenCanisterIds, setHiddenCanisterIds] = useState<{ [canisterId: string]: boolean }>({});
 
   const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
@@ -43,8 +43,18 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
   const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, handleSearchToken, 300);
 
   const noData = useMemo(() => {
-    return hiddenCanisterIds.length === allBridgeTokens.length * 2;
+    return Object.values(hiddenCanisterIds).filter((e) => e === true).length === allBridgeTokens.length;
   }, [hiddenCanisterIds, allBridgeTokens]);
+
+  const handleUpdateTokenIsHidden = useCallback(
+    (tokenId: string, hidden: boolean) => {
+      setHiddenCanisterIds((prevState) => ({
+        ...prevState,
+        [tokenId]: hidden,
+      }));
+    },
+    [setHiddenCanisterIds],
+  );
 
   return (
     <>
@@ -116,6 +126,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                     searchWord={searchKeyword}
                     chain={tokenId === ckBTC.address ? ckBridgeChain.btc : ckBridgeChain.eth}
                     minterInfo={minterInfo}
+                    updateTokenHide={handleUpdateTokenIsHidden}
                   />
 
                   <SelectorToken
@@ -124,6 +135,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                     searchWord={searchKeyword}
                     chain={ckBridgeChain.icp}
                     minterInfo={minterInfo}
+                    updateTokenHide={handleUpdateTokenIsHidden}
                   />
                 </Box>
               ))}

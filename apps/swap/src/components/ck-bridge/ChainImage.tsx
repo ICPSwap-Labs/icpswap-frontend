@@ -35,7 +35,7 @@ export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "
               ? "/images/ck-bridge-chain-btc.svg"
               : "/images/ck-bridge-chain-eth.svg"
           }
-          sx={{ width: chainSize, height: chainSize }}
+          sx={{ width: chainSize, height: chainSize, borderRadius: "4px" }}
         />
       </Box>
     </Box>

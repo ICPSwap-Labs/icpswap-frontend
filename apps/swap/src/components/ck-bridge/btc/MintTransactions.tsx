@@ -195,8 +195,11 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
         <Trans>Latest Transactions</Trans>
       </Typography>
 
-      <Typography sx={{ margin: "12px 0 0 0" }}>
-        <Trans>Wait for 12 confirmations, then update ckBTC balance.</Trans>
+      <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px" }}>
+        <Trans>
+          After the IC's Bitcoin network syncs to the Bitcoin mainnet height and the transaction receives 6 block
+          confirmations, your ckBTC balance will be updated accordingly.
+        </Trans>
       </Typography>
 
       <Box sx={{ margin: "16px 0 0 0" }}>

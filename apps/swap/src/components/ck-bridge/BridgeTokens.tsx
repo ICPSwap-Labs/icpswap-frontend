@@ -31,10 +31,27 @@ export function BridgeTokens({
   }, [bridgeChain, onBridgeChainChange, token]);
 
   return (
-    <Flex gap="0 8px" fullWidth>
+    <Flex
+      gap="0 8px"
+      fullWidth
+      sx={{
+        "@media(max-width: 640px)": {
+          flexDirection: "column",
+          gap: "0 8px",
+          alignItems: "enter",
+        },
+      }}
+    >
       <BridgeTokenSelector token={token} tokenChain={bridgeChain} onChange={onTokenChange} />
       <Image
-        sx={{ width: "32px", height: "32px", cursor: "pointer" }}
+        sx={{
+          width: "32px",
+          height: "32px",
+          cursor: "pointer",
+          "@media(max-width: 640px)": {
+            transform: "rotate(90deg)",
+          },
+        }}
         src="/images/ck-bridge-switch.svg"
         onClick={handleSwitchChain}
       />

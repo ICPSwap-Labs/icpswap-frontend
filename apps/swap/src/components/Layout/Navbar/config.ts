@@ -53,7 +53,7 @@ export const routes: Route[] = [
   },
   {
     key: "ck-bridge",
-    name: `ck-bridge`,
+    name: `ck-Bridge`,
     path: `/ck-bridge`,
   },
   {

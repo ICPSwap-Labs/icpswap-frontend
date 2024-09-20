@@ -34,14 +34,16 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
           padding: "20px 16px",
           background: theme.palette.background.level2,
           borderRadius: "16px",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "16px 0",
+          },
         }}
         justify="center"
         gap="0 32px"
       >
         <Box
           sx={{
-            width: "164px",
-            height: "164px",
             padding: "12px",
             border: `1px solid ${theme.palette.background.level4}`,
             display: "flex",
