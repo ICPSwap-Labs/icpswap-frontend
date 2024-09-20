@@ -59,38 +59,38 @@ export default function WalletConnector() {
   const classes = useStyles();
 
   const Wallets: Wallet[] = [
-    {
-      label: "Internet Identity",
-      value: Connector.IC,
-      logo: "/images/connect/InternetIdentity.svg",
-    },
-    { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
+    // {
+    //   label: "Internet Identity",
+    //   value: Connector.IC,
+    //   logo: "/images/connect/InternetIdentity.svg",
+    // },
+    // { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
     {
       label: "Stoic Wallet",
       value: Connector.STOIC,
       logo: "/images/connect/stoic.svg",
     },
-    {
-      label: "ICPSwap Wallet",
-      value: Connector.ICPSwap,
-      logo: "/images/connect/icpswap.svg",
-    },
-    { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
-    {
-      label: "Bitfinity Wallet",
-      value: Connector.INFINITY,
-      logo: "/images/connect/Infinity.svg",
-    },
-    {
-      label: "AstroX ME",
-      value: Connector.ME,
-      logo: "/images/connect/AstroX.svg",
-    },
-    {
-      label: "MetaMask",
-      value: Connector.Metamask,
-      logo: "/images/connect/metamask.svg",
-    },
+    // {
+    //   label: "ICPSwap Wallet",
+    //   value: Connector.ICPSwap,
+    //   logo: "/images/connect/icpswap.svg",
+    // },
+    // { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
+    // {
+    //   label: "Bitfinity Wallet",
+    //   value: Connector.INFINITY,
+    //   logo: "/images/connect/Infinity.svg",
+    // },
+    // {
+    //   label: "AstroX ME",
+    //   value: Connector.ME,
+    //   logo: "/images/connect/AstroX.svg",
+    // },
+    // {
+    //   label: "MetaMask",
+    //   value: Connector.Metamask,
+    //   logo: "/images/connect/metamask.svg",
+    // },
   ];
 
   return (
