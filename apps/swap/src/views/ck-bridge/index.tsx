@@ -1,15 +1,26 @@
-import { useChainKeyMinterInfo } from "@icpswap/hooks";
+import { useChainKeyMinterInfo, useParsedQueryString } from "@icpswap/hooks";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs } from "@icpswap/utils";
 import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
 import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckETH_MINTER_ID } from "constants/ckETH";
+import { useToken } from "hooks/useCurrency";
+import { useHistory } from "react-router-dom";
 
 export default function CkBridge() {
   const [token, setToken] = useState<Token>(ckUSDC);
   const [bridgeChain, setBridgeChain] = useState<ckBridgeChain>(ckBridgeChain.eth);
+
+  const history = useHistory();
+
+  const { chain, tokenId } = useParsedQueryString() as {
+    chain: ckBridgeChain | undefined;
+    tokenId: string | undefined;
+  };
+
+  const [, tokenFromUrl] = useToken(tokenId);
 
   const { result: minterInfo } = useChainKeyMinterInfo(ckETH_MINTER_ID);
 
@@ -37,10 +48,26 @@ export default function CkBridge() {
       : ckBridgeChain.icp;
   }, [token, bridgeChain]);
 
-  const handleTokenChange = useCallback((token: Token, chain: ckBridgeChain) => {
-    setToken(token);
-    setBridgeChain(chain);
-  }, []);
+  const handleTokenChange = useCallback(
+    (token: Token, chain: ckBridgeChain) => {
+      history.push(`/ck-bridge?tokenId=${token.address}&chain=${chain}`);
+    },
+    [history],
+  );
+
+  const handleBridgeChangeChange = useCallback(() => {
+    history.push(`/ck-bridge?tokenId=${tokenId}&chain=${targetTokenBridgeChain}`);
+  }, [targetTokenBridgeChain, tokenId]);
+
+  useEffect(() => {
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+    }
+
+    if (chain) {
+      setBridgeChain(chain);
+    }
+  }, [tokenFromUrl, chain]);
 
   return bridgeTokenType === "erc20" ? (
     <Erc20BridgeWrapper
@@ -49,7 +76,7 @@ export default function CkBridge() {
       bridgeChain={bridgeChain}
       targetTokenBridgeChain={targetTokenBridgeChain}
       onTokenChange={handleTokenChange}
-      onBridgeChainChange={() => setBridgeChain(targetTokenBridgeChain)}
+      onBridgeChainChange={handleBridgeChangeChange}
       bridgeType={bridgeType}
     />
   ) : bridgeTokenType === "btc" ? (
@@ -60,7 +87,7 @@ export default function CkBridge() {
       targetTokenBridgeChain={targetTokenBridgeChain}
       onTokenChange={handleTokenChange}
       bridgeType={bridgeType}
-      onBridgeChainChange={() => setBridgeChain(targetTokenBridgeChain)}
+      onBridgeChainChange={handleBridgeChangeChange}
     />
   ) : bridgeTokenType === "eth" ? (
     <EthBridgeWrapper
@@ -69,7 +96,7 @@ export default function CkBridge() {
       bridgeChain={bridgeChain}
       targetTokenBridgeChain={targetTokenBridgeChain}
       onTokenChange={handleTokenChange}
-      onBridgeChainChange={() => setBridgeChain(targetTokenBridgeChain)}
+      onBridgeChainChange={handleBridgeChangeChange}
       bridgeType={bridgeType}
     />
   ) : null;
