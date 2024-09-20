@@ -136,7 +136,7 @@ export type BTCTx = {
   vin: VIn[];
 };
 
-export function useBtcTransactions(address: string | undefined | null, reload?: boolean) {
+export function useBtcTransactions(address: string | undefined | null, refresh?: number | boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!address) return undefined;
@@ -148,7 +148,7 @@ export function useBtcTransactions(address: string | undefined | null, reload?: 
         return undefined;
       }
     }, [address]),
-    reload,
+    refresh,
   );
 }
 

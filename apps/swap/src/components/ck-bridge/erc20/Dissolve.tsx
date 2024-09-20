@@ -1,10 +1,11 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, Button, useTheme, CircularProgress } from "components/Mui";
+import { FilledTextField } from "components/index";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -14,6 +15,7 @@ import { useActiveChain } from "hooks/web3/index";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
+import { isAddress } from "utils/web3/index";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -33,6 +35,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     bridgeChain: bridgeChain === ckBridgeChain.icp ? ckBridgeChain.eth : ckBridgeChain.icp,
   });
 
+  const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
@@ -45,9 +48,16 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     refresh: refreshTrigger,
   });
 
+  useEffect(() => {
+    setAddress(account);
+  }, [account, setAddress]);
+
   const dissolve_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
     if (!amount) return t`Enter the amount`;
+    if (!address) return t`Enter the address`;
+    if (isAddress(address) === false) return t`Invalid ethereum address`;
+
     if (!token || !tokenBalance) return t`Waiting to fetch data`;
 
     if (!formatTokenAmount(amount, token.decimals).isGreaterThan(token.transFee))
@@ -58,7 +68,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     if (formatTokenAmount(amount, token.decimals).isGreaterThan(tokenBalance)) return t`Insufficient Balance`;
 
     return undefined;
-  }, [amount, token, tokenBalance, chain, chainId]);
+  }, [amount, token, address, tokenBalance, chain, chainId]);
 
   const balance = useBridgeTokenBalance({ token, chain: bridgeChain, minterInfo });
 
@@ -96,7 +106,16 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           {account ? (
-            <Typography sx={{ fontSize: "16px", color: "text.primary" }}>{account}</Typography>
+            <FilledTextField
+              inputPadding="0px"
+              background="level3"
+              value={address}
+              onChange={(value: string) => setAddress(value)}
+              fullWidth
+              fontSize="16px"
+              placeholder="Enter the address"
+              variant="standard"
+            />
           ) : (
             <Web3ButtonConnector />
           )}

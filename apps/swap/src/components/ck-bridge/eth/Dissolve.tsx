@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
@@ -6,12 +6,14 @@ import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, Button, useTheme, CircularProgress } from "components/Mui";
+import { FilledTextField } from "components/index";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Web3ButtonConnector } from "components/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { useActiveChain } from "hooks/web3/index";
+import { isAddress } from "utils/web3/index";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
@@ -38,6 +40,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
     bridgeChain: bridgeChain === ckBridgeChain.icp ? ckBridgeChain.eth : ckBridgeChain.icp,
   });
 
+  const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
@@ -50,9 +53,15 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
     refresh: refreshTrigger,
   });
 
+  useEffect(() => {
+    setAddress(account);
+  }, [account, setAddress]);
+
   const dissolve_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
     if (!amount) return t`Enter the amount`;
+    if (!address) return t`Enter the address`;
+    if (isAddress(address) === false) return t`Invalid ethereum address`;
     if (formatTokenAmount(amount, ckETH.decimals).isLessThan(MIN_WITHDRAW_AMOUNT))
       return `Min amount is ${toSignificantWithGroupSeparator(
         parseTokenAmount(MIN_WITHDRAW_AMOUNT, ckETH.decimals).toString(),
@@ -67,7 +76,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       return t`Insufficient Balance`;
 
     return undefined;
-  }, [amount, token, tokenBalance, chain, chainId]);
+  }, [amount, token, tokenBalance, chain, chainId, address]);
 
   const handleMax = useCallback(() => {
     setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());
@@ -103,7 +112,16 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           {account ? (
-            <Typography sx={{ fontSize: "16px", color: "text.primary" }}>{account}</Typography>
+            <FilledTextField
+              inputPadding="0px"
+              background="level3"
+              value={address}
+              onChange={(value: string) => setAddress(value)}
+              fullWidth
+              fontSize="16px"
+              placeholder="Enter the address"
+              variant="standard"
+            />
           ) : (
             <Web3ButtonConnector />
           )}

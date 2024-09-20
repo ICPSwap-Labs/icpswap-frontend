@@ -7,6 +7,8 @@ import { Flex, LoadingRow } from "@icpswap/ui";
 import { useBtcTransactions, BTCTx } from "hooks/ck-bridge/index";
 import { Null } from "@icpswap/types";
 import dayjs from "dayjs";
+import { RotateCcw } from "react-feather";
+import { useRefreshTriggerManager } from "hooks/index";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -182,7 +184,9 @@ export interface MintTransactionProps {
 }
 
 export function MintTransactions({ btc_address, block }: MintTransactionProps) {
-  const { result: transactions, loading } = useBtcTransactions(btc_address);
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("BtcMintTransactions");
+
+  const { result: transactions, loading } = useBtcTransactions(btc_address, refreshTrigger);
 
   const slicedTransactions = useMemo(() => {
     if (!btc_address) return [];
@@ -191,9 +195,13 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
 
   return (
     <MainCard level={1}>
-      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-        <Trans>Latest Transactions</Trans>
-      </Typography>
+      <Flex gap="0 8px">
+        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+          <Trans>Latest Transactions</Trans>
+        </Typography>
+
+        <RotateCcw color="#ffffff" size={14} style={{ cursor: "pointer" }} onClick={setRefreshTrigger} />
+      </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px" }}>
         <Trans>
