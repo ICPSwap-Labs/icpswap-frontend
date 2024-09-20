@@ -89,10 +89,6 @@ export function toFormat(value: string | number | BigNumber | undefined) {
   return new BigNumber(value).toFormat();
 }
 
-export function isHouseUserTokenTransactions(canisterId: string, principal: string) {
-  return `https://637g5-siaaa-aaaaj-aasja-cai.raw.ic0.app/address/${canisterId}${principal ? `/${principal}` : ""}`;
-}
-
 export function timeParser(time: any): Date {
   const date = new Date(time);
   const seconds = date.getSeconds();

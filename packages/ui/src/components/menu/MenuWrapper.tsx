@@ -1,5 +1,6 @@
 import { ClickAwayListener } from "@mui/base";
 import { ReactNode } from "react";
+
 import { useTheme, Box, Popper, makeStyles } from "../Mui";
 
 const useStyles = makeStyles(() => {
@@ -23,11 +24,22 @@ export interface MenuWrapperProps {
     | "right-end"
     | "left-start"
     | "left-end";
-  menuWidth?: string;
   children: ReactNode;
+  border?: string;
+  padding?: string;
+  menuWidth?: string;
 }
 
-export function MenuWrapper({ open, onClickAway, anchor, placement, menuWidth, children }: MenuWrapperProps) {
+export function MenuWrapper({
+  open,
+  menuWidth,
+  onClickAway,
+  border,
+  padding,
+  anchor,
+  placement,
+  children,
+}: MenuWrapperProps) {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -52,10 +64,10 @@ export function MenuWrapper({ open, onClickAway, anchor, placement, menuWidth, c
         <Box
           sx={{
             background: theme.palette.background.level1,
-            border: `1px solid ${theme.palette.background.level3}`,
-            padding: "10px 0",
-            width: `${menuWidth ?? "146px"}!important`,
+            border: border ?? `1px solid ${theme.palette.background.level3}`,
+            padding: padding ?? "4px 0",
             borderRadius: "12px",
+            ...(menuWidth ? { width: `${menuWidth}!important` } : {}),
           }}
         >
           {children}

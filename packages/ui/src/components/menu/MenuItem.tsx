@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
+
 import { useTheme, Typography, BoxProps } from "../Mui";
 import { Flex } from "../Grid/Flex";
 
 export interface MenuItemProps {
   onMenuClick: (value: any) => void;
   active?: boolean;
-  label: ReactNode;
+  label?: ReactNode;
   icon?: ReactNode;
   value: any;
   children?: ReactNode;
@@ -32,9 +33,7 @@ export function MenuItem({
       fullWidth
       sx={{
         background: theme.palette.background.level1,
-        paddingTop: "10px",
-        paddingBottom: "10px",
-        padding: "0 12px",
+        padding: "0 24px",
         height: "44px",
         "&.active": {
           background: theme.palette.background.level3,
@@ -53,15 +52,17 @@ export function MenuItem({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <Flex sx={{ color: active ? "text.primary" : "text.secondary" }} gap="0 10px" fullWidth>
-        {icon}
-        <Typography
-          className="nav-bar-label"
-          sx={{ fontSize: "16px", color: active ? "text.primary" : "text.secondary" }}
-        >
-          {label}
-        </Typography>
-      </Flex>
+      {label ? (
+        <Flex sx={{ color: active ? "text.primary" : "text.secondary" }} gap="0 10px" fullWidth>
+          {icon}
+          <Typography
+            className="nav-bar-label"
+            sx={{ fontSize: "14px", color: active ? "text.primary" : "text.secondary" }}
+          >
+            {label}
+          </Typography>
+        </Flex>
+      ) : null}
 
       {children}
     </Flex>

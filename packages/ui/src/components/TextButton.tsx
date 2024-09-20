@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Box } from "@mui/material";
 import { mockALinkAndOpen } from "@icpswap/utils";
+
+import { Typography, Box } from "./Mui";
 
 export interface ALinkProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ export interface ALinkProps {
   textDecorationColor?: "primary" | "secondary" | "text.secondary";
   fontSize?: string;
   align?: "right";
+  text?: boolean;
 }
 
 export function ALink({
@@ -19,6 +21,7 @@ export function ALink({
   color = "",
   fontSize = "14px",
   align,
+  text = true,
 }: ALinkProps) {
   return (
     <a
@@ -26,7 +29,7 @@ export function ALink({
       target="_blank"
       rel="noreferrer"
       style={{
-        textDecoration: "underline",
+        textDecoration: text ? "underline" : "none",
         fontSize,
         textDecorationColor:
           textDecorationColor === "primary"
@@ -38,17 +41,21 @@ export function ALink({
         textAlign: align,
       }}
     >
-      <Typography
-        color={color ?? "text.secondary"}
-        sx={{
-          cursor: "pointer",
-          userSelect: "none",
-          fontSize,
-        }}
-        component="span"
-      >
-        {children}
-      </Typography>
+      {text ? (
+        <Typography
+          color={color ?? "text.secondary"}
+          sx={{
+            cursor: "pointer",
+            userSelect: "none",
+            fontSize,
+          }}
+          component="span"
+        >
+          {children}
+        </Typography>
+      ) : (
+        children
+      )}
     </a>
   );
 }

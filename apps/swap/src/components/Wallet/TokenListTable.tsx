@@ -1,14 +1,11 @@
-import { useState, useContext, useMemo, useEffect, useCallback } from "react";
-import { Typography, Box, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { useState, useContext, useMemo, useEffect } from "react";
+import { Typography, Box, useTheme, makeStyles } from "components/Mui";
 import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
-import { useAccount } from "store/global/hooks";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
@@ -20,7 +17,6 @@ import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
-import { isHouseUserTokenTransactions } from "utils/index";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { Erc20MinterInfo } from "@icpswap/types";
@@ -29,6 +25,8 @@ import { SortBalanceEnum } from "types/index";
 
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
+import { Button } from "./Button";
+import { TransactionButton } from "./TransactionButton";
 
 const useStyles = makeStyles(() => ({
   tokenAssets: {
@@ -47,49 +45,6 @@ const useStyles = makeStyles(() => ({
     background: "#8492C4",
   },
 }));
-
-interface ActionButtonProps {
-  label: string;
-  onClick?: () => void;
-}
-
-function ActionButton({ label, onClick }: ActionButtonProps) {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        padding: "7px 12px",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#4F5A84",
-        borderRadius: "8px",
-        cursor: "pointer",
-      }}
-      onClick={onClick}
-    >
-      <Typography color="text.primary">{label}</Typography>
-    </Box>
-  );
-}
-
-export const XTCTopUpIcon = () => {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M7.9987 13.334C10.9442 13.334 13.332 10.9462 13.332 8.00065C13.332 5.05513 10.9442 2.66732 7.9987 2.66732C5.05318 2.66732 2.66536 5.05513 2.66536 8.00065C2.66536 10.9462 5.05318 13.334 7.9987 13.334ZM7.9987 14.6673C11.6806 14.6673 14.6654 11.6825 14.6654 8.00065C14.6654 4.31875 11.6806 1.33398 7.9987 1.33398C4.3168 1.33398 1.33203 4.31875 1.33203 8.00065C1.33203 11.6825 4.3168 14.6673 7.9987 14.6673Z"
-        fill="#5669DC"
-      />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M7.9678 6.58579L6.55359 8L7.9678 9.41421L9.38201 8L7.9678 6.58579ZM4.66797 8L7.9678 11.2998L11.2676 8L7.9678 4.70017L4.66797 8Z"
-        fill="#5669DC"
-      />
-    </svg>
-  );
-};
 
 type ckTOKEN = {
   id: string;
@@ -115,8 +70,8 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
 
   return (
     <>
-      <ActionButton label={t`Mint`} onClick={() => handleCKTokenMint(ckToken.mintPath)} />
-      <ActionButton label={t`Dissolve`} onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)} />
+      <Button label={t`Mint`} onClick={() => handleCKTokenMint(ckToken.mintPath)} />
+      <Button label={t`Dissolve`} onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)} />
     </>
   );
 }
@@ -130,9 +85,8 @@ export interface TokenListItemProps {
 
 export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
   const classes = useStyles();
-  const account = useAccount();
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const walletType = useConnectorType();
 
@@ -235,29 +189,10 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
 
   const root_canister_id = useSNSTokenRootId(canisterId);
 
-  const handleToTransactions = useCallback(() => {
-    if (!tokenInfo || !principal) return;
-
-    const { canisterId, standardType, symbol } = tokenInfo;
-
-    const isErc20MintToken = !!allSupportedErc20Tokens.find((e) => e.id === tokenInfo.canisterId);
-
-    let url = "";
-
-    if (symbol === ICP.symbol) {
-      url = `https://dashboard.internetcomputer.org/account/${account}`;
-    } else if (root_canister_id) {
-      url = `https://dashboard.internetcomputer.org/sns/${root_canister_id}/account/${principal.toString()}`;
-    } else if (isErc20MintToken) {
-      url = `https://dashboard.internetcomputer.org/ethereum/${tokenInfo.canisterId}/account/${principal.toString()}`;
-    } else if (tokenInfo.standardType === TOKEN_STANDARD.ICRC1 || tokenInfo.standardType === TOKEN_STANDARD.ICRC2) {
-      url = isHouseUserTokenTransactions(tokenInfo.canisterId, principal?.toString());
-    } else {
-      url = `${INFO_URL}/token/transactions/${canisterId}/${principal?.toString()}?standard=${standardType}`;
-    }
-
-    mockALinkAndOpen(url, "TOKEN_TRANSACTIONS");
-  }, [tokenInfo, principal, root_canister_id, allSupportedErc20Tokens]);
+  const isBridgeToken = useMemo(() => {
+    if (!tokenInfo) return false;
+    return !!allSupportedErc20Tokens.find((e) => e.id === tokenInfo.canisterId);
+  }, [allSupportedErc20Tokens, tokenInfo]);
 
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
@@ -369,23 +304,29 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
 
       <Box sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "space-between", gap: "0 5px" }}>
         {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : <RemoveToken canisterId={canisterId} />}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "10px 10px", flexWrap: "wrap" }}>
-          {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <ActionButton label="Swap" onClick={handleToSwap} />}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "12px", flexWrap: "wrap" }}>
+          {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <Button label="Swap" onClick={handleToSwap} />}
 
-          <ActionButton label="Send" onClick={handleTransfer} />
-          <ActionButton label="Receive" onClick={handleReceive} />
-          <ActionButton label="Transactions" onClick={handleToTransactions} />
+          <Button label="Send" onClick={handleTransfer} />
+          <Button label="Receive" onClick={handleReceive} />
+
+          <TransactionButton
+            tokenId={canisterId}
+            principal={principal?.toString()}
+            snsRootId={root_canister_id}
+            isBridgeToken={isBridgeToken}
+          />
 
           {canisterId === ICP.address && walletType === Connector.NFID ? (
-            <ActionButton label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
+            <Button label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
           ) : null}
 
-          {tokenInfo?.canisterId === XTC.address ? <ActionButton label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
+          {tokenInfo?.canisterId === XTC.address ? <Button label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
 
           {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
             <>
-              <ActionButton label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
-              <ActionButton label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
+              <Button label={t`Unwrap`} onClick={() => handleWrappedICP("unwrap")} />
+              <Button label={t`Wrap`} onClick={() => handleWrappedICP("wrap")} />
             </>
           ) : null}
 

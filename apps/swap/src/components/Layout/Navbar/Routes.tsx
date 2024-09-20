@@ -100,7 +100,6 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
                   anchor={subMenuTarget}
                   subMenuKey={subMenuOpenKey}
                   placement="bottom-start"
-                  menuWidth="180px"
                 />
               </Grid>
             </Box>
