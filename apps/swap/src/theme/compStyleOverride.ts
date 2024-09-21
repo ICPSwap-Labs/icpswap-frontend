@@ -470,8 +470,17 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          color: isDark ? theme.colors.darkLevel1 : theme.paper,
-          background: isDark ? theme.colors.grey50 : theme.colors.grey700,
+          background: "#ffffff",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          maxWidth: "300px",
+          color: "#111936",
+          fontSize: "12px",
+          lineHeight: "18px",
+          fontWeight: 400,
+          "& .MuiTooltip-arrow": {
+            color: "#ffffff",
+          },
         },
       },
     },

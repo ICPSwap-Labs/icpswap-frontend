@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
+import { Box, Typography, useTheme, makeStyles, Tooltip } from "components/Mui";
 import { t, Trans } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
 import { useWalletConnectorManager } from "store/auth/hooks";
-import { Flex, TextButton, Tooltip } from "@icpswap/ui";
+import { Flex, TextButton } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -113,7 +113,8 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
 
         {value === ConnectorType.STOIC ? (
           <Tooltip
-            tips={
+            arrow
+            title={
               <Trans>
                 This wallet is no longer supported. You can import your Stoic seed phrase into Plug, which will allow
                 you to log in to ICPSwap. Please refer to the tutorial (
@@ -127,7 +128,10 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
               </Trans>
             }
           >
-            <img src="/images/notice_icon.svg" alt="" width="16px" height="16px" style={{ cursor: "pointer" }} />
+            <Box sx={{ width: "16px", height: "16px", position: "relative" }}>
+              <Box sx={{ width: "16px", height: "16px", position: "absolute", top: 0, left: 0 }} />
+              <img src="/images/notice_icon.svg" width="16px" height="16px" alt="" style={{ borderRadius: "50%" }} />
+            </Box>
           </Tooltip>
         ) : null}
       </Flex>
