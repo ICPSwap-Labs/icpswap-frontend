@@ -46,22 +46,23 @@ export default function NumberTextField(props: NumberTextFieldProps) {
   const { numericProps, ...textFiledProps } = props;
 
   return (
-    // @ts-ignore
     <TextField
       {...textFiledProps}
       type="text"
-      InputProps={{
-        ...(textFiledProps.InputProps ?? {}),
-        disableUnderline: true,
-        inputComponent: TextFieldNumberComponent as any,
-        inputProps: {
-          decimalScale: numericProps.decimalScale,
-          allowNegative: numericProps.allowNegative,
-          maxLength: 79,
-          thousandSeparator: numericProps.thousandSeparator,
-          value: props.value,
+      slotProps={{
+        input: {
+          ...(textFiledProps.InputProps ?? {}),
+          disableUnderline: true,
+          inputComponent: TextFieldNumberComponent as any,
+          inputProps: {
+            decimalScale: numericProps.decimalScale,
+            allowNegative: numericProps.allowNegative,
+            maxLength: 79,
+            thousandSeparator: numericProps.thousandSeparator,
+            value: props.value,
+          },
+          autoComplete: "off",
         },
-        autoComplete: "off",
       }}
     />
   );

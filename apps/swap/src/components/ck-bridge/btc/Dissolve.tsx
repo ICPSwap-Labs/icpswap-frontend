@@ -38,7 +38,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
     if (parseTokenAmount(tokenBalance, token.decimals).isLessThan(amount)) return t`Insufficient balance`;
 
     return undefined;
-  }, [amount, token, chainId]);
+  }, [amount, token, chainId, address]);
 
   const handleMax = useCallback(() => {
     if (!tokenBalance) return;
@@ -65,8 +65,8 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
 
     if (success) {
       setRefreshTrigger();
-      setAmount(undefined);
-      setAddress(undefined);
+      setAmount("");
+      setAddress("");
     }
   }, [dissolve_call, setRefreshTrigger, amount, address]);
 

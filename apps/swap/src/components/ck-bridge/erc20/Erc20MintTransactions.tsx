@@ -9,6 +9,8 @@ import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "co
 import { useTransaction } from "hooks/web3/useTransaction";
 import { Flex } from "@icpswap/ui";
 import { useUserErc20TX } from "store/web3/hooks";
+import { Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -134,9 +136,10 @@ function Transaction({ transaction }: TransactionProps) {
 export interface Erc20MintTransactionsProps {
   refresh?: boolean | number;
   ledger: string | undefined;
+  token: Token | Null;
 }
 
-export function Erc20MintTransactions({ ledger }: Erc20MintTransactionsProps) {
+export function Erc20MintTransactions({ token, ledger }: Erc20MintTransactionsProps) {
   const principal = useAccountPrincipalString();
   const transactions = useUserErc20TX(principal, ledger);
 
@@ -149,7 +152,7 @@ export function Erc20MintTransactions({ ledger }: Erc20MintTransactionsProps) {
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px" }}>
         <Trans>
           After the IC's Ethereum network syncs to the Ethereum mainnet height and the transaction receives 12 block
-          confirmations, your ckToken balance will be updated accordingly.
+          confirmations, your {token?.symbol} balance will be updated accordingly.
         </Trans>
       </Typography>
 

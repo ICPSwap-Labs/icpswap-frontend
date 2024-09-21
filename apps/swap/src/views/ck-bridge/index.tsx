@@ -56,7 +56,7 @@ export default function CkBridge() {
   );
 
   const handleBridgeChangeChange = useCallback(() => {
-    history.push(`/ck-bridge?tokenId=${tokenId}&chain=${targetTokenBridgeChain}`);
+    history.push(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chain=${targetTokenBridgeChain}`);
   }, [targetTokenBridgeChain, tokenId]);
 
   useEffect(() => {

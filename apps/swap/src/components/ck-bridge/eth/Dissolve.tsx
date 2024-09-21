@@ -79,7 +79,11 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   }, [amount, token, tokenBalance, chain, chainId, address]);
 
   const handleMax = useCallback(() => {
-    setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());
+    if (!token || !tokenBalance) return;
+
+    setAmount(
+      parseTokenAmount(tokenBalance, token.decimals).minus(parseTokenAmount(token.transFee, token.decimals)).toFixed(8),
+    );
   }, [token, tokenBalance, ercTokenBalance, setAmount]);
 
   const { loading, dissolve_call } = useDissolveCallback();
@@ -92,6 +96,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
     if (success) {
       setRefreshTrigger();
       setAmount("");
+      setAddress("");
     }
   }, [account]);
 

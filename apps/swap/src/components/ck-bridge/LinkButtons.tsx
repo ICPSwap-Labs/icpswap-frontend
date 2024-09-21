@@ -28,7 +28,7 @@ export function LinkButtons({ ckToken, contract }: LinkButtonsProps) {
       {contract && ckToken ? (
         <LinkButton
           link={getExplorerAddress(contract)}
-          label={<Trans>{ckToken.symbol} smart contract on the Ethereum network</Trans>}
+          label={<Trans>{ckToken.symbol.replace("ck", "")} smart contract on the Ethereum network</Trans>}
         />
       ) : null}
     </Flex>

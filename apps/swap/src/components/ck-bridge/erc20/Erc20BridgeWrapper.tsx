@@ -72,7 +72,7 @@ export function Erc20BridgeWrapper({
 
             <Box sx={{ margin: "12px 0 0 0" }}>
               {bridgeType === "mint" ? (
-                <Erc20MintTransactions ledger={token.address} />
+                <Erc20MintTransactions ledger={token.address} token={token} />
               ) : (
                 <Erc20DissolveTransactions token={token} />
               )}

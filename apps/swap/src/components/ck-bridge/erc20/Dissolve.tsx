@@ -70,8 +70,6 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     return undefined;
   }, [amount, token, address, tokenBalance, chain, chainId]);
 
-  const balance = useBridgeTokenBalance({ token, chain: bridgeChain, minterInfo });
-
   const handleMax = useCallback(() => {
     setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());
   }, [token, tokenBalance, ercTokenBalance, setAmount]);
@@ -86,8 +84,9 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     if (success) {
       setRefreshTrigger();
       setAmount("");
+      setAddress("");
     }
-  }, [account]);
+  }, [account, amount, principal, token]);
 
   return (
     <>
@@ -126,7 +125,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         value={amount}
         token={token}
         chain={bridgeChain}
-        balance={balance}
+        balance={tokenBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}
       />

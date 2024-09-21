@@ -10,7 +10,7 @@ import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Web3ButtonConnector } from "components/web3/index";
 import { useWeb3React } from "@web3-react/core";
-import { useActiveChain, useERC20MinterHelperContract } from "hooks/web3/index";
+import { useActiveChain } from "hooks/web3/index";
 import { useERC20TokenByChainKeyId } from "hooks/token/index";
 import { ApprovalState } from "hooks/web3/useApproveCallback";
 import { chainIdToNetwork, chain } from "constants/web3";
@@ -43,19 +43,17 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
   const ercTokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
 
-  const erc20MinterHelper = useERC20MinterHelperContract(helperContractAddress);
-
   const { loading, mint_call, approveState } = useMintCallback({ erc20Token, helperContractAddress, amount });
 
   const handleMint = useCallback(async () => {
-    if (!token || !erc20MinterHelper || !erc20Token || !principal || !amount || !blockNumber) return;
+    if (!token || !erc20Token || !principal || !amount || !blockNumber) return;
 
     const response = await mint_call(erc20Token, amount, token, blockNumber);
 
     if (response && response.hash) {
       setAmount("");
     }
-  }, [mint_call, token, blockNumber]);
+  }, [mint_call, token, erc20Token, principal, amount, blockNumber]);
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;

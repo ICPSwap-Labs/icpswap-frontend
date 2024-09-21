@@ -67,7 +67,7 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
           variant="standard"
           numericProps={{
             thousandSeparator: true,
-            decimalScale: 18,
+            decimalScale: 8,
             allowNegative: false,
             maxLength: 70,
           }}
