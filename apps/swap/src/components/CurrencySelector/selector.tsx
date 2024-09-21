@@ -1,12 +1,10 @@
 import { useState, useCallback, useMemo } from "react";
 import SwapModal from "components/modal/swap";
-import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { InputAdornment, useTheme, Typography, Box, useMediaQuery, makeStyles } from "components/Mui";
 import { useGlobalTokenList } from "store/global/hooks";
-import { isDarkTheme } from "utils";
+import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { FilledTextField, NoData } from "components/index";
-import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { isValidPrincipal } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
@@ -46,7 +44,7 @@ export default function Selector({
   disabledCurrencyIds = [],
   activeCurrencyIds = [],
 }: SelectorProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const isDark = isDarkTheme(theme);
   const classes = useStyles();
 
