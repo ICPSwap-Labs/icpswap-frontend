@@ -1,9 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Typography, InputAdornment, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { ImportToken } from "components/ImportToken/index";
 import { Modal, FilledTextField, NoData } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
@@ -59,7 +57,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   const [importTokenCanceled, setImportTokenCanceled] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [panel, setPanel] = useState<Panel>("SNS");
-  const [hiddenCanisterIds, setHiddenCanisterIds] = useState<string[]>([]);
+  const [canisterStates, setCanisterStates] = useState<{ [tokenId: string]: boolean }>({});
 
   const globalTokenList = useGlobalTokenList();
 
@@ -120,35 +118,21 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
     return false;
   }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
 
-  const handleTokenHidden = (canisterId: string, hidden: boolean) => {
-    const index = hiddenCanisterIds.indexOf(canisterId);
-
-    if (index !== -1) {
-      if (!hidden) {
-        setHiddenCanisterIds((prevState) => {
-          const newCanisterIds = [...prevState];
-          newCanisterIds.splice(index, 1);
-          return [...newCanisterIds];
-        });
-      }
-      return;
-    }
-
-    if (hidden) {
-      setHiddenCanisterIds((prevState) => {
-        const newCanisterIds = [...prevState, canisterId];
-        return [...newCanisterIds];
-      });
-    }
-  };
+  const handleTokenHidden = useCallback(
+    (canisterId: string, hidden: boolean) => {
+      setCanisterStates((prevState) => ({ ...prevState, [canisterId]: hidden }));
+    },
+    [setCanisterStates],
+  );
 
   const allTokenCanisterIds = useMemo(() => {
     return [...new Set([...(snsTokens ?? []), ...(noneSnsTokens ?? [])])];
   }, [snsTokens, noneSnsTokens]);
 
   const noData = useMemo(() => {
-    return hiddenCanisterIds.length === allTokenCanisterIds.length && showImportToken === false;
-  }, [hiddenCanisterIds, allTokenCanisterIds, showImportToken]);
+    const allHiddenCanisterNum = Object.values(canisterStates).filter((hidden) => hidden === true);
+    return allHiddenCanisterNum.length === allTokenCanisterIds.length && showImportToken === false;
+  }, [canisterStates, allTokenCanisterIds, showImportToken]);
 
   return (
     <>
