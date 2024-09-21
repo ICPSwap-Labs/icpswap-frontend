@@ -63,7 +63,7 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
       if (loading || !value || !selfConnector) return;
 
       if ((!window.ic || !window.ic?.infinityWallet) && value === ConnectorType.INFINITY) {
-        openErrorTip(t`Please install the infinity wallet extension!`);
+        openErrorTip(t`Please install the Bitfinity wallet extension!`);
         return;
       }
 
