@@ -6,6 +6,7 @@ import { parseTokenAmount } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { useUserTxs } from "store/wallet/hooks";
 import { StoredTxValue } from "types/ckBTC";
+import { useFetchUserTxStates } from "hooks/ck-bridge/index";
 
 interface TransactionProps {
   transaction: StoredTxValue;
@@ -90,6 +91,8 @@ export interface DissolveTransactionProps {
 export function DissolveTransactions() {
   const principal = useAccountPrincipalString();
   const transactions = useUserTxs(principal);
+
+  useFetchUserTxStates();
 
   return (
     <MainCard level={1}>
