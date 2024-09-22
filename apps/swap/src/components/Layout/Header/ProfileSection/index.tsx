@@ -20,6 +20,7 @@ import { Connector } from "constants/wallet";
 import { AccountSection } from "./Account";
 import Principal from "./Principal";
 import LogOutSection from "../LogOutSection";
+import { BalanceAndValue } from "./BalanceAndValue";
 
 export default function ProfileSection() {
   const theme = useTheme();
@@ -136,19 +137,7 @@ export default function ProfileSection() {
                       </LogOutSection>
                     </Box>
 
-                    <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">
-                      <Typography sx={{ fontSize: "12px" }}>
-                        <Trans>Est total value</Trans>
-                      </Typography>
-
-                      <Typography
-                        sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}
-                      >
-                        $13,234.23
-                      </Typography>
-
-                      <Typography sx={{ fontSize: "16px", margin: "8px 0 0 0" }}>18.888 ICP</Typography>
-                    </Flex>
+                    <BalanceAndValue />
 
                     <Box
                       sx={{
