@@ -2,7 +2,7 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import { useTheme, Box, Typography, Button, CircularProgress } from "components/Mui";
+import { useTheme, Box, Typography, Button, CircularProgress, TextField } from "components/Mui";
 import { FilledTextField } from "components/index";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
@@ -85,16 +85,38 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
           <Trans>BTC Receiving Address</Trans>
         </Typography>
 
-        <FilledTextField
-          inputPadding="0px"
-          background="level3"
-          value={address}
-          onChange={(value: string) => setAddress(value)}
-          fullWidth
-          fontSize="16px"
-          placeholder="Enter the address"
-          variant="standard"
-        />
+        <Box sx={{ margin: "12px 0 0 0" }}>
+          <TextField
+            sx={{
+              "& input": {
+                lineHeight: "1.15rem",
+                fontSize: "16px",
+              },
+              "& textarea": {
+                lineHeight: "1.15rem",
+                fontSize: "16px",
+              },
+              "& input::placeholder": {
+                fontSize: "16px",
+              },
+              "& textarea::placeholder": {
+                fontSize: "16px",
+              },
+            }}
+            variant="standard"
+            onChange={({ target: { value } }) => setAddress(value)}
+            value={address}
+            multiline
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
+            }}
+            fullWidth
+            autoComplete="off"
+            placeholder="Enter the address"
+          />
+        </Box>
       </Box>
 
       <InputWrapper

@@ -203,7 +203,7 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
         <RotateCcw color="#ffffff" size={14} style={{ cursor: "pointer" }} onClick={setRefreshTrigger} />
       </Flex>
 
-      <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px" }}>
+      <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
         <Trans>
           After the IC's Bitcoin network syncs to the Bitcoin mainnet height and the transaction receives 6 block
           confirmations, your ckBTC balance will be updated accordingly.

@@ -51,16 +51,10 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
             "& input": {
               fontSize: "24px!important",
               fontWeight: 500,
-              [theme.breakpoints.down("sm")]: {
-                fontSize: "16px",
-              },
             },
             "& input::placeholder": {
               fontSize: "24px",
               fontWeight: 500,
-              [theme.breakpoints.down("sm")]: {
-                fontSize: "16px",
-              },
             },
           }}
           placeholder="0.0"

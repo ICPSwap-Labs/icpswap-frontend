@@ -5,7 +5,7 @@ import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGrou
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
 import { t, Trans } from "@lingui/macro";
-import { Box, Typography, Button, useTheme, CircularProgress } from "components/Mui";
+import { Box, Typography, Button, useTheme, CircularProgress, TextField } from "components/Mui";
 import { FilledTextField } from "components/index";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
@@ -117,15 +117,35 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           {account ? (
-            <FilledTextField
-              inputPadding="0px"
-              background="level3"
-              value={address}
-              onChange={(value: string) => setAddress(value)}
-              fullWidth
-              fontSize="16px"
-              placeholder="Enter the address"
+            <TextField
+              sx={{
+                "& input": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& textarea": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& input::placeholder": {
+                  fontSize: "16px",
+                },
+                "& textarea::placeholder": {
+                  fontSize: "16px",
+                },
+              }}
               variant="standard"
+              onChange={({ target: { value } }) => setAddress(value)}
+              value={address}
+              multiline
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
+              }}
+              fullWidth
+              autoComplete="off"
+              placeholder="Enter the address"
             />
           ) : (
             <Web3ButtonConnector />

@@ -1,8 +1,9 @@
+import { useCallback } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { ckETH } from "@icpswap/tokens";
-import { useCallback } from "react";
 import { Flex, Image } from "@icpswap/ui";
+import { Box } from "components/Mui";
 import { SelectButton, BridgeTokenSelector } from "components/ck-bridge";
 
 interface BridgeTokensProps {
@@ -43,18 +44,28 @@ export function BridgeTokens({
       }}
     >
       <BridgeTokenSelector token={token} tokenChain={bridgeChain} onChange={onTokenChange} />
-      <Image
+
+      <Box
         sx={{
-          width: "32px",
-          height: "32px",
-          cursor: "pointer",
           "@media(max-width: 640px)": {
-            transform: "rotate(90deg)",
+            padding: "8px",
           },
         }}
-        src="/images/ck-bridge-switch.svg"
-        onClick={handleSwitchChain}
-      />
+      >
+        <Image
+          sx={{
+            width: "32px",
+            height: "32px",
+            cursor: "pointer",
+            "@media(max-width: 640px)": {
+              transform: "rotate(90deg)",
+            },
+          }}
+          src="/images/ck-bridge-switch.svg"
+          onClick={handleSwitchChain}
+        />
+      </Box>
+
       <SelectButton token={token} chain={targetTokenBridgeChain} />
     </Flex>
   );

@@ -193,7 +193,7 @@ export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsPro
         <Trans>Transactions</Trans>
       </Typography>
 
-      <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px" }}>
+      <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
         <Trans>
           After the IC's Ethereum network syncs to the Ethereum mainnet height and the transaction receives 12 block
           confirmations, your {token?.symbol} balance will be updated accordingly.
