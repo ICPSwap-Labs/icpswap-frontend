@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount } from "@icpswap/utils";
+import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
@@ -57,13 +57,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount) return t`Enter the amount`;
-    if (
-      !!amount &&
-      ercTokenBalance &&
-      erc20Token &&
-      parseTokenAmount(ercTokenBalance, erc20Token.decimals).isLessThan(amount)
-    )
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t`Enter the amount`;
+    if (ercTokenBalance && erc20Token && parseTokenAmount(ercTokenBalance, erc20Token.decimals).isLessThan(amount))
       return t`Insufficient Balance`;
 
     return undefined;

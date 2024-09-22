@@ -6,7 +6,6 @@ import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, Button, useTheme, CircularProgress, TextField } from "components/Mui";
-import { FilledTextField } from "components/index";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -68,7 +67,6 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       )} ckETH`;
 
     if (
-      amount &&
       token &&
       tokenBalance &&
       !formatTokenAmount(amount, ckETH.decimals).plus(token.transFee.toString()).isLessThan(tokenBalance)

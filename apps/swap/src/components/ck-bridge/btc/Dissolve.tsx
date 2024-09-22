@@ -3,7 +3,6 @@ import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { useTheme, Box, Typography, Button, CircularProgress, TextField } from "components/Mui";
-import { FilledTextField } from "components/index";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
 import { useActiveChain } from "hooks/web3/index";
