@@ -77,16 +77,16 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   const { loading, dissolve_call } = useDissolveCallback();
 
   const handleDissolve = useCallback(async () => {
-    if (!amount || !principal || !token || !account) return;
+    if (!amount || !principal || !token || !address) return;
 
-    const success = await dissolve_call(token, amount, account);
+    const success = await dissolve_call(token, amount, address);
 
     if (success) {
       setRefreshTrigger();
       setAmount("");
       setAddress("");
     }
-  }, [account, amount, principal, token]);
+  }, [address, amount, principal, token]);
 
   return (
     <>

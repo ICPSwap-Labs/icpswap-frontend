@@ -89,16 +89,16 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   const { loading, dissolve_call } = useDissolveCallback();
 
   const handleDissolve = useCallback(async () => {
-    if (!amount || !principal || !token || !account) return;
+    if (!amount || !principal || !token || !address) return;
 
-    const success = await dissolve_call(amount, account, token);
+    const success = await dissolve_call(amount, address, token);
 
     if (success) {
       setRefreshTrigger();
       setAmount("");
       setAddress("");
     }
-  }, [account]);
+  }, [address, amount, principal, token]);
 
   return (
     <>
