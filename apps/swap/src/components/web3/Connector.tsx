@@ -21,10 +21,10 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
     }
   }, []);
 
-  const handleConnect = () => {
+  const handleConnect = useCallback(async () => {
     if (isMobile) {
       if (!account) {
-        window.open("https://metamask.app.link/dapp/airdrop.blus.cc");
+        window.open("https://metamask.io/download/");
       }
       return;
     }
@@ -32,7 +32,7 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
     if (!account || (!!account && currChainId !== (chainId ?? DEFAULT_CHAIN_ID))) {
       tryActivation(injectedConnection.connector);
     }
-  };
+  }, [isMobile, account, currChainId, chainId, DEFAULT_CHAIN_ID]);
 
   return (
     <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect}>
