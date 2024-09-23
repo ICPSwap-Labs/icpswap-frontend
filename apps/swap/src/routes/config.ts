@@ -51,10 +51,6 @@ const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index
 const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
 const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
-const ckBTC = Loadable(lazy(() => import("../views/wallet/ckBTC")));
-const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
-const ckToken = Loadable(lazy(() => import("../views/wallet/ckToken")));
-
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
 const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launchpad/Launch")));
 const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
@@ -66,9 +62,6 @@ const CkBridge = Loadable(lazy(() => import("../views/ck-bridge")));
 export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any } = {
   "/wallet": Wallet,
 
-  "/wallet/ckBTC": ckBTC,
-  "/wallet/ckETH": ckETH,
-  "/wallet/ckToken": ckToken,
   "/wallet/nft/view/:canisterId/:tokenId": WalletNFTView,
   "/wallet/nft/canister/details/:id": NFTCanisterDetails,
 
