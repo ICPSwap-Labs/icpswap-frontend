@@ -13,13 +13,16 @@ export interface Web3ButtonConnectorProps {
 export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
   const { account, chainId: currChainId } = useWeb3React();
 
-  const tryActivation = useCallback(async (connector: Connector) => {
-    try {
-      await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
-    } catch (error) {
-      console.error(`web3-react connection error: ${error}`);
-    }
-  }, []);
+  const tryActivation = useCallback(
+    async (connector: Connector) => {
+      try {
+        await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
+      } catch (error) {
+        console.error(`web3-react connection error: ${error}`);
+      }
+    },
+    [chainId],
+  );
 
   const handleConnect = useCallback(async () => {
     if (isMobile) {

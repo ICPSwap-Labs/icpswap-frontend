@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -8,12 +8,24 @@ import { useUserTxs } from "store/wallet/hooks";
 import { StoredTxValue } from "types/ckBTC";
 import { useFetchUserTxStates } from "hooks/ck-bridge/index";
 
+const useStyles = makeStyles(() => ({
+  txLink: {
+    maxWidth: "380px",
+    wordBreak: "break-all",
+    whiteSpace: "break-spaces",
+    textAlign: "right",
+    lineHeight: "16px",
+    "@media(max-width:640px)": { width: "220px" },
+  },
+}));
+
 interface TransactionProps {
   transaction: StoredTxValue;
 }
 
 function Transaction({ transaction }: TransactionProps) {
   const theme = useTheme();
+  const classes = useStyles();
 
   return (
     <Box
@@ -46,20 +58,11 @@ function Transaction({ transaction }: TransactionProps) {
 
           <Typography>
             {transaction.txid ? (
-              <Typography
-                sx={{
-                  maxWidth: "400px",
-                  wordBreak: "break-all",
-                  whiteSpace: "break-spaces",
-                  textAlign: "right",
-                  "@media(max-width:640px)": { width: "300px" },
-                }}
-              >
+              <Typography className={classes.txLink}>
                 <ALink
                   link={`https://explorer.btc.com/btc/transaction/${transaction.txid}`}
                   color="secondary"
                   textDecorationColor="secondary"
-                  fontSize="16px"
                   align="right"
                 >
                   {transaction.txid}
