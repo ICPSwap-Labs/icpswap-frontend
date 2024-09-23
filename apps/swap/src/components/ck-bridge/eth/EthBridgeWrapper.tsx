@@ -4,7 +4,6 @@ import { Token } from "@icpswap/swap-sdk";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { Wrapper } from "components/index";
 import { Box } from "components/Mui";
-import { useFetchBlockNumber } from "hooks/web3/useBlockNumber";
 
 import { TopContent } from "../TopContent";
 import { BridgeTokens } from "../BridgeTokens";
@@ -35,8 +34,6 @@ export function EthBridgeWrapper({
   onBridgeChainChange,
   targetTokenBridgeChain,
 }: EthBridgeWrapperProps) {
-  useFetchBlockNumber();
-
   return (
     <Wrapper>
       <Flex sx={{ width: "100%" }} justify="center">
