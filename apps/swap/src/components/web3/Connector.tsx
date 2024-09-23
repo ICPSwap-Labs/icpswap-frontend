@@ -26,9 +26,9 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
 
   const handleConnect = useCallback(async () => {
     if (isMobile) {
-      if (!account) {
-        window.open("https://metamask.io/download/");
-      }
+      // if (!account) {
+      //   window.open("https://metamask.io/download/");
+      // }
       return;
     }
 
