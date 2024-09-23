@@ -1,4 +1,4 @@
-import { ckBTC } from "constants/tokens";
+import { ckBTC } from "@icpswap/tokens";
 import BTC_SVG from "assets/images/token/BTC.svg";
 import { Logos } from "../ckTokens/Logos";
 

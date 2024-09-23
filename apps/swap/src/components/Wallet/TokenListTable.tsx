@@ -11,8 +11,9 @@ import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { XTC, ckETH, ckBTC, TOKEN_STANDARD } from "constants/tokens";
-import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { XTC, TOKEN_STANDARD } from "constants/tokens";
+import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
+import { ckBridgeChain } from "@icpswap/constants";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
@@ -53,8 +54,16 @@ type ckTOKEN = {
 };
 
 const ckTokens: ckTOKEN[] = [
-  { id: ckBTC.address, mintPath: "/wallet/ckBTC?type=mint", dissolvePath: "/wallet/ckBTC?type=dissolve" },
-  { id: ckETH.address, mintPath: "/wallet/ckETH?type=mint", dissolvePath: "/wallet/ckETH?type=dissolve" },
+  {
+    id: ckBTC.address,
+    mintPath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.btc}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.icp}`,
+  },
+  {
+    id: ckETH.address,
+    mintPath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.eth}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.icp}`,
+  },
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
@@ -162,8 +171,8 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
 
         return {
           id: ledger_id,
-          mintPath: `/wallet/ckToken?type=mint&tokenId=${ledger_id}`,
-          dissolvePath: `/wallet/ckToken?type=dissolve&tokenId=${ledger_id}`,
+          mintPath: `/ck-bridge?chain=${ckBridgeChain.eth}&tokenId=${ledger_id}`,
+          dissolvePath: `/ck-bridge?chain=${ckBridgeChain.icp}&tokenId=${ledger_id}`,
         };
       }),
     );

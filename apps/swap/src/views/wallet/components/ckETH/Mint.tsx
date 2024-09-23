@@ -16,7 +16,7 @@ import { Web3ButtonConnector } from "components/web3/index";
 import { RefreshIcon } from "assets/icons/Refresh";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useTokenBalance } from "hooks/token";
-import { ckETH } from "constants/tokens";
+import { ckETH } from "@icpswap/tokens";
 import { Theme } from "@mui/material/styles";
 import type { Erc20MinterInfo } from "@icpswap/types";
 

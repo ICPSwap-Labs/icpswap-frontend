@@ -1,4 +1,4 @@
-import { ckETH } from "constants/tokens";
+import { ckETH } from "@icpswap/tokens";
 import ethTokenSVG from "assets/images/token/ETH.svg";
 
 import { Logos } from "../ckTokens/Logos";

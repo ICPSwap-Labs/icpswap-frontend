@@ -6,7 +6,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { StoredWithdrawTxValue } from "types/ckETH";
 import { parseTokenAmount } from "@icpswap/utils";
 import { EXPLORER_TX_LINK } from "constants/ckETH";
-import { ckETH } from "constants/tokens";
+import { ckETH } from "@icpswap/tokens";
 import { HeaderCell, BodyCell, Flex } from "@icpswap/ui";
 import type { Erc20MinterInfo } from "@icpswap/types";
 
