@@ -1,7 +1,7 @@
 import { useCallsData } from "@icpswap/hooks";
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ckBTCMinterActor } from "actor/ckBTC";
+import { ckBtcMinter } from "actor/ckBTC";
 import { Principal } from "@dfinity/principal";
 import { UtxoStatus } from "candid/ckBTCMint";
 import {
@@ -41,7 +41,7 @@ export function useBtcDepositAddress(principal: string | undefined, subaccount?:
 
       const address = resultFormat<string>(
         await (
-          await ckBTCMinterActor(true)
+          await ckBtcMinter(true)
         ).get_btc_address({
           owner: availableArgsNull(Principal.fromText(principal)),
           subaccount: availableArgsNull<Uint8Array>(subaccount),
@@ -64,14 +64,12 @@ export function useBtcDepositAddress(principal: string | undefined, subaccount?:
 
 export function useRefreshBtcBalanceCallback() {
   return useCallback(async (principal: string, subaccount?: Uint8Array) => {
-    return resultFormat<Array<UtxoStatus>>(
-      await (
-        await ckBTCMinterActor(true)
-      ).update_balance({
-        owner: availableArgsNull<Principal>(Principal.fromText(principal)),
-        subaccount: availableArgsNull<Uint8Array>(subaccount),
-      }),
-    );
+    return await (
+      await ckBtcMinter(true)
+    ).update_balance({
+      owner: availableArgsNull<Principal>(Principal.fromText(principal)),
+      subaccount: availableArgsNull<Uint8Array>(subaccount),
+    });
   }, []);
 }
 
@@ -85,7 +83,7 @@ export function useBtcWithdrawAddress() {
       if (!principal) return undefined;
 
       const address = resultFormat<{ owner: Principal; subaccount: [] | Uint8Array[] }>(
-        await (await ckBTCMinterActor(true)).get_withdrawal_account(),
+        await (await ckBtcMinter(true)).get_withdrawal_account(),
       ).data;
 
       if (address) {
@@ -181,7 +179,7 @@ export function useFetchUserTxStates() {
           const block_index = BigInt(txs[i].block_index);
           const { state } = txs[i];
           if (!isEndedState(state)) {
-            const res = await (await ckBTCMinterActor()).retrieve_btc_status({ block_index });
+            const res = await (await ckBtcMinter()).retrieve_btc_status({ block_index });
             updateUserTx(principal, block_index, res, undefined);
           }
         }
