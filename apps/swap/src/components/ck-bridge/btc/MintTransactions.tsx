@@ -80,6 +80,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
               <ALink
                 link={`https://explorer.btc.com/btc/block/${transaction.status.block_height}`}
                 color="text.primary"
+                textDecorationColor="text.primary"
               >
                 {transaction.status.block_height}
               </ALink>

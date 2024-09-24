@@ -23,8 +23,8 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
     return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
   }, [principal]);
 
-  const { result: token0Balance } = useStoreTokenBalance(principal, token0, refresh);
-  const { result: token1Balance } = useStoreTokenBalance(principal, token1, refresh);
+  const { result: token0Balance } = useStoreTokenBalance(token0?.address, principal, refresh);
+  const { result: token1Balance } = useStoreTokenBalance(token1?.address, principal, refresh);
 
   const { result: token0SubAccountBalance } = useTokenBalance({
     canisterId: token0?.address,

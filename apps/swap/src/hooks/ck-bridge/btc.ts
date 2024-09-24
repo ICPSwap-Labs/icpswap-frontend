@@ -3,7 +3,6 @@ import { resultFormat, availableArgsNull } from "@icpswap/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckBtcMinter } from "actor/ckBTC";
 import { Principal } from "@dfinity/principal";
-import { UtxoStatus } from "candid/ckBTCMint";
 import {
   useUserBTCDepositAddress,
   useUpdateUserBTCDepositAddress,

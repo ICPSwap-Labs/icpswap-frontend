@@ -8,7 +8,7 @@ export interface ALinkProps {
   children: ReactNode;
   link: string | undefined;
   color?: string;
-  textDecorationColor?: "primary" | "secondary" | "text.secondary";
+  textDecorationColor?: "primary" | "secondary" | "text.secondary" | "text.primary";
   fontSize?: string;
   align?: "right";
   text?: boolean;
@@ -36,6 +36,8 @@ export function ALink({
             ? "rgb(134, 114, 255)"
             : textDecorationColor === "secondary"
             ? "rgb(86, 105, 220)"
+            : textDecorationColor === "text.primary"
+            ? "#ffffff"
             : "#8492c4",
         color,
         textAlign: align,

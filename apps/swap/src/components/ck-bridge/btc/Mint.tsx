@@ -102,6 +102,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
           },
         }}
         justify="center"
+        align="flex-start"
         gap="0 32px"
       >
         <Box

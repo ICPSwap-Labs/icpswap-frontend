@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { useERC20Balance, useETHBalance } from "hooks/web3/index";
 import { ckBridgeChain } from "@icpswap/constants";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -29,7 +29,7 @@ export function useBridgeTokenBalance({ token, minterInfo, chain, refresh }: Use
 
   const { result: ethBalance } = useETHBalance();
   const { result: erc20TokenBalance } = useERC20Balance(erc20MinterInfo?.erc20_contract_address, refresh);
-  const { result: tokenBalance } = useTokenBalance(token?.address, principal?.toString(), refresh);
+  const { result: tokenBalance } = useStoreTokenBalance(token?.address, principal?.toString(), refresh);
 
   return useMemo(() => {
     if (!token) return undefined;
