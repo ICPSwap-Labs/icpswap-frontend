@@ -18,6 +18,7 @@ import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { useFetchUserTxStates } from "hooks/ck-eth";
+import { isMobile } from "react-device-detect";
 
 export interface EthDissolveProps {
   token: Token;
@@ -114,7 +115,9 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
         </Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          {account ? (
+          {!account && !isMobile ? (
+            <Web3ButtonConnector />
+          ) : (
             <TextField
               sx={{
                 "& input": {
@@ -145,8 +148,6 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
               autoComplete="off"
               placeholder="Enter the address"
             />
-          ) : (
-            <Web3ButtonConnector />
           )}
         </Box>
       </Box>

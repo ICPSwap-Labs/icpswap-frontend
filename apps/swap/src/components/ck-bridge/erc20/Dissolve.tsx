@@ -15,6 +15,7 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
+import { isMobile } from "react-device-detect";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -103,7 +104,9 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         </Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          {account ? (
+          {!account && !isMobile ? (
+            <Web3ButtonConnector />
+          ) : (
             <Box sx={{ width: "100%" }}>
               <TextField
                 sx={{
@@ -136,8 +139,6 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
                 placeholder="Enter the address"
               />
             </Box>
-          ) : (
-            <Web3ButtonConnector />
           )}
         </Box>
       </Box>

@@ -48,6 +48,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
     } else {
       openTip(message ?? t`Failed to update`, MessageTypes.error);
     }
+
     setLoading(false);
   }, [setLoading, loading, principal, setRefreshTrigger]);
 
@@ -126,7 +127,16 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
                 <Trans>Balance</Trans>
               </Typography>
 
-              <RotateCcw color="#ffffff" size={14} style={{ cursor: "pointer" }} onClick={handleRefreshBalance} />
+              <RotateCcw
+                color="#ffffff"
+                size={14}
+                style={{
+                  rotate: loading ? "-360deg" : "0deg",
+                  transition: loading ? "all 800ms" : undefined,
+                  cursor: "pointer",
+                }}
+                onClick={handleRefreshBalance}
+              />
             </Flex>
 
             <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }}>
