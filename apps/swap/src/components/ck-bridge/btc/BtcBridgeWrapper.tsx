@@ -6,6 +6,7 @@ import { Flex, MainCard } from "@icpswap/ui";
 import { Wrapper } from "components/index";
 import { useBridgeTokenBalance, useBtcDepositAddress, useBtcCurrentBlock } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useRefreshTriggerManager } from "hooks/index";
 
 import { TopContent } from "../TopContent";
 import { BridgeTokens } from "../BridgeTokens";
@@ -35,9 +36,10 @@ export function BtcBridgeWrapper({
   targetTokenBridgeChain,
 }: BtcBridgeWrapperProps) {
   const principal = useAccountPrincipal();
+  const [refreshTrigger] = useRefreshTriggerManager("BtcBalance");
 
   const { result: btc_address } = useBtcDepositAddress(principal?.toString());
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
+  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
   const block = useBtcCurrentBlock();
 
   return (

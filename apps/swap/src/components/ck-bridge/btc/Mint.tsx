@@ -1,13 +1,18 @@
 import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { useTheme, Box, Typography } from "components/Mui";
-import { useRef } from "react";
-import { Null } from "@icpswap/types";
-import { Flex } from "@icpswap/ui";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { Null, ResultStatus } from "@icpswap/types";
+import { Flex, TextButton } from "@icpswap/ui";
 import QRCode from "components/qrcode";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import Copy, { CopyRef } from "components/Copy";
+import { RotateCcw } from "react-feather";
+import { useRefreshBtcBalanceCallback } from "hooks/ck-bridge/index";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useTips, MessageTypes } from "hooks/useTips";
+import { useRefreshTriggerManager } from "hooks/index";
 
 interface BtcBridgeMintProps {
   token: Token;
@@ -17,14 +22,46 @@ interface BtcBridgeMintProps {
 
 export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProps) {
   const theme = useTheme();
-
+  const principal = useAccountPrincipal();
   const copyRef = useRef<CopyRef>(null);
+  const [openTip] = useTips();
+  const [, setRefreshTrigger] = useRefreshTriggerManager("BtcBalance");
+
+  const [loading, setLoading] = useState(false);
 
   const handleCopy = () => {
     if (copyRef) {
       copyRef?.current?.copy();
     }
   };
+
+  const refreshBtcBalance = useRefreshBtcBalanceCallback();
+
+  const handleRefreshBalance = useCallback(async () => {
+    if (!principal || loading) return;
+    setLoading(true);
+
+    const { status, message } = await refreshBtcBalance(principal.toString(), undefined);
+    if (status === ResultStatus.OK) {
+      openTip(t`Update successfully`, MessageTypes.success);
+      setRefreshTrigger();
+    } else {
+      openTip(message ?? t`Failed to update`, MessageTypes.error);
+    }
+    setLoading(false);
+  }, [setLoading, loading, principal, setRefreshTrigger]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRefreshTrigger();
+    }, 10000);
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [setRefreshTrigger]);
 
   return (
     <>
@@ -79,10 +116,19 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
             ) : null}
           </Typography>
 
+          <TextButton sx={{ fontSize: "12px" }} link={`https://mempool.space/address/${btc_address}`}>
+            <Trans>Check on Bitcoin Explorer</Trans>
+          </TextButton>
+
           <Box sx={{ margin: "32px 0 0 0" }}>
-            <Typography>
-              <Trans>Balance</Trans>
-            </Typography>
+            <Flex gap="0 6px">
+              <Typography>
+                <Trans>Balance</Trans>
+              </Typography>
+
+              <RotateCcw color="#ffffff" size={14} style={{ cursor: "pointer" }} onClick={handleRefreshBalance} />
+            </Flex>
+
             <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }}>
               <Typography
                 sx={{
