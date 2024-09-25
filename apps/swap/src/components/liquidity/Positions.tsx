@@ -231,7 +231,7 @@ export function Positions() {
               <Typography className={`${classes.tab}${tab === "YOUR" ? " active" : ""}`} onClick={() => setTab("YOUR")}>
                 <Trans>Your Positions</Trans>
               </Typography>
-              <NumberLabel num={allPositions?.length ?? "--"} />
+              <NumberLabel num={allPositions?.filter((position) => position.liquidity !== BigInt(0)).length ?? "--"} />
             </Flex>
 
             <Flex align="center" gap="0 4px">

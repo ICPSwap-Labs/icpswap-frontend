@@ -135,6 +135,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
             volumeWindow={volumeWindow}
             noData={<Box sx={{ height: "340px", width: "auto" }} />}
             setValue={setVolumeValue}
+            setValueLabel={setValueLabel}
           />
         ) : chartView === ChartView.TVL ? (
           <PoolTvlChart
