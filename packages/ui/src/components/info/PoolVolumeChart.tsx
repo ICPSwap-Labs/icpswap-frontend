@@ -71,7 +71,8 @@ export interface PoolChartProps {
   setLatestValue?: (value: number) => void;
   setValue: (value: number) => void;
   loadingBackground?: string;
-  needUpdateValue?: boolean;
+  setValueLabel?: (label: string) => void;
+  valueLabel?: string;
 }
 
 export function PoolVolumeChart({
@@ -80,8 +81,9 @@ export function PoolVolumeChart({
   canisterId,
   setLatestValue: __setLatestValue,
   loadingBackground,
-  needUpdateValue = true,
   setValue,
+  setValueLabel,
+  valueLabel,
 }: PoolChartProps) {
   const { result: allChartsData, loading } = usePoolAllChartData(canisterId);
 
@@ -95,7 +97,6 @@ export function PoolVolumeChart({
       });
   }, [allChartsData]);
 
-  const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
   const volumeData = useMemo(() => {

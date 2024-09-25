@@ -1,5 +1,4 @@
-import { Typography, Box, Grid, useMediaQuery, Button } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, Grid, useMediaQuery, Button, useTheme } from "ui-component/Mui";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
@@ -9,7 +8,6 @@ import { usePoolLatestTVL, usePoolApr24h } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
-import { Theme } from "@mui/material/styles";
 import PoolTransactions from "ui-component/analytic/PoolTransactions";
 import { swapLinkOfPool, addLiquidityLink, cycleValueFormat } from "utils/index";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
@@ -27,6 +25,8 @@ import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 export default function SwapPoolDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
+  const theme = useTheme();
+  const [openTips] = useTips();
 
   const { result: pool } = usePool(canisterId);
   const { result: token0 } = useTokenInfo(pool?.token0Id);
@@ -49,8 +49,6 @@ export default function SwapPoolDetails() {
 
   const { result: latestTVL } = usePoolLatestTVL(canisterId);
 
-  const theme = useTheme() as Theme;
-
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleToSwap = () => {
@@ -64,8 +62,6 @@ export default function SwapPoolDetails() {
 
     mockALinkAndOpen(addLiquidityLink(canisterId), "to_liquidity");
   };
-
-  const [openTips] = useTips();
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
@@ -90,30 +86,21 @@ export default function SwapPoolDetails() {
           }}
         >
           <Box>
-            <Grid container alignItems="center">
+            <Flex fullWidth>
               <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.canisterId} />
               <TokenImage logo={token1?.logo} size="24px" tokenId={token1?.canisterId} />
               <Typography color="text.primary" sx={{ margin: "0 8px 0 8px" }} fontWeight={500}>
                 {pool?.token0Symbol} / {pool?.token1Symbol}
               </Typography>
               <FeeTierPercentLabel feeTier={pool?.feeTier} />
-            </Grid>
+            </Flex>
           </Box>
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
-            <Grid container alignItems="center">
-              <TextButton
-                sx={{
-                  margin: "0 0 0 6px",
-                }}
-                link={explorerLink(canisterId)}
-              >
-                {canisterId}
-              </TextButton>
-
-              <Box sx={{ width: "4px" }} />
+            <Flex gap="0 4px">
+              <TextButton link={explorerLink(canisterId)}>{canisterId}</TextButton>
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
-            </Grid>
+            </Flex>
           </Box>
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
@@ -127,47 +114,38 @@ export default function SwapPoolDetails() {
       </Box>
 
       <Box mt="20px">
-        <Grid
-          container
-          alignItems={matchDownMD ? "start" : "center"}
-          flexDirection={matchDownMD ? "column" : "row"}
+        <Flex
+          fullWidth
+          justify="space-between"
+          align={matchDownMD ? "start" : "center"}
           sx={{
             gap: matchDownMD ? "10px 0" : "0px 0px",
+            flexDirection: matchDownMD ? "column" : "row",
           }}
         >
-          <Box>
-            <Grid
-              container
-              alignItems="center"
-              sx={{
-                "@media screen and (max-width: 580px)": {
-                  flexDirection: "column",
-                  gap: "5px 0",
-                  alignItems: "start",
-                },
-              }}
-            >
-              <TokenPrice token0={token0} price0={pool?.token0Price} price1={pool?.token1Price} token1={token1} />
-              {matchDownMD ? null : <Box sx={{ width: "20px" }} />}
-              <TokenPrice token0={token1} price0={pool?.token1Price} price1={pool?.token0Price} token1={token0} />
-            </Grid>
-          </Box>
+          <Flex
+            sx={{
+              "@media screen and (max-width: 580px)": {
+                flexDirection: "column",
+                gap: "5px 0",
+                alignItems: "start",
+              },
+            }}
+          >
+            <TokenPrice token0={token0} price0={pool?.token0Price} price1={pool?.token1Price} token1={token1} />
+            {matchDownMD ? null : <Box sx={{ width: "20px" }} />}
+            <TokenPrice token0={token1} price0={pool?.token1Price} price1={pool?.token0Price} token1={token0} />
+          </Flex>
 
-          <Grid item xs>
-            <Grid container alignItems="center" justifyContent="flex-end">
-              <Box>
-                <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
-                  Add Liquidity
-                </Button>
-              </Box>
-              <Box sx={{ margin: "0px 0px 0px 10px" }}>
-                <Button variant="contained" onClick={handleToSwap}>
-                  Swap
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+          <Flex gap="0 10px">
+            <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
+              Add Liquidity
+            </Button>
+            <Button variant="contained" onClick={handleToSwap}>
+              Swap
+            </Button>
+          </Flex>
+        </Flex>
       </Box>
 
       <Box
