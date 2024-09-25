@@ -138,7 +138,7 @@
     "toformat": "^2.0.0",
     "viem": "^2.18.4",
     "wagmi": "2.5.19",
-    "web3": "1.8.2",
+    "web3": "4.13.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   },
   "browserslist": [

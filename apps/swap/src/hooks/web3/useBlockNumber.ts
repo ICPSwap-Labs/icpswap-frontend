@@ -2,13 +2,13 @@ import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
 import Web3 from "web3";
 
-export function useFetchBlockNumber() {
+export function useFetchBlockNumber(): number | undefined {
   const { data } = useSwr(
     "ethBlockNumber",
     async () => {
       const web3 = new Web3(Web3.givenProvider);
       const blockNumber = await web3.eth.getBlockNumber();
-      return blockNumber;
+      return Number(blockNumber);
     },
     {
       refreshInterval: 3000,

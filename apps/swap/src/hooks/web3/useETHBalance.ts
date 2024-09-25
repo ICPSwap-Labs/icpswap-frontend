@@ -14,7 +14,7 @@ export function useETHBalance(reload?: boolean) {
         setLoading(true);
         const web3 = new Web3(Web3.givenProvider);
         const balance = await web3.eth.getBalance(account);
-        setBalance(new BigNumber(balance));
+        setBalance(new BigNumber(balance.toString()));
         setLoading(false);
       }
     }
