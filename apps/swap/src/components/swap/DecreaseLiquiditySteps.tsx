@@ -7,6 +7,7 @@ import { BURN_FIELD } from "constants/swap";
 import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
 import { getDecreaseLiquidityAmount } from "store/swap/hooks";
+import { StepContents } from "types/step";
 
 export interface DecreaseLiquidityStepsProps {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -16,6 +17,7 @@ export interface DecreaseLiquidityStepsProps {
   principal: Principal | undefined;
   handleReclaim: () => void;
   key: string;
+  keepTokenInPools?: boolean;
 }
 
 function TokenAmount({ logo, amount }: { logo: string; amount: string | undefined }) {
@@ -37,6 +39,7 @@ export function getDecreaseLiquiditySteps({
   principal,
   handleReclaim,
   key,
+  keepTokenInPools,
 }: DecreaseLiquidityStepsProps) {
   const { amount0, amount1 } = getDecreaseLiquidityAmount(key) ?? {};
 
@@ -71,67 +74,74 @@ export function getDecreaseLiquiditySteps({
       ? false
       : new BigNumber((amount1 - BigInt(currencyB.transFee)).toString()).isLessThan(0);
 
-  return currencyA && currencyB
-    ? [
-        {
-          title: `Remove liquidity ${currencyA?.symbol} and ${currencyB.symbol}`,
-          step: 0,
-          children: [
-            { label: t`Position ID`, value: positionId.toString() },
-            {
-              label: `${currencyA.symbol}`,
-              value: <TokenAmount amount={toFormat(formattedAmounts[BURN_FIELD.CURRENCY_A])} logo={currencyA.logo} />,
-            },
-            {
-              label: `${currencyB.symbol}`,
-              value: <TokenAmount amount={toFormat(formattedAmounts[BURN_FIELD.CURRENCY_B])} logo={currencyB.logo} />,
-            },
-          ],
-        },
-        {
-          title: withdrawAmountALessThanZero
-            ? t`Unable to withdraw ${currencyA.symbol}`
-            : t`Withdraw ${currencyA.symbol}`,
-          step: 1,
-          children: [
-            {
-              label: t`Amount`,
-              value: <TokenAmount amount={withdrawAmountA} logo={currencyA.logo} />,
-            },
-            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-          ],
-          skipError: withdrawAmountALessThanZero
-            ? t`The amount of withdrawal is less than the transfer fee`
+  const contents =
+    currencyA && currencyB
+      ? [
+          {
+            title: `Remove liquidity ${currencyA?.symbol} and ${currencyB.symbol}`,
+            step: 0,
+            children: [
+              { label: t`Position ID`, value: positionId.toString() },
+              {
+                label: `${currencyA.symbol}`,
+                value: <TokenAmount amount={toFormat(formattedAmounts[BURN_FIELD.CURRENCY_A])} logo={currencyA.logo} />,
+              },
+              {
+                label: `${currencyB.symbol}`,
+                value: <TokenAmount amount={toFormat(formattedAmounts[BURN_FIELD.CURRENCY_B])} logo={currencyB.logo} />,
+              },
+            ],
+          },
+          !keepTokenInPools
+            ? {
+                title: withdrawAmountALessThanZero
+                  ? t`Unable to withdraw ${currencyA.symbol}`
+                  : t`Withdraw ${currencyA.symbol}`,
+                step: 1,
+                children: [
+                  {
+                    label: t`Amount`,
+                    value: <TokenAmount amount={withdrawAmountA} logo={currencyA.logo} />,
+                  },
+                  { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+                ],
+                skipError: withdrawAmountALessThanZero
+                  ? t`The amount of withdrawal is less than the transfer fee`
+                  : undefined,
+                errorActions: [
+                  <TextButton onClick={handleReclaim}>
+                    <Trans>Reclaim</Trans>
+                  </TextButton>,
+                ],
+                errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+              }
+            : null,
+          !keepTokenInPools
+            ? {
+                title: withdrawAmountBLessThanZero
+                  ? t`Unable to withdraw ${currencyB.symbol}`
+                  : t`Withdraw ${currencyB.symbol}`,
+                step: 2,
+                children: [
+                  {
+                    label: t`Amount`,
+                    value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
+                  },
+                  { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+                ],
+                skipError: withdrawAmountBLessThanZero
+                  ? t`The amount of withdrawal is less than the transfer fee`
+                  : undefined,
+                errorActions: [
+                  <TextButton onClick={handleReclaim}>
+                    <Trans>Reclaim</Trans>
+                  </TextButton>,
+                ],
+                errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+              }
             : undefined,
-          errorActions: [
-            <TextButton onClick={handleReclaim}>
-              <Trans>Reclaim</Trans>
-            </TextButton>,
-          ],
-          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-        },
-        {
-          title: withdrawAmountBLessThanZero
-            ? t`Unable to withdraw ${currencyB.symbol}`
-            : t`Withdraw ${currencyB.symbol}`,
-          step: 2,
-          children: [
-            {
-              label: t`Amount`,
-              value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
-            },
-            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-          ],
-          skipError: withdrawAmountBLessThanZero
-            ? t`The amount of withdrawal is less than the transfer fee`
-            : undefined,
-          errorActions: [
-            <TextButton onClick={handleReclaim}>
-              <Trans>Reclaim</Trans>
-            </TextButton>,
-          ],
-          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-        },
-      ]
-    : [];
+        ]
+      : [];
+
+  return contents.filter((e) => !!e) as StepContents[];
 }
