@@ -107,7 +107,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
 
             <Flex sx={{ width: "100%" }} justify="space-between">
               <Typography>
-                <Trans>Total Reward</Trans>
+                <Trans>Total Rewarded</Trans>
               </Typography>
 
               <Flex vertical align="flex-end">
