@@ -14,6 +14,7 @@ import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { BURN_FIELD } from "constants/swap";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
+import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 
 type updateStepsArgs = {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -28,23 +29,28 @@ type updateStepsArgs = {
 function useUpdateStepContent() {
   const updateStep = useStepContentManager();
   const handleReclaim = useReclaimCallback();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
-  return useCallback(({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
-    const content = getDecreaseLiquiditySteps({
-      formattedAmounts,
-      currencyA,
-      currencyB,
-      positionId,
-      principal,
-      key,
-      handleReclaim,
-    });
+  return useCallback(
+    ({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
+      const content = getDecreaseLiquiditySteps({
+        formattedAmounts,
+        currencyA,
+        currencyB,
+        positionId,
+        principal,
+        key,
+        handleReclaim,
+        keepTokenInPools,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t`Remove Liquidity Details`,
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t`Remove Liquidity Details`,
+      });
+    },
+    [keepTokenInPools],
+  );
 }
 
 interface DecreaseLiquidityCallsArgs {
@@ -66,6 +72,7 @@ function useDecreaseLiquidityCalls() {
   const withdraw = useSwapWithdraw();
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
     ({
@@ -137,9 +144,9 @@ function useDecreaseLiquidityCalls() {
         });
       };
 
-      return [_decreaseLiquidity, withdrawCurrencyA, withdrawCurrencyB];
+      return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, withdrawCurrencyA, withdrawCurrencyB];
     },
-    [],
+    [keepTokenInPools],
   );
 }
 
@@ -167,13 +174,11 @@ export function useDecreaseLiquidityCallback({
   feeAmount1,
 }: DecreaseLiquidityCallbackProps) {
   const principal = useAccountPrincipal();
-
   const getCalls = useDecreaseLiquidityCalls();
   const getStepCalls = useStepCalls();
-
   const stepContentManage = useStepContentManager();
-
   const handleReclaim = useReclaimCallback();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
     ({ openExternalTip }: { openExternalTip: OpenExternalTip }) => {
@@ -201,6 +206,7 @@ export function useDecreaseLiquidityCallback({
         principal,
         handleReclaim,
         key,
+        keepTokenInPools,
       });
 
       stepContentManage(String(key), {
@@ -222,6 +228,7 @@ export function useDecreaseLiquidityCallback({
       formattedAmounts,
       feeAmount0,
       feeAmount1,
+      keepTokenInPools,
     ],
   );
 }

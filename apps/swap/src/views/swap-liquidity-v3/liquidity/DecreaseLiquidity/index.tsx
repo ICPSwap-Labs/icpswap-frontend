@@ -21,6 +21,7 @@ import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips, LoadingRow, MainCard, Wrapper } from "components/index";
+import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 
 import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
@@ -225,7 +226,7 @@ export default function DecreaseLiquidity() {
                 </Box>
               </Box>
               <Box
-                mt={5}
+                mt="40px"
                 sx={{
                   paddingRight: "12px",
                 }}
@@ -236,11 +237,23 @@ export default function DecreaseLiquidity() {
                 />
               </Box>
 
-              <Box mt="30px">
+              <Box mt="24px">
                 <Unclaimed position={positionSDK} feeAmount0={feeAmount0} feeAmount1={feeAmount1} />
               </Box>
 
-              <Box mt={4}>
+              <Box mt="24px">
+                <KeepTokenInPool
+                  label={
+                    <Trans>
+                      Keep your tokens in the Swap Pool to easily add liquidity again without the need for repeated
+                      withdrawals and deposits.
+                    </Trans>
+                  }
+                  showRefresh={false}
+                />
+              </Box>
+
+              <Box mt="24px">
                 <Button
                   variant="contained"
                   fullWidth

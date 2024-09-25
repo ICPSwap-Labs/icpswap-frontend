@@ -1,20 +1,21 @@
 import { useHistory } from "react-router-dom";
 import { useCallback, useMemo, useState } from "react";
-import { Box, Typography, useTheme, Collapse, Checkbox, makeStyles, CircularProgress, Theme } from "components/Mui";
+import { Box, Typography, useTheme, Collapse, makeStyles, CircularProgress, Theme } from "components/Mui";
 import { Tooltip, DotLoading } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
-import { ArrowUpRight, ChevronDown, RotateCcw } from "react-feather";
-import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { ArrowUpRight, ChevronDown } from "react-feather";
 import { isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { DepositModal } from "components/swap/DepositModal";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
-import { KeepTokenInPoolsConfirmModal } from "components/swap/KeepTokenInPoolsConfirm";
+import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useGlobalContext } from "hooks/index";
+
+import { CanisterIcon } from "./icons/CanisterIcon";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -140,11 +141,9 @@ export function Reclaim({
   const principal = useAccountPrincipal();
 
   const [open, setOpen] = useState(true);
-  const [checkOpen, setCheckOpen] = useState(false);
 
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
-  const [keepInPools, updateKeepInPools] = useSwapKeepTokenInPoolsManager();
   const { balances } = useSwapUserUnusedTokenByPool(
     pool,
     principal,
@@ -180,30 +179,11 @@ export function Reclaim({
     setOpen(!open);
   }, [setOpen, open]);
 
-  const handleCheckChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    if (checked) {
-      setCheckOpen(true);
-    }
-  }, []);
-
-  const handleToggleCheck = useCallback(() => {
-    if (!keepInPools) {
-      setCheckOpen(true);
-    } else {
-      updateKeepInPools(false);
-    }
-  }, [setCheckOpen, keepInPools, updateKeepInPools]);
-
   const handleRefresh = useCallback(() => {
     if (setRefreshTriggers && nonNullArgs(refreshKey)) {
       setRefreshTriggers(refreshKey);
     }
   }, [setRefreshTriggers, refreshKey]);
-
-  const handleCheckConfirm = useCallback(() => {
-    updateKeepInPools(true);
-    setCheckOpen(false);
-  }, [updateKeepInPools, setCheckOpen]);
 
   const __fontSize = useMemo(() => {
     if (ui === "pro") return "12px";
@@ -251,39 +231,28 @@ export function Reclaim({
       </Flex>
 
       <Collapse in={open}>
-        {keepInPool ? (
-          <Flex justify="space-between" align="center" sx={{ margin: ui === "pro" ? "12px 0 0 0" : "18px 0 0 0" }}>
-            <Flex
-              sx={{ width: "fit-content", cursor: "pointer", userSelect: "none" }}
-              gap="0 4px"
-              onClick={handleToggleCheck}
-              align="center"
-            >
-              <Checkbox size="small" onChange={handleCheckChange} checked={keepInPools} />
-
-              <Typography sx={{ fontSize: "12px" }}>
-                <Trans>Keep your swapped tokens in Swap Pool</Trans>
-              </Typography>
-            </Flex>
-            <RotateCcw size={14} style={{ cursor: "pointer" }} onClick={handleRefresh} />
-          </Flex>
-        ) : null}
+        {keepInPool ? <KeepTokenInPool ui={ui} refreshKey={refreshKey} /> : null}
 
         <Box sx={{ background: bg1 ?? theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
           <Box className={`${classes.wrapper} ${ui} border`}>
             <Flex justify="space-between">
               {pool ? (
-                <Typography
-                  sx={{ fontSize: __fontSize, cursor: "pointer" }}
-                  onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
-                >
-                  <Trans>
-                    {token0?.symbol ?? "--"} Amount:{" "}
-                    {token0TotalAmount && token0
-                      ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
-                      : "--"}
-                  </Trans>
-                </Typography>
+                <Flex gap="0 4px">
+                  <CanisterIcon />
+                  <Typography
+                    sx={{ fontSize: __fontSize, cursor: "pointer" }}
+                    onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
+                  >
+                    <Trans>
+                      {token0?.symbol ?? "--"}:{" "}
+                      {token0TotalAmount && token0
+                        ? toSignificantWithGroupSeparator(
+                            parseTokenAmount(token0TotalAmount, token0.decimals).toString(),
+                          )
+                        : "--"}
+                    </Trans>
+                  </Typography>
+                </Flex>
               ) : (
                 <DotLoading loading size="3px" color="#ffffff" />
               )}
@@ -302,15 +271,18 @@ export function Reclaim({
           <Box className={`${classes.wrapper} ${ui}`}>
             <Flex justify="space-between">
               {pool ? (
-                <Typography
-                  sx={{ fontSize: __fontSize, cursor: "pointer" }}
-                  onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
-                >
-                  {token1?.symbol ?? "--"} Amount:{" "}
-                  {token1TotalAmount && token1
-                    ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
-                    : "--"}
-                </Typography>
+                <Flex gap="0 4px">
+                  <CanisterIcon />
+                  <Typography
+                    sx={{ fontSize: __fontSize, cursor: "pointer" }}
+                    onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
+                  >
+                    {token1?.symbol ?? "--"}:{" "}
+                    {token1TotalAmount && token1
+                      ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
+                      : "--"}
+                  </Typography>
+                </Flex>
               ) : (
                 <DotLoading loading size="3px" color="#ffffff" />
               )}
@@ -335,12 +307,6 @@ export function Reclaim({
           <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
         </Flex>
       </Collapse>
-
-      <KeepTokenInPoolsConfirmModal
-        open={checkOpen}
-        onCancel={() => setCheckOpen(false)}
-        onConfirm={handleCheckConfirm}
-      />
     </Box>
   );
 }
