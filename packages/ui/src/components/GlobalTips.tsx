@@ -1,5 +1,6 @@
-import { Grid, Box, Typography } from "@mui/material";
-import { TextButton } from "./TextButton";
+import { ReactNode } from "react";
+import { Box, Typography } from "./Mui";
+import { Flex } from "./Grid/Flex";
 
 function CloseIcon() {
   return (
@@ -20,48 +21,28 @@ function CloseIcon() {
 }
 
 export interface GlobalTipsProps {
-  onClose: () => void;
+  onClose?: () => void;
+  children?: ReactNode;
 }
 
-export function GlobalTips({ onClose }: GlobalTipsProps) {
+export function GlobalTips({ children, onClose }: GlobalTipsProps) {
   return (
-    <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
-      <Grid item xs>
-        <Typography
-          sx={{
-            color: "#ffffff",
-            cursor: "pointer",
-            "@media(max-width: 640px)": { fontSize: "12px" },
-          }}
-        >
-          Join ICP's 3rd Anniversary on ICPSwap with liquidity mining and trading competition.{" "}
-          <TextButton
-            link="https://x.com/ICPSwap/status/1795078197165379886"
-            color="white"
-            textDecoration="underline"
-            sx={{
-              "@media(max-width: 640px)": { fontSize: "12px" },
-            }}
-          >
-            Click here for details!
-          </TextButton>
-          <TextButton
-            link="https://app.icpswap.com/farm"
-            color="white"
-            textDecoration="underline"
-            sx={{
-              "@media(max-width: 640px)": { fontSize: "12px" },
-              margin: "0 0 0 5px!important",
-            }}
-          >
-            Click here to earn juicy APR rewards!
-          </TextButton>
-        </Typography>
-      </Grid>
+    <Flex sx={{ width: "1wh", height: "52px", background: "#B79C4A", padding: "0 20px" }} gap="0 10px">
+      <Typography
+        sx={{
+          color: "#ffffff",
+          cursor: "pointer",
+          "@media(max-width: 640px)": { fontSize: "12px" },
+        }}
+      >
+        {children}
+      </Typography>
 
-      <Box sx={{ cursor: "pointer" }} onClick={onClose}>
-        <CloseIcon />
-      </Box>
-    </Grid>
+      {onClose ? (
+        <Box sx={{ cursor: "pointer" }} onClick={onClose}>
+          <CloseIcon />
+        </Box>
+      ) : null}
+    </Flex>
   );
 }
