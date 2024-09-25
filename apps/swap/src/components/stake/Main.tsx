@@ -5,6 +5,7 @@ import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { StakingPoolInfo } from "@icpswap/types";
+import { useStakePoolStatInfo } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTokenBalance } from "hooks/token";
 import { useApr } from "hooks/staking-token/useApr";
@@ -35,6 +36,7 @@ export function MainContent({
   const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);
 
   const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
+  const { result: stakeStatInfo } = useStakePoolStatInfo(poolId);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const stakeTokenPrice = useUSDPrice(stakeToken);
@@ -61,18 +63,46 @@ export function MainContent({
           }}
         >
           <Box sx={{ padding: "0 16px" }}>
-            <Flex gap="0 4px" align="center">
-              <Typography>
-                <Trans>APR</Trans>
-              </Typography>
-              <Tooltip
-                iconSize="14px"
-                tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
-              />
-            </Flex>
-            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
-              {apr ?? "--"}
-            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                  gap: "24px 0",
+                },
+              }}
+            >
+              <Box>
+                <Flex gap="0 4px" align="center">
+                  <Typography>
+                    <Trans>APR</Trans>
+                  </Typography>
+                  <Tooltip
+                    iconSize="14px"
+                    tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
+                  />
+                </Flex>
+                <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+                  {apr ?? "--"}
+                </Typography>
+              </Box>
+
+              <Box>
+                <Flex gap="0 4px" align="center">
+                  <Typography>
+                    <Trans>Total Rewards</Trans>
+                  </Typography>
+                </Flex>
+                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600, margin: "16px 0 0 0" }}>
+                  {stakeStatInfo && rewardToken
+                    ? `${formatAmount(
+                        parseTokenAmount(stakeStatInfo.rewardTokenAmount, rewardToken.decimals).toString(),
+                      )} ${rewardToken.symbol}`
+                    : "--"}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
 
           <Box mt="32px">

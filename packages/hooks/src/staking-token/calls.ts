@@ -10,6 +10,7 @@ import type {
   StakingPoolCycle,
   StakingPoolGlobalData,
   PaginationResult,
+  StakeGlobalDataInfo,
 } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
@@ -273,8 +274,22 @@ export function useStakingPoolClaimTransactions(
 
 export async function stakingPoolClaimRewards(canisterId: string, owner: Principal | undefined) {
   if (!owner) return resultFormat<boolean>({ err: "Principal is undefined" });
-  console.log("claim reward canisterId: ", canisterId);
-  console.log("claim reward owner: ", owner.toString());
 
   return resultFormat<boolean>(await (await stakingPool(canisterId, true)).claim());
+}
+
+export async function getStakePoolStatInfo(principal: string) {
+  return resultFormat<StakeGlobalDataInfo>(
+    await (await stakingPoolController()).getPoolStatInfo(Principal.fromText(principal)),
+  ).data;
+}
+
+export function useStakePoolStatInfo(canisterId: string | undefined, reload?: boolean) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getStakePoolStatInfo(canisterId);
+    }, [canisterId]),
+    reload,
+  );
 }

@@ -13,6 +13,7 @@ export type {
   InitRequest as CreateStakingPoolArgs,
   StakingPoolInfo as StakingPoolControllerPoolInfo,
   GlobalDataInfo as StakingPoolGlobalData,
+  TokenGlobalDataInfo as StakeGlobalDataInfo,
 } from "./StakingPoolController";
 
 export { idlFactory as V1TokenPoolInterfaceFactory } from "./V1TokenPool.did";
