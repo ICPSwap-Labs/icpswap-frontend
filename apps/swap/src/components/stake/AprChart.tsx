@@ -2,7 +2,7 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useStakeAprChartData } from "@icpswap/hooks";
-
+import { Flex, Tooltip as Tip } from "@icpswap/ui";
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
@@ -78,9 +78,21 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
         }}
       >
         <Box sx={{ padding: "0 24px" }}>
-          <Typography fontSize="16px">
-            <Trans>APR</Trans>
-          </Typography>
+          <Flex gap="0 6px">
+            <Typography fontSize="16px">
+              <Trans>APR</Trans>
+            </Typography>
+
+            <Tip
+              tips={
+                <Trans>
+                  This APR updates every 10 minutes, so it may differ slightly from the real-time APR shown on the
+                  right.
+                </Trans>
+              }
+              iconSize="14px"
+            />
+          </Flex>
 
           <Typography
             sx={{
