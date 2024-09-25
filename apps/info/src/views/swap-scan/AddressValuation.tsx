@@ -1,9 +1,16 @@
 import { MainCard, Wrapper, FilledTextField, NoData, TokenImage } from "ui-component/index";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
-import { isValidPrincipal, toSignificant, parseTokenAmount, BigNumber, explorerLink } from "@icpswap/utils";
+import {
+  isValidPrincipal,
+  toSignificant,
+  parseTokenAmount,
+  BigNumber,
+  explorerLink,
+  locationSearchReplace,
+} from "@icpswap/utils";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, OnlyTokenList } from "@icpswap/ui";
 import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
@@ -11,6 +18,7 @@ import { TokenInfo } from "types/token";
 import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP } from "@icpswap/tokens";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { SwapScanTabPanels } from "./components/TabPanels";
 
@@ -97,20 +105,15 @@ function UserTokenBalance({
 export default function SwapScanValuation() {
   const classes = useStyles();
   const { principal } = useParsedQueryString() as { principal: string };
+  const history = useHistory();
+  const location = useLocation();
 
   const [checked, setChecked] = useState(false);
   const [allTokenIds, setAllTokenIds] = useState<string[]>([]);
-  const [search, setSearch] = useState<null | string>(null);
   const [usdValues, setUSDValues] = useState<{ [tokenId: string]: string }>({});
   const [userTokenBalances, setUserTokensBalance] = useState(
     {} as { [tokenId: string]: { balance: bigint | undefined; tokenInfo: TokenInfo } },
   );
-
-  useEffect(() => {
-    if (principal && isValidPrincipal(principal)) {
-      setSearch(principal);
-    }
-  }, [principal]);
 
   useEffect(() => {
     async function call() {
@@ -121,12 +124,12 @@ export default function SwapScanValuation() {
   }, []);
 
   const address = useMemo(() => {
-    if (!search) return undefined;
-    if (!isValidPrincipal(search)) return undefined;
+    if (!principal) return undefined;
+    if (!isValidPrincipal(principal)) return undefined;
     setUserTokensBalance({});
     setUSDValues({});
-    return search;
-  }, [search]);
+    return principal;
+  }, [principal]);
 
   const _allTokensInfo = useTokensInfo(allTokenIds);
   const allTokensInfo = useMemo(() => {
@@ -180,7 +183,7 @@ export default function SwapScanValuation() {
   };
 
   const totalUSDValues = useMemo(() => {
-    if (!search) return new BigNumber(0);
+    if (!principal) return new BigNumber(0);
     return Object.keys(usdValues).reduce((prev, curr) => {
       const usdValue = usdValues[curr];
       const inTokenList = !!tokenList.find((e) => e === curr);
@@ -194,7 +197,7 @@ export default function SwapScanValuation() {
 
       return prev.plus(usdValue);
     }, new BigNumber(0));
-  }, [usdValues, checked, tokenList, search]);
+  }, [usdValues, checked, tokenList, principal]);
 
   const sortedUserTokenBalances = useMemo(() => {
     const values = Object.values(userTokenBalances).filter((e) => e.balance !== undefined) as {
@@ -211,6 +214,16 @@ export default function SwapScanValuation() {
       return -1;
     });
   }, [userTokenBalances, usdValues]);
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      if (isValidPrincipal(value) || value === "") {
+        const search = locationSearchReplace(location.search, "principal", value);
+        history.push(`${location.pathname}${search}`);
+      }
+    },
+    [history, location],
+  );
 
   return (
     <Wrapper>
@@ -248,14 +261,14 @@ export default function SwapScanValuation() {
             <FilledTextField
               width="100%"
               fullHeight
-              value={search}
+              value={principal}
               textFiledProps={{
                 placeholder: `Search the principal for valuation`,
               }}
-              onChange={(value: string) => setSearch(value)}
+              onChange={handleSearchChange}
             />
 
-            {search && !isValidPrincipal(search) ? (
+            {principal && !isValidPrincipal(principal) ? (
               <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
                 <Trans>Invalid principal</Trans>
               </Typography>

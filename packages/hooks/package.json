@@ -29,7 +29,6 @@
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
     "bignumber.js": "^9.0.1",
-    "qs": "^6.9.4",
     "swr": "^2.2.0"
   }
 }
