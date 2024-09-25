@@ -102,7 +102,7 @@ export default function SwapPro() {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%", padding: "0 0 8px 0" }}>
             <Box sx={{ margin: "0 0 8px 0" }}>
               <SearchWrapper />
             </Box>

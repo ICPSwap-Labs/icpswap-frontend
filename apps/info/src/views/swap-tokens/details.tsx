@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
@@ -6,7 +6,7 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, TokenCharts } from "@icpswap/ui";
+import { GridAutoRows, Proportion, TokenCharts, Flex } from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
@@ -54,7 +54,7 @@ export default function TokenDetails() {
       />
 
       <Box mt="20px">
-        <Grid container alignItems="center">
+        <Flex fullWidth>
           <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={tokenInfo?.canisterId} />
 
           <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
@@ -66,7 +66,7 @@ export default function TokenDetails() {
           </Typography>
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
-            <Grid container alignItems="center">
+            <Flex fullWidth>
               <TextButton
                 to={`/token/details/${canisterId}`}
                 sx={{
@@ -78,16 +78,17 @@ export default function TokenDetails() {
 
               <Box sx={{ width: "4px" }} />
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
-            </Grid>
+            </Flex>
           </Box>
-        </Grid>
+        </Flex>
       </Box>
 
-      <Grid
-        container
-        alignItems="flex-end"
-        mt="16px"
+      <Flex
+        fullWidth
+        align="flex-end"
+        justify="space-between"
         sx={{
+          margin: "16px 0 0 0",
           "@media (max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
@@ -96,7 +97,7 @@ export default function TokenDetails() {
         }}
       >
         <Box>
-          <Grid container alignItems="center">
+          <Flex fullWidth align="center">
             <Typography
               color="text.primary"
               sx={{
@@ -112,23 +113,21 @@ export default function TokenDetails() {
             <Typography component="div" sx={{ display: "flex" }}>
               (<Proportion value={token?.priceUSDChange} />)
             </Typography>
-          </Grid>
+          </Flex>
         </Box>
 
-        <Grid item xs>
-          <Grid container justifyContent="flex-end" sx={{ gap: "0 10px" }}>
-            <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
-              Token Details
-            </Button>
-            <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
-              Add Liquidity
-            </Button>
-            <Button variant="contained" onClick={handleToSwap}>
-              Swap
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+        <Flex justify="flex-end" sx={{ gap: "0 10px" }}>
+          <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
+            Token Details
+          </Button>
+          <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
+            Add Liquidity
+          </Button>
+          <Button variant="contained" onClick={handleToSwap}>
+            Swap
+          </Button>
+        </Flex>
+      </Flex>
 
       <Box
         sx={{
@@ -213,7 +212,7 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
 
-        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} />
+        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} showDexScreener />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

@@ -1,9 +1,7 @@
-import { makeStyles } from "@mui/styles";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, makeStyles, Theme, Typography } from "components/Mui";
 import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
-import { TextButton } from "components/index";
+import { Flex, TextButton } from "components/index";
 import { Connector } from "constants/wallet";
 import { useWalletConnectorManager } from "store/auth/hooks";
 
@@ -51,6 +49,7 @@ type Wallet = {
   value: Connector;
   logo: any;
   tips?: string;
+  disabled?: boolean;
 };
 
 export default function WalletConnector() {
@@ -69,6 +68,7 @@ export default function WalletConnector() {
       label: "Stoic Wallet",
       value: Connector.STOIC,
       logo: "/images/connect/stoic.svg",
+      disabled: true,
     },
     {
       label: "ICPSwap Wallet",
@@ -95,42 +95,47 @@ export default function WalletConnector() {
 
   return (
     <Modal open={open} onClose={() => walletConnectorManager(false)} title={t`Connect a wallet`}>
-      <Grid container alignItems="center" flexDirection="column">
+      <Flex align="center">
         <Box className={classes.wrapper}>
-          <Box>
-            <Typography
-              sx={{
-                fontSize: "16px",
-                lineHeight: "20px",
-              }}
-            >
-              <Trans>
-                By connecting a wallet, you agree to ICPSwap’s{" "}
-                <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service">
-                  Terms of Service
-                </TextButton>{" "}
-                and acknowledge that you have read and understand the{" "}
-                <TextButton
-                  link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
-                  sx={{
-                    marginLeft: "0!important",
-                  }}
-                >
-                  ICPSwap Disclaimer
-                </TextButton>
-                .
-              </Trans>
-            </Typography>
-          </Box>
+          <Typography
+            sx={{
+              fontSize: "16px",
+              lineHeight: "20px",
+            }}
+          >
+            <Trans>
+              By connecting a wallet, you agree to ICPSwap’s{" "}
+              <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service">
+                Terms of Service
+              </TextButton>{" "}
+              and acknowledge that you have read and understand the{" "}
+              <TextButton
+                link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
+                sx={{
+                  marginLeft: "0!important",
+                }}
+              >
+                ICPSwap Disclaimer
+              </TextButton>
+              .
+            </Trans>
+          </Typography>
+
           <Box mt="24px">
             <Box className={classes.walletBox}>
               {Wallets.map((wallet) => (
-                <ConnectorComponent key={wallet.value} label={wallet.label} logo={wallet.logo} value={wallet.value} />
+                <ConnectorComponent
+                  key={wallet.value}
+                  label={wallet.label}
+                  logo={wallet.logo}
+                  value={wallet.value}
+                  disabled={wallet.disabled}
+                />
               ))}
             </Box>
           </Box>
         </Box>
-      </Grid>
+      </Flex>
     </Modal>
   );
 }

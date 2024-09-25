@@ -3,10 +3,10 @@ import { liquidityLocks } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
 import { resultFormat } from "@icpswap/utils";
 import { Pool, Position } from "@icpswap/swap-sdk";
-import { type UserPositionInfoWithId } from "@icpswap/types";
+import { Null, type UserPositionInfoWithId } from "@icpswap/types";
 
 import { useCallsData } from "./useCallData";
-import { useMultiPositionInfos } from "./swap/useMultiPositionInfos";
+import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
 export function useLiquidityLockIds(tokenIds: string[] | undefined) {
@@ -28,6 +28,33 @@ export function useLiquidityLockIds(tokenIds: string[] | undefined) {
       ).data;
     }, [tokenIds]),
   );
+}
+
+export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] | Null {
+  const poolId = pool?.id;
+
+  const positionIds: bigint[] | undefined = useMemo(() => {
+    if (!poolId) return undefined;
+    if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
+    return undefined;
+  }, [poolId]);
+
+  const { result: positions } = useMultiPositionInfosByIds(poolId, positionIds);
+
+  const multiPositions = useMemo(() => {
+    if (!positions || !pool) return null;
+
+    return getSinglePoolMultiPositions({
+      pool,
+      positionInfos: positions.map((e) => ({
+        tickUpper: e.tickUpper,
+        tickLower: e.tickLower,
+        liquidity: e.liquidity,
+      })),
+    });
+  }, [positions, pool]);
+
+  return useMemo(() => multiPositions, [multiPositions]);
 }
 
 export function useAllLiquidityLocks(
@@ -106,6 +133,8 @@ export function useAllLiquidityLocks(
     call();
   }, [positionInfos, lockIds, ledgerIds]);
 
+  const extraBlackHolePositions = useExtraBlackHoleLiquidityLocks(pool);
+
   const multiPositions = useMemo(() => {
     if (!result || !pool) return null;
 
@@ -123,11 +152,23 @@ export function useAllLiquidityLocks(
     ]) as Array<[Position[], string, string]>;
   }, [result, pool]);
 
+  const allPositions: Array<[Position[], string, string]> | null = useMemo(() => {
+    if (!multiPositions) return null;
+
+    return multiPositions.map(([positions, principalId, name]) => {
+      if (name === "Black Hole") {
+        return [(positions ?? []).concat(extraBlackHolePositions ?? []), principalId, name];
+      }
+
+      return [positions, principalId, name];
+    }) as Array<[Position[], string, string]>;
+  }, [multiPositions, extraBlackHolePositions]);
+
   return useMemo(
     () => ({
       loading,
-      result: multiPositions,
+      result: allPositions,
     }),
-    [multiPositions, loading],
+    [allPositions, loading],
   );
 }

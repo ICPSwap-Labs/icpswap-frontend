@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme, makeStyles, Tooltip } from "components/Mui";
+import { t, Trans } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
 import { useWalletConnectorManager } from "store/auth/hooks";
+import { Flex, TextButton } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -34,12 +33,13 @@ export interface ConnectorProps {
   label: string;
   value: ConnectorType;
   logo: string;
+  disabled?: boolean;
 }
 
-export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
+export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
   const [, walletConnectorManager] = useWalletConnectorManager();
 
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();
 
@@ -57,11 +57,13 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
   }, []);
 
   const handleConnect = async () => {
+    if (disabled) return;
+
     try {
       if (loading || !value || !selfConnector) return;
 
       if ((!window.ic || !window.ic?.infinityWallet) && value === ConnectorType.INFINITY) {
-        openErrorTip(t`Please install the infinity wallet extension!`);
+        openErrorTip(t`Please install the Bitfinity wallet extension!`);
         return;
       }
 
@@ -104,9 +106,35 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
       }}
       onClick={handleConnect}
     >
-      <Typography color="text.primary" fontSize="14px" fontWeight={700}>
-        {label}
-      </Typography>
+      <Flex gap="0 8px">
+        <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+          {label}
+        </Typography>
+
+        {value === ConnectorType.STOIC ? (
+          <Tooltip
+            arrow
+            title={
+              <Trans>
+                This wallet is no longer supported. You can import your Stoic seed phrase into Plug, which will allow
+                you to log in to ICPSwap. Please refer to the tutorial (
+                <TextButton
+                  sx={{ fontSize: "12px" }}
+                  link="https://iloveics.gitbook.io/icpswap/products/wallet/how-to-import-stoic-seed-phrase-into-plug"
+                >
+                  How to Import Stoic Seed Phrase into Plug | ICPSwap
+                </TextButton>
+                ) for guidance.
+              </Trans>
+            }
+          >
+            <Box sx={{ width: "16px", height: "16px", position: "relative" }}>
+              <Box sx={{ width: "16px", height: "16px", position: "absolute", top: 0, left: 0 }} />
+              <img src="/images/notice_icon.svg" width="16px" height="16px" alt="" style={{ borderRadius: "50%" }} />
+            </Box>
+          </Tooltip>
+        ) : null}
+      </Flex>
 
       <Box className={`${classes.loadingWrapper}${loading ? " loading" : ""}`}>
         <img width="40px" height="40px" src={logo} alt="" />

@@ -5,7 +5,14 @@ import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { MainCard, ChartDateButtons, PoolVolumeChart, PoolTvlChart, ChartViewButtons, ChartView } from "@icpswap/ui";
+import {
+  MainCard,
+  ChartDateButtons,
+  PoolVolumeChart,
+  PoolTvlChart,
+  MultipleSmallButtons,
+  ChartView,
+} from "@icpswap/ui";
 import DensityChart from "ui-component/DensityChart";
 import { VolumeWindow } from "@icpswap/types";
 import { usePoolTvlChartData } from "@icpswap/hooks";
@@ -15,9 +22,9 @@ dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
 export const chartViews = [
-  { label: t`Volume`, key: ChartView.VOL },
-  { label: t`TVL`, key: ChartView.TVL },
-  { label: t`Liquidity`, key: ChartView.LIQUIDITY },
+  { label: t`Volume`, value: ChartView.VOL },
+  { label: t`TVL`, value: ChartView.TVL },
+  { label: t`Liquidity`, value: ChartView.LIQUIDITY },
 ];
 
 export interface PoolChartProps {
@@ -104,10 +111,10 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
           zIndex: 101,
         }}
       >
-        <ChartViewButtons
-          chartViews={chartViews}
-          activeView={chartView}
-          setActiveChartView={(chartView) => setChartView(chartView)}
+        <MultipleSmallButtons
+          buttons={chartViews}
+          active={chartView}
+          onClick={(chartView) => setChartView(chartView.value)}
         />
 
         {chartView === ChartView.VOL ? (
