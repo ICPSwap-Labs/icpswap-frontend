@@ -13,30 +13,33 @@ export interface Web3ButtonConnectorProps {
 export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
   const { account, chainId: currChainId } = useWeb3React();
 
-  const tryActivation = useCallback(async (connector: Connector) => {
-    try {
-      await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
-    } catch (error) {
-      console.error(`web3-react connection error: ${error}`);
-    }
-  }, []);
-
-  const handleConnect = () => {
-    if (isMobile) {
-      if (!account) {
-        window.open("https://metamask.app.link/dapp/airdrop.blus.cc");
+  const tryActivation = useCallback(
+    async (connector: Connector) => {
+      try {
+        await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
+      } catch (error) {
+        console.error(`web3-react connection error: ${error}`);
       }
+    },
+    [chainId],
+  );
+
+  const handleConnect = useCallback(async () => {
+    if (isMobile) {
+      // if (!account) {
+      //   window.open("https://metamask.io/download/");
+      // }
       return;
     }
 
     if (!account || (!!account && currChainId !== (chainId ?? DEFAULT_CHAIN_ID))) {
       tryActivation(injectedConnection.connector);
     }
-  };
+  }, [isMobile, account, currChainId, chainId, DEFAULT_CHAIN_ID]);
 
   return (
-    <Button sx={{ maxWidth: "100%" }} variant="contained" fullWidth size="large" onClick={handleConnect}>
-      Connect to Metamask
+    <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect} disabled={isMobile}>
+      {isMobile ? "Not supported on mobile" : "Connect to Metamask"}
     </Button>
   );
 }

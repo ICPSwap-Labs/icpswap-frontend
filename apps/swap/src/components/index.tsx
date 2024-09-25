@@ -10,7 +10,7 @@ export { TextButton, ALink, MaxButton, LoadingRow } from "@icpswap/ui";
 export * from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as ViewMore } from "./ViewMore/index";
-export { Breadcrumbs, MainCard, Flex } from "@icpswap/ui";
+export { Breadcrumbs, MainCard, Flex, Tooltip } from "@icpswap/ui";
 export { default as StepViewButton } from "./Steps/View";
 export * from "./Maintenance";
 export { default as FindPositionsModal } from "./swap/FindPositions";
@@ -20,7 +20,6 @@ export { default as NumberTextField, TextFieldNumberComponent } from "./Input/Nu
 export { default as FilledTextField } from "./Input/FilledTextField";
 export * from "./Input/NumberFilledTextField";
 export * from "./ReclaimTips";
-export * from "./Tooltip/index";
 export { default as Copy } from "./Copy/index";
 export * from "./TabPanel";
 export * from "./Image/index";

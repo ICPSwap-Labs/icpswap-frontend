@@ -1,20 +1,14 @@
-import { useWeb3React } from "@web3-react/core";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
-import { useSupportedActiveChain } from "hooks/web3/index";
+import Web3 from "web3";
 
-export function useFetchBlockNumber() {
-  const { provider } = useWeb3React();
-  const supportedActiveChain = useSupportedActiveChain();
-
+export function useFetchBlockNumber(): number | undefined {
   const { data } = useSwr(
-    provider && supportedActiveChain ? ["ethBlockNumber"] : undefined,
+    "ethBlockNumber",
     async () => {
-      if (provider && supportedActiveChain) {
-        const blockNumber = await provider.getBlockNumber();
-        return blockNumber;
-      }
-      return undefined;
+      const web3 = new Web3(Web3.givenProvider);
+      const blockNumber = await web3.eth.getBlockNumber();
+      return Number(blockNumber);
     },
     {
       refreshInterval: 3000,
@@ -25,6 +19,6 @@ export function useFetchBlockNumber() {
 }
 
 export function useBlockNumber() {
-  const { data } = useSWRImmutable<number>(["ethBlockNumber"]);
+  const { data } = useSWRImmutable<number>("ethBlockNumber");
   return data;
 }

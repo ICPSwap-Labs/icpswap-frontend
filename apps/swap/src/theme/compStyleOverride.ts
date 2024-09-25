@@ -48,7 +48,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: "8px",
+          borderRadius: "12px",
           textTransform: "none",
           "&.MuiButton-outlinedPrimary": {
             color: isDark ? theme.colors.secondaryMain : theme.colors.lightPrimaryMain,
@@ -663,9 +663,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                   },
                 },
               },
-            },
-            "& .Mui-disabled.opacity1": {
-              opacity: 1,
             },
           },
           "&.customize-menu-list-light": {

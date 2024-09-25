@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "components/Mui";
 import { Link as ReactLink } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({

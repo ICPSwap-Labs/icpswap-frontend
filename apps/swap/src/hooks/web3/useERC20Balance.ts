@@ -5,7 +5,7 @@ import { useCallsData } from "@icpswap/hooks";
 
 import { useERC20Contract } from "./useContract";
 
-export function useERC20Balance(contractAddress: string | undefined, reload?: boolean) {
+export function useERC20Balance(contractAddress: string | undefined, reload?: number) {
   const { account } = useWeb3React();
   const contract = useERC20Contract(contractAddress);
 

@@ -1,3 +1,4 @@
+import createTheme from "@mui/material/styles/createTheme";
 import { Theme } from "@mui/material/styles";
 import useMuiTheme from "@mui/styles/useTheme";
 
@@ -22,9 +23,12 @@ export { default as makeStyles } from "@mui/styles/makeStyles";
 export { default as Tooltip } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as ButtonBase } from "@mui/material/ButtonBase";
+export { default as Drawer } from "@mui/material/Drawer";
 
 export function useTheme() {
   return useMuiTheme() as Theme;
 }
 
 export type { Theme };
+
+export { createTheme };

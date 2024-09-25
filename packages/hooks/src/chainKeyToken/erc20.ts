@@ -6,6 +6,7 @@ import type {
   WithdrawalDetail,
   Erc20MinterInfo,
   Eip1559TransactionPrice,
+  Null,
 } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 
@@ -62,9 +63,10 @@ export async function getChainKeyMinterInfo(minter_id: string) {
   return resultFormat<Erc20MinterInfo>(await (await erc20Minter(minter_id)).get_minter_info()).data;
 }
 
-export function useChainKeyMinterInfo(minter_id: string) {
+export function useChainKeyMinterInfo(minter_id: string | Null) {
   return useCallsData(
     useCallback(async () => {
+      if (!minter_id) return undefined;
       return await getChainKeyMinterInfo(minter_id);
     }, [minter_id]),
   );

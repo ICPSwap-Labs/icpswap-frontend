@@ -10,7 +10,6 @@ export function AccountSection() {
     <AddressSection
       address={principal ? principalToAccount(principal) : ""}
       label={t`Account ID`}
-      labelColor="#E3F2FD"
       link={principal ? explorerLink(principal) : ""}
     />
   );

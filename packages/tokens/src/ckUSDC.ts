@@ -5,7 +5,7 @@ import { TOKEN_STANDARD } from "@icpswap/constants";
 export const ckUSDCTokenInfo: TokenInfo = {
   standardType: TOKEN_STANDARD.ICRC2,
   name: "ckUSDC",
-  decimals: 8,
+  decimals: 6,
   symbol: "ckUSDC",
   canisterId: "xevnm-gaaaa-aaaar-qafnq-cai",
   totalSupply: BigInt(0),

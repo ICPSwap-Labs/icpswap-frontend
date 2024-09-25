@@ -72,3 +72,4 @@ export * from "./nft";
 export * from "./types";
 export * from "./icp";
 export * from "./wallet";
+export * from "./ckERC20";

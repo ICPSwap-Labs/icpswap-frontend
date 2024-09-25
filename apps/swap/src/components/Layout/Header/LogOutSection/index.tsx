@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { useUserLogout } from "store/auth/hooks";
 import LogoutConfirmModal from "./Confirm";
 
-export default function LogOutSection({ children, onLogout }: { children: ReactNode; onLogout: () => void }) {
+export default function LogOutSection({ children, onLogout }: { children: ReactNode; onLogout?: () => void }) {
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const logout = useUserLogout();
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {
   Pagination,

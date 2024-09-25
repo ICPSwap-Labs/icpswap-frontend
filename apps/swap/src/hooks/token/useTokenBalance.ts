@@ -216,13 +216,13 @@ export function useTokenBalanceV2({ canisterId, address, sub, refresh }: UseToke
 }
 
 export function useStoreTokenBalance(
-  account: string | Principal | undefined,
-  token: Token | undefined,
+  tokenId: string | undefined,
+  address: string | Principal | undefined,
   refresh?: boolean | number,
 ) {
   const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
 
-  const { loading, result } = useTokenBalance(token?.address, account, refresh);
+  const { loading, result } = useTokenBalance(tokenId, address, refresh);
 
   useEffect(() => {
     if (result) {
@@ -231,15 +231,15 @@ export function useStoreTokenBalance(
   }, [result]);
 
   return useMemo(() => {
-    if (!token || !storeResult || loading || isNaN(storeResult.toNumber()))
+    if (!tokenId || !storeResult || loading || isNaN(storeResult.toNumber()))
       return {
         loading,
-        result: storeResult && token ? storeResult : undefined,
+        result: storeResult && tokenId ? storeResult : undefined,
       };
 
     return {
       loading,
       result: storeResult,
     };
-  }, [loading, storeResult, token]);
+  }, [loading, storeResult, tokenId]);
 }

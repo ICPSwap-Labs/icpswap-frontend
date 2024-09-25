@@ -10,7 +10,6 @@ export default function ProfileSection() {
     <AddressSection
       address={principal}
       label={t`Principal ID`}
-      labelColor="#EFEFFF"
       link={principal ? explorerLink(principal) : undefined}
     />
   );

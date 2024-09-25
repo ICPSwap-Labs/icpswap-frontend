@@ -5,3 +5,6 @@ export * from "./useActiveChain";
 export * from "./useTokenFromNetwork";
 export * from "./useETHBalance";
 export * from "./useWeb3CallsData";
+export * from "./useERC20Allowance";
+export * from "./useERC20Approve";
+export * from "./useERC20Balance";

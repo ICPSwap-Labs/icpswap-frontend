@@ -3,10 +3,6 @@ import { WICPCanisterId } from "constants/canister";
 import { TokenInfo, TokenMetadata } from "types/token";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { ckETH_LEDGER_ID } from "./ckETH";
-import { ckBTC_ID } from "./ckBTC";
-import ckETHSVG from "../assets/images/token/ckETH.svg";
-import ckBTCSVG from "../assets/images/token/ckBTC.svg";
 
 export { TOKEN_STANDARD };
 
@@ -127,54 +123,4 @@ export const SONIC = new Token({
   logo: "",
   standard: TOKEN_STANDARD.ICRC1,
   transFee: 100000,
-});
-
-export const ckBTC = new Token({
-  address: ckBTC_ID,
-  decimals: 8,
-  symbol: "ckBTC",
-  name: "ckBTC",
-  logo: ckBTCSVG,
-  standard: TOKEN_STANDARD.ICRC2,
-  transFee: 10,
-});
-
-export const ckETH = new Token({
-  address: ckETH_LEDGER_ID,
-  decimals: 18,
-  symbol: "ckETH",
-  name: "ckETH",
-  logo: ckETHSVG,
-  standard: TOKEN_STANDARD.ICRC2,
-  transFee: 2_000_000_000_000,
-});
-
-export const TRAX = new Token({
-  address: "emww2-4yaaa-aaaaq-aacbq-cai",
-  decimals: 8,
-  symbol: "TRAX",
-  name: "TRAX",
-  logo: ckETHSVG,
-  standard: TOKEN_STANDARD.ICRC1,
-  transFee: 100000,
-});
-
-export const NTN = new Token({
-  address: "f54if-eqaaa-aaaaq-aacea-cai",
-  decimals: 8,
-  symbol: "NTN",
-  name: "Neutrinite",
-  logo: "",
-  standard: TOKEN_STANDARD.ICRC1,
-  transFee: 10_000,
-});
-
-export const GLDGov = new Token({
-  address: "tyyy3-4aaaa-aaaaq-aab7a-cai",
-  decimals: 8,
-  symbol: "GLDGov",
-  name: "Gold Governance Token",
-  logo: "",
-  standard: TOKEN_STANDARD.ICRC1,
-  transFee: 100_000,
 });

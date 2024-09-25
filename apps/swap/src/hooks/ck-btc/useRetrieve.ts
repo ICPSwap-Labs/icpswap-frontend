@@ -1,5 +1,5 @@
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
-import { ckBTCMinterActor } from "actor/ckBTC";
+import { ckBtcMinter } from "actor/ckBTC";
 import { getActorIdentity } from "components/Identity";
 
 export async function retrieveBTC(address: string, amount: bigint) {
@@ -9,7 +9,7 @@ export async function retrieveBTC(address: string, amount: bigint) {
     block_index: bigint;
   }>(
     await (
-      await ckBTCMinterActor(identity)
+      await ckBtcMinter(identity)
     ).retrieve_btc_with_approval({
       from_subaccount: availableArgsNull<number[]>(undefined),
       address,
@@ -25,7 +25,7 @@ export async function retrieveBTCv1(address: string, amount: bigint) {
     block_index: bigint;
   }>(
     await (
-      await ckBTCMinterActor(identity)
+      await ckBtcMinter(identity)
     ).retrieve_btc({
       address,
       amount,

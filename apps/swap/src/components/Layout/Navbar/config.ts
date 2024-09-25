@@ -23,7 +23,7 @@ export type Route = {
 
 export type SubMenu = Route;
 
-export const MAX_NUMBER = 6;
+export const MAX_NUMBER = 5;
 
 export const MOBILE_MAX_NUMBER = 7;
 
@@ -43,24 +43,18 @@ export const routes: Route[] = [
     path: "/liquidity",
   },
   {
-    key: "stake",
-    name: `Stake`,
-    path: "/stake",
+    key: "stake_farm",
+    name: `Earn`,
     subMenus: [
+      { key: "farm", name: `Farm`, path: "/farm" },
       { key: "staking-token", name: `Staking Pool V2`, path: "/stake" },
       { key: "staking v1", name: `Staking Pool V1`, path: "/stake/v1" },
     ],
   },
   {
-    key: "farm",
-    name: `Farm`,
-    path: `/farm`,
-  },
-
-  {
-    key: "wallet",
-    name: `Wallet`,
-    path: `/wallet`,
+    key: "ck-bridge",
+    name: `ck-Bridge`,
+    path: `/ck-bridge`,
   },
   {
     key: "info",

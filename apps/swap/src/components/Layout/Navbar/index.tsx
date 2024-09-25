@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 
 import { routes, MAX_NUMBER } from "./config";
 import { ExceedRoutes } from "./ExceedRoutes";

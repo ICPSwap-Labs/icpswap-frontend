@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
-import { Box, Collapse, Typography } from "components/Mui";
+import { Box, Collapse, Typography, useTheme } from "components/Mui";
 import { Link } from "@mui/material";
-import { MainCard, Flex } from "components/index";
-import { useTheme } from "@mui/styles";
+import { MainCard, Flex, Image } from "components/index";
 import { INFO_URL } from "constants/index";
 import { t, Trans } from "@lingui/macro";
 import {
@@ -17,8 +16,6 @@ import {
 } from "@icpswap/utils";
 import { useStakingPoolState, useStakingPoolCycles, useStakingPoolUserInfo } from "@icpswap/hooks";
 import Countdown from "react-countdown";
-import { ICRocksLoadIcon } from "components/Layout/Header/ProfileSection";
-import { Theme } from "@mui/material/styles";
 import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
 import { StakingPoolInfo, StakingState } from "@icpswap/types";
@@ -57,7 +54,7 @@ export interface StakeDetailsProps {
 }
 
 export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice, poolInfo }: StakeDetailsProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -103,14 +100,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
                     Get {stakeToken.symbol}
                   </Link>
 
-                  <ICRocksLoadIcon
-                    fontSize="24"
-                    sx={{
-                      position: "relative",
-                      cursor: "pointer",
-                      color: theme.colors.secondaryMain,
-                    }}
-                  />
+                  <Image src="/images/external-link.svg" sx={{ width: "22px", height: "22px", cursor: "pointer" }} />
                 </>
               ) : null}
             </Flex>

@@ -1,8 +1,6 @@
 import { useMemo } from "react";
-import { Box } from "@mui/material";
 import { t } from "@lingui/macro";
-import { formatDollarAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { useStakeIntervalGlobalData } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
 
@@ -13,7 +11,7 @@ export function Staking() {
 
   const { data } = useStakeIntervalGlobalData();
 
-  const { tvl, rewardedValue, rewardingValue, totalPools, totalStaker } = useMemo(() => {
+  const { tvl, rewardedValue, rewardingValue, totalPools } = useMemo(() => {
     if (!data || !icpPrice) return {};
 
     const tvl = formatDollarAmount(new BigNumber(data.valueOfStaking).times(icpPrice).toNumber());

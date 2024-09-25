@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Box, useMediaQuery, Drawer } from "@mui/material";
+import { Box, useMediaQuery, Drawer } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { createTheme } from "@mui/material/styles";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
@@ -8,7 +8,6 @@ import LogoSection from "../../LogoSection";
 import ProfileSection from "./ProfileSection";
 import Navbar from "../Navbar";
 import MobileNavbar from "../Navbar/mobile/Navbar";
-// import TokenClaim from "./TokenClaim";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -37,12 +36,10 @@ export default function Header() {
             <DensityMediumIcon sx={{ cursor: "pointer" }} onClick={handleToggleDrawer} />
           ) : (
             <>
-              <Box mr="20px">
+              <Box sx={{ margin: "0 20px 0 0" }}>
                 <LogoSection />
               </Box>
-              <Grid item>
-                <Navbar />
-              </Grid>
+              <Navbar />
             </>
           )}
         </Flex>
@@ -54,7 +51,6 @@ export default function Header() {
             "@media(max-width: 640px)": { gap: "0 8px" },
           }}
         >
-          {/* <TokenClaim /> */}
           <ProfileSection />
         </Flex>
 
