@@ -56,17 +56,17 @@ export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps
         { label: t`Canister Id`, value: token.address },
       ],
     },
-    {
-      title: t`Withdraw ${rewardToken.symbol}`,
-      children: [
-        { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
-      ],
-      skipError:
-        data && Number(data) < rewardToken.transFee
-          ? t`The amount of withdrawal is less than the transfer fee`
-          : undefined,
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-    },
+    // {
+    //   title: t`Withdraw ${rewardToken.symbol}`,
+    //   children: [
+    //     { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
+    //   ],
+    //   skipError:
+    //     data && Number(data) < rewardToken.transFee
+    //       ? t`The amount of withdrawal is less than the transfer fee`
+    //       : undefined,
+    //   errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+    // },
   ];
 
   return steps.filter((step) => step !== undefined).map((step, index) => ({ ...step, step: index }));
