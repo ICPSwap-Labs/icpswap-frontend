@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { GlobalTips } from "@icpswap/ui";
 import { Grid, Box, Typography } from "components/Mui";
 import { NoData, MainCard, ImageLoading, TextButton } from "components/index";
 import Switch from "components/switch";
@@ -8,6 +9,7 @@ import { useParsedQueryString, useV1StakingTokenPools } from "@icpswap/hooks";
 import { useStakingPoolInfoFromController } from "hooks/staking-token/v1";
 import { STATE } from "types/staking-token";
 import { getStakingTokenPoolState } from "utils/staking-v1";
+
 import UnusedTokens from "./components/UnusedTokens";
 import Pool from "./components/Pool";
 import GlobalData from "./components/GlobalData";
