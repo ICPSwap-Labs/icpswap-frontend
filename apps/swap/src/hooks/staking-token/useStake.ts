@@ -135,10 +135,16 @@ function useStakeCalls() {
         });
 
       const call1 = async () => await deposit({ token, amount, poolId, standard });
-      const call2 = async () => await stake({ token, amount, poolId, standard, key, rewardToken });
-      const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
+      const call2 = async () => {
+        const stakeResult = await stake({ token, amount, poolId, standard, key, rewardToken });
+        if (stakeResult) {
+          withdraw({ token: rewardToken, poolId, key });
+        }
+        return stakeResult;
+      };
+      // const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
 
-      return [call0, call1, call2, call3];
+      return [call0, call1, call2];
     },
     [approveOrTransfer, deposit, stake, withdraw],
   );
