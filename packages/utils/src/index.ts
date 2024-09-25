@@ -31,3 +31,4 @@ export * from "./formatPercentage";
 export * from "./classes";
 export * from "./feeAmountToPercent";
 export * from "./swap";
+export * from "./locationSearchReplace";

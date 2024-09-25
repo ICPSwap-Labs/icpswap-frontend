@@ -1,12 +1,19 @@
 import { useSwapTransactions } from "hooks/info/useScanSwapTransactions";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { LoadingRow, SelectPair, Pagination, PaginationType, Copy, NoData } from "ui-component/index";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  enumToString,
+  pageArgsFormat,
+  shorten,
+  locationSearchReplace,
+} from "@icpswap/utils";
 import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip, Flex } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
@@ -65,6 +72,7 @@ interface TransactionsProps {
 function Transactions({ address }: TransactionsProps) {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
 
   const { pair } = useParsedQueryString() as { pair: string };
 
@@ -85,11 +93,9 @@ function Transactions({ address }: TransactionsProps) {
   const handlePairChange = (pairId: string | undefined) => {
     setPagination({ pageNum: 1, pageSize: 10 });
 
-    if (pairId) {
-      history.push(`/swap-scan/transactions?pair=${pairId}`);
-    } else {
-      history.push(`/swap-scan/transactions`);
-    }
+    const search = locationSearchReplace(location.search, "pair", pairId);
+
+    history.push(`/swap-scan/transactions${search}`);
   };
 
   const handlePageChange = (pagination: PaginationType) => {

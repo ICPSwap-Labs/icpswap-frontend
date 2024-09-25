@@ -3,7 +3,14 @@ import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { UserPosition } from "types/swap";
 import { usePositions } from "hooks/swap-scan/index";
-import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shorten } from "@icpswap/utils";
+import {
+  pageArgsFormat,
+  toSignificant,
+  numberToString,
+  formatDollarAmount,
+  shorten,
+  locationSearchReplace,
+} from "@icpswap/utils";
 import { useSwapPositionOwner, useParsedQueryString, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
@@ -16,7 +23,7 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { toFormat } from "utils/index";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
@@ -210,19 +217,16 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   );
 }
 
-interface PositionsProps {
-  address: string | undefined;
-}
-
-function Positions({ address }: PositionsProps) {
+function Positions() {
   const classes = useStyles();
   const history = useHistory();
-  const { pair } = useParsedQueryString() as { pair: string };
+  const location = useLocation();
+  const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { loading, result } = usePositions(pair, address, offset, pagination.pageSize);
+  const { loading, result } = usePositions(pair, principal, offset, pagination.pageSize);
 
   const positions = result?.content;
   const totalElements = result?.totalElements;
@@ -235,12 +239,8 @@ function Positions({ address }: PositionsProps) {
 
   const handlePairChange = (pairId: string | undefined) => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
-
-    if (pairId) {
-      history.push(`/swap-scan/positions?pair=${pairId}`);
-    } else {
-      history.push(`/swap-scan/positions`);
-    }
+    const search = locationSearchReplace(location.search, "pair", pairId);
+    history.push(`/swap-scan/positions${search}`);
   };
 
   return (
@@ -313,5 +313,9 @@ function Positions({ address }: PositionsProps) {
 }
 
 export default function SwapScanPositions() {
-  return <SwapScanWrapper>{({ address }: ScanChildrenProps) => <Positions address={address} />}</SwapScanWrapper>;
+  return (
+    <SwapScanWrapper>
+      <Positions />
+    </SwapScanWrapper>
+  );
 }
