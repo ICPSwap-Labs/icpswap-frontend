@@ -1,15 +1,15 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard } from "components/index";
+import { Flex, MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useFarmAprCharts } from "@icpswap/hooks";
+import { Tooltip as Tip } from "@icpswap/ui";
+import { BigNumber } from "@icpswap/utils";
 
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Theme } from "@mui/material/styles";
 import { darken } from "polished";
-import { BigNumber } from "@icpswap/utils";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -26,7 +26,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
 
   const { result: aprCharts } = useFarmAprCharts(farmId);
 
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const chartData = useMemo(() => {
     if (!aprCharts) return undefined;
@@ -56,9 +56,21 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
         }}
       >
         <Box sx={{ padding: "0 24px" }}>
-          <Typography fontSize="16px">
-            <Trans>APR</Trans>
-          </Typography>
+          <Flex gap="0 6px">
+            <Typography fontSize="16px">
+              <Trans>APR</Trans>
+            </Typography>
+
+            <Tip
+              tips={
+                <Trans>
+                  This APR updates every 10 minutes, so it may differ slightly from the real-time APR shown on the
+                  right.
+                </Trans>
+              }
+              iconSize="14px"
+            />
+          </Flex>
 
           <Typography
             sx={{

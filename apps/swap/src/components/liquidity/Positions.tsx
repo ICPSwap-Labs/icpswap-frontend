@@ -68,11 +68,11 @@ export function Positions() {
 
   const { subTab } = useParsedQueryString() as { subTab: string | undefined };
 
-  const yourHiddenNumbers = Object.keys(__hiddenNumbers).filter(
+  const hiddenNumbersOfYourPositions = Object.keys(__hiddenNumbers).filter(
     (key) => key.includes("YOUR") && __hiddenNumbers[key] === true,
   ).length;
 
-  const stakedHiddenNumbers = Object.keys(__hiddenNumbers).filter(
+  const hiddenNumbersOfStakedPosition = Object.keys(__hiddenNumbers).filter(
     (key) => key.includes("FARM") && __hiddenNumbers[key] === true,
   ).length;
 
@@ -231,7 +231,7 @@ export function Positions() {
               <Typography className={`${classes.tab}${tab === "YOUR" ? " active" : ""}`} onClick={() => setTab("YOUR")}>
                 <Trans>Your Positions</Trans>
               </Typography>
-              <NumberLabel num={allPositions?.filter((position) => position.liquidity !== BigInt(0)).length ?? "--"} />
+              <NumberLabel num={allPositions ? allPositions.length - hiddenNumbersOfYourPositions : "--"} />
             </Flex>
 
             <Flex align="center" gap="0 4px">
@@ -271,14 +271,18 @@ export function Positions() {
 
         <Box mt="26px">
           <Box sx={{ display: tab === "YOUR" ? "block" : "none" }}>
-            <YourPositions filterState={positionFilterState} sort={positionSort} hiddenNumbers={yourHiddenNumbers} />
+            <YourPositions
+              filterState={positionFilterState}
+              sort={positionSort}
+              hiddenNumbers={hiddenNumbersOfYourPositions}
+            />
           </Box>
 
           <Box sx={{ display: tab === "STAKED" ? "block" : "none" }}>
             <StakedPositions
               filterState={positionFilterState}
               sort={positionSort}
-              hiddenNumbers={stakedHiddenNumbers}
+              hiddenNumbers={hiddenNumbersOfStakedPosition}
             />
           </Box>
         </Box>

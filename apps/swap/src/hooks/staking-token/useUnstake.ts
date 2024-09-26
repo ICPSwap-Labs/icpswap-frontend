@@ -76,11 +76,22 @@ function useCalls() {
 
   return useCallback(
     ({ token, amount, poolId, key, rewardToken }: UnstakeCallsArgs) => {
-      const call0 = async () => await unstake({ token, amount, poolId, key, rewardToken });
-      const call1 = async () => await withdraw({ token, amount, poolId });
-      const call2 = async () => await withdrawRewardToken({ token, key, poolId });
+      const call0 = async () => {
+        const unStakeResult = await unstake({ token, amount, poolId, key, rewardToken });
 
-      return [call0, call1, call2];
+        if (unStakeResult) {
+          withdraw({ token, amount, poolId });
+          withdrawRewardToken({ token, key, poolId });
+        }
+
+        return unStakeResult;
+      };
+      // const call1 = async () => {
+      //   await withdraw({ token, amount, poolId });
+      // };
+      // const call2 = async () => await withdrawRewardToken({ token, key, poolId });
+
+      return [call0];
     },
     [unstake, withdraw, withdrawRewardToken],
   );
