@@ -1,9 +1,11 @@
 import { useCallback } from "react";
 import { stakingPoolHarvest } from "@icpswap/hooks";
+import { sleep } from "@icpswap/utils";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { useUpdateStepData } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTips, MessageTypes } from "hooks/useTips";
+
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 import { useHarvestSteps } from "./useHarvestSteps";
 
@@ -47,16 +49,16 @@ function useCalls() {
     ({ token, key, poolId }: UnstakeCallsArgs) => {
       const call0 = async () => {
         const harvestResult = await harvest({ token, poolId, key });
-
-        if (harvestResult) {
-          withdraw({ token, poolId, key });
-        }
-
+        if (harvestResult) withdraw({ token, poolId, key });
         return harvestResult;
       };
-      // const call1 = async () => await withdraw({ token, poolId, key });
 
-      return [call0];
+      const call1 = async () => {
+        await sleep(2000);
+        return true;
+      };
+
+      return [call0, call1];
     },
     [withdraw, harvest],
   );
