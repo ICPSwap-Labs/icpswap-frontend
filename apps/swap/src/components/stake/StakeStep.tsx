@@ -5,7 +5,7 @@ import { t } from "@lingui/macro";
 import { toFormat } from "utils/index";
 import { isUseTransferByStandard, actualAmountToPool } from "utils/token/index";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { getStepData } from "store/steps/hooks";
+// import { getStepData } from "store/steps/hooks";
 import { TokenImage } from "components/index";
 
 export interface GetSteps {
@@ -17,9 +17,9 @@ export interface GetSteps {
   retry?: () => void;
 }
 
-export function getSteps({ token, rewardToken, amount, standard, key }: GetSteps) {
+export function getSteps({ token, amount, standard }: GetSteps) {
   const amount0 = toFormat(parseTokenAmount(actualAmountToPool(token, String(amount)), token.decimals).toString());
-  const data = getStepData<bigint | undefined>(key);
+  // const data = getStepData<bigint | undefined>(key);
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>

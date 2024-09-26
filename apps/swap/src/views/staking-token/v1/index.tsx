@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { GlobalTips } from "@icpswap/ui";
 import { Grid, Box, Typography } from "components/Mui";
 import { NoData, MainCard, ImageLoading, TextButton } from "components/index";
 import Switch from "components/switch";

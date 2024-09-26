@@ -45,10 +45,18 @@ function useCalls() {
 
   return useCallback(
     ({ token, key, poolId }: UnstakeCallsArgs) => {
-      const call0 = async () => await harvest({ token, poolId, key });
-      const call1 = async () => await withdraw({ token, poolId, key });
+      const call0 = async () => {
+        const harvestResult = await harvest({ token, poolId, key });
 
-      return [call0, call1];
+        if (harvestResult) {
+          withdraw({ token, poolId, key });
+        }
+
+        return harvestResult;
+      };
+      // const call1 = async () => await withdraw({ token, poolId, key });
+
+      return [call0];
     },
     [withdraw, harvest],
   );

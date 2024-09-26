@@ -79,19 +79,23 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
   useEffect(() => {
     const timer = setInterval(
       () => {
-        handleRefreshBalance();
+        if (principal) {
+          refreshBtcBalance(principal.toString(), undefined);
+        }
       },
       1000 * 5 * 60,
     );
 
-    handleRefreshBalance();
+    if (principal) {
+      refreshBtcBalance(principal.toString(), undefined);
+    }
 
     return () => {
       if (timer) {
         clearInterval(timer);
       }
     };
-  }, []);
+  }, [principal]);
 
   useEffect(() => {
     const timer = setInterval(() => {
