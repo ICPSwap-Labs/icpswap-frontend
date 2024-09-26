@@ -151,8 +151,8 @@ export function Erc20MintTransactions({ token, ledger }: Erc20MintTransactionsPr
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
         <Trans>
-          Once the IC’s Ethereum network syncs with the Ethereum mainnet’s latest finalized block containing your ETH
-          transaction, your {token?.symbol} balance will be updated accordingly.
+          Once the IC’s Ethereum network syncs with the Ethereum mainnet’s latest finalized block containing your{" "}
+          {token?.symbol.replace("ck", "")} transaction, your {token?.symbol} balance will be updated accordingly.
         </Trans>
       </Typography>
 
