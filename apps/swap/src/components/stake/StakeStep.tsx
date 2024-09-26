@@ -5,7 +5,7 @@ import { t } from "@lingui/macro";
 import { toFormat } from "utils/index";
 import { isUseTransferByStandard, actualAmountToPool } from "utils/token/index";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-// import { getStepData } from "store/steps/hooks";
+import { getStepData } from "store/steps/hooks";
 import { TokenImage } from "components/index";
 
 export interface GetSteps {
@@ -17,9 +17,9 @@ export interface GetSteps {
   retry?: () => void;
 }
 
-export function getSteps({ token, amount, standard }: GetSteps) {
+export function getSteps({ token, amount, standard, rewardToken, key }: GetSteps) {
   const amount0 = toFormat(parseTokenAmount(actualAmountToPool(token, String(amount)), token.decimals).toString());
-  // const data = getStepData<bigint | undefined>(key);
+  const data = getStepData<bigint | undefined>(key);
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
@@ -56,17 +56,17 @@ export function getSteps({ token, amount, standard }: GetSteps) {
         { label: t`Canister Id`, value: token.address },
       ],
     },
-    // {
-    //   title: t`Withdraw ${rewardToken.symbol}`,
-    //   children: [
-    //     { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
-    //   ],
-    //   skipError:
-    //     data && Number(data) < rewardToken.transFee
-    //       ? t`The amount of withdrawal is less than the transfer fee`
-    //       : undefined,
-    //   errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-    // },
+    {
+      title: t`Withdraw ${rewardToken.symbol}`,
+      children: [
+        { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
+      ],
+      skipError:
+        data && Number(data) < rewardToken.transFee
+          ? t`The amount of withdrawal is less than the transfer fee`
+          : undefined,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+    },
   ];
 
   return steps.filter((step) => step !== undefined).map((step, index) => ({ ...step, step: index }));

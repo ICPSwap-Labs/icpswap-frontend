@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { sleep } from "@icpswap/utils";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { isUseTransferByStandard } from "utils/token/index";
@@ -143,8 +144,12 @@ function useStakeCalls() {
         return stakeResult;
       };
       // const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
+      const call3 = async () => {
+        await sleep(3000);
+        return true;
+      };
 
-      return [call0, call1, call2];
+      return [call0, call1, call2, call3];
     },
     [approveOrTransfer, deposit, stake, withdraw],
   );

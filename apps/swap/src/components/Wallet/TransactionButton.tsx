@@ -8,7 +8,7 @@ import { Button } from "./Button";
 
 const TRANSACTIONS: { label: string; img: string; value: TransactionLink }[] = [
   { label: t`Internet Computer Dashboard`, img: "/images/wallet/ii.svg", value: "dashboard" },
-  { label: t`IC Explorer`, img: "/images/wallet/ic-explorer.svg", value: "ic-explorer" },
+  // { label: t`IC Explorer`, img: "/images/wallet/ic-explorer.svg", value: "ic-explorer" },
   { label: t`NFTGeek`, img: "/images/wallet/NFTGeek.svg", value: "NFTGeek" },
   { label: t`IC.House`, img: "/images/wallet/ic-house.svg", value: "ic-house" },
 ];
