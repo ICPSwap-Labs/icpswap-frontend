@@ -17,6 +17,8 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 
+import { MintExtraContent } from "./MintExtra";
+
 export interface Erc20MintProps {
   token: Token;
   bridgeChain: ckBridgeChain;
@@ -118,6 +120,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
             : t`Approve`
           : mint_error}
       </ButtonConnector>
+
+      <MintExtraContent token={token} balance={tokenBalance} />
     </>
   );
 }

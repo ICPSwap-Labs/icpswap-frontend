@@ -22,3 +22,24 @@ export function useBlockNumber() {
   const { data } = useSWRImmutable<number>("ethBlockNumber");
   return data;
 }
+
+export function useFetchFinalizedBlock(): number | undefined {
+  const { data } = useSwr(
+    "ethFinalizedBlockNumber",
+    async () => {
+      const web3 = new Web3(Web3.givenProvider);
+      const block = await web3.eth.getBlock("finalized");
+      return Number(Number(block.number));
+    },
+    {
+      refreshInterval: 3000,
+    },
+  );
+
+  return data;
+}
+
+export function useFinalizedBlockNumber() {
+  const { data } = useSWRImmutable<number>("ethFinalizedBlockNumber");
+  return data;
+}

@@ -3,7 +3,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
-import { LinkButtons, LastSyncBlock, EthereumBlock } from "components/ck-bridge";
+import { LinkButtons, LastSyncBlock, EthereumFinalizedBlock } from "components/ck-bridge";
 import { useMemo } from "react";
 
 export interface Erc20NetworkStateProps {
@@ -26,7 +26,7 @@ export function Erc20NetworkState({ token, minterInfo }: Erc20NetworkStateProps)
       <LinkButtons ckToken={token} contract={tokenMinterInfo?.erc20_contract_address} />
 
       <Box>
-        <EthereumBlock />
+        <EthereumFinalizedBlock />
         {minterInfo ? (
           <Box sx={{ margin: "8px 0 0 0" }}>
             <LastSyncBlock minterInfo={minterInfo} />

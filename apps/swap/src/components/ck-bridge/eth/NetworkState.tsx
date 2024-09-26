@@ -3,7 +3,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
-import { LinkButtons, LastSyncBlock, EthereumBlock } from "components/ck-bridge";
+import { LinkButtons, LastSyncBlock, EthereumFinalizedBlock } from "components/ck-bridge";
 
 export interface EthNetworkStateProps {
   token: Token;
@@ -22,7 +22,7 @@ export function EthNetworkState({ token, minterInfo }: EthNetworkStateProps) {
       <LinkButtons ckToken={token} contract={ethHelperContract} />
 
       <Box>
-        <EthereumBlock />
+        <EthereumFinalizedBlock />
         {minterInfo ? (
           <Box sx={{ margin: "8px 0 0 0" }}>
             <LastSyncBlock minterInfo={minterInfo} />
