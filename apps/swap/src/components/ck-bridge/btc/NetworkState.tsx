@@ -26,7 +26,7 @@ export function BtcBridgeNetworkState({ token, block }: BtcBridgeNetworkStatePro
 
       {block ? (
         <Typography fontSize="12px">
-          <Trans>Bitcoin network block height: </Trans> {block}
+          <Trans>Bitcoin Network Block Height: </Trans> {block}
         </Typography>
       ) : null}
     </Flex>
