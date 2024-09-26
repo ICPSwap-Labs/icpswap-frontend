@@ -10,7 +10,6 @@ import { BridgeTokens } from "../BridgeTokens";
 import { EthNetworkState } from "./NetworkState";
 import { EthMint } from "./Mint";
 import { EthDissolve } from "./Dissolve";
-import { MintExtraContent } from "./MintExtra";
 import { EthDissolveTransactions } from "./Eth20DissolveTransactions";
 import { EthMintTransactions } from "./Eth20MintTransactions";
 
@@ -57,8 +56,6 @@ export function EthBridgeWrapper({
                   <EthDissolve token={token} minterInfo={minterInfo} bridgeChain={bridgeChain} />
                 )}
               </Flex>
-
-              {bridgeType === "mint" ? <MintExtraContent /> : null}
 
               <EthNetworkState token={token} minterInfo={minterInfo} />
             </MainCard>

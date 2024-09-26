@@ -12,7 +12,6 @@ import { BridgeTokens } from "../BridgeTokens";
 import { Erc20NetworkState } from "./NetworkState";
 import { Erc20Mint } from "./Mint";
 import { Erc20Dissolve } from "./Dissolve";
-import { MintExtraContent } from "./MintExtra";
 
 export interface Erc20BridgeWrapperProps {
   token: Token;
@@ -64,8 +63,6 @@ export function Erc20BridgeWrapper({
                   <Erc20Dissolve token={token} minterInfo={minterInfo} bridgeChain={bridgeChain} />
                 )}
               </Flex>
-
-              {bridgeType === "mint" ? <MintExtraContent /> : null}
 
               <Erc20NetworkState token={token} minterInfo={minterInfo} />
             </MainCard>

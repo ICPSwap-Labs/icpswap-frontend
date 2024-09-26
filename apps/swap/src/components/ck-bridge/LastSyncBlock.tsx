@@ -9,7 +9,7 @@ export interface LastSyncBlockProps {
 export function LastSyncBlock({ minterInfo }: LastSyncBlockProps) {
   return (
     <Typography sx={{ margin: "8px 0 0 0", fontSize: "12px" }}>
-      <Trans>Last Ethereum synced block number:</Trans>{" "}
+      <Trans>Last Ethereum Synced Block Height:</Trans>{" "}
       {minterInfo?.last_erc20_scraped_block_number[0]?.toString() ?? "--"}
     </Typography>
   );

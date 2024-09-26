@@ -65,7 +65,7 @@ export function Erc20Fee() {
               {ckETHBalance
                 ? toSignificantWithGroupSeparator(parseTokenAmount(ckETHBalance, ckETH.decimals).toNumber())
                 : "--"}
-              {ckETH?.symbol}
+              &nbsp;{ckETH?.symbol}
             </Typography>
 
             <Button variant="outlined" onClick={handleBuy} size="small">

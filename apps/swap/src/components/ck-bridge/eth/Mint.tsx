@@ -15,6 +15,8 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-eth/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 
+import { MintExtraContent } from "./MintExtra";
+
 export interface EthMintProps {
   token: Token;
   bridgeChain: ckBridgeChain;
@@ -101,6 +103,8 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
       >
         {mint_error === undefined ? t`Mint ckETH` : mint_error}
       </ButtonConnector>
+
+      <MintExtraContent token={token} balance={tokenBalance} />
     </>
   );
 }
