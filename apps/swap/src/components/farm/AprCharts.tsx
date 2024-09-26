@@ -64,7 +64,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
             <Tip
               tips={
                 <Trans>
-                  This APR updates every 10 minutes, so it may differ slightly from the real-time APR shown on the
+                  This APR updates every 30 minutes, so it may differ slightly from the real-time APR shown on the
                   right.
                 </Trans>
               }

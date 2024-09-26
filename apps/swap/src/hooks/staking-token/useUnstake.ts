@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { stakingPoolUnstake, stakingPoolWithdraw } from "@icpswap/hooks";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, sleep } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { useUpdateStepData } from "store/steps/hooks";
 
@@ -91,7 +91,17 @@ function useCalls() {
       // };
       // const call2 = async () => await withdrawRewardToken({ token, key, poolId });
 
-      return [call0];
+      const call1 = async () => {
+        await sleep(1000);
+        return true;
+      };
+
+      const call2 = async () => {
+        await sleep(2000);
+        return true;
+      };
+
+      return [call0, call1, call2];
     },
     [unstake, withdraw, withdrawRewardToken],
   );
