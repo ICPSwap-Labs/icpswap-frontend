@@ -23,7 +23,9 @@ export default function ButtonConnector(props: ButtonConnectorProps) {
       onClick={handleConnect}
       variant={!isConnected ? "contained" : props.variant}
       disabled={!isConnected ? false : !!props.disabled}
-      startIcon={props.loading ? <CircularProgress color="inherit" size={22} /> : null}
+      startIcon={
+        props.startIcon ? props.startIcon : props.loading ? <CircularProgress color="inherit" size={22} /> : null
+      }
     >
       {isConnected ? props.children : t`Connect wallet`}
     </Button>
