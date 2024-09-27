@@ -42,12 +42,12 @@ export function EthFee() {
           <Typography>
             {transactionPrice && ckETHInfoToken ? (
               <Trans>
-                (Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
+                Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
                 {ckETH.symbol} ($
                 {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
                   .multipliedBy(ckETHInfoToken.priceUSD)
                   .toFormat(2)}
-                ) for gas fees)
+                )
               </Trans>
             ) : (
               "--"

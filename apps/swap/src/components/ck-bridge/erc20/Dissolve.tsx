@@ -4,7 +4,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
-import { Box, Typography, Button, useTheme, CircularProgress, TextField } from "components/Mui";
+import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -16,6 +16,7 @@ import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
 import { isMobile } from "react-device-detect";
+import ButtonConnector from "components/authentication/ButtonConnector";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -154,7 +155,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
       <Erc20Fee />
 
-      <Button
+      <ButtonConnector
         variant="contained"
         fullWidth
         size="large"
@@ -163,7 +164,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         onClick={handleDissolve}
       >
         {dissolve_error || <Trans>Dissolve {token?.symbol ?? "--"}</Trans>}
-      </Button>
+      </ButtonConnector>
     </>
   );
 }

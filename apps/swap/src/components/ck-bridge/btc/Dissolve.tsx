@@ -2,7 +2,7 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import { useTheme, Box, Typography, Button, CircularProgress, TextField } from "components/Mui";
+import { useTheme, Box, Typography, CircularProgress, TextField } from "components/Mui";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
 import { useActiveChain } from "hooks/web3/index";
@@ -12,6 +12,7 @@ import { DISSOLVE_FEE } from "constants/ckBTC";
 import { useDissolve } from "hooks/ck-btc/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { validate } from "bitcoin-address-validation";
+import ButtonConnector from "components/authentication/ButtonConnector";
 
 interface BtcBridgeDissolveProps {
   token: Token;
@@ -150,7 +151,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
         </Flex>
       </Box>
 
-      <Button
+      <ButtonConnector
         variant="contained"
         fullWidth
         size="large"
@@ -159,7 +160,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
       >
         {dissolve_error ?? t`Confirm`}
-      </Button>
+      </ButtonConnector>
     </>
   );
 }
