@@ -163,6 +163,7 @@ export function SwapMain() {
                   refreshKey={SWAP_REFRESH_KEY}
                   onInputTokenClick={handleInputTokenClick}
                   inputToken={inputToken}
+                  fontSize="12px"
                 />
               </Box>
             ) : null}

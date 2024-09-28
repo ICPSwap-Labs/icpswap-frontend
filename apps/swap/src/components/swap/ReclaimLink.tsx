@@ -301,10 +301,10 @@ export function Reclaim({
         </Box>
 
         <Flex gap="0 4px" sx={{ cursor: "pointer", margin: "12px 0 0 0" }} onClick={handleViewAll} justify="center">
-          <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px" }}>
-            <Trans>View All</Trans>
+          <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px", textAlign: "center" }}>
+            <Trans>Missing Tokens? Check All Your Pool Balances Here</Trans>
+            <ArrowUpRight color={theme.colors.secondaryMain} size="16px" style={{ position: "relative", top: "4px" }} />
           </Typography>
-          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
         </Flex>
       </Collapse>
     </Box>
