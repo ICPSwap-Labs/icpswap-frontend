@@ -31,6 +31,7 @@ function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons
           <TabPanel tabs={buttons} />
         </Box>
       ) : null}
+
       <Box>{children}</Box>
     </Wrapper>
   );

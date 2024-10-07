@@ -16,16 +16,15 @@ import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils"
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
+import { Null } from "@icpswap/types";
 
 import {
   selectCurrency,
   switchCurrencies,
   typeInput,
   clearSwapState,
-  updatePoolCanisterIds,
-  PoolCanisterRecord,
   updateSwapOutAmount,
-  updateDecreaseLiquidityAmount,
+  updatePlaceOrderPositionId,
 } from "./actions";
 
 export function useSwapHandlers() {
@@ -64,7 +63,7 @@ export function useSwapHandlers() {
 }
 
 export function useSwapState() {
-  return useAppSelector((state) => state.swap);
+  return useAppSelector((state) => state.limitOrder);
 }
 
 export function useCleanSwapState() {
@@ -77,7 +76,7 @@ export interface UseSwapInfoArgs {
   refresh?: number | boolean;
 }
 
-export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
+export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const principal = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
@@ -208,6 +207,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     return null;
   }, [typedValue, parsedAmount, currencies, inputTokenSubBalance, inputTokenUnusedBalance, Trade, tokenInsufficient]);
 
+  const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
+  const outputTokenBalance = formatTokenAmount(
+    outputCurrencyBalance?.toExact(),
+    outputCurrencyBalance?.currency.decimals,
+  );
+
   return {
     currencies,
     inputError,
@@ -216,6 +221,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
     tradePoolId: Trade?.tradePoolId,
+    pool: Trade.trade?.swaps[0].route.pools[0],
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
@@ -224,14 +230,20 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     outputToken,
     inputCurrencyState,
     outputCurrencyState,
-    unusedBalance,
     inputTokenUnusedBalance,
     outputTokenUnusedBalance,
     inputTokenSubBalance,
     outputTokenSubBalance,
-    inputTokenBalance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals),
-    outputTokenBalance: formatTokenAmount(outputCurrencyBalance?.toExact(), outputCurrencyBalance?.currency.decimals),
+    inputTokenBalance,
+    outputTokenBalance,
     maxInputAmount,
+    unusedBalance,
+    token0Balance: Trade.pool?.token0.address === inputToken?.address ? inputTokenBalance : outputTokenBalance,
+    token1Balance: Trade.pool?.token1.address === inputToken?.address ? inputTokenBalance : outputTokenBalance,
+    token0SubAccountBalance:
+      Trade.pool?.token0.address === inputToken?.address ? inputTokenSubBalance : outputTokenBalance,
+    token1SubAccountBalance:
+      Trade.pool?.token1.address === inputToken?.address ? inputTokenSubBalance : outputTokenBalance,
   };
 }
 
@@ -261,24 +273,6 @@ export function useLoadDefaultParams() {
   }, [input, output, dispatch]);
 }
 
-export function usePoolCanisterIdManager(
-  key?: string | undefined,
-): [string | undefined, (params: PoolCanisterRecord) => void] {
-  const dispatch = useAppDispatch();
-
-  const poolIds = useAppSelector((state) => state.swap.poolCanisterIds);
-  const poolId = !key ? undefined : poolIds[key];
-
-  const updatePoolCanisterId = useCallback(
-    ({ key, id }: PoolCanisterRecord) => {
-      dispatch(updatePoolCanisterIds({ key, id }));
-    },
-    [dispatch],
-  );
-
-  return useMemo(() => [poolId, updatePoolCanisterId], [poolId, updatePoolCanisterId]);
-}
-
 export function useSwapOutAmount() {
   return useAppSelector((state) => state.swap.swapOutAmount);
 }
@@ -298,16 +292,16 @@ export function useUpdateSwapOutAmount() {
   );
 }
 
-export function getDecreaseLiquidityAmount(key: string) {
-  return store.getState().swap.decreaseLiquidityAmount[key];
+export function getPlaceOrderPositionId() {
+  return store.getState().limitOrder.placeOrderPositionId;
 }
 
-export function useUpdateDecreaseLiquidityAmount() {
+export function useUpdatePlaceOrderPositionId() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (key: string, amount0: bigint | undefined, amount1: bigint | undefined) => {
-      dispatch(updateDecreaseLiquidityAmount({ key, amount0, amount1 }));
+    (positionId: bigint | Null) => {
+      dispatch(updatePlaceOrderPositionId(positionId));
     },
     [dispatch],
   );

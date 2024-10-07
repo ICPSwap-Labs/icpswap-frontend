@@ -1,25 +1,27 @@
 import React, { memo } from "react";
 import { Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
 import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
 import { NumberTextField } from "components/index";
 
 export interface SwapInputProps {
-  value: string | number | undefined;
+  value: string | number | Null;
   token: Token | undefined;
   onUserInput: (value: string) => void;
   disabled?: boolean;
+  align?: string;
 }
 
-export const SwapInput = memo(({ value, token, onUserInput, disabled }: SwapInputProps) => {
+export const SwapInput = memo(({ value, align = "right", token, onUserInput, disabled }: SwapInputProps) => {
   const decimal = token?.decimals ?? SAFE_DECIMALS_LENGTH;
 
   return (
     <NumberTextField
-      value={value}
+      value={value ?? ""}
       fullWidth
       sx={{
         "& input": {
-          textAlign: "right",
+          textAlign: align,
           fontSize: "28px!important",
           fontWeight: 600,
           padding: "0px",

@@ -19,6 +19,8 @@ import type {
   TickInfoWithId,
   ActorIdentity,
   PaginationResult,
+  LimitOrderKey,
+  LimitOrderValue,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -421,6 +423,50 @@ export function useSwapTokenAmountState(canisterId: string | undefined) {
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getSwapTokenAmountState(canisterId);
+    }, [canisterId]),
+  );
+}
+
+export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
+  return resultFormat<boolean>(
+    await (
+      await swapPool(canisterId, true)
+    ).addLimitOrder({
+      positionId,
+      tickLimit,
+    }),
+  );
+}
+
+export async function getUserLimitOrders(canisterId: string, principal: string) {
+  return resultFormat<{
+    upperLimitOrdersIds: Array<{ userPositionId: bigint; timestamp: bigint }>;
+    lowerLimitOrderIds: Array<{ userPositionId: bigint; timestamp: bigint }>;
+  }>(await (await swapPool(canisterId)).getUserLimitOrders(Principal.fromText(principal))).data;
+}
+
+export function useUserLimitOrders(canisterId: string | undefined, principal: string | undefined, refresh?: number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId || !principal) return undefined;
+      return await getUserLimitOrders(canisterId, principal);
+    }, [canisterId, principal]),
+    refresh,
+  );
+}
+
+export async function getLimitOrders(canisterId: string) {
+  return resultFormat<{
+    lowerLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+    upperLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+  }>(await (await swapPool(canisterId)).getLimitOrders()).data;
+}
+
+export function useLimitOrders(canisterId: string | undefined) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getLimitOrders(canisterId);
     }, [canisterId]),
   );
 }

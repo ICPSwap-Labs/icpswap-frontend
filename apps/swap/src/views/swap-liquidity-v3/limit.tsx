@@ -1,30 +1,21 @@
-import { useState, memo, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Box } from "components/Mui";
-import { MainCard, Flex } from "components/index";
-import SwapSettingIcon from "components/swap/SettingIcon";
-import {
-  SwapWrapper,
-  type SwapWrapperRef,
-  Reclaim,
-  SwapContext,
-  SwapUIWrapper,
-  CreatePool,
-  SwapTabPanels,
-  TABS,
-} from "components/swap/index";
+import { MainCard, Flex, Wrapper } from "components/index";
+import { CreatePool, SwapTabPanels, TABS } from "components/swap/index";
+import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
-import { SWAP_REFRESH_KEY } from "constants/index";
-import { parseTokenAmount } from "@icpswap/utils";
+import { UserLimitPanel, LimitOrders, PlaceOrder } from "components/swap/limit-order";
 
-export function SwapMain() {
+export default function Limit() {
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
   const [inputToken, setInputToken] = useState<Token | Null>(null);
   const [outputToken, setOutputToken] = useState<Token | Null>(null);
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
+  const [showLimitOrders, setShowLimitOrders] = useState(false);
 
   const isConnected = useConnectorStateConnected();
 
@@ -44,18 +35,8 @@ export function SwapMain() {
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
 
-  const swapWrapperRef = useRef<SwapWrapperRef>(null);
-
-  const handleInputTokenClick = useCallback(
-    (tokenAmount: string) => {
-      if (!inputToken) return;
-      swapWrapperRef.current?.setInputAmount(parseTokenAmount(tokenAmount, inputToken.decimals).toString());
-    },
-    [swapWrapperRef, inputToken],
-  );
-
   return (
-    <SwapContext.Provider
+    <LimitContext.Provider
       value={{
         selectedPool,
         setSelectedPool,
@@ -72,7 +53,7 @@ export function SwapMain() {
         setOutputToken,
       }}
     >
-      <SwapUIWrapper>
+      <Wrapper>
         <Flex fullWidth justify="center">
           <Flex
             vertical
@@ -105,33 +86,20 @@ export function SwapMain() {
                   },
                 }}
               >
-                <SwapTabPanels currentTab={TABS.SWAP} />
-
-                <SwapSettingIcon type="swap" />
+                <SwapTabPanels currentTab={TABS.LIMIT} />
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>
-                <SwapWrapper ref={swapWrapperRef} />
+                {showLimitOrders ? (
+                  <LimitOrders pool={selectedPool} onBack={() => setShowLimitOrders(false)} />
+                ) : (
+                  <PlaceOrder />
+                )}
               </Box>
             </MainCard>
 
-            {isConnected && noLiquidity === false ? (
-              <Box
-                mt="8px"
-                sx={{
-                  width: "100%",
-                  background: "#111936",
-                  padding: "16px",
-                  borderRadius: "12px",
-                }}
-              >
-                <Reclaim
-                  pool={selectedPool}
-                  refreshKey={SWAP_REFRESH_KEY}
-                  onInputTokenClick={handleInputTokenClick}
-                  inputToken={inputToken}
-                />
-              </Box>
+            {isConnected && showLimitOrders === false ? (
+              <UserLimitPanel onClick={() => setShowLimitOrders(true)} />
             ) : null}
 
             {isConnected && noLiquidity === true ? (
@@ -139,9 +107,7 @@ export function SwapMain() {
             ) : null}
           </Flex>
         </Flex>
-      </SwapUIWrapper>
-    </SwapContext.Provider>
+      </Wrapper>
+    </LimitContext.Provider>
   );
 }
-
-export default memo(SwapMain);

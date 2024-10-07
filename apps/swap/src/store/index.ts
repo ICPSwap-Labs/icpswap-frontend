@@ -25,6 +25,7 @@ import { CallState } from "./call/states";
 import { StepsState } from "./steps/state";
 import { Web3State } from "./web3/states";
 import { SnsState } from "./sns/states";
+import { LimitOrderState } from "./swap/limit-order/state";
 import { TransactionsState } from "./transactions/reducer";
 
 import { SwapBurnState as SwapV2BurnState } from "./swapv2/burn/state";
@@ -58,6 +59,7 @@ export interface AllState {
   web3: Web3State;
   sns: SnsState;
   transactions: TransactionsState;
+  limitOrder: LimitOrderState;
 }
 
 const defaultStorageConfig = {
@@ -83,6 +85,7 @@ const rootPersistConfig = {
     "swapV2Liquidity",
     "swapV2Burn",
     "sns",
+    "limitOrder",
   ],
   migrate: (state: any) => {
     let newState = {};
