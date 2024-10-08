@@ -1,14 +1,13 @@
 import React, { useState, useContext, useMemo } from "react";
-import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Button, Typography, Box, InputAdornment, makeStyles, Theme } from "components/Mui";
 import {
   parseTokenAmount,
   formatTokenAmount,
   isValidAccount,
   isValidPrincipal,
   toSignificantWithGroupSeparator,
+  BigNumber,
 } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
@@ -16,16 +15,15 @@ import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "locales/services";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
-import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
-import MaxButton from "components/MaxButton";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { MaxButton, Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -214,7 +212,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
           }}
         />
 
-        <Grid container alignItems="center">
+        <Flex fullWidth gap="0 6px">
           <Typography>
             <Trans>
               Balance:{" "}
@@ -227,13 +225,10 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
               }`}
             </Trans>
           </Typography>
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+
+          <MaxButton onClick={handleMax} />
+        </Flex>
+
         <Typography>
           <Trans>Fee:</Trans> {parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()}
           &nbsp;{token.symbol}&nbsp;(
