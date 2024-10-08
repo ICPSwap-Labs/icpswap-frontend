@@ -518,8 +518,8 @@ importers:
         specifier: ^5.1.4
         version: 5.7.2
       ic-stoic-identity:
-        specifier: ^2.0.0
-        version: 2.0.0(@dfinity/candid@0.19.3)
+        specifier: 6.0.0
+        version: 6.0.0(@dfinity/candid@0.19.3)
       js-sha256:
         specifier: ^0.9.0
         version: 0.9.0
@@ -14414,8 +14414,8 @@ packages:
       '@babel/runtime': 7.25.0
     dev: false
 
-  /ic-stoic-identity@2.0.0(@dfinity/candid@0.19.3):
-    resolution: {integrity: sha512-0lvtX+lWR0LaEo076SFTKYDds+WKByQZfn3iU8ap5iCgc+OEBt/g/0jHwsnH3e7tI46JLiNaxSQIp223BEj81Q==}
+  /ic-stoic-identity@6.0.0(@dfinity/candid@0.19.3):
+    resolution: {integrity: sha512-UdT56JRpierF01yMfkfm8FWi6apYxXolxirZHgHlQv249+ikLOggzTwos/EVghw9bmT7h+IIlRzjtMwdWBRgEw==}
     dependencies:
       '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3)(@dfinity/principal@0.10.4)
       '@dfinity/identity': 0.10.4(@dfinity/agent@0.10.4)(@dfinity/principal@0.10.4)
