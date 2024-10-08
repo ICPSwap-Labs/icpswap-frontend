@@ -7,8 +7,8 @@ import {
   useCleanSwapState,
   useLoadDefaultParams,
 } from "store/swap/limit-order/hooks";
-import { toSignificant, isNullArgs, BigNumber } from "@icpswap/utils";
-import { SWAP_FIELD, SWAP_REFRESH_KEY, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
+import { isNullArgs } from "@icpswap/utils";
+import { SWAP_FIELD, SWAP_LIMIT_REFRESH_KEY, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
@@ -29,7 +29,6 @@ import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
 import qs from "qs";
-import { useLimitOrderSwap, usePlaceOrderPosition } from "hooks/swap/limit-order";
 
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { SwapLimitPrice } from "./Price";
@@ -60,15 +59,13 @@ export const PlaceOrder = forwardRef(
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput } = useSwapHandlers();
     const handleClearSwapState = useCleanSwapState();
-    const refreshTrigger = useRefreshTrigger(SWAP_REFRESH_KEY);
+    const refreshTrigger = useRefreshTrigger(SWAP_LIMIT_REFRESH_KEY);
 
     useLoadDefaultParams();
 
     const [impactChecked, setImpactChecked] = useState(false);
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-
-    const { orderPrice, handleInputOrderPrice } = useLimitOrderSwap();
 
     const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
 
@@ -78,7 +75,6 @@ export const PlaceOrder = forwardRef(
       trade,
       tradePoolId,
       routes,
-      pool,
       state: swapState,
       currencyBalances,
       inputToken,
@@ -97,16 +93,12 @@ export const PlaceOrder = forwardRef(
       token1Balance,
       token0SubAccountBalance,
       token1SubAccountBalance,
-    } = useLimitOrderInfo({ refresh: refreshTrigger });
-
-    const { position, orderPriceTick } = usePlaceOrderPosition({
-      pool,
-      inputToken,
+      currentPrice,
+      orderPriceTick,
+      position,
       orderPrice,
-    });
-
-    console.log("position.amount0: ", position?.amount0.toExact());
-    console.log("position.amount1: ", position?.amount1.toExact());
+      setOrderPrice,
+    } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     // For swap pro
     useEffect(() => {
@@ -197,6 +189,8 @@ export const PlaceOrder = forwardRef(
         (needImpactConfirm && !impactChecked) ||
         swapLoading ||
         !trade ||
+        isNullArgs(inputToken) ||
+        isNullArgs(outputToken) ||
         isNullArgs(unusedBalance) ||
         isNullArgs(position) ||
         isNullArgs(token0Balance) ||
@@ -223,9 +217,9 @@ export const PlaceOrder = forwardRef(
           openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
         },
         refresh: () => {
-          setRefreshTriggers(SWAP_REFRESH_KEY);
+          setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
           setTimeout(() => {
-            setRefreshTriggers(SWAP_REFRESH_KEY);
+            setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
           }, 1000);
         },
       });
@@ -233,9 +227,8 @@ export const PlaceOrder = forwardRef(
       setSwapLoading(true);
 
       const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
-      const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-      const loadingKey = openLoadingTip(t`Add ${amount0} ${inputToken?.symbol} and ${amount1} ${outputToken?.symbol}`, {
+      const loadingKey = openLoadingTip(t`Add ${amount0} ${inputToken.symbol} and 0 ${outputToken.symbol}`, {
         extraContent: <StepViewButton step={key} />,
       });
 
@@ -244,8 +237,13 @@ export const PlaceOrder = forwardRef(
 
       handleInput("", "input");
       handleInput("", "output");
+      setOrderPrice("");
 
-      await call();
+      const addSuccessful = await call();
+
+      if (addSuccessful) {
+        setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
+      }
 
       closeLoadingTip(loadingKey);
     }, [
@@ -343,9 +341,17 @@ export const PlaceOrder = forwardRef(
           maxInputAmount={maxInputAmount}
           noLiquidity={noLiquidity}
           onSwitchTokens={handleSwitchTokens}
+          orderPrice={orderPrice}
         />
 
-        <SwapLimitPrice ui={ui} trade={trade} orderPrice={orderPrice} onInputOrderPrice={handleInputOrderPrice} />
+        <SwapLimitPrice
+          ui={ui}
+          orderPrice={orderPrice}
+          onInputOrderPrice={setOrderPrice}
+          inputToken={inputToken}
+          outputToken={outputToken}
+          currentPrice={currentPrice}
+        />
 
         {needImpactConfirm ? (
           <Box
@@ -415,6 +421,7 @@ export const PlaceOrder = forwardRef(
             inputTokenUnusedBalance={inputTokenUnusedBalance}
             inputTokenSubBalance={inputTokenSubBalance}
             inputTokenBalance={inputTokenBalance}
+            orderPrice={orderPrice}
           />
         )}
       </Box>

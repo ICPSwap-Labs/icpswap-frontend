@@ -61,8 +61,6 @@ export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlace
 
     const formattedAmount = formatTokenAmount(inputAmount, inputToken.decimals).toString();
 
-    console.log("formattedAmount: ", formattedAmount);
-
     return {
       amount0: inputToken.equals(token0) ? formattedAmount : "0",
       amount1: inputToken.equals(token0) ? "0" : formattedAmount,
@@ -80,12 +78,6 @@ export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlace
     )
       return {};
 
-    console.log("amount0: ", amount0);
-    console.log("amount1: ", amount1);
-    console.log("orderPriceTick: ", orderPriceTick);
-    console.log("tickLower: ", tickLower);
-    console.log("tickUpper: ", tickUpper);
-
     const position = Position.fromAmounts({
       pool,
       tickLower,
@@ -94,9 +86,6 @@ export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlace
       amount1,
       useFullPrecision: false,
     });
-
-    console.log("position.amount0xxx: ", position.amount0.toFixed());
-    console.log("position.amount1xxx: ", position.amount1.toFixed());
 
     return {
       position,

@@ -1,17 +1,24 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import SwapModal from "components/modal/swap";
 import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
-import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
-import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
-import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
+import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
+import {
+  BigNumber,
+  formatDollarAmount,
+  formatTokenAmount,
+  numberToString,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
+import { Token, CurrencyAmount, Trade } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
 import { t, Trans } from "@lingui/macro";
 import { isElement } from "react-is";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
+import { Null } from "@icpswap/types";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -90,6 +97,7 @@ export interface LimitOrderConfirmProps {
   inputTokenSubBalance: BigNumber | undefined;
   inputTokenUnusedBalance: bigint | undefined;
   inputTokenBalance: BigNumber | undefined;
+  orderPrice: string | Null;
 }
 
 export function LimitOrderConfirm({
@@ -101,11 +109,14 @@ export function LimitOrderConfirm({
   inputTokenBalance,
   inputTokenUnusedBalance,
   inputTokenSubBalance,
+  orderPrice,
 }: LimitOrderConfirmProps) {
   const theme = useTheme();
   const classes = useStyle();
 
-  const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount } = useMemo(() => {
+  const [viewAll, setViewAll] = useState(false);
+
+  const { realizedLPFee, inputToken, outputToken, inputAmount } = useMemo(() => {
     if (!trade) return {};
 
     const feeAmount = CurrencyAmount.fromRawAmount(
@@ -128,15 +139,21 @@ export function LimitOrderConfirm({
   }, [trade]);
 
   const inputTokenPrice = useUSDPriceById(inputToken?.address);
-  const outputTokenPrice = useUSDPriceById(outputToken?.address);
 
-  const swapTokenFee = useSwapTokenFeeCost({
+  const swapFeeCost = useSwapTokenFeeCost({
     token: inputToken,
     subAccountBalance: inputTokenSubBalance,
     tokenBalance: inputTokenBalance,
     unusedBalance: inputTokenUnusedBalance,
     amount: formatTokenAmount(inputAmount, inputToken?.decimals).toString(),
   });
+
+  const handleViewAll = useCallback(
+    (viewAll: boolean) => {
+      setViewAll(viewAll);
+    },
+    [setViewAll],
+  );
 
   return (
     <SwapModal open={open} title={t`Confirm Limit Order`} onClose={onClose}>
@@ -170,10 +187,10 @@ export function LimitOrderConfirm({
               <Flex gap="8px 0" vertical align="flex-start">
                 <Typography>You Receive</Typography>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {trade
-                    ? `${trade.outputAmount.toSignificant(6, { groupSeparator: "," })} ${
-                        trade.outputAmount.currency.symbol
-                      }`
+                  {orderPrice && trade
+                    ? `${toSignificantWithGroupSeparator(
+                        new BigNumber(trade.inputAmount.toExact()).multipliedBy(orderPrice).toString(),
+                      )} ${trade.outputAmount.currency.symbol}`
                     : "--"}
                 </Typography>
               </Flex>
@@ -186,14 +203,15 @@ export function LimitOrderConfirm({
             label={t`Limit Price`}
             value={
               <TradePrice
-                price={trade?.executionPrice}
+                price={orderPrice}
                 showConvert={false}
                 color="text.primary"
                 token0={inputToken}
                 token1={outputToken}
-                token0PriceUSDValue={inputTokenPrice}
-                token1PriceUSDValue={outputTokenPrice}
               />
+            }
+            tooltip={
+              <Tooltip background="#ffffff" tips={t`Limit price is the set price for buying or selling your token.`} />
             }
           />
 
@@ -201,13 +219,11 @@ export function LimitOrderConfirm({
             label={t`Current Price`}
             value={
               <TradePrice
-                price={trade?.executionPrice}
+                price={trade?.executionPrice.toFixed()}
                 showConvert={false}
                 color="text.primary"
                 token0={inputToken}
                 token1={outputToken}
-                token0PriceUSDValue={inputTokenPrice}
-                token1PriceUSDValue={outputTokenPrice}
               />
             }
           />
@@ -215,27 +231,92 @@ export function LimitOrderConfirm({
           <DetailItem
             label={t`Estimated trading fee earnings`}
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
-            tooltip={<Tooltip background="#ffffff" tips={t`For each trade a 0.3% fee is paid.`} />}
+            tooltip={
+              <Tooltip
+                background="#ffffff"
+                tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
+              />
+            }
           />
 
           <DetailItem
             label={t`Estimated transfer fee for limit order`}
-            value={FormattedPriceImpact({ priceImpact })}
+            value={
+              swapFeeCost && inputToken && inputTokenPrice
+                ? `${parseTokenAmount(swapFeeCost, inputToken.decimals).toFormat()} ${
+                    inputToken.symbol
+                  } (${formatDollarAmount(
+                    parseTokenAmount(swapFeeCost, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
+                  )})`
+                : "--"
+            }
             tooltip={
               <Tooltip
                 background="#ffffff"
-                tips={t`The difference between the market price and your price due to trade size.`}
+                tips={t`Each order requires the transfer fee, determined by the token's canister.`}
               />
             }
           />
 
           <Box sx={{ borderRadius: "12px", background: theme.palette.background.level2, padding: "14px 16px" }}>
-            <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-              <Trans>
-                The Limit Order feature on ICPSwap utilizes an innovative approach by integrating limit orders as part
-                of the liquidity positions in trading. View All
-              </Trans>
-            </Typography>
+            {viewAll ? (
+              <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
+                <Trans>
+                  The Limit Order feature on ICPSwap utilizes an innovative approach by integrating limit orders as part
+                  of the liquidity positions in trading. When the liquidity from a limit order is fully converted into
+                  the target token, the ICPSwap Swap Pool canister will automatically remove the liquidity, allowing you
+                  to withdraw your target tokens from the Swap Pool balance for that trading pair. Due to this approach,
+                  limit orders do not need to pay the 0.3% trading fee and can instead earn a 0.24% trading fee. Please
+                  note that the Limit Order feature cannot guarantee that all limit orders will be executed 100% of the
+                  time.
+                </Trans>
+
+                <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
+                  <Trans>
+                    Limit order will execute if someone else's swap matches your order exactly at the price you set.
+                  </Trans>
+                </Typography>
+
+                <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
+                  <Trans>
+                    There might be a situation where swap price reaches your limit order price but doesn’t get executed.
+                    For example, a swap order (buying or selling) could hit your limit order price, but the swap volume
+                    might not be enough to fill your limit order.
+                  </Trans>
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    margin: "15px 0 0 0",
+                  }}
+                  color="secondary"
+                  onClick={() => handleViewAll(false)}
+                >
+                  <Trans>Hide</Trans>
+                </Typography>
+              </Typography>
+            ) : (
+              <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
+                <Trans>
+                  The Limit Order feature on ICPSwap utilizes an innovative approach by integrating limit orders as part
+                  of the liquidity positions in trading.
+                </Trans>
+
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: "12px",
+                    cursor: "pointer",
+                  }}
+                  color="secondary"
+                  onClick={() => handleViewAll(true)}
+                >
+                  <Trans>View All</Trans>
+                </Typography>
+              </Typography>
+            )}
           </Box>
         </Box>
 

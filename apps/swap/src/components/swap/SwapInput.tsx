@@ -6,7 +6,7 @@ import { NumberTextField } from "components/index";
 
 export interface SwapInputProps {
   value: string | number | Null;
-  token: Token | undefined;
+  token: Token | Null;
   onUserInput: (value: string) => void;
   disabled?: boolean;
   align?: string;

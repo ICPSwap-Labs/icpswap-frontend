@@ -3,7 +3,6 @@ import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/ut
 import { Position } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
 import { TextButton } from "components/index";
-import { BURN_FIELD } from "constants/swap";
 import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
 import { getDecreaseLiquidityAmount } from "store/swap/hooks";

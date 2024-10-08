@@ -40,6 +40,7 @@ export interface SwapInputWrapperProps {
   maxInputAmount: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
   onSwitchTokens: () => void;
+  orderPrice: string | Null;
 }
 
 export function SwapInputWrapper({
@@ -64,6 +65,7 @@ export function SwapInputWrapper({
   noLiquidity,
   poolId,
   onSwitchTokens,
+  orderPrice,
 }: SwapInputWrapperProps) {
   const theme = useTheme();
   const { independentField, typedValue } = useSwapState();
@@ -153,7 +155,11 @@ export function SwapInputWrapper({
         <SwapInputCurrency
           token={outputToken}
           currencyPrice={tokenBPrice}
-          formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
+          formattedAmount={
+            orderPrice && formattedAmounts[SWAP_FIELD.INPUT]
+              ? new BigNumber(orderPrice).multipliedBy(formattedAmounts[SWAP_FIELD.INPUT]).toString()
+              : undefined
+          }
           currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
           onInput={(value: string) => onInput(value, "output")}
           onTokenChange={onTokenBChange}

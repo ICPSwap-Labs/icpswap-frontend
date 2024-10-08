@@ -6,6 +6,8 @@ import { Trans } from "@lingui/macro";
 import { useUserLimitOrders } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { ArrowRight } from "react-feather";
+import { useRefreshTriggerManager } from "hooks/index";
+import { SWAP_LIMIT_REFRESH_KEY } from "constants/swap";
 
 interface UserLimitOrdersProps {
   onClick: () => void;
@@ -16,7 +18,9 @@ export function UserLimitPanel({ onClick }: UserLimitOrdersProps) {
   const principal = useAccountPrincipal();
   const { selectedPool } = useContext(LimitContext);
 
-  const { result } = useUserLimitOrders(selectedPool?.id, principal?.toString());
+  const [refreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
+
+  const { result } = useUserLimitOrders(selectedPool?.id, principal?.toString(), refreshTrigger);
 
   const allLimitOrders = useMemo(() => {
     if (!result) return undefined;
