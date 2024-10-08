@@ -68,7 +68,6 @@ export default function WalletConnector() {
       label: "Stoic Wallet",
       value: Connector.STOIC,
       logo: "/images/connect/stoic.svg",
-      disabled: true,
     },
     {
       label: "ICPSwap Wallet",
