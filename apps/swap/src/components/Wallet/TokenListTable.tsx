@@ -1,6 +1,13 @@
 import { useState, useContext, useMemo, useEffect } from "react";
 import { Typography, Box, useTheme, makeStyles } from "components/Mui";
-import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  parseTokenAmount,
+  mockALinkAndOpen,
+  BigNumber,
+  principalToAccount,
+  nonNullArgs,
+} from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -228,7 +235,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const isHidden = useMemo(() => {
     let hiddenBySmallBalance = false;
 
-    if (tokenBalance && tokenInfo && tokenUSDPrice) {
+    if (nonNullArgs(tokenBalance) && nonNullArgs(tokenInfo) && nonNullArgs(tokenUSDPrice)) {
       const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
 
       if (sortBalance === SortBalanceEnum.TEN) {
