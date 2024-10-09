@@ -263,7 +263,7 @@ export function Positions() {
             </Flex>
 
             <Flex gap="0 3px">
-              <Typography>Value:</Typography>
+              <Typography>Sort by:</Typography>
               <SelectPositionsSort value={positionSort} onChange={setPositionSort} />
             </Flex>
           </Flex>

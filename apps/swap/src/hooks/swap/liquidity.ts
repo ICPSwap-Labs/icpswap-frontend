@@ -15,6 +15,7 @@ import { Principal } from "@dfinity/principal";
 import { BURN_FIELD } from "constants/swap";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { sleep } from "@icpswap/utils";
 
 type updateStepsArgs = {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -86,6 +87,30 @@ function useDecreaseLiquidityCalls() {
       openExternalTip,
       tipKey,
     }: DecreaseLiquidityCallsArgs) => {
+      const withdrawCurrencyA = async () => {
+        const { amount0 } = getDecreaseLiquidityAmount(tipKey);
+
+        if (!currencyA || amount0 === undefined) return false;
+        // skip if amount is less than 0 or is 0
+        if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
+
+        return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
+          openExternalTip({ message, tipKey, poolId });
+        });
+      };
+
+      const withdrawCurrencyB = async () => {
+        const { amount1 } = getDecreaseLiquidityAmount(tipKey);
+
+        if (!currencyB || amount1 === undefined) return false;
+        // skip if amount is less than 0 or is 0
+        if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
+
+        return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
+          openExternalTip({ message, tipKey, poolId });
+        });
+      };
+
       const _decreaseLiquidity = async () => {
         if (!position || !liquidityToRemove || !principal) return false;
 
@@ -117,34 +142,25 @@ function useDecreaseLiquidityCalls() {
           key: tipKey,
         });
 
+        if (!keepTokenInPools) {
+          withdrawCurrencyA();
+          withdrawCurrencyB();
+        }
+
         return true;
       };
 
-      const withdrawCurrencyA = async () => {
-        const { amount0 } = getDecreaseLiquidityAmount(tipKey);
-
-        if (!currencyA || amount0 === undefined) return false;
-        // skip if amount is less than 0 or is 0
-        if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
-
-        return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey, poolId });
-        });
+      const step1 = async () => {
+        await sleep(500);
+        return true;
       };
 
-      const withdrawCurrencyB = async () => {
-        const { amount1 } = getDecreaseLiquidityAmount(tipKey);
-
-        if (!currencyB || amount1 === undefined) return false;
-        // skip if amount is less than 0 or is 0
-        if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
-
-        return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey, poolId });
-        });
+      const step2 = async () => {
+        await sleep(1000);
+        return true;
       };
 
-      return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, withdrawCurrencyA, withdrawCurrencyB];
+      return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, step1, step2];
     },
     [keepTokenInPools],
   );

@@ -77,6 +77,12 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
               },
             },
           },
+          "&.MuiButton-outlined": {
+            "&.Mui-disabled": {
+              color: "#4F5A84",
+              border: "1px solid #4F5A84",
+            },
+          },
         },
         containedPrimary: {
           background: globalButtonBackground,
