@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
+import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 
 import dayjs from "dayjs";
@@ -16,11 +16,11 @@ import { CandleChart } from "../CandleChart/index";
 import { SwapAnalyticLoading } from "./Loading";
 
 import { ChartDateButtons } from "./ChartDateButton";
-import { MultipleSmallButtons, ChartView } from "./ChartViewButton";
+import { MultipleSmallButtonsWrapper, MultipleSmallButton, ChartView } from "./ChartViewButton";
 
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
-import { TextButton } from "../TextButton";
+import { DexScreener } from "../DexScreener";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -67,10 +67,17 @@ function priceChartFormat(data: InfoPriceChartData[]) {
 }
 
 export const chartViews = [
+  { label: `Dexscreener`, value: ChartView.DexScreener },
   { label: `Volume`, value: ChartView.VOL },
   { label: `TVL`, value: ChartView.TVL },
   { label: `Price`, value: ChartView.PRICE },
 ];
+
+export interface ChartButton {
+  label: string;
+  value: ChartView;
+  tokenId?: string | undefined;
+}
 
 function volumeDataFormatter(data: PublicTokenChartDayData[]) {
   const oldData = [...data];
@@ -131,28 +138,22 @@ type PriceLine = {
   low: number;
 };
 
-export type PriceToggle = {
-  label: string;
-  id: string;
-};
 export interface TokenChartsProps {
   canisterId: string | undefined;
   volume?: number;
   background?: number;
   borderRadius?: string;
-  priceToggles?: PriceToggle[];
   showPrice?: boolean;
-  showDexScreener?: boolean;
+  chartButtons: ChartButton[];
 }
 
 export function TokenCharts({
   canisterId,
   volume,
+  chartButtons,
   borderRadius,
-  priceToggles,
   showPrice = true,
   background = 2,
-  showDexScreener,
 }: TokenChartsProps) {
   const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
 
@@ -225,13 +226,17 @@ export function TokenCharts({
     return weeklyVolumeData;
   }, [weeklyVolumeData, monthlyVolumeData, dailyVolumeData, volumeWindow]);
 
-  const handleTokenPrice = (id: string) => {
-    setPriceChartTokenId(id);
-  };
-
   useEffect(() => {
     setPriceChartTokenId(canisterId);
   }, [canisterId]);
+
+  const handleButtonClick = useCallback((chart: { tokenId?: string; label: string; value: ChartView }) => {
+    if (chart.value === ChartView.PRICE) {
+      setPriceChartTokenId(chart.tokenId);
+    }
+
+    setChartView(chart.value);
+  }, []);
 
   return (
     <MainCard
@@ -314,29 +319,17 @@ export function TokenCharts({
         }}
       >
         <Flex gap="0 8px" wrap="wrap-reverse" justify="flex-end" sx={{ "@media(max-width: 640px)": { gap: "8px 0" } }}>
-          {chartView === ChartView.PRICE && priceToggles ? (
-            <MultipleSmallButtons
-              buttons={priceToggles.map((e) => ({ label: e.label, value: e.id }))}
-              active={priceChartTokenId}
-              onClick={(chartView) => handleTokenPrice(chartView.value)}
-            />
-          ) : null}
-
-          {chartView === ChartView.PRICE && showDexScreener ? (
-            <Flex gap="0 4px">
-              <Typography sx={{ fontSize: "12px" }}>
-                Detailed Chart on{" "}
-                <TextButton link={`https://dexscreener.com/icp/${canisterId}`}>DEXScreener</TextButton>
-              </Typography>
-              <img src="/images/dex_screener.svg" alt="" />
-            </Flex>
-          ) : null}
-
-          <MultipleSmallButtons
-            buttons={chartViews}
-            active={chartView}
-            onClick={(chartView) => setChartView(chartView.value)}
-          />
+          <MultipleSmallButtonsWrapper>
+            {chartButtons.map((chart) => (
+              <MultipleSmallButton
+                key={chart.value}
+                onClick={() => handleButtonClick(chart)}
+                active={chartView === ChartView.PRICE ? priceChartTokenId === chart.tokenId : chartView === chart.value}
+              >
+                {chart.label}
+              </MultipleSmallButton>
+            ))}
+          </MultipleSmallButtonsWrapper>
         </Flex>
 
         {chartView === ChartView.VOL ? (
@@ -346,7 +339,7 @@ export function TokenCharts({
         ) : null}
       </Box>
 
-      <Box mt="20px">
+      <Box mt="10px">
         {chartView === ChartView.TVL ? (
           formattedTvlData.length > 0 ? (
             <LineChartAlt
@@ -392,6 +385,8 @@ export function TokenCharts({
           ) : (
             <Box sx={{ height: "340px", width: "auto" }} />
           )
+        ) : chartView === ChartView.DexScreener ? (
+          <DexScreener id={canisterId} height="420px" />
         ) : null}
       </Box>
     </MainCard>

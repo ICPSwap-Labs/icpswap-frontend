@@ -33,3 +33,4 @@ export * from "./components/swap";
 export * from "./components/Image";
 export * from "./components/button";
 export * from "./components/menu";
+export * from "./components/DexScreener";

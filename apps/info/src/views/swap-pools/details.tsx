@@ -1,4 +1,4 @@
-import { Typography, Box, Grid, useMediaQuery, Button, useTheme } from "ui-component/Mui";
+import { Typography, Box, useMediaQuery, Button, useTheme } from "ui-component/Mui";
 import { useParams } from "react-router-dom";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";

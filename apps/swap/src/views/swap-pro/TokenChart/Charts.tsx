@@ -1,6 +1,6 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { Box, useTheme } from "components/Mui";
-import { TokenCharts } from "@icpswap/ui";
+import { TokenCharts, ChartView } from "@icpswap/ui";
 
 import { SwapProContext } from "../context";
 
@@ -9,10 +9,13 @@ export default function TokenChartInfo() {
 
   const { inputToken, outputToken, token } = useContext(SwapProContext);
 
-  const priceToggles = useMemo(() => {
-    if (!inputToken || !outputToken) return undefined;
-    return [inputToken, outputToken].map((e) => ({ label: e.symbol, id: e.address }));
-  }, [inputToken, outputToken]);
+  const chartButtons = [
+    { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: inputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: inputToken?.address },
+    { label: outputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: outputToken?.address },
+    { label: `Volume`, value: ChartView.VOL },
+    { label: `TVL`, value: ChartView.TVL },
+  ];
 
   return (
     <Box
@@ -31,8 +34,8 @@ export default function TokenChartInfo() {
         canisterId={token?.address}
         background={3}
         borderRadius="0px"
-        priceToggles={priceToggles}
         showPrice={false}
+        chartButtons={chartButtons}
       />
     </Box>
   );
