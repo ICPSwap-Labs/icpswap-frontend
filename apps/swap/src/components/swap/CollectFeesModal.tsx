@@ -66,6 +66,9 @@ export function CollectFeesModal({
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
+      refresh: () => {
+        if (onClaimedSuccessfully) onClaimedSuccessfully();
+      },
     });
 
     const loadingTipKey = openLoadingTip(
@@ -80,8 +83,7 @@ export function CollectFeesModal({
     const result = await call();
 
     if (result === true) {
-      openSuccessTip(t`Collected successfully`);
-      if (onClaimedSuccessfully) onClaimedSuccessfully();
+      openSuccessTip(t`Withdrawal submitted`);
     }
 
     closeLoadingTip(loadingTipKey);

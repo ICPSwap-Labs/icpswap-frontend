@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Box, Typography, makeStyles } from "components/Mui";
+import { Box, Typography, makeStyles } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
@@ -178,7 +179,7 @@ export default function DecreaseLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t`Removed liquidity successfully`);
+      openSuccessTip(t`Withdrawal submitted`);
       handleBack();
     }
 
@@ -195,7 +196,7 @@ export default function DecreaseLiquidity() {
 
   return (
     <Wrapper>
-      <Grid container justifyContent="center">
+      <Flex fullWidth justify="center">
         <MainCard level={1} className={`${classes.container} lightGray200`}>
           <HeaderTab title={t`Remove Liquidity`} showArrow showUserSetting slippageType="burn" onBack={handleBack} />
 
@@ -288,7 +289,7 @@ export default function DecreaseLiquidity() {
             </Box>
           ) : null}
         </MainCard>
-      </Grid>
+      </Flex>
 
       {confirmModalShow && (
         <ConfirmRemoveLiquidityModal

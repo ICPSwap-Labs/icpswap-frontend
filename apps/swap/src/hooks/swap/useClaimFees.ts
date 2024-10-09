@@ -11,6 +11,7 @@ import { useSwapWithdraw, useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
+import { sleep } from "@icpswap/utils";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
   return await collect(pool, {
@@ -25,6 +26,7 @@ interface CollectFeeCallsArgs {
   currencyFeeAmount1: CurrencyAmount<Token>;
   openExternalTip: OpenExternalTip;
   stepKey: string;
+  refresh?: () => void;
 }
 
 function useCollectFeeCalls() {
@@ -33,19 +35,15 @@ function useCollectFeeCalls() {
   const withdraw = useSwapWithdraw();
 
   return useCallback(
-    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip, stepKey }: CollectFeeCallsArgs) => {
-      const _collect = async () => {
-        if (!positionId || !principal || !pool) return false;
-
-        const { status, message } = await collectPositionFee(pool.id, positionId);
-
-        if (status === "ok") {
-          return true;
-        }
-        openErrorTip(getLocaleMessage(message) ?? t`Failed to claim`);
-        return false;
-      };
-
+    ({
+      pool,
+      positionId,
+      currencyFeeAmount0,
+      currencyFeeAmount1,
+      openExternalTip,
+      stepKey,
+      refresh,
+    }: CollectFeeCallsArgs) => {
       const __withdraw = async () => {
         const withdrawCurrencyA = async () => {
           if (!currencyFeeAmount0 || !pool) return false;
@@ -90,10 +88,32 @@ function useCollectFeeCalls() {
         };
 
         const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]);
+
+        if (refresh) refresh();
+
         return !result.includes(false);
       };
 
-      return [_collect, __withdraw];
+      const _collect = async () => {
+        if (!positionId || !principal || !pool) return false;
+
+        const { status, message } = await collectPositionFee(pool.id, positionId);
+
+        if (status === "ok") {
+          __withdraw();
+          return true;
+        }
+
+        openErrorTip(getLocaleMessage(message) ?? t`Failed to claim`);
+        return false;
+      };
+
+      const step1 = async () => {
+        await sleep(1000);
+        return true;
+      };
+
+      return [_collect, step1];
     },
     [principal],
   );
@@ -138,6 +158,7 @@ export interface ClaimFeeArgs {
   positionId: bigint;
   currencyFeeAmount1: CurrencyAmount<Token>;
   openExternalTip: OpenExternalTip;
+  refresh?: () => void;
 }
 
 export function useCollectFeeCallback() {
@@ -146,7 +167,7 @@ export function useCollectFeeCallback() {
   const initialSteps = useCollectFeeSteps();
 
   return useCallback(
-    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip }: ClaimFeeArgs) => {
+    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip, refresh }: ClaimFeeArgs) => {
       const key = newStepKey();
       const calls = getCalls({
         pool,
@@ -155,6 +176,7 @@ export function useCollectFeeCallback() {
         currencyFeeAmount1,
         openExternalTip,
         stepKey: key,
+        refresh,
       });
       const { call, reset, retry } = formatCall(calls, key);
 
