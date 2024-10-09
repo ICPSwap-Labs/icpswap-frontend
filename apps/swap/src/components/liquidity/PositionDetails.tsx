@@ -18,8 +18,8 @@ import { Flex } from "@icpswap/ui";
 import TransferPosition from "components/swap/TransferPosition";
 
 interface PositionDetailItemProps {
-  label: React.ReactChild;
-  value: React.ReactChild | undefined;
+  label: React.ReactNode;
+  value: React.ReactNode | undefined;
   convert?: boolean;
   onConvertClick?: () => void;
 }
