@@ -7,6 +7,7 @@ import {
   BigNumber,
   principalToAccount,
   nonNullArgs,
+  isNullArgs,
 } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
@@ -235,7 +236,11 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const isHidden = useMemo(() => {
     let hiddenBySmallBalance = false;
 
-    if (nonNullArgs(tokenBalance) && nonNullArgs(tokenInfo) && nonNullArgs(tokenUSDPrice)) {
+    if (isNullArgs(tokenBalance)) return false;
+
+    if (tokenBalance.isEqualTo(0)) return true;
+
+    if (nonNullArgs(tokenInfo) && nonNullArgs(tokenUSDPrice)) {
       const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
 
       if (sortBalance === SortBalanceEnum.TEN) {
