@@ -10,7 +10,8 @@ import {
   ChartDateButtons,
   PoolVolumeChart,
   PoolTvlChart,
-  MultipleSmallButtons,
+  MultipleSmallButtonsWrapper,
+  MultipleSmallButton,
   ChartView,
 } from "@icpswap/ui";
 import DensityChart from "ui-component/DensityChart";
@@ -111,11 +112,17 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
           zIndex: 101,
         }}
       >
-        <MultipleSmallButtons
-          buttons={chartViews}
-          active={chartView}
-          onClick={(chartView) => setChartView(chartView.value)}
-        />
+        <MultipleSmallButtonsWrapper>
+          {chartViews.map((chart) => (
+            <MultipleSmallButton
+              key={chart.value}
+              onClick={() => setChartView(chart.value)}
+              active={chartView === chart.value}
+            >
+              {chart.label}
+            </MultipleSmallButton>
+          ))}
+        </MultipleSmallButtonsWrapper>
 
         {chartView === ChartView.VOL ? (
           <Box sx={{ margin: "15px 0 0 0" }}>

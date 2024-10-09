@@ -5,7 +5,14 @@ import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { ChartDateButtons, PoolVolumeChart, PoolTvlChart, MultipleSmallButtons, ChartView } from "@icpswap/ui";
+import {
+  ChartDateButtons,
+  PoolVolumeChart,
+  PoolTvlChart,
+  MultipleSmallButtonsWrapper,
+  MultipleSmallButton,
+  ChartView,
+} from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
 import { VolumeWindow } from "@icpswap/types";
 import { usePoolTvlChartData } from "@icpswap/hooks";
@@ -99,11 +106,17 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
           zIndex: 101,
         }}
       >
-        <MultipleSmallButtons
-          buttons={chartViews}
-          active={chartView}
-          onClick={(chartView) => setChartView(chartView.value)}
-        />
+        <MultipleSmallButtonsWrapper>
+          {chartViews.map((chart) => (
+            <MultipleSmallButton
+              key={chart.value}
+              onClick={() => setChartView(chart.value)}
+              active={chartView === chart.value}
+            >
+              {chart.label}
+            </MultipleSmallButton>
+          ))}
+        </MultipleSmallButtonsWrapper>
 
         {chartView === ChartView.VOL ? (
           <Box sx={{ margin: "15px 0 0 0" }}>

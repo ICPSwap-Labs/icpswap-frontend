@@ -1,5 +1,4 @@
-import { ReactNode, useCallback } from "react";
-import { Override } from "@icpswap/types";
+import { ReactNode } from "react";
 
 import { Box, Typography, BoxProps, useTheme } from "../Mui";
 
@@ -10,14 +9,13 @@ export enum ChartView {
   FEES,
   LIQUIDITY,
   TRANSACTIONS,
+  DexScreener,
 }
-
-export type ButtonElementProps = { label: string; value: any };
 
 export interface MultipleSmallButtonProps {
   children: ReactNode;
   active?: boolean;
-  onClick: React.MouseEventHandler<HTMLSpanElement>;
+  onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 export function MultipleSmallButton({ children, active, onClick }: MultipleSmallButtonProps) {
@@ -45,24 +43,8 @@ export function MultipleSmallButton({ children, active, onClick }: MultipleSmall
   );
 }
 
-export type MultipleSmallButtonsProps = Override<
-  BoxProps,
-  {
-    onClick: (ele: ButtonElementProps) => void;
-    active: any;
-    buttons: ButtonElementProps[];
-  }
->;
-
-export function MultipleSmallButtons({ onClick, active, buttons, ...rest }: MultipleSmallButtonsProps) {
+export function MultipleSmallButtonsWrapper({ onClick, children, ...rest }: BoxProps) {
   const theme = useTheme();
-
-  const handleClick = useCallback(
-    (button: ButtonElementProps) => {
-      onClick(button);
-    },
-    [onClick],
-  );
 
   return (
     <Box
@@ -76,11 +58,7 @@ export function MultipleSmallButtons({ onClick, active, buttons, ...rest }: Mult
         ...(rest.sx ?? {}),
       }}
     >
-      {buttons.map((button) => (
-        <MultipleSmallButton key={button.value} active={button.value === active} onClick={() => handleClick(button)}>
-          {button.label}
-        </MultipleSmallButton>
-      ))}
+      {children}
     </Box>
   );
 }

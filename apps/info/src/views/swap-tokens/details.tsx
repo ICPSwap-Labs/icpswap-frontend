@@ -1,4 +1,4 @@
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button } from "ui-component/Mui";
 import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
@@ -6,7 +6,7 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, TokenCharts, Flex } from "@icpswap/ui";
+import { GridAutoRows, Proportion, TokenCharts, Flex, ChartView } from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
@@ -44,6 +44,13 @@ export default function TokenDetails() {
   const handleToTokenDetails = () => {
     history.push(`/token/details/${canisterId}`);
   };
+
+  const chartButtons = [
+    { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: token?.symbol ?? "Price", value: ChartView.PRICE, tokenId: token?.address },
+    { label: `Volume`, value: ChartView.VOL },
+    { label: `TVL`, value: ChartView.TVL },
+  ];
 
   return (
     <Wrapper>
@@ -212,7 +219,7 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
 
-        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} showDexScreener />
+        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} chartButtons={chartButtons} />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
