@@ -238,8 +238,6 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
 
     if (isNullArgs(tokenBalance)) return false;
 
-    if (tokenBalance.isEqualTo(0)) return true;
-
     if (nonNullArgs(tokenInfo) && nonNullArgs(tokenUSDPrice)) {
       const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
 
@@ -249,6 +247,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
         hiddenBySmallBalance = tokenUSDValue.isLessThan(1);
       } else if (sortBalance === SortBalanceEnum.ZERO) {
         hiddenBySmallBalance = tokenUSDValue.isEqualTo(0);
+        if (tokenBalance.isEqualTo(0)) hiddenBySmallBalance = true;
       }
     }
 
