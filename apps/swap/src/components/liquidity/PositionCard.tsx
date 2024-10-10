@@ -16,6 +16,7 @@ import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
+import { LimitPanel } from "components/LimitPanel";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -108,9 +109,18 @@ export interface PositionCardProps {
   staked?: boolean;
   filterState: PositionFilterState;
   sort: PositionSort;
+  isLimit: boolean;
 }
 
-export function PositionCard({ position, showButtons, positionId, farmId, staked, filterState }: PositionCardProps) {
+export function PositionCard({
+  position,
+  showButtons,
+  positionId,
+  farmId,
+  staked,
+  filterState,
+  isLimit,
+}: PositionCardProps) {
   const classes = useStyle();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
@@ -285,6 +295,12 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
           </Typography>
 
           <FeeTierPercentLabel feeTier={feeAmount} />
+
+          {isLimit ? (
+            <Flex gap="0 4px">
+              <LimitPanel />
+            </Flex>
+          ) : null}
         </Flex>
 
         <Flex

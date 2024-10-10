@@ -3,12 +3,12 @@ import { Box, Button } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { NoData, LoadingRow, Flex } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
 import PositionContext from "components/swap/PositionContext";
-import { useFarmsByFilter } from "@icpswap/hooks";
+import { useFarmsByFilter, useUserLimitOrders } from "@icpswap/hooks";
 import { useSortedPositions } from "hooks/swap/index";
 import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
@@ -20,6 +20,8 @@ interface PositionItemProps {
 }
 
 function PositionItem({ position: positionDetail, filterState, sort }: PositionItemProps) {
+  const principal = useAccountPrincipal();
+
   const { position } = usePosition({
     poolId: positionDetail.id,
     tickLower: positionDetail.tickLower,
@@ -34,6 +36,13 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
     user: undefined,
   });
 
+  const { result: userLimitOrdersResult } = useUserLimitOrders(position?.pool.id, principal?.toString());
+
+  const userLimitOrders = useMemo(() => {
+    if (!userLimitOrdersResult) return undefined;
+    return userLimitOrdersResult.lowerLimitOrderIds.concat(userLimitOrdersResult.upperLimitOrdersIds);
+  }, [userLimitOrdersResult]);
+
   const availableStakedFarm = useMemo(() => {
     if (!farms) return undefined;
     return farms[0]?.toString();
@@ -47,6 +56,9 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
       showButtons
       filterState={filterState}
       sort={sort}
+      isLimit={
+        userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionDetail.index)) : false
+      }
     />
   );
 }

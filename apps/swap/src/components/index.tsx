@@ -29,3 +29,4 @@ export * from "./Button/index";
 export { default as AuthButton } from "./authentication/ButtonConnector";
 export * from "./Link";
 export * from "./Checkbox";
+export * from "./LimitPanel";

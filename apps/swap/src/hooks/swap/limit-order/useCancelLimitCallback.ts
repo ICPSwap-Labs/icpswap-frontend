@@ -63,7 +63,6 @@ function useCancelLimitCalls() {
   const withdraw = useSwapWithdraw();
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
-  // const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(({ position, poolId, positionId, openExternalTip, tipKey }: CancelLimitCallsArgs) => {
     const _decreaseLiquidity = async () => {
@@ -106,7 +105,6 @@ function useCancelLimitCalls() {
       });
     };
 
-    // return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, withdrawToken];
     return [_decreaseLiquidity, withdrawToken];
   }, []);
 }
