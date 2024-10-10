@@ -1,16 +1,12 @@
 import { useState, useMemo, useEffect } from "react";
-import { Theme } from "@mui/material/styles";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Tooltip } from "components/index";
+import { Typography, Box, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
+import { Tooltip, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { withdraw, deposit } from "hooks/swap/v3Calls";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
+import { useReclaim } from "hooks/swap/useReclaim";
 
 interface ReclaimItemProps {
   poolId: string;
@@ -36,14 +32,14 @@ export function ReclaimItem({
   claimedKey,
   claimedKeys,
 }: ReclaimItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const { hideUnavailableClaim } = useHideUnavailableClaimManager();
-
-  const [openTip, closeTip] = useTips();
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const unavailableClaim = type === "unDeposit" ? balance < token.transFee * BigInt(2) : balance < token.transFee;
+
+  const reclaim = useReclaim();
 
   const isClaimed = useMemo(() => {
     return claimedKeys.includes(claimedKey);
@@ -60,49 +56,22 @@ export function ReclaimItem({
 
     setLoading(true);
 
-    const loadingKey = openTip(
-      `Withdraw your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
-      MessageTypes.loading,
-    );
+    await reclaim({
+      token,
+      poolId,
+      type,
+      balance,
+    });
 
-    const amount = balance;
-
-    if (amount !== BigInt(0)) {
-      if (type === "unDeposit") {
-        const result = await deposit(poolId, token.canisterId, amount, token.transFee);
-
-        if (result.status === ResultStatus.OK) {
-          const result = await withdraw(poolId, token.canisterId, token.transFee, amount - token.transFee);
-          if (result.status === ResultStatus.OK) {
-            openTip(`Withdrew ${name} ${token.symbol} successfully`, MessageTypes.success);
-            updateClaimedKey(claimedKey);
-          } else {
-            openTip(`Failed to Withdraw ${name} ${token.symbol}: ${result.message}`, MessageTypes.error);
-          }
-        } else {
-          openTip(`Failed to Withdraw: ${result.message ?? ""}`, MessageTypes.error);
-        }
-      } else {
-        const result = await withdraw(poolId, token.canisterId, token.transFee, amount);
-
-        if (result.status === ResultStatus.OK) {
-          openTip(`Withdrew ${name} ${token?.symbol} successfully`, MessageTypes.success);
-          updateClaimedKey(claimedKey);
-        } else {
-          openTip(result.message ? result.message : `Failed to Withdraw ${name} ${token.symbol}`, MessageTypes.error);
-        }
-      }
-    }
-
-    closeTip(loadingKey);
+    updateClaimedKey(claimedKey);
 
     setLoading(false);
   };
 
   return (
-    <Grid
-      container
-      alignItems="center"
+    <Flex
+      fullWidth
+      align="center"
       sx={{
         padding: "24px",
         borderRadius: "12px",
@@ -167,7 +136,7 @@ export function ReclaimItem({
           </Button>
         </Box>
       </Box>
-    </Grid>
+    </Flex>
   );
 }
 

@@ -40,11 +40,15 @@ export function ReclaimForSinglePool({
 
     setLoading(true);
 
-    const claimSuccess = await reclaim({ token: tokenInfo, poolId, type, balance });
-
-    if (claimSuccess) {
-      if (onReclaimSuccess) onReclaimSuccess();
-    }
+    await reclaim({
+      token: tokenInfo,
+      poolId,
+      type,
+      balance,
+      refresh: () => {
+        if (onReclaimSuccess) onReclaimSuccess();
+      },
+    });
 
     setLoading(false);
   }, [tokenInfo, loading, reclaim]);
