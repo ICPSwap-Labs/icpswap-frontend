@@ -49,8 +49,8 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <Box sx={{ flex: 1 }}>
+    <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+      <Flex sx={{ flex: 1, overflow: "hidden" }} align="flex-start">
         <Typography
           sx={{
             lineHeight: "12px",
@@ -60,16 +60,14 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
         >
           {label}
           {tooltip ? (
-            <Box
-              sx={{ display: "inline-block", cursor: "pointer", position: "relative", top: "4px", margin: "0 0 0 5px" }}
-            >
+            <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
               {tooltip}
             </Box>
           ) : null}
         </Typography>
-      </Box>
+      </Flex>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
         {isElement(value) ? (
           value
         ) : (
@@ -213,7 +211,11 @@ export function LimitOrderConfirm({
               />
             }
             tooltip={
-              <Tooltip background="#ffffff" tips={t`Limit price is the set price for buying or selling your token.`} />
+              <Tooltip
+                background="#ffffff"
+                tips={t`Limit price is the set price for buying or selling your token.`}
+                iconSize="14px"
+              />
             }
           />
 
@@ -235,6 +237,7 @@ export function LimitOrderConfirm({
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
             tooltip={
               <Tooltip
+                iconSize="14px"
                 background="#ffffff"
                 tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
               />
@@ -254,6 +257,7 @@ export function LimitOrderConfirm({
             }
             tooltip={
               <Tooltip
+                iconSize="14px"
                 background="#ffffff"
                 tips={t`Each order requires the transfer fee, determined by the token's canister.`}
               />

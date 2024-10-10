@@ -6,6 +6,8 @@ import { Flex } from "../Grid/Flex";
 import { Image } from "../Image/index";
 import { Box, Typography, useTheme } from "../Mui";
 
+const SPLITS = [25, 50, 75];
+
 let MouseDownX: number | null = null;
 
 export interface SliderProps {
@@ -64,7 +66,7 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
         const screenX = event.screenX;
         const moveX = screenX - MouseDownX;
 
-        const startLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(percent));
+        const startLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(percent ?? "0%"));
 
         const __position = numToPercent(startLeft.plus(moveX).dividedBy(wrapperWidth).toString());
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
@@ -138,6 +140,21 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
                 cursor: "pointer",
               }}
             />
+
+            {SPLITS.map((element) => (
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: `${element}%`,
+                  top: 0,
+                  width: "1px",
+                  height: "4px",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  background: theme.palette.background.level1,
+                }}
+              />
+            ))}
           </Box>
         </Flex>
 

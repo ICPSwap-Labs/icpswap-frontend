@@ -116,15 +116,19 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
         <Line />
 
         <Flex vertical align="flex-start" gap="16px 0" fullWidth>
-          <Flex fullWidth justify="space-between">
-            <Flex gap="0 4px">
-              <Typography>
+          <Flex fullWidth justify="space-between" gap="0 12px">
+            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+              <Typography
+                sx={{
+                  "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
+                }}
+              >
                 <Trans>Limit Price</Trans>
               </Typography>
               <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} />
             </Flex>
 
-            <Typography sx={{ color: "text.primary" }}>
+            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
               {inputToken && outputToken && limitPrice
                 ? `1 ${inputToken.symbol} = ${limitPrice.toSignificant()} ${outputToken.symbol} ${
                     inputTokenPrice ? `(${formatDollarAmount(inputTokenPrice)})` : ""
@@ -133,23 +137,32 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             </Typography>
           </Flex>
 
-          <Flex fullWidth justify="space-between">
-            <Flex gap="0 4px">
-              <Typography>
+          <Flex fullWidth justify="space-between" gap="0 12px">
+            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+              <Typography
+                sx={{
+                  "@media(max-width: 640px)": { fontSize: "12px" },
+                }}
+              >
                 <Trans>Current Price</Trans>
               </Typography>
             </Flex>
 
-            <Typography sx={{ color: "text.primary" }}>
+            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
               {inputToken && outputToken && currentPrice
                 ? `1 ${inputToken.symbol} = ${currentPrice.toSignificant()} ${outputToken.symbol}`
                 : "--"}
             </Typography>
           </Flex>
 
-          <Flex fullWidth justify="space-between">
-            <Flex gap="0 4px">
-              <Typography>
+          <Flex fullWidth justify="space-between" gap="0 12px">
+            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+              <Typography
+                sx={{
+                  lineHeight: "14px",
+                  "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
+                }}
+              >
                 <Trans>Estimated trading fee earnings</Trans>
               </Typography>
               <Tooltip
@@ -157,18 +170,25 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
               />
             </Flex>
 
-            <Typography sx={{ color: "text.primary" }}>1 ICS = 0.00224234 ICP ($188,985)</Typography>
+            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
+              1 ICS = 0.00224234 ICP ($188,985)
+            </Typography>
           </Flex>
 
-          <Flex fullWidth justify="space-between">
-            <Flex gap="0 4px">
-              <Typography>
+          <Flex fullWidth justify="space-between" gap="0 12px">
+            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+              <Typography
+                sx={{
+                  lineHeight: "14px",
+                  "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
+                }}
+              >
                 <Trans>Estimated transfer fee for limit order</Trans>
               </Typography>
               <Tooltip tips={t`Each order requires the transfer fee, determined by the token's canister.`} />
             </Flex>
 
-            <Typography sx={{ color: "text.primary" }}>
+            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
               {swapFeeCost && inputToken && inputTokenPrice
                 ? `${parseTokenAmount(swapFeeCost, inputToken.decimals).toFormat()} ${
                     inputToken.symbol

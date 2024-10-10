@@ -95,7 +95,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>
           <Flex gap="0 6px">
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
-            <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "text.primary" }}>
+            <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {inputToken && inputAmount
                 ? `${toSignificantWithGroupSeparator(inputAmount.toString())} ${inputToken.symbol}`
                 : "--"}
@@ -106,7 +106,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
 
           <Flex gap="0 6px">
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
-            <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "text.primary" }}>
+            <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {outputToken && outputAmount
                 ? `${toSignificantWithGroupSeparator(outputAmount.toExact())} ${outputToken.symbol}`
                 : "--"}
@@ -114,7 +114,18 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
           </Flex>
         </Flex>
 
-        <Flex align="flex-end" justify="space-between" sx={{ margin: "24px 0 0 0" }}>
+        <Flex
+          align="flex-end"
+          justify="space-between"
+          sx={{
+            margin: "24px 0 0 0",
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "12px 0",
+            },
+          }}
+        >
           <Box>
             <Flex gap="0 8px">
               <Typography>
