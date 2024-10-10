@@ -141,7 +141,13 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
                 <Trans>Current Price</Trans>
               </Typography>
               <Typography sx={{ color: "text.primary" }}>
-                {currentPrice && outputToken ? `${currentPrice.toFixed()} ${outputToken.symbol}` : "--"}
+                {currentPrice && outputToken && inputToken
+                  ? invertPrice
+                    ? `${toSignificantWithGroupSeparator(
+                        new BigNumber(1).dividedBy(currentPrice.toFixed()).toString(),
+                      )} ${inputToken.symbol}`
+                    : `${toSignificantWithGroupSeparator(currentPrice.toFixed())} ${outputToken.symbol}`
+                  : "--"}
               </Typography>
             </Flex>
           </Box>

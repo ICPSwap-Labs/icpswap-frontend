@@ -1,4 +1,3 @@
-import { useMemo, useContext, useEffect } from "react";
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState } from "store/swap/limit-order/hooks";
@@ -10,7 +9,6 @@ import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 
 import { SwapInputCurrency } from "../SwapInputCurrency";
-import { LimitContext } from "./context";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -69,7 +67,6 @@ export function SwapInputWrapper({
 }: SwapInputWrapperProps) {
   const theme = useTheme();
   const { independentField, typedValue } = useSwapState();
-  const { setUSDValueChange } = useContext(LimitContext);
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
@@ -77,32 +74,6 @@ export function SwapInputWrapper({
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
   };
-
-  const inputBalanceUSDValue = useMemo(() => {
-    const amount = formattedAmounts[SWAP_FIELD.INPUT];
-    if (!tokenAPrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(tokenAPrice).toNumber();
-  }, [tokenAPrice, formattedAmounts]);
-
-  const outputBalanceUSDValue = useMemo(() => {
-    const amount = formattedAmounts[SWAP_FIELD.OUTPUT];
-    if (!tokenBPrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(tokenBPrice).toNumber();
-  }, [tokenBPrice, formattedAmounts]);
-
-  const USDChange = useMemo(() => {
-    return !!outputBalanceUSDValue && !!inputBalanceUSDValue
-      ? new BigNumber(outputBalanceUSDValue)
-          .minus(inputBalanceUSDValue)
-          .dividedBy(inputBalanceUSDValue)
-          .multipliedBy(100)
-          .toFixed(2)
-      : null;
-  }, [outputBalanceUSDValue, inputBalanceUSDValue]);
-
-  useEffect(() => {
-    setUSDValueChange(USDChange);
-  }, [setUSDValueChange, USDChange]);
 
   return (
     <Box>
@@ -124,6 +95,7 @@ export function SwapInputWrapper({
           isInput
           maxInputAmount={maxInputAmount}
           poolId={poolId}
+          showUSDChange={false}
         />
 
         <Box
@@ -165,13 +137,13 @@ export function SwapInputWrapper({
           onTokenChange={onTokenBChange}
           currencyState={outputCurrencyState}
           parsedAmount={parsedAmounts[SWAP_FIELD.OUTPUT]}
-          usdChange={USDChange}
           background={ui === "pro" ? "level1" : "level3"}
           disabled
           unusedBalance={outputTokenUnusedBalance}
           subBalance={outputTokenSubBalance}
           poolId={poolId}
           noLiquidity={noLiquidity}
+          showUSDChange={false}
         />
       </Box>
     </Box>

@@ -14,8 +14,6 @@ export interface LimitContextProps {
   unavailableBalanceKeys: string[];
   setUnavailableBalanceKey: (key: string) => void;
   removeUnavailableBalanceKey: (key: string) => void;
-  usdValueChange: string | null;
-  setUSDValueChange: (change: string | null) => void;
 }
 
 export const LimitContext = createContext<LimitContextProps>({} as LimitContextProps);

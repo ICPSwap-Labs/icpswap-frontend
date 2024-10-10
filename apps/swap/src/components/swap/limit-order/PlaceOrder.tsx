@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box } from "components/Mui";
 import {
   useSwapState,
   useSwapHandlers,
@@ -15,11 +15,10 @@ import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
 import { usePlaceOrderCallback } from "hooks/swap/limit-order/usePlaceOrderCallback";
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
+import { warningSeverity } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
-import { Flex, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -55,7 +54,7 @@ export const PlaceOrder = forwardRef(
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
     const [isExpertMode] = useExpertModeManager();
-    const { setSelectedPool, setNoLiquidity, usdValueChange, setInputToken, setOutputToken } = useContext(LimitContext);
+    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput } = useSwapHandlers();
     const handleClearSwapState = useCleanSwapState();
@@ -63,7 +62,6 @@ export const PlaceOrder = forwardRef(
 
     useLoadDefaultParams();
 
-    const [impactChecked, setImpactChecked] = useState(false);
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
 
@@ -177,16 +175,10 @@ export const PlaceOrder = forwardRef(
       }
     };
 
-    const needImpactConfirm = useMemo(() => {
-      if (!usdValueChange) return false;
-      return getImpactConfirm(usdValueChange);
-    }, [usdValueChange]);
-
     const placeOrderCallback = usePlaceOrderCallback();
 
     const handlePlaceOrder = useCallback(async () => {
       if (
-        (needImpactConfirm && !impactChecked) ||
         swapLoading ||
         !trade ||
         isNullArgs(inputToken) ||
@@ -226,11 +218,14 @@ export const PlaceOrder = forwardRef(
 
       setSwapLoading(true);
 
-      const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount0 = trade.inputAmount.toSignificant(6, { groupSeparator: "," });
 
-      const loadingKey = openLoadingTip(t`Add ${amount0} ${inputToken.symbol} and 0 ${outputToken.symbol}`, {
-        extraContent: <StepViewButton step={key} />,
-      });
+      const loadingKey = openLoadingTip(
+        t`Submit a limit order of ${amount0} ${inputToken.symbol} for the ${inputToken.symbol}/${outputToken.symbol} trading pair`,
+        {
+          extraContent: <StepViewButton step={key} />,
+        },
+      );
 
       setConfirmModalShow(false);
       setSwapLoading(false);
@@ -247,8 +242,6 @@ export const PlaceOrder = forwardRef(
 
       closeLoadingTip(loadingKey);
     }, [
-      needImpactConfirm,
-      impactChecked,
       placeOrderCallback,
       swapLoading,
       setSwapLoading,
@@ -284,10 +277,6 @@ export const PlaceOrder = forwardRef(
       };
     }, []);
 
-    const handleCheck = useCallback((check: boolean) => {
-      setImpactChecked(check);
-    }, []);
-
     const handleSwitchTokens = useCallback(() => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
       const search = qs.parse(location.search.replace("?", ""));
@@ -307,6 +296,7 @@ export const PlaceOrder = forwardRef(
       }
 
       history.push(`${prePath}?${qs.stringify(newSearch)}`);
+      handleInput("", "input");
     }, [ui, history, location]);
 
     useImperativeHandle(
@@ -353,44 +343,12 @@ export const PlaceOrder = forwardRef(
           currentPrice={currentPrice}
         />
 
-        {needImpactConfirm ? (
-          <Box
-            sx={{
-              padding: ui === "pro" ? "10px" : "16px",
-              background: "rgba(211, 98, 91, 0.15)",
-              borderRadius: "16px",
-            }}
-          >
-            <Flex gap="0 8px" align="flex-start">
-              <Box>
-                <Checkbox checked={impactChecked} onCheckedChange={handleCheck} />
-              </Box>
-
-              <Typography
-                style={{
-                  color: "#D3625B",
-                  lineHeight: "15px",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  userSelect: "none",
-                }}
-                onClick={() => handleCheck(!impactChecked)}
-              >
-                <Trans>
-                  Price impact is too high. You would lose a significant portion of your funds in this trade. Please
-                  confirm if you wish to proceed with the swap.
-                </Trans>
-              </Typography>
-            </Flex>
-          </Box>
-        ) : null}
-
         <Button
           fullWidth
           variant="contained"
           size="large"
           onClick={handleShowConfirmModal}
-          disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
+          disabled={!isValid || priceImpactTooHigh || isPoolNotChecked}
           sx={{
             borderRadius: "16px",
           }}
@@ -422,6 +380,7 @@ export const PlaceOrder = forwardRef(
             inputTokenSubBalance={inputTokenSubBalance}
             inputTokenBalance={inputTokenBalance}
             orderPrice={orderPrice}
+            currentPrice={currentPrice}
           />
         )}
       </Box>

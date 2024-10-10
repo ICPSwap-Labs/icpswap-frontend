@@ -98,6 +98,7 @@ export interface LimitOrderConfirmProps {
   inputTokenUnusedBalance: bigint | undefined;
   inputTokenBalance: BigNumber | undefined;
   orderPrice: string | Null;
+  currentPrice: string | Null;
 }
 
 export function LimitOrderConfirm({
@@ -110,6 +111,7 @@ export function LimitOrderConfirm({
   inputTokenUnusedBalance,
   inputTokenSubBalance,
   orderPrice,
+  currentPrice,
 }: LimitOrderConfirmProps) {
   const theme = useTheme();
   const classes = useStyle();
@@ -156,7 +158,7 @@ export function LimitOrderConfirm({
   );
 
   return (
-    <SwapModal open={open} title={t`Confirm Limit Order`} onClose={onClose}>
+    <SwapModal open={open} title={t`Submit Limit Order`} onClose={onClose}>
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -219,7 +221,7 @@ export function LimitOrderConfirm({
             label={t`Current Price`}
             value={
               <TradePrice
-                price={trade?.executionPrice.toFixed()}
+                price={currentPrice}
                 showConvert={false}
                 color="text.primary"
                 token0={inputToken}

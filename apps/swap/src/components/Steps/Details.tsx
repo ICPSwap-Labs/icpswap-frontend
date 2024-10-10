@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Grid } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Box, Typography, useTheme } from "components/Mui";
 import { Modal } from "components/index";
-import { Theme } from "@mui/material/styles";
 import GreenCircleLoading from "components/Loading/GreenCircle";
 import { Trans } from "@lingui/macro";
 import { StepContents, StepDetailsProps } from "types/step";
+import { Flex } from "@icpswap/ui";
+import { isElement } from "react-is";
 
 import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
 
@@ -17,7 +17,7 @@ interface ActionIconProps {
 }
 
 function ActionIcon({ ele, activeStep, showErrorHint }: ActionIconProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Box sx={{ width: "52px", height: "44px", display: "flex", alignItems: "center" }}>
@@ -66,7 +66,7 @@ export default function _StepDetails({
 }: StepDetailsProps) {
   const [openedSteps, setOpenedSteps] = useState<number[]>([]);
 
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const isStepOpened = (step: number) => {
     return !!openedSteps.includes(step) || step === activeStep;
@@ -134,9 +134,18 @@ export default function _StepDetails({
                     if (ele.children) handleStepClick(ele.step);
                   }}
                 >
-                  <Typography color="text.primary" fontWeight={500}>
-                    {ele.step + 1}. {ele.title}
-                  </Typography>
+                  <Flex gap="0 4px">
+                    <Typography color="text.primary" fontWeight={500} fontSize="16px">
+                      {ele.step + 1}.
+                    </Typography>
+                    {isElement(ele.title) ? (
+                      ele.title
+                    ) : (
+                      <Typography color="text.primary" fontWeight={500} fontSize="16px">
+                        {ele.title}
+                      </Typography>
+                    )}
+                  </Flex>
 
                   {ele.children ? (
                     <Box
@@ -183,11 +192,15 @@ export default function _StepDetails({
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            marginTop: index === 0 ? "0px" : "8px",
+                            marginTop: index === 0 ? "0px" : "12px",
                           }}
                         >
-                          <Typography component="div">{ele1.label}</Typography>
-                          <Typography component="div">{ele1.value}</Typography>
+                          <Typography component="div" fontSize="12px">
+                            {ele1.label}
+                          </Typography>
+                          <Typography component="div" fontSize="12px">
+                            {ele1.value}
+                          </Typography>
                         </Box>
                       ))}
                       {ele.skipError ? (
@@ -229,9 +242,9 @@ export default function _StepDetails({
                     </Box>
 
                     {errorStep === ele.step && ele.errorActions && ele.errorActions.length > 0 ? (
-                      <Grid
-                        container
-                        alignItems="center"
+                      <Flex
+                        fullWidth
+                        align="center"
                         sx={{
                           background: theme.palette.background.level2,
                           borderBottomLeftRadius: "12px",
@@ -239,11 +252,10 @@ export default function _StepDetails({
                         }}
                       >
                         {ele.errorActions.map((action, index) => (
-                          <Grid
+                          <Flex
                             key={`${ele.step}_${index}_action`}
-                            item
-                            xs
                             sx={{
+                              flex: 1,
                               borderLeft: index === 0 ? "none" : `1px solid ${theme.palette.background.level4}`,
                             }}
                           >
@@ -257,9 +269,9 @@ export default function _StepDetails({
                             >
                               {action}
                             </Box>
-                          </Grid>
+                          </Flex>
                         ))}
-                      </Grid>
+                      </Flex>
                     ) : null}
                   </Box>
                 ) : null}

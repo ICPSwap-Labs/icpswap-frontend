@@ -1,12 +1,12 @@
-import { Box } from "components/Mui";
-import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { Position, Token } from "@icpswap/swap-sdk";
+import { Typography } from "components/Mui";
+import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Tooltip } from "@icpswap/ui";
+import { Position, TICK_SPACINGS, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Trans, t } from "@lingui/macro";
-import { TextButton, TokenImage } from "components/index";
-import { toFormat } from "utils/index";
+import { Flex, TextButton, TokenImage } from "components/index";
+import { getPriceTick } from "utils/index";
 import { isUseTransfer } from "utils/token/index";
 import { StepContents, StepContent } from "types/step";
-// import { getPlaceOrderPositionId } from "store/swap/limit-order/hooks";
 
 export interface GetLimitOrderStepsProps {
   position: Position | undefined;
@@ -16,84 +16,84 @@ export interface GetLimitOrderStepsProps {
   inputToken: Token;
 }
 
-export function getLimitOrderSteps({ position, retry, handleReclaim }: GetLimitOrderStepsProps) {
+export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }: GetLimitOrderStepsProps) {
   if (!position) return [];
 
   const { token0, token1 } = position.pool;
 
-  const symbol0 = token0.symbol;
-  const symbol1 = token1.symbol;
   const amount0 = position.mintAmounts.amount0.toString();
   const amount1 = position.mintAmounts.amount1.toString();
 
-  const token = new BigNumber(amount0).isEqualTo(0) ? token1 : token0;
+  const priceTick = getPriceTick(Number(limitLick), position.pool);
+  const tickLower = priceTick - TICK_SPACINGS[position.pool.fee];
+  const tickUpper = priceTick + TICK_SPACINGS[position.pool.fee];
 
-  const formatAmount0 = toFormat(parseTokenAmount(amount0, token0.decimals).toString());
-  const formatAmount1 = toFormat(parseTokenAmount(amount1, token1.decimals).toString());
+  const inputToken = new BigNumber(amount0).isEqualTo(0) ? token1 : token0;
+  const outputToken = new BigNumber(amount0).isEqualTo(0) ? token0 : token1;
 
-  // const positionId = getPlaceOrderPositionId();
+  const orderPrice = tickToPrice(inputToken, outputToken, priceTick).toFixed();
 
-  const amount0Value = (
-    <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-      <TokenImage logo={token0.logo} size="16px" />
-      {formatAmount0}
-    </Box>
+  const inputAmount = inputToken.address === token0.address ? amount0 : amount1;
+  const outputAmount = parseTokenAmount(inputAmount, inputToken.decimals).multipliedBy(orderPrice).toString();
+
+  const formatInputAmount = toSignificantWithGroupSeparator(
+    parseTokenAmount(inputAmount, inputToken.decimals).toString(),
+  );
+  const formatOutputAmount = toSignificantWithGroupSeparator(outputAmount);
+
+  const InputTokenAmount = (
+    <Flex gap="0 4px">
+      <TokenImage logo={inputToken.logo} size="16px" />
+      {formatInputAmount}
+    </Flex>
   );
 
-  const amount1Value = (
-    <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-      <TokenImage logo={token1.logo} size="16px" />
-      {formatAmount1}
-    </Box>
+  const OutputTokenAmount = (
+    <Flex gap="0 4px">
+      <TokenImage logo={outputToken.logo} size="16px" />
+      {formatOutputAmount}
+    </Flex>
+  );
+
+  const LimitPrice = (
+    <Flex gap="0 4px">
+      <Typography fontSize="12px">
+        {`1 ${inputToken.symbol} = ${toSignificantWithGroupSeparator(orderPrice)} ${outputToken.symbol}`}
+      </Typography>
+    </Flex>
+  );
+
+  const priceLower = tickToPrice(inputToken, outputToken, tickLower).toFixed();
+  const priceUpper = tickToPrice(inputToken, outputToken, tickUpper).toFixed();
+
+  const PriceRange = (
+    <Flex gap="0 4px">
+      <Typography fontSize="12px">
+        {`${toSignificantWithGroupSeparator(priceLower)} - ${toSignificantWithGroupSeparator(priceUpper)} ${
+          inputToken.symbol
+        } per ${outputToken.symbol}`}
+      </Typography>
+    </Flex>
   );
 
   const originSteps: StepContent[] = [
-    ...(token.equals(token0)
+    ...(inputToken.equals(token0)
       ? [
           {
-            title: isUseTransfer(token0) ? `Transfer ${symbol0}` : `Approve ${symbol0}`,
+            title: isUseTransfer(inputToken) ? `Transfer ${inputToken.symbol}` : `Approve ${inputToken.symbol}`,
             children: [
-              { label: t`Amount`, value: amount0Value },
-              { label: t`Canister Id`, value: token0.address },
+              { label: t`Amount`, value: InputTokenAmount },
+              { label: t`Canister Id`, value: inputToken.address },
             ],
           },
           {
-            title: t`Deposit ${symbol0}`,
+            title: t`Deposit ${inputToken.symbol}`,
             children: [
               {
                 label: t`Amount`,
-                value: amount0Value,
+                value: InputTokenAmount,
               },
-              { label: t`Canister Id`, value: token0.address },
-            ],
-            errorActions: [
-              <>
-                <TextButton onClick={handleReclaim}>
-                  <Trans>Reclaim</Trans>
-                </TextButton>
-              </>,
-            ],
-            errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-          },
-        ]
-      : []),
-    ...(token.equals(token1)
-      ? [
-          {
-            title: isUseTransfer(token1) ? `Transfer ${symbol1}` : `Approve ${symbol1}`,
-            children: [
-              { label: t`Amount`, value: amount1Value },
-              { label: t`Canister Id`, value: token1.address },
-            ],
-          },
-          {
-            title: `Deposit ${symbol1}`,
-            children: [
-              {
-                label: t`Amount`,
-                value: amount1Value,
-              },
-              { label: t`Canister Id`, value: token1.address },
+              { label: t`Canister Id`, value: inputToken.address },
             ],
             errorActions: [
               <>
@@ -107,10 +107,19 @@ export function getLimitOrderSteps({ position, retry, handleReclaim }: GetLimitO
         ]
       : []),
     {
-      title: `Add liquidity ${token0.symbol} and ${token1.symbol}`,
+      title: (
+        <Flex gap="0 4px">
+          <Typography color="text.primary" fontWeight={500} fontSize="16px">
+            <Trans>Set Limit Order</Trans>
+          </Typography>
+
+          <Tooltip tips="" />
+        </Flex>
+      ),
       children: [
-        { label: symbol0, value: amount0Value },
-        { label: symbol1, value: amount1Value },
+        { label: <Trans>Limit Price</Trans>, value: LimitPrice },
+        { label: <Trans>Price Range</Trans>, value: PriceRange },
+        { label: <Trans>You Pay</Trans>, value: InputTokenAmount },
       ],
       errorActions: [
         <TextButton onClick={handleReclaim}>
@@ -123,11 +132,12 @@ export function getLimitOrderSteps({ position, retry, handleReclaim }: GetLimitO
       errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
-      title: t`Add Limit Order`,
-      // children: [
-      //   { label: t`Price`, value: amount0Value },
-      //   { label: t`Position ID`, value: positionId?.toString() },
-      // ],
+      title: t`Submit Limit Order`,
+      children: [
+        { label: <Trans>Limit Price</Trans>, value: LimitPrice },
+        { label: <Trans>You Pay</Trans>, value: InputTokenAmount },
+        { label: <Trans>You Expect to Receive</Trans>, value: OutputTokenAmount },
+      ],
     },
   ];
 

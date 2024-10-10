@@ -9,7 +9,6 @@ import { useConnectorStateConnected } from "store/auth/hooks";
 import { UserLimitPanel, LimitOrders, PlaceOrder } from "components/swap/limit-order";
 
 export default function Limit() {
-  const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
   const [inputToken, setInputToken] = useState<Token | Null>(null);
   const [outputToken, setOutputToken] = useState<Token | Null>(null);
@@ -43,8 +42,6 @@ export default function Limit() {
         unavailableBalanceKeys,
         setUnavailableBalanceKey: handleAddKeys,
         removeUnavailableBalanceKey: handleRemoveKeys,
-        usdValueChange,
-        setUSDValueChange,
         setNoLiquidity,
         noLiquidity,
         inputToken,
