@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, useTheme, BoxProps } from "components/Mui";
 
 export interface SwapProCardWrapperProps {
   children: React.ReactNode;
   padding?: string;
   background?: "level2" | "level3";
   overflow?: "hidden" | "visible";
+  sx?: BoxProps["sx"];
 }
 
 export function SwapProCardWrapper({
@@ -14,8 +14,9 @@ export function SwapProCardWrapper({
   overflow = "hidden",
   padding = "16px",
   background = "level3",
+  sx,
 }: SwapProCardWrapperProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Box
@@ -24,6 +25,7 @@ export function SwapProCardWrapper({
         padding,
         borderRadius: "12px",
         overflow,
+        ...sx,
       }}
     >
       {children}

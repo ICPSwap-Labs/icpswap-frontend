@@ -52,9 +52,10 @@ export function ChartDateButtons({ volume, onChange }: ChartDateButtonsProps) {
   return (
     <Box
       sx={{
-        display: "grid",
-        columnGap: "8px",
-        gridTemplateColumns: "repeat(3, 1fr)",
+        width: "100%",
+        display: "flex",
+        gap: "0 8px",
+        justifyContent: "flex-end",
       }}
     >
       <SmallOptionButton

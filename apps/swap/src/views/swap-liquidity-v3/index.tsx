@@ -1,6 +1,6 @@
 import { useState, memo, useCallback, useRef } from "react";
-import { Grid, Box, Typography } from "components/Mui";
-import { MainCard } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { MainCard, Flex } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
 import { t } from "@lingui/macro";
 import {
@@ -85,9 +85,8 @@ export function SwapMain() {
       }}
     >
       <SwapUIWrapper>
-        <Grid container justifyContent="center">
-          <Grid
-            item
+        <Flex fullWidth justify="center" align="flex-start">
+          <Box
             sx={{
               width: "570px",
             }}
@@ -171,8 +170,8 @@ export function SwapMain() {
             {isConnected && noLiquidity === true ? (
               <CreatePool inputToken={inputToken} outputToken={outputToken} />
             ) : null}
-          </Grid>
-        </Grid>
+          </Box>
+        </Flex>
       </SwapUIWrapper>
     </SwapContext.Provider>
   );
