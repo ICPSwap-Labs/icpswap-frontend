@@ -89,11 +89,9 @@ function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: W
 
     await Promise.all(
       __balances.map(async ([balance, type]) => {
-        return await reclaim({ token, poolId: pool.id, type, balance });
+        return await reclaim({ token, poolId: pool.id, type, balance, refresh: () => onReclaimSuccess() });
       }),
     );
-
-    onReclaimSuccess();
 
     setLoading(false);
   }, [__balances, loading, token, pool]);
