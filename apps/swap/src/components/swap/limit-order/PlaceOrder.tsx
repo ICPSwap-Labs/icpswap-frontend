@@ -371,16 +371,17 @@ export const PlaceOrder = forwardRef(
 
         {confirmModalShow && trade && (
           <LimitOrderConfirm
-            trade={trade}
             open={confirmModalShow}
             onClose={() => setConfirmModalShow(false)}
             onConfirm={handlePlaceOrder}
-            loading={swapLoading}
             inputTokenUnusedBalance={inputTokenUnusedBalance}
             inputTokenSubBalance={inputTokenSubBalance}
             inputTokenBalance={inputTokenBalance}
             orderPrice={orderPrice}
             currentPrice={currentPrice}
+            inputToken={inputToken}
+            outputToken={outputToken}
+            inputAmount={trade.inputAmount.toExact()}
           />
         )}
       </Box>

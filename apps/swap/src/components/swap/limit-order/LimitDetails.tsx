@@ -6,6 +6,7 @@ import {
   toSignificantWithGroupSeparator,
   formatTokenAmount,
   parseTokenAmount,
+  BigNumber,
 } from "@icpswap/utils";
 import { Modal, Line } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
@@ -171,7 +172,11 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             </Flex>
 
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
-              1 ICS = 0.00224234 ICP ($188,985)
+              {outputToken && outputAmount
+                ? `${toSignificantWithGroupSeparator(
+                    new BigNumber(outputAmount.toExact()).multipliedBy(0.003).multipliedBy(0.8).toString(),
+                  )} ${outputToken.symbol}`
+                : "--"}
             </Typography>
           </Flex>
 

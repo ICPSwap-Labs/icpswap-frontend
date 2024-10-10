@@ -1,18 +1,16 @@
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import SwapModal from "components/modal/swap";
-import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
-import { computeRealizedLPFeePercent } from "utils/swap/prices";
+import { Typography, Box, Button, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
 import {
   BigNumber,
   formatDollarAmount,
   formatTokenAmount,
-  numberToString,
+  isNullArgs,
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Token, CurrencyAmount, Trade } from "@icpswap/swap-sdk";
-import { TradeType } from "@icpswap/constants";
+import { Token } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
 import { isElement } from "react-is";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
@@ -88,21 +86,20 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
 
 export interface LimitOrderConfirmProps {
   open: boolean;
-  loading: boolean;
   onConfirm: () => void;
   onClose: () => void;
-  trade: Trade<Token, Token, TradeType> | null;
   inputTokenSubBalance: BigNumber | undefined;
   inputTokenUnusedBalance: bigint | undefined;
   inputTokenBalance: BigNumber | undefined;
   orderPrice: string | Null;
   currentPrice: string | Null;
+  inputToken: Token | Null;
+  outputToken: Token | Null;
+  inputAmount: string;
 }
 
 export function LimitOrderConfirm({
   open,
-  trade,
-  loading,
   onConfirm,
   onClose,
   inputTokenBalance,
@@ -110,33 +107,20 @@ export function LimitOrderConfirm({
   inputTokenSubBalance,
   orderPrice,
   currentPrice,
+  inputToken,
+  outputToken,
+  inputAmount,
 }: LimitOrderConfirmProps) {
   const theme = useTheme();
   const classes = useStyle();
 
   const [viewAll, setViewAll] = useState(false);
 
-  const { realizedLPFee, inputToken, outputToken, inputAmount } = useMemo(() => {
-    if (!trade) return {};
+  const outputAmount = useMemo(() => {
+    if (isNullArgs(orderPrice) || isNullArgs(inputAmount)) return undefined;
 
-    const feeAmount = CurrencyAmount.fromRawAmount(
-      trade.inputAmount.currency,
-      numberToString(trade.inputAmount.currency.transFee),
-    );
-
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade);
-    // sub transferFee
-    const realizedLPFee = trade.inputAmount.subtract(feeAmount).multiply(realizedLpFeePercent);
-    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent);
-
-    return {
-      priceImpact,
-      realizedLPFee,
-      inputToken: trade.inputAmount.currency,
-      outputToken: trade.outputAmount.currency,
-      inputAmount: trade.inputAmount.toExact(),
-    };
-  }, [trade]);
+    return new BigNumber(inputAmount).multipliedBy(orderPrice).toString();
+  }, [inputAmount, orderPrice]);
 
   const inputTokenPrice = useUSDPriceById(inputToken?.address);
 
@@ -169,10 +153,8 @@ export function LimitOrderConfirm({
                 </Flex>
 
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {trade
-                    ? `${trade.inputAmount.toSignificant(6, { groupSeparator: "," })} ${
-                        trade.inputAmount.currency.symbol
-                      }`
+                  {inputToken && inputAmount
+                    ? `${toSignificantWithGroupSeparator(inputAmount)} ${inputToken.symbol}`
                     : "--"}
                 </Typography>
               </Flex>
@@ -187,10 +169,8 @@ export function LimitOrderConfirm({
               <Flex gap="8px 0" vertical align="flex-start">
                 <Typography>You Receive</Typography>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {orderPrice && trade
-                    ? `${toSignificantWithGroupSeparator(
-                        new BigNumber(trade.inputAmount.toExact()).multipliedBy(orderPrice).toString(),
-                      )} ${trade.outputAmount.currency.symbol}`
+                  {outputAmount && outputToken
+                    ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
                     : "--"}
                 </Typography>
               </Flex>
@@ -234,7 +214,13 @@ export function LimitOrderConfirm({
 
           <DetailItem
             label={t`Estimated trading fee earnings`}
-            value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
+            value={
+              outputToken && outputAmount
+                ? `${toSignificantWithGroupSeparator(
+                    new BigNumber(outputAmount).multipliedBy(0.003).multipliedBy(0.8).toString(),
+                  )} ${outputToken.symbol}`
+                : "--"
+            }
             tooltip={
               <Tooltip
                 iconSize="14px"
@@ -327,15 +313,8 @@ export function LimitOrderConfirm({
         </Box>
 
         <Box sx={{ margin: "16px 0 0 0" }}>
-          <Button
-            variant="contained"
-            size="large"
-            fullWidth
-            onClick={onConfirm}
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-          >
-            {loading ? "" : t`Place order`}
+          <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
+            {t`Place order`}
           </Button>
         </Box>
       </>
