@@ -43,6 +43,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
     await Promise.all(
       availableFees.map(async (key: string) => {
         const { poolId, positionIndex, token0, token0Fee, token1, token1Fee } = decodePositionKey(key);
+
         if (nonNullArgs(poolId) && nonNullArgs(positionIndex)) {
           const result = await collect(poolId, {
             positionId: BigInt(positionIndex),
@@ -84,13 +85,15 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
 
           return result;
         }
+
+        return undefined;
       }),
-    );
+    ).catch((error) => console.error("Collect all position fees error: ", JSON.stringify(error)));
 
     closeTip(loading_key);
 
     setLoading(false);
-  }, [positionFees]);
+  }, [positionFees, availableFees]);
 
   return (
     <Box sx={{ width: "260px" }}>
