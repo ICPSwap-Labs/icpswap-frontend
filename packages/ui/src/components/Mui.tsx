@@ -26,3 +26,5 @@ export { default as Menu } from "@mui/material/Menu";
 export function useTheme() {
   return useMuiTheme() as Theme;
 }
+
+export type { Theme };

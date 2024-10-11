@@ -1,9 +1,9 @@
 import React, { useState, useRef, ReactNode } from "react";
-import { Typography, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseIcon from "@mui/icons-material/Close";
-import { Theme } from "@mui/material/styles";
+import { nonNullArgs } from "@icpswap/utils";
+
+import { makeStyles, Theme, Typography, Box } from "../Mui";
 
 import { MenuProps } from "./types";
 
@@ -56,7 +56,7 @@ export interface PanelProps {
   panel?: (menu: MenuProps | null | undefined) => ReactNode;
 }
 
-export function Panel({
+export function SelectPanel({
   label,
   value,
   onChange,
@@ -123,7 +123,7 @@ export function Panel({
 
       <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         <Box>
-          {value || panel ? (
+          {nonNullArgs(value) || panel ? (
             <Typography color={valueColor ?? "text.primary"} component="div">
               {panel ? panel(menu) : menu?.selectLabel ?? menu?.label}
             </Typography>
