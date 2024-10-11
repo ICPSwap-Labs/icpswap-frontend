@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Box, Checkbox, Popper, TextField, InputAdornment } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { NoData } from "components/index";
 import { ClickAwayListener } from "@mui/base";
 import { Search } from "react-feather";
 
 import { MenuProps } from "./types";
+import { Theme, useTheme, Box, Checkbox, Popper, TextField, InputAdornment } from "../Mui";
+import { NoData } from "../NoData";
 
 export interface DropDownMenuProps {
   value?: any;

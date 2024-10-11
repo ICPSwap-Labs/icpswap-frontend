@@ -12,15 +12,13 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import { LineChartAlt } from "../LineChart/alt";
 import { BarChartAlt } from "../BarChart/alt";
 import { CandleChart } from "../CandleChart/index";
-
 import { SwapAnalyticLoading } from "./Loading";
-
 import { ChartDateButtons } from "./ChartDateButton";
-import { MultipleSmallButtonsWrapper, MultipleSmallButton, ChartView } from "./ChartViewButton";
-
+import { ChartView } from "./ChartViewButton";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";
+import { Select } from "../Select";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -65,13 +63,6 @@ function priceChartFormat(data: InfoPriceChartData[]) {
       };
     });
 }
-
-export const chartViews = [
-  { label: `Dexscreener`, value: ChartView.DexScreener },
-  { label: `Volume`, value: ChartView.VOL },
-  { label: `TVL`, value: ChartView.TVL },
-  { label: `Price`, value: ChartView.PRICE },
-];
 
 export interface ChartButton {
   label: string;
@@ -230,7 +221,7 @@ export function TokenCharts({
     setPriceChartTokenId(canisterId);
   }, [canisterId]);
 
-  const handleButtonClick = useCallback((chart: { tokenId?: string; label: string; value: ChartView }) => {
+  const handleChartViewChange = useCallback((chart: { tokenId?: string; label: string; value: ChartView }) => {
     if (chart.value === ChartView.PRICE) {
       setPriceChartTokenId(chart.tokenId);
     }
@@ -248,7 +239,7 @@ export function TokenCharts({
     >
       <SwapAnalyticLoading loading={priceChartLoading} />
 
-      <Box sx={{ height: "70px" }}>
+      <Box sx={{ height: chartView === ChartView.DexScreener ? "40px" : "70px" }}>
         <Typography
           color="text.primary"
           fontSize="24px"
@@ -319,17 +310,23 @@ export function TokenCharts({
         }}
       >
         <Flex gap="0 8px" wrap="wrap-reverse" justify="flex-end" sx={{ "@media(max-width: 640px)": { gap: "8px 0" } }}>
-          <MultipleSmallButtonsWrapper>
-            {chartButtons.map((chart) => (
-              <MultipleSmallButton
-                key={chart.value}
-                onClick={() => handleButtonClick(chart)}
-                active={chartView === ChartView.PRICE ? priceChartTokenId === chart.tokenId : chartView === chart.value}
-              >
-                {chart.label}
-              </MultipleSmallButton>
-            ))}
-          </MultipleSmallButtonsWrapper>
+          <Select
+            menus={chartButtons.map((element) => ({
+              label: element.label,
+              value: element.tokenId ? `${element.value}_${element.tokenId}` : element.value,
+            }))}
+            minMenuWidth="140px"
+            menuMaxHeight="240px"
+            onChange={(value: any) => {
+              const chart = chartButtons.find(
+                (element) => (element.tokenId ? `${element.value}_${element.tokenId}` : element.value) === value,
+              );
+              handleChartViewChange(chart);
+            }}
+            value={chartView === ChartView.PRICE ? `${chartView}_${priceChartTokenId}` : chartView}
+            showBackground={false}
+            showClean={false}
+          />
         </Flex>
 
         {chartView === ChartView.VOL ? (
