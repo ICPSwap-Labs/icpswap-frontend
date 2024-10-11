@@ -48,7 +48,11 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
     return farms[0]?.toString();
   }, [farms]);
 
-  return (
+  const isLimit = useMemo(() => {
+    return userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionDetail.index)) : false;
+  }, [userLimitOrders, positionDetail]);
+
+  return !isLimit ? (
     <PositionCard
       farmId={availableStakedFarm}
       position={position}
@@ -60,7 +64,7 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
         userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionDetail.index)) : false
       }
     />
-  );
+  ) : null;
 }
 
 interface YourPositionsProps {
