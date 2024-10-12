@@ -126,7 +126,7 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
               >
                 <Trans>Limit Price</Trans>
               </Typography>
-              <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} />
+              <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} iconSize="14px" />
             </Flex>
 
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
@@ -156,19 +156,23 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             </Typography>
           </Flex>
 
-          <Flex fullWidth justify="space-between" gap="0 12px">
-            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+          <Flex fullWidth justify="space-between" gap="0 12px" align="flex-start">
+            <Flex sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
               <Typography
                 sx={{
                   lineHeight: "14px",
                   "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
                 }}
+                component="div"
               >
                 <Trans>Estimated trading fee earnings</Trans>
+                <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
+                  <Tooltip
+                    iconSize="14px"
+                    tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
+                  />
+                </Box>
               </Typography>
-              <Tooltip
-                tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
-              />
             </Flex>
 
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
@@ -180,17 +184,23 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             </Typography>
           </Flex>
 
-          <Flex fullWidth justify="space-between" gap="0 12px">
+          <Flex fullWidth justify="space-between" gap="0 12px" align="flex-start">
             <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
               <Typography
                 sx={{
                   lineHeight: "14px",
                   "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
                 }}
+                component="div"
               >
                 <Trans>Estimated transfer fee for limit order</Trans>
+                <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
+                  <Tooltip
+                    tips={t`Each order requires the transfer fee, determined by the token's canister.`}
+                    iconSize="14px"
+                  />
+                </Box>
               </Typography>
-              <Tooltip tips={t`Each order requires the transfer fee, determined by the token's canister.`} />
             </Flex>
 
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>

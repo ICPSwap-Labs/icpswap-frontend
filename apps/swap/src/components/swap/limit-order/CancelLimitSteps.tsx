@@ -61,7 +61,7 @@ export function getCancelLimitSteps({
     token && amount
       ? [
           {
-            title: `Remove liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
+            title: t`Confirm Cancellation`,
             step: 0,
             children: [
               { label: t`Position ID`, value: positionId.toString() },
@@ -93,30 +93,6 @@ export function getCancelLimitSteps({
                 errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
               }
             : null,
-          // !keepTokenInPools
-          //   ? {
-          //       title: withdrawAmountBLessThanZero
-          //         ? t`Unable to withdraw ${currencyB.symbol}`
-          //         : t`Withdraw ${currencyB.symbol}`,
-          //       step: 2,
-          //       children: [
-          //         {
-          //           label: t`Amount`,
-          //           value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
-          //         },
-          //         { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-          //       ],
-          //       skipError: withdrawAmountBLessThanZero
-          //         ? t`The amount of withdrawal is less than the transfer fee`
-          //         : undefined,
-          //       errorActions: [
-          //         <TextButton onClick={handleReclaim}>
-          //           <Trans>Reclaim</Trans>
-          //         </TextButton>,
-          //       ],
-          //       errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-          //     }
-          //   : undefined,
         ]
       : [];
 

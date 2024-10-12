@@ -12,7 +12,7 @@ import { getTokenInsufficient } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
 import { useParsedQueryString, useUserUnusedBalance, useTokenBalance, useDebouncedChangeHandler } from "@icpswap/hooks";
-import { isValidPrincipal, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
+import { isValidPrincipal, formatTokenAmount, isNullArgs, BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
@@ -218,9 +218,14 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   }, [pool, inputToken, orderPrice]);
 
   const inputError = useMemo(() => {
-    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) return t`Select a token`;
+    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken) return t`Select a token`;
     if (!parsedAmount) return t`Enter an amount`;
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+
+    const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
+
+    if (inputToken.transFee > 0 && minimumAmount.isGreaterThan(typedValue))
+      return t`Amount must exceed ${minimumAmount.toFormat()} ${inputToken.symbol}`;
     if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
     if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
@@ -256,6 +261,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     currentPrice,
     pool,
     orderPriceTick,
+    inputToken,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
