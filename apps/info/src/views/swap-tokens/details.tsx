@@ -1,4 +1,4 @@
-import { Typography, Box, Button } from "ui-component/Mui";
+import { Typography, Box, Button, useMediaQuery, useTheme } from "ui-component/Mui";
 import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
@@ -6,27 +6,63 @@ import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, TokenCharts, Flex, ChartView } from "@icpswap/ui";
+import {
+  GridAutoRows,
+  Proportion,
+  TokenCharts,
+  Flex,
+  ChartView,
+  TokenChartsRef,
+  ChartViewSelector,
+  ChartButton,
+} from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { swapLink, addLiquidityLink } from "utils/index";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
+import { TokenInfo } from "types/token";
+import { useState, useEffect, useRef } from "react";
+import { Null } from "@icpswap/types";
 
 import { TokenPrices } from "./components/TokenPrice";
 
+interface TokenChartsViewSelectorProps {
+  token: TokenInfo | undefined;
+  chartView: ChartButton | Null;
+  setChartView: (chart: ChartButton) => void;
+}
+
+function TokenChartsViewSelector({ token, chartView, setChartView }: TokenChartsViewSelectorProps) {
+  const ChartsViewButtons = [
+    { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: token?.symbol ?? "Price", value: ChartView.PRICE, tokenId: token?.canisterId },
+    { label: `Volume`, value: ChartView.VOL },
+    { label: `TVL`, value: ChartView.TVL },
+  ];
+
+  return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
+}
+
 export default function TokenDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
+  const history = useHistory();
+  const [openTips] = useTips();
+  const theme = useTheme();
+  const tokenChartsRef = useRef<TokenChartsRef>(null);
 
   const { path, page } = useParsedQueryString() as { path: string | undefined; page: string | undefined };
 
   const token = useToken(canisterId);
   const { result: tokenInfo } = useTokenInfo(token?.address);
   const { result: tokenTVL } = useTokenLatestTVL(canisterId);
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const history = useHistory();
-  const [openTips] = useTips();
+  const [chartView, setChartView] = useState<Null | ChartButton>({
+    label: `Dexscreener`,
+    value: ChartView.DexScreener,
+  });
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
@@ -45,12 +81,11 @@ export default function TokenDetails() {
     history.push(`/token/details/${canisterId}`);
   };
 
-  const chartButtons = [
-    { label: `Dexscreener`, value: ChartView.DexScreener },
-    { label: token?.symbol ?? "Price", value: ChartView.PRICE, tokenId: token?.address },
-    { label: `Volume`, value: ChartView.VOL },
-    { label: `TVL`, value: ChartView.TVL },
-  ];
+  useEffect(() => {
+    if (chartView && tokenChartsRef.current) {
+      tokenChartsRef.current.setView(chartView);
+    }
+  }, [chartView, tokenChartsRef]);
 
   return (
     <Wrapper>
@@ -124,6 +159,10 @@ export default function TokenDetails() {
         </Box>
 
         <Flex justify="flex-end" sx={{ gap: "0 10px" }}>
+          {!matchDownSM ? (
+            <TokenChartsViewSelector token={tokenInfo} chartView={chartView} setChartView={setChartView} />
+          ) : null}
+
           <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
             Token Details
           </Button>
@@ -219,7 +258,19 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
 
-        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} chartButtons={chartButtons} />
+        {matchDownSM ? (
+          <Box sx={{ width: "fit-content" }}>
+            <TokenChartsViewSelector token={tokenInfo} chartView={chartView} setChartView={setChartView} />
+          </Box>
+        ) : null}
+
+        <TokenCharts
+          ref={tokenChartsRef}
+          canisterId={canisterId}
+          volume={token?.volumeUSD}
+          showTopIfDexScreen={false}
+          dexScreenHeight="486px"
+        />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

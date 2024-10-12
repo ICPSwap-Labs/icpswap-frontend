@@ -25,7 +25,7 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { toFormat } from "utils/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
+import SwapScanWrapper from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
   return {
