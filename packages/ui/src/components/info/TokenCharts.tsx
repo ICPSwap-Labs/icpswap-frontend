@@ -141,6 +141,7 @@ export interface TokenChartsProps {
   showPrice?: boolean;
   chartButtons?: ChartButton[];
   showTopIfDexScreen?: boolean;
+  dexScreenHeight?: string;
 }
 
 export const TokenCharts = forwardRef(
@@ -153,6 +154,7 @@ export const TokenCharts = forwardRef(
       showPrice = true,
       background = 2,
       showTopIfDexScreen = true,
+      dexScreenHeight,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -419,7 +421,7 @@ export const TokenCharts = forwardRef(
               <Box sx={{ height: "340px", width: "auto" }} />
             )
           ) : chartView === ChartView.DexScreener ? (
-            <DexScreener id={canisterId} height="420px" />
+            <DexScreener id={canisterId} height={dexScreenHeight ?? "420px"} />
           ) : null}
         </Box>
       </MainCard>

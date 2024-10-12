@@ -2,6 +2,8 @@ import { isDarkTheme } from "utils/index";
 import { createTheme } from "@mui/material";
 import { DynamicObject } from "types/index";
 
+import colors from "./colors";
+
 const MuiTheme = createTheme({});
 
 export function componentStyleOverrides(theme: DynamicObject) {
@@ -34,6 +36,15 @@ export function componentStyleOverrides(theme: DynamicObject) {
             background: "#4F5A84",
             "&:hover": {
               background: "#4F5A84",
+            },
+          },
+          "&.MuiButton-contained": {
+            "&.secondary": {
+              background: colors.darkLevel4,
+              boxShadow: "none",
+              "&.Mui-disabled": {
+                color: colors.darkTextTertiary,
+              },
             },
           },
         },
