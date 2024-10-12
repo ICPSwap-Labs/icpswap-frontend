@@ -143,6 +143,7 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
 
             {SPLITS.map((element) => (
               <Box
+                key={element}
                 sx={{
                   position: "absolute",
                   left: `${element}%`,

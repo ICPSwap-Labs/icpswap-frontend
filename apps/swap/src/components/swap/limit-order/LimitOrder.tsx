@@ -16,6 +16,7 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
+import { TokenPrice } from "components/swap/index";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -151,15 +152,14 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
               <Typography>
                 <Trans>Current Price</Trans>
               </Typography>
-              <Typography sx={{ color: "text.primary" }}>
-                {currentPrice && outputToken && inputToken
-                  ? invertPrice
-                    ? `${toSignificantWithGroupSeparator(
-                        new BigNumber(1).dividedBy(currentPrice.toFixed()).toString(),
-                      )} ${inputToken.symbol}`
-                    : `${toSignificantWithGroupSeparator(currentPrice.toFixed())} ${outputToken.symbol}`
-                  : "--"}
-              </Typography>
+
+              <TokenPrice
+                sx={{ color: "text.primary" }}
+                baseToken={inputToken}
+                quoteToken={outputToken}
+                price={currentPrice?.toFixed()}
+                convert={invertPrice}
+              />
             </Flex>
           </Box>
 

@@ -9,13 +9,11 @@ import {
 } from "store/swap/limit-order/hooks";
 import { isNullArgs } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_LIMIT_REFRESH_KEY, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
-import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
 import { usePlaceOrderCallback } from "hooks/swap/limit-order/usePlaceOrderCallback";
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { warningSeverity } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
@@ -53,7 +51,6 @@ export const PlaceOrder = forwardRef(
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-    const [isExpertMode] = useExpertModeManager();
     const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput } = useSwapHandlers();
@@ -264,13 +261,6 @@ export const PlaceOrder = forwardRef(
       }
     }, [maxInputAmount, onUserInput]);
 
-    const priceImpactSeverity = useMemo(() => {
-      const executionPriceImpact = trade?.priceImpact;
-      return warningSeverity(executionPriceImpact);
-    }, [trade]);
-
-    const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode;
-
     useEffect(() => {
       return () => {
         handleClearSwapState();
@@ -297,6 +287,7 @@ export const PlaceOrder = forwardRef(
 
       history.push(`${prePath}?${qs.stringify(newSearch)}`);
       handleInput("", "input");
+      setOrderPrice("");
     }, [ui, history, location]);
 
     useImperativeHandle(
@@ -348,7 +339,7 @@ export const PlaceOrder = forwardRef(
           variant="contained"
           size="large"
           onClick={handleShowConfirmModal}
-          disabled={!isValid || priceImpactTooHigh || isPoolNotChecked}
+          disabled={!isValid || isPoolNotChecked}
           sx={{
             borderRadius: "16px",
           }}
@@ -360,10 +351,6 @@ export const PlaceOrder = forwardRef(
               <Trans>Insufficient liquidity for this trade.</Trans>
             ) : isPoolNotChecked ? (
               <Trans>Waiting for verifying the pool...</Trans>
-            ) : priceImpactTooHigh ? (
-              <Trans>High Price Impact</Trans>
-            ) : priceImpactSeverity > 2 ? (
-              <Trans>Swap Anyway</Trans>
             ) : (
               <Trans>Submit Limit Order</Trans>
             ))}

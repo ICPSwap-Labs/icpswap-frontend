@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard, Slider } from "@icpswap/ui";
-import { BigNumber, isNullArgs, percentToNum, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { SwapInput } from "components/swap/index";
+import { BigNumber, isNullArgs, nonNullArgs, numToPercent, percentToNum } from "@icpswap/utils";
+import { SwapInput, TokenPrice } from "components/swap/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
+import { PriceMultiple } from "constants/limit";
 
 export interface SwapLimitPriceProps {
   ui?: "pro" | "normal";
@@ -28,10 +29,6 @@ export const SwapLimitPrice = ({
   const [inputValue, setInputValue] = useState<string | Null>(null);
   const [showConvert, setShowConvert] = useState(false);
 
-  const handleInvert = useCallback(() => {
-    setShowConvert(!showConvert);
-  }, [setShowConvert, showConvert]);
-
   const price = useMemo(() => {
     if (!currentPrice) return undefined;
 
@@ -39,18 +36,25 @@ export const SwapLimitPrice = ({
   }, [currentPrice, showConvert]);
 
   const handleInputPrice = useCallback(
-    (value: string) => {
+    (value: string, convert: boolean) => {
       setInputValue(value);
 
-      if (new BigNumber(value).isEqualTo(0) || !value) return;
-
-      if (showConvert) {
-        onInputOrderPrice(new BigNumber(1).dividedBy(value).toString());
-      } else {
-        onInputOrderPrice(value);
+      if (value === "") {
+        onInputOrderPrice("");
+        return;
       }
+
+      if (new BigNumber(value).isEqualTo(0) || !value || !currentPrice) return;
+
+      const price = convert ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
+      const orderPrice = convert ? new BigNumber(1).dividedBy(value).toString() : value;
+      const percentNum = new BigNumber(value).dividedBy(price).dividedBy(10);
+      const percent = numToPercent(percentNum.isGreaterThan(1) ? 1 : percentNum.toNumber());
+
+      onInputOrderPrice(orderPrice);
+      setPercent(percent);
     },
-    [onInputOrderPrice, showConvert],
+    [currentPrice, onInputOrderPrice],
   );
 
   const handlePercentChange = useCallback(
@@ -66,7 +70,7 @@ export const SwapLimitPrice = ({
       }
 
       const value = showConvert ? new BigNumber(1).dividedBy(currentPrice) : new BigNumber(currentPrice);
-      const inputValue = value.multipliedBy(100).multipliedBy(percentToNum(percent)).toString();
+      const inputValue = value.multipliedBy(PriceMultiple).multipliedBy(percentToNum(percent)).toString();
       const price = showConvert ? new BigNumber(1).dividedBy(inputValue).toString() : inputValue;
 
       onInputOrderPrice(price);
@@ -75,9 +79,18 @@ export const SwapLimitPrice = ({
     [setPercent, onInputOrderPrice, currentPrice, showConvert],
   );
 
+  const handleInvert = useCallback(() => {
+    setShowConvert(!showConvert);
+
+    if (nonNullArgs(inputValue) && inputValue !== "") {
+      handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(4), !showConvert);
+    }
+  }, [setShowConvert, showConvert, inputValue]);
+
   useEffect(() => {
-    if (isNullArgs(orderPrice)) {
+    if (isNullArgs(orderPrice) || orderPrice === "") {
       setInputValue("");
+      setPercent(null);
     }
   }, [orderPrice]);
 
@@ -93,20 +106,24 @@ export const SwapLimitPrice = ({
           <Typography>
             <Trans>Current Price</Trans>
           </Typography>
-          <Typography
-            color="text.primary"
-            sx={{
-              textDecoration: currentPrice ? "underline" : "none",
-              cursor: "pointer",
-            }}
-          >
-            {price ? toSignificantWithGroupSeparator(price) : "--"}
-          </Typography>
+
+          <TokenPrice
+            convert={showConvert}
+            sx={{ color: "text.primary", textDecoration: currentPrice ? "underline" : "none", cursor: "pointer" }}
+            baseToken={inputToken}
+            quoteToken={outputToken}
+            price={price}
+          />
         </Flex>
 
         <Flex>
           <Box sx={{ flex: 1 }}>
-            <SwapInput align="left" token={outputToken} value={inputValue} onUserInput={handleInputPrice} />
+            <SwapInput
+              align="left"
+              token={outputToken}
+              value={inputValue}
+              onUserInput={(value: string) => handleInputPrice(value, showConvert)}
+            />
           </Box>
 
           <Flex gap="0 8px">
@@ -127,7 +144,7 @@ export const SwapLimitPrice = ({
         </Flex>
 
         <Box sx={{ width: "50%" }}>
-          <Slider percent={percent} onChange={handlePercentChange} labelLeft="0" labelRight="100x" />
+          <Slider percent={percent} onChange={handlePercentChange} labelLeft="0" labelRight={`${PriceMultiple}x`} />
         </Box>
 
         <Typography fontSize="12px">
