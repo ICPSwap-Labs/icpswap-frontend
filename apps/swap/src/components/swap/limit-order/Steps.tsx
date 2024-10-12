@@ -77,35 +77,32 @@ export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }
   );
 
   const originSteps: StepContent[] = [
-    ...(inputToken.equals(token0)
-      ? [
-          {
-            title: isUseTransfer(inputToken) ? `Transfer ${inputToken.symbol}` : `Approve ${inputToken.symbol}`,
-            children: [
-              { label: t`Amount`, value: InputTokenAmount },
-              { label: t`Canister Id`, value: inputToken.address },
-            ],
-          },
-          {
-            title: t`Deposit ${inputToken.symbol}`,
-            children: [
-              {
-                label: t`Amount`,
-                value: InputTokenAmount,
-              },
-              { label: t`Canister Id`, value: inputToken.address },
-            ],
-            errorActions: [
-              <>
-                <TextButton onClick={handleReclaim}>
-                  <Trans>Reclaim</Trans>
-                </TextButton>
-              </>,
-            ],
-            errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-          },
-        ]
-      : []),
+    {
+      title: isUseTransfer(inputToken) ? `Transfer ${inputToken.symbol}` : `Approve ${inputToken.symbol}`,
+      children: [
+        { label: t`Amount`, value: InputTokenAmount },
+        { label: t`Canister Id`, value: inputToken.address },
+      ],
+    },
+    {
+      title: t`Deposit ${inputToken.symbol}`,
+      children: [
+        {
+          label: t`Amount`,
+          value: InputTokenAmount,
+        },
+        { label: t`Canister Id`, value: inputToken.address },
+      ],
+      errorActions: [
+        <>
+          <TextButton onClick={handleReclaim}>
+            <Trans>Reclaim</Trans>
+          </TextButton>
+        </>,
+      ],
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+    },
+
     {
       title: (
         <Flex gap="0 4px">
