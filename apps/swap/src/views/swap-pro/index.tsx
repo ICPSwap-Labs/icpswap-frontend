@@ -8,6 +8,7 @@ import { type Null } from "@icpswap/types";
 import { useInfoToken } from "hooks/info/useInfoTokens";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
+import { ChartButton, ChartView } from "@icpswap/ui";
 
 import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
@@ -29,6 +30,10 @@ export default function SwapPro() {
   const [inputToken, setInputToken] = useState<Token | Null>(undefined);
   const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
+  const [chartView, setChartView] = useState<ChartButton | null>({
+    label: `Dexscreener`,
+    value: ChartView.DexScreener,
+  });
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
   const outputTokenInfo = useInfoToken(outputToken?.address);
@@ -99,6 +104,8 @@ export default function SwapPro() {
           inputTokenPrice,
           outputTokenPrice,
           token,
+          chartView,
+          setChartView,
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>

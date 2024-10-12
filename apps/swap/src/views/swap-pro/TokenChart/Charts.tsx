@@ -1,21 +1,20 @@
-import { useContext } from "react";
+import { useEffect, useContext, useRef } from "react";
 import { Box, useTheme } from "components/Mui";
-import { TokenCharts, ChartView } from "@icpswap/ui";
+import { TokenCharts, TokenChartsRef } from "@icpswap/ui";
 
 import { SwapProContext } from "../context";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
+  const { token, chartView } = useContext(SwapProContext);
 
-  const { inputToken, outputToken, token } = useContext(SwapProContext);
+  const tokenChartsRef = useRef<TokenChartsRef>(null);
 
-  const chartButtons = [
-    { label: `Dexscreener`, value: ChartView.DexScreener },
-    { label: inputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: inputToken?.address },
-    { label: outputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: outputToken?.address },
-    { label: `Volume`, value: ChartView.VOL },
-    { label: `TVL`, value: ChartView.TVL },
-  ];
+  useEffect(() => {
+    if (chartView && tokenChartsRef && tokenChartsRef.current) {
+      tokenChartsRef.current.setView(chartView);
+    }
+  }, [chartView, tokenChartsRef]);
 
   return (
     <Box
@@ -31,11 +30,12 @@ export default function TokenChartInfo() {
       }}
     >
       <TokenCharts
+        ref={tokenChartsRef}
         canisterId={token?.address}
         background={3}
         borderRadius="0px"
         showPrice={false}
-        chartButtons={chartButtons}
+        showTopIfDexScreen={false}
       />
     </Box>
   );

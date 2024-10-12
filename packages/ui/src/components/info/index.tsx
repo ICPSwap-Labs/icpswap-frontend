@@ -3,3 +3,4 @@ export * from "./PoolVolumeChart";
 export * from "./PoolTvlChart";
 export * from "./ChartViewButton";
 export * from "./TokenCharts";
+export * from "./ChartViewSelector";
