@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
-import { useErrorTip } from "hooks/useTips";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
@@ -14,6 +14,7 @@ import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { sleep } from "@icpswap/utils";
 
 type updateStepsArgs = {
   positionId: bigint;
@@ -54,17 +55,38 @@ interface CancelLimitCallsArgs {
   poolId: string;
   openExternalTip: OpenExternalTip;
   tipKey: string;
+  refresh?: () => void;
 }
 
 function useCancelLimitCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
+  const [openSuccessTip] = useSuccessTip();
 
   const withdraw = useSwapWithdraw();
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
 
-  return useCallback(({ position, poolId, positionId, openExternalTip, tipKey }: CancelLimitCallsArgs) => {
+  return useCallback(({ position, poolId, positionId, openExternalTip, tipKey, refresh }: CancelLimitCallsArgs) => {
+    const withdrawToken = async () => {
+      const { amount0, amount1 } = getDecreaseLiquidityAmount(tipKey);
+
+      const token = position.amount0.equalTo(0) ? position.pool.token1 : position.pool.token0;
+      const amount = position.amount0.equalTo(0) ? amount1 : amount0;
+
+      if (!token || amount === undefined) return false;
+      // skip if amount is less than 0 or is 0
+      if (amount - BigInt(token.transFee) <= BigInt(0)) return "skip";
+
+      const result = await withdraw(token, poolId, amount.toString(), ({ message }: ExternalTipArgs) => {
+        openExternalTip({ message, tipKey, poolId });
+      });
+
+      if (refresh) refresh();
+
+      return result;
+    };
+
     const _decreaseLiquidity = async () => {
       if (!principal) return false;
 
@@ -87,25 +109,22 @@ function useCancelLimitCalls() {
         key: tipKey,
       });
 
+      withdrawToken();
+
       return true;
     };
 
-    const withdrawToken = async () => {
-      const { amount0, amount1 } = getDecreaseLiquidityAmount(tipKey);
+    const step1 = async () => {
+      await sleep(2000);
 
-      const token = position.amount0.equalTo(0) ? position.pool.token1 : position.pool.token0;
-      const amount = position.amount0.equalTo(0) ? amount1 : amount0;
+      openSuccessTip(t`Withdrawal submitted`);
 
-      if (!token || amount === undefined) return false;
-      // skip if amount is less than 0 or is 0
-      if (amount - BigInt(token.transFee) <= BigInt(0)) return "skip";
+      if (refresh) refresh();
 
-      return await withdraw(token, poolId, amount.toString(), ({ message }: ExternalTipArgs) => {
-        openExternalTip({ message, tipKey, poolId });
-      });
+      return true;
     };
 
-    return [_decreaseLiquidity, withdrawToken];
+    return [_decreaseLiquidity, step1];
   }, []);
 }
 
@@ -114,6 +133,7 @@ export interface CancelLimitCallbackProps {
   positionId: bigint;
   poolId: string;
   openExternalTip: OpenExternalTip;
+  refresh?: () => void;
 }
 
 export function useCancelLimitCallback() {
@@ -125,7 +145,7 @@ export function useCancelLimitCallback() {
   const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
-    ({ position, positionId, poolId, openExternalTip }: CancelLimitCallbackProps) => {
+    ({ position, positionId, poolId, openExternalTip, refresh }: CancelLimitCallbackProps) => {
       const key = newStepKey();
 
       const calls = getCalls({
@@ -134,6 +154,7 @@ export function useCancelLimitCallback() {
         positionId,
         tipKey: key,
         openExternalTip,
+        refresh,
       });
 
       const { call, reset, retry } = getStepCalls(calls, key);

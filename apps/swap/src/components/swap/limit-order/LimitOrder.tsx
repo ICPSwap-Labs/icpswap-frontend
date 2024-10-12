@@ -64,6 +64,9 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
       },
+      refresh: () => {
+        if (onCancelSuccess) onCancelSuccess();
+      },
     });
 
     setShowLimitDetails(false);
@@ -73,11 +76,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
       extraContent: <StepViewButton step={key} />,
     });
 
-    const result = await call();
-
-    if (result) {
-      if (onCancelSuccess) onCancelSuccess();
-    }
+    await call();
 
     closeLoadingTip(loadingKey);
   }, [position, positionId, cancelLimit]);

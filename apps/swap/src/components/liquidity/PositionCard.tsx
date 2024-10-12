@@ -234,6 +234,7 @@ export function PositionCard({
 
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState)) return true;
+    if (isLimit) return false;
 
     switch (filterState) {
       case PositionFilterState.All:
@@ -249,7 +250,7 @@ export function PositionCard({
       default:
         return true;
     }
-  }, [positionState, filterState]);
+  }, [positionState, filterState, isLimit]);
 
   useEffect(() => {
     if (positionKey) {
