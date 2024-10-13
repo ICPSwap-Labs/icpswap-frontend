@@ -112,7 +112,7 @@ export const SwapLimitPrice = ({
             sx={{ color: "text.primary", textDecoration: currentPrice ? "underline" : "none", cursor: "pointer" }}
             baseToken={inputToken}
             quoteToken={outputToken}
-            price={price}
+            price={currentPrice}
           />
         </Flex>
 
