@@ -17,7 +17,7 @@ import { VolumeWindow } from "@icpswap/types";
 
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
-import TopTokens from "./TopTokens";
+// import TopTokens from "./TopTokens";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -250,7 +250,7 @@ export default function SwapOverview() {
           </MainCard>
         </Box>
 
-        <TopTokens />
+        {/* <TopTokens /> */}
 
         <TopPools />
 
