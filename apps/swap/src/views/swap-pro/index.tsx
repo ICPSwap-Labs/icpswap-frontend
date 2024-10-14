@@ -14,14 +14,14 @@ import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
 import TokenUI from "./Token";
-import TokenChartWrapper from "./TokenChart";
+// import TokenChartWrapper from "./TokenChart";
 import Transactions from "./Transactions";
 import { SearchWrapper } from "./layout/SearchWrapper";
-import TokenChartInfo from "./TokenChart/Token";
+// import TokenChartInfo from "./TokenChart/Token";
 
 export default function SwapPro() {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  // const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
@@ -141,9 +141,10 @@ export default function SwapPro() {
               >
                 <Swap />
 
-                {matchDownSM ? (
+                {/* {matchDownSM ? (
                   <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                ) : null}
+                ) : null} */}
+
                 <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
               </Box>
 
@@ -159,7 +160,7 @@ export default function SwapPro() {
                   },
                 }}
               >
-                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                {/* <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} /> */}
                 <Transactions />
               </Box>
             </Box>
