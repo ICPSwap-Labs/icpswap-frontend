@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { Box, useTheme, useMediaQuery } from "components/Mui";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
@@ -14,14 +14,14 @@ import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
 import TokenUI from "./Token";
-// import TokenChartWrapper from "./TokenChart";
+import TokenChartWrapper from "./TokenChart";
 import Transactions from "./Transactions";
 import { SearchWrapper } from "./layout/SearchWrapper";
-// import TokenChartInfo from "./TokenChart/Token";
+import TokenChartInfo from "./TokenChart/Token";
 
 export default function SwapPro() {
   const theme = useTheme();
-  // const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
@@ -31,8 +31,8 @@ export default function SwapPro() {
   const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
   const [chartView, setChartView] = useState<ChartButton | null>({
-    label: `Dexscreener`,
-    value: ChartView.DexScreener,
+    label: "Price",
+    value: ChartView.PRICE,
   });
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
@@ -74,6 +74,12 @@ export default function SwapPro() {
     },
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
+
+  useEffect(() => {
+    if (token) {
+      setChartView({ label: token.symbol, tokenId: token.address, value: ChartView.PRICE });
+    }
+  }, [setChartView, token, tradePoolId]);
 
   return (
     <SwapContext.Provider
@@ -141,9 +147,9 @@ export default function SwapPro() {
               >
                 <Swap />
 
-                {/* {matchDownSM ? (
+                {matchDownSM ? (
                   <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                ) : null} */}
+                ) : null}
 
                 <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
               </Box>
@@ -160,7 +166,7 @@ export default function SwapPro() {
                   },
                 }}
               >
-                {/* <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} /> */}
+                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 <Transactions />
               </Box>
             </Box>

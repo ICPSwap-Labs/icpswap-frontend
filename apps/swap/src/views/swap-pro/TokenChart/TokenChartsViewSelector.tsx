@@ -7,7 +7,7 @@ export function TokenChartsViewSelector() {
   const { inputToken, outputToken, setChartView, chartView } = useContext(SwapProContext);
 
   const ChartsViewButtons = [
-    { label: `Dexscreener`, value: ChartView.DexScreener },
+    // { label: `Dexscreener`, value: ChartView.DexScreener },
     { label: inputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: inputToken?.address },
     { label: outputToken?.symbol ?? "Price", value: ChartView.PRICE, tokenId: outputToken?.address },
     { label: `Volume`, value: ChartView.VOL },

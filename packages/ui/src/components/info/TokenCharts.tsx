@@ -164,7 +164,7 @@ export const TokenCharts = forwardRef(
 
     const { result: chartData } = useTokenVolChart(canisterId);
 
-    const [chartView, setChartView] = useState<ChartView>(ChartView.DexScreener);
+    const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
     const [valueLabel, setValueLabel] = useState<string | undefined>();
     const [latestValue, setLatestValue] = useState<number | undefined>();
     const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
