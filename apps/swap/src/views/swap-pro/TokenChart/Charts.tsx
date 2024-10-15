@@ -6,7 +6,7 @@ import { SwapProContext } from "../context";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
-  const { token, chartView, tradePoolId } = useContext(SwapProContext);
+  const { token, chartView } = useContext(SwapProContext);
 
   const tokenChartsRef = useRef<TokenChartsRef>(null);
 
@@ -36,7 +36,6 @@ export default function TokenChartInfo() {
         borderRadius="0px"
         showPrice={false}
         showTopIfDexScreen={false}
-        dexScreenId={tradePoolId}
       />
     </Box>
   );
