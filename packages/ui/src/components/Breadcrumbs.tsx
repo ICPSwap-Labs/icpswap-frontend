@@ -27,6 +27,7 @@ export function Breadcrumbs({ prevLabel, currentLabel, prevLink, fontSize = "12p
       sx={{
         display: "flex",
         gap: "0 5px",
+        padding: "8px 0",
         alignItems: "center",
       }}
     >

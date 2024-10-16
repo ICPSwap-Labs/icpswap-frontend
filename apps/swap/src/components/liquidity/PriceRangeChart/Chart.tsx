@@ -1,7 +1,5 @@
-// @ts-nocheck
 import { max, scaleLinear, ZoomTransform } from "d3";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bound } from "constants/swap";
 import { Area } from "./Area";
 import { AxisBottom } from "./AxisBottom";
 import { Brush } from "./Brush";
@@ -16,7 +14,6 @@ export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
 export function Chart({
   id = "liquidityChartRangeInput",
   data: { series, current },
-  ticksAtLimit,
   styles,
   dimensions: { width, height },
   margins,
@@ -81,9 +78,9 @@ export function Chart({
             "reset",
           );
         }}
-        showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}
         zoomLevels={zoomLevels}
       />
+
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible" }}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
@@ -122,7 +119,7 @@ export function Chart({
               </g>
             )}
 
-            <Line value={current} xScale={xScale} innerHeight={innerHeight} />
+            <Line value={current} xScale={xScale} height={innerHeight} />
 
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>

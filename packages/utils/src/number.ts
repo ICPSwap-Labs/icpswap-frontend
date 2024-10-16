@@ -56,6 +56,8 @@ export function percentToNum(val: string) {
   return new BigNumber(val.replace("%", "")).dividedBy(100).toNumber();
 }
 
-export function numToPercent(num: string | number | BigNumber) {
-  return `${new BigNumber(num).multipliedBy(100).toString()}%`;
+export function numToPercent(num: string | number | BigNumber, digits?: number) {
+  return digits || digits === 0
+    ? `${new BigNumber(num).multipliedBy(100).toFixed(digits)}%`
+    : `${new BigNumber(num).multipliedBy(100).toString()}%`;
 }

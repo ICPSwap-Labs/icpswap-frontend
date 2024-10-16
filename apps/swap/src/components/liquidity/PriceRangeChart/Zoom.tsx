@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
-import styled from "styled-components/macro";
+import { useEffect, useMemo, useRef, forwardRef } from "react";
 import { select, zoom, zoomIdentity, ZoomTransform, ScaleLinear, ZoomBehavior } from "d3";
 import { Box, Chip, makeStyles, useTheme, Theme } from "components/Mui";
 import { Replay as ReplayIcon } from "@mui/icons-material";
@@ -10,14 +9,28 @@ import { Flex } from "@icpswap/ui";
 
 import { ZoomLevels } from "./types";
 
-export const ZoomOverlay = styled.rect`
-  fill: transparent;
-  cursor: grab;
+interface ZoomOverlayProps {
+  width: string | number;
+  height: string | number;
+}
 
-  &:active {
-    cursor: grabbing;
-  }
-`;
+export const ZoomOverlay = forwardRef(({ width, height }: ZoomOverlayProps, ref) => {
+  return (
+    <Box
+      ref={ref}
+      component="rect"
+      sx={{
+        width,
+        height,
+        fill: "transparent",
+        cursor: "grab",
+        "&:active ": {
+          cursor: "grabbing",
+        },
+      }}
+    />
+  );
+});
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -50,11 +63,20 @@ export interface ZoomProps {
   width: number;
   height: number;
   resetBrush: () => void;
-  showResetButton: boolean;
   zoomLevels: ZoomLevels;
+  noIcons?: boolean;
 }
 
-export default function Zoom({ svg, xScale, setZoom, width, height, resetBrush, zoomLevels }: ZoomProps) {
+export default function Zoom({
+  svg,
+  xScale,
+  setZoom,
+  width,
+  height,
+  resetBrush,
+  zoomLevels,
+  noIcons = false,
+}: ZoomProps) {
   const classes = useStyle();
   const theme = useTheme();
 
@@ -110,7 +132,7 @@ export default function Zoom({ svg, xScale, setZoom, width, height, resetBrush, 
     zoomInitial();
   }, [zoomInitial, zoomLevels]);
 
-  return (
+  return noIcons ? null : (
     <Box
       sx={{
         position: "absolute",
@@ -118,7 +140,7 @@ export default function Zoom({ svg, xScale, setZoom, width, height, resetBrush, 
         right: "0",
       }}
     >
-      <Flex gap="0 12px">
+      <Flex gap="0 8px">
         <Chip
           className={classes.chartIcon}
           icon={<ReplayIcon />}
@@ -127,7 +149,6 @@ export default function Zoom({ svg, xScale, setZoom, width, height, resetBrush, 
             zoomReset();
           }}
         />
-
         <Chip
           className={classes.chartIcon}
           icon={<ZoomInIcon fillColor={isDarkTheme(theme) ? undefined : theme.colors.darkLevel2} />}

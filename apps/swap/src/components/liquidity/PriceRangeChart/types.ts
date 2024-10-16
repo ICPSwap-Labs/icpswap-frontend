@@ -27,19 +27,18 @@ export interface ZoomLevels {
 export interface LiquidityChartRangeInputProps {
   // to distringuish between multiple charts in the DOM
   id?: string;
-
   data: {
     series: ChartEntry[];
     current: number;
+    lower?: number;
+    upper?: number;
   };
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
-
   styles: {
     area: {
       // color of the ticks in range
       selection: string;
     };
-
     brush: {
       handle: {
         west: string;
@@ -47,15 +46,11 @@ export interface LiquidityChartRangeInputProps {
       };
     };
   };
-
   dimensions: Dimensions;
   margins: Margins;
-
   interactive?: boolean;
-
   brushLabels: (d: "w" | "e", x: number) => string;
   brushDomain: [number, number] | undefined;
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void;
-
   zoomLevels: ZoomLevels;
 }

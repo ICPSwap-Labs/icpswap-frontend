@@ -1,12 +1,11 @@
-import { formatTokenAmount } from "@icpswap/utils";
+import { formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import { useAppSelector } from "store/hooks";
 import { useMemo } from "react";
 import { WRAPPED_ICP } from "constants/tokens";
 import { network, NETWORK } from "constants/server";
 import { useInfoToken } from "hooks/info/useInfoTokens";
-import BigNumber from "bignumber.js";
-import { ICP } from "@icpswap/tokens";
 
 export function useICPPrice(): number | undefined {
   const { ICPPriceList } = useAppSelector((state) => state.global);

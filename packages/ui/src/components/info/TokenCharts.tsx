@@ -14,7 +14,7 @@ import { BarChartAlt } from "../BarChart/alt";
 import { CandleChart } from "../CandleChart/index";
 import { SwapAnalyticLoading } from "./Loading";
 import { ChartDateButtons } from "./ChartDateButton";
-import { ChartView } from "./ChartViewButton";
+import { ChartView } from "./types";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";

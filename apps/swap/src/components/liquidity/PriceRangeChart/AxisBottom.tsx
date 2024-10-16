@@ -1,17 +1,6 @@
-// @ts-nocheck
 import { useMemo } from "react";
 import { Axis as d3Axis, axisBottom, NumberValue, ScaleLinear, select } from "d3";
-import styled from "styled-components/macro";
-
-const StyledGroup = styled.g`
-  line {
-    display: none;
-  }
-  text {
-    color: ${({ theme }) => theme.text2};
-    transform: translateY(5px);
-  }
-`;
+import { Box, useTheme } from "components/Mui";
 
 const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
   const axisRef = (axis: SVGGElement) => {
@@ -25,20 +14,34 @@ const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
   return <g ref={axisRef} />;
 };
 
-export const AxisBottom = ({
-  xScale,
-  innerHeight,
-  offset = 0,
-}: {
+interface AxisBottomProps {
   xScale: ScaleLinear<number, number>;
   innerHeight: number;
   offset?: number;
-}) =>
-  useMemo(
+}
+
+export function AxisBottom({ xScale, innerHeight, offset = 0 }: AxisBottomProps) {
+  const theme = useTheme();
+
+  return useMemo(
     () => (
-      <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
+      <Box
+        id="axis-bottom-xxx"
+        component="g"
+        sx={{
+          line: {
+            display: "none",
+          },
+          text: {
+            color: theme.colors.darkTextSecondary,
+            transform: "translateY(5px)",
+          },
+        }}
+        transform={`translate(0, ${innerHeight + offset})`}
+      >
         <Axis axisGenerator={axisBottom(xScale).ticks(6)} />
-      </StyledGroup>
+      </Box>
     ),
     [innerHeight, offset, xScale],
   );
+}

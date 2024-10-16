@@ -1,41 +1,110 @@
-// @ts-nocheck
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { brushX, select, ScaleLinear, BrushBehavior } from "d3";
-import styled from "styled-components/macro";
 import { usePrevious } from "@icpswap/hooks";
-import { useTheme } from "@mui/material";
+import { useTheme, Box } from "components/Mui";
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 
-const Handle = styled.path<{ color: string; d: string }>`
-  cursor: ew-resize;
-  pointer-events: none;
-  stroke-width: 3;
-  stroke: ${({ color }) => color};
-  fill: ${({ color }) => color};
-`;
+interface HandleProps {
+  d: string;
+  color: string;
+}
 
-const HandleAccent = styled.path<{ d: string }>`
-  cursor: ew-resize;
-  pointer-events: none;
-  stroke-width: 1.5;
-  stroke: "#ffffff";
-  opacity: 0.6;
-`;
+const Handle = ({ d, color }: HandleProps) => (
+  <Box
+    d={d}
+    component="path"
+    sx={{
+      stroke: color,
+      fill: color,
+      cursor: "ew-resize",
+      pointerEvents: "none",
+      strokeWidth: 3,
+    }}
+  />
+);
 
-const LabelGroup = styled.g<{ visible: boolean; transform: string }>`
-  opacity: ${({ visible }) => (visible ? "1" : "0")};
-  transition: opacity 300ms;
-`;
+interface HandleAccentProps {
+  d: string;
+}
 
-const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.palette.background.level3};
-`;
+const HandleAccent = ({ d }: HandleAccentProps) => (
+  <Box
+    d={d}
+    sx={{
+      cursor: "ew-resize",
+      pointerEvents: "none",
+      strokeWidth: 1.5,
+      stroke: "#ffffff",
+      opacity: 0.6,
+    }}
+    component="path"
+  />
+);
 
-const Tooltip = styled.text`
-  text-anchor: middle;
-  font-size: 13px;
-  fill: ${({ theme }) => theme.themeOption.textPrimary};
-`;
+interface LabelGroupProps {
+  visible: boolean;
+  children: ReactNode;
+  transform?: string;
+}
+
+const LabelGroup = ({ visible, children, transform }: LabelGroupProps) => (
+  <Box transform={transform} component="g" sx={{ opacity: visible ? 1 : 0, transition: "opacity 300ms" }}>
+    {children}
+  </Box>
+);
+
+interface TooltipBackgroundProps {
+  x: string;
+  y: string;
+  height: string;
+  width: string;
+  rx: string;
+  transform?: string;
+}
+
+const TooltipBackground = ({ transform, rx, x, y, width, height }: TooltipBackgroundProps) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      component="rect"
+      transform={transform}
+      fill={theme.palette.background.level3}
+      x={x}
+      y={y}
+      width={width}
+      height={height}
+      rx={rx}
+    />
+  );
+};
+
+interface TooltipProps {
+  transform?: string;
+  y: string;
+  dominantBaseline: string;
+  children?: ReactNode;
+}
+
+const Tooltip = ({ y, transform, dominantBaseline, children }: TooltipProps) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      component="text"
+      transform={transform}
+      fill={theme.themeOption.textPrimary}
+      sx={{
+        textAnchor: "middle",
+        fontSize: "12px",
+      }}
+      dominantBaseline={dominantBaseline}
+      y={y}
+    >
+      {children}
+    </Box>
+  );
+};
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20;
@@ -73,7 +142,6 @@ export const Brush = ({
 }: BrushProps) => {
   const brushRef = useRef<SVGGElement | null>(null);
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null);
-  const theme = useTheme();
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent);
@@ -202,15 +270,15 @@ export const Brush = ({
               >
                 <g>
                   <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} theme={theme} />
+                  <HandleAccent d={brushHandleAccentPath()} />
                 </g>
 
                 <LabelGroup
-                  transform={`translate(50,0), scale(${flipWestHandle ? "1" : "-1"}, 1)`}
                   visible={showLabels || hovering}
+                  transform={`translate(50,0), scale(${flipWestHandle ? "1" : "-1"}, 1)`}
                 >
-                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" theme={theme} />
-                  <Tooltip transform="scale(-1, 1)" y="15" dominantBaseline="middle" theme={theme}>
+                  <TooltipBackground y="0" x="-30" height="30px" width="60px" rx="8" />
+                  <Tooltip transform="scale(-1, 1)" y="15" dominantBaseline="middle">
                     {brushLabelValue("w", localBrushExtent[0])}
                   </Tooltip>
                 </LabelGroup>
@@ -222,15 +290,15 @@ export const Brush = ({
               <g transform={`translate(${xScale(localBrushExtent[1])}, 0), scale(${flipEastHandle ? "-1" : "1"}, 1)`}>
                 <g>
                   <Handle color={eastHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} theme={theme} />
+                  <HandleAccent d={brushHandleAccentPath()} />
                 </g>
 
                 <LabelGroup
                   transform={`translate(50,0), scale(${flipEastHandle ? "-1" : "1"}, 1)`}
                   visible={showLabels || hovering}
                 >
-                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" theme={theme} />
-                  <Tooltip y="15" dominantBaseline="middle" theme={theme}>
+                  <TooltipBackground y="0" x="-30" height="30px" width="60px" rx="8" />
+                  <Tooltip y="15" dominantBaseline="middle">
                     {brushLabelValue("e", localBrushExtent[1])}
                   </Tooltip>
                 </LabelGroup>

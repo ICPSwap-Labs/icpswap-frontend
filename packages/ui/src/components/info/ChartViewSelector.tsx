@@ -2,10 +2,10 @@ import { useState, useCallback } from "react";
 import { Null } from "@icpswap/types";
 import { ChevronDown } from "react-feather";
 
-import { ChartView } from "./ChartViewButton";
 import { Button } from "../Mui";
 import { DropDownMenu } from "../Select";
 import { ChartButton } from "./TokenCharts";
+import { ChartView } from "./types";
 
 export interface ChartViewSelectorProps {
   chartsViews?: ChartButton[];

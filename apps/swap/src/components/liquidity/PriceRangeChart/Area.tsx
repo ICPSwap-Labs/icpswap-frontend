@@ -1,18 +1,11 @@
-// @ts-nocheck
 import { useMemo } from "react";
 import { area, curveStepAfter, ScaleLinear } from "d3";
-import styled from "styled-components/macro";
 import inRange from "lodash/inRange";
+import { Box } from "components/Mui";
 
 import { ChartEntry } from "./types";
 
 const COLOR_BLUE_2 = "#0068FC";
-
-const Path = styled.path`
-  opacity: 0.5;
-  stroke: ${({ fill }) => fill ?? COLOR_BLUE_2};
-  fill: ${({ fill }) => fill ?? COLOR_BLUE_2};
-`;
 
 export interface AreaProps {
   series: ChartEntry[];
@@ -23,10 +16,12 @@ export interface AreaProps {
   fill?: string | undefined;
 }
 
-export const Area = ({ series, xScale, yScale, xValue, yValue, fill }: AreaProps) =>
-  useMemo(
+export function Area({ series, xScale, yScale, xValue, yValue, fill }: AreaProps) {
+  return useMemo(
     () => (
-      <Path
+      <Box
+        component="path"
+        sx={{ opacity: 0.5, stroke: fill ?? COLOR_BLUE_2, fill: fill ?? COLOR_BLUE_2 }}
         fill={fill}
         d={
           area()
@@ -41,3 +36,4 @@ export const Area = ({ series, xScale, yScale, xValue, yValue, fill }: AreaProps
     ),
     [fill, series, xScale, xValue, yScale, yValue],
   );
+}

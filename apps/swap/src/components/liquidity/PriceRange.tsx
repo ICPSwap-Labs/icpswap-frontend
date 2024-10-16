@@ -1,6 +1,6 @@
 import { memo, useState, useMemo, useCallback } from "react";
 import { Box, Grid, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { Token, Price } from "@icpswap/swap-sdk";
+import { Token, Price, Pool } from "@icpswap/swap-sdk";
 import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { TokenToggle } from "components/TokenToggle";
@@ -8,8 +8,9 @@ import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { useUSDPrice } from "hooks/useUSDPrice";
+import { BigNumber } from "@icpswap/utils";
+import { PoolCurrentPrice } from "components/swap/index";
+import { Null } from "@icpswap/types";
 
 import PriceRangeChart from "./PriceRangeChart";
 import { FullRangeWarning } from "./FullRangeWarning";
@@ -84,6 +85,7 @@ export interface PriceRangeProps {
   handleTokenToggle: () => void;
   poolLoading?: boolean;
   getRangeByPercent: (value: string | number) => [string, string] | undefined;
+  pool: Pool | Null;
 }
 
 export const PriceRange = memo(
@@ -108,6 +110,7 @@ export const PriceRange = memo(
     handleTokenToggle,
     poolLoading,
     getRangeByPercent,
+    pool,
   }: PriceRangeProps) => {
     const theme = useTheme();
     const classes = useSetPriceStyle();
@@ -166,8 +169,6 @@ export const PriceRange = memo(
     const fullRangeShow = useMemo(() => {
       return rangeValue === "FullRange" && !fullRangeWaring;
     }, [rangeValue, fullRangeWaring]);
-
-    const baseTokenPrice = useUSDPrice(baseCurrency);
 
     return (
       <>
@@ -254,25 +255,12 @@ export const PriceRange = memo(
             {!noLiquidity && (
               <Box mt={3} sx={{ position: "relative" }}>
                 <Grid sx={{ height: "28px" }} container alignItems="center">
-                  <Flex gap="0 2px" align="flex-start">
+                  <Flex gap="0 2px" align="center">
                     <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
                       <Trans>Current Price: </Trans>
                     </Typography>
-                    <Flex sx={{ width: "210px" }} wrap="wrap" gap="6px 0">
-                      <Typography
-                        color="text.primary"
-                        fontSize="12px"
-                        sx={{ wordBreak: "break-all", lineHeight: "16px" }}
-                      >
-                        {price ? toSignificantWithGroupSeparator(price) : "--"}
-                        <Typography component="span" sx={{ marginLeft: "5px" }} fontSize="12px">
-                          {quoteCurrency?.symbol} per {baseCurrency?.symbol}
-                        </Typography>
-                      </Typography>
-                      {baseTokenPrice ? (
-                        <Typography sx={{ fontSize: "12px" }}>({formatDollarAmount(baseTokenPrice)})</Typography>
-                      ) : null}
-                    </Flex>
+
+                    <PoolCurrentPrice pool={pool} token={baseCurrency} sx={{ width: "210px", flexWrap: "wrap" }} />
                   </Flex>
                 </Grid>
 

@@ -6,7 +6,8 @@ import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
 import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
-import { Box, Grid, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { Flex } from "components/index";
 import { t } from "@lingui/macro";
 
 import { ZoomLevels } from "./types";
@@ -35,20 +36,14 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
 
 function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      sx={{ height: "100%", minHeight: "200px" }}
-      flexDirection="column"
-    >
+    <Flex fullWidth justify="center" align="center" sx={{ height: "100%", minHeight: "200px" }} vertical>
       {icon}
       {message && (
         <Typography variant="h3" color="textPrimary" align="center" sx={{ marginTop: "20px" }}>
           {message}
         </Typography>
       )}
-    </Grid>
+    </Flex>
   );
 }
 
@@ -60,8 +55,8 @@ export interface LiquidityChartRangeInputProps {
   price: number | undefined | string;
   priceLower?: Price<Token, Token>;
   priceUpper?: Price<Token, Token>;
-  onLeftRangeInput: (typedValue: string) => void;
-  onRightRangeInput: (typedValue: string) => void;
+  onLeftRangeInput?: (typedValue: string) => void;
+  onRightRangeInput?: (typedValue: string) => void;
   interactive: boolean;
 }
 
@@ -106,13 +101,13 @@ export default function LiquidityChartRangeInput({
           (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === "handle" || mode === "reset") &&
           leftRangeValue > 0
         ) {
-          onLeftRangeInput(leftRangeValue.toFixed(6));
+          if (onLeftRangeInput) onLeftRangeInput(leftRangeValue.toFixed(6));
         }
         if ((!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === "reset") && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
-            onRightRangeInput(rightRangeValue.toFixed(6));
+            if (onRightRangeInput) onRightRangeInput(rightRangeValue.toFixed(6));
           }
         }
       });
@@ -168,11 +163,11 @@ export default function LiquidityChartRangeInput({
           icon={<BarChart2 size={56} stroke={theme.palette.background.level3} />}
         />
       ) : (
-        <Grid container alignItems="center" justifyContent="center">
+        <Flex fullWidth justify="center">
           <Chart
             data={{ series: formattedData, current: Number(price) }}
-            dimensions={{ width: 400, height: 200 }}
-            margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
+            dimensions={{ width: 400, height: 240 }}
+            margins={{ top: 0, right: 0, bottom: 20, left: 0 }}
             styles={{
               area: {
                 selection: COLOR_BLUE,
@@ -191,7 +186,7 @@ export default function LiquidityChartRangeInput({
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
             ticksAtLimit={ticksAtLimit}
           />
-        </Grid>
+        </Flex>
       )}
     </Box>
   );

@@ -1,7 +1,4 @@
-import { actor } from "../actor";
 import { ActorIdentity } from "@icpswap/types";
-import { ActorName } from "../ActorName";
-
 import {
   SwapFactory,
   SwapFactoryInterfaceFactory,
@@ -13,7 +10,12 @@ import {
   TicketInterfaceFactory,
   PositionIndex,
   PositionIndexInterfaceFactory,
+  PositionChartsService,
+  PositionChartsFactory,
 } from "@icpswap/candid";
+import { actor } from "../actor";
+import { ActorName } from "../ActorName";
+
 
 export const swapNFT = (identity?: ActorIdentity) =>
   actor.create<SwapNFT>({
@@ -32,7 +34,7 @@ export const swapFactory = (identity?: ActorIdentity) =>
 export const swapPool = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<SwapPool>({
     identity,
-    canisterId: canisterId,
+    canisterId,
     idlFactory: SwapPoolInterfaceFactory,
   });
 
@@ -47,4 +49,10 @@ export const swapPosition = (identity?: ActorIdentity) =>
     actorName: ActorName.Position,
     idlFactory: PositionIndexInterfaceFactory,
     identity,
+  });
+
+export const positionCharts = () =>
+  actor.create<PositionChartsService>({
+    actorName: ActorName.PositionCharts,
+    idlFactory: PositionChartsFactory,
   });
