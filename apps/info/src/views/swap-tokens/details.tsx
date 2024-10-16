@@ -36,7 +36,7 @@ interface TokenChartsViewSelectorProps {
 
 function TokenChartsViewSelector({ token, chartView, setChartView }: TokenChartsViewSelectorProps) {
   const ChartsViewButtons = [
-    // { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: `Dexscreener`, value: ChartView.DexScreener },
     { label: token?.symbol ?? "Price", value: ChartView.PRICE, tokenId: token?.canisterId },
     { label: `Volume`, value: ChartView.VOL },
     { label: `TVL`, value: ChartView.TVL },
@@ -60,8 +60,8 @@ export default function TokenDetails() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [chartView, setChartView] = useState<Null | ChartButton>({
-    label: "Price",
-    value: ChartView.PRICE,
+    label: "DexScreener",
+    value: ChartView.DexScreener,
   });
 
   const handleCopy = () => {
@@ -86,12 +86,6 @@ export default function TokenDetails() {
       tokenChartsRef.current.setView(chartView);
     }
   }, [chartView, tokenChartsRef]);
-
-  useEffect(() => {
-    if (token) {
-      setChartView({ label: token.symbol, tokenId: token.address, value: ChartView.PRICE });
-    }
-  }, [setChartView, token]);
 
   return (
     <Wrapper>
