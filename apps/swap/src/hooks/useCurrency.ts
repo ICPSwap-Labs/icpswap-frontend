@@ -5,6 +5,7 @@ import { TokenInfo } from "types/token";
 import { useTokenInfo, useTokensInfo } from "hooks/token/useTokenInfo";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { ICP } from "@icpswap/tokens";
+import { Null } from "@icpswap/types";
 
 export enum UseCurrencyState {
   LOADING = "LOADING",
@@ -12,7 +13,7 @@ export enum UseCurrencyState {
   INVALID = "INVALID",
 }
 
-export function useToken(tokenId: string | undefined): [UseCurrencyState, Token | undefined] {
+export function useToken(tokenId: string | Null): [UseCurrencyState, Token | undefined] {
   const { result: tokenInfo, loading: queryLoading } = useTokenInfo(tokenId);
 
   return useMemo(() => {

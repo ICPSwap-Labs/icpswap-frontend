@@ -15,7 +15,7 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
-import { usePositionState } from "hooks/liquidity";
+import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -128,6 +128,8 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
+
+  const loadLiquidityPage = useLoadLiquidityPageCallback({ poolId: pool?.id, positionId, page: "position" });
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
 
@@ -247,6 +249,11 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
     }
   }, [displayByFilter, setHiddenNumbers, positionKey]);
 
+  const handleToPositionDetails = useCallback(() => {
+    if (!position || matchDownMD) return;
+    loadLiquidityPage();
+  }, [detailShow, setDetailShow, position, matchDownMD, loadLiquidityPage]);
+
   return (
     <Box
       className={classes.wrapper}
@@ -259,7 +266,13 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
       <Flex
         justify="space-between"
         fullWidth
-        onClick={handleToggleShow}
+        onClick={() => {
+          if (matchDownMD) {
+            handleToggleShow();
+          } else {
+            handleToPositionDetails();
+          }
+        }}
         sx={{
           "@media(max-width: 640px)": {
             flexDirection: "column",
@@ -381,38 +394,81 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
           <PositionRangeState state={positionState} width="110px" />
 
-          <Flex
-            sx={{
-              "@media(max-width: 640px)": {
-                width: "100%",
-                justifyContent: "center",
-                visibility: detailShow ? "hidden" : "visible",
-                height: detailShow ? "0px" : "auto",
-              },
-            }}
-          >
-            <Typography
+          {matchDownMD ? (
+            <Flex
               sx={{
-                display: "none",
-                fontSize: "12px",
                 "@media(max-width: 640px)": {
-                  display: "block",
+                  width: "100%",
+                  justifyContent: "center",
+                  visibility: detailShow ? "hidden" : "visible",
+                  height: detailShow ? "0px" : "auto",
                 },
               }}
-              color="text.theme-secondary"
             >
-              <Trans>Detail</Trans>
-            </Typography>
-            {detailShow ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown
+              <Typography
                 sx={{
-                  color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  display: "none",
+                  fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    display: "block",
+                  },
                 }}
-              />
-            )}
-          </Flex>
+                color="text.theme-secondary"
+              >
+                <Trans>Detail</Trans>
+              </Typography>
+
+              {detailShow ? (
+                <KeyboardArrowUp />
+              ) : (
+                <KeyboardArrowDown
+                  sx={{
+                    color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  }}
+                />
+              )}
+            </Flex>
+          ) : (
+            <Flex
+              sx={{
+                width: "80px",
+                justifyContent: "flex-end",
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleShow();
+              }}
+            >
+              {detailShow ? (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowDown
+                    sx={{
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
 

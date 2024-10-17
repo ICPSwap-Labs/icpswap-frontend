@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react";
 import { TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
-import type { TokenInfo, StorageTokenInfo } from "@icpswap/types";
+import type { TokenInfo, StorageTokenInfo, Null } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
@@ -228,7 +228,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
   }, [tokenInfos, loadings, tokenIds]);
 }
 
-export function useTokenInfo(tokenId: string | undefined) {
+export function useTokenInfo(tokenId: string | Null) {
   const [state, tokenInfo] = useTokensInfo([tokenId])[0];
 
   return useMemo(() => {

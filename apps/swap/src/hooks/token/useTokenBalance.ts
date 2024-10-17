@@ -8,6 +8,7 @@ import { isPrincipal, isValidPrincipal, isOkSubAccount, principalToAccount, BigN
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { useLatestDataCall } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -78,7 +79,7 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
 
 export function useTokenBalance(
   canisterId: string | undefined,
-  account: string | Principal | undefined,
+  account: string | Principal | Null,
   refresh?: number | boolean,
   subAccount?: Uint8Array,
 ) {

@@ -12,3 +12,4 @@ export * from "./SwapConfirm";
 export * from "./CreatePool";
 export * from "./BuyTokenButton";
 export * from "./PoolCurrentPrice";
+export * from "./PoolTvlTooltip";

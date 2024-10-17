@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Button } from "components/Mui";
+import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import { NoData, TokenImage, TabPanel, type Tab } from "components/index";
@@ -20,10 +20,11 @@ import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, useDebouncedCha
 import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
+import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { PoolTvlTooltip } from "components/swap/index";
 
 import { PoolCharts } from "./PoolCharts";
 
@@ -39,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       gridTemplateColumns: "20px 1.5fr 1fr repeat(3, 1fr) 180px",
       "@media screen and (max-width: 640px)": {
-        // gridTemplateColumns: "20px 220px 1fr repeat(3, 1fr) 180px",
         gridTemplateColumns: "1fr 120px",
       },
       "&.body": {
@@ -156,11 +156,11 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
       .toFixed(2)}%`;
   }, [pool, fees, timeBase]);
 
+  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token0Id });
+
   const handleAdd = useCallback(() => {
-    history.push(
-      `/liquidity/add/${pool.token0Id}/${pool.token1Id}/${pool.feeTier}?path=${window.btoa("/liquidity?tab=TopPools")}`,
-    );
-  }, [history, pool]);
+    loadAddLiquidity();
+  }, [loadAddLiquidity]);
 
   const handleSwap = useCallback(() => {
     history.push(`/swap?&input=${pool.token0Id}&output=${pool.token1Id}`);
@@ -229,7 +229,24 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
           </Flex>
         </BodyCell>
         <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          {formatDollarAmount(pool.tvlUSD)}
+          <PoolTvlTooltip token0Id={pool.token0Id} token1Id={pool.token1Id} poolId={pool.pool}>
+            <Typography
+              align="right"
+              sx={{
+                textDecoration: "underline",
+                textDecorationStyle: "dashed",
+                textDecorationColor: theme.colors.darkTextSecondary,
+                fontSize: "16px",
+                cursor: "pointer",
+                color: "text.primary",
+                "@media screen and (max-width: 600px)": {
+                  fontSize: "14px",
+                },
+              }}
+            >
+              {formatDollarAmount(pool.tvlUSD)}
+            </Typography>
+          </PoolTvlTooltip>
         </BodyCell>
         <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
           {apr ? <APRPanel value={apr} /> : null}
@@ -274,7 +291,6 @@ export function InfoPools() {
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const theme = useTheme();
-  const history = useHistory();
 
   const [page, setPage] = useState(START_PAGE);
   const [timeBase, setTimeBase] = useState<"24H" | "7D">("24H");
@@ -369,10 +385,6 @@ export function InfoPools() {
     [debounceSetSearchToken, setPage],
   );
 
-  const handleAddLiquidity = useCallback(() => {
-    history.push(`/liquidity/add?path=${window.btoa("/liquidity?tab=TopPools")}`);
-  }, [history]);
-
   const handleTabChange = useCallback(
     (tab: Tab) => {
       if (tab.key === "24h") {
@@ -443,10 +455,6 @@ export function InfoPools() {
               }}
             />
           </Box>
-
-          <Button variant="contained" onClick={handleAddLiquidity}>
-            <Trans>Add Liquidity</Trans>
-          </Button>
         </Flex>
       </Box>
 

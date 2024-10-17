@@ -421,9 +421,11 @@ export function PositionDetails({
               margin: "32px 0 0 0",
               gap: "0 8px",
               flexWrap: "wrap",
+              display: "none",
               "@media(max-width: 640px)": {
                 flexWrap: "wrap",
                 gap: "12px 8px",
+                display: "flex",
               },
             }}
             justify="flex-end"

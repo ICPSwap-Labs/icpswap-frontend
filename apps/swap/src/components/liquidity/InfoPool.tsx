@@ -7,6 +7,7 @@ import { Pool } from "@icpswap/swap-sdk";
 import { usePoolApr24h, useAllPoolsTVL } from "@icpswap/hooks";
 import { formatDollarAmount, nonNullArgs, calcFee24h } from "@icpswap/utils";
 import { useInfoPool } from "hooks/info/useInfoPool";
+import { PoolTvlTooltip } from "components/swap";
 
 export interface InfoPoolProps {
   pool: Pool | undefined | null;
@@ -81,9 +82,18 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
         sx={{ margin: noPoolDetails ? "0" : "16px 0 0 0", "@media(max-width: 640px)": {} }}
       >
         <Flex gap="0 6px">
-          <Typography>
-            <Trans>TVL</Trans>
-          </Typography>
+          <PoolTvlTooltip token0Id={token0.address} token1Id={token1.address} poolId={pool?.id}>
+            <Typography
+              sx={{
+                cursor: "pointer",
+                textDecoration: "underline",
+                textDecorationColor: theme.colors.darkTextSecondary,
+                textDecorationStyle: "dashed",
+              }}
+            >
+              <Trans>TVL</Trans>
+            </Typography>
+          </PoolTvlTooltip>
           <Typography color="text.primary">{poolTvlUSD ? formatDollarAmount(poolTvlUSD) : "--"}</Typography>
         </Flex>
 

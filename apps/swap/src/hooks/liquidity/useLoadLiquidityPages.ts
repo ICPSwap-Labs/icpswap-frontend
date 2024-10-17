@@ -6,8 +6,8 @@ import { useHistory, useLocation } from "react-router-dom";
 
 interface useLoadLiquidityPageCallbackProps {
   poolId: string | Null;
-  positionId: string | Null;
-  page: "increase" | "decrease";
+  positionId: string | bigint | Null;
+  page: "increase" | "decrease" | "position";
 }
 
 export function useLoadLiquidityPageCallback({ poolId, positionId, page }: useLoadLiquidityPageCallbackProps) {
@@ -16,14 +16,14 @@ export function useLoadLiquidityPageCallback({ poolId, positionId, page }: useLo
 
   return useCallback(() => {
     if (nonNullArgs(poolId) && nonNullArgs(positionId)) {
-      history.push(`/liquidity/${page}/${positionId}/${poolId}?path=${window.btoa(location.pathname)}`);
+      history.push(`/liquidity/${page}/${positionId.toString()}/${poolId}?path=${window.btoa(location.pathname)}`);
     }
   }, [history, poolId, positionId, location, page]);
 }
 
 interface useLoadAddLiquidityCallbackProps {
-  token0: Token | Null;
-  token1: Token | Null;
+  token0: Token | Null | string;
+  token1: Token | Null | string;
 }
 
 export function useLoadAddLiquidityCallback({ token0, token1 }: useLoadAddLiquidityCallbackProps) {
@@ -32,7 +32,16 @@ export function useLoadAddLiquidityCallback({ token0, token1 }: useLoadAddLiquid
 
   return useCallback(() => {
     if (nonNullArgs(token0) && nonNullArgs(token1)) {
-      history.push(`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(location.pathname)}`);
+      const token0Address = typeof token0 === "string" ? token0 : token0.address;
+      const token1Address = typeof token1 === "string" ? token1 : token1.address;
+
+      history.push(
+        `/liquidity/add/${token0Address}/${token1Address}?path=${window.btoa(
+          `${location.pathname}${location.search}`,
+        )}`,
+      );
+    } else {
+      history.push(`/liquidity/add?path=${window.btoa(`${location.pathname}${location.search}`)}`);
     }
   }, [history, token0, token1, location]);
 }
