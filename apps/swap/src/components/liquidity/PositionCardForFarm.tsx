@@ -11,7 +11,7 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { FeeTierPercentLabel, Flex, APR } from "@icpswap/ui";
+import { FeeTierPercentLabel, Flex, APRPanel } from "@icpswap/ui";
 import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
 import { type FarmInfoWithId } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
@@ -361,7 +361,7 @@ export function PositionCardForFarm({
                 "@media(max-width: 640px)": { width: "fit-content" },
               }}
             >
-              <Typography color="text.primary">{userApr ? <APR value={userApr} /> : "--"}</Typography>
+              {userApr ? <APRPanel value={userApr} /> : <Typography color="text.primary">--</Typography>}
             </Flex>
           </Flex>
 

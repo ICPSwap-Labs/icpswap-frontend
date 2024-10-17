@@ -296,7 +296,7 @@ export default function SwapPoolDetails() {
                   <Trans>APR 24H</Trans>
                 </Typography>
                 <Typography
-                  color="text.primary"
+                  color="text.apr"
                   sx={{
                     fontWeight: 500,
                     fontSize: "24px",

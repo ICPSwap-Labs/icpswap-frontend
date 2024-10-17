@@ -14,6 +14,7 @@ import {
   Flex,
   LoadingRow,
   FilledTextField,
+  APRPanel,
 } from "@icpswap/ui";
 import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
@@ -230,8 +231,8 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
         <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
           {formatDollarAmount(pool.tvlUSD)}
         </BodyCell>
-        <BodyCell align="right" color="text.apr" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          {apr ?? "--"}
+        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+          {apr ? <APRPanel value={apr} /> : null}
         </BodyCell>
         <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
           {formatDollarAmount(fees)}

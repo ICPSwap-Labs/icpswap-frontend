@@ -270,7 +270,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                   />
                 </Flex>
 
-                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
+                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.apr" }}>
                   {userApr ? `${userApr}` : "--"}
                 </Typography>
               </Box>
