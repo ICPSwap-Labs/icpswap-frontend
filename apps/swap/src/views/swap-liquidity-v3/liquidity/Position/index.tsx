@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
+import { LoadingRow, Flex, FeeTierPercentLabel } from "@icpswap/ui";
+import { principalToAccount } from "@icpswap/utils";
+import { useSwapPositionOwner } from "@icpswap/hooks";
+import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
 import { Typography, Box } from "components/Mui";
 import { Wrapper, Breadcrumbs, TokenImage } from "components/index";
-import { LoadingRow, Flex, FeeTierPercentLabel } from "@icpswap/ui";
-import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
 import { usePosition } from "hooks/swap/usePosition";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
@@ -11,9 +13,15 @@ import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { InfoPool } from "components/liquidity/index";
 import { PositionInfo, UncollectedFees, PositionValue, ChartsWrapper } from "components/liquidity/Position/index";
 import { BuyTokenButton } from "components/swap/index";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
+import { useRefreshTriggerManager } from "hooks/index";
 
 export default function PositionDetails() {
+  const principal = useAccountPrincipal();
   const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
+  const [refreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId);
   const { position } = usePosition({
@@ -28,6 +36,13 @@ export default function PositionDetails() {
   const token1 = position?.pool.token1;
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0, token1 });
+
+  const { result: owner } = useSwapPositionOwner(position?.pool.id, BigInt(positionId), refreshTrigger);
+
+  const isOwner = useMemo(() => {
+    if (!owner || !principal) return false;
+    return principalToAccount(principal.toString()) === owner;
+  }, [owner, principal]);
 
   return (
     <Wrapper sx={{ padding: "7px 0 20px 0" }}>
@@ -153,9 +168,9 @@ export default function PositionDetails() {
               <Flex vertical gap="16px 0" fullWidth align="flex-start">
                 {position && positionId ? (
                   <>
-                    <PositionInfo position={position} positionId={positionId} />
-                    <UncollectedFees position={position} positionId={positionId} />
-                    <PositionValue position={position} positionId={positionId} />
+                    <PositionInfo position={position} positionId={positionId} owner={owner} isOwner={isOwner} />
+                    <UncollectedFees position={position} positionId={positionId} isOwner={isOwner} />
+                    <PositionValue position={position} positionId={positionId} isOwner={isOwner} />
                   </>
                 ) : null}
               </Flex>

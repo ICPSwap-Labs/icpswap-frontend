@@ -11,9 +11,10 @@ import { usePositionValue, useLoadLiquidityPageCallback } from "hooks/liquidity"
 interface PositionValueProps {
   position: Position;
   positionId: string;
+  isOwner: boolean;
 }
 
-export function PositionValue({ position, positionId }: PositionValueProps) {
+export function PositionValue({ position, positionId, isOwner }: PositionValueProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const positionValue = usePositionValue({ position });
@@ -165,26 +166,28 @@ export function PositionValue({ position, positionId }: PositionValueProps) {
           </Box>
         ) : null}
 
-        <Flex gap="0 12px" fullWidth>
-          <Button
-            variant="contained"
-            className="secondary"
-            sx={{ flex: "50%" }}
-            size={matchDownSM ? "small" : "large"}
-            onClick={loadDecreaseLiquidity}
-          >
-            <Trans>Remove Liquidity</Trans>
-          </Button>
-          <Button
-            variant="contained"
-            className="secondary"
-            sx={{ flex: "50%" }}
-            size={matchDownSM ? "small" : "large"}
-            onClick={loadIncreaseLiquidity}
-          >
-            <Trans>Increase Liquidity</Trans>
-          </Button>
-        </Flex>
+        {isOwner ? (
+          <Flex gap="0 12px" fullWidth>
+            <Button
+              variant="contained"
+              className="secondary"
+              sx={{ flex: "50%" }}
+              size={matchDownSM ? "small" : "large"}
+              onClick={loadDecreaseLiquidity}
+            >
+              <Trans>Remove Liquidity</Trans>
+            </Button>
+            <Button
+              variant="contained"
+              className="secondary"
+              sx={{ flex: "50%" }}
+              size={matchDownSM ? "small" : "large"}
+              onClick={loadIncreaseLiquidity}
+            >
+              <Trans>Increase Liquidity</Trans>
+            </Button>
+          </Flex>
+        ) : null}
       </Flex>
     </MainCard>
   );

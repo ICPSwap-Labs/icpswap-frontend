@@ -17,9 +17,10 @@ import { CollectFees } from "components/liquidity/CollectFees";
 export interface UncollectedFeesProps {
   position: Position | undefined;
   positionId: string;
+  isOwner: boolean;
 }
 
-export function UncollectedFees({ position, positionId }: UncollectedFeesProps) {
+export function UncollectedFees({ position, positionId, isOwner }: UncollectedFeesProps) {
   const theme = useTheme();
 
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("CollectFees");
@@ -80,21 +81,23 @@ export function UncollectedFees({ position, positionId }: UncollectedFeesProps) 
             {totalUSDValue ? formatDollarAmount(totalUSDValue.toString()) : "--"}
           </Typography>
 
-          <CollectFees
-            position={position}
-            positionId={BigInt(positionId)}
-            disabled={disableCollect}
-            onCollectSuccess={handleCollectSuccess}
-          >
-            <Button
-              variant="contained"
-              size="large"
-              sx={{ height: "44px", background: theme.colors.secondaryMain }}
+          {isOwner ? (
+            <CollectFees
+              position={position}
+              positionId={BigInt(positionId)}
               disabled={disableCollect}
+              onCollectSuccess={handleCollectSuccess}
             >
-              <Trans>Collect Fees</Trans>
-            </Button>
-          </CollectFees>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ height: "44px", background: theme.colors.secondaryMain }}
+                disabled={disableCollect}
+              >
+                <Trans>Collect Fees</Trans>
+              </Button>
+            </CollectFees>
+          ) : null}
         </Flex>
 
         <Flex justify="space-between" fullWidth>

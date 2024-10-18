@@ -4,25 +4,31 @@ import { principalToAccount, shorten } from "@icpswap/utils";
 import { Flex, TextButton, Image } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
-import { useSwapPositionOwner, useLiquidityLockIds } from "@icpswap/hooks";
+import { useLiquidityLockIds } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState } from "hooks/liquidity";
-import { useMemo } from "react";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useCallback, useMemo } from "react";
+import { Null } from "@icpswap/types";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 
 interface PositionInfoProps {
   position: Position;
   positionId: string;
+  owner: string | Null;
+  isOwner: boolean;
 }
 
-export function PositionInfo({ position, positionId }: PositionInfoProps) {
+export function PositionInfo({ position, positionId, isOwner, owner }: PositionInfoProps) {
   const positionState = usePositionState(position);
+
+  const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const tokenIds = useMemo(() => {
     return [position.pool.token0.address, position.pool.token1.address];
   }, [position.pool]);
 
   const { result: locksIds } = useLiquidityLockIds(tokenIds);
-  const { result: owner } = useSwapPositionOwner(position.pool.id, BigInt(positionId));
 
   const sneedLedger = useMemo(() => {
     if (!locksIds) return undefined;
@@ -34,6 +40,10 @@ export function PositionInfo({ position, positionId }: PositionInfoProps) {
 
     return principalToAccount(sneedLedger) === owner;
   }, [sneedLedger, owner]);
+
+  const handleTransferSuccess = useCallback(() => {
+    setRefreshTrigger();
+  }, [setRefreshTrigger]);
 
   return (
     <MainCard level={3}>
@@ -56,7 +66,7 @@ export function PositionInfo({ position, positionId }: PositionInfoProps) {
           </Typography>
 
           <Flex gap="0 4px">
-            <Typography color="text.primary">{shorten(owner)}</Typography>
+            <Typography color="text.primary">{owner ? shorten(owner) : "--"}</Typography>
             {isSneed ? <Image src="/images/sneed.svg" alt="" style={{ width: "18px", height: "18px" }} /> : null}
           </Flex>
         </Flex>
@@ -80,13 +90,19 @@ export function PositionInfo({ position, positionId }: PositionInfoProps) {
           </Flex>
         </Flex>
 
-        <Flex fullWidth>
-          <TransferPosition position={position} positionId={BigInt(positionId)}>
-            <TextButton sx={{ fontWeight: 500 }}>
-              <Trans>Transfer Position</Trans>
-            </TextButton>
-          </TransferPosition>
-        </Flex>
+        {isOwner ? (
+          <Flex fullWidth>
+            <TransferPosition
+              position={position}
+              positionId={BigInt(positionId)}
+              onTransferSuccess={handleTransferSuccess}
+            >
+              <TextButton sx={{ fontWeight: 500 }}>
+                <Trans>Transfer Position</Trans>
+              </TextButton>
+            </TransferPosition>
+          </Flex>
+        ) : null}
       </Flex>
     </MainCard>
   );
