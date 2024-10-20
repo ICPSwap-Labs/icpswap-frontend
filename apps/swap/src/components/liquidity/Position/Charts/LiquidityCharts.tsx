@@ -1,12 +1,12 @@
+import { useMemo } from "react";
 import { Box, Typography } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
+import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { usePositionPricePeriodRange } from "@icpswap/hooks";
-import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
 import { PoolCurrentPrice } from "components/swap/index";
 import { PositionPriceRange } from "components/liquidity/index";
 import { Trans } from "@lingui/macro";
-import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR } from "constants/swap";
+import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
 
 import PriceRangeChart from "./RangeCharts";
 
@@ -16,31 +16,44 @@ export interface LiquidityChartsProps {
 
 export function LiquidityCharts({ position }: LiquidityChartsProps) {
   const pool = position.pool;
-  const { token0, token1 } = pool;
+  const { token0, token1, fee } = pool;
 
   const isSorted = token0 && token1 && token0.sortsBefore(token1);
 
   const leftPrice = isSorted ? position.token0PriceLower : position.token0PriceUpper.invert();
   const rightPrice = isSorted ? position.token0PriceUpper : position.token0PriceLower.invert();
-  const currentPrice = isSorted ? position.pool.token0Price.toFixed() : position.pool.token1Price.toFixed();
-
-  const ticksAtLimit = useTicksAtLimitInvert({
-    position,
-  });
+  const currentPrice = isSorted
+    ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
+    : position.pool.token1Price.toFixed(position.pool.token1.decimals);
 
   const { result: periodPriceRange } = usePositionPricePeriodRange(pool.id);
+
+  const tickSpaceLimits = useMemo(
+    () => ({
+      [Bound.LOWER]: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[fee]),
+      [Bound.UPPER]: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[fee]),
+    }),
+    [fee],
+  );
+
+  const ticksAtLimit = useMemo(
+    () => ({
+      [Bound.LOWER]: position.tickLower === tickSpaceLimits.LOWER,
+      [Bound.UPPER]: position.tickUpper === tickSpaceLimits.UPPER,
+    }),
+    [tickSpaceLimits, position],
+  );
 
   return (
     <>
       <PriceRangeChart
         priceLower={leftPrice}
         priceUpper={rightPrice}
-        ticksAtLimit={ticksAtLimit}
         currencyA={token0}
         currencyB={token1}
         price={currentPrice}
-        interactive
         periodPriceRange={periodPriceRange}
+        ticksAtLimit={ticksAtLimit}
       />
 
       <Flex vertical gap="10px 0" align="flex-start" sx={{ margin: "10px" }}>

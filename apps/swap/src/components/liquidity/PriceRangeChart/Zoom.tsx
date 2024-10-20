@@ -62,7 +62,7 @@ export interface ZoomProps {
   setZoom: (transform: ZoomTransform) => void;
   width: number;
   height: number;
-  resetBrush: () => void;
+  resetBrush?: () => void;
   zoomLevels: ZoomLevels;
   noIcons?: boolean;
 }
@@ -145,7 +145,7 @@ export default function Zoom({
           className={classes.chartIcon}
           icon={<ReplayIcon />}
           onClick={() => {
-            resetBrush();
+            if (resetBrush) resetBrush();
             zoomReset();
           }}
         />

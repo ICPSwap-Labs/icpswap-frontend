@@ -1,14 +1,13 @@
 import { max, scaleLinear, ZoomTransform } from "d3";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bound } from "constants/swap";
 import { useTheme } from "components/Mui";
-
 import { Area } from "components/liquidity/PriceRangeChart/Area";
 import { AxisBottom } from "components/liquidity/PriceRangeChart/AxisBottom";
 import { Line } from "components/liquidity/PriceRangeChart/Line";
 import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 import { ChartEntry, ZoomLevels, Dimensions, Margins } from "components/liquidity/PriceRangeChart/types";
 import type { Null, PositionPricePeriodRange } from "@icpswap/types";
+import { Bound } from "constants/swap";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -22,38 +21,27 @@ interface LiquidityChartsProps {
     lower?: number;
     upper?: number;
   };
-  ticksAtLimit: { [bound in Bound]?: boolean | undefined };
   styles: {
     area: {
       // color of the ticks in range
       selection: string;
     };
-    brush: {
-      handle: {
-        west: string;
-        east: string;
-      };
-    };
   };
   dimensions: Dimensions;
   margins: Margins;
-  interactive?: boolean;
-  brushLabels: (d: "w" | "e", x: number) => string;
-  brushDomain: [number, number] | undefined;
-  onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void;
   zoomLevels: ZoomLevels;
   periodPriceRange: PositionPricePeriodRange | Null;
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined };
 }
 
 export function Chart({
-  id = "liquidityChartRangeInput",
+  id = "liquidityPositionChart",
   data: { series, current, lower, upper },
   dimensions: { width, height },
   margins,
-  brushDomain,
-  onBrushDomainChange,
   zoomLevels,
   periodPriceRange,
+  ticksAtLimit,
 }: LiquidityChartsProps) {
   const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
@@ -76,8 +64,8 @@ export function Chart({
     };
 
     if (zoom) {
-      const newXscale = zoom.rescaleX(scales.xScale);
-      scales.xScale.domain(newXscale.domain());
+      const newXScale = zoom.rescaleX(scales.xScale);
+      scales.xScale.domain(newXScale.domain());
     }
 
     return scales;
@@ -87,14 +75,6 @@ export function Chart({
     // reset zoom as necessary
     setZoom(null);
   }, [zoomLevels]);
-
-  useEffect(() => {
-    if (!brushDomain) {
-      onBrushDomainChange(xScale.domain() as [number, number], undefined);
-    }
-  }, [brushDomain, onBrushDomainChange, xScale]);
-
-  console.log("series: ", series);
 
   return (
     <>
@@ -107,12 +87,6 @@ export function Chart({
           // allow zooming inside the x-axis
           height
         }
-        resetBrush={() => {
-          onBrushDomainChange(
-            [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
-            "reset",
-          );
-        }}
         zoomLevels={zoomLevels}
         noIcons
       />

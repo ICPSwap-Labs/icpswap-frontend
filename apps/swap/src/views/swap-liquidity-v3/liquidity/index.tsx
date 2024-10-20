@@ -142,7 +142,19 @@ export default function Liquidity() {
             <Trans>Explore the top pools for high-yield opportunities!</Trans>
           </Typography>
 
-          <Flex fullWidth sx={{ margin: "56px 0 0 0" }} justify="space-between">
+          <Flex
+            fullWidth
+            sx={{
+              margin: "56px 0 0 0",
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "30px 0",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              },
+            }}
+            justify="space-between"
+          >
             <Flex gap="0 33px">
               {tabs.map((tab) => (
                 <Tab

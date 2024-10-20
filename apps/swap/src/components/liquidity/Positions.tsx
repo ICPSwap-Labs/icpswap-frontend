@@ -284,8 +284,8 @@ export function Positions() {
                   >
                     <Trans>Need to lock your liquidity? Check out the Sneedlock feature controlled by Sneed DAO:</Trans>
                   </Typography>
-                  <Link link="https://xyjos-zqaaa-aaaag-ak7iq-cai.icp0.io/">
-                    https://xyjos-zqaaa-aaaag-ak7iq-cai.icp0.io/
+                  <Link link="https://xyjos-zqaaa-aaaag-ak7iq-cai.icp0.io" color="secondary">
+                    https://xyjos-zqaaa-aaaag-ak7iq-cai.icp0.io
                   </Link>
                 </Box>
               }

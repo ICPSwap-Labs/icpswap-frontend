@@ -33,7 +33,7 @@ export interface APRPanelProps {
   sx?: TypographyProps["sx"];
 }
 
-export function APRPanel({ value, fontWeight = 400, fontSize = "12px", align, wrapperSx, sx }: APRPanelProps) {
+export function APRPanel({ value, fontWeight = 500, fontSize = "14px", align, wrapperSx, sx }: APRPanelProps) {
   const theme = useTheme();
 
   return (

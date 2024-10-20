@@ -26,7 +26,6 @@ export function AxisBottom({ xScale, innerHeight, offset = 0 }: AxisBottomProps)
   return useMemo(
     () => (
       <Box
-        id="axis-bottom-xxx"
         component="g"
         sx={{
           line: {

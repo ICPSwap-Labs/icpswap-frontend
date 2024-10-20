@@ -431,7 +431,6 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
           ) : (
             <Flex
               sx={{
-                width: "80px",
                 justifyContent: "flex-end",
               }}
               onClick={(event) => {
