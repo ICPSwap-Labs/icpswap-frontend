@@ -112,9 +112,10 @@ function Transactions({ address }: TransactionsProps) {
         sx={{
           display: "flex",
           margin: "10px 0 0 0",
-          gap: "0 16px",
+          gap: "16px",
           alignItems: "center",
           justifyContent: "space-between",
+          flexWrap: "wrap",
         }}
       >
         <Flex gap="0 16px">
@@ -123,16 +124,15 @@ function Transactions({ address }: TransactionsProps) {
           </Box>
           {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
         </Flex>
-        <Flex>
-          <Button
-            variant="contained"
-            onClick={download}
-            disabled={downloadLoading}
-            startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
-          >
-            <Trans>Download: Excel Export</Trans>
-          </Button>
-        </Flex>
+
+        <Button
+          variant="contained"
+          onClick={download}
+          disabled={downloadLoading}
+          startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
+        >
+          <Trans>Download: Excel Export</Trans>
+        </Button>
       </Box>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
