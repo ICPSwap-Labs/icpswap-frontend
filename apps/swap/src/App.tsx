@@ -6,7 +6,7 @@ import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
-import { useConnectManager, useWalletConnectorManager } from "store/auth/hooks";
+import { useConnectManager } from "store/auth/hooks";
 import RiskStatement from "components/RiskStatement";
 import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -42,9 +42,7 @@ export default function App() {
   useFetchInfoAllTokens();
   useFetchAllSwapTokens();
 
-  const { isConnected } = useConnectManager();
-
-  const [walletConnectorOpen] = useWalletConnectorManager();
+  const { open: connectorModalOpen, isConnected } = useConnectManager();
 
   const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
   const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
@@ -87,7 +85,7 @@ export default function App() {
                         <FullscreenLoading />
                         <GlobalSteps />
                         {isConnected ? <RiskStatement /> : null}
-                        {walletConnectorOpen ? <WalletConnector /> : null}
+                        {connectorModalOpen ? <WalletConnector /> : null}
                       </NavigationScroll>
                     </ActorInitial>
                   </GlobalContext.Provider>

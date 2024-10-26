@@ -1,11 +1,11 @@
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
 import type { Identity } from "@dfinity/agent";
-import { IConnector, CreateActorArgs, ConnectorType, type WalletConnectorConfig } from "./connectors";
+import { ConnectorAbstract, CreateActorArgs, Connector, type WalletConnectorConfig } from "./connectors";
 
 const iiExpireTime = 7 * 24 * 3600; // seconds
 
-export class InternetIdentityConnector implements IConnector {
+export class InternetIdentityConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     host: string;
@@ -19,7 +19,7 @@ export class InternetIdentityConnector implements IConnector {
 
   private client?: AuthClient;
 
-  public type = ConnectorType.IC;
+  public type = Connector.IC;
 
   public get getPrincipal() {
     return this.principal;
@@ -108,5 +108,5 @@ export class InternetIdentityConnector implements IConnector {
 export const InternetIdentity = {
   connector: InternetIdentityConnector,
   id: "ii",
-  type: ConnectorType.IC,
+  type: Connector.IC,
 };

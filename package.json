@@ -22,7 +22,12 @@
     "check-local-tokens": "ts-node-esm ./scripts/check-tokens-metadata.ts"
   },
   "resolutions": {
-    "@babel/runtime": "7.25.0"
+    "@babel/runtime": "7.25.0",
+    "@dfinity/agent": "2.1.2",
+    "@dfinity/auth-client": "2.1.2",
+    "@dfinity/candid": "2.1.2",
+    "@dfinity/identity": "2.1.2",
+    "@dfinity/principal": "2.1.2"
   },
   "devDependencies": {
     "@types/qs": "^6.9.4",
@@ -53,12 +58,12 @@
     "react-scripts": "5.0.1"
   },
   "dependencies": {
-    "@dfinity/agent": "1.0.1",
-    "@dfinity/auth-client": "1.0.1",
-    "@dfinity/candid": "1.0.1",
-    "@dfinity/identity": "1.0.1",
+    "@dfinity/agent": "2.1.2",
+    "@dfinity/auth-client": "2.1.2",
+    "@dfinity/candid": "2.1.2",
+    "@dfinity/identity": "2.1.2",
     "@dfinity/ledger-icp": "2.2.0",
-    "@dfinity/principal": "1.0.1",
+    "@dfinity/principal": "2.1.2",
     "@dfinity/utils": "2.1.1",
     "@dfinity/nns": "4.0.2",
     "@lingui/cli": "4.6.0",

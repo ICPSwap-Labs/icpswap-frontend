@@ -3,7 +3,7 @@ import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton } from "components/index";
 import { Connector } from "constants/wallet";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { useConnectManager } from "store/auth/hooks";
 
 import { ConnectorComponent } from "./connector";
 
@@ -53,7 +53,7 @@ type Wallet = {
 };
 
 export default function WalletConnector() {
-  const [open, walletConnectorManager] = useWalletConnectorManager();
+  const { open, showConnector } = useConnectManager();
 
   const classes = useStyles();
 
@@ -93,7 +93,7 @@ export default function WalletConnector() {
   ];
 
   return (
-    <Modal open={open} onClose={() => walletConnectorManager(false)} title={t`Connect a wallet`}>
+    <Modal open={open} onClose={() => showConnector(false)} title={t`Connect a wallet`}>
       <Flex align="center">
         <Box className={classes.wrapper}>
           <Typography

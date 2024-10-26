@@ -4,13 +4,7 @@ import { useTheme } from "components/Mui";
 import { shorten } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import {
-  useAccountPrincipal,
-  useConnectorStateConnected,
-  useUserLogout,
-  useWalletConnectorManager,
-  useConnectorType,
-} from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnectorType } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
@@ -30,14 +24,12 @@ export default function ProfileSection() {
 
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const prevOpen = useRef(open);
-
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const logout = useUserLogout();
   const history = useHistory();
   const connectorType = useConnectorType();
 
-  const [, walletManager] = useWalletConnectorManager();
+  const { showConnector, disconnect } = useConnectManager();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -49,8 +41,8 @@ export default function ProfileSection() {
   };
 
   const handleConnectWallet = async () => {
-    await logout();
-    walletManager(true);
+    await disconnect();
+    showConnector(true);
   };
 
   useEffect(() => {

@@ -1,32 +1,32 @@
-import { Grid, Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button } from "components/Mui";
 import { MainCard } from "components/index";
-import NoData from "components/no-data";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { NoData, Flex } from "@icpswap/ui";
+import { useConnectManager } from "store/auth/hooks";
 import { Trans } from "@lingui/macro";
 
 export default function ConnectWallet() {
-  const [, walletManager] = useWalletConnectorManager();
+  const { showConnector } = useConnectManager();
 
   return (
-    <Grid container justifyContent="center">
+    <Flex fullWidth align="flex-start" justify="center">
       <Box sx={{ maxWidth: "1400px", width: "100%" }}>
         <MainCard level={3}>
-          <Grid container alignItems="center" flexDirection="column" sx={{ height: "250px" }}>
+          <Flex fullWidth vertical sx={{ height: "250px" }}>
             <NoData />
             <Typography color="text.primary">
               <Trans>Connect wallet to view</Trans>
             </Typography>
             <Button
               variant="contained"
-              onClick={() => walletManager(true)}
+              onClick={() => showConnector(true)}
               sx={{ width: "100%", maxWidth: "522px", marginTop: "23px" }}
               size="large"
             >
               <Trans>Connect Wallet</Trans>
             </Button>
-          </Grid>
+          </Flex>
         </MainCard>
       </Box>
-    </Grid>
+    </Flex>
   );
 }

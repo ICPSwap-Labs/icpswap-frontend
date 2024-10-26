@@ -2,11 +2,11 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
+import "@nfid/identitykit/react/styles.css";
 
 import * as serviceWorker from "./serviceWorker";
 import store, { persistor } from "./store/index";
-import App from "./App";
-import { LanguageProvider } from "./i18n";
+import { AppWithProvider } from "./Provider";
 import "./tracing";
 import "./assets/css/global.css";
 
@@ -30,9 +30,7 @@ createRoot(root).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <LanguageProvider>
-          <App />
-        </LanguageProvider>
+        <AppWithProvider />
       </BrowserRouter>
     </PersistGate>
   </Provider>,

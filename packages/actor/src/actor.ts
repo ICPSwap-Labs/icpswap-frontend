@@ -2,6 +2,7 @@ import { HttpAgent, ActorSubclass } from "@dfinity/agent";
 import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
 import { ic_host } from "@icpswap/constants";
+
 import { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
 
@@ -24,7 +25,6 @@ export enum Connector {
   NFID = "NFID",
   INFINITY = "INFINITY",
   ME = "ME",
-  STOIC_MNEMONIC = "STOIC_MNEMONIC",
   Metamask = "Metamask",
 }
 

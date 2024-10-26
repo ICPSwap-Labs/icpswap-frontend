@@ -12,7 +12,9 @@ export interface WalletConnectorConfig {
   host: string;
 }
 
-export interface IConnector {
+export type ConnectCallback = () => Promise<void>;
+
+export interface ConnectorAbstract {
   init: () => Promise<boolean>;
   isConnected: () => Promise<boolean>;
   createActor: <Service>({
@@ -26,4 +28,4 @@ export interface IConnector {
   expired: () => Promise<boolean>;
 }
 
-export { Connector as ConnectorType };
+export { Connector };

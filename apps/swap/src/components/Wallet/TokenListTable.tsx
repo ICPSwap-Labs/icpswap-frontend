@@ -12,19 +12,18 @@ import {
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
+import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
-import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
+import { useAccountPrincipal } from "store/auth/hooks";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
 import XTCTopUpModal from "components/XTCTopup/index";
 import { useInfoToken } from "hooks/info/useInfoTokens";
-import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
@@ -105,13 +104,11 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const history = useHistory();
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const walletType = useConnectorType();
 
   const [XTCTopUpShow, setXTCTopUpShow] = useState(false);
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [receiveOpen, setReceiveOpen] = useState(false);
-  const [NFIDTransferOpen, setNFIDTransferOpen] = useState(false);
   const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
   const { sortBalance } = useSortBalanceManager();
 
@@ -193,7 +190,6 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const handleTransferSuccess = () => {
     setRefreshInnerCounter(refreshInnerCounter + 1);
     handleCloseModal();
-    setNFIDTransferOpen(false);
   };
 
   const handleTopUpSuccess = () => {
@@ -340,10 +336,6 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
             isBridgeToken={isBridgeToken}
           />
 
-          {canisterId === ICP.address && walletType === Connector.NFID ? (
-            <Button label={t`NFID Transfer`} onClick={() => setNFIDTransferOpen(true)} />
-          ) : null}
-
           {tokenInfo?.canisterId === XTC.address ? <Button label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
 
           {tokenInfo?.canisterId === WRAPPED_ICP.address ? (
@@ -365,15 +357,6 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
         <TransferModal
           open={open}
           onClose={handleCloseModal}
-          token={tokenInfo}
-          onTransferSuccess={handleTransferSuccess}
-        />
-      ) : null}
-
-      {NFIDTransferOpen && !!tokenInfo ? (
-        <NFIDTransfer
-          open={NFIDTransferOpen}
-          onClose={() => setNFIDTransferOpen(false)}
           token={tokenInfo}
           onTransferSuccess={handleTransferSuccess}
         />

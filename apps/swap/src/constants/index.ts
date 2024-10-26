@@ -63,6 +63,9 @@ export const SAFE_INTEGER_LENGTH = 12;
 export const SAFE_DECIMALS_LENGTH = 8;
 export const MAX_SWAP_INPUT_LENGTH = 25;
 
+// 24 hours (nanosecond)
+export const MAX_IDENTITY_KIT_TIME_LIVE = BigInt(24 * 3600) * BigInt(1000 * 1000 * 1000);
+
 export * from "./canister";
 export * from "./server";
 export * from "./tokens";
