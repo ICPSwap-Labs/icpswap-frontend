@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 
 import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
 import { PoolTransactions } from "./PoolTransactions";
 import { UserTransactions } from "./UserTransactions";
 import { Positions } from "./Positions";
+import { AutoRefresh } from "./AutoRefresh";
+import { AddLiquidity } from "./AddLiquidity";
 
 enum TransactionPart {
   All = "all",
@@ -21,15 +22,33 @@ const Menus = [
   { label: t`Your Positions`, value: TransactionPart.POSITIONS },
 ];
 
+let AUTO_REFRESH_COUNTER = 0;
+
 export default function Transactions() {
-  const theme = useTheme() as Theme;
-  const { tradePoolId } = useContext(SwapProContext);
+  const theme = useTheme();
+  const { tradePoolId, inputToken, outputToken } = useContext(SwapProContext);
 
   const [active, setActive] = useState<TransactionPart>(TransactionPart.All);
+  const [autoRefresh, setAutoRefresh] = useState(0);
+
+  const handleAutoRefresh = () => {
+    AUTO_REFRESH_COUNTER++;
+    setAutoRefresh(AUTO_REFRESH_COUNTER);
+  };
 
   return (
     <SwapProCardWrapper padding="16px 0px">
-      <Box sx={{ padding: "0 16px" }}>
+      <Box
+        sx={{
+          padding: "0 16px",
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "12px 0",
+          },
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -45,7 +64,7 @@ export default function Transactions() {
               className={e.value === active ? "active" : ""}
               sx={{
                 cursor: "pointer",
-                padding: "6px 10px",
+                padding: "10px 10px",
                 borderRadius: "12px",
                 "&.active": {
                   background: theme.palette.background.level3,
@@ -73,10 +92,13 @@ export default function Transactions() {
             </Box>
           ))}
         </Box>
+
+        {active === TransactionPart.All ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
+        {active === TransactionPart.POSITIONS ? <AddLiquidity token0={inputToken} token1={outputToken} /> : null}
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} /> : null}
+        {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} /> : null}
         {active === TransactionPart.YOUR ? <UserTransactions canisterId={tradePoolId} /> : null}
         {active === TransactionPart.POSITIONS ? <Positions canisterId={tradePoolId} /> : null}
       </Box>

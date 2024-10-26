@@ -6,7 +6,6 @@ export enum NETWORK {
 
 export const hostMap = {
   [NETWORK.LOCAL]: "http://localhost:8000",
-  [NETWORK.TEST]: "",
   [NETWORK.IC]: "https://icp0.io",
 };
 

@@ -1,24 +1,18 @@
+/* eslint-disable global-require */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { actor, Actor } from "@icpswap/actor";
 import { network, NETWORK, host } from "./server";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  const context = require.context("../canister_ids_json", true, /\.json$/);
+  const canister_ids = require("../canister_ids.json");
+  const temp_canister_ids = require("../temp_canister_ids.json");
 
-  context.keys().forEach((key: string) => {
-    const canister_ids = context(key);
-
-    if (
-      (key.includes(network) && network !== NETWORK.IC) ||
-      (network === NETWORK.IC && key.includes("canister_ids.json"))
-    ) {
-      CanisterIdsJson = {
-        ...CanisterIdsJson,
-        ...canister_ids,
-      };
-    }
-  });
+  CanisterIdsJson = {
+    ...canister_ids,
+    ...temp_canister_ids,
+  };
 } catch (error) {
   console.error(error);
 }

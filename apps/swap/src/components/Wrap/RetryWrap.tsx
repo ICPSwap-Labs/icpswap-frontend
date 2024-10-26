@@ -1,20 +1,23 @@
 import { ReactNode, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import Modal from "components/modal/index";
 import { Trans, t } from "@lingui/macro";
 import isFunction from "lodash/isFunction";
-import FilledTextField from "components/FilledTextField";
 import Identity, { CallbackProps } from "components/Identity";
 import { Identity as AuthIdentity, ResultStatus } from "types";
 import { wrapICP } from "hooks/useWICPCalls";
 import { useSuccessTip, useErrorTip, useFullscreenLoading } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import { TextButton, TextFieldNumberComponent } from "components/index";
+import { TextButton, TextFieldNumberComponent, FilledTextField, Modal, AuthButton } from "components/index";
 import { useAccount } from "store/global/hooks";
 import isNumber from "lodash/isNumber";
-import Button from "components/authentication/ButtonConnector";
 
-export default function RetryWrap({ children, onRetrySuccess }: { children: ReactNode; onRetrySuccess: () => void }) {
+export default function RetryWrap({
+  children,
+  onRetrySuccess,
+}: {
+  children: ReactNode | ((val: any) => JSX.Element);
+  onRetrySuccess: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [blockHeight, setBlockHeight] = useState<null | bigint>(null);
   const account = useAccount();
@@ -91,7 +94,7 @@ export default function RetryWrap({ children, onRetrySuccess }: { children: Reac
           <Box mt={5}>
             <Identity onSubmit={handleWrap}>
               {({ submit }: CallbackProps) => (
-                <Button
+                <AuthButton
                   fullWidth
                   disabled={!blockHeight || loading || !!errorMessage}
                   variant="contained"
@@ -99,7 +102,7 @@ export default function RetryWrap({ children, onRetrySuccess }: { children: Reac
                   onClick={submit}
                 >
                   {errorMessage || <Trans>Retry</Trans>}
-                </Button>
+                </AuthButton>
               )}
             </Identity>
           </Box>

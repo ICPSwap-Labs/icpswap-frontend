@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import { getTokenStandard } from "store/token/cache/hooks";

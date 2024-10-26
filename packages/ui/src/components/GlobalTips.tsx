@@ -1,4 +1,6 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { ReactNode } from "react";
+import { Box, Typography } from "./Mui";
+import { Flex } from "./Grid/Flex";
 
 function CloseIcon() {
   return (
@@ -19,27 +21,28 @@ function CloseIcon() {
 }
 
 export interface GlobalTipsProps {
-  onClose: () => void;
+  onClose?: () => void;
+  children?: ReactNode;
 }
 
-export function GlobalTips({ onClose }: GlobalTipsProps) {
+export function GlobalTips({ children, onClose }: GlobalTipsProps) {
   return (
-    <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
-      <Grid item xs>
-        <Typography
-          sx={{
-            color: "#ffffff",
-            cursor: "pointer",
-            "@media(max-width: 640px)": { fontSize: "12px" },
-          }}
-        >
-          The ICPSwap testing environment is for the IC project team only, with all tokens being test tokens.
-        </Typography>
-      </Grid>
+    <Flex sx={{ width: "1wh", height: "52px", background: "#B79C4A", padding: "0 20px" }} gap="0 10px">
+      <Typography
+        sx={{
+          color: "#ffffff",
+          cursor: "pointer",
+          "@media(max-width: 640px)": { fontSize: "12px" },
+        }}
+      >
+        {children}
+      </Typography>
 
-      <Box sx={{ cursor: "pointer" }} onClick={onClose}>
-        <CloseIcon />
-      </Box>
-    </Grid>
+      {onClose ? (
+        <Box sx={{ cursor: "pointer" }} onClick={onClose}>
+          <CloseIcon />
+        </Box>
+      ) : null}
+    </Flex>
   );
 }

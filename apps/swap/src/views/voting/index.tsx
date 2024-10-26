@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { pageArgsFormat } from "@icpswap/utils";
-import { Wrapper, MainCard , Pagination, PaginationType, NoData, StaticLoading } from "components/index";
+import { Wrapper, MainCard, Pagination, PaginationType, NoData, ImageLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import { ProjectInfo } from "@icpswap/types";
 import { useVotingProjects } from "@icpswap/hooks";
@@ -120,7 +120,7 @@ export default function Voting() {
                 justifyContent: "center",
               }}
             >
-              <StaticLoading loading={loading} />
+              <ImageLoading loading={loading} />
             </Box>
           ) : null}
 

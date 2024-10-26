@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { MainCard } from "components/index";
-import FilledTextField from "components/FilledTextField";
+import {
+  Grid,
+  Box,
+  Typography,
+  TextField,
+  InputAdornment,
+  useTheme,
+  useMediaQuery,
+  Theme,
+  makeStyles,
+} from "components/Mui";
+import { MainCard, FilledTextField, Wrapper } from "components/index";
 import { t } from "@lingui/macro";
 import { IconSearch } from "@tabler/icons";
 import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";
 import debounce from "lodash/debounce";
-import { Theme } from "@mui/material/styles";
-import Wrapper from "components/Wrapper";
 import { useParsedQueryString } from "@icpswap/hooks";
 import NFTMarketplace from "./NFTMarket";
 import NFTMarketSaleRecords from "./NFTMarketSaleRecords";
@@ -187,7 +193,6 @@ export default function MarketWrapper({
                         fullHeight
                         alignCenter
                         select
-                        contained={false}
                         placeholder={t`Sort By`}
                         required
                         value={sortBy}

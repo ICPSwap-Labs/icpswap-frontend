@@ -1,15 +1,15 @@
 import { useState, useMemo } from "react";
-import { Typography, Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Trans } from "@lingui/macro";
-import { Theme, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { TokenImage } from "components/Image/Token";
-import PositionRangeState from "./PositionRangeState";
+import { PositionRangeState } from "components/swap/index";
+import { usePositionState } from "hooks/liquidity";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -60,10 +60,6 @@ export interface LiquidityInfoProps {
   version?: "v2" | "v3";
 }
 
-function hasLiquidity(position: Position | undefined) {
-  return position?.liquidity?.toString() !== "0";
-}
-
 export default function LiquidityInfo({ position }: LiquidityInfoProps) {
   const classes = useStyle();
 
@@ -101,12 +97,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
     return !!currencyQuote && !!currencyBase ? `${currencyQuote?.symbol} per ${currencyBase?.symbol}` : "--";
   }, [currencyQuote, currencyBase]);
 
-  const outOfRange =
-    pool && (tickUpper || tickUpper === 0) && (tickLower || tickLower === 0)
-      ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper
-      : false;
-
-  const closed = !hasLiquidity(position);
+  const positionState = usePositionState(position);
 
   return (
     <Grid container flexDirection="column">
@@ -156,7 +147,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
           </Typography>
         </Box>
 
-        <PositionRangeState outOfRange={outOfRange} closed={closed} />
+        <PositionRangeState state={positionState} />
       </Grid>
 
       <Grid item xs sx={{ margin: "24px 0 0 0" }}>

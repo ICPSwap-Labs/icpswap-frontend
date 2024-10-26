@@ -6,7 +6,7 @@ import { UserSwapPoolsBalance } from "hooks/useUserAllReclaims";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
-import { StaticLoading, NoData, SelectToken } from "ui-component/index";
+import { LoadingRow, NoData, SelectToken } from "ui-component/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
@@ -123,7 +123,21 @@ function Reclaim({ address }: ReclaimProps) {
 
           {allClaims.length === 0 && !loading ? <NoData /> : null}
 
-          {loading ? <StaticLoading loading={loading} /> : null}
+          {loading ? (
+            <Box sx={{ padding: "16px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : null}
         </Box>
       </Box>
     </>

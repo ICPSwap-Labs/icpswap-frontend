@@ -1,58 +1,55 @@
-import { Box, Typography, SvgIcon } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { getStateColor, PositionState } from "utils/swap/index";
+import { PositionRangeDot } from "components/liquidity/index";
 
-const useStyle = makeStyles((theme: Theme) => {
-  return {
-    wrapper: {
-      display: "flex",
-      alignItems: "center",
-      height: "24px",
-      padding: "0 9px",
-      borderRadius: "8px",
-
-      "& .MuiTypography-root": {
-        fontSize: "12px",
-        fontWeight: 500,
-      },
-
-      "&.inRange": {
-        background: theme.colors.darkPrimary400,
-      },
-
-      "&.closed": {
-        background: theme.colors.darkPrimary400,
-      },
-
-      "&.outOfRange": {
-        background: "#FFC107",
-        "& .MuiTypography-root": {
-          color: theme.colors.darkLevel1,
-          marginLeft: "3px",
-        },
-      },
-    },
-  };
-});
-
-function Marker(props: any) {
-  return (
-    <SvgIcon width="12" height="12" viewBox="0 0 12 12" {...props}>
-      <path
-        d="M5.5 3.5H6.5V4.5H5.5V3.5ZM5.5 5.5H6.5V8.5H5.5V5.5ZM6 1C3.24 1 1 3.24 1 6C1 8.76 3.24 11 6 11C8.76 11 11 8.76 11 6C11 3.24 8.76 1 6 1ZM6 10C3.795 10 2 8.205 2 6C2 3.795 3.795 2 6 2C8.205 2 10 3.795 10 6C10 8.205 8.205 10 6 10Z"
-        fill={props.color ? props.color : "#111936"}
-      />
-    </SvgIcon>
-  );
+interface UseStyleProps {
+  width?: string;
 }
 
-function Closed() {
-  const classes = useStyle();
+const useStyle = ({ width }: UseStyleProps) => {
+  return makeStyles((theme: Theme) => {
+    return {
+      wrapper: {
+        width: width ?? "fit-content",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "24px",
+        padding: "0 9px",
+        borderRadius: "8px",
+        gap: "0 6px",
+        "& .MuiTypography-root": {
+          fontSize: "12px",
+          fontWeight: 500,
+        },
+        "&.inRange": {
+          background: theme.colors.darkLevel3,
+        },
+        "&.closed": {
+          background: theme.colors.darkLevel3,
+        },
+        "&.outOfRange": {
+          background: getStateColor(PositionState.OutOfRange),
+          "& .MuiTypography-root": {
+            color: theme.palette.text.primary,
+          },
+        },
+      },
+    };
+  });
+};
+
+interface ClosedProps {
+  width?: string;
+}
+
+function Closed({ width }: ClosedProps) {
+  const classes = useStyle({ width })();
 
   return (
     <Box component="span" className={`${classes.wrapper} closed`}>
-      <Marker fontSize="12px" color="#fff" />
+      <PositionRangeDot state={PositionState.CLOSED} />
 
       <Typography color="#ffffff" sx={{ marginLeft: "3px" }}>
         <Trans>Closed</Trans>
@@ -61,12 +58,16 @@ function Closed() {
   );
 }
 
-function OutOfRange() {
-  const classes = useStyle();
+interface OutOfRangeProps {
+  width?: string;
+}
+
+function OutOfRange({ width }: OutOfRangeProps) {
+  const classes = useStyle({ width })();
 
   return (
     <Box className={`${classes.wrapper} outOfRange`}>
-      <Marker fontSize="12px" />
+      <PositionRangeDot background="#ffffff" state={PositionState.OutOfRange} />
 
       <Typography>
         <Trans>Out of range</Trans>
@@ -75,15 +76,17 @@ function OutOfRange() {
   );
 }
 
-function InRange() {
-  const classes = useStyle();
+interface InRangeProps {
+  width?: string;
+}
+
+function InRange({ width }: InRangeProps) {
+  const classes = useStyle({ width })();
 
   return (
     <Box className={`${classes.wrapper} inRange`}>
-      <Box
-        component="span"
-        sx={{ background: "#54C081", width: "8px", height: "8px", borderRadius: "50%", marginRight: "8px" }}
-      />
+      <PositionRangeDot state={PositionState.InRange} />
+
       <Typography color="#ffffff">
         <Trans>In range</Trans>
       </Typography>
@@ -92,10 +95,16 @@ function InRange() {
 }
 
 export interface PositionRangeStateProps {
-  outOfRange?: boolean | undefined;
-  closed?: boolean | undefined;
+  width?: string;
+  state: PositionState | undefined;
 }
 
-export default function PositionRangeState({ outOfRange, closed }: PositionRangeStateProps) {
-  return closed ? <Closed /> : outOfRange ? <OutOfRange /> : <InRange />;
+export function PositionRangeState({ state, width }: PositionRangeStateProps) {
+  return state === PositionState.CLOSED ? (
+    <Closed width={width} />
+  ) : state === PositionState.OutOfRange ? (
+    <OutOfRange width={width} />
+  ) : (
+    <InRange width={width} />
+  );
 }

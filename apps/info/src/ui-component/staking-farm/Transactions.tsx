@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
-import { pageArgsFormat, enumToString, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
+import { pageArgsFormat, enumToString, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ListLoading, NoData, Pagination, PaginationType } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import { useV3FarmStakeRecords } from "@icpswap/hooks";
 import { type StakingFarmStakeTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { useTokenInfo } from "hooks/token";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({
   transactions,
@@ -24,22 +25,30 @@ export function PoolItem({
   return (
     <TableRow>
       <TableCell>
-        <Typography>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
+        <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{upperFirst(enumToString(transactions.transType))}</Typography>
+        <BodyCell>{upperFirst(enumToString(transactions.transType))}</BodyCell>
       </TableCell>
       <TableCell>
-        <AddressFormat address={isStaking ? transactions.from.toString() : transactions.to.toString()} />
+        <AddressFormat
+          address={isStaking ? transactions.from.toString() : transactions.to.toString()}
+          sx={{ fontSize: "16px" }}
+        />
       </TableCell>
       <TableCell>
-        <Typography sx={{ maxWidth: "200px", wordBreak: "break-word" }}>
+        <BodyCell sx={{ maxWidth: "200px", wordBreak: "break-word" }}>
           {isStaking
             ? ""
-            : toSignificant(parseTokenAmount(transactions.amount, token?.decimals).toString(), 6, {
-                groupSeparator: ",",
-              })}
-        </Typography>
+            : `${
+                token
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(transactions.amount, token?.decimals).toString(),
+                      6,
+                    )} ${token.symbol}`
+                  : "--"
+              }`}
+        </BodyCell>
       </TableCell>
     </TableRow>
   );
@@ -68,15 +77,25 @@ export default function Transactions({
         <TableHead>
           <TableRow>
             <TableCell>
-              <Trans>Time</Trans>
+              <HeaderCell>
+                <Trans>Time</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Type</Trans>
+              <HeaderCell>
+                <Trans>Type</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Address</Trans>
+              <HeaderCell>
+                <Trans>Address</Trans>
+              </HeaderCell>
             </TableCell>
-            <TableCell>Reward Amount</TableCell>
+            <TableCell>
+              <HeaderCell>
+                <Trans>Reward Amount</Trans>
+              </HeaderCell>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -6,7 +6,7 @@ import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
 import { MainCard } from "components/index";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
-import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swapv2/burn/hooks";
 import { useSlippageManager, useUserTransactionsDeadline } from "store/swapv2/cache/hooks";
 import { BURN_FIELD, slippageToPercent } from "constants/mint";

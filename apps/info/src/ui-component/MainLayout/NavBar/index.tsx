@@ -123,9 +123,9 @@ export default function NavBar() {
       path: "/token/list",
     },
     {
-      key: "staking-token",
-      name: t`Token Pools`,
-      path: "/staking-token",
+      key: "stake",
+      name: t`Stake`,
+      path: "/stake",
     },
     {
       key: "marketplace",
@@ -134,9 +134,9 @@ export default function NavBar() {
     },
 
     {
-      key: "staking-farm",
-      name: t`Farms`,
-      path: "/staking-farm",
+      key: "farm",
+      name: t`Farm`,
+      path: "/farm",
     },
     {
       key: "/token-claim",

@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
-import { Modal, TextButton } from "components/index";
+import { Modal, TextButton, FilledTextField } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import TokenStandardLabel from "components/token/TokenStandardLabel";
-import FilledTextField from "components/FilledTextField";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";
-import { useUpdateImportedToken, useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
+import { useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
 import { INFO_URL } from "constants/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
-import { Principal } from "@dfinity/principal";
-import { useSaveCacheTokenCallback } from "store/wallet/hooks";
+import { useUpdateTaggedTokenCallback } from "store/wallet/hooks";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -64,8 +62,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
   const [riskWarning, setRiskWarning] = useState(false);
 
   const updateTokenStandard = useUpdateTokenStandard();
-  const updateImportedToken = useUpdateImportedToken();
-  const saveTokenToWallet = useSaveCacheTokenCallback();
+  const saveTokenToWallet = useUpdateTaggedTokenCallback();
   const [openSuccessTip] = useSuccessTip();
 
   const tokens = useGlobalTokenList();
@@ -102,16 +99,8 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
   const handleConfirm = () => {
     if (!metadata) return;
 
-    updateImportedToken(values.id, {
-      decimals: metadata.decimals,
-      metadata: [],
-      name: metadata.name,
-      standardType: values.standard as TOKEN_STANDARD,
-      symbol: metadata.symbol,
-      canisterId: Principal.fromText(values.id),
-    });
-    updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
-    registerTokens({ canisterIds: [values.id], standard: values.standard as TOKEN_STANDARD });
+    updateTokenStandard([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
+    registerTokens([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
     openSuccessTip(t`Imported successfully`);
     saveTokenToWallet([values.id]);
     if (onImportSuccessfully) onImportSuccessfully();
@@ -172,7 +161,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
 
       {checkFailed ? (
         <Box mt="16px">
-          <Typography color="text.warning">
+          <Typography color="text.danger">
             <Trans>This canister id did not match the token standard "{values.standard}"</Trans>
           </Typography>
         </Box>

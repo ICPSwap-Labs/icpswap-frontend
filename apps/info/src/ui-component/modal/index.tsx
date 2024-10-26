@@ -107,14 +107,11 @@ export default function Modal({
       sx={{
         "& .MuiDialogTitle-root": {
           ...(matchDownMD ? { padding: "8px 14px" } : {}),
-          "&+.MuiDialogContent-root": {
-            paddingTop: "5px",
-            ...(matchDownMD ? { paddingTop: "5px" } : {}),
-          },
         },
         "& .MuiDialogContent-root": {
           position: "relative",
-          ...(matchDownMD ? { padding: "8px 14px" } : {}),
+          padding: "24px",
+          ...(matchDownMD ? { padding: "20px" } : {}),
         },
         ...{
           "& .MuiDialog-paper": {

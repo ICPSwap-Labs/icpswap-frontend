@@ -141,7 +141,7 @@ export default function TokenClaim() {
   return (
     <Wrapper>
       {isConnected ? (
-        <Box sx={{ paddingTop: "40px", maxWidth: "800px", width: "100%", margin: " 0 auto" }}>
+        <Box sx={{ maxWidth: "800px", width: "100%", margin: " 0 auto" }}>
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography color="text.primary" fontWeight={500} fontSize="24px">
               <Trans>Claim Your Tokens</Trans>

@@ -28,7 +28,6 @@ export default {
   // error
   errorLight: "#ef9a9a",
   errorMain: "#f44336",
-  errorDark: "#c62828",
 
   // orange
   orangeLight: "#fbe9e7",
@@ -39,9 +38,10 @@ export default {
   warningLight: "#F2994A",
   warningMain: "#ffe57f",
   warningDark: "#ffc107",
-  warning: "#D3625B",
 
-  orangeWarning: "#B79C4A",
+  danger: "#D3625B",
+
+  warning: "#B79C4A",
 
   // grey
   grey50: "#fafafa",
@@ -56,7 +56,7 @@ export default {
   // -----------------------|| DARK THEME VARIANTS ||-----------------------//
 
   // paper & background
-  darkPaper: "#111936",
+  darkPaper: "#1a223f",
   darkBackground: "#1a223f",
 
   // dark 800 & 900
@@ -72,6 +72,8 @@ export default {
   darkTextTertiary: "#4F5A84",
   darkTextFourth: "#29314F",
   darkTextFifth: "#212946",
+
+  disable: "#4F5A84",
 
   lightPrimaryMain: "#8672FF",
 
@@ -108,6 +110,10 @@ export default {
 
   defaultGradientStart: "#5569db",
   defaultGradientEnd: "#8572ff",
-
   border0: "#4F5A84",
+  border1: "#353C5D",
+
+  apr: "#54C081",
+
+  "text.success": "#54C081",
 };

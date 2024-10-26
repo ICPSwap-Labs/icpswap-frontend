@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {
   Pagination,
@@ -18,7 +18,7 @@ import { Trans } from "@lingui/macro";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import { useStateTokenCapId, useTokenStandardIsRegistered, useUpdateTokenStandards } from "store/token/cache/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import upperFirst from "lodash/upperFirst";
 import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
 
@@ -117,15 +117,11 @@ export function Transactions() {
       <Box sx={{ height: "20px" }} />
 
       <MainCard>
-        <Grid container mb="20px">
-          <Grid item xs>
-            <Typography variant="h3">
-              <Trans>Transactions</Trans>
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="h3">
+          <Trans>Transactions</Trans>
+        </Typography>
 
-        <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative", margin: "20px 0 0 0", overflow: "auto" }}>
           <Header className={classes.wrapper}>
             <HeaderCell>
               <Trans>Type</Trans>
@@ -155,18 +151,20 @@ export function Transactions() {
           {list.length === 0 && !loading ? <NoData /> : null}
 
           {loading ? (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
+            <Box sx={{ padding: "16px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
           ) : null}
         </Box>
 

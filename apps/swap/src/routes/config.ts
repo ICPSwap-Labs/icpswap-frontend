@@ -3,29 +3,34 @@ import Loadable from "../components/Loading/Loadable";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
-// const StakingFarm = Loadable(lazy(() => import("../views/staking-farm/index")));
-// const StakingFarmCreate = Loadable(lazy(() => import("../views/staking-farm/create")));
+const Farms = Loadable(lazy(() => import("../views/staking-farm/index")));
+const Farm = Loadable(lazy(() => import("../views/staking-farm/farm")));
+const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 
-// const StakingToken = Loadable(lazy(() => import("../views/staking-token")));
-// const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
+const Staking = Loadable(lazy(() => import("../views/staking-token")));
+const StakingDetails = Loadable(lazy(() => import("../views/staking-token/details")));
+const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
+const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
-const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/Swap")));
+const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
+const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));
 const IncreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/IncreaseLiquidity")));
 const DecreaseLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/DecreaseLiquidity")));
-const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/Reclaim")));
+const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/reclaim/Reclaim")));
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
-const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 
 // const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
-// const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
-// const Console = Loadable(lazy(() => import("../views/console/index")));
-// const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
-// const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
+const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
+const Console = Loadable(lazy(() => import("../views/console/index")));
+const ConsoleBurn = Loadable(lazy(() => import("../views/console/burn")));
+
+const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
+const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 
 // const NFTMarket = Loadable(lazy(() => import("../views/nft")));
@@ -42,47 +47,47 @@ const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDeta
 // const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
 // const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
 
-// const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
-// const AddLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/AddLiquidity")));
-// const IncreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/IncreaseLiquidity")));
-// const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
-// const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
+const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
+const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
+const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
-const ckBTC = Loadable(lazy(() => import("../views/wallet/ckBTC")));
-const ckETH = Loadable(lazy(() => import("../views/wallet/ckETH")));
+const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
+const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launchpad/Launch")));
+const SnsNeurons = Loadable(lazy(() => import("../views/sns/Neurons/index")));
+const SnsVotes = Loadable(lazy(() => import("../views/sns/Voting/index")));
+const SnsVoting = Loadable(lazy(() => import("../views/sns/Voting/Voting")));
 
-// const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launches")));
-// const SNSLaunch = Loadable(lazy(() => import("../views/sns/Launch")));
+const CkBridge = Loadable(lazy(() => import("../views/ck-bridge")));
 
-export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
+export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any } = {
   "/wallet": Wallet,
 
-  "/wallet/ckBTC": ckBTC,
-  "/wallet/ckETH": ckETH,
   "/wallet/nft/view/:canisterId/:tokenId": WalletNFTView,
   "/wallet/nft/canister/details/:id": NFTCanisterDetails,
 
-  // "/staking-token": StakingToken,
-  // "/staking-token/create": StakingTokenCreate,
-  // "/staking-farm": StakingFarm,
-  // "/staking-farm/create": StakingFarmCreate,
+  "/stake": Staking,
+  "/stake/details/:id": StakingDetails,
+  "/stake/create": StakingTokenCreate,
+  "/stake/v1": StakingTokenV1,
+  "/farm": Farms,
+  "/farm/details/:id": Farm,
+  "/farm/create": CreateFarm,
 
   "/swap": Swap,
-  "/swap/liquidity": Liquidity,
-  "/swap/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
-  "/swap/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
-  "/swap/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
-  "/swap/reclaim": SwapReclaim,
+  "/liquidity": Liquidity,
+  "/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
+  "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
+  "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+
+  "/swap/withdraw": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
   "/swap/revoke-approve": SwapRevokeApprove,
   "/swap/pcm/reclaim": PCMReclaim,
-  "/swap-pro": SwapPro,
+  "/swap/pro": SwapPro,
 
-  // "/swap/v2/liquidity": LiquidityV2,
-  // "/swap/v2/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidityV2,
-  // "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
-  // "/swap/v2/liquidity/increase/:positionId?": IncreaseLiquidityV2,
-  // "/swap/v2/wrap": Wrap,
+  "/swap/v2/liquidity": LiquidityV2,
+  "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
+  "/swap/v2/wrap": Wrap,
 
   // "/marketplace/NFT": NFTMarket,
   // "/marketplace/NFT/:canisterId": NFTCollectMarket,
@@ -100,11 +105,17 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element } = {
   // "/token-claim/transactions/:id": TokenClaimTransactions,
   // "/token-claim/create": CreateTokenClaim,
 
-  // "/console": Console,
-  // "/console/nft/canister/create": NFTCanisterCreate,
-  // "/console/nft/mint": NFTMint,
-  // "/console/nft/canister/list": NFTCanisterList,
+  "/console": Console,
+  "/console/burn": ConsoleBurn,
+  "/console/nft/canister/create": NFTCanisterCreate,
+  "/console/nft/mint": NFTMint,
+  "/console/nft/canister/list": NFTCanisterList,
 
-  // "/sns/launches": SNSLaunches,
-  // "/sns/launch/:root_id": SNSLaunch,
+  "/sns/neurons": SnsNeurons,
+  "/sns/voting": SnsVotes,
+  "/sns/voting/:governance_id/:proposal_id": SnsVoting,
+  "/sns/launches": SNSLaunches,
+  "/sns/launch/:root_id": SNSLaunch,
+
+  "/ck-bridge": CkBridge,
 };

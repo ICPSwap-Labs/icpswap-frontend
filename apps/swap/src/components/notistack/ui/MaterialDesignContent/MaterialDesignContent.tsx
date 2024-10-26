@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) => {
         backgroundColor: theme.colors.successDark,
       },
       "&.error": {
-        backgroundColor: theme.colors.warning,
+        backgroundColor: theme.colors.danger,
       },
     },
   };

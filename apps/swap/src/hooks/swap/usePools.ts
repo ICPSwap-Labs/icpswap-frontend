@@ -3,8 +3,9 @@ import { useMemo, useEffect, useState } from "react";
 import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
-import type { PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
-import { ICP, NETWORK, network } from "constants/index";
+import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
+import { NETWORK, network } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 
 export enum PoolState {
   LOADING = "LOADING",
@@ -28,9 +29,9 @@ function transformedKeyToKey(transformedKey: TransformedKey) {
   return `${transformedKey.token0}_${transformedKey.token1}_${transformedKey.fee}`;
 }
 
-export function usePools(
-  poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][],
-): [PoolState, Pool | null][] {
+export type PoolKey = [Token | Null, Token | Null, FeeAmount | undefined];
+
+export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState, Pool | null][] {
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 
@@ -69,7 +70,7 @@ export function usePools(
               id: pool.canisterId.toString(),
               metadata: poolMetadata,
               ticks: [],
-              checked: false,
+              checked: !!withoutVerify,
             };
           }),
         );
@@ -86,36 +87,38 @@ export function usePools(
         setLoading(false);
 
         // Use update call to verify the pool.
-        transformedPoolKeys.map(async (element) => {
-          if (!element) return;
+        if (withoutVerify === false) {
+          transformedPoolKeys.map(async (element) => {
+            if (!element) return;
 
-          const pool = await getPool_update_call(element.token0, element.token1, element.fee);
+            const pool = await getPool_update_call(element.token0, element.token1, element.fee);
 
-          if (!pool) {
-            setPools((prevState) => ({
-              ...prevState,
-              [transformedKeyToKey(element)]: null,
-            }));
-          } else {
-            const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
+            if (!pool) {
+              setPools((prevState) => ({
+                ...prevState,
+                [transformedKeyToKey(element)]: null,
+              }));
+            } else {
+              const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
 
-            setPools((prevState) => ({
-              ...prevState,
-              [transformedKeyToKey(element)]: {
-                key: transformedKeyToKey(element),
-                id: pool.canisterId.toString(),
-                metadata: poolMetadata,
-                ticks: [],
-                checked: true,
-              },
-            }));
-          }
-        });
+              setPools((prevState) => ({
+                ...prevState,
+                [transformedKeyToKey(element)]: {
+                  key: transformedKeyToKey(element),
+                  id: pool.canisterId.toString(),
+                  metadata: poolMetadata,
+                  ticks: [],
+                  checked: true,
+                },
+              }));
+            }
+          });
+        }
       }
     }
 
     call();
-  }, [JSON.stringify(transformedPoolKeys)]);
+  }, [JSON.stringify(transformedPoolKeys), withoutVerify]);
 
   return useMemo(() => {
     return transformedPoolKeys.map((transformedKey, index) => {
@@ -137,12 +140,33 @@ export function usePools(
 
         if (!token0 || !token1) return [PoolState.NOT_EXISTS, null];
 
+        // Renew token that standard from the pool metadata
+        const __token0 = new Token({
+          address: token0.address,
+          decimals: token0.decimals,
+          symbol: token0.symbol,
+          name: token0.name,
+          standard: token0.address === metadata.token0.address ? metadata.token0.standard : metadata.token1.standard,
+          logo: token0.logo,
+          transFee: token0.transFee,
+        });
+
+        const __token1 = new Token({
+          address: token1.address,
+          decimals: token1.decimals,
+          symbol: token1.symbol,
+          name: token1.name,
+          standard: token1.address === metadata.token1.address ? metadata.token1.standard : metadata.token0.standard,
+          logo: token1.logo,
+          transFee: token1.transFee,
+        });
+
         return [
           checked ? PoolState.EXISTS : PoolState.NOT_CHECK,
           new Pool(
             id,
-            token0.wrapped,
-            token1.wrapped,
+            __token0,
+            __token1,
             Number(fee),
             numberToString(sqrtPriceX96),
             numberToString(liquidity),
@@ -157,13 +181,18 @@ export function usePools(
   }, [JSON.stringify(pools), loading, poolKeys, JSON.stringify(transformedPoolKeys)]);
 }
 
-export function usePool(currencyA: Token | undefined, currencyB: Token | undefined, feeAmount: FeeAmount | undefined) {
-  const poolKeys: [Token | undefined, Token | undefined, FeeAmount | undefined][] = useMemo(
+export function usePool(
+  currencyA: Token | Null,
+  currencyB: Token | Null,
+  feeAmount: FeeAmount | undefined,
+  withoutVerify = false,
+) {
+  const poolKeys: [Token | Null, Token | Null, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
     [currencyA, currencyB, feeAmount],
   );
 
-  return usePools(poolKeys)[0];
+  return usePools(poolKeys, withoutVerify)[0];
 }
 
 export function useTokenSwapPools(tokens: string[] | undefined) {

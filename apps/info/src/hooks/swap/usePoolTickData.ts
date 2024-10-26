@@ -1,8 +1,7 @@
-import { tickToPrice, TICK_SPACINGS, FeeAmount, Token } from "@icpswap/swap-sdk";
+import { tickToPrice, TICK_SPACINGS, FeeAmount, Token, computeSurroundingTicks } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
 import { useMemo } from "react";
-import computeSurroundingTicks from "utils/computeSurroundingTicks";
-import { useLiquidityTicks, useSwapPool } from "@icpswap/hooks";
+import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
 import JSBI from "jsbi";
 import BigNumber from "bignumber.js";
 import { PoolState, usePool } from "./usePools";
@@ -32,7 +31,7 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
     return poolData.canisterId.toString();
   }, [poolData]);
 
-  return useLiquidityTicks(id, 100);
+  return useLiquidityTickInfos(id, 100);
 }
 
 export function usePoolActiveLiquidity(

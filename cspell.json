@@ -31,6 +31,10 @@
     "toformat",
     "notistack",
     "ethersproject",
-    "unstake"
+    "unstake",
+    "craco",
+    "typechain",
+    "Sepolia",
+    "Unstart"
   ]
 }

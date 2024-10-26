@@ -1,4 +1,5 @@
-import { ICP, WRAPPED_ICP, ckBTC } from "@icpswap/tokens";
+import { ICP, WRAPPED_ICP, ICS } from "@icpswap/tokens";
+
 import { isIC } from "./server";
 
 export enum SWAP_FIELD {
@@ -7,6 +8,8 @@ export enum SWAP_FIELD {
 }
 
 export const DEFAULT_SWAP_INPUT_ID = isIC ? ICP.address : WRAPPED_ICP.address;
-export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ckBTC.address : ckBTC.address;
+export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
+
+export const SWAP_REFRESH_KEY = "swap";
 
 export * from "./mint";

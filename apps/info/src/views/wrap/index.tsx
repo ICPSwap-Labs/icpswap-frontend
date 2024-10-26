@@ -4,8 +4,8 @@ import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import DetailItem from "ui-component/DetailItem";
 import { WICPCanisterId } from "constants/canister";
-import { cycleValueFormat, getExplorerPrincipalLink } from "utils/index";
-import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
+import { cycleValueFormat } from "utils/index";
+import { parseTokenAmount, enumToString, pageArgsFormat, shorten, timestampFormat, explorerLink } from "@icpswap/utils";
 import { useWrapOverview } from "hooks/useWICPCalls";
 import { useWrapTransactions } from "@icpswap/hooks";
 import { NoData, Pagination, Copy, LoadingRow, PaginationType, MainCard, MainContainer } from "ui-component/index";
@@ -85,7 +85,7 @@ export default function Wrap() {
               <DetailItem
                 title={t`Canister ID`}
                 value={
-                  <Link href={getExplorerPrincipalLink(WICPCanisterId)} target="_blank">
+                  <Link href={explorerLink(WICPCanisterId)} target="_blank">
                     {WICPCanisterId}
                   </Link>
                 }
@@ -110,66 +110,78 @@ export default function Wrap() {
             <Trans>Transactions</Trans>
           </Typography>
 
-          <Box mt="20px">
-            <>
-              <Header className={classes.wrapper}>
-                <HeaderCell>
-                  <Trans>Time</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>From</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>To</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>Type</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>Amount</Trans>
-                </HeaderCell>
-              </Header>
+          <Box sx={{ width: "100%", overflow: "auto" }}>
+            <Box
+              sx={{
+                margin: "20px 0 0 0",
+                overflow: "auto",
+                "@media(max-width: 640px)": {
+                  minWidth: "1200px",
+                },
+              }}
+            >
+              <>
+                <Header className={classes.wrapper}>
+                  <HeaderCell>
+                    <Trans>Time</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>From</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>To</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>Type</Trans>
+                  </HeaderCell>
+                  <HeaderCell>
+                    <Trans>Amount</Trans>
+                  </HeaderCell>
+                </Header>
 
-              {(loading ? [] : content).map((row, index) => (
-                <TableRow key={index} className={classes.wrapper}>
-                  <BodyCell>{timestampFormat(row.date)}</BodyCell>
-                  <Copy content={row.from}>
-                    <BodyCell color="primary.main">{shorten(row.from, 10)}</BodyCell>
-                  </Copy>
-                  <Copy content={row.to}>
-                    <BodyCell color="primary.main">{shorten(row.to, 10)}</BodyCell>
-                  </Copy>
-                  <BodyCell>
-                    {upperFirst(ExchangeTypes[enumToString(row.wrapType)] ?? enumToString(row.wrapType))}
-                  </BodyCell>
-                  <BodyCell>{parseTokenAmount(row.amount, WRAPPED_ICP.decimals).toFormat()}</BodyCell>
-                </TableRow>
-              ))}
+                {(loading ? [] : content).map((row, index) => (
+                  <TableRow key={index} className={classes.wrapper}>
+                    <BodyCell>{timestampFormat(row.date)}</BodyCell>
+                    <Copy content={row.from}>
+                      <BodyCell color="primary.main">{shorten(row.from, 10)}</BodyCell>
+                    </Copy>
+                    <Copy content={row.to}>
+                      <BodyCell color="primary.main">{shorten(row.to, 10)}</BodyCell>
+                    </Copy>
+                    <BodyCell>
+                      {upperFirst(ExchangeTypes[enumToString(row.wrapType)] ?? enumToString(row.wrapType))}
+                    </BodyCell>
+                    <BodyCell>{parseTokenAmount(row.amount, WRAPPED_ICP.decimals).toFormat()}</BodyCell>
+                  </TableRow>
+                ))}
 
-              {content.length === 0 && !loading ? <NoData /> : null}
+                {content.length === 0 && !loading ? <NoData /> : null}
 
-              {loading ? (
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              ) : null}
+                {loading ? (
+                  <Box sx={{ padding: "24px" }}>
+                    <LoadingRow>
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                      <div />
+                    </LoadingRow>
+                  </Box>
+                ) : null}
 
-              {Number(totalElements ?? 0) > 0 ? (
-                <Pagination
-                  total={Number(totalElements ?? 0)}
-                  num={pagination.pageNum}
-                  onPageChange={handlePageChange}
-                />
-              ) : null}
-            </>
+                {Number(totalElements ?? 0) > 0 ? (
+                  <Pagination
+                    total={Number(totalElements ?? 0)}
+                    num={pagination.pageNum}
+                    onPageChange={handlePageChange}
+                  />
+                ) : null}
+              </>
+            </Box>
           </Box>
         </MainCard>
       </Box>

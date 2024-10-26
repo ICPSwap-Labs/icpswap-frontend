@@ -2,21 +2,19 @@ import { useCallback } from "react";
 import BigNumber from "bignumber.js";
 import { Pool, CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { useSwapWithdraw , useReclaimCallback } from "hooks/swap/index";
+import { useSwapWithdraw, useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
+import { sleep } from "@icpswap/utils";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
-  const identity = await getActorIdentity();
-
-  return await collect(pool, identity, {
+  return await collect(pool, {
     positionId,
   });
 }
@@ -28,6 +26,7 @@ interface CollectFeeCallsArgs {
   currencyFeeAmount1: CurrencyAmount<Token>;
   openExternalTip: OpenExternalTip;
   stepKey: string;
+  refresh?: () => void;
 }
 
 function useCollectFeeCalls() {
@@ -36,63 +35,85 @@ function useCollectFeeCalls() {
   const withdraw = useSwapWithdraw();
 
   return useCallback(
-    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip, stepKey }: CollectFeeCallsArgs) => {
+    ({
+      pool,
+      positionId,
+      currencyFeeAmount0,
+      currencyFeeAmount1,
+      openExternalTip,
+      stepKey,
+      refresh,
+    }: CollectFeeCallsArgs) => {
+      const __withdraw = async () => {
+        const withdrawCurrencyA = async () => {
+          if (!currencyFeeAmount0 || !pool) return false;
+
+          if (
+            !new BigNumber(currencyFeeAmount0.quotient.toString())
+              .minus(currencyFeeAmount0.currency.transFee)
+              .isGreaterThan(0)
+          )
+            return true;
+
+          return await withdraw(
+            currencyFeeAmount0.currency,
+            pool.id,
+            currencyFeeAmount0.quotient.toString(),
+            ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
+            },
+          );
+        };
+
+        const withdrawCurrencyB = async () => {
+          if (!currencyFeeAmount1 || !pool) return false;
+
+          if (
+            !new BigNumber(currencyFeeAmount1.quotient.toString())
+              .minus(currencyFeeAmount1.currency.transFee)
+              .isGreaterThan(0)
+          )
+            return true;
+
+          const result = await withdraw(
+            currencyFeeAmount1.currency,
+            pool.id,
+            currencyFeeAmount1.quotient.toString(),
+            ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
+            },
+          );
+
+          return result;
+        };
+
+        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]);
+
+        if (refresh) refresh();
+
+        return !result.includes(false);
+      };
+
       const _collect = async () => {
         if (!positionId || !principal || !pool) return false;
 
         const { status, message } = await collectPositionFee(pool.id, positionId);
 
         if (status === "ok") {
+          __withdraw();
           return true;
-        } 
-          openErrorTip(getLocaleMessage(message) ?? t`Failed to claim`);
-          return false;
-        
+        }
+
+        openErrorTip(getLocaleMessage(message) ?? t`Failed to claim`);
+        return false;
       };
 
-      const withdrawCurrencyA = async () => {
-        if (!currencyFeeAmount0 || !pool) return false;
-
-        if (
-          !new BigNumber(currencyFeeAmount0.quotient.toString())
-            .minus(currencyFeeAmount0.currency.transFee)
-            .isGreaterThan(0)
-        )
-          return true;
-
-        return await withdraw(
-          currencyFeeAmount0.currency,
-          pool.id,
-          currencyFeeAmount0.quotient.toString(),
-          ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey });
-          },
-        );
+      const step1 = async () => {
+        await sleep(1000);
+        return true;
       };
 
-      const withdrawCurrencyB = async () => {
-        if (!currencyFeeAmount1 || !pool) return false;
-
-        if (
-          !new BigNumber(currencyFeeAmount1.quotient.toString())
-            .minus(currencyFeeAmount1.currency.transFee)
-            .isGreaterThan(0)
-        )
-          return true;
-
-        const result = await withdraw(
-          currencyFeeAmount1.currency,
-          pool.id,
-          currencyFeeAmount1.quotient.toString(),
-          ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey });
-          },
-        );
-
-        return result;
-      };
-
-      return [_collect, withdrawCurrencyA, withdrawCurrencyB];
+      return [_collect, step1];
     },
     [principal],
   );
@@ -124,7 +145,7 @@ function useCollectFeeSteps() {
 
       stepContentManage(String(key), {
         content,
-        title: t`Claim Fees Details`,
+        title: t`Collect Fees Details`,
       });
     },
     [principal],
@@ -137,6 +158,7 @@ export interface ClaimFeeArgs {
   positionId: bigint;
   currencyFeeAmount1: CurrencyAmount<Token>;
   openExternalTip: OpenExternalTip;
+  refresh?: () => void;
 }
 
 export function useCollectFeeCallback() {
@@ -145,7 +167,7 @@ export function useCollectFeeCallback() {
   const initialSteps = useCollectFeeSteps();
 
   return useCallback(
-    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip }: ClaimFeeArgs) => {
+    ({ pool, positionId, currencyFeeAmount0, currencyFeeAmount1, openExternalTip, refresh }: ClaimFeeArgs) => {
       const key = newStepKey();
       const calls = getCalls({
         pool,
@@ -154,6 +176,7 @@ export function useCollectFeeCallback() {
         currencyFeeAmount1,
         openExternalTip,
         stepKey: key,
+        refresh,
       });
       const { call, reset, retry } = formatCall(calls, key);
 

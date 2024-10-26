@@ -1,18 +1,23 @@
-import { Box, Grid, Typography, Chip } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { useCallback } from "react";
+import { makeStyles, useTheme, Box, Grid, Typography, Theme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import LockIcon from "assets/images/swap/Lock";
-import { NumberTextField, TokenImage } from "components/index";
+import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { isDarkTheme } from "utils";
+import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Flex } from "@icpswap/ui";
+import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
+import { Null } from "@icpswap/types";
+import { WalletBalance } from "components/swap/WalletBalance";
+import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
     box: {
       position: "relative",
+      width: "100%",
       borderRadius: `${theme.radius}px`,
       backgroundColor: theme.palette.background.level3,
       border: theme.palette.border.gray200,
@@ -20,16 +25,16 @@ const useStyle = makeStyles((theme: Theme) => {
     input: {
       "& input": {
         textAlign: "right",
-        fontSize: "20px",
-        fontWeight: 700,
-        // color: theme.textPrimary,
+        fontSize: "28px!important",
+        fontWeight: 600,
+        padding: "0px",
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },
       },
       "& input::placeholder": {
-        fontSize: "20px",
-        fontWeight: 700,
+        fontSize: "28px",
+        fontWeight: 600,
         [theme.breakpoints.down("sm")]: {
           fontSize: "16px",
         },
@@ -37,25 +42,22 @@ const useStyle = makeStyles((theme: Theme) => {
     },
     chip: {
       padding: "0 10px",
-      height: "44px",
+      height: "40px",
       backgroundColor: isDarkTheme(theme) ? theme.palette.background.level2 : theme.colors.lightGray200,
-      borderRadius: `${theme.radius}px`,
+      borderRadius: `12px`,
       "& .MuiChip-label": {
         paddingLeft: "18px",
       },
     },
-    maxButton: {
-      padding: "1px 3px",
-      cursor: "pointer",
-      borderRadius: "2px",
-      backgroundColor: theme.colors.secondaryMain,
-      color: "#ffffff",
-    },
   };
 });
 
-const LockMask = ({ type }: { type: string | undefined }) => {
-  const theme = useTheme() as Theme;
+interface LockMaskProps {
+  type: string | undefined;
+}
+
+const LockMask = ({ type }: LockMaskProps) => {
+  const theme = useTheme();
 
   return (
     <Box
@@ -110,9 +112,13 @@ export interface SwapDepositAmountProps {
   showMaxButton?: boolean;
   onMax?: () => void;
   currencyBalance: CurrencyAmount<Token> | undefined;
+  subAccountBalance: BigNumber | Null;
+  unusedBalance: bigint | Null;
+  maxSpentAmount: string | Null;
+  noLiquidity?: boolean;
 }
 
-export default function SwapDepositAmount({
+export function SwapDepositAmount({
   currency,
   value,
   locked = false,
@@ -121,20 +127,50 @@ export default function SwapDepositAmount({
   currencyBalance,
   showMaxButton,
   onMax,
+  subAccountBalance,
+  unusedBalance,
+  maxSpentAmount,
+  noLiquidity,
 }: SwapDepositAmountProps) {
   const classes = useStyle();
 
   const decimals = currency?.decimals ?? SAFE_DECIMALS_LENGTH;
 
+  const handleCanisterBalanceClick = useCallback(() => {
+    if (!subAccountBalance || !unusedBalance || !currency) return;
+
+    if (subAccountBalance.isEqualTo(0)) {
+      onUserInput(parseTokenAmount(unusedBalance, currency.decimals).toString());
+    } else {
+      onUserInput(
+        parseTokenAmount(unusedBalance, currency.decimals)
+          .plus(parseTokenAmount(subAccountBalance.minus(currency.transFee), currency.decimals))
+          .toString(),
+      );
+    }
+  }, [subAccountBalance, unusedBalance, currency]);
+
+  const handleWalletBalanceClick = useCallback(() => {
+    if (!currencyBalance) return;
+    onUserInput(currencyBalance.toExact());
+  }, [currencyBalance]);
+
   return (
     <Box sx={{ p: 2 }} className={classes.box}>
-      <Grid container alignItems="center">
-        <Chip
-          className={classes.chip}
-          label={currency?.symbol}
-          avatar={<TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} />}
-        />
-        <Grid item xs>
+      <Flex fullWidth gap="0 8px">
+        <Flex gap="0 8px" className={classes.chip}>
+          <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} size="24px" />
+          <Typography
+            sx={{
+              color: "text.primary",
+              fontSize: "16px",
+            }}
+          >
+            {currency?.symbol}
+          </Typography>
+        </Flex>
+
+        <Box sx={{ flex: 1 }}>
           <NumberTextField
             value={value}
             fullWidth
@@ -151,22 +187,56 @@ export default function SwapDepositAmount({
               onUserInput(e.target.value);
             }}
           />
-        </Grid>
-      </Grid>
-      <Grid container mt={1}>
-        <Grid item mr={1}>
-          <Typography>
-            <Trans>Balance:</Trans> {currency ? formatCurrencyAmount(currencyBalance, currency.decimals) : "--"}
-          </Typography>
-        </Grid>
-        {showMaxButton && (
-          <Grid>
-            <Typography fontSize={12} className={classes.maxButton} onClick={onMax}>
-              <Trans>Max</Trans>
-            </Typography>
-          </Grid>
-        )}
-      </Grid>
+        </Box>
+      </Flex>
+
+      <Flex gap="0 4px" sx={{ margin: "12px 0 0 0" }}>
+        {currency ? (
+          <Flex fullWidth justify="space-between">
+            <Flex gap="0 8px">
+              {noLiquidity === false ? (
+                nonNullArgs(unusedBalance) &&
+                nonNullArgs(subAccountBalance) &&
+                currency &&
+                parseTokenAmount(
+                  new BigNumber(unusedBalance.toString()).plus(subAccountBalance),
+                  currency.decimals,
+                ).isGreaterThan(0) ? (
+                  <SwapPoolBalance
+                    onClick={handleCanisterBalanceClick}
+                    token={currency}
+                    subAccountBalance={subAccountBalance}
+                    unusedBalance={unusedBalance}
+                  />
+                ) : null
+              ) : null}
+
+              <WalletBalance onClick={handleWalletBalanceClick} currencyBalance={currencyBalance} />
+
+              {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
+            </Flex>
+          </Flex>
+        ) : null}
+      </Flex>
+
+      {currency ? (
+        <Box sx={{ margin: "8px 0 0 0", width: "50%" }}>
+          <SwapBalancesSlider
+            token={currency}
+            unusedBalance={unusedBalance}
+            subAccountBalance={subAccountBalance}
+            balance={
+              currencyBalance && currency
+                ? formatTokenAmount(currencyBalance.toExact(), currency.decimals).toString()
+                : undefined
+            }
+            onAmountChange={onUserInput}
+            amount={value}
+            maxSpentAmount={maxSpentAmount}
+          />
+        </Box>
+      ) : null}
+
       {locked && <LockMask type={type} />}
     </Box>
   );

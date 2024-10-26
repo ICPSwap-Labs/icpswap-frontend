@@ -10,7 +10,7 @@ export const ck_BTC_TOKEN_INFO: TokenInfo = {
   canisterId: "mxzaz-hqaaa-aaaar-qaada-cai",
   totalSupply: BigInt(0),
   transFee: BigInt(10),
-  logo: "",
+  logo: "/images/tokens/mxzaz-hqaaa-aaaar-qaada-cai.svg",
 };
 
 export const ckBTC = new Token({

@@ -1,31 +1,11 @@
-import { useCallback, FC, useState } from "react";
-import { Link as ReactLink, useParams, useHistory } from "react-router-dom";
-import { Breadcrumbs, Typography, Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { MainCard } from "components/index";
+import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Typography, Grid, Box } from "components/Mui";
+import { MainCard, Breadcrumbs, Wrapper } from "components/index";
 import NFTTransactions from "components/NFT/NFTTransactions";
 import NFTActivity from "components/NFT/NFTActivity";
 import NFTInfo from "components/NFT/Info";
 import { Trans, t } from "@lingui/macro";
-import Wrapper from "components/Wrapper";
-
-const useStyles = makeStyles(() => {
-  return {
-    breadcrumbs: {
-      padding: "0 0 25px 16px",
-      "& a": {
-        textDecoration: "none",
-        "&:hover": {
-          textDecoration: "underline",
-        },
-      },
-    },
-    descItem: {
-      fontSize: "12px",
-      lineHeight: "20px",
-    },
-  };
-});
 
 export type Tab = {
   key: string;
@@ -39,15 +19,9 @@ const TabList: Tab[] = [
 ];
 
 export default function NFTView({ isWallet = false }: { isWallet?: boolean }) {
-  const classes = useStyles();
-  const history = useHistory();
   const { canisterId, tokenId } = useParams<{ canisterId: string; tokenId: string }>();
 
   const [tab, setTab] = useState<Tab>(TabList[0]);
-
-  const handleLoadPage = useCallback(() => {
-    history.push(isWallet ? `/wallet/nft/canister/details/${canisterId}` : "/marketplace/NFT");
-  }, [history]);
 
   const displayedComponent = () => {
     const ShowedComponent = TabList.filter((item) => item.key === tab.key)[0].component;
@@ -61,21 +35,12 @@ export default function NFTView({ isWallet = false }: { isWallet?: boolean }) {
   return (
     <Wrapper>
       <>
-        <Box>
-          <Breadcrumbs className={classes.breadcrumbs}>
-            <ReactLink
-              to="/"
-              onClick={(e) => {
-                e.preventDefault();
-                handleLoadPage();
-              }}
-            >
-              <Typography color="secondary">{isWallet ? "NFT List" : "Marketplace"}</Typography>
-            </ReactLink>
-            <Typography>
-              <Trans>NFT Details</Trans>
-            </Typography>
-          </Breadcrumbs>
+        <Box sx={{ margin: "0 0 20px 0" }}>
+          <Breadcrumbs
+            prevLink={isWallet ? `/wallet/nft/canister/details/${canisterId}` : "/marketplace/NFT"}
+            prevLabel={isWallet ? "NFT List" : "Marketplace"}
+            currentLabel={<Trans>NFT Details</Trans>}
+          />
         </Box>
 
         <NFTInfo isView canisterId={canisterId} tokenId={Number(tokenId)} />

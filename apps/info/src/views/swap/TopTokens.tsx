@@ -1,19 +1,18 @@
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { FilledTextField } from "ui-component/index";
-import { useInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
+import { useNodeInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
 import TokenTable from "ui-component/analytic/TokenTable";
-import InTokenListCheck from "ui-component/InTokenListCheck";
 import { useState, useMemo, useEffect } from "react";
 import { isValidPrincipal } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { MainCard } from "@icpswap/ui";
+import { MainCard, OnlyTokenList } from "@icpswap/ui";
 
 export default function TopTokens() {
   const [search, setSearch] = useState<null | string>(null);
   const [onlyTokenList, setOnlyTokenList] = useState(false);
 
-  const { result: allTokens, loading } = useInfoAllTokens();
+  const { result: allTokens, loading } = useNodeInfoAllTokens();
 
   const { result: tokenList } = useTokensFromList();
 
@@ -96,7 +95,7 @@ export default function TopTokens() {
             />
           </Box>
 
-          <InTokenListCheck onChange={handleCheckChange} checked={onlyTokenList} />
+          <OnlyTokenList onChange={handleCheckChange} checked={onlyTokenList} />
         </Box>
       </Box>
 

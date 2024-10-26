@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Principal } from "@dfinity/principal";
-import { tokenAdapter } from "@icpswap/token-adapter";
+import { TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
 import { ResultStatus, StatusResult } from "@icpswap/types";
 import { allowance } from "./useAllowance";
 
@@ -9,11 +9,26 @@ export interface ApproveArgs {
   spender: string;
   value: number | string | bigint;
   account: string | Principal | undefined;
+  standard?: TOKEN_STANDARD;
 }
 
-export async function approve({ canisterId, spender, value, account }: ApproveArgs) {
+export async function approve({ canisterId, spender, value, account, standard }: ApproveArgs) {
   if (!account) {
     return { status: ResultStatus.ERROR, data: undefined, message: "No account" };
+  }
+
+  if (standard) {
+    const adapter = tokenAdapter.getAdapterByName(standard);
+    return adapter.approve({
+      canisterId,
+      identity: true,
+      params: {
+        spender: Principal.fromText(spender),
+        allowance: BigInt(value),
+        subaccount: undefined,
+        account,
+      },
+    });
   }
 
   return tokenAdapter.approve({
@@ -29,7 +44,7 @@ export async function approve({ canisterId, spender, value, account }: ApproveAr
 }
 
 export function useApprove(): (approveParams: ApproveArgs) => Promise<StatusResult<boolean>> {
-  return useCallback(async ({ canisterId, spender, value, account }: ApproveArgs) => {
+  return useCallback(async ({ canisterId, spender, value, account, standard }: ApproveArgs) => {
     if (!account)
       return await Promise.resolve({
         status: "err",
@@ -48,6 +63,7 @@ export function useApprove(): (approveParams: ApproveArgs) => Promise<StatusResu
         spender,
         value,
         account,
+        standard,
       });
     }
     return await Promise.resolve({

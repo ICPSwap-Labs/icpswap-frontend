@@ -1,9 +1,9 @@
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar } from "components/Mui";
 import { Position } from "@icpswap/swap-sdk";
-import { parseTokenAmount , toSignificant } from "@icpswap/utils";
+import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
-import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { StepDetails } from "components/Steps/types";
+import { isUseTransfer } from "utils/token/index";
+import { StepContents } from "types/step";
 import { TextButton } from "components/index";
 
 export interface IncreaseLiquidityStepsProps {
@@ -13,25 +13,16 @@ export interface IncreaseLiquidityStepsProps {
 }
 
 export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseLiquidityStepsProps) {
-  const {token0} = position.pool;
-  const {token1} = position.pool;
+  const { token0, token1 } = position.pool;
 
-  const amount0 = toSignificant(
-    parseTokenAmount(
-      actualAmountToPool(token0, position.mintAmounts.amount0.toString()),
-      position.pool.token0.decimals,
-    ).toString(),
+  const amount0 = toSignificantWithGroupSeparator(
+    parseTokenAmount(position.mintAmounts.amount0.toString(), position.pool.token0.decimals).toString(),
     8,
-    { groupSeparator: "," },
   );
 
-  const amount1 = toSignificant(
-    parseTokenAmount(
-      actualAmountToPool(token1, position.mintAmounts.amount1.toString()),
-      position.pool.token1.decimals,
-    ).toString(),
+  const amount1 = toSignificantWithGroupSeparator(
+    parseTokenAmount(position.mintAmounts.amount1.toString(), position.pool.token1.decimals).toString(),
     8,
-    { groupSeparator: "," },
   );
 
   const symbol0 = token0.symbol;
@@ -84,7 +75,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: isToken1UseTransfer ? t`Transfer ${symbol1}` : t`Approve ${symbol1}`,
@@ -111,7 +102,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: t`Increase liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
@@ -127,7 +118,7 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
-  ] as StepDetails[];
+  ] as StepContents[];
 }

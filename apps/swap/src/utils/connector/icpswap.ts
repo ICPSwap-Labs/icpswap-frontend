@@ -1,11 +1,11 @@
 import { AuthClient } from "@honopu/auth-client";
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
 import type { Identity } from "@dfinity/agent";
-import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
+import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 
-export class ICPSwapConnector implements IConnector {
+export class ICPSwapConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     host: string;
@@ -19,7 +19,7 @@ export class ICPSwapConnector implements IConnector {
 
   private client?: AuthClient;
 
-  public type = ConnectorType.ICPSwap;
+  public type = Connector.ICPSwap;
 
   public get getPrincipal() {
     return this.principal;
@@ -111,5 +111,5 @@ export class ICPSwapConnector implements IConnector {
 export const ICPSwapWallet = {
   connector: ICPSwapConnector,
   id: "ICPSwap",
-  type: ConnectorType.ICPSwap,
+  type: Connector.ICPSwap,
 };

@@ -17,7 +17,7 @@ import TransferDetail from "ui-component/transfer-detail";
 import {
   Pagination,
   Copy,
-  StaticLoading,
+  ImageLoading,
   NoData,
   PaginationType,
   MainCard,
@@ -39,7 +39,7 @@ import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token/index";
 import { useStateTokenCapId, useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { Principal } from "@dfinity/principal";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { useICPTransactions } from "hooks/useICPCalls";
 import upperFirst from "lodash/upperFirst";
 
@@ -189,7 +189,7 @@ export function TransactionsMain({
           </Table>
           {list.length === 0 && !loading ? <NoData /> : null}
         </TableContainer>
-        <StaticLoading loading={loading} />
+        <ImageLoading loading={loading} />
       </Box>
       {list.length ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />

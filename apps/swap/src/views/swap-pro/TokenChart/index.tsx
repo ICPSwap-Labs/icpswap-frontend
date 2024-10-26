@@ -1,10 +1,11 @@
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "components/Mui";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 
 import Token from "./Token";
 import TokenCharts from "./Charts";
 import { SwapProCardWrapper } from "../SwapProWrapper";
+import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 
 export interface TokenChartWrapperProps {
   infoToken: PublicTokenOverview | undefined;
@@ -17,9 +18,17 @@ export default function TokenChartWrapper({ infoToken, tokenInfo, tokenListInfo 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <SwapProCardWrapper padding="0px" background="level2">
-      {!matchDownSM ? <Token infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} /> : null}
-      <TokenCharts />
-    </SwapProCardWrapper>
+    <>
+      {matchDownSM ? (
+        <Box sx={{ width: "fit-content" }}>
+          <TokenChartsViewSelector />
+        </Box>
+      ) : null}
+
+      <SwapProCardWrapper padding="0px" background="level2">
+        {!matchDownSM ? <Token infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} /> : null}
+        <TokenCharts />
+      </SwapProCardWrapper>
+    </>
   );
 }

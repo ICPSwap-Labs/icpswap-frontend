@@ -44,7 +44,7 @@ export function useAllTokensOfSwap() {
 
   return useCallsData(
     useCallback(async () => {
-      return getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(call, 1000);
+      return getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(call, 1000, 2);
     }, []),
   );
 }

@@ -40,7 +40,7 @@ export interface UploadProps {
 }
 
 export interface UploadRef {
-  uploadCb: (identity?: CallIdentity) => Promise<
+  uploadCb: () => Promise<
     | {
         filePath: string;
         batchId: bigint;
@@ -128,11 +128,10 @@ const Upload = forwardRef(
       }
     }, [fileError]);
 
-    async function uploadCb(identity?: CallIdentity) {
+    async function uploadCb() {
       if (file) {
         return await uploadCallback({
           file,
-          identity,
           canisterId,
         });
       }
@@ -155,7 +154,6 @@ const Upload = forwardRef(
 
       await uploadCallback({
         file: file as File,
-        identity,
         canisterId,
       });
     };

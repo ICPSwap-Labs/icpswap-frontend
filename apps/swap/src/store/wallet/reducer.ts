@@ -1,33 +1,31 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  deleteWalletCatchToken,
-  saveWalletCacheToken,
-  updateHideSmallBalance,
+  updateTaggedTokens,
+  deleteTaggedTokens,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
+  updateSortBalance,
 } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
   builder
-    .addCase(saveWalletCacheToken, (state, { payload }) => {
-      const newSaveCacheTokenIds = [...(state.cacheTokenIds ?? []), ...(payload || [])];
+    .addCase(updateTaggedTokens, (state, { payload }) => {
+      const newTaggedTokens = [...state.taggedTokens, ...payload];
 
       return {
         ...state,
-        cacheTokenIds: newSaveCacheTokenIds,
+        taggedTokens: newTaggedTokens,
       };
     })
-    .addCase(deleteWalletCatchToken, (state, { payload }) => {
-      const newDelCacheTokenIds = (state.cacheTokenIds ?? []).filter((token) => !(payload || []).includes(token));
+    .addCase(deleteTaggedTokens, (state, { payload }) => {
+      const newTaggedTokens = [...state.taggedTokens].filter((token) => !payload.includes(token));
 
       return {
         ...state,
-        cacheTokenIds: newDelCacheTokenIds,
+        taggedTokens: newTaggedTokens,
       };
-    })
-    .addCase(updateHideSmallBalance, (state, { payload }) => {
-      state.hideSmallBalance = payload;
     })
     .addCase(updateCK_BTCAddresses, (state, { payload }) => {
       state.ckBTCAddresses = {
@@ -60,5 +58,11 @@ export default createReducer(initialState, (builder) => {
       });
 
       state.retrieveState[`${payload.principal}`] = _states;
+    })
+    .addCase(updateWalletSortType, (state, { payload }) => {
+      state.sort = payload;
+    })
+    .addCase(updateSortBalance, (state, { payload }) => {
+      state.sortBalance = payload;
     });
 });

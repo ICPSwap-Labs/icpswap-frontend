@@ -4,14 +4,14 @@ import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { usePool, PoolState } from "hooks/swap/usePools";
 import { useToken } from "hooks/useCurrency";
 
-export interface usePositionProps {
+export interface UsePositionProps {
   poolId: string | undefined;
   tickLower: bigint | undefined;
   tickUpper: bigint | undefined;
   liquidity: bigint | undefined;
 }
 
-export function usePosition(userPosition: usePositionProps | undefined) {
+export function usePosition(userPosition: UsePositionProps | undefined) {
   const { result: poolMetadata } = useSwapPoolMetadata(userPosition?.poolId);
 
   const [, currency0] = useToken(poolMetadata?.token0.address);

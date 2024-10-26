@@ -28,7 +28,6 @@ export function themePalette(theme: ThemeOption) {
     error: {
       light: theme.colors.errorLight,
       main: theme.colors.errorMain,
-      dark: theme.colors.errorDark,
     },
     orange: {
       light: theme.colors.orangeLight,
@@ -72,6 +71,10 @@ export function themePalette(theme: ThemeOption) {
       dark: theme.textDark,
       light: theme.textLight,
       hint: theme.colors.grey100,
+      "theme-primary": theme.colors.darkPrimaryMain,
+      "theme-secondary": theme.colors.darkSecondaryMain,
+      success: theme.colors["text.success"],
+      apr: theme.colors.apr,
     },
     background: {
       paper: theme.paper,

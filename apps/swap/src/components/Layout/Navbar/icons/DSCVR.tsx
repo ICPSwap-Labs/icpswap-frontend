@@ -8,9 +8,9 @@ export default function DSCVSRIcon() {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
-      <rect x="1" y="1" width="12" height="12" fill="url(#pattern0)" />
+      <rect x="1" y="1" width="12" height="12" fill="url(#pattern_dscvr)" />
       <defs>
-        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <pattern id="pattern_dscvr" patternContentUnits="objectBoundingBox" width="1" height="1">
           <use xlinkHref="#image0_22765_76289" transform="scale(0.00238663)" />
         </pattern>
         <image

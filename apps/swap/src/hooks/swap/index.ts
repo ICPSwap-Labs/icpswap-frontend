@@ -3,36 +3,58 @@ import { NumberType, ResultStatus } from "@icpswap/types";
 import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import { getPoolCanisterId } from "hooks/swap/v3Calls";
-import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks";
+import { getSwapPosition, depositFrom, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
 import BigNumber from "bignumber.js";
 import { PositionDetail } from "types/swap";
-import type { SwapNFTTokenMetadata } from "@icpswap/types";
-import { getActorIdentity } from "components/Identity";
+import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { isUseTransfer } from "utils/token/index";
+import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
 import { SubAccount } from "@dfinity/ledger-icp";
 
-export function useActualSwapAmount(amount: NumberType | undefined, currency: Token | undefined): string | undefined {
-  return useMemo(() => {
-    if (!amount || !currency) return undefined;
+// Now the amount that user input is the final amount swap/add/increase
+// Amount is the value that the subaccount balance when use transfer, 1 token fees should be added on the amount
+// And if use approve, amount is the value that the pool unused balance
+export function getTokenActualTransferAmount(amount: NumberType, token: Token): string {
+  const typedValue = formatTokenAmount(amount, token.decimals);
+  const fee = token.transFee;
 
-    const typedValue = formatTokenAmount(amount, currency.decimals);
-    const fee = currency.transFee;
+  // And 1 token fees will be subtracted by token canister,
+  // so user balance should be equal to or greater than typeValue + token.fee * 2 if use transfer
+  // typeValue + token.fee if use approve
+  return isUseTransfer(token)
+    ? parseTokenAmount(typedValue.plus(fee), token.decimals).toString()
+    : parseTokenAmount(typedValue, token.decimals).toString();
+}
 
-    if (typedValue.isGreaterThan(currency.transFee)) {
-      // When token use transfer, 1 trans fee will be subtracted by endpoint
-      return isUseTransfer(currency.wrapped)
-        ? parseTokenAmount(typedValue.minus(fee), currency.decimals).toString()
-        : parseTokenAmount(typedValue, currency.decimals).toString();
-    }
+export function getTokenActualTransferRawAmount(rawAmount: NumberType, token: Token): string {
+  const fee = token.transFee;
 
-    return "0";
-  }, [amount, currency]);
+  // And 1 token fees will be subtracted by token canister,
+  // so user balance should be equal to or greater than typeValue + token.fee * 2 if use transfer
+  // typeValue + token.fee if use approve
+  return isUseTransfer(token) ? new BigNumber(rawAmount.toString()).plus(fee).toString() : rawAmount.toString();
+}
+
+export function getTokenActualDepositAmount(amount: NumberType, token: Token): string {
+  const typedValue = formatTokenAmount(amount, token.decimals);
+  const fee = token.transFee;
+
+  return isUseTransfer(token)
+    ? parseTokenAmount(typedValue.plus(fee), token.decimals).toString()
+    : parseTokenAmount(typedValue, token.decimals).toString();
+}
+
+export function getTokenActualDepositRawAmount(rawAmount: NumberType, token: Token): string {
+  const fee = token.transFee;
+
+  return isUseTransfer(token)
+    ? new BigNumber(rawAmount.toString()).plus(fee).toString()
+    : new BigNumber(rawAmount.toString()).toString();
 }
 
 export function usePoolCanisterId(
@@ -146,20 +168,25 @@ export function usePositionsFromNFTs(data: SwapNFTTokenMetadata[] | undefined) {
   return useMemo(() => ({ loading, result: positions }), [positions, loading]);
 }
 
+export interface UseSwapDepositArgs {
+  token: Token;
+  amount: string;
+  poolId: string;
+  openExternalTip?: OpenExternalTip;
+  standard: TOKEN_STANDARD;
+}
+
 export function useSwapDeposit() {
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(async (token: Token, amount: string, poolId: string, openExternalTip?: OpenExternalTip) => {
-    const identity = await getActorIdentity();
-
-    const useTransfer = isUseTransfer(token);
+  return useCallback(async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
+    const useTransfer = isUseTransferByStandard(standard);
 
     let status: ResultStatus = ResultStatus.ERROR;
     let message = "";
 
     if (useTransfer) {
       const { status: _status, message: _message } = await deposit(
-        identity,
         poolId,
         token.address,
         BigInt(amount),
@@ -169,7 +196,6 @@ export function useSwapDeposit() {
       message = _message;
     } else {
       const { status: _status, message: _message } = await depositFrom(
-        identity,
         poolId,
         token.address,
         BigInt(amount),
@@ -184,7 +210,7 @@ export function useSwapDeposit() {
         openExternalTip({ message });
       } else {
         openErrorTip(
-          `Failed to deposit ${token.symbol}: ${message}. Please click 'Reclaim Your Tokens' to reclaim your tokens.`,
+          `Failed to deposit ${token.symbol}: ${message}. Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
         );
       }
 
@@ -207,10 +233,7 @@ export function useSwapTransfer() {
         return false;
       }
 
-      const identity = await getActorIdentity();
-
       const { status, message } = await tokenTransfer({
-        identity,
         to: poolId,
         canisterId: token.address,
         amount: new BigNumber(amount),
@@ -231,29 +254,15 @@ export function useSwapTransfer() {
   );
 }
 
-export function useSwapWithdraw() {
-  const [openErrorTip] = useErrorTip();
-
-  return useCallback(async (token: Token, poolId: string, amount: string, openExternalTip?: OpenExternalTip) => {
-    const identity = await getActorIdentity();
-
-    const { status, message } = await withdraw(identity, poolId, token.address, BigInt(token.transFee), BigInt(amount));
-
-    if (status === "err") {
-      if (openExternalTip) {
-        openExternalTip({ message });
-      } else {
-        openErrorTip(
-          `Failed to withdraw ${token.symbol}: ${message}. Please click 'Reclaim Your Tokens' to reclaim your tokens.`,
-        );
-      }
-
-      return false;
-    }
-
-    return true;
-  }, []);
-}
-
 export * from "./useReclaimCallback";
 export * from "./useSwapApprove";
+export * from "./usePositionValue";
+export * from "./useWithdrawPCMBalance";
+export * from "./useSortedPositions";
+export * from "./useTokenInsufficient";
+export * from "./useSwapPositions";
+export * from "./usePCMBalances";
+export * from "./useSwapTokenFeeCost";
+export * from "./useLiquidityLocksImage";
+export * from "./useMaxAmountSpend";
+export * from "./useSwapWithdraw";

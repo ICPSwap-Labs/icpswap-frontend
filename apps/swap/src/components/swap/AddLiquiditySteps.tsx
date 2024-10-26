@@ -4,8 +4,8 @@ import { Position, Token } from "@icpswap/swap-sdk";
 import { Trans, t } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { toFormat } from "utils/index";
-import { isUseTransfer, actualAmountToPool } from "utils/token/index";
-import { StepDetails, StepContent } from "components/Steps/types";
+import { isUseTransfer } from "utils/token/index";
+import { StepContents, StepContent } from "types/step";
 import type { PCMMetadata } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 
@@ -34,18 +34,14 @@ export function getAddLiquidityStepDetails({
 }: GetAddLiquidityStepDetails) {
   if (!position) return [];
 
-  const {token0} = position.pool;
-  const {token1} = position.pool;
+  const { token0 } = position.pool;
+  const { token1 } = position.pool;
 
   const symbol0 = position.pool.token0.symbol;
   const symbol1 = position.pool.token1.symbol;
 
-  const amount0 = toFormat(
-    parseTokenAmount(actualAmountToPool(token0, position.mintAmounts.amount0.toString()), token0.decimals).toString(),
-  );
-  const amount1 = toFormat(
-    parseTokenAmount(actualAmountToPool(token1, position.mintAmounts.amount1.toString()), token1.decimals).toString(),
-  );
+  const amount0 = toFormat(parseTokenAmount(position.mintAmounts.amount0.toString(), token0.decimals).toString());
+  const amount1 = toFormat(parseTokenAmount(position.mintAmounts.amount1.toString(), token1.decimals).toString());
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -89,7 +85,7 @@ export function getAddLiquidityStepDetails({
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: isUseTransfer(token1) ? `Transfer ${symbol1}` : `Approve ${symbol1}`,
@@ -114,7 +110,7 @@ export function getAddLiquidityStepDetails({
           </TextButton>
         </>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
     {
       title: `Add liquidity ${token0.symbol} and ${token1.symbol}`,
@@ -130,7 +126,7 @@ export function getAddLiquidityStepDetails({
           <Trans>Retry</Trans>
         </TextButton>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
   ];
 
@@ -170,7 +166,7 @@ export function getAddLiquidityStepDetails({
               </TextButton>
             </>,
           ],
-          errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
         });
       }
     }
@@ -178,5 +174,5 @@ export function getAddLiquidityStepDetails({
 
   return originSteps
     .filter((step) => step !== undefined)
-    .map((step, index) => ({ ...step, step: index }) as StepDetails);
+    .map((step, index) => ({ ...step, step: index }) as StepContents);
 }

@@ -1,7 +1,6 @@
 import { ReactNode, useMemo } from "react";
-import { Link as ReactLink } from "react-router-dom";
-import { Breadcrumbs, Typography, Grid, Box, useMediaQuery, Avatar } from "@mui/material";
-import { createTheme , Theme } from "@mui/material/styles";
+import { Typography, Grid, Box, useMediaQuery, Avatar } from "@mui/material";
+import { createTheme, Theme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
@@ -10,7 +9,8 @@ import { Trans } from "@lingui/macro";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import { formatAmount } from "@icpswap/utils";
-import LoadingRow from "components/Loading/LoadingRow";
+import { LoadingRow, Breadcrumbs } from "components/index";
+
 import CollectionLinks from "../collectionsIcon/index";
 
 export const customizeTheme = createTheme({
@@ -26,16 +26,6 @@ export const customizeTheme = createTheme({
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    breadcrumbs: {
-      "& a": {
-        textDecoration: "none",
-        fontSize: "12px",
-        "&:hover": {
-          textDecoration: "underline",
-        },
-      },
-    },
-
     descItem: {
       fontSize: "12px",
       lineHeight: "20px",
@@ -115,14 +105,11 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
   return (
     <>
       <Box mb="40px">
-        <Breadcrumbs className={classes.breadcrumbs}>
-          <ReactLink to="/marketplace/collections">
-            <Typography color="secondary">
-              <Trans>Marketplace</Trans>
-            </Typography>
-          </ReactLink>
-          <Typography fontSize="12px">{canister?.name}</Typography>
-        </Breadcrumbs>
+        <Breadcrumbs
+          prevLink="/marketplace/collections"
+          prevLabel={<Trans>Marketplace</Trans>}
+          currentLabel={canister?.name}
+        />
       </Box>
 
       <Grid container flexDirection={matchDownMD ? "column" : "row"}>

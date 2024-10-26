@@ -12,6 +12,7 @@ import {
   LoadingRow,
   NoData,
   SimplePagination,
+  SwapTransactionPriceTip,
 } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
@@ -193,11 +194,13 @@ export default function Transactions({
               <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
               <BodyCell>
-                {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
+                {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
+                <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
               </BodyCell>
 
               <BodyCell>
-                {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
+                {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
+                <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
               </BodyCell>
 
               <BodyCell>
@@ -214,16 +217,18 @@ export default function Transactions({
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
       {loading ? (
-        <LoadingRow>
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </LoadingRow>
+        <Box sx={{ padding: "24px" }}>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        </Box>
       ) : null}
 
       <Box mt="20px">

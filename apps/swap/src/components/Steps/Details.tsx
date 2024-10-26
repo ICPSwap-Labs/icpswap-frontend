@@ -5,12 +5,13 @@ import { Modal } from "components/index";
 import { Theme } from "@mui/material/styles";
 import GreenCircleLoading from "components/Loading/GreenCircle";
 import { Trans } from "@lingui/macro";
+import { StepContents, StepDetailsProps } from "types/step";
+
 import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
-import { StepDetails, StepDetailsProps } from "./types";
 
 interface ActionIconProps {
   activeStep: number;
-  ele: StepDetails;
+  ele: StepContents;
   errorStep: number | undefined;
   showErrorHint: boolean;
 }
@@ -54,7 +55,15 @@ function ActionIcon({ ele, activeStep, showErrorHint }: ActionIconProps) {
   );
 }
 
-export default function _StepDetails({ title, onClose, open, content, activeStep, errorStep }: StepDetailsProps) {
+export default function _StepDetails({
+  title,
+  onClose,
+  open,
+  content,
+  activeStep,
+  errorStep,
+  description,
+}: StepDetailsProps) {
   const [openedSteps, setOpenedSteps] = useState<number[]>([]);
 
   const theme = useTheme() as Theme;
@@ -81,12 +90,16 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
     }
   }, [content, activeStep]);
 
-  const showErrorHint = (ele: StepDetails) => {
+  const showErrorHint = (ele: StepContents) => {
     return errorStep === ele.step || !!ele.skipError;
   };
 
   return (
-    <Modal open={open} title={title} onClose={onClose}>
+    <Modal open={open} title={title} onClose={onClose} contentPadding="18px 24px 24px 24px">
+      {description ? <Typography lineHeight="20px">{description}</Typography> : null}
+
+      <Box sx={{ width: "100%", height: "32px" }} />
+
       <Box sx={{ display: "flex", flexDirection: "column", gap: "12px 0" }}>
         {content.map((ele, index) => {
           return (
@@ -102,7 +115,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                   sx={{
                     display: "flex",
                     padding: "12px 20px",
-                    border: `1px solid ${showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4}`,
+                    border: `1px solid ${showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4}`,
                     borderRadius: "12px",
                     alignItems: "center",
                     justifyContent: "space-between",
@@ -143,13 +156,13 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                   <Box
                     sx={{
                       borderLeft: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderBottom: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderRight: `1px solid ${
-                        showErrorHint(ele) ? theme.colors.warning : theme.palette.background.level4
+                        showErrorHint(ele) ? theme.colors.danger : theme.palette.background.level4
                       }`,
                       borderBottomLeftRadius: "12px",
                       borderBottomRightRadius: "12px",
@@ -190,7 +203,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           <Typography component="div">
                             <Trans>Error</Trans>
                           </Typography>
-                          <Typography component="div" color="text.warning" sx={{ maxWidth: "380px" }}>
+                          <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
                             {ele.skipError}
                           </Typography>
                         </Box>
@@ -208,7 +221,7 @@ export default function _StepDetails({ title, onClose, open, content, activeStep
                           <Typography component="div">
                             <Trans>Error</Trans>
                           </Typography>
-                          <Typography component="div" color="text.warning" sx={{ maxWidth: "380px" }}>
+                          <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
                             {ele.errorMessage}
                           </Typography>
                         </Box>

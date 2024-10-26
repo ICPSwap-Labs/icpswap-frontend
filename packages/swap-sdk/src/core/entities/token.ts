@@ -15,7 +15,7 @@ interface ConstructorArgs {
 }
 
 /**
- * Represents an ERC20 token with a unique address and some metadata.
+ * Represents an ICP token with a unique address and some metadata.
  */
 export class Token extends BaseCurrency {
   public readonly isNative: false = false;

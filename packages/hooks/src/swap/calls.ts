@@ -22,10 +22,11 @@ import type {
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
-import { useCallsData, getPaginationAllData, usePaginationAllData } from "../useCallData";
 
-export async function createSwapPool(identity: ActorIdentity, args: CreatePoolArgs) {
-  return resultFormat<SwapPoolData>(await (await swapFactory(identity)).createPool(args));
+import { useCallsData, getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
+
+export async function createSwapPool(args: CreatePoolArgs) {
+  return resultFormat<SwapPoolData>(await (await swapFactory(true)).createPool(args));
 }
 
 export async function getSwapPool(args: GetPoolArgs) {
@@ -66,71 +67,65 @@ export function useSwapPoolMetadata(canisterId: string | undefined) {
   );
 }
 
-export async function getSwapPoolTicks(canisterId: string, offset: number, limit: number) {
+export async function getSwapTickInfos(canisterId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<TickLiquidityInfo>>(
     await (await swapPool(canisterId)).getTickInfos(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export async function getSwapPoolAllTicks(poolId: string, limit = 500) {
+export async function getSwapPoolAllTickInfos(poolId: string, limit = 500) {
   const callback = async (offset: number, limit: number) => {
-    return await getSwapPoolTicks(poolId, offset, limit);
+    return await getSwapTickInfos(poolId, offset, limit);
   };
 
   return await getPaginationAllData<TickLiquidityInfo>(callback, limit);
 }
 
-export function useLiquidityTicks(canisterId: string | undefined, limit?: number) {
+export function useLiquidityTickInfos(canisterId: string | undefined, limit?: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getSwapPoolAllTicks(canisterId, limit);
+      return await getSwapPoolAllTickInfos(canisterId, limit);
     }, [canisterId, limit]),
   );
 }
 
-export async function deposit(identity: ActorIdentity, canisterId: string, token: string, amount: bigint, fee: bigint) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).deposit({ token, amount, fee }));
+export async function deposit(canisterId: string, token: string, amount: bigint, fee: bigint) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).deposit({ token, amount, fee }));
 }
 
-export async function depositFrom(
-  identity: ActorIdentity,
-  canisterId: string,
-  token: string,
-  amount: bigint,
-  fee: bigint,
-) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).depositFrom({ token, amount, fee }));
+export async function depositFrom(canisterId: string, token: string, amount: bigint, fee: bigint) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).depositFrom({ token, amount, fee }));
 }
 
-export async function mint(canisterId: string, identity: ActorIdentity, args: MintArgs) {
-  return resultFormat<bigint>(await (await swapPool(canisterId, identity)).mint(args));
+export async function mint(canisterId: string, args: MintArgs) {
+  return resultFormat<bigint>(await (await swapPool(canisterId, true)).mint(args));
 }
 
-export async function increaseLiquidity(identity: ActorIdentity, poolId: string, args: IncreaseLiquidityArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).increaseLiquidity(args));
+export async function increaseLiquidity(poolId: string, args: IncreaseLiquidityArgs) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).increaseLiquidity(args));
 }
 
-export async function decreaseLiquidity(identity: ActorIdentity, poolId: string, args: DecreaseLiquidityArgs) {
+export async function decreaseLiquidity(poolId: string, args: DecreaseLiquidityArgs) {
   return resultFormat<{ amount0: bigint; amount1: bigint }>(
-    await (await swapPool(poolId, identity)).decreaseLiquidity(args),
+    await (await swapPool(poolId, true)).decreaseLiquidity(args),
   );
 }
 
-export async function withdraw(identity: ActorIdentity, poolId: string, token: string, fee: bigint, amount: bigint) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).withdraw({ token, fee, amount }));
+export async function withdraw(poolId: string, token: string, fee: bigint, amount: bigint) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).withdraw({ token, fee, amount }));
 }
 
 export async function quote(poolId: string, args: SwapArgs) {
   return resultFormat<bigint>(await (await swapPool(poolId)).quote(args)).data;
 }
 
-export async function swap(poolId: string, identity: ActorIdentity, args: SwapArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId, identity)).swap(args));
+export async function swap(poolId: string, args: SwapArgs) {
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).swap(args));
 }
 
-export async function collect(poolId: string, identity: ActorIdentity, args: ClaimArgs) {
-  return resultFormat<{ amount0: bigint; amount1: bigint }>(await (await swapPool(poolId, identity)).claim(args));
+export async function collect(poolId: string, args: ClaimArgs) {
+  return resultFormat<{ amount0: bigint; amount1: bigint }>(await (await swapPool(poolId, true)).claim(args));
 }
 
 export async function getUserUnusedBalance(canisterId: string, user: Principal) {
@@ -139,12 +134,17 @@ export async function getUserUnusedBalance(canisterId: string, user: Principal) 
   ).data;
 }
 
-export function useUserUnusedBalance(canisterId: string | undefined, user: Principal | undefined) {
+export function useUserUnusedBalance(
+  canisterId: string | undefined,
+  user: Principal | undefined,
+  refresh?: number | boolean,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !user) return undefined;
       return await getUserUnusedBalance(canisterId, user);
     }, [canisterId, user]),
+    refresh,
   );
 }
 
@@ -373,9 +373,8 @@ export function useSwapPoolAllPositions(canisterId: string | undefined, limit?: 
 }
 
 export async function getSwapTicks(canisterId: string, offset: number, limit: number) {
-  return resultFormat<PaginationResult<TickInfoWithId>>(
-    await (await swapPool(canisterId)).getTicks(BigInt(offset), BigInt(limit)),
-  ).data;
+  const result = await (await swapPool(canisterId)).getTicks(BigInt(offset), BigInt(limit));
+  return resultFormat<PaginationResult<TickInfoWithId>>(result).data;
 }
 
 export async function getSwapAllTicks(canisterId: string, limit = 1000) {
@@ -383,7 +382,7 @@ export async function getSwapAllTicks(canisterId: string, limit = 1000) {
     return await getSwapTicks(canisterId, offset, limit);
   };
 
-  return await getPaginationAllData<TickInfoWithId>(callback, limit);
+  return await getPaginationAllDataLimit<TickInfoWithId>(callback, limit);
 }
 
 export function useSwapAllTicks(canisterId: string | undefined, limit?: number) {
@@ -452,23 +451,23 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(poolId: string | undefined, principal: string | undefined) {
+export function useSwapUserPositions(
+  poolId: string | undefined,
+  principal: string | undefined,
+  refresh?: boolean | number,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !poolId) return undefined;
       return await getSwapUserPositions(poolId, principal);
     }, [principal, poolId]),
+    refresh,
   );
 }
 
-export async function approvePosition(
-  identity: ActorIdentity,
-  poolId: string,
-  spender: string,
-  index: number | bigint,
-) {
+export async function approvePosition(poolId: string, spender: string, index: number | bigint) {
   return resultFormat<boolean>(
-    await (await swapPool(poolId, identity)).approvePosition(Principal.fromText(spender), BigInt(index)),
+    await (await swapPool(poolId, true)).approvePosition(Principal.fromText(spender), BigInt(index)),
   );
 }
 

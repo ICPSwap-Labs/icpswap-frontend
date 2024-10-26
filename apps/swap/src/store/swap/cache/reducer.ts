@@ -10,6 +10,8 @@ import {
   updateShowClosedPosition,
   updateUserPositionPools,
   updateUserMultipleApprove,
+  updateSwapProAutoRefresh,
+  updateKeepTokenInPools,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -41,12 +43,18 @@ export default createReducer(initialState, (builder) => {
       state.showClosedPosition = payload;
     })
     .addCase(updateUserPositionPools, (state, { payload }) => {
-      const {userPositionPools} = state;
+      const { userPositionPools } = state;
       const allPoolIds = [...new Set([...userPositionPools, ...payload])];
 
       state.userPositionPools = allPoolIds;
     })
     .addCase(updateUserMultipleApprove, (state, { payload }) => {
       state.multipleApprove = payload;
+    })
+    .addCase(updateSwapProAutoRefresh, (state, { payload }) => {
+      state.swapProAutoRefresh = payload;
+    })
+    .addCase(updateKeepTokenInPools, (state, { payload }) => {
+      state.keepTokenInPools = payload;
     });
 });

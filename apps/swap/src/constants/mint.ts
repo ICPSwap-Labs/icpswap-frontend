@@ -1,4 +1,3 @@
-import { JSBI } from "utils/index";
 import { Percent, BigintIsh } from "@icpswap/swap-sdk";
 
 export enum Bound {
@@ -24,8 +23,6 @@ export const TICK_SPACING = {
   [FeeAmount.MEDIUM]: 60,
   [FeeAmount.HIGH]: 200,
 };
-
-export const BIG_INT_ZERO = JSBI.BigInt(0);
 
 export enum BURN_FIELD {
   LIQUIDITY_PERCENT = "LIQUIDITY_PERCENT",
@@ -59,3 +56,21 @@ export const MAX_TRANSACTIONS_DEADLINE = 180;
 export const DEFAULT_TRANSACTIONS_DEADLINE = 30;
 
 export const DEFAULT_MULTIPLE_APPROVE = 5;
+
+export const ZOOM_LEVEL_INITIAL_MIN_MAX = {
+  [FeeAmount.LOW]: {
+    min: 0.999,
+    max: 1.001,
+  },
+  [FeeAmount.MEDIUM]: {
+    min: 0.5,
+    max: 2,
+  },
+  [FeeAmount.HIGH]: {
+    min: 0.5,
+    max: 2,
+  },
+};
+
+export const ADD_LIQUIDITY_REFRESH_KEY = "AddLiquidity";
+export const INCREASE_LIQUIDITY_REFRESH_KEY = "IncreaseLiquidity";

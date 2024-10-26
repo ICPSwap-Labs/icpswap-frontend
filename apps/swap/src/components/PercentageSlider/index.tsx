@@ -14,7 +14,6 @@ const useStyle = makeStyles((theme: Theme) => {
         backgroundColor: isDarkTheme(theme) ? theme.palette.background.level4 : "#fff",
       },
       "& .MuiSlider-thumb": {
-        // marginLeft: "0px",
         width: "16px",
         height: "16px",
         border: "2px solid #fff",

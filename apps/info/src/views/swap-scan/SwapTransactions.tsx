@@ -1,15 +1,24 @@
 import { useSwapTransactions } from "hooks/info/useScanSwapTransactions";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { LoadingRow, SelectPair, Pagination, PaginationType, Copy, NoData } from "ui-component/index";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, enumToString, pageArgsFormat, shorten } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
+import {
+  formatDollarAmount,
+  formatAmount,
+  enumToString,
+  pageArgsFormat,
+  shorten,
+  locationSearchReplace,
+} from "@icpswap/utils";
+import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip, Flex } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
+import { useSwapScanTransactionDownload } from "hooks/info/useSwapScanDownloadTransaction";
+
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
@@ -63,8 +72,11 @@ interface TransactionsProps {
 function Transactions({ address }: TransactionsProps) {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
 
   const { pair } = useParsedQueryString() as { pair: string };
+
+  const { download, loading: downloadLoading } = useSwapScanTransactionDownload({ pair, principal: address });
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
@@ -81,11 +93,9 @@ function Transactions({ address }: TransactionsProps) {
   const handlePairChange = (pairId: string | undefined) => {
     setPagination({ pageNum: 1, pageSize: 10 });
 
-    if (pairId) {
-      history.push(`/swap-scan/transactions?pair=${pairId}`);
-    } else {
-      history.push(`/swap-scan/transactions`);
-    }
+    const search = locationSearchReplace(location.search, "pair", pairId);
+
+    history.push(`/swap-scan/transactions${search}`);
   };
 
   const handlePageChange = (pagination: PaginationType) => {
@@ -98,11 +108,31 @@ function Transactions({ address }: TransactionsProps) {
 
   return (
     <>
-      <Box sx={{ display: "flex", margin: "10px 0 0 0", gap: "0 16px", alignItems: "center" }}>
-        <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-          <SelectPair value={pair} onPairChange={handlePairChange} />
-        </Box>
-        {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+      <Box
+        sx={{
+          display: "flex",
+          margin: "10px 0 0 0",
+          gap: "0 16px",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Flex gap="0 16px">
+          <Box sx={{ width: "fit-content", minWidth: "214px" }}>
+            <SelectPair value={pair} onPairChange={handlePairChange} search />
+          </Box>
+          {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
+        </Flex>
+        <Flex>
+          <Button
+            variant="contained"
+            onClick={download}
+            disabled={downloadLoading}
+            startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
+          >
+            <Trans>Download: Excel Export</Trans>
+          </Button>
+        </Flex>
       </Box>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
@@ -111,23 +141,23 @@ function Transactions({ address }: TransactionsProps) {
             <Header className={classes.wrapper}>
               <HeaderCell>#</HeaderCell>
 
-              <HeaderCell field="amountUSD" isSort>
+              <HeaderCell field="amountUSD">
                 <Trans>Total Value</Trans>
               </HeaderCell>
 
-              <HeaderCell field="amountToken0" isSort>
+              <HeaderCell field="amountToken0">
                 <Trans>Token Amount</Trans>
               </HeaderCell>
 
-              <HeaderCell field="amountToken1" isSort>
+              <HeaderCell field="amountToken1">
                 <Trans>Token Amount</Trans>
               </HeaderCell>
 
-              <HeaderCell field="sender" isSort>
+              <HeaderCell field="sender">
                 <Trans>Account</Trans>
               </HeaderCell>
 
-              <HeaderCell field="timestamp" isSort>
+              <HeaderCell field="timestamp">
                 <Trans>Time</Trans>
               </HeaderCell>
             </Header>
@@ -139,11 +169,13 @@ function Transactions({ address }: TransactionsProps) {
                 <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
                 <BodyCell>
-                  {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
+                  {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
+                  <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
                 </BodyCell>
 
                 <BodyCell>
-                  {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
+                  {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
+                  <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
                 </BodyCell>
 
                 <BodyCell>
@@ -159,16 +191,18 @@ function Transactions({ address }: TransactionsProps) {
             {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
             {loading ? (
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
+              <Box sx={{ padding: "16px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
             ) : null}
 
             {!loading && !!transactions?.length ? (

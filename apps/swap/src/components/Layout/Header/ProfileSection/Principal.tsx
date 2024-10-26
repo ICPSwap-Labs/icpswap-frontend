@@ -1,5 +1,4 @@
-import { principalToAccount } from "@icpswap/utils";
-import { getExplorerAccountLink } from "utils/index";
+import { explorerLink } from "@icpswap/utils";
 import { t } from "@lingui/macro";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { AddressSection } from "./Address";
@@ -10,9 +9,8 @@ export default function ProfileSection() {
   return (
     <AddressSection
       address={principal}
-      label={t`Principal`}
-      labelColor="#EFEFFF"
-      link={principal ? getExplorerAccountLink(principalToAccount(principal)) : undefined}
+      label={t`Principal ID`}
+      link={principal ? explorerLink(principal) : undefined}
     />
   );
 }

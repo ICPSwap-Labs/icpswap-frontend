@@ -3,7 +3,7 @@ import { v2SwapFactory, v2SwapPool } from "hooks/v2-actor";
 import { PoolInfo, TickLiquidityInfo } from "types/swap-v2";
 import { useCallsData } from "@icpswap/hooks";
 import { resultFormat } from "@icpswap/utils";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 
 export async function getSwapPoolIds() {
   return resultFormat<string[]>(await (await v2SwapFactory()).getPoolIds()).data;

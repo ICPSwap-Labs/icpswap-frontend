@@ -1,14 +1,16 @@
 import { useContext, useMemo } from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { TokenImage } from "components/index";
+import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui";
+import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { Copy } from "components/Copy/icon";
+import { TokenListIdentifying } from "components/TokenListIdentifying";
+import { ICP } from "@icpswap/tokens";
 
+import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 import { SwapProContext } from "../context";
 
 interface MediasProps {
@@ -16,7 +18,7 @@ interface MediasProps {
 }
 
 function Medias({ mediaLinks }: MediasProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return mediaLinks ? (
     <Box
@@ -54,25 +56,29 @@ export interface TokenChartInfoProps {
 }
 
 export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { outputToken } = useContext(SwapProContext);
+  const { token } = useContext(SwapProContext);
 
   const tokenId = useMemo(() => {
-    return outputToken?.address;
-  }, [outputToken]);
+    return token?.address;
+  }, [token]);
 
   const mediaLinks = useMemo(() => {
     if (!tokenListInfo) return undefined;
 
     const links = [
       { k: "Dashboard", v: `https://dashboard.internetcomputer.org/canister/${tokenId}` },
+      tokenId ? { k: "DexScreener", v: `https://dexscreener.com/icp/${tokenId}` } : undefined,
       { k: "ICScan", v: `https://icscan.io/canister/${tokenId}` },
-    ];
+    ] as {
+      k: string;
+      v: string;
+    }[];
 
-    return links.concat(
-      (tokenListInfo.mediaLinks ?? []).map((mediaLink) => ({ k: mediaLink.mediaType, v: mediaLink.link })),
-    );
+    return links
+      .concat((tokenListInfo.mediaLinks ?? []).map((mediaLink) => ({ k: mediaLink.mediaType, v: mediaLink.link })))
+      .filter((e) => !!e);
   }, [tokenId, tokenListInfo]);
 
   return (
@@ -113,12 +119,17 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-            <Typography color="text.theme_secondary">{tokenId}</Typography>
+            <Typography color="text.theme-secondary">{tokenId}</Typography>
             <Copy content={tokenId} />
           </Box>
         </Box>
 
-        {!matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
+        {!matchDownSM ? (
+          <Box sx={{ display: "flex", gap: "0 10px" }}>
+            <Medias mediaLinks={mediaLinks} />
+            <TokenListIdentifying tokenId={tokenId} />
+          </Box>
+        ) : null}
       </Box>
 
       <Box
@@ -134,7 +145,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken?.priceUSD ? formatDollarAmount(infoToken.priceUSD, 4) : "--"}
+            {infoToken?.priceUSD ? formatDollarAmount(infoToken.priceUSD) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -143,30 +154,33 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           ) : null}
         </Box>
 
-        {matchDownSM ? <Medias mediaLinks={mediaLinks} /> : null}
-
-        <a
-          href={`https://info.icpswap.com/token/details/${tokenId}`}
-          target="_blank"
-          rel="noreferrer"
-          style={{ textDecoration: "none" }}
-        >
-          <Box
-            sx={{
-              width: "121px",
-              height: "36px",
-              borderRadius: "8px",
-              background: "#515A81",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Typography align="center" color="text.primary">
-              <Trans>Token Details</Trans>
-            </Typography>
+        {matchDownSM ? (
+          <Box sx={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <Medias mediaLinks={mediaLinks} />
+            <TokenListIdentifying tokenId={tokenId} />
           </Box>
-        </a>
+        ) : null}
+
+        <Box sx={{ display: "flex", gap: "0 10px" }}>
+          {!matchDownSM ? <TokenChartsViewSelector /> : null}
+
+          <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
+            <Button className="secondary" variant="contained">
+              <Trans>Add Liquidity</Trans>
+            </Button>
+          </Link>
+
+          <a
+            href={`https://info.icpswap.com/token/details/${tokenId}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <Button className="secondary" variant="contained">
+              <Trans>Token Details</Trans>
+            </Button>
+          </a>
+        </Box>
       </Box>
     </Box>
   );

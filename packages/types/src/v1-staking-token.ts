@@ -3,4 +3,5 @@ export type {
   V1StakingPoolInfo,
   V1StakingPoolUserInfo,
   V1StakingPoolTransaction,
+  V1StakingPoolControllerPoolInfo,
 } from "@icpswap/candid";

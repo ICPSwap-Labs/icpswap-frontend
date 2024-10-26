@@ -33,7 +33,6 @@ export default {
   // error
   errorLight: "#ef9a9a",
   errorMain: "#f44336",
-  errorDark: "#c62828",
 
   // orange
   orangeLight: "#fbe9e7",
@@ -111,4 +110,11 @@ export default {
 
   defaultGradientStart: "#5569db",
   defaultGradientEnd: "#8572ff",
+
+  apr: "#54C081",
+
+  "text.success": "#54C081",
+
+  border0: "#4F5A84",
+  border1: "#353C5D",
 };

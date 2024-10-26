@@ -3,6 +3,8 @@ import { Grid, Typography, Box, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import { RISK_WARNING_INDEX } from "constants/zIndex";
+
 import RiskStatementModal, { getRiskStorage } from "./Modal";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -67,6 +69,7 @@ export default function RiskStatement() {
           bottom: 0,
           left: 0,
           width: "100%",
+          zIndex: RISK_WARNING_INDEX,
         }}
       >
         <Grid
@@ -77,10 +80,7 @@ export default function RiskStatement() {
         >
           <Grid item xs>
             <Typography color="text.primary" fontSize={matchDownSM ? "12px" : "14px"}>
-              <Trans>
-                Using a Canister (the Smart Contracts) is not always safe, and there is always some potential risk in
-                using Tokens and/or cryptos. DYOR before investing.
-              </Trans>
+              <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
             </Typography>
           </Grid>
           <Box className={classes.button} onClick={handleRead}>

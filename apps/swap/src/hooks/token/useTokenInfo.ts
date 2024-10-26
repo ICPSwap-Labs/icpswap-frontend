@@ -1,11 +1,14 @@
 import { useMemo, useEffect, useState } from "react";
-import { ICP_TOKEN_INFO, TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO, ckTestUSD_TOKEN_INFO } from "constants/index";
+import { TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import type { TokenInfo, StorageTokenInfo } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
 import { IdbStorage } from "@icpswap/utils";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getPromisesAwait } from "@icpswap/hooks";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+// import { generateLogoUrl } from "hooks/token/useTokenLogo";
+
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
 
@@ -94,7 +97,6 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
     if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;
-    if (tokenId === ckTestUSD_TOKEN_INFO.canisterId) tokeInfo = ckTestUSD_TOKEN_INFO;
 
     if (tokeInfo) {
       setTokenInfos((prevState) => ({
@@ -146,6 +148,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           [tokenId]: {
             name: storageInfo.name,
             logo: storageInfo.logo,
+            // logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
@@ -173,6 +176,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       if (tokenInfo) {
         await setStorageTokenInfo({
           ...tokenInfo,
+          // logo: generateLogoUrl(tokenId),
           transFee: tokenInfo.transFee.toString(),
           totalSupply: "0",
         });

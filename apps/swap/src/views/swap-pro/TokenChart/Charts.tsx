@@ -1,34 +1,43 @@
-import { useContext, useMemo } from "react";
-import { Box, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { TokenCharts } from "@icpswap/ui";
+import { useEffect, useContext, useRef } from "react";
+import { Box, useTheme } from "components/Mui";
+import { TokenCharts, TokenChartsRef } from "@icpswap/ui";
 
 import { SwapProContext } from "../context";
 
 export default function TokenChartInfo() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
+  const { token, chartView, tradePoolId } = useContext(SwapProContext);
 
-  const { inputToken, outputToken } = useContext(SwapProContext);
+  const tokenChartsRef = useRef<TokenChartsRef>(null);
 
-  const priceToggles = useMemo(() => {
-    if (!inputToken || !outputToken) return undefined;
-    return [inputToken, outputToken].map((e) => ({ label: e.symbol, id: e.address }));
-  }, [inputToken, outputToken]);
+  useEffect(() => {
+    if (chartView && tokenChartsRef && tokenChartsRef.current) {
+      tokenChartsRef.current.setView(chartView);
+    }
+  }, [chartView, tokenChartsRef]);
 
   return (
     <Box
       sx={{
-        margin: "22px 0 0 0",
+        margin: "10px 0 0 0",
         background: theme.palette.background.level3,
         borderBottomLeftRadius: "12px",
         borderBottomRightRadius: "12px",
         overflow: "hidden",
         "@media(max-width: 640px)": {
-          margin: "0",
+          margin: "0 0 0 0",
         },
       }}
     >
-      <TokenCharts canisterId={outputToken?.address} background={3} borderRadius="0px" priceToggles={priceToggles} />
+      <TokenCharts
+        ref={tokenChartsRef}
+        canisterId={token?.address}
+        background={3}
+        borderRadius="0px"
+        showPrice={false}
+        showTopIfDexScreen={false}
+        dexScreenId={tradePoolId}
+      />
     </Box>
   );
 }

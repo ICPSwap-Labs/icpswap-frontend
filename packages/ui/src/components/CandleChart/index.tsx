@@ -49,6 +49,9 @@ export const CandleChart = ({
     if (chartCreated && chartRef?.current?.parentElement) {
       chartCreated.resize(chartRef.current.parentElement.clientWidth - 32, height);
       chartCreated.timeScale().fitContent();
+      chartCreated.timeScale().applyOptions({
+        barSpacing: 20,
+      });
       chartCreated.timeScale().scrollToPosition(0, false);
     }
   }, [chartCreated, chartRef, height]);
@@ -117,6 +120,10 @@ export const CandleChart = ({
       });
 
       chart.timeScale().fitContent();
+      chart.timeScale().applyOptions({
+        barSpacing: 20,
+      });
+
       setChart(chart);
     }
   }, [color, chartCreated, data, height, setValue, textColor, theme]);
@@ -144,6 +151,11 @@ export const CandleChart = ({
           precision,
           minMove: 1 / 10 ** precision,
         },
+      });
+
+      chartCreated.timeScale().fitContent();
+      chartCreated.timeScale().applyOptions({
+        barSpacing: 20,
       });
 
       // update the title when hovering on the chart

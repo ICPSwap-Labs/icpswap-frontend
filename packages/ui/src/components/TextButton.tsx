@@ -1,31 +1,63 @@
 import { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Box } from "@mui/material";
 import { mockALinkAndOpen } from "@icpswap/utils";
+
+import { Typography, Box } from "./Mui";
 
 export interface ALinkProps {
   children: ReactNode;
   link: string | undefined;
+  color?: string;
+  textDecorationColor?: "primary" | "secondary" | "text.secondary" | "text.primary";
+  fontSize?: string;
+  align?: "right";
+  text?: boolean;
 }
 
-export function ALink({ children, link }: ALinkProps) {
+export function ALink({
+  children,
+  link,
+  textDecorationColor = "text.secondary",
+  color = "",
+  fontSize = "14px",
+  align,
+  text = true,
+}: ALinkProps) {
   return (
     <a
       href={link}
       target="_blank"
       rel="noreferrer"
-      style={{ textDecoration: "underline", textDecorationColor: "#8492c4" }}
+      style={{
+        textDecoration: text ? "underline" : "none",
+        fontSize,
+        textDecorationColor:
+          textDecorationColor === "primary"
+            ? "rgb(134, 114, 255)"
+            : textDecorationColor === "secondary"
+            ? "rgb(86, 105, 220)"
+            : textDecorationColor === "text.primary"
+            ? "#ffffff"
+            : "#8492c4",
+        color,
+        textAlign: align,
+      }}
     >
-      <Typography
-        color="text.secondary"
-        sx={{
-          cursor: "pointer",
-          userSelect: "none",
-        }}
-        component="span"
-      >
-        {children}
-      </Typography>
+      {text ? (
+        <Typography
+          color={color ?? "text.secondary"}
+          sx={{
+            cursor: "pointer",
+            userSelect: "none",
+            fontSize,
+          }}
+          component="span"
+        >
+          {children}
+        </Typography>
+      ) : (
+        children
+      )}
     </a>
   );
 }
@@ -51,7 +83,7 @@ export interface TextButtonProps {
   to?: string;
   sx?: any;
   arrow?: boolean;
-  color?: "primary" | "write" | "secondary";
+  color?: "primary" | "white" | "secondary";
   textDecoration?: "underline" | "none";
 }
 
@@ -84,7 +116,7 @@ export function TextButton({
 
   return (
     <Typography
-      color={color === "primary" ? "primary" : color === "write" ? "#ffffff" : "secondary"}
+      color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
       sx={{
         cursor: "pointer",
         userSelect: "none",

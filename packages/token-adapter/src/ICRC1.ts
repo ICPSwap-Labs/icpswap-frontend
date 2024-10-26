@@ -2,6 +2,8 @@ import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc1, icrcArchive } from "@icpswap/actor";
 import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
+import { Principal } from "@dfinity/principal";
+
 import { TokenHolder, Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
@@ -228,6 +230,15 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
+  }
+
+  public async getMintingAccount({ canisterId }: { canisterId: string }) {
+    const result = (await (await this.actor(canisterId)).icrc1_minting_account())[0];
+    return resultFormat<{ owner: string; sub: number[] | undefined }>(
+      result
+        ? { owner: result.owner.toString(), sub: result.subaccount[0] ? [...result.subaccount[0]] : undefined }
+        : undefined,
+    );
   }
 }
 

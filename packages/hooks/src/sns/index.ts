@@ -6,3 +6,5 @@ export * from "./useSwapLifeCycle";
 export * from "./useSwapSaleParameters";
 export * from "./useSwapInitArgs";
 export * from "./useSNSBuyerState";
+export * from "./governance";
+export * from "./governance_proposal";

@@ -1,7 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
+
 import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { initialState } from "./states";
-
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -11,8 +11,8 @@ export default createReducer(initialState, (builder) => {
         ...payload,
       };
     })
-    .addCase(logout, () => {
-      return { ...initialState };
+    .addCase(logout, (state) => {
+      return { ...initialState, walletConnectorOpen: state.walletConnectorOpen };
     })
     .addCase(updateConnected, (state, { payload }) => {
       state.isConnected = payload.isConnected;

@@ -26,7 +26,6 @@ export function themePalette(theme: { [key: string]: any }) {
     error: {
       light: theme.colors.errorLight,
       main: theme.colors.errorMain,
-      dark: theme.colors.errorDark,
     },
     orange: {
       light: theme.colors.orangeLight,
@@ -65,12 +64,16 @@ export function themePalette(theme: { [key: string]: any }) {
       tertiary: theme.textTertiary,
       dark: theme.textDark,
       light: theme.textLight,
-      warning: theme.colors.warning,
-      orangeWarning: theme.colors.orangeWarning,
+      danger: theme.colors.danger,
+      orangeWarning: theme.colors.warning,
       level1: isDark ? theme.colors.darkLevel1 : theme.colors.primaryLight,
       400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
       theme_primary: theme.colors.darkPrimaryMain,
       theme_secondary: theme.colors.darkSecondaryMain,
+      "theme-primary": theme.colors.darkPrimaryMain,
+      "theme-secondary": theme.colors.darkSecondaryMain,
+      apr: theme.colors.apr,
+      success: theme.colors["text.success"],
     },
     background: {
       paper: theme.paper,
@@ -83,6 +86,7 @@ export function themePalette(theme: { [key: string]: any }) {
     },
     border: {
       normal: isDark ? "1px solid #313A5A" : `1px solid ${theme.colors.lightGray200BorderColor}`,
+      border0: "1px solid #4F5A84",
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
     },
     avatar: {

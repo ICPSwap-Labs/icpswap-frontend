@@ -3,12 +3,11 @@ import { Principal } from "@dfinity/principal";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { isPrincipal, isValidPrincipal, isOkSubAccount, principalToAccount, BigNumber } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
-import { icpAdapter, tokenAdapter } from "@icpswap/token-adapter";
-import { TOKEN_STANDARD } from "@icpswap/types";
-import { useLatestDataCall } from "../useCallsData";
+import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { useLatestDataCall } from "@icpswap/hooks";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -151,12 +150,12 @@ export function useCurrencyBalances(
 export function useCurrencyBalance(
   account: string | Principal | undefined,
   currency: Token | undefined,
-  refresh?: boolean,
+  refresh?: boolean | number,
 ) {
   const { loading, result } = useTokenBalance(currency?.address, account, refresh);
 
   return useMemo(() => {
-    if (!currency || !result || loading || isNaN(result.toNumber()))
+    if (!result || loading || !currency)
       return {
         loading,
         result: undefined,
@@ -167,4 +166,80 @@ export function useCurrencyBalance(
       result: CurrencyAmount.fromRawAmount(currency, result.toNumber()),
     };
   }, [loading, result, currency]);
+}
+
+export function useCurrencyBalanceV1(
+  account: string | Principal | undefined,
+  currency: Token | undefined,
+  refresh?: boolean | number,
+) {
+  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
+
+  const { loading, result } = useTokenBalance(currency?.address, account, refresh);
+
+  useEffect(() => {
+    if (result) {
+      setStoreResult(result);
+    }
+  }, [result]);
+
+  return useMemo(() => {
+    if (!currency || !storeResult || loading || isNaN(storeResult.toNumber()))
+      return {
+        loading,
+        result: storeResult && currency ? CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()) : undefined,
+      };
+
+    return {
+      loading,
+      result: CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()),
+    };
+  }, [loading, storeResult, currency]);
+}
+
+export interface UseTokenBalanceProps {
+  canisterId: string | undefined;
+  address: string | Principal | undefined;
+  sub?: Uint8Array;
+  refresh?: boolean | number;
+}
+
+export function useTokenBalanceV2({ canisterId, address, sub, refresh }: UseTokenBalanceProps) {
+  return useLatestDataCall(
+    useCallback(async () => {
+      if (!address || !canisterId) return undefined;
+      const result = await getTokenBalance(canisterId, address, sub);
+      return new BigNumber(result ? result.data?.toString() ?? 0 : 0);
+    }, [address, canisterId, sub]),
+    refresh,
+  );
+}
+
+export function useStoreTokenBalance(
+  tokenId: string | undefined,
+  address: string | Principal | undefined,
+  refresh?: boolean | number,
+) {
+  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
+
+  const { loading, result } = useTokenBalance(tokenId, address, refresh);
+
+  useEffect(() => {
+    if (result) {
+      setStoreResult(result);
+    }
+  }, [result]);
+
+  return useMemo(() => {
+    if (!tokenId || !storeResult || loading || isNaN(storeResult.toNumber()))
+      return {
+        loading,
+        result: storeResult && tokenId ? storeResult : undefined,
+      };
+
+    return {
+      loading,
+      result: storeResult,
+    };
+  }, [loading, storeResult, tokenId]);
 }

@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+
 import { useCallsData } from "./useCallData";
 
 export type ipLocationResult = {

@@ -17,19 +17,18 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@types/node": "^13.13.5",
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
+    "@types/node": "^13.13.5"
   },
   "dependencies": {
-    "qs": "^6.9.4",
-    "bignumber.js": "^9.0.1",
     "@icpswap/actor": "workspace:*",
     "@icpswap/candid": "workspace:*",
+    "@icpswap/constants": "workspace:*",
+    "@icpswap/swap-sdk": "workspace:*",
+    "@icpswap/token-adapter": "workspace:*",
+    "@icpswap/tokens": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "@icpswap/token-adapter": "workspace:*",
-    "@icpswap/constants": "workspace:*",
-    "@icpswap/swap-sdk": "workspace:*"
+    "bignumber.js": "^9.0.1",
+    "swr": "^2.2.0"
   }
 }

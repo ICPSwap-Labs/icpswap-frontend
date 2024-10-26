@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useMemo, useState } from "react";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { BigNumber } from "@icpswap/utils";
 import Web3 from "web3";
 
 export function useETHBalance(reload?: boolean) {
@@ -14,7 +14,7 @@ export function useETHBalance(reload?: boolean) {
         setLoading(true);
         const web3 = new Web3(Web3.givenProvider);
         const balance = await web3.eth.getBalance(account);
-        setBalance(parseTokenAmount(balance, 18));
+        setBalance(new BigNumber(balance.toString()));
         setLoading(false);
       }
     }

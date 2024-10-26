@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Grid, Typography, Box, Checkbox, Button } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Typography, Box, Checkbox, Button, makeStyles, useTheme, Theme } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 import Modal from "components/modal/index";
 import { Trans, t } from "@lingui/macro";
 import { TextButton } from "components/index";
@@ -44,15 +43,13 @@ export async function setRiskStorage(isRead: boolean) {
   await storage.setItem(RISK_STORAGE_NAME, JSON.stringify(isRead));
 }
 
-export default function RiskStatementModal({
-  open,
-  onClose,
-  onRead,
-}: {
+interface RiskStatementModalProps {
   open: boolean;
   onClose: () => void;
   onRead: () => void;
-}) {
+}
+
+export default function RiskStatementModal({ open, onClose, onRead }: RiskStatementModalProps) {
   const classes = useStyles();
 
   const [isRead, setIsRead] = useState(false);
@@ -81,15 +78,12 @@ export default function RiskStatementModal({
     >
       <Box>
         <Typography>
-          <Trans>
-            Using a Canister (the Smart Contracts) is not always safe, and there is always some potential risk in using
-            Tokens and/or cryptos. DYOR before investing.
-          </Trans>
+          <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
         </Typography>
       </Box>
       <Box className={classes.content}>
         <Box>
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
               1. ICPSwap is a decentralized financial hub of the Internet Computer, providing the transaction function
               of various tokens and NFTs within its ecosystem and other services. All the services are deployed on the
@@ -99,16 +93,16 @@ export default function RiskStatementModal({
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
-              2. The Internet Computer ecosystem is in its early stage. All functions of ICPSwap have undergone multiple
-              rounds of internal and public testing and also iterative repair, but have not been audited yet. Please
-              bear this in mind when using the platform.
+              2. The Internet Computer ecosystem is in its growth stage. All functions of ICPSwap have undergone
+              multiple rounds of internal and public testing and also iterative repair, The ICPSwap DApp is now under
+              SNS control, enhancing its security!
             </Trans>
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
               3. Anyone who has the seed phrase of a wallet address has control of the funds in that wallet. Never share
               your seed phrase under any circumstances whatsoever, including with the ICPSwap team.
@@ -116,7 +110,7 @@ export default function RiskStatementModal({
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
               4. Please stay vigilant to phishing attacks and make sure you are visiting{" "}
               <Typography color="primary" component="span">
@@ -127,7 +121,7 @@ export default function RiskStatementModal({
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography>
+          <Typography sx={{ lineHeight: "18px" }}>
             <Trans>
               5. For any events and news about ICPSwap, please refer to ICPSwap's Twitter:{" "}
               <TextButton link="https://twitter.com/icpswap">https://twitter.com/icpswap</TextButton> or @ICPSwap
@@ -135,13 +129,15 @@ export default function RiskStatementModal({
           </Typography>
         </Box>
       </Box>
-      <Box>
-        <Grid
-          container
-          alignItems="center"
+      <Box mt="10px">
+        <Flex
+          fullWidth
+          align="center"
           sx={{
             cursor: "pointer",
             userSelect: "none",
+            gap: "0 5px",
+            flexWrap: "nowrap",
           }}
           onClick={() => setIsRead(!isRead)}
         >
@@ -151,10 +147,16 @@ export default function RiskStatementModal({
               setIsRead(checked);
             }}
           />
-          <Typography component="span" fontSize="12px">
+          <Typography
+            sx={{
+              fontSize: "12px",
+              wordBreak: "break-word",
+              lineHeight: "18px",
+            }}
+          >
             <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
           </Typography>
-        </Grid>
+        </Flex>
       </Box>
       <Box mt="10px">
         <Button fullWidth variant="contained" size="large" disabled={!isRead} onClick={handleRead}>
@@ -162,7 +164,7 @@ export default function RiskStatementModal({
         </Button>
       </Box>
       <Box mt="5px">
-        <Typography fontSize="10px">
+        <Typography fontSize="10px" sx={{ lineHeight: "18px" }}>
           <Trans>* The ICPSwap founding team reserves right for the final explanation of all the statements.</Trans>
         </Typography>
       </Box>

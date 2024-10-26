@@ -4,7 +4,6 @@ import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { t } from "@lingui/macro";
-import { getActorIdentity } from "components/Identity";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "locales/services";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
@@ -15,6 +14,8 @@ import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { BURN_FIELD } from "constants/swap";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
+import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { sleep } from "@icpswap/utils";
 
 type updateStepsArgs = {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -29,23 +30,28 @@ type updateStepsArgs = {
 function useUpdateStepContent() {
   const updateStep = useStepContentManager();
   const handleReclaim = useReclaimCallback();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
-  return useCallback(({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
-    const content = getDecreaseLiquiditySteps({
-      formattedAmounts,
-      currencyA,
-      currencyB,
-      positionId,
-      principal,
-      key,
-      handleReclaim,
-    });
+  return useCallback(
+    ({ formattedAmounts, currencyA, currencyB, positionId, principal, key }: updateStepsArgs) => {
+      const content = getDecreaseLiquiditySteps({
+        formattedAmounts,
+        currencyA,
+        currencyB,
+        positionId,
+        principal,
+        key,
+        handleReclaim,
+        keepTokenInPools,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t`Decrease Liquidity Details`,
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t`Remove Liquidity Details`,
+      });
+    },
+    [keepTokenInPools],
+  );
 }
 
 interface DecreaseLiquidityCallsArgs {
@@ -65,9 +71,9 @@ function useDecreaseLiquidityCalls() {
   const [openErrorTip] = useErrorTip();
 
   const withdraw = useSwapWithdraw();
-
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
     ({
@@ -81,10 +87,32 @@ function useDecreaseLiquidityCalls() {
       openExternalTip,
       tipKey,
     }: DecreaseLiquidityCallsArgs) => {
+      const withdrawCurrencyA = async () => {
+        const { amount0 } = getDecreaseLiquidityAmount(tipKey);
+
+        if (!currencyA || amount0 === undefined) return false;
+        // skip if amount is less than 0 or is 0
+        if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
+
+        return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
+          openExternalTip({ message, tipKey, poolId });
+        });
+      };
+
+      const withdrawCurrencyB = async () => {
+        const { amount1 } = getDecreaseLiquidityAmount(tipKey);
+
+        if (!currencyB || amount1 === undefined) return false;
+        // skip if amount is less than 0 or is 0
+        if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
+
+        return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
+          openExternalTip({ message, tipKey, poolId });
+        });
+      };
+
       const _decreaseLiquidity = async () => {
         if (!position || !liquidityToRemove || !principal) return false;
-
-        const identity = await getActorIdentity();
 
         const partialPosition = new Position({
           pool: position.pool,
@@ -93,7 +121,7 @@ function useDecreaseLiquidityCalls() {
           tickUpper: position.tickUpper,
         });
 
-        const { status, message, data } = await decreaseLiquidity(identity, poolId, {
+        const { status, message, data } = await decreaseLiquidity(poolId, {
           positionId,
           liquidity: partialPosition.liquidity.toString(),
         });
@@ -114,36 +142,27 @@ function useDecreaseLiquidityCalls() {
           key: tipKey,
         });
 
+        if (!keepTokenInPools) {
+          withdrawCurrencyA();
+          withdrawCurrencyB();
+        }
+
         return true;
       };
 
-      const withdrawCurrencyA = async () => {
-        const { amount0 } = getDecreaseLiquidityAmount(tipKey);
-
-        if (!currencyA || amount0 === undefined) return false;
-        // skip if amount is less than 0 or is 0
-        if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
-
-        return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey });
-        });
+      const step1 = async () => {
+        await sleep(500);
+        return true;
       };
 
-      const withdrawCurrencyB = async () => {
-        const { amount1 } = getDecreaseLiquidityAmount(tipKey);
-
-        if (!currencyB || amount1 === undefined) return false;
-        // skip if amount is less than 0 or is 0
-        if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
-
-        return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
-          openExternalTip({ message, tipKey });
-        });
+      const step2 = async () => {
+        await sleep(1000);
+        return true;
       };
 
-      return [_decreaseLiquidity, withdrawCurrencyA, withdrawCurrencyB];
+      return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, step1, step2];
     },
-    [],
+    [keepTokenInPools],
   );
 }
 
@@ -171,13 +190,11 @@ export function useDecreaseLiquidityCallback({
   feeAmount1,
 }: DecreaseLiquidityCallbackProps) {
   const principal = useAccountPrincipal();
-
   const getCalls = useDecreaseLiquidityCalls();
   const getStepCalls = useStepCalls();
-
   const stepContentManage = useStepContentManager();
-
   const handleReclaim = useReclaimCallback();
+  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
     ({ openExternalTip }: { openExternalTip: OpenExternalTip }) => {
@@ -205,11 +222,12 @@ export function useDecreaseLiquidityCallback({
         principal,
         handleReclaim,
         key,
+        keepTokenInPools,
       });
 
       stepContentManage(String(key), {
         content,
-        title: t`Decrease Liquidity Details`,
+        title: t`Remove Liquidity Details`,
       });
 
       return { call, reset, retry, key };
@@ -226,6 +244,7 @@ export function useDecreaseLiquidityCallback({
       formattedAmounts,
       feeAmount0,
       feeAmount1,
+      keepTokenInPools,
     ],
   );
 }

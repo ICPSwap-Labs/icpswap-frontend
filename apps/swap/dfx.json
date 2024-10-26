@@ -7,13 +7,5 @@
       "source": ["./build"],
       "type": "assets"
     }
-  },
-  "dfx": "0.14.3",
-  "version": 1,
-  "networks": {
-    "release": {
-      "providers": ["https://icp0.io"],
-      "type": "persistent"
-    }
   }
 }

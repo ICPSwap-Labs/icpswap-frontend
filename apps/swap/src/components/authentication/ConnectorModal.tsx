@@ -1,18 +1,9 @@
-import { makeStyles } from "@mui/styles";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, makeStyles, Theme, Typography } from "components/Mui";
 import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
-import { TextButton } from "components/index";
+import { Flex, TextButton } from "components/index";
 import { Connector } from "constants/wallet";
-import { useWalletConnectorManager } from "store/auth/hooks";
-import PlugWalletLogo from "./icons/Plug.svg";
-import ICPSwapWalletLogo from "./icons/icpswap.svg";
-import StoicWalletLogo from "./icons/stoic.svg";
-import InterWalletLogo from "./icons/InternetIdentity.svg";
-import NFIDLogo from "./icons/NFID.svg";
-import InfinityWalletLogo from "./icons/Infinity.svg";
-import AstroXLogo from "./icons/AstroX.svg";
+import { useConnectManager } from "store/auth/hooks";
 
 import { ConnectorComponent } from "./connector";
 
@@ -58,10 +49,11 @@ type Wallet = {
   value: Connector;
   logo: any;
   tips?: string;
+  disabled?: boolean;
 };
 
 export default function WalletConnector() {
-  const [open, walletConnectorManager] = useWalletConnectorManager();
+  const { open, showConnector } = useConnectManager();
 
   const classes = useStyles();
 
@@ -69,70 +61,80 @@ export default function WalletConnector() {
     {
       label: "Internet Identity",
       value: Connector.IC,
-      logo: InterWalletLogo,
+      logo: "/images/connect/InternetIdentity.svg",
     },
-    { label: "Plug", value: Connector.PLUG, logo: PlugWalletLogo },
+    { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
     {
       label: "Stoic Wallet",
       value: Connector.STOIC,
-      logo: StoicWalletLogo,
+      logo: "/images/connect/stoic.svg",
     },
     {
       label: "ICPSwap Wallet",
       value: Connector.ICPSwap,
-      logo: ICPSwapWalletLogo,
+      logo: "/images/connect/icpswap.svg",
     },
-    { label: "NFID", value: Connector.NFID, logo: NFIDLogo },
+    { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
     {
       label: "Bitfinity Wallet",
       value: Connector.INFINITY,
-      logo: InfinityWalletLogo,
+      logo: "/images/connect/Infinity.svg",
     },
     {
       label: "AstroX ME",
       value: Connector.ME,
-      logo: AstroXLogo,
+      logo: "/images/connect/AstroX.svg",
+    },
+    {
+      label: "MetaMask",
+      value: Connector.Metamask,
+      logo: "/images/connect/metamask.svg",
     },
   ];
 
   return (
-    <Modal open={open} onClose={() => walletConnectorManager(false)} title={t`Connect a wallet`}>
-      <Grid container alignItems="center" flexDirection="column">
+    <Modal open={open} onClose={() => showConnector(false)} title={t`Connect a wallet`}>
+      <Flex align="center">
         <Box className={classes.wrapper}>
-          <Box>
-            <Typography
-              sx={{
-                fontSize: "16px",
-                lineHeight: "20px",
-              }}
-            >
-              <Trans>
-                By connecting a wallet, you agree to ICPSwap’s{" "}
-                <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service">
-                  Terms of Service
-                </TextButton>{" "}
-                and acknowledge that you have read and understand the{" "}
-                <TextButton
-                  link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
-                  sx={{
-                    marginLeft: "0!important",
-                  }}
-                >
-                  ICPSwap Disclaimer
-                </TextButton>
-                .
-              </Trans>
-            </Typography>
-          </Box>
+          <Typography
+            sx={{
+              fontSize: "16px",
+              lineHeight: "20px",
+            }}
+          >
+            <Trans>
+              By connecting a wallet, you agree to ICPSwap’s{" "}
+              <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service">
+                Terms of Service
+              </TextButton>{" "}
+              and acknowledge that you have read and understand the{" "}
+              <TextButton
+                link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
+                sx={{
+                  marginLeft: "0!important",
+                }}
+              >
+                ICPSwap Disclaimer
+              </TextButton>
+              .
+            </Trans>
+          </Typography>
+
           <Box mt="24px">
             <Box className={classes.walletBox}>
               {Wallets.map((wallet) => (
-                <ConnectorComponent key={wallet.value} label={wallet.label} logo={wallet.logo} value={wallet.value} />
+                <ConnectorComponent
+                  key={wallet.value}
+                  label={wallet.label}
+                  logo={wallet.logo}
+                  value={wallet.value}
+                  disabled={wallet.disabled}
+                />
               ))}
             </Box>
           </Box>
         </Box>
-      </Grid>
+      </Flex>
     </Modal>
   );
 }

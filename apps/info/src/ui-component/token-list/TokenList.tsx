@@ -138,7 +138,7 @@ export default function TokenList() {
               <Trans>Total Supply</Trans>
             </HeaderCell>
             <HeaderCell>
-              <Trans>Market Cap</Trans>
+              <Trans>FDV</Trans>
             </HeaderCell>
             <HeaderCell>
               <Trans>Holders</Trans>
@@ -150,19 +150,21 @@ export default function TokenList() {
           {list?.map((token, index) => <TokenListItem key={index} index={index} token={token} />)}
           {list?.length === 0 && !loading ? <NoData /> : null}
           {loading ? (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
+            <Box sx={{ padding: "16px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
           ) : null}
         </Box>
       </Grid>

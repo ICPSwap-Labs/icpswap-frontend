@@ -4,9 +4,8 @@ import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, Input } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
-import FilledTextField from "components/FilledTextField";
+import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { TextFieldNumberComponent, Wrapper, MainCard } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
@@ -15,7 +14,7 @@ import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
 import Button from "components/authentication/ButtonConnector";
 import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { Principal } from "@dfinity/principal";
@@ -104,7 +103,7 @@ export default function CreateTokenClaim() {
         return;
       }
 
-      updateTokenStandard({ canisterId: values.id, standard: values.standard as TOKEN_STANDARD });
+      updateTokenStandard([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
 
       setTokenId(values.id);
     }

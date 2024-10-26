@@ -5,6 +5,15 @@ import { approve } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useMultipleApproveManager } from "store/swap/cache/hooks";
 import { allowance } from "hooks/token/useAllowance";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+
+export interface UseSwapApproveArgs {
+  token: Token;
+  amount: string;
+  poolId: string;
+  options?: TIP_OPTIONS;
+  standard?: TOKEN_STANDARD;
+}
 
 export function useSwapApprove() {
   const principal = useAccountPrincipal();
@@ -12,7 +21,7 @@ export function useSwapApprove() {
   const { multipleApprove } = useMultipleApproveManager();
 
   return useCallback(
-    async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
+    async ({ token, amount, poolId, options, standard }: UseSwapApproveArgs) => {
       if (!principal) return false;
 
       const allowedBalance = await allowance({
@@ -29,6 +38,7 @@ export function useSwapApprove() {
           spender: poolId,
           value: multipleApproveAmount,
           account: principal,
+          standard,
         });
 
         if (status === "err") {

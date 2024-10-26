@@ -1,29 +1,14 @@
-import { Typography, Box, useTheme } from "@mui/material";
+import { Typography, Box, useTheme, Theme } from "components/Mui";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { enumToString, BigNumber, mockALinkAndOpen } from "@icpswap/utils";
 import { LoadingRow, NoData, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT, INFO_URL } from "constants/index";
-import { Theme } from "@mui/material/styles";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { mockALinkAndOpen } from "utils/index";
-import { t } from "@lingui/macro";
-
-function ArrowIcon() {
-  return (
-    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.87558 1.64258H0.927903V0.642578H7.08452H7.58452V1.14258V7.29919H6.58452V2.34786L1.34151 7.59087L0.634399 6.88376L5.87558 1.64258Z"
-        fill="#5669dc"
-      />
-    </svg>
-  );
-}
+import { ArrowUpRight } from "react-feather";
+import { SwapTransactionPriceTip } from "@icpswap/ui";
 
 export const RECORD_TYPE: { [key: string]: string } = {
   swap: "Swap",
@@ -62,7 +47,7 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
           background: theme.palette.background.level2,
         },
         "@media(max-width: 640px)": {
-          padding: "10px 0px",
+          padding: "10px 6px",
         },
       }}
     >
@@ -78,22 +63,30 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
             {dayjs(Number(transaction.timestamp * BigInt(1000))).format(DAYJS_FORMAT)}
           </Typography>
         </Box>
-        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "4px 0 0 0" }}>
-          {enumToString(transaction.action) === "swap"
-            ? t`${amount0} ${symbol0} to ${amount1} ${symbol1}`
-            : `${amount0} ${symbol0} and ${amount1} ${symbol1}`}
+        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
+          {enumToString(transaction.action) === "swap" ? (
+            <>
+              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to {amount1}{" "}
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+            </>
+          ) : (
+            <>
+              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and {amount1}{" "}
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+            </>
+          )}
         </Typography>
       </Box>
     </Box>
   );
 }
 
-export default function SwapTransactions() {
+export function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme() as Theme;
 
-  const { loading, result } = useUserSwapTransactions(principal, 0, 500);
-  const list = !principal ? undefined : result?.content;
+  const { loading, result } = useUserSwapTransactions(principal, 0, 100);
+  const transactions = !principal ? undefined : result?.content;
 
   const handleViewMore = () => {
     mockALinkAndOpen(`${INFO_URL}/swap-scan/transactions?principal=${principal}`, "SWAP_TRANSACTIONS_VIEW_MORE");
@@ -102,8 +95,8 @@ export default function SwapTransactions() {
   return (
     <>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
-        {list?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
-        {(list?.length === 0 || !list) && !loading ? <NoData /> : null}
+        {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
+        {(transactions?.length === 0 || !transactions) && !loading ? <NoData /> : null}
 
         {loading ? (
           <Box sx={{ padding: "0 24px" }}>
@@ -124,7 +117,7 @@ export default function SwapTransactions() {
         ) : null}
       </Box>
 
-      {!loading && !!list ? (
+      {!loading && !!transactions ? (
         <Typography
           sx={{
             display: "flex",
@@ -140,7 +133,7 @@ export default function SwapTransactions() {
           <Typography sx={{ fontSize: "12px" }} component="span" color="secondary">
             View more
           </Typography>
-          <ArrowIcon />
+          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
         </Typography>
       ) : null}
     </>

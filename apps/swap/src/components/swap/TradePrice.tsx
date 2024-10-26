@@ -1,8 +1,7 @@
 import { useCallback, useState, useMemo } from "react";
-import BigNumber from "bignumber.js";
 import { Price, Token } from "@icpswap/swap-sdk";
-import { formatDollarAmount } from "@icpswap/utils";
-import { Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
+import { formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { Typography, Grid, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton } from "components/index";
 import { INFO_URL } from "constants/index";
@@ -14,6 +13,8 @@ export interface TradePricePropsNoInfo {
   token0PriceUSDValue?: string | null | undefined | number;
   token1?: Token | undefined;
   token1PriceUSDValue?: string | null | undefined | number;
+  showConvert?: boolean;
+  color?: string;
 }
 
 export function TradePriceNoInfo({
@@ -22,6 +23,8 @@ export function TradePriceNoInfo({
   token0PriceUSDValue,
   token1,
   token1PriceUSDValue,
+  showConvert = true,
+  color,
 }: TradePricePropsNoInfo) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -54,15 +57,20 @@ export function TradePriceNoInfo({
 
   return (
     <Grid container justifyContent="flex-end" alignItems="center">
-      <Typography onClick={flipPrice} sx={{ cursor: "pointer", ...(matchDownSM ? { fontSize: "12px" } : {}) }}>
+      <Typography
+        onClick={flipPrice}
+        sx={{ cursor: "pointer", color: color ?? "text.secondary", ...(matchDownSM ? { fontSize: "12px" } : {}) }}
+      >
         {text}
       </Typography>
       {usdValue ? (
-        <Typography onClick={flipPrice} sx={{ cursor: "pointer" }}>
-          ({formatDollarAmount(usdValue)})
+        <Typography onClick={flipPrice} sx={{ color: color ?? "text.secondary", cursor: "pointer" }}>
+          &nbsp;({formatDollarAmount(usdValue)})
         </Typography>
       ) : null}
-      <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+      {showConvert ? (
+        <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+      ) : null}
     </Grid>
   );
 }
@@ -132,7 +140,7 @@ export default function TradePrice({
               ({formatDollarAmount(usdValue)})
             </Typography>
           ) : null}
-          <SyncAltIcon style={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={flipPrice} />
+          <SyncAltIcon style={{ fontSize: "1rem", margin: "0 0 0 4px", cursor: "pointer" }} onClick={flipPrice} />
         </Grid>
       </Grid>
 

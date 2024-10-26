@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { Grid, Button, Typography, Box, CircularProgress } from "@mui/material";
-import { Wrapper, MainCard } from "components/index";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as CallIdentity } from "types/global";
+import { Wrapper, MainCard, FilledTextField } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import FilledTextField from "components/FilledTextField";
 import Upload from "components/upload/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { createVotingCanister } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TOKEN_STANDARD } from "constants/tokens";
-// import { standardCheck } from "utils/token/standardCheck";
 
 export type Values = {
   name: string;
@@ -29,7 +25,7 @@ export const TokenStandards = [
 export default function CreateVotingProject() {
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
-
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<Values>({
     name: "",
     logo: "",
@@ -45,17 +41,12 @@ export default function CreateVotingProject() {
     });
   };
 
-  const handleCreateProject = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
+  const handleCreateProject = async () => {
     if (loading) return;
 
-    // const { valid } = await standardCheck(values.tokenId, values.standard as TOKEN_STANDARD);
+    setLoading(true);
 
-    // if (valid === false) {
-    //   openErrorTip(t`This token id did not match the token standard ${values.standard}`);
-    //   return;
-    // }
-
-    const { status, message } = await createVotingCanister(identity, {
+    const { status, message } = await createVotingCanister({
       logo: values.logo,
       name: values.name,
       managerAddress: { principal: Principal.fromText(values.manager) },
@@ -69,6 +60,8 @@ export default function CreateVotingProject() {
     } else {
       openErrorTip(message);
     }
+
+    setLoading(false);
   };
 
   let errorMessage = "";
@@ -87,40 +80,29 @@ export default function CreateVotingProject() {
           <Box sx={{ width: "100%", maxWidth: "570px" }}>
             <Box mt="20px">
               <Box mt="20px">
-                <Typography color="text.primary">
-                  <Trans>Token Canister Id</Trans>
-                </Typography>
-                <Box mt="20px">
-                  <FilledTextField onChange={(value) => onFiledChange(value, "tokenId")} />
-                </Box>
+                <FilledTextField
+                  label={<Trans>Token Canister Id</Trans>}
+                  onChange={(value) => onFiledChange(value, "tokenId")}
+                />
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
-                  <Trans>Token Standard</Trans>
-                </Typography>
-                <Box mt="20px">
-                  <FilledTextField
-                    select
-                    menus={TokenStandards}
-                    placeholder={t`Select the token standard`}
-                    onChange={(value) => onFiledChange(value, "standard")}
-                    value={values.standard}
-                  />
-                </Box>
+                <FilledTextField
+                  label={<Trans>Token Standard</Trans>}
+                  select
+                  menus={TokenStandards}
+                  placeholder={t`Select the token standard`}
+                  onChange={(value) => onFiledChange(value, "standard")}
+                  value={values.standard}
+                />
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
-                  <Trans>Name</Trans>
-                </Typography>
-                <Box mt="20px">
-                  <FilledTextField onChange={(value) => onFiledChange(value, "name")} />
-                </Box>
+                <FilledTextField label={<Trans>Name</Trans>} onChange={(value) => onFiledChange(value, "name")} />
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
+                <Typography color="text.secondary">
                   <Trans>Logo</Trans>
                 </Typography>
 
@@ -135,10 +117,9 @@ export default function CreateVotingProject() {
                       onChange={(result) => {
                         if ((typeof result).toLowerCase() === "string") {
                           onFiledChange(result, "logo");
-                          
                         } else if (!result.status && result.message) {
-                            openErrorTip(result.message);
-                          }
+                          openErrorTip(result.message);
+                        }
                       }}
                       fullWidth
                     />
@@ -149,12 +130,8 @@ export default function CreateVotingProject() {
                     </Typography>
                   </Box>
                   <Box mt="10px">
-                    <Typography>
-                      <Trans>Or</Trans>
-                    </Typography>
-                  </Box>
-                  <Box>
                     <FilledTextField
+                      label={<Trans>Or</Trans>}
                       value={values.logo}
                       onChange={(value: string) => onFiledChange(value, "logo")}
                       fullWidth
@@ -164,29 +141,23 @@ export default function CreateVotingProject() {
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.primary">
-                  <Trans>Manager Principal</Trans>
-                </Typography>
-                <Box mt="20px">
-                  <FilledTextField onChange={(value) => onFiledChange(value, "manager")} />
-                </Box>
+                <FilledTextField
+                  label={<Trans>Manager Principal</Trans>}
+                  onChange={(value) => onFiledChange(value, "manager")}
+                />
               </Box>
 
               <Box mt="20px">
-                <Identity onSubmit={handleCreateProject}>
-                  {({ submit, loading }: CallbackProps) => (
-                    <Button
-                      onClick={submit}
-                      disabled={loading || !!errorMessage}
-                      fullWidth
-                      variant="contained"
-                      size="large"
-                      startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
-                    >
-                      {errorMessage || t`Create voting project`}
-                    </Button>
-                  )}
-                </Identity>
+                <Button
+                  onClick={handleCreateProject}
+                  disabled={loading || !!errorMessage}
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={22} color="inherit" /> : null}
+                >
+                  {errorMessage || t`Create voting project`}
+                </Button>
               </Box>
             </Box>
           </Box>

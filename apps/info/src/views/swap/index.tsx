@@ -1,21 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
-import { Typography, Box, Grid, Button, Tooltip } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Typography, Box, Grid, Button } from "@mui/material";
+import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Wrapper } from "ui-component/index";
 import { useSwapProtocolData, useTransformedVolumeData } from "@icpswap/hooks";
 import { useTheme } from "@mui/styles";
 import { Theme } from "@mui/material/styles";
-import { GridAutoRows, MainCard, BarChartAlt, LineChartAlt } from "@icpswap/ui";
+import { GridAutoRows, MainCard, BarChartAlt, LineChartAlt, Tooltip, ChartDateButtons } from "@icpswap/ui";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import SwapAnalyticLoading from "ui-component/analytic/Loading";
 import { useHistory } from "react-router-dom";
-import { QuestionMark } from "assets/icons/QuestionMark";
 import { useChartData } from "hooks/info/useSwapChartData";
-import ChartDateButton from "ui-component/ChartDateButton";
-import { VolumeWindow } from "types/analytic";
+import { VolumeWindow } from "@icpswap/types";
 
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
@@ -164,33 +162,8 @@ export default function SwapOverview() {
                       <Typography fontSize="16px">TVL</Typography>
 
                       <Tooltip
-                        enterTouchDelay={0}
-                        PopperProps={{
-                          // @ts-ignore
-                          sx: {
-                            "& .MuiTooltip-tooltip": {
-                              background: "#ffffff",
-                              borderRadius: "8px",
-                              padding: "12px 16px",
-                              "& .MuiTooltip-arrow": {
-                                color: "#ffffff",
-                              },
-                            },
-                          },
-                        }}
-                        title={
-                          <Typography color="text.400" fontSize="14px">
-                            <Trans>
-                              TVL is calculated only based on the total value of tokens listed on the Tokenlist.
-                            </Trans>
-                          </Typography>
-                        }
-                        arrow
-                      >
-                        <Box sx={{ width: "16px", height: "16px", cursor: "pointer" }}>
-                          <QuestionMark />
-                        </Box>
-                      </Tooltip>
+                        tips={t`TVL is calculated only based on the total value of tokens listed on the Tokenlist.`}
+                      />
                     </Box>
                     <Typography fontSize="32px" fontWeight="500" color="text.primary">
                       {formatDollarAmount(liquidityHover, 2, true)}
@@ -246,7 +219,7 @@ export default function SwapOverview() {
                       marginTop: "8px",
                     }}
                   >
-                    <ChartDateButton volume={volumeWindow} onChange={setVolumeWindow} />
+                    <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
                   </Box>
                 }
                 topLeft={
@@ -255,33 +228,8 @@ export default function SwapOverview() {
                       <Typography fontSize="16px">Volume</Typography>
 
                       <Tooltip
-                        enterTouchDelay={0}
-                        PopperProps={{
-                          // @ts-ignore
-                          sx: {
-                            "& .MuiTooltip-tooltip": {
-                              background: "#ffffff",
-                              borderRadius: "8px",
-                              padding: "12px 16px",
-                              "& .MuiTooltip-arrow": {
-                                color: "#ffffff",
-                              },
-                            },
-                          },
-                        }}
-                        title={
-                          <Typography color="text.400" fontSize="14px">
-                            <Trans>
-                              Volume is calculated only based on the total value of tokens listed on the Tokenlist.
-                            </Trans>
-                          </Typography>
-                        }
-                        arrow
-                      >
-                        <Box sx={{ width: "16px", height: "16px", cursor: "pointer" }}>
-                          <QuestionMark />
-                        </Box>
-                      </Tooltip>
+                        tips={t` Volume is calculated only based on the total value of tokens listed on the Tokenlist.`}
+                      />
                     </Box>
                     <Typography color="text.primary" fontWeight={600} fontSize="32px">
                       {volumeHover === undefined
@@ -301,62 +249,6 @@ export default function SwapOverview() {
             ) : null}
           </MainCard>
         </Box> */}
-
-        {/* <MainCard level={2} border={false}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "fit-content(100%) fit-content(100%) fit-content(100%)",
-              gap: "0 18px",
-
-              "@media screen and (max-width: 720px)": {
-                "& > *:nth-of-type(2)": {
-                  display: "none",
-                },
-              },
-
-              "@media screen and (max-width: 540px)": {
-                "& > *:nth-of-type(2)": {
-                  display: "flex",
-                },
-                gridTemplateColumns: "1fr",
-                gap: "8px 0",
-              },
-            }}
-          >
-            <Grid container alignItems="center">
-              <Typography sx={{ marginRight: "4px" }}>
-                <Trans>Today(UTC):</Trans>
-              </Typography>
-
-              <Typography color="text.primary" sx={{ marginRight: "4px" }}>
-                {protocolData?.volumeUSD !== undefined ? formatDollarAmount(protocolData?.volumeUSD) : "--"}
-              </Typography>
-            </Grid>
-
-            <Grid container alignItems="center">
-              <Typography sx={{ marginRight: "4px" }}>
-                <Trans>Fees 24H:</Trans>
-              </Typography>
-
-              <Typography color="text.primary" sx={{ marginRight: "4px" }}>
-                {protocolData?.feesUSD !== undefined ? formatDollarAmount(protocolData?.feesUSD) : "--"}
-              </Typography>
-            </Grid>
-
-            <Grid container alignItems="center">
-              <Box>
-                <Typography sx={{ marginRight: "4px" }}>
-                  <Trans>TVL:</Trans>
-                </Typography>
-              </Box>
-
-              <Typography color="text.primary" sx={{ marginRight: "4px" }}>
-                {protocolData?.tvlUSD !== undefined ? formatDollarAmount(protocolData?.tvlUSD) : "--"}
-              </Typography>
-            </Grid>
-          </Box>
-        </MainCard> */}
 
         <TopTokens />
 

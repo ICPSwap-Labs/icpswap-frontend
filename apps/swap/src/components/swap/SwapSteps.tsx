@@ -5,6 +5,7 @@ import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapOutAmount } from "store/swap/hooks";
 import { TextButton } from "components/index";
+import type { StepContents } from "types/step";
 
 export interface GetStepsArgs {
   inputCurrency: Token;
@@ -14,9 +15,18 @@ export interface GetStepsArgs {
   key: string;
   retry?: () => Promise<boolean>;
   handleReclaim: () => void;
+  keepTokenInPools: boolean;
 }
 
-export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, key, handleReclaim }: GetStepsArgs) {
+export function getSwapStep({
+  inputCurrency,
+  outputCurrency,
+  key,
+  amount0,
+  amount1,
+  handleReclaim,
+  keepTokenInPools,
+}: GetStepsArgs) {
   const symbol0 = inputCurrency.symbol;
   const symbol1 = outputCurrency.symbol;
   const address0 = inputCurrency.wrapped.address;
@@ -58,7 +68,7 @@ export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, k
 
   const isTokenInUseTransfer = isUseTransfer(inputCurrency.wrapped);
 
-  const steps = [
+  const steps: StepContents[] = [
     {
       title: isTokenInUseTransfer ? `Transfer ${symbol0}` : `Approve ${symbol0}`,
       step: 0,
@@ -82,7 +92,7 @@ export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, k
           <Trans>Reclaim</Trans>
         </TextButton>,
       ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
 
     {
@@ -93,19 +103,20 @@ export function getSwapStep({ inputCurrency, outputCurrency, amount0, amount1, k
         { label: symbol1, value: amount1Value },
       ],
     },
-    {
-      title: withdrawAmountLessThanZero ? t`Unable to withdraw ${symbol1}` : t`Withdraw ${symbol1}`,
+  ];
+
+  if (!keepTokenInPools) {
+    steps.push({
+      title: !outAmount
+        ? t`Withdraw ${symbol1}`
+        : withdrawAmountLessThanZero
+        ? t`Unable to withdraw ${symbol1}`
+        : t`Withdraw ${symbol1}`,
       step: 3,
       children: [{ label: symbol1, value: outAmountValue }],
       skipError: withdrawAmountLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
-      errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-      ],
-      errorMessage: t`Please click Reclaim your tokens if they've transferred to the swap pool.`,
-    },
-  ];
+    });
+  }
 
   return steps;
 }

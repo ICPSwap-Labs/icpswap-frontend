@@ -1,47 +1,11 @@
 import { useCallback } from "react";
-import { Grid, Typography, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { KeyboardArrowDown } from "@mui/icons-material";
+import { Typography, useTheme } from "components/Mui";
 import { isDarkTheme } from "utils";
-import Loading from "components/Loading";
 import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { Token } from "@icpswap/swap-sdk";
-import { TokenImage } from "components/index";
-
-const useStyle = (bgGray: boolean) =>
-  makeStyles((theme: Theme) => {
-    return {
-      selectButton: {
-        position: "relative",
-        padding: "0 16px 0 12px",
-        height: "44px",
-        color: "#ffffff",
-        cursor: "pointer",
-        backgroundColor: isDarkTheme(theme)
-          ? theme.palette.background.level2
-          : bgGray
-          ? theme.colors.lightGray200
-          : "#ffffff",
-        borderRadius: `${theme.radius}px`,
-      },
-      selectButtonActive: {
-        padding: "0 16px",
-        height: "44px",
-        lineHeight: "44px",
-        background: theme.themeOption.defaultGradient,
-        color: "#ffffff",
-        cursor: "pointer",
-        borderRadius: `${theme.radius}px`,
-      },
-      arrow: {
-        color: isDarkTheme(theme) ? "inherit" : "#757575",
-        "&.active": {
-          color: "#fff",
-        },
-      },
-    };
-  });
+import { TokenImage, Loading } from "components/index";
+import { Flex } from "@icpswap/ui";
+import { ChevronDown } from "react-feather";
 
 export interface CurrencySelectorButtonProps {
   currency: undefined | null | Token;
@@ -51,14 +15,8 @@ export interface CurrencySelectorButtonProps {
   disabled?: boolean;
 }
 
-export default function CurrencySelectorButton({
-  currency,
-  onClick,
-  bgGray = false,
-  loading,
-  disabled,
-}: CurrencySelectorButtonProps) {
-  const classes = useStyle(bgGray)();
+export function CurrencySelectorButton({ currency, onClick, bgGray = false, loading }: CurrencySelectorButtonProps) {
+  const theme = useTheme();
 
   const handleButtonClick = useCallback(() => {
     if (loading) return;
@@ -66,36 +24,58 @@ export default function CurrencySelectorButton({
   }, [loading, onClick]);
 
   return currency ? (
-    <Grid container className={classes.selectButton} alignItems="center" onClick={handleButtonClick}>
-      <Grid item mr={1} xs>
-        <Grid container alignItems="center" gap="0 8px">
-          <TokenImage logo={currency.logo} size="28px" tokenId={currency.address} />
-          <Typography component="span">{currency.symbol}</Typography>
-        </Grid>
-      </Grid>
-      {!disabled && (
-        <KeyboardArrowDown
-          className={classes.arrow}
+    <Flex
+      sx={{
+        padding: "8px",
+        cursor: "pointer",
+        backgroundColor: isDarkTheme(theme)
+          ? theme.palette.background.level2
+          : bgGray
+          ? theme.colors.lightGray200
+          : "#ffffff",
+        borderRadius: "12px",
+      }}
+      onClick={handleButtonClick}
+      gap="0 8px"
+      justify="space-between"
+    >
+      <Flex gap="0 8px">
+        <TokenImage logo={currency.logo} size="24px" tokenId={currency.address} />
+
+        <Typography
           sx={{
-            fontSize: "1rem",
+            color: "text.primary",
+            fontSize: "18px",
+            fontWeight: 500,
           }}
-        />
-      )}
+        >
+          {currency.symbol}
+        </Typography>
+      </Flex>
+
+      <ChevronDown size={14} color={theme.colors.darkTextSecondary} />
+
       {loading && <Loading loading={loading} circularSize={20} />}
-    </Grid>
+    </Flex>
   ) : (
-    <Box className={classes.selectButtonActive} onClick={handleButtonClick}>
-      <Grid container alignItems="center">
-        <Grid container alignItems="center" item xs>
+    <Flex
+      sx={{
+        padding: "8px",
+        height: "40px",
+        background: theme.themeOption.defaultGradient,
+        color: "#ffffff",
+        cursor: "pointer",
+        borderRadius: "12px",
+      }}
+      onClick={handleButtonClick}
+    >
+      <Flex gap="0 8px" sx={{ width: "fit-content" }}>
+        <Typography color="text.primary">
           <Trans>Select a token</Trans>
-        </Grid>
-        <KeyboardArrowDown
-          className={`${classes.arrow} active`}
-          sx={{
-            fontSize: "1rem",
-          }}
-        />
-      </Grid>
-    </Box>
+        </Typography>
+
+        <ChevronDown size={14} color="#ffffff" />
+      </Flex>
+    </Flex>
   );
 }

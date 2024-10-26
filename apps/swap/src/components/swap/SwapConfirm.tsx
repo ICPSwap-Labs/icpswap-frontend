@@ -1,66 +1,36 @@
 import { useMemo } from "react";
 import SwapModal from "components/modal/swap";
-import { Typography, Box, Grid, Button, CircularProgress, useMediaQuery } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { ArrowRightAlt } from "@mui/icons-material";
-import CurrencyAvatar from "components/CurrencyAvatar";
+import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
-import Tooltip from "components/Tooltip";
-import { numberToString } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { isElement } from "react-is";
-import { useSwapFeeTip } from "hooks/swap/useSwapFeeTip";
+import { useSwapTokenFeeCost } from "hooks/swap/index";
+import { Flex, TokenImage, Tooltip } from "components/index";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+
 import FormattedPriceImpact from "./FormattedPriceImpact";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
-    transferBox: {
+    box: {
       borderRadius: "12px",
       background: theme.palette.background.level3,
-      padding: "10px 12px",
+      border: `1px solid ${theme.palette.background.level4}`,
     },
-    arrowDown: {
-      transform: "rotate(90deg)",
+    wrapper: {
+      padding: "16px 24px",
+    },
+    line: {
+      width: "100%",
+      height: "1px",
+      background: theme.palette.background.level4,
     },
   };
 });
-
-export interface SwapCurrencyProps {
-  currency: Token | undefined;
-  currencyAmount: CurrencyAmount<Token> | undefined;
-  inputCurrency?: boolean;
-}
-
-export function SwapCurrency({ currency, currencyAmount, inputCurrency }: SwapCurrencyProps) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <Box>
-        <Grid container alignItems="center">
-          <Grid sx={{ mr: 1 }}>
-            <CurrencyAvatar currency={currency} bgColor="#497BF7" borderColor="transparent" />
-          </Grid>
-          <Grid item>
-            <Typography color="textPrimary">{currency?.symbol}</Typography>
-          </Grid>
-        </Grid>
-      </Box>
-
-      <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
-        <Typography color="textPrimary" align="right">
-          {currencyAmount?.toSignificant(6, { groupSeparator: "," })}
-        </Typography>
-
-        {inputCurrency ? (
-          <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
-        ) : null}
-      </Box>
-    </Box>
-  );
-}
 
 export interface DetailItemProps {
   label: string;
@@ -69,7 +39,7 @@ export interface DetailItemProps {
 }
 
 export function DetailItem({ label, value, tooltip }: DetailItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
@@ -119,13 +89,26 @@ export interface SwapConfirmModalProps {
   onClose: () => void;
   slippageTolerance: Percent | null;
   trade: Trade<Token, Token, TradeType> | null;
+  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenUnusedBalance: bigint | undefined;
+  inputTokenBalance: BigNumber | undefined;
 }
 
-export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }: SwapConfirmModalProps) => {
+export function SwapConfirmModal({
+  slippageTolerance,
+  open,
+  trade,
+  loading,
+  onConfirm,
+  onClose,
+  inputTokenBalance,
+  inputTokenUnusedBalance,
+  inputTokenSubBalance,
+}: SwapConfirmModalProps) {
   const classes = useStyle();
 
-  const { realizedLPFee, priceImpact } = useMemo(() => {
-    if (!trade) return { realizedLPFee: undefined, priceImpact: undefined };
+  const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount } = useMemo(() => {
+    if (!trade) return {};
 
     const feeAmount = CurrencyAmount.fromRawAmount(
       trade.inputAmount.currency,
@@ -136,36 +119,85 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
     // sub transferFee
     const realizedLPFee = trade.inputAmount.subtract(feeAmount).multiply(realizedLpFeePercent);
     const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent);
-    return { priceImpact, realizedLPFee };
+
+    return {
+      priceImpact,
+      realizedLPFee,
+      inputToken: trade.inputAmount.currency,
+      outputToken: trade.outputAmount.currency,
+      inputAmount: trade.inputAmount.toExact(),
+    };
   }, [trade]);
 
-  const { inputFeeUSDValue, inputTokenFee, outputFeeUSDValue, outputTokenFee } = useSwapFeeTip(trade);
+  const inputTokenPrice = useUSDPriceById(inputToken?.address);
+  const outputTokenPrice = useUSDPriceById(outputToken?.address);
+
+  const swapTokenFee = useSwapTokenFeeCost({
+    token: inputToken,
+    subAccountBalance: inputTokenSubBalance,
+    tokenBalance: inputTokenBalance,
+    unusedBalance: inputTokenUnusedBalance,
+    amount: formatTokenAmount(inputAmount, inputToken?.decimals).toString(),
+  });
 
   return (
     <SwapModal open={open} title={t`Confirm Swap`} onClose={onClose}>
       <>
-        <Box>
-          <Box className={classes.transferBox}>
-            <SwapCurrency currency={trade?.inputAmount?.currency} currencyAmount={trade?.inputAmount} inputCurrency />
-            <Grid container alignItems="center">
-              <ArrowRightAlt className={classes.arrowDown} sx={{ color: "#C4C4C4" }} />
-            </Grid>
-            <SwapCurrency currency={trade?.outputAmount?.currency} currencyAmount={trade?.outputAmount} />
+        <Box className={classes.box}>
+          <Box className={classes.wrapper}>
+            <Flex gap="0 12px">
+              <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
+              <Flex gap="8px 0" vertical align="flex-start">
+                <Flex gap="0 4px">
+                  <Typography>You pay</Typography>
+                  <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
+                </Flex>
+
+                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                  {trade
+                    ? `${trade.inputAmount.toSignificant(6, { groupSeparator: "," })} ${
+                        trade.inputAmount.currency.symbol
+                      }`
+                    : "--"}
+                </Typography>
+              </Flex>
+            </Flex>
           </Box>
-          {/* <Grid mt={1} container justifyContent="center">
-          <Typography fontSize={12}>
-            Output is estimated. You will receive at least{" "}
-            <Typography component="span" color="textPrimary" fontSize="12px">
-              {trade?.minimumAmountOut(slippageTolerance).toSignificant(6)}{" "}
-              {trade?.outputAmount.currency.symbol}
-            </Typography>{" "}
-            or the transaction will revert.
-          </Typography>
-        </Grid> */}
+
+          <Box className={classes.line} />
+
+          <Box className={classes.wrapper}>
+            <Flex gap="0 12px">
+              <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
+              <Flex gap="8px 0" vertical align="flex-start">
+                <Typography>You Receive</Typography>
+                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                  {trade
+                    ? `${trade.outputAmount.toSignificant(6, { groupSeparator: "," })} ${
+                        trade.outputAmount.currency.symbol
+                      }`
+                    : "--"}
+                </Typography>
+              </Flex>
+            </Flex>
+          </Box>
         </Box>
 
-        <Box mt={2} sx={{ display: "flex", flexDirection: "column", gap: "20px 0" }}>
-          <DetailItem label={t`Price`} value={<TradePrice price={trade?.executionPrice} />} />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0", margin: "24px 0 0 0" }}>
+          <DetailItem
+            label={t`Price`}
+            value={
+              <TradePrice
+                price={trade?.executionPrice}
+                showConvert={false}
+                color="text.primary"
+                token0={inputToken}
+                token1={outputToken}
+                token0PriceUSDValue={inputTokenPrice}
+                token1PriceUSDValue={outputTokenPrice}
+              />
+            }
+          />
           <DetailItem
             label={t`Liquidity Provider Fee`}
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
@@ -207,19 +239,30 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
             label={t`Estimated transfer fee for the swap`}
             value={
               <Box>
-                <Typography color="text.primary" sx={{ "@media(max-width: 640px)": { fontSize: "12px" } }}>
-                  {inputTokenFee && inputFeeUSDValue && trade?.inputAmount.currency
-                    ? `${inputTokenFee.toFormat()} ${trade.inputAmount.currency.symbol} ($${inputFeeUSDValue})`
+                <Typography
+                  color="text.primary"
+                  sx={{ textAlign: "right", "@media(max-width: 640px)": { fontSize: "12px" } }}
+                >
+                  {swapTokenFee && inputToken && inputTokenPrice
+                    ? `${parseTokenAmount(swapTokenFee, inputToken.decimals).toFormat()} ${
+                        inputToken.symbol
+                      } (${formatDollarAmount(
+                        parseTokenAmount(swapTokenFee, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
+                      )})`
                     : "--"}
                 </Typography>
                 <Typography
                   color="text.primary"
-                  sx={{ margin: "5px 0 0 0", "@media(max-width: 640px)": { fontSize: "12px" } }}
+                  sx={{ textAlign: "right", margin: "5px 0 0 0", "@media(max-width: 640px)": { fontSize: "12px" } }}
                 >
-                  {outputTokenFee && trade?.outputAmount.currency
-                    ? `${outputTokenFee.toFormat()} ${trade.outputAmount.currency.symbol} ($${
-                        outputFeeUSDValue ?? "--"
-                      })`
+                  {outputToken && outputTokenPrice
+                    ? `${parseTokenAmount(outputToken.transFee, outputToken.decimals).toFormat()} ${
+                        outputToken.symbol
+                      } (${formatDollarAmount(
+                        parseTokenAmount(outputToken.transFee, outputToken.decimals)
+                          .multipliedBy(outputTokenPrice)
+                          .toString(),
+                      )})`
                     : "--"}
                 </Typography>
               </Box>
@@ -228,7 +271,7 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
           />
         </Box>
 
-        <Box mt={4}>
+        <Box sx={{ margin: "24px 0 0 0" }}>
           <Button
             variant="contained"
             size="large"
@@ -243,4 +286,4 @@ export default ({ slippageTolerance, open, trade, loading, onConfirm, onClose }:
       </>
     </SwapModal>
   );
-};
+}

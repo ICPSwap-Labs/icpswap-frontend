@@ -11,7 +11,7 @@ import { TokenInfo } from "types/token";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { Identity as CallIdentity } from "types/global";
-import { ICP } from "constants/index";
+import { ICP } from "@icpswap/tokens";
 import {
   useUserMisTransferredTokens,
   MisTransferredResult,

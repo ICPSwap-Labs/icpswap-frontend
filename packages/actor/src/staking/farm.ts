@@ -1,7 +1,4 @@
-import { actor } from "../actor";
 import { ActorIdentity } from "@icpswap/types";
-import { ActorName } from "../ActorName";
-
 import {
   Farm,
   FarmInterfaceFactory,
@@ -9,16 +6,20 @@ import {
   FarmControllerInterfaceFactory,
   FarmStorage,
   FarmStorageInterfaceFactory,
+  FarmIndex,
+  FarmIndexInterfaceFactory,
 } from "@icpswap/candid";
+import { actor } from "../actor";
+import { ActorName } from "../ActorName";
 
-export const v3FarmController = (identity?: ActorIdentity) =>
+export const farmController = (identity?: ActorIdentity) =>
   actor.create<FarmController>({
     actorName: ActorName.FarmController,
     identity,
     idlFactory: FarmControllerInterfaceFactory,
   });
 
-export const v3Farm = (canisterId: string, identity?: ActorIdentity) =>
+export const farm = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<Farm>({
     actorName: ActorName.Farm,
     canisterId,
@@ -26,10 +27,17 @@ export const v3Farm = (canisterId: string, identity?: ActorIdentity) =>
     idlFactory: FarmInterfaceFactory,
   });
 
-export const v3FarmStorage = (canisterId: string, identity?: ActorIdentity) =>
+export const farmStorage = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<FarmStorage>({
     actorName: ActorName.FarmStorage,
     canisterId,
     identity,
     idlFactory: FarmStorageInterfaceFactory,
+  });
+
+export const farmIndex = (identity?: ActorIdentity) =>
+  actor.create<FarmIndex>({
+    actorName: ActorName.FarmIndex,
+    identity,
+    idlFactory: FarmIndexInterfaceFactory,
   });

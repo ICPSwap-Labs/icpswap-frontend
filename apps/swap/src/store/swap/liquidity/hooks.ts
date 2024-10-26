@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import { Bound, BIG_INT_ZERO, FIELD } from "constants/swap";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { Bound, FIELD } from "constants/swap";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import {
   Price,
   CurrencyAmount,
@@ -17,17 +17,16 @@ import {
   Token,
   FeeAmount,
 } from "@icpswap/swap-sdk";
-import { tryParseTick } from "utils/swap/mint";
-import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { getTickToPrice } from "utils/swap/getTickToPrice";
 import { usePool, PoolState, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
-import { JSBI } from "utils/index";
-import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { maxAmountSpend } from "utils/swap/maxAmountSpend";
+import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
 import { t } from "@lingui/macro";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { getTokenStandard } from "store/token/cache/hooks";
+import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
+import { useTokenAllBalance } from "hooks/liquidity/index";
+
 import {
   updateFiled,
   updateLeftRange,
@@ -51,14 +50,14 @@ export function useResetMintState() {
 const VALID_TOKEN_STANDARDS_CREATE_POOL: any[] = [TOKEN_STANDARD.ICRC1, TOKEN_STANDARD.ICRC2];
 
 export function useMintInfo(
-  currencyA: Token | undefined,
-  currencyB: Token | undefined,
+  tokenA: Token | undefined,
+  tokenB: Token | undefined,
   feeAmount: FeeAmount | undefined,
   baseCurrency: Token | undefined,
   existingPosition?: Position,
   inverted?: boolean | undefined,
+  refresh?: number,
 ) {
-  const principal = useAccountPrincipal();
   const {
     independentField,
     typedValue,
@@ -69,17 +68,14 @@ export function useMintInfo(
 
   const dependentField = independentField === FIELD.CURRENCY_A ? FIELD.CURRENCY_B : FIELD.CURRENCY_A;
 
-  const [tokenA, tokenB, baseToken] = useMemo(
-    () => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped],
-    [currencyA, currencyB, baseCurrency],
-  );
+  const baseToken = baseCurrency?.wrapped;
 
   const currencies = useMemo(
     () => ({
-      [FIELD.CURRENCY_A]: currencyA,
-      [FIELD.CURRENCY_B]: currencyB,
+      [FIELD.CURRENCY_A]: tokenA,
+      [FIELD.CURRENCY_B]: tokenB,
     }),
-    [currencyA, currencyB],
+    [tokenA, tokenB],
   );
 
   const [token0, token1] = useMemo(
@@ -88,26 +84,48 @@ export function useMintInfo(
     [tokenA, tokenB],
   );
 
-  // const tokens = useMemo(() => (tokenA && tokenB ? [tokenA.address, tokenB.address] : undefined), [tokenA, tokenB]);
+  const tokens = useMemo(() => (tokenA && tokenB ? [tokenA.address, tokenB.address] : undefined), [tokenA, tokenB]);
+  const [poolState, pool] = usePool(tokenA, tokenB, feeAmount);
+  const { poolId } = useMemo(() => {
+    if (!pool) return {};
+
+    return {
+      poolId: pool.id,
+    };
+  }, [pool, poolState]);
 
   // const hasPairWithBaseToken = useTokensHasPairWithBaseToken(tokens);
 
-  const { result: tokenABalance } = useCurrencyBalance(principal, tokenA);
-  const { result: tokenBBalance } = useCurrencyBalance(principal, tokenB);
+  const { token0Balance, token1Balance, token0SubAccountBalance, token1SubAccountBalance, unusedBalance } =
+    useTokenAllBalance({
+      token0,
+      token1,
+      poolId,
+      refresh,
+    });
 
-  const currencyBalances = {
-    [FIELD.CURRENCY_A]: tokenABalance,
-    [FIELD.CURRENCY_B]: tokenBBalance,
+  const __currencyBalances = {
+    [FIELD.CURRENCY_A]: tokenA?.address === token0?.address ? token0Balance : token1Balance,
+    [FIELD.CURRENCY_B]: tokenB?.address === token0?.address ? token0Balance : token1Balance,
   };
 
-  const [poolState, pool] = usePool(currencyA, currencyB, feeAmount);
+  const currencyBalances = {
+    [FIELD.CURRENCY_A]:
+      tokenA && __currencyBalances[FIELD.CURRENCY_A]
+        ? CurrencyAmount.fromRawAmount(tokenA, __currencyBalances[FIELD.CURRENCY_A].toString())
+        : undefined,
+    [FIELD.CURRENCY_B]:
+      tokenB && __currencyBalances[FIELD.CURRENCY_B]
+        ? CurrencyAmount.fromRawAmount(tokenB, __currencyBalances[FIELD.CURRENCY_B].toString())
+        : undefined,
+  };
 
   const noLiquidity = poolState === PoolState.NOT_EXISTS;
   const poolLoading = poolState === PoolState.LOADING;
 
   const invertPrice = Boolean(baseToken && token0 && !baseToken.equals(token0));
 
-  const available = useSwapPoolAvailable(pool?.id);
+  const available = useSwapPoolAvailable(poolId);
 
   const price = useMemo(() => {
     if (noLiquidity) {
@@ -244,7 +262,8 @@ export function useMintInfo(
   const dependentAmount = useMemo(() => {
     // we wrap the currencies just to get the price in terms of the other token
     const wrappedIndependentAmount = independentAmount?.wrapped;
-    const dependentCurrency = dependentField === FIELD.CURRENCY_B ? currencyB : currencyA;
+    const dependentCurrency = dependentField === FIELD.CURRENCY_B ? tokenB : tokenA;
+
     if (
       independentAmount &&
       wrappedIndependentAmount &&
@@ -252,9 +271,7 @@ export function useMintInfo(
       typeof tickUpper === "number" &&
       poolForPosition
     ) {
-      if (outOfRange || invalidRange) {
-        return undefined;
-      }
+      if (outOfRange || invalidRange) return undefined;
 
       const position = wrappedIndependentAmount.currency.equals(poolForPosition.token0)
         ? Position.fromAmount0({
@@ -282,8 +299,8 @@ export function useMintInfo(
     independentAmount,
     outOfRange,
     dependentField,
-    currencyB,
-    currencyA,
+    tokenB,
+    tokenA,
     tickLower,
     tickUpper,
     poolForPosition,
@@ -333,10 +350,10 @@ export function useMintInfo(
 
     const amount0 = !deposit0Disabled
       ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? FIELD.CURRENCY_A : FIELD.CURRENCY_B]?.quotient
-      : BIG_INT_ZERO;
+      : JSBI.BigInt(0);
     const amount1 = !deposit1Disabled
       ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? FIELD.CURRENCY_B : FIELD.CURRENCY_A]?.quotient
-      : BIG_INT_ZERO;
+      : JSBI.BigInt(0);
 
     if (amount0 !== undefined && amount1 !== undefined) {
       return Position.fromAmounts({
@@ -362,21 +379,37 @@ export function useMintInfo(
     tickUpper,
   ]);
 
-  const maxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
-    (accumulator, field) => {
-      return {
-        ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field]),
-      };
-    },
-    {},
-  );
+  const currencyAMaxSpentAmount = useAllBalanceMaxSpend({
+    token: tokenA,
+    balance: tokenA?.address === token0?.address ? token0Balance?.toString() : token1Balance?.toString(),
+    poolId,
+    subBalance: tokenA?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
+    unusedBalance: tokenA?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
+  });
+
+  const currencyBMaxSpentAmount = useAllBalanceMaxSpend({
+    token: tokenB,
+    balance: tokenB?.address === token0?.address ? token0Balance?.toString() : token1Balance?.toString(),
+    poolId,
+    subBalance: tokenB?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
+    unusedBalance: tokenB?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
+  });
+
+  const maxAmounts = useMemo(() => {
+    if (!currencyAMaxSpentAmount || !currencyBMaxSpentAmount) return {};
+
+    return {
+      [FIELD.CURRENCY_A]: currencyAMaxSpentAmount,
+      [FIELD.CURRENCY_B]: currencyBMaxSpentAmount,
+    };
+  }, [currencyAMaxSpentAmount, currencyBMaxSpentAmount]);
 
   const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0"),
+        [field]:
+          maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0") : false,
       };
     },
     {},
@@ -417,47 +450,61 @@ export function useMintInfo(
 
   const { [FIELD.CURRENCY_A]: currencyAAmount, [FIELD.CURRENCY_B]: currencyBAmount } = parsedAmounts;
 
-  if (
-    currencyA &&
-    currencyAAmount &&
-    currencyBalances?.[FIELD.CURRENCY_A]?.lessThan(
-      currencyAAmount.add(CurrencyAmount.fromRawAmount(currencyA.wrapped, currencyA.transFee)),
-    )
-  ) {
-    errorMessage = errorMessage ?? `Insufficient ${currencyA?.symbol} balance`;
+  const token0Insufficient = getTokenInsufficient({
+    token: token0,
+    subAccountBalance: token0SubAccountBalance,
+    balance: token0Balance,
+    unusedBalance: unusedBalance?.balance0,
+    formatTokenAmount:
+      token0 && currencyAAmount && currencyBAmount
+        ? token0.address === currencyAAmount.currency.address
+          ? formatTokenAmount(currencyAAmount.toExact(), token0.decimals).toString()
+          : formatTokenAmount(currencyBAmount.toExact(), token0.decimals).toString()
+        : undefined,
+  });
+
+  const token1Insufficient = getTokenInsufficient({
+    token: token1,
+    subAccountBalance: token1SubAccountBalance,
+    balance: token1Balance,
+    unusedBalance: unusedBalance?.balance1,
+    formatTokenAmount:
+      token1 && currencyAAmount && currencyBAmount
+        ? token1.address === currencyAAmount.currency.address
+          ? formatTokenAmount(currencyAAmount.toExact(), token1.decimals).toString()
+          : formatTokenAmount(currencyBAmount.toExact(), token1.decimals).toString()
+        : undefined,
+  });
+
+  if (token0Insufficient === "INSUFFICIENT") {
+    errorMessage = errorMessage ?? t`Insufficient ${token0?.symbol} balance`;
+  }
+
+  if (token1Insufficient === "INSUFFICIENT") {
+    errorMessage = errorMessage ?? t`Insufficient ${token1?.symbol} balance`;
   }
 
   if (
-    currencyB &&
-    currencyBAmount &&
-    currencyBalances?.[FIELD.CURRENCY_B]?.lessThan(
-      currencyBAmount.add(CurrencyAmount.fromRawAmount(currencyB.wrapped, currencyB.transFee)),
-    )
-  ) {
-    errorMessage = errorMessage ?? `Insufficient ${currencyB?.symbol} balance`;
-  }
-
-  if (
-    currencyA &&
+    tokenA &&
     currencyAAmount &&
     !depositADisabled &&
-    !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(currencyA.wrapped, currencyA.transFee))
+    !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
   ) {
-    errorMessage = errorMessage ?? t`${currencyA?.symbol} amount must greater than trans fee`;
+    errorMessage = errorMessage ?? t`${tokenA?.symbol} amount must greater than trans fee`;
   }
 
   if (
-    currencyB &&
+    tokenB &&
     currencyBAmount &&
     !depositBDisabled &&
-    !currencyBAmount.greaterThan(CurrencyAmount.fromRawAmount(currencyB.wrapped, currencyB.transFee))
+    !currencyBAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenB.wrapped, tokenB.transFee))
   ) {
-    errorMessage = errorMessage ?? t`${currencyB?.symbol} amount must greater than trans fee`;
+    errorMessage = errorMessage ?? t`${tokenB?.symbol} amount must greater than trans fee`;
   }
 
   if (
-    (!VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(currencyB?.address)) ||
-      !VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(currencyA?.address))) &&
+    (!VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenB?.address)) ||
+      !VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenA?.address))) &&
     noLiquidity
   ) {
     errorMessage = errorMessage ?? t`Only ICRC1 and ICRC2 support`;
@@ -484,6 +531,11 @@ export function useMintInfo(
     atMaxAmounts,
     maxAmounts,
     poolLoading,
+    unusedBalance,
+    token0SubAccountBalance,
+    token1SubAccountBalance,
+    token0Balance,
+    token1Balance,
   };
 }
 
@@ -594,6 +646,21 @@ export function useRangeCallbacks(
     return "";
   }, [baseToken, quoteToken, tickUpper, feeAmount, pool]);
 
+  const getRangeByPercent = useCallback(
+    (value: string | number) => {
+      if (isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
+
+      const basePrice = pool.priceOf(baseToken).toFixed();
+      const range: [string, string] = [
+        new BigNumber(basePrice).minus(new BigNumber(basePrice).multipliedBy(value).dividedBy(100)).toFixed(5),
+        new BigNumber(basePrice).multipliedBy(value).dividedBy(100).plus(basePrice).toFixed(5),
+      ];
+
+      return range;
+    },
+    [baseToken, pool],
+  );
+
   const getSetFullRange = useCallback(() => {
     dispatch(updateFullRange());
   }, [dispatch]);
@@ -604,5 +671,6 @@ export function useRangeCallbacks(
     getDecrementUpper,
     getIncrementUpper,
     getSetFullRange,
+    getRangeByPercent,
   };
 }

@@ -11,6 +11,10 @@ const useStyles = makeStyles({
   },
 });
 
+export interface CopyRef {
+  copy: () => void;
+}
+
 const Copy = forwardRef(
   ({ content, children, hide }: { content: string | undefined; children: React.ReactChild; hide?: boolean }, ref) => {
     const classes = useStyles();

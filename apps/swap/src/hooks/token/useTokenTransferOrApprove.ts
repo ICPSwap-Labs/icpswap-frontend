@@ -1,33 +1,37 @@
 import { useCallback } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
-import { getActorIdentity } from "components/Identity";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { useApprove } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { isUseTransfer } from "utils/token/index";
+import { isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { SubAccount } from "@dfinity/ledger-icp";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+
+export interface UseTokenSubAccountTransferArgs {
+  token: Token;
+  amount: string;
+  address: string;
+  options?: TIP_OPTIONS;
+}
 
 export function useTokenSubAccountTransfer() {
-  const [openErrorTip] = useErrorTip();
-
   const principal = useAccountPrincipal();
 
+  const [openErrorTip] = useErrorTip();
+
   return useCallback(
-    async (token: Token, amount: string, address: string, options?: TIP_OPTIONS) => {
+    async ({ token, address, amount, options }: UseTokenSubAccountTransferArgs) => {
       if (!principal) {
         openErrorTip(t`Failed to transfer: no principal`);
         return false;
       }
 
-      const identity = await getActorIdentity();
-
       const subAccount = SubAccount.fromPrincipal(principal);
 
       const { status, message } = await tokenTransfer({
-        identity,
         to: address,
         canisterId: token.address,
         amount: new BigNumber(amount),
@@ -48,18 +52,27 @@ export function useTokenSubAccountTransfer() {
   );
 }
 
+interface UseTokenApproveArgs {
+  token: Token;
+  amount: string;
+  spender: string;
+  options?: TIP_OPTIONS;
+  standard: TOKEN_STANDARD;
+}
+
 export function useTokenApprove() {
   const principal = useAccountPrincipal();
   const approve = useApprove();
   const [openErrorTip] = useErrorTip();
 
   return useCallback(
-    async (token: Token, amount: string, spender: string, options?: TIP_OPTIONS) => {
+    async ({ token, amount, spender, standard, options }: UseTokenApproveArgs) => {
       const { status, message } = await approve({
         canisterId: token.address,
         spender,
         value: amount,
         account: principal,
+        standard,
       });
 
       if (status === "err") {
@@ -73,17 +86,31 @@ export function useTokenApprove() {
   );
 }
 
+export interface UseTokenTransferOrApproveArgs {
+  token: Token;
+  amount: string;
+  to_owner: string;
+  standard: TOKEN_STANDARD;
+  options?: TIP_OPTIONS;
+}
+
 export function useTokenTransferOrApprove() {
   const approve = useTokenApprove();
   const transfer = useTokenSubAccountTransfer();
 
   return useCallback(
-    async (token: Token, amount: string, principal: string, options?: TIP_OPTIONS) => {
-      if (isUseTransfer(token)) {
-        return await transfer(token, amount, principal, options);
+    async ({ token, amount, to_owner, options, standard }: UseTokenTransferOrApproveArgs) => {
+      if (isUseTransferByStandard(standard)) {
+        return await transfer({ token, amount, address: to_owner, options });
       }
 
-      return await approve(token, amount, principal, options);
+      return await approve({
+        token,
+        amount,
+        spender: to_owner,
+        options,
+        standard,
+      });
     },
     [transfer, approve],
   );

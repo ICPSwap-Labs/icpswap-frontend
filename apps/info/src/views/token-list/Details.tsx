@@ -5,21 +5,19 @@ import { useEffect, useMemo } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTokenInfo } from "hooks/token/index";
 import { useToken } from "hooks/useToken";
-import { getExplorerPrincipalLink } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { MainContainer, MainCard, TokenImage } from "ui-component/index";
-import { TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount, explorerLink } from "@icpswap/utils";
 import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { TextButton } from "@icpswap/ui";
-// import Breadcrumbs from "ui-component/Breadcrumbs";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 
 const useStyles = makeStyles({
@@ -81,12 +79,6 @@ export function TokenDetail() {
         }}
       >
         <Box sx={{ width: "100%", overflow: "hidden", display: "grid", gap: "20px 0" }}>
-          {/* <Breadcrumbs
-            prevLink={`/token/list`}
-            prevLabel={<Trans>Token List</Trans>}
-            currentLabel={<Trans>Details</Trans>}
-         /> */}
-
           <MainCard>
             <Typography fontSize="20px" fontWeight="700">
               <Trans>Token Details</Trans>
@@ -183,7 +175,12 @@ export function TokenDetail() {
                             : "--"}
                         </Typography>
                       </Box>
-                      <TextButton to={`/swap/token/details/${canisterId}`} sx={{ padding: "0 40px 0 0" }}>
+                      <TextButton
+                        to={`/swap/token/details/${canisterId}?path=${window.btoa(`/token/list`)}&page=${btoa(
+                          t`Tokens`,
+                        )}`}
+                        sx={{ padding: "0 40px 0 0" }}
+                      >
                         <Trans>Details</Trans>
                       </TextButton>
                     </Grid>
@@ -223,7 +220,7 @@ export function TokenDetail() {
                       </Box>
                     </Grid>
                   }
-                  title={t`Market Cap`}
+                  title={t`FDV`}
                   border={{ borderRadius: "12px 0 0 12px" }}
                 />
               </Box>
@@ -232,7 +229,7 @@ export function TokenDetail() {
                 <BoxItem
                   CustomChild={
                     <Link
-                      href={getExplorerPrincipalLink(canisterId)}
+                      href={explorerLink(canisterId)}
                       target="_blank"
                       sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
                     >

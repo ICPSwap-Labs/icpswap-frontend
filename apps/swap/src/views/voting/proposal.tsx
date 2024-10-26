@@ -1,9 +1,9 @@
 import { useState, useRef, useMemo } from "react";
-import { useParams, Link, useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar, Box, Breadcrumbs, CircularProgress, useMediaQuery } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { valueofUser , isPrincipal, shorten, principalToAccount } from "@icpswap/utils";
-import { Wrapper, MainCard } from "components/index";
+import { useParams, useHistory } from "react-router-dom";
+import { Grid, Typography, Avatar, Box, CircularProgress, useMediaQuery } from "components/Mui";
+import { useTheme } from "@mui/styles";
+import { valueofUser, isPrincipal, shorten, principalToAccount } from "@icpswap/utils";
+import { Wrapper, MainCard, Breadcrumbs } from "components/index";
 import { Trans } from "@lingui/macro";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
 import { Theme } from "@mui/material/styles";
@@ -15,19 +15,7 @@ import { useVotingProposal } from "@icpswap/hooks";
 import DeleteProposalModal from "components/vote/DeleteProposal";
 import { useAccount } from "store/auth/hooks";
 
-const useStyles = makeStyles(() => ({
-  breadcrumbs: {
-    "& a": {
-      textDecoration: "none",
-      "&:hover": {
-        textDecoration: "underline",
-      },
-    },
-  },
-}));
-
 export default function VotingProposal() {
-  const classes = useStyles();
   const account = useAccount();
   const theme = useTheme() as Theme;
   const history = useHistory();
@@ -75,19 +63,11 @@ export default function VotingProposal() {
 
   return (
     <Wrapper>
-      <>
-        <Breadcrumbs className={classes.breadcrumbs}>
-          <Link to={`/voting/${canisterId}`}>
-            <Typography color="secondary">
-              <Trans>Proposals</Trans>
-            </Typography>
-          </Link>
-
-          <Typography>
-            <Trans>Details</Trans>
-          </Typography>
-        </Breadcrumbs>
-      </>
+      <Breadcrumbs
+        prevLink={`/voting/${canisterId}`}
+        prevLabel={<Trans>Proposals</Trans>}
+        currentLabel={<Trans>Details</Trans>}
+      />
 
       <Box mt="25px">
         <MainCard>

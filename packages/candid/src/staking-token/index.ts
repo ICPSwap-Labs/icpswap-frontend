@@ -1,29 +1,25 @@
 export { idlFactory as TokenPoolInterfaceFactory } from "./TokenPool.did";
 export type {
   _SERVICE as TokenPool,
-  PublicTokenPoolInfo as StakingTokenPoolInfo,
+  PublicStakingPoolInfo as StakingPoolInfo,
   PublicUserInfo as StakingPoolUserInfo,
   CycleInfo as StakingPoolCycle,
+  Record as StakingPoolTransaction,
 } from "./TokenPool";
 
-export { idlFactory as TokenPoolControllerInterfaceFactory } from "./TokenPoolController.did";
+export { idlFactory as StakingPoolControllerInterfaceFactory } from "./StakingPoolController.did";
 export type {
-  _SERVICE as TokenPoolController,
-  InitRequest as CreateTokenPoolArgs,
-  TokenPoolInfo as StakingPoolControllerPoolInfo,
+  _SERVICE as StakingPoolController,
+  InitRequest as CreateStakingPoolArgs,
+  StakingPoolInfo as StakingPoolControllerPoolInfo,
   GlobalDataInfo as StakingPoolGlobalData,
-} from "./TokenPoolController";
-
-export { idlFactory as TokenPoolStorageInterfaceFactory } from "./TokenPoolStorage.did";
-export type {
-  _SERVICE as TokenPoolStorage,
-  Record as StakingPoolTransaction,
-} from "./TokenPoolStorage";
+  TokenGlobalDataInfo as StakeGlobalDataInfo,
+} from "./StakingPoolController";
 
 export { idlFactory as V1TokenPoolInterfaceFactory } from "./V1TokenPool.did";
 export type {
   _SERVICE as V1TokenPool,
-  PublicPoolInfo as V1StakingPoolInfo,
+  PublicTokenPoolInfo as V1StakingPoolInfo,
   PublicUserInfo as V1StakingPoolUserInfo,
 } from "./V1TokenPool";
 
@@ -31,10 +27,16 @@ export { idlFactory as V1TokenPoolControllerInterfaceFactory } from "./V1TokenPo
 export type {
   _SERVICE as V1TokenPoolController,
   InitRequest as V1StakingPoolCreateArgs,
+  TokenPoolInfo as V1StakingPoolControllerPoolInfo,
 } from "./V1TokenPoolController";
 
 export { idlFactory as V1TokenPoolStorageInterfaceFactory } from "./V1TokenPoolStorage.did";
+export type { _SERVICE as V1TokenPoolStorage, Record as V1StakingPoolTransaction } from "./V1TokenPoolStorage";
+
+export { idlFactory as StakeIndexInterfaceFactor } from "./StakeIndex.did";
 export type {
-  _SERVICE as V1TokenPoolStorage,
-  Record as V1StakingPoolTransaction,
-} from "./V1TokenPoolStorage";
+  _SERVICE as StakeIndex,
+  UserPool as StakeIndexPoolInfo,
+  APRInfo as StakeAprInfo,
+  UserStakedToken as StakeUserStakeInfo,
+} from "./StakeIndex";

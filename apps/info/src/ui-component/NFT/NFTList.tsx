@@ -58,7 +58,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
 
   return (
     <>
-      <Box sx={{ overflow: "hidden" }}>
+      <Box sx={{ overflow: "auto" }}>
         <Header className={classes.wrapper}>
           <HeaderCell>
             <Trans>NFT</Trans>

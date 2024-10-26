@@ -1,9 +1,7 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid } from "components/Mui";
 import { t } from "@lingui/macro";
-import { Wrapper } from "components/index";
-import SwitchComponent from "components/SwitchToggle";
+import { Wrapper, TabPanel } from "components/index";
 import React from "react";
-import { INFO_URL } from "constants/index";
 
 function LinkIcon() {
   return (
@@ -25,11 +23,15 @@ type Button = {
   key: string;
 };
 
-function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons: Button[] }) {
+function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons?: Button[] }) {
   return (
     <Wrapper>
-      <SwitchComponent buttons={buttons} />
-      <Box mt={4}>{children}</Box>
+      {buttons ? (
+        <Box sx={{ margin: "0 0 16px 0" }}>
+          <TabPanel tabs={buttons} />
+        </Box>
+      ) : null}
+      <Box>{children}</Box>
     </Wrapper>
   );
 }
@@ -70,29 +72,6 @@ export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
   return <SwapWrapper buttons={buttons}>{children}</SwapWrapper>;
 }
 
-export default function _SwapWrapper({ children }: { children: React.ReactNode }) {
-  const buttons = [
-    { id: 1, value: t`Swap V3`, path: "/swap", key: "/swap" },
-    {
-      id: 2,
-      key: "/swap/liquidity",
-      value: t`Liquidity`,
-      path: "/swap/liquidity",
-    },
-    {
-      id: 3,
-      key: "info",
-      value: (
-        <Grid container>
-          <Typography>Info</Typography>
-          <Box sx={{ margin: "0 0 0 3px", position: "relative", top: "-4px" }}>
-            <LinkIcon />
-          </Box>
-        </Grid>
-      ),
-      link: INFO_URL,
-    },
-  ];
-
-  return <SwapWrapper buttons={buttons}>{children}</SwapWrapper>;
+export function SwapUIWrapper({ children }: { children: React.ReactNode }) {
+  return <SwapWrapper>{children}</SwapWrapper>;
 }

@@ -11,3 +11,7 @@
   border-radius: 10px;
   background: #29314f;
 }
+
+body iframe {
+  border-width: 0px;
+}

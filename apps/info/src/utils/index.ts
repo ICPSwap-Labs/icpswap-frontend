@@ -1,7 +1,7 @@
 /* eslint-disable no-extend-native */
 import _BigNumber from "bignumber.js";
 import { APP_LINK } from "constants/index";
-import { parseTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, explorerLink } from "@icpswap/utils";
 import JSBI from "jsbi";
 import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 
@@ -10,7 +10,7 @@ BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 
-_BigNumber.set({ EXPONENTIAL_AT: 100 });
+_BigNumber.set({ EXPONENTIAL_AT: 10 ** 9 });
 
 _BigNumber.config({
   ROUNDING_MODE: _BigNumber.ROUND_DOWN,
@@ -57,23 +57,8 @@ export function isAvailablePageArgs(offset: number, limit: number): boolean {
   return (!!offset || offset === 0) && !!limit;
 }
 
-export function mockALinkAndOpen(url: string, id: string): void {
-  const a = document.createElement("a");
-  a.setAttribute("href", url);
-  a.setAttribute("target", "_blank");
-  a.setAttribute("id", id);
-  if (!document.getElementById(id)) {
-    document.body.appendChild(a);
-  }
-  a.click();
-}
-
 export function getExplorerPrincipalLink(principalId: string): string {
-  if ((principalId ?? "").length > 27) {
-    return `https://icscan.io/principal/${principalId}`;
-  }
-
-  return `https://dashboard.internetcomputer.org/canister/${principalId}`;
+  return explorerLink(principalId);
 }
 
 export function getExplorerAccountLink(account: string): string {
@@ -99,8 +84,12 @@ export function swapLink(canisterId: string) {
 
 export function addLiquidityLink(canisterId: string) {
   if (canisterId === ICP_TOKEN_INFO.canisterId || canisterId === WRAPPED_ICP_TOKEN_INFO.canisterId)
-    return `${APP_LINK}/swap/liquidity/add/${ICP_TOKEN_INFO.canisterId}/`;
-  return `${APP_LINK}/swap/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
+    return `${APP_LINK}/liquidity/add/${ICP_TOKEN_INFO.canisterId}/`;
+  return `${APP_LINK}/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
+}
+
+export function swapLinkOfPool(token0Id: string, token1Id: string) {
+  return `${APP_LINK}/swap?input=${token0Id}&output=${token1Id}`;
 }
 
 export function toFormat(value: string | number | undefined) {

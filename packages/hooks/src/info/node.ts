@@ -4,26 +4,26 @@ import { node_index } from "@icpswap/actor";
 import { PublicPoolOverView, PublicTokenOverview } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
-export async function getInfoAllPools() {
+export async function getNodeInfoAllPools() {
   return resultFormat<PublicPoolOverView[]>(await (await node_index()).getAllPools()).data;
 }
 
-export function useInfoAllPools() {
+export function useNodeInfoAllPools() {
   return useCallsData(
     useCallback(async () => {
-      return await getInfoAllPools();
+      return await getNodeInfoAllPools();
     }, []),
   );
 }
 
-export async function getInfoAllTokens() {
+export async function getNodeInfoAllTokens() {
   return resultFormat<PublicTokenOverview[]>(await (await node_index()).getAllTokens()).data;
 }
 
-export function useInfoAllTokens() {
+export function useNodeInfoAllTokens() {
   return useCallsData(
     useCallback(async () => {
-      return await getInfoAllTokens();
+      return await getNodeInfoAllTokens();
     }, []),
   );
 }

@@ -1,30 +1,29 @@
-import { actor } from "../actor";
 import { ActorIdentity } from "@icpswap/types";
-import { ActorName } from "../ActorName";
-
 import {
   TokenPool,
-  TokenPoolController,
-  TokenPoolControllerInterfaceFactory,
+  StakingPoolController,
+  StakingPoolControllerInterfaceFactory,
   TokenPoolInterfaceFactory,
-  TokenPoolStorage,
-  TokenPoolStorageInterfaceFactory,
   V1TokenPool,
   V1TokenPoolInterfaceFactory,
   V1TokenPoolController,
   V1TokenPoolControllerInterfaceFactory,
   V1TokenPoolStorage,
   V1TokenPoolStorageInterfaceFactory,
+  StakeIndex,
+  StakeIndexInterfaceFactor,
 } from "@icpswap/candid";
+import { actor } from "../actor";
+import { ActorName } from "../ActorName";
 
-export const stakingTokenController = (identity?: ActorIdentity) =>
-  actor.create<TokenPoolController>({
-    actorName: ActorName.TokenPoolController,
+export const stakingPoolController = (identity?: ActorIdentity) =>
+  actor.create<StakingPoolController>({
+    actorName: ActorName.StakingTokenController,
     identity,
-    idlFactory: TokenPoolControllerInterfaceFactory,
+    idlFactory: StakingPoolControllerInterfaceFactory,
   });
 
-export const stakingToken = (canisterId: string, identity?: ActorIdentity) =>
+export const stakingPool = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<TokenPool>({
     canisterId,
     actorName: ActorName.TokenPool,
@@ -32,21 +31,17 @@ export const stakingToken = (canisterId: string, identity?: ActorIdentity) =>
     idlFactory: TokenPoolInterfaceFactory,
   });
 
-export const stakingTokenStorage = (
-  canisterId: string,
-  identity?: ActorIdentity
-) =>
-  actor.create<TokenPoolStorage>({
-    canisterId,
-    actorName: ActorName.TokenPoolStorage,
+export const stakeIndex = (identity?: ActorIdentity) =>
+  actor.create<StakeIndex>({
+    actorName: ActorName.StakeIndex,
     identity,
-    idlFactory: TokenPoolStorageInterfaceFactory,
+    idlFactory: StakeIndexInterfaceFactor,
   });
 
 /* v1 staking token pool */
 export const v1StakingTokenController = (identity?: ActorIdentity) =>
   actor.create<V1TokenPoolController>({
-    actorName: ActorName.V1TokenPoolController,
+    canisterId: "o5xzb-ryaaa-aaaak-aejmq-cai",
     identity,
     idlFactory: V1TokenPoolControllerInterfaceFactory,
   });

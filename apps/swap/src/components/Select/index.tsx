@@ -22,7 +22,7 @@ const useStyles = (contained: boolean, fullHeight?: boolean) => {
 };
 
 export type Menus = {
-  label: string;
+  label: React.ReactNode;
   value: any;
 };
 
@@ -70,6 +70,7 @@ export function Value({ value, menus = [], helperText }: { helperText?: string; 
           whiteSpace: "nowrap",
         }}
         color="#fff"
+        component="div"
       >
         {menus.filter((menu) => menu.value === value)[0]?.label ?? value}
       </Typography>
@@ -89,7 +90,7 @@ export function Value({ value, menus = [], helperText }: { helperText?: string; 
   );
 }
 
-export default function Select({
+export function Select({
   value,
   onChange,
   menus = [],
@@ -191,6 +192,7 @@ export default function Select({
               width: menuWidth,
               minWidth: "108px",
               transform: "translateY(10px)",
+              maxHeight: "450px",
             },
           }}
         >

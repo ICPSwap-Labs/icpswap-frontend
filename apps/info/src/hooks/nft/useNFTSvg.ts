@@ -9,15 +9,15 @@ export type PositionSVG = {
   image: string;
 };
 
-export function useIsV2PositionNFT(data: NFTTokenMetadata): boolean {
-  return data.cId === v2Ids.V3SwapNFTCanister.ic;
+export function useIsV2PositionNFT(data: NFTTokenMetadata | undefined): boolean {
+  return data?.cId === v2Ids.V3SwapNFTCanister.ic;
 }
 
-export function useIsV3PositionNFT(data: NFTTokenMetadata): boolean {
-  return data.cId === SwapNFTCanisterId;
+export function useIsV3PositionNFT(data: NFTTokenMetadata | undefined): boolean {
+  return data?.cId === SwapNFTCanisterId;
 }
 
-export function usePositionNFTSvg(metadata: NFTTokenMetadata): {
+export function usePositionNFTSvg(metadata: NFTTokenMetadata | undefined): {
   isPositionNFT: boolean;
   positionSVG: PositionSVG;
 } {
@@ -31,7 +31,7 @@ export function usePositionNFTSvg(metadata: NFTTokenMetadata): {
 
   useEffect(() => {
     (async () => {
-      if (metadata.tokenId && (isV2PositionNFT || isV3PositionNFT)) {
+      if (metadata && metadata.tokenId && (isV2PositionNFT || isV3PositionNFT)) {
         let poolId = String(metadata.tokenId);
         if (metadata.attributes && Boolean(metadata.attributes.length)) {
           const newPoolId = (metadata.attributes ?? []).find((item) => item.k === "poolId")?.v;

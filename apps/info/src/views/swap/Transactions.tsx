@@ -2,11 +2,10 @@ import { Box, Typography } from "@mui/material";
 import { useState, useMemo } from "react";
 import { useBaseTransactions } from "hooks/info/useBaseTransactions";
 import Transaction from "ui-component/analytic/Transactions";
-import InTokenListCheck from "ui-component/InTokenListCheck";
 import { Trans } from "@lingui/macro";
 import { useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { MainCard } from "@icpswap/ui";
+import { MainCard, OnlyTokenList } from "@icpswap/ui";
 
 export default function AllTransactions() {
   const [checked, setChecked] = useState(false);
@@ -41,7 +40,7 @@ export default function AllTransactions() {
           <Trans>Transactions</Trans>
         </Typography>
 
-        <InTokenListCheck onChange={handleCheckChange} checked={checked} />
+        <OnlyTokenList onChange={handleCheckChange} checked={checked} />
       </Box>
 
       <Box sx={{ minWidth: "1200px", margin: "20px 0 0 0" }}>

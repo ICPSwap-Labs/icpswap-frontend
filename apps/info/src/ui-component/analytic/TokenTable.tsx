@@ -1,15 +1,16 @@
 import { useState, useMemo } from "react";
-import { makeStyles } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
+import { makeStyles, useTheme } from "@mui/styles";
+import { Box, Grid, useMediaQuery } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
-import { NoData, StaticLoading, TokenImage } from "ui-component/index";
+import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion } from "@icpswap/ui";
 import { useAllTokensTVL } from "@icpswap/hooks";
+import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,7 +34,7 @@ export type HeaderType = {
   end?: boolean;
 };
 
-export function TokenItem({ token, index }: { token: TokenData; index: number }) {
+export function TokenItem({ token, index, align }: { token: TokenData; index: number; align: "left" | "right" }) {
   const classes = useStyles();
   const history = useHistory();
   const { result: tokenInfo } = useTokenInfo(token.address);
@@ -52,16 +53,16 @@ export function TokenItem({ token, index }: { token: TokenData; index: number })
           {tokenInfo ? <BodyCell sub>({tokenInfo.name})</BodyCell> : null}
         </Grid>
       </BodyCell>
-      <BodyCell color="text.primary" align="right">
+      <BodyCell color="text.primary" align={align}>
         {formatDollarAmount(token.priceUSD, 3)}
       </BodyCell>
-      <BodyCell align="right">
-        <Proportion align="right" value={token.priceUSDChange} />
+      <BodyCell align={align}>
+        <Proportion align={align} value={token.priceUSDChange} />
       </BodyCell>
-      <BodyCell color="text.primary" align="right">
+      <BodyCell color="text.primary" align={align}>
         {formatDollarAmount(token.volumeUSD)}
       </BodyCell>
-      <BodyCell color="text.primary" align="right">
+      <BodyCell color="text.primary" align={align}>
         {formatDollarAmount(token.tvlUSD)}
       </BodyCell>
     </TableRow>
@@ -87,7 +88,9 @@ const headers: HeaderType[] = [
 
 export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTableProps) {
   const classes = useStyles();
+  const theme = useTheme() as Theme;
   const [page, setPage] = useState(1);
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
@@ -135,6 +138,11 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
     setSortField(sortField);
   };
 
+  const align = useMemo(() => {
+    if (matchDownMD) return "left";
+    return "right";
+  }, [matchDownMD]);
+
   return (
     <>
       <Header className={classes.wrapper} onSortChange={handleSortChange} defaultSortFiled={sortField}>
@@ -143,7 +151,7 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
             key={header.key}
             field={header.key}
             isSort={header.sort}
-            align={header.key !== "#" && header.key !== "name" ? "right" : "left"}
+            align={header.key !== "#" && header.key !== "name" ? align : "left"}
           >
             {header.label}
           </HeaderCell>
@@ -151,7 +159,7 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
       </Header>
 
       {(sortedTokens ?? []).map((token, index) => (
-        <TokenItem key={String(token.address)} index={(page - 1) * maxItems + index + 1} token={token} />
+        <TokenItem key={String(token.address)} index={(page - 1) * maxItems + index + 1} token={token} align={align} />
       ))}
 
       {tokens?.length === 0 && !loading ? (
@@ -160,7 +168,7 @@ export default function TokenTable({ tokens: _tokens, maxItems = 10, loading }: 
         />
       ) : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && (tokens?.length ?? 0) > 0 ? (

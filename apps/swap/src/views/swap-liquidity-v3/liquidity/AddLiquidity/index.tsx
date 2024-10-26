@@ -1,13 +1,8 @@
 /* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import BackIcon from "assets/images/swap/back";
-import FeeSelector from "components/swap/SwapFeeSelector";
-import CurrencySelector from "components/CurrencySelector";
-import DepositAmount from "components/swap/SwapDepositAmount";
-import SwapWrapper from "components/swap/SwapUIWrapper";
+import { Box, Typography, makeStyles, Theme, useTheme, Button } from "components/Mui";
+import { FeeSelector, CurrencySelector, SwapDepositAmount, Reclaim, AddLiquidityButton } from "components/swap/index";
 import {
   useMintState,
   useMintHandlers,
@@ -15,28 +10,28 @@ import {
   useRangeCallbacks,
   useResetMintState,
 } from "store/swap/liquidity/hooks";
-import { useSlippageManager } from "store/swap/cache/hooks";
 import { UseCurrencyState, useToken } from "hooks/useCurrency";
-import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, FIELD } from "constants/swap";
+import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
-import { useAccount } from "store/global/hooks";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
-import BigNumber from "bignumber.js";
 import { isDarkTheme } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
+import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as TypeIdentity } from "types/global";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
 import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
 import StepViewButton from "components/Steps/View";
-import AddLiquidityButton from "components/swap/AddLiquidityButton";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
-import { usePCMMetadata, useUserPCMBalance } from "@icpswap/hooks";
-import SetPriceRange from "./SetPriceRange";
+import { usePCMMetadata, useParsedQueryString, useUserPCMBalance } from "@icpswap/hooks";
+import { InfoPool, PriceRange } from "components/liquidity/index";
+import { Flex } from "@icpswap/ui";
+import { ICP, ICS } from "@icpswap/tokens";
+import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
+import { useRefreshTrigger } from "hooks/index";
+import { Wrapper } from "components/index";
+import { ArrowLeft } from "react-feather";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -57,18 +52,6 @@ const useStyle = makeStyles((theme: Theme) => {
     },
     topHeader: {
       paddingBottom: "12px",
-      borderBottom: isDarkTheme(theme) ? "1px solid #212946" : `1px solid ${theme.colors.lightGray200BorderColor}`,
-    },
-    outerBox: {
-      paddingTop: "24px",
-      display: "grid",
-      gap: "24px 48px",
-      gridTemplateRows: "max-content",
-      gridTemplateColumns: "1fr 1fr",
-      gridAutoFlow: "row",
-      "@media(max-width: 960px)": {
-        gridTemplateColumns: "1fr",
-      },
     },
     priceRange: {
       gridArea: "1 / 2 / 3 / auto",
@@ -90,14 +73,18 @@ export default function AddLiquidity() {
   const classes = useStyle();
   const history = useHistory();
   const principal = useAccountPrincipal();
+  const theme = useTheme();
+  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
+  const [openErrorTip] = useErrorTip();
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
+  const { path: backPath } = useParsedQueryString() as { path: string };
 
   if (!currencyIdA) currencyIdA = DEFAULT_SWAP_INPUT_ID;
+  if (!currencyIdB) currencyIdB = DEFAULT_SWAP_OUTPUT_ID;
 
   const [confirmModalShow, setConfirmModalShow] = useState(false);
-
-  const [slippageTolerance] = useSlippageManager("mint");
+  const refreshTrigger = useRefreshTrigger(ADD_LIQUIDITY_REFRESH_KEY);
 
   const feeAmount = feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
 
@@ -126,7 +113,20 @@ export default function AddLiquidity() {
     atMaxAmounts,
     maxAmounts,
     poolLoading,
-  } = useMintInfo(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, baseCurrency ?? undefined);
+    token0SubAccountBalance,
+    token1SubAccountBalance,
+    unusedBalance,
+    token0Balance,
+    token1Balance,
+  } = useMintInfo(
+    baseCurrency ?? undefined,
+    quoteCurrency ?? undefined,
+    feeAmount,
+    baseCurrency ?? undefined,
+    undefined,
+    undefined,
+    refreshTrigger,
+  );
 
   const isValid = !errorMessage && !invalidRange;
 
@@ -142,35 +142,63 @@ export default function AddLiquidity() {
 
   const resetMintState = useResetMintState();
 
-  const handleBackToPosition = useCallback(() => {
+  const loadToPage = useCallback(() => {
     resetMintState();
-    history.push("/swap/liquidity");
-  }, [history, resetMintState]);
 
-  const onTokenAChange = (token: TokenInfo) => {
-    const tokenId = token.canisterId.toString();
-
-    if (tokenId === currencyIdB || !currencyIdB) {
-      history.push(`/swap/liquidity/add/${tokenId}`);
+    if (backPath) {
+      try {
+        const path = window.atob(backPath);
+        history.push(path);
+      } catch (error) {
+        console.warn(error);
+      }
     } else {
-      history.push(`/swap/liquidity/add/${tokenId}/${currencyIdB}`);
+      history.goBack();
     }
-  };
+  }, [history, resetMintState, backPath]);
 
-  const onTokenBChange = (token: TokenInfo) => {
-    const tokenId = token.canisterId.toString();
+  const handleUrlChange = useCallback(
+    (path: string) => {
+      if (backPath) {
+        history.push(`${path}?path=${backPath}`);
+        return;
+      }
+      history.push(path);
+    },
+    [backPath],
+  );
 
-    if (tokenId === currencyIdA || !currencyIdA) {
-      history.push(`/swap/liquidity/add/${tokenId}`);
-    } else {
-      history.push(`/swap/liquidity/add/${currencyIdA}/${tokenId}`);
-    }
-  };
+  const handleTokenChange = useCallback(
+    (token: TokenInfo, isTokenA: boolean) => {
+      const tokenId = token.canisterId.toString();
+      let path = "";
+
+      if (isTokenA) {
+        if (tokenId === currencyIdB || !currencyIdB) {
+          path = `/liquidity/add/${tokenId}`;
+        } else {
+          path = `/liquidity/add/${tokenId}/${currencyIdB}`;
+        }
+
+        handleUrlChange(path);
+        return;
+      }
+
+      if (tokenId === currencyIdA || !currencyIdA) {
+        path = `/liquidity/add/${tokenId}`;
+      } else {
+        path = `/liquidity/add/${currencyIdA}/${tokenId}`;
+      }
+
+      handleUrlChange(path);
+    },
+    [handleUrlChange],
+  );
 
   const handleFeeChange = useCallback(
     (feeValue) => {
       if (currencyIdA && currencyIdB) {
-        history.push(`/swap/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
+        handleUrlChange(`/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
       }
     },
     [currencyIdA, currencyIdB],
@@ -181,11 +209,17 @@ export default function AddLiquidity() {
     onFieldBInput("");
     onLeftRangeInput("");
     onRightRangeInput("");
-    history.push(`/swap/liquidity/add`);
+    handleUrlChange("/liquidity/add");
   }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
-    useRangeCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool);
+  const {
+    getDecrementLower,
+    getIncrementLower,
+    getDecrementUpper,
+    getIncrementUpper,
+    getSetFullRange,
+    getRangeByPercent,
+  } = useRangeCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool);
 
   const isValidPair = currencyIdA && currencyIdB && currencyIdA !== currencyIdB;
 
@@ -193,64 +227,79 @@ export default function AddLiquidity() {
     setConfirmModalShow(true);
   }, []);
 
-  const account = useAccount();
-
-  const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-  const [openErrorTip] = useErrorTip();
-
   const { result: pcmMetadata } = usePCMMetadata();
   const { result: userPCMBalance } = useUserPCMBalance(principal);
 
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
   const getAddLiquidityCall = useAddLiquidityCall();
 
-  const handleOnConfirm = useCallback(
-    async (identity: TypeIdentity, { loading }: SubmitLoadingProps) => {
-      if (
-        !identity ||
-        loading ||
-        !position ||
-        !principal ||
-        !pcmMetadata ||
-        !pcmToken ||
-        userPCMBalance === undefined ||
-        userPCMBalance === null
-      )
-        return;
+  const handleOnConfirm = useCallback(async () => {
+    // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
+    // So set the value is 0 by default
+    // TODO: Fix this?
+    if (
+      isNullArgs(position) ||
+      isNullArgs(principal) ||
+      isNullArgs(pcmMetadata) ||
+      isNullArgs(pcmToken) ||
+      isNullArgs(userPCMBalance) ||
+      isNullArgs(token0Balance) ||
+      isNullArgs(token1Balance) ||
+      isNullArgs(token0SubAccountBalance) ||
+      isNullArgs(token1SubAccountBalance) ||
+      isNullArgs(unusedBalance)
+    )
+      return;
 
-      const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
+    const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
 
-      const { call, key } = await getAddLiquidityCall({
-        noLiquidity,
-        position,
-        pcmMetadata,
-        needPayForPCM,
-        pcmToken,
-        principal: principal.toString(),
-        openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-          openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
-        },
-      });
+    const { call, key } = await getAddLiquidityCall({
+      token0Balance,
+      token1Balance,
+      token0SubAccountBalance,
+      token1SubAccountBalance,
+      unusedBalance,
+      noLiquidity,
+      position,
+      pcmMetadata,
+      needPayForPCM,
+      pcmToken,
+      principal: principal.toString(),
+      openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
+      },
+    });
 
-      const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
-        extraContent: <StepViewButton step={key} />,
-      });
+    const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
+      extraContent: <StepViewButton step={key} />,
+    });
 
-      setConfirmModalShow(false);
+    setConfirmModalShow(false);
 
-      const result = await call();
+    const result = await call();
 
-      if (!result) {
-        closeLoadingTip(loadingTipKey);
-        return;
-      }
-
+    if (!result) {
       closeLoadingTip(loadingTipKey);
+      return;
+    }
 
-      handleBackToPosition();
-    },
-    [position, slippageTolerance, account, noLiquidity],
-  );
+    closeLoadingTip(loadingTipKey);
+
+    resetMintState();
+    history.push(`/liquidity?tab=Positions`);
+  }, [
+    position,
+    principal,
+    pcmMetadata,
+    pcmToken,
+    userPCMBalance,
+    token0Balance,
+    token1Balance,
+    token0SubAccountBalance,
+    token1SubAccountBalance,
+    unusedBalance,
+    noLiquidity,
+  ]);
 
   const handleOnCancel = useCallback(() => {
     setConfirmModalShow(false);
@@ -269,7 +318,7 @@ export default function AddLiquidity() {
       onFieldAInput(formattedAmounts[FIELD.CURRENCY_B] ?? "");
     }
 
-    history.push(`/swap/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
+    handleUrlChange(`/liquidity/add/${currencyIdB}/${currencyIdA}${feeAmount ? `/${feeAmount}` : ""}`);
   };
 
   const handleCurrencyAMax = () => {
@@ -288,6 +337,24 @@ export default function AddLiquidity() {
     onFieldBInput(maxAmountFormat(currencyBAmount.toExact(), currencyBAmount.currency.decimals));
   };
 
+  const handleByToken = useCallback(
+    (address: string) => {
+      let input: string = address;
+      let output: string = address;
+
+      if (address === ICP.address) {
+        input = ICS.address;
+        output = ICP.address;
+      } else {
+        input = ICP.address;
+        output = address;
+      }
+
+      history.push(`/swap?input=${input}&output=${output}`);
+    },
+    [history],
+  );
+
   useEffect(() => {
     return () => {
       resetMintState();
@@ -295,169 +362,274 @@ export default function AddLiquidity() {
   }, []);
 
   return (
-    <Identity onSubmit={handleOnConfirm}>
-      {({ submit, loading }: CallbackProps) => (
-        <>
-          <SwapWrapper>
-            <Grid container justifyContent="center">
-              <Grid item className={classes.container}>
-                <Grid container className={classes.topHeader}>
-                  <Grid item xs={3} container alignItems="center">
-                    <BackIcon
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                      onClick={handleBackToPosition}
-                    />
-                  </Grid>
-                  <Grid item xs={6} container justifyContent="center" alignItems="center">
-                    <Typography variant="h3" color="textPrimary" align="center">
-                      <Trans>Add Liquidity</Trans>
-                    </Typography>
-                  </Grid>
-                  <Grid item container alignItems="center" xs={3} sx={{ position: "relative" }}>
-                    <Grid item xs>
-                      <Grid container justifyContent="flex-end">
-                        <Typography sx={{ cursor: "pointer" }} color="secondary" component="span" onClick={clearAll}>
-                          <Trans>clear all</Trans>
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Box className={classes.outerBox}>
-                  <Box>
-                    <Typography variant="h4" color="textPrimary">
-                      <Trans>Select Pair</Trans>
-                    </Typography>
-                    <Grid container mt={2} spacing="12px">
-                      <Grid item xs={6}>
-                        <CurrencySelector
-                          currencyId={currencyIdA}
-                          onChange={onTokenAChange}
-                          loading={useCurrencyALoading === UseCurrencyState.LOADING}
-                          disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
-                        />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <CurrencySelector
-                          currencyId={currencyIdB}
-                          onChange={onTokenBChange}
-                          loading={useCurrencyBLoading === UseCurrencyState.LOADING}
-                          disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Box mt={2} sx={!isValidPair ? DISABLED_STYLE : {}}>
-                      <FeeSelector
-                        defaultActiveFee={feeAmount}
-                        onSelect={handleFeeChange}
-                        currencyA={baseCurrency}
-                        currencyB={quoteCurrency}
-                      />
-                    </Box>
-                  </Box>
-                  <Box sx={isDepositAmountDisabled ? DISABLED_STYLE : {}}>
-                    <Typography variant="h4" color="textPrimary">
-                      <Trans>Deposit Amounts</Trans>
-                    </Typography>
-                    <Box mt={2}>
-                      <Box>
-                        <DepositAmount
-                          currency={baseCurrency}
-                          value={formattedAmounts[FIELD.CURRENCY_A]}
-                          onUserInput={onFieldAInput}
-                          locked={depositADisabled}
-                          currencyBalance={currencyBalances?.[FIELD.CURRENCY_A]}
-                          showMaxButton={
-                            !atMaxAmounts[FIELD.CURRENCY_A] &&
-                            new BigNumber(maxAmounts[FIELD.CURRENCY_A]?.toExact() ?? 0).isGreaterThan(0)
-                          }
-                          onMax={handleCurrencyAMax}
-                        />
-                      </Box>
-                      <Box mt={2}>
-                        <DepositAmount
-                          currency={quoteCurrency}
-                          value={formattedAmounts[FIELD.CURRENCY_B]}
-                          onUserInput={onFieldBInput}
-                          locked={depositBDisabled}
-                          currencyBalance={currencyBalances?.[FIELD.CURRENCY_B]}
-                          showMaxButton={
-                            !atMaxAmounts[FIELD.CURRENCY_B] &&
-                            new BigNumber(maxAmounts[FIELD.CURRENCY_B]?.toExact() ?? 0).isGreaterThan(0)
-                          }
-                          onMax={handleCurrencyBMax}
-                        />
-                      </Box>
-                    </Box>
-                    <Box
-                      mt={2}
-                      sx={{
-                        "@media(max-width: 959px)": {
-                          display: "block",
-                        },
-                        "@media(min-width: 960px)": {
-                          display: "none",
-                        },
-                      }}
-                    >
-                      <AddLiquidityButton size="large" disabled={!isValid} error={errorMessage} onClick={handleOnAdd} />
-                    </Box>
-                  </Box>
-                  <Box className={classes.priceRange} sx={!isValidPair ? DISABLED_STYLE : {}}>
-                    <SetPriceRange
-                      poolLoading={poolLoading}
-                      startPrice={startPrice}
-                      noLiquidity={noLiquidity}
-                      onStartPriceInput={onStartPriceInput}
-                      onLeftRangeInput={onLeftRangeInput}
-                      onRightRangeInput={onRightRangeInput}
-                      getDecrementLower={getDecrementLower}
-                      getIncrementLower={getIncrementLower}
-                      getDecrementUpper={getDecrementUpper}
-                      getIncrementUpper={getIncrementUpper}
-                      getSetFullRange={getSetFullRange}
-                      handleTokenToggle={handleTokenToggle}
-                      baseCurrency={baseCurrency}
-                      quoteCurrency={quoteCurrency}
-                      ticksAtLimit={ticksAtLimit}
-                      feeAmount={feeAmount}
-                      priceLower={priceLower}
-                      priceUpper={priceUpper}
-                      price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
-                    />
-                    <Box
-                      mt={2}
-                      sx={{
-                        "@media(max-width:960px)": {
-                          display: "none",
-                        },
-                      }}
-                    >
-                      <AddLiquidityButton
-                        size="large"
-                        disabled={!isValid || loading}
-                        error={errorMessage}
-                        onClick={handleOnAdd}
-                      />
-                    </Box>
-                  </Box>
-                </Box>
-              </Grid>
-            </Grid>
-          </SwapWrapper>
-
-          {confirmModalShow && !!position && (
-            <ConfirmAddLiquidity
-              onConfirm={submit}
-              onCancel={handleOnCancel}
-              open={confirmModalShow}
-              position={position}
+    <Wrapper>
+      <Flex fullWidth justify="center">
+        <Box className={classes.container}>
+          <Flex justify="space-between">
+            <ArrowLeft
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={loadToPage}
             />
-          )}
-        </>
+
+            <Typography variant="h3" color="textPrimary" align="center">
+              <Trans>Add Liquidity</Trans>
+            </Typography>
+
+            <Typography sx={{ cursor: "pointer" }} color="secondary" component="span" onClick={clearAll}>
+              <Trans>clear all</Trans>
+            </Typography>
+          </Flex>
+
+          <Box sx={{ margin: "32px 0 0 0" }}>
+            <InfoPool pool={pool} />
+          </Box>
+
+          <Box
+            sx={{
+              paddingTop: "24px",
+              display: "grid",
+              gap: "24px 48px",
+              gridTemplateRows: "138px auto",
+              gridTemplateColumns: "1fr 1fr",
+              "@media(max-width: 960px)": {
+                gridTemplateColumns: "1fr",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                gridArea: "1 / 1 / 2 /2",
+              }}
+            >
+              <Typography variant="h4" color="textPrimary">
+                <Trans>Select Pair</Trans>
+              </Typography>
+
+              <Flex gap="0 12px" sx={{ margin: "12px 0 0 0" }}>
+                <Flex sx={{ flex: "50%" }}>
+                  <Box sx={{ width: "100%" }}>
+                    <CurrencySelector
+                      currencyId={currencyIdA}
+                      onChange={(token: TokenInfo) => handleTokenChange(token, true)}
+                      loading={useCurrencyALoading === UseCurrencyState.LOADING}
+                      disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
+                    />
+                  </Box>
+                </Flex>
+                <Flex sx={{ flex: "50%" }}>
+                  <Box sx={{ width: "100%" }}>
+                    <CurrencySelector
+                      currencyId={currencyIdB}
+                      onChange={(token: TokenInfo) => handleTokenChange(token, false)}
+                      loading={useCurrencyBLoading === UseCurrencyState.LOADING}
+                      disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
+                    />
+                  </Box>
+                </Flex>
+              </Flex>
+
+              <Box mt={2} sx={!isValidPair ? DISABLED_STYLE : {}}>
+                <FeeSelector
+                  defaultActiveFee={feeAmount}
+                  onSelect={handleFeeChange}
+                  currencyA={baseCurrency}
+                  currencyB={quoteCurrency}
+                />
+              </Box>
+            </Box>
+
+            <Flex
+              vertical
+              align="flex-start"
+              gap="12px 0"
+              fullWidth
+              sx={{
+                gridArea: "2 / 1 / auto / auto",
+                ...(isDepositAmountDisabled ? DISABLED_STYLE : {}),
+                "@media(max-width: 960px)": {
+                  gridArea: "3 / 1 / auto / 1",
+                },
+              }}
+            >
+              <Typography variant="h4" color="textPrimary">
+                <Trans>Deposit Amounts</Trans>
+              </Typography>
+
+              <SwapDepositAmount
+                noLiquidity={noLiquidity}
+                currency={baseCurrency}
+                value={formattedAmounts[FIELD.CURRENCY_A]}
+                onUserInput={onFieldAInput}
+                locked={depositADisabled}
+                currencyBalance={currencyBalances?.[FIELD.CURRENCY_A]}
+                showMaxButton={
+                  !atMaxAmounts[FIELD.CURRENCY_A] &&
+                  new BigNumber(maxAmounts[FIELD.CURRENCY_A]?.toExact() ?? 0).isGreaterThan(0)
+                }
+                onMax={handleCurrencyAMax}
+                unusedBalance={
+                  baseCurrency && pool
+                    ? baseCurrency.address === pool.token0.address
+                      ? unusedBalance.balance0
+                      : unusedBalance.balance1
+                    : undefined
+                }
+                subAccountBalance={
+                  baseCurrency && pool
+                    ? baseCurrency.address === pool.token0.address
+                      ? token0SubAccountBalance
+                      : token1SubAccountBalance
+                    : undefined
+                }
+                maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
+              />
+
+              <SwapDepositAmount
+                noLiquidity={noLiquidity}
+                currency={quoteCurrency}
+                value={formattedAmounts[FIELD.CURRENCY_B]}
+                onUserInput={onFieldBInput}
+                locked={depositBDisabled}
+                currencyBalance={currencyBalances?.[FIELD.CURRENCY_B]}
+                showMaxButton={
+                  !atMaxAmounts[FIELD.CURRENCY_B] &&
+                  new BigNumber(maxAmounts[FIELD.CURRENCY_B]?.toExact() ?? 0).isGreaterThan(0)
+                }
+                onMax={handleCurrencyBMax}
+                unusedBalance={
+                  quoteCurrency && pool
+                    ? quoteCurrency.address === pool.token0.address
+                      ? unusedBalance.balance0
+                      : unusedBalance.balance1
+                    : undefined
+                }
+                subAccountBalance={
+                  quoteCurrency && pool
+                    ? quoteCurrency.address === pool.token0.address
+                      ? token0SubAccountBalance
+                      : token1SubAccountBalance
+                    : undefined
+                }
+                maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
+              />
+
+              {!noLiquidity ? (
+                <Box
+                  sx={{
+                    padding: "16px",
+                    background: theme.palette.background.level3,
+                    borderRadius: "12px",
+                    width: "100%",
+                  }}
+                >
+                  <Reclaim
+                    fontSize="12px"
+                    pool={pool}
+                    bg1={theme.palette.background.level2}
+                    keepInPool={false}
+                    refreshKey={ADD_LIQUIDITY_REFRESH_KEY}
+                  />
+                </Box>
+              ) : null}
+
+              {nonNullArgs(baseCurrency) && nonNullArgs(quoteCurrency) && !noLiquidity ? (
+                <Flex
+                  fullWidth
+                  sx={{
+                    gap: "0 16px",
+                  }}
+                >
+                  <Button
+                    className="secondary"
+                    variant="outlined"
+                    fullWidth
+                    onClick={() => handleByToken(baseCurrency.address)}
+                  >
+                    <Trans>Buy {baseCurrency.symbol}</Trans>
+                  </Button>
+                  <Button
+                    className="secondary"
+                    variant="outlined"
+                    fullWidth
+                    onClick={() => handleByToken(quoteCurrency.address)}
+                  >
+                    <Trans>Buy {quoteCurrency.symbol}</Trans>
+                  </Button>
+                </Flex>
+              ) : null}
+
+              <Box
+                sx={{
+                  width: "100%",
+                  "@media(max-width: 959px)": {
+                    display: "block",
+                  },
+                  "@media(min-width: 960px)": {
+                    display: "none",
+                  },
+                }}
+              >
+                <AddLiquidityButton size="large" disabled={!isValid} error={errorMessage} onClick={handleOnAdd} />
+              </Box>
+            </Flex>
+
+            <Box
+              sx={{
+                gridArea: "1 / 2 / 3 / auto",
+                height: "fit-content",
+                "@media(max-width: 960px)": {
+                  gridArea: "2 / 1 / 3 / auto",
+                },
+                ...(!isValidPair ? DISABLED_STYLE : {}),
+              }}
+            >
+              <PriceRange
+                poolLoading={poolLoading}
+                startPrice={startPrice}
+                noLiquidity={noLiquidity}
+                onStartPriceInput={onStartPriceInput}
+                onLeftRangeInput={onLeftRangeInput}
+                onRightRangeInput={onRightRangeInput}
+                getDecrementLower={getDecrementLower}
+                getIncrementLower={getIncrementLower}
+                getDecrementUpper={getDecrementUpper}
+                getIncrementUpper={getIncrementUpper}
+                getSetFullRange={getSetFullRange}
+                handleTokenToggle={handleTokenToggle}
+                baseCurrency={baseCurrency}
+                quoteCurrency={quoteCurrency}
+                ticksAtLimit={ticksAtLimit}
+                feeAmount={feeAmount}
+                priceLower={priceLower}
+                priceUpper={priceUpper}
+                price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
+                getRangeByPercent={getRangeByPercent}
+              />
+              <Box
+                mt={2}
+                sx={{
+                  "@media(max-width:960px)": {
+                    display: "none",
+                  },
+                }}
+              >
+                <AddLiquidityButton size="large" disabled={!isValid} error={errorMessage} onClick={handleOnAdd} />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Flex>
+
+      {confirmModalShow && !!position && (
+        <ConfirmAddLiquidity
+          onConfirm={handleOnConfirm}
+          onCancel={handleOnCancel}
+          open={confirmModalShow}
+          position={position}
+        />
       )}
-    </Identity>
+    </Wrapper>
   );
 }

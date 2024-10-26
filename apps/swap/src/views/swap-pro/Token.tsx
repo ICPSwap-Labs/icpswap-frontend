@@ -1,33 +1,32 @@
 import React, { useContext, useMemo, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token";
-import { Theme } from "@mui/material/styles";
 import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
-import { usePool } from "hooks/info/useInfoPool";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
 import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenImage } from "components/index";
 import { useICPPrice } from "hooks/useUSDPrice";
-import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
+import type { Null, PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
 import { ChevronDown } from "react-feather";
 import { Copy } from "components/Copy/icon";
+import { Token } from "@icpswap/swap-sdk";
 
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { SwapProContext } from "./context";
+import { LiquidityLocks } from "./LiquidityLocks";
 
 interface TokenTvlProps {
-  token: TokenInfo | undefined;
-  balance: BigNumber | undefined;
+  token: Token | Null;
+  balance: BigNumber | Null;
   tvlUsd: string | undefined;
 }
 
 function TokenTvl({ token, balance, tvlUsd }: TokenTvlProps) {
   return (
     <Box sx={{ display: "flex", gap: "0 6px", alignItems: "center" }}>
-      <TokenImage logo={token?.logo} tokenId={token?.canisterId} size="18px" />
+      <TokenImage logo={token?.logo} tokenId={token?.address} size="18px" />
       <Typography color="text.primary" fontSize="12px">
         {balance ? formatAmount(parseTokenAmount(balance, token?.decimals).toNumber()) : "--"} {token?.symbol ?? "--"} (
         {formatDollarAmount(tvlUsd)})
@@ -60,68 +59,49 @@ export interface TokenProps {
   tokenListInfo: TokenListMetadata | undefined;
 }
 
-export default function Token({ infoToken, tokenListInfo }: TokenProps) {
-  const theme = useTheme() as Theme;
-  const { outputToken, tradePoolId } = useContext(SwapProContext);
-  const [moreInformation, setMoreInformation] = useState(false);
+export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
+  const theme = useTheme();
+  const { token, tradePoolId, inputToken, outputToken, inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
+  const [moreInformation, setMoreInformation] = useState(true);
 
-  const tokenId = useMemo(() => outputToken?.address, [outputToken]);
+  const tokenId = useMemo(() => token?.address, [token]);
 
-  const { result: pool } = usePool(tradePoolId);
-
-  const token0Id = useMemo(() => {
-    return pool?.token0Id;
-  }, [pool]);
-
-  const token1Id = useMemo(() => {
-    return pool?.token1Id;
-  }, [pool]);
-
-  const { result: token0 } = useTokenInfo(token0Id);
-  const { result: token1 } = useTokenInfo(token1Id);
-
-  const tokenInfo = useMemo(() => {
-    if (!token0 || !token1 || !tokenId) return undefined;
-    return token0.canisterId === tokenId ? token0 : token1;
-  }, [token0, token1, tokenId]);
-
-  const { result: token0Balance } = useTokenBalance(token0Id, pool?.pool);
-  const { result: token1Balance } = useTokenBalance(token1Id, pool?.pool);
+  const { result: token0Balance } = useTokenBalance(inputToken?.address, tradePoolId);
+  const { result: token1Balance } = useTokenBalance(outputToken?.address, tradePoolId);
 
   const tokenPrice = useMemo(() => {
-    return pool?.token0Id === tokenId ? pool?.token0Price : pool?.token1Price;
-  }, [pool]);
+    return token?.address === inputToken?.address ? inputTokenPrice : outputTokenPrice;
+  }, [inputToken, outputToken, token]);
+
   const icpPrice = useICPPrice();
 
   const token0UsdTvl = useMemo(() => {
-    if (!token0Balance || !pool) return undefined;
-    return new BigNumber(pool.token0Price)
-      .multipliedBy(parseTokenAmount(token0Balance, pool.token0Decimals))
-      .toString();
-  }, [token0Balance, pool]);
+    if (!token0Balance || !inputTokenPrice || !inputToken) return undefined;
+    return new BigNumber(inputTokenPrice).multipliedBy(parseTokenAmount(token0Balance, inputToken.decimals)).toString();
+  }, [token0Balance, inputTokenPrice, inputToken]);
 
   const token1UsdTvl = useMemo(() => {
-    if (!token1Balance || !pool) return undefined;
-    return new BigNumber(pool.token1Price)
-      .multipliedBy(parseTokenAmount(token1Balance, pool.token1Decimals))
+    if (!token1Balance || !outputTokenPrice || !outputToken) return undefined;
+    return new BigNumber(outputTokenPrice)
+      .multipliedBy(parseTokenAmount(token1Balance, outputToken.decimals))
       .toString();
-  }, [token1Balance, pool]);
+  }, [token1Balance, outputTokenPrice, outputToken]);
 
   const totalTVL = useMemo(() => {
     if (!token0UsdTvl || !token1UsdTvl) return undefined;
     return formatDollarAmount(new BigNumber(token0UsdTvl).plus(token1UsdTvl).toString());
-  }, [token0Balance, token1Balance, pool]);
+  }, [token0UsdTvl, token1UsdTvl]);
 
   const { result: tokenSupply } = useTokenSupply(tokenId);
   const { result: tokenHolders } = useTokenTotalHolder(tokenId);
 
   return (
     <SwapProCardWrapper padding="0px">
-      <Box sx={{ padding: !(tokenListInfo && tokenInfo && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
+      <Box sx={{ padding: !(tokenListInfo && token && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
         <Typography color="text.primary" fontWeight={600}>
           <Trans>Token Name</Trans>
-          <Typography component="span" color="text.theme_secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
-            {tokenInfo?.name}
+          <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
+            {token?.name}
           </Typography>
         </Typography>
 
@@ -133,8 +113,8 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
             sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
           >
             <Trans>Token</Trans>
-            <Typography component="span" color="text.theme_secondary" fontSize="12px">
-              {tokenInfo ? shorten(tokenInfo.canisterId, 5) : "--"}
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
+              {token ? shorten(token.address, 5) : "--"}
             </Typography>
             <Copy content={tokenId} />
           </Typography>
@@ -146,7 +126,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
             sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
           >
             <Trans>Pool</Trans>
-            <Typography component="span" color="text.theme_secondary" fontSize="12px">
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
               {tradePoolId ? shorten(tradePoolId) : "--"}
             </Typography>
             <Copy content={tradePoolId} />
@@ -154,57 +134,57 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
         </Box>
 
         <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "8px 0" }}>
-          {pool ? (
+          {inputToken && outputToken ? (
             <Card title={t`Price swap with ICP`} fontSize="12px">
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0", padding: "0 0 0 4px" }}>
                 <TokenPoolPrice
-                  tokenA={token0}
-                  tokenB={token1}
-                  priceA={pool?.token0Price}
-                  priceB={pool?.token1Price}
+                  tokenA={inputToken}
+                  tokenB={outputToken}
+                  priceA={inputTokenPrice}
+                  priceB={outputTokenPrice}
                   background="none"
                 />
                 <TokenPoolPrice
-                  tokenA={token1}
-                  tokenB={token0}
-                  priceA={pool?.token1Price}
-                  priceB={pool?.token0Price}
+                  tokenA={outputToken}
+                  tokenB={inputToken}
+                  priceA={outputTokenPrice}
+                  priceB={inputTokenPrice}
                   background="none"
                 />
               </Box>
             </Card>
           ) : null}
 
-          {moreInformation ? (
-            <Card>
-              <Box sx={{ display: "flex", gap: "0 16px" }}>
-                <Box sx={{ padding: "0 0 0 8px" }}>
-                  <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
-                    <Trans>TVL</Trans>
-                  </Typography>
-                  <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
-                    {totalTVL ?? "--"}
-                  </Typography>
-                </Box>
-                <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
-                  <TokenTvl token={token0} tvlUsd={token0UsdTvl} balance={token0Balance} />
-                  <TokenTvl token={token1} tvlUsd={token1UsdTvl} balance={token1Balance} />
-                </Box>
+          <Card>
+            <Box sx={{ display: "flex", gap: "0 16px" }}>
+              <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
+                  <Trans>TVL</Trans>
+                </Typography>
+                <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
+                  {totalTVL ?? "--"}
+                </Typography>
               </Box>
-            </Card>
-          ) : null}
+              <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+                <TokenTvl token={inputToken} tvlUsd={token0UsdTvl} balance={token0Balance} />
+                <TokenTvl token={outputToken} tvlUsd={token1UsdTvl} balance={token1Balance} />
+              </Box>
+            </Box>
+          </Card>
+
+          <LiquidityLocks poolId={tradePoolId} />
 
           {moreInformation ? (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              <Card title={t`Total Supply`}>
+              <Card title={t`Total Supply`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && tokenInfo
-                    ? formatAmount(parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals).toNumber())
+                  {tokenSupply && token
+                    ? formatAmount(parseTokenAmount(tokenSupply.toString(), token.decimals).toNumber())
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Transfer Fee`}>
+              <Card title={t`Transfer Fee`} fontSize="12px">
                 <Typography
                   color="text.primary"
                   sx={{
@@ -216,7 +196,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                   }}
                   component="div"
                 >
-                  {tokenInfo ? parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals).toFormat() : "--"}
+                  {token ? parseTokenAmount(token.transFee.toString(), token.decimals).toFormat() : "--"}
                   <Typography
                     color="text.primary"
                     sx={{
@@ -229,9 +209,9 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                     }}
                   >
                     (
-                    {tokenSupply && tokenInfo && tokenPrice
+                    {tokenSupply && token && tokenPrice
                       ? formatDollarAmount(
-                          parseTokenAmount(tokenInfo.transFee.toString(), tokenInfo.decimals)
+                          parseTokenAmount(token.transFee.toString(), token.decimals)
                             .multipliedBy(tokenPrice)
                             .toString(),
                         )
@@ -240,22 +220,20 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                   </Typography>
                 </Typography>
               </Card>
-              <Card title={t`Market Cap (USD)`}>
+              <Card title={t`FDV (USD)`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && tokenInfo && tokenPrice
+                  {tokenSupply && token && tokenPrice
                     ? formatDollarAmount(
-                        parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals)
-                          .multipliedBy(tokenPrice)
-                          .toString(),
+                        parseTokenAmount(tokenSupply.toString(), token.decimals).multipliedBy(tokenPrice).toString(),
                       )
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Market Cap (ICP)`}>
+              <Card title={t`FDV (ICP)`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && tokenInfo && tokenPrice && icpPrice
+                  {tokenSupply && token && tokenPrice && icpPrice
                     ? formatAmount(
-                        parseTokenAmount(tokenSupply.toString(), tokenInfo.decimals)
+                        parseTokenAmount(tokenSupply.toString(), token.decimals)
                           .multipliedBy(tokenPrice)
                           .dividedBy(icpPrice)
                           .toString(),
@@ -263,22 +241,22 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                     : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Volume 24H`}>
+              <Card title={t`Volume 24H`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Volume 7D`}>
+              <Card title={t`Volume 7D`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Decimals`}>
+              <Card title={t`Decimals`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenInfo ? tokenInfo.decimals : "--"}
+                  {token ? token.decimals : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Holders`}>
+              <Card title={t`Holders`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {tokenHolders ? tokenHolders.toString() : "--"}
                 </Typography>
@@ -287,7 +265,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
           ) : null}
         </Box>
 
-        {tokenListInfo && tokenInfo && tokenListInfo.introduction && moreInformation ? (
+        {tokenListInfo && token && tokenListInfo.introduction && moreInformation ? (
           <Box sx={{ margin: "20px 0 0 0" }}>
             <Typography sx={{ fontWeight: 600 }} color="text.primary">
               <Trans>Introduction</Trans>
@@ -302,10 +280,11 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                lineHeight: "16px",
               }}
             >
-              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme_secondary", fontWeight: 600 }}>
-                {tokenInfo?.symbol}
+              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme-secondary", fontWeight: 600 }}>
+                {token?.symbol}
               </Typography>
               {tokenListInfo.introduction}
             </Typography>
@@ -313,7 +292,7 @@ export default function Token({ infoToken, tokenListInfo }: TokenProps) {
         ) : null}
       </Box>
 
-      {tokenInfo ? (
+      {token ? (
         <Box
           sx={{
             margin: "12px 0 0 0",

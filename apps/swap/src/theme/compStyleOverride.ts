@@ -1,6 +1,8 @@
 import { isDarkTheme } from "utils/index";
 import { createTheme, keyframes } from "@mui/material";
 
+import colors from "./colors";
+
 const MuiTheme = createTheme({});
 
 export function componentStyleOverrides(theme: { [key: string]: any }) {
@@ -35,17 +37,28 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
   `;
 
   return {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          lineHeight: 1,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: "8px",
+          borderRadius: "12px",
           textTransform: "none",
           "&.MuiButton-outlinedPrimary": {
             color: isDark ? theme.colors.secondaryMain : theme.colors.lightPrimaryMain,
             borderColor: isDark ? theme.colors.secondaryMain : theme.colors.lightPrimaryMain,
             "&:hover": {
               background: "rgba(86, 105, 220, 0.1)",
+            },
+            "&.secondary": {
+              border: `1px solid ${colors.darkLevel4}`,
+              color: "#ffffff",
             },
           },
           "&.MuiButton-contained.Mui-disabled": {
@@ -55,9 +68,27 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                 }
               : { color: "#9E9E9E", background: "#E0E0E0" }),
           },
+          "&.MuiButton-contained": {
+            "&.secondary": {
+              background: colors.darkLevel4,
+              boxShadow: "none",
+              "&.Mui-disabled": {
+                color: colors.darkTextTertiary,
+              },
+            },
+          },
+          "&.MuiButton-outlined": {
+            "&.Mui-disabled": {
+              color: "#4F5A84",
+              border: "1px solid #4F5A84",
+            },
+          },
         },
         containedPrimary: {
           background: globalButtonBackground,
+          "&.MuiButton-sizeLarge": {
+            padding: "11px 22px",
+          },
         },
         containedSecondary: {
           background: isDark ? theme.colors.darkLevel4 : "#EFEFFF",
@@ -89,7 +120,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           },
         },
         rounded: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
         },
       },
     },
@@ -231,11 +262,17 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     },
     MuiInputBase: {
       styleOverrides: {
+        root: {
+          "& .MuiInputBase-input": {
+            fontSize: "16px",
+          },
+        },
         input: {
           color: theme.textDark,
           "&::placeholder": {
             color: theme.textSecondary,
             fontSize: "0.875rem",
+            fontWeight: 400,
           },
         },
       },
@@ -244,10 +281,9 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
       styleOverrides: {
         root: {
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
-          borderRadius: `${theme.borderRadius  }px`,
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor:
-              theme.customization.mode === "dark" ? theme.colors.textPrimary + 28 : theme.colors.lightGray200,
+          borderRadius: `${theme.borderRadius}px`,
+          "& fieldset": {
+            borderColor: theme.colors.darkTextSecondary,
           },
           "&:hover $notchedOutline": {
             borderColor: theme.colors.primaryLight,
@@ -260,7 +296,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           fontWeight: 500,
           background: isDark ? theme.colors.darkBackground : theme.colors.grey50,
           padding: "15.5px 14px",
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
           "&.MuiInputBase-inputSizeSmall": {
             padding: "10px 14px",
             "&.MuiInputBase-inputAdornedStart": {
@@ -272,7 +308,8 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           paddingLeft: 4,
         },
         notchedOutline: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderColor: theme.colors.secondary,
+          borderRadius: `${theme.borderRadius}px`,
         },
       },
     },
@@ -305,7 +342,7 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
           },
         },
         popper: {
-          borderRadius: `${theme.borderRadius  }px`,
+          borderRadius: `${theme.borderRadius}px`,
           boxShadow:
             "0px 8px 10px -5px rgb(0 0 0 / 20%), 0px 16px 24px 2px rgb(0 0 0 / 14%), 0px 6px 30px 5px rgb(0 0 0 / 12%)",
         },
@@ -439,8 +476,17 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          color: isDark ? theme.colors.darkLevel1 : theme.paper,
-          background: isDark ? theme.colors.grey50 : theme.colors.grey700,
+          background: "#ffffff",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          maxWidth: "300px",
+          color: "#111936",
+          fontSize: "12px",
+          lineHeight: "18px",
+          fontWeight: 400,
+          "& .MuiTooltip-arrow": {
+            color: "#ffffff",
+          },
         },
       },
     },
@@ -595,12 +641,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
               paddingTop: "10px",
               paddingBottom: "10px",
               margin: "5px 0",
-              // "&:first-child": {
-              //   borderRadius: "8px 8px 0 0",
-              // },
-              // "&:last-child": {
-              //   borderRadius: "0 0 8px 8px",
-              // },
               "&.active": {
                 background: "#313D67",
               },
@@ -619,6 +659,9 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                     color: "#fff",
                   },
                 },
+                "& .customize-label.active": {
+                  color: "#fff",
+                },
                 "&:hover": {
                   background: theme.colors.darkLevel3,
                   "& .customize-label": {
@@ -626,9 +669,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
                   },
                 },
               },
-            },
-            "& .Mui-disabled.opacity1": {
-              opacity: 1,
             },
           },
           "&.customize-menu-list-light": {

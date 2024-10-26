@@ -1,11 +1,14 @@
 import { createAction } from "@reduxjs/toolkit";
 import { BTCAddressType, TxState } from "types/ckBTC";
+import { WalletSortType, SortBalanceEnum } from "types/index";
 
-export const saveWalletCacheToken = createAction<string[]>("wallet/saveWalletCacheToken");
+export const updateTaggedTokens = createAction<string[]>("wallet/updateTaggedTokens");
 
-export const deleteWalletCatchToken = createAction<string[]>("wallet/deleteWalletCatchToken");
+export const deleteTaggedTokens = createAction<string[]>("wallet/deleteTaggedTokens");
 
-export const updateHideSmallBalance = createAction<boolean>("wallet/updateHideSmallBalance");
+export const updateWalletSortType = createAction<WalletSortType>("wallet/updateWalletSortType");
+
+export const updateSortBalance = createAction<SortBalanceEnum>("wallet/updateSortBalance");
 
 export const updateCK_BTCAddresses = createAction<{
   principal: string;

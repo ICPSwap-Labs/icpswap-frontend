@@ -1,17 +1,16 @@
 import { useState, useMemo } from "react";
-import { makeStyles } from "@mui/styles";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, useMediaQuery, makeStyles, useTheme, Theme } from "ui-component/Mui";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override } from "@icpswap/types";
-import { NoData, StaticLoading, TokenImage } from "ui-component/index";
+import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { PublicPoolOverView } from "types/analytic";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection } from "@icpswap/ui";
-import FeeTierLabel from "ui-component/FeeTierLabel";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL } from "@icpswap/hooks";
+import { useAllPoolsTVL, usePoolApr24h } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
+import { HIDDEN_POOLS } from "constants/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -19,9 +18,9 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gridGap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "20px 2fr repeat(4, 1fr)",
+      gridTemplateColumns: "20px 2fr 1fr repeat(4, 1fr)",
       "@media screen and (max-width: 500px)": {
-        gridTemplateColumns: "20px 1fr repeat(4, 1fr)",
+        gridTemplateColumns: "20px 260px 1fr repeat(4, 1fr)",
       },
     },
   };
@@ -37,15 +36,17 @@ export type HeaderType = {
 export interface PoolTableHeaderProps {
   onSortChange: (sortField: string, sortDirection: SortDirection) => void;
   defaultSortFiled?: string;
+  align: "right" | "left";
 }
 
-export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeaderProps) {
+export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTableHeaderProps) {
   const classes = useStyles();
 
   const headers: HeaderType[] = [
     { label: "#", key: "#", sort: false },
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
+    { label: t`APR(24H)`, key: "apr", sort: false },
     { label: t`Volume 24H`, key: "volumeUSD", sort: true },
     { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
     { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },
@@ -58,7 +59,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
           key={header.key}
           field={header.key}
           isSort={header.sort}
-          align={header.key !== "#" && header.key !== "pool" ? "right" : "left"}
+          align={header.key !== "#" && header.key !== "pool" ? align : "left"}
         >
           {header.label}
         </HeaderCell>
@@ -67,7 +68,13 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTab
   );
 }
 
-export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
+interface PoolItemProps {
+  pool: PoolData;
+  index: number;
+  align: "right" | "left";
+}
+
+export function PoolItem({ pool, index, align }: PoolItemProps) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -77,6 +84,8 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
   const handlePoolClick = () => {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
+
+  const apr24h = usePoolApr24h({ volumeUSD: pool.volumeUSD, poolTvlUSD: pool.tvlUSD });
 
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
@@ -92,13 +101,16 @@ export function PoolItem({ pool, index }: { pool: PoolData; index: number }) {
             {pool.token0Symbol} / {pool.token1Symbol}
           </BodyCell>
 
-          <FeeTierLabel feeTier={pool.feeTier} />
+          <FeeTierPercentLabel feeTier={pool.feeTier} />
         </Grid>
       </BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.volumeUSD)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
+      <BodyCell align={align} color="text.apr">
+        {apr24h ?? "--"}
+      </BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
+      <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
     </TableRow>
   );
 }
@@ -112,6 +124,8 @@ export interface PoolsProps {
 }
 
 export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
+  const theme = useTheme() as Theme;
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
@@ -126,7 +140,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     return _pools
       .slice()
       .filter((pool) => {
-        return pool.token0Price !== 0 && pool.token1Price !== 0;
+        return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
       })
       .map((pool) => {
         const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
@@ -159,12 +173,17 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     setSortField(sortField);
   };
 
+  const align = useMemo(() => {
+    if (matchDownMD) return "left";
+    return "right";
+  }, [matchDownMD]);
+
   return (
     <>
-      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
+      <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" align={align} />
 
       {(sortedPools ?? []).map((pool, index) => (
-        <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} />
+        <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} align={align} />
       ))}
 
       {sortedPools?.length === 0 && !loading ? (
@@ -173,7 +192,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
         />
       ) : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && (pools?.length ?? 0) > 0 ? (

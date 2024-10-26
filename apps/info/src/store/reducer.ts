@@ -1,10 +1,9 @@
 import snackbarReducer from "./snackbarReducer";
-
 import globalReducer from "./global/reducer";
 import loadingReducer from "./loadingReducer";
-
 import tokenCacheReducer from "./token/cache/reducer";
 import callReducer from "./call/reducer";
+import snsReducer from "./sns/reducer"
 
 export { tokenCacheReducer };
 
@@ -14,4 +13,5 @@ export default {
   global: globalReducer,
   call: callReducer,
   tokenCache: tokenCacheReducer,
+  sns:snsReducer
 };

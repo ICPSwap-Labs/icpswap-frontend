@@ -10,7 +10,11 @@ async function dynamicActivate(locale: SupportedLocale) {
   i18n.activate(locale);
 }
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export interface LanguageProviderProps {
+  children: ReactNode;
+}
+
+export function LanguageProvider({ children }: LanguageProviderProps) {
   const locale = useActiveLocale();
   const [loaded, setLoaded] = useState(false);
 
@@ -24,8 +28,5 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       });
   }, [locale]);
 
-  // prevent the app from rendering with placeholder text before the locale is loaded
-  if (!loaded) return null;
-
-  return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
+  return loaded ? <I18nProvider i18n={i18n}>{children}</I18nProvider> : null;
 }

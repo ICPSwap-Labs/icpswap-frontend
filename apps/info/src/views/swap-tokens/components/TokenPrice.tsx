@@ -1,8 +1,5 @@
-import { Typography, Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { toSignificant } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import { Theme } from "@mui/material/styles";
+import { Typography, Box, useTheme } from "ui-component/Mui";
+import { toSignificant, BigNumber } from "@icpswap/utils";
 import { TokenInfo } from "types/token";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { usePoolIdWithICP } from "hooks/swap/usePoolIdWithICP";
@@ -17,7 +14,7 @@ export interface TokenPriceProps {
 }
 
 export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return token0 && token1Symbol && price ? (
     <Box
@@ -38,7 +35,7 @@ export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
 }
 
 export function TokenPrices({ tokenInfo }: { tokenInfo: TokenInfo | undefined }) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const poolId = usePoolIdWithICP(tokenInfo?.canisterId);
   const { result: pool } = usePool(poolId);

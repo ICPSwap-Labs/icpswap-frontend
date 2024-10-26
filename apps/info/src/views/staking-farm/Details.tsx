@@ -7,27 +7,41 @@ import MainContainer from "ui-component/MainContainer";
 import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { parseTokenAmount, shorten } from "@icpswap/utils";
-import { getFarmPoolStatus } from "utils/farms/index";
+import {
+  parseTokenAmount,
+  shorten,
+  explorerLink,
+  toSignificantWithGroupSeparator,
+  cycleValueFormat,
+} from "@icpswap/utils";
 import dayjs from "dayjs";
 import Copy from "ui-component/copy/copy";
-import { getExplorerPrincipalLink } from "utils";
-import { useV3UserFarmInfo } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
+import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard } from "@icpswap/ui";
+import { useTokenInfo } from "hooks/token";
+import upperFirst from "lodash/upperFirst";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     details: {
-      display: "grid",
+      display: "flex",
       gap: "20px 0",
-      gridTemplateColumns: "repeat(2, 1fr)",
-      [theme.breakpoints.down("md")]: {
-        gridTemplateColumns: "repeat(2, 1fr)",
+      "& .columns": {
+        flex: "50%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px 0",
       },
-      [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "repeat(1, 1fr)",
+      "@media(max-width: 640px)": {
+        flexDirection: "column",
+
+        "& .columns": {
+          flex: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px 0",
+        },
       },
     },
   };
@@ -35,11 +49,9 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export function PoolDetailItem({ label, value }: { value: ReactNode; label: ReactNode }) {
   return (
-    <Box>
-      <Typography fontSize="12px" component="span">
-        {label}
-      </Typography>{" "}
-      <Typography fontSize="12px" component="span" color="text.primary">
+    <Box className="row-item">
+      <Typography component="span">{label}</Typography>{" "}
+      <Typography component="span" color="text.primary">
         {value}
       </Typography>
     </Box>
@@ -52,11 +64,16 @@ export function timeFormatter(dateTime: bigint | undefined) {
 
 export default function FarmDetails() {
   const classes = useStyles();
-  const { poolId } = useParams<{ poolId: string }>();
-  const { result: pool } = useV3UserFarmInfo(poolId, AnonymousPrincipal);
-  const { statusText } = getFarmPoolStatus(pool) ?? { statusText: "" };
+  const { farmId } = useParams<{ farmId: string }>();
+  const { result: farmInfo } = useV3UserFarmInfo(farmId, AnonymousPrincipal);
+  const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
+  const { result: cycles } = useFarmCycles(farmId);
+
+  const state = useFarmState(farmInfo);
 
   const [recordType, setRecordType] = useState("transactions");
+
+  const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
 
   return (
     <MainContainer>
@@ -84,44 +101,120 @@ export default function FarmDetails() {
             }}
           >
             <Grid container alignItems="center" sx={{ height: "100%" }}>
-              <Typography color="text.primary">{statusText}</Typography>
+              <Typography color="text.primary">
+                {state ? (state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())) : "--"}
+              </Typography>
             </Grid>
           </Box>
           <Box mt="30px" className={classes.details}>
-            <PoolDetailItem
-              label={t`ID:`}
-              value={
-                <Copy content={pool?.farmCid ?? ""}>
-                  <Typography fontSize="12px" color="text.primary">
-                    {shorten(pool?.farmCid ?? "", 8)}
+            <Box className="columns">
+              <PoolDetailItem
+                label={t`Canister ID:`}
+                value={
+                  <Copy content={farmId}>
+                    <Typography color="text.primary">{shorten(farmId, 8)}</Typography>
+                  </Copy>
+                }
+              />
+              <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
+              <PoolDetailItem
+                label={t`Reward Token Amount:`}
+                value={
+                  <Typography component="span" color="text.primary">
+                    {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
+                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      &nbsp;{`${rewardToken?.symbol ?? "--"}`}
+                    </Link>
                   </Typography>
-                </Copy>
-              }
-            />
-            <PoolDetailItem label={t`Staking NFTs Amount:`} value={String(pool?.numberOfStakes ?? 0)} />
-            <PoolDetailItem
-              label={t`Reward Token Amount:`}
-              value={
-                <Typography fontSize="12px" component="span" color="text.primary">
-                  {parseTokenAmount(pool?.totalReward, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={getExplorerPrincipalLink(pool?.rewardToken.address ?? "")} target="_blank">
-                    &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
-                  </Link>
-                </Typography>
-              }
-            />
-            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(pool?.startTime)} />
-            <PoolDetailItem label={t`End Time:`} value={timeFormatter(pool?.endTime)} />
-            <PoolDetailItem
-              label={t`Creator:`}
-              value={
-                <Copy content={pool?.creator.toString() ?? ""}>
-                  <Typography fontSize="12px" color="text.primary">
-                    {shorten(pool?.creator.toString() ?? "", 8)}
-                  </Typography>
-                </Copy>
-              }
-            />
+                }
+              />
+              <PoolDetailItem
+                label={t`Claimed Rewards:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem
+                label={t`Unclaimed Rewards:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(
+                          farmMetadata.totalRewardUnharvested.toString(),
+                          rewardToken.decimals,
+                        ).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem
+                label={t`Distribution Interval:`}
+                value={
+                  farmMetadata ? (
+                    <>
+                      {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+            </Box>
+
+            <Box className="columns">
+              <PoolDetailItem
+                label={t`Amount per Distribution:`}
+                value={
+                  farmMetadata && rewardToken ? (
+                    <>
+                      {toSignificantWithGroupSeparator(
+                        parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
+                        8,
+                      )}
+                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                        &nbsp;{rewardToken.symbol}
+                      </Link>
+                    </>
+                  ) : (
+                    "--"
+                  )
+                }
+              />
+              <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
+              <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
+              <PoolDetailItem
+                label={t`Creator:`}
+                value={
+                  <Copy content={farmInfo?.creator.toString() ?? ""}>
+                    <Typography color="text.primary">{shorten(farmInfo?.creator.toString() ?? "", 8)}</Typography>
+                  </Copy>
+                }
+              />
+              <PoolDetailItem
+                label={t`Cycles left:`}
+                value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -138,7 +231,7 @@ export default function FarmDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Position(LP) NFTs</Trans>
+              <Trans>Staked Positions</Trans>
             </Typography>
             <Typography
               color={recordType !== "transactions" ? "text.primary" : ""}
@@ -152,11 +245,11 @@ export default function FarmDetails() {
               <Trans>Reward Tokens</Trans>
             </Typography>
           </Grid>
-          <Grid item container justifyContent="center">
+          <Grid item container justifyContent="center" mt="20px">
             {recordType === "transactions" ? (
-              <Transactions id={pool?.farmCid} rewardTokenId={pool?.rewardToken.address} />
+              <Transactions id={farmId} rewardTokenId={farmInfo?.rewardToken.address} />
             ) : (
-              <ClaimRecords id={pool?.farmCid} rewardTokenId={pool?.rewardToken.address} />
+              <ClaimRecords id={farmId} rewardTokenId={farmInfo?.rewardToken.address} />
             )}
           </Grid>
         </MainCard>

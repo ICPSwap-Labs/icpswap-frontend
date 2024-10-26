@@ -1,38 +1,40 @@
-import { useCallback, useMemo } from "react";
-import { getV3StakingFarms, useFarmTVL } from "@icpswap/hooks";
-import { usePaginationAllData } from "hooks/usePaginationAllData";
-import BigNumber from "bignumber.js";
-import type { StakingFarmInfo } from "@icpswap/types";
+import { useMemo } from "react";
+import { useFarmTVL, useInfoAllTokens } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
+import { parseTokenAmount } from "@icpswap/utils";
+import { useTokenInfo } from "hooks/token/index";
 
-export function useAllFarmPools() {
-  const call = useCallback(async (offset: number, limit: number) => {
-    return await getV3StakingFarms(offset, limit, "all");
-  }, []);
-
-  return usePaginationAllData(call, 100);
-}
-
-export function useFarmUSDValue(farm: StakingFarmInfo) {
+export function useFarmTvl(farmId: string) {
   const icpPrice = useICPPrice();
 
-  const { result: farmTVL } = useFarmTVL(farm.farmCid);
+  const { result: farmTvl } = useFarmTVL(farmId);
 
-  const poolTVL = useMemo(() => {
-    if (!farmTVL || !icpPrice) {
-      return 0;
-    }
+  const { result: token0Info } = useTokenInfo(farmTvl?.poolToken0.address);
+  const { result: token1Info } = useTokenInfo(farmTvl?.poolToken1.address);
 
-    return new BigNumber(icpPrice)
-      .multipliedBy(farmTVL.stakedTokenTVL)
-      .div(10 ** 8)
-      .toFixed(3);
-  }, [farmTVL, icpPrice]);
+  const infoAllTokens = useInfoAllTokens();
+
+  const tvl = useMemo(() => {
+    if (!farmTvl || !icpPrice || !token0Info || !token1Info || !infoAllTokens || infoAllTokens.length === 0)
+      return undefined;
+
+    const { poolToken0, poolToken1 } = farmTvl;
+
+    const token0Price = infoAllTokens.find((e) => e.address === poolToken0.address)?.priceUSD;
+    const token1Price = infoAllTokens.find((e) => e.address === poolToken1.address)?.priceUSD;
+
+    if (!token0Price || !token1Price) return undefined;
+
+    const token0Tvl = parseTokenAmount(poolToken0.amount, token0Info.decimals).multipliedBy(token0Price);
+    const token1Tvl = parseTokenAmount(poolToken1.amount, token1Info.decimals).multipliedBy(token1Price);
+
+    return token0Tvl.plus(token1Tvl).toFixed(3);
+  }, [farmTvl, icpPrice, infoAllTokens, token0Info, token1Info]);
 
   return useMemo(
     () => ({
-      poolTVL,
+      tvl,
     }),
-    [poolTVL],
+    [tvl],
   );
 }

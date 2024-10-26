@@ -1,5 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography, useTheme, useMediaQuery, Theme } from "components/Mui";
 import { makeStyles } from "@mui/styles";
 import { Trans } from "@lingui/macro";
 import { useTickAtLimit } from "@icpswap/hooks";
@@ -19,10 +19,10 @@ import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
-import CollectFeesModal from "components/swap/CollectFeesModal";
+import { CollectFeesModal } from "components/swap/CollectFeesModal";
 import TransferPosition from "components/swap/TransferPosition";
 import { useHistory } from "react-router-dom";
-import { Theme } from "@mui/material/styles";
+import { usePositionState } from "hooks/liquidity";
 
 import { SwapProContext } from "../context";
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "100px repeat(5, 1fr) 30px",
+      gridTemplateColumns: "100px repeat(4, 1fr) 30px",
       padding: "20px 16px",
     },
   };
@@ -109,6 +109,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     };
   }, [nonInvertedTicksAtLimit, inverted]);
 
+  const positionState = usePositionState(position);
+
   const pairName = useMemo(() => {
     if (!currencyQuote || !currencyBase) return undefined;
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
@@ -161,14 +163,14 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         background: showButtons ? theme.palette.background.level2 : "none",
       }}
     >
-      <TableRow className={classes.wrapper} border="none">
+      <TableRow className={classes.wrapper} borderBottom="none">
         <BodyCell>{positionInfo.index}</BodyCell>
 
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount0.toExact(), 6)} ` : "--"}</BodyCell>
 
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount1.toExact(), 6)} ` : "--"}</BodyCell>
 
-        <BodyCell>
+        {/* <BodyCell>
           {!!token1 && !!token0 && pool ? (
             inverted ? (
               <BodyCell>
@@ -177,14 +179,14 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               </BodyCell>
             ) : (
               <BodyCell>
-                ${pool.priceOf(token0).toSignificant(6)}
+                {pool.priceOf(token0).toSignificant(6)}
                 <BodyCell>{pairName ?? ""}</BodyCell>
               </BodyCell>
             )
           ) : (
             "--"
           )}
-        </BodyCell>
+        </BodyCell> */}
 
         <BodyCell>
           {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
@@ -279,12 +281,12 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               <>
                 <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
                   <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                    <Trans>Claim Fees</Trans>
+                    <Trans>Collect Fees</Trans>
                   </Button>
                   <Button
                     size={matchSM ? "small" : "medium"}
                     variant="contained"
-                    onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                    onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
                   >
                     <Trans>Increase Liquidity</Trans>
                   </Button>
@@ -296,7 +298,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                   <Button
                     size={matchSM ? "small" : "medium"}
                     variant="outlined"
-                    onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                    onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
                   >
                     <Trans>Remove Liquidity</Trans>
                   </Button>
@@ -310,17 +312,17 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                 <Button
                   size={matchSM ? "small" : "medium"}
                   variant="outlined"
-                  onClick={() => handleLoadPage(`/swap/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
+                  onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
                 >
                   <Trans>Remove Liquidity</Trans>
                 </Button>
                 <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                  <Trans>Claim Fees</Trans>
+                  <Trans>Collect Fees</Trans>
                 </Button>
                 <Button
                   size={matchSM ? "small" : "medium"}
                   variant="contained"
-                  onClick={() => handleLoadPage(`/swap/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
+                  onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
                 >
                   <Trans>Increase Liquidity</Trans>
                 </Button>
@@ -346,8 +348,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           onClose={() => setTransferOpen(false)}
           position={position}
           positionId={BigInt(positionInfo.index)}
-          closed={false}
           onTransferSuccess={handleTransferSuccess}
+          state={positionState}
         />
       ) : null}
     </Box>
@@ -389,16 +391,16 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
             <Trans>{pool?.token1.symbol} Amount</Trans>
           </HeaderCell>
 
-          <HeaderCell field="currentPrice">
+          {/* <HeaderCell field="currentPrice">
             <Trans>Current Price</Trans>
-          </HeaderCell>
+          </HeaderCell> */}
 
           <HeaderCell field="priceRange">
             <Trans>Price Range</Trans>
           </HeaderCell>
 
           <HeaderCell field="unclaimedFees">
-            <Trans>Unclaimed Fees</Trans>
+            <Trans>Uncollected Fees</Trans>
           </HeaderCell>
 
           <HeaderCell>&nbsp;</HeaderCell>
@@ -413,7 +415,7 @@ export function Positions({ canisterId }: PoolTransactionsProps) {
         {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
 
         {loading ? (
-          <Box sx={{ padding: "0 16px" }}>
+          <Box sx={{ padding: "24px" }}>
             <LoadingRow>
               <div />
               <div />

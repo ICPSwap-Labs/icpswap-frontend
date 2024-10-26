@@ -78,6 +78,7 @@ export interface ModalProps {
   dialogProps?: any;
   type?: string;
   background?: string;
+  contentPadding?: string;
   [key: string]: any;
 }
 
@@ -99,6 +100,7 @@ export default function Modal({
   type,
   background,
   dialogProps,
+  contentPadding,
 }: ModalProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
@@ -114,20 +116,23 @@ export default function Modal({
       fullWidth={fullWidth}
       {...dialogProps}
       sx={{
+        "& .MuiDialog-paper, & .MuiPaper-root": {
+          padding: "0",
+        },
         "& .MuiDialogTitle-root": {
-          ...(matchDownMD ? { padding: "8px 14px" } : {}),
-          "&+.MuiDialogContent-root": {
-            paddingTop: "5px",
-            ...(matchDownMD ? { paddingTop: "5px" } : {}),
-          },
+          padding: "24px 24px 0 24px",
+          ...(matchDownMD ? { padding: "12px 12px 0 12px" } : {}),
         },
         "& .MuiDialogContent-root": {
           position: "relative",
-          ...(matchDownMD ? { padding: "8px 14px" } : {}),
+          padding: contentPadding ? `${contentPadding}!important` : "24px!important",
+          ...(matchDownMD ? { padding: "12px", paddingTop: "12px!important" } : {}),
         },
         ...{
-          "& .MuiPaper-root": {
-            ...(background ? { backgroundColor: background } : { backgroundColor: theme.palette.background.level2 }),
+          "& .MuiPaper-root ": {
+            ...(background
+              ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
+              : { backgroundColor: theme.palette.background.level2 }),
           },
           ...(dialogProps?.sx || {}),
         },

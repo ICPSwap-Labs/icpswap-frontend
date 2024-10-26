@@ -91,6 +91,9 @@ src/canister-ids/**/canister_ids_local.json
 # version file
 .version.ts
 
+# test cansiter ids
+temp_canister_ids.json
+
 
 build/
 dist/

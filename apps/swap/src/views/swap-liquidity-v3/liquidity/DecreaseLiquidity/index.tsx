@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Typography, makeStyles } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
-import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler";
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
 import { BURN_FIELD } from "constants/swap";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -21,7 +21,9 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
-import { ReclaimTips, LoadingRow, MainCard } from "components/index";
+import { ReclaimTips, LoadingRow, MainCard, Wrapper } from "components/index";
+import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
+
 import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
 import ConfirmRemoveLiquidityModal from "./Confirm";
@@ -136,7 +138,7 @@ export default function DecreaseLiquidity() {
 
   const handleBack = useCallback(() => {
     resetBurnState();
-    history.push("/swap/liquidity");
+    history.goBack();
   }, [history, resetBurnState]);
 
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));
@@ -161,8 +163,8 @@ export default function DecreaseLiquidity() {
     setLoading(true);
 
     const { key, call } = getDecreaseLiquidityCall({
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
       },
     });
 
@@ -177,7 +179,7 @@ export default function DecreaseLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t`Removed liquidity successfully`);
+      openSuccessTip(t`Withdrawal submitted`);
       handleBack();
     }
 
@@ -193,8 +195,8 @@ export default function DecreaseLiquidity() {
   }, [setConfirmModalShow]);
 
   return (
-    <>
-      <Grid container justifyContent="center">
+    <Wrapper>
+      <Flex fullWidth justify="center">
         <MainCard level={1} className={`${classes.container} lightGray200`}>
           <HeaderTab title={t`Remove Liquidity`} showArrow showUserSetting slippageType="burn" onBack={handleBack} />
 
@@ -225,7 +227,7 @@ export default function DecreaseLiquidity() {
                 </Box>
               </Box>
               <Box
-                mt={5}
+                mt="40px"
                 sx={{
                   paddingRight: "12px",
                 }}
@@ -236,11 +238,23 @@ export default function DecreaseLiquidity() {
                 />
               </Box>
 
-              <Box mt="30px">
+              <Box mt="24px">
                 <Unclaimed position={positionSDK} feeAmount0={feeAmount0} feeAmount1={feeAmount1} />
               </Box>
 
-              <Box mt={4}>
+              <Box mt="24px">
+                <KeepTokenInPool
+                  label={
+                    <Trans>
+                      Keep your tokens in the Swap Pool to easily add liquidity again without the need for repeated
+                      withdrawals and deposits.
+                    </Trans>
+                  }
+                  showRefresh={false}
+                />
+              </Box>
+
+              <Box mt="24px">
                 <Button
                   variant="contained"
                   fullWidth
@@ -275,7 +289,7 @@ export default function DecreaseLiquidity() {
             </Box>
           ) : null}
         </MainCard>
-      </Grid>
+      </Flex>
 
       {confirmModalShow && (
         <ConfirmRemoveLiquidityModal
@@ -287,6 +301,6 @@ export default function DecreaseLiquidity() {
           formattedAmounts={formattedAmounts}
         />
       )}
-    </>
+    </Wrapper>
   );
 }

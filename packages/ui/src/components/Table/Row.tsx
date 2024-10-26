@@ -2,7 +2,7 @@ import { Box, SxProps } from "@mui/material";
 import React from "react";
 
 export interface RowProps {
-  border?: string;
+  borderBottom?: string;
   sx?: SxProps;
   children: React.ReactNode;
   className?: string;
@@ -16,7 +16,7 @@ export default function Row(props: RowProps) {
       className={props.className}
       sx={{
         padding: "20px 0",
-        borderBottom: props.border ?? "1px solid rgba(189, 200, 240, 0.082)",
+        borderBottom: props.borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
         ...props.sx,
       }}
       onClick={props.onClick}

@@ -1,160 +1,138 @@
-import { useState, useMemo } from "react";
-import { Button, Grid, Box, TextField, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useWalletCatchTokenIds, useSaveCacheTokenCallback, useDeleteCacheTokenCallback } from "store/wallet/hooks";
-import { IconSearch } from "@tabler/icons";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import { Trans, t } from "@lingui/macro";
-import { useImportedTokens } from "store/token/cache/hooks";
-import { Theme } from "@mui/material/styles";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
-import ImportToken from "components/Wallet/ImportToken";
-import { NoData, TextButton, Modal } from "components/index";
+import { useState, useMemo, useCallback } from "react";
+import { Box, Typography, InputAdornment, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
+import { useTaggedTokenManager } from "store/wallet/hooks";
+import { t } from "@lingui/macro";
+import { ImportToken } from "components/ImportToken/index";
+import { Modal, FilledTextField, NoData } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
-import { TokenImage } from "@icpswap/ui";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { isValidPrincipal, classNames } from "@icpswap/utils";
+import { Search as SearchIcon } from "react-feather";
+import { TokenListMetadata } from "types/token-list";
+import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
 
-export function TokenItem({ canisterId }: { canisterId: string }) {
-  const theme = useTheme() as Theme;
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const walletCatchTokenIds = useWalletCatchTokenIds() ?? [];
-  const addToken = useSaveCacheTokenCallback();
-  const deleteToken = useDeleteCacheTokenCallback();
-
-  const handleAddToken = (canisterId: string) => {
-    addToken([canisterId]);
+const useStyles = makeStyles((theme: Theme) => {
+  return {
+    wrapper: {
+      padding: "0 24px",
+      "@media(max-width: 640px)": {
+        padding: "0 16px",
+      },
+    },
+    panel: {
+      position: "relative",
+      fontSize: "16px",
+      fontWeight: 500,
+      color: theme.palette.text.secondary,
+      cursor: "pointer",
+      "&.active": {
+        color: theme.palette.text.primary,
+        "&:after": {
+          content: '""',
+          position: "absolute",
+          bottom: "-3px",
+          left: 0,
+          width: "100%",
+          height: "3px",
+          background: theme.colors.secondaryMain,
+        },
+      },
+    },
   };
+});
 
-  const handleDeleteToken = (canisterId: string) => {
-    deleteToken([canisterId]);
-  };
+type Panel = "SNS" | "Others";
 
-  const hasBeenAdded = (canisterId: string) => {
-    return !!walletCatchTokenIds.find((tokenId) => tokenId === canisterId);
-  };
-
-  const { result: tokenInfo } = useTokenInfo(canisterId);
-
-  return (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateColumns: "190px 1fr 80px",
-        gap: "0 20px",
-        height: "73px",
-        alignItems: "center",
-        borderTop: "1px solid rgba(189, 200, 240, 0.082)",
-      }}
-    >
-      <Grid container alignItems="center">
-        <TokenImage logo={tokenInfo?.logo} size="32px" />
-
-        <Grid ml={1} item xs>
-          <Grid container alignItems="center" mr="5px">
-            <Grid
-              item
-              xs
-              sx={{
-                width: "80px",
-                overflow: "hidden",
-              }}
-            >
-              <Typography>{tokenInfo?.symbol}</Typography>
-              <Typography
-                fontSize={12}
-                color="textSecondary"
-                sx={{
-                  width: "100%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {tokenInfo?.name}
-              </Typography>
-            </Grid>
-
-            <TokenStandardLabel standard={tokenInfo?.standardType} />
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Typography>{matchDownSM ? "" : tokenInfo?.canisterId}</Typography>
-
-      <>
-        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : hasBeenAdded(canisterId) ? (
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            startIcon={<HorizontalRuleIcon fontSize="small" />}
-            onClick={() => handleDeleteToken(canisterId)}
-          >
-            <Trans>Delete</Trans>
-          </Button>
-        ) : (
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            startIcon={<AddIcon fontSize="small" />}
-            onClick={() => handleAddToken(canisterId)}
-          >
-            <Trans>Add</Trans>
-          </Button>
-        )}
-      </>
-    </Box>
-  );
-}
+const Panels: { value: Panel; label: string }[] = [
+  { value: "SNS", label: t`SNS Tokens` },
+  { value: "Others", label: t`Other Tokens` },
+];
 
 export default function AddTokenModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const theme = useTheme() as Theme;
+  const classes = useStyles();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [queryValue, setQueryValue] = useState("");
-  const [importTokenShow, setImportTokenShow] = useState(false);
+  const [importTokenCanceled, setImportTokenCanceled] = useState<boolean>(false);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [panel, setPanel] = useState<Panel>("SNS");
+  const [canisterStates, setCanisterStates] = useState<{ [tokenId: string]: boolean }>({});
 
   const globalTokenList = useGlobalTokenList();
-  const importedTokens = useImportedTokens();
 
-  const handleSearch = async (values: string) => {
-    setQueryValue(values);
-  };
+  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
 
-  const tokens = useMemo(() => {
-    const iTokens = Object.keys(importedTokens ?? [])
-      .filter((canisterId) => !globalTokenList.find((token) => token.canisterId === canisterId))
-      .map((canisterId) => {
-        const token = importedTokens[canisterId];
+  const { taggedTokens } = useTaggedTokenManager();
 
-        return {
-          canisterId,
-          name: token.name,
-          symbol: token.symbol,
-        };
+  const yourTokens: string[] = useMemo(() => {
+    return [...new Set(DISPLAY_IN_WALLET_FOREVER.map((e) => e).concat(taggedTokens))];
+  }, [DISPLAY_IN_WALLET_FOREVER, taggedTokens]);
+
+  const { snsTokens, noneSnsTokens } = useMemo(() => {
+    if (!snsAllTokensInfo) return {};
+
+    const snsTokens: TokenListMetadata[] = [];
+    const noneSnsTokens: TokenListMetadata[] = [];
+
+    const sortedGlobalTokenList = [...globalTokenList].sort((a, b) => {
+      if (a.rank < b.rank) return -1;
+      if (a.rank > b.rank) return 1;
+      return 0;
+    });
+
+    sortedGlobalTokenList
+      .filter((token) => {
+        return !DISPLAY_IN_WALLET_FOREVER.includes(token.canisterId);
+      })
+      .forEach((token) => {
+        const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === token.canisterId);
+
+        if (snsTokenInfo?.canister_ids.root_canister_id) {
+          snsTokens.push(token);
+        } else {
+          noneSnsTokens.push(token);
+        }
       });
 
-    const _tokens = globalTokenList
-      .filter((token) => !token.configs.find((config) => config.name === "WALLET" && config.value === "true"))
-      .map((token) => ({
-        canisterId: token.canisterId,
-        name: token.name,
-        symbol: token.symbol,
-      }));
+    return {
+      snsTokens: snsTokens.map((e) => e.canisterId),
+      noneSnsTokens: noneSnsTokens.map((e) => e.canisterId),
+    };
+  }, [globalTokenList, snsAllTokensInfo]);
 
-    const tokens = [...iTokens, ..._tokens];
+  const handleSearchToken = useCallback((value: string) => {
+    setImportTokenCanceled(false);
+    setSearchKeyword(value);
+  }, []);
 
-    if (queryValue) {
-      return tokens.filter(
-        (token) =>
-          token.name.toLowerCase().includes(queryValue.toLowerCase()) ||
-          token.symbol.toLowerCase().includes(queryValue.toLowerCase()),
-      );
+  const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, handleSearchToken, 300);
+
+  const showImportToken = useMemo(() => {
+    if (!searchKeyword || !yourTokens || !noneSnsTokens || !snsTokens) return false;
+
+    if (isValidPrincipal(searchKeyword)) {
+      return !yourTokens.concat(noneSnsTokens).concat(snsTokens).includes(searchKeyword);
     }
 
-    return tokens;
-  }, [importedTokens, globalTokenList, queryValue]);
+    return false;
+  }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
+
+  const handleTokenHidden = useCallback(
+    (canisterId: string, hidden: boolean) => {
+      setCanisterStates((prevState) => ({ ...prevState, [canisterId]: hidden }));
+    },
+    [setCanisterStates],
+  );
+
+  const allTokenCanisterIds = useMemo(() => {
+    return [...new Set([...(snsTokens ?? []), ...(noneSnsTokens ?? [])])];
+  }, [snsTokens, noneSnsTokens]);
+
+  const noData = useMemo(() => {
+    const allHiddenCanisterNum = Object.values(canisterStates).filter((hidden) => hidden === true);
+    return allHiddenCanisterNum.length === allTokenCanisterIds.length && showImportToken === false;
+  }, [canisterStates, allTokenCanisterIds, showImportToken]);
 
   return (
     <>
@@ -165,98 +143,108 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         dialogProps={{
           sx: {
             "& .MuiPaper-root": {
-              width: "700px",
-              maxWith: "700px",
+              width: "570px",
+              maxWidth: "570px",
+            },
+            "& .MuiDialog-paper": {
+              padding: "0",
+            },
+            "& .MuiDialogContent-root": {
+              padding: "0",
             },
           },
         }}
+        background={theme.palette.background.level2}
       >
-        <Box>
-          <TextField
-            id="searchToken"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconSearch stroke={1.5} size="1rem" />
-                </InputAdornment>
-              ),
-            }}
-            fullWidth
-            size={matchDownSM ? "small" : undefined}
-            autoComplete="searchToken"
-            placeholder={t`Search token`}
-            onChange={(event) => {
-              handleSearch(event.target.value);
-            }}
-          />
-
-          <Box mt="12px">
-            <Typography color="text.warning" fontSize="12px">
-              $ICS (ICPSwap Token) has NOT been minted and traded yet! Please beware of Fake tokens!
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box mt="16px">
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "190px 1fr 80px",
-              gap: "0 20px",
-              height: "57px",
-              alignItems: "center",
-            }}
-          >
-            <Typography>
-              <Trans>Token</Trans>
-            </Typography>
-            <Typography sx={{ "@media (max-width: 540px)": { display: "none" } }}>
-              <Trans>Canister ID</Trans>
-            </Typography>
-            <Typography>&nbsp;</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              maxHeight: "260px",
-              overflow: "auto",
-              "@media (max-width: 540px)": { maxHeight: "290px" },
-            }}
-          >
-            {tokens.map((token, index) => (
-              <TokenItem key={`${token.canisterId}-${index}}`} canisterId={token.canisterId} />
-            ))}
-          </Box>
-
-          {tokens.length === 0 ? (
-            <Box sx={{ borderTop: "1px solid rgba(189, 200, 240, 0.082)" }}>
-              <NoData />
-            </Box>
-          ) : null}
-        </Box>
-
-        <Grid
-          container
-          justifyContent="center"
+        <Box
           sx={{
-            paddingTop: "20px",
-            borderTop: "1px solid rgba(81, 81, 81, 1)",
-            borderColor: "rgba(189, 200, 240, 0.082)",
+            position: "relative",
           }}
         >
-          <TextButton onClick={() => setImportTokenShow(true)}>
-            <Trans>Import Token</Trans>
-          </TextButton>
-        </Grid>
-      </Modal>
+          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "8px 0 0 0" }}>
+            <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
+              Do your own research before investing. While we've collected known information about tokens on the list,
+              it's essential to conduct your research.
+            </Typography>
+          </Box>
 
-      {importTokenShow ? (
-        <ImportToken
-          open={importTokenShow}
-          onClose={() => setImportTokenShow(false)}
-          onImportSuccessfully={() => onClose()}
-        />
-      ) : null}
+          <Box
+            sx={{
+              position: "relative",
+              margin: "8px 0 0 0",
+              padding: matchDownSM ? "0 16px" : "0 24px",
+            }}
+          >
+            <FilledTextField
+              contained
+              borderRadius="8px"
+              background={theme.palette.background.level1}
+              placeholderSize="14px"
+              fullWidth
+              placeholder={t`Search name or canister ID`}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color={theme.palette.text.secondary} size="14px" />
+                  </InputAdornment>
+                ),
+                maxLength: 50,
+              }}
+              onChange={debouncedSearch}
+            />
+          </Box>
+
+          <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+
+          <Box sx={{ height: "370px", overflow: "hidden auto" }}>
+            {noData ? <NoData /> : null}
+
+            {showImportToken && !importTokenCanceled ? (
+              <Box className={classes.wrapper}>
+                <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
+              </Box>
+            ) : null}
+
+            <Box>
+              {searchKeyword !== "" ? null : (
+                <Box sx={{ display: "flex", gap: "0 32px" }} className={classes.wrapper}>
+                  {Panels.map((__panel) => (
+                    <Typography
+                      key={__panel.value}
+                      className={classNames([classes.panel, panel === __panel.value ? "active" : ""])}
+                      onClick={() => setPanel(__panel.value)}
+                    >
+                      {__panel.label}
+                    </Typography>
+                  ))}
+                </Box>
+              )}
+            </Box>
+
+            <Box mt={searchKeyword ? "0px" : "16px"}>
+              {snsTokens?.map((tokenId) => (
+                <TokenItem
+                  key={tokenId}
+                  canisterId={tokenId}
+                  searchWord={searchKeyword}
+                  hidden={panel === "Others" && !searchKeyword}
+                  onTokenHide={handleTokenHidden}
+                />
+              ))}
+
+              {noneSnsTokens?.map((tokenId) => (
+                <TokenItem
+                  key={tokenId}
+                  canisterId={tokenId}
+                  searchWord={searchKeyword}
+                  hidden={panel === "SNS" && !searchKeyword}
+                  onTokenHide={handleTokenHidden}
+                />
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }

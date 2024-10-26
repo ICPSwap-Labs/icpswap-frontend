@@ -1,17 +1,32 @@
+import type { FarmInfo } from "@icpswap/candid";
+import { Override } from "./global";
+
 export type {
-  StakingFarmInfo,
-  StakingFarmDepositArgs,
+  CreateFarmArgs,
+  FarmTvl,
+  FarmDepositArgs,
   StakingFarmDistributeTransaction,
   StakingFarmStakeTransaction,
+  FarmInfo,
+  InitFarmArgs,
+  FarmUserTvl,
+  FarmStatusArgs,
+  FarmFilterCondition,
+  FarmRewardInfo,
 } from "@icpswap/candid";
 
-export type FarmMetadata = {
+export type FarmRewardMetadata = {
   secondPerCycle: bigint;
+  totalRewardHarvested: bigint;
   totalRewardBalance: bigint;
+  totalRewardFee: bigint;
   rewardPerCycle: bigint;
-  totalRewardClaimed: bigint;
   totalCycleCount: bigint;
+  totalRewardUnharvested: bigint;
   currentCycleCount: bigint;
   totalReward: bigint;
-  totalRewardUnclaimed: bigint;
 };
+
+export type FarmInfoWithId = Override<FarmInfo, { id: string }>;
+
+export type FarmState = "LIVE" | "NOT_STARTED" | "CLOSED" | "FINISHED";

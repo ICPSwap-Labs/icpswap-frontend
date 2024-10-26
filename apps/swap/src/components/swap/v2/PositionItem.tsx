@@ -24,7 +24,7 @@ import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { Identity as TypeIdentity } from "types/global";
-import PositionStatus from "components/swap/PositionRangeState";
+import { PositionRangeState } from "components/swap/index";
 import { getLocaleMessage } from "locales/services";
 
 import CollectFeesModal from "./CollectFeesModal";
@@ -136,10 +136,6 @@ export function PositionDetails({
     }
     history.push(`/swap/v2/liquidity/decrease/${String(positionId)}`);
   }, [history, invalid, positionId]);
-
-  const handleLoadIncreaseLiquidity = useCallback(() => {
-    history.push(`/swap/v2/liquidity/increase/${String(positionId)}`);
-  }, [token0, token1]);
 
   const handleCollectFee = useCallback(() => {
     setCollectFeesShow(true);
@@ -285,7 +281,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <DetailItem
-          label={t`Unclaimed fees`}
+          label={t`Uncollected fees`}
           value={
             currencyFeeAmount0 && currencyFeeAmount1
               ? `${new BigNumber(currencyFeeAmount0.toExact())
@@ -314,17 +310,10 @@ export function PositionDetails({
             {hasUnclaimedFees && (
               <Grid item xs={buttonGridXS}>
                 <Button fullWidth variant="outlined" size="large" onClick={handleCollectFee}>
-                  <Trans>Claim fees</Trans>
+                  <Trans>Collect Fees</Trans>
                 </Button>
               </Grid>
             )}
-            {!invalid ? (
-              <Grid item xs={buttonGridXS}>
-                <Button fullWidth variant="contained" size="large" onClick={handleLoadIncreaseLiquidity}>
-                  <Trans>Increase Liquidity</Trans>
-                </Button>
-              </Grid>
-            ) : null}
           </Grid>
         )}
       </Grid>
@@ -352,16 +341,9 @@ export interface PositionItemProps {
   invalid?: boolean;
   showButtons?: boolean;
   position: Position | undefined;
-  closed: boolean;
 }
 
-export default function PositionItem({
-  position,
-  showButtons,
-  positionId,
-  invalid = false,
-  closed,
-}: PositionItemProps) {
+export default function PositionItem({ position, showButtons, positionId, invalid = false }: PositionItemProps) {
   const classes = useStyle();
   const theme = useTheme() as Theme;
 
@@ -374,7 +356,7 @@ export default function PositionItem({
     setDetailShow(!detailShow);
   }, [detailShow, setDetailShow, position]);
 
-  const { pool, tickLower, tickUpper } = position || {};
+  const { pool } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
@@ -393,11 +375,6 @@ export default function PositionItem({
 
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
-
-  const outOfRange =
-    pool && (tickUpper || tickUpper === 0) && (tickLower || tickLower === 0)
-      ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper
-      : false;
 
   return (
     <>
@@ -434,7 +411,7 @@ export default function PositionItem({
         </Grid>
         <Grid item>
           <Grid container alignItems="center">
-            <PositionStatus closed={closed} outOfRange={outOfRange} />
+            <PositionRangeState state={undefined} />
             <Grid item ml={matchDownMD ? "5px" : "10px"}>
               <Grid container alignItems="center">
                 {detailShow ? <KeyboardArrowUp /> : <KeyboardArrowDown />}

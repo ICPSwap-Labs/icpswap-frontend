@@ -1,11 +1,13 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
+
 import * as serviceWorker from "./serviceWorker";
 import App from "./App";
 import store, { persistor } from "./store";
 import { LanguageProvider } from "./i18n";
+
 import "./assets/css/global.css";
 
 window.onerror = (msg, url, row, col, error) => {
@@ -22,18 +24,18 @@ window.onerror = (msg, url, row, col, error) => {
   }
 };
 
-ReactDOM.render(
-  // @ts-ignore TODO:FIX
+const root = document.getElementById("root") as HTMLElement;
+
+createRoot(root).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter basename="/">
+      <BrowserRouter>
         <LanguageProvider>
           <App />
         </LanguageProvider>
       </BrowserRouter>
     </PersistGate>
   </Provider>,
-  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change

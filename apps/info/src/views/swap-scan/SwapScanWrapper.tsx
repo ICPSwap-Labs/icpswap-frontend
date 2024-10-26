@@ -1,10 +1,10 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { Typography, Box } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { MainCard, Wrapper, FilledTextField } from "ui-component/index";
 import { GridAutoRows } from "@icpswap/ui";
-import { isValidPrincipal } from "@icpswap/utils";
+import { isValidPrincipal, locationSearchReplace } from "@icpswap/utils";
 import isFunction from "lodash/isFunction";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { SwapScanTabPanels } from "./components/TabPanels";
@@ -12,12 +12,12 @@ import { SwapScanTabPanels } from "./components/TabPanels";
 enum TabPanelValue {
   TRANSACTIONS = "transactions",
   POSITIONS = "positions",
-  RECLAIM = "reclaims",
+  RECLAIM = "pool-balances",
   VALUATION = "valuation",
 }
 
 export interface SwapScanWrapperProps {
-  children: ReactNode;
+  children: ReactNode | ((props: any) => JSX.Element);
 }
 
 export interface ScanChildrenProps {
@@ -26,16 +26,29 @@ export interface ScanChildrenProps {
 
 export default function SwapScan({ children }: SwapScanWrapperProps) {
   const location = useLocation();
+  const history = useHistory();
 
   const [search, setSearch] = useState<null | string>(null);
 
-  const { principal } = useParsedQueryString() as { principal: string };
+  const { principal } = useParsedQueryString() as { principal: string | undefined };
 
   useEffect(() => {
     if (principal && isValidPrincipal(principal)) {
       setSearch(principal);
+    } else {
+      setSearch("");
     }
   }, [principal]);
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      if (isValidPrincipal(value) || value === "") {
+        const search = locationSearchReplace(location.search, "principal", value);
+        history.push(`${location.pathname}${search}`);
+      }
+    },
+    [history, location],
+  );
 
   const address = useMemo(() => {
     if (!search) return undefined;
@@ -92,7 +105,7 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
                     : activeTab === TabPanelValue.POSITIONS
                     ? "positions"
                     : activeTab === TabPanelValue.RECLAIM
-                    ? "reclaims"
+                    ? "users’ Pool Balances"
                     : "valuation"
                 }`,
                 sx: {
@@ -104,7 +117,7 @@ export default function SwapScan({ children }: SwapScanWrapperProps) {
                   },
                 },
               }}
-              onChange={(value: string) => setSearch(value)}
+              onChange={handleSearchChange}
             />
           </Box>
         </Box>

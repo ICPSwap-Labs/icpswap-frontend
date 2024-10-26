@@ -17,18 +17,18 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@types/node": "^13.13.5",
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
+    "@types/node": "^13.13.5"
   },
   "dependencies": {
+    "@icpswap/constants": "workspace:*",
     "@icpswap/hooks": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "@icpswap/constants": "workspace:*",
+    "@icpswap/swap-sdk": "workspace:*",
     "lightweight-charts": "3.8.0",
     "polished": "^3.3.2",
-    "react-router-dom": "5.2.0",
-    "recharts": "^2.1.12"
+    "react-feather": "^2.0.8",
+    "react-is": "18.2.0",
+    "recharts": "2.1.12"
   }
 }

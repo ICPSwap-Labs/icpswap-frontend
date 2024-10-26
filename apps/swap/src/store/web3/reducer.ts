@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTX, updateWithdrawTX } from "./actions";
+import { updateTX, updateErc20TX, updateWithdrawTX } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
@@ -33,5 +33,10 @@ export default createReducer(initialState, (builder) => {
       });
 
       state.withdrawTx[`${payload.principal}`] = newStates;
+    })
+    .addCase(updateErc20TX, (state, { payload }) => {
+      const key = `${payload.principal}_${payload.ledger_id}`;
+      const allTx = state.erc20Transactions[key] ? [payload.tx, ...state.erc20Transactions[key]] : [payload.tx];
+      state.erc20Transactions[key] = allTx;
     });
 });

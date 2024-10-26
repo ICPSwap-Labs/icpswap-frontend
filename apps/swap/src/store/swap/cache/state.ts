@@ -16,6 +16,8 @@ export interface SwapCacheState {
   showClosedPosition: boolean;
   userPositionPools: string[];
   multipleApprove: number;
+  swapProAutoRefresh: boolean;
+  keepTokenInPools: boolean;
 }
 
 export const initialState: SwapCacheState = {
@@ -32,4 +34,6 @@ export const initialState: SwapCacheState = {
   showClosedPosition: true,
   userPositionPools: [],
   multipleApprove: DEFAULT_MULTIPLE_APPROVE,
+  swapProAutoRefresh: true,
+  keepTokenInPools: false,
 };

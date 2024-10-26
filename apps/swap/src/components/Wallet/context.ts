@@ -10,6 +10,9 @@ export interface WalletContextProps {
   setRefreshTotalBalance?: (refreshTotalBalance: boolean) => void;
   refreshCounter: number;
   setRefreshCounter: (refreshCounter: number) => void;
+  allTokenUSDMap: { [tokenId: string]: BigNumber };
+  noUSDTokens: string[];
+  setNoUSDTokens: (token: string) => void;
   totalValue: BigNumber;
   setTotalValue: (tokenId: string, value: BigNumber) => void;
   transferTo: string;
@@ -22,4 +25,6 @@ export interface WalletContextProps {
   setTotalUSDBeforeChange: (tokenId: string, value: BigNumber) => void;
 }
 
-export default createContext<WalletContextProps>({} as WalletContextProps);
+export default createContext<WalletContextProps>({
+  allTokenUSDMap: {},
+} as WalletContextProps);

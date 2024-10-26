@@ -1,54 +1,65 @@
-import { useState } from "react";
-import { Typography, Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
+import { useMemo, useState } from "react";
+import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { PaginationType, Pagination, NoData, ListLoading, AddressFormat } from "ui-component/index";
 import dayjs from "dayjs";
-import { useV1StakingTokenTransactions } from "@icpswap/hooks";
+import { useStakingPoolTransactions } from "@icpswap/hooks";
 import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
-
-export const StakingType: { [key: string]: string } = {
-  staking: "Stake",
-  unstaking: "Unstake",
-  deposit: "Deposit",
-  withdraw: "Withdraw",
-  claim: "Claim",
-  createIncentive: "CreateIncentive",
-  endIncentive: "EndIncentive",
-  stakeTokenids: "StakeTokenids",
-  unstakeTokenids: "UnstakeTokenids",
-};
+import upperFirst from "lodash/upperFirst";
+import { HeaderCell, BodyCell } from "@icpswap/ui";
 
 export function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
+  const tokenType = useMemo(() => {
+    if ("stakeToken" in transactions.transTokenType) {
+      return "stakeToken";
+    }
+
+    return "rewardToken";
+  }, [transactions]);
+
+  const tokenAmount = useMemo(() => {
+    if (tokenType === "rewardToken") {
+      return `${parseTokenAmount(transactions.amount, transactions.rewardTokenDecimals).toFormat()} ${
+        transactions.rewardTokenSymbol
+      }`;
+    }
+
+    return `${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
+      transactions.stakingTokenSymbol
+    }`;
+  }, [tokenType]);
+
   return (
     <TableRow>
       <TableCell>
-        <Typography>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</Typography>
+        <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
       </TableCell>
       <TableCell>
-        <Typography>{StakingType[enumToString(transactions.transType)]}</Typography>
+        <BodyCell>{upperFirst(enumToString(transactions.transType))}</BodyCell>
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.from} />
+        <AddressFormat address={transactions.from.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
       <TableCell>
-        <AddressFormat address={transactions.to} />
+        <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
       </TableCell>
       <TableCell>
-        <Typography color="text.primary">{`${parseTokenAmount(
-          transactions.amount,
-          transactions.stakingTokenDecimals,
-        ).toFormat()} ${transactions.stakingTokenSymbol}`}</Typography>
+        <BodyCell>{tokenAmount}</BodyCell>
       </TableCell>
     </TableRow>
   );
 }
 
-export default function Transactions({ id }: { id: string | undefined }) {
+export interface TransactionsProps {
+  id: string | undefined;
+}
+
+export default function Transactions({ id }: TransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useV1StakingTokenTransactions(id, offset, pagination.pageSize);
+  const { result, loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (pagination: PaginationType) => {
@@ -61,19 +72,29 @@ export default function Transactions({ id }: { id: string | undefined }) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Trans>Time</Trans>
+              <HeaderCell>
+                <Trans>Time</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Type</Trans>
+              <HeaderCell>
+                <Trans>Type</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>From</Trans>
+              <HeaderCell>
+                <Trans>From</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>To</Trans>
+              <HeaderCell>
+                <Trans>To</Trans>
+              </HeaderCell>
             </TableCell>
             <TableCell>
-              <Trans>Amount</Trans>
+              <HeaderCell>
+                <Trans>Amount</Trans>
+              </HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>

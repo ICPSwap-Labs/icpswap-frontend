@@ -4,7 +4,7 @@ import { ckBTC_MINTER_ID, ckBTC_ID } from "constants/ckBTC";
 import { _SERVICE } from "candid/ckBTCMint";
 import { idlFactory } from "candid/ckBTCMint.did";
 
-export const ckBTCMinterActor = (identity?: ActorIdentity) =>
+export const ckBtcMinter = (identity?: ActorIdentity) =>
   actor.create<_SERVICE>({
     canisterId: ckBTC_MINTER_ID,
     identity,

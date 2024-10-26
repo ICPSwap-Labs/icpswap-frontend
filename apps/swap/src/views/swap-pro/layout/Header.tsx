@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
 import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
 
-import { Search } from "./Search";
+import { TokenSearch } from "./TokenSearch";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -61,7 +61,6 @@ export default function Header() {
               <Box sx={{ width: "358px", height: "32px" }}>
                 <FilledTextField
                   fullHeight
-                  contained={false}
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
                   InputProps={{
@@ -76,13 +75,13 @@ export default function Header() {
               </Box>
             )}
             <ButtonChip label={t`Wallet`} onClick={() => handleLoadPage("/wallet")} />
-            <ButtonChip label={t`Standard Model`} onClick={() => handleLoadPage("/swap")} />
+            <ButtonChip label={t`Simple mode`} onClick={() => handleLoadPage("/swap")} />
             <ProfileSection />
           </Box>
         </Grid>
       </Box>
 
-      <Search open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <TokenSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

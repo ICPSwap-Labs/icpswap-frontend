@@ -1,12 +1,9 @@
-import { Box, Grid, Typography, CircularProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Grid, Typography, CircularProgress, makeStyles, Theme } from "components/Mui";
 import SwapModal from "components/modal/swap";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
-import { BigNumber } from "@icpswap/utils";
+import { toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Token, CurrencyAmount, Pool } from "@icpswap/swap-sdk";
 import Button from "components/authentication/ButtonConnector";
-import { toFormat } from "utils/index";
 import { TokenImage } from "components/index";
 import { useMemo, useState } from "react";
 import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
@@ -33,7 +30,7 @@ export interface CollectFeeModalProps {
   onClaimedSuccessfully?: () => void;
 }
 
-export default function CollectFees({
+export function CollectFeesModal({
   open,
   onClose,
   currencyFeeAmount0,
@@ -66,13 +63,16 @@ export default function CollectFees({
       positionId: BigInt(positionId),
       currencyFeeAmount0,
       currencyFeeAmount1,
-      openExternalTip: ({ message, tipKey }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} />);
+      openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {
+        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
+      },
+      refresh: () => {
+        if (onClaimedSuccessfully) onClaimedSuccessfully();
       },
     });
 
     const loadingTipKey = openLoadingTip(
-      `Claim ${currencyFeeAmount0.toSignificant(6, {
+      `Collect ${currencyFeeAmount0.toSignificant(6, {
         groupSeparator: ",",
       })} ${token0?.symbol} and ${currencyFeeAmount1.toSignificant(6, { groupSeparator: "," })} ${token1?.symbol}`,
       {
@@ -83,16 +83,20 @@ export default function CollectFees({
     const result = await call();
 
     if (result === true) {
-      openSuccessTip(t`Claimed successfully`);
-      if (onClaimedSuccessfully) onClaimedSuccessfully();
+      openSuccessTip(t`Withdrawal submitted`);
     }
 
     closeLoadingTip(loadingTipKey);
     setLoading(false);
   };
 
+  const disabled = useMemo(() => {
+    if (!currencyFeeAmount0 || !currencyFeeAmount1) return true;
+    return currencyFeeAmount0.equalTo(0) && currencyFeeAmount1.equalTo(0);
+  }, [currencyFeeAmount0, currencyFeeAmount1]);
+
   return (
-    <SwapModal open={open} onClose={onClose} title={t`Claim fees`}>
+    <SwapModal open={open} onClose={onClose} title={t`Collect Fees`}>
       <>
         <Box className={classes.feeBox}>
           <Grid container alignItems="center">
@@ -106,7 +110,7 @@ export default function CollectFees({
             </Grid>
             <Grid item xs>
               <Typography align="right" color="text.primary">
-                {currencyFeeAmount0 ? toFormat(new BigNumber(currencyFeeAmount0.toExact()).toFixed(8)) : "--"}
+                {currencyFeeAmount0 ? toSignificantWithGroupSeparator(currencyFeeAmount0.toExact()) : "--"}
               </Typography>
             </Grid>
           </Grid>
@@ -121,13 +125,13 @@ export default function CollectFees({
             </Grid>
             <Grid item xs>
               <Typography align="right" color="text.primary">
-                {currencyFeeAmount1 ? toFormat(new BigNumber(currencyFeeAmount1.toExact()).toFixed(8)) : "--"}
+                {currencyFeeAmount1 ? toSignificantWithGroupSeparator(currencyFeeAmount1.toExact()) : "--"}
               </Typography>
             </Grid>
           </Grid>
         </Box>
-        <Typography mt={1}>
-          <Trans>You can claim the liquidity incentive reward from the transaction according to your position.</Trans>
+        <Typography mt={1} lineHeight="18px">
+          <Trans>You can collect the liquidity incentive reward from the transaction according to your position.</Trans>
         </Typography>
         <Button
           variant="contained"
@@ -135,10 +139,10 @@ export default function CollectFees({
           fullWidth
           sx={{ marginTop: "24px" }}
           onClick={handleCollect}
-          disabled={loading}
+          disabled={loading || disabled}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {t`Claim`}
+          <Trans>Collect</Trans>
         </Button>
       </>
     </SwapModal>

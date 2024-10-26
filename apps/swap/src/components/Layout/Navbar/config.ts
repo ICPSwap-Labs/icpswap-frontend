@@ -1,12 +1,14 @@
 import { INFO_URL } from "constants/index";
-// import TwitterIcon from "./icons/Twitter";
-// import TelegramIcon from "./icons/Telegram";
-// import DiscordIcon from "./icons/Discord";
-// import WebsiteIcon from "./icons/Website";
-// import MediumIcon from "./icons/Medium";
-// import GithubIcon from "./icons/Github";
-// import GitbookIcon from "./icons/Gitbook";
-// import DSCVRIcon from "./icons/DSCVR";
+import TwitterIcon from "./icons/Twitter";
+import TelegramIcon from "./icons/Telegram";
+import DiscordIcon from "./icons/Discord";
+import WebsiteIcon from "./icons/Website";
+import MediumIcon from "./icons/Medium";
+import GithubIcon from "./icons/Github";
+import GitbookIcon from "./icons/Gitbook";
+import DSCVRIcon from "./icons/DSCVR";
+import SimpleModeIcon from "./icons/SimpleMode";
+import ProModeIcon from "./icons/ProMode";
 import { version } from "../../../.version";
 
 export type Route = {
@@ -23,37 +25,56 @@ export type SubMenu = Route;
 
 export const MAX_NUMBER = 5;
 
+export const MOBILE_MAX_NUMBER = 7;
+
 export const routes: Route[] = [
   {
     key: "swap",
     name: `Swap`,
     path: "/swap",
+    subMenus: [
+      { key: "simple-mode", name: `Simple mode`, path: "/swap", icon: SimpleModeIcon },
+      // { key: "pro-mode", name: `Pro mode`, path: "/swap/pro", icon: ProModeIcon },
+    ],
+  },
+  {
+    key: "liquidity",
+    name: `Liquidity`,
+    path: "/liquidity",
   },
   // {
-  //   key: "staking-token",
-  //   name: `Token Pools`,
-  //   path: `/staking-token`,
+  //   key: "stake_farm",
+  //   name: `Earn`,
+  //   subMenus: [
+  //     { key: "farm", name: `Farm`, path: "/farm" },
+  //     { key: "staking-token", name: `Staking Pool V2`, path: "/stake" },
+  //     { key: "staking v1", name: `Staking Pool V1`, path: "/stake/v1" },
+  //   ],
   // },
   // {
-  //   key: "staking-farm",
-  //   name: `Farms`,
-  //   path: `/staking-farm`,
-  // },
-  // {
-  //   key: "marketplace",
-  //   name: `Marketplace`,
-  //   // path: "/marketplace/NFT",
-  //   path: "/marketplace/collections",
+  //   key: "ck-bridge",
+  //   name: `ck-Bridge`,
+  //   path: `/ck-bridge`,
   // },
   {
-    key: "wallet",
-    name: `Wallet`,
-    path: `/wallet`,
+    key: "info",
+    name: `Info`,
+    link: INFO_URL,
   },
   // {
+  //   key: "marketplace",
+  //   name: `NFT`,
+  //   path: "/marketplace/collections",
+  // },
+  // {
+  //   key: "/token-claim",
+  //   name: `Claim`,
+  //   path: "/token-claim",
+  // },
+  // {
   //   key: "sns",
-  //   name: `SNS Launchpad`,
-  //   path: `/sns/launch/csyra-haaaa-aaaaq-aacva-cai`,
+  //   name: `SNS(Beta)`,
+  //   path: `/sns/neurons`,
   // },
   // {
   //   key: "voting",
@@ -65,11 +86,6 @@ export const routes: Route[] = [
   //   name: `Console`,
   //   path: `/console`,
   // },
-  {
-    key: "info",
-    name: `Info`,
-    link: INFO_URL,
-  },
   // {
   //   key: "followUS",
   //   name: `Follow US`,

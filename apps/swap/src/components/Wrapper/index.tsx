@@ -1,35 +1,26 @@
 import { ReactNode } from "react";
-import { Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, BoxProps } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 
-const useStyles = makeStyles(() => {
-  return {
-    box: {
-      width: "100%",
-      maxWidth: "1400px",
-    },
-  };
-});
+export interface WrapperProps {
+  children: ReactNode;
+  sx?: BoxProps["sx"];
+}
 
-export default function Wrapper({ children }: { children: ReactNode }) {
-  const classes = useStyles();
-
+export function Wrapper({ children, sx }: WrapperProps) {
   return (
-    <Grid
-      container
-      justifyContent="center"
-      sx={{
-        width: "100%",
-      }}
-    >
+    <Flex fullWidth justify="center">
       <Box
         sx={{
+          width: "100%",
+          maxWidth: "1200px",
           position: "relative",
+          padding: "48px 0",
+          ...sx,
         }}
-        className={classes.box}
       >
         {children}
       </Box>
-    </Grid>
+    </Flex>
   );
 }

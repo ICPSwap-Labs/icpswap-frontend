@@ -41,7 +41,7 @@ export default function CollectFeesModal({
   const classes = useStyles();
 
   return (
-    <SwapModal open={open} onClose={onClose} title={t`Claim fees`}>
+    <SwapModal open={open} onClose={onClose} title={t`Collect Fees`}>
       <>
         <Box className={classes.feeBox}>
           <Grid container alignItems="center">
@@ -75,7 +75,7 @@ export default function CollectFeesModal({
             </Grid>
           </Grid>
         </Box>
-        <Typography mt={1}>
+        <Typography mt={1} lineHeight="18px">
           <Trans>You can claim the liquidity incentive reward from the transaction according to your position.</Trans>
         </Typography>
         <Button

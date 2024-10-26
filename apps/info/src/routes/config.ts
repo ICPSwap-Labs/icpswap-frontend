@@ -1,25 +1,20 @@
 import { lazy } from "react";
 import Loadable from "ui-component/Loading/Loadable";
 
+const Overview = Loadable(lazy(() => import("../views/overview")));
+const Wrap = Loadable(lazy(() => import("../views/wrap")));
+
 const Swap = Loadable(lazy(() => import("../views/swap/index")));
 const SwapPool = Loadable(lazy(() => import("../views/swap-pools/index")));
 const SwapPoolDetails = Loadable(lazy(() => import("../views/swap-pools/details")));
 const SwapToken = Loadable(lazy(() => import("../views/swap-tokens/index")));
 const SwapTokenDetails = Loadable(lazy(() => import("../views/swap-tokens/details")));
 
-const V2Swap = Loadable(lazy(() => import("../views/swap-v2/index")));
-const V2SwapPools = Loadable(lazy(() => import("../views/swap-pools-v2/index")));
-const V2SwapPoolDetails = Loadable(lazy(() => import("../views/swap-pools-v2/details")));
-const V2SwapTokens = Loadable(lazy(() => import("../views/swap-tokens-v2/index")));
-const V2SwapTokenDetails = Loadable(lazy(() => import("../views/swap-tokens-v2/details")));
-
 const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const NFTMarket = Loadable(lazy(() => import("../views/marketplace/index")));
 
-const Overview = Loadable(lazy(() => import("../views/overview")));
-const Wrap = Loadable(lazy(() => import("../views/wrap")));
 const TokenList = Loadable(lazy(() => import("../views/token-list")));
 const TokenDetail = Loadable(lazy(() => import("../views/token-list/Details")));
 
@@ -27,6 +22,7 @@ const Farms = Loadable(lazy(() => import("views/staking-farm/index")));
 const FarmsDetails = Loadable(lazy(() => import("views/staking-farm/Details")));
 const StakingToken = Loadable(lazy(() => import("views/staking-token/index")));
 const StakingTokenDetails = Loadable(lazy(() => import("views/staking-token/Details")));
+const V1StakingTokenDetails = Loadable(lazy(() => import("views/staking-token/v1/Details")));
 
 const TokenTransactions = Loadable(lazy(() => import("../views/token-list/Transactions")));
 const UserTokenTransactions = Loadable(lazy(() => import("../views/token-list/UserTransactions")));
@@ -56,25 +52,20 @@ export const routesConfig: { [path: string]: (props: any) => JSX.Element } = {
   "/swap/token": SwapToken,
   "/swap/token/details/:canisterId": SwapTokenDetails,
 
-  // "/swap/v2": V2Swap,
-  // "/swap/v2/pool": V2SwapPools,
-  // "/swap/v2/pool/details/:canisterId": V2SwapPoolDetails,
-  // "/swap/v2/token": V2SwapTokens,
-  // "/swap/v2/token/details/:canisterId": V2SwapTokenDetails,
+  "/nft/canisters": NFTCanisterList,
+  "/nft/canister/details/:id": NFTCanisterDetails,
+  "/nft/view/:canisterId/:tokenId": NFTView,
 
-  // "/nft/canisters": NFTCanisterList,
-  // "/nft/canister/details/:id": NFTCanisterDetails,
-  // "/nft/view/:canisterId/:tokenId": NFTView,
-
-  // "/staking-token": StakingToken,
-  // "/staking-token/details/:poolId/:version/:state": StakingTokenDetails,
-  // "/staking-farm": Farms,
-  // "/staking-farm/details/:poolId": FarmsDetails,
-  // "/marketplace": NFTMarket,
-  // "/token-claim": TokenClaim,
-  // "/token-claim/transactions/:id": TokenClaimTransactions,
+  "/stake": StakingToken,
+  "/stake/details/:poolId": StakingTokenDetails,
+  "/stake-v1/details/:poolId/:state": V1StakingTokenDetails,
+  "/farm": Farms,
+  "/farm/details/:farmId": FarmsDetails,
+  "/marketplace": NFTMarket,
+  "/token-claim": TokenClaim,
+  "/token-claim/transactions/:id": TokenClaimTransactions,
   "/swap-scan/transactions": SwapScanTransactions,
   "/swap-scan/positions": SwapScanPositions,
-  "/swap-scan/reclaims": SwapScanReclaims,
+  "/swap-scan/pool-balances": SwapScanReclaims,
   "/swap-scan/valuation": SwapScanValuation,
 };

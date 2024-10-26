@@ -1,4 +1,5 @@
 import { Principal } from "@dfinity/principal";
+import { Buffer } from "buffer";
 
 export function from32bits(data: number[]) {
   let value;

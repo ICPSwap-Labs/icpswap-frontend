@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BaseTransaction } from "@icpswap/types";
 import { getTransactionsByPool, useBaseStorages } from "./info";
 
-export function usePoolTransactions(poolId: string | undefined, offset: number, limit: number) {
+export function usePoolTransactions(poolId: string | undefined, offset: number, limit: number, refresh?: number) {
   const { result: storageIds } = useBaseStorages();
 
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export function usePoolTransactions(poolId: string | undefined, offset: number, 
     }
 
     call();
-  }, [storageIds, poolId, offset, limit]);
+  }, [storageIds, poolId, offset, limit, refresh]);
 
   return useMemo(() => ({ loading, result: transactions }), [loading, transactions]);
 }

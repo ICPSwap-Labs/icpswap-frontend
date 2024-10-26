@@ -15,6 +15,8 @@ import {
   updateShowClosedPosition,
   updateUserPositionPools,
   updateUserMultipleApprove,
+  updateSwapProAutoRefresh,
+  updateKeepTokenInPools,
 } from "./actions";
 
 export function useIsExpertMode() {
@@ -104,18 +106,19 @@ export function useSlippageToleranceToPercent(type: string) {
   const [slippageTolerance] = useSlippageManager(type);
 
   return useMemo(() => {
-    if (slippageToPercent && slippageTolerance) {
+    if (slippageTolerance || slippageTolerance === 0) {
       return slippageToPercent(slippageTolerance);
-    } 
-      let percentSlippage: Percent | null = null;
-      // input change will case error when value is 0.
-      try {
-        percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
-      } catch {
-        percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
-      }
-      return percentSlippage;
-    
+    }
+
+    let percentSlippage: Percent | null = null;
+    // input change will case error when value is 0.
+    try {
+      percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
+    } catch {
+      percentSlippage = slippageToPercent(getDefaultSlippageTolerance(type));
+    }
+
+    return percentSlippage;
   }, [slippageTolerance, slippageToPercent]);
 }
 
@@ -189,14 +192,12 @@ export function useUpdateUserPositionPools() {
 
 export function useInitialUserPositionPools() {
   const account = useAccount();
+  const storeUserPositionPools = useStoreUserPositionPools();
+  const updateStoreUserPositionPools = useUpdateUserPositionPools();
 
   const [initialLoading, setInitialLoading] = useState(true);
 
   const { result: positionPools, loading } = useUserPositionPools(account);
-
-  const storeUserPositionPools = useStoreUserPositionPools();
-
-  const updateStoreUserPositionPools = useUpdateUserPositionPools();
 
   useEffect(() => {
     if (positionPools) {
@@ -204,11 +205,47 @@ export function useInitialUserPositionPools() {
       updateStoreUserPositionPools(allPoolIds);
       setInitialLoading(false);
     } else if (loading === false) {
-        setInitialLoading(false);
-      }
+      setInitialLoading(false);
+    }
   }, [JSON.stringify(storeUserPositionPools), positionPools, updateStoreUserPositionPools, loading]);
 
   return {
     loading: initialLoading,
   };
+}
+
+export function useSwapProAutoRefresh() {
+  return useAppSelector((state) => state.swapCache.swapProAutoRefresh);
+}
+
+export function useSwapProAutoRefreshManager(): [boolean, (autoRefresh: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const swapProAutoRefresh = useSwapProAutoRefresh();
+
+  const callback = useCallback(
+    (autoRefresh: boolean) => {
+      dispatch(updateSwapProAutoRefresh(autoRefresh));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [swapProAutoRefresh, callback], [swapProAutoRefresh, callback]);
+}
+
+export function useSwapKeepTokenInPools() {
+  return useAppSelector((state) => state.swapCache.keepTokenInPools);
+}
+
+export function useSwapKeepTokenInPoolsManager(): [boolean, (autoRefresh: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const keepTokenInPools = useSwapKeepTokenInPools();
+
+  const callback = useCallback(
+    (keepTokenInPools: boolean) => {
+      dispatch(updateKeepTokenInPools(keepTokenInPools));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [keepTokenInPools, callback], [keepTokenInPools, callback]);
 }

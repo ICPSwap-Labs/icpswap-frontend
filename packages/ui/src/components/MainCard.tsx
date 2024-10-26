@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
-import { useTheme } from "@mui/styles";
-import { Box, type SxProps } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+
+import { Box, BoxProps, useTheme } from "./Mui";
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
 
@@ -11,13 +10,13 @@ export interface MainCardProps {
   level?: number;
   onClick?: (event: any) => void;
   padding?: string;
-  sx?: SxProps;
+  sx?: BoxProps["sx"];
   borderRadius?: string;
   className?: string;
 }
 
 export function MainCard({ border, level, onClick, padding, children, sx, borderRadius, className }: MainCardProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const cardStyles = useMemo(() => {
     const _border =
@@ -71,15 +70,18 @@ export function MainCard({ border, level, onClick, padding, children, sx, border
         backgroundColor: cardStyles.background,
         ...(cardStyles.border ? { border: cardStyles.border } : {}),
         borderRadius: borderRadius ?? "16px",
-        padding: padding ?? "16px",
+        padding: padding ?? "24px",
         width: "100%",
         overflow: "hidden",
+        "@media(max-width: 640px)": {
+          padding: padding ?? "16px",
+        },
         ...sx,
       }}
       onClick={onClick}
       className={className}
     >
-      <Box>{children}</Box>
+      {children}
     </Box>
   );
 }

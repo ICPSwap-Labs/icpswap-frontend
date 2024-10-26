@@ -83,7 +83,7 @@ export default function TokenClaim() {
         </Box>
 
         <Box mt="20px" sx={{ overflow: "auto", width: "100%" }}>
-          <Box sx={{ minWidth: "1368px" }}>
+          <Box sx={{ padding: "0 0 20px 0" }}>
             <Header className={classes.wrapper}>
               <HeaderCell>
                 <Trans>Claim Event</Trans>
@@ -118,19 +118,21 @@ export default function TokenClaim() {
             {result?.content?.map((ele, index) => <ClaimEventItem key={index} ele={ele} />)}
 
             {loading ? (
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
+              <Box sx={{ padding: "16px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
             ) : null}
 
             {result?.content?.length === 0 && !loading ? <NoData /> : null}

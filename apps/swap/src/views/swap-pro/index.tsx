@@ -1,10 +1,14 @@
-import { useMemo, useState } from "react";
-import { Box, useTheme, useMediaQuery } from "@mui/material";
+import { useMemo, useState, useCallback } from "react";
+import { Box, useTheme, useMediaQuery } from "components/Mui";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTokenListTokenInfo } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import { Token, Pool } from "@icpswap/swap-sdk";
+import { type Null } from "@icpswap/types";
 import { useInfoToken } from "hooks/info/useInfoTokens";
+import { ICP } from "@icpswap/tokens";
+import { SwapContext } from "components/swap/index";
+import { ChartButton, ChartView } from "@icpswap/ui";
 
 import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
@@ -12,19 +16,24 @@ import Swap from "./Swap";
 import TokenUI from "./Token";
 import TokenChartWrapper from "./TokenChart";
 import Transactions from "./Transactions";
-import { SwapProLayout } from "./layout";
+import { SearchWrapper } from "./layout/SearchWrapper";
 import TokenChartInfo from "./TokenChart/Token";
 
 export default function SwapPro() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [inputToken, setInputToken] = useState<Token | undefined>(undefined);
-  const [outputToken, setOutputToken] = useState<Token | undefined>(undefined);
+  const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
+  const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
+  const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
+  const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
+  const [inputToken, setInputToken] = useState<Token | Null>(undefined);
+  const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
-
-  const { result: tokenInfo } = useTokenInfo(outputToken?.address);
-  const { result: tokenListInfo } = useTokenListTokenInfo(outputToken?.address);
+  const [chartView, setChartView] = useState<ChartButton | null>({
+    label: `Dexscreener`,
+    value: ChartView.DexScreener,
+  });
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
   const outputTokenInfo = useInfoToken(outputToken?.address);
@@ -36,22 +45,75 @@ export default function SwapPro() {
     };
   }, [inputTokenInfo, outputTokenInfo]);
 
+  const { token, infoToken } = useMemo(() => {
+    if (!outputToken || !inputToken) return { token: undefined, infoToken: undefined };
+
+    if (outputToken.address === ICP.address) return { token: inputToken, infoToken: inputTokenInfo };
+    if (inputToken.address === ICP.address) return { token: outputToken, infoToken: outputTokenInfo };
+
+    return { token: outputToken, infoToken: outputTokenInfo };
+  }, [outputToken, inputToken, outputTokenInfo, inputTokenInfo]);
+
+  const tokenId = useMemo(() => token?.address, [token]);
+
+  const { result: tokenInfo } = useTokenInfo(tokenId);
+  const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
+
+  const handleAddKeys = useCallback(
+    (key: string) => {
+      setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
+    },
+    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+  );
+
+  const handleRemoveKeys = useCallback(
+    (key: string) => {
+      const newKeys = [...unavailableBalanceKeys];
+      newKeys.splice(newKeys.indexOf(key), 1);
+      setUnavailableBalanceKeys(newKeys);
+    },
+    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+  );
+
   return (
-    <SwapProContext.Provider
+    <SwapContext.Provider
       value={{
+        selectedPool,
+        setSelectedPool,
+        unavailableBalanceKeys,
+        setUnavailableBalanceKey: handleAddKeys,
+        removeUnavailableBalanceKey: handleRemoveKeys,
+        usdValueChange,
+        setUSDValueChange,
+        noLiquidity,
+        setNoLiquidity,
         inputToken,
         setInputToken,
         outputToken,
         setOutputToken,
-        tradePoolId,
-        setTradePoolId,
-        inputTokenPrice,
-        outputTokenPrice,
       }}
     >
-      <SwapProLayout>
+      <SwapProContext.Provider
+        value={{
+          inputToken,
+          setInputToken,
+          outputToken,
+          setOutputToken,
+          tradePoolId,
+          setTradePoolId,
+          inputTokenPrice,
+          outputTokenPrice,
+          token,
+          chartView,
+          setChartView,
+        }}
+      >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%", padding: "0 0 8px 0" }}>
+            <Box sx={{ margin: "0 0 8px 0" }}>
+              <SearchWrapper />
+            </Box>
+
             <HotTokens />
 
             <Box
@@ -67,7 +129,7 @@ export default function SwapPro() {
             >
               <Box
                 sx={{
-                  width: "350px",
+                  width: "380px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "8px 0",
@@ -78,10 +140,11 @@ export default function SwapPro() {
                 }}
               >
                 <Swap />
+
                 {matchDownSM ? (
-                  <TokenChartInfo infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                  <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 ) : null}
-                <TokenUI infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
               </Box>
 
               <Box
@@ -96,13 +159,13 @@ export default function SwapPro() {
                   },
                 }}
               >
-                <TokenChartWrapper infoToken={outputTokenInfo} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 <Transactions />
               </Box>
             </Box>
           </Box>
         </Box>
-      </SwapProLayout>
-    </SwapProContext.Provider>
+      </SwapProContext.Provider>
+    </SwapContext.Provider>
   );
 }

@@ -19,3 +19,7 @@ export const updateShowClosedPosition = createAction<boolean>("swapCache/updateS
 export const updateUserPositionPools = createAction<string[]>("swapCache/updateUserPositionPools");
 
 export const updateUserMultipleApprove = createAction<number>("swapCache/updateUserMultipleApprove");
+
+export const updateSwapProAutoRefresh = createAction<boolean>("global/updateSwapProAutoRefresh");
+
+export const updateKeepTokenInPools = createAction<boolean>("swapCache/updateKeepTokenInPools");

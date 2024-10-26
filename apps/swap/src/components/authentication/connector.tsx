@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { useState } from "react";
+import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { useErrorTip } from "hooks/useTips";
-import { Connector as ConnectorType } from "constants/wallet";
-import { WalletConnector } from "utils/connector";
-import { useWalletConnectorManager } from "store/auth/hooks";
-import { sendSentryError } from "hooks/useTracingTransaction";
+import { Connector } from "constants/wallet";
+import { useConnectManager } from "store/auth/hooks";
+import { Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,63 +30,50 @@ const useStyles = makeStyles(() => {
 
 export interface ConnectorProps {
   label: string;
-  value: ConnectorType;
+  value: Connector;
   logo: string;
+  disabled?: boolean;
 }
 
-export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
-  const [, walletConnectorManager] = useWalletConnectorManager();
-
-  const theme = useTheme() as Theme;
+export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
+  const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();
+  const { showConnector, connect } = useConnectManager();
 
   const [loading, setLoading] = useState(false);
-  const [selfConnector, setSelfConnector] = useState<null | WalletConnector>(null);
-
-  useEffect(() => {
-    async function call() {
-      const selfConnector = new WalletConnector();
-      await selfConnector.init(value);
-      setSelfConnector(selfConnector);
-    }
-
-    call();
-  }, []);
 
   const handleConnect = async () => {
-    try {
-      if (loading || !value || !selfConnector) return;
+    if (disabled) return;
 
-      if ((!window.ic || !window.ic?.infinityWallet) && value === ConnectorType.INFINITY) {
-        openErrorTip(t`Please install the infinity wallet extension!`);
+    try {
+      if (loading || !value) return;
+
+      if ((!window.ic || !window.ic?.infinityWallet) && value === Connector.INFINITY) {
+        openErrorTip(t`Please install the Bitfinity wallet extension!`);
         return;
       }
 
-      if ((!window.ic || !window.ic?.plug) && value === ConnectorType.PLUG) {
+      if ((!window.ic || !window.ic?.plug) && value === Connector.PLUG) {
         openErrorTip(t`Please install the plug wallet extension!`);
         return;
       }
 
       setLoading(true);
 
-      const connectSuccessful = await selfConnector.connect();
+      const connectSuccessful = await connect(value);
 
       if (!connectSuccessful) {
         openErrorTip(t`An unknown error occurred. Please try connect again.`);
       }
 
-      walletConnectorManager(false);
+      showConnector(false);
       setLoading(false);
     } catch (error: any) {
       console.error(error);
       setLoading(false);
 
       openErrorTip(`Failed to connect to ${label}: ${error}`);
-
-      if (!error.toString().includes("UserInterrupt")) {
-        sendSentryError(`connect to ${label}: ${error}`);
-      }
     }
   };
 
@@ -109,9 +93,11 @@ export function ConnectorComponent({ label, value, logo }: ConnectorProps) {
       }}
       onClick={handleConnect}
     >
-      <Typography color="text.primary" fontSize="14px" fontWeight={700}>
-        {label}
-      </Typography>
+      <Flex gap="0 8px">
+        <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+          {label}
+        </Typography>
+      </Flex>
 
       <Box className={`${classes.loadingWrapper}${loading ? " loading" : ""}`}>
         <img width="40px" height="40px" src={logo} alt="" />

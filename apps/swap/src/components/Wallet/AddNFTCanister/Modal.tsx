@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import {
   Button,
   Grid,
-  TextField,
   Typography,
   Avatar,
   TableContainer,
@@ -21,12 +20,12 @@ import Modal from "components/modal/index";
 import { IconSearch } from "@tabler/icons";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import { useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import Nodata from "components/no-data";
 import { Trans, t } from "@lingui/macro";
 import { OFFICIAL_CANISTER_IDS } from "constants/index";
 import { isICPSwapOfficial } from "utils";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
+import { NoData, FilledTextField } from "components/index";
 
 export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
   const { result: logo } = useCanisterLogo(data.cid);
@@ -139,7 +138,10 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
     >
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <TextField
+          <FilledTextField
+            contained
+            borderRadius="12px"
+            background={theme.palette.background.level1}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -150,9 +152,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             fullWidth
             size={matchDownSM ? "small" : undefined}
             placeholder="Search canister"
-            onChange={(event) => {
-              setSearchValue(event.target.value);
-            }}
+            onChange={setSearchValue}
           />
         </Grid>
         <Grid item xs={12}>
@@ -176,7 +176,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
               </TableBody>
             </Table>
           </TableContainer>
-          {list.length === 0 ? <Nodata /> : null}
+          {list.length === 0 ? <NoData /> : null}
         </Grid>
       </Grid>
     </Modal>

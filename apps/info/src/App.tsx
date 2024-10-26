@@ -3,12 +3,14 @@ import { CssBaseline, StyledEngineProvider } from "@mui/material";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import Loader from "ui-component/Loading/LinearLoader";
 import { useInitialXDR2USD } from "hooks/useXDR2USD";
-import { useFetchInfoAllToken } from "hooks/info/useInfoTokens";
+import { useFetchInfoAllTokens } from "hooks/info/useInfoTokens";
+
 import Routes from "./routes";
 import { theme } from "./themes";
 import NavigationScroll from "./ui-component/NavigationScroll";
 import Snackbar from "./ui-component/Snackbar";
 import { useICPPrices, useFetchSNSTokenRootIds } from "./store/global/hooks";
+import { useFetchSnsAllTokensInfo } from "./store/sns/hooks";
 
 export default function App() {
   const { loading: initialTokenStandardLoading } = useInitialTokenStandard();
@@ -16,7 +18,8 @@ export default function App() {
   useICPPrices();
   useInitialXDR2USD();
   useFetchSNSTokenRootIds();
-  useFetchInfoAllToken();
+  useFetchInfoAllTokens();
+  useFetchSnsAllTokensInfo();
 
   return (
     <StyledEngineProvider injectFirst>

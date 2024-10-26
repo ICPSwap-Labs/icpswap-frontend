@@ -1,18 +1,14 @@
-import { useWeb3React } from "@web3-react/core";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
+import Web3 from "web3";
 
-export function useFetchBlockNumber() {
-  const { provider } = useWeb3React();
-
+export function useFetchBlockNumber(): number | undefined {
   const { data } = useSwr(
-    provider ? ["ethBlockNumber"] : undefined,
+    "ethBlockNumber",
     async () => {
-      if (provider) {
-        const blockNumber = await provider.getBlockNumber();
-        return blockNumber;
-      }
-      return undefined;
+      const web3 = new Web3(Web3.givenProvider);
+      const blockNumber = await web3.eth.getBlockNumber();
+      return Number(blockNumber);
     },
     {
       refreshInterval: 3000,
@@ -23,6 +19,27 @@ export function useFetchBlockNumber() {
 }
 
 export function useBlockNumber() {
-  const { data } = useSWRImmutable<number>(["ethBlockNumber"]);
+  const { data } = useSWRImmutable<number>("ethBlockNumber");
+  return data;
+}
+
+export function useFetchFinalizedBlock(): number | undefined {
+  const { data } = useSwr(
+    "ethFinalizedBlockNumber",
+    async () => {
+      const web3 = new Web3(Web3.givenProvider);
+      const block = await web3.eth.getBlock("finalized");
+      return Number(Number(block.number));
+    },
+    {
+      refreshInterval: 3000,
+    },
+  );
+
+  return data;
+}
+
+export function useFinalizedBlockNumber() {
+  const { data } = useSWRImmutable<number>("ethFinalizedBlockNumber");
   return data;
 }

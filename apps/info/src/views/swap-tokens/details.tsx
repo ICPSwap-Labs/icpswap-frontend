@@ -1,30 +1,68 @@
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Button, useMediaQuery, useTheme } from "ui-component/Mui";
 import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
-import { useTokenLatestTVL } from "@icpswap/hooks";
+import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, TokenCharts } from "@icpswap/ui";
+import {
+  GridAutoRows,
+  Proportion,
+  TokenCharts,
+  Flex,
+  ChartView,
+  TokenChartsRef,
+  ChartViewSelector,
+  ChartButton,
+} from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { swapLink, addLiquidityLink } from "utils/index";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
+import { TokenInfo } from "types/token";
+import { useState, useEffect, useRef } from "react";
+import { Null } from "@icpswap/types";
 
 import { TokenPrices } from "./components/TokenPrice";
 
+interface TokenChartsViewSelectorProps {
+  token: TokenInfo | undefined;
+  chartView: ChartButton | Null;
+  setChartView: (chart: ChartButton) => void;
+}
+
+function TokenChartsViewSelector({ token, chartView, setChartView }: TokenChartsViewSelectorProps) {
+  const ChartsViewButtons = [
+    { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: token?.symbol ?? "Price", value: ChartView.PRICE, tokenId: token?.canisterId },
+    { label: `Volume`, value: ChartView.VOL },
+    { label: `TVL`, value: ChartView.TVL },
+  ];
+
+  return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
+}
+
 export default function TokenDetails() {
   const { canisterId } = useParams<{ canisterId: string }>();
+  const history = useHistory();
+  const [openTips] = useTips();
+  const theme = useTheme();
+  const tokenChartsRef = useRef<TokenChartsRef>(null);
+
+  const { path, page } = useParsedQueryString() as { path: string | undefined; page: string | undefined };
 
   const token = useToken(canisterId);
   const { result: tokenInfo } = useTokenInfo(token?.address);
   const { result: tokenTVL } = useTokenLatestTVL(canisterId);
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const history = useHistory();
-  const [openTips] = useTips();
+  const [chartView, setChartView] = useState<Null | ChartButton>({
+    label: `Dexscreener`,
+    value: ChartView.DexScreener,
+  });
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
@@ -43,14 +81,22 @@ export default function TokenDetails() {
     history.push(`/token/details/${canisterId}`);
   };
 
+  useEffect(() => {
+    if (chartView && tokenChartsRef.current) {
+      tokenChartsRef.current.setView(chartView);
+    }
+  }, [chartView, tokenChartsRef]);
+
   return (
     <Wrapper>
-      <Box>
-        <Breadcrumbs prevLink="/swap" prevLabel={<Trans>Tokens</Trans>} currentLabel={<Trans>Details</Trans>} />
-      </Box>
+      <Breadcrumbs
+        prevLink={path ? atob(path) : "/swap"}
+        prevLabel={page ? atob(page) : <Trans>Swap Tokens</Trans>}
+        currentLabel={<Trans>Details</Trans>}
+      />
 
       <Box mt="20px">
-        <Grid container alignItems="center">
+        <Flex fullWidth>
           <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={tokenInfo?.canisterId} />
 
           <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
@@ -62,7 +108,7 @@ export default function TokenDetails() {
           </Typography>
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
-            <Grid container alignItems="center">
+            <Flex fullWidth>
               <TextButton
                 to={`/token/details/${canisterId}`}
                 sx={{
@@ -74,16 +120,17 @@ export default function TokenDetails() {
 
               <Box sx={{ width: "4px" }} />
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
-            </Grid>
+            </Flex>
           </Box>
-        </Grid>
+        </Flex>
       </Box>
 
-      <Grid
-        container
-        alignItems="flex-end"
-        mt="16px"
+      <Flex
+        fullWidth
+        align="flex-end"
+        justify="space-between"
         sx={{
+          margin: "16px 0 0 0",
           "@media (max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
@@ -92,7 +139,7 @@ export default function TokenDetails() {
         }}
       >
         <Box>
-          <Grid container alignItems="center">
+          <Flex fullWidth align="center">
             <Typography
               color="text.primary"
               sx={{
@@ -102,29 +149,31 @@ export default function TokenDetails() {
                 lineHeight: "0.8",
               }}
             >
-              {formatDollarAmount(token?.priceUSD, 4)}
+              {formatDollarAmount(token?.priceUSD)}
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
               (<Proportion value={token?.priceUSDChange} />)
             </Typography>
-          </Grid>
+          </Flex>
         </Box>
 
-        <Grid item xs>
-          <Grid container justifyContent="flex-end" sx={{ gap: "0 10px" }}>
-            <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
-              Token Details
-            </Button>
-            <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
-              Add Liquidity
-            </Button>
-            <Button variant="contained" onClick={handleToSwap}>
-              Swap
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+        <Flex justify="flex-end" sx={{ gap: "0 10px" }}>
+          {!matchDownSM ? (
+            <TokenChartsViewSelector token={tokenInfo} chartView={chartView} setChartView={setChartView} />
+          ) : null}
+
+          <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
+            Token Details
+          </Button>
+          <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
+            Add Liquidity
+          </Button>
+          <Button variant="contained" onClick={handleToSwap}>
+            Swap
+          </Button>
+        </Flex>
+      </Flex>
 
       <Box
         sx={{
@@ -209,7 +258,19 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
 
-        <TokenCharts canisterId={canisterId} volume={token?.volumeUSD} />
+        {matchDownSM ? (
+          <Box sx={{ width: "fit-content" }}>
+            <TokenChartsViewSelector token={tokenInfo} chartView={chartView} setChartView={setChartView} />
+          </Box>
+        ) : null}
+
+        <TokenCharts
+          ref={tokenChartsRef}
+          canisterId={canisterId}
+          volume={token?.volumeUSD}
+          showTopIfDexScreen={false}
+          dexScreenHeight="486px"
+        />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

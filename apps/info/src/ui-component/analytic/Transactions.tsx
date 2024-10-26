@@ -3,11 +3,11 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Trans, t } from "@lingui/macro";
 import { enumToString, shorten, formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, SortDirection } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, SortDirection, SwapTransactionPriceTip } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
 import dayjs from "dayjs";
-import { StaticLoading, Copy, NoData } from "ui-component/index";
+import { ImageLoading, Copy, NoData } from "ui-component/index";
 import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles(() => {
@@ -185,11 +185,13 @@ export default function Transactions({
           <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
           <BodyCell>
-            {formatAmount(transaction.token0ChangeAmount, 6)} {transaction.token0Symbol}
+            {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
+            <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
           </BodyCell>
 
           <BodyCell>
-            {formatAmount(transaction.token1ChangeAmount, 6)} {transaction.token1Symbol}
+            {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
+            <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
           </BodyCell>
 
           <BodyCell>
@@ -204,7 +206,7 @@ export default function Transactions({
 
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-      {loading ? <StaticLoading loading={loading} /> : null}
+      {loading ? <ImageLoading loading={loading} /> : null}
 
       <Box mt="20px">
         {!loading && !!filteredTransactions?.length ? (

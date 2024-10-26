@@ -2,12 +2,14 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
+import { SortBalanceEnum, WalletSortType } from "types/index";
 import {
-  saveWalletCacheToken,
-  deleteWalletCatchToken,
-  updateHideSmallBalance,
+  updateTaggedTokens,
+  deleteTaggedTokens,
   updateCK_BTCAddresses,
   updateRetrieveState,
+  updateWalletSortType,
+  updateSortBalance,
 } from "./actions";
 
 export function toHexString(byteArray: number[]) {
@@ -16,46 +18,41 @@ export function toHexString(byteArray: number[]) {
   }).join("");
 }
 
-export function useWalletCatchTokenIds() {
-  return useAppSelector((state) => state.wallet.cacheTokenIds);
+export function useTaggedTokens() {
+  return useAppSelector((state) => state.wallet.taggedTokens);
 }
 
-export function useSaveCacheTokenCallback() {
+export function useUpdateTaggedTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens: string[]) => {
-      dispatch(saveWalletCacheToken(cacheTokens));
+    (tokens: string[]) => {
+      dispatch(updateTaggedTokens(tokens));
     },
     [dispatch],
   );
 }
 
-export function useDeleteCacheTokenCallback() {
+export function useDeleteTaggedTokenCallback() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (cacheTokens: string[]) => {
-      dispatch(deleteWalletCatchToken(cacheTokens));
+    (tokens: string[]) => {
+      dispatch(deleteTaggedTokens(tokens));
     },
     [dispatch],
   );
 }
 
-export function useUpdateHideSmallBalanceManager(): [boolean, (hide: boolean) => void] {
-  const dispatch = useAppDispatch();
-  const hideSmallBalance = useAppSelector((state) => state.wallet.hideSmallBalance);
+export function useTaggedTokenManager() {
+  const taggedTokens = useTaggedTokens();
 
-  const updateHideSmallBalanceCallback = useCallback(
-    (hideSmallBalance) => {
-      dispatch(updateHideSmallBalance(hideSmallBalance));
-    },
-    [dispatch],
-  );
+  const updateTaggedTokens = useUpdateTaggedTokenCallback();
+  const deleteTaggedTokens = useDeleteTaggedTokenCallback();
 
   return useMemo(
-    () => [hideSmallBalance, updateHideSmallBalanceCallback],
-    [hideSmallBalance, updateHideSmallBalanceCallback],
+    () => ({ taggedTokens, updateTaggedTokens, deleteTaggedTokens }),
+    [taggedTokens, updateTaggedTokens, deleteTaggedTokens],
   );
 }
 
@@ -129,4 +126,40 @@ export function useUserTxs(principal: string | undefined) {
 
     return undefined;
   }, [principal, states]);
+}
+
+export function useWalletSortType() {
+  return useAppSelector((state) => state.wallet.sort);
+}
+
+export function useWalletSortManager() {
+  const sortType = useWalletSortType();
+  const dispatch = useAppDispatch();
+
+  const update = useCallback(
+    (val: WalletSortType) => {
+      dispatch(updateWalletSortType(val));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => ({ sort: sortType, updateWalletSortType: update }), [update, sortType]);
+}
+
+export function useSortBalanceValue() {
+  return useAppSelector((state) => state.wallet.sortBalance);
+}
+
+export function useSortBalanceManager() {
+  const sortBalance = useSortBalanceValue();
+  const dispatch = useAppDispatch();
+
+  const update = useCallback(
+    (val: SortBalanceEnum) => {
+      dispatch(updateSortBalance(val));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => ({ sortBalance, updateSortBalance: update }), [update, sortBalance]);
 }

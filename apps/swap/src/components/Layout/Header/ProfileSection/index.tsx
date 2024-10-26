@@ -1,111 +1,35 @@
-import { useEffect, useRef, useState } from "react";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Chip, List, Paper, Popper, ButtonBase, Box, Typography, useMediaQuery, SvgIcon, Fade } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Paper, Popper, Box, Typography, useMediaQuery, Fade, Button } from "@mui/material";
+import { useTheme } from "components/Mui";
 import { shorten } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import {
-  useAccountPrincipal,
-  useConnectorStateConnected,
-  useUserLogout,
-  useWalletConnectorManager,
-} from "store/auth/hooks";
-import { Theme } from "@mui/material/styles";
+import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnectorType } from "store/auth/hooks";
+import { Flex } from "@icpswap/ui";
+import { ConnectorImage, Image } from "components/Image/index";
+import { ChevronDown } from "react-feather";
+import { useHistory } from "react-router-dom";
+import { Connector } from "constants/wallet";
+
 import { AccountSection } from "./Account";
 import Principal from "./Principal";
-import LogoutIcon from "./LogoutIcon";
 import LogOutSection from "../LogOutSection";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-  },
-  navContainer: {
-    width: "100%",
-    maxWidth: "350px",
-    minWidth: "300px",
-    borderRadius: "10px",
-    padding: "0",
-    [theme.breakpoints.down("sm")]: {
-      minWidth: "100%",
-      maxWidth: "280px",
-    },
-  },
-  profileChip: {
-    height: "48px",
-    alignItems: "center",
-    borderRadius: "27px",
-    transition: "all .2s ease-in-out",
-    borderColor: theme.palette.mode === "dark" ? theme.palette.dark.main : theme.palette.primary.light,
-    backgroundColor: theme.palette.mode === "dark" ? theme.palette.dark.main : theme.palette.primary.light,
-    '&[aria-controls="menu-list-grow"], &:hover': {
-      borderColor: theme.palette.primary.main,
-      background: `${theme.palette.primary.main}!important`,
-      color: theme.palette.primary.light,
-      "& svg": {
-        stroke: theme.palette.primary.light,
-      },
-    },
-  },
-  profileLabel: {
-    lineHeight: 0,
-    padding: "12px",
-  },
-  listItem: {
-    paddingLeft: "30px",
-    wordBreak: "break-all",
-    display: "flex",
-    height: "52px",
-    alignItems: "center",
-    cursor: "pointer",
-    "&:hover": {
-      background: "#F5F5FF",
-    },
-    "& .MuiTypography-root": {
-      color: "#111936",
-      marginLeft: "10px",
-    },
-  },
-  profileRoot: {
-    background: theme.palette.mode === "dark" ? theme.themeOption.defaultGradient : theme.colors.lightPrimaryMain,
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    "&:hover": {
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? theme.themeOption.defaultGradient
-          : `${theme.colors.lightPrimaryMain}!important`,
-    },
-  },
-}));
-
-export function ICRocksLoadIcon(props: any) {
-  return (
-    <SvgIcon viewBox="0 0 15 14" {...props}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M0 0H6V2H2V12H12V8H14V14H0V0Z" />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10.7865 2H8.40071V0H13.0033H14.0033V1V5.60261H12.0033V3.6116L5.81851 9.79641L4.4043 8.3822L10.7865 2Z"
-      />
-    </SvgIcon>
-  );
-}
+import { BalanceAndValue } from "./BalanceAndValue";
 
 export default function ProfileSection() {
-  const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-  const principal = useAccountPrincipal();
-  const isConnected = useConnectorStateConnected();
+
   const [open, setOpen] = useState(false);
+
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const prevOpen = useRef(open);
-  const logout = useUserLogout();
+  const principal = useAccountPrincipal();
+  const isConnected = useConnectorStateConnected();
+  const history = useHistory();
+  const connectorType = useConnectorType();
 
-  const [, walletManager] = useWalletConnectorManager();
+  const { showConnector, disconnect } = useConnectManager();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -117,8 +41,8 @@ export default function ProfileSection() {
   };
 
   const handleConnectWallet = async () => {
-    await logout();
-    walletManager(true);
+    await disconnect();
+    showConnector(true);
   };
 
   useEffect(() => {
@@ -128,20 +52,42 @@ export default function ProfileSection() {
     prevOpen.current = open;
   }, [open]);
 
-  return (
-    <>
-      <ButtonBase sx={{ borderRadius: "12px" }}>
-        <Chip
-          ref={anchorRef}
-          classes={{ root: classes.profileRoot, label: classes.profileLabel }}
-          label={isConnected && !!principal ? shorten(principal.toString()) : t`Connect Wallet`}
-          variant="outlined"
-          onClick={isConnected ? handleToggle : handleConnectWallet}
-          color="primary"
-        />
-      </ButtonBase>
+  const handleToWallet = useCallback(() => {
+    history.push("/wallet");
+  }, [history]);
 
-      {/* @ts-ignore */}
+  return (
+    <Flex gap="0 8px">
+      <Image
+        src="/images/wallet.svg"
+        sx={{ width: "40px", height: "40px", cursor: "pointer" }}
+        onClick={handleToWallet}
+      />
+
+      <Box ref={anchorRef} onClick={isConnected ? handleToggle : handleConnectWallet} sx={{ zIndex: 10 }}>
+        {isConnected ? (
+          <Flex
+            gap="0 10px"
+            sx={{
+              padding: "4px 12px 4px 4px",
+              borderRadius: "48px",
+              background: theme.palette.background.level3,
+              cursor: "pointer",
+            }}
+          >
+            <ConnectorImage size="32px" />
+            <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
+              {principal ? shorten(principal.toString()) : ""}
+            </Typography>
+            <ChevronDown size="14px" strokeWidth="4px" color="#ffffff" />
+          </Flex>
+        ) : (
+          <Button variant="contained" sx={{ width: "141px", height: "40px", borderRadius: "48px" }}>
+            <Trans>Connect Wallet</Trans>
+          </Button>
+        )}
+      </Box>
+
       <Popper
         placement={matchDownMD ? "bottom-start" : "bottom-end"}
         open={open}
@@ -159,37 +105,89 @@ export default function ProfileSection() {
             },
           ],
         }}
+        style={{
+          zIndex: 10000,
+        }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
             <Paper>
-              <Box className={classes.paper}>
+              <Box
+                sx={{
+                  width: "310px",
+                  padding: "12px",
+                  borderRadius: "12px",
+                  border: `1px solid #313852`,
+                  background: "#242B45",
+                }}
+              >
                 <ClickAwayListener onClickAway={handleClose}>
-                  <List component="nav" className={classes.navContainer}>
-                    <Box sx={{ padding: "12px", boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)" }}>
-                      <Box sx={{ marginBottom: "12px" }}>
+                  <Box>
+                    <Box sx={{ position: "absolute", top: "12px", right: "12px" }}>
+                      <LogOutSection onLogout={() => setOpen(false)}>
+                        <Image src="/images/logout.svg" sx={{ width: "32px", height: "32px", cursor: "pointer" }} />
+                      </LogOutSection>
+                    </Box>
+
+                    <BalanceAndValue />
+
+                    <Box
+                      sx={{
+                        margin: "12px 0 0 0",
+                        background: "#2E354D",
+                        borderRadius: "8px",
+                        padding: "12px",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          lineHeight: "18px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        <Trans>Copy Account ID for sending from exchanges and Principal ID for lCP network.</Trans>
+                      </Typography>
+
+                      <Box sx={{ margin: "12px 0 0 0" }}>
                         <AccountSection />
                       </Box>
-                      <Box>
+
+                      <Box sx={{ margin: "12px 0 0 0" }}>
                         <Principal />
                       </Box>
                     </Box>
 
-                    <LogOutSection onLogout={() => setOpen(false)}>
-                      <Box className={classes.listItem} sx={{ borderRadius: "0 0 12px 12px" }}>
-                        <LogoutIcon />
-                        <Typography>
-                          <Trans>Log Out</Trans>
+                    {connectorType === Connector.IC ? (
+                      <Box
+                        sx={{
+                          margin: "4px 0 0 0",
+                          background: "rgb(255 210 76 / 10%)",
+                          borderRadius: "8px",
+                          padding: "12px",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            lineHeight: "16px",
+                            fontSize: "12px",
+                            color: "#B79C4A",
+                          }}
+                        >
+                          <Trans>
+                            Internet Identity generates unique Principal IDs and Account IDs for each Dapp. This feature
+                            ensures that user identities and account information are isolated across different
+                            applications, enhancing security and privacy protection.
+                          </Trans>
                         </Typography>
                       </Box>
-                    </LogOutSection>
-                  </List>
+                    ) : null}
+                  </Box>
                 </ClickAwayListener>
               </Box>
             </Paper>
           </Fade>
         )}
       </Popper>
-    </>
+    </Flex>
   );
 }

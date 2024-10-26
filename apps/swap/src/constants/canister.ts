@@ -1,34 +1,18 @@
+/* eslint-disable global-require */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { actor, Actor } from "@icpswap/actor";
 import { network, NETWORK, host } from "./server";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  const context = require.context("../canister-ids", true, /\.json$/);
+  const canister_ids = require("../canister_ids.json");
+  const temp_canister_ids = require("../temp_canister_ids.json");
 
-  context.keys().forEach((key: string) => {
-    let canister_ids = context(key);
-
-    if (key.includes("icpswap-v2")) {
-      canister_ids = {};
-      Object.keys(context(key)).forEach((canisterName) => {
-        canister_ids[`V2${canisterName}`] = context(key)[canisterName];
-      });
-    }
-
-    if (
-      (key.includes(network) && network !== NETWORK.IC) ||
-      (network === NETWORK.IC && key.includes("canister_ids.json"))
-    ) {
-      CanisterIdsJson = {
-        ...CanisterIdsJson,
-        ...canister_ids,
-        ...(key.includes("voting") && !!canister_ids.FileCanister
-          ? { VotingFileCanister: canister_ids.FileCanister }
-          : {}),
-      };
-    }
-  });
+  CanisterIdsJson = {
+    ...canister_ids,
+    ...temp_canister_ids,
+  };
 } catch (error) {
   console.error(error);
 }
@@ -72,7 +56,8 @@ export const CANISTER_NAMES = {
 
   VotingFileCanister: "VotingFileCanister",
   FarmController: "FarmController",
-  TokenPoolController: "TokenPoolController",
+  StakingTokenController: "StakingTokenController",
+  StakeIndex: "StakeIndex",
 
   NodeIndex: "node_index",
   GlobalIndex: "global_index",

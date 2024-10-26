@@ -21,6 +21,7 @@ export enum ActorName {
   FarmController = "FarmController",
   Farm = "Farm",
   FarmStorage = "FarmStorage",
+  FarmIndex = "FarmIndex",
 
   NFTCanisterController = "V3NFTCanisterController",
   NFTCanister = "NFTDynamicCanister",
@@ -39,15 +40,18 @@ export enum ActorName {
   VotingCanister = "VoteProjectCanister",
   VotingFileCanister = "VoteFileCanister",
 
-  TokenPoolController = "TokenPoolController",
+  StakingTokenController = "StakingTokenController",
   TokenPool = "TokenPool",
   TokenPoolStorage = "TokenPoolStorage",
+  StakeIndex = "StakeIndex",
 
   V1TokenPoolController = "V1TokenPoolController",
   V1TokenPool = "V1TokenPool",
   V1TokenPoolStorage = "V1TokenPoolStorage",
 
-  GlobalIndex = "global_index",
-  NodeIndex = "node_index",
-  BaseIndex = "base_index",
+  GlobalIndex = "GlobalIndex",
+  NodeIndex = "NodeIndex",
+  BaseIndex = "BaseIndex",
+
+  LiquidityLocks = "LiquidityLocks",
 }

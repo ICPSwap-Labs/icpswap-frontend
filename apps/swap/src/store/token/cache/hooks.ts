@@ -1,28 +1,45 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { TokenMetadata } from "types/token";
 import store from "store/index";
-import { ICP, TOKEN_STANDARD } from "constants/tokens";
+import { TOKEN_STANDARD } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { registerTokens } from "@icpswap/token-adapter";
-import { updateTokenStandard, updateImportedToken, updateAllTokenIds } from "./actions";
+import { updateTokenStandards } from "./actions";
+
+interface useUpdateTokenStandardProps {
+  canisterId: string;
+  standard: TOKEN_STANDARD;
+}
 
 export function useUpdateTokenStandard() {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    ({ canisterId, standard }: { canisterId: string; standard: TOKEN_STANDARD }) => {
-      if (canisterId) {
+    (standards: useUpdateTokenStandardProps[]) => {
+      const __standards = standards.map(({ standard, canisterId }) => {
         // Register icp as icrc2 token
         if (canisterId === ICP.address) {
-          dispatch(updateTokenStandard({ canisterId, standard: TOKEN_STANDARD.ICRC2 }));
-          registerTokens({ canisterIds: [canisterId], standard: TOKEN_STANDARD.ICRC2 });
-        } else {
-          dispatch(updateTokenStandard({ canisterId, standard }));
-          registerTokens({ canisterIds: [canisterId], standard });
+          return { canisterId, standard: TOKEN_STANDARD.ICRC2 };
+          // Register usdc as icrc2 token
         }
 
-        dispatch(updateAllTokenIds(canisterId));
-      }
+        if (
+          canisterId === "xevnm-gaaaa-aaaar-qafnq-cai" ||
+          canisterId === "yfumr-cyaaa-aaaar-qaela-cai" ||
+          canisterId === "vgqnj-miaaa-aaaal-qaapa-cai"
+        ) {
+          return { canisterId, standard: TOKEN_STANDARD.ICRC2 };
+        }
+
+        if (canisterId === "qfr6e-biaaa-aaaak-qafuq-cai") {
+          return { canisterId, standard: TOKEN_STANDARD.ICRC1 };
+        }
+
+        return { canisterId, standard };
+      });
+
+      dispatch(updateTokenStandards(__standards));
+      registerTokens(__standards);
     },
     [dispatch],
   );
@@ -46,21 +63,6 @@ export function getTokenStandard(canisterId: string | undefined) {
   if (canisterId) {
     return standards[canisterId];
   }
-}
-
-export function useUpdateImportedToken() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (canisterId: string, metadata: TokenMetadata) => {
-      dispatch(updateImportedToken({ canisterId, metadata }));
-    },
-    [dispatch],
-  );
-}
-
-export function useImportedTokens() {
-  return useAppSelector((state) => state.tokenCache.importedTokens);
 }
 
 export function useTokenStandards() {

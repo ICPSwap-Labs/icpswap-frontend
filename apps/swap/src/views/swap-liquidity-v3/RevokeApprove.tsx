@@ -8,7 +8,7 @@ import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { ICP } from "constants/tokens";
+import { ICP } from "@icpswap/tokens";
 import { useGlobalContext } from "hooks/useGlobalContext";
 import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
 import type { SwapPoolData, AllTokenOfSwapTokenInfo } from "@icpswap/types";
@@ -219,7 +219,7 @@ export default function SwapRevokeApprove() {
             <Trans>Revoke Token Approval</Trans>
           </Typography>
 
-          <Typography sx={{ margin: "10px 0 0 0" }}>
+          <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
             <Trans>
               ICRC2 standard tokens require an approval step when using swap. You can revoke this approval based on your
               security needs.

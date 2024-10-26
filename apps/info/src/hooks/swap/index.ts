@@ -78,3 +78,4 @@ export function useSwapTickets(offset: number, limit: number) {
 }
 
 export * from "./useUserAllPositions";
+export * from "./useLiquidityLocksImage";

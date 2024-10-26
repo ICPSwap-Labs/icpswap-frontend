@@ -124,6 +124,10 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
   }
+
+  public async getMintingAccount({ canisterId }: { canisterId: string }) {
+    return await icrc1Adapter.getMintingAccount({ canisterId });
+  }
 }
 
 export const icrc2Adapter = new ICRC2Adapter({

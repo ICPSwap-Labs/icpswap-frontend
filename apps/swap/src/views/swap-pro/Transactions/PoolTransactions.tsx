@@ -4,10 +4,11 @@ import Transaction from "./Transactions";
 
 export interface PoolTransactionsProps {
   canisterId: string | undefined;
+  refresh?: number;
 }
 
-export function PoolTransactions({ canisterId }: PoolTransactionsProps) {
-  const { result: transactions, loading } = usePoolTransactions(canisterId, 0, 300);
+export function PoolTransactions({ canisterId, refresh }: PoolTransactionsProps) {
+  const { result: transactions, loading } = usePoolTransactions(canisterId, 0, 300, refresh);
 
   return (
     <Box sx={{ width: "100%", padding: "0 16px", overflow: "auto" }}>

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { Box, keyframes } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { keyframes } from "@mui/material";
+
+import { Box, useTheme } from "../Mui";
 
 const loadingAnimation = keyframes`
   0% {
@@ -13,7 +13,7 @@ const loadingAnimation = keyframes`
 `;
 
 export function LoadingSingleRow() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Box
@@ -53,8 +53,12 @@ export function LoadingSingleRow() {
   );
 }
 
-export function LoadingRow({ children }: { children: ReactNode }) {
-  const theme = useTheme() as Theme;
+export interface LoadingRowProps {
+  children: ReactNode;
+}
+
+export function LoadingRow({ children }: LoadingRowProps) {
+  const theme = useTheme();
 
   return (
     <Box

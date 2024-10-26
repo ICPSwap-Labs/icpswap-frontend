@@ -2,11 +2,11 @@ import { Typography, Box } from "@mui/material";
 import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
 import { MainCard } from "ui-component/index";
-import { useInfoAllTokens } from "@icpswap/hooks";
+import { useNodeInfoAllTokens } from "@icpswap/hooks";
 import TokenTable from "ui-component/analytic/TokenTable";
 
 export default function Tokens() {
-  const { result: tokens, loading } = useInfoAllTokens();
+  const { result: tokens, loading } = useNodeInfoAllTokens();
 
   return (
     <Wrapper>
