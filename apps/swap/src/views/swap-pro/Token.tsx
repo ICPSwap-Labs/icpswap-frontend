@@ -246,11 +246,11 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
                 </Typography>
               </Card>
-              <Card title={t`Volume 7D`} fontSize="12px">
+              {/* <Card title={t`Volume 7D`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
                 </Typography>
-              </Card>
+              </Card> */}
               <Card title={t`Decimals`} fontSize="12px">
                 <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                   {token ? token.decimals : "--"}

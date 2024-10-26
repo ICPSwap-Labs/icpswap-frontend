@@ -222,7 +222,7 @@ export default function TokenDetails() {
               </Typography>
             </GridAutoRows>
 
-            <GridAutoRows gap="4px">
+            {/* <GridAutoRows gap="4px">
               <Typography>
                 <Trans>Volume 7D</Trans>
               </Typography>
@@ -235,7 +235,7 @@ export default function TokenDetails() {
               >
                 {formatDollarAmount(token?.volumeUSD7d)}
               </Typography>
-            </GridAutoRows>
+            </GridAutoRows> */}
 
             <GridAutoRows gap="4px">
               <Typography>
