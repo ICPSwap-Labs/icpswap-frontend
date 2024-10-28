@@ -27,9 +27,9 @@ export class NF_IDConnector {
     return Actor.createActor(interfaceFactory, {
       agent:
         this.agent ??
-        new HttpAgent({
+        (await HttpAgent.create({
           host: ic_host,
-        }),
+        })),
       canisterId,
     });
   }
