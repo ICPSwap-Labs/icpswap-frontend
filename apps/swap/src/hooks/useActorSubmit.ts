@@ -4,14 +4,15 @@ import store from "store/index";
 import { t } from "@lingui/macro";
 
 async function isCurrentAccount() {
-  const {principal} = store.getState().auth;
+  // const { principal } = store.getState().auth;
 
-  if (window.ic && window.ic.plug && !!principal) {
-    const plugPrincipal = await window.ic.plug.getPrincipal();
-    return plugPrincipal.toString() === principal;
-  }
+  // TODO
+  // if (window.ic && window.ic.plug && !!principal) {
+  //   const plugPrincipal = await window.ic.plug.getPrincipal();
+  //   return plugPrincipal.toString() === principal;
+  // }
 
-  return false;
+  return true;
 }
 
 export function useActorSubmit() {

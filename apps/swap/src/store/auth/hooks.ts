@@ -15,6 +15,11 @@ import { updateLockStatus as _updateLockStatus } from "../session/actions";
 import { NF_IDConnector } from "./NF_IDConnector";
 
 const IdentityKitConnector = [Connector.NFID, Connector.IC, Connector.PLUG];
+const IdentityKitId = {
+  [Connector.IC]: InternetIdentity.id,
+  [Connector.NFID]: NFIDW.id,
+  [Connector.PLUG]: Plug.id,
+};
 
 export function useIsUnLocked() {
   return useAppSelector((state) => state.session.isUnLocked);
@@ -198,6 +203,10 @@ export function useIdentityKitInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
+  // console.log("user: ", user);
+  // console.log("agent: ", agent);
+  // console.log("isInitializing: ", isInitializing);
+
   useEffect(() => {
     async function call() {
       const connector = getConnectorType();
@@ -259,21 +268,9 @@ export function useConnectManager() {
   );
 
   const __connect = useCallback(async (connector: Connector) => {
-    if (connector === Connector.NFID) {
-      await connect(NFIDW.id);
-      updateAuth({ walletType: Connector.NFID, connected: false });
-      return true;
-    }
-
-    if (connector === Connector.PLUG) {
-      await connect(Plug.id);
-      updateAuth({ walletType: Connector.PLUG, connected: false });
-      return true;
-    }
-
-    if (connector === Connector.IC) {
-      await connect(InternetIdentity.id);
-      updateAuth({ walletType: Connector.IC, connected: false });
+    if (IdentityKitConnector.includes(connector)) {
+      await connect(IdentityKitId[connector]);
+      updateAuth({ walletType: connector, connected: false });
       return true;
     }
 
@@ -284,8 +281,10 @@ export function useConnectManager() {
   }, []);
 
   const __disconnect = useCallback(async () => {
-    if (connector === Connector.NFID) {
-      await identityKitDisconnect();
+    if (connector) {
+      if (IdentityKitConnector.includes(connector)) {
+        await identityKitDisconnect();
+      }
     }
 
     await disconnect();
