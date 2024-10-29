@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { TextField, Typography, Box, Menu, Grid, MenuItem } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { TextField, Typography, Box, Menu, MenuItem, makeStyles, Theme } from "components/Mui";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NoData from "components/no-data";
-import { Theme } from "@mui/material/styles";
+import { Flex, NoData } from "@icpswap/ui";
 
 interface UseStylesProps {
   contained: boolean;
@@ -247,59 +245,58 @@ function FilledTextField(
       >
         <>
           {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
-          <Grid container alignItems="center" sx={{ flex: 1 }}>
-            <Grid item xs>
-              {!select ? (
-                <TextField
-                  sx={{
-                    "& input": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                    },
-                    "& textarea": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                    },
-                    "& input::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                    "& textarea::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                  }}
-                  inputRef={inputRef}
-                  {...props}
-                  variant="standard"
-                  onChange={({ target: { value } }) => onChange && onChange(value)}
-                  value={value}
-                  multiline={multiline}
-                  InputProps={{
-                    disableUnderline: true,
-                    ...(InputProps || {}),
-                  }}
-                  fullWidth
-                  disabled={disabled}
-                  helperText={helperText}
-                  onFocus={onFocus}
-                  autoComplete="off"
-                />
-              ) : value ? (
-                <Value menus={menus} value={value} helperText={helperText} select={select} />
-              ) : (
-                <Typography
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                  color="#c5c5c5"
-                >
-                  {props.placeholder}
-                </Typography>
-              )}
-            </Grid>
+          <Flex fullWidth sx={{ flex: 1 }} justify="space-between">
+            {!select ? (
+              <TextField
+                sx={{
+                  "& input": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                  },
+                  "& textarea": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                  },
+                  "& input::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                  "& textarea::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                }}
+                inputRef={inputRef}
+                {...props}
+                variant="standard"
+                onChange={({ target: { value } }) => onChange && onChange(value)}
+                value={value}
+                multiline={multiline}
+                InputProps={{
+                  disableUnderline: true,
+                  ...(InputProps || {}),
+                }}
+                fullWidth
+                disabled={disabled}
+                helperText={helperText}
+                onFocus={onFocus}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            ) : value ? (
+              <Value menus={menus} value={value} helperText={helperText} select={select} />
+            ) : (
+              <Typography
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                color="#c5c5c5"
+              >
+                {props.placeholder}
+              </Typography>
+            )}
             {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
-          </Grid>
+          </Flex>
         </>
       </Box>
 
