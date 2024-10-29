@@ -18,7 +18,7 @@ import {
 } from "@icpswap/ui";
 import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber, isNullArgs } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => {
       display: "grid",
       gridGap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "20px 1.5fr 1fr repeat(3, 1fr) 180px",
+      gridTemplateColumns: "20px 1.5fr 1fr repeat(3, 1fr) 220px",
       "@media screen and (max-width: 640px)": {
         gridTemplateColumns: "1fr 120px",
       },
@@ -95,7 +95,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
         { label: timeBase === "24H" ? t`APR 24H` : t`APR 7D`, key: "apr", sort: false, align: "right" },
         { label: timeBase === "24H" ? t`Fees 24H` : t`Fees 7D`, key: "fees24", sort: false, align: "right" },
         {
-          label: timeBase === "24H" ? t`Total Volume 24H` : t`Total Volume 7D`,
+          label: timeBase === "24H" ? t`Volume 24H` : t`Volume 7D`,
           key: "volumeUSD",
           sort: true,
           align: "right",
@@ -156,7 +156,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
       .toFixed(2)}%`;
   }, [pool, fees, timeBase]);
 
-  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token0Id });
+  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token1Id });
 
   const handleAdd = useCallback(() => {
     loadAddLiquidity();
@@ -258,7 +258,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
           {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}
         </BodyCell>
         <BodyCell>
-          <Flex gap="0 5px" justify="flex-end">
+          <Flex fullWidth gap="0 5px" justify="flex-end">
             <Box className={`${classes.button} outlined`} onClick={handleChart}>
               <Trans>Chart</Trans>
             </Box>
@@ -298,7 +298,7 @@ export function InfoPools() {
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: tokenList } = useTokensFromList();
-  const { result: allSwapPools, loading } = useNodeInfoAllPools();
+  const { result: allSwapPools } = useNodeInfoAllPools();
 
   const allPools = useMemo(() => {
     if (!allSwapPools || !tokenList) return undefined;
@@ -490,7 +490,7 @@ export function InfoPools() {
                   <PoolItem key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
                 ))}
               </>
-            ) : loading ? (
+            ) : isNullArgs(slicedPools) ? (
               <Box sx={{ padding: "24px" }}>
                 <LoadingRow>
                   <div />

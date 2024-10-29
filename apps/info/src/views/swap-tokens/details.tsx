@@ -2,7 +2,7 @@ import { Typography, Box, Button, useMediaQuery, useTheme } from "ui-component/M
 import { useParams, useHistory } from "react-router-dom";
 import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, mockALinkAndOpen } from "@icpswap/utils";
+import { formatDollarAmount, formatDollarAmountV1, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
 import { useToken } from "hooks/info/useToken";
 import { useTokenInfo } from "hooks/token/index";
@@ -149,7 +149,7 @@ export default function TokenDetails() {
                 lineHeight: "0.8",
               }}
             >
-              {formatDollarAmount(token?.priceUSD)}
+              {formatDollarAmountV1({ num: token?.priceUSD })}
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>

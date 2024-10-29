@@ -166,7 +166,7 @@ export default function SwapOverview() {
                       />
                     </Box>
                     <Typography fontSize="32px" fontWeight="500" color="text.primary">
-                      {formatDollarAmount(liquidityHover, 2, true)}
+                      {formatDollarAmount(liquidityHover, 2)}
                     </Typography>
                     <Typography fontSize="12px" sx={{ height: "14px" }}>
                       {leftLabel || null}

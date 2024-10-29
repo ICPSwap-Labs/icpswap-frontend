@@ -1,6 +1,5 @@
-import { Grid, Typography, Box, Link } from "@mui/material";
+import { Typography, Box, Link, makeStyles } from "ui-component/Mui";
 import { BoxItem } from "ui-component/token-list/BoxItem";
-import { makeStyles } from "@mui/styles";
 import { useEffect, useMemo } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTokenInfo } from "hooks/token/index";
@@ -11,13 +10,20 @@ import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import TokenStandardLabel from "ui-component/TokenStandardLabel";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
-import BigNumber from "bignumber.js";
-import { formatDollarAmount, formatAmount, toSignificant, parseTokenAmount, explorerLink } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  toSignificant,
+  parseTokenAmount,
+  explorerLink,
+  BigNumber,
+  formatDollarAmountV1,
+} from "@icpswap/utils";
 import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import MediaLinks from "ui-component/MediaLink";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { TextButton } from "@icpswap/ui";
+import { TextButton, Flex } from "@icpswap/ui";
 import { useUpdateTokenStandards, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 
 const useStyles = makeStyles({
@@ -98,17 +104,13 @@ export function TokenDetail() {
                 <BoxItem
                   title={t`Symbol`}
                   CustomChild={
-                    <Grid
-                      container
-                      alignItems="center"
-                      sx={{ gap: "0 8px", "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                    >
+                    <Flex fullWidth sx={{ gap: "0 8px", "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
                       {tokenInfo?.logo ? (
                         <TokenImage logo={tokenInfo.logo} size="22px" tokenId={tokenInfo.canisterId} />
                       ) : null}
                       {tokenInfo?.symbol}
                       <TokenStandardLabel standard={tokenInfo?.standardType as TOKEN_STANDARD} />
-                    </Grid>
+                    </Flex>
                   }
                   border={{ borderRadius: "12px 0 0 0" }}
                 />
@@ -137,20 +139,18 @@ export function TokenDetail() {
                 <BoxItem
                   title={t`Holders`}
                   CustomChild={
-                    <Grid container alignItems="center">
-                      <Grid item xs>
-                        <Typography
-                          color="text.primary"
-                          sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                        >
-                          {totalHolder ? String(totalHolder) : "--"}
-                        </Typography>
-                      </Grid>
-                      <TextButton to={`/token/holders/${canisterId}`}>
+                    <Flex fullWidth justify="space-between">
+                      <Typography
+                        color="text.primary"
+                        sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
+                      >
+                        {totalHolder ? String(totalHolder) : "--"}
+                      </Typography>
+
+                      <TextButton to={`/token/holders/${canisterId}`} sx={{ padding: "0 40px 0 0" }}>
                         <Trans>Details</Trans>
                       </TextButton>
-                      <Box sx={{ width: "40px" }} />
-                    </Grid>
+                    </Flex>
                   }
                   border={{ borderRadius: "0 0 0 12px" }}
                 />
@@ -159,7 +159,7 @@ export function TokenDetail() {
               <Box className={classes.box}>
                 <BoxItem
                   CustomChild={
-                    <Grid container alignItems="center" justifyContent="space-between">
+                    <Flex fullWidth justify="space-between">
                       <Box>
                         <Typography
                           color="text.primary"
@@ -170,9 +170,7 @@ export function TokenDetail() {
                             : "--"}
                         </Typography>
                         <Typography sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
-                          {tokenUSDPrice && ICPPrice
-                            ? formatDollarAmount(new BigNumber(tokenUSDPrice).toNumber(), 8)
-                            : "--"}
+                          {tokenUSDPrice && ICPPrice ? formatDollarAmountV1({ num: tokenUSDPrice }) : "--"}
                         </Typography>
                       </Box>
                       <TextButton
@@ -183,7 +181,7 @@ export function TokenDetail() {
                       >
                         <Trans>Details</Trans>
                       </TextButton>
-                    </Grid>
+                    </Flex>
                   }
                   title={t`Price`}
                   border={{ borderRadius: "12px 0 0 12px" }}
@@ -193,7 +191,7 @@ export function TokenDetail() {
               <Box className={classes.box}>
                 <BoxItem
                   CustomChild={
-                    <Grid container alignItems="center">
+                    <Flex fullWidth>
                       <Box>
                         <Typography
                           color="text.primary"
@@ -218,7 +216,7 @@ export function TokenDetail() {
                             : "--"}
                         </Typography>
                       </Box>
-                    </Grid>
+                    </Flex>
                   }
                   title={t`FDV`}
                   border={{ borderRadius: "12px 0 0 12px" }}
@@ -288,15 +286,19 @@ export function TokenDetail() {
           ) : null}
 
           <MainCard>
-            <Grid container alignItems="center" sx={{ cursor: "pointer" }} onClick={handleToTransactions}>
-              <Grid item xs>
-                <Typography fontWeight={500} color="text.primary">
-                  <Trans>Transactions</Trans>
-                </Typography>
-              </Grid>
+            <Flex
+              fullWidth
+              align="center"
+              justify="space-between"
+              sx={{ cursor: "pointer" }}
+              onClick={handleToTransactions}
+            >
+              <Typography fontWeight={500} color="text.primary">
+                <Trans>Transactions</Trans>
+              </Typography>
 
               <KeyboardArrowRightIcon color="secondary" />
-            </Grid>
+            </Flex>
           </MainCard>
         </Box>
       </Box>

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "ui-component/Mui";
 import { MainCard } from "@icpswap/ui";
 import TokenList from "ui-component/token-list/TokenList";
 import MainContainer from "ui-component/MainContainer";

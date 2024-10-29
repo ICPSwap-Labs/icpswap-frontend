@@ -251,7 +251,7 @@ export function Positions() {
             gap="0 20px"
             sx={{
               "@media(max-width: 640px)": {
-                gap: "0",
+                gap: "12px 0",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "flex-start",

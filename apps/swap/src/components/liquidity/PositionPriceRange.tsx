@@ -10,9 +10,10 @@ import { Flex } from "@icpswap/ui";
 export interface PositionPriceRangeProps {
   position: Position | undefined;
   fontSize?: string;
+  nameColor?: string;
 }
 
-export function PositionPriceRange({ position, fontSize = "14px" }: PositionPriceRangeProps) {
+export function PositionPriceRange({ position, nameColor, fontSize = "14px" }: PositionPriceRangeProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -73,7 +74,18 @@ export function PositionPriceRange({ position, fontSize = "14px" }: PositionPric
         component="div"
       >
         {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -{formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}{" "}
-        {pairName}
+        <Typography
+          sx={{
+            fontSize,
+            color: nameColor ?? "text.primary",
+            "@media(max-width: 640px)": {
+              fontSize: "12px",
+            },
+          }}
+          component="span"
+        >
+          {pairName}
+        </Typography>
       </Typography>
 
       <SyncAltIcon

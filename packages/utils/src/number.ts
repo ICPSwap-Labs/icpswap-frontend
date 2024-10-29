@@ -4,7 +4,7 @@ import { BigNumber } from "./bignumber";
 import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 
 // using a currency library here in case we want to add more in future
-export const formatDollarAmount = (num: number | string | undefined, digits = 3, round = true, ab?: number) => {
+export const formatDollarAmount = (num: number | string | undefined, digits = 3, ab?: number) => {
   const _num = num;
   if (_num === 0 || _num === "0") return "$0.00";
   if (!_num) return "-";
@@ -19,13 +19,39 @@ export const formatDollarAmount = (num: number | string | undefined, digits = 3,
   }
 
   return numbro(_num).formatCurrency({
-    average: round,
+    average: true,
     mantissa: Number(_num) > 1000 ? 2 : digits,
     abbreviations: {
       million: "M",
       billion: "B",
     },
   });
+};
+
+// using a currency library here in case we want to add more in future
+export const formatDollarAmountV1 = ({
+  num,
+  digits = 3,
+  ab,
+}: {
+  num: number | string | undefined;
+  digits?: number;
+  ab?: number;
+}) => {
+  const _num = num;
+  if (_num === 0 || _num === "0") return "$0.00";
+  if (!_num) return "-";
+
+  if (new BigNumber(_num).isLessThan(1)) {
+    return `$${toSignificant(_num, digits)}`;
+  }
+
+  if (new BigNumber(_num).isLessThan(0.01)) {
+    if (ab && new BigNumber(_num).isLessThan(ab)) return `<$${ab}`;
+    return `$${toSignificant(_num, digits)}`;
+  }
+
+  return `$${new BigNumber(new BigNumber(_num).toFixed(2)).toFormat()}`;
 };
 
 // using a currency library here in case we want to add more in future

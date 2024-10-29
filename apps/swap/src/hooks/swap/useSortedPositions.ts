@@ -12,14 +12,15 @@ export interface UseSortedPositionsProps {
 export function useSortedPositions<T>({ positions, sort, feesValue, positionValue }: UseSortedPositionsProps): T[] {
   return useMemo(() => {
     if (!positions) return [];
-    if (sort === PositionSort.Default) return positions;
+
+    if (sort === PositionSort.Default) return [...positions];
 
     if (sort === PositionSort.FeesValue) {
       if (!feesValue) return positions;
 
       if (Object.keys(feesValue).length < positions.length) return positions;
 
-      return positions.sort((a, b) => {
+      return [...positions].sort((a, b) => {
         const allKeys = Object.keys(feesValue);
 
         const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));
@@ -42,7 +43,7 @@ export function useSortedPositions<T>({ positions, sort, feesValue, positionValu
       if (!positionValue) return positions;
       if (Object.keys(positionValue).length < positions.length) return positions;
 
-      return positions.sort((a, b) => {
+      return [...positions].sort((a, b) => {
         const allKeys = Object.keys(positionValue);
 
         const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));

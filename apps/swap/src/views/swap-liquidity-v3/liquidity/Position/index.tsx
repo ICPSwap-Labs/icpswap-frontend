@@ -51,7 +51,8 @@ export default function PositionDetails() {
       <Box sx={{ margin: "26px 0 0 0" }}>
         <Flex
           fullWidth
-          gap="0 8px"
+          justify="space-between"
+          align="flex-end"
           sx={{
             "@media(max-width: 640px)": {
               flexDirection: "column",
@@ -60,41 +61,54 @@ export default function PositionDetails() {
             },
           }}
         >
-          <Flex gap="0 8px">
-            <Flex>
-              <TokenImage logo={token0?.logo} tokenId={token0?.address} size="32px" />
-              <TokenImage logo={token1?.logo} tokenId={token1?.address} size="32px" />
+          <Box>
+            <Flex
+              gap="0 8px"
+              sx={{
+                "@media(max-width: 640px)": {
+                  flexDirection: "column",
+                  gap: "10px 0 ",
+                  alignItems: "flex-start",
+                },
+              }}
+            >
+              <Flex gap="0 8px">
+                <Flex>
+                  <TokenImage logo={token0?.logo} tokenId={token0?.address} size="32px" />
+                  <TokenImage logo={token1?.logo} tokenId={token1?.address} size="32px" />
+                </Flex>
+
+                <Typography color="text.primary" fontSize="18px">
+                  {token0?.symbol} / {token1?.symbol}
+                </Typography>
+
+                <FeeTierPercentLabel feeTier={pool?.fee} />
+              </Flex>
+
+              <PoolTokensPrice pool={pool} />
             </Flex>
 
-            <Typography color="text.primary" fontSize="18px">
-              {token0?.symbol} / {token1?.symbol}
-            </Typography>
-
-            <FeeTierPercentLabel feeTier={pool?.fee} />
-          </Flex>
-
-          <PoolTokensPrice pool={pool} />
-        </Flex>
-
-        <Flex
-          fullWidth
-          sx={{
-            margin: "20px 0 0 0",
-            "@media(max-width: 640px)": {
-              flexDirection: "column",
-              gap: "20px 0 ",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            },
-          }}
-          justify="space-between"
-          align="flex-end"
-        >
-          {pool ? (
-            <InfoPool pool={pool} noPoolDetails wrapperSx={{ padding: "0", border: "none" }} />
-          ) : (
-            <Box>&nbsp;</Box>
-          )}
+            <Flex
+              fullWidth
+              sx={{
+                margin: "20px 0 0 0",
+                "@media(max-width: 640px)": {
+                  flexDirection: "column",
+                  gap: "20px 0 ",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                },
+              }}
+              justify="space-between"
+              align="flex-end"
+            >
+              {pool ? (
+                <InfoPool pool={pool} noPoolDetails wrapperSx={{ padding: "0", border: "none" }} />
+              ) : (
+                <Box>&nbsp;</Box>
+              )}
+            </Flex>
+          </Box>
 
           <Button className="secondary" variant="contained" onClick={loadAddLiquidity}>
             <Trans>Create New Position</Trans>

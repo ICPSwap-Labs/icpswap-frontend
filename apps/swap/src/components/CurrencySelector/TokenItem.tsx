@@ -206,7 +206,6 @@ export function TokenItem({
                         .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
                         .toString(),
                       4,
-                      true,
                       0.001,
                     )
                   : "--"}

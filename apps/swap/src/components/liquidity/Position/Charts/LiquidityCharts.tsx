@@ -56,29 +56,29 @@ export function LiquidityCharts({ position }: LiquidityChartsProps) {
         ticksAtLimit={ticksAtLimit}
       />
 
-      <Flex vertical gap="10px 0" align="flex-start" sx={{ margin: "10px" }}>
-        <Flex gap="0 12px">
-          <Box sx={{ background: SWAP_CHART_CURRENT_PRICE_COLOR, width: "8px", height: "2px" }} />
+      <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>
+        <Flex gap="8px 3px" wrap="wrap">
+          <Flex gap="0 12px">
+            <Box sx={{ background: SWAP_CHART_CURRENT_PRICE_COLOR, width: "8px", height: "2px" }} />
 
-          <Flex gap="0 3px">
             <Typography fontSize="12px">
               <Trans>Current Price:</Trans>
             </Typography>
-
-            <PoolCurrentPrice pool={position.pool} showInverted />
           </Flex>
+
+          <PoolCurrentPrice pool={position.pool} showInverted />
         </Flex>
 
-        <Flex gap="0 12px">
-          <Box sx={{ background: SWAP_CHART_RANGE_PRICE_COLOR, width: "8px", height: "2px" }} />
+        <Flex gap="8px 3px" wrap="wrap">
+          <Flex gap="0 12px">
+            <Box sx={{ background: SWAP_CHART_RANGE_PRICE_COLOR, width: "8px", height: "2px" }} />
 
-          <Flex gap="0 3px">
             <Typography fontSize="12px">
               <Trans>Position Price Range:</Trans>
             </Typography>
-
-            <PositionPriceRange position={position} fontSize="12px" />
           </Flex>
+
+          <PositionPriceRange position={position} fontSize="12px" nameColor="text.secondary" />
         </Flex>
       </Flex>
     </>
