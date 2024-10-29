@@ -192,7 +192,11 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           })} ${pairName ?? ""}`}
         </BodyCell>
 
-        <BodyCell>
+        <BodyCell
+          sx={{
+            flexDirection: "column",
+          }}
+        >
           <BodyCell>
             {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined
               ? `${toSignificantWithGroupSeparator(
