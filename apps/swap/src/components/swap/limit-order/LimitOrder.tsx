@@ -69,9 +69,6 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
       },
     });
 
-    setShowLimitDetails(false);
-    setShowLimitConfirm(false);
-
     const loadingKey = openLoadingTip(t`Cancel Limit Order`, {
       extraContent: <StepViewButton step={key} />,
     });
@@ -162,7 +159,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
             </Flex>
           </Box>
 
-          <Button variant="contained" className="secondary" onClick={() => setShowLimitConfirm(true)}>
+          <Button variant="contained" className="secondary" onClick={() => setShowLimitDetails(true)}>
             <Trans>Cancel</Trans>
           </Button>
         </Flex>
@@ -176,7 +173,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
           onClose={() => {
             setShowLimitDetails(false);
           }}
-          onCancelLimit={handleCancelLimit}
+          onCancelLimit={() => setShowLimitConfirm(true)}
         />
       ) : null}
 
@@ -185,7 +182,8 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
         onClose={() => setShowLimitConfirm(false)}
         onConfirm={() => {
           setShowLimitConfirm(false);
-          setShowLimitDetails(true);
+          setShowLimitDetails(false);
+          handleCancelLimit();
         }}
       />
     </>

@@ -348,7 +348,7 @@ export const PlaceOrder = forwardRef(
             (isLoadingRoute ? (
               <Trans>Submit Limit Order</Trans>
             ) : isNoRouteFound ? (
-              <Trans>Insufficient liquidity for this trade.</Trans>
+              <Trans>No route for this trade.</Trans>
             ) : isPoolNotChecked ? (
               <Trans>Waiting for verifying the pool...</Trans>
             ) : (

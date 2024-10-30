@@ -1,8 +1,7 @@
-import { Box, Avatar } from "@mui/material";
 import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/utils";
-import { Position } from "@icpswap/swap-sdk";
+import { Position, Token } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
-import { TextButton } from "components/index";
+import { Flex, TextButton, TokenImage } from "components/index";
 import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
 import { getDecreaseLiquidityAmount } from "store/swap/hooks";
@@ -17,14 +16,17 @@ export interface CancelLimitStepsProps {
   handleReclaim: () => void;
 }
 
-function TokenAmount({ logo, amount }: { logo: string; amount: string | undefined }) {
+interface TokenAmountProps {
+  amount: string | undefined;
+  token: Token;
+}
+
+function TokenAmount({ token, amount }: TokenAmountProps) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo}>
-        &nbsp;
-      </Avatar>
+    <Flex gap="0 4px">
+      <TokenImage size="16px" logo={token.logo} tokenId={token.address} />
       {amount ?? "--"}
-    </Box>
+    </Flex>
   );
 }
 
@@ -57,44 +59,39 @@ export function getCancelLimitSteps({
       ? false
       : new BigNumber((amount - BigInt(token.transFee)).toString()).isLessThan(0);
 
-  const contents =
-    token && amount
-      ? [
-          {
-            title: t`Confirm Cancellation`,
-            step: 0,
-            children: [
-              { label: t`Position ID`, value: positionId.toString() },
-              {
-                label: `${token.symbol}`,
-                value: <TokenAmount amount={toFormat(withdrawAmount)} logo={token.logo} />,
-              },
-            ],
-          },
-          !keepTokenInPools
-            ? {
-                title: withdrawAmountLessThanZero ? t`Unable to withdraw ${token.symbol}` : t`Withdraw ${token.symbol}`,
-                step: 1,
-                children: [
-                  {
-                    label: t`Amount`,
-                    value: <TokenAmount amount={withdrawAmount} logo={token.logo} />,
-                  },
-                  { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-                ],
-                skipError: withdrawAmountLessThanZero
-                  ? t`The amount of withdrawal is less than the transfer fee`
-                  : undefined,
-                errorActions: [
-                  <TextButton onClick={handleReclaim}>
-                    <Trans>Reclaim</Trans>
-                  </TextButton>,
-                ],
-                errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-              }
-            : null,
-        ]
-      : [];
+  const contents = [
+    {
+      title: t`Confirm Cancellation`,
+      step: 0,
+      children: [
+        { label: t`Position ID`, value: positionId.toString() },
+        {
+          label: `${token.symbol}`,
+          value: <TokenAmount amount={toFormat(withdrawAmount)} token={token} />,
+        },
+      ],
+    },
+    !keepTokenInPools
+      ? {
+          title: withdrawAmountLessThanZero ? t`Unable to withdraw ${token.symbol}` : t`Withdraw ${token.symbol}`,
+          step: 1,
+          children: [
+            {
+              label: t`Amount`,
+              value: <TokenAmount amount={withdrawAmount} token={token} />,
+            },
+            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+          ],
+          skipError: withdrawAmountLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
+          errorActions: [
+            <TextButton onClick={handleReclaim}>
+              <Trans>Reclaim</Trans>
+            </TextButton>,
+          ],
+          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+        }
+      : null,
+  ];
 
   return contents.filter((e) => !!e) as StepContents[];
 }
