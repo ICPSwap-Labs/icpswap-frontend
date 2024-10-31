@@ -26,6 +26,8 @@ import { getTokenStandard } from "store/token/cache/hooks";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
 import { useTokenAllBalance } from "hooks/liquidity/index";
+import { useAllowance } from "hooks/token";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import {
   updateFiled,
@@ -58,6 +60,7 @@ export function useMintInfo(
   inverted?: boolean | undefined,
   refresh?: number,
 ) {
+  const principal = useAccountPrincipal();
   const {
     independentField,
     typedValue,
@@ -379,12 +382,24 @@ export function useMintInfo(
     tickUpper,
   ]);
 
+  const { result: tokenAAllowance } = useAllowance({
+    canisterId: tokenA?.address,
+    spender: poolId,
+    owner: principal?.toString(),
+  });
+  const { result: tokenBAllowance } = useAllowance({
+    canisterId: tokenB?.address,
+    spender: poolId,
+    owner: principal?.toString(),
+  });
+
   const currencyAMaxSpentAmount = useAllBalanceMaxSpend({
     token: tokenA,
     balance: tokenA?.address === token0?.address ? token0Balance?.toString() : token1Balance?.toString(),
     poolId,
     subBalance: tokenA?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
     unusedBalance: tokenA?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
+    allowance: tokenAAllowance,
   });
 
   const currencyBMaxSpentAmount = useAllBalanceMaxSpend({
@@ -393,6 +408,7 @@ export function useMintInfo(
     poolId,
     subBalance: tokenB?.address === token0?.address ? token0SubAccountBalance : token1SubAccountBalance,
     unusedBalance: tokenB?.address === token0?.address ? unusedBalance.balance0 : unusedBalance.balance1,
+    allowance: tokenBAllowance,
   });
 
   const maxAmounts = useMemo(() => {
@@ -428,6 +444,7 @@ export function useMintInfo(
           ? formatTokenAmount(currencyAAmount ? currencyAAmount.toExact() : 0, token0.decimals).toString()
           : formatTokenAmount(currencyBAmount ? currencyBAmount.toExact() : 0, token0.decimals).toString()
         : "0",
+    allowance: token0 && tokenA ? (token0.address === tokenA.address ? tokenAAllowance : tokenBAllowance) : undefined,
   });
 
   const token1Insufficient = getTokenInsufficient({
@@ -441,6 +458,7 @@ export function useMintInfo(
           ? formatTokenAmount(currencyAAmount ? currencyAAmount.toExact() : 0, token1.decimals).toString()
           : formatTokenAmount(currencyBAmount ? currencyBAmount.toExact() : 0, token1.decimals).toString()
         : "0",
+    allowance: token0 && tokenA ? (token1.address === tokenA.address ? tokenAAllowance : tokenBAllowance) : undefined,
   });
 
   const error = useMemo(() => {
