@@ -415,39 +415,6 @@ export function useMintInfo(
     {},
   );
 
-  let errorMessage: string | undefined;
-
-  if (hasPairWithBaseToken !== true) errorMessage = errorMessage ?? t`No pair with icp`;
-
-  if (inputNumberCheck(typedValue) === false) errorMessage = errorMessage ?? t`Amount exceeds limit`;
-
-  if (poolState === PoolState.INVALID) {
-    errorMessage = errorMessage ?? t`Invalid pair`;
-  }
-
-  if (invalidPrice) {
-    errorMessage = errorMessage ?? t`Invalid price input`;
-  }
-
-  if (invalidRange) {
-    errorMessage = errorMessage ?? t`Invalid Range`;
-  }
-
-  if (
-    (!parsedAmounts[FIELD.CURRENCY_A] && !depositADisabled) ||
-    (!parsedAmounts[FIELD.CURRENCY_B] && !depositBDisabled)
-  ) {
-    errorMessage = errorMessage ?? t`Enter an amount`;
-  }
-
-  if (typeof available === "boolean" && !available) {
-    errorMessage = errorMessage ?? t`This pool is not available now`;
-  }
-
-  if (poolState === PoolState.NOT_CHECK) {
-    errorMessage = errorMessage ?? t`Waiting for verify the pool...`;
-  }
-
   const { [FIELD.CURRENCY_A]: currencyAAmount, [FIELD.CURRENCY_B]: currencyBAmount } = parsedAmounts;
 
   const token0Insufficient = getTokenInsufficient({
@@ -456,11 +423,11 @@ export function useMintInfo(
     balance: token0Balance,
     unusedBalance: unusedBalance?.balance0,
     formatTokenAmount:
-      token0 && currencyAAmount && currencyBAmount
-        ? token0.address === currencyAAmount.currency.address
-          ? formatTokenAmount(currencyAAmount.toExact(), token0.decimals).toString()
-          : formatTokenAmount(currencyBAmount.toExact(), token0.decimals).toString()
-        : undefined,
+      token0 && tokenA
+        ? token0.address === tokenA.address
+          ? formatTokenAmount(currencyAAmount ? currencyAAmount.toExact() : 0, token0.decimals).toString()
+          : formatTokenAmount(currencyBAmount ? currencyBAmount.toExact() : 0, token0.decimals).toString()
+        : "0",
   });
 
   const token1Insufficient = getTokenInsufficient({
@@ -469,46 +436,73 @@ export function useMintInfo(
     balance: token1Balance,
     unusedBalance: unusedBalance?.balance1,
     formatTokenAmount:
-      token1 && currencyAAmount && currencyBAmount
-        ? token1.address === currencyAAmount.currency.address
-          ? formatTokenAmount(currencyAAmount.toExact(), token1.decimals).toString()
-          : formatTokenAmount(currencyBAmount.toExact(), token1.decimals).toString()
-        : undefined,
+      token1 && tokenA
+        ? token1.address === tokenA.address
+          ? formatTokenAmount(currencyAAmount ? currencyAAmount.toExact() : 0, token1.decimals).toString()
+          : formatTokenAmount(currencyBAmount ? currencyBAmount.toExact() : 0, token1.decimals).toString()
+        : "0",
   });
 
-  if (token0Insufficient === "INSUFFICIENT") {
-    errorMessage = errorMessage ?? t`Insufficient ${token0?.symbol} balance`;
-  }
+  const error = useMemo(() => {
+    if (hasPairWithBaseToken !== true) return t`No pair with icp`;
+    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
+    if (poolState === PoolState.INVALID) return t`Invalid pair`;
+    if (invalidPrice) return t`Invalid price input`;
+    if (invalidRange) return t`Invalid Range`;
+    if (
+      (!parsedAmounts[FIELD.CURRENCY_A] && !depositADisabled) ||
+      (!parsedAmounts[FIELD.CURRENCY_B] && !depositBDisabled)
+    )
+      return t`Enter an amount`;
 
-  if (token1Insufficient === "INSUFFICIENT") {
-    errorMessage = errorMessage ?? t`Insufficient ${token1?.symbol} balance`;
-  }
+    if (typeof available === "boolean" && !available) return t`This pool is not available now`;
+    if (poolState === PoolState.NOT_CHECK) return t`Waiting for verify the pool...`;
+    if (token0Insufficient === "INSUFFICIENT") return t`Insufficient ${token0?.symbol} balance`;
+    if (token1Insufficient === "INSUFFICIENT") return t`Insufficient ${token1?.symbol} balance`;
 
-  if (
-    tokenA &&
-    currencyAAmount &&
-    !depositADisabled &&
-    !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
-  ) {
-    errorMessage = errorMessage ?? t`${tokenA?.symbol} amount must greater than trans fee`;
-  }
+    if (
+      tokenA &&
+      currencyAAmount &&
+      !depositADisabled &&
+      !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
+    ) {
+      return t`${tokenA?.symbol} amount must greater than trans fee`;
+    }
 
-  if (
-    tokenB &&
-    currencyBAmount &&
-    !depositBDisabled &&
-    !currencyBAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenB.wrapped, tokenB.transFee))
-  ) {
-    errorMessage = errorMessage ?? t`${tokenB?.symbol} amount must greater than trans fee`;
-  }
+    if (
+      tokenB &&
+      currencyBAmount &&
+      !depositBDisabled &&
+      !currencyBAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenB.wrapped, tokenB.transFee))
+    )
+      return t`${tokenB?.symbol} amount must greater than trans fee`;
 
-  if (
-    (!VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenB?.address)) ||
-      !VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenA?.address))) &&
-    noLiquidity
-  ) {
-    errorMessage = errorMessage ?? t`Only ICRC1 and ICRC2 support`;
-  }
+    if (
+      (!VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenB?.address)) ||
+        !VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenA?.address))) &&
+      noLiquidity
+    )
+      return t`Only ICRC1 and ICRC2 support`;
+  }, [
+    hasPairWithBaseToken,
+    typedValue,
+    poolState,
+    invalidPrice,
+    invalidRange,
+    parsedAmounts,
+    depositADisabled,
+    depositBDisabled,
+    available,
+    token0,
+    token0Insufficient,
+    token1,
+    token1Insufficient,
+    tokenA,
+    currencyAAmount,
+    tokenB,
+    currencyBAmount,
+    noLiquidity,
+  ]);
 
   return {
     ticks,
@@ -521,7 +515,7 @@ export function useMintInfo(
     depositADisabled,
     depositBDisabled,
     ticksAtLimit,
-    errorMessage,
+    errorMessage: error,
     position,
     price,
     invertPrice,
