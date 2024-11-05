@@ -1,11 +1,10 @@
-import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/utils";
-import { Position, Token } from "@icpswap/swap-sdk";
+import { parseTokenAmount, BigNumber, shorten, toSignificantWithGroupSeparator, nonNullArgs } from "@icpswap/utils";
+import { Position, TICK_SPACINGS, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
-import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
-import { getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { StepContents } from "types/step";
+import { Typography } from "components/Mui";
 
 export interface CancelLimitStepsProps {
   positionId: bigint;
@@ -30,44 +29,44 @@ function TokenAmount({ token, amount }: TokenAmountProps) {
   );
 }
 
-export function getCancelLimitSteps({
-  positionId,
-  principal,
-  handleReclaim,
-  key,
-  keepTokenInPools,
-  position,
-}: CancelLimitStepsProps) {
-  const { amount0, amount1 } = getDecreaseLiquidityAmount(key) ?? {};
+export function getCancelLimitSteps({ principal, handleReclaim, keepTokenInPools, position }: CancelLimitStepsProps) {
+  const { token0, token1 } = position.pool;
 
-  const token = position.amount0.equalTo(0) ? position.pool.token1 : position.pool.token0;
-  const amount = position.amount0.equalTo(0) ? amount1 : amount0;
+  const token = position.amount0.equalTo(0) ? token1 : token0;
+  const amount = position.amount0.equalTo(0) ? position.amount1.toExact() : position.amount0.toExact();
+  const outputToken = token.equals(token1) ? token0 : token1;
 
-  const withdrawAmount =
-    amount === undefined
-      ? undefined
-      : toSignificant(parseTokenAmount(amount, token.decimals).toFixed(), 12, {
-          groupSeparator: ",",
-        });
+  const priceTick = position.tickUpper - TICK_SPACINGS[position.pool.fee];
+  const orderPrice = tickToPrice(token, outputToken, priceTick).toFixed();
+
+  const withdrawAmount = nonNullArgs(amount) ? toSignificantWithGroupSeparator(amount) : undefined;
 
   const withdrawAmountLessThanZero =
     amount === undefined
       ? false
-      : amount === BigInt(0)
+      : new BigNumber(amount).isEqualTo(0)
       ? false
       : !token
       ? false
-      : new BigNumber((amount - BigInt(token.transFee)).toString()).isLessThan(0);
+      : new BigNumber(amount).minus(parseTokenAmount(token.transFee, token.decimals)).isLessThan(0);
+
+  const LimitPrice = (
+    <Flex gap="0 4px">
+      <Typography fontSize="12px">
+        {`1 ${token.symbol} = ${toSignificantWithGroupSeparator(orderPrice)} ${outputToken.symbol}`}
+      </Typography>
+    </Flex>
+  );
 
   const contents = [
     {
-      title: t`Confirm Cancellation`,
+      title: t`Cancel Limit Order ${token0.symbol} and ${token1.symbol}`,
       step: 0,
       children: [
-        { label: t`Position ID`, value: positionId.toString() },
+        { label: t`Limit Price`, value: LimitPrice },
         {
           label: `${token.symbol}`,
-          value: <TokenAmount amount={toFormat(withdrawAmount)} token={token} />,
+          value: <TokenAmount amount={withdrawAmount} token={token} />,
         },
       ],
     },
