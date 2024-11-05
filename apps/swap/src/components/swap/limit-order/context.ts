@@ -14,6 +14,8 @@ export interface LimitContextProps {
   unavailableBalanceKeys: string[];
   setUnavailableBalanceKey: (key: string) => void;
   removeUnavailableBalanceKey: (key: string) => void;
+  inverted: boolean;
+  setInverted: (inverted: boolean) => void;
 }
 
 export const LimitContext = createContext<LimitContextProps>({} as LimitContextProps);

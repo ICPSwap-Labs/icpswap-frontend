@@ -4,3 +4,4 @@ export * from "./LimitOrders";
 export * from "./PlaceOrder";
 export * from "./SwapInputWrapper";
 export * from "./context";
+export * from "./GuidePanel";

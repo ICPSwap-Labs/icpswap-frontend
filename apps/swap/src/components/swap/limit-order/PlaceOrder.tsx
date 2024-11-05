@@ -30,6 +30,8 @@ import qs from "qs";
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { SwapLimitPrice } from "./Price";
 import { LimitContext } from "./context";
+import { CurrentPricePanel } from "./CurrentPricePanel";
+import { PriceError } from "./PriceError";
 
 export interface PlaceOrderRef {
   setInputAmount: (amount: string) => void;
@@ -51,7 +53,7 @@ export const PlaceOrder = forwardRef(
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken } = useContext(LimitContext);
+    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken, setInverted } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput } = useSwapHandlers();
     const handleClearSwapState = useCleanSwapState();
@@ -93,6 +95,8 @@ export const PlaceOrder = forwardRef(
       position,
       orderPrice,
       setOrderPrice,
+      minUseableTick,
+      isInputTokenSorted,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     // For swap pro
@@ -110,11 +114,14 @@ export const PlaceOrder = forwardRef(
     const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
     const outputCurrencyInterfacePrice = useUSDPrice(outputToken);
 
+    const pool = useMemo(() => {
+      return routes[0]?.pools[0];
+    }, [routes]);
+
     useEffect(() => {
-      const pool = routes[0]?.pools[0];
       setSelectedPool(pool);
       setNoLiquidity(noLiquidity);
-    }, [routes, setSelectedPool, noLiquidity]);
+    }, [pool, setSelectedPool, noLiquidity]);
 
     useEffect(() => {
       setInputToken(inputToken);
@@ -230,6 +237,7 @@ export const PlaceOrder = forwardRef(
       handleInput("", "input");
       handleInput("", "output");
       setOrderPrice("");
+      setInverted(false);
 
       const addSuccessful = await call();
 
@@ -287,7 +295,7 @@ export const PlaceOrder = forwardRef(
 
       history.push(`${prePath}?${qs.stringify(newSearch)}`);
       handleInput("", "input");
-      setOrderPrice("");
+      setOrderPrice(null);
     }, [ui, history, location]);
 
     useImperativeHandle(
@@ -332,6 +340,18 @@ export const PlaceOrder = forwardRef(
           inputToken={inputToken}
           outputToken={outputToken}
           currentPrice={currentPrice}
+          minUseableTick={minUseableTick}
+          isInputTokenSorted={isInputTokenSorted}
+        />
+
+        <CurrentPricePanel inputToken={inputToken} outputToken={outputToken} currentPrice={currentPrice} />
+
+        <PriceError
+          inputToken={inputToken}
+          outputToken={outputToken}
+          currentPrice={currentPrice}
+          minUseableTick={minUseableTick}
+          orderPriceTick={orderPriceTick}
         />
 
         <Button

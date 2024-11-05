@@ -6,7 +6,7 @@ import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
-import { UserLimitPanel, LimitOrders, PlaceOrder } from "components/swap/limit-order";
+import { UserLimitPanel, LimitOrders, PlaceOrder, GuidePanel } from "components/swap/limit-order";
 
 export default function Limit() {
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
@@ -15,6 +15,7 @@ export default function Limit() {
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [showLimitOrders, setShowLimitOrders] = useState(false);
+  const [inverted, setInverted] = useState(false);
 
   const isConnected = useConnectorStateConnected();
 
@@ -48,6 +49,8 @@ export default function Limit() {
         setInputToken,
         outputToken,
         setOutputToken,
+        inverted,
+        setInverted,
       }}
     >
       <Wrapper>
@@ -94,6 +97,10 @@ export default function Limit() {
                 )}
               </Box>
             </MainCard>
+
+            <Box mt="8px" sx={{ width: "100%" }}>
+              <GuidePanel />
+            </Box>
 
             {isConnected && showLimitOrders === false ? (
               <UserLimitPanel onClick={() => setShowLimitOrders(true)} />

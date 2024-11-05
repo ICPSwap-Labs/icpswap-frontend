@@ -42,7 +42,7 @@ export function UserLimitPanel({ onClick }: UserLimitOrdersProps) {
     >
       <Flex justify="space-between" onClick={onClick}>
         <Typography>
-          <Trans>All {allLimitOrders ? allLimitOrders.length : "--"} limits</Trans>
+          <Trans>Limit Order History</Trans>
         </Typography>
         <ArrowRight size={18} />
       </Flex>

@@ -48,7 +48,6 @@ export function themePalette(theme: ThemeOption) {
     grey: {
       50: theme.colors.grey50,
       100: theme.colors.grey100,
-      500: theme.darkTextSecondary,
       600: theme.heading,
       700: theme.colors.darkTextPrimary,
       900: theme.textDark,
@@ -75,6 +74,7 @@ export function themePalette(theme: ThemeOption) {
       "theme-secondary": theme.colors.darkSecondaryMain,
       success: theme.colors["text.success"],
       apr: theme.colors.apr,
+      default: theme.colors.darkTextSecondary,
     },
     background: {
       paper: theme.paper,

@@ -18,7 +18,7 @@ import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { TICK_SPACINGS } from "@icpswap/swap-sdk";
+import { TICK_SPACINGS, nearestUsableTick } from "@icpswap/swap-sdk";
 
 import {
   selectCurrency,
@@ -142,6 +142,29 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     orderPrice,
   });
 
+  const isInputTokenSorted = useMemo(() => {
+    if (isNullArgs(pool) || isNullArgs(inputToken)) return null;
+    return pool.token0.equals(inputToken);
+  }, [pool, inputToken]);
+
+  const minUseableTick = useMemo(() => {
+    if (isNullArgs(pool) || isNullArgs(isInputTokenSorted)) return null;
+
+    const tickCurrent = pool.tickCurrent;
+
+    if (isInputTokenSorted) {
+      const minTick = tickCurrent + TICK_SPACINGS[pool.fee];
+      const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
+      if (useableTick - TICK_SPACINGS[pool.fee] < tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
+      return useableTick;
+    }
+
+    const minTick = tickCurrent - TICK_SPACINGS[pool.fee];
+    const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
+    if (useableTick + TICK_SPACINGS[pool.fee] > tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
+    return useableTick;
+  }, [pool, isInputTokenSorted]);
+
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
   const { result: __inputTokenSubBalance } = useTokenBalance({
@@ -230,25 +253,19 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
-    if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
+    if (new BigNumber(orderPrice).isEqualTo(0) || isNullArgs(minUseableTick)) return t`Invalid price`;
     if (
       !inputTokenSubBalance ||
       isNullArgs(inputTokenUnusedBalance) ||
       isNullArgs(currentPrice) ||
       isNullArgs(pool) ||
-      isNullArgs(orderPriceTick)
+      isNullArgs(orderPriceTick) ||
+      isNullArgs(isInputTokenSorted)
     )
       return t`Submit Limit Order`;
-    if (new BigNumber(orderPrice).isLessThan(currentPrice)) return t`Order price must be greater than current price`;
 
-    const tickUpper = orderPriceTick + TICK_SPACINGS[pool.fee];
-    const tickLower = orderPriceTick - TICK_SPACINGS[pool.fee];
-    const tickCurrent = pool.tickCurrent;
-
-    if (tickCurrent < tickUpper && tickCurrent > tickLower)
-      return t`Invalid price, please adjust your limit price to proceed.`;
-
-    return null;
+    if (isInputTokenSorted && orderPriceTick < minUseableTick) return t`Adjust your limit price to proceed.`;
+    if (!isInputTokenSorted && orderPriceTick > minUseableTick) return t`Adjust your limit price to proceed.`;
   }, [
     typedValue,
     parsedAmount,
@@ -262,6 +279,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     pool,
     orderPriceTick,
     inputToken,
+    minUseableTick,
+    isInputTokenSorted,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
@@ -306,6 +325,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     position,
     orderPrice,
     setOrderPrice,
+    minUseableTick,
+    isInputTokenSorted,
   };
 }
 

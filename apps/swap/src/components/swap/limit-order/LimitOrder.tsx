@@ -154,7 +154,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
                 baseToken={inputToken}
                 quoteToken={outputToken}
                 price={currentPrice?.toFixed()}
-                convert={invertPrice}
+                inverted={invertPrice}
               />
             </Flex>
           </Box>
