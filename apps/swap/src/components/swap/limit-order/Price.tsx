@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, useContext } from "react";
+import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useImperativeHandle } from "react";
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
@@ -11,6 +11,10 @@ import { PriceMutator } from "components/swap/limit-order/PriceMutator";
 
 import { LimitContext } from "./context";
 
+export interface LimitPriceRef {
+  setDefaultPrice: () => void;
+}
+
 export interface SwapLimitPriceProps {
   ui?: "pro" | "normal";
   orderPrice: string | Null;
@@ -22,250 +26,290 @@ export interface SwapLimitPriceProps {
   isInputTokenSorted: boolean | Null;
 }
 
-export function SwapLimitPrice({
-  ui = "normal",
-  inputToken,
-  outputToken,
-  onInputOrderPrice,
-  currentPrice,
-  orderPrice,
-  minUseableTick,
-  isInputTokenSorted,
-}: SwapLimitPriceProps) {
-  const [inputValue, setInputValue] = useState<string | Null>(null);
+export const SwapLimitPrice = forwardRef(
+  (
+    {
+      ui = "normal",
+      inputToken,
+      outputToken,
+      onInputOrderPrice,
+      currentPrice,
+      orderPrice,
+      minUseableTick,
+      isInputTokenSorted,
+    }: SwapLimitPriceProps,
+    ref,
+  ) => {
+    const [inputValue, setInputValue] = useState<string | Null>(null);
 
-  const { inverted, setInverted, selectedPool } = useContext(LimitContext);
+    const { inverted, setInverted, selectedPool } = useContext(LimitContext);
 
-  const handleInputPrice = useCallback(
-    (value: string, inverted: boolean) => {
-      setInputValue(value);
-
-      if (value === "") {
-        onInputOrderPrice("");
-        return;
+    const minUseablePrice = useMemo(() => {
+      if (nonNullArgs(inputToken) && nonNullArgs(outputToken) && nonNullArgs(minUseableTick)) {
+        return tickToPrice(inputToken, outputToken, minUseableTick).toFixed(outputToken.decimals);
       }
+    }, [inputToken, outputToken, minUseableTick]);
 
-      if (new BigNumber(value).isEqualTo(0) || !value || !currentPrice) return;
+    const handleInputPrice = useCallback(
+      (value: string, inverted: boolean) => {
+        setInputValue(value);
 
-      // const price = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
-      const orderPrice = inverted ? new BigNumber(1).dividedBy(value).toString() : value;
-
-      onInputOrderPrice(orderPrice);
-    },
-    [currentPrice, onInputOrderPrice],
-  );
-
-  const handleInvert = useCallback(() => {
-    setInverted(!inverted);
-
-    if (nonNullArgs(inputValue) && inputValue !== "") {
-      handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(4), !inverted);
-    }
-  }, [setInverted, inverted, inputValue]);
-
-  useEffect(() => {
-    if (isNullArgs(orderPrice) || orderPrice === "") {
-      setInputValue("");
-    }
-  }, [orderPrice]);
-
-  const { inputTokenInverted, outputTokenInverted } = useMemo(() => {
-    if (!inputToken || !outputToken) return {};
-
-    return inverted
-      ? {
-          inputTokenInverted: outputToken,
-          outputTokenInverted: inputToken,
+        if (value === "") {
+          onInputOrderPrice("");
+          return;
         }
-      : {
-          inputTokenInverted: inputToken,
-          outputTokenInverted: outputToken,
-        };
-  }, [inverted, inputToken, outputToken]);
 
-  const __orderPrice = useMemo(() => {
-    if (nonNullArgs(orderPrice) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-      return new Price(
-        inputToken,
-        outputToken,
-        formatTokenAmount(1, inputToken.decimals).toString(),
-        formatTokenAmount(orderPrice, outputToken.decimals).toString(),
-      );
-    }
-  }, [orderPrice, inputToken, outputToken]);
+        if (new BigNumber(value).isEqualTo(0) || !value || !currentPrice) return;
 
-  const useableTick = useMemo(() => {
-    if (nonNullArgs(__orderPrice) && nonNullArgs(selectedPool) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-      return nearestUsableTick(priceToClosestTick(__orderPrice), TICK_SPACINGS[selectedPool.fee]);
-    }
-  }, [__orderPrice, selectedPool]);
+        // const price = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
+        const orderPrice = inverted ? new BigNumber(1).dividedBy(value).toString() : value;
 
-  const handleIncreasePrice = useCallback(() => {
-    if (nonNullArgs(selectedPool) && nonNullArgs(useableTick) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-      const newPriceTick =
-        useableTick +
-        (isInputTokenSorted
-          ? inverted
-            ? -TICK_SPACINGS[selectedPool.fee]
-            : TICK_SPACINGS[selectedPool.fee]
-          : inverted
-          ? TICK_SPACINGS[selectedPool.fee]
-          : -TICK_SPACINGS[selectedPool.fee]);
-      const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
-
-      handleInputPrice(
-        inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
-        inverted,
-      );
-    }
-  }, [useableTick, selectedPool, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
-
-  const handleDecreasePrice = useCallback(() => {
-    if (nonNullArgs(useableTick) && nonNullArgs(selectedPool) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-      const newPriceTick =
-        useableTick +
-        (isInputTokenSorted
-          ? inverted
-            ? TICK_SPACINGS[selectedPool.fee]
-            : -TICK_SPACINGS[selectedPool.fee]
-          : inverted
-          ? -TICK_SPACINGS[selectedPool.fee]
-          : +TICK_SPACINGS[selectedPool.fee]);
-
-      const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
-
-      handleInputPrice(
-        inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
-        inverted,
-      );
-    }
-  }, [selectedPool, useableTick, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
-
-  const handleMinMax = useCallback(() => {
-    if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
-      return;
-
-    // Force tick range exclude tick current
-    const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
-    handleInputPrice(
-      inverted ? new BigNumber(1).dividedBy(minPrice.toFixed()).toString() : minPrice.toFixed(),
-      inverted,
+        onInputOrderPrice(orderPrice);
+      },
+      [currentPrice, onInputOrderPrice],
     );
-  }, [inverted, inputToken, outputToken, selectedPool, minUseableTick]);
 
-  const handlePriceChange = useCallback(
-    (val: number) => {
-      if (isNullArgs(currentPrice)) return;
+    const handleInvert = useCallback(() => {
+      setInverted(!inverted);
 
-      const invertedPrice = new BigNumber(1).dividedBy(currentPrice);
-      const invertedNewPrice = inverted
-        ? invertedPrice.minus(invertedPrice.multipliedBy(val)).toString()
-        : new BigNumber(currentPrice).multipliedBy(val).plus(currentPrice).toString();
+      if (nonNullArgs(inputValue) && inputValue !== "" && nonNullArgs(outputToken)) {
+        handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(outputToken.decimals), !inverted);
+      }
+    }, [setInverted, inverted, inputValue, outputToken]);
 
-      handleInputPrice(invertedNewPrice, inverted);
-    },
-    [inverted, currentPrice],
-  );
+    useEffect(() => {
+      if (isNullArgs(orderPrice) || orderPrice === "") {
+        setInputValue("");
+      }
+    }, [orderPrice]);
 
-  // Set default order price
-  useEffect(() => {
-    if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
-      return;
+    const { inputTokenInverted, outputTokenInverted } = useMemo(() => {
+      if (!inputToken || !outputToken) return {};
 
-    // Force tick range exclude tick current
-    const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
-    handleInputPrice(minPrice.toFixed(), false);
-  }, [inputToken, outputToken, selectedPool, minUseableTick]);
+      return inverted
+        ? {
+            inputTokenInverted: outputToken,
+            outputTokenInverted: inputToken,
+          }
+        : {
+            inputTokenInverted: inputToken,
+            outputTokenInverted: outputToken,
+          };
+    }, [inverted, inputToken, outputToken]);
 
-  return (
-    <MainCard
-      border="level4"
-      level={ui === "pro" ? 1 : 3}
-      padding={ui === "pro" ? "10px" : "16px"}
-      borderRadius={ui === "pro" ? "12px" : undefined}
-    >
-      <Box sx={{ display: "grid", gap: "16px 0", gridTemplateColumns: "1fr" }}>
-        <Flex fullWidth justify="space-between">
-          <Flex gap="0 4px">
-            <Typography>
-              <Trans>When</Trans>
-            </Typography>
+    const __orderPrice = useMemo(() => {
+      if (nonNullArgs(orderPrice) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
+        return new Price(
+          inputToken,
+          outputToken,
+          formatTokenAmount(1, inputToken.decimals).toString(),
+          formatTokenAmount(orderPrice, outputToken.decimals).toString(),
+        );
+      }
+    }, [orderPrice, inputToken, outputToken]);
 
-            <Typography color="text.primary" component="div" sx={{ display: "flex", gap: "0 4px" }}>
-              1 <TokenImage size="16px" logo={inputTokenInverted?.logo} tokenId={inputTokenInverted?.address} />{" "}
-              {inputTokenInverted?.symbol} =
-            </Typography>
+    const useableTick = useMemo(() => {
+      if (
+        nonNullArgs(__orderPrice) &&
+        nonNullArgs(selectedPool) &&
+        nonNullArgs(inputToken) &&
+        nonNullArgs(outputToken)
+      ) {
+        return nearestUsableTick(priceToClosestTick(__orderPrice), TICK_SPACINGS[selectedPool.fee]);
+      }
+    }, [__orderPrice, selectedPool]);
+
+    const handleIncreasePrice = useCallback(() => {
+      if (
+        nonNullArgs(selectedPool) &&
+        nonNullArgs(useableTick) &&
+        nonNullArgs(inputToken) &&
+        nonNullArgs(outputToken)
+      ) {
+        const newPriceTick =
+          useableTick +
+          (isInputTokenSorted
+            ? inverted
+              ? -TICK_SPACINGS[selectedPool.fee]
+              : TICK_SPACINGS[selectedPool.fee]
+            : inverted
+            ? TICK_SPACINGS[selectedPool.fee]
+            : -TICK_SPACINGS[selectedPool.fee]);
+        const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
+
+        handleInputPrice(
+          inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
+          inverted,
+        );
+      }
+    }, [useableTick, selectedPool, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
+
+    const handleDecreasePrice = useCallback(() => {
+      if (
+        nonNullArgs(useableTick) &&
+        nonNullArgs(selectedPool) &&
+        nonNullArgs(inputToken) &&
+        nonNullArgs(outputToken)
+      ) {
+        const newPriceTick =
+          useableTick +
+          (isInputTokenSorted
+            ? inverted
+              ? TICK_SPACINGS[selectedPool.fee]
+              : -TICK_SPACINGS[selectedPool.fee]
+            : inverted
+            ? -TICK_SPACINGS[selectedPool.fee]
+            : +TICK_SPACINGS[selectedPool.fee]);
+
+        const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
+
+        handleInputPrice(
+          inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
+          inverted,
+        );
+      }
+    }, [selectedPool, useableTick, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
+
+    const handleMinMax = useCallback(() => {
+      if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
+        return;
+
+      // Force tick range exclude tick current
+      const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
+      handleInputPrice(
+        inverted
+          ? new BigNumber(1).dividedBy(minPrice.toFixed(outputToken.decimals)).toString()
+          : minPrice.toFixed(outputToken.decimals),
+        inverted,
+      );
+    }, [inverted, inputToken, outputToken, selectedPool, minUseableTick]);
+
+    const handlePriceChange = useCallback(
+      (val: number) => {
+        if (isNullArgs(minUseablePrice)) return;
+
+        const invertedPrice = new BigNumber(1).dividedBy(minUseablePrice);
+        const invertedNewPrice = inverted
+          ? invertedPrice.minus(invertedPrice.multipliedBy(val)).toString()
+          : new BigNumber(minUseablePrice).multipliedBy(val).plus(minUseablePrice).toString();
+
+        handleInputPrice(invertedNewPrice, inverted);
+      },
+      [inverted, minUseablePrice],
+    );
+
+    const handleSetDefaultPrice = useCallback(() => {
+      if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
+        return;
+
+      // Force tick range exclude tick current
+      const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
+      handleInputPrice(minPrice.toFixed(), false);
+    }, [inputToken, outputToken, selectedPool, minUseableTick]);
+
+    // Set default order price
+    useEffect(() => {
+      handleSetDefaultPrice();
+    }, [handleSetDefaultPrice, inputToken, outputToken, selectedPool, minUseableTick]);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        setDefaultPrice: handleSetDefaultPrice,
+      }),
+      [handleSetDefaultPrice],
+    );
+
+    return (
+      <MainCard
+        border="level4"
+        level={ui === "pro" ? 1 : 3}
+        padding={ui === "pro" ? "10px" : "16px"}
+        borderRadius={ui === "pro" ? "12px" : undefined}
+      >
+        <Box sx={{ display: "grid", gap: "16px 0", gridTemplateColumns: "1fr" }}>
+          <Flex fullWidth justify="space-between">
+            <Flex gap="0 4px">
+              <Typography>
+                <Trans>When</Trans>
+              </Typography>
+
+              <Typography color="text.primary" component="div" sx={{ display: "flex", gap: "0 4px" }}>
+                1 <TokenImage size="16px" logo={inputTokenInverted?.logo} tokenId={inputTokenInverted?.address} />{" "}
+                {inputTokenInverted?.symbol} =
+              </Typography>
+            </Flex>
+
+            {inputToken && outputToken ? (
+              <Box
+                sx={{ width: "24px", height: "24px", cursor: "pointer", transform: "rotate(90deg)" }}
+                onClick={handleInvert}
+              >
+                <img src="/images/ck-bridge-switch.svg" style={{ width: "24px", height: "24px" }} alt="" />
+              </Box>
+            ) : null}
           </Flex>
 
-          {inputToken && outputToken ? (
-            <Box
-              sx={{ width: "24px", height: "24px", cursor: "pointer", transform: "rotate(90deg)" }}
-              onClick={handleInvert}
-            >
-              <img src="/images/ck-bridge-switch.svg" style={{ width: "24px", height: "24px" }} alt="" />
-            </Box>
-          ) : null}
-        </Flex>
+          <Flex>
+            <Flex sx={{ flex: 1 }} fullWidth gap="0 12px">
+              <Flex vertical align="flex-start" gap="6px 0">
+                <Box
+                  sx={{
+                    width: 0,
+                    height: 0,
+                    borderBottom: "6px solid #8492C4",
+                    borderLeft: "4px solid transparent",
+                    borderRight: "4px solid transparent",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleIncreasePrice}
+                />
 
-        <Flex>
-          <Flex sx={{ flex: 1 }} fullWidth gap="0 12px">
-            <Flex vertical align="flex-start" gap="6px 0">
-              <Box
-                sx={{
-                  width: 0,
-                  height: 0,
-                  borderBottom: "6px solid #8492C4",
-                  borderLeft: "4px solid transparent",
-                  borderRight: "4px solid transparent",
-                  cursor: "pointer",
-                }}
-                onClick={handleIncreasePrice}
-              />
+                <Box
+                  sx={{
+                    width: 0,
+                    height: 0,
+                    borderTop: "6px solid #8492C4",
+                    borderLeft: "4px solid transparent",
+                    borderRight: "4px solid transparent",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleDecreasePrice}
+                />
+              </Flex>
 
-              <Box
-                sx={{
-                  width: 0,
-                  height: 0,
-                  borderTop: "6px solid #8492C4",
-                  borderLeft: "4px solid transparent",
-                  borderRight: "4px solid transparent",
-                  cursor: "pointer",
-                }}
-                onClick={handleDecreasePrice}
+              <SwapInput
+                align="left"
+                token={outputToken}
+                value={inputValue}
+                onUserInput={(value: string) => handleInputPrice(value, inverted)}
               />
             </Flex>
 
-            <SwapInput
-              align="left"
-              token={outputToken}
-              value={inputValue}
-              onUserInput={(value: string) => handleInputPrice(value, inverted)}
-            />
+            <Flex gap="0 8px">
+              <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
+                {outputTokenInverted ? (
+                  <Flex gap="0 4px">
+                    <TokenImage size="16px" logo={outputTokenInverted.logo} tokenId={outputTokenInverted.address} />
+                    <Typography color="text.primary">{outputTokenInverted.symbol}</Typography>
+                  </Flex>
+                ) : (
+                  ""
+                )}
+              </Typography>
+            </Flex>
           </Flex>
 
-          <Flex gap="0 8px">
-            <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
-              {outputTokenInverted ? (
-                <Flex gap="0 4px">
-                  <TokenImage size="16px" logo={outputTokenInverted.logo} tokenId={outputTokenInverted.address} />
-                  <Typography color="text.primary">{outputTokenInverted.symbol}</Typography>
-                </Flex>
-              ) : (
-                ""
-              )}
-            </Typography>
-          </Flex>
-        </Flex>
-
-        <PriceMutator
-          currentPrice={currentPrice}
-          inverted={inverted}
-          onMinMax={handleMinMax}
-          onChange={handlePriceChange}
-          inputValue={inputValue}
-          minUseableTick={minUseableTick}
-        />
-      </Box>
-    </MainCard>
-  );
-}
+          <PriceMutator
+            currentPrice={currentPrice}
+            inverted={inverted}
+            onMinMax={handleMinMax}
+            onChange={handlePriceChange}
+            inputValue={inputValue}
+            minUseablePrice={minUseablePrice}
+          />
+        </Box>
+      </MainCard>
+    );
+  },
+);

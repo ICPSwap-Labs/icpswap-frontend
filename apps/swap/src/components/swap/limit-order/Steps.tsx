@@ -1,6 +1,5 @@
 import { Typography } from "components/Mui";
 import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Tooltip } from "@icpswap/ui";
 import { Position, TICK_SPACINGS, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
@@ -67,8 +66,8 @@ export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }
   const priceUpper = tickToPrice(inputToken, outputToken, tickUpper).toFixed();
 
   const PriceRange = (
-    <Flex gap="0 4px">
-      <Typography fontSize="12px">
+    <Flex gap="0 4px" justify="flex-end">
+      <Typography fontSize="12px" align="right">
         {`${toSignificantWithGroupSeparator(priceLower)} - ${toSignificantWithGroupSeparator(priceUpper)} ${
           inputToken.symbol
         } per ${outputToken.symbol}`}
@@ -105,13 +104,9 @@ export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }
 
     {
       title: (
-        <Flex gap="0 4px">
-          <Typography color="text.primary" fontWeight={500} fontSize="16px">
-            <Trans>Set Limit Order</Trans>
-          </Typography>
-
-          <Tooltip tips="" />
-        </Flex>
+        <Typography color="text.primary" fontWeight={500} fontSize="16px">
+          <Trans>Set Limit Order</Trans>
+        </Typography>
       ),
       children: [
         { label: <Trans>Limit Price</Trans>, value: LimitPrice },

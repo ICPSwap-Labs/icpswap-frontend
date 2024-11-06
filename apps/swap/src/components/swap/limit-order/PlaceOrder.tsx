@@ -1,4 +1,14 @@
-import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useContext,
+  forwardRef,
+  Ref,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Box } from "components/Mui";
 import {
   useSwapState,
@@ -28,7 +38,7 @@ import { useGlobalContext, useRefreshTrigger } from "hooks/index";
 import qs from "qs";
 
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
-import { SwapLimitPrice } from "./Price";
+import { SwapLimitPrice, LimitPriceRef } from "./Price";
 import { LimitContext } from "./context";
 import { CurrentPricePanel } from "./CurrentPricePanel";
 import { PriceError } from "./PriceError";
@@ -63,8 +73,8 @@ export const PlaceOrder = forwardRef(
 
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-
     const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
+    const limitPriceRef = useRef<LimitPriceRef>();
 
     const {
       inputError: swapInputError,
@@ -243,6 +253,7 @@ export const PlaceOrder = forwardRef(
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
+        limitPriceRef?.current?.setDefaultPrice();
       }
 
       closeLoadingTip(loadingKey);
@@ -261,6 +272,7 @@ export const PlaceOrder = forwardRef(
       token1SubAccountBalance,
       inputToken,
       orderPriceTick,
+      limitPriceRef,
     ]);
 
     const handleMaxInput = useCallback(() => {
@@ -334,6 +346,7 @@ export const PlaceOrder = forwardRef(
         />
 
         <SwapLimitPrice
+          ref={limitPriceRef}
           ui={ui}
           orderPrice={orderPrice}
           onInputOrderPrice={setOrderPrice}

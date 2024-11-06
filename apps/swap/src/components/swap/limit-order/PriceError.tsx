@@ -17,30 +17,24 @@ export interface PriceErrorProps {
   orderPriceTick: number | Null;
 }
 
-export function PriceError({ inputToken, outputToken, minUseableTick, orderPriceTick, currentPrice }: PriceErrorProps) {
+export function PriceError({ inputToken, outputToken, minUseableTick, orderPriceTick }: PriceErrorProps) {
   const { selectedPool, inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
-    if (
-      isNullArgs(orderPriceTick) ||
-      isNullArgs(minUseableTick) ||
-      isNullArgs(inputToken) ||
-      isNullArgs(outputToken) ||
-      isNullArgs(currentPrice)
-    )
+    if (isNullArgs(orderPriceTick) || isNullArgs(minUseableTick) || isNullArgs(inputToken) || isNullArgs(outputToken))
       return null;
 
     const orderPrice = tickToPrice(inputToken, outputToken, orderPriceTick);
-    // const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
+    const minPrice = tickToPrice(inputToken, outputToken, minUseableTick).toFixed();
 
-    if (new BigNumber(orderPrice.toFixed(8)).isGreaterThan(currentPrice)) return null;
+    if (new BigNumber(orderPrice.toFixed(8)).isGreaterThan(minPrice)) return null;
 
-    const __percent = new BigNumber(orderPrice.toFixed(8)).minus(currentPrice).dividedBy(currentPrice).toFixed(4);
+    const __percent = new BigNumber(orderPrice.toFixed(8)).minus(minPrice).dividedBy(minPrice).toFixed(4);
 
     if (new BigNumber(__percent).isLessThan(0)) return __percent;
 
     return null;
-  }, [currentPrice, selectedPool, orderPriceTick, inputToken, minUseableTick, inputToken, outputToken, currentPrice]);
+  }, [selectedPool, orderPriceTick, inputToken, minUseableTick, inputToken, outputToken]);
 
   return pricePercent ? (
     <Box sx={{ padding: "16px", background: "rgba(211, 98, 91, .2)", borderRadius: "16px" }}>

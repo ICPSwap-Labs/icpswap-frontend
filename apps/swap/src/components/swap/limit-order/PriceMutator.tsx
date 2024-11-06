@@ -31,6 +31,9 @@ function Mutator({ children, active, onClick, showClose, onClose }: MutatorProps
         cursor: "pointer",
         gap: showClose ? "0 16px" : "0",
         userSelect: "none",
+        "&:hover": {
+          background: active ? theme.palette.background.level4 : theme.palette.background.level2,
+        },
       }}
       onClick={onClick}
     >
@@ -69,15 +72,16 @@ export interface PriceMutatorProps {
   onChange: (val: number) => void;
   inputValue: string | Null;
   currentPrice: string | Null;
-  minUseableTick: number | Null;
+  minUseablePrice: string | Null;
 }
 
-export function PriceMutator({ currentPrice, inputValue, inverted, onChange, onMinMax }: PriceMutatorProps) {
+export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUseablePrice }: PriceMutatorProps) {
   const percent = useMemo(() => {
-    if (isNullArgs(currentPrice) || isNullArgs(inputValue) || inputValue === "") return null;
-    const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
+    if (isNullArgs(minUseablePrice) || isNullArgs(inputValue) || inputValue === "") return null;
+    const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(minUseablePrice).toString() : minUseablePrice;
+
     return new BigNumber(inputValue).minus(invertedCurrentPrice).dividedBy(invertedCurrentPrice);
-  }, [currentPrice, inputValue, inverted]);
+  }, [minUseablePrice, inputValue, inverted]);
 
   const activePercent = useMemo(() => {
     if (isNullArgs(percent)) return null;

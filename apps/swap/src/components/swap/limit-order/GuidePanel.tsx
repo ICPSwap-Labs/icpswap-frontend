@@ -11,7 +11,7 @@ export function GuidePanel() {
 
         <Typography sx={{ lineHeight: "20px" }}>
           If you’re using the limit order feature for the first time, check out
-          <Link link="https://translate.google.com">
+          <Link link="https://iloveics.gitbook.io/icpswap/products/limit-order/how-to-use-limit-order">
             <Typography color="text.theme-secondary">this Guide.</Typography>
           </Link>
         </Typography>

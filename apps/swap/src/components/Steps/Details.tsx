@@ -198,7 +198,7 @@ export default function _StepDetails({
                           <Typography component="div" fontSize="12px">
                             {ele1.label}
                           </Typography>
-                          <Typography component="div" fontSize="12px">
+                          <Typography component="div" fontSize="12px" align="right">
                             {ele1.value}
                           </Typography>
                         </Box>
