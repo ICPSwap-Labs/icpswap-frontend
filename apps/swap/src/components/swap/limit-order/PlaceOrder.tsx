@@ -253,6 +253,7 @@ export const PlaceOrder = forwardRef(
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
+        limitPriceRef?.current?.setInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
 

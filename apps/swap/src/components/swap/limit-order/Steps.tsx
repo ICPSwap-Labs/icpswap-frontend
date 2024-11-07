@@ -101,7 +101,6 @@ export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }
       ],
       errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
-
     {
       title: (
         <Typography color="text.primary" fontWeight={500} fontSize="16px">
@@ -121,7 +120,7 @@ export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }
           <Trans>Retry</Trans>
         </TextButton>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool. You can retrieve your limit order tokens on the liquidity page after importing this trading pair.`,
     },
     {
       title: t`Submit Limit Order`,

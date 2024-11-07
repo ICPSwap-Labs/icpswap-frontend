@@ -13,6 +13,7 @@ import { LimitContext } from "./context";
 
 export interface LimitPriceRef {
   setDefaultPrice: () => void;
+  setInverted: () => void;
 }
 
 export interface SwapLimitPriceProps {
@@ -75,7 +76,7 @@ export const SwapLimitPrice = forwardRef(
       if (nonNullArgs(inputValue) && inputValue !== "" && nonNullArgs(outputToken)) {
         handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(outputToken.decimals), !inverted);
       }
-    }, [setInverted, inverted, inputValue, outputToken]);
+    }, [setInverted, outputToken, inputValue, inverted]);
 
     useEffect(() => {
       if (isNullArgs(orderPrice) || orderPrice === "") {
@@ -217,6 +218,7 @@ export const SwapLimitPrice = forwardRef(
       ref,
       () => ({
         setDefaultPrice: handleSetDefaultPrice,
+        setInverted: setInverted(false),
       }),
       [handleSetDefaultPrice],
     );
