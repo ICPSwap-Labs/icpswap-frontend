@@ -3,8 +3,8 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 
 export interface LimitContextProps {
-  selectedPool: Pool | undefined | null;
-  setSelectedPool: (pool: Pool) => void;
+  selectedPool: Pool | Null;
+  setSelectedPool: (pool: Pool | Null) => void;
   inputToken: Token | Null;
   setInputToken: (token: Token | Null) => void;
   outputToken: Token | Null;

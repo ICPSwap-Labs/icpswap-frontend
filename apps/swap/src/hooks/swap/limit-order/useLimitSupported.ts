@@ -21,10 +21,9 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
 
         if ("message" in result && result.message.includes(`has no query method 'getLimitOrders'`)) {
           setAvailable(false);
-          return;
+        } else {
+          setAvailable(result.status === ResultStatus.OK);
         }
-
-        setAvailable(result.status === ResultStatus.OK);
       }
 
       if (nonNullArgs(canisterId)) {
@@ -32,7 +31,6 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
 
         if ("message" in result && result.message.includes(`has no query method`)) {
           setLimitAvailableState(false);
-          return;
         }
 
         if (nonNullArgs(result.data)) {
@@ -46,7 +44,10 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
 
   // available by default
   return useMemo(
-    () => (nonNullArgs(available) && nonNullArgs(limitAvailableState) ? available && limitAvailableState : true),
+    () =>
+      nonNullArgs(available) && nonNullArgs(limitAvailableState)
+        ? available === true && limitAvailableState === true
+        : true,
     [available, limitAvailableState],
   );
 }

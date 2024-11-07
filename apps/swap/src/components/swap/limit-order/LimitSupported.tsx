@@ -1,17 +1,13 @@
-import { useContext } from "react";
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { WaringIcon } from "assets/icons/WaringIcon";
-import { useLimitSupported } from "hooks/swap/limit-order";
 
-import { LimitContext } from "./context";
+export interface LimitSupportedProps {
+  available: boolean;
+}
 
-export function LimitSupported() {
-  const { selectedPool } = useContext(LimitContext);
-
-  const available = useLimitSupported({ canisterId: selectedPool?.id });
-
+export function LimitSupported({ available }: LimitSupportedProps) {
   return available === false ? (
     <Box sx={{ padding: "16px", background: "rgba(211, 98, 91, .2)", borderRadius: "16px" }}>
       <Flex gap="0 8px">

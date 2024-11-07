@@ -21,7 +21,7 @@ import { isNullArgs } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_LIMIT_REFRESH_KEY, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
 import { TradeState } from "hooks/swap/useTrade";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
-import { usePlaceOrderCallback } from "hooks/swap/limit-order/usePlaceOrderCallback";
+import { usePlaceOrderCallback, useLimitSupported } from "hooks/swap/limit-order";
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -82,7 +82,6 @@ export const PlaceOrder = forwardRef(
       parsedAmount,
       trade,
       tradePoolId,
-      routes,
       state: swapState,
       currencyBalances,
       inputToken,
@@ -109,7 +108,10 @@ export const PlaceOrder = forwardRef(
       minUseableTick,
       isInputTokenSorted,
       outputAmount,
+      pool,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
+
+    const available = useLimitSupported({ canisterId: pool?.id });
 
     // For swap pro
     useEffect(() => {
@@ -125,10 +127,6 @@ export const PlaceOrder = forwardRef(
 
     const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
     const outputCurrencyInterfacePrice = useUSDPrice(outputToken);
-
-    const pool = useMemo(() => {
-      return routes[0]?.pools[0];
-    }, [routes]);
 
     useEffect(() => {
       setSelectedPool(pool);
@@ -368,14 +366,14 @@ export const PlaceOrder = forwardRef(
           orderPriceTick={orderPriceTick}
         />
 
-        <LimitSupported />
+        <LimitSupported available={available} />
 
         <Button
           fullWidth
           variant="contained"
           size="large"
           onClick={handleShowConfirmModal}
-          disabled={!isValid || isPoolNotChecked}
+          disabled={!isValid || isPoolNotChecked || !available}
           sx={{
             borderRadius: "16px",
           }}
