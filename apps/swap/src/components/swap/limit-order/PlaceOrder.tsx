@@ -42,6 +42,7 @@ import { SwapLimitPrice, LimitPriceRef } from "./Price";
 import { LimitContext } from "./context";
 import { CurrentPricePanel } from "./CurrentPricePanel";
 import { PriceError } from "./PriceError";
+import { LimitSupported } from "./LimitSupported";
 
 export interface PlaceOrderRef {
   setInputAmount: (amount: string) => void;
@@ -365,6 +366,8 @@ export const PlaceOrder = forwardRef(
           minUseableTick={minUseableTick}
           orderPriceTick={orderPriceTick}
         />
+
+        <LimitSupported />
 
         <Button
           fullWidth

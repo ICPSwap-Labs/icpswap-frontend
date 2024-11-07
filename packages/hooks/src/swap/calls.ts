@@ -21,6 +21,7 @@ import type {
   PaginationResult,
   LimitOrderKey,
   LimitOrderValue,
+  Null,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -466,6 +467,21 @@ export function useLimitOrders(canisterId: string | undefined) {
       if (!canisterId) return undefined;
       return await getLimitOrders(canisterId);
     }, [canisterId]),
+  );
+}
+
+export async function getPoolLimitAvailableState(canisterId: string) {
+  const result = await (await swapPool(canisterId)).getLimitOrderAvailabilityState();
+  return resultFormat<boolean>(result).data;
+}
+
+export function usePoolLimitAvailableState(canisterId: string | Null, refresh?: number) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId) return undefined;
+      return await getPoolLimitAvailableState(canisterId);
+    }, [canisterId]),
+    refresh,
   );
 }
 
