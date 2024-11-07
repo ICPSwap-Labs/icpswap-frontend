@@ -171,7 +171,7 @@ export function TradePriceV2({ price, token0, token1, showConvert = true, color 
 
   const formattedPrice = price
     ? showInverted
-      ? toSignificantWithGroupSeparator(price)
+      ? toSignificantWithGroupSeparator(new BigNumber(price).toString())
       : toSignificantWithGroupSeparator(new BigNumber(1).dividedBy(price).toString())
     : undefined;
 
@@ -192,7 +192,7 @@ export function TradePriceV2({ price, token0, token1, showConvert = true, color 
     return showInverted ? token0USDPrice : token1USDPrice;
   }, [price, showInverted, token0, token0USDPrice, token1, token1USDPrice]);
 
-  const text = `${`1 ${labelInverted} = ${formattedPrice ? new BigNumber(formattedPrice).toFormat() : "-"}`} ${label}`;
+  const text = `${`1 ${labelInverted} = ${formattedPrice ?? "-"}`} ${label}`;
 
   return (
     <Grid container justifyContent="flex-end" alignItems="center">

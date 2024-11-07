@@ -111,9 +111,9 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputToken, refresh);
 
   const orderPrice = useMemo(() => {
-    if (!__orderPrice || !inputToken) return undefined;
-    return new BigNumber(__orderPrice).toFixed(inputToken.decimals).toString();
-  }, [__orderPrice, inputToken]);
+    if (!__orderPrice || !outputToken) return undefined;
+    return new BigNumber(__orderPrice).toFixed(outputToken.decimals).toString();
+  }, [__orderPrice, outputToken]);
 
   const currencyBalances = {
     [SWAP_FIELD.INPUT]: inputCurrencyBalance,

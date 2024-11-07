@@ -44,7 +44,7 @@ export function PriceError({ inputToken, outputToken, minUseableTick, orderPrice
         <Typography color="#D3625B" sx={{ lineHeight: "20px" }}>
           <Trans>
             Your limit price is {numToPercent(new BigNumber(pricePercent).abs())} {inverted ? "higher" : "lower"} than
-            market. Adjust your limit price to proceed.
+            settable limit order price. Adjust your limit price to proceed.
           </Trans>
         </Typography>
       </Flex>

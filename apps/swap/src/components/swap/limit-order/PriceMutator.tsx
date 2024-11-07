@@ -6,7 +6,7 @@ import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils
 import { X } from "react-feather";
 import { Null } from "@icpswap/types";
 
-const VALUES = [0.01, 0.05, 0.1, 0.5];
+const VALUES = [0.1, 0.3, 0.5];
 const MIN_STEP = 0.01;
 
 interface MutatorProps {

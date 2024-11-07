@@ -204,7 +204,8 @@ export const SwapLimitPrice = forwardRef(
 
       // Force tick range exclude tick current
       const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
-      handleInputPrice(minPrice.toFixed(), false);
+
+      handleInputPrice(minPrice.toFixed(outputToken.decimals), false);
     }, [inputToken, outputToken, selectedPool, minUseableTick]);
 
     // Set default order price

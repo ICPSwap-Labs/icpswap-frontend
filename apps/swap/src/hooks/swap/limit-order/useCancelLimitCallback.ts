@@ -117,7 +117,7 @@ function useCancelLimitCalls() {
     const step1 = async () => {
       await sleep(2000);
 
-      openSuccessTip(t`Withdrawal submitted`);
+      openSuccessTip(t`Cancellation successful, withdrawal submitted`);
 
       if (refresh) refresh();
 

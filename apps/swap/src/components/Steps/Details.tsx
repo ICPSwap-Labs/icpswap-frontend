@@ -258,17 +258,17 @@ export default function _StepDetails({
                               flex: 1,
                               borderLeft: index === 0 ? "none" : `1px solid ${theme.palette.background.level4}`,
                             }}
+                            fullWidth
                           >
-                            <Box
+                            <Flex
+                              justify="center"
+                              align="center"
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
                                 height: "44px",
                               }}
                             >
                               {action}
-                            </Box>
+                            </Flex>
                           </Flex>
                         ))}
                       </Flex>
