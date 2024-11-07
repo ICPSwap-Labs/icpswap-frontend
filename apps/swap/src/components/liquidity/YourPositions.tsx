@@ -36,12 +36,7 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
     user: undefined,
   });
 
-  const { result: userLimitOrdersResult } = useUserLimitOrders(position?.pool.id, principal?.toString());
-
-  const userLimitOrders = useMemo(() => {
-    if (!userLimitOrdersResult) return undefined;
-    return userLimitOrdersResult.lowerLimitOrderIds.concat(userLimitOrdersResult.upperLimitOrdersIds);
-  }, [userLimitOrdersResult]);
+  const { result: userLimitOrders } = useUserLimitOrders(position?.pool.id, principal?.toString());
 
   const availableStakedFarm = useMemo(() => {
     if (!farms) return undefined;

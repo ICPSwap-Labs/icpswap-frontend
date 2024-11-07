@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, LoadingRow, NoData } from "@icpswap/ui";
@@ -21,16 +21,7 @@ export function LimitOrders({ ui = "normal", pool, onBack }: LimitOrdersProps) {
   const principal = useAccountPrincipal();
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("LimitOrders");
 
-  const { result: userLimitOrdersResult, loading } = useUserLimitOrders(
-    pool?.id,
-    principal?.toString(),
-    refreshTrigger,
-  );
-
-  const userLimitOrders = useMemo(() => {
-    if (!userLimitOrdersResult) return undefined;
-    return userLimitOrdersResult.lowerLimitOrderIds.concat(userLimitOrdersResult.upperLimitOrdersIds);
-  }, [userLimitOrdersResult]);
+  const { result: userLimitOrders, loading } = useUserLimitOrders(pool?.id, principal?.toString(), refreshTrigger);
 
   const handleCancelSuccess = useCallback(() => {
     setRefreshTrigger();

@@ -439,10 +439,8 @@ export async function placeOrder(canisterId: string, positionId: bigint, tickLim
 }
 
 export async function getUserLimitOrders(canisterId: string, principal: string) {
-  return resultFormat<{
-    upperLimitOrdersIds: Array<{ userPositionId: bigint; timestamp: bigint }>;
-    lowerLimitOrderIds: Array<{ userPositionId: bigint; timestamp: bigint }>;
-  }>(await (await swapPool(canisterId)).getUserLimitOrders(Principal.fromText(principal))).data;
+  const result = await (await swapPool(canisterId)).getSortedUserLimitOrders(Principal.fromText(principal));
+  return resultFormat<Array<{ userPositionId: bigint; timestamp: bigint }>>(result).data;
 }
 
 export function useUserLimitOrders(canisterId: string | undefined, principal: string | undefined, refresh?: number) {

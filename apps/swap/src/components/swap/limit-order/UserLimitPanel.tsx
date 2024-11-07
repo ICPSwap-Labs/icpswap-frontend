@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { LimitContext } from "components/swap/limit-order/index";
@@ -21,12 +21,7 @@ export function UserLimitPanel({ onClick }: UserLimitOrdersProps) {
 
   const [refreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
 
-  const { result } = useUserLimitOrders(selectedPool?.id, principal?.toString(), refreshTrigger);
-
-  const allLimitOrders = useMemo(() => {
-    if (!result) return undefined;
-    return result.lowerLimitOrderIds.concat(result.upperLimitOrdersIds);
-  }, [result]);
+  const { result: allLimitOrders } = useUserLimitOrders(selectedPool?.id, principal?.toString(), refreshTrigger);
 
   return (
     <Box
