@@ -11,8 +11,8 @@ import {
 } from "react";
 import { Box } from "components/Mui";
 import {
-  useSwapState,
-  useSwapHandlers,
+  useLimitState,
+  useLimitHandlers,
   useLimitOrderInfo,
   useCleanSwapState,
   useLoadDefaultParams,
@@ -65,7 +65,7 @@ export const PlaceOrder = forwardRef(
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
     const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken, setInverted } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
-    const { onUserInput } = useSwapHandlers();
+    const { onUserInput } = useLimitHandlers();
     const handleClearSwapState = useCleanSwapState();
     const refreshTrigger = useRefreshTrigger(SWAP_LIMIT_REFRESH_KEY);
 
@@ -73,7 +73,7 @@ export const PlaceOrder = forwardRef(
 
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-    const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
+    const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useLimitState();
     const limitPriceRef = useRef<LimitPriceRef>();
 
     const {
@@ -107,6 +107,7 @@ export const PlaceOrder = forwardRef(
       setOrderPrice,
       minUseableTick,
       isInputTokenSorted,
+      outputAmount,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     // For swap pro
@@ -141,7 +142,7 @@ export const PlaceOrder = forwardRef(
     const parsedAmounts = useMemo(
       () => ({
         [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
-        [SWAP_FIELD.OUTPUT]: independentField === SWAP_FIELD.OUTPUT ? parsedAmount : trade?.outputAmount,
+        [SWAP_FIELD.OUTPUT]: outputAmount,
       }),
       [independentField, parsedAmount, trade],
     );
@@ -184,8 +185,6 @@ export const PlaceOrder = forwardRef(
     const handleInput = (value: string, type: "input" | "output") => {
       if (type === "input") {
         onUserInput(SWAP_FIELD.INPUT, value);
-      } else {
-        onUserInput(SWAP_FIELD.OUTPUT, value);
       }
     };
 

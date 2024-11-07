@@ -1,6 +1,6 @@
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useSwapState } from "store/swap/limit-order/hooks";
+import { useLimitState } from "store/swap/limit-order/hooks";
 import { BigNumber } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
@@ -63,10 +63,9 @@ export function SwapInputWrapper({
   noLiquidity,
   poolId,
   onSwitchTokens,
-  orderPrice,
 }: SwapInputWrapperProps) {
   const theme = useTheme();
-  const { independentField, typedValue } = useSwapState();
+  const { independentField, typedValue } = useLimitState();
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
@@ -127,11 +126,7 @@ export function SwapInputWrapper({
         <SwapInputCurrency
           token={outputToken}
           currencyPrice={tokenBPrice}
-          formattedAmount={
-            orderPrice && formattedAmounts[SWAP_FIELD.INPUT]
-              ? new BigNumber(orderPrice).multipliedBy(formattedAmounts[SWAP_FIELD.INPUT]).toString()
-              : undefined
-          }
+          formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
           onInput={(value: string) => onInput(value, "output")}
           onTokenChange={onTokenBChange}

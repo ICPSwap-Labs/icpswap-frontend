@@ -130,7 +130,7 @@ export function SwapInputCurrency({
         </Flex>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formattedAmount ?? ""} token={token} onUserInput={onInput} disabled={disabled} />
+          <SwapInput value={formattedAmount} token={token} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 

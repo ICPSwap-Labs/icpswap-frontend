@@ -12,13 +12,20 @@ import { getTokenInsufficient } from "hooks/swap/index";
 import useDebounce from "hooks/useDebounce";
 import store from "store/index";
 import { useParsedQueryString, useUserUnusedBalance, useTokenBalance, useDebouncedChangeHandler } from "@icpswap/hooks";
-import { isValidPrincipal, formatTokenAmount, isNullArgs, BigNumber, parseTokenAmount } from "@icpswap/utils";
+import {
+  isValidPrincipal,
+  formatTokenAmount,
+  isNullArgs,
+  BigNumber,
+  parseTokenAmount,
+  nonNullArgs,
+} from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { TICK_SPACINGS, nearestUsableTick } from "@icpswap/swap-sdk";
+import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick } from "@icpswap/swap-sdk";
 
 import {
   selectCurrency,
@@ -29,7 +36,7 @@ import {
   updatePlaceOrderPositionId,
 } from "./actions";
 
-export function useSwapHandlers() {
+export function useLimitHandlers() {
   const dispatch = useAppDispatch();
 
   const onCurrencySelection = useCallback(
@@ -64,7 +71,7 @@ export function useSwapHandlers() {
   };
 }
 
-export function useSwapState() {
+export function useLimitState() {
   return useAppSelector((state) => state.limitOrder);
 }
 
@@ -93,7 +100,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     typedValue,
     [SWAP_FIELD.INPUT]: { currencyId: inputCurrencyId },
     [SWAP_FIELD.OUTPUT]: { currencyId: outputCurrencyId },
-  } = useSwapState();
+  } = useLimitState();
 
   const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
   const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
@@ -114,6 +121,17 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   };
 
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
+  const outputAmount = useMemo(() => {
+    if (nonNullArgs(parsedAmount) && nonNullArgs(orderPrice) && nonNullArgs(outputToken)) {
+      return CurrencyAmount.fromRawAmount(
+        outputToken,
+        formatTokenAmount(
+          new BigNumber(parsedAmount.toExact()).multipliedBy(orderPrice).toFixed(outputToken.decimals),
+          outputToken.decimals,
+        ).toString(),
+      );
+    }
+  }, [parsedAmount, orderPrice, outputToken]);
 
   const currencies = {
     [SWAP_FIELD.INPUT]: inputToken ?? undefined,
@@ -327,6 +345,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     setOrderPrice,
     minUseableTick,
     isInputTokenSorted,
+    outputAmount,
   };
 }
 

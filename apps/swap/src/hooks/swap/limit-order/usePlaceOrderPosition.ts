@@ -11,7 +11,7 @@ import {
 } from "@icpswap/swap-sdk";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
-import { useSwapState } from "store/swap/limit-order/hooks";
+import { useLimitState } from "store/swap/limit-order/hooks";
 
 interface usePlaceOrderPositionProps {
   pool: Pool | Null;
@@ -20,7 +20,7 @@ interface usePlaceOrderPositionProps {
 }
 
 export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlaceOrderPositionProps) {
-  const { typedValue: inputAmount } = useSwapState();
+  const { typedValue: inputAmount } = useLimitState();
 
   const { token0, token1, fee: feeAmount } = pool ?? {};
 
