@@ -234,7 +234,11 @@ export default function _StepDetails({
                           <Typography component="div">
                             <Trans>Error</Trans>
                           </Typography>
-                          <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
+                          <Typography
+                            component="div"
+                            color="text.danger"
+                            sx={{ maxWidth: "380px", lineHeight: "16px", fontSize: "12px", textAlign: "right" }}
+                          >
                             {ele.errorMessage}
                           </Typography>
                         </Box>
@@ -258,7 +262,6 @@ export default function _StepDetails({
                               flex: 1,
                               borderLeft: index === 0 ? "none" : `1px solid ${theme.palette.background.level4}`,
                             }}
-                            fullWidth
                           >
                             <Flex
                               justify="center"
@@ -266,6 +269,7 @@ export default function _StepDetails({
                               sx={{
                                 height: "44px",
                               }}
+                              fullWidth
                             >
                               {action}
                             </Flex>
