@@ -78,12 +78,10 @@ export function LimitOrders({ pool: __pool }: LimitOrdersProps) {
         <NoData />
       ) : (
         <Flex vertical align="flex-start" fullWidth gap="6px 0" sx={{ margin: "16px 0 0 0" }}>
-          {userLimitOrders.map(({ userPositionId, timestamp, poolId }) => (
+          {userLimitOrders.map((limitOrder) => (
             <LimitOrder
-              key={userPositionId.toString()}
-              positionId={userPositionId}
-              time={timestamp}
-              poolId={poolId}
+              key={limitOrder.userPositionId.toString()}
+              order={limitOrder}
               onCancelSuccess={handleCancelSuccess}
             />
           ))}

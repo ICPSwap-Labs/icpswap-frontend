@@ -23,6 +23,7 @@ import type {
   LimitOrderValue,
   Null,
   LimitTransactionResult,
+  LimitOrder,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs, nonNullArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -442,7 +443,7 @@ export async function placeOrder(canisterId: string, positionId: bigint, tickLim
 
 export async function getUserLimitOrders(canisterId: string, principal: string) {
   const result = await (await swapPool(canisterId)).getSortedUserLimitOrders(Principal.fromText(principal));
-  return resultFormat<Array<{ userPositionId: bigint; timestamp: bigint }>>(result).data;
+  return resultFormat<Array<LimitOrder>>(result).data;
 }
 
 export function useUserLimitOrders(canisterId: string | Null, principal: string | Null, refresh?: number) {

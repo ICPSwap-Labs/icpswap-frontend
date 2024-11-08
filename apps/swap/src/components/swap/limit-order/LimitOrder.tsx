@@ -1,11 +1,18 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, toSignificantWithGroupSeparator, nanosecond2Millisecond } from "@icpswap/utils";
+import {
+  BigNumber,
+  toSignificantWithGroupSeparator,
+  nanosecond2Millisecond,
+  nonNullArgs,
+  isNullArgs,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
-import { Null } from "@icpswap/types";
+import { LimitOrder as LimitOrderType, Null, Override } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -22,13 +29,11 @@ import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
 
 export interface LimitOrderProps {
-  positionId: bigint;
-  time: bigint;
-  poolId: string | Null;
   onCancelSuccess?: () => void;
+  order: Override<LimitOrderType, { poolId: string | Null }>;
 }
 
-export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitOrderProps) {
+export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
   const theme = useTheme();
 
   const [showLimitDetails, setShowLimitDetails] = useState(false);
@@ -38,9 +43,12 @@ export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitO
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
+  const { poolId, userPositionId: positionId, timestamp, token0Amount, token1Amount } = order;
+
   const [, pool] = usePoolById(poolId);
 
   const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId.toString());
+
   const position = usePositionWithPool({
     pool,
     tickLower: positionDetails?.tickLower,
@@ -48,9 +56,22 @@ export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitO
     liquidity: positionDetails?.liquidity,
   });
 
-  const { inputToken, outputToken, inputAmount, outputAmount, limitPrice, currentPrice } = useLimitDetails({
+  const { inputToken, outputToken, limitPrice, currentPrice } = useLimitDetails({
     position,
   });
+
+  const inputAmount = useMemo(() => {
+    if (isNullArgs(inputToken)) return null;
+    return new BigNumber(token0Amount.toString()).isEqualTo(0)
+      ? parseTokenAmount(token1Amount, inputToken.decimals).toString()
+      : parseTokenAmount(token0Amount, inputToken.decimals).toString();
+  }, [token0Amount, token1Amount, inputToken]);
+
+  const outputAmount = useMemo(() => {
+    if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
+      return new BigNumber(inputAmount).multipliedBy(limitPrice.toFixed(outputToken.decimals)).toString();
+    }
+  }, [inputAmount, limitPrice, outputToken]);
 
   const cancelLimit = useCancelLimitCallback();
 
@@ -86,7 +107,7 @@ export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitO
     <>
       <Box sx={{ background: theme.palette.background.level2, padding: "24px", borderRadius: "16px", width: "100%" }}>
         <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Created {dayjs(nanosecond2Millisecond(time)).format("MM/DD/YYYY h:mm A")}</Trans>
+          <Trans>Created {dayjs(nanosecond2Millisecond(timestamp)).format("MM/DD/YYYY h:mm A")}</Trans>
         </Typography>
 
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>
@@ -105,7 +126,7 @@ export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitO
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {outputToken && outputAmount
-                ? `${toSignificantWithGroupSeparator(outputAmount.toExact())} ${outputToken.symbol}`
+                ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
                 : "--"}
             </Typography>
           </Flex>
@@ -169,7 +190,7 @@ export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitO
         <LimitDetails
           open={showLimitDetails}
           position={position}
-          time={time}
+          time={timestamp}
           onClose={() => {
             setShowLimitDetails(false);
           }}

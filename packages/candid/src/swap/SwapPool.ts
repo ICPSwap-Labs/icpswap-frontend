@@ -42,6 +42,52 @@ export interface GetPositionArgs {
   tickUpper: bigint;
   tickLower: bigint;
 }
+export interface Icrc21ConsentInfo {
+  metadata: Icrc21ConsentMessageMetadata;
+  consent_message: Icrc21ConsentMessage;
+}
+export type Icrc21ConsentMessage =
+  | {
+      LineDisplayMessage: { pages: Array<{ lines: Array<string> }> };
+    }
+  | { GenericDisplayMessage: string };
+export interface Icrc21ConsentMessageMetadata {
+  utc_offset_minutes: [] | [number];
+  language: string;
+}
+export interface Icrc21ConsentMessageRequest {
+  arg: Uint8Array | number[];
+  method: string;
+  user_preferences: Icrc21ConsentMessageSpec;
+}
+export type Icrc21ConsentMessageResponse = { Ok: Icrc21ConsentInfo } | { Err: Icrc21Error };
+export interface Icrc21ConsentMessageSpec {
+  metadata: Icrc21ConsentMessageMetadata;
+  device_spec:
+    | []
+    | [
+        | { GenericDisplay: null }
+        | {
+            LineDisplay: {
+              characters_per_line: number;
+              lines_per_page: number;
+            };
+          },
+      ];
+}
+export type Icrc21Error =
+  | {
+      GenericError: { description: string; error_code: bigint };
+    }
+  | { InsufficientPayment: Icrc21ErrorInfo }
+  | { UnsupportedCanisterCall: Icrc21ErrorInfo }
+  | { ConsentMessageUnavailable: Icrc21ErrorInfo };
+export interface Icrc21ErrorInfo {
+  description: string;
+}
+export interface Icrc28TrustedOriginsResponse {
+  trusted_origins: Array<string>;
+}
 export interface IncreaseLiquidityArgs {
   positionId: bigint;
   amount0Desired: string;
@@ -177,7 +223,12 @@ export type Result_19 =
 export type Result_2 = { ok: boolean } | { err: Error };
 export type Result_20 =
   | {
-      ok: Array<{ userPositionId: bigint; timestamp: bigint }>;
+      ok: Array<{
+        userPositionId: bigint;
+        timestamp: bigint;
+        token0Amount: bigint;
+        token1Amount: bigint;
+      }>;
     }
   | { err: Error };
 export type Result_21 = { ok: Page_4 } | { err: Error };
@@ -409,6 +460,9 @@ export interface _SERVICE {
   getUserPositionsByPrincipal: ActorMethod<[Principal], Result_7>;
   getUserUnusedBalance: ActorMethod<[Principal], Result_6>;
   getVersion: ActorMethod<[], string>;
+  icrc10_supported_standards: ActorMethod<[], Array<{ url: string; name: string }>>;
+  icrc21_canister_call_consent_message: ActorMethod<[Icrc21ConsentMessageRequest], Icrc21ConsentMessageResponse>;
+  icrc28_trusted_origins: ActorMethod<[], Icrc28TrustedOriginsResponse>;
   increaseLiquidity: ActorMethod<[IncreaseLiquidityArgs], Result>;
   init: ActorMethod<[bigint, bigint, bigint], undefined>;
   metadata: ActorMethod<[], Result_5>;

@@ -31,6 +31,13 @@ export type {
   LimitTransactionResult,
 } from "@icpswap/candid";
 
+export type LimitOrder = {
+  userPositionId: bigint;
+  timestamp: bigint;
+  token0Amount: bigint;
+  token1Amount: bigint;
+};
+
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";
 
 export type PCMMetadata = {

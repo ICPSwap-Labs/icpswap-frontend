@@ -124,7 +124,14 @@ export const idlFactory = ({ IDL }: any) => {
   });
   const Result_21 = IDL.Variant({ ok: Page_4, err: Error });
   const Result_20 = IDL.Variant({
-    ok: IDL.Vec(IDL.Record({ userPositionId: IDL.Nat, timestamp: IDL.Nat })),
+    ok: IDL.Vec(
+      IDL.Record({
+        userPositionId: IDL.Nat,
+        timestamp: IDL.Nat,
+        token0Amount: IDL.Nat,
+        token1Amount: IDL.Nat,
+      }),
+    ),
     err: Error,
   });
   const TransactionType = IDL.Variant({
@@ -315,6 +322,54 @@ export const idlFactory = ({ IDL }: any) => {
     ok: IDL.Record({ balance0: IDL.Nat, balance1: IDL.Nat }),
     err: Error,
   });
+  const Icrc21ConsentMessageMetadata = IDL.Record({
+    utc_offset_minutes: IDL.Opt(IDL.Int16),
+    language: IDL.Text,
+  });
+  const Icrc21ConsentMessageSpec = IDL.Record({
+    metadata: Icrc21ConsentMessageMetadata,
+    device_spec: IDL.Opt(
+      IDL.Variant({
+        GenericDisplay: IDL.Null,
+        LineDisplay: IDL.Record({
+          characters_per_line: IDL.Nat16,
+          lines_per_page: IDL.Nat16,
+        }),
+      }),
+    ),
+  });
+  const Icrc21ConsentMessageRequest = IDL.Record({
+    arg: IDL.Vec(IDL.Nat8),
+    method: IDL.Text,
+    user_preferences: Icrc21ConsentMessageSpec,
+  });
+  const Icrc21ConsentMessage = IDL.Variant({
+    LineDisplayMessage: IDL.Record({
+      pages: IDL.Vec(IDL.Record({ lines: IDL.Vec(IDL.Text) })),
+    }),
+    GenericDisplayMessage: IDL.Text,
+  });
+  const Icrc21ConsentInfo = IDL.Record({
+    metadata: Icrc21ConsentMessageMetadata,
+    consent_message: Icrc21ConsentMessage,
+  });
+  const Icrc21ErrorInfo = IDL.Record({ description: IDL.Text });
+  const Icrc21Error = IDL.Variant({
+    GenericError: IDL.Record({
+      description: IDL.Text,
+      error_code: IDL.Nat,
+    }),
+    InsufficientPayment: Icrc21ErrorInfo,
+    UnsupportedCanisterCall: Icrc21ErrorInfo,
+    ConsentMessageUnavailable: Icrc21ErrorInfo,
+  });
+  const Icrc21ConsentMessageResponse = IDL.Variant({
+    Ok: Icrc21ConsentInfo,
+    Err: Icrc21Error,
+  });
+  const Icrc28TrustedOriginsResponse = IDL.Record({
+    trusted_origins: IDL.Vec(IDL.Text),
+  });
   const IncreaseLiquidityArgs = IDL.Record({
     positionId: IDL.Nat,
     amount0Desired: IDL.Text,
@@ -424,6 +479,9 @@ export const idlFactory = ({ IDL }: any) => {
     getUserPositionsByPrincipal: IDL.Func([IDL.Principal], [Result_7], ["query"]),
     getUserUnusedBalance: IDL.Func([IDL.Principal], [Result_6], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
+    icrc10_supported_standards: IDL.Func([], [IDL.Vec(IDL.Record({ url: IDL.Text, name: IDL.Text }))], ["query"]),
+    icrc21_canister_call_consent_message: IDL.Func([Icrc21ConsentMessageRequest], [Icrc21ConsentMessageResponse], []),
+    icrc28_trusted_origins: IDL.Func([], [Icrc28TrustedOriginsResponse], []),
     increaseLiquidity: IDL.Func([IncreaseLiquidityArgs], [Result], []),
     init: IDL.Func([IDL.Nat, IDL.Int, IDL.Nat], [], []),
     metadata: IDL.Func([], [Result_5], ["query"]),
