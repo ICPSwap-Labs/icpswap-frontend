@@ -6,7 +6,7 @@ import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
-import { UserLimitPanel, LimitOrders, PlaceOrder, GuidePanel } from "components/swap/limit-order";
+import { UserLimitPanel, LimitTransactions, PlaceOrder, GuidePanel } from "components/swap/limit-order";
 
 export default function Limit() {
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
@@ -91,7 +91,7 @@ export default function Limit() {
 
               <Box sx={{ margin: "16px 0 0 0" }}>
                 {showLimitOrders ? (
-                  <LimitOrders pool={selectedPool} onBack={() => setShowLimitOrders(false)} />
+                  <LimitTransactions pool={selectedPool} onBack={() => setShowLimitOrders(false)} />
                 ) : (
                   <PlaceOrder />
                 )}

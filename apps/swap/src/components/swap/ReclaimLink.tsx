@@ -14,8 +14,7 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useGlobalContext } from "hooks/index";
-
-import { CanisterIcon } from "./icons/CanisterIcon";
+import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {

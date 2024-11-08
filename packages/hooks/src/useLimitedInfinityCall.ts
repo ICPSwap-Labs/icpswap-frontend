@@ -61,13 +61,12 @@ export async function getLimitedInfinityCall<T>(
 
         if (!result) {
           return undefined;
-        } 
-          data = data.concat(result);
+        }
+        data = data.concat(result);
 
-          if (result.length < limit) {
-            fetch_done = true;
-          }
-        
+        if (result.length < limit) {
+          fetch_done = true;
+        }
 
         return undefined;
       }),

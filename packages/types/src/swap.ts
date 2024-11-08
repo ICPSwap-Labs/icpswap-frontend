@@ -27,6 +27,8 @@ export type {
   Ticket,
   LimitOrderKey,
   LimitOrderValue,
+  LimitTransaction,
+  LimitTransactionResult,
 } from "@icpswap/candid";
 
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";

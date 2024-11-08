@@ -12,9 +12,9 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isNullArgs } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
-import type { PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
+import type { Null, PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
@@ -89,10 +89,10 @@ export async function getPositionDetailsFromId(poolId: string, positionId: strin
   return undefined;
 }
 
-export function usePositionDetailsFromId(poolId: string | undefined, positionId: string | undefined) {
+export function usePositionDetailsFromId(poolId: string | Null, positionId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
-      if (poolId === undefined || positionId === undefined) return undefined;
+      if (isNullArgs(poolId) || isNullArgs(positionId)) return undefined;
       return await getPositionDetailsFromId(poolId, positionId);
     }, [poolId, positionId]),
   );

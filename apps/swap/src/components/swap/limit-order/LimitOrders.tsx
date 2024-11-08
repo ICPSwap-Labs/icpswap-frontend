@@ -1,45 +1,66 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, LoadingRow, NoData } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
-import { useUserLimitOrders } from "@icpswap/hooks";
-import { ArrowLeft } from "react-feather";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
+import { SelectPair } from "components/Select/SelectPair";
+import { useLimitOrders } from "hooks/swap/limit-order/useLimitOrders";
 
 import { LimitOrder } from "./LimitOrder";
 
 export interface LimitOrdersProps {
   ui?: "pro" | "normal";
   pool: Pool | Null;
-  onBack: () => void;
 }
 
-export function LimitOrders({ ui = "normal", pool, onBack }: LimitOrdersProps) {
-  const principal = useAccountPrincipal();
+export function LimitOrders({ pool: __pool }: LimitOrdersProps) {
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("LimitOrders");
+  const [pair, setPair] = useState<Null | string>(null);
 
-  const { result: userLimitOrders, loading } = useUserLimitOrders(pool?.id, principal?.toString(), refreshTrigger);
+  const { result: userLimitOrders, loading } = useLimitOrders({ val: pair, refreshTrigger });
 
   const handleCancelSuccess = useCallback(() => {
     setRefreshTrigger();
   }, [setRefreshTrigger]);
 
+  const handlePairChange = useCallback(
+    (id: string | undefined) => {
+      setPair(id);
+    },
+    [setPair],
+  );
+
+  useEffect(() => {
+    if (__pool) {
+      setPair(__pool.id);
+    }
+  }, [__pool]);
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "6px 0" : "6px 0" }}>
-      <Flex justify="space-between">
-        <Flex gap="0 8px" sx={{ cursor: "pointer" }} onClick={onBack}>
-          <ArrowLeft size={18} />
-          <Typography>
-            <Trans>Back</Trans>
-          </Typography>
+    <>
+      <Box sx={{ margin: "18px 0 0 0" }}>
+        <Flex vertical gap="16px 0" fullWidth align="flex-start">
+          <Flex gap="0 4px">
+            <Typography>Select a pair: </Typography>
+            <SelectPair
+              value={pair}
+              panelPadding="0"
+              showClean={false}
+              onPairChange={handlePairChange}
+              search
+              allPair
+            />
+          </Flex>
+
+          {pair === "ALL PAIR" ? (
+            <Typography sx={{ fontSize: "12px" }}>Fetching multiple limit orders may take some time.</Typography>
+          ) : null}
         </Flex>
-      </Flex>
+      </Box>
 
       {loading ? (
-        <Box>
+        <Box sx={{ padding: "8px" }}>
           <LoadingRow>
             <div />
             <div />
@@ -57,17 +78,17 @@ export function LimitOrders({ ui = "normal", pool, onBack }: LimitOrdersProps) {
         <NoData />
       ) : (
         <Flex vertical align="flex-start" fullWidth gap="6px 0" sx={{ margin: "16px 0 0 0" }}>
-          {userLimitOrders.map(({ userPositionId, timestamp }) => (
+          {userLimitOrders.map(({ userPositionId, timestamp, poolId }) => (
             <LimitOrder
               key={userPositionId.toString()}
               positionId={userPositionId}
               time={timestamp}
-              pool={pool}
+              poolId={poolId}
               onCancelSuccess={handleCancelSuccess}
             />
           ))}
         </Flex>
       )}
-    </Box>
+    </>
   );
 }

@@ -4,7 +4,6 @@ import { BigNumber, toSignificantWithGroupSeparator, nanosecond2Millisecond } fr
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex } from "@icpswap/ui";
-import { Pool } from "@icpswap/swap-sdk";
 import { ArrowRight } from "react-feather";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -17,6 +16,7 @@ import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { TokenPrice } from "components/swap/index";
+import { usePoolById } from "hooks/swap/usePools";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -24,11 +24,11 @@ import { LimitDetails } from "./LimitDetails";
 export interface LimitOrderProps {
   positionId: bigint;
   time: bigint;
-  pool: Pool | Null;
+  poolId: string | Null;
   onCancelSuccess?: () => void;
 }
 
-export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrderProps) {
+export function LimitOrder({ positionId, time, poolId, onCancelSuccess }: LimitOrderProps) {
   const theme = useTheme();
 
   const [showLimitDetails, setShowLimitDetails] = useState(false);
@@ -38,7 +38,7 @@ export function LimitOrder({ positionId, time, pool, onCancelSuccess }: LimitOrd
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
-  const { id: poolId } = pool ?? {};
+  const [, pool] = usePoolById(poolId);
 
   const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId.toString());
   const position = usePositionWithPool({

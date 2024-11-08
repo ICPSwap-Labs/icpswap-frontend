@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { swapFactory, swapPool, swapNFT, swapPosition } from "@icpswap/actor";
+import { swapFactory, swapPool, swapNFT, swapPosition, limitTransaction } from "@icpswap/actor";
 import type {
   SwapPoolData,
   TickLiquidityInfo,
@@ -22,8 +22,9 @@ import type {
   LimitOrderKey,
   LimitOrderValue,
   Null,
+  LimitTransactionResult,
 } from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, nonNullArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 
 import { useCallsData, getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
@@ -61,7 +62,7 @@ export async function getSwapPoolMetadata(canisterId: string) {
   return resultFormat<PoolMetadata>(await (await swapPool(canisterId)).metadata()).data;
 }
 
-export function useSwapPoolMetadata(canisterId: string | undefined) {
+export function useSwapPoolMetadata(canisterId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
@@ -444,7 +445,7 @@ export async function getUserLimitOrders(canisterId: string, principal: string) 
   return resultFormat<Array<{ userPositionId: bigint; timestamp: bigint }>>(result).data;
 }
 
-export function useUserLimitOrders(canisterId: string | undefined, principal: string | undefined, refresh?: number) {
+export function useUserLimitOrders(canisterId: string | Null, principal: string | Null, refresh?: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
@@ -481,6 +482,31 @@ export function usePoolLimitAvailableState(canisterId: string | Null, refresh?: 
       if (!canisterId) return undefined;
       return await getPoolLimitAvailableState(canisterId);
     }, [canisterId]),
+    refresh,
+  );
+}
+
+export async function getUserLimitTransactions(principal: string, start: number, offset: number, limit: number) {
+  const result = await (await limitTransaction()).get(principal, BigInt(start), BigInt(offset), BigInt(limit));
+
+  return resultFormat<LimitTransactionResult>(result).data;
+}
+
+export function useUserLimitTransactions(
+  principal: string | undefined,
+  start: number | Null,
+  offset: number,
+  limit: number,
+  refresh?: number,
+) {
+  return useCallsData<LimitTransactionResult>(
+    useCallback(async () => {
+      if (nonNullArgs(start) && nonNullArgs(principal) && isAvailablePageArgs(offset, limit)) {
+        return await getUserLimitTransactions(principal, start, offset, limit);
+      }
+
+      return undefined;
+    }, [start, principal, offset, limit]),
     refresh,
   );
 }

@@ -41,5 +41,12 @@ export type { _SERVICE as TICKET_SERVICE, Ticket } from "./Ticket";
 export type { _SERVICE as PassCodeManagerService } from "./PassCodeManager";
 export { idlFactory as PassCodeManagerInterfaceFactory } from "./PassCodeManager.did";
 
+export type {
+  _SERVICE as LimitTransactionService,
+  LimitOrder as LimitTransaction,
+  QueryResult as LimitTransactionResult,
+} from "./LimitTransaction";
+export { idlFactory as LimitTransactionInterfaceFactory } from "./LimitTransaction.did";
+
 export type PassCodeResult = Array<[Principal, Array<PassCode>]>;
 export type { PassCode };
