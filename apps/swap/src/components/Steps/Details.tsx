@@ -181,8 +181,10 @@ export default function _StepDetails({
                       sx={{
                         padding: "12px 20px",
                         background: theme.palette.background.level1,
-                        borderBottomLeftRadius: "12px",
-                        borderBottomRightRadius: "12px",
+                        borderBottomLeftRadius:
+                          errorStep === ele.step && ele.errorActions && ele.errorActions.length > 0 ? "0px" : "12px",
+                        borderBottomRightRadius:
+                          errorStep === ele.step && ele.errorActions && ele.errorActions.length > 0 ? "0px" : "12px",
                       }}
                     >
                       {ele.children.map((ele1, index) => (

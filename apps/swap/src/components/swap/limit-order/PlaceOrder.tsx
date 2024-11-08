@@ -109,6 +109,7 @@ export const PlaceOrder = forwardRef(
       isInputTokenSorted,
       outputAmount,
       pool,
+      minSettableTick,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     const available = useLimitSupported({ canisterId: pool?.id });
@@ -367,9 +368,10 @@ export const PlaceOrder = forwardRef(
           currentPrice={currentPrice}
           minUseableTick={minUseableTick}
           orderPriceTick={orderPriceTick}
+          minSettableTick={minSettableTick}
         />
 
-        <LimitSupported available={available} />
+        <LimitSupported available={available} noLiquidity={noLiquidity} />
 
         <Button
           fullWidth

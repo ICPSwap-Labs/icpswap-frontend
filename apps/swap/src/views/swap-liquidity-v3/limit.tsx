@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Box } from "components/Mui";
 import { MainCard, Flex, Wrapper } from "components/index";
-import { CreatePool, SwapTabPanels, TABS } from "components/swap/index";
+import { SwapTabPanels, TABS } from "components/swap/index";
 import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -104,10 +104,6 @@ export default function Limit() {
 
             {isConnected && showLimitOrders === false ? (
               <UserLimitPanel onClick={() => setShowLimitOrders(true)} />
-            ) : null}
-
-            {isConnected && noLiquidity === true ? (
-              <CreatePool inputToken={inputToken} outputToken={outputToken} />
             ) : null}
           </Flex>
         </Flex>

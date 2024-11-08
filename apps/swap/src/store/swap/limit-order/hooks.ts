@@ -167,15 +167,24 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (isInputTokenSorted) {
       const minTick = tickCurrent + TICK_SPACINGS[pool.fee];
       const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
-      if (useableTick - TICK_SPACINGS[pool.fee] < tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
+      if (useableTick - TICK_SPACINGS[pool.fee] <= tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
       return useableTick;
     }
 
     const minTick = tickCurrent - TICK_SPACINGS[pool.fee];
     const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
-    if (useableTick + TICK_SPACINGS[pool.fee] > tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
+    if (useableTick + TICK_SPACINGS[pool.fee] >= tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
     return useableTick;
   }, [pool, isInputTokenSorted]);
+
+  // The order price tick should be greater than or equal to this tick
+  const minSettableTick = useMemo(() => {
+    if (nonNullArgs(minUseableTick) && pool) {
+      return isInputTokenSorted
+        ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2)) + 1
+        : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2)) - 1;
+    }
+  }, [minUseableTick, pool, isInputTokenSorted]);
 
   const { position, orderPriceTick } = usePlaceOrderPosition({
     pool,
@@ -279,12 +288,14 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       isNullArgs(currentPrice) ||
       isNullArgs(pool) ||
       isNullArgs(orderPriceTick) ||
-      isNullArgs(isInputTokenSorted)
+      isNullArgs(isInputTokenSorted) ||
+      isNullArgs(minSettableTick) ||
+      Trade?.noLiquidity === true
     )
       return t`Submit Limit Order`;
 
-    if (isInputTokenSorted && orderPriceTick < minUseableTick) return t`Adjust your limit price to proceed.`;
-    if (!isInputTokenSorted && orderPriceTick > minUseableTick) return t`Adjust your limit price to proceed.`;
+    if (isInputTokenSorted && orderPriceTick <= minSettableTick) return t`Adjust your limit price to proceed.`;
+    if (!isInputTokenSorted && orderPriceTick >= minSettableTick) return t`Adjust your limit price to proceed.`;
   }, [
     typedValue,
     parsedAmount,
@@ -300,6 +311,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     inputToken,
     minUseableTick,
     isInputTokenSorted,
+    minSettableTick,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
@@ -347,6 +359,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minUseableTick,
     isInputTokenSorted,
     outputAmount,
+    minSettableTick,
   };
 }
 

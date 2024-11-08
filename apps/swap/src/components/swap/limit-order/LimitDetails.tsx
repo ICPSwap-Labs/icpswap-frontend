@@ -129,7 +129,9 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
               <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} iconSize="14px" />
             </Flex>
 
-            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
+            <Typography
+              sx={{ color: "text.primary", textAlign: "right", "@media(max-width: 640px)": { fontSize: "12px" } }}
+            >
               {inputToken && outputToken && limitPrice
                 ? `1 ${inputToken.symbol} = ${limitPrice.toSignificant()} ${outputToken.symbol} ${
                     inputTokenPrice ? `(${formatDollarAmount(inputTokenPrice)})` : ""
@@ -149,7 +151,9 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
               </Typography>
             </Flex>
 
-            <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
+            <Typography
+              sx={{ color: "text.primary", textAlign: "right", "@media(max-width: 640px)": { fontSize: "12px" } }}
+            >
               {inputToken && outputToken && currentPrice
                 ? `1 ${inputToken.symbol} = ${currentPrice.toSignificant()} ${outputToken.symbol}`
                 : "--"}

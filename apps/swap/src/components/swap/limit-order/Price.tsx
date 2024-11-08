@@ -3,11 +3,11 @@ import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
 import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
-import { SwapInput } from "components/swap/index";
-import { Price, tickToPrice, Token, priceToClosestTick, nearestUsableTick, TICK_SPACINGS } from "@icpswap/swap-sdk";
+import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { PriceMutator } from "components/swap/limit-order/PriceMutator";
+import { SwapInput } from "components/swap/index";
 
 import { LimitContext } from "./context";
 
@@ -62,7 +62,6 @@ export const SwapLimitPrice = forwardRef(
 
         if (new BigNumber(value).isEqualTo(0) || !value || !currentPrice) return;
 
-        // const price = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
         const orderPrice = inverted ? new BigNumber(1).dividedBy(value).toString() : value;
 
         onInputOrderPrice(orderPrice);
@@ -109,26 +108,21 @@ export const SwapLimitPrice = forwardRef(
       }
     }, [orderPrice, inputToken, outputToken]);
 
-    const useableTick = useMemo(() => {
-      if (
-        nonNullArgs(__orderPrice) &&
-        nonNullArgs(selectedPool) &&
-        nonNullArgs(inputToken) &&
-        nonNullArgs(outputToken)
-      ) {
-        return nearestUsableTick(priceToClosestTick(__orderPrice), TICK_SPACINGS[selectedPool.fee]);
+    const closestTick = useMemo(() => {
+      if (nonNullArgs(__orderPrice)) {
+        return priceToClosestTick(__orderPrice);
       }
-    }, [__orderPrice, selectedPool]);
+    }, [__orderPrice]);
 
     const handleIncreasePrice = useCallback(() => {
       if (
         nonNullArgs(selectedPool) &&
-        nonNullArgs(useableTick) &&
+        nonNullArgs(closestTick) &&
         nonNullArgs(inputToken) &&
         nonNullArgs(outputToken)
       ) {
         const newPriceTick =
-          useableTick +
+          closestTick +
           (isInputTokenSorted
             ? inverted
               ? -TICK_SPACINGS[selectedPool.fee]
@@ -145,17 +139,17 @@ export const SwapLimitPrice = forwardRef(
           inverted,
         );
       }
-    }, [useableTick, selectedPool, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
+    }, [closestTick, selectedPool, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
 
     const handleDecreasePrice = useCallback(() => {
       if (
-        nonNullArgs(useableTick) &&
+        nonNullArgs(closestTick) &&
         nonNullArgs(selectedPool) &&
         nonNullArgs(inputToken) &&
         nonNullArgs(outputToken)
       ) {
         const newPriceTick =
-          useableTick +
+          closestTick +
           (isInputTokenSorted
             ? inverted
               ? TICK_SPACINGS[selectedPool.fee]
@@ -173,7 +167,7 @@ export const SwapLimitPrice = forwardRef(
           inverted,
         );
       }
-    }, [selectedPool, useableTick, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
+    }, [selectedPool, closestTick, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
 
     const handleMinMax = useCallback(() => {
       if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
@@ -181,6 +175,7 @@ export const SwapLimitPrice = forwardRef(
 
       // Force tick range exclude tick current
       const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
+
       handleInputPrice(
         inverted
           ? new BigNumber(1).dividedBy(minPrice.toFixed(outputToken.decimals)).toString()

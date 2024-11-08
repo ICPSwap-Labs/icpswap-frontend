@@ -1,17 +1,9 @@
 import { useMemo } from "react";
-import {
-  Price,
-  TICK_SPACINGS,
-  priceToClosestTick,
-  nearestUsableTick,
-  Pool,
-  Position,
-  Token,
-  CurrencyAmount,
-} from "@icpswap/swap-sdk";
+import { Price, TICK_SPACINGS, Pool, Position, Token, CurrencyAmount, priceToClosestTick } from "@icpswap/swap-sdk";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { useLimitState } from "store/swap/limit-order/hooks";
+import { priceToClosestUseableTick } from "utils/swap/limit-order";
 
 interface usePlaceOrderPositionProps {
   pool: Pool | Null;
@@ -30,8 +22,17 @@ export function usePlaceOrderPosition({
 
   const { token0, token1, fee: feeAmount } = pool ?? {};
 
-  const { orderPriceTick } = useMemo(() => {
-    if (!orderPrice || !pool || !inputToken || !token0 || !token1 || new BigNumber(orderPrice).isEqualTo(0)) return {};
+  const { orderPriceTick, closetUseableTick } = useMemo(() => {
+    if (
+      !orderPrice ||
+      !pool ||
+      !inputToken ||
+      !token0 ||
+      !token1 ||
+      new BigNumber(orderPrice).isEqualTo(0) ||
+      isNullArgs(isInputTokenSorted)
+    )
+      return {};
 
     const baseToken = inputToken;
     const quoteToken = baseToken.address === token0.address ? token1 : token0;
@@ -44,31 +45,24 @@ export function usePlaceOrderPosition({
       ),
     });
 
-    const __orderPriceTick = priceToClosestTick(price);
-
-    let useableTick = nearestUsableTick(__orderPriceTick, pool.tickSpacing);
-
-    if (Math.abs(Math.abs(useableTick) - Math.abs(pool.tickCurrent)) <= TICK_SPACINGS[pool.fee]) {
-      if (isInputTokenSorted) {
-        useableTick += TICK_SPACINGS[pool.fee];
-      } else {
-        useableTick -= TICK_SPACINGS[pool.fee];
-      }
-    }
+    const closetTick = priceToClosestTick(price);
+    const closetUseableTick = priceToClosestUseableTick(price, pool, isInputTokenSorted);
 
     return {
-      orderPriceTick: useableTick,
+      closetTick,
+      orderPriceTick: closetTick,
+      closetUseableTick,
     };
-  }, [orderPrice, inputToken, token0, token1, pool, isInputTokenSorted]);
+  }, [orderPrice, inputToken, token0, token1, pool]);
 
   const { tickLower, tickUpper } = useMemo(() => {
-    if (isNullArgs(orderPriceTick) || isNullArgs(feeAmount)) return {};
+    if (isNullArgs(closetUseableTick) || isNullArgs(feeAmount)) return {};
 
     return {
-      tickLower: orderPriceTick - TICK_SPACINGS[feeAmount],
-      tickUpper: orderPriceTick + TICK_SPACINGS[feeAmount],
+      tickLower: closetUseableTick - TICK_SPACINGS[feeAmount],
+      tickUpper: closetUseableTick + TICK_SPACINGS[feeAmount],
     };
-  }, [orderPriceTick, feeAmount]);
+  }, [closetUseableTick, feeAmount]);
 
   const { amount0, amount1 } = useMemo(() => {
     if (isNullArgs(inputAmount) || isNullArgs(inputToken) || isNullArgs(token0) || isNullArgs(token1)) return {};
