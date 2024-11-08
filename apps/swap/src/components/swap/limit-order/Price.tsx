@@ -139,7 +139,9 @@ export const SwapLimitPrice = forwardRef(
         const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
 
         handleInputPrice(
-          inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
+          inverted
+            ? new BigNumber(1).dividedBy(newPrice.toFixed(outputToken.decimals)).toFixed(outputToken.decimals)
+            : newPrice.toFixed(outputToken.decimals),
           inverted,
         );
       }
@@ -165,7 +167,9 @@ export const SwapLimitPrice = forwardRef(
         const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
 
         handleInputPrice(
-          inverted ? new BigNumber(1).dividedBy(newPrice.toFixed()).toString() : newPrice.toFixed(),
+          inverted
+            ? new BigNumber(1).dividedBy(newPrice.toFixed(outputToken.decimals)).toFixed(outputToken.decimals)
+            : newPrice.toFixed(outputToken.decimals),
           inverted,
         );
       }
