@@ -222,7 +222,7 @@ export const SwapLimitPrice = forwardRef(
       ref,
       () => ({
         setDefaultPrice: handleSetDefaultPrice,
-        setInverted: setInverted(false),
+        setInverted: () => setInverted(false),
       }),
       [handleSetDefaultPrice, setInverted],
     );

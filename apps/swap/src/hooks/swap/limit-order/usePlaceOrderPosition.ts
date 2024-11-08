@@ -17,9 +17,15 @@ interface usePlaceOrderPositionProps {
   pool: Pool | Null;
   orderPrice: string | Null;
   inputToken: Token | Null;
+  isInputTokenSorted: boolean | Null;
 }
 
-export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlaceOrderPositionProps) {
+export function usePlaceOrderPosition({
+  inputToken,
+  pool,
+  orderPrice,
+  isInputTokenSorted,
+}: usePlaceOrderPositionProps) {
   const { typedValue: inputAmount } = useLimitState();
 
   const { token0, token1, fee: feeAmount } = pool ?? {};
@@ -40,12 +46,20 @@ export function usePlaceOrderPosition({ inputToken, pool, orderPrice }: usePlace
 
     const __orderPriceTick = priceToClosestTick(price);
 
-    const useableTick = nearestUsableTick(__orderPriceTick, pool?.tickSpacing);
+    let useableTick = nearestUsableTick(__orderPriceTick, pool.tickSpacing);
+
+    if (Math.abs(Math.abs(useableTick) - Math.abs(pool.tickCurrent)) <= TICK_SPACINGS[pool.fee]) {
+      if (isInputTokenSorted) {
+        useableTick += TICK_SPACINGS[pool.fee];
+      } else {
+        useableTick -= TICK_SPACINGS[pool.fee];
+      }
+    }
 
     return {
       orderPriceTick: useableTick,
     };
-  }, [orderPrice, inputToken, token0, token1, pool]);
+  }, [orderPrice, inputToken, token0, token1, pool, isInputTokenSorted]);
 
   const { tickLower, tickUpper } = useMemo(() => {
     if (isNullArgs(orderPriceTick) || isNullArgs(feeAmount)) return {};

@@ -154,12 +154,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const pool = useMemo(() => Trade?.pool, [Trade]);
   const poolId = useMemo(() => pool?.id, [pool]);
 
-  const { position, orderPriceTick } = usePlaceOrderPosition({
-    pool,
-    inputToken,
-    orderPrice,
-  });
-
   const isInputTokenSorted = useMemo(() => {
     if (isNullArgs(pool) || isNullArgs(inputToken)) return null;
     return pool.token0.equals(inputToken);
@@ -182,6 +176,13 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (useableTick + TICK_SPACINGS[pool.fee] > tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
     return useableTick;
   }, [pool, isInputTokenSorted]);
+
+  const { position, orderPriceTick } = usePlaceOrderPosition({
+    pool,
+    inputToken,
+    orderPrice,
+    isInputTokenSorted,
+  });
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20

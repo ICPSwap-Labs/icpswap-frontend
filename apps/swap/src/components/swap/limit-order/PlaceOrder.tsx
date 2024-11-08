@@ -251,8 +251,10 @@ export const PlaceOrder = forwardRef(
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
-        limitPriceRef?.current?.setInverted();
-        limitPriceRef?.current?.setDefaultPrice();
+        if (limitPriceRef?.current) {
+          limitPriceRef?.current?.setInverted();
+          limitPriceRef?.current?.setDefaultPrice();
+        }
       }
 
       closeLoadingTip(loadingKey);
@@ -270,6 +272,7 @@ export const PlaceOrder = forwardRef(
       token0SubAccountBalance,
       token1SubAccountBalance,
       inputToken,
+      outputToken,
       orderPriceTick,
       limitPriceRef,
     ]);
