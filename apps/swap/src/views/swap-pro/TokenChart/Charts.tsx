@@ -1,6 +1,7 @@
 import { useEffect, useContext, useRef } from "react";
 import { Box, useTheme } from "components/Mui";
 import { TokenCharts, TokenChartsRef } from "@icpswap/ui";
+import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 
 import { SwapProContext } from "../context";
 
@@ -37,6 +38,7 @@ export default function TokenChartInfo() {
         showPrice={false}
         showTopIfDexScreen={false}
         dexScreenId={tradePoolId}
+        priceChart={<TokenPriceChart token={token} />}
       />
     </Box>
   );

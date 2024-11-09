@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle } from "react";
+import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
@@ -143,6 +143,7 @@ export interface TokenChartsProps {
   showTopIfDexScreen?: boolean;
   dexScreenHeight?: string;
   dexScreenId?: string;
+  priceChart?: ReactNode;
 }
 
 export const TokenCharts = forwardRef(
@@ -157,6 +158,7 @@ export const TokenCharts = forwardRef(
       showTopIfDexScreen = true,
       dexScreenHeight,
       dexScreenId,
+      priceChart,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -269,7 +271,13 @@ export const TokenCharts = forwardRef(
           sx={{
             height: "70px",
             padding: "16px",
-            display: chartView === ChartView.DexScreener ? (showTopIfDexScreen ? "flex" : "none") : "flex",
+            display: priceChart
+              ? "none"
+              : chartView === ChartView.DexScreener
+              ? showTopIfDexScreen
+                ? "flex"
+                : "none"
+              : "flex",
           }}
         >
           <Box>
@@ -374,7 +382,13 @@ export const TokenCharts = forwardRef(
 
         <Box
           sx={{
-            margin: chartView === ChartView.DexScreener ? (showTopIfDexScreen ? "10px 0 0 0 " : "0px") : "10px 0 0 0",
+            margin: priceChart
+              ? "0"
+              : chartView === ChartView.DexScreener
+              ? showTopIfDexScreen
+                ? "10px 0 0 0 "
+                : "0px"
+              : "10px 0 0 0",
           }}
         >
           {chartView === ChartView.TVL ? (
@@ -411,7 +425,8 @@ export const TokenCharts = forwardRef(
               <Box sx={{ height: "340px", width: "auto" }} />
             )
           ) : chartView === ChartView.PRICE ? (
-            priceChartData && priceChartData.length > 0 ? (
+            priceChart ||
+            (priceChartData && priceChartData.length > 0 ? (
               <CandleChart
                 height={340}
                 data={priceChartData}
@@ -421,7 +436,7 @@ export const TokenCharts = forwardRef(
               />
             ) : (
               <Box sx={{ height: "340px", width: "auto" }} />
-            )
+            ))
           ) : chartView === ChartView.DexScreener ? (
             <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : null}
