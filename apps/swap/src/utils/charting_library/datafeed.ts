@@ -37,6 +37,8 @@ export class Datafeed {
       pricescale: 10 ** 6,
       timezone: "Etc/UTC",
       full_name: symbol,
+      variable_tick_size:
+        "0.0000000001 0.000001 0.00000001 0.00001 0.0000001 0.0001 0.000001 0.001 0.00001 0.01 0.0001 0.1 0.001 1 0.01 10 0.01",
     };
 
     setTimeout(() => onResolve(result), 0);
