@@ -33,9 +33,10 @@ export type {
 
 export type LimitOrder = {
   userPositionId: bigint;
+  token0InAmount: bigint;
   timestamp: bigint;
-  token0Amount: bigint;
-  token1Amount: bigint;
+  tickLimit: bigint;
+  token1InAmount: bigint;
 };
 
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";

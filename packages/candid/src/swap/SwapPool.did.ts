@@ -127,9 +127,10 @@ export const idlFactory = ({ IDL }: any) => {
     ok: IDL.Vec(
       IDL.Record({
         userPositionId: IDL.Nat,
+        token0InAmount: IDL.Nat,
         timestamp: IDL.Nat,
-        token0Amount: IDL.Nat,
-        token1Amount: IDL.Nat,
+        tickLimit: IDL.Int,
+        token1InAmount: IDL.Nat,
       }),
     ),
     err: Error,

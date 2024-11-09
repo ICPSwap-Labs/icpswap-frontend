@@ -7,6 +7,8 @@ import {
   formatTokenAmount,
   parseTokenAmount,
   BigNumber,
+  isNullArgs,
+  nonNullArgs,
 } from "@icpswap/utils";
 import { Modal, Line } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
@@ -20,16 +22,17 @@ import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
+import { LimitOrder as LimitOrderType, Null, Override } from "@icpswap/types";
 
 export interface LimitDetailsProps {
   open: boolean;
   position: Position;
-  time: bigint;
   onClose: () => void;
   onCancelLimit: () => void;
+  order: Override<LimitOrderType, { poolId: string | Null }>;
 }
 
-export function LimitDetails({ open, position, time, onClose, onCancelLimit }: LimitDetailsProps) {
+export function LimitDetails({ open, position, order, onClose, onCancelLimit }: LimitDetailsProps) {
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -37,9 +40,25 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
     pool: { id: poolId, token0 },
   } = position;
 
-  const { inputToken, outputToken, inputAmount, outputAmount, limitPrice, currentPrice } = useLimitDetails({
+  const { timestamp, token0InAmount, token1InAmount, tickLimit } = order;
+
+  const { inputToken, outputToken, limitPrice, currentPrice } = useLimitDetails({
     position,
+    tickLimit,
   });
+
+  const inputAmount = useMemo(() => {
+    if (isNullArgs(inputToken)) return null;
+    return new BigNumber(token0InAmount.toString()).isEqualTo(0)
+      ? parseTokenAmount(token1InAmount, inputToken.decimals).toString()
+      : parseTokenAmount(token0InAmount, inputToken.decimals).toString();
+  }, [token0InAmount, token1InAmount, inputToken]);
+
+  const outputAmount = useMemo(() => {
+    if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
+      return new BigNumber(inputAmount).multipliedBy(limitPrice.toFixed(outputToken.decimals)).toString();
+    }
+  }, [inputAmount, limitPrice, outputToken]);
 
   const inputTokenPrice = useUSDPriceById(inputToken?.address);
 
@@ -87,7 +106,7 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             </Typography>
 
             <Typography sx={{ fontSize: "12px", margin: "8px 0 0 0" }}>
-              {dayjs(nanosecond2Millisecond(time)).format("MM/DD/YYYY h:mm A")}
+              {dayjs(nanosecond2Millisecond(timestamp)).format("MM/DD/YYYY h:mm A")}
             </Typography>
           </Box>
         </Flex>
@@ -109,7 +128,7 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
           <Flex gap="0 12px">
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
             <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }}>
-              {outputAmount ? toSignificantWithGroupSeparator(outputAmount.toExact()) : "--"} {outputToken?.symbol}
+              {outputAmount ? toSignificantWithGroupSeparator(outputAmount) : "--"} {outputToken?.symbol}
             </Typography>
           </Flex>
         </Flex>
@@ -182,7 +201,7 @@ export function LimitDetails({ open, position, time, onClose, onCancelLimit }: L
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
               {outputToken && outputAmount
                 ? `${toSignificantWithGroupSeparator(
-                    new BigNumber(outputAmount.toExact()).multipliedBy(0.003).multipliedBy(0.8).toString(),
+                    new BigNumber(outputAmount).multipliedBy(0.003).multipliedBy(0.8).toString(),
                   )} ${outputToken.symbol}`
                 : "--"}
             </Typography>

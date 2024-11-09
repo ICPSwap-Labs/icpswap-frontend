@@ -102,7 +102,7 @@ export default function Limit() {
               <GuidePanel />
             </Box>
 
-            {isConnected && showLimitOrders === false ? (
+            {isConnected && showLimitOrders === false && noLiquidity === false ? (
               <UserLimitPanel onClick={() => setShowLimitOrders(true)} />
             ) : null}
           </Flex>

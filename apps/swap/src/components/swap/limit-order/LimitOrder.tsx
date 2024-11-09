@@ -43,7 +43,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
-  const { poolId, userPositionId: positionId, timestamp, token0Amount, token1Amount } = order;
+  const { poolId, userPositionId: positionId, timestamp, token0InAmount, token1InAmount, tickLimit } = order;
 
   const [, pool] = usePoolById(poolId);
 
@@ -58,14 +58,15 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
 
   const { inputToken, outputToken, limitPrice, currentPrice } = useLimitDetails({
     position,
+    tickLimit,
   });
 
   const inputAmount = useMemo(() => {
     if (isNullArgs(inputToken)) return null;
-    return new BigNumber(token0Amount.toString()).isEqualTo(0)
-      ? parseTokenAmount(token1Amount, inputToken.decimals).toString()
-      : parseTokenAmount(token0Amount, inputToken.decimals).toString();
-  }, [token0Amount, token1Amount, inputToken]);
+    return new BigNumber(token0InAmount.toString()).isEqualTo(0)
+      ? parseTokenAmount(token1InAmount, inputToken.decimals).toString()
+      : parseTokenAmount(token0InAmount, inputToken.decimals).toString();
+  }, [token0InAmount, token1InAmount, inputToken]);
 
   const outputAmount = useMemo(() => {
     if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
@@ -190,7 +191,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
         <LimitDetails
           open={showLimitDetails}
           position={position}
-          time={timestamp}
+          order={order}
           onClose={() => {
             setShowLimitDetails(false);
           }}

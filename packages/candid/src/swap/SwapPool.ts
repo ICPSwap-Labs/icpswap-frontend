@@ -225,9 +225,10 @@ export type Result_20 =
   | {
       ok: Array<{
         userPositionId: bigint;
+        token0InAmount: bigint;
         timestamp: bigint;
-        token0Amount: bigint;
-        token1Amount: bigint;
+        tickLimit: bigint;
+        token1InAmount: bigint;
       }>;
     }
   | { err: Error };

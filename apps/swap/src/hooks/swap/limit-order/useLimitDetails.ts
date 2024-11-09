@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { isNullArgs, BigNumber, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
 import { Position, tickToPrice, CurrencyAmount } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { getPriceTickByPosition } from "utils/swap";
 
 export interface UseLimitDetailsProps {
   position: Position | Null;
+  tickLimit: bigint;
 }
 
-export function useLimitDetails({ position }: UseLimitDetailsProps) {
+export function useLimitDetails({ position, tickLimit }: UseLimitDetailsProps) {
   const { mintAmounts, pool } = position ?? {};
   const { token0, token1 } = pool ?? {};
   const { amount0: __amount0, amount1: __amount1 } = mintAmounts ?? {};
@@ -26,7 +26,7 @@ export function useLimitDetails({ position }: UseLimitDetailsProps) {
     const baseToken = inputToken;
     const quoteToken = outputToken;
 
-    const priceTick = getPriceTickByPosition(position);
+    const priceTick = Number(tickLimit);
     const limitPrice = tickToPrice(baseToken, quoteToken, priceTick);
     const currentPrice = position.pool.priceOf(baseToken);
 
@@ -39,5 +39,5 @@ export function useLimitDetails({ position }: UseLimitDetailsProps) {
     );
 
     return { inputToken, outputToken, inputAmount, outputAmount, limitPrice, currentPrice };
-  }, [token0, token1, amount0, amount1, position]);
+  }, [token0, token1, amount0, amount1, position, tickLimit]);
 }
