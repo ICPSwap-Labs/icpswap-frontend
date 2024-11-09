@@ -192,6 +192,8 @@ export function SelectPair({
           token1: StringifyAllTokenOfSwapTokenInfo;
         };
 
+        if (!additional.token0 || !additional.token1) return menu.label;
+
         const token0 = {
           ...additional.token0,
           ledger_id: Principal.fromText(additional.token0.ledger_id.__principal__),
