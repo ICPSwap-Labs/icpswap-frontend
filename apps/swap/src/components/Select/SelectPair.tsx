@@ -1,9 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
 import { useSwapPools, useAllTokensOfSwap } from "@icpswap/hooks";
-import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import type { AllTokenOfSwapTokenInfo, Null } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
 import { Principal } from "@dfinity/principal";
 
@@ -62,7 +62,7 @@ function PairMenuItem({ token0, token1, select, color }: PairItemProps) {
 
 export interface SelectPairProps {
   border?: boolean;
-  value?: string;
+  value?: string | Null;
   onPairChange?: (poolId: string | undefined) => void;
   filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
   search?: boolean;
@@ -72,6 +72,8 @@ export interface SelectPairProps {
   showClean?: boolean;
   panelPadding?: string;
   defaultPanel?: ReactNode;
+  customPanel?: (menu: MenuProps | Null) => ReactNode;
+  allPair?: boolean;
 }
 
 export function SelectPair({
@@ -86,6 +88,8 @@ export function SelectPair({
   showClean = true,
   panelPadding,
   defaultPanel,
+  customPanel,
+  allPair,
 }: SelectPairProps) {
   const [value, setValue] = useState<string | null | undefined>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
@@ -116,17 +120,27 @@ export function SelectPair({
         };
       });
 
-      return data
+      const menus = data
         .map((ele) => ({
           value: ele.poolId,
           label: <PairMenuItem token0={ele.additional.token0} token1={ele.additional.token1} />,
           additional: JSON.stringify(ele.additional),
         }))
         .filter((ele) => !!ele.label);
+
+      if (allPair) {
+        menus.unshift({
+          value: "ALL PAIR",
+          label: <Typography color="inherit">All Pair</Typography>,
+          additional: "",
+        });
+      }
+
+      return menus;
     }
 
     return undefined;
-  }, [swapPools, allTokensOfSwap]);
+  }, [swapPools, allTokensOfSwap, allPair]);
 
   const handleValueChange = (value: string | undefined) => {
     setValue(value);
@@ -167,14 +181,18 @@ export function SelectPair({
       showBackground={showBackground}
       showClean={showClean}
       panelPadding={panelPadding}
-      panel={(menu: MenuProps | null | undefined) => {
+      panel={(menu: MenuProps | Null) => {
         if (!menu) return defaultPanel;
-        if (!menu.additional) return null;
+        if (!menu.additional) return menu.label;
+
+        if (customPanel) return customPanel(menu);
 
         const additional = JSON.parse(menu.additional) as {
           token0: StringifyAllTokenOfSwapTokenInfo;
           token1: StringifyAllTokenOfSwapTokenInfo;
         };
+
+        if (!additional.token0 || !additional.token1) return menu.label;
 
         const token0 = {
           ...additional.token0,

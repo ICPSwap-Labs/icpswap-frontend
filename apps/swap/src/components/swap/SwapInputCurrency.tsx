@@ -43,6 +43,7 @@ export interface SwapInputCurrencyProps {
   maxInputAmount?: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
   poolId: string | Null;
+  showUSDChange?: boolean;
 }
 
 export function SwapInputCurrency({
@@ -64,6 +65,7 @@ export function SwapInputCurrency({
   maxInputAmount,
   noLiquidity,
   poolId,
+  showUSDChange = true,
 }: SwapInputCurrencyProps) {
   const theme = useTheme();
 
@@ -128,7 +130,7 @@ export function SwapInputCurrency({
         </Flex>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formattedAmount ?? ""} token={token} onUserInput={onInput} disabled={disabled} />
+          <SwapInput value={formattedAmount} token={token} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 
@@ -156,7 +158,7 @@ export function SwapInputCurrency({
             {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
           </Flex>
 
-          {currencyBalanceUSDValue ? (
+          {currencyBalanceUSDValue && showUSDChange ? (
             <Typography component="div">
               ~{formatDollarAmount(currencyBalanceUSDValue)}
               {usdChange ? (

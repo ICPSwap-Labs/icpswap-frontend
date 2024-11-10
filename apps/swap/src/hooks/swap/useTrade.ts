@@ -30,9 +30,9 @@ export function useBestTrade(
   const zeroForOne =
     inputCurrency && outputCurrency ? inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped) : undefined;
 
-  const tradePoolId = useMemo(() => {
+  const pool = useMemo(() => {
     if (!routes) return undefined;
-    return routes[0]?.pools[0]?.id;
+    return routes[0]?.pools[0];
   }, [routes]);
 
   const params = useMemo(() => {
@@ -63,7 +63,7 @@ export function useBestTrade(
     });
   }, [routes, actualSwapValue]);
 
-  const available = useSwapPoolAvailable(tradePoolId);
+  const available = useSwapPoolAvailable(pool?.id);
 
   const { loading: exactInputLoading, result: _quotesResults } = useQuoteExactInput(params);
 
@@ -85,7 +85,8 @@ export function useBestTrade(
       return {
         state: TradeState.INVALID,
         trade: null,
-        tradePoolId,
+        tradePoolId: pool?.id,
+        pool,
         routes,
         noLiquidity,
       };
@@ -95,7 +96,8 @@ export function useBestTrade(
       return {
         state: TradeState.LOADING,
         trade: null,
-        tradePoolId,
+        tradePoolId: pool?.id,
+        pool,
         routes,
         noLiquidity,
       };
@@ -132,7 +134,8 @@ export function useBestTrade(
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: null,
-        tradePoolId,
+        tradePoolId: pool?.id,
+        pool,
         routes,
         noLiquidity,
       };
@@ -147,7 +150,8 @@ export function useBestTrade(
         inputAmount,
         outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, amountOut.toString()),
       }),
-      tradePoolId,
+      tradePoolId: pool?.id,
+      pool,
       routes,
       noLiquidity,
     };
@@ -160,7 +164,7 @@ export function useBestTrade(
     routesLoading,
     available,
     checked,
-    tradePoolId,
+    pool,
     noLiquidity,
   ]);
 }

@@ -1,11 +1,12 @@
 import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { useMemo, useEffect, useState } from "react";
 import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
-import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
+import { getSwapPoolMetadata, useSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
 import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
 import { NETWORK, network } from "constants/index";
 import { ICP } from "@icpswap/tokens";
+import { useToken } from "hooks/useCurrency";
 
 export enum PoolState {
   LOADING = "LOADING",
@@ -237,4 +238,13 @@ export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
       return prev || hasPairWithBaseToken;
     }, false);
   }, [tokenPools]);
+}
+
+export function usePoolById(poolId: Null | string) {
+  const { result: poolMetadata } = useSwapPoolMetadata(poolId);
+
+  const [, token0] = useToken(poolMetadata?.token0.address);
+  const [, token1] = useToken(poolMetadata?.token1.address);
+
+  return usePool(token0, token1, poolMetadata?.fee ? Number(poolMetadata?.fee) : undefined);
 }

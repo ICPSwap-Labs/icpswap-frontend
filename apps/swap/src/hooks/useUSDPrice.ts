@@ -72,7 +72,7 @@ export function useUSDPriceById(tokenId: string | undefined): number | undefined
   const icpPriceNumber = useICPPrice();
 
   return useMemo(() => {
-    if (!tokenId || !icpPriceNumber) return undefined;
+    if (!tokenId) return undefined;
 
     if (tokenId === ICP.address || tokenId === WRAPPED_ICP.address) return icpPriceNumber;
 

@@ -12,4 +12,6 @@ export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
+export const SWAP_LIMIT_REFRESH_KEY = "SWAP_LIMIT";
+
 export * from "./mint";

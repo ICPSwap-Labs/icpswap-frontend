@@ -279,7 +279,8 @@ export class Position {
           ),
           amount1: ZERO,
         };
-      } if (this.pool.tickCurrent < this.tickUpper) {
+      }
+      if (this.pool.tickCurrent < this.tickUpper) {
         return {
           amount0: SqrtPriceMath.getAmount0Delta(
             this.pool.sqrtRatioX96,
@@ -294,17 +295,16 @@ export class Position {
             true,
           ),
         };
-      } 
-        return {
-          amount0: ZERO,
-          amount1: SqrtPriceMath.getAmount1Delta(
-            TickMath.getSqrtRatioAtTick(this.tickLower),
-            TickMath.getSqrtRatioAtTick(this.tickUpper),
-            this.liquidity,
-            true,
-          ),
-        };
-      
+      }
+      return {
+        amount0: ZERO,
+        amount1: SqrtPriceMath.getAmount1Delta(
+          TickMath.getSqrtRatioAtTick(this.tickLower),
+          TickMath.getSqrtRatioAtTick(this.tickUpper),
+          this.liquidity,
+          true,
+        ),
+      };
     }
     return this._mintAmounts;
   }

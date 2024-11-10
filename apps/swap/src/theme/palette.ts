@@ -74,6 +74,7 @@ export function themePalette(theme: { [key: string]: any }) {
       "theme-secondary": theme.colors.darkSecondaryMain,
       apr: theme.colors.apr,
       success: theme.colors["text.success"],
+      default: theme.colors.darkTextSecondary,
     },
     background: {
       paper: theme.paper,

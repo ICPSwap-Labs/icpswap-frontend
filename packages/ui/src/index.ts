@@ -34,3 +34,5 @@ export * from "./components/Image";
 export * from "./components/button";
 export * from "./components/menu";
 export * from "./components/DexScreener";
+export * from "./components/Line";
+export * from "./components/Slider";

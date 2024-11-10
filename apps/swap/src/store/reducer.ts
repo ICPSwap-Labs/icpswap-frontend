@@ -15,6 +15,7 @@ import callReducer from "./call/reducer";
 import StepReducer from "./steps/reducer";
 import SnsReducer from "./sns/reducer";
 import TransactionsReducer from "./transactions/reducer";
+import LimitOrderReducer from "./swap/limit-order/reducer";
 
 import SwapV2LiquidityReducer from "./swapv2/liquidity/reducer";
 import SwapV2CacheReducer from "./swapv2/cache/reducer";
@@ -39,6 +40,7 @@ export default {
   step: StepReducer,
   tokenCache: tokenCacheReducer,
   transactions: TransactionsReducer,
+  limitOrder: LimitOrderReducer,
 
   swapV2Cache: SwapV2CacheReducer,
   swapV2Liquidity: SwapV2LiquidityReducer,

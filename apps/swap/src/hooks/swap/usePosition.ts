@@ -3,6 +3,7 @@ import { Position, Pool } from "@icpswap/swap-sdk";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import { usePool, PoolState } from "hooks/swap/usePools";
 import { useToken } from "hooks/useCurrency";
+import { nonNullArgs } from "@icpswap/utils";
 
 export interface UsePositionProps {
   poolId: string | undefined;
@@ -51,18 +52,18 @@ export function usePosition(userPosition: UsePositionProps | undefined) {
 
 export interface usePositionWithPoolProps {
   pool: Pool | null | undefined;
-  liquidity: number | string | undefined;
-  tickLower: number | string | undefined;
-  tickUpper: number | string | undefined;
+  liquidity: bigint | number | string | undefined;
+  tickLower: bigint | number | string | undefined;
+  tickUpper: bigint | number | string | undefined;
 }
 
 export function usePositionWithPool({ tickLower, tickUpper, liquidity, pool }: usePositionWithPoolProps) {
   let position: Position | undefined;
 
-  if (pool && liquidity && (tickLower || tickLower === 0) && (tickUpper || tickUpper === 0)) {
+  if (pool && nonNullArgs(liquidity) && nonNullArgs(tickLower) && nonNullArgs(tickUpper)) {
     position = new Position({
       pool,
-      liquidity,
+      liquidity: liquidity.toString(),
       tickLower: Number(tickLower),
       tickUpper: Number(tickUpper),
     });

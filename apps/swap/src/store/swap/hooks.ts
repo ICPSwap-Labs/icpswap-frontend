@@ -224,6 +224,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     outputToken,
     inputCurrencyState,
     outputCurrencyState,
+    unusedBalance,
     inputTokenUnusedBalance,
     outputTokenUnusedBalance,
     inputTokenSubBalance,

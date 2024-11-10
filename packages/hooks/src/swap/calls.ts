@@ -19,6 +19,7 @@ import type {
   TickInfoWithId,
   ActorIdentity,
   PaginationResult,
+  Null,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -58,7 +59,7 @@ export async function getSwapPoolMetadata(canisterId: string) {
   return resultFormat<PoolMetadata>(await (await swapPool(canisterId)).metadata()).data;
 }
 
-export function useSwapPoolMetadata(canisterId: string | undefined) {
+export function useSwapPoolMetadata(canisterId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
