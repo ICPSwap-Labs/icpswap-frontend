@@ -44,8 +44,9 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
   const [, outputToken] = useToken(outputTokenId);
 
   const limitPrice = useMemo(() => {
-    return new BigNumber(outputChangeAmount).dividedBy(transaction.token0InAmount).toFixed(transaction.token1Decimals);
-  }, [transaction]);
+    if (!outputToken) return undefined;
+    return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
+  }, [outputChangeAmount, outputToken, inputAmount]);
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
