@@ -88,5 +88,8 @@
   },
   "LiquidityLocks": {
     "ic": "ihzcl-aiaaa-aaaah-aebvq-cai"
+  },
+  "LimitTransaction": {
+    "ic": "pm5d3-aqaaa-aaaag-atsga-cai"
   }
 }
