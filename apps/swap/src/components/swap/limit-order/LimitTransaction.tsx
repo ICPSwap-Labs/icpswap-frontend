@@ -22,13 +22,29 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
   const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
   const [invertPrice, setInvertPrice] = useState(false);
 
-  const [, inputToken] = useToken(transaction.token0Id);
-  const [, outputToken] = useToken(transaction.token1Id);
+  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
+    const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
+      ? transaction.token1Id
+      : transaction.token0Id;
+
+    const outputTokenId = inputTokenId === transaction.token1Id ? transaction.token0Id : transaction.token1Id;
+    const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
+    const outputChangeAmount =
+      inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
+
+    return {
+      inputTokenId,
+      outputTokenId,
+      inputAmount,
+      outputChangeAmount,
+    };
+  }, [transaction]);
+
+  const [, inputToken] = useToken(inputTokenId);
+  const [, outputToken] = useToken(outputTokenId);
 
   const limitPrice = useMemo(() => {
-    return new BigNumber(transaction.token1ChangeAmount)
-      .dividedBy(transaction.token0InAmount)
-      .toFixed(transaction.token1Decimals);
+    return new BigNumber(outputChangeAmount).dividedBy(transaction.token0InAmount).toFixed(transaction.token1Decimals);
   }, [transaction]);
 
   const handleInvert = useCallback(() => {
@@ -46,7 +62,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
           <Flex gap="0 6px">
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
-              {toSignificantWithGroupSeparator(transaction.token0InAmount)} {transaction.token0Symbol}
+              {toSignificantWithGroupSeparator(inputAmount)} {inputToken?.symbol}
             </Typography>
           </Flex>
 
@@ -55,7 +71,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
           <Flex gap="0 6px">
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
-              {toSignificantWithGroupSeparator(transaction.token1ChangeAmount)} {transaction.token1Symbol}
+              {toSignificantWithGroupSeparator(outputChangeAmount)} {outputToken?.symbol}
             </Typography>
           </Flex>
         </Flex>
@@ -81,10 +97,10 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
                 <Typography sx={{ color: "text.primary" }}>
                   {limitPrice
                     ? invertPrice
-                      ? `1 ${transaction.token1Symbol} = ${toSignificantWithGroupSeparator(
+                      ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
                           new BigNumber(1).dividedBy(limitPrice).toString(),
-                        )} ${transaction.token0Symbol}`
-                      : `1 ${transaction.token0Symbol} = ${limitPrice} ${transaction.token1Symbol}`
+                        )} ${inputToken?.symbol}`
+                      : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
                     : "--"}
                 </Typography>
                 <Box sx={{ width: "20px", height: "20px", cursor: "pointer" }} onClick={handleInvert}>
