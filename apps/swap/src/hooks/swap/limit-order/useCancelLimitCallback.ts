@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
+import { sleep } from "@icpswap/utils";
+import { removeOrder } from "@icpswap/hooks";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
@@ -14,7 +16,6 @@ import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
-import { sleep } from "@icpswap/utils";
 
 type updateStepsArgs = {
   positionId: bigint;
@@ -68,6 +69,17 @@ function useCancelLimitCalls() {
   const updateStepContent = useUpdateStepContent();
 
   return useCallback(({ position, poolId, positionId, openExternalTip, tipKey, refresh }: CancelLimitCallsArgs) => {
+    const __removeOrder = async () => {
+      const { status, message } = await removeOrder(poolId, positionId);
+
+      if (status === "err") {
+        openErrorTip(`${getLocaleMessage(message)}.`);
+        return false;
+      }
+
+      return true;
+    };
+
     const withdrawToken = async () => {
       const { amount0, amount1 } = getDecreaseLiquidityAmount(tipKey);
 
@@ -87,7 +99,7 @@ function useCancelLimitCalls() {
       return result;
     };
 
-    const _decreaseLiquidity = async () => {
+    const __decreaseLiquidity = async () => {
       if (!principal) return false;
 
       const { status, message, data } = await decreaseLiquidity(poolId, {
@@ -124,7 +136,7 @@ function useCancelLimitCalls() {
       return true;
     };
 
-    return [_decreaseLiquidity, step1];
+    return [__removeOrder, __decreaseLiquidity, step1];
   }, []);
 }
 

@@ -491,6 +491,7 @@ export const idlFactory = ({ IDL }: any) => {
     quoteForAll: IDL.Func([SwapArgs], [Result], ["query"]),
     refreshIncome: IDL.Func([IDL.Nat], [Result_4], ["query"]),
     removeErrorTransferLog: IDL.Func([IDL.Nat, IDL.Bool], [], []),
+    removeLimitOrder: IDL.Func([IDL.Nat], [Result_2], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
     setAvailable: IDL.Func([IDL.Bool], [], []),
     setLimitOrderAvailable: IDL.Func([IDL.Bool], [], []),

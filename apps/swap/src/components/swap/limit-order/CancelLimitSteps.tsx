@@ -60,8 +60,19 @@ export function getCancelLimitSteps({ principal, handleReclaim, keepTokenInPools
 
   const contents = [
     {
-      title: t`Cancel Limit Order ${token0.symbol} and ${token1.symbol}`,
+      title: t`Cancel the limit order`,
       step: 0,
+      children: [
+        { label: t`Limit Price`, value: LimitPrice },
+        {
+          label: `${token.symbol}`,
+          value: <TokenAmount amount={withdrawAmount} token={token} />,
+        },
+      ],
+    },
+    {
+      title: t`Remove the tokens from the limit order`,
+      step: 1,
       children: [
         { label: t`Limit Price`, value: LimitPrice },
         {
@@ -73,7 +84,7 @@ export function getCancelLimitSteps({ principal, handleReclaim, keepTokenInPools
     !keepTokenInPools
       ? {
           title: withdrawAmountLessThanZero ? t`Unable to withdraw ${token.symbol}` : t`Withdraw ${token.symbol}`,
-          step: 1,
+          step: 2,
           children: [
             {
               label: t`Amount`,

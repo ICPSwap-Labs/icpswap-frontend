@@ -472,6 +472,7 @@ export interface _SERVICE {
   quoteForAll: ActorMethod<[SwapArgs], Result>;
   refreshIncome: ActorMethod<[bigint], Result_4>;
   removeErrorTransferLog: ActorMethod<[bigint, boolean], undefined>;
+  removeLimitOrder: ActorMethod<[bigint], Result_2>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setAvailable: ActorMethod<[boolean], undefined>;
   setLimitOrderAvailable: ActorMethod<[boolean], undefined>;
