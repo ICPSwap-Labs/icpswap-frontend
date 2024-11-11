@@ -148,15 +148,21 @@ export class Actor {
           const result = actor[key](...args) as Promise<any>;
           return await result;
         } catch (error) {
-          const _error = String(error);
+          let __error = "";
+
+          if ("message" in error) {
+            __error = error.message;
+          } else {
+            __error = String(error);
+          }
 
           let message = "";
-          if (_error.includes("Reject text:")) {
-            const _message = _error.split(`Reject text: `)[1]?.split(" at") ?? "";
-            message = _message ? _message[0]?.trim() : _error;
+          if (__error.includes("Reject text:")) {
+            const _message = __error.split(`Reject text: `)[1]?.split(" at") ?? "";
+            message = _message ? _message[0]?.trim() : __error;
           } else {
-            const _message = _error.includes(`"Message"`) ? _error.split(`"Message": `)[1]?.split('"') : "";
-            message = _error.includes(`"Message"`) && !!_message ? _message[1] : _error;
+            const _message = __error.includes(`"Message"`) ? __error.split(`"Message": `)[1]?.split('"') : "";
+            message = __error.includes(`"Message"`) && !!_message ? _message[1] : __error;
           }
 
           if (this.log) {

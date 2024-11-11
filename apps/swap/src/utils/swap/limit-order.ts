@@ -1,8 +1,9 @@
 import { Pool, Position, Token, TICK_SPACINGS, priceToClosestTick, nearestUsableTick, Price } from "@icpswap/swap-sdk";
 
-export function getBackendLimitTick(priceTick: number, pool: Pool) {
-  const tickLower = priceTick - TICK_SPACINGS[pool.fee];
-  const tickUpper = priceTick + TICK_SPACINGS[pool.fee];
+export function getBackendLimitTick(position: Position) {
+  const pool = position.pool;
+  const tickLower = position.tickLower;
+  const tickUpper = position.tickUpper;
 
   if (tickUpper < pool.tickCurrent) {
     return tickLower;
