@@ -207,7 +207,7 @@ export const PlaceOrder = forwardRef(
       )
         return;
 
-      const limitTick = getBackendLimitTick(orderPriceTick, position.pool);
+      const limitTick = getBackendLimitTick(position);
 
       const { call, key } = placeOrderCallback({
         inputToken,
