@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperati
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
+import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 
 import dayjs from "dayjs";
@@ -144,6 +144,7 @@ export interface TokenChartsProps {
   dexScreenHeight?: string;
   dexScreenId?: string;
   priceChart?: ReactNode;
+  onPriceTokenIdChange?: (tokenId: string | Null) => void;
 }
 
 export const TokenCharts = forwardRef(
@@ -159,6 +160,7 @@ export const TokenCharts = forwardRef(
       dexScreenHeight,
       dexScreenId,
       priceChart,
+      onPriceTokenIdChange,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -237,13 +239,17 @@ export const TokenCharts = forwardRef(
       setPriceChartTokenId(canisterId);
     }, [canisterId]);
 
-    const handleChartViewChange = useCallback((chart: { tokenId?: string; label: string; value: ChartView }) => {
-      if (chart.value === ChartView.PRICE) {
-        setPriceChartTokenId(chart.tokenId);
-      }
+    const handleChartViewChange = useCallback(
+      (chart: { tokenId?: string; label: string; value: ChartView }) => {
+        if (chart.value === ChartView.PRICE) {
+          setPriceChartTokenId(chart.tokenId);
+          if (onPriceTokenIdChange) onPriceTokenIdChange(chart.tokenId);
+        }
 
-      setChartView(chart.value);
-    }, []);
+        setChartView(chart.value);
+      },
+      [onPriceTokenIdChange],
+    );
 
     useImperativeHandle(
       ref,

@@ -23,6 +23,7 @@ export async function getTokenPriceChart(
       low: data.low,
       close: data.close,
       time: Number(data.timestamp) * 1000,
+      id: canisterId,
     }))
     .filter((ele) => ele.time !== 0)
     .sort((a, b) => {
