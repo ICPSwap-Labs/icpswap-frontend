@@ -146,7 +146,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
   }, [timeBase, pool]);
 
   const apr = useMemo(() => {
-    if (!pool) return undefined;
+    if (!pool || new BigNumber(pool.tvlUSD).isEqualTo(0)) return undefined;
 
     return `${new BigNumber(fees)
       .dividedBy(pool.tvlUSD)
