@@ -263,10 +263,10 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const currentPrice = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(inputToken)) return undefined;
-    if (pool.token0.address === inputToken.address) return pool.token0Price.toFixed();
-    return pool.token1Price.toFixed();
-  }, [pool, inputToken, orderPrice]);
+    if (isNullArgs(pool) || isNullArgs(inputToken) || isNullArgs(outputToken)) return undefined;
+    if (pool.token0.address === inputToken.address) return pool.token0Price.toFixed(outputToken.decimals);
+    return pool.token1Price.toFixed(inputToken.decimals);
+  }, [pool, inputToken, outputToken]);
 
   const inputError = useMemo(() => {
     if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken) return t`Select a token`;
