@@ -1,14 +1,11 @@
 import { useState, useMemo } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Trans, t } from "@lingui/macro";
-import { enumToString, shorten, formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, SortDirection, SwapTransactionPriceTip } from "@icpswap/ui";
+import { Trans } from "@lingui/macro";
+import { enumToString } from "@icpswap/utils";
+import { Header, HeaderCell, SortDirection, TransactionRow } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
-import dayjs from "dayjs";
-import { ImageLoading, Copy, NoData } from "ui-component/index";
-import { Theme } from "@mui/material/styles";
+import { ImageLoading, NoData } from "ui-component/index";
+import { Theme, Box, Typography, useTheme, makeStyles } from "ui-component/Mui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -24,33 +21,6 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-
-export function ActionTypeFormat(transaction: PoolStorageTransaction) {
-  const type = enumToString(transaction.action);
-
-  let swapDesc = "";
-
-  switch (type) {
-    case "swap":
-      swapDesc = t`Swap ${transaction.token0Symbol} for ${transaction.token1Symbol}`;
-      break;
-    case "increaseLiquidity":
-    case "addLiquidity":
-    case "mint":
-      swapDesc = t`Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`;
-      break;
-    case "decreaseLiquidity":
-      swapDesc = t`Remove ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    case "claim":
-      swapDesc = t`Collect ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    default:
-      break;
-  }
-
-  return swapDesc;
-}
 
 export interface TransactionsProps {
   transactions: PoolStorageTransaction[] | undefined | null;
@@ -179,29 +149,11 @@ export default function Transactions({
       </Header>
 
       {(sortedTransactions ?? []).map((transaction, index) => (
-        <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
-          <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
-
-          <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
-
-          <BodyCell>
-            {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
-            <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
-          </BodyCell>
-
-          <BodyCell>
-            {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
-            <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
-          </BodyCell>
-
-          <BodyCell>
-            <Copy content={transaction.recipient}>
-              <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
-            </Copy>
-          </BodyCell>
-
-          <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-        </TableRow>
+        <TransactionRow
+          key={`${String(transaction.timestamp)}_${index}`}
+          className={classes.wrapper}
+          transaction={transaction}
+        />
       ))}
 
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}

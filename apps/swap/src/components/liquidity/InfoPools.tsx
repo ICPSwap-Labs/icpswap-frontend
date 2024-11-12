@@ -132,6 +132,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [poolChartOpen, setPoolChartOpen] = useState(false);
 
@@ -175,10 +176,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
       <TableRow
         className={`${classes.wrapper} body`}
         sx={{
-          padding: "20px 24px",
-          "@media(max-width: 640px)": {
-            padding: "12px 16px",
-          },
+          padding: matchDownSM ? "12px 16px" : "20px 24px",
         }}
         borderBottom={`1px solid ${theme.palette.background.level1}`}
       >

@@ -22,7 +22,12 @@
     "check-local-tokens": "ts-node-esm ./scripts/check-tokens-metadata.ts"
   },
   "resolutions": {
-    "@babel/runtime": "7.25.0"
+    "@babel/runtime": "7.25.0",
+    "@dfinity/agent": "1.0.1",
+    "@dfinity/auth-client": "1.0.1",
+    "@dfinity/candid": "1.0.1",
+    "@dfinity/identity": "1.0.1",
+    "@dfinity/principal": "1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
