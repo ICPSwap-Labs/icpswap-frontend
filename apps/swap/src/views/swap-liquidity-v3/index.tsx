@@ -139,7 +139,7 @@ export function SwapMain() {
                   ))}
                 </Box>
 
-                <SwapSettingIcon type="swap" />
+                {activeTab === TABS.SWAP ? <SwapSettingIcon type="swap" /> : null}
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>
