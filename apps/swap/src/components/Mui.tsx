@@ -25,6 +25,7 @@ export { default as Chip } from "@mui/material/Chip";
 export { default as ButtonBase } from "@mui/material/ButtonBase";
 export { default as Drawer } from "@mui/material/Drawer";
 export { default as Menu } from "@mui/material/Menu";
+export { ClickAwayListener } from "@mui/base/ClickAwayListener";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

@@ -33,7 +33,7 @@ export default function Swap() {
             ICPSwap Pro
           </Typography>
 
-          <SwapSettings type="swap" position={matchDownSM ? "right" : "left"} />
+          <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
         </Box>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
