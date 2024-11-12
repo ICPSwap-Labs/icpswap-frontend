@@ -1,12 +1,14 @@
-import { Typography, Box, useTheme, Tooltip } from "@mui/material";
 import { formatDollarAmountV1 } from "@icpswap/utils";
+
+import { Typography, Box, useTheme, Tooltip, TypographyProps } from "./Mui";
 
 export interface SwapTransactionPriceTipProps {
   price: number | string;
   symbol: string;
+  symbolSx?: TypographyProps["sx"];
 }
 
-export function SwapTransactionPriceTip({ price, symbol }: SwapTransactionPriceTipProps) {
+export function SwapTransactionPriceTip({ price, symbol, symbolSx }: SwapTransactionPriceTipProps) {
   const theme = useTheme();
 
   return (
@@ -38,6 +40,7 @@ export function SwapTransactionPriceTip({ price, symbol }: SwapTransactionPriceT
           textDecorationLine: "underline",
           textDecorationStyle: "dotted",
           textDecorationColor: theme.palette.text.secondary,
+          ...symbolSx,
         }}
         component="span"
       >
