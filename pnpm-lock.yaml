@@ -6,6 +6,11 @@ settings:
 
 overrides:
   '@babel/runtime': 7.25.0
+  '@dfinity/agent': 1.0.1
+  '@dfinity/auth-client': 1.0.1
+  '@dfinity/candid': 1.0.1
+  '@dfinity/identity': 1.0.1
+  '@dfinity/principal': 1.0.1
 
 importers:
 
@@ -411,7 +416,7 @@ importers:
         version: 0.3.4(@types/react@18.2.0)(bufferutil@4.0.8)(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.25.0(@babel/core@7.24.9))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)(rollup@2.79.1)
       '@honopu/auth-client':
         specifier: 1.0.13
-        version: 1.0.13(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/identity@1.0.1(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@0.10.4)
+        version: 1.0.13(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/identity@1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@1.0.1)
       '@icpswap/actor':
         specifier: workspace:*
         version: link:../../packages/actor
@@ -522,7 +527,7 @@ importers:
         version: 5.7.2(bufferutil@4.0.8)
       ic-stoic-identity:
         specifier: 6.0.0
-        version: 6.0.0(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))
+        version: 6.0.0(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@peculiar/webcrypto@1.5.0)
       js-sha256:
         specifier: ^0.9.0
         version: 0.9.0
@@ -2104,68 +2109,38 @@ packages:
       moment:
         optional: true
 
-  '@dfinity/agent@0.10.4':
-    resolution: {integrity: sha512-/O1443GWkQ6GngrXos/ShAbnF9IgUlWclzaQn/qEsGJIey6S7tty+iOa5yZqOS1BtOTnDe+TYh8GeERZZn7vvg==}
-    peerDependencies:
-      '@dfinity/candid': ^0.10.4
-      '@dfinity/principal': ^0.10.4
-
-  '@dfinity/agent@0.19.3':
-    resolution: {integrity: sha512-q410aNLoOA1ZkwdAMgSo6t++pjISn9TfSybRXhPRI5Ume7eG6+6qYr/rlvcXy7Nb2+Ar7LTsHNn34IULfjni7w==}
-    peerDependencies:
-      '@dfinity/candid': ^0.19.3
-      '@dfinity/principal': ^0.19.3
-
   '@dfinity/agent@1.0.1':
     resolution: {integrity: sha512-QoCiKIWEgsXoaiHpb76M2qLXYDS9IdfvC81dLJYvX9KVXRq8Ojo4S82tBqBFGtM0j0EKEC6mIAJV/bqhOJTtjQ==}
     peerDependencies:
-      '@dfinity/candid': ^1.0.1
-      '@dfinity/principal': ^1.0.1
+      '@dfinity/candid': 1.0.1
+      '@dfinity/principal': 1.0.1
 
   '@dfinity/auth-client@1.0.1':
     resolution: {integrity: sha512-QooHufXCDHTXySC1Tb1xf9+KRJISbw1sLYLIgY7PTxrA4Nc1ZgA7o4exwgRyIuJgoWMKrjgHPUZcu4N5ak69OQ==}
     peerDependencies:
-      '@dfinity/agent': ^1.0.1
-      '@dfinity/identity': ^1.0.1
-      '@dfinity/principal': ^1.0.1
-
-  '@dfinity/candid@0.19.3':
-    resolution: {integrity: sha512-yXfbLSWTeRd4G0bLLxYoDqpXH3Jim0P+1PPZOoktXNC1X1hB+ea3yrZebX75t4GVoQK7123F7mxWHiPjuV2tQQ==}
-    peerDependencies:
-      '@dfinity/principal': ^0.19.3
+      '@dfinity/agent': 1.0.1
+      '@dfinity/identity': 1.0.1
+      '@dfinity/principal': 1.0.1
 
   '@dfinity/candid@1.0.1':
     resolution: {integrity: sha512-PfZNV1fTOWtl+NhLOw71ACLYGugKF9HdEJKtkyBJqbj+6pqshvK6rllCUkGwMsmXfP8YopLzmoNVdy1rp/eOgg==}
     peerDependencies:
-      '@dfinity/principal': ^1.0.1
-
-  '@dfinity/identity@0.10.4':
-    resolution: {integrity: sha512-b4WsaD70Ts75JlJcf4+E04B140hQN5u/GnCvjhaHqN2++bwWO56Paxtv0UfAc58LMwJZj4iOyZoahnT56LhC9A==}
-    peerDependencies:
-      '@dfinity/agent': ^0.10.4
-      '@dfinity/principal': ^0.10.4
-
-  '@dfinity/identity@0.19.3':
-    resolution: {integrity: sha512-6XHrkNQ8tVN6+MERyXPy+avGHTd2zoX3l47bu6gSwreDdOZQnAnXpHVzLcXhnUptkBVetcC70YQEKCmqtuLriA==}
-    peerDependencies:
-      '@dfinity/agent': ^0.19.3
-      '@dfinity/principal': ^0.19.3
-      '@peculiar/webcrypto': ^1.4.0
+      '@dfinity/principal': 1.0.1
 
   '@dfinity/identity@1.0.1':
     resolution: {integrity: sha512-ArajyKSkiA4LjOq/ocGLMd66svgMVntF9j9P7irZScrzTCPcEXk5c7VteAqRGMwHCpI4LRipjmuZA1agwmUzRw==}
     peerDependencies:
-      '@dfinity/agent': ^1.0.1
-      '@dfinity/principal': ^1.0.1
+      '@dfinity/agent': 1.0.1
+      '@dfinity/principal': 1.0.1
       '@peculiar/webcrypto': ^1.4.0
 
   '@dfinity/ledger-icp@2.2.0':
     resolution: {integrity: sha512-4Nn5/wAX8XMTb8GJ2LftsuEwGznM1v7lAgbUl+DdnERTIQ2btfP8LWFG+45PQKM7NjWZFFTp5JDbW1gEKM1KbQ==}
     peerDependencies:
-      '@dfinity/agent': ^0.20.2
-      '@dfinity/candid': ^0.20.2
+      '@dfinity/agent': 1.0.1
+      '@dfinity/candid': 1.0.1
       '@dfinity/nns-proto': ^1.0.1
-      '@dfinity/principal': ^0.20.2
+      '@dfinity/principal': 1.0.1
       '@dfinity/utils': ^2.1.1
 
   '@dfinity/nns-proto@1.0.2':
@@ -2174,18 +2149,12 @@ packages:
   '@dfinity/nns@4.0.2':
     resolution: {integrity: sha512-cX6c8JCGAcfdvS2l+JT3u63dIZtVcAUdOKodeFOdN1ADyuC0zu05uurZVHpCmt+uaDM3ahf9LsAC1RxAImd7UQ==}
     peerDependencies:
-      '@dfinity/agent': ^1.0.1
-      '@dfinity/candid': ^1.0.1
+      '@dfinity/agent': 1.0.1
+      '@dfinity/candid': 1.0.1
       '@dfinity/ledger-icp': ^2.2.2
       '@dfinity/nns-proto': ^1.0.1
-      '@dfinity/principal': ^1.0.1
+      '@dfinity/principal': 1.0.1
       '@dfinity/utils': ^2.1.3
-
-  '@dfinity/principal@0.10.4':
-    resolution: {integrity: sha512-qwzpmq5wfyeKMBspRZmuYvTxu1dqN+IY0ThACHTRh6D58QjnVQNCD3Hq9d5eEDu0qyNcY22cJEWwzrzZaaoVmw==}
-
-  '@dfinity/principal@0.19.3':
-    resolution: {integrity: sha512-+nixVvdGt7ECxRvLXDXsvU9q9sSPssBtDQ4bXa149SK6gcYcmZ6lfWIi3DJNqj3tGROxILVBsguel9tECappsA==}
 
   '@dfinity/principal@1.0.1':
     resolution: {integrity: sha512-pCAuTLcvZEZ8fYgVzTVhfUfFGadxeWN4v2z8Q0rizeiqcHKhbJVfWUiXXjzPGG5lNz2DxKyUHQ/WS4UTbTaxvg==}
@@ -2193,9 +2162,9 @@ packages:
   '@dfinity/utils@2.1.1':
     resolution: {integrity: sha512-H4WEG4gEuQlAH/vKRbkvnUggoFkF4ffLSGQEh2aekThffm+iSaKwVQ9AnAvwFGaGBbSR3rLhHMIpPnZxchj+rA==}
     peerDependencies:
-      '@dfinity/agent': ^0.20.2
-      '@dfinity/candid': ^0.20.2
-      '@dfinity/principal': ^0.20.2
+      '@dfinity/agent': 1.0.1
+      '@dfinity/candid': 1.0.1
+      '@dfinity/principal': 1.0.1
 
   '@emotion/babel-plugin@11.12.0':
     resolution: {integrity: sha512-y2WQb+oP8Jqvvclh8Q55gLUyb7UFvgv7eJfsj7td5TToBrIUtPay2kMrZi4xjq9qw2vD0ZR5fSho0yqoFgX7Rw==}
@@ -10981,10 +10950,6 @@ packages:
   scrypt-js@3.0.1:
     resolution: {integrity: sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==}
 
-  secp256k1@4.0.3:
-    resolution: {integrity: sha512-NLZVf+ROMxwtEj3Xa562qgv2BK5e2WNmXPiOdVIPLgs6lyTzMvBq0aWTYMI5XCP9jZMVKOcqZLw/Wc4vDkuxhA==}
-    engines: {node: '>=10.0.0'}
-
   secp256k1@5.0.0:
     resolution: {integrity: sha512-TKWX8xvoGHrxVdqbYeZM9w+izTF4b9z3NhSaDkdn81btvuh+ivbIMGT/zQvDtTFWhRlThpoz6LEYTr7n8A5GcA==}
     engines: {node: '>=14.0.0'}
@@ -11824,9 +11789,6 @@ packages:
 
   tweetnacl@0.14.5:
     resolution: {integrity: sha512-KXXFFdAbFXY4geFIwoyNK+f5Z1b7swfXABfL7HXCmoIWMKU3dmS26672A4EeQtDzLKy7SXmfBu51JolvEKwtGA==}
-
-  tweetnacl@1.0.3:
-    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
 
   type-check@0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}
@@ -12789,10 +12751,10 @@ snapshots:
 
   '@astrox/sdk-core@0.1.41(@peculiar/webcrypto@1.5.0)(@types/node@13.13.52)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))':
     dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       '@types/jest': 29.5.12
       borc: 2.1.2
       jest: 29.7.0(@types/node@13.13.52)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))
@@ -12807,10 +12769,10 @@ snapshots:
 
   '@astrox/sdk-core@0.1.41(@peculiar/webcrypto@1.5.0)(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))':
     dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       '@types/jest': 29.5.12
       borc: 2.1.2
       jest: 29.7.0(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))
@@ -12826,10 +12788,10 @@ snapshots:
   '@astrox/sdk-web@0.1.41(@peculiar/webcrypto@1.5.0)(@types/node@13.13.52)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))':
     dependencies:
       '@astrox/sdk-core': 0.1.41(@peculiar/webcrypto@1.5.0)(@types/node@13.13.52)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.19.3)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       '@types/crc': 3.8.3
       '@types/jest': 29.5.12
       buffer: 6.0.3
@@ -12863,10 +12825,10 @@ snapshots:
     dependencies:
       '@astrox/sdk-core': 0.1.41(@peculiar/webcrypto@1.5.0)(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))
       '@astrox/sdk-webview-bridge': 0.1.41(@types/node@18.19.42)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.10.4)
-      '@dfinity/identity': 0.19.3(@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 0.19.3
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       '@types/jest': 29.5.12
       '@types/node': 18.19.42
       borc: 2.1.2
@@ -14276,25 +14238,6 @@ snapshots:
     optionalDependencies:
       moment: 2.30.1
 
-  '@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4)':
-    dependencies:
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
-      base64-arraybuffer: 0.2.0
-      bignumber.js: 9.1.2
-      borc: 2.1.2
-      js-sha256: 0.9.0
-      simple-cbor: 0.4.1
-
-  '@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)':
-    dependencies:
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.19.3
-      '@noble/hashes': 1.4.0
-      base64-arraybuffer: 0.2.0
-      borc: 2.1.2
-      simple-cbor: 0.4.1
-
   '@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)':
     dependencies:
       '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
@@ -14313,44 +14256,9 @@ snapshots:
       '@dfinity/principal': 1.0.1
       idb: 7.1.1
 
-  '@dfinity/candid@0.19.3(@dfinity/principal@0.10.4)':
-    dependencies:
-      '@dfinity/principal': 0.10.4
-
-  '@dfinity/candid@0.19.3(@dfinity/principal@0.19.3)':
-    dependencies:
-      '@dfinity/principal': 0.19.3
-
   '@dfinity/candid@1.0.1(@dfinity/principal@1.0.1)':
     dependencies:
       '@dfinity/principal': 1.0.1
-
-  '@dfinity/identity@0.10.4(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)':
-    dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
-      borc: 2.1.2
-      js-sha256: 0.9.0
-      secp256k1: 4.0.3
-      tweetnacl: 1.0.3
-
-  '@dfinity/identity@0.19.3(@dfinity/agent@0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)(@peculiar/webcrypto@1.5.0)':
-    dependencies:
-      '@dfinity/agent': 0.19.3(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.19.3)
-      '@dfinity/principal': 0.19.3
-      '@noble/hashes': 1.4.0
-      '@peculiar/webcrypto': 1.5.0
-      borc: 2.1.2
-      tweetnacl: 1.0.3
-
-  '@dfinity/identity@1.0.1(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)(@peculiar/webcrypto@1.5.0)':
-    dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
-      '@peculiar/webcrypto': 1.5.0
-      borc: 2.1.2
 
   '@dfinity/identity@1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)':
     dependencies:
@@ -14383,12 +14291,6 @@ snapshots:
       '@dfinity/utils': 2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
       '@noble/hashes': 1.4.0
       randombytes: 2.1.0
-
-  '@dfinity/principal@0.10.4': {}
-
-  '@dfinity/principal@0.19.3':
-    dependencies:
-      '@noble/hashes': 1.4.0
 
   '@dfinity/principal@1.0.1':
     dependencies:
@@ -14978,12 +14880,12 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@honopu/auth-client@1.0.13(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/identity@1.0.1(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@0.10.4)':
+  '@honopu/auth-client@1.0.13(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/identity@1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@1.0.1)':
     dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4)
-      '@dfinity/candid': 0.19.3(@dfinity/principal@0.10.4)
-      '@dfinity/identity': 1.0.1(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 0.10.4
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       idb: 8.0.0
 
   '@humanwhocodes/config-array@0.11.14':
@@ -21818,14 +21720,15 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.25.0
 
-  ic-stoic-identity@6.0.0(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3)):
+  ic-stoic-identity@6.0.0(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@peculiar/webcrypto@1.5.0):
     dependencies:
-      '@dfinity/agent': 0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4)
-      '@dfinity/identity': 0.10.4(@dfinity/agent@0.10.4(@dfinity/candid@0.19.3(@dfinity/principal@0.19.3))(@dfinity/principal@0.10.4))(@dfinity/principal@0.10.4)
-      '@dfinity/principal': 0.10.4
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/principal': 1.0.1
       buffer: 6.0.3
     transitivePeerDependencies:
       - '@dfinity/candid'
+      - '@peculiar/webcrypto'
 
   iconv-lite@0.4.24:
     dependencies:
@@ -26497,12 +26400,6 @@ snapshots:
 
   scrypt-js@3.0.1: {}
 
-  secp256k1@4.0.3:
-    dependencies:
-      elliptic: 6.5.6
-      node-addon-api: 2.0.2
-      node-gyp-build: 4.8.1
-
   secp256k1@5.0.0:
     dependencies:
       elliptic: 6.5.6
@@ -27460,8 +27357,6 @@ snapshots:
       turbo-windows-arm64: 1.10.15
 
   tweetnacl@0.14.5: {}
-
-  tweetnacl@1.0.3: {}
 
   type-check@0.3.2:
     dependencies:

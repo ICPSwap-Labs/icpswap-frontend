@@ -1,27 +1,27 @@
-import { Box, SxProps } from "@mui/material";
 import React from "react";
+
+import { Box, BoxProps } from "../Mui";
 
 export interface RowProps {
   borderBottom?: string;
-  sx?: SxProps;
+  sx?: BoxProps;
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
 }
 
-export default function Row(props: RowProps) {
+export default function Row({ borderBottom, sx, children, className, onClick }: RowProps) {
   return (
     <Box
-      {...props}
-      className={props.className}
+      className={className}
       sx={{
         padding: "20px 0",
-        borderBottom: props.borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
-        ...props.sx,
+        borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+        ...sx,
       }}
-      onClick={props.onClick}
+      onClick={onClick}
     >
-      {props.children}
+      {children}
     </Box>
   );
 }
