@@ -2,6 +2,7 @@ const shelljs = require("shelljs");
 const path = require("path");
 
 const identity = process.argv[2];
+const network = process.argv[3] ?? 0;
 
 function deploy() {
   const pre_deploy_path = path.resolve(__dirname, "./pre-deploy.js");
@@ -14,7 +15,7 @@ function deploy() {
     return;
   }
 
-  const result = shelljs.exec("dfx deploy --network=ic --wallet=$(dfx identity --network=ic get-wallet)");
+  const result = shelljs.exec(`dfx deploy --network=${network} --wallet=$(dfx identity --network=ic get-wallet)`);
 
   if (result.code !== 0) {
     deploy();
