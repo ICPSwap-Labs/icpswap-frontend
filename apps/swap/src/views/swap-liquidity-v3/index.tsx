@@ -142,7 +142,7 @@ export function SwapMain() {
 
                 <Flex gap="0 4px">
                   <SwapProButton />
-                  <SwapSettingIcon type="swap" />
+                  {activeTab === TABS.SWAP ? <SwapSettingIcon type="swap" /> : null}
                 </Flex>
               </Box>
 
