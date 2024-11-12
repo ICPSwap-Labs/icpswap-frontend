@@ -111,102 +111,118 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
 
   return (
     <>
-      <Flex
+      <Box
         sx={{
           width: "100%",
           padding: "20px 16px",
           background: theme.palette.background.level2,
           borderRadius: "16px",
-          "@media(max-width: 640px)": {
-            flexDirection: "column",
-            gap: "16px 0",
-          },
         }}
-        justify="center"
-        align="flex-start"
-        gap="0 32px"
       >
-        <Box
-          sx={{
-            padding: "12px",
-            border: `1px solid ${theme.palette.background.level4}`,
-            display: "flex",
-            justifyContent: "center",
-            borderRadius: "8px",
-          }}
-        >
-          <QRCode value={btc_address ?? ""} />
-        </Box>
-
         <Box>
-          <Box>
-            <Flex gap="0 6px">
-              <Typography>
-                <Trans>Balance</Trans>
-              </Typography>
-            </Flex>
+          <Typography align="center">
+            <Trans>Balance</Trans>
+          </Typography>
 
-            <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }}>
-              <Typography
-                sx={{
-                  color: "text.primary",
-                  fontWeight: 600,
-                  fontSize: "18px",
-                }}
-              >
-                {balance ? toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString()) : "--"}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                }}
-              >
-                {token.symbol}
-              </Typography>
-            </Flex>
-          </Box>
-
-          <Box sx={{ margin: "32px 0 0 0" }}>
-            <Typography>
-              <Trans>BTC Deposit Address</Trans>
-            </Typography>
+          <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }} justify="center">
             <Typography
-              component="div"
               sx={{
                 color: "text.primary",
-                maxWidth: "304px",
-                lineHeight: "20px",
-                margin: "8px 0 0 0",
-                wordBreak: "break-all",
-                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "20px",
               }}
-              onClick={handleCopy}
             >
-              {btc_address ?? "--"}
-
-              {btc_address ? (
-                <Box component="span" sx={{ margin: "0 0 0 4px", cursor: "pointer" }}>
-                  <CopyIcon />
-                </Box>
-              ) : null}
+              {balance ? toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString()) : "--"}
             </Typography>
-
-            <TextButton sx={{ fontSize: "12px" }} link={`https://mempool.space/address/${btc_address}`}>
-              <Trans>Check on Bitcoin Explorer</Trans>
-            </TextButton>
-          </Box>
-
-          <Box sx={{ margin: "20px 0 0 0" }}>
-            <Button
-              variant="outlined"
-              onClick={handleRefreshBalance}
-              startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}
+            <Typography
+              sx={{
+                fontSize: "16px",
+              }}
             >
-              <Trans>Check for incoming BTC</Trans>
-            </Button>
-          </Box>
+              {token.symbol}
+            </Typography>
+          </Flex>
         </Box>
-      </Flex>
+
+        <Flex
+          sx={{
+            margin: "24px 0 0 0",
+            width: "100%",
+            padding: "20px 16px",
+            background: theme.palette.background.level2,
+            borderRadius: "16px",
+            border: `1px solid ${theme.palette.background.level4}`,
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              gap: "16px 0",
+              alignItems: "center",
+            },
+          }}
+          justify="space-between"
+          align="flex-start"
+        >
+          <Box>
+            <Box>
+              <Typography>
+                <Trans>BTC Deposit Address</Trans>
+              </Typography>
+              <Typography
+                component="div"
+                sx={{
+                  color: "text.primary",
+                  maxWidth: "380px",
+                  lineHeight: "20px",
+                  margin: "8px 0 0 0",
+                  wordBreak: "break-all",
+                  cursor: "pointer",
+                }}
+                onClick={handleCopy}
+              >
+                {btc_address ?? "--"}
+
+                {btc_address ? (
+                  <Box component="span" sx={{ margin: "0 0 0 4px", cursor: "pointer" }}>
+                    <CopyIcon />
+                  </Box>
+                ) : null}
+              </Typography>
+
+              <TextButton sx={{ fontSize: "12px" }} link={`https://mempool.space/address/${btc_address}`}>
+                <Trans>Check on Bitcoin Explorer</Trans>
+              </TextButton>
+            </Box>
+
+            <Box
+              sx={{
+                margin: "46px 0 0 0",
+                "@media(max-width: 640px)": {
+                  margin: "20px 0 0 0",
+                },
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={handleRefreshBalance}
+                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}
+              >
+                <Trans>Check for incoming BTC</Trans>
+              </Button>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "10px",
+              display: "flex",
+              justifyContent: "center",
+              borderRadius: "8px",
+              background: "#ffffff",
+            }}
+          >
+            <QRCode width={120} height={120} value={btc_address ?? ""} />
+          </Box>
+        </Flex>
+      </Box>
 
       <Copy content={btc_address ?? ""} hide ref={copyRef} />
 
