@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const packageJson = require("../package.json");
+const packageJson = require(`${path.resolve("../../package.json")}`);
 
 fs.writeFileSync(path.resolve(__dirname, "../src/temp_canister_ids.json"), JSON.stringify({}, null, 2));
 
