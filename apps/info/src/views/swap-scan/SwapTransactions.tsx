@@ -112,7 +112,7 @@ function Transactions({ address }: TransactionsProps) {
         sx={{
           display: "flex",
           margin: "10px 0 0 0",
-          gap: "16px",
+          gap: "10px 16px",
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
@@ -168,14 +168,30 @@ function Transactions({ address }: TransactionsProps) {
 
                 <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
 
-                <BodyCell>
-                  {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
-                  <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
+                <BodyCell sx={{ gap: "0 4px" }}>
+                  {formatAmount(transaction.token0ChangeAmount, 4)}
+                  <SwapTransactionPriceTip
+                    symbol={transaction.token0Symbol}
+                    price={transaction.token0Price}
+                    symbolSx={{
+                      "@media(max-width: 640px)": {
+                        fontSize: "14px",
+                      },
+                    }}
+                  />
                 </BodyCell>
 
-                <BodyCell>
-                  {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
-                  <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
+                <BodyCell sx={{ gap: "0 4px" }}>
+                  {formatAmount(transaction.token1ChangeAmount, 4)}
+                  <SwapTransactionPriceTip
+                    symbol={transaction.token1Symbol}
+                    price={transaction.token1Price}
+                    symbolSx={{
+                      "@media(max-width: 640px)": {
+                        fontSize: "14px",
+                      },
+                    }}
+                  />
                 </BodyCell>
 
                 <BodyCell>
