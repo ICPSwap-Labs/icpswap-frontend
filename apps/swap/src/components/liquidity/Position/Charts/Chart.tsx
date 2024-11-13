@@ -6,8 +6,9 @@ import { AxisBottom } from "components/liquidity/PriceRangeChart/AxisBottom";
 import { Line } from "components/liquidity/PriceRangeChart/Line";
 import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 import { ChartEntry, ZoomLevels, Dimensions, Margins } from "components/liquidity/PriceRangeChart/types";
-import type { Null, PositionPricePeriodRange } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { Bound } from "constants/swap";
+import { nonNullArgs } from "@icpswap/utils";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -30,8 +31,9 @@ interface LiquidityChartsProps {
   dimensions: Dimensions;
   margins: Margins;
   zoomLevels: ZoomLevels;
-  periodPriceRange: PositionPricePeriodRange | Null;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
+  priceLower: string | number | Null;
+  priceUpper: string | number | Null;
 }
 
 export function Chart({
@@ -40,8 +42,8 @@ export function Chart({
   dimensions: { width, height },
   margins,
   zoomLevels,
-  periodPriceRange,
-  ticksAtLimit,
+  priceLower,
+  priceUpper,
 }: LiquidityChartsProps) {
   const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
@@ -97,31 +99,37 @@ export function Chart({
             <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
 
-          {/* {periodPriceRange && (
+          {nonNullArgs(priceLower) && nonNullArgs(priceUpper) && (
             // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
-              <rect fill="white" x={xScale(0.001)} y="0" width={xScale(0.004) - xScale(0.001)} height={innerHeight} />
+              <rect
+                fill="white"
+                x={xScale(Number(priceLower))}
+                y="0"
+                width={xScale(Number(priceUpper)) - xScale(Number(priceLower))}
+                height={innerHeight}
+              />
             </mask>
-          )} */}
+          )}
         </defs>
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
             <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
-            {/* {periodPriceRange && (
+            {nonNullArgs(priceLower) && nonNullArgs(priceUpper) && (
               // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <rect
                   fill="white"
-                  x={xScale(0.001)}
-                  y={10}
-                  width={xScale(0.004) - xScale(0.001)}
+                  x={xScale(Number(priceLower))}
+                  y={0}
+                  width={xScale(Number(priceUpper)) - xScale(Number(priceLower))}
                   height={innerHeight}
                   opacity={0.2}
                 />
               </g>
-            )} */}
+            )}
 
             <Line value={current} xScale={xScale} height={innerHeight} />
             {lower ? (

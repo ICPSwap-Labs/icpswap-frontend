@@ -1,4 +1,4 @@
-import { useCallback, useMemo, ReactNode } from "react";
+import { ReactNode } from "react";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX, Bound } from "constants/swap";
@@ -6,9 +6,9 @@ import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { t } from "@lingui/macro";
-import type { Null, PositionPricePeriodRange } from "@icpswap/types";
-
+import type { Null } from "@icpswap/types";
 import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+
 import { Chart } from "./Chart";
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
@@ -52,8 +52,9 @@ export interface LiquidityChartRangeInputProps {
   price: number | undefined | string;
   priceLower?: Price<Token, Token>;
   priceUpper?: Price<Token, Token>;
-  periodPriceRange: PositionPricePeriodRange | Null;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export default function LiquidityChartRangeInput({
@@ -63,8 +64,9 @@ export default function LiquidityChartRangeInput({
   price,
   priceLower,
   priceUpper,
-  periodPriceRange,
   ticksAtLimit,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
 
@@ -112,8 +114,9 @@ export default function LiquidityChartRangeInput({
               },
             }}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
-            periodPriceRange={periodPriceRange}
             ticksAtLimit={ticksAtLimit}
+            priceLower={poolPriceLower}
+            priceUpper={poolPriceUpper}
           />
         </Flex>
       )}

@@ -1,23 +1,18 @@
-// import { useState } from "react";
+import { useState } from "react";
 import { useTheme, Box } from "components/Mui";
 import { MainCard } from "components/index";
 import { Position } from "@icpswap/swap-sdk";
-// import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
+import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
 import { t } from "@lingui/macro";
+import { PositionChartTimes } from "types/swap";
 
-import { LiquidityCharts } from "./Charts";
+import { LiquidityCharts, PositionValueChart, PositionFeesChart, PositionAPRChart } from "./Charts";
 
 enum Charts {
   PriceRange = "Price Range",
   PositionValue = "Position Value",
   APR = "APR",
   Fees = "Fees",
-}
-
-enum Times {
-  "24H" = "24H",
-  "7D" = "7D",
-  "30D" = "30D",
 }
 
 const Tabs = [
@@ -28,9 +23,9 @@ const Tabs = [
 ];
 
 const TimeTabs = [
-  { label: t`24H`, value: Times["24H"] },
-  { label: t`7D`, value: Times["7D"] },
-  { label: t`30D`, value: Times["30D"] },
+  { label: t`24H`, value: PositionChartTimes["24H"] },
+  { label: t`7D`, value: PositionChartTimes["7D"] },
+  { label: t`30D`, value: PositionChartTimes["30D"] },
 ];
 
 interface ChartsWrapperProps {
@@ -39,19 +34,26 @@ interface ChartsWrapperProps {
 }
 
 export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
-  // const theme = useTheme();
+  const theme = useTheme();
 
-  // const [chartView, setChartView] = useState(Charts.PriceRange);
-  // const [chartTime, setChartTime] = useState(Times["24H"]);
+  const [chartView, setChartView] = useState(Charts.PriceRange);
+  const [chartTime, setChartTime] = useState(PositionChartTimes["24H"]);
+
+  const {
+    pool: { id: poolId },
+  } = position;
 
   return (
     <MainCard level={3}>
-      {/* <Box sx={{ width: "fit-content" }}>
+      <Box sx={{ width: "fit-content" }}>
         <SmallTabsButtonWrapper background={theme.palette.background.level1} borderRadius="8px" padding="4px">
           {Tabs.map((chart) => (
             <SmallTabButton
               key={chart.value}
-              onClick={() => setChartView(chart.value)}
+              onClick={() => {
+                setChartTime(PositionChartTimes["24H"]);
+                setChartView(chart.value);
+              }}
               active={chartView === chart.value}
               background={theme.palette.background.level4}
               borderRadius="8px"
@@ -61,13 +63,20 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
             </SmallTabButton>
           ))}
         </SmallTabsButtonWrapper>
-      </Box> */}
+      </Box>
 
-      {/* <Box sx={{ margin: "20px 0 0 0" }}> */}
-      <Box sx={{ margin: "0 0 0 0" }}>
-        <LiquidityCharts position={position} />
+      <Box sx={{ margin: "20px 0 0 0" }}>
+        {chartView === Charts.PriceRange ? (
+          <LiquidityCharts position={position} time={chartTime} />
+        ) : chartView === Charts.PositionValue ? (
+          <PositionValueChart poolId={poolId} positionId={BigInt(positionId)} />
+        ) : chartView === Charts.Fees ? (
+          <PositionFeesChart poolId={poolId} positionId={BigInt(positionId)} />
+        ) : chartView === Charts.APR ? (
+          <PositionAPRChart poolId={poolId} positionId={BigInt(positionId)} time={chartTime} />
+        ) : null}
 
-        {/* {chartView === Charts.PriceRange ? (
+        {chartView === Charts.PriceRange || chartView === Charts.APR ? (
           <Box sx={{ width: "fit-content", margin: "20px 0 0 0" }}>
             <SmallTabsButtonWrapper
               background={theme.palette.background.level2}
@@ -89,7 +98,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
               ))}
             </SmallTabsButtonWrapper>
           </Box>
-        ) : null} */}
+        ) : null}
       </Box>
     </MainCard>
   );

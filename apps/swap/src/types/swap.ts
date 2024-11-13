@@ -39,4 +39,10 @@ export enum PositionSort {
   FeesValue = "Uncollected fees",
 }
 
+export enum PositionChartTimes {
+  "24H" = "24H",
+  "7D" = "7D",
+  "30D" = "30D",
+}
+
 export type PositionKey = string;

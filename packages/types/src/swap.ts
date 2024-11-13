@@ -25,8 +25,8 @@ export type {
   SwapPoolData,
   SwapPoolToken,
   Ticket,
-  PositionChartData,
   PositionPricePeriodRange,
+  PositionAPRs,
 } from "@icpswap/candid";
 
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";

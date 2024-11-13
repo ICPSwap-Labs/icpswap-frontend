@@ -1,11 +1,10 @@
 import React, { Dispatch, SetStateAction, ReactNode } from "react";
-import { ResponsiveContainer, XAxis, Tooltip, AreaChart, Area } from "recharts";
-import { Box } from "@mui/material";
+import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import { darken } from "polished";
+
+import { Box, useTheme } from "../Mui";
 import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
@@ -26,6 +25,12 @@ export type LineChartAltProps = {
   bottomLeft?: ReactNode | undefined;
   bottomRight?: ReactNode | undefined;
   tickFormat?: string;
+  showXAxis?: boolean;
+  showYAxis?: boolean;
+  xTickFormatter?: (val: string) => string;
+  yTickFormatter?: (val: string) => string;
+  tipFormat?: string;
+  extraNode?: ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export function LineChartAlt({
@@ -41,10 +46,19 @@ export function LineChartAlt({
   bottomRight,
   minHeight = DEFAULT_HEIGHT,
   tickFormat = "DD",
+  showXAxis = true,
+  showYAxis = false,
+  xTickFormatter,
+  yTickFormatter,
+  tipFormat = "MMM D, YYYY",
+  extraNode,
   ...rest
 }: LineChartAltProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const parsedValue = value;
+
+  console.log("data:", data);
+  console.log("extraNode: ", extraNode);
 
   return (
     <Box
@@ -72,8 +86,8 @@ export function LineChartAlt({
           data={data}
           margin={{
             top: 5,
-            right: 30,
-            left: 20,
+            right: 5,
+            left: 5,
             bottom: 5,
           }}
           onMouseLeave={() => {
@@ -87,14 +101,31 @@ export function LineChartAlt({
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis
-            dataKey="time"
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(time) => dayjs(time).format(tickFormat)}
-            minTickGap={10}
-            tick={{ fill: theme.palette.text.secondary }}
-          />
+
+          {showXAxis ? (
+            <XAxis
+              dataKey="time"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(val) => {
+                return xTickFormatter ? xTickFormatter(val) : dayjs(val).format(tickFormat);
+              }}
+              minTickGap={10}
+              tick={{ fill: theme.palette.text.secondary }}
+            />
+          ) : null}
+
+          {showYAxis ? (
+            <YAxis
+              dataKey="value"
+              axisLine={false}
+              tickFormatter={yTickFormatter ? (value) => yTickFormatter(value) : null}
+              tickLine={false}
+              minTickGap={10}
+              tick={{ fill: theme.palette.text.secondary, fontSize: "12px" }}
+            />
+          ) : null}
+
           <Tooltip
             cursor={{ stroke: "#8572FF" }}
             contentStyle={{ display: "none" }}
@@ -103,11 +134,14 @@ export function LineChartAlt({
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);
               }
-              const formattedTime = dayjs(props.payload.time).format("MMM D, YYYY");
+              const formattedTime = dayjs(props.payload.time).format(tipFormat);
               if (setLabel && label !== formattedTime) setLabel(formattedTime);
             }}
           />
+
           <Area dataKey="value" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />
+
+          {extraNode || null}
         </AreaChart>
       </ResponsiveContainer>
 
