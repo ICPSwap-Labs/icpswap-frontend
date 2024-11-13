@@ -1,6 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
-import { formatDollarAmount, principalToAccount } from "@icpswap/utils";
+import { formatDollarAmountV1, principalToAccount } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
@@ -135,7 +135,7 @@ export default function WalletAccount() {
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           <Typography component="span" sx={{ fontSize: "32px", fontWeight: 600 }} color="text.primary">
-            ≈{formatDollarAmount(totalValue.toString(), 2)}
+            ≈{formatDollarAmountV1({ num: totalValue.toString() })}
           </Typography>
         </Box>
 

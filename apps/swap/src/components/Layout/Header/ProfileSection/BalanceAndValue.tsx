@@ -1,5 +1,5 @@
 import { Typography } from "components/Mui";
-import { BigNumber, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatDollarAmountV1, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { useHelperUserTokens } from "@icpswap/hooks";
 import { Flex } from "@icpswap/ui";
@@ -19,7 +19,7 @@ export function BalanceAndValue() {
                       </Typography> */}
 
       <Typography sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}>
-        {userTokens ? formatDollarAmount(userTokens.totalBalance) : "--"}
+        {userTokens ? formatDollarAmountV1({ num: userTokens.totalBalance }) : "--"}
       </Typography>
 
       <Typography sx={{ fontSize: "16px", margin: "8px 0 0 0" }}>
