@@ -12,16 +12,6 @@ export function getBackendLimitTick(position: Position) {
   return tickUpper;
 }
 
-export function getPriceTick(limitTick: number, pool: Pool) {
-  const tickCurrent = pool.tickCurrent;
-
-  if (limitTick < tickCurrent) {
-    return limitTick + TICK_SPACINGS[pool.fee];
-  }
-
-  return limitTick - TICK_SPACINGS[pool.fee];
-}
-
 export function getPriceTickByPosition(position: Position) {
   return position.tickLower + TICK_SPACINGS[position.pool.fee];
 }

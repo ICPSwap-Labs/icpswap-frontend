@@ -3,11 +3,12 @@ import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
 import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
-import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick } from "@icpswap/swap-sdk";
+import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { PriceMutator } from "components/swap/limit-order/PriceMutator";
 import { SwapInput } from "components/swap/index";
+import { priceToClosestUseableTick } from "utils/swap/limit-order";
 
 import { LimitContext } from "./context";
 
@@ -170,10 +171,15 @@ export const SwapLimitPrice = forwardRef(
     }, [selectedPool, closestTick, inputToken, outputToken, handleInputPrice, inverted, isInputTokenSorted]);
 
     const handleMinMax = useCallback(() => {
-      if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
+      if (
+        isNullArgs(selectedPool) ||
+        isNullArgs(inputToken) ||
+        isNullArgs(outputToken) ||
+        isNullArgs(minUseableTick) ||
+        isNullArgs(isInputTokenSorted)
+      )
         return;
 
-      // Force tick range exclude tick current
       const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
 
       handleInputPrice(
@@ -186,16 +192,16 @@ export const SwapLimitPrice = forwardRef(
 
     const handlePriceChange = useCallback(
       (val: number) => {
-        if (isNullArgs(minUseablePrice)) return;
+        if (isNullArgs(currentPrice)) return;
 
-        const invertedPrice = new BigNumber(1).dividedBy(minUseablePrice);
+        const invertedPrice = new BigNumber(1).dividedBy(currentPrice);
         const invertedNewPrice = inverted
           ? invertedPrice.minus(invertedPrice.multipliedBy(val)).toString()
-          : new BigNumber(minUseablePrice).multipliedBy(val).plus(minUseablePrice).toString();
+          : new BigNumber(currentPrice).multipliedBy(val).plus(currentPrice).toString();
 
         handleInputPrice(invertedNewPrice, inverted);
       },
-      [inverted, minUseablePrice],
+      [inverted, currentPrice],
     );
 
     const handleSetDefaultPrice = useCallback(() => {
@@ -207,6 +213,37 @@ export const SwapLimitPrice = forwardRef(
 
       handleInputPrice(minPrice.toFixed(outputToken.decimals), false);
     }, [inputToken, outputToken, selectedPool, minUseableTick]);
+
+    const handleBlur: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
+      if (
+        isNullArgs(inputToken) ||
+        isNullArgs(outputToken) ||
+        isNullArgs(selectedPool) ||
+        isNullArgs(isInputTokenSorted)
+      )
+        return;
+
+      const baseToken = inputToken;
+      const quoteToken = outputToken;
+
+      const price = new Price({
+        baseAmount: CurrencyAmount.fromRawAmount(baseToken, formatTokenAmount(1, baseToken.decimals).toString()),
+        quoteAmount: CurrencyAmount.fromRawAmount(
+          quoteToken,
+          formatTokenAmount(orderPrice, quoteToken.decimals).toString(),
+        ),
+      });
+
+      const closestUseableTick = priceToClosestUseableTick(price, selectedPool, isInputTokenSorted);
+      const useablePrice = tickToPrice(baseToken, quoteToken, closestUseableTick);
+
+      handleInputPrice(
+        inverted
+          ? new BigNumber(1).dividedBy(useablePrice.toFixed(outputToken.decimals)).toFixed(outputToken.decimals)
+          : useablePrice.toFixed(outputToken.decimals),
+        inverted,
+      );
+    }, [orderPrice, selectedPool, inputToken, outputToken, isInputTokenSorted, inverted]);
 
     // Set default order price
     useEffect(() => {
@@ -285,6 +322,7 @@ export const SwapLimitPrice = forwardRef(
                 token={outputToken}
                 value={inputValue}
                 onUserInput={(value: string) => handleInputPrice(value, inverted)}
+                onBlur={handleBlur}
               />
             </Flex>
 

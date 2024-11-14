@@ -159,21 +159,23 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return pool.token0.equals(inputToken);
   }, [pool, inputToken]);
 
+  // The position tickUpper or tickLower, boundary tick
   const minUseableTick = useMemo(() => {
     if (isNullArgs(pool) || isNullArgs(isInputTokenSorted)) return null;
 
     const tickCurrent = pool.tickCurrent;
 
     if (isInputTokenSorted) {
-      const minTick = tickCurrent + TICK_SPACINGS[pool.fee];
-      const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
-      if (useableTick - TICK_SPACINGS[pool.fee] <= tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
+      const tickUpper = tickCurrent + TICK_SPACINGS[pool.fee] * 2;
+      const useableTick = nearestUsableTick(tickUpper, TICK_SPACINGS[pool.fee]);
+
+      if (useableTick - TICK_SPACINGS[pool.fee] * 2 <= tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
       return useableTick;
     }
 
-    const minTick = tickCurrent - TICK_SPACINGS[pool.fee];
-    const useableTick = nearestUsableTick(minTick, TICK_SPACINGS[pool.fee]);
-    if (useableTick + TICK_SPACINGS[pool.fee] >= tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
+    const tickLower = tickCurrent - TICK_SPACINGS[pool.fee] * 2;
+    const useableTick = nearestUsableTick(tickLower, TICK_SPACINGS[pool.fee]);
+    if (useableTick + TICK_SPACINGS[pool.fee] * 2 >= tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
     return useableTick;
   }, [pool, isInputTokenSorted]);
 
@@ -281,7 +283,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
-    if (new BigNumber(orderPrice).isEqualTo(0) || isNullArgs(minUseableTick)) return t`Invalid price`;
+    if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
     if (
       !inputTokenSubBalance ||
       isNullArgs(inputTokenUnusedBalance) ||
@@ -290,7 +292,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       isNullArgs(orderPriceTick) ||
       isNullArgs(isInputTokenSorted) ||
       isNullArgs(minSettableTick) ||
-      Trade?.noLiquidity === true
+      Trade?.noLiquidity === true ||
+      isNullArgs(minUseableTick)
     )
       return t`Submit Limit Order`;
 

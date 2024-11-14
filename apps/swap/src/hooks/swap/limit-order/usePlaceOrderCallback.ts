@@ -55,7 +55,7 @@ export function usePlaceOrderCallback() {
 
       const { call, reset, retry } = createCall(calls, key.toString());
 
-      manageStep({ position, limitLick, inputToken, key, retry });
+      manageStep({ position, inputToken, key, retry });
 
       return { call, reset, retry, key };
     },

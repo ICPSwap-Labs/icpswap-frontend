@@ -1,7 +1,7 @@
 import { useMemo, ReactNode } from "react";
-import { Box, Typography, useTheme, BoxProps } from "components/Mui";
+import { Box, Typography, useTheme, BoxProps, TypographyProps } from "components/Mui";
 import { Trans } from "@lingui/macro";
-import { Flex } from "@icpswap/ui";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { X } from "react-feather";
 import { Null } from "@icpswap/types";
@@ -15,9 +15,11 @@ interface MutatorProps {
   onClick?: BoxProps["onClick"];
   showClose?: boolean;
   onClose?: () => void;
+  textSx?: TypographyProps["sx"];
+  tips?: ReactNode;
 }
 
-function Mutator({ children, active, onClick, showClose, onClose }: MutatorProps) {
+function Mutator({ children, active, onClick, showClose, onClose, textSx, tips }: MutatorProps) {
   const theme = useTheme();
 
   return (
@@ -37,9 +39,22 @@ function Mutator({ children, active, onClick, showClose, onClose }: MutatorProps
       }}
       onClick={onClick}
     >
-      <Typography sx={{ fontWeight: 500, fontSize: "16px", color: active ? "text.primary" : "text.secondary" }}>
-        {children}
-      </Typography>
+      {tips ? (
+        <Tooltip tips={tips}>
+          <Typography
+            sx={{ fontWeight: 500, fontSize: "16px", color: active ? "text.primary" : "text.secondary", ...textSx }}
+          >
+            {children}
+          </Typography>
+        </Tooltip>
+      ) : (
+        <Typography
+          sx={{ fontWeight: 500, fontSize: "16px", color: active ? "text.primary" : "text.secondary", ...textSx }}
+        >
+          {children}
+        </Typography>
+      )}
+
       {showClose ? (
         <Box
           sx={{
@@ -76,6 +91,8 @@ export interface PriceMutatorProps {
 }
 
 export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUseablePrice }: PriceMutatorProps) {
+  const theme = useTheme();
+
   const percent = useMemo(() => {
     if (isNullArgs(minUseablePrice) || isNullArgs(inputValue) || inputValue === "") return null;
     const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(minUseablePrice).toString() : minUseablePrice;
@@ -108,19 +125,21 @@ export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUsea
       <Mutator
         key="Min"
         onClick={onMinMax}
-        active={isNullArgs(activePercent)}
-        showClose={
-          isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP)
-        }
         onClose={onMinMax}
+        tips={
+          <Trans>
+            ICPSwap’s limit orders require a specified minimum or maximum price to ensure the order can be executed as
+            intended.
+          </Trans>
+        }
+        textSx={{
+          textDecoration: "underline",
+          textDecorationStyle: "dashed",
+          textDecorationColor: theme.colors.darkTextSecondary,
+          color: "text.primary",
+        }}
       >
-        {isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP) ? (
-          `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
-        ) : inverted ? (
-          <Trans>Max</Trans>
-        ) : (
-          <Trans>Min</Trans>
-        )}
+        {inverted ? <Trans>Max</Trans> : <Trans>Min</Trans>}
       </Mutator>
 
       {VALUES.map((val) => (

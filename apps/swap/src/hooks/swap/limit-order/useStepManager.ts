@@ -10,7 +10,6 @@ interface LimitOrderStepsArgs {
   position: Position;
   retry: () => void;
   key: string;
-  limitLick: bigint;
   inputToken: Token;
 }
 
@@ -24,12 +23,11 @@ export function useStepManager() {
     closeAllSteps();
   };
 
-  return useCallback(({ key, position, inputToken, limitLick, retry }: LimitOrderStepsArgs) => {
+  return useCallback(({ key, position, inputToken, retry }: LimitOrderStepsArgs) => {
     const content = getLimitOrderSteps({
       position,
       retry,
       handleReclaim,
-      limitLick,
       inputToken,
     });
 

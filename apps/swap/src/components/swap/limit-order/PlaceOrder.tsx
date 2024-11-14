@@ -366,7 +366,6 @@ export const PlaceOrder = forwardRef(
           inputToken={inputToken}
           outputToken={outputToken}
           currentPrice={currentPrice}
-          minUseableTick={minUseableTick}
           orderPriceTick={orderPriceTick}
           minSettableTick={minSettableTick}
         />

@@ -45,6 +45,7 @@ export function usePlaceOrderPosition({
       ),
     });
 
+    // The tick upper or tick lower
     const closetTick = priceToClosestTick(price);
     const closetUseableTick = priceToClosestUseableTick(price, pool, isInputTokenSorted);
 
@@ -56,13 +57,13 @@ export function usePlaceOrderPosition({
   }, [orderPrice, inputToken, token0, token1, pool]);
 
   const { tickLower, tickUpper } = useMemo(() => {
-    if (isNullArgs(closetUseableTick) || isNullArgs(feeAmount)) return {};
+    if (isNullArgs(closetUseableTick) || isNullArgs(feeAmount) || isNullArgs(isInputTokenSorted)) return {};
 
     return {
-      tickLower: closetUseableTick - TICK_SPACINGS[feeAmount],
-      tickUpper: closetUseableTick + TICK_SPACINGS[feeAmount],
+      tickLower: isInputTokenSorted ? closetUseableTick - TICK_SPACINGS[feeAmount] * 2 : closetUseableTick,
+      tickUpper: isInputTokenSorted ? closetUseableTick : closetUseableTick + TICK_SPACINGS[feeAmount] * 2,
     };
-  }, [closetUseableTick, feeAmount]);
+  }, [closetUseableTick, isInputTokenSorted, feeAmount]);
 
   const { amount0, amount1 } = useMemo(() => {
     if (isNullArgs(inputAmount) || isNullArgs(inputToken) || isNullArgs(token0) || isNullArgs(token1)) return {};
