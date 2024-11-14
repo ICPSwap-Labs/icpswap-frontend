@@ -57,9 +57,6 @@ export function LineChartAlt({
   const theme = useTheme();
   const parsedValue = value;
 
-  console.log("data:", data);
-  console.log("extraNode: ", extraNode);
-
   return (
     <Box
       sx={{

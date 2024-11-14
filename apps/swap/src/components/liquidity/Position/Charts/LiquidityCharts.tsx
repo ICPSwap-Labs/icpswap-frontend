@@ -7,14 +7,14 @@ import { PoolCurrentPrice } from "components/swap/index";
 import { PositionPriceRange } from "components/liquidity/index";
 import { Trans } from "@lingui/macro";
 import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
-import { PositionChartTimes } from "types/swap";
+import { APRChartTime } from "@icpswap/types";
 import { isNullArgs } from "@icpswap/utils";
 
 import PriceRangeChart from "./RangeCharts";
 
 export interface LiquidityChartsProps {
   position: Position;
-  time: PositionChartTimes;
+  time: APRChartTime;
 }
 
 export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
@@ -50,11 +50,11 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   const { poolPriceLower, poolPriceUpper } = useMemo(() => {
     if (isNullArgs(periodPriceRange)) return {};
 
-    if (time === PositionChartTimes["24H"]) {
+    if (time === APRChartTime["24H"]) {
       return { poolPriceLower: periodPriceRange.priceLow24H, poolPriceUpper: periodPriceRange.priceHigh24H };
     }
 
-    if (time === PositionChartTimes["7D"]) {
+    if (time === APRChartTime["7D"]) {
       return { poolPriceLower: periodPriceRange.priceLow7D, poolPriceUpper: periodPriceRange.priceHigh7D };
     }
 

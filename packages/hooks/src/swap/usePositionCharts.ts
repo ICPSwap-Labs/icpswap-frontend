@@ -6,7 +6,8 @@ import type {
   PositionValueChartData,
   PositionFeeChartData,
   PositionAPRChartData,
-  PositionAPRs,
+  PoolAPRChartData,
+  PoolAPRs,
 } from "@icpswap/types";
 import { positionCharts } from "@icpswap/actor";
 
@@ -69,16 +70,30 @@ export function usePositionAPRChartData(poolId: string | Null, positionId: bigin
   );
 }
 
-export async function getPositionAPRs(poolId: string | Null) {
-  const result = await (await positionCharts()).getPoolAprIndex(Principal.fromText(poolId));
-  return resultFormat<PositionAPRs>(result).data;
+export async function getPoolAPRChartData(poolId: string | Null) {
+  const result = await (await positionCharts()).queryPoolAprLine(Principal.fromText(poolId));
+  return resultFormat<Array<PoolAPRChartData>>(result).data;
 }
 
-export function usePositionAPRs(poolId: string | Null) {
+export function usePoolAPRChartData(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (isNullArgs(poolId)) return undefined;
-      return await getPositionAPRs(poolId);
+      return await getPoolAPRChartData(poolId);
+    }, [poolId]),
+  );
+}
+
+export async function getPoolAPRs(poolId: string | Null) {
+  const result = await (await positionCharts()).getPoolAprIndex(Principal.fromText(poolId));
+  return resultFormat<PoolAPRs>(result).data;
+}
+
+export function usePoolAPRs(poolId: string | Null) {
+  return useCallsData(
+    useCallback(async () => {
+      if (isNullArgs(poolId)) return undefined;
+      return await getPoolAPRs(poolId);
     }, [poolId]),
   );
 }

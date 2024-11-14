@@ -4,7 +4,7 @@ import { MainCard } from "components/index";
 import { Position } from "@icpswap/swap-sdk";
 import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
 import { t } from "@lingui/macro";
-import { PositionChartTimes } from "types/swap";
+import { APRChartTime } from "@icpswap/types";
 
 import { LiquidityCharts, PositionValueChart, PositionFeesChart, PositionAPRChart } from "./Charts";
 
@@ -23,9 +23,9 @@ const Tabs = [
 ];
 
 const TimeTabs = [
-  { label: t`24H`, value: PositionChartTimes["24H"] },
-  { label: t`7D`, value: PositionChartTimes["7D"] },
-  { label: t`30D`, value: PositionChartTimes["30D"] },
+  { label: t`24H`, value: APRChartTime["24H"] },
+  { label: t`7D`, value: APRChartTime["7D"] },
+  { label: t`30D`, value: APRChartTime["30D"] },
 ];
 
 interface ChartsWrapperProps {
@@ -37,7 +37,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
   const theme = useTheme();
 
   const [chartView, setChartView] = useState(Charts.PriceRange);
-  const [chartTime, setChartTime] = useState(PositionChartTimes["24H"]);
+  const [chartTime, setChartTime] = useState(APRChartTime["24H"]);
 
   const {
     pool: { id: poolId },
@@ -51,7 +51,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
             <SmallTabButton
               key={chart.value}
               onClick={() => {
-                setChartTime(PositionChartTimes["24H"]);
+                setChartTime(APRChartTime["24H"]);
                 setChartView(chart.value);
               }}
               active={chartView === chart.value}

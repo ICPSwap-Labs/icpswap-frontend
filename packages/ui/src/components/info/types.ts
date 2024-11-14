@@ -6,4 +6,5 @@ export enum ChartView {
   LIQUIDITY,
   TRANSACTIONS,
   DexScreener,
+  APR,
 }

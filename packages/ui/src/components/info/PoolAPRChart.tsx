@@ -1,20 +1,20 @@
-import { useState, useMemo } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
+import { useState, useMemo, useEffect } from "react";
 import { BigNumber, isNullArgs, numToPercent } from "@icpswap/utils";
-import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
+import { usePoolAPRChartData, usePoolAPRs } from "@icpswap/hooks";
 import { type Null, APRChartTime } from "@icpswap/types";
-import { LineChartAlt, ImageLoading } from "@icpswap/ui";
 import { ReferenceLine } from "recharts";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 
+import { ImageLoading } from "../Loading";
+import { LineChartAlt } from "../LineChart/alt";
+import { Typography, Box, useTheme } from "../Mui";
+
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
-
-const CHART_HEIGHT = 340;
 
 interface APRLabelProps {
   apr: string;
@@ -60,23 +60,24 @@ function APRLabel(props: APRLabelProps) {
   );
 }
 
-interface PositionFeesChartProps {
+export interface PoolAPRChartProps {
   poolId: string | Null;
-  positionId: bigint | Null;
-  time: APRChartTime;
+  height?: string;
+  time?: APRChartTime;
 }
 
-export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChartProps) {
+export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPRChartProps) {
   const theme = useTheme();
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
+  const [time, setTime] = useState<APRChartTime>(APRChartTime["7D"]);
 
-  const { result: positionChartData, loading } = usePositionAPRChartData(poolId, positionId);
+  const { result: poolChartData, loading } = usePoolAPRChartData(poolId);
   const { result: aprResult } = usePoolAPRs(poolId);
 
   const formattedChartData = useMemo(() => {
-    if (positionChartData) {
-      return positionChartData.map((data) => {
+    if (poolChartData) {
+      return poolChartData.map((data) => {
         return {
           time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
           value: data.apr,
@@ -84,9 +85,9 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
       });
     }
     return [];
-  }, [positionChartData]);
+  }, [poolChartData]);
 
-  const latestPositionValue = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
+  const latestData = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
 
   const apr = useMemo(() => {
     if (isNullArgs(aprResult)) return null;
@@ -114,30 +115,30 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
 
     const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
 
-    return ((diff - apr) / diff) * CHART_HEIGHT;
+    return ((diff - apr) / diff) * parseInt(height);
   }, [formattedChartData, apr, time]);
 
+  useEffect(() => {
+    setTime(__time);
+  }, [__time]);
+
   const lineY = useMemo(() => {
-    return apr
-      ? new BigNumber(apr).isLessThan(1)
-        ? new BigNumber(apr).toFixed(4)
-        : new BigNumber(apr).toFixed(4)
-      : null;
+    return new BigNumber(apr).isLessThan(1) ? new BigNumber(apr).toFixed(4) : new BigNumber(apr).toFixed(4);
   }, [apr]);
 
   return (
     <>
       {loading ? (
-        <Box sx={{ width: "100%", minHeight: "300px" }}>
+        <Box sx={{ width: "100%", height }}>
           <ImageLoading loading={loading} />
         </Box>
       ) : (
         <>
           <Box sx={{ height: "50px" }}>
-            {latestPositionValue ? (
+            {latestData ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {latestValue ? numToPercent(latestValue, 2) : numToPercent(latestPositionValue.value, 2)}
+                  {latestValue ? numToPercent(latestValue, 2) : numToPercent(latestData.value, 2)}
                 </Typography>
 
                 <Typography
@@ -147,7 +148,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
                     margin: "10px 0 0 0",
                   }}
                 >
-                  {valueLabel ?? dayjs(latestPositionValue.time).format("MMM D, YYYY HH:mm:ss") ?? ""}
+                  {valueLabel ?? dayjs(latestData.time).format("MMM D, YYYY HH:mm:ss") ?? ""}
                 </Typography>
               </>
             ) : null}
@@ -162,7 +163,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
               <LineChartAlt
                 data={formattedChartData}
                 setLabel={setValueLabel}
-                minHeight={CHART_HEIGHT}
+                minHeight={parseInt(height)}
                 setValue={setLatestValue}
                 value={latestValue}
                 label={valueLabel}
@@ -171,7 +172,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
                 yTickFormatter={(val: string) => numToPercent(val, 2)}
                 tipFormat="MMM D, YYYY HH:mm:ss"
                 extraNode={
-                  aprY && apr && lineY ? (
+                  aprY && apr ? (
                     <ReferenceLine
                       stroke={theme.colors.apr}
                       y={lineY}

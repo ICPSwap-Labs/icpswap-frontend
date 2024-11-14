@@ -45,6 +45,6 @@ export type { PassCode };
 export type {
   _SERVICE as PositionChartsService,
   PriceIndex as PositionPricePeriodRange,
-  PoolAprIndex as PositionAPRs,
+  PoolAprIndex as PoolAPRs,
 } from "./PositionCharts";
 export { idlFactory as PositionChartsFactory } from "./PositionCharts.did";

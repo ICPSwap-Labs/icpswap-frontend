@@ -33,3 +33,16 @@ export type PositionAPRChartData = {
   dayId: bigint;
   poolId: Principal;
 };
+
+export type PoolAPRChartData = {
+  apr: number;
+  snapshotTime: bigint;
+  dayId: bigint;
+  poolId: string;
+};
+
+export enum APRChartTime {
+  "24H" = "24H",
+  "7D" = "7D",
+  "30D" = "30D",
+}
