@@ -14,7 +14,7 @@ import { LimitContext } from "./context";
 
 export interface LimitPriceRef {
   setDefaultPrice: () => void;
-  setInverted: () => void;
+  resetInverted: () => void;
 }
 
 export interface SwapLimitPriceProps {
@@ -254,7 +254,7 @@ export const SwapLimitPrice = forwardRef(
       ref,
       () => ({
         setDefaultPrice: handleSetDefaultPrice,
-        setInverted: () => setInverted(false),
+        resetInverted: () => setInverted(false),
       }),
       [handleSetDefaultPrice, setInverted],
     );

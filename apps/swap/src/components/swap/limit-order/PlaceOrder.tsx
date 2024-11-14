@@ -253,7 +253,7 @@ export const PlaceOrder = forwardRef(
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
         if (limitPriceRef?.current) {
-          limitPriceRef?.current?.setInverted();
+          limitPriceRef?.current?.resetInverted();
           limitPriceRef?.current?.setDefaultPrice();
         }
       }
@@ -311,7 +311,11 @@ export const PlaceOrder = forwardRef(
       history.push(`${prePath}?${qs.stringify(newSearch)}`);
       handleInput("", "input");
       setOrderPrice(null);
-    }, [ui, history, location]);
+      if (limitPriceRef?.current) {
+        limitPriceRef?.current?.resetInverted();
+        limitPriceRef?.current?.setDefaultPrice();
+      }
+    }, [ui, history, location, limitPriceRef]);
 
     useImperativeHandle(
       ref,
