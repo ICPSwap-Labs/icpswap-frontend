@@ -5,7 +5,7 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
 
 export interface PoolCurrentPriceProps {
   pool: Pool | Null;
@@ -27,25 +27,38 @@ export function PoolCurrentPrice({
 
   const { token0, token1 } = pool || {};
 
-  const token = useMemo(() => {
-    if (__token) return __token;
-    if (!token0 || !token1) return undefined;
+  const baseToken = useMemo(() => {
+    if (isNullArgs(token0) || isNullArgs(token1)) return undefined;
+
+    if (__token) {
+      const anotherToken = __token.equals(token0) ? token1 : token0;
+      return manuallyInverted ? anotherToken : __token;
+    }
 
     return manuallyInverted ? token1 : token0;
-  }, [__token, token0, token1, manuallyInverted]);
+  }, [__token, token0, token1]);
 
-  const token0USDPrice = useUSDPriceById(token0?.address);
-  const token1USDPrice = useUSDPriceById(token1?.address);
+  const quoteToken = useMemo(() => {
+    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(baseToken)) return undefined;
+    return baseToken.equals(token0) ? token1 : token0;
+  }, [baseToken, token0, token1]);
+
+  const baseTokenUSDPrice = useUSDPriceById(baseToken?.address);
+  const quoteTokenUSDPrice = useUSDPriceById(quoteToken?.address);
 
   const price = useMemo(() => {
-    if (!token || !pool) return undefined;
-    return pool.priceOf(token);
-  }, [pool, token]);
+    if (isNullArgs(quoteToken) || isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
+
+    return manuallyInverted ? pool.priceOf(quoteToken) : pool.priceOf(baseToken);
+  }, [pool, quoteToken, manuallyInverted]);
 
   const label = useMemo(() => {
-    if (!token0 || !token1) return undefined;
-    return manuallyInverted ? `${token1.symbol} per ${token0.symbol}` : `${token0.symbol} per ${token1.symbol}`;
-  }, [token0, token1, manuallyInverted]);
+    if (isNullArgs(baseToken) || isNullArgs(quoteToken)) return undefined;
+
+    return manuallyInverted
+      ? `${baseToken.symbol} per ${quoteToken.symbol}`
+      : `${quoteToken.symbol} per ${baseToken.symbol}`;
+  }, [baseToken, quoteToken, manuallyInverted]);
 
   return (
     <Flex
@@ -90,13 +103,13 @@ export function PoolCurrentPrice({
         </Typography>
       )}
 
-      {token0USDPrice && token1USDPrice ? (
+      {baseTokenUSDPrice && quoteTokenUSDPrice ? (
         <Typography
           sx={{
             fontSize,
           }}
         >
-          ({formatDollarAmount(manuallyInverted ? token1USDPrice : token0USDPrice)})
+          ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
         </Typography>
       ) : null}
 
