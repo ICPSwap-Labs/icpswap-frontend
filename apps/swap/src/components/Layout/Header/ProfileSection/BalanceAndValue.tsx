@@ -1,5 +1,6 @@
+import { useMemo } from "react";
 import { Typography } from "components/Mui";
-import { BigNumber, formatDollarAmountV1, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatDollarAmountV1, nonNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { useHelperUserTokens } from "@icpswap/hooks";
 import { Flex } from "@icpswap/ui";
@@ -10,7 +11,12 @@ export function BalanceAndValue() {
   const principal = useAccountPrincipal();
 
   const infoToken = useInfoToken(ICP.address);
-  const { result: userTokens } = useHelperUserTokens({ principal: principal?.toString() });
+  const { result: userTokens, loading } = useHelperUserTokens({ principal: principal?.toString() });
+
+  const totalBalance = useMemo(() => {
+    if (loading) return undefined;
+    return userTokens?.totalBalance ?? 0;
+  }, [userTokens, loading]);
 
   return (
     <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">
@@ -19,15 +25,12 @@ export function BalanceAndValue() {
                       </Typography> */}
 
       <Typography sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}>
-        {userTokens ? formatDollarAmountV1({ num: userTokens.totalBalance, ab: 0.01 }) : "--"}
+        {nonNullArgs(totalBalance) ? formatDollarAmountV1({ num: totalBalance, ab: 0.01 }) : "--"}
       </Typography>
 
       <Typography sx={{ fontSize: "16px", margin: "8px 0 0 0" }}>
-        {userTokens && infoToken
-          ? toSignificantWithGroupSeparator(
-              new BigNumber(userTokens.totalBalance).dividedBy(infoToken.priceUSD).toString(),
-              4,
-            )
+        {nonNullArgs(totalBalance) && infoToken
+          ? toSignificantWithGroupSeparator(new BigNumber(totalBalance).dividedBy(infoToken.priceUSD).toString(), 4)
           : "--"}{" "}
         ICP
       </Typography>
