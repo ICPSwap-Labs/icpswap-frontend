@@ -19,7 +19,7 @@ export function ImportToken({ canisterId, onCancel, onImportSuccessfully }: Impo
         <ConfirmImport
           canisterId={canisterId}
           open={step === 1}
-          onClose={() => setStep(1)}
+          onClose={() => setStep(0)}
           onImportSuccessfully={onImportSuccessfully}
         />
       ) : null}
