@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX, Bound } from "constants/swap";
@@ -69,6 +69,9 @@ export default function LiquidityChartRangeInput({
   poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
+  const wrapperRef = useRef<HTMLDivElement>();
+
+  const [wrapperWidth, setWrapperWidth] = useState<null | number>(null);
 
   const COLOR_BLUE = "#0068FC";
 
@@ -78,8 +81,15 @@ export default function LiquidityChartRangeInput({
     feeAmount: feeAmount ?? FeeAmount.MEDIUM,
   });
 
+  useEffect(() => {
+    if (wrapperRef.current) {
+      const width = wrapperRef.current.clientWidth;
+      setWrapperWidth(width);
+    }
+  }, [wrapperRef]);
+
   return (
-    <Box style={{ minHeight: "200px" }}>
+    <Box style={{ minHeight: "200px" }} ref={wrapperRef}>
       {isUninitialized ? (
         <InfoBox
           message={t`Your position will appear here.`}
@@ -99,25 +109,27 @@ export default function LiquidityChartRangeInput({
         />
       ) : (
         <Flex fullWidth justify="center">
-          <Chart
-            data={{
-              series: formattedData,
-              current: Number(price),
-              lower: priceLower ? Number(priceLower?.toFixed()) : undefined,
-              upper: priceUpper ? Number(priceUpper.toFixed()) : undefined,
-            }}
-            dimensions={{ width: 400, height: 220 }}
-            margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
-            styles={{
-              area: {
-                selection: COLOR_BLUE,
-              },
-            }}
-            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
-            ticksAtLimit={ticksAtLimit}
-            priceLower={poolPriceLower}
-            priceUpper={poolPriceUpper}
-          />
+          {wrapperWidth ? (
+            <Chart
+              data={{
+                series: formattedData,
+                current: Number(price),
+                lower: priceLower ? Number(priceLower?.toFixed()) : undefined,
+                upper: priceUpper ? Number(priceUpper.toFixed()) : undefined,
+              }}
+              dimensions={{ width: wrapperWidth, height: 265 }}
+              margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
+              styles={{
+                area: {
+                  selection: COLOR_BLUE,
+                },
+              }}
+              zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
+              ticksAtLimit={ticksAtLimit}
+              priceLower={poolPriceLower}
+              priceUpper={poolPriceUpper}
+            />
+          ) : null}
         </Flex>
       )}
     </Box>

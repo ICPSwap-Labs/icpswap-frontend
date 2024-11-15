@@ -66,39 +66,41 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
-        {chartView === Charts.PriceRange ? (
-          <LiquidityCharts position={position} time={chartTime} />
-        ) : chartView === Charts.PositionValue ? (
-          <PositionValueChart poolId={poolId} positionId={BigInt(positionId)} />
-        ) : chartView === Charts.Fees ? (
-          <PositionFeesChart poolId={poolId} positionId={BigInt(positionId)} />
-        ) : chartView === Charts.APR ? (
-          <PositionAPRChart poolId={poolId} positionId={BigInt(positionId)} time={chartTime} />
-        ) : null}
+        <Box sx={{ height: "366px", overflow: "hidden" }}>
+          {chartView === Charts.PriceRange ? (
+            <LiquidityCharts position={position} time={chartTime} />
+          ) : chartView === Charts.PositionValue ? (
+            <PositionValueChart poolId={poolId} positionId={BigInt(positionId)} />
+          ) : chartView === Charts.Fees ? (
+            <PositionFeesChart poolId={poolId} positionId={BigInt(positionId)} />
+          ) : chartView === Charts.APR ? (
+            <PositionAPRChart poolId={poolId} positionId={BigInt(positionId)} time={chartTime} />
+          ) : null}
 
-        {chartView === Charts.PriceRange || chartView === Charts.APR ? (
-          <Box sx={{ width: "fit-content", margin: "20px 0 0 0" }}>
-            <SmallTabsButtonWrapper
-              background={theme.palette.background.level2}
-              borderRadius="8px"
-              padding="2px"
-              border={`1px solid ${theme.palette.background.level4}`}
-            >
-              {TimeTabs.map((chart) => (
-                <SmallTabButton
-                  key={chart.value}
-                  onClick={() => setChartTime(chart.value)}
-                  active={chartTime === chart.value}
-                  background={theme.palette.background.level1}
-                  borderRadius="6px"
-                  padding="4px 8px"
-                >
-                  {chart.label}
-                </SmallTabButton>
-              ))}
-            </SmallTabsButtonWrapper>
-          </Box>
-        ) : null}
+          {chartView === Charts.PriceRange || chartView === Charts.APR ? (
+            <Box sx={{ width: "fit-content", margin: "20px 0 0 0" }}>
+              <SmallTabsButtonWrapper
+                background={theme.palette.background.level2}
+                borderRadius="8px"
+                padding="1px"
+                border={`1px solid ${theme.palette.background.level4}`}
+              >
+                {TimeTabs.map((chart) => (
+                  <SmallTabButton
+                    key={chart.value}
+                    onClick={() => setChartTime(chart.value)}
+                    active={chartTime === chart.value}
+                    background={theme.palette.background.level1}
+                    borderRadius="6px"
+                    padding="4px 8px"
+                  >
+                    {chart.label}
+                  </SmallTabButton>
+                ))}
+              </SmallTabsButtonWrapper>
+            </Box>
+          ) : null}
+        </Box>
       </Box>
     </MainCard>
   );

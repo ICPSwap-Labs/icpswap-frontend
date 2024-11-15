@@ -9,8 +9,6 @@ import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
 
-const DEFAULT_HEIGHT = 300;
-
 export type LineChartAltProps = {
   data: any[];
   color?: string | undefined;
@@ -44,7 +42,7 @@ export function LineChartAlt({
   topRight,
   bottomLeft,
   bottomRight,
-  minHeight = DEFAULT_HEIGHT,
+  minHeight = 300,
   tickFormat = "DD",
   showXAxis = true,
   showYAxis = false,
@@ -61,7 +59,7 @@ export function LineChartAlt({
     <Box
       sx={{
         width: "100%",
-        height: `${DEFAULT_HEIGHT}px`,
+        height: `${minHeight}px`,
         display: "flex",
         minHeight,
         flexDirection: "column",
@@ -79,7 +77,7 @@ export function LineChartAlt({
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           width={500}
-          height={300}
+          height={minHeight}
           data={data}
           margin={{
             top: 5,

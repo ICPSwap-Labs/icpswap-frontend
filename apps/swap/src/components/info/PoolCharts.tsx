@@ -57,13 +57,14 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
           zIndex: 101,
         }}
       >
-        <SmallTabsButtonWrapper padding="4px">
+        <SmallTabsButtonWrapper padding="1px">
           {chartViews.map((chart) => (
             <SmallTabButton
               key={chart.value}
               onClick={() => setChartView(chart.value)}
               active={chartView === chart.value}
-              borderRadius="20px"
+              borderRadius="40px"
+              padding="2px 10px"
             >
               {chart.label}
             </SmallTabButton>
@@ -94,7 +95,9 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
         ) : chartView === ChartView.TVL ? (
           <PoolTvlChart canisterId={canisterId} noData={<Box sx={{ height: "340px", width: "auto" }} />} />
         ) : chartView === ChartView.LIQUIDITY ? (
-          <DensityChart address={canisterId} token0Price={token0Price} />
+          <Box sx={{ padding: "40px 0 0 0", "@media(max-width: 640px)": { padding: "0px" } }}>
+            <DensityChart address={canisterId} token0Price={token0Price} />
+          </Box>
         ) : chartView === ChartView.APR ? (
           <PoolAPRChart poolId={canisterId} time={aprTime} />
         ) : null}

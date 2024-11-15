@@ -14,7 +14,7 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
-const CHART_HEIGHT = 340;
+const CHART_HEIGHT = 240;
 
 interface APRLabelProps {
   apr: string;
@@ -142,9 +142,8 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
 
                 <Typography
                   sx={{
-                    height: "20px",
                     fontSize: "12px",
-                    margin: "10px 0 0 0",
+                    margin: "8px 0 0 0",
                   }}
                 >
                   {valueLabel ?? dayjs(latestPositionValue.time).format("MMM D, YYYY HH:mm:ss") ?? ""}
@@ -155,7 +154,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
 
           <Box
             sx={{
-              margin: "40px 0 0 0",
+              margin: "30px 0 0 0",
             }}
           >
             {formattedChartData.length > 0 ? (

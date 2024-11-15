@@ -19,7 +19,7 @@ export function BalanceAndValue() {
                       </Typography> */}
 
       <Typography sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}>
-        {userTokens ? formatDollarAmountV1({ num: userTokens.totalBalance }) : "--"}
+        {userTokens ? formatDollarAmountV1({ num: userTokens.totalBalance, ab: 0.01 }) : "--"}
       </Typography>
 
       <Typography sx={{ fontSize: "16px", margin: "8px 0 0 0" }}>

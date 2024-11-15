@@ -135,7 +135,7 @@ export default function WalletAccount() {
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           <Typography component="span" sx={{ fontSize: "32px", fontWeight: 600 }} color="text.primary">
-            ≈{formatDollarAmountV1({ num: totalValue.toString() })}
+            ≈{formatDollarAmountV1({ num: totalValue.toString(), ab: 0.01 })}
           </Typography>
         </Box>
 

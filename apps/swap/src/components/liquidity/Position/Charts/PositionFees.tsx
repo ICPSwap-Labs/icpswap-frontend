@@ -62,9 +62,8 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
 
                 <Typography
                   sx={{
-                    height: "20px",
                     fontSize: "12px",
-                    margin: "10px 0 0 0",
+                    margin: "8px 0 0 0",
                   }}
                 >
                   {valueLabel ??
@@ -86,7 +85,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
               <LineChartAlt
                 data={formattedPositionValueChartData}
                 setLabel={setValueLabel}
-                minHeight={340}
+                minHeight={260}
                 setValue={setLatestValue}
                 value={latestValue}
                 label={valueLabel}
@@ -99,7 +98,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
                 tipFormat="MMM D, YYYY HH:mm:ss"
               />
             ) : (
-              <Box sx={{ height: "340px", width: "auto" }} />
+              <Box sx={{ height: "260px", width: "auto" }} />
             )}
           </Box>
         </>
