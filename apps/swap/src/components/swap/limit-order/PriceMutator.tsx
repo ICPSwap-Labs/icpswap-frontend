@@ -90,15 +90,14 @@ export interface PriceMutatorProps {
   minUseablePrice: string | Null;
 }
 
-export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUseablePrice }: PriceMutatorProps) {
+export function PriceMutator({ inputValue, currentPrice, inverted, onChange, onMinMax }: PriceMutatorProps) {
   const theme = useTheme();
 
   const percent = useMemo(() => {
-    if (isNullArgs(minUseablePrice) || isNullArgs(inputValue) || inputValue === "") return null;
-    const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(minUseablePrice).toString() : minUseablePrice;
-
+    if (isNullArgs(currentPrice) || isNullArgs(inputValue) || inputValue === "") return null;
+    const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
     return new BigNumber(inputValue).minus(invertedCurrentPrice).dividedBy(invertedCurrentPrice);
-  }, [minUseablePrice, inputValue, inverted]);
+  }, [inputValue, inverted]);
 
   const activePercent = useMemo(() => {
     if (isNullArgs(percent)) return null;
@@ -126,6 +125,10 @@ export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUsea
         key="Min"
         onClick={onMinMax}
         onClose={onMinMax}
+        active={isNullArgs(activePercent)}
+        showClose={
+          isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP)
+        }
         tips={
           <Trans>
             ICPSwap’s limit orders require a specified minimum or maximum price to ensure the order can be executed as
@@ -139,7 +142,13 @@ export function PriceMutator({ inputValue, inverted, onChange, onMinMax, minUsea
           color: "text.primary",
         }}
       >
-        {inverted ? <Trans>Max</Trans> : <Trans>Min</Trans>}
+        {isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP) ? (
+          `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
+        ) : inverted ? (
+          <Trans>Max</Trans>
+        ) : (
+          <Trans>Min</Trans>
+        )}
       </Mutator>
 
       {VALUES.map((val) => (

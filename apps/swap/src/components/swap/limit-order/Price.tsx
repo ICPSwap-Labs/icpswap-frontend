@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useI
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
-import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs, toSignificant } from "@icpswap/utils";
 import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -259,6 +259,14 @@ export const SwapLimitPrice = forwardRef(
       [handleSetDefaultPrice, setInverted],
     );
 
+    const formattedInputValue = useMemo(() => {
+      return inputValue
+        ? new BigNumber(inputValue).isLessThan(0.1)
+          ? toSignificant(inputValue, 3)
+          : toSignificant(inputValue, 6)
+        : null;
+    }, [inputValue]);
+
     return (
       <MainCard
         border="level4"
@@ -320,7 +328,7 @@ export const SwapLimitPrice = forwardRef(
               <SwapInput
                 align="left"
                 token={outputToken}
-                value={inputValue}
+                value={formattedInputValue}
                 onUserInput={(value: string) => handleInputPrice(value, inverted)}
                 onBlur={handleBlur}
               />
@@ -345,7 +353,7 @@ export const SwapLimitPrice = forwardRef(
             inverted={inverted}
             onMinMax={handleMinMax}
             onChange={handlePriceChange}
-            inputValue={inputValue}
+            inputValue={formattedInputValue}
             minUseablePrice={minUseablePrice}
           />
         </Box>
