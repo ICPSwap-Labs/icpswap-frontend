@@ -17,3 +17,4 @@ export * from "./useTokenInfo";
 export * from "./useTokenBalance";
 export * from "./useTokenInSNS";
 export * from "./useERC20Token";
+export * from "./useTokenStandard";
