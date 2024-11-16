@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
-import { BigNumber, isNullArgs, numToPercent } from "@icpswap/utils";
+import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
 import { type Null, APRChartTime } from "@icpswap/types";
 import { LineChartAlt, ImageLoading } from "@icpswap/ui";
@@ -137,7 +137,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {latestValue ? numToPercent(latestValue, 2) : numToPercent(latestPositionValue.value, 2)}
+                  {nonNullArgs(latestValue) ? numToPercent(latestValue, 2) : numToPercent(latestPositionValue.value, 2)}
                 </Typography>
 
                 <Typography
