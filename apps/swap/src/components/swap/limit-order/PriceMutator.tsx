@@ -5,6 +5,7 @@ import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { X } from "react-feather";
 import { Null } from "@icpswap/types";
+import { inputValueFormat } from "utils/swap/limit-order";
 
 const VALUES = [0.1, 0.3, 0.5];
 const MIN_STEP = 0.01;
@@ -88,9 +89,19 @@ export interface PriceMutatorProps {
   inputValue: string | Null;
   currentPrice: string | Null;
   minUseablePrice: string | Null;
+  isInputTokenSorted: boolean | Null;
+  minPrice: string | Null;
 }
 
-export function PriceMutator({ inputValue, currentPrice, inverted, onChange, onMinMax }: PriceMutatorProps) {
+export function PriceMutator({
+  inputValue,
+  currentPrice,
+  inverted,
+  isInputTokenSorted,
+  onChange,
+  onMinMax,
+  minPrice,
+}: PriceMutatorProps) {
   const theme = useTheme();
 
   const percent = useMemo(() => {
@@ -106,18 +117,23 @@ export function PriceMutator({ inputValue, currentPrice, inverted, onChange, onM
     const activePercent = inverted
       ? VALUES.find(
           (val) =>
-            new BigNumber(percent).isLessThan(new BigNumber(`-${val}`).plus(MIN_STEP)) &&
-            new BigNumber(percent).isGreaterThan(new BigNumber(`-${val}`).minus(MIN_STEP)),
+            percent.isLessThan(new BigNumber(`-${val}`).plus(MIN_STEP)) &&
+            percent.isGreaterThan(new BigNumber(`-${val}`).minus(MIN_STEP)),
         )
-      : new BigNumber(percent).isLessThan(MIN_STEP)
+      : percent.isLessThan(MIN_STEP)
       ? null
-      : VALUES.find(
-          (val) =>
-            new BigNumber(percent).isLessThan(val + MIN_STEP) && new BigNumber(percent).isGreaterThan(val - MIN_STEP),
-        );
+      : VALUES.find((val) => percent.isLessThan(val + MIN_STEP) && percent.isGreaterThan(val - MIN_STEP));
 
     return activePercent;
   }, [percent, inverted]);
+
+  const isMinMaxPrice = useMemo(() => {
+    if (isNullArgs(inputValue) || isNullArgs(isInputTokenSorted) || isNullArgs(minPrice)) return null;
+
+    const invertedMaxPrice = new BigNumber(1).dividedBy(minPrice).toString();
+
+    return inverted ? inputValueFormat(invertedMaxPrice) === inputValue : inputValueFormat(minPrice) === inputValue;
+  }, [minPrice, isInputTokenSorted, inverted, inputValue]);
 
   return (
     <Flex gap="0 8px" fullWidth>
@@ -125,9 +141,13 @@ export function PriceMutator({ inputValue, currentPrice, inverted, onChange, onM
         key="Min"
         onClick={onMinMax}
         onClose={onMinMax}
-        active={isNullArgs(activePercent)}
+        active={isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)}
         showClose={
-          isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP)
+          isNullArgs(activePercent) &&
+          nonNullArgs(percent) &&
+          !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
+          nonNullArgs(isMinMaxPrice) &&
+          !isMinMaxPrice
         }
         tips={
           <Trans>
@@ -142,7 +162,11 @@ export function PriceMutator({ inputValue, currentPrice, inverted, onChange, onM
           color: "text.primary",
         }}
       >
-        {isNullArgs(activePercent) && nonNullArgs(percent) && !new BigNumber(percent.abs()).isLessThan(MIN_STEP) ? (
+        {isNullArgs(activePercent) &&
+        nonNullArgs(percent) &&
+        !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
+        nonNullArgs(isMinMaxPrice) &&
+        !isMinMaxPrice ? (
           `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
         ) : inverted ? (
           <Trans>Max</Trans>

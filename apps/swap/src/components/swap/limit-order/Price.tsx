@@ -2,13 +2,13 @@ import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useI
 import { Box, Typography } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
-import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs, toSignificant } from "@icpswap/utils";
+import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { PriceMutator } from "components/swap/limit-order/PriceMutator";
 import { SwapInput } from "components/swap/index";
-import { priceToClosestUseableTick } from "utils/swap/limit-order";
+import { priceToClosestUseableTick, inputValueFormat } from "utils/swap/limit-order";
 
 import { LimitContext } from "./context";
 
@@ -43,6 +43,7 @@ export const SwapLimitPrice = forwardRef(
     ref,
   ) => {
     const [inputValue, setInputValue] = useState<string | Null>(null);
+    const [minPrice, setMinPrice] = useState<string | Null>(null);
 
     const { inverted, setInverted, selectedPool } = useContext(LimitContext);
 
@@ -182,6 +183,8 @@ export const SwapLimitPrice = forwardRef(
 
       const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
 
+      setMinPrice(minPrice.toFixed(outputToken.decimals));
+
       handleInputPrice(
         inverted
           ? new BigNumber(1).dividedBy(minPrice.toFixed(outputToken.decimals)).toString()
@@ -260,11 +263,7 @@ export const SwapLimitPrice = forwardRef(
     );
 
     const formattedInputValue = useMemo(() => {
-      return inputValue
-        ? new BigNumber(inputValue).isLessThan(0.1)
-          ? toSignificant(inputValue, 3)
-          : toSignificant(inputValue, 6)
-        : null;
+      return inputValueFormat(inputValue);
     }, [inputValue]);
 
     return (
@@ -355,6 +354,8 @@ export const SwapLimitPrice = forwardRef(
             onChange={handlePriceChange}
             inputValue={formattedInputValue}
             minUseablePrice={minUseablePrice}
+            isInputTokenSorted={isInputTokenSorted}
+            minPrice={minPrice}
           />
         </Box>
       </MainCard>

@@ -1,4 +1,6 @@
 import { Pool, Position, Token, TICK_SPACINGS, priceToClosestTick, nearestUsableTick, Price } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
+import { BigNumber, toSignificant } from "@icpswap/utils";
 
 export function getBackendLimitTick(position: Position) {
   const pool = position.pool;
@@ -30,4 +32,12 @@ export function priceToClosestUseableTick(price: Price<Token, Token>, pool: Pool
   }
 
   return useableTick;
+}
+
+export function inputValueFormat(inputValue: string | Null) {
+  return inputValue
+    ? new BigNumber(inputValue).isLessThan(0.1)
+      ? toSignificant(inputValue, 3)
+      : toSignificant(inputValue, 6)
+    : null;
 }
