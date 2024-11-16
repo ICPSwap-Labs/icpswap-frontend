@@ -1,11 +1,13 @@
-import { useState, useMemo } from "react";
-import { Trans } from "@lingui/macro";
+import { useState, useMemo, useCallback } from "react";
+import { t, Trans } from "@lingui/macro";
 import { enumToString } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
 import { ImageLoading, NoData } from "ui-component/index";
-import { Theme, Box, Typography, useTheme, makeStyles } from "ui-component/Mui";
+import { Box, Typography, useTheme, makeStyles } from "ui-component/Mui";
+import { useTips, TIP_SUCCESS } from "hooks/index";
+import copyToClipboard from "copy-to-clipboard";
 
 const useStyles = makeStyles(() => {
   return {
@@ -39,10 +41,10 @@ export default function Transactions({
   hasFilter,
   showedTokens,
 }: TransactionsProps) {
-  const theme = useTheme() as Theme;
-  const [page, setPage] = useState(1);
-
+  const theme = useTheme();
   const classes = useStyles();
+  const [openTip] = useTips();
+  const [page, setPage] = useState(1);
 
   const [sortField, setSortField] = useState<string>("timestamp");
   const [filter, setFilter] = useState<Filter>("all");
@@ -102,6 +104,11 @@ export default function Transactions({
     setFilter(filter);
   };
 
+  const handleCopy = useCallback((address: string) => {
+    copyToClipboard(address);
+    openTip(t`Copy Success`, TIP_SUCCESS);
+  }, []);
+
   return (
     <Box>
       <Header className={classes.wrapper} onSortChange={handleSortChange} defaultSortFiled={sortField}>
@@ -153,6 +160,7 @@ export default function Transactions({
           key={`${String(transaction.timestamp)}_${index}`}
           className={classes.wrapper}
           transaction={transaction}
+          onAddressClick={handleCopy}
         />
       ))}
 

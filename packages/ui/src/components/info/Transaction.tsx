@@ -38,9 +38,10 @@ interface TransactionRowProps {
   transaction: PoolStorageTransaction;
   wrapperSx?: BoxProps["sx"];
   className?: BoxProps["className"];
+  onAddressClick?: (address: string) => void;
 }
 
-export function TransactionRow({ transaction, className }: TransactionRowProps) {
+export function TransactionRow({ transaction, className, onAddressClick }: TransactionRowProps) {
   return (
     <TableRow className={className}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
@@ -74,9 +75,9 @@ export function TransactionRow({ transaction, className }: TransactionRowProps) 
       </BodyCell>
 
       <BodyCell>
-        <Copy content={transaction.recipient}>
-          <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
-        </Copy>
+        <BodyCell color="primary.main" onClick={() => onAddressClick(transaction.recipient)}>
+          {shorten(transaction.recipient, 8)}
+        </BodyCell>
       </BodyCell>
 
       <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>

@@ -2,12 +2,14 @@ import { useSwapTransactions } from "hooks/info/useScanSwapTransactions";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { LoadingRow, SelectPair, Pagination, PaginationType, NoData } from "ui-component/index";
 import { useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Box, Typography, Button, CircularProgress, makeStyles } from "ui-component/Mui";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
 import { Header, HeaderCell, Flex, TransactionRow } from "@icpswap/ui";
 import { useSwapScanTransactionDownload } from "hooks/info/useSwapScanDownloadTransaction";
+import { useTips, TIP_SUCCESS } from "hooks/index";
+import copyToClipboard from "copy-to-clipboard";
 
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
@@ -36,6 +38,7 @@ function Transactions({ address }: TransactionsProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
+  const [openTip] = useTips();
 
   const { pair } = useParsedQueryString() as { pair: string };
 
@@ -68,6 +71,11 @@ function Transactions({ address }: TransactionsProps) {
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: 10 });
   }, [address]);
+
+  const handleCopy = useCallback((address: string) => {
+    copyToClipboard(address);
+    openTip(t`Copy Success`, TIP_SUCCESS);
+  }, []);
 
   return (
     <>
@@ -130,6 +138,7 @@ function Transactions({ address }: TransactionsProps) {
                 key={`${String(transaction.timestamp)}_${index}`}
                 transaction={transaction}
                 className={classes.wrapper}
+                onAddressClick={handleCopy}
               />
             ))}
 
