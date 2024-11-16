@@ -32,7 +32,7 @@ function APRLabel(props: APRLabelProps) {
       <defs>
         <path
           id="pool-apr-label"
-          d={`M20 ${wrapperY + wrapperHeight / 2 + 1},60,${wrapperY + wrapperHeight / 2 + 1}`}
+          d={`M10 ${wrapperY + wrapperHeight / 2 + 1},64,${wrapperY + wrapperHeight / 2 + 1}`}
           style={{
             stroke: "white",
             fill: "none",
@@ -40,8 +40,8 @@ function APRLabel(props: APRLabelProps) {
         />
       </defs>
 
-      <g width={40} height={16}>
-        <rect x="20" y={wrapperY} width={40} height={16} fill={theme.colors.apr} rx="4" />
+      <g width={54} height={16}>
+        <rect x="10" y={wrapperY} width={54} height={16} fill={theme.colors.apr} rx="4" />
         <text
           fontSize="12px"
           fontWeight={500}
