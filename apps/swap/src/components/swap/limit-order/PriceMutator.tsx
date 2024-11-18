@@ -135,6 +135,16 @@ export function PriceMutator({
     return inverted ? inputValueFormat(invertedMaxPrice) === inputValue : inputValueFormat(minPrice) === inputValue;
   }, [minPrice, isInputTokenSorted, inverted, inputValue]);
 
+  const showPercent = useMemo(() => {
+    return (
+      isNullArgs(activePercent) &&
+      nonNullArgs(percent) &&
+      !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
+      nonNullArgs(isMinMaxPrice) &&
+      !isMinMaxPrice
+    );
+  }, [activePercent, isMinMaxPrice, percent]);
+
   return (
     <Flex gap="0 8px" fullWidth>
       <Mutator
@@ -142,13 +152,7 @@ export function PriceMutator({
         onClick={onMinMax}
         onClose={onMinMax}
         active={isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)}
-        showClose={
-          isNullArgs(activePercent) &&
-          nonNullArgs(percent) &&
-          !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
-          nonNullArgs(isMinMaxPrice) &&
-          !isMinMaxPrice
-        }
+        showClose={showPercent}
         tips={
           <Trans>
             ICPSwap’s limit orders require a specified minimum or maximum price to ensure the order can be executed as
@@ -156,7 +160,7 @@ export function PriceMutator({
           </Trans>
         }
         textSx={{
-          textDecoration: "underline",
+          textDecoration: showPercent ? "none" : "underline",
           textDecorationStyle: "dashed",
           textDecorationColor: theme.colors.darkTextSecondary,
           color: "text.primary",

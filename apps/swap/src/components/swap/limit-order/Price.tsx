@@ -250,16 +250,16 @@ export const SwapLimitPrice = forwardRef(
 
     // Set default order price
     useEffect(() => {
-      handleSetDefaultPrice();
-    }, [handleSetDefaultPrice, inputToken, outputToken, selectedPool, minUseableTick]);
+      handleMinMax();
+    }, [handleMinMax, inputToken, outputToken, selectedPool, minUseableTick]);
 
     useImperativeHandle(
       ref,
       () => ({
-        setDefaultPrice: handleSetDefaultPrice,
+        setDefaultPrice: handleMinMax,
         resetInverted: () => setInverted(false),
       }),
-      [handleSetDefaultPrice, setInverted],
+      [handleMinMax, setInverted],
     );
 
     const formattedInputValue = useMemo(() => {
