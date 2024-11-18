@@ -41,7 +41,7 @@ export function ChartAPRLabel(props: APRLabelProps) {
           }}
         >
           <textPath xlinkHref="#pool-apr-label" startOffset="50%">
-            Avg{props.apr}
+            Avg {props.apr}
           </textPath>
         </text>
       </g>
