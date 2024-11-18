@@ -1,6 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
-import { formatDollarTokenPrice, principalToAccount } from "@icpswap/utils";
+import { formatAmount, formatDollarTokenPrice, principalToAccount } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
@@ -139,8 +139,8 @@ export default function WalletAccount() {
           </Typography>
         </Box>
 
-        <Box sx={{ margin: "6px 0 0 0", display: "flex", gap: "0 8px" }}>
-          <Typography>≈{useTotalICPValue ? useTotalICPValue.toFormat(4) : 0}&nbsp;ICP</Typography>
+        <Box sx={{ margin: "6px 0 0 0", display: "flex", gap: "0 8px", alignItems: "center" }}>
+          <Typography>≈{useTotalICPValue ? formatAmount(useTotalICPValue.toString()) : 0}&nbsp;ICP</Typography>
           <Typography sx={{ color: USDChangeColor }} component="span">
             {usdChange ? `${usdChangeType === "down" ? "" : "+"}${usdChange}` : "--"}
           </Typography>

@@ -314,6 +314,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
                   .multipliedBy(tokenUSDPrice)
                   .toString(),
                 4,
+                0.01,
               )}`
               : "--"}
           </Typography>
