@@ -1,5 +1,5 @@
 import { parseTokenAmount, BigNumber, shorten, toSignificantWithGroupSeparator, nonNullArgs } from "@icpswap/utils";
-import { Position, TICK_SPACINGS, tickToPrice, Token } from "@icpswap/swap-sdk";
+import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { t, Trans } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
 import { Principal } from "@dfinity/principal";
@@ -36,8 +36,8 @@ export function getCancelLimitSteps({ principal, handleReclaim, keepTokenInPools
   const amount = position.amount0.equalTo(0) ? position.amount1.toExact() : position.amount0.toExact();
   const outputToken = token.equals(token1) ? token0 : token1;
 
-  const priceTick = position.tickUpper - TICK_SPACINGS[position.pool.fee];
-  const orderPrice = tickToPrice(token, outputToken, priceTick).toFixed();
+  const priceTick = position.tickUpper < position.pool.tickCurrent ? position.tickLower : position.tickUpper;
+  const orderPrice = tickToPrice(token, outputToken, priceTick).toFixed(outputToken.decimals);
 
   const withdrawAmount = nonNullArgs(amount) ? toSignificantWithGroupSeparator(amount) : undefined;
 

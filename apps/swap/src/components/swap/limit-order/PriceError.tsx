@@ -5,7 +5,7 @@ import { Flex } from "@icpswap/ui";
 import { tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { WaringIcon } from "assets/icons/WaringIcon";
-import { BigNumber, isNullArgs, numToPercent } from "@icpswap/utils";
+import { BigNumber, isNullArgs } from "@icpswap/utils";
 
 import { LimitContext } from "./context";
 
@@ -13,7 +13,6 @@ export interface PriceErrorProps {
   inputToken: Token | Null;
   outputToken: Token | Null;
   currentPrice: string | Null;
-  minUseableTick: number | Null;
   orderPriceTick: number | Null;
   minSettableTick: number | Null;
 }
@@ -44,8 +43,8 @@ export function PriceError({ inputToken, outputToken, minSettableTick, orderPric
 
         <Typography color="#D3625B" sx={{ lineHeight: "20px" }}>
           <Trans>
-            Your limit price is {numToPercent(new BigNumber(pricePercent).abs())} {inverted ? "higher" : "lower"} than
-            settable limit order price. Adjust your limit price to proceed.
+            Your limit price is {inverted ? "higher" : "lower"} than settable limit order price. Adjust your limit price
+            to proceed.
           </Trans>
         </Typography>
       </Flex>

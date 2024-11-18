@@ -1,9 +1,8 @@
 import { Typography } from "components/Mui";
-import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Position, TICK_SPACINGS, tickToPrice, Token } from "@icpswap/swap-sdk";
+import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
-import { getPriceTick } from "utils/index";
 import { isUseTransfer } from "utils/token/index";
 import { StepContents, StepContent } from "types/step";
 
@@ -11,26 +10,27 @@ export interface GetLimitOrderStepsProps {
   position: Position | undefined;
   retry: () => void;
   handleReclaim: () => void;
-  limitLick: bigint;
   inputToken: Token;
 }
 
-export function getLimitOrderSteps({ position, limitLick, retry, handleReclaim }: GetLimitOrderStepsProps) {
+export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim }: GetLimitOrderStepsProps) {
   if (!position) return [];
 
   const { token0, token1 } = position.pool;
 
+  const isInputTokenSorted = inputToken.sortsBefore(token1);
+
   const amount0 = position.mintAmounts.amount0.toString();
   const amount1 = position.mintAmounts.amount1.toString();
 
-  const priceTick = getPriceTick(Number(limitLick), position.pool);
-  const tickLower = priceTick - TICK_SPACINGS[position.pool.fee];
-  const tickUpper = priceTick + TICK_SPACINGS[position.pool.fee];
+  const tickLower = position.tickLower;
+  const tickUpper = position.tickUpper;
 
-  const inputToken = new BigNumber(amount0).isEqualTo(0) ? token1 : token0;
-  const outputToken = new BigNumber(amount0).isEqualTo(0) ? token0 : token1;
+  const outputToken = inputToken.equals(token0) ? token1 : token0;
 
-  const orderPrice = tickToPrice(inputToken, outputToken, priceTick).toFixed();
+  const orderPrice = tickToPrice(inputToken, outputToken, isInputTokenSorted ? tickUpper : tickLower).toFixed(
+    outputToken.decimals,
+  );
 
   const inputAmount = inputToken.address === token0.address ? amount0 : amount1;
   const outputAmount = parseTokenAmount(inputAmount, inputToken.decimals).multipliedBy(orderPrice).toString();

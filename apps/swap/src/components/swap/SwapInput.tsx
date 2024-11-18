@@ -10,9 +10,10 @@ export interface SwapInputProps {
   onUserInput: (value: string) => void;
   disabled?: boolean;
   align?: string;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 }
 
-export const SwapInput = memo(({ value, align = "right", token, onUserInput, disabled }: SwapInputProps) => {
+export const SwapInput = memo(({ value, align = "right", token, onBlur, onUserInput, disabled }: SwapInputProps) => {
   const decimal = token?.decimals ?? SAFE_DECIMALS_LENGTH;
 
   return (
@@ -41,6 +42,7 @@ export const SwapInput = memo(({ value, align = "right", token, onUserInput, dis
         maxLength: MAX_SWAP_INPUT_LENGTH,
       }}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUserInput(e.target.value)}
+      onBlur={onBlur}
     />
   );
 });
