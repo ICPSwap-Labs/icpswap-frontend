@@ -7,3 +7,4 @@ export * from "./PoolAPRChart";
 export * from "./types";
 export * from "./Transaction";
 export * from "./APRChartTimeButtons";
+export * from "./ChartAPRLabel";

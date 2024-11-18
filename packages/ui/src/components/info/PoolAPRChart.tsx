@@ -11,54 +11,11 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import { ImageLoading } from "../Loading";
 import { LineChartAlt } from "../LineChart/alt";
 import { Typography, Box, useTheme } from "../Mui";
+import { ChartAPRLabel } from "./ChartAPRLabel";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
-
-interface APRLabelProps {
-  apr: string;
-  viewBox: { x: number; y: number; width: number; height: number };
-}
-
-function APRLabel(props: APRLabelProps) {
-  const theme = useTheme();
-
-  const wrapperHeight = 16;
-  const wrapperY = props.viewBox.y - wrapperHeight / 2;
-
-  return (
-    <>
-      <defs>
-        <path
-          id="pool-apr-label"
-          d={`M10 ${wrapperY + wrapperHeight / 2 + 1},64,${wrapperY + wrapperHeight / 2 + 1}`}
-          style={{
-            stroke: "white",
-            fill: "none",
-          }}
-        />
-      </defs>
-
-      <g width={54} height={16}>
-        <rect x="10" y={wrapperY} width={54} height={16} fill={theme.colors.apr} rx="4" />
-        <text
-          fontSize="12px"
-          fontWeight={500}
-          fill={theme.colors.darkLevel1}
-          style={{
-            textAnchor: "middle",
-            dominantBaseline: "middle",
-          }}
-        >
-          <textPath xlinkHref="#pool-apr-label" startOffset="50%">
-            {props.apr}
-          </textPath>
-        </text>
-      </g>
-    </>
-  );
-}
 
 export interface PoolAPRChartProps {
   poolId: string | Null;
@@ -178,7 +135,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                       y={lineY}
                       label={
                         // @ts-ignore
-                        <APRLabel
+                        <ChartAPRLabel
                           apr={new BigNumber(apr).isLessThan(0.01) ? numToPercent(apr, 2) : numToPercent(apr, 2)}
                         />
                       }
