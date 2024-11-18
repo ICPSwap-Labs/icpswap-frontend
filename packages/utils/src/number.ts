@@ -10,12 +10,12 @@ export const formatDollarAmount = (num: number | string | undefined, digits = 3,
   if (_num === 0 || _num === "0") return "$0.00";
   if (!_num) return "-";
 
-  if (new BigNumber(_num).isLessThan(1)) {
+  if (new BigNumber(_num).isLessThan(0.01)) {
+    if (nonNullArgs(ab) && new BigNumber(_num).isLessThan(ab)) return `<$${ab}`;
     return `$${toSignificant(_num, digits)}`;
   }
 
-  if (new BigNumber(_num).isLessThan(0.01)) {
-    if (ab && new BigNumber(_num).isLessThan(ab)) return `<$${ab}`;
+  if (new BigNumber(_num).isLessThan(1)) {
     return `$${toSignificant(_num, digits)}`;
   }
 
@@ -30,7 +30,7 @@ export const formatDollarAmount = (num: number | string | undefined, digits = 3,
 };
 
 // using a currency library here in case we want to add more in future
-export const formatDollarAmountV1 = ({
+export const formatDollarTokenPrice = ({
   num,
   digits = 3,
   ab,

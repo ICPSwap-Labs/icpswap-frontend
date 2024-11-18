@@ -1,4 +1,4 @@
-import { formatDollarAmountV1 } from "@icpswap/utils";
+import { formatDollarTokenPrice } from "@icpswap/utils";
 
 import { Typography, Box, useTheme, Tooltip, TypographyProps } from "./Mui";
 
@@ -24,7 +24,7 @@ export function SwapTransactionPriceTip({ price, symbol, symbolSx }: SwapTransac
         <Box>
           <Typography fontSize={12}>Trade Price</Typography>
           <Typography color="#111936" sx={{ margin: "6px 0 0 0" }}>
-            1 {symbol} = {formatDollarAmountV1({ num: price })}
+            1 {symbol} = {formatDollarTokenPrice({ num: price })}
           </Typography>
         </Box>
       }

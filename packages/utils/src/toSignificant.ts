@@ -20,7 +20,7 @@ export function toSignificant(
   num: number | string,
   significantDigits = 6,
   format: object = { groupSeparator: "" },
-  rounding: Rounding = Rounding.ROUND_HALF_UP,
+  rounding: Rounding = Rounding.ROUND_DOWN,
 ): string {
   Decimal.set({
     precision: significantDigits + 1,

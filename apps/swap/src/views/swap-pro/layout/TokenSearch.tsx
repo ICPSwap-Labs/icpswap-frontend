@@ -6,7 +6,7 @@ import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useAllTokensOfSwap } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarAmountV1, nonNullArgs, shortenString } from "@icpswap/utils";
+import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import NoDataIcon from "assets/icons/NoData";
 import type { AllTokenOfSwapTokenInfo, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
@@ -92,7 +92,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarAmountV1({ num: info.priceUSD, ab: 0.0001, digits: 2 }) : "--"}
+        {info ? formatDollarTokenPrice({ num: info.priceUSD, ab: 0.0001, digits: 2 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle } from "react";
 import { Typography, Box } from "@mui/material";
-import { BigNumber, toSignificant, formatDollarAmount, formatDollarAmountV1 } from "@icpswap/utils";
+import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
 import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
@@ -296,7 +296,7 @@ export const TokenCharts = forwardRef(
                 ? chartView === ChartView.TRANSACTIONS
                   ? latestValue
                   : chartView === ChartView.PRICE
-                  ? formatDollarAmountV1({ num: latestValue })
+                  ? formatDollarTokenPrice({ num: latestValue })
                   : formatDollarAmount(latestValue)
                 : chartView === ChartView.VOL
                 ? volume
@@ -306,7 +306,7 @@ export const TokenCharts = forwardRef(
                 ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
                 : priceChartData
                 ? showPrice
-                  ? formatDollarAmountV1({ num: priceChartData[priceChartData.length - 1]?.close })
+                  ? formatDollarTokenPrice({ num: priceChartData[priceChartData.length - 1]?.close })
                   : ""
                 : "--"}
             </Typography>

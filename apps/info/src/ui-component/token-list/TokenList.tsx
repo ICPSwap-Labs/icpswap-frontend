@@ -5,7 +5,7 @@ import {
   parseTokenAmount,
   toSignificant,
   formatDollarAmount,
-  formatDollarAmountV1,
+  formatDollarTokenPrice,
   formatAmount,
 } from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token/index";
@@ -66,7 +66,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
         <TokenStandardLabel standard={token.standard as TOKEN_STANDARD} />
       </Flex>
       <Typography component="div">
-        <BodyCell>{tokenUSDPrice ? formatDollarAmountV1({ num: tokenUSDPrice }) : "--"}</BodyCell>
+        <BodyCell>{tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}</BodyCell>
         <BodyCell sub>
           {tokenUSDPrice && icpPrice
             ? `${toSignificant(new BigNumber(tokenUSDPrice).dividedBy(icpPrice).toNumber(), 8)} ICP`

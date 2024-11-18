@@ -1,5 +1,5 @@
 import { Typography } from "components/Mui";
-import { formatDollarAmountV1, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -14,16 +14,13 @@ export function BalanceAndValue() {
 
   return (
     <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">
-      {/* <Typography sx={{ fontSize: "12px" }}>
-                        <Trans>Est total value</Trans>
-                      </Typography> */}
-
       <Typography sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}>
         {tokenBalance && infoToken
-          ? formatDollarAmountV1({
-              num: parseTokenAmount(tokenBalance, ICP.decimals).multipliedBy(infoToken.priceUSD).toString(),
-              ab: 0.01,
-            })
+          ? formatDollarAmount(
+              parseTokenAmount(tokenBalance, ICP.decimals).multipliedBy(infoToken.priceUSD).toString(),
+              3,
+              0.01,
+            )
           : "--"}
       </Typography>
 
