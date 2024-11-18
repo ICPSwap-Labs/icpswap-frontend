@@ -66,7 +66,7 @@ interface PositionFeesChartProps {
   time: APRChartTime;
 }
 
-export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChartProps) {
+export function PositionAPRChart({ poolId, time: aprTime, positionId }: PositionFeesChartProps) {
   const theme = useTheme();
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
@@ -91,11 +91,13 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
   const apr = useMemo(() => {
     if (isNullArgs(aprResult)) return null;
 
-    if (time === APRChartTime["24H"]) return aprResult.aprAvg1D;
-    if (time === APRChartTime["7D"]) return aprResult.aprAvg7D;
+    console.log("aprTime: ", aprTime);
+
+    if (aprTime === APRChartTime["24H"]) return aprResult.aprAvg1D;
+    if (aprTime === APRChartTime["7D"]) return aprResult.aprAvg7D;
 
     return aprResult.aprAvg30D;
-  }, [aprResult, time]);
+  }, [aprResult, aprTime]);
 
   const aprY = useMemo(() => {
     if (
@@ -115,7 +117,7 @@ export function PositionAPRChart({ poolId, time, positionId }: PositionFeesChart
     const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
 
     return ((diff - apr) / diff) * CHART_HEIGHT;
-  }, [formattedChartData, apr, time]);
+  }, [formattedChartData, apr]);
 
   const lineY = useMemo(() => {
     return apr

@@ -26,6 +26,8 @@ interface LiquidityChartsProps {
     area: {
       // color of the ticks in range
       selection: string;
+      leftColor: string;
+      rightColor: string;
     };
   };
   dimensions: Dimensions;
@@ -44,6 +46,7 @@ export function Chart({
   zoomLevels,
   priceLower,
   priceUpper,
+  styles,
 }: LiquidityChartsProps) {
   const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
@@ -95,6 +98,11 @@ export function Chart({
 
       <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible" }}>
         <defs>
+          <linearGradient id={`${id}-gradient`} x1="0%" y1="100%" x2="100%" y2="100%">
+            <stop stopColor={styles.area.leftColor} offset="0%" />
+            <stop stopColor={styles.area.rightColor} offset="100%" />
+          </linearGradient>
+
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
@@ -103,11 +111,12 @@ export function Chart({
             // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
               <rect
-                fill="white"
+                fill={`url(#${id}-gradient`}
                 x={xScale(Number(priceLower))}
                 y="0"
                 width={xScale(Number(priceUpper)) - xScale(Number(priceLower))}
                 height={innerHeight}
+                fillOpacity={0.5}
               />
             </mask>
           )}
@@ -121,12 +130,12 @@ export function Chart({
               // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <rect
-                  fill="white"
+                  fill={`url(#${id}-gradient`}
                   x={xScale(Number(priceLower))}
                   y={0}
                   width={xScale(Number(priceUpper)) - xScale(Number(priceLower))}
                   height={innerHeight}
-                  opacity={0.2}
+                  fillOpacity={0.5}
                 />
               </g>
             )}

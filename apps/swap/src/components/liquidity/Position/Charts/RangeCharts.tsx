@@ -1,7 +1,14 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
-import { FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX, Bound } from "constants/swap";
+import {
+  FeeAmount,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  Bound,
+  SWAP_CHART_RANGE_AREA_COLOR,
+  SWAP_CHART_RANGE_LEFT_COLOR,
+  SWAP_CHART_RANGE_RIGHT_COLOR,
+} from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
@@ -73,8 +80,6 @@ export default function LiquidityChartRangeInput({
 
   const [wrapperWidth, setWrapperWidth] = useState<null | number>(null);
 
-  const COLOR_BLUE = "#0068FC";
-
   const { isLoading, isUninitialized, isError, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -121,7 +126,9 @@ export default function LiquidityChartRangeInput({
               margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
               styles={{
                 area: {
-                  selection: COLOR_BLUE,
+                  selection: SWAP_CHART_RANGE_AREA_COLOR,
+                  leftColor: SWAP_CHART_RANGE_LEFT_COLOR,
+                  rightColor: SWAP_CHART_RANGE_RIGHT_COLOR,
                 },
               }}
               zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}

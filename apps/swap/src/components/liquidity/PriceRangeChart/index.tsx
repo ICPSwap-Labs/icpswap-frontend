@@ -4,7 +4,14 @@ import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { batch } from "react-redux";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import {
+  Bound,
+  FeeAmount,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  SWAP_CHART_RANGE_LEFT_COLOR,
+  SWAP_CHART_RANGE_RIGHT_COLOR,
+  SWAP_CHART_RANGE_AREA_COLOR,
+} from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
@@ -73,10 +80,6 @@ export default function LiquidityChartRangeInput({
   interactive,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
-
-  const tokenAColor = "#788686";
-  const tokenBColor = "#bb8d00";
-  const COLOR_BLUE = "#0068FC";
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped);
 
@@ -170,12 +173,12 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 0, right: 0, bottom: 30, left: 0 }}
             styles={{
               area: {
-                selection: COLOR_BLUE,
+                selection: SWAP_CHART_RANGE_AREA_COLOR,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor),
-                  east: saturate(0.1, tokenBColor) ?? COLOR_BLUE,
+                  west: saturate(0.1, SWAP_CHART_RANGE_LEFT_COLOR),
+                  east: saturate(0.1, SWAP_CHART_RANGE_RIGHT_COLOR),
                 },
               },
             }}

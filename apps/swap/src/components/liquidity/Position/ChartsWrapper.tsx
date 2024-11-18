@@ -22,8 +22,13 @@ const Tabs = [
   { label: t`Fees`, value: Charts.Fees },
 ];
 
-const TimeTabs = [
+const PriceRangeTimeTabs = [
   { label: t`24H`, value: APRChartTime["24H"] },
+  { label: t`7D`, value: APRChartTime["7D"] },
+  { label: t`30D`, value: APRChartTime["30D"] },
+];
+
+const APRTimeTabs = [
   { label: t`7D`, value: APRChartTime["7D"] },
   { label: t`30D`, value: APRChartTime["30D"] },
 ];
@@ -38,6 +43,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
 
   const [chartView, setChartView] = useState(Charts.PriceRange);
   const [chartTime, setChartTime] = useState(APRChartTime["24H"]);
+  const [aprChartTime, setAPRChartTime] = useState(APRChartTime["7D"]);
 
   const {
     pool: { id: poolId },
@@ -74,7 +80,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
           ) : chartView === Charts.Fees ? (
             <PositionFeesChart poolId={poolId} positionId={BigInt(positionId)} />
           ) : chartView === Charts.APR ? (
-            <PositionAPRChart poolId={poolId} positionId={BigInt(positionId)} time={chartTime} />
+            <PositionAPRChart poolId={poolId} positionId={BigInt(positionId)} time={aprChartTime} />
           ) : null}
 
           {chartView === Charts.PriceRange || chartView === Charts.APR ? (
@@ -85,11 +91,13 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
                 padding="1px"
                 border={`1px solid ${theme.palette.background.level4}`}
               >
-                {TimeTabs.map((chart) => (
+                {(chartView === Charts.PriceRange ? PriceRangeTimeTabs : APRTimeTabs).map((chart) => (
                   <SmallTabButton
                     key={chart.value}
-                    onClick={() => setChartTime(chart.value)}
-                    active={chartTime === chart.value}
+                    onClick={() =>
+                      chartView === Charts.PriceRange ? setChartTime(chart.value) : setAPRChartTime(chart.value)
+                    }
+                    active={(chartView === Charts.PriceRange ? chartTime : aprChartTime) === chart.value}
                     background={theme.palette.background.level1}
                     borderRadius="6px"
                     padding="4px 8px"
