@@ -133,8 +133,8 @@ export default function LiquidityChartRangeInput({
               }}
               zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
               ticksAtLimit={ticksAtLimit}
-              priceLower={poolPriceLower}
-              priceUpper={poolPriceUpper}
+              poolPriceLower={poolPriceLower}
+              poolPriceUpper={poolPriceUpper}
             />
           ) : null}
         </Flex>

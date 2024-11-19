@@ -16,7 +16,7 @@ import {
   APRChartTimeButtons,
 } from "@icpswap/ui";
 import DensityChart from "ui-component/DensityChart";
-import { APRChartTime, VolumeWindow } from "@icpswap/types";
+import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -37,7 +37,7 @@ export interface PoolChartProps {
 
 export default function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps) {
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
-  const [aprTime, setAPRTime] = useState<APRChartTime>(APRChartTime["7D"]);
+  const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
   const [chartView, setChartView] = useState<ChartView>(ChartView.APR);
 
   return (

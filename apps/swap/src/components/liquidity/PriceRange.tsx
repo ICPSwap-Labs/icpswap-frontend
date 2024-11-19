@@ -1,5 +1,5 @@
 import { memo, useState, useMemo, useCallback } from "react";
-import { Box, Grid, Typography, makeStyles, useTheme, Theme } from "components/Mui";
+import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { Token, Price, Pool } from "@icpswap/swap-sdk";
 import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
@@ -8,14 +8,16 @@ import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber } from "@icpswap/utils";
+import { BigNumber, isNullArgs, nonNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { PoolCurrentPrice } from "components/swap/index";
-import { Null } from "@icpswap/types";
+import { Null, ChartTimeEnum } from "@icpswap/types";
+import { usePoolPricePeriodRange } from "@icpswap/hooks";
 
 import PriceRangeChart from "./PriceRangeChart";
 import { FullRangeWarning } from "./FullRangeWarning";
 import { PriceRangeSelector } from "./PriceRangeSelector";
 import { RangeButton } from "./RangeButton";
+import { PriceRangeChartTimeButtons } from "./PriceRangeChartTimeButtons";
 
 const useSetPriceStyle = makeStyles((theme: Theme) => {
   return {
@@ -114,7 +116,9 @@ export const PriceRange = memo(
   }: PriceRangeProps) => {
     const theme = useTheme();
     const classes = useSetPriceStyle();
+    const { result: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
 
+    const [chartTime, setChartTime] = useState<ChartTimeEnum>(ChartTimeEnum["24H"]);
     const [fullRangeWaring, setFullRangeWarning] = useState(false);
     const [rangeValue, setRangeValue] = useState<string | null>(null);
 
@@ -169,6 +173,37 @@ export const PriceRange = memo(
     const fullRangeShow = useMemo(() => {
       return rangeValue === "FullRange" && !fullRangeWaring;
     }, [rangeValue, fullRangeWaring]);
+
+    const { poolPriceLower, poolPriceUpper } = useMemo(() => {
+      if (isNullArgs(periodPriceRange)) return {};
+
+      let poolPriceLower: number | string | Null = null;
+      let poolPriceUpper: number | string | Null = null;
+
+      if (chartTime === ChartTimeEnum["24H"]) {
+        poolPriceLower = periodPriceRange.priceLow24H;
+        poolPriceUpper = periodPriceRange.priceHigh24H;
+      } else if (chartTime === ChartTimeEnum["7D"]) {
+        poolPriceLower = periodPriceRange.priceLow7D;
+        poolPriceUpper = periodPriceRange.priceHigh7D;
+      } else {
+        poolPriceLower = periodPriceRange.priceLow30D;
+        poolPriceUpper = periodPriceRange.priceHigh30D;
+      }
+
+      return {
+        poolPriceLower: isSorted
+          ? poolPriceLower
+          : poolPriceLower
+          ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+          : null,
+        poolPriceUpper: isSorted
+          ? poolPriceUpper
+          : poolPriceUpper
+          ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+          : null,
+      };
+    }, [periodPriceRange, chartTime, isSorted]);
 
     return (
       <>
@@ -254,18 +289,42 @@ export const PriceRange = memo(
           >
             {!noLiquidity && (
               <Box mt={3} sx={{ position: "relative" }}>
-                <Grid sx={{ height: "28px" }} container alignItems="center">
-                  <Flex gap="0 2px" align="center">
-                    <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
-                      <Trans>Current Price: </Trans>
-                    </Typography>
+                <Flex sx={{ height: "28px" }} fullWidth>
+                  <PriceRangeChartTimeButtons time={chartTime} setTime={setChartTime} />
+                </Flex>
 
-                    <PoolCurrentPrice pool={pool} token={baseCurrency} sx={{ width: "210px", flexWrap: "wrap" }} />
+                <Flex vertical gap="12px 0" sx={{ margin: "16px 0 0 0" }}>
+                  <Flex fullWidth gap="0 12px">
+                    <Box sx={{ background: "#ffffff", width: "8px", height: "2px" }} />
+                    <Flex gap="0 2px" align="center">
+                      <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
+                        <Trans>Current Price:</Trans>&nbsp;
+                      </Typography>
+
+                      <PoolCurrentPrice pool={pool} token={baseCurrency} sx={{ width: "210px", flexWrap: "wrap" }} />
+                    </Flex>
                   </Flex>
-                </Grid>
+
+                  <Flex fullWidth gap="0 12px">
+                    <Box sx={{ background: "#8672FF", width: "8px", height: "2px" }} />
+                    <Flex gap="0 2px" align="center">
+                      <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
+                        <Trans>{chartTime} Price Range:</Trans>&nbsp;
+                      </Typography>
+
+                      <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
+                        {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
+                          ? `${toSignificantWithGroupSeparator(poolPriceLower, 6)} - ${toSignificantWithGroupSeparator(
+                              poolPriceUpper,
+                              6,
+                            )}`
+                          : "--"}
+                      </Typography>
+                    </Flex>
+                  </Flex>
+                </Flex>
 
                 <Box mt={3}>
-                  {/* @ts-ignore */}
                   <PriceRangeChart
                     priceLower={priceLower}
                     priceUpper={priceUpper}
@@ -276,6 +335,8 @@ export const PriceRange = memo(
                     currencyB={quoteCurrency}
                     feeAmount={feeAmount}
                     price={price}
+                    poolPriceLower={poolPriceLower}
+                    poolPriceUpper={poolPriceUpper}
                   />
                 </Box>
               </Box>
@@ -287,8 +348,8 @@ export const PriceRange = memo(
                   opacity: fullRangeShow ? 0.05 : 1,
                 }}
               >
-                <Grid container justifyContent="space-between">
-                  <Grid item sx={{ width: "48%" }}>
+                <Flex fullWidth justify="space-between" align="flex-start">
+                  <Flex sx={{ width: "48%" }}>
                     <PriceRangeSelector
                       label={t`Min Price`}
                       value={
@@ -302,8 +363,8 @@ export const PriceRange = memo(
                       baseCurrency={baseCurrency}
                       quoteCurrency={quoteCurrency}
                     />
-                  </Grid>
-                  <Grid item sx={{ width: "48%" }}>
+                  </Flex>
+                  <Flex sx={{ width: "48%" }}>
                     <PriceRangeSelector
                       label={t`Max Price`}
                       value={
@@ -318,8 +379,8 @@ export const PriceRange = memo(
                       baseCurrency={baseCurrency}
                       quoteCurrency={quoteCurrency}
                     />
-                  </Grid>
-                </Grid>
+                  </Flex>
+                </Flex>
 
                 {!noLiquidity ? (
                   <Box sx={{ margin: "12px 0 0 0" }}>

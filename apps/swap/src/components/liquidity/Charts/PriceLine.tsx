@@ -4,7 +4,7 @@ import { ScaleLinear } from "d3";
 
 const ARROW_HEIGHT = 4;
 
-export interface LineProps {
+export interface PriceLineProps {
   value: number;
   xScale: ScaleLinear<number, number>;
   height: number;
@@ -12,7 +12,7 @@ export interface LineProps {
   id?: string;
 }
 
-export const Line = ({ value, xScale, height, color = "#ffffff", id = "current" }: LineProps) => {
+export function PriceLine({ value, xScale, height, color = "#ffffff", id = "current" }: PriceLineProps) {
   return useMemo(
     () => (
       <>
@@ -48,4 +48,4 @@ export const Line = ({ value, xScale, height, color = "#ffffff", id = "current" 
     ),
     [value, xScale, height],
   );
-};
+}

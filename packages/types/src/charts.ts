@@ -41,7 +41,7 @@ export type PoolAPRChartData = {
   poolId: string;
 };
 
-export enum APRChartTime {
+export enum ChartTimeEnum {
   "24H" = "24H",
   "7D" = "7D",
   "30D" = "30D",

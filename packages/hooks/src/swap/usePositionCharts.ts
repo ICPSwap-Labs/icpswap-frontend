@@ -14,16 +14,16 @@ import { positionCharts } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
 
-export async function getPositionPricePeriodRange(poolId: string) {
+export async function getPoolPricePeriodRange(poolId: string) {
   const result = await (await positionCharts()).getPriceIndex(Principal.fromText(poolId));
   return resultFormat<PositionPricePeriodRange>(result).data;
 }
 
-export function usePositionPricePeriodRange(poolId: string | Null) {
+export function usePoolPricePeriodRange(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!poolId) return undefined;
-      return await getPositionPricePeriodRange(poolId);
+      return await getPoolPricePeriodRange(poolId);
     }, [poolId]),
   );
 }

@@ -2,19 +2,19 @@ import { useMemo } from "react";
 import { Box, Typography } from "components/Mui";
 import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
-import { usePositionPricePeriodRange } from "@icpswap/hooks";
+import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { PoolCurrentPrice } from "components/swap/index";
 import { PositionPriceRange } from "components/liquidity/index";
 import { Trans } from "@lingui/macro";
 import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
-import { APRChartTime } from "@icpswap/types";
+import { ChartTimeEnum } from "@icpswap/types";
 import { isNullArgs } from "@icpswap/utils";
 
 import PriceRangeChart from "./RangeCharts";
 
 export interface LiquidityChartsProps {
   position: Position;
-  time: APRChartTime;
+  time: ChartTimeEnum;
 }
 
 export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
@@ -29,7 +29,7 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
     : position.pool.token1Price.toFixed(position.pool.token1.decimals);
 
-  const { result: periodPriceRange } = usePositionPricePeriodRange(pool.id);
+  const { result: periodPriceRange } = usePoolPricePeriodRange(pool.id);
 
   const tickSpaceLimits = useMemo(
     () => ({
@@ -50,11 +50,11 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   const { poolPriceLower, poolPriceUpper } = useMemo(() => {
     if (isNullArgs(periodPriceRange)) return {};
 
-    if (time === APRChartTime["24H"]) {
+    if (time === ChartTimeEnum["24H"]) {
       return { poolPriceLower: periodPriceRange.priceLow24H, poolPriceUpper: periodPriceRange.priceHigh24H };
     }
 
-    if (time === APRChartTime["7D"]) {
+    if (time === ChartTimeEnum["7D"]) {
       return { poolPriceLower: periodPriceRange.priceLow7D, poolPriceUpper: periodPriceRange.priceHigh7D };
     }
 

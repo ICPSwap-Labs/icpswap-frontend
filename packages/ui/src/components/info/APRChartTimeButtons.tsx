@@ -1,16 +1,16 @@
-import { APRChartTime } from "@icpswap/types";
+import { ChartTimeEnum } from "@icpswap/types";
 
 import { Box } from "../Mui";
 import { SmallOptionButton } from "./ChartDateButton";
 
 const buttons = [
-  { label: "7D", value: APRChartTime["7D"] },
-  { label: "30D", value: APRChartTime["30D"] },
+  { label: "7D", value: ChartTimeEnum["7D"] },
+  { label: "30D", value: ChartTimeEnum["30D"] },
 ];
 
 export interface APRChartTimeButtonsProps {
-  setTime: (time: APRChartTime) => void;
-  time: APRChartTime;
+  setTime: (time: ChartTimeEnum) => void;
+  time: ChartTimeEnum;
 }
 
 export function APRChartTimeButtons({ time, setTime }: APRChartTimeButtonsProps) {

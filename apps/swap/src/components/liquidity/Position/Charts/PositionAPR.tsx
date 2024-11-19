@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
-import { type Null, APRChartTime } from "@icpswap/types";
+import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { LineChartAlt, ImageLoading, ChartAPRLabel } from "@icpswap/ui";
 import { ReferenceLine } from "recharts";
 
@@ -19,7 +19,7 @@ const CHART_HEIGHT = 240;
 interface PositionFeesChartProps {
   poolId: string | Null;
   positionId: bigint | Null;
-  time: APRChartTime;
+  time: ChartTimeEnum;
 }
 
 export function PositionAPRChart({ poolId, time: aprTime, positionId }: PositionFeesChartProps) {
@@ -47,8 +47,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
   const apr = useMemo(() => {
     if (isNullArgs(aprResult)) return null;
 
-    if (aprTime === APRChartTime["24H"]) return aprResult.aprAvg1D;
-    if (aprTime === APRChartTime["7D"]) return aprResult.aprAvg7D;
+    if (aprTime === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
+    if (aprTime === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
 
     return aprResult.aprAvg30D;
   }, [aprResult, aprTime]);

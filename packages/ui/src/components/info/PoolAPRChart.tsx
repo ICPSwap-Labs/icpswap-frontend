@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { BigNumber, isNullArgs, numToPercent } from "@icpswap/utils";
 import { usePoolAPRChartData, usePoolAPRs } from "@icpswap/hooks";
-import { type Null, APRChartTime } from "@icpswap/types";
+import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { ReferenceLine } from "recharts";
 
 import dayjs from "dayjs";
@@ -20,14 +20,14 @@ dayjs.extend(weekOfYear);
 export interface PoolAPRChartProps {
   poolId: string | Null;
   height?: string;
-  time?: APRChartTime;
+  time?: ChartTimeEnum;
 }
 
 export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPRChartProps) {
   const theme = useTheme();
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [time, setTime] = useState<APRChartTime>(APRChartTime["7D"]);
+  const [time, setTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
 
   const { result: poolChartData, loading } = usePoolAPRChartData(poolId);
   const { result: aprResult } = usePoolAPRs(poolId);
@@ -49,8 +49,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const apr = useMemo(() => {
     if (isNullArgs(aprResult)) return null;
 
-    if (time === APRChartTime["24H"]) return aprResult.aprAvg1D;
-    if (time === APRChartTime["7D"]) return aprResult.aprAvg7D;
+    if (time === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
+    if (time === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
 
     return aprResult.aprAvg30D;
   }, [aprResult, time]);

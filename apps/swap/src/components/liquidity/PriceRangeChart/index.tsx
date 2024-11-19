@@ -16,6 +16,7 @@ import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { t } from "@lingui/macro";
+import { Null } from "@icpswap/types";
 
 import { ZoomLevels } from "./types";
 import { Chart } from "./Chart";
@@ -64,7 +65,8 @@ export interface LiquidityChartRangeInputProps {
   priceUpper?: Price<Token, Token>;
   onLeftRangeInput?: (typedValue: string) => void;
   onRightRangeInput?: (typedValue: string) => void;
-  interactive: boolean;
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export default function LiquidityChartRangeInput({
@@ -77,7 +79,8 @@ export default function LiquidityChartRangeInput({
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
-  interactive,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
 
@@ -118,7 +121,7 @@ export default function LiquidityChartRangeInput({
     [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   );
 
-  const _interactive = interactive && Boolean(formattedData?.length);
+  const interactive = Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     const leftPrice = isSorted ? priceLower : priceUpper?.invert();
@@ -182,12 +185,14 @@ export default function LiquidityChartRangeInput({
                 },
               },
             }}
-            interactive={_interactive}
+            interactive={interactive}
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
             ticksAtLimit={ticksAtLimit}
+            poolPriceLower={poolPriceLower}
+            poolPriceUpper={poolPriceUpper}
           />
         </Flex>
       )}
