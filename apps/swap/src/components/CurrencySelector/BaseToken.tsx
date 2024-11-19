@@ -1,13 +1,13 @@
 import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
 import { useTheme } from "components/Mui";
-import { ICP, ICS, ckBTC, ckETH, ckUSDC } from "@icpswap/tokens";
+import { ICP, ICS, ckBTC, ckETH, ckUSDC, BOB } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenInfo } from "types/token";
 import { useTokenInfo } from "hooks/token";
 import { useCallback } from "react";
 
-const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH];
+const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, BOB];
 
 export interface BaseTokenProps {
   token: Token;
@@ -67,12 +67,11 @@ export function BaseTokens({ onTokenClick }: BaseTokensProps) {
         margin: "16px 0 0 0",
         padding: "0 24px",
         "@media(max-width: 640px)": {
-          gap: "12px",
           justifyContent: "flex-start",
           padding: "0 16px",
         },
       }}
-      gap="0 12px"
+      gap="12px"
       justify="center"
       wrap="wrap"
     >
