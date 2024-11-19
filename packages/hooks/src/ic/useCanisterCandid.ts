@@ -1,7 +1,6 @@
 /* eslint-disable no-new-func */
 
-import { IDL } from "@dfinity/candid";
-import { Actor, QueryResponseReplied, HttpAgent } from "@dfinity/agent";
+import { Actor, HttpAgent, fetchCandid } from "@dfinity/agent";
 import { useCallback } from "react";
 import { candidToJsService } from "@icpswap/actor";
 
@@ -13,15 +12,10 @@ export async function getCanisterCandidString(canisterId: string) {
     identity: null,
   });
 
-  const result = await agent.query(canisterId, {
-    methodName: "__get_candid_interface_tmp_hack",
-    // Null
-    arg: Buffer.from([68, 73, 68, 76, 0, 0]),
-  });
+  const candidString = await fetchCandid(canisterId, agent);
 
-  if ((result as QueryResponseReplied).status) {
-    const candid = IDL.decode([IDL.Text], Buffer.from((result as QueryResponseReplied).reply.arg))[0] as string;
-    const jsResult = await (await candidToJsService()).did_to_js(candid);
+  if (candidString) {
+    const jsResult = await (await candidToJsService()).did_to_js(candidString);
 
     if (jsResult && jsResult.length) {
       return jsResult[0];
