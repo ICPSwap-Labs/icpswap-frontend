@@ -60,6 +60,7 @@ export async function createPool(token0: string, token1: string, fee: FeeAmount,
     token0: getSwapTokenArgs(_token0),
     token1: getSwapTokenArgs(_token1),
     sqrtPriceX96,
+    subnet: [],
   });
 }
 
