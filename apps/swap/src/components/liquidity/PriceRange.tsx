@@ -195,12 +195,16 @@ export const PriceRange = memo(
         poolPriceLower: isSorted
           ? poolPriceLower
           : poolPriceLower
-          ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+          ? poolPriceUpper
+            ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+            : null
           : null,
         poolPriceUpper: isSorted
           ? poolPriceUpper
           : poolPriceUpper
-          ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+          ? poolPriceLower
+            ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+            : null
           : null,
       };
     }, [periodPriceRange, chartTime, isSorted]);
