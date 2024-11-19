@@ -2,14 +2,26 @@ import { useCallback } from "react";
 import { Flex } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
+import { Token } from "@icpswap/swap-sdk";
+import { Null } from "@icpswap/types";
+import { nonNullArgs } from "@icpswap/utils";
 
-export function SwapProButton() {
+export interface SwapProButtonProps {
+  inputToken: Token | Null;
+  outputToken: Token | Null;
+}
+
+export function SwapProButton({ inputToken, outputToken }: SwapProButtonProps) {
   const theme = useTheme();
   const history = useHistory();
 
   const handleToSwapPro = useCallback(() => {
-    history.push("/swap/pro");
-  }, [history]);
+    if (nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
+      history.push(`/swap/pro?input=${inputToken.address}&output=${outputToken.address}`);
+    } else {
+      history.push(`/swap/pro`);
+    }
+  }, [history, inputToken, outputToken]);
 
   return (
     <Flex
