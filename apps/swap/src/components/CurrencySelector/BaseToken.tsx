@@ -72,7 +72,6 @@ export function BaseTokens({ onTokenClick }: BaseTokensProps) {
         },
       }}
       gap="12px"
-      justify="center"
       wrap="wrap"
     >
       {BASE_TOKENS.map((base_token) => (
