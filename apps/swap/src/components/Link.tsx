@@ -13,16 +13,19 @@ export interface LinkProps {
   link?: string;
   color?: "secondary" | "primary";
   children: React.ReactNode;
+  width?: string;
+  height?: string;
+  display?: "flex" | "block" | "inline-block" | "inline";
 }
 
-export function Link({ to, link, color, children }: LinkProps) {
+export function Link({ to, link, color, children, width, height, display }: LinkProps) {
   const classes = useStyles();
   const theme = useTheme();
 
   return (
     <>
       {to ? (
-        <ReactLink className={classes.link} to={to}>
+        <ReactLink className={classes.link} to={to} style={{ width, height, display }}>
           {children}
         </ReactLink>
       ) : link ? (
@@ -31,6 +34,9 @@ export function Link({ to, link, color, children }: LinkProps) {
           target="_blank"
           rel="noreferrer"
           style={{
+            width,
+            height,
+            display,
             textDecoration: "none",
             color:
               color === "primary"
