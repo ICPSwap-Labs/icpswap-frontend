@@ -5,7 +5,16 @@ import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel, OnlyTokenList } from "@icpswap/ui";
+import {
+  Header,
+  HeaderCell,
+  BodyCell,
+  TableRow,
+  SortDirection,
+  FeeTierPercentLabel,
+  OnlyTokenList,
+  APRPanel,
+} from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolApr24h } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
@@ -105,7 +114,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell color="text.apr">{apr ?? "--"}</BodyCell>
+      <BodyCell>{apr ? <APRPanel value={apr} /> : "--"}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>

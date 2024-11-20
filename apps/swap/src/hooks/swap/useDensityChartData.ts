@@ -15,7 +15,7 @@ export function useDensityChartData({ currencyA, currencyB, feeAmount }: UseDens
   const formatData = useMemo(() => {
     if (!data?.length) return undefined;
 
-    const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
+    const isSorted = currencyA && currencyB ? currencyA.sortsBefore(currencyB) : undefined;
 
     const newData: { activeLiquidity: number; price0: number }[] = [];
 

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { Box, Collapse, Typography, Theme, useTheme } from "components/Mui";
 import { MainCard, Flex, Link, Image } from "components/index";

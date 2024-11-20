@@ -6,7 +6,7 @@ import { Override } from "@icpswap/types";
 import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import { useTokenInfo } from "hooks/token/index";
 import { PublicPoolOverView } from "types/analytic";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel } from "@icpswap/ui";
+import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel, APRPanel } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
 import { useAllPoolsTVL, usePoolApr24h } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
@@ -105,9 +105,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
         </Grid>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell align={align} color="text.apr">
-        {apr24h ?? "--"}
-      </BodyCell>
+      <BodyCell align={align}>{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>

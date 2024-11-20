@@ -1,10 +1,9 @@
 import { useState, useMemo } from "react";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Box, Grid, useMediaQuery } from "@mui/material";
+import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "ui-component/Mui";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override, PublicTokenOverview } from "@icpswap/types";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { NoData, ImageLoading, TokenImage } from "ui-component/index";
 import Pagination from "ui-component/pagination/cus";
 import { useTokenInfo } from "hooks/token/index";
@@ -54,7 +53,7 @@ export function TokenItem({ token, index, align }: { token: TokenData; index: nu
         </Grid>
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
-        {formatDollarAmount(token.priceUSD, 3)}
+        {formatDollarTokenPrice({ num: token.priceUSD })}
       </BodyCell>
       <BodyCell align={align}>
         <Proportion align={align} value={token.priceUSDChange} />

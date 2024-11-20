@@ -1,14 +1,16 @@
-// @ts-nocheck
 import { max, scaleLinear, ZoomTransform } from "d3";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bound } from "constants/swap";
-import { Area } from "./Area";
-import { AxisBottom } from "./AxisBottom";
-import { Brush } from "./Brush";
-import { Line } from "./Line";
-import Zoom, { ZoomOverlay } from "./Zoom";
+import { useTheme } from "components/Mui";
+import {
+  PriceLine,
+  Area,
+  AxisBottom,
+  ChartEntry,
+  LiquidityChartRangeInputProps,
+} from "components/liquidity/Charts/index";
 
-import { ChartEntry, LiquidityChartRangeInputProps } from "./types";
+import { Brush } from "./Brush";
+import Zoom, { ZoomOverlay } from "./Zoom";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -16,7 +18,6 @@ export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
 export function Chart({
   id = "liquidityChartRangeInput",
   data: { series, current },
-  ticksAtLimit,
   styles,
   dimensions: { width, height },
   margins,
@@ -25,7 +26,10 @@ export function Chart({
   brushLabels,
   onBrushDomainChange,
   zoomLevels,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
+  const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
 
   const [zoom, setZoom] = useState<ZoomTransform | null>(null);
@@ -81,9 +85,9 @@ export function Chart({
             "reset",
           );
         }}
-        showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}
         zoomLevels={zoomLevels}
       />
+
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible" }}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
@@ -122,7 +126,27 @@ export function Chart({
               </g>
             )}
 
-            <Line value={current} xScale={xScale} innerHeight={innerHeight} />
+            <PriceLine value={current} xScale={xScale} height={innerHeight} />
+
+            {poolPriceLower ? (
+              <PriceLine
+                id="lower"
+                value={Number(poolPriceLower)}
+                xScale={xScale}
+                height={innerHeight}
+                color={theme.colors.primaryMain}
+              />
+            ) : null}
+
+            {poolPriceUpper ? (
+              <PriceLine
+                id="upper"
+                value={Number(poolPriceUpper)}
+                xScale={xScale}
+                height={innerHeight}
+                color={theme.colors.primaryMain}
+              />
+            ) : null}
 
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>

@@ -1,7 +1,6 @@
-import { useState, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
+import { useState } from "react";
+import { Box } from "components/Mui";
 import { t } from "@lingui/macro";
-import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -9,19 +8,21 @@ import {
   ChartDateButtons,
   PoolVolumeChart,
   PoolTvlChart,
-  MultipleSmallButtonsWrapper,
-  MultipleSmallButton,
+  SmallTabsButtonWrapper,
+  SmallTabButton,
   ChartView,
+  PoolAPRChart,
+  APRChartTimeButtons,
 } from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
-import { VolumeWindow } from "@icpswap/types";
-import { usePoolTvlChartData } from "@icpswap/hooks";
+import { VolumeWindow, ChartTimeEnum } from "@icpswap/types";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
 export const chartViews = [
+  { label: t`APR`, value: ChartView.APR },
   { label: t`Volume`, value: ChartView.VOL },
   { label: t`TVL`, value: ChartView.TVL },
   { label: t`Liquidity`, value: ChartView.LIQUIDITY },
@@ -35,69 +36,19 @@ export interface PoolChartProps {
 
 export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProps) {
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
-
-  const [chartView, setChartView] = useState<ChartView>(ChartView.VOL);
-  const [valueLabel, setValueLabel] = useState<string | undefined>();
-  const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [latestVolumeValue, setLatestVolumeValue] = useState<number | undefined>();
-  const [volumeValue, setVolumeValue] = useState<number | undefined>();
-
-  const { result: poolChartTVl } = usePoolTvlChartData(canisterId);
-
-  const formattedTvlData = useMemo(() => {
-    if (poolChartTVl) {
-      return poolChartTVl
-        .filter((data) => Number(data.timestamp) !== 0)
-        .map((data) => {
-          return {
-            time: dayjs(Number(data.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss"),
-            value: data.tvlUSD,
-          };
-        });
-    }
-    return [];
-  }, [poolChartTVl]);
+  const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
+  const [chartView, setChartView] = useState<ChartView>(ChartView.APR);
 
   return (
     <Box
       sx={{
         position: "relative",
         minHeight: "320px",
+        "@media(max-width: 640px)": {
+          padding: "60px 0 0 0",
+        },
       }}
     >
-      <Box>
-        <Typography
-          color="text.primary"
-          fontSize="24px"
-          fontWeight={500}
-          sx={{
-            height: "30px",
-          }}
-        >
-          {latestValue || latestValue === 0
-            ? formatDollarAmount(latestValue)
-            : chartView === ChartView.VOL
-            ? volume24H
-              ? formatDollarAmount(volume24H)
-              : volumeValue
-              ? formatDollarAmount(volumeValue)
-              : formatDollarAmount(latestVolumeValue)
-            : chartView === ChartView.LIQUIDITY
-            ? ""
-            : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)}{" "}
-        </Typography>
-        <Typography
-          color="text.primary"
-          fontWeight={500}
-          sx={{
-            height: "20px",
-          }}
-          fontSize="12px"
-        >
-          {valueLabel || ""}
-        </Typography>
-      </Box>
-
       <Box
         sx={{
           position: "absolute",
@@ -106,47 +57,49 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
           zIndex: 101,
         }}
       >
-        <MultipleSmallButtonsWrapper>
+        <SmallTabsButtonWrapper padding="1px">
           {chartViews.map((chart) => (
-            <MultipleSmallButton
+            <SmallTabButton
               key={chart.value}
               onClick={() => setChartView(chart.value)}
               active={chartView === chart.value}
+              borderRadius="40px"
+              padding="2px 10px"
             >
               {chart.label}
-            </MultipleSmallButton>
+            </SmallTabButton>
           ))}
-        </MultipleSmallButtonsWrapper>
+        </SmallTabsButtonWrapper>
 
         {chartView === ChartView.VOL ? (
           <Box sx={{ margin: "15px 0 0 0" }}>
             <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
           </Box>
         ) : null}
+
+        {chartView === ChartView.APR ? (
+          <Box sx={{ margin: "15px 0 0 0" }}>
+            <APRChartTimeButtons time={aprTime} setTime={setAPRTime} />
+          </Box>
+        ) : null}
       </Box>
 
-      <Box
-        sx={{
-          marginTop: "20px",
-        }}
-      >
+      <Box>
         {chartView === ChartView.VOL ? (
           <PoolVolumeChart
             canisterId={canisterId}
             volumeWindow={volumeWindow}
             noData={<Box sx={{ height: "340px", width: "auto" }} />}
-            setLatestValue={setLatestVolumeValue}
-            setValue={setVolumeValue}
+            defaultValue={volume24H}
           />
         ) : chartView === ChartView.TVL ? (
-          <PoolTvlChart
-            canisterId={canisterId}
-            setValueLabel={setValueLabel}
-            setLatestValue={setLatestValue}
-            noData={<Box sx={{ height: "340px", width: "auto" }} />}
-          />
+          <PoolTvlChart canisterId={canisterId} noData={<Box sx={{ height: "340px", width: "auto" }} />} />
         ) : chartView === ChartView.LIQUIDITY ? (
-          <DensityChart address={canisterId} token0Price={token0Price} />
+          <Box sx={{ padding: "40px 0 0 0", "@media(max-width: 640px)": { padding: "0px" } }}>
+            <DensityChart address={canisterId} token0Price={token0Price} />
+          </Box>
+        ) : chartView === ChartView.APR ? (
+          <PoolAPRChart poolId={canisterId} time={aprTime} />
         ) : null}
       </Box>
     </Box>

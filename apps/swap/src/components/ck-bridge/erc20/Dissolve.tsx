@@ -8,14 +8,12 @@ import { Box, Typography, useTheme, CircularProgress, TextField } from "componen
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Web3ButtonConnector } from "components/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { useActiveChain } from "hooks/web3/index";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
-import { isMobile } from "react-device-detect";
 import ButtonConnector from "components/authentication/ButtonConnector";
 
 export interface Erc20DissolveProps {
@@ -105,42 +103,38 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         </Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          {!account && !isMobile ? (
-            <Web3ButtonConnector />
-          ) : (
-            <Box sx={{ width: "100%" }}>
-              <TextField
-                sx={{
-                  "& input": {
-                    lineHeight: "1.15rem",
-                    fontSize: "16px",
-                  },
-                  "& textarea": {
-                    lineHeight: "1.15rem",
-                    fontSize: "16px",
-                  },
-                  "& input::placeholder": {
-                    fontSize: "16px",
-                  },
-                  "& textarea::placeholder": {
-                    fontSize: "16px",
-                  },
-                }}
-                variant="standard"
-                onChange={({ target: { value } }) => setAddress(value)}
-                value={address}
-                multiline
-                slotProps={{
-                  input: {
-                    disableUnderline: true,
-                  },
-                }}
-                fullWidth
-                autoComplete="off"
-                placeholder="Enter the address"
-              />
-            </Box>
-          )}
+          <Box sx={{ width: "100%" }}>
+            <TextField
+              sx={{
+                "& input": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& textarea": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& input::placeholder": {
+                  fontSize: "16px",
+                },
+                "& textarea::placeholder": {
+                  fontSize: "16px",
+                },
+              }}
+              variant="standard"
+              onChange={({ target: { value } }) => setAddress(value)}
+              value={address}
+              multiline
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
+              }}
+              fullWidth
+              autoComplete="off"
+              placeholder="Enter the address"
+            />
+          </Box>
         </Box>
       </Box>
 

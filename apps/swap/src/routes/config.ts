@@ -10,7 +10,6 @@ const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 const Staking = Loadable(lazy(() => import("../views/staking-token")));
 const StakingDetails = Loadable(lazy(() => import("../views/staking-token/details")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
-const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
@@ -22,6 +21,7 @@ const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/recla
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
+const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/Position")));
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
@@ -68,7 +68,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/stake": Staking,
   "/stake/details/:id": StakingDetails,
   "/stake/create": StakingTokenCreate,
-  "/stake/v1": StakingTokenV1,
   "/farm": Farms,
   "/farm/details/:id": Farm,
   "/farm/create": CreateFarm,
@@ -78,6 +77,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
   "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
   "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+  "/liquidity/position/:positionId/:pool": Position,
 
   "/swap/withdraw": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,

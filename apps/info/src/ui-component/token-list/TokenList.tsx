@@ -1,7 +1,13 @@
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
-import { parseTokenAmount, toSignificant, formatDollarAmount, formatAmount } from "@icpswap/utils";
+import { Box, Typography } from "ui-component/Mui";
+import {
+  parseTokenAmount,
+  toSignificant,
+  formatDollarAmount,
+  formatDollarTokenPrice,
+  formatAmount,
+} from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TextButton, TokenImage } from "ui-component/index";
@@ -13,7 +19,7 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import { makeStyles } from "@mui/styles";
 import BigNumber from "bignumber.js";
-import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -42,14 +48,12 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
   const tokenUSDPrice = useUSDPrice(token.canisterId);
   const icpPrice = useICPPrice();
 
-  // sx={{ borderTop: "1px solid rgba(189, 200, 240, 0.082)" }}
-
   return (
     <TableRow className={classes.wrapper}>
       <BodyCell>{index + 1}</BodyCell>
-      <Grid
-        container
-        alignItems="center"
+      <Flex
+        fullWidth
+        align="center"
         sx={{
           minWidth: "120px",
           gap: "0 8px",
@@ -60,11 +64,9 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
           {token?.symbol}
         </Typography>
         <TokenStandardLabel standard={token.standard as TOKEN_STANDARD} />
-      </Grid>
+      </Flex>
       <Typography component="div">
-        <BodyCell>
-          {tokenUSDPrice && icpPrice ? formatDollarAmount(new BigNumber(tokenUSDPrice).toNumber(), 8) : "--"}
-        </BodyCell>
+        <BodyCell>{tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}</BodyCell>
         <BodyCell sub>
           {tokenUSDPrice && icpPrice
             ? `${toSignificant(new BigNumber(tokenUSDPrice).dividedBy(icpPrice).toNumber(), 8)} ICP`
@@ -121,53 +123,51 @@ export default function TokenList() {
   }, [tokenList]);
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Box mt={2} sx={{ overflow: "auto" }}>
-          <Header className={classes.wrapper}>
-            <HeaderCell>
-              <Trans>Index</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Symbol</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Price</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Total Supply</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>FDV</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Holders</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Action</Trans>
-            </HeaderCell>
-          </Header>
-          {list?.map((token, index) => <TokenListItem key={index} index={index} token={token} />)}
-          {list?.length === 0 && !loading ? <NoData /> : null}
-          {loading ? (
-            <Box sx={{ padding: "16px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : null}
-        </Box>
-      </Grid>
-    </Grid>
+    <Flex fullWidth>
+      <Box mt={2} sx={{ width: "100%", overflow: "auto" }}>
+        <Header className={classes.wrapper}>
+          <HeaderCell>
+            <Trans>Index</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>Symbol</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>Price</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>Total Supply</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>FDV</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>Holders</Trans>
+          </HeaderCell>
+          <HeaderCell>
+            <Trans>Action</Trans>
+          </HeaderCell>
+        </Header>
+        {list?.map((token, index) => <TokenListItem key={index} index={index} token={token} />)}
+        {list?.length === 0 && !loading ? <NoData /> : null}
+        {loading ? (
+          <Box sx={{ padding: "16px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : null}
+      </Box>
+    </Flex>
   );
 }

@@ -1,6 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box, Button, Typography, useTheme, useMediaQuery, Theme } from "components/Mui";
-import { makeStyles } from "@mui/styles";
+import { Box, Button, Typography, useTheme, useMediaQuery, makeStyles } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { useTickAtLimit } from "@icpswap/hooks";
 import {
@@ -19,7 +18,7 @@ import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
-import { CollectFeesModal } from "components/swap/CollectFeesModal";
+import { CollectFees } from "components/liquidity/index";
 import TransferPosition from "components/swap/TransferPosition";
 import { useHistory } from "react-router-dom";
 import { usePositionState } from "hooks/liquidity";
@@ -51,11 +50,9 @@ enum Bound {
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [manuallyInverted, setManuallyInverted] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
-  const [collectOpen, setCollectOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [transferred, setTransferred] = useState(false);
   const [refreshFeeFlag, setRefreshFeeFlag] = useState<number>(0);
@@ -93,7 +90,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     priceUpper: pricesFromPosition?.priceUpper,
     quote: pricesFromPosition?.quote,
     base: pricesFromPosition?.base,
-    invert: manuallyInverted,
+    invert: false,
   });
 
   const inverted = token1 ? base?.equals(token1) : undefined;
@@ -144,7 +141,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 
   const handleClaimedSuccessfully = () => {
     setRefreshFeeFlag(refreshFeeFlag + 1);
-    setCollectOpen(false);
   };
 
   const handleLoadPage = (path: string) => {
@@ -196,7 +192,11 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           })} ${pairName ?? ""}`}
         </BodyCell>
 
-        <BodyCell>
+        <BodyCell
+          sx={{
+            flexDirection: "column",
+          }}
+        >
           <BodyCell>
             {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined
               ? `${toSignificantWithGroupSeparator(
@@ -280,9 +280,16 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             {matchSM ? (
               <>
                 <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
-                  <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                    <Trans>Collect Fees</Trans>
-                  </Button>
+                  <CollectFees
+                    position={position}
+                    positionId={BigInt(positionInfo.index)}
+                    onCollectSuccess={handleClaimedSuccessfully}
+                  >
+                    <Button size={matchSM ? "small" : "medium"} variant="outlined">
+                      <Trans>Collect Fees</Trans>
+                    </Button>
+                  </CollectFees>
+
                   <Button
                     size={matchSM ? "small" : "medium"}
                     variant="contained"
@@ -316,9 +323,17 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
                 >
                   <Trans>Remove Liquidity</Trans>
                 </Button>
-                <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setCollectOpen(true)}>
-                  <Trans>Collect Fees</Trans>
-                </Button>
+
+                <CollectFees
+                  position={position}
+                  positionId={BigInt(positionInfo.index)}
+                  onCollectSuccess={handleClaimedSuccessfully}
+                >
+                  <Button size={matchSM ? "small" : "medium"} variant="outlined">
+                    <Trans>Collect Fees</Trans>
+                  </Button>
+                </CollectFees>
+
                 <Button
                   size={matchSM ? "small" : "medium"}
                   variant="contained"
@@ -331,16 +346,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           </Box>
         </Box>
       ) : null}
-
-      <CollectFeesModal
-        open={collectOpen}
-        pool={pool}
-        positionId={positionInfo.index}
-        onClose={() => setCollectOpen(false)}
-        currencyFeeAmount0={currencyFeeAmount0}
-        currencyFeeAmount1={currencyFeeAmount1}
-        onClaimedSuccessfully={handleClaimedSuccessfully}
-      />
 
       {transferOpen ? (
         <TransferPosition

@@ -10,7 +10,7 @@ export default function Background() {
         right: "0",
         pointerEvents: "none",
         transform: "unset",
-        background: "radial-gradient(65% 100% at 48% 0%,rgba(255, 143, 224, 0.1) 0, rgba(33, 41, 70, .1) 100%)",
+        background: "radial-gradient(30% 30% at 50% 0%,rgba(255, 143, 224, 0.1) 0, rgba(33, 41, 70, .1) 100%)",
         width: "100vw",
         height: "100vh",
         zIndex: "-1",

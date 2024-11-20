@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Box, Typography, makeStyles } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
@@ -28,17 +28,7 @@ import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
 import ConfirmRemoveLiquidityModal from "./Confirm";
 
-const useStyle = makeStyles(() => {
-  return {
-    container: {
-      width: "100%",
-      maxWidth: "612px",
-    },
-  };
-});
-
 export default function DecreaseLiquidity() {
-  const classes = useStyle();
   const history = useHistory();
 
   const principal = useAccountPrincipal();
@@ -141,6 +131,16 @@ export default function DecreaseLiquidity() {
     history.goBack();
   }, [history, resetBurnState]);
 
+  const handleDecreaseSuccess = () => {
+    resetBurnState();
+
+    if (liquidityToRemove.equalTo(1)) {
+      history.push("/liquidity?tab=Positions");
+    } else {
+      history.goBack();
+    }
+  };
+
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));
 
   const getDecreaseLiquidityCall = useDecreaseLiquidityCallback({
@@ -180,7 +180,7 @@ export default function DecreaseLiquidity() {
 
     if (result === true) {
       openSuccessTip(t`Withdrawal submitted`);
-      handleBack();
+      handleDecreaseSuccess();
     }
 
     setLoading(false);
@@ -197,7 +197,13 @@ export default function DecreaseLiquidity() {
   return (
     <Wrapper>
       <Flex fullWidth justify="center">
-        <MainCard level={1} className={`${classes.container} lightGray200`}>
+        <MainCard
+          level={1}
+          sx={{
+            width: "100%",
+            maxWidth: "612px",
+          }}
+        >
           <HeaderTab title={t`Remove Liquidity`} showArrow showUserSetting slippageType="burn" onBack={handleBack} />
 
           {!positionLoading ? (

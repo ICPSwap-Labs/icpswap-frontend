@@ -14,13 +14,13 @@ export function BalanceAndValue() {
 
   return (
     <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">
-      {/* <Typography sx={{ fontSize: "12px" }}>
-                        <Trans>Est total value</Trans>
-                      </Typography> */}
-
       <Typography sx={{ fontSize: "28px", fontWeight: 500, margin: "12px 0 0 0", color: "text.primary" }}>
         {tokenBalance && infoToken
-          ? formatDollarAmount(parseTokenAmount(tokenBalance, ICP.decimals).multipliedBy(infoToken.priceUSD).toString())
+          ? formatDollarAmount(
+              parseTokenAmount(tokenBalance, ICP.decimals).multipliedBy(infoToken.priceUSD).toString(),
+              3,
+              0.01,
+            )
           : "--"}
       </Typography>
 

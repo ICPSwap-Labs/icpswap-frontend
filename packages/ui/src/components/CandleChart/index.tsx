@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { Box, useTheme } from "../Mui";
+
 import { GridRowBetween } from "../Grid/Row";
 
 dayjs.extend(utc);
@@ -39,7 +38,7 @@ export const CandleChart = ({
   onHoverChange,
   ...rest
 }: CandleChartProps) => {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const textColor = theme.palette.text.secondary;
   const chartRef = useRef<HTMLDivElement>(null);

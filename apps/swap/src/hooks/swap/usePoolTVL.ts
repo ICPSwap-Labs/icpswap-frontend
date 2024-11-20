@@ -5,6 +5,8 @@ import BigNumber from "bignumber.js";
 import { usePoolTotalVolumeCall } from "hooks/swap/v2/useSwapCalls";
 import { usePoolTokenAmountsFromKey } from "hooks/swap/v3Calls";
 import { formatDollarAmount, numberToString } from "@icpswap/utils";
+import { Null } from "@icpswap/types";
+import { useTokenBalance } from "hooks/token";
 
 export function usePoolTVL(
   token0: Token | undefined,
@@ -52,9 +54,8 @@ export function usePoolTVLAndTotalVolume(
     if (!token0 || !token1 || !token0USDPrice || !token1USDPrice || !balance0 || !balance1) {
       if (format) {
         return formatDollarAmount(0);
-      } 
-        return 0;
-      
+      }
+      return 0;
     }
 
     const token0TVLValue = new BigNumber(token0USDPrice).multipliedBy(balance0.toString());
@@ -62,18 +63,16 @@ export function usePoolTVLAndTotalVolume(
 
     if (format) {
       return formatDollarAmount(token0TVLValue.plus(token1TVLValue).toNumber());
-    } 
-      return token0TVLValue.plus(token1TVLValue).toNumber();
-    
+    }
+    return token0TVLValue.plus(token1TVLValue).toNumber();
   }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1]);
 
   const poolTotalVolumeValue = useMemo(() => {
     if (!token0 || !totalVolume || !token0USDPrice) {
       if (format) {
         return formatDollarAmount(0);
-      } 
-        return 0;
-      
+      }
+      return 0;
     }
 
     const token0TotalVolume = new BigNumber(token0USDPrice).multipliedBy(totalVolume.tokenA.toString());
@@ -85,9 +84,8 @@ export function usePoolTVLAndTotalVolume(
     // return formatDollarAmount(new BigNumber(token0TotalVolume.toExact()).plus(token1TotalVolume.toExact()).toNumber());
     if (format) {
       return formatDollarAmount(token0TotalVolume.toNumber());
-    } 
-      return token0TotalVolume.toNumber();
-    
+    }
+    return token0TotalVolume.toNumber();
   }, [totalVolume, token0USDPrice, token0]);
 
   return useMemo(() => {
@@ -144,9 +142,8 @@ export function useV3PoolTVLAndTotalVolume(
     if (!token0 || !token1 || !token0USDPrice || !token1USDPrice || !balance0 || !balance1) {
       if (format) {
         return formatDollarAmount(0);
-      } 
-        return 0;
-      
+      }
+      return 0;
     }
 
     const token0TVLValue = new BigNumber(token0USDPrice).multipliedBy(balance0.toString());
@@ -154,18 +151,16 @@ export function useV3PoolTVLAndTotalVolume(
 
     if (format) {
       return formatDollarAmount(new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber());
-    } 
-      return new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber();
-    
+    }
+    return new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber();
   }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1]);
 
   const poolTotalVolumeValue = useMemo(() => {
     if (!token0 || !totalVolume || !token0USDPrice) {
       if (format) {
         return formatDollarAmount(0);
-      } 
-        return 0;
-      
+      }
+      return 0;
     }
 
     const token0TotalVolume = new BigNumber(token0USDPrice).multipliedBy(totalVolume.balance0);
@@ -177,9 +172,8 @@ export function useV3PoolTVLAndTotalVolume(
     // return formatDollarAmount(new BigNumber(token0TotalVolume.toExact()).plus(token1TotalVolume.toExact()).toNumber());
     if (format) {
       return formatDollarAmount(token0TotalVolume.toNumber());
-    } 
-      return new BigNumber(token0TotalVolume).toNumber();
-    
+    }
+    return new BigNumber(token0TotalVolume).toNumber();
   }, [totalVolume, token0USDPrice, token0]);
 
   return useMemo(() => {
@@ -188,4 +182,32 @@ export function useV3PoolTVLAndTotalVolume(
       poolTotalVolume: poolTotalVolumeValue,
     };
   }, [poolTVL, poolTotalVolumeValue]);
+}
+
+interface usePoolTvlV2Props {
+  token0: Token | Null;
+  token1: Token | Null;
+  poolId: string | Null;
+}
+
+export function usePoolTvlV2({ token0, token1, poolId }: usePoolTvlV2Props) {
+  const { result: balance0 } = useTokenBalance(token0?.address, poolId);
+  const { result: balance1 } = useTokenBalance(token1?.address, poolId);
+
+  const amount0 = token0 && balance0 ? CurrencyAmount.fromRawAmount(token0, balance0.toString()) : undefined;
+  const amount1 = token1 && balance1 ? CurrencyAmount.fromRawAmount(token1, balance1.toString()) : undefined;
+
+  const token0USDValue = useUSDValue(amount0);
+  const token1USDValue = useUSDValue(amount1);
+
+  return useMemo(() => {
+    if (!token0USDValue || !token1USDValue) return {};
+
+    return {
+      token0Tvl: token0USDValue.toString(),
+      token0Balance: balance0?.toString(),
+      token1Tvl: token1USDValue.toString(),
+      token1Balance: balance1?.toString(),
+    };
+  }, [token1USDValue, token0USDValue, balance0, balance1]);
 }

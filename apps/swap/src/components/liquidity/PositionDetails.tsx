@@ -6,7 +6,7 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { CollectFeesModal } from "components/swap/CollectFeesModal";
+import { CollectFees } from "components/liquidity/index";
 import { BigNumber, formatDollarAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { toFormat, PositionState } from "utils/index";
@@ -99,7 +99,6 @@ export function PositionDetails({
   const history = useHistory();
   const theme = useTheme();
 
-  const [collectFeesShow, setCollectFeesShow] = useState(false);
   const [transferShow, setTransferShow] = useState(false);
 
   const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
@@ -188,10 +187,6 @@ export function PositionDetails({
     history.push(`/liquidity/increase/${String(positionId)}/${position.pool.id}`);
   }, [positionId, position]);
 
-  const handleCollectFee = useCallback(() => {
-    setCollectFeesShow(true);
-  }, [setCollectFeesShow]);
-
   const handleTransferPosition = useCallback(() => {
     setTransferShow(true);
   }, [setTransferShow]);
@@ -205,6 +200,11 @@ export function PositionDetails({
     if (!farmId) return;
     history.push(`/farm/details/${farmId}`);
   }, [history, farmId]);
+
+  const handleDetails = useCallback(() => {
+    if (!position) return;
+    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}`);
+  }, [position, history]);
 
   return (
     <>
@@ -421,13 +421,24 @@ export function PositionDetails({
               margin: "32px 0 0 0",
               gap: "0 8px",
               flexWrap: "wrap",
+              display: "none",
               "@media(max-width: 640px)": {
                 flexWrap: "wrap",
                 gap: "12px 8px",
+                display: "flex",
               },
             }}
             justify="flex-end"
           >
+            <Button
+              variant="contained"
+              className="secondary"
+              size={matchDownSM ? "small" : "medium"}
+              onClick={handleDetails}
+            >
+              <Trans>Details</Trans>
+            </Button>
+
             {staked ? (
               <Button
                 variant="contained"
@@ -438,6 +449,7 @@ export function PositionDetails({
                 <Trans>Unstake</Trans>
               </Button>
             ) : null}
+
             {!staked && farmId ? (
               <Button
                 variant="contained"
@@ -448,6 +460,7 @@ export function PositionDetails({
                 <Trans>Stake</Trans>
               </Button>
             ) : null}
+
             {!noLiquidity && !staked ? (
               <Button
                 variant="contained"
@@ -460,15 +473,21 @@ export function PositionDetails({
             ) : null}
 
             {hasUnclaimedFees && !staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleCollectFee}
+              <CollectFees
+                position={position}
+                positionId={positionId}
+                onCollectSuccess={onClaimSuccess}
                 disabled={feeIsZero}
               >
-                <Trans>Collect Fees</Trans>
-              </Button>
+                <Button
+                  variant="contained"
+                  className="secondary"
+                  size={matchDownSM ? "small" : "medium"}
+                  disabled={feeIsZero}
+                >
+                  <Trans>Collect Fees</Trans>
+                </Button>
+              </CollectFees>
             ) : null}
 
             {!staked ? (
@@ -490,18 +509,6 @@ export function PositionDetails({
           </Flex>
         )}
       </Box>
-
-      <CollectFeesModal
-        open={collectFeesShow}
-        pool={pool}
-        positionId={positionId}
-        currencyFeeAmount0={feeAmount0}
-        currencyFeeAmount1={feeAmount1}
-        onClose={() => {
-          setCollectFeesShow(false);
-        }}
-        onClaimedSuccessfully={onClaimSuccess}
-      />
 
       {transferShow ? (
         <TransferPosition

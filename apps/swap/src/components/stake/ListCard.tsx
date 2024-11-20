@@ -1,6 +1,5 @@
-import { Typography, Box, BoxProps } from "components/Mui";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, BoxProps, useTheme } from "components/Mui";
+import { Flex, Tooltip, APRPanel } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
@@ -121,9 +120,7 @@ export function PoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardPro
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.apr" }}>
-          {apr ?? "--"}
-        </Typography>
+        {apr ? <APRPanel value={apr} /> : "--"}
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">

@@ -475,12 +475,17 @@ export async function getSwapPositionOwner(poolId: string, positionIndex: number
   return resultFormat<string>(await (await swapPool(poolId)).getUserByPositionId(BigInt(positionIndex))).data;
 }
 
-export function useSwapPositionOwner(poolId: string | undefined, positionIndex: number | bigint | undefined) {
+export function useSwapPositionOwner(
+  poolId: string | undefined,
+  positionIndex: number | bigint | undefined,
+  refresh?: number,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!poolId || positionIndex === undefined) return undefined;
       return await getSwapPositionOwner(poolId, positionIndex);
     }, [positionIndex, poolId]),
+    refresh,
   );
 }
 

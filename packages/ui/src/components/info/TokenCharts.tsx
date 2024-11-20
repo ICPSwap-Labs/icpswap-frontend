@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
 import { Typography, Box } from "@mui/material";
-import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
+import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
 import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
@@ -14,7 +14,7 @@ import { BarChartAlt } from "../BarChart/alt";
 import { CandleChart } from "../CandleChart/index";
 import { SwapAnalyticLoading } from "./Loading";
 import { ChartDateButtons } from "./ChartDateButton";
-import { ChartView } from "./ChartViewButton";
+import { ChartView } from "./types";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";
@@ -309,6 +309,8 @@ export const TokenCharts = forwardRef(
               {latestValue || latestValue === 0
                 ? chartView === ChartView.TRANSACTIONS
                   ? latestValue
+                  : chartView === ChartView.PRICE
+                  ? formatDollarTokenPrice({ num: latestValue })
                   : formatDollarAmount(latestValue)
                 : chartView === ChartView.VOL
                 ? volume
@@ -318,7 +320,7 @@ export const TokenCharts = forwardRef(
                 ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
                 : priceChartData
                 ? showPrice
-                  ? formatDollarAmount(priceChartData[priceChartData.length - 1]?.close)
+                  ? formatDollarTokenPrice({ num: priceChartData[priceChartData.length - 1]?.close })
                   : ""
                 : "--"}
             </Typography>

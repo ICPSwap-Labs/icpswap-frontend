@@ -14,10 +14,7 @@ export type {
 } from "./Factory";
 
 export { idlFactory as SwapNFTInterfaceFactory } from "./SwapNFT.did";
-export type {
-  _SERVICE as SwapNFT,
-  TokenMetadata as SwapNFTTokenMetadata,
-} from "./SwapNFT";
+export type { _SERVICE as SwapNFT, TokenMetadata as SwapNFTTokenMetadata } from "./SwapNFT";
 
 export { idlFactory as SwapPoolInterfaceFactory } from "./SwapPool.did";
 export type {
@@ -44,3 +41,10 @@ export { idlFactory as PassCodeManagerInterfaceFactory } from "./PassCodeManager
 
 export type PassCodeResult = Array<[Principal, Array<PassCode>]>;
 export type { PassCode };
+
+export type {
+  _SERVICE as PositionChartsService,
+  PriceIndex as PositionPricePeriodRange,
+  PoolAprIndex as PoolAPRs,
+} from "./PositionCharts";
+export { idlFactory as PositionChartsFactory } from "./PositionCharts.did";

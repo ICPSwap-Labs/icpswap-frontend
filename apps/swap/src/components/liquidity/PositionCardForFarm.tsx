@@ -11,7 +11,7 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { FeeTierPercentLabel, Flex, APR } from "@icpswap/ui";
+import { FeeTierPercentLabel, Flex, APRPanel } from "@icpswap/ui";
 import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
 import { type FarmInfoWithId } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
@@ -23,7 +23,12 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
-import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
+import {
+  usePositionState,
+  usePositionValue,
+  usePositionFeesValue,
+  useLoadLiquidityPageCallback,
+} from "hooks/liquidity";
 import { useFarmUserRewardAmountAndValue, useUserApr, useFarmTvlValue } from "hooks/staking-farm/index";
 import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -273,6 +278,13 @@ export function PositionCardForFarm({
     deposits,
   });
 
+  const loadLiquidityPage = useLoadLiquidityPageCallback({ poolId: pool?.id, positionId, page: "position" });
+
+  const handleToPositionDetails = useCallback(() => {
+    if (!position || matchDownMD) return;
+    loadLiquidityPage();
+  }, [detailShow, setDetailShow, position, matchDownMD, loadLiquidityPage]);
+
   return (
     <Box
       className={classes.wrapper}
@@ -285,7 +297,6 @@ export function PositionCardForFarm({
       <Flex
         justify="space-between"
         fullWidth
-        onClick={handleToggleShow}
         sx={{
           "@media(max-width: 640px)": {
             flexDirection: "column",
@@ -293,6 +304,13 @@ export function PositionCardForFarm({
             justifyContent: "flex-start",
             gap: "18px 0",
           },
+        }}
+        onClick={() => {
+          if (matchDownMD) {
+            handleToggleShow();
+          } else {
+            handleToPositionDetails();
+          }
         }}
       >
         {!position && <Loading loading={!position} circularSize={28} />}
@@ -361,7 +379,7 @@ export function PositionCardForFarm({
                 "@media(max-width: 640px)": { width: "fit-content" },
               }}
             >
-              <Typography color="text.primary">{userApr ? <APR value={userApr} /> : "--"}</Typography>
+              {userApr ? <APRPanel value={userApr} /> : <Typography color="text.primary">--</Typography>}
             </Flex>
           </Flex>
 
@@ -403,38 +421,80 @@ export function PositionCardForFarm({
 
           <PositionRangeState state={positionState} width="110px" />
 
-          <Flex
-            sx={{
-              "@media(max-width: 640px)": {
-                width: "100%",
-                justifyContent: "center",
-                visibility: detailShow ? "hidden" : "visible",
-                height: detailShow ? "0px" : "auto",
-              },
-            }}
-          >
-            <Typography
+          {matchDownMD ? (
+            <Flex
               sx={{
-                display: "none",
-                fontSize: "12px",
                 "@media(max-width: 640px)": {
-                  display: "block",
+                  width: "100%",
+                  justifyContent: "center",
+                  visibility: detailShow ? "hidden" : "visible",
+                  height: detailShow ? "0px" : "auto",
                 },
               }}
-              color="text.theme-secondary"
             >
-              <Trans>Detail</Trans>
-            </Typography>
-            {detailShow ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown
+              <Typography
                 sx={{
-                  color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  display: "none",
+                  fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    display: "block",
+                  },
                 }}
-              />
-            )}
-          </Flex>
+                color="text.theme-secondary"
+              >
+                <Trans>Detail</Trans>
+              </Typography>
+
+              {detailShow ? (
+                <KeyboardArrowUp />
+              ) : (
+                <KeyboardArrowDown
+                  sx={{
+                    color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  }}
+                />
+              )}
+            </Flex>
+          ) : (
+            <Flex
+              sx={{
+                justifyContent: "flex-end",
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleShow();
+              }}
+            >
+              {detailShow ? (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowDown
+                    sx={{
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
 

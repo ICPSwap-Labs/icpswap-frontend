@@ -1,14 +1,13 @@
-import { useState, useMemo } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Trans, t } from "@lingui/macro";
-import { enumToString, shorten, formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, SortDirection, SwapTransactionPriceTip } from "@icpswap/ui";
+import { useState, useMemo, useCallback } from "react";
+import { t, Trans } from "@lingui/macro";
+import { enumToString } from "@icpswap/utils";
+import { Header, HeaderCell, SortDirection, TransactionRow } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "ui-component/pagination/cus";
-import dayjs from "dayjs";
-import { ImageLoading, Copy, NoData } from "ui-component/index";
-import { Theme } from "@mui/material/styles";
+import { ImageLoading, NoData } from "ui-component/index";
+import { Box, Typography, useTheme, makeStyles } from "ui-component/Mui";
+import { useTips, TIP_SUCCESS } from "hooks/index";
+import copyToClipboard from "copy-to-clipboard";
 
 const useStyles = makeStyles(() => {
   return {
@@ -24,33 +23,6 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-
-export function ActionTypeFormat(transaction: PoolStorageTransaction) {
-  const type = enumToString(transaction.action);
-
-  let swapDesc = "";
-
-  switch (type) {
-    case "swap":
-      swapDesc = t`Swap ${transaction.token0Symbol} for ${transaction.token1Symbol}`;
-      break;
-    case "increaseLiquidity":
-    case "addLiquidity":
-    case "mint":
-      swapDesc = t`Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`;
-      break;
-    case "decreaseLiquidity":
-      swapDesc = t`Remove ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    case "claim":
-      swapDesc = t`Collect ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    default:
-      break;
-  }
-
-  return swapDesc;
-}
 
 export interface TransactionsProps {
   transactions: PoolStorageTransaction[] | undefined | null;
@@ -69,10 +41,10 @@ export default function Transactions({
   hasFilter,
   showedTokens,
 }: TransactionsProps) {
-  const theme = useTheme() as Theme;
-  const [page, setPage] = useState(1);
-
+  const theme = useTheme();
   const classes = useStyles();
+  const [openTip] = useTips();
+  const [page, setPage] = useState(1);
 
   const [sortField, setSortField] = useState<string>("timestamp");
   const [filter, setFilter] = useState<Filter>("all");
@@ -132,6 +104,11 @@ export default function Transactions({
     setFilter(filter);
   };
 
+  const handleCopy = useCallback((address: string) => {
+    copyToClipboard(address);
+    openTip(t`Copy Success`, TIP_SUCCESS);
+  }, []);
+
   return (
     <Box>
       <Header className={classes.wrapper} onSortChange={handleSortChange} defaultSortFiled={sortField}>
@@ -179,29 +156,12 @@ export default function Transactions({
       </Header>
 
       {(sortedTransactions ?? []).map((transaction, index) => (
-        <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
-          <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
-
-          <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
-
-          <BodyCell>
-            {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
-            <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
-          </BodyCell>
-
-          <BodyCell>
-            {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
-            <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
-          </BodyCell>
-
-          <BodyCell>
-            <Copy content={transaction.recipient}>
-              <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
-            </Copy>
-          </BodyCell>
-
-          <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-        </TableRow>
+        <TransactionRow
+          key={`${String(transaction.timestamp)}_${index}`}
+          className={classes.wrapper}
+          transaction={transaction}
+          onAddressClick={handleCopy}
+        />
       ))}
 
       {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}

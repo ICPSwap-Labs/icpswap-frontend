@@ -87,7 +87,10 @@ function useCollectFeeCalls() {
           return result;
         };
 
-        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]);
+        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]).catch((err) => {
+          console.warn("Claim fees error: ", err);
+          return [false, false];
+        });
 
         if (refresh) refresh();
 

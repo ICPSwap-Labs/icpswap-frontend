@@ -1,5 +1,5 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex, Tooltip } from "@icpswap/ui";
+import { Flex, Tooltip, APRPanel } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import {
   useIntervalUserFarmInfo,
@@ -155,9 +155,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.apr" }}>
-          {apr ?? "--"}
-        </Typography>
+        {apr ? <APRPanel value={apr} /> : "--"}
       </Flex>
 
       <Flex gap="0 4px" justify="flex-end" className="row-item">

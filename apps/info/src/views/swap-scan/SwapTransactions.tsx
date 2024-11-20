@@ -1,23 +1,15 @@
 import { useSwapTransactions } from "hooks/info/useScanSwapTransactions";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { LoadingRow, SelectPair, Pagination, PaginationType, Copy, NoData } from "ui-component/index";
+import { LoadingRow, SelectPair, Pagination, PaginationType, NoData } from "ui-component/index";
 import { useHistory, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { useState, useEffect, useCallback } from "react";
+import { Box, Typography, Button, CircularProgress, makeStyles } from "ui-component/Mui";
 import { Trans, t } from "@lingui/macro";
-import {
-  formatDollarAmount,
-  formatAmount,
-  enumToString,
-  pageArgsFormat,
-  shorten,
-  locationSearchReplace,
-} from "@icpswap/utils";
-import { Header, HeaderCell, TableRow, BodyCell, SwapTransactionPriceTip, Flex } from "@icpswap/ui";
-import { PoolStorageTransaction } from "@icpswap/types";
-import dayjs from "dayjs";
+import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
+import { Header, HeaderCell, Flex, TransactionRow } from "@icpswap/ui";
 import { useSwapScanTransactionDownload } from "hooks/info/useSwapScanDownloadTransaction";
+import { useTips, TIP_SUCCESS } from "hooks/index";
+import copyToClipboard from "copy-to-clipboard";
 
 import SwapScanWrapper, { ScanChildrenProps } from "./SwapScanWrapper";
 
@@ -36,33 +28,6 @@ const useStyles = makeStyles(() => {
   };
 });
 
-export function ActionTypeFormat(transaction: PoolStorageTransaction) {
-  const type = enumToString(transaction.action);
-
-  let swapDesc = "";
-
-  switch (type) {
-    case "swap":
-      swapDesc = t`Swap ${transaction.token0Symbol} for ${transaction.token1Symbol}`;
-      break;
-    case "increaseLiquidity":
-    case "addLiquidity":
-    case "mint":
-      swapDesc = t`Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`;
-      break;
-    case "decreaseLiquidity":
-      swapDesc = t`Remove ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    case "claim":
-      swapDesc = t`Collect ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    default:
-      break;
-  }
-
-  return swapDesc;
-}
-
 const PageSize = 10;
 
 interface TransactionsProps {
@@ -73,6 +38,7 @@ function Transactions({ address }: TransactionsProps) {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
+  const [openTip] = useTips();
 
   const { pair } = useParsedQueryString() as { pair: string };
 
@@ -106,15 +72,21 @@ function Transactions({ address }: TransactionsProps) {
     setPagination({ pageNum: 1, pageSize: 10 });
   }, [address]);
 
+  const handleCopy = useCallback((address: string) => {
+    copyToClipboard(address);
+    openTip(t`Copy Success`, TIP_SUCCESS);
+  }, []);
+
   return (
     <>
       <Box
         sx={{
           display: "flex",
           margin: "10px 0 0 0",
-          gap: "0 16px",
+          gap: "10px 16px",
           alignItems: "center",
           justifyContent: "space-between",
+          flexWrap: "wrap",
         }}
       >
         <Flex gap="0 16px">
@@ -123,16 +95,15 @@ function Transactions({ address }: TransactionsProps) {
           </Box>
           {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
         </Flex>
-        <Flex>
-          <Button
-            variant="contained"
-            onClick={download}
-            disabled={downloadLoading}
-            startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
-          >
-            <Trans>Download: Excel Export</Trans>
-          </Button>
-        </Flex>
+
+        <Button
+          variant="contained"
+          onClick={download}
+          disabled={downloadLoading}
+          startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
+        >
+          <Trans>Download: Excel Export</Trans>
+        </Button>
       </Box>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
@@ -163,29 +134,12 @@ function Transactions({ address }: TransactionsProps) {
             </Header>
 
             {(transactions ?? []).map((transaction, index) => (
-              <TableRow key={`${String(transaction.timestamp)}_${index}`} className={classes.wrapper}>
-                <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
-
-                <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
-
-                <BodyCell>
-                  {formatAmount(transaction.token0ChangeAmount, 4)}{" "}
-                  <SwapTransactionPriceTip symbol={transaction.token0Symbol} price={transaction.token0Price} />
-                </BodyCell>
-
-                <BodyCell>
-                  {formatAmount(transaction.token1ChangeAmount, 4)}{" "}
-                  <SwapTransactionPriceTip symbol={transaction.token1Symbol} price={transaction.token1Price} />
-                </BodyCell>
-
-                <BodyCell>
-                  <Copy content={transaction.recipient}>
-                    <BodyCell color="primary.main">{shorten(transaction.recipient, 8)}</BodyCell>
-                  </Copy>
-                </BodyCell>
-
-                <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-              </TableRow>
+              <TransactionRow
+                key={`${String(transaction.timestamp)}_${index}`}
+                transaction={transaction}
+                className={classes.wrapper}
+                onAddressClick={handleCopy}
+              />
             ))}
 
             {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}

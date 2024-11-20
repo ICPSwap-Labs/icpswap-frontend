@@ -47,7 +47,7 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
           background: theme.palette.background.level2,
         },
         "@media(max-width: 640px)": {
-          padding: "10px 6px",
+          padding: "10px 12px",
         },
       }}
     >

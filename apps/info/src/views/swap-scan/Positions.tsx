@@ -133,7 +133,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 
           <BodyCell>{totalUSDValue ? `$${toFormat(totalUSDValue)}` : "--"}</BodyCell>
 
-          <BodyCell>
+          <BodyCell sx={{ flexDirection: "column" }}>
             <Typography>
               {position
                 ? `${toSignificant(position.amount0.toExact(), 12, { groupSeparator: "," })} ${pool.token0.symbol}`
@@ -147,7 +147,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             </Typography>
           </BodyCell>
 
-          <BodyCell>
+          <BodyCell sx={{ flexDirection: "column" }}>
             <Typography sx={{ display: "flex", alignItems: "center" }}>
               {!!token1 && !!token0
                 ? inverted
@@ -173,7 +173,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             </Typography>
           </BodyCell>
 
-          <BodyCell>
+          <BodyCell sx={{ flexDirection: "column" }}>
             <Typography>
               {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
                 ? `${toFormat(

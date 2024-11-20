@@ -39,7 +39,7 @@ export function PoolCharts({ open, onClose, pool }: PoolChartsProps) {
 
         <Box mt="16px">
           <MainCard level={2} padding="20px">
-            <InfoPoolCharts canisterId={pool.pool} token0Price={pool.token0Price} />
+            <InfoPoolCharts canisterId={pool.pool} token0Price={pool.token0Price} volume24H={pool.volumeUSD} />
           </MainCard>
         </Box>
       </>

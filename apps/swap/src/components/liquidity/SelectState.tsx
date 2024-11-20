@@ -49,7 +49,7 @@ export function SelectPositionState({ value: state, onChange, border, filled, fu
       showClean={false}
       showBackground={false}
       valueColor="text.secondary"
-      panelPadding="9px 0"
+      panelPadding="0"
       panel={(menu) => {
         if (!menu) return null;
         return <Typography color="text.primary">{menu.value}</Typography>;

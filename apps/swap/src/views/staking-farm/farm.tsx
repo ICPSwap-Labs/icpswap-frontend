@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, TabPanel, type Tab } from "components/index";
 import { useIntervalUserFarmInfo } from "hooks/staking-farm";
-import { useTheme } from "@mui/styles";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { useV3FarmRewardMetadata } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
@@ -20,7 +18,7 @@ const tabs = [
 ];
 
 export default function Farm() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
 
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
@@ -42,7 +40,7 @@ export default function Farm() {
   };
 
   return (
-    <Flex sx={{ width: "100%" }} justify="center">
+    <Flex sx={{ width: "100%", padding: "0 0 24px 0" }} justify="center">
       <Box sx={{ width: "100%", maxWidth: "1120px", margin: "16px 0 0 0" }}>
         <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="back" />
 
