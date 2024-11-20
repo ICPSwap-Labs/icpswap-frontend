@@ -13,6 +13,7 @@ export interface PoolCurrentPriceProps {
   showInverted?: boolean;
   fontSize?: string;
   sx?: BoxProps["sx"];
+  onInverted?: (inverted: boolean) => void;
 }
 
 export function PoolCurrentPrice({
@@ -21,6 +22,7 @@ export function PoolCurrentPrice({
   showInverted = false,
   fontSize = "12px",
   sx,
+  onInverted,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -70,6 +72,7 @@ export function PoolCurrentPrice({
       onClick={() => {
         if (showInverted) {
           setManuallyInverted(!manuallyInverted);
+          if (onInverted) onInverted(!manuallyInverted);
         }
       }}
     >

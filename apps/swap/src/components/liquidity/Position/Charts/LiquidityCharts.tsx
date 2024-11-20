@@ -1,14 +1,13 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Box, Typography } from "components/Mui";
 import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { PoolCurrentPrice } from "components/swap/index";
-import { PositionPriceRange } from "components/liquidity/index";
 import { Trans } from "@lingui/macro";
 import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
-import { ChartTimeEnum } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { ChartTimeEnum, Null } from "@icpswap/types";
+import { isNullArgs, nonNullArgs, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 
 import PriceRangeChart from "./RangeCharts";
 
@@ -18,6 +17,8 @@ export interface LiquidityChartsProps {
 }
 
 export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
+  const [inverted, setInverted] = useState(false);
+
   const pool = position.pool;
   const { token0, token1, fee } = pool;
 
@@ -47,19 +48,46 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     [tickSpaceLimits, position],
   );
 
-  const { poolPriceLower, poolPriceUpper } = useMemo(() => {
+  const { poolPriceLower, poolPriceUpper, sortedPoolPriceLower, sortedPoolPriceUpper } = useMemo(() => {
     if (isNullArgs(periodPriceRange)) return {};
 
+    let poolPriceLower: number | string | Null = null;
+    let poolPriceUpper: number | string | Null = null;
+
     if (time === ChartTimeEnum["24H"]) {
-      return { poolPriceLower: periodPriceRange.priceLow24H, poolPriceUpper: periodPriceRange.priceHigh24H };
+      poolPriceLower = periodPriceRange.priceLow24H;
+      poolPriceUpper = periodPriceRange.priceHigh24H;
+    } else if (time === ChartTimeEnum["7D"]) {
+      poolPriceLower = periodPriceRange.priceLow7D;
+      poolPriceUpper = periodPriceRange.priceHigh7D;
+    } else {
+      poolPriceLower = periodPriceRange.priceLow30D;
+      poolPriceUpper = periodPriceRange.priceHigh30D;
     }
 
-    if (time === ChartTimeEnum["7D"]) {
-      return { poolPriceLower: periodPriceRange.priceLow7D, poolPriceUpper: periodPriceRange.priceHigh7D };
-    }
+    return {
+      sortedPoolPriceLower: poolPriceLower,
+      poolPriceLower: !inverted
+        ? poolPriceLower
+        : poolPriceLower
+        ? poolPriceUpper
+          ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+          : null
+        : null,
+      sortedPoolPriceUpper: poolPriceUpper,
+      poolPriceUpper: !inverted
+        ? poolPriceUpper
+        : poolPriceUpper
+        ? poolPriceLower
+          ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+          : null
+        : null,
+    };
+  }, [periodPriceRange, inverted, time]);
 
-    return { poolPriceLower: periodPriceRange.priceLow30D, poolPriceUpper: periodPriceRange.priceHigh30D };
-  }, [periodPriceRange, time]);
+  const handleInverted = useCallback((inverted: boolean) => {
+    setInverted(inverted);
+  }, []);
 
   return (
     <>
@@ -70,8 +98,8 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
         currencyB={token1}
         price={currentPrice}
         ticksAtLimit={ticksAtLimit}
-        poolPriceLower={poolPriceLower}
-        poolPriceUpper={poolPriceUpper}
+        poolPriceLower={sortedPoolPriceLower}
+        poolPriceUpper={sortedPoolPriceUpper}
       />
 
       <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>
@@ -84,19 +112,26 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
             </Typography>
           </Flex>
 
-          <PoolCurrentPrice pool={position.pool} showInverted />
+          <PoolCurrentPrice pool={position.pool} showInverted onInverted={handleInverted} />
         </Flex>
 
         <Flex gap="8px 3px" wrap="wrap">
           <Flex gap="0 12px">
             <Box sx={{ background: SWAP_CHART_RANGE_PRICE_COLOR, width: "8px", height: "2px" }} />
 
-            <Typography fontSize="12px">
-              <Trans>Position Price Range:</Trans>
+            <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
+              <Trans>{time} Price Range:</Trans>&nbsp;
             </Typography>
           </Flex>
 
-          <PositionPriceRange position={position} fontSize="12px" nameColor="text.secondary" />
+          <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
+            {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
+              ? `${toSignificantWithGroupSeparator(poolPriceLower, 6)} - ${toSignificantWithGroupSeparator(
+                  poolPriceUpper,
+                  6,
+                )}`
+              : "--"}
+          </Typography>
         </Flex>
       </Flex>
     </>
