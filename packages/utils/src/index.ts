@@ -32,3 +32,4 @@ export * from "./classes";
 export * from "./feeAmountToPercent";
 export * from "./swap";
 export * from "./locationSearchReplace";
+export * from "./numDecimals";

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
-import { Grid, Box, Typography, CircularProgress } from "components/Mui";
+import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import { toSignificant, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
+import { toSignificant, isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useExpertModeManager } from "store/swap/cache/hooks";
@@ -156,28 +156,21 @@ export const SwapWrapper = forwardRef(
       [currencyA],
     );
 
-    const handleInput = useCallback(
-      (value: string, type: "input" | "output") => {
-        if (nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-          if (type === "input") {
-            onUserInput(
-              SWAP_FIELD.INPUT,
-              new BigNumber(value).toFixed(
-                inputToken.decimals > SAFE_DECIMALS_LENGTH ? SAFE_DECIMALS_LENGTH : inputToken.decimals,
-              ),
-            );
-          } else {
-            onUserInput(
-              SWAP_FIELD.OUTPUT,
-              new BigNumber(value).toFixed(
-                outputToken.decimals > SAFE_DECIMALS_LENGTH ? SAFE_DECIMALS_LENGTH : outputToken.decimals,
-              ),
-            );
-          }
-        }
-      },
-      [inputToken, outputToken],
-    );
+    const handleInput = useCallback((value: string, type: "input" | "output") => {
+      const numDecimals = getNumberDecimals(value);
+
+      if (type === "input") {
+        onUserInput(
+          SWAP_FIELD.INPUT,
+          new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
+      } else {
+        onUserInput(
+          SWAP_FIELD.OUTPUT,
+          new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
+      }
+    }, []);
 
     const needImpactConfirm = useMemo(() => {
       if (!usdValueChange) return false;
@@ -309,10 +302,10 @@ export const SwapWrapper = forwardRef(
           >
             <Box sx={{ display: "grid", gap: "20px 0", gridTemplateColumns: "1fr" }}>
               {isLoadingRoute ? (
-                <Grid container justifyContent="flex-start" alignItems="center">
+                <Flex fullWidth justify="flex-start" align="center">
                   <CircularProgress size={14} color="inherit" />
                   <Typography sx={{ margin: "0 0 0 4px" }}>Fetching price...</Typography>
-                </Grid>
+                </Flex>
               ) : trade ? (
                 <TradePrice
                   poolId={trade.swaps[0].route.pools[0].id}
