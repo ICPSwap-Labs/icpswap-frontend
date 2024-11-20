@@ -1,3 +1,4 @@
+import { isNullArgs } from "@icpswap/utils";
 import { network, NETWORK } from "./server";
 
 export const ASSETS_DECIMALS = 2;
@@ -35,7 +36,7 @@ export const NFT_UPLOAD_FILES = [
 ];
 
 export const CurrencyAmountFormatDecimals = (decimals: number | bigint | undefined) => {
-  if (!decimals) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
+  if (isNullArgs(decimals)) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   if (Number(decimals) > TOKEN_AMOUNT_DISPLAY_DECIMALS) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   return Number(decimals);
 };

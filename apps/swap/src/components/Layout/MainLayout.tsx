@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { makeStyles, useTheme, Box, Theme, Typography } from "components/Mui";
+import { makeStyles, useTheme, Box, Theme } from "components/Mui";
 import { Flex, GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
@@ -85,41 +85,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
         {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
         {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
-        {location.pathname.includes("/stake/v1") ? (
-          <GlobalTips>
-            <Typography
-              sx={{
-                color: "#ffffff",
-                cursor: "pointer",
-                "@media(max-width: 640px)": { fontSize: "12px" },
-              }}
-            >
-              Support for Staking Pool V1 will end on{" "}
-              <Typography
-                component="span"
-                sx={{
-                  color: "#ffffff",
-                  fontWeight: 600,
-                  "@media(max-width: 640px)": { fontSize: "12px" },
-                }}
-              >
-                November 5, 2024
-              </Typography>
-              . Please&nbsp;
-              <Typography
-                component="span"
-                sx={{
-                  color: "#ffffff",
-                  fontWeight: 600,
-                  "@media(max-width: 640px)": { fontSize: "12px" },
-                }}
-              >
-                Withdraw Your Rewards & Tokens
-              </Typography>
-              &nbsp; before this date. Thank you for your understanding!
-            </Typography>
-          </GlobalTips>
-        ) : null}
 
         <main className={`${classes.content} ${isSmallPadding ? "small-padding" : ""}`}>{children}</main>
       </Box>

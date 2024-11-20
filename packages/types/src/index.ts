@@ -5,7 +5,6 @@ export * from "./token";
 export * from "./info";
 export * from "./nft";
 export * from "./staking-farm";
-export * from "./v1-staking-token";
 export * from "./staking-token";
 export * from "./token-claim";
 export * from "./voting";

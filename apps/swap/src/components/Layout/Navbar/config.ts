@@ -48,7 +48,6 @@ export const routes: Route[] = [
     subMenus: [
       { key: "farm", name: `Farm`, path: "/farm" },
       { key: "staking-token", name: `Staking Pool V2`, path: "/stake" },
-      { key: "staking v1", name: `Staking Pool V1`, path: "/stake/v1" },
     ],
   },
   {

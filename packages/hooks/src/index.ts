@@ -10,7 +10,6 @@ export * from "./icp";
 export * from "./nft";
 export * from "./staking-farm";
 export * from "./staking-token";
-export * from "./staking-token/v1";
 export * from "./voting";
 export * from "./wrap";
 export * from "./token";
