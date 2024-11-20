@@ -2,10 +2,9 @@ import { useMemo } from "react";
 import { area, curveStepAfter, ScaleLinear } from "d3";
 import inRange from "lodash/inRange";
 import { Box } from "components/Mui";
+import { SWAP_CHART_RANGE_AREA_COLOR } from "constants/swap";
 
 import { ChartEntry } from "./types";
-
-const COLOR_BLUE_2 = "#0068FC";
 
 export interface AreaProps {
   series: ChartEntry[];
@@ -21,7 +20,7 @@ export function Area({ series, xScale, yScale, xValue, yValue, fill }: AreaProps
     () => (
       <Box
         component="path"
-        sx={{ opacity: 0.5, stroke: fill ?? COLOR_BLUE_2, fill: fill ?? COLOR_BLUE_2 }}
+        sx={{ opacity: 0.5, stroke: fill ?? SWAP_CHART_RANGE_AREA_COLOR, fill: fill ?? SWAP_CHART_RANGE_AREA_COLOR }}
         fill={fill}
         d={
           area()

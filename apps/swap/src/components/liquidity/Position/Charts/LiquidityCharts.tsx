@@ -2,19 +2,22 @@ import { useMemo } from "react";
 import { Box, Typography } from "components/Mui";
 import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
-import { usePositionPricePeriodRange } from "@icpswap/hooks";
+import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { PoolCurrentPrice } from "components/swap/index";
 import { PositionPriceRange } from "components/liquidity/index";
 import { Trans } from "@lingui/macro";
 import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
+import { ChartTimeEnum } from "@icpswap/types";
+import { isNullArgs } from "@icpswap/utils";
 
 import PriceRangeChart from "./RangeCharts";
 
 export interface LiquidityChartsProps {
   position: Position;
+  time: ChartTimeEnum;
 }
 
-export function LiquidityCharts({ position }: LiquidityChartsProps) {
+export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   const pool = position.pool;
   const { token0, token1, fee } = pool;
 
@@ -26,7 +29,7 @@ export function LiquidityCharts({ position }: LiquidityChartsProps) {
     ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
     : position.pool.token1Price.toFixed(position.pool.token1.decimals);
 
-  const { result: periodPriceRange } = usePositionPricePeriodRange(pool.id);
+  const { result: periodPriceRange } = usePoolPricePeriodRange(pool.id);
 
   const tickSpaceLimits = useMemo(
     () => ({
@@ -44,6 +47,20 @@ export function LiquidityCharts({ position }: LiquidityChartsProps) {
     [tickSpaceLimits, position],
   );
 
+  const { poolPriceLower, poolPriceUpper } = useMemo(() => {
+    if (isNullArgs(periodPriceRange)) return {};
+
+    if (time === ChartTimeEnum["24H"]) {
+      return { poolPriceLower: periodPriceRange.priceLow24H, poolPriceUpper: periodPriceRange.priceHigh24H };
+    }
+
+    if (time === ChartTimeEnum["7D"]) {
+      return { poolPriceLower: periodPriceRange.priceLow7D, poolPriceUpper: periodPriceRange.priceHigh7D };
+    }
+
+    return { poolPriceLower: periodPriceRange.priceLow30D, poolPriceUpper: periodPriceRange.priceHigh30D };
+  }, [periodPriceRange, time]);
+
   return (
     <>
       <PriceRangeChart
@@ -52,8 +69,9 @@ export function LiquidityCharts({ position }: LiquidityChartsProps) {
         currencyA={token0}
         currencyB={token1}
         price={currentPrice}
-        periodPriceRange={periodPriceRange}
         ticksAtLimit={ticksAtLimit}
+        poolPriceLower={poolPriceLower}
+        poolPriceUpper={poolPriceUpper}
       />
 
       <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>

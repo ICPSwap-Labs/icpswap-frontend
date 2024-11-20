@@ -4,11 +4,19 @@ import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { batch } from "react-redux";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import {
+  Bound,
+  FeeAmount,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  SWAP_CHART_RANGE_LEFT_COLOR,
+  SWAP_CHART_RANGE_RIGHT_COLOR,
+  SWAP_CHART_RANGE_AREA_COLOR,
+} from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { t } from "@lingui/macro";
+import { Null } from "@icpswap/types";
 
 import { ZoomLevels } from "./types";
 import { Chart } from "./Chart";
@@ -57,7 +65,8 @@ export interface LiquidityChartRangeInputProps {
   priceUpper?: Price<Token, Token>;
   onLeftRangeInput?: (typedValue: string) => void;
   onRightRangeInput?: (typedValue: string) => void;
-  interactive: boolean;
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export default function LiquidityChartRangeInput({
@@ -70,13 +79,10 @@ export default function LiquidityChartRangeInput({
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
-  interactive,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
-
-  const tokenAColor = "#788686";
-  const tokenBColor = "#bb8d00";
-  const COLOR_BLUE = "#0068FC";
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped);
 
@@ -115,7 +121,7 @@ export default function LiquidityChartRangeInput({
     [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   );
 
-  const _interactive = interactive && Boolean(formattedData?.length);
+  const interactive = Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     const leftPrice = isSorted ? priceLower : priceUpper?.invert();
@@ -170,21 +176,23 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 0, right: 0, bottom: 30, left: 0 }}
             styles={{
               area: {
-                selection: COLOR_BLUE,
+                selection: SWAP_CHART_RANGE_AREA_COLOR,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor),
-                  east: saturate(0.1, tokenBColor) ?? COLOR_BLUE,
+                  west: saturate(0.1, SWAP_CHART_RANGE_LEFT_COLOR),
+                  east: saturate(0.1, SWAP_CHART_RANGE_RIGHT_COLOR),
                 },
               },
             }}
-            interactive={_interactive}
+            interactive={interactive}
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
             ticksAtLimit={ticksAtLimit}
+            poolPriceLower={poolPriceLower}
+            poolPriceUpper={poolPriceUpper}
           />
         </Flex>
       )}

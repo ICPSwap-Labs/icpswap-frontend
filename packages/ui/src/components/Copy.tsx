@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 
 export interface CopyProps {
   content: string | undefined;
-  children: React.ReactChild;
+  children: React.ReactNode;
   hide?: boolean;
   onCopy?: () => void;
 }

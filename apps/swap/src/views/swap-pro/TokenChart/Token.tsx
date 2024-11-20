@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui";
 import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
-import { formatDollarAmountV1 } from "@icpswap/utils";
+import { formatDollarTokenPrice } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
@@ -145,7 +145,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken ? formatDollarAmountV1({ num: infoToken.priceUSD }) : "--"}
+            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>

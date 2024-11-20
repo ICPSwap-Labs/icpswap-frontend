@@ -4,6 +4,7 @@ import WalletPageToggle from "components/Wallet/PageToggle";
 import { SelectSortType } from "components/Wallet/SelectSortType";
 import { useWalletSortManager, useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalance } from "components/Wallet/SortBalance";
+import { SyncUserTokens } from "components/SyncUserTokens";
 
 export interface TokenHeaderProps {
   onHideSmallBalances: (checked: boolean) => void;
@@ -30,29 +31,35 @@ export default function TokenListHeader() {
         <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
           {!matchDownSM ? (
             <>
-              <Box>
-                <SelectSortType value={sort} onChange={updateWalletSortType} />
-              </Box>
+              <SelectSortType value={sort} onChange={updateWalletSortType} />
 
-              <Box>
-                <SortBalance value={sortBalance} onChange={updateSortBalance} />
-              </Box>
+              <SortBalance value={sortBalance} onChange={updateSortBalance} />
+
+              <SyncUserTokens />
+
+              <AddToken />
             </>
           ) : null}
 
-          <AddToken />
+          {matchDownSM ? <AddToken /> : null}
         </Box>
       </Box>
 
       {matchDownSM ? (
-        <Box sx={{ margin: "10px 0 0 0", display: "flex", justifyContent: "space-between" }}>
-          <Box>
-            <SelectSortType value={sort} onChange={updateWalletSortType} />
-          </Box>
+        <Box
+          sx={{
+            margin: "10px 0 0 0",
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
+        >
+          <SelectSortType value={sort} onChange={updateWalletSortType} />
 
-          <Box>
-            <SortBalance value={sortBalance} onChange={updateSortBalance} />
-          </Box>
+          <SortBalance value={sortBalance} onChange={updateSortBalance} />
+
+          <SyncUserTokens />
         </Box>
       ) : null}
     </Box>

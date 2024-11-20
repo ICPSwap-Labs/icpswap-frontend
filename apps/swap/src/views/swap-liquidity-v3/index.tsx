@@ -2,6 +2,7 @@ import { useState, memo, useCallback, useRef } from "react";
 import { Box, Typography } from "components/Mui";
 import { MainCard, Flex } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
+import { SwapProButton } from "components/swap/SwapProButton";
 import { t } from "@lingui/macro";
 import {
   SwapWrapper,
@@ -139,7 +140,10 @@ export function SwapMain() {
                   ))}
                 </Box>
 
-                {activeTab === TABS.SWAP ? <SwapSettingIcon type="swap" /> : null}
+                <Flex gap="0 4px">
+                  <SwapProButton inputToken={inputToken} outputToken={outputToken} />
+                  {activeTab === TABS.SWAP ? <SwapSettingIcon type="swap" /> : null}
+                </Flex>
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>

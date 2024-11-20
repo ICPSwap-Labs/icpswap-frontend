@@ -2,6 +2,7 @@ import { useState, useContext, useMemo, useEffect } from "react";
 import { Typography, Box, useTheme, makeStyles } from "components/Mui";
 import {
   formatDollarAmount,
+  formatDollarTokenPrice,
   parseTokenAmount,
   mockALinkAndOpen,
   BigNumber,
@@ -313,6 +314,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
                   .multipliedBy(tokenUSDPrice)
                   .toString(),
                 4,
+                0.01,
               )}`
               : "--"}
           </Typography>
@@ -320,7 +322,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Price</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {tokenUSDPrice ? formatDollarAmount(tokenUSDPrice) : "--"}
+            {tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
           </Typography>
         </Box>
       </Box>

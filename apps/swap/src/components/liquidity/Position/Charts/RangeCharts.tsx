@@ -1,14 +1,21 @@
-import { useCallback, useMemo, ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
-import { FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX, Bound } from "constants/swap";
+import {
+  FeeAmount,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  Bound,
+  SWAP_CHART_RANGE_AREA_COLOR,
+  SWAP_CHART_RANGE_LEFT_COLOR,
+  SWAP_CHART_RANGE_RIGHT_COLOR,
+} from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { t } from "@lingui/macro";
-import type { Null, PositionPricePeriodRange } from "@icpswap/types";
-
+import type { Null } from "@icpswap/types";
 import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+
 import { Chart } from "./Chart";
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
@@ -52,8 +59,9 @@ export interface LiquidityChartRangeInputProps {
   price: number | undefined | string;
   priceLower?: Price<Token, Token>;
   priceUpper?: Price<Token, Token>;
-  periodPriceRange: PositionPricePeriodRange | Null;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export default function LiquidityChartRangeInput({
@@ -63,12 +71,14 @@ export default function LiquidityChartRangeInput({
   price,
   priceLower,
   priceUpper,
-  periodPriceRange,
   ticksAtLimit,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
+  const wrapperRef = useRef<HTMLDivElement>();
 
-  const COLOR_BLUE = "#0068FC";
+  const [wrapperWidth, setWrapperWidth] = useState<null | number>(null);
 
   const { isLoading, isUninitialized, isError, formattedData } = useDensityChartData({
     currencyA,
@@ -76,8 +86,15 @@ export default function LiquidityChartRangeInput({
     feeAmount: feeAmount ?? FeeAmount.MEDIUM,
   });
 
+  useEffect(() => {
+    if (wrapperRef.current) {
+      const width = wrapperRef.current.clientWidth;
+      setWrapperWidth(width);
+    }
+  }, [wrapperRef]);
+
   return (
-    <Box style={{ minHeight: "200px" }}>
+    <Box style={{ minHeight: "200px" }} ref={wrapperRef}>
       {isUninitialized ? (
         <InfoBox
           message={t`Your position will appear here.`}
@@ -97,24 +114,29 @@ export default function LiquidityChartRangeInput({
         />
       ) : (
         <Flex fullWidth justify="center">
-          <Chart
-            data={{
-              series: formattedData,
-              current: Number(price),
-              lower: priceLower ? Number(priceLower?.toFixed()) : undefined,
-              upper: priceUpper ? Number(priceUpper.toFixed()) : undefined,
-            }}
-            dimensions={{ width: 400, height: 220 }}
-            margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
-            styles={{
-              area: {
-                selection: COLOR_BLUE,
-              },
-            }}
-            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
-            periodPriceRange={periodPriceRange}
-            ticksAtLimit={ticksAtLimit}
-          />
+          {wrapperWidth ? (
+            <Chart
+              data={{
+                series: formattedData,
+                current: Number(price),
+                lower: priceLower ? Number(priceLower?.toFixed()) : undefined,
+                upper: priceUpper ? Number(priceUpper.toFixed()) : undefined,
+              }}
+              dimensions={{ width: wrapperWidth, height: 265 }}
+              margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
+              styles={{
+                area: {
+                  selection: SWAP_CHART_RANGE_AREA_COLOR,
+                  leftColor: SWAP_CHART_RANGE_LEFT_COLOR,
+                  rightColor: SWAP_CHART_RANGE_RIGHT_COLOR,
+                },
+              }}
+              zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
+              ticksAtLimit={ticksAtLimit}
+              poolPriceLower={poolPriceLower}
+              poolPriceUpper={poolPriceUpper}
+            />
+          ) : null}
         </Flex>
       )}
     </Box>

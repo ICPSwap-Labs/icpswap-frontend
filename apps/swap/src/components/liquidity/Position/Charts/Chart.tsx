@@ -1,13 +1,12 @@
 import { max, scaleLinear, ZoomTransform } from "d3";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "components/Mui";
-import { Area } from "components/liquidity/PriceRangeChart/Area";
-import { AxisBottom } from "components/liquidity/PriceRangeChart/AxisBottom";
-import { Line } from "components/liquidity/PriceRangeChart/Line";
+import { PriceLine, Area, AxisBottom } from "components/liquidity/Charts/index";
 import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 import { ChartEntry, ZoomLevels, Dimensions, Margins } from "components/liquidity/PriceRangeChart/types";
-import type { Null, PositionPricePeriodRange } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { Bound } from "constants/swap";
+import { nonNullArgs } from "@icpswap/utils";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -25,13 +24,16 @@ interface LiquidityChartsProps {
     area: {
       // color of the ticks in range
       selection: string;
+      leftColor: string;
+      rightColor: string;
     };
   };
   dimensions: Dimensions;
   margins: Margins;
   zoomLevels: ZoomLevels;
-  periodPriceRange: PositionPricePeriodRange | Null;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export function Chart({
@@ -40,8 +42,9 @@ export function Chart({
   dimensions: { width, height },
   margins,
   zoomLevels,
-  periodPriceRange,
-  ticksAtLimit,
+  poolPriceLower,
+  poolPriceUpper,
+  styles,
 }: LiquidityChartsProps) {
   const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
@@ -76,6 +79,9 @@ export function Chart({
     setZoom(null);
   }, [zoomLevels]);
 
+  const areaLower = lower;
+  const areaUpper = upper;
+
   return (
     <>
       <Zoom
@@ -91,44 +97,70 @@ export function Chart({
         noIcons
       />
 
-      <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible" }}>
+      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible" }}>
         <defs>
+          <linearGradient id={`${id}-range-area`} x1="0%" y1="100%" x2="100%" y2="100%">
+            <stop stopColor={styles.area.leftColor} offset="0%" />
+            <stop stopColor={styles.area.rightColor} offset="100%" />
+          </linearGradient>
+
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
 
-          {/* {periodPriceRange && (
+          {nonNullArgs(areaLower) && nonNullArgs(areaUpper) && (
             // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
-              <rect fill="white" x={xScale(0.001)} y="0" width={xScale(0.004) - xScale(0.001)} height={innerHeight} />
+              <rect
+                fill={`url(#${id}-range-area`}
+                x={xScale(Number(areaLower))}
+                y="0"
+                width={xScale(Number(areaUpper)) - xScale(Number(areaLower))}
+                height={innerHeight}
+                fillOpacity={0.5}
+              />
             </mask>
-          )} */}
+          )}
         </defs>
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
             <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
-            {/* {periodPriceRange && (
+            {nonNullArgs(areaLower) && nonNullArgs(areaUpper) && (
               // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <rect
-                  fill="white"
-                  x={xScale(0.001)}
-                  y={10}
-                  width={xScale(0.004) - xScale(0.001)}
+                  fill={`url(#${id}-range-area`}
+                  x={xScale(Number(areaLower))}
+                  y={0}
+                  width={xScale(Number(areaUpper)) - xScale(Number(areaLower))}
                   height={innerHeight}
-                  opacity={0.2}
+                  fillOpacity={0.5}
                 />
               </g>
-            )} */}
+            )}
 
-            <Line value={current} xScale={xScale} height={innerHeight} />
-            {lower ? (
-              <Line id="lower" value={lower} xScale={xScale} height={innerHeight} color={theme.colors.primaryMain} />
+            <PriceLine value={current} xScale={xScale} height={innerHeight} />
+
+            {poolPriceLower ? (
+              <PriceLine
+                id="lower"
+                value={Number(poolPriceLower)}
+                xScale={xScale}
+                height={innerHeight}
+                color={theme.colors.primaryMain}
+              />
             ) : null}
-            {upper ? (
-              <Line id="upper" value={upper} xScale={xScale} height={innerHeight} color={theme.colors.primaryMain} />
+
+            {poolPriceUpper ? (
+              <PriceLine
+                id="upper"
+                value={Number(poolPriceUpper)}
+                xScale={xScale}
+                height={innerHeight}
+                color={theme.colors.primaryMain}
+              />
             ) : null}
 
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />

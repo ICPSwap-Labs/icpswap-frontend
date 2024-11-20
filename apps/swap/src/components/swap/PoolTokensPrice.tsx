@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { nonNullArgs, formatDollarAmountV1 } from "@icpswap/utils";
+import { nonNullArgs, formatDollarTokenPrice } from "@icpswap/utils";
 import { Pool } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
@@ -31,10 +31,10 @@ export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
           {nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(pool)
             ? manuallyInverted
               ? `1 ${token1.symbol} = ${pool.priceOf(token1).toSignificant(6)} ${token0.symbol}${
-                  token1USDPrice ? ` = ${formatDollarAmountV1({ num: token1USDPrice })}` : ""
+                  token1USDPrice ? ` = ${formatDollarTokenPrice({ num: token1USDPrice })}` : ""
                 }`
               : `1 ${token0.symbol} = ${pool.priceOf(token0).toSignificant(6)} ${token1.symbol}${
-                  token0USDPrice ? ` = ${formatDollarAmountV1({ num: token0USDPrice })}` : ""
+                  token0USDPrice ? ` = ${formatDollarTokenPrice({ num: token0USDPrice })}` : ""
                 }`
             : "--"}
         </Typography>

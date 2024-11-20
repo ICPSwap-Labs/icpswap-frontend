@@ -17,7 +17,7 @@ import {
   parseTokenAmount,
   explorerLink,
   BigNumber,
-  formatDollarAmountV1,
+  formatDollarTokenPrice,
 } from "@icpswap/utils";
 import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
@@ -170,7 +170,7 @@ export function TokenDetail() {
                             : "--"}
                         </Typography>
                         <Typography sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
-                          {tokenUSDPrice && ICPPrice ? formatDollarAmountV1({ num: tokenUSDPrice }) : "--"}
+                          {tokenUSDPrice && ICPPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
                         </Typography>
                       </Box>
                       <TextButton

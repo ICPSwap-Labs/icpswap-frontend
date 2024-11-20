@@ -1,21 +1,17 @@
 import { useState } from "react";
-import { Box, ClickAwayListener, Typography } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import SettingIcon from "assets/images/swap/setting";
+import { Box, ClickAwayListener, Typography, useTheme } from "components/Mui";
 import UserSetting from "components/swap/UserSetting";
 import { Flex } from "@icpswap/ui";
-import { isDarkTheme } from "utils";
-import { Trans, t } from "@lingui/macro";
 import { useSlippageManager } from "store/swap/cache/hooks";
-import { BigNumber } from "bignumber.js";
-import { Tooltip } from "components/index";
+import { BigNumber } from "@icpswap/utils";
 
 export interface SwapSettingsProps {
   type: string;
   position?: "right" | "left";
+  ui?: "pro";
 }
 
-export default function SwapSettingIcon({ type, position = "right" }: SwapSettingsProps) {
+export default function SwapSettingIcon({ type, ui, position = "right" }: SwapSettingsProps) {
   const theme = useTheme();
   const [settingShow, setSettingShow] = useState(false);
   const [slippageTolerance] = useSlippageManager(type);
@@ -38,22 +34,19 @@ export default function SwapSettingIcon({ type, position = "right" }: SwapSettin
           },
         }}
       >
-        <Flex gap="0 4px">
-          <Tooltip
-            tips={t`In DEX trading, multiple swaps may occur simultaneously. Allowing some slippage can help ensure successful trades within price fluctuations. However, to prevent potential 'sandwich attacks' by BOTs in your trade, you might consider setting slippage to 0. This ensures your trade executes at the expected price. If a sandwich attack occurs (or simultaneous swaps happen), your trade will fail, preventing any loss, and you can Reclaim your token`}
-          />
+        <Flex
+          gap="0 4px"
+          onClick={handleToggleSettingShow}
+          sx={{
+            cursor: "pointer",
+            padding: "4px 8px",
+            borderRadius: "40px",
+            background: ui === "pro" ? theme.palette.background.level1 : theme.palette.background.level3,
+          }}
+        >
+          <Typography sx={{ fontSize: "12px" }}>{new BigNumber(slippageTolerance).div(1000).toString()}%</Typography>
 
-          <Typography sx={{ fontSize: "12px" }}>
-            <Trans>{new BigNumber(slippageTolerance).div(1000).toString()}% Slippage</Trans>
-          </Typography>
-          <SettingIcon
-            onClick={handleToggleSettingShow}
-            sx={{
-              color: "transparent",
-              cursor: "pointer",
-            }}
-            strokeColor={isDarkTheme(theme) ? "#ffffff" : undefined}
-          />
+          <img src="/images/setting.svg" alt="" />
         </Flex>
 
         {settingShow && (

@@ -88,5 +88,8 @@
   },
   "LiquidityLocks": {
     "ic": "ihzcl-aiaaa-aaaah-aebvq-cai"
+  },
+  "PositionCharts": {
+    "ic": "ppuf3-gyaaa-aaaag-qkpuq-cai"
   }
 }

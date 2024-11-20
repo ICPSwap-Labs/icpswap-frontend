@@ -1,13 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import { VolumeWindow } from "@icpswap/types";
 import { usePoolTvlChartData } from "@icpswap/hooks";
 
+import { formatDollarAmount } from "@icpswap/utils";
 import { ImageLoading } from "../Loading";
 import { LineChartAlt } from "../LineChart/alt";
-import { Box } from "../Mui";
+import { Box, Typography } from "../Mui";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -17,21 +18,16 @@ export interface PoolTvlChartProps {
   canisterId: string;
   noData?: React.ReactNode;
   volumeWindow?: VolumeWindow;
-  setLatestValue?: (value: number | undefined) => void;
-  setValueLabel?: (label: string | undefined) => void;
-  loadingBackground?: string;
+  height?: string;
 }
 
-export function PoolTvlChart({
-  setValueLabel,
-  setLatestValue,
-  noData,
-  canisterId,
-  loadingBackground,
-}: PoolTvlChartProps) {
+export function PoolTvlChart({ noData, canisterId, height = "340px" }: PoolTvlChartProps) {
+  const [valueLabel, setValueLabel] = useState<string | undefined>();
+  const [latestValue, setLatestValue] = useState<number | undefined>();
+
   const { result: poolChartTVl, loading } = usePoolTvlChartData(canisterId);
 
-  const formattedTvlData = useMemo(() => {
+  const formattedData = useMemo(() => {
     if (poolChartTVl) {
       return poolChartTVl
         .filter((data) => Number(data.timestamp) !== 0)
@@ -45,25 +41,46 @@ export function PoolTvlChart({
     return [];
   }, [poolChartTVl]);
 
+  const latestData = formattedData.length > 0 ? formattedData[formattedData.length - 1] : null;
+
   return loading ? (
     <Box
       sx={{
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        top: "0",
-        left: "0",
-        justifyContent: "center",
         width: "100%",
-        height: "100%",
-        background: loadingBackground,
-        zIndex: 100,
+        height,
       }}
     >
       <ImageLoading loading />
     </Box>
-  ) : formattedTvlData.length > 0 ? (
-    <LineChartAlt data={formattedTvlData} setLabel={setValueLabel} minHeight={340} setValue={setLatestValue} />
+  ) : formattedData.length > 0 ? (
+    <>
+      <Box sx={{ height: "50px" }}>
+        {latestData ? (
+          <>
+            <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
+              {latestValue ? formatDollarAmount(latestValue) : formatDollarAmount(latestData.value)}
+            </Typography>
+
+            <Typography
+              sx={{
+                height: "20px",
+                fontSize: "12px",
+                margin: "10px 0 0 0",
+              }}
+            >
+              {valueLabel ?? dayjs(latestData.time).format("MMM D, YYYY") ?? ""}
+            </Typography>
+          </>
+        ) : null}
+      </Box>
+
+      <LineChartAlt
+        data={formattedData}
+        setLabel={setValueLabel}
+        minHeight={parseInt(height)}
+        setValue={setLatestValue}
+      />
+    </>
   ) : noData ? (
     <>{noData}</>
   ) : null;
