@@ -16,7 +16,6 @@ import {
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
 
-
 export const swapNFT = (identity?: ActorIdentity) =>
   actor.create<SwapNFT>({
     actorName: ActorName.SwapNFTCanister,

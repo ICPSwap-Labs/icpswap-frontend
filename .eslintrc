@@ -107,5 +107,13 @@
     "ecmaVersion": 2020
   },
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["**/*.did.ts", "**/*.did.js", "craco.config.js", "**/*.css", "**/*.d.ts", "**/scripts/*.js"]
+  "ignorePatterns": [
+    "**/*.did.ts",
+    "**/*.did.js",
+    "craco.config.js",
+    "**/*.css",
+    "**/*.d.ts",
+    "**/scripts/*.js",
+    "**/charting_library/*"
+  ]
 }

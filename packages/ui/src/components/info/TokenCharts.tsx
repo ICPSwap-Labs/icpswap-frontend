@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle } from "react";
+import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
 import { Typography, Box } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
+import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 
 import dayjs from "dayjs";
@@ -143,6 +143,8 @@ export interface TokenChartsProps {
   showTopIfDexScreen?: boolean;
   dexScreenHeight?: string;
   dexScreenId?: string;
+  priceChart?: ReactNode;
+  onPriceTokenIdChange?: (tokenId: string | Null) => void;
 }
 
 export const TokenCharts = forwardRef(
@@ -157,6 +159,8 @@ export const TokenCharts = forwardRef(
       showTopIfDexScreen = true,
       dexScreenHeight,
       dexScreenId,
+      priceChart,
+      onPriceTokenIdChange,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -235,13 +239,17 @@ export const TokenCharts = forwardRef(
       setPriceChartTokenId(canisterId);
     }, [canisterId]);
 
-    const handleChartViewChange = useCallback((chart: { tokenId?: string; label: string; value: ChartView }) => {
-      if (chart.value === ChartView.PRICE) {
-        setPriceChartTokenId(chart.tokenId);
-      }
+    const handleChartViewChange = useCallback(
+      (chart: { tokenId?: string; label: string; value: ChartView }) => {
+        if (chart.value === ChartView.PRICE) {
+          setPriceChartTokenId(chart.tokenId);
+          if (onPriceTokenIdChange) onPriceTokenIdChange(chart.tokenId);
+        }
 
-      setChartView(chart.value);
-    }, []);
+        setChartView(chart.value);
+      },
+      [onPriceTokenIdChange],
+    );
 
     useImperativeHandle(
       ref,
@@ -269,7 +277,13 @@ export const TokenCharts = forwardRef(
           sx={{
             height: "70px",
             padding: "16px",
-            display: chartView === ChartView.DexScreener ? (showTopIfDexScreen ? "flex" : "none") : "flex",
+            display: priceChart
+              ? "none"
+              : chartView === ChartView.DexScreener
+              ? showTopIfDexScreen
+                ? "flex"
+                : "none"
+              : "flex",
           }}
         >
           <Box>
@@ -376,7 +390,13 @@ export const TokenCharts = forwardRef(
 
         <Box
           sx={{
-            margin: chartView === ChartView.DexScreener ? (showTopIfDexScreen ? "10px 0 0 0 " : "0px") : "10px 0 0 0",
+            margin: priceChart
+              ? "0"
+              : chartView === ChartView.DexScreener
+              ? showTopIfDexScreen
+                ? "10px 0 0 0 "
+                : "0px"
+              : "10px 0 0 0",
           }}
         >
           {chartView === ChartView.TVL ? (
@@ -413,7 +433,8 @@ export const TokenCharts = forwardRef(
               <Box sx={{ height: "340px", width: "auto" }} />
             )
           ) : chartView === ChartView.PRICE ? (
-            priceChartData && priceChartData.length > 0 ? (
+            priceChart ||
+            (priceChartData && priceChartData.length > 0 ? (
               <CandleChart
                 height={340}
                 data={priceChartData}
@@ -423,7 +444,7 @@ export const TokenCharts = forwardRef(
               />
             ) : (
               <Box sx={{ height: "340px", width: "auto" }} />
-            )
+            ))
           ) : chartView === ChartView.DexScreener ? (
             <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : null}
