@@ -8,7 +8,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { PublicPoolOverView } from "types/analytic";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel, APRPanel } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL, usePoolApr24h } from "@icpswap/hooks";
+import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
 import { HIDDEN_POOLS } from "constants/index";
 
@@ -85,7 +85,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
 
-  const apr24h = usePoolApr24h({ volumeUSD: pool.volumeUSD, poolTvlUSD: pool.tvlUSD });
+  const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });
 
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>

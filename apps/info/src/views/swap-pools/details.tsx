@@ -4,7 +4,7 @@ import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount, explorerLink } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
-import { usePoolLatestTVL, usePoolApr24h } from "@icpswap/hooks";
+import { usePoolLatestTVL, usePoolAPR } from "@icpswap/hooks";
 import { usePool } from "hooks/info/usePool";
 import { useTokenInfo } from "hooks/token/index";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
@@ -70,7 +70,7 @@ export default function SwapPoolDetails() {
 
   const { result: cycles } = useSwapPoolCycles(canisterId);
 
-  const apr = usePoolApr24h({ volumeUSD: pool?.volumeUSD, poolTvlUSD });
+  const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD, tvlUSD: poolTvlUSD });
 
   return (
     <Wrapper>

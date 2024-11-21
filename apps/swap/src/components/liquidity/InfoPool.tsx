@@ -4,8 +4,8 @@ import { Trans } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Proportion } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
-import { usePoolApr24h, useAllPoolsTVL } from "@icpswap/hooks";
-import { formatDollarAmount, nonNullArgs, calcFee24h } from "@icpswap/utils";
+import { usePoolAPR, useAllPoolsTVL } from "@icpswap/hooks";
+import { formatDollarAmount, nonNullArgs, calcPoolFees } from "@icpswap/utils";
 import { useInfoPool } from "hooks/info/useInfoPool";
 import { PoolTvlTooltip } from "components/swap";
 
@@ -41,9 +41,9 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
     return allPoolsTVL.find((e) => e[0] === pool.id)?.[1];
   }, [allPoolsTVL, pool]);
 
-  const fee24h = calcFee24h(infoPool?.volumeUSD);
+  const fee24h = calcPoolFees(infoPool?.volumeUSD);
 
-  const apr24h = usePoolApr24h({ volumeUSD: infoPool?.volumeUSD, poolTvlUSD });
+  const apr24h = usePoolAPR({ volumeUSD: infoPool?.volumeUSD, tvlUSD: poolTvlUSD });
 
   return nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(fee) ? (
     <Box

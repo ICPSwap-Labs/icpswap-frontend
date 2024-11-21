@@ -16,7 +16,7 @@ import {
   APRPanel,
 } from "@icpswap/ui";
 import Pagination from "ui-component/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolApr24h } from "@icpswap/hooks";
+import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolAPR } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
@@ -88,7 +88,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
     history.push(`/swap/pool/details/${pool.pool}`);
   };
 
-  const apr = usePoolApr24h({ volumeUSD: pool.volumeUSD, poolTvlUSD: pool.tvlUSD });
+  const apr = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });
 
   return (
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>

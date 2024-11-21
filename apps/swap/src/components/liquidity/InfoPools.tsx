@@ -16,9 +16,15 @@ import {
   FilledTextField,
   APRPanel,
 } from "@icpswap/ui";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler } from "@icpswap/hooks";
+import {
+  useAllPoolsTVL,
+  useTokensFromList,
+  useNodeInfoAllPools,
+  useDebouncedChangeHandler,
+  usePoolAPR,
+} from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, BigNumber, isNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
@@ -136,9 +142,6 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
 
   const [poolChartOpen, setPoolChartOpen] = useState(false);
 
-  // const { result: token0 } = useTokenInfo(pool.token0Id);
-  // const { result: token1 } = useTokenInfo(pool.token1Id);
-
   const fees = useMemo(() => {
     if (timeBase === "24H") {
       return (pool.volumeUSD * 3) / 1000;
@@ -147,15 +150,11 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
     return (pool.volumeUSD7d * 3) / 1000;
   }, [timeBase, pool]);
 
-  const apr = useMemo(() => {
-    if (!pool) return undefined;
-
-    return `${new BigNumber(fees)
-      .dividedBy(pool.tvlUSD)
-      .multipliedBy(360 * 0.8)
-      .multipliedBy(100)
-      .toFixed(2)}%`;
-  }, [pool, fees, timeBase]);
+  const apr = usePoolAPR({
+    tvlUSD: pool?.tvlUSD,
+    volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
+    timeBase,
+  });
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token1Id });
 
