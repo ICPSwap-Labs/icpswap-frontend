@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo, useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Flex } from "components/index";
@@ -9,7 +9,7 @@ import { Position } from "@icpswap/swap-sdk";
 import { SwapContext } from "components/swap/index";
 import { useLiquidityLocksImage } from "hooks/swap/index";
 import { Null } from "@icpswap/types";
-import { LoadingRow, LiquidityLock } from "@icpswap/ui";
+import { LoadingRow, LiquidityLock, Tooltip } from "@icpswap/ui";
 import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
 
 interface LiquidityLocksItemProps {
@@ -130,10 +130,15 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
 
   return (
     <Box sx={{ background: theme.palette.background.level1, borderRadius: "8px", padding: "12px 0 0 0" }}>
-      <Flex justify="center">
+      <Flex justify="center" gap="0 4px">
         <Typography sx={{ fontSize: "12px" }}>
           <Trans>Liquidity locks</Trans>
         </Typography>
+
+        <Tooltip
+          iconSize="12px"
+          tips={t`Liquidity is locked in a smart contract to prevent malicious transfers and ensure that there is sufficient liquidity support for tokens on the ICPSwap platform. Here, you can view the locked liquidity's duration and amount.`}
+        />
       </Flex>
 
       <Box mt="10px" sx={{ padding: "0 8px 12px 8px" }}>

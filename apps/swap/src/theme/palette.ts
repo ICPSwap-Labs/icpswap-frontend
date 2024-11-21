@@ -74,6 +74,10 @@ export function themePalette(theme: { [key: string]: any }) {
       "theme-secondary": theme.colors.darkSecondaryMain,
       apr: theme.colors.apr,
       success: theme.colors["text.success"],
+      tooltip: theme.colors.darkLevel1,
+    },
+    textSize: {
+      tooltip: "12px",
     },
     background: {
       paper: theme.paper,
