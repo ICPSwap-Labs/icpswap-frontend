@@ -7,7 +7,7 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { isNullArgs } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
 import { useHistory } from "react-router-dom";
-import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
+import { FarmListCard, FarmListHeader, GlobalData, TopLiveFarms } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 import { SelectToken } from "components/Select/SelectToken";
 import { SelectPair } from "components/Select/SelectPair";
@@ -113,11 +113,15 @@ function MainContent() {
           ? __state === FilterState.YOUR
             ? "180px 180px 80px 220px 160px 160px 160px"
             : "220px 220px 100px 240px 180px 180px"
+          : state === "FINISHED"
+          ? "220px 220px 100px 240px"
           : "220px 220px 100px 240px 180px"
         : state === undefined
         ? __state === FilterState.YOUR
           ? "180px 180px 80px 1fr 1fr 1fr 120px"
           : "220px 220px 120px 1fr 1fr 180px"
+        : state === "FINISHED"
+        ? "220px 220px 120px 1fr"
         : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);
@@ -249,65 +253,7 @@ function MainContent() {
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns,
-              "& .row-item": {
-                padding: "16px 0",
-                "&:first-of-type": {
-                  padding: "16px 0 16px 24px",
-                },
-                "&:last-of-type": {
-                  padding: "16px 24px 16px 0",
-                },
-              },
-            }}
-          >
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Staked Position</Trans>
-            </Typography>
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Reward Token</Trans>
-            </Typography>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>APR</Trans>
-              </Typography>
-            </Flex>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>Your Available to Stake</Trans>
-              </Typography>
-            </Flex>
-            {your ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Your Rewards</Trans>
-                </Typography>
-              </Flex>
-            ) : null}
-            {your ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Your Staked</Trans>
-                </Typography>
-              </Flex>
-            ) : (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Total Staked</Trans>
-                </Typography>
-              </Flex>
-            )}
-            {showState ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Status</Trans>
-                </Typography>
-              </Flex>
-            ) : null}
-          </Box>
+          <FarmListHeader state={state} showState={showState} your={your} sx={{ gridTemplateColumns }} />
 
           <InfiniteScroll
             dataLength={slicedFarms?.length ?? 0}
@@ -351,6 +297,7 @@ function MainContent() {
                     }}
                     showState={showState}
                     your={your}
+                    filterState={__state}
                   />
                 ))}
               </>

@@ -26,6 +26,7 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/index";
 import upperFirst from "lodash/upperFirst";
 import dayjs from "dayjs";
+import { FilterState } from "types/staking-farm";
 
 import { PendingPanel } from "./PendingPanel";
 
@@ -37,11 +38,12 @@ interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];
   showState: boolean;
   your?: boolean;
+  filterState: FilterState;
 }
 
-export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCardProps) {
-  const principal = useAccountPrincipal();
+export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }: FarmListCardProps) {
   const theme = useTheme();
+  const principal = useAccountPrincipal();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const { result: farmInitArgs } = useFarmInitArgs(farmId);
@@ -160,44 +162,46 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
           )}
         </Flex>
 
-        <Flex gap="0 4px" justify="flex-end" className="row-item">
-          {state === "FINISHED" || state === "CLOSED" ? (
-            <Typography variant="body2" sx={{ color: "text.primary" }}>
-              --
-            </Typography>
-          ) : (
-            <>
+        {filterState === FilterState.FINISHED ? null : (
+          <Flex gap="0 4px" justify="flex-end" className="row-item">
+            {state === "FINISHED" || state === "CLOSED" ? (
               <Typography variant="body2" sx={{ color: "text.primary" }}>
-                {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
+                --
               </Typography>
-              {userAvailablePositions ? (
-                <Typography
-                  fontSize={12}
-                  fontWeight={500}
-                  color="text.primary"
-                  sx={{
-                    width: "fit-content",
-                    background: theme.palette.background.level4,
-                    padding: "2px 8px",
-                    borderRadius: "44px",
-                  }}
-                >
-                  {userAvailablePositions.length}
+            ) : (
+              <>
+                <Typography variant="body2" sx={{ color: "text.primary" }}>
+                  {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
                 </Typography>
-              ) : null}
+                {userAvailablePositions ? (
+                  <Typography
+                    fontSize={12}
+                    fontWeight={500}
+                    color="text.primary"
+                    sx={{
+                      width: "fit-content",
+                      background: theme.palette.background.level4,
+                      padding: "2px 8px",
+                      borderRadius: "44px",
+                    }}
+                  >
+                    {userAvailablePositions.length}
+                  </Typography>
+                ) : null}
 
-              {state === "NOT_STARTED" && userFarmInfo ? (
-                <Tooltip
-                  tips={`
-                  As soon as the Farm goes live on ${dayjs(Number(userFarmInfo.startTime) * 1000).format(
-                    DAYJS_FORMAT0,
-                  )} at ${dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
-                  iconSize="14px"
-                />
-              ) : null}
-            </>
-          )}
-        </Flex>
+                {state === "NOT_STARTED" && userFarmInfo ? (
+                  <Tooltip
+                    tips={`
+                   As soon as the Farm goes live on ${dayjs(Number(userFarmInfo.startTime) * 1000).format(
+                     DAYJS_FORMAT0,
+                   )} at ${dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
+                    iconSize="14px"
+                  />
+                ) : null}
+              </>
+            )}
+          </Flex>
+        )}
 
         {your ? (
           <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
@@ -229,13 +233,45 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
               {userTvlValue ? formatDollarAmount(userTvlValue) : "--"}
             </Typography>
           </Flex>
-        ) : (
+        ) : filterState !== FilterState.FINISHED ? (
           <Flex justify="flex-end" className="row-item">
             <Typography variant="body2" sx={{ color: "text.primary" }}>
               {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
             </Typography>
           </Flex>
-        )}
+        ) : null}
+
+        {filterState === FilterState.FINISHED ? (
+          <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
+            <Flex justify="flex-end">
+              <Typography variant="body2" sx={{ color: "text.primary" }}>
+                {userFarmInfo && rewardToken ? (
+                  <>
+                    {toSignificantWithGroupSeparator(
+                      parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toString(),
+                      6,
+                    )}
+                    &nbsp;
+                    {rewardToken.symbol}
+                  </>
+                ) : (
+                  "--"
+                )}
+              </Typography>
+            </Flex>
+            <Flex justify="flex-end">
+              <Typography sx={{ fontSize: "12px" }}>
+                {userFarmInfo && rewardToken && rewardTokenPrice
+                  ? `~${formatDollarAmount(
+                      parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals)
+                        .multipliedBy(rewardTokenPrice)
+                        .toString(),
+                    )}`
+                  : "--"}
+              </Typography>
+            </Flex>
+          </Flex>
+        ) : null}
 
         {showState ? (
           <Flex justify="flex-end" className="row-item">
@@ -247,7 +283,9 @@ export function FarmListCard({ farmId, wrapperSx, showState, your }: FarmListCar
                 </Typography>
               </Flex>
             ) : (
-              "--"
+              <Typography variant="body2" sx={{ color: "text.primary" }}>
+                --
+              </Typography>
             )}
           </Flex>
         ) : null}
