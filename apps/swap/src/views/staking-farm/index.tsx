@@ -1,19 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
-import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { useHistory } from "react-router-dom";
+import { isNullArgs } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
+import { useHistory } from "react-router-dom";
 import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 import { SelectToken } from "components/Select/SelectToken";
 import { SelectPair } from "components/Select/SelectPair";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import FarmContext from "./context";
 
@@ -25,8 +25,11 @@ const Tabs = [
   { label: t`Your Farms`, state: FilterState.YOUR },
 ];
 
+const PAGE_SIZE = 10;
+const START_PAGE = 1;
+
 function MainContent() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -37,6 +40,7 @@ function MainContent() {
 
   const [filterPair, setFilterPair] = useState<string | Null>(null);
   const [filterToken, setFilterToken] = useState<string | Null>(null);
+  const [page, setPage] = useState(START_PAGE);
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
 
@@ -73,6 +77,12 @@ function MainContent() {
     token: filterToken,
     user: filterUser,
   });
+
+  const slicedFarms = useMemo(() => {
+    if (isNullArgs(farms)) return undefined;
+
+    return farms.slice(0, PAGE_SIZE * page);
+  }, [farms, page]);
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
     history.push(`/farm?state=${value.state}`);
@@ -119,6 +129,15 @@ function MainContent() {
   const handleTokenChange = (tokenId: string | undefined) => {
     setFilterToken(tokenId);
   };
+
+  const handleScrollNext = useCallback(() => {
+    setPage(page + 1);
+  }, [setPage, page]);
+
+  const hasMore = useMemo(() => {
+    if (!slicedFarms || !farms) return false;
+    return slicedFarms.length !== farms.length;
+  }, [slicedFarms, farms]);
 
   return (
     <FarmContext.Provider
@@ -290,37 +309,53 @@ function MainContent() {
             ) : null}
           </Box>
 
-          {loading ? (
-            <Box sx={{ padding: "24px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : (
-            <>
-              {(unStakedFarms.length === farms?.length || !farms?.length) && !loading && <NoData />}
+          <InfiniteScroll
+            dataLength={slicedFarms?.length ?? 0}
+            next={handleScrollNext}
+            hasMore={hasMore}
+            loader={
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            }
+          >
+            {loading ? (
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            ) : (
+              <>
+                {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? <NoData /> : null}
 
-              {farms?.map((farmId) => (
-                <FarmListCard
-                  key={farmId.toString()}
-                  farmId={farmId.toString()}
-                  wrapperSx={{
-                    display: "grid",
-                    gridTemplateColumns,
-                  }}
-                  showState={showState}
-                  your={your}
-                />
-              ))}
-            </>
-          )}
+                {slicedFarms?.map((farmId) => (
+                  <FarmListCard
+                    key={farmId.toString()}
+                    farmId={farmId.toString()}
+                    wrapperSx={{
+                      display: "grid",
+                      gridTemplateColumns,
+                    }}
+                    showState={showState}
+                    your={your}
+                  />
+                ))}
+              </>
+            )}
+          </InfiniteScroll>
         </Box>
       </MainCard>
     </FarmContext.Provider>
