@@ -13,7 +13,14 @@ import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  parseTokenAmount,
+  BigNumber,
+  toSignificantWithGroupSeparator,
+  nonNullArgs,
+  formatAmount,
+} from "@icpswap/utils";
 import {
   useV3FarmRewardMetadata,
   useFarmInitArgs,
@@ -27,6 +34,7 @@ import { TokenImage } from "components/index";
 import upperFirst from "lodash/upperFirst";
 import dayjs from "dayjs";
 import { FilterState } from "types/staking-farm";
+import { Trans } from "@lingui/macro";
 
 import { PendingPanel } from "./PendingPanel";
 
@@ -111,6 +119,19 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
 
   const stateColor = useStateColors(state);
 
+  const { totalRewardAmount, totalRewardUSD } = useMemo(() => {
+    if (nonNullArgs(userFarmInfo) && nonNullArgs(rewardToken)) {
+      const amount = parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toString();
+
+      return {
+        totalRewardAmount: amount,
+        totalRewardUSD: rewardTokenPrice ? new BigNumber(amount).multipliedBy(rewardTokenPrice).toString() : null,
+      };
+    }
+
+    return {};
+  }, [userFarmInfo, rewardToken, rewardTokenPrice]);
+
   return (
     <Link to={`/farm/details/${farmId}`}>
       <Box
@@ -154,7 +175,18 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
 
         <Flex justify="flex-end" className="row-item">
           {apr ? (
-            <APRPanel value={apr} />
+            <APRPanel
+              value={apr}
+              tooltip={
+                nonNullArgs(rewardToken) && nonNullArgs(totalRewardAmount) ? (
+                  <Trans>
+                    This's the average APR for the pool. The total reward is {formatAmount(totalRewardAmount)}{" "}
+                    {rewardToken.symbol} ({nonNullArgs(totalRewardUSD) ? formatDollarAmount(totalRewardUSD) : "--"}
+                    ).
+                  </Trans>
+                ) : null
+              }
+            />
           ) : (
             <Typography variant="body2" sx={{ color: "text.primary" }}>
               --
@@ -245,12 +277,9 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
           <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
             <Flex justify="flex-end">
               <Typography variant="body2" sx={{ color: "text.primary" }}>
-                {userFarmInfo && rewardToken ? (
+                {nonNullArgs(totalRewardAmount) && nonNullArgs(rewardToken) ? (
                   <>
-                    {toSignificantWithGroupSeparator(
-                      parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals).toString(),
-                      6,
-                    )}
+                    {toSignificantWithGroupSeparator(totalRewardAmount, 6)}
                     &nbsp;
                     {rewardToken.symbol}
                   </>
@@ -261,13 +290,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
             </Flex>
             <Flex justify="flex-end">
               <Typography sx={{ fontSize: "12px" }}>
-                {userFarmInfo && rewardToken && rewardTokenPrice
-                  ? `~${formatDollarAmount(
-                      parseTokenAmount(userFarmInfo.totalReward, rewardToken.decimals)
-                        .multipliedBy(rewardTokenPrice)
-                        .toString(),
-                    )}`
-                  : "--"}
+                {totalRewardUSD ? `~${formatDollarAmount(totalRewardUSD)}` : "--"}
               </Typography>
             </Flex>
           </Flex>
