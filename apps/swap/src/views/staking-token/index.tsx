@@ -5,14 +5,7 @@ import { NoData, MainCard, Flex, SelectToken, Wrapper } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
-import {
-  GlobalData,
-  TopLiveStaking,
-  PoolListCard,
-  PoolListHeader,
-  YourPoolListHeader,
-  YourPoolListCard,
-} from "components/stake/index";
+import { GlobalData, TopLiveStaking, PoolListCard, PoolListHeader, YourPoolListCard } from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
 import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
@@ -64,9 +57,13 @@ function MainContent() {
           : matchDownSM
           ? state === undefined
             ? "220px 220px 100px 240px 180px 180px"
+            : __state === FilterState.FINISHED
+            ? "220px 220px 100px 240px"
             : "220px 220px 100px 240px 180px"
           : state === undefined
           ? "220px 220px 120px 1fr 1fr 180px"
+          : __state === FilterState.FINISHED
+          ? "220px 220px 120px 1fr"
           : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);
@@ -173,11 +170,12 @@ function MainContent() {
       <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
       <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-        {__state === FilterState.YOUR ? (
-          <YourPoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
-        ) : (
-          <PoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
-        )}
+        <PoolListHeader
+          showState={showState}
+          gridTemplateColumns={gridTemplateColumns}
+          your={__state === FilterState.YOUR}
+          finished={__state === FilterState.FINISHED}
+        />
 
         {loading ? (
           <Box sx={{ padding: "24px" }}>
@@ -216,6 +214,7 @@ function MainContent() {
                     display: "grid",
                     gridTemplateColumns,
                   }}
+                  filterState={__state}
                 />
               ),
             )}
