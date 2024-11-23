@@ -32,3 +32,4 @@ export * from "./useInterval";
 export * from "./liquidityLocks";
 export * from "./useTransactionExplorerLink";
 export * from "./helper";
+export * from "./icexplorer";

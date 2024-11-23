@@ -33,3 +33,4 @@ export * from "./feeAmountToPercent";
 export * from "./swap";
 export * from "./locationSearchReplace";
 export * from "./numDecimals";
+export * from "./fetch_post";

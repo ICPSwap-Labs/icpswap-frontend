@@ -10,12 +10,14 @@ import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
 import { AddLiquidity } from "./AddLiquidity";
+import { Holders } from "./Holders";
 
 enum Tabs {
   ALL_TRANSACTIONS = "ALL_TRANSACTIONS",
   YOUR_TRANSACTIONS = "YOUR_TRANSACTIONS",
   YOUR_POSITIONS = "YOUR_POSITIONS",
   POSITIONS = "POSITIONS",
+  TOKEN_HOLDERS = "TOKEN_HOLDERS",
 }
 
 const Menus = [
@@ -23,13 +25,14 @@ const Menus = [
   { label: t`Your Transactions`, value: Tabs.YOUR_TRANSACTIONS },
   { label: t`Your Positions`, value: Tabs.YOUR_POSITIONS },
   { label: t`Positions`, value: Tabs.POSITIONS },
+  { label: t`Holders`, value: Tabs.TOKEN_HOLDERS },
 ];
 
 let AUTO_REFRESH_COUNTER = 0;
 
 export default function Transactions() {
   const theme = useTheme();
-  const { tradePoolId, inputToken, outputToken } = useContext(SwapProContext);
+  const { tradePoolId, inputToken, outputToken, token } = useContext(SwapProContext);
 
   const [active, setActive] = useState<Tabs>(Tabs.ALL_TRANSACTIONS);
   const [autoRefresh, setAutoRefresh] = useState(0);
@@ -105,6 +108,7 @@ export default function Transactions() {
         {active === Tabs.YOUR_TRANSACTIONS ? <UserTransactions canisterId={tradePoolId} /> : null}
         {active === Tabs.YOUR_POSITIONS ? <YourPositions canisterId={tradePoolId} /> : null}
         {active === Tabs.POSITIONS ? <Positions poolId={tradePoolId} /> : null}
+        {active === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
       </Box>
     </SwapProCardWrapper>
   );

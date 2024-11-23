@@ -31,6 +31,9 @@ importers:
       '@dfinity/ledger-icp':
         specifier: 2.2.0
         version: 2.2.0(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))
+      '@dfinity/ledger-icrc':
+        specifier: ^2.6.3
+        version: 2.6.3(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))
       '@dfinity/nns':
         specifier: 4.0.2
         version: 4.0.2(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/ledger-icp@2.2.0(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))
@@ -2142,6 +2145,14 @@ packages:
       '@dfinity/nns-proto': ^1.0.1
       '@dfinity/principal': 1.0.1
       '@dfinity/utils': ^2.1.1
+
+  '@dfinity/ledger-icrc@2.6.3':
+    resolution: {integrity: sha512-nt379IojzyBiFiIhowr6sYbxVBF3HsJpM10sf4GlCUf1X++kk3DRbQExESD2XndiChVNCEOXxzmupDVSIbq7CQ==}
+    peerDependencies:
+      '@dfinity/agent': 1.0.1
+      '@dfinity/candid': 1.0.1
+      '@dfinity/principal': 1.0.1
+      '@dfinity/utils': ^2.7.0
 
   '@dfinity/nns-proto@1.0.2':
     resolution: {integrity: sha512-GszvkrGOFCFhMNGCjBLBOJJ7tqNIynqgB7ZCX5hKoK3Nd2VDI6sJ+B3kldnz59bHYeB2fTnXl+DogsL5iCRYFQ==}
@@ -6365,6 +6376,7 @@ packages:
 
   eciesjs@0.3.19:
     resolution: {integrity: sha512-b+PkRDZ3ym7HEcnbxc22CMVCpgsnr8+gGgST3U5PtgeX1luvINgfXW7efOyUtmn/jFtA/lg5ywBi/Uazf4oeaA==}
+    deprecated: Please upgrade to v0.4+
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -6699,6 +6711,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -9540,7 +9553,8 @@ packages:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
 
   path-to-regexp@1.8.0:
-    resolution: {integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==}
+    resolution: {integrity: sha512-xIp7/apCFJuUHdDLWe8O1HIkb0kQrOMb/0u6FXQjemHn/ii5LrIzU6bdECnsiTF/GjZkMEKg1xdiZwNqDYlZ6g==, tarball: https://registry.npmmirror.com/path-to-regexp/-/path-to-regexp-1.9.0.tgz}
+    deprecated: '[WARNING] Use 1.9.0 instead of 1.8.0, reason: https://github.com/pillarjs/path-to-regexp/security/advisories/GHSA-9wv6-86v2-598j'
 
   path-to-regexp@2.2.1:
     resolution: {integrity: sha512-gu9bD6Ta5bwGrrU8muHzVOBFFREpp2iRkVfhBJahwJ6p6Xw20SjT0MxLnwkjOibQmGSYhiUnf2FLe7k+jcFmGQ==}
@@ -14277,6 +14291,13 @@ snapshots:
       '@dfinity/principal': 1.0.1
       '@dfinity/utils': 2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
 
+  '@dfinity/ledger-icrc@2.6.3(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@dfinity/utils@2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))':
+    dependencies:
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+      '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
+      '@dfinity/principal': 1.0.1
+      '@dfinity/utils': 2.1.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
+
   '@dfinity/nns-proto@1.0.2':
     dependencies:
       google-protobuf: 3.21.4
@@ -16487,7 +16508,7 @@ snapshots:
       chalk: 4.1.2
       execa: 5.1.1
       metro: 0.80.9(bufferutil@4.0.8)
-      metro-config: 0.80.9(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      metro-config: 0.80.9(bufferutil@4.0.8)
       metro-core: 0.80.9
       node-fetch: 2.7.0
       querystring: 0.2.1
@@ -20502,7 +20523,7 @@ snapshots:
     dependencies:
       eslint: 8.57.0
 
-  eslint-config-react-app@7.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.9))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.24.9))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5)))(typescript@4.9.5):
+  eslint-config-react-app@7.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.9))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.24.9))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4))(typescript@4.9.5):
     dependencies:
       '@babel/core': 7.24.9
       '@babel/eslint-parser': 7.25.1(@babel/core@7.24.9)(eslint@8.57.0)
@@ -20514,7 +20535,7 @@ snapshots:
       eslint: 8.57.0
       eslint-plugin-flowtype: 8.0.3(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.9))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.24.9))(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)
-      eslint-plugin-jest: 25.7.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5)))(typescript@4.9.5)
+      eslint-plugin-jest: 25.7.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4))(typescript@4.9.5)
       eslint-plugin-jsx-a11y: 6.9.0(eslint@8.57.0)
       eslint-plugin-react: 7.35.0(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.0)
@@ -20582,7 +20603,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jest@25.7.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5)))(typescript@4.9.5):
+  eslint-plugin-jest@25.7.0(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(typescript@4.9.5))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4))(typescript@4.9.5):
     dependencies:
       '@typescript-eslint/experimental-utils': 5.62.0(eslint@8.57.0)(typescript@4.9.5)
       eslint: 8.57.0
@@ -23204,7 +23225,7 @@ snapshots:
       leven: 3.1.0
       pretty-format: 29.7.0
 
-  jest-watch-typeahead@1.1.0(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))):
+  jest-watch-typeahead@1.1.0(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4)):
     dependencies:
       ansi-escapes: 4.3.2
       chalk: 4.1.2
@@ -23935,6 +23956,21 @@ snapshots:
       metro-core: 0.80.9
       rimraf: 3.0.2
 
+  metro-config@0.80.9(bufferutil@4.0.8):
+    dependencies:
+      connect: 3.7.0
+      cosmiconfig: 5.2.1
+      jest-validate: 29.7.0
+      metro: 0.80.9(bufferutil@4.0.8)
+      metro-cache: 0.80.9
+      metro-core: 0.80.9
+      metro-runtime: 0.80.9
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+
   metro-config@0.80.9(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       connect: 3.7.0
@@ -23949,6 +23985,7 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+    optional: true
 
   metro-core@0.80.9:
     dependencies:
@@ -24055,6 +24092,7 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+    optional: true
 
   metro@0.80.9(bufferutil@4.0.8):
     dependencies:
@@ -24082,7 +24120,7 @@ snapshots:
       metro-babel-transformer: 0.80.9
       metro-cache: 0.80.9
       metro-cache-key: 0.80.9
-      metro-config: 0.80.9(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      metro-config: 0.80.9(bufferutil@4.0.8)
       metro-core: 0.80.9
       metro-file-map: 0.80.9
       metro-resolver: 0.80.9
@@ -24157,6 +24195,7 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+    optional: true
 
   micro-ftch@0.3.1: {}
 
@@ -25827,7 +25866,7 @@ snapshots:
       dotenv: 10.0.0
       dotenv-expand: 5.1.0
       eslint: 8.57.0
-      eslint-config-react-app: 7.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.9))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.24.9))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5)))(typescript@4.9.5)
+      eslint-config-react-app: 7.0.1(@babel/plugin-syntax-flow@7.24.7(@babel/core@7.24.9))(@babel/plugin-transform-react-jsx@7.24.7(@babel/core@7.24.9))(eslint@8.57.0)(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4))(typescript@4.9.5)
       eslint-webpack-plugin: 3.2.0(eslint@8.57.0)(webpack@5.93.0)
       file-loader: 6.2.0(webpack@5.93.0)
       fs-extra: 10.1.0
@@ -25835,7 +25874,7 @@ snapshots:
       identity-obj-proxy: 3.0.0
       jest: 27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4)
       jest-resolve: 27.5.1
-      jest-watch-typeahead: 1.1.0(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5)))
+      jest-watch-typeahead: 1.1.0(jest@27.5.1(bufferutil@4.0.8)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@4.9.5))(utf-8-validate@6.0.4))
       mini-css-extract-plugin: 2.9.0(webpack@5.93.0)
       postcss: 8.4.40
       postcss-flexbugs-fixes: 5.0.2(postcss@8.4.40)

@@ -63,6 +63,7 @@
     "@dfinity/candid": "1.0.1",
     "@dfinity/identity": "1.0.1",
     "@dfinity/ledger-icp": "2.2.0",
+    "@dfinity/ledger-icrc": "^2.6.3",
     "@dfinity/nns": "4.0.2",
     "@dfinity/principal": "1.0.1",
     "@dfinity/utils": "2.1.1",
