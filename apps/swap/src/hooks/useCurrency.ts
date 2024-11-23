@@ -65,7 +65,24 @@ export function useTokens(tokenIds: (string | undefined)[]): [UseCurrencyState, 
   }, [tokens, tokenIds]);
 }
 
-export function useCurrencyFromInfo(tokenInfo: TokenInfo | undefined) {
+export function getTokensFromInfos(tokenInfos: TokenInfo[] | undefined | null) {
+  if (!tokenInfos) return undefined;
+
+  return tokenInfos.map((tokenInfo) =>
+    tokenInfo
+      ? new Token({
+          address: tokenInfo.canisterId,
+          decimals: Number(tokenInfo.decimals),
+          symbol: tokenInfo.symbol,
+          name: tokenInfo.name,
+          logo: tokenInfo.logo,
+          standard: getTokenStandard(tokenInfo.canisterId) ?? TOKEN_STANDARD.EXT,
+        })
+      : undefined,
+  );
+}
+
+export function useTokenFromInfo(tokenInfo: TokenInfo | undefined) {
   return useMemo(() => {
     if (!tokenInfo) return undefined;
 
@@ -80,7 +97,7 @@ export function useCurrencyFromInfo(tokenInfo: TokenInfo | undefined) {
   }, [tokenInfo]);
 }
 
-export function useCurrenciesFromInfo(tokenInfos: TokenInfo[] | undefined | null) {
+export function useTokensFromInfos(tokenInfos: TokenInfo[] | undefined | null) {
   return useMemo(() => {
     if (!tokenInfos) return undefined;
 

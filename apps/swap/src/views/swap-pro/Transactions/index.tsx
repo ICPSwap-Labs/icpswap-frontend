@@ -6,20 +6,23 @@ import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
 import { PoolTransactions } from "./PoolTransactions";
 import { UserTransactions } from "./UserTransactions";
+import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
 import { AddLiquidity } from "./AddLiquidity";
 
-enum TransactionPart {
-  All = "all",
-  YOUR = "your",
-  POSITIONS = "positions",
+enum Tabs {
+  ALL_TRANSACTIONS = "ALL_TRANSACTIONS",
+  YOUR_TRANSACTIONS = "YOUR_TRANSACTIONS",
+  YOUR_POSITIONS = "YOUR_POSITIONS",
+  POSITIONS = "POSITIONS",
 }
 
 const Menus = [
-  { label: t`All Transactions`, value: TransactionPart.All },
-  { label: t`Your Transactions`, value: TransactionPart.YOUR },
-  { label: t`Your Positions`, value: TransactionPart.POSITIONS },
+  { label: t`All Transactions`, value: Tabs.ALL_TRANSACTIONS },
+  { label: t`Your Transactions`, value: Tabs.YOUR_TRANSACTIONS },
+  { label: t`Your Positions`, value: Tabs.YOUR_POSITIONS },
+  { label: t`Positions`, value: Tabs.POSITIONS },
 ];
 
 let AUTO_REFRESH_COUNTER = 0;
@@ -28,7 +31,7 @@ export default function Transactions() {
   const theme = useTheme();
   const { tradePoolId, inputToken, outputToken } = useContext(SwapProContext);
 
-  const [active, setActive] = useState<TransactionPart>(TransactionPart.All);
+  const [active, setActive] = useState<Tabs>(Tabs.ALL_TRANSACTIONS);
   const [autoRefresh, setAutoRefresh] = useState(0);
 
   const handleAutoRefresh = () => {
@@ -93,14 +96,15 @@ export default function Transactions() {
           ))}
         </Box>
 
-        {active === TransactionPart.All ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
-        {active === TransactionPart.POSITIONS ? <AddLiquidity token0={inputToken} token1={outputToken} /> : null}
+        {active === Tabs.ALL_TRANSACTIONS ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
+        {active === Tabs.YOUR_POSITIONS ? <AddLiquidity token0={inputToken} token1={outputToken} /> : null}
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        {active === TransactionPart.All ? <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} /> : null}
-        {active === TransactionPart.YOUR ? <UserTransactions canisterId={tradePoolId} /> : null}
-        {active === TransactionPart.POSITIONS ? <Positions canisterId={tradePoolId} /> : null}
+        {active === Tabs.ALL_TRANSACTIONS ? <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} /> : null}
+        {active === Tabs.YOUR_TRANSACTIONS ? <UserTransactions canisterId={tradePoolId} /> : null}
+        {active === Tabs.YOUR_POSITIONS ? <YourPositions canisterId={tradePoolId} /> : null}
+        {active === Tabs.POSITIONS ? <Positions poolId={tradePoolId} /> : null}
       </Box>
     </SwapProCardWrapper>
   );

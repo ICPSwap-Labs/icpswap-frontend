@@ -19,6 +19,7 @@ import type {
   TickInfoWithId,
   ActorIdentity,
   PaginationResult,
+  Null,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -314,7 +315,7 @@ export async function getSwapPositions(canisterId: string, offset: number, limit
   ).data;
 }
 
-export function useSwapPositions(canisterId: string | undefined, offset: number, limit: number) {
+export function useSwapPositions(canisterId: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
@@ -451,11 +452,7 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(
-  poolId: string | undefined,
-  principal: string | undefined,
-  refresh?: boolean | number,
-) {
+export function useSwapUserPositions(poolId: string | Null, principal: string | Null, refresh?: boolean | number) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !poolId) return undefined;

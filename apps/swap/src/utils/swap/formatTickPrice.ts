@@ -12,6 +12,7 @@ export function formatTickPrice(
   atLimit: { [bound in Bound]?: boolean | undefined },
   direction: Bound,
   placeholder?: string,
+  format?: object,
 ) {
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? "0" : "∞";
@@ -21,5 +22,5 @@ export function formatTickPrice(
     return placeholder;
   }
 
-  return formatPrice(price, 5);
+  return formatPrice(price, 5, format);
 }
