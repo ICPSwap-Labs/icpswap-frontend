@@ -73,7 +73,7 @@ export function FarmListHeader({ your, state, showState, sx }: FarmListHeaderPro
       {state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
           <Typography variant="body2" color="text.400">
-            <Trans>Total reward tokens</Trans>
+            <Trans>Total Reward Tokens</Trans>
           </Typography>
         </Flex>
       ) : null}

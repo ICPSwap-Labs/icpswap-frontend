@@ -70,7 +70,7 @@ export function PoolListHeader({ showState, finished, gridTemplateColumns, your 
       {finished ? (
         <Flex justify="flex-end" className="row-item">
           <Typography variant="body2" color="text.400">
-            <Trans>Total reward tokens</Trans>
+            <Trans>Total Reward Tokens</Trans>
           </Typography>
         </Flex>
       ) : null}
