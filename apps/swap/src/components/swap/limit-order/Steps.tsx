@@ -18,15 +18,15 @@ export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim 
 
   const { token0, token1 } = position.pool;
 
-  const isInputTokenSorted = inputToken.sortsBefore(token1);
+  const outputToken = inputToken.equals(token0) ? token1 : token0;
+
+  const isInputTokenSorted = inputToken.sortsBefore(outputToken);
 
   const amount0 = position.mintAmounts.amount0.toString();
   const amount1 = position.mintAmounts.amount1.toString();
 
   const tickLower = position.tickLower;
   const tickUpper = position.tickUpper;
-
-  const outputToken = inputToken.equals(token0) ? token1 : token0;
 
   const orderPrice = tickToPrice(inputToken, outputToken, isInputTokenSorted ? tickUpper : tickLower).toFixed(
     outputToken.decimals,
