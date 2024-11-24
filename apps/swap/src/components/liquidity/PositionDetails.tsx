@@ -29,8 +29,8 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Flex fullWidth justify="space-between" align="flex-start">
-      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div">
+    <Flex fullWidth>
+      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div" sx={{ width: "140px" }}>
         {label}
       </Typography>
 
@@ -98,7 +98,7 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const history = useHistory();
   const theme = useTheme();
-
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
   const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
@@ -154,8 +154,6 @@ export function PositionDetails({
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked]);
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
   const handleTransferSuccess = () => {
     setRefreshTrigger();
   };
@@ -203,8 +201,8 @@ export function PositionDetails({
 
   const handleDetails = useCallback(() => {
     if (!position) return;
-    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}`);
-  }, [position, history]);
+    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`);
+  }, [position, history, farmId]);
 
   return (
     <>
@@ -218,8 +216,8 @@ export function PositionDetails({
         }}
       >
         <Flex
-          align="flex-start"
-          gap="0 66px"
+          align="flex-end"
+          justify="space-between"
           sx={{
             "@media(max-width: 640px)": {
               flexDirection: "column",
@@ -229,7 +227,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              flex: "50%",
+              width: "70%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -260,23 +258,23 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
+                  <Flex gap="0 8px">
                     <Typography color="text.primary" align="right">
                       {toFormat(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 ) : (
-                  <Box>
+                  <Flex gap="0 8px">
                     <Typography color="text.primary" align="right">
                       {toFormat(amount1)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value1 ? formatDollarAmount(value1) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 )
               }
             />
@@ -302,42 +300,27 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
+                  <Flex gap="0 8px">
                     <Typography color="text.primary" align="right">
                       {toFormat(amount1)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value1 ? formatDollarAmount(value1) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 ) : (
-                  <Box>
+                  <Flex gap="0 8px">
                     <Typography color="text.primary" align="right">
                       {toFormat(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 )
               }
             />
-          </Flex>
 
-          {matchDownSM ? null : (
-            <Box sx={{ width: "1px", height: "100%", minHeight: "120px", background: "#242E54" }} />
-          )}
-
-          <Flex
-            sx={{
-              flex: "50%",
-              "@media(max-width: 640px)": {
-                width: "100%",
-              },
-            }}
-            vertical
-            gap="16px 0"
-          >
             <PositionDetailItem
               label={t`Price Range`}
               value={
@@ -378,7 +361,7 @@ export function PositionDetails({
             <PositionDetailItem
               label={t`Uncollected fees`}
               value={
-                <Box>
+                <Flex gap="0 8px">
                   <Typography
                     color="text.primary"
                     align="right"
@@ -399,7 +382,6 @@ export function PositionDetails({
                       : "--"}
                   </Typography>
                   <Typography
-                    mt="5px"
                     align="right"
                     sx={{
                       "@media(max-width: 640px)": {
@@ -409,9 +391,21 @@ export function PositionDetails({
                   >
                     {feeUSDValue ? formatDollarAmount(feeUSDValue) : "--"}
                   </Typography>
-                </Box>
+                </Flex>
               }
             />
+          </Flex>
+
+          <Flex gap="0 17px">
+            {farmId ? (
+              <Button variant="contained" className="secondary" size="large" onClick={handleStake}>
+                <Trans>Farm Details</Trans>
+              </Button>
+            ) : null}
+
+            <Button variant="contained" size="large" onClick={handleDetails}>
+              <Trans>Position Details</Trans>
+            </Button>
           </Flex>
         </Flex>
 

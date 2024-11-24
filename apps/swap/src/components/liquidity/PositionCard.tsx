@@ -267,13 +267,10 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
         justify="space-between"
         fullWidth
         onClick={() => {
-          if (matchDownMD) {
-            handleToggleShow();
-          } else {
-            handleToPositionDetails();
-          }
+          handleToggleShow();
         }}
         sx={{
+          userSelect: "none",
           "@media(max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
