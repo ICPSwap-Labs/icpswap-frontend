@@ -20,7 +20,7 @@ import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
-import { useIntervalStakingPoolInfo } from "hooks/staking-token/index";
+import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
 import dayjs from "dayjs";
 import { FilterState } from "types/staking-token";
@@ -33,9 +33,10 @@ interface FarmListCardProps {
   showState: boolean;
   poolInfo: StakingPoolControllerPoolInfo;
   filterState: FilterState;
+  your?: boolean;
 }
 
-export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: FarmListCardProps) {
+export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState }: FarmListCardProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme();
   const history = useHistory();
@@ -47,6 +48,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
   const { result: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
 
   const [stakingPoolInfo] = useIntervalStakingPoolInfo(poolInfo.canisterId.toString());
+  const userPoolInfo = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
 
   const state = useStakingPoolState(poolInfo);
 
@@ -124,7 +126,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
           {stakeToken ? `${stakeToken.symbol} ` : "--"}
         </Typography>
       </Flex>
-
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
         <Typography
@@ -141,7 +142,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
           {rewardToken ? `${rewardToken.symbol} ` : "--"}
         </Typography>
       </Flex>
-
       <Flex justify="flex-end" className="row-item">
         {apr ? (
           <APRPanel
@@ -223,7 +223,8 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
         </Flex>
       )}
 
-      {filterState !== FilterState.FINISHED ? (
+      {/* Total Staked */}
+      {filterState !== FilterState.FINISHED && !your ? (
         <Flex justify="flex-end" className="row-item">
           <Typography variant="body2" sx={{ color: "text.primary" }}>
             {poolStakeTvl ? formatDollarAmount(poolStakeTvl) : "--"}
@@ -231,6 +232,49 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
         </Flex>
       ) : null}
 
+      {/* Your Staked */}
+      {your || filterState === FilterState.FINISHED ? (
+        <Flex vertical gap="5px 0" className="row-item" justify="center">
+          <Flex gap="0 4px" justify="flex-end" fullWidth>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.primary",
+                maxWidth: "170px",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+              title={
+                userPoolInfo && stakeToken
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
+                    )} ${stakeToken.symbol}`
+                  : ""
+              }
+            >
+              {userPoolInfo && stakeToken
+                ? `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
+                  )} ${stakeToken.symbol}`
+                : "--"}
+            </Typography>
+          </Flex>
+          <Flex gap="0 4px" justify="flex-end" fullWidth>
+            <Typography sx={{ fontSize: "12px" }}>
+              {userPoolInfo && stakeToken && stakeTokenPrice
+                ? `${formatDollarAmount(
+                    parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals)
+                      .multipliedBy(stakeTokenPrice)
+                      .toString(),
+                  )}`
+                : "--"}
+            </Typography>
+          </Flex>
+        </Flex>
+      ) : null}
+
+      {/* Total reward tokens */}
       {filterState === FilterState.FINISHED ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
           <Flex fullWidth justify="flex-end">
@@ -247,6 +291,47 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, showState }: Fa
         </Flex>
       ) : null}
 
+      {/* Your rewards */}
+      {your ? (
+        <Flex vertical gap="5px 0" className="row-item" justify="center">
+          <Flex justify="flex-end" fullWidth>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.primary",
+                maxWidth: "170px",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+              title={
+                userPoolInfo && rewardToken
+                  ? `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
+                    )} ${rewardToken.symbol}`
+                  : ""
+              }
+            >
+              {userPoolInfo && rewardToken
+                ? `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
+                  )} ${rewardToken.symbol}`
+                : "--"}
+            </Typography>
+          </Flex>
+          <Flex gap="0 4px" justify="flex-end" fullWidth>
+            <Typography sx={{ fontSize: "12px" }}>
+              {userPoolInfo && rewardToken && rewardTokenPrice
+                ? `${formatDollarAmount(
+                    parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals)
+                      .multipliedBy(rewardTokenPrice)
+                      .toString(),
+                  )}`
+                : "--"}
+            </Typography>
+          </Flex>
+        </Flex>
+      ) : null}
       {showState ? (
         <Flex justify="flex-end" className="row-item">
           {state ? (

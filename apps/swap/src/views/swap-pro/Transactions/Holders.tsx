@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Box, makeStyles } from "components/Mui";
+import { Box, makeStyles, useTheme } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { useExplorerTokenHolders, useLiquidityLockIds } from "@icpswap/hooks";
 import {
@@ -38,6 +38,7 @@ interface HolderRowProps {
 
 function HolderRow({ page, sneedLedger, holder, index }: HolderRowProps) {
   const classes = useStyles();
+  const theme = useTheme();
 
   const isSneed = useMemo(() => {
     if (!holder || !sneedLedger) return false;
@@ -48,7 +49,7 @@ function HolderRow({ page, sneedLedger, holder, index }: HolderRowProps) {
   const copySuccess = useCopySuccess();
 
   return (
-    <TableRow className={classes.wrapper} borderBottom="none">
+    <TableRow className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{index + 1 + (page - 1) * 10}</BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
@@ -83,6 +84,8 @@ export interface PoolTransactionsProps {
 
 export function Holders({ tokenId }: PoolTransactionsProps) {
   const classes = useStyles();
+  const theme = useTheme();
+
   const [page, setPage] = useState(1);
 
   const { result, loading } = useExplorerTokenHolders(tokenId, page, 10);
@@ -99,63 +102,65 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
   }, [locksIds]);
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1026px" }}>
-        <Header className={classes.wrapper}>
-          <HeaderCell field="PositionId">
-            <Trans>Rank</Trans>
-          </HeaderCell>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1026px" }}>
+          <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
+            <HeaderCell field="PositionId">
+              <Trans>Rank</Trans>
+            </HeaderCell>
 
-          <HeaderCell field="token0Amount">
-            <Trans>Address</Trans>
-          </HeaderCell>
+            <HeaderCell field="token0Amount">
+              <Trans>Address</Trans>
+            </HeaderCell>
 
-          <HeaderCell field="token1Amount">
-            <Trans>Amount</Trans>
-          </HeaderCell>
+            <HeaderCell field="token1Amount">
+              <Trans>Amount</Trans>
+            </HeaderCell>
 
-          <HeaderCell field="priceRange">
-            <Trans>Value</Trans>
-          </HeaderCell>
+            <HeaderCell field="priceRange">
+              <Trans>Value</Trans>
+            </HeaderCell>
 
-          <HeaderCell field="unclaimedFees">
-            <Trans>%</Trans>
-          </HeaderCell>
-        </Header>
+            <HeaderCell field="unclaimedFees">
+              <Trans>%</Trans>
+            </HeaderCell>
+          </Header>
 
-        {!loading
-          ? (result?.list ?? []).map((element, index) => (
-              <HolderRow key={index} page={page} holder={element} index={index} sneedLedger={sneedLedger} />
-            ))
-          : null}
+          {!loading
+            ? (result?.list ?? []).map((element, index) => (
+                <HolderRow key={index} page={page} holder={element} index={index} sneedLedger={sneedLedger} />
+              ))
+            : null}
 
-        {(result?.list ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(result?.list ?? []).length === 0 && !loading ? <NoData /> : null}
 
-        {loading ? (
-          <Box sx={{ padding: "24px" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          </Box>
-        ) : null}
-
-        <Box mt="20px">
-          {!loading && !!result?.list.length ? (
-            <SimplePagination
-              page={page}
-              maxItems={maxItems}
-              length={result?.total ? Number(result.total) : 0}
-              onPageChange={setPage}
-            />
+          {loading ? (
+            <Box sx={{ padding: "24px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
           ) : null}
         </Box>
+      </Box>
+
+      <Box mt="20px">
+        {!loading && !!result?.list.length ? (
+          <SimplePagination
+            page={page}
+            maxItems={maxItems}
+            length={result?.total ? Number(result.total) : 0}
+            onPageChange={setPage}
+          />
+        ) : null}
       </Box>
     </Box>
   );

@@ -28,6 +28,7 @@ import {
   useSwapPoolMetadata,
   useFarmState,
   useFarmUserPositions,
+  useFarmAvgApr,
 } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/index";
@@ -117,6 +118,16 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
     state,
   });
 
+  const { result: avgAPR } = useFarmAvgApr(farmId);
+
+  const __apr = useMemo(() => {
+    if (state === "FINISHED" || state === "CLOSED") {
+      return avgAPR ? `${new BigNumber(avgAPR).toFixed(2)}%` : null;
+    }
+
+    return apr;
+  }, [state, avgAPR, apr]);
+
   const stateColor = useStateColors(state);
 
   const { totalRewardAmount, totalRewardUSD } = useMemo(() => {
@@ -174,9 +185,9 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
         </Flex>
 
         <Flex justify="flex-end" className="row-item">
-          {apr ? (
+          {__apr ? (
             <APRPanel
-              value={apr}
+              value={__apr}
               tooltip={
                 nonNullArgs(rewardToken) && nonNullArgs(totalRewardAmount) ? (
                   <Trans>
@@ -259,19 +270,19 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
           </Flex>
         ) : null}
 
-        {your ? (
+        {your || filterState === FilterState.FINISHED ? (
           <Flex justify="flex-end" className="row-item">
             <Typography variant="body2" sx={{ color: "text.primary" }}>
               {userTvlValue ? formatDollarAmount(userTvlValue) : "--"}
             </Typography>
           </Flex>
-        ) : filterState !== FilterState.FINISHED ? (
+        ) : (
           <Flex justify="flex-end" className="row-item">
             <Typography variant="body2" sx={{ color: "text.primary" }}>
               {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
             </Typography>
           </Flex>
-        ) : null}
+        )}
 
         {filterState === FilterState.FINISHED ? (
           <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
@@ -279,7 +290,7 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
               <Typography variant="body2" sx={{ color: "text.primary" }}>
                 {nonNullArgs(totalRewardAmount) && nonNullArgs(rewardToken) ? (
                   <>
-                    {toSignificantWithGroupSeparator(totalRewardAmount, 6)}
+                    {formatAmount(totalRewardAmount)}
                     &nbsp;
                     {rewardToken.symbol}
                   </>

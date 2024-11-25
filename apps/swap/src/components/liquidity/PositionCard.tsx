@@ -15,7 +15,7 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
-import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
+import { usePositionState } from "hooks/liquidity";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -128,8 +128,6 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
-
-  const loadLiquidityPage = useLoadLiquidityPageCallback({ poolId: pool?.id, positionId, page: "position" });
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
 
@@ -248,11 +246,6 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
       setHiddenNumbers(`${positionKey}_YOUR`, !displayByFilter);
     }
   }, [displayByFilter, setHiddenNumbers, positionKey]);
-
-  const handleToPositionDetails = useCallback(() => {
-    if (!position || matchDownMD) return;
-    loadLiquidityPage();
-  }, [detailShow, setDetailShow, position, matchDownMD, loadLiquidityPage]);
 
   return (
     <Box

@@ -113,15 +113,11 @@ function MainContent() {
           ? __state === FilterState.YOUR
             ? "180px 180px 80px 220px 160px 160px 160px"
             : "220px 220px 100px 240px 180px 180px"
-          : state === "FINISHED"
-          ? "220px 220px 100px 240px"
           : "220px 220px 100px 240px 180px"
         : state === undefined
         ? __state === FilterState.YOUR
           ? "180px 180px 80px 1fr 1fr 1fr 120px"
           : "220px 220px 120px 1fr 1fr 180px"
-        : state === "FINISHED"
-        ? "220px 220px 120px 1fr"
         : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);

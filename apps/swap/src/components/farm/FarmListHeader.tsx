@@ -54,7 +54,7 @@ export function FarmListHeader({ your, state, showState, sx }: FarmListHeaderPro
         </Flex>
       ) : null}
 
-      {your ? (
+      {your || state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
           <Typography variant="body2" color="text.400">
             <Trans>Your Staked</Trans>

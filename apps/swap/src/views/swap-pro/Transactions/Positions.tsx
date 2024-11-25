@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Trans } from "@lingui/macro";
-import { Box, Typography, makeStyles } from "components/Mui";
+import { Box, Typography, makeStyles, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
 import { usePositions } from "hooks/liquidity/usePositions";
 import { pageArgsFormat, toSignificant, numberToString, formatDollarAmount, shorten, BigNumber } from "@icpswap/utils";
@@ -20,6 +20,7 @@ const useStyles = makeStyles(() => {
     wrapper: {
       display: "grid",
       gap: "1em",
+      padding: "16px",
       alignItems: "center",
       gridTemplateColumns: "200px 120px 120px repeat(3, 1fr)",
     },
@@ -38,6 +39,7 @@ interface PositionItemProps {
 
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
+  const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
@@ -110,7 +112,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   return (
     <>
       {pool ? (
-        <TableRow className={classes.wrapper}>
+        <TableRow className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <BodyCell>
             <Copy content={owner ?? ""}>
               <Typography>{owner ? shorten(owner) : "--"}</Typography>
@@ -211,6 +213,7 @@ export interface PositionsProps {
 
 export function Positions({ poolId }: PositionsProps) {
   const classes = useStyles();
+  const theme = useTheme();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
@@ -227,10 +230,10 @@ export function Positions({ poolId }: PositionsProps) {
   };
 
   return (
-    <Box sx={{ margin: "10px 0 0 0", padding: "0 16px" }}>
+    <Box sx={{ margin: "10px 0 0 0" }}>
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ minWidth: "1200px" }}>
-          <Header className={classes.wrapper}>
+          <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
             <HeaderCell field="Pair">
               <Trans>Owner</Trans>
             </HeaderCell>
@@ -282,7 +285,9 @@ export function Positions({ poolId }: PositionsProps) {
       </Box>
 
       {totalElements && Number(totalElements) !== 0 ? (
-        <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+        <Box sx={{ padding: "0 16px" }}>
+          <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+        </Box>
       ) : null}
     </Box>
   );

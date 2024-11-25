@@ -46,19 +46,20 @@ export function PoolListHeader({ showState, finished, gridTemplateColumns, your 
         </Flex>
       )}
 
+      {your || finished ? (
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" color="text.400">
+            <Trans>Your Staked</Trans>
+          </Typography>
+        </Flex>
+      ) : null}
+
       {your ? (
-        <>
-          <Flex justify="flex-end" className="row-item">
-            <Typography variant="body2" color="text.400">
-              <Trans>Your Staked</Trans>
-            </Typography>
-          </Flex>
-          <Flex justify="flex-end" className="row-item">
-            <Typography variant="body2" color="text.400">
-              <Trans>Your Rewards</Trans>
-            </Typography>
-          </Flex>
-        </>
+        <Flex justify="flex-end" className="row-item">
+          <Typography variant="body2" color="text.400">
+            <Trans>Your Rewards</Trans>
+          </Typography>
+        </Flex>
       ) : finished ? null : (
         <Flex justify="flex-end" className="row-item">
           <Typography variant="body2" color="text.400">

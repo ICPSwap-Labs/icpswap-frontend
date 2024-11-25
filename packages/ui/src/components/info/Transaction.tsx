@@ -3,7 +3,7 @@ import type { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 
 import { Copy } from "../Copy";
-import { BoxProps } from "../Mui";
+import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
 
@@ -42,8 +42,10 @@ interface TransactionRowProps {
 }
 
 export function TransactionRow({ transaction, className, onAddressClick }: TransactionRowProps) {
+  const theme = useTheme();
+
   return (
-    <TableRow className={className}>
+    <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
       <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>

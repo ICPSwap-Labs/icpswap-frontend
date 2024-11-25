@@ -23,12 +23,7 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
-import {
-  usePositionState,
-  usePositionValue,
-  usePositionFeesValue,
-  useLoadLiquidityPageCallback,
-} from "hooks/liquidity";
+import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
 import { useFarmUserRewardAmountAndValue, useUserApr, useFarmTvlValue } from "hooks/staking-farm/index";
 import { usePositionsValueByInfos } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -278,13 +273,6 @@ export function PositionCardForFarm({
     deposits,
   });
 
-  const loadLiquidityPage = useLoadLiquidityPageCallback({ poolId: pool?.id, positionId, page: "position" });
-
-  const handleToPositionDetails = useCallback(() => {
-    if (!position || matchDownMD) return;
-    loadLiquidityPage();
-  }, [detailShow, setDetailShow, position, matchDownMD, loadLiquidityPage]);
-
   return (
     <Box
       className={classes.wrapper}
@@ -306,11 +294,7 @@ export function PositionCardForFarm({
           },
         }}
         onClick={() => {
-          if (matchDownMD) {
-            handleToggleShow();
-          } else {
-            handleToPositionDetails();
-          }
+          handleToggleShow();
         }}
       >
         {!position && <Loading loading={!position} circularSize={28} />}

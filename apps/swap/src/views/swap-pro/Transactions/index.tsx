@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
+import { Flex } from "@icpswap/ui";
 
 import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
@@ -43,67 +44,58 @@ export default function Transactions() {
   };
 
   return (
-    <SwapProCardWrapper padding="16px 0px">
-      <Box
+    <SwapProCardWrapper padding="20px 0px">
+      <Flex
+        justify="space-between"
         sx={{
-          padding: "0 16px",
-          display: "flex",
-          justifyContent: "space-between",
+          padding: "0 16px 24px 16px",
+          borderBottom: `1px solid ${theme.palette.background.level1}`,
           "@media(max-width: 640px)": {
             flexDirection: "column",
-            gap: "12px 0",
+            alignItems: "flex-start",
+            gap: "20px 0",
           },
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            width: "fit-content",
-            background: theme.palette.background.level1,
-            padding: "4px",
-            borderRadius: "15px",
+            overflow: "auto hidden",
+            "@media(max-width: 640px)": {
+              width: "100%",
+              padding: "0 0 16px 0",
+            },
           }}
         >
-          {Menus.map((e) => (
-            <Box
-              key={e.value}
-              className={e.value === active ? "active" : ""}
-              sx={{
-                cursor: "pointer",
-                padding: "10px 10px",
-                borderRadius: "12px",
-                "&.active": {
-                  background: theme.palette.background.level3,
-                },
-                "@media(max-width: 640px)": {
-                  padding: "6px",
-                },
-              }}
-              onClick={() => setActive(e.value)}
-            >
-              <Typography
-                className={e.value === active ? "active" : ""}
-                sx={{
-                  "&.active": {
-                    color: "text.primary",
-                    fontWeight: 500,
-                  },
-                  "@media(max-width: 640px)": {
-                    fontSize: "11px",
-                  },
-                }}
-              >
-                {e.label}
-              </Typography>
-            </Box>
-          ))}
+          <Flex gap="20px">
+            {Menus.map((e) => (
+              <Box key={e.value} className={e.value === active ? "active" : ""} onClick={() => setActive(e.value)}>
+                <Typography
+                  className={e.value === active ? "active" : ""}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    "&.active": {
+                      color: "text.primary",
+                      fontWeight: 500,
+                    },
+                    "@media(max-width: 640px)": {
+                      fontSize: "14px",
+                    },
+                  }}
+                >
+                  {e.label}
+                </Typography>
+              </Box>
+            ))}
+          </Flex>
         </Box>
 
         {active === Tabs.ALL_TRANSACTIONS ? <AutoRefresh trigger={handleAutoRefresh} /> : null}
         {active === Tabs.YOUR_POSITIONS ? <AddLiquidity token0={inputToken} token1={outputToken} /> : null}
-      </Box>
+      </Flex>
 
-      <Box sx={{ margin: "10px 0 0 0" }}>
+      <Box>
         {active === Tabs.ALL_TRANSACTIONS ? <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} /> : null}
         {active === Tabs.YOUR_TRANSACTIONS ? <UserTransactions canisterId={tradePoolId} /> : null}
         {active === Tabs.YOUR_POSITIONS ? <YourPositions canisterId={tradePoolId} /> : null}
