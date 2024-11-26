@@ -271,14 +271,24 @@ export default function TokenDetails() {
           </Box>
         ) : null}
 
-        <TokenCharts
-          ref={tokenChartsRef}
-          canisterId={canisterId}
-          volume={infoToken?.volumeUSD}
-          showTopIfDexScreen={false}
-          dexScreenHeight="486px"
-          priceChart={<TokenPriceChart token={token} />}
-        />
+        <Box>
+          <TokenCharts
+            ref={tokenChartsRef}
+            canisterId={canisterId}
+            volume={infoToken?.volumeUSD}
+            showTopIfDexScreen={false}
+            dexScreenHeight="486px"
+            priceChart={<TokenPriceChart token={token} />}
+          />
+
+          {chartView && chartView.value === ChartView.PRICE ? (
+            <Typography sx={{ fontSize: "12px", padding: "12px", lineHeight: "16px" }}>
+              *Token price charts powered by TradingView, the charting platform and social network that provides users
+              with valuable information on market events through tools such as the economic calendar, stock analyser and
+              others
+            </Typography>
+          ) : null}
+        </Box>
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

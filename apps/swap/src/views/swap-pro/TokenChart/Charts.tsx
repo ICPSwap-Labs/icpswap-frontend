@@ -1,6 +1,6 @@
 import { useEffect, useContext, useRef, useState } from "react";
-import { Box, useTheme } from "components/Mui";
-import { TokenCharts, TokenChartsRef } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { TokenCharts, TokenChartsRef, ChartView } from "@icpswap/ui";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken } from "hooks/index";
 import { Null } from "@icpswap/types";
@@ -52,6 +52,13 @@ export default function TokenChartInfo() {
         priceChart={<TokenPriceChart token={priceToken} />}
         onPriceTokenIdChange={setPriceTokenId}
       />
+
+      {chartView && chartView.value === ChartView.PRICE ? (
+        <Typography sx={{ fontSize: "12px", padding: "12px", lineHeight: "16px" }}>
+          *Token price charts powered by TradingView, the charting platform and social network that provides users with
+          valuable information on market events through tools such as the economic calendar, stock analyser and others
+        </Typography>
+      ) : null}
     </Box>
   );
 }
