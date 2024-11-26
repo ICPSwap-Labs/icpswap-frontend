@@ -154,7 +154,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   return (
     <Box
       sx={{
-        borderBottom: "1px solid rgba(189, 200, 240, 0.082)",
+        borderBottom: `1px solid ${theme.palette.background.level1}`,
         display: !transferred ? "block" : "none",
         background: showButtons ? theme.palette.background.level2 : "none",
       }}
@@ -369,6 +369,7 @@ export interface PoolTransactionsProps {
 
 export function YourPositions({ canisterId }: PoolTransactionsProps) {
   const classes = useStyles();
+  const theme = useTheme();
   const [page, setPage] = useState(1);
   const { result, loading } = useUserPoolPositions(canisterId);
 
@@ -383,7 +384,7 @@ export function YourPositions({ canisterId }: PoolTransactionsProps) {
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
       <Box sx={{ minWidth: "1026px" }}>
-        <Header className={classes.wrapper}>
+        <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <HeaderCell field="PositionId">
             <Trans>Position ID</Trans>
           </HeaderCell>
