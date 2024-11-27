@@ -1,0 +1,52 @@
+import { t } from "@lingui/macro";
+import { Typography } from "components/Mui";
+import { Flex, Image } from "@icpswap/ui";
+import { formatDollarAmount } from "@icpswap/utils";
+import { useSwapProtocolData, useSwapPools } from "@icpswap/hooks";
+import { useFarmGlobalData } from "hooks/staking-farm/index";
+
+import { Card, Item } from "../component";
+
+export function Swap() {
+  const globalData = useFarmGlobalData();
+  const { result: swapProtocol } = useSwapProtocolData();
+  const { result: allSwapPools } = useSwapPools();
+
+  return (
+    <Card
+      title={
+        <Flex gap="0 12px">
+          <Image src="/images/info/overview-swap.svg" sizes="40px" />
+
+          <Typography color="text.primary" fontWeight={500} fontSize="18px">
+            Swap
+          </Typography>
+        </Flex>
+      }
+    >
+      <Flex vertical gap="32px 0" align="flex-start" sx={{ margin: "32px 0 0 0" }}>
+        <Item
+          label={t`TVL`}
+          value={swapProtocol ? formatDollarAmount(swapProtocol.tvlUSD) : "--"}
+          // tooltip={t`The cumulative value of positions staked across all live farming pools.`}
+        />
+        <Item
+          label={t`Total Volume`}
+          value={swapProtocol ? formatDollarAmount(swapProtocol.volumeUSD) : "--"}
+          // tooltip={t`The total value of rewards distributed by live farming pools.`}
+        />
+
+        <Item
+          label={t`Total Trading Pairs`}
+          value={allSwapPools ? allSwapPools.length : "--"}
+          // tooltip={t`The total value of rewards distributed by finished farming pools.`}
+        />
+        <Item
+          label={t`Total Users`}
+          value={globalData?.farmAmount?.toString() ?? "--"}
+          // tooltip={t`The total number of farming pools, including those that are unstart, live, and finished.`}
+        />
+      </Flex>
+    </Card>
+  );
+}

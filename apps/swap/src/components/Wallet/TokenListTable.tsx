@@ -11,7 +11,7 @@ import {
   isNullArgs,
 } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
-import { NoData, LoadingRow } from "components/index";
+import { NoData, LoadingRow, TokenStandardLabel } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
@@ -19,7 +19,6 @@ import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";

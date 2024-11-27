@@ -13,7 +13,6 @@ import ErrorBoundary from "components/ErrorBoundary";
 import WalletConnector from "components/authentication/ConnectorModal";
 import Loader from "components/Loading/LinearLoader";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
-import { useFetchInfoAllTokens } from "hooks/info/useInfoTokens";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
 import { GlobalContext } from "hooks/useGlobalContext";
@@ -22,7 +21,9 @@ import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
+import { PublicTokenOverview, Null } from "@icpswap/types";
 
+import { GlobalFetch } from "./GlobalFetch";
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
@@ -34,12 +35,13 @@ import Routes from "./routes";
 initGoogleAnalytics();
 
 export default function App() {
-  const [refreshTriggers, setRefreshTriggers] = useState<{ [key: string]: number }>({});
   const customization = useAppSelector((state) => state.customization);
+
+  const [refreshTriggers, setRefreshTriggers] = useState<{ [key: string]: number }>({});
+  const [infoAllTokens, setInfoAllTokens] = useState<PublicTokenOverview[] | Null>(null);
 
   useFetchXDR2USD();
   useFetchICPPrices();
-  useFetchInfoAllTokens();
   useFetchAllSwapTokens();
 
   const { isConnected } = useConnectManager();
@@ -71,7 +73,13 @@ export default function App() {
               <ThemeProvider theme={theme(customization)}>
                 <SnackbarProvider maxSnack={100}>
                   <GlobalContext.Provider
-                    value={{ AllPools, refreshTriggers, setRefreshTriggers: handleRefreshTriggers }}
+                    value={{
+                      AllPools,
+                      refreshTriggers,
+                      setRefreshTriggers: handleRefreshTriggers,
+                      infoAllTokens,
+                      setInfoAllTokens,
+                    }}
                   >
                     <ActorInitial>
                       <CssBaseline />
@@ -86,6 +94,7 @@ export default function App() {
                         <Snackbar />
                         <FullscreenLoading />
                         <GlobalSteps />
+                        <GlobalFetch />
                         {isConnected ? <RiskStatement /> : null}
                         {walletConnectorOpen ? <WalletConnector /> : null}
                       </NavigationScroll>

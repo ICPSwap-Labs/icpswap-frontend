@@ -2,10 +2,9 @@ import React, { useMemo, useEffect } from "react";
 import { useTheme, Typography, Box, Grid, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { DotLoading, TokenImage } from "components/index";
+import { DotLoading, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import {
   parseTokenAmount,

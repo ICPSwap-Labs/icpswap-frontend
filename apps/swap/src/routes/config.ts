@@ -1,5 +1,7 @@
 import { lazy } from "react";
-import Loadable from "../components/Loading/Loadable";
+import Loadable from "components/Loading/Loadable";
+
+import { infoRoutesConfigs } from "./info.config";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
@@ -118,4 +120,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/sns/launch/:root_id": SNSLaunch,
 
   "/ck-bridge": CkBridge,
+
+  ...infoRoutesConfigs,
 };

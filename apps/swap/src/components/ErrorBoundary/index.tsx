@@ -26,7 +26,7 @@ function Fallback({ error, eventId }: FallbackProps) {
   }, [error]);
 
   return (
-    <Layout>
+    <Layout info={false}>
       <Box sx={{ width: "100%", height: "calc(100vh - 280px)" }}>
         <Grid container alignItems="center" justifyContent="center" sx={{ width: "100%", height: "100%" }}>
           <Grid item>

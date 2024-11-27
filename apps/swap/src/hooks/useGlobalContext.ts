@@ -1,10 +1,12 @@
 import { createContext, useContext, useMemo } from "react";
-import type { SwapPoolData } from "@icpswap/types";
+import type { SwapPoolData, PublicTokenOverview, Null } from "@icpswap/types";
 
 export type GlobalContextProps = {
   AllPools: SwapPoolData[] | undefined;
   refreshTriggers: { [key: string]: number };
   setRefreshTriggers: (key: string) => void;
+  infoAllTokens: PublicTokenOverview[] | Null;
+  setInfoAllTokens: (args: PublicTokenOverview[]) => void;
 };
 
 export const GlobalContext = createContext({} as GlobalContextProps);

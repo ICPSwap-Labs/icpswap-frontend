@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
-import { Modal, TextButton, FilledTextField } from "components/index";
+import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";

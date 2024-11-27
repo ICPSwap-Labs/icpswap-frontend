@@ -8,7 +8,7 @@ import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useAllTokensOfSwap } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import NoDataIcon from "assets/icons/NoData";
-import type { AllTokenOfSwapTokenInfo, PublicTokenOverview } from "@icpswap/types";
+import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import { ICP } from "@icpswap/tokens";
@@ -19,7 +19,7 @@ import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
-  infoAllTokens: PublicTokenOverview[] | undefined;
+  infoAllTokens: PublicTokenOverview[] | Null;
   onTokenClick?: (token: AllTokenOfSwapTokenInfo) => void;
   inTokenList?: boolean;
 }
