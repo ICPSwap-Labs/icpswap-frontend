@@ -49,7 +49,6 @@ export default function ProfileSection() {
   };
 
   const handleConnectWallet = async () => {
-    await logout();
     walletManager(true);
   };
 
