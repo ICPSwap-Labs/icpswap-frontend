@@ -286,6 +286,14 @@ export default function TokenDetails() {
             showTopIfDexScreen={false}
             dexScreenHeight="486px"
             priceChart={<TokenPriceChart token={token} />}
+            wrapperSx={
+              chartView && chartView?.value === ChartView.PRICE
+                ? {
+                    borderBottomLeftRadius: "0px",
+                    borderBottomRightRadius: "0px",
+                  }
+                : null
+            }
           />
 
           {chartView && chartView.value === ChartView.PRICE ? (
