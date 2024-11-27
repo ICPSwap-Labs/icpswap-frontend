@@ -134,7 +134,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
 
       <Box
         sx={{
-          margin: "10px 0 0 0",
+          margin: "20px 0 0 0",
           display: "flex",
           justifyContent: "space-between",
           "@media(max-width: 640px)": {

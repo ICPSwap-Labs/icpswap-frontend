@@ -277,13 +277,14 @@ export const TokenCharts = forwardRef(
           sx={{
             height: "70px",
             padding: "16px",
-            display: priceChart
-              ? "none"
-              : chartView === ChartView.DexScreener
-              ? showTopIfDexScreen
-                ? "flex"
-                : "none"
-              : "flex",
+            display:
+              chartView === ChartView.PRICE && priceChart
+                ? "none"
+                : chartView === ChartView.DexScreener
+                ? showTopIfDexScreen
+                  ? "flex"
+                  : "none"
+                : "flex",
           }}
         >
           <Box>
