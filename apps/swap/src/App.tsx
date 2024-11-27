@@ -22,6 +22,7 @@ import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
+import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
 
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
@@ -41,6 +42,7 @@ export default function App() {
   useFetchICPPrices();
   useFetchInfoAllTokens();
   useFetchAllSwapTokens();
+  usePlugExternalDisconnect();
 
   const { isConnected } = useConnectManager();
 
