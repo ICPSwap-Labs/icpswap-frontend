@@ -7,7 +7,6 @@ import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import {
   useAccountPrincipal,
   useConnectorStateConnected,
-  useUserLogout,
   useWalletConnectorManager,
   useConnectorType,
 } from "store/auth/hooks";
@@ -33,7 +32,6 @@ export default function ProfileSection() {
 
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const logout = useUserLogout();
   const history = useHistory();
   const connectorType = useConnectorType();
 

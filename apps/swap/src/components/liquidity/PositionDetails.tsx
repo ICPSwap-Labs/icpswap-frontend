@@ -28,7 +28,7 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Flex fullWidth align={matchDownSM ? "flex-start" : "center"}>
+    <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
       <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div" sx={{ width: "140px" }}>
         {label}
       </Typography>

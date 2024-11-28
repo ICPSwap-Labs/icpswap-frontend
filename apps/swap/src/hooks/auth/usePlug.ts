@@ -5,11 +5,14 @@ export function usePlugExternalDisconnect() {
   const logout = useUserLogout();
 
   useEffect(() => {
-    window.ic.plug.onExternalDisconnect(logout);
-    window.ic.plug.onLockStateChange((isLocked) => {
-      if (isLocked) {
-        logout();
-      }
-    });
+    if (window.ic.plug) {
+      if (window.ic.plug.onExternalDisconnect) window.ic.plug.onExternalDisconnect(logout);
+      if (window.ic.plug.onLockStateChange)
+        window.ic.plug.onLockStateChange((isLocked) => {
+          if (isLocked) {
+            logout();
+          }
+        });
+    }
   }, []);
 }
