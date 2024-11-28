@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
+import { useFetchXDR2USD, useFetchGlobalTokenList, useWalletConnectorManager } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
@@ -22,7 +22,6 @@ import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
-import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
 
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
@@ -42,9 +41,10 @@ export default function App() {
   useFetchICPPrices();
   useFetchInfoAllTokens();
   useFetchAllSwapTokens();
-  usePlugExternalDisconnect();
 
   const { isConnected } = useConnectManager();
+
+  const [walletConnectorOpen] = useWalletConnectorManager();
 
   const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
   const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
@@ -87,7 +87,7 @@ export default function App() {
                         <FullscreenLoading />
                         <GlobalSteps />
                         {isConnected ? <RiskStatement /> : null}
-                        <WalletConnector />
+                        {walletConnectorOpen ? <WalletConnector /> : null}
                       </NavigationScroll>
                     </ActorInitial>
                   </GlobalContext.Provider>
