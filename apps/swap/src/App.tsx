@@ -7,6 +7,7 @@ import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
 import { useConnectManager } from "store/auth/hooks";
+import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
 import RiskStatement from "components/RiskStatement";
 import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -41,6 +42,7 @@ export default function App() {
   useFetchICPPrices();
   useFetchInfoAllTokens();
   useFetchAllSwapTokens();
+  usePlugExternalDisconnect();
 
   const { isConnected } = useConnectManager();
 
