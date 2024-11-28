@@ -29,7 +29,11 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
 
   return (
     <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
-      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div" sx={{ width: "140px" }}>
+      <Typography
+        {...(matchDownSM ? { fontSize: "12px" } : {})}
+        component="div"
+        sx={{ width: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", lineHeight: "14px" }}
+      >
         {label}
       </Typography>
 
@@ -214,8 +218,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
@@ -273,8 +282,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
