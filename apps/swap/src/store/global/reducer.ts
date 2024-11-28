@@ -1,5 +1,12 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateXDR2USD, updateICPPriceList, updateUserLocale, updateTokenList, updateAllSwapTokens } from "./actions";
+import {
+  updateXDR2USD,
+  updateICPPriceList,
+  updateUserLocale,
+  updateTokenList,
+  updateAllSwapTokens,
+  updateWalletConnector,
+} from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
@@ -18,5 +25,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateAllSwapTokens, (state, { payload }) => {
       state.allSwapTokens = payload;
+    })
+    .addCase(updateWalletConnector, (state, { payload }) => {
+      state.walletConnector = payload;
     });
 });

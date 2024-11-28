@@ -17,7 +17,6 @@ export interface AuthState {
   isConnected: boolean;
   account: string;
   password: string;
-  walletConnectorOpen: boolean;
 }
 
 export const initialState: AuthState = {
@@ -28,5 +27,4 @@ export const initialState: AuthState = {
   isConnected: false,
   account: "",
   password: "",
-  walletConnectorOpen: false,
 };

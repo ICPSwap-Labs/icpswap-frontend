@@ -4,7 +4,7 @@ import { t } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {

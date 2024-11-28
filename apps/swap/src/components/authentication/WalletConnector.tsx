@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Grid } from "@mui/material";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 
 export default function WalletConnector({ children }: { children: ReactNode }) {
   const [, manager] = useWalletConnectorManager();

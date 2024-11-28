@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import Button, { ButtonProps } from "@mui/material/Button";
-import { useWalletConnectorManager, useConnectorStateConnected } from "store/auth/hooks";
+import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Override } from "@icpswap/types";
 import { t } from "@lingui/macro";
 import { CircularProgress } from "@mui/material";
