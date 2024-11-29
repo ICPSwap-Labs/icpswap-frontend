@@ -86,9 +86,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         },
         containedPrimary: {
           background: globalButtonBackground,
-          "&.MuiButton-sizeLarge": {
-            padding: "11px 22px",
-          },
         },
         containedSecondary: {
           background: isDark ? theme.colors.darkLevel4 : "#EFEFFF",

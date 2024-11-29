@@ -1,15 +1,15 @@
-import React, { useContext, useMemo, useState } from "react";
-import { Box, Typography, useTheme, Theme } from "components/Mui";
+import React, { ReactNode, useContext, useMemo, useState } from "react";
+import { Box, BoxProps, Typography, useTheme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
+import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
-import { useTokenTotalHolder, useTokenSupply } from "@icpswap/hooks";
+import { useTokenSupply, useTokenAnalysis } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenImage } from "components/index";
-import { useICPPrice } from "hooks/useUSDPrice";
 import type { Null, PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
-import { ChevronDown } from "react-feather";
+import { ChevronDown, ArrowUpRight } from "react-feather";
 import { Copy } from "components/Copy/icon";
 import { Token } from "@icpswap/swap-sdk";
 
@@ -37,17 +37,26 @@ function TokenTvl({ token, balance, tvlUsd }: TokenTvlProps) {
 
 interface CardProps {
   padding?: "12px" | "8px";
-  title?: string;
+  title?: ReactNode;
+  titleArrow?: boolean;
   children: React.ReactNode;
   fontSize?: "14px" | "12px";
+  tips?: ReactNode;
+  wrapperSx?: BoxProps["sx"];
 }
 
-function Card({ title, padding = "8px", fontSize = "14px", children }: CardProps) {
-  const theme = useTheme() as Theme;
+function Card({ title, titleArrow, padding = "8px", fontSize = "14px", tips, children, wrapperSx }: CardProps) {
+  const theme = useTheme();
 
   return (
-    <Box sx={{ background: theme.palette.background.level1, borderRadius: "8px", padding }}>
-      {title ? <Typography sx={{ margin: "0 0 8px 0", textAlign: "center", fontSize }}>{title}</Typography> : null}
+    <Box sx={{ background: theme.palette.background.level1, borderRadius: "8px", padding, ...wrapperSx }}>
+      {title ? (
+        <Flex fullWidth justify="center" gap="0 4px" sx={{ margin: "0 0 8px 0" }}>
+          <Typography sx={{ fontSize }}>{title}</Typography>
+          {titleArrow ? <ArrowUpRight size={14} color={theme.colors.secondaryMain} /> : null}
+          {tips ? <Tooltip iconSize="12px" tips={tips} /> : null}
+        </Flex>
+      ) : null}
       {children}
     </Box>
   );
@@ -73,7 +82,7 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
     return token?.address === inputToken?.address ? inputTokenPrice : outputTokenPrice;
   }, [inputToken, outputToken, token]);
 
-  const icpPrice = useICPPrice();
+  // const icpPrice = useICPPrice();
 
   const token0UsdTvl = useMemo(() => {
     if (!token0Balance || !inputTokenPrice || !inputToken) return undefined;
@@ -93,7 +102,22 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
   }, [token0UsdTvl, token1UsdTvl]);
 
   const { result: tokenSupply } = useTokenSupply(tokenId);
-  const { result: tokenHolders } = useTokenTotalHolder(tokenId);
+  // const { result: tokenHolders } = useTokenTotalHolder(tokenId);
+  const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
+
+  const marketCap = useMemo(() => {
+    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenPrice)) {
+      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(tokenPrice).toString();
+    }
+  }, [tokenAnalysis, tokenPrice]);
+
+  const circulating = useMemo(() => {
+    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
+      return `${new BigNumber(
+        new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
+      ).multipliedBy(100)}%`;
+    }
+  }, [tokenAnalysis, tokenSupply, token]);
 
   return (
     <SwapProCardWrapper padding="0px">
@@ -184,6 +208,106 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                     : "--"}
                 </Typography>
               </Card>
+              <Card
+                title={t`FDV (USD)`}
+                fontSize="12px"
+                tips={
+                  <Flex vertical gap="8px 0" align="flex-start">
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>
+                        Fully-diluted Valuation (FDV): The Valuation assuming all possible tokens are in circulation.
+                      </Trans>
+                    </Typography>
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>FDV = Price x Max Supply.</Trans>
+                    </Typography>
+                  </Flex>
+                }
+              >
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenSupply && token && tokenPrice
+                    ? formatDollarAmount(
+                        parseTokenAmount(tokenSupply.toString(), token.decimals).multipliedBy(tokenPrice).toString(),
+                      )
+                    : "--"}
+                </Typography>
+              </Card>
+              <Card
+                title={t`Circulating Supply`}
+                fontSize="12px"
+                tips={
+                  <Trans>
+                    The number of coins currently available and circulating in the public market, similar to the
+                    floating shares in stocks.
+                  </Trans>
+                }
+              >
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {nonNullArgs(tokenAnalysis) ? formatAmount(tokenAnalysis.marketAmount) : "--"}
+                </Typography>
+              </Card>
+              <Card
+                title={t`Market Cap`}
+                fontSize="12px"
+                tips={
+                  <Flex vertical gap="8px 0" align="flex-start">
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>
+                        Market Cap: The total market value of a cryptocurrency's circulating supply, similar to
+                        free-float market cap in stocks.
+                      </Trans>
+                    </Typography>
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>Market Cap = Current Price x Circulating Supply.</Trans>
+                    </Typography>
+                  </Flex>
+                }
+              >
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
+                </Typography>
+              </Card>
+              <Card
+                title={t`Circulating %`}
+                fontSize="12px"
+                tips={
+                  <Flex vertical gap="8px 0" align="flex-start">
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>
+                        The proportion of a cryptocurrency's total supply that is currently in circulation and available
+                        for trading.
+                      </Trans>
+                    </Typography>
+                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
+                      <Trans>Circulating Supply Percentage = (Circulating Supply / Total Supply) x 100%.</Trans>
+                    </Typography>
+                  </Flex>
+                }
+              >
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {nonNullArgs(circulating) ? circulating : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Holders`} fontSize="12px">
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
+                </Typography>
+              </Card>
+              <Card title={t`Volume 24H`} fontSize="12px">
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
+                </Typography>
+              </Card>
+              {/* <Card title={t`Volume 7D`} fontSize="12px">
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
+                </Typography>
+              </Card> */}
+              <Card title={t`Decimals`} fontSize="12px">
+                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
+                  {token ? token.decimals : "--"}
+                </Typography>
+              </Card>
               <Card title={t`Transfer Fee`} fontSize="12px">
                 <Typography
                   color="text.primary"
@@ -218,47 +342,6 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
                       : "--"}
                     )
                   </Typography>
-                </Typography>
-              </Card>
-              <Card title={t`FDV (USD)`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && token && tokenPrice
-                    ? formatDollarAmount(
-                        parseTokenAmount(tokenSupply.toString(), token.decimals).multipliedBy(tokenPrice).toString(),
-                      )
-                    : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`FDV (ICP)`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && token && tokenPrice && icpPrice
-                    ? formatAmount(
-                        parseTokenAmount(tokenSupply.toString(), token.decimals)
-                          .multipliedBy(tokenPrice)
-                          .dividedBy(icpPrice)
-                          .toString(),
-                      )
-                    : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`Volume 24H`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
-                </Typography>
-              </Card>
-              {/* <Card title={t`Volume 7D`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
-                </Typography>
-              </Card> */}
-              <Card title={t`Decimals`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {token ? token.decimals : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`Holders`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenHolders ? tokenHolders.toString() : "--"}
                 </Typography>
               </Card>
             </Box>

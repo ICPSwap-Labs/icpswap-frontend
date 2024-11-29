@@ -12,6 +12,7 @@ export interface GlobalState {
   userLocale: SupportedLocale;
   poolStandardUpdated: boolean;
   allSwapTokens: AllTokenOfSwapTokenInfo[];
+  walletConnector: boolean;
 }
 
 export const initialState: GlobalState = {
@@ -23,4 +24,5 @@ export const initialState: GlobalState = {
   userLocale: DEFAULT_LOCALE,
   poolStandardUpdated: false,
   allSwapTokens: [],
+  walletConnector: false,
 };

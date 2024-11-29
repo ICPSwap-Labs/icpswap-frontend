@@ -7,7 +7,7 @@ import { getConnectorIsConnected, getConnectorPrincipal, connector, WalletConnec
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
 import store from "../index";
-import { login, logout, updateConnected, updateWalletConnector } from "./actions";
+import { login, logout, updateConnected } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
 
 export function useIsUnLocked() {
@@ -188,18 +188,4 @@ export function useAccountPrincipalString() {
   return useMemo(() => {
     return principal?.toString();
   }, [principal]);
-}
-
-export function useWalletConnectorManager(): [boolean, (open: boolean) => void] {
-  const dispatch = useAppDispatch();
-  const open = useAppSelector((state) => state.auth.walletConnectorOpen);
-
-  const manage = useCallback(
-    (open: boolean) => {
-      dispatch(updateWalletConnector(open));
-    },
-    [dispatch],
-  );
-
-  return [open, manage];
 }

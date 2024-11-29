@@ -9,3 +9,5 @@ export enum ckBridgeChain {
   icp = "Internet Computer",
   btc = "Bitcoin",
 }
+
+export const NONE_SUB_HEX = "0000000000000000000000000000000000000000000000000000000000000000";

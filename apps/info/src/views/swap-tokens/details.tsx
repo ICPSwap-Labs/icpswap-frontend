@@ -1,6 +1,6 @@
 import { Typography, Box, Button, useMediaQuery, useTheme } from "ui-component/Mui";
 import { useParams, useHistory } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "ui-component/index";
+import { Wrapper, Breadcrumbs, TokenImage, MainCard } from "ui-component/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatDollarTokenPrice, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL } from "@icpswap/hooks";
@@ -14,6 +14,7 @@ import {
   TokenChartsRef,
   ChartViewSelector,
   ChartButton,
+  TextButton,
 } from "@icpswap/ui";
 import TokenPools from "ui-component/analytic/TokenPools";
 import TokenTransactions from "ui-component/analytic/TokenTransactions";
@@ -271,14 +272,55 @@ export default function TokenDetails() {
           </Box>
         ) : null}
 
-        <TokenCharts
-          ref={tokenChartsRef}
-          canisterId={canisterId}
-          volume={infoToken?.volumeUSD}
-          showTopIfDexScreen={false}
-          dexScreenHeight="486px"
-          priceChart={<TokenPriceChart token={token} />}
-        />
+        <Box
+          sx={{
+            background:
+              chartView && chartView.value === ChartView.PRICE ? theme.palette.background.level2 : "transparent",
+            borderRadius: chartView && chartView.value === ChartView.PRICE ? "16px" : "none",
+          }}
+        >
+          <TokenCharts
+            ref={tokenChartsRef}
+            canisterId={canisterId}
+            volume={infoToken?.volumeUSD}
+            showTopIfDexScreen={false}
+            dexScreenHeight="486px"
+            priceChart={<TokenPriceChart token={token} />}
+            wrapperSx={
+              chartView && chartView?.value === ChartView.PRICE
+                ? {
+                    borderBottomLeftRadius: "0px",
+                    borderBottomRightRadius: "0px",
+                  }
+                : null
+            }
+          />
+
+          {chartView && chartView.value === ChartView.PRICE ? (
+            <Typography
+              sx={{
+                fontSize: "12px",
+                padding: "12px",
+                lineHeight: "16px",
+                background: theme.palette.background.level2,
+                borderBottomLeftRadius: "16px",
+                borderBottomRightRadius: "16px",
+              }}
+            >
+              *Token price charts powered by{" "}
+              <TextButton
+                link="https://www.tradingview.com/chart"
+                sx={{
+                  fontSize: "12px",
+                }}
+              >
+                TradingView
+              </TextButton>
+              , the charting platform and social network that provides users with valuable information on market events
+              through tools such as the economic calendar, stock analyser and others
+            </Typography>
+          ) : null}
+        </Box>
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

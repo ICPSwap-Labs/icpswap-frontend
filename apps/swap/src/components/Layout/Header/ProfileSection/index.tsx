@@ -4,13 +4,8 @@ import { useTheme } from "components/Mui";
 import { shorten } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import {
-  useAccountPrincipal,
-  useConnectorStateConnected,
-  useUserLogout,
-  useWalletConnectorManager,
-  useConnectorType,
-} from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected, useConnectorType } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
@@ -33,7 +28,6 @@ export default function ProfileSection() {
 
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const logout = useUserLogout();
   const history = useHistory();
   const connectorType = useConnectorType();
 
@@ -49,7 +43,6 @@ export default function ProfileSection() {
   };
 
   const handleConnectWallet = async () => {
-    await logout();
     walletManager(true);
   };
 

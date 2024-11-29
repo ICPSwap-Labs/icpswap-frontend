@@ -1,5 +1,5 @@
 import { MainCard } from "components/index";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Trans } from "@lingui/macro";
 import { Box, Typography, Button } from "components/Mui";
 import { Flex, NoData } from "@icpswap/ui";

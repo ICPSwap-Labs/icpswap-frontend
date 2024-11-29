@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { AppState } from "store/index";
@@ -12,7 +12,13 @@ import {
 } from "@icpswap/hooks";
 import { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 
-import { updateXDR2USD, updateICPPriceList, updateTokenList, updateAllSwapTokens } from "./actions";
+import {
+  updateXDR2USD,
+  updateICPPriceList,
+  updateTokenList,
+  updateAllSwapTokens,
+  updateWalletConnector,
+} from "./actions";
 
 export function useAccount() {
   return useAppSelector((state: AppState) => state.auth.account);
@@ -168,4 +174,18 @@ export function useFetchAllSwapTokens() {
   }, [allSwapTokens, dispatch]);
 
   return useMemo(() => ({ loading, result: allSwapTokens }), [loading, allSwapTokens]);
+}
+
+export function useWalletConnectorManager(): [boolean, (open: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.global.walletConnector);
+
+  const manage = useCallback(
+    (open: boolean) => {
+      dispatch(updateWalletConnector(open));
+    },
+    [dispatch],
+  );
+
+  return [open, manage];
 }

@@ -162,14 +162,18 @@ export const SwapWrapper = forwardRef(
       if (type === "input") {
         onUserInput(
           SWAP_FIELD.INPUT,
-          new BigNumber(value).isEqualTo(0)
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
             ? "0"
             : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
         );
       } else {
         onUserInput(
           SWAP_FIELD.OUTPUT,
-          new BigNumber(value).isEqualTo(0)
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
             ? "0"
             : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
         );

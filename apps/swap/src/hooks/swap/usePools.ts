@@ -1,11 +1,14 @@
-import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { useMemo, useEffect, useState } from "react";
-import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
+import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
 import { numberToString } from "@icpswap/utils";
 import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
+import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
 import { NETWORK, network } from "constants/index";
-import { ICP } from "@icpswap/tokens";
+import { useToken, getTokensFromInfos } from "hooks/useCurrency";
+import { getTokenInfo } from "hooks/token/calls";
+import { TokenInfo } from "types/token";
 
 export enum PoolState {
   LOADING = "LOADING",
@@ -237,4 +240,151 @@ export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
       return prev || hasPairWithBaseToken;
     }, false);
   }, [tokenPools]);
+}
+
+export function usePoolByPoolId(canisterId: string | Null): [PoolState, Pool | null] {
+  const [pool, setPool] = useState<PoolMetadata | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const call = async () => {
+      if (canisterId) {
+        setLoading(true);
+        const poolInfo = await getSwapPoolMetadata(canisterId);
+        setPool(poolInfo);
+        setLoading(false);
+      }
+    };
+
+    call();
+  }, [canisterId]);
+
+  const [, token0] = useToken(pool?.token0.address);
+  const [, token1] = useToken(pool?.token1.address);
+
+  return useMemo(() => {
+    if (loading) return [PoolState.LOADING, null];
+    if (!pool || !pool?.token0 || !pool?.token1 || !pool?.fee || !token0 || !token1 || !canisterId)
+      return [PoolState.NOT_EXISTS, null];
+
+    const { fee, sqrtPriceX96, liquidity, tick } = pool;
+
+    try {
+      return [
+        PoolState.EXISTS,
+        new Pool(
+          canisterId,
+          token0.wrapped,
+          token1.wrapped,
+          Number(fee),
+          numberToString(sqrtPriceX96),
+          numberToString(liquidity),
+          Number(tick),
+        ),
+      ];
+    } catch (error) {
+      console.error("Error when constructing the pool", error);
+      return [PoolState.NOT_EXISTS, null];
+    }
+  }, [pool, loading, token0, token1, canisterId]);
+}
+
+export function usePoolsByIds(canisterIds: string[] | undefined): {
+  Pools: [PoolState, Pool | null][];
+  tokens: { [key: string]: Token };
+} {
+  const [pools, setPools] = useState<(PoolMetadata | undefined)[] | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  const [tokens, setTokens] = useState<{ [key: string]: Token }>({} as { [key: string]: Token });
+
+  useEffect(() => {
+    async function call() {
+      if (canisterIds) {
+        setLoading(true);
+
+        const pools = await Promise.all(
+          canisterIds.map(async (canisterId) => {
+            return await getSwapPoolMetadata(canisterId);
+          }),
+        );
+
+        setPools(pools);
+        setLoading(false);
+      }
+    }
+
+    call();
+  }, [canisterIds]);
+
+  const tokenIds = useMemo(() => {
+    if (pools) {
+      const ids = pools.reduce((prev, curr) => {
+        return prev.concat(curr ? [curr.token0.address, curr.token1.address] : []);
+      }, [] as string[]);
+
+      return [...new Set(ids)];
+    }
+
+    return undefined;
+  }, [pools]);
+
+  useEffect(() => {
+    async function call() {
+      if (tokenIds) {
+        const tokenInfos = await Promise.all(tokenIds.map(async (id) => await getTokenInfo(id)));
+        const tokens = getTokensFromInfos(tokenInfos.filter((info) => !!info) as TokenInfo[]);
+
+        const _tokens: { [key: string]: Token } = {};
+
+        tokens?.forEach((token) => {
+          if (token) {
+            _tokens[token.address] = token;
+          }
+        });
+
+        setTokens(_tokens);
+      }
+    }
+
+    call();
+  }, [tokenIds]);
+
+  return useMemo(() => {
+    if (loading) return { Pools: [] as [PoolState, null][], tokens: {} };
+
+    if (!pools || Object.keys(tokens).length === 0) return { Pools: [] as [PoolState, null][], tokens: {} };
+
+    const Pools: [PoolState, null | Pool][] = [];
+
+    pools.forEach((pool, index) => {
+      if (!pool || !canisterIds) return [PoolState.NOT_EXISTS, null];
+
+      const { fee, sqrtPriceX96, liquidity, tick } = pool;
+
+      const token0 = tokens[pool.token0.address];
+      const token1 = tokens[pool.token1.address];
+
+      try {
+        Pools.push([
+          PoolState.EXISTS,
+          new Pool(
+            canisterIds[index],
+            token0.wrapped,
+            token1.wrapped,
+            Number(fee),
+            numberToString(sqrtPriceX96),
+            numberToString(liquidity),
+            Number(tick),
+          ),
+        ]);
+      } catch (error) {
+        console.error("Error when constructing the pool", error);
+
+        Pools.push([PoolState.NOT_EXISTS, null]);
+      }
+    });
+
+    return { Pools, tokens };
+  }, [pools, loading, tokens, canisterIds]);
 }

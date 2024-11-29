@@ -6,7 +6,6 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { CollectFees } from "components/liquidity/index";
 import { BigNumber, formatDollarAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { toFormat, PositionState } from "utils/index";
@@ -29,17 +28,22 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Flex fullWidth justify="space-between" align="flex-start">
-      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div">
+    <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
+      <Typography
+        {...(matchDownSM ? { fontSize: "12px" } : {})}
+        component="div"
+        sx={{ width: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", lineHeight: "14px" }}
+      >
         {label}
       </Typography>
 
       <Flex
-        justify="flex-end"
         gap="0 4px"
         sx={{
+          flex: 1,
           "@media(max-width:640px)": {
             maxWidth: "130px",
+            justifyContent: "flex-end",
           },
         }}
       >
@@ -79,7 +83,6 @@ export interface PositionDetailsProps {
 
 export function PositionDetails({
   position,
-  showButtons,
   positionId,
   manuallyInverted,
   setManuallyInverted,
@@ -90,7 +93,6 @@ export function PositionDetails({
   feeUSDValue,
   feeAmount0,
   feeAmount1,
-  onClaimSuccess,
   onHide,
   farmId,
   staked,
@@ -98,12 +100,10 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const history = useHistory();
   const theme = useTheme();
-
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
   const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
-
-  const noLiquidity = position?.liquidity.toString() === "0";
 
   const { pool, tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -138,23 +138,11 @@ export function PositionDetails({
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
   }, [currencyQuote, currencyBase]);
 
-  const hasUnclaimedFees = useMemo(() => {
-    if (!feeAmount0 && !feeAmount1) return false;
-    return true;
-  }, [feeAmount0, feeAmount1]);
-
-  const feeIsZero = useMemo(() => {
-    if (!feeAmount0 || !feeAmount1) return true;
-    return new BigNumber(feeAmount0.toExact()).plus(feeAmount1.toExact()).isEqualTo(0);
-  }, [feeAmount0, feeAmount1]);
-
   useEffect(() => {
     if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked]);
-
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleTransferSuccess = () => {
     setRefreshTrigger();
@@ -177,34 +165,15 @@ export function PositionDetails({
     };
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const handleLoadRemoveLiquidity = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/decrease/${String(positionId)}/${position.pool.id}`);
-  }, [history, positionId, position]);
-
-  const handleLoadIncreaseLiquidity = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/increase/${String(positionId)}/${position.pool.id}`);
-  }, [positionId, position]);
-
-  const handleTransferPosition = useCallback(() => {
-    setTransferShow(true);
-  }, [setTransferShow]);
-
   const handleStake = useCallback(() => {
-    if (!farmId) return;
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
-
-  const handleUnStake = useCallback(() => {
     if (!farmId) return;
     history.push(`/farm/details/${farmId}`);
   }, [history, farmId]);
 
   const handleDetails = useCallback(() => {
     if (!position) return;
-    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}`);
-  }, [position, history]);
+    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`);
+  }, [position, history, farmId]);
 
   return (
     <>
@@ -218,8 +187,8 @@ export function PositionDetails({
         }}
       >
         <Flex
-          align="flex-start"
-          gap="0 66px"
+          align="flex-end"
+          justify="space-between"
           sx={{
             "@media(max-width: 640px)": {
               flexDirection: "column",
@@ -229,7 +198,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              flex: "50%",
+              width: "70%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -249,8 +218,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
@@ -260,23 +234,40 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
+                  <Flex
+                    gap="8px"
+                    justify="flex-end"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
                     <Typography color="text.primary" align="right">
                       {toFormat(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 ) : (
-                  <Box>
-                    <Typography color="text.primary" align="right">
-                      {toFormat(amount1)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
-                      {value1 ? formatDollarAmount(value1) : "--"}
-                    </Typography>
-                  </Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
+                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
+                  </Flex>
                 )
               }
             />
@@ -291,8 +282,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
@@ -302,42 +298,43 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
-                    <Typography color="text.primary" align="right">
-                      {toFormat(amount1)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
-                      {value1 ? formatDollarAmount(value1) : "--"}
-                    </Typography>
-                  </Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
+                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
+                  </Flex>
                 ) : (
-                  <Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
                     <Typography color="text.primary" align="right">
                       {toFormat(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 )
               }
             />
-          </Flex>
 
-          {matchDownSM ? null : (
-            <Box sx={{ width: "1px", height: "100%", minHeight: "120px", background: "#242E54" }} />
-          )}
-
-          <Flex
-            sx={{
-              flex: "50%",
-              "@media(max-width: 640px)": {
-                width: "100%",
-              },
-            }}
-            vertical
-            gap="16px 0"
-          >
             <PositionDetailItem
               label={t`Price Range`}
               value={
@@ -378,7 +375,17 @@ export function PositionDetails({
             <PositionDetailItem
               label={t`Uncollected fees`}
               value={
-                <Box>
+                <Flex
+                  gap="8px"
+                  justify="flex-end"
+                  sx={{
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
                   <Typography
                     color="text.primary"
                     align="right"
@@ -399,7 +406,6 @@ export function PositionDetails({
                       : "--"}
                   </Typography>
                   <Typography
-                    mt="5px"
                     align="right"
                     sx={{
                       "@media(max-width: 640px)": {
@@ -409,105 +415,28 @@ export function PositionDetails({
                   >
                     {feeUSDValue ? formatDollarAmount(feeUSDValue) : "--"}
                   </Typography>
-                </Box>
+                </Flex>
               }
             />
           </Flex>
-        </Flex>
 
-        {showButtons && (
-          <Flex
-            sx={{
-              margin: "32px 0 0 0",
-              gap: "0 8px",
-              flexWrap: "wrap",
-              display: "none",
-              "@media(max-width: 640px)": {
-                flexWrap: "wrap",
-                gap: "12px 8px",
-                display: "flex",
-              },
-            }}
-            justify="flex-end"
-          >
-            <Button
-              variant="contained"
-              className="secondary"
-              size={matchDownSM ? "small" : "medium"}
-              onClick={handleDetails}
-            >
-              <Trans>Details</Trans>
-            </Button>
-
-            {staked ? (
+          <Flex gap="17px" wrap="wrap" justify="flex-end">
+            {farmId ? (
               <Button
                 variant="contained"
                 className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleUnStake}
-              >
-                <Trans>Unstake</Trans>
-              </Button>
-            ) : null}
-
-            {!staked && farmId ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
+                size={matchDownSM ? "medium" : "large"}
                 onClick={handleStake}
               >
-                <Trans>Stake</Trans>
+                <Trans>Farm Details</Trans>
               </Button>
             ) : null}
 
-            {!noLiquidity && !staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleLoadRemoveLiquidity}
-              >
-                <Trans>Remove Liquidity</Trans>
-              </Button>
-            ) : null}
-
-            {hasUnclaimedFees && !staked ? (
-              <CollectFees
-                position={position}
-                positionId={positionId}
-                onCollectSuccess={onClaimSuccess}
-                disabled={feeIsZero}
-              >
-                <Button
-                  variant="contained"
-                  className="secondary"
-                  size={matchDownSM ? "small" : "medium"}
-                  disabled={feeIsZero}
-                >
-                  <Trans>Collect Fees</Trans>
-                </Button>
-              </CollectFees>
-            ) : null}
-
-            {!staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleTransferPosition}
-              >
-                <Trans>Transfer Position</Trans>
-              </Button>
-            ) : null}
-
-            {!staked ? (
-              <Button variant="contained" size={matchDownSM ? "small" : "medium"} onClick={handleLoadIncreaseLiquidity}>
-                <Trans>Increase Liquidity</Trans>
-              </Button>
-            ) : null}
+            <Button variant="contained" size={matchDownSM ? "medium" : "large"} onClick={handleDetails}>
+              <Trans>Position Details</Trans>
+            </Button>
           </Flex>
-        )}
+        </Flex>
       </Box>
 
       {transferShow ? (

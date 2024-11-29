@@ -14,3 +14,4 @@ export * from "./charts";
 export * from "./token-list";
 export * from "./chainKeyToken";
 export * from "./helper";
+export * from "./icexplorer";

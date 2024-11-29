@@ -74,6 +74,10 @@ export function themePalette(theme: { [key: string]: any }) {
       "theme-secondary": theme.colors.darkSecondaryMain,
       apr: theme.colors.apr,
       success: theme.colors["text.success"],
+      tooltip: theme.colors.darkLevel1,
+    },
+    textSize: {
+      tooltip: "12px",
     },
     background: {
       paper: theme.paper,
@@ -90,6 +94,7 @@ export function themePalette(theme: { [key: string]: any }) {
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
       1: "#38446C",
       2: "rgba(75, 87, 130, 0.68)",
+      level1: theme.colors.darkLevel1,
     },
     avatar: {
       gray200BgColor: isDark ? { bgcolor: "#384368" } : { bgcolor: "transparent" },

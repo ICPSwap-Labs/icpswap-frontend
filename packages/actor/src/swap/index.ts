@@ -1,7 +1,4 @@
-import {
-  PassCodeManagerService,
-  PassCodeManagerInterfaceFactory,
-} from "@icpswap/candid";
+import { PassCodeManagerService, PassCodeManagerInterfaceFactory } from "@icpswap/candid";
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
 
@@ -13,3 +10,4 @@ export const passCodeManager = async (identity?: true) =>
   });
 
 export * from "./global";
+export * from "./tokenAnalysis";

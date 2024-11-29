@@ -1,4 +1,6 @@
+import { ReactNode } from "react";
 import { BoxProps, Typography, TypographyProps, Box, useTheme } from "./Mui";
+import { Tooltip } from "./Tooltip";
 
 export interface APRProps {
   value: string | undefined | null;
@@ -31,9 +33,10 @@ export interface APRPanelProps {
   fontWeight?: number;
   wrapperSx?: BoxProps["sx"];
   sx?: TypographyProps["sx"];
+  tooltip?: ReactNode;
 }
 
-export function APRPanel({ value, fontWeight = 500, fontSize = "14px", align, wrapperSx, sx }: APRPanelProps) {
+export function APRPanel({ value, fontWeight = 500, fontSize = "14px", align, tooltip, wrapperSx, sx }: APRPanelProps) {
   const theme = useTheme();
 
   return (
@@ -49,17 +52,35 @@ export function APRPanel({ value, fontWeight = 500, fontSize = "14px", align, wr
         ...wrapperSx,
       }}
     >
-      <Typography
-        color="text.apr"
-        sx={{
-          fontWeight,
-          fontSize,
-          color: theme.colors.darkLevel1,
-          ...sx,
-        }}
-      >
-        {value}
-      </Typography>
+      {tooltip ? (
+        <Tooltip tips={tooltip}>
+          <Typography
+            color="text.apr"
+            sx={{
+              fontWeight,
+              fontSize,
+              color: theme.colors.darkLevel1,
+              textDecoration: "underline",
+              textDecorationStyle: "dashed",
+              ...sx,
+            }}
+          >
+            {value}
+          </Typography>
+        </Tooltip>
+      ) : (
+        <Typography
+          color="text.apr"
+          sx={{
+            fontWeight,
+            fontSize,
+            color: theme.colors.darkLevel1,
+            ...sx,
+          }}
+        >
+          {value}
+        </Typography>
+      )}
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, BoxProps } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
 import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
@@ -145,6 +145,7 @@ export interface TokenChartsProps {
   dexScreenId?: string;
   priceChart?: ReactNode;
   onPriceTokenIdChange?: (tokenId: string | Null) => void;
+  wrapperSx?: BoxProps["sx"];
 }
 
 export const TokenCharts = forwardRef(
@@ -161,6 +162,7 @@ export const TokenCharts = forwardRef(
       dexScreenId,
       priceChart,
       onPriceTokenIdChange,
+      wrapperSx,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -265,6 +267,7 @@ export const TokenCharts = forwardRef(
         borderRadius={borderRadius}
         sx={{
           position: "relative",
+          ...wrapperSx,
         }}
         padding="0"
       >
@@ -277,13 +280,14 @@ export const TokenCharts = forwardRef(
           sx={{
             height: "70px",
             padding: "16px",
-            display: priceChart
-              ? "none"
-              : chartView === ChartView.DexScreener
-              ? showTopIfDexScreen
-                ? "flex"
-                : "none"
-              : "flex",
+            display:
+              chartView === ChartView.PRICE && priceChart
+                ? "none"
+                : chartView === ChartView.DexScreener
+                ? showTopIfDexScreen
+                  ? "flex"
+                  : "none"
+                : "flex",
           }}
         >
           <Box>

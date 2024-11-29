@@ -2,11 +2,12 @@ import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
+import { useFetchXDR2USD, useFetchGlobalTokenList, useWalletConnectorManager } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
-import { useConnectManager, useWalletConnectorManager } from "store/auth/hooks";
+import { useConnectManager } from "store/auth/hooks";
+import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
 import RiskStatement from "components/RiskStatement";
 import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -43,6 +44,7 @@ export default function App() {
   useFetchXDR2USD();
   useFetchICPPrices();
   useFetchAllSwapTokens();
+  usePlugExternalDisconnect();
 
   const { isConnected } = useConnectManager();
 
