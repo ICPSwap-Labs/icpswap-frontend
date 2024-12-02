@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Grid, Pagination as MuiPagination, Box } from "@mui/material";
+
+import { Grid, Pagination as MuiPagination, Box } from "./Mui";
 import { MainCard } from "./MainCard";
 
 export type PaginationType = {
@@ -13,15 +14,10 @@ export interface PaginationProps {
   flexEnd?: boolean;
   num?: number;
   defaultPageSize?: number;
+  mt?: string;
 }
 
-export function Pagination({
-  total,
-  onPageChange = () => {},
-  defaultPageSize = 10,
-  flexEnd,
-  num,
-}: PaginationProps) {
+export function Pagination({ total, onPageChange, defaultPageSize = 10, flexEnd, num, mt = "15px" }: PaginationProps) {
   const [pageNum, setPageNum] = React.useState(1);
 
   useEffect(() => {
@@ -30,10 +26,7 @@ export function Pagination({
     }
   }, [num]);
 
-  const paginationChange = (
-    e: React.ChangeEvent<unknown>,
-    pageNum: number
-  ): void => {
+  const paginationChange = (e: React.ChangeEvent<unknown>, pageNum: number): void => {
     setPageNum(pageNum);
     if (onPageChange) {
       onPageChange({
@@ -44,7 +37,7 @@ export function Pagination({
   };
 
   return (
-    <Grid container justifyContent={flexEnd ? "flex-end" : ""} mt="15px">
+    <Grid container justifyContent={flexEnd ? "flex-end" : ""} mt={mt}>
       <Box>
         <MainCard level={4} padding="12px">
           <MuiPagination

@@ -45,7 +45,17 @@ export function ICPSwap() {
           </Flex>
         </Box>
 
-        <Box sx={{ margin: "24px 0 0 0", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0 24px" }}>
+        <Box
+          sx={{
+            margin: "24px 0 0 0",
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px",
+            "@media(max-width: 640px)": {
+              gridTemplateColumns: "1fr",
+            },
+          }}
+        >
           <Swap />
           <Staking />
           <Farm />

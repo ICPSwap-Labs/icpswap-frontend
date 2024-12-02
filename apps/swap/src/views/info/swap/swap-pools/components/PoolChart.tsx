@@ -15,7 +15,7 @@ import {
   PoolAPRChart,
   APRChartTimeButtons,
 } from "@icpswap/ui";
-import DensityChart from "ui-component/DensityChart";
+import { DensityChart } from "components/info/DensityChart";
 import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
 
 // format dayjs with the libraries that we need
@@ -42,7 +42,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
 
   return (
     <MainCard
-      level={2}
+      level={3}
       sx={{
         position: "relative",
       }}

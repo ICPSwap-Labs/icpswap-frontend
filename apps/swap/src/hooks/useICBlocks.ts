@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useCallsData } from "@icpswap/hooks";
-import { useAppDispatch } from "store/hooks";
 
-const ROSETTA_API__BASE = "https://rosetta-api.internetcomputer.org";
 const INTERNET_COMPUTER_BASE = "https://ic-api.internetcomputer.org/api/v3";
 
 export function useICPBlocksCall() {
@@ -25,13 +23,8 @@ export function useICPBlocksCall() {
 }
 
 export function useICPBlocksManager() {
-  // const dispatch = useAppDispatch();
   const { result } = useICPBlocksCall();
   const { blocks, secondBlocks } = result ?? {};
-
-  // useEffect(() => {
-  //   dispatch(updateICPBlocks({ blocks: blocks ?? "", secondBlocks: secondBlocks ?? "" }));
-  // }, [dispatch, blocks, secondBlocks]);
 
   return useMemo(
     () => ({

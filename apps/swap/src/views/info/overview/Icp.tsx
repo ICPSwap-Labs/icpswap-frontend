@@ -8,12 +8,14 @@ import { useICPBlocksManager } from "hooks/useICBlocks";
 import { useInfoToken } from "hooks/uesInfoToken";
 import { useTokenSupply } from "hooks/token/calls";
 import { useICPPriceList } from "store/global/hooks";
+import { useTokenAnalysis } from "@icpswap/hooks";
 
 export function Icp() {
   const theme = useTheme();
 
   const { result: icpTokenInfo } = useInfoToken(ICP.address);
   const { result: icpTotalSupply } = useTokenSupply(ICP.address);
+  const { result: tokenAnalysis } = useTokenAnalysis(ICP.address);
 
   const ICPPriceList = useICPPriceList();
 
@@ -29,16 +31,41 @@ export function Icp() {
     );
   }, [icpTotalSupply, icpTokenInfo]);
 
-  return (
-    <MainCard level={3} padding="32px">
-      <Flex gap="0 8px">
-        <TokenImage logo={ICP.logo} size="24px" />
+  const fdv = useMemo(() => {
+    if (isNullArgs(tokenAnalysis) || isNullArgs(icpTokenInfo)) return null;
 
-        <Flex gap="0 4px">
-          <Typography color="text.primary" fontWeight={500} fontSize="18px">
-            ICP
-          </Typography>
-          <Typography fontSize="12px">(Internet Computer)</Typography>
+    return formatDollarAmount(new BigNumber(tokenAnalysis.marketAmount).multipliedBy(icpTokenInfo.priceUSD).toString());
+  }, [tokenAnalysis, icpTokenInfo]);
+
+  return (
+    <MainCard
+      level={3}
+      sx={{
+        padding: "32px",
+        "@media(max-width: 640px)": {
+          padding: "16px",
+        },
+      }}
+    >
+      <Flex
+        gap="0 8px"
+        sx={{
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: " 16px 0",
+            alignItems: "flex-start",
+          },
+        }}
+      >
+        <Flex gap="0 8px">
+          <TokenImage logo={ICP.logo} size="24px" />
+
+          <Flex gap="0 4px">
+            <Typography color="text.primary" fontWeight={500} fontSize="18px">
+              ICP
+            </Typography>
+            <Typography fontSize="12px">(Internet Computer)</Typography>
+          </Flex>
         </Flex>
 
         <Box sx={{ padding: "4px 12px", borderRadius: "30px", background: theme.palette.background.level4 }}>
@@ -47,7 +74,16 @@ export function Icp() {
       </Flex>
 
       <Box sx={{ margin: "30px 0 0 0" }}>
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            "@media(max-width: 640px)": {
+              gridTemplateColumns: "1fr",
+              gap: "24px 0",
+            },
+          }}
+        >
           <Box>
             <Typography>
               <Trans>Price</Trans>
@@ -75,7 +111,7 @@ export function Icp() {
               <Trans>Fully Diluted Market Cap</Trans>
             </Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
-              $200M
+              {nonNullArgs(fdv) ? fdv : "--"}
             </Typography>
           </Box>
 

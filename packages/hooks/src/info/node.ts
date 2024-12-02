@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
 import { node_index } from "@icpswap/actor";
-import { PublicPoolOverView, PublicTokenOverview } from "@icpswap/types";
+import { Null, PublicPoolOverView, PublicTokenOverview } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
 export async function getNodeInfoAllPools() {
@@ -45,7 +45,7 @@ export async function getInfoTokenStorageIds(token: string) {
   return resultFormat<string[]>(await (await node_index()).tokenStorage(token)).data;
 }
 
-export function useInfoTokenStorageIds(token: string | undefined) {
+export function useInfoTokenStorageIds(token: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!token) return undefined;
@@ -58,7 +58,7 @@ export async function getInfoUserStorageIds(principal: string) {
   return resultFormat<string[]>(await (await node_index()).userStorage(principal)).data;
 }
 
-export function useInfoUserStorageIds(principal: string | undefined) {
+export function useInfoUserStorageIds(principal: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!principal) return undefined;

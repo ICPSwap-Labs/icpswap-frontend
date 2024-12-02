@@ -1,42 +1,47 @@
-import { Typography, Box, useMediaQuery, Button, useTheme } from "ui-component/Mui";
+import { useMemo } from "react";
+import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import Wrapper from "ui-component/Wrapper";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, formatAmount, mockALinkAndOpen, parseTokenAmount, explorerLink } from "@icpswap/utils";
-import { MainCard, TextButton, TokenImage, Breadcrumbs } from "ui-component/index";
-import { usePoolLatestTVL, usePoolAPR } from "@icpswap/hooks";
-import { usePool } from "hooks/info/usePool";
+import {
+  formatDollarAmount,
+  formatAmount,
+  mockALinkAndOpen,
+  parseTokenAmount,
+  explorerLink,
+  cycleValueFormat,
+} from "@icpswap/utils";
+import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper } from "components/index";
+import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks";
+import { useInfoPool } from "hooks/info/index";
 import { useTokenInfo } from "hooks/token/index";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
-import PoolTransactions from "ui-component/analytic/PoolTransactions";
-import { swapLinkOfPool, addLiquidityLink, cycleValueFormat } from "utils/index";
+import { PoolTransactions } from "components/info/swap";
+import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { useSwapPoolCycles } from "hooks/swap/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { useMemo } from "react";
+import { useUSDPriceById } from "hooks/useUSDPrice";
 
 import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 export default function SwapPoolDetails() {
-  const { canisterId } = useParams<{ canisterId: string }>();
+  const { id: canisterId } = useParams<{ id: string }>();
   const theme = useTheme();
   const [openTips] = useTips();
 
-  const { result: pool } = usePool(canisterId);
+  const { result: pool } = useInfoPool(canisterId);
   const { result: token0 } = useTokenInfo(pool?.token0Id);
   const { result: token1 } = useTokenInfo(pool?.token1Id);
 
   const { result: poolTVLToken0 } = useTokenBalance(pool?.token0Id, pool?.pool);
   const { result: poolTVLToken1 } = useTokenBalance(pool?.token1Id, pool?.pool);
 
-  const token0Price = useUSDPrice(pool?.token0Id);
-  const token1Price = useUSDPrice(pool?.token1Id);
+  const token0Price = useUSDPriceById(pool?.token0Id);
+  const token1Price = useUSDPriceById(pool?.token1Id);
 
   const poolTvlUSD = useMemo(() => {
     if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return undefined;
@@ -68,13 +73,13 @@ export default function SwapPoolDetails() {
     openTips("Copy Successfully", TIP_SUCCESS);
   };
 
-  const { result: cycles } = useSwapPoolCycles(canisterId);
+  const { result: cycles } = useSwapCyclesInfo(canisterId);
 
   const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD, tvlUSD: poolTvlUSD });
 
   return (
-    <Wrapper>
-      <Breadcrumbs prevLink="/swap" prevLabel={<Trans>Pools</Trans>} currentLabel={<Trans>Details</Trans>} />
+    <InfoWrapper>
+      <Breadcrumbs prevLink="/info-swap" prevLabel={<Trans>Pools</Trans>} currentLabel={<Trans>Details</Trans>} />
 
       <Box mt="20px">
         <Box
@@ -160,7 +165,7 @@ export default function SwapPoolDetails() {
           },
         }}
       >
-        <MainCard level={2}>
+        <MainCard level={3}>
           <GridAutoRows gap="24px">
             <MainCard level={4}>
               <GridAutoRows gap="12px">
@@ -313,7 +318,7 @@ export default function SwapPoolDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2}>
+        <MainCard level={3}>
           <Typography variant="h3">
             <Trans>Transactions</Trans>
           </Typography>
@@ -323,6 +328,6 @@ export default function SwapPoolDetails() {
           </Box>
         </MainCard>
       </Box>
-    </Wrapper>
+    </InfoWrapper>
   );
 }

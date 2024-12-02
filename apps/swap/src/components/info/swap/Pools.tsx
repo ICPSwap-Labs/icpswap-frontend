@@ -1,16 +1,24 @@
 import { useState, useMemo } from "react";
-import { Box, Grid, useMediaQuery, makeStyles, useTheme, Theme } from "ui-component/Mui";
+import { Box, Grid, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
-import { Override } from "@icpswap/types";
-import { NoData, ImageLoading, TokenImage } from "ui-component/index";
+import { Override, PublicPoolOverView } from "@icpswap/types";
+import { ImageLoading, TokenImage } from "components/index";
 import { useTokenInfo } from "hooks/token/index";
-import { PublicPoolOverView } from "types/analytic";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection, FeeTierPercentLabel, APRPanel } from "@icpswap/ui";
-import Pagination from "ui-component/pagination/cus";
+import {
+  Header,
+  HeaderCell,
+  BodyCell,
+  TableRow,
+  SortDirection,
+  FeeTierPercentLabel,
+  APRPanel,
+  NoData,
+} from "@icpswap/ui";
+import Pagination from "components/pagination/cus";
 import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
-import { HIDDEN_POOLS } from "constants/index";
+import { HIDDEN_POOLS } from "constants/info";
 
 const useStyles = makeStyles(() => {
   return {
@@ -26,20 +34,20 @@ const useStyles = makeStyles(() => {
   };
 });
 
-export type HeaderType = {
+type HeaderType = {
   label: string;
   key: string;
   sort: boolean;
   end?: boolean;
 };
 
-export interface PoolTableHeaderProps {
+interface PoolTableHeaderProps {
   onSortChange: (sortField: string, sortDirection: SortDirection) => void;
   defaultSortFiled?: string;
   align: "right" | "left";
 }
 
-export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTableHeaderProps) {
+function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTableHeaderProps) {
   const classes = useStyles();
 
   const headers: HeaderType[] = [
@@ -74,7 +82,7 @@ interface PoolItemProps {
   align: "right" | "left";
 }
 
-export function PoolItem({ pool, index, align }: PoolItemProps) {
+function PoolItem({ pool, index, align }: PoolItemProps) {
   const classes = useStyles();
   const history = useHistory();
 
@@ -82,7 +90,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
   const { result: token1 } = useTokenInfo(pool.token1Id);
 
   const handlePoolClick = () => {
-    history.push(`/swap/pool/details/${pool.pool}`);
+    history.push(`/info-swap/pool/details/${pool.pool}`);
   };
 
   const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });
@@ -121,7 +129,7 @@ export interface PoolsProps {
   loading?: boolean;
 }
 
-export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
+export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
   const theme = useTheme() as Theme;
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [page, setPage] = useState(1);

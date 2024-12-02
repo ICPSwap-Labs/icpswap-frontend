@@ -58,7 +58,7 @@ export const routes: Route[] = [
   {
     key: "info",
     name: `Info`,
-    link: INFO_URL,
+    path: "/info-overview",
   },
   {
     key: "marketplace",
@@ -79,11 +79,6 @@ export const routes: Route[] = [
     key: "voting",
     name: `Voting`,
     path: `/voting`,
-  },
-  {
-    key: "console",
-    name: `Console`,
-    path: `/console`,
   },
   {
     key: "followUS",

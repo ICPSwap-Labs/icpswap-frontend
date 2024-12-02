@@ -1,8 +1,8 @@
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { makeStyles } from "@mui/styles";
-import { UserPosition } from "types/swap";
-import { usePositions } from "hooks/swap-scan/index";
+import { PositionDetails } from "types/swap";
+import { usePositions } from "hooks/liquidity/usePositions";
 import {
   pageArgsFormat,
   toSignificant,
@@ -15,8 +15,8 @@ import {
 import { useSwapPositionOwner, useParsedQueryString, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
-import { Header, HeaderCell, TableRow, BodyCell } from "@icpswap/ui";
-import { LoadingRow, NoData, SelectPair, Pagination, PaginationType, Copy } from "components/index";
+import { Header, HeaderCell, TableRow, BodyCell, Pagination, PaginationType, LoadingRow, NoData } from "@icpswap/ui";
+import { SelectPair, Copy } from "components/index";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
@@ -25,6 +25,7 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { toFormat } from "utils/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+
 import SwapScanWrapper from "./SwapScanWrapper";
 
 const useStyles = makeStyles(() => {
@@ -44,7 +45,7 @@ enum Bound {
 }
 
 interface PositionItemProps {
-  positionInfo: UserPosition;
+  positionInfo: PositionDetails;
   pool: Pool | null;
 }
 
@@ -124,7 +125,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       {pool ? (
         <TableRow className={classes.wrapper}>
           <BodyCell>
-            <Copy content={owner}>
+            <Copy content={owner ?? ""}>
               <Typography>{owner ? shorten(owner) : "--"}</Typography>
             </Copy>
           </BodyCell>
@@ -240,7 +241,7 @@ function Positions() {
   const handlePairChange = (pairId: string | undefined) => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
     const search = locationSearchReplace(location.search, "pair", pairId);
-    history.push(`/swap-scan/positions${search}`);
+    history.push(`/info-tools/positions${search}`);
   };
 
   return (

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useTokenTransactions } from "hooks/info/swap/";
+import { useTokenTransactions } from "hooks/info/swap";
 
 import { Transactions } from "./Transactions";
 
@@ -8,7 +8,7 @@ export function TokenTransactions({ canisterId }: { canisterId: string }) {
 
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1200px" }}>
+      <Box sx={{ minWidth: "1152px" }}>
         <Transactions transactions={transactions} loading={loading} hasFilter />
       </Box>
     </Box>

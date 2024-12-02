@@ -68,7 +68,7 @@ export default {
       y: {
         formatter: (value) => formatDollarAmount(value),
         title: {
-          formatter: (name) => "",
+          formatter: () => "",
         },
       },
       marker: {

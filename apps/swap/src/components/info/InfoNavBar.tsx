@@ -131,9 +131,9 @@ export function InfoNavBar() {
       path: "/info-farm",
     },
     {
-      key: "/info/tools",
+      key: "info-tools",
       name: t`Tools`,
-      path: `/info/tools`,
+      path: `/info-tools`,
     },
     {
       key: "info-marketplace",

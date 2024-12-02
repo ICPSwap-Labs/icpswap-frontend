@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import { useMemo } from "react";
-import type { UserSwapPoolsBalance } from "@icpswap/types";
+import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
 import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 
-export function useUserSwapPoolBalances(principal: string | undefined, selectedTokenId?: string, reload?: boolean) {
+export function useUserSwapPoolBalances(principal: string | Null, selectedTokenId?: string, reload?: boolean) {
   const { result: pools } = useSwapPools();
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(

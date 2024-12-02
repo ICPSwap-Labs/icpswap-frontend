@@ -1,312 +1,382 @@
-import { Typography, Box, Link, makeStyles } from "components/Mui";
-import { useEffect, useMemo } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { useTokenInfo } from "hooks/token/index";
+import { Typography, Box } from "components/Mui";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useToken } from "hooks/index";
-import { Trans, t } from "@lingui/macro";
-import { InfoWrapper, MainCard, TokenImage, TokenStandardLabel } from "components/index";
-import { BoxItem } from "components/tokens/BoxItem";
+import { Trans } from "@lingui/macro";
+import { InfoWrapper, MainCard, TokenImage, Link } from "components/index";
+import Copy, { CopyRef } from "components/Copy";
+import { LinkButtons } from "components/info/tokens";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useUSDPrice, useUSDPriceById } from "hooks/useUSDPrice";
 import { useICPPrice } from "store/global/hooks";
 import {
-  formatDollarAmount,
-  formatAmount,
-  toSignificant,
   parseTokenAmount,
-  explorerLink,
   BigNumber,
   formatDollarTokenPrice,
+  toSignificantWithGroupSeparator,
+  formatAmount,
+  nonNullArgs,
+  formatDollarAmount,
+  explorerLink,
 } from "@icpswap/utils";
-import { useTokenTotalHolder, useTokenSupply, useTokenListTokenInfo, useParsedQueryString } from "@icpswap/hooks";
+import {
+  useTokenListTokenInfo,
+  useParsedQueryString,
+  useInfoToken,
+  useTokenAnalysis,
+  useTokenSupply,
+  useTokenLatestTVL,
+} from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { TextButton, Flex } from "@icpswap/ui";
+import { Flex, Proportion, TextButton, BreadcrumbsV1, dexScreenerUrl } from "@icpswap/ui";
 import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/token/cache/hooks";
-
-const useStyles = makeStyles({
-  box: {
-    background: "#29314F",
-    borderRadius: "12px",
-  },
-  container: {
-    display: "grid",
-    gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
-    gridGap: "16px",
-    "@media screen and (min-width:960px)": {
-      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-      gridGap: "16px",
-    },
-  },
-  divider: {
-    width: "100%",
-    height: "1px",
-    background: "#313A5A",
-    opacity: 0.4,
-  },
-});
+import { useTokenDexScreener } from "hooks/info";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 
 export function TokenDetail() {
-  const classes = useStyles();
-  const history = useHistory();
+  const copyRef = useRef<CopyRef>(null);
+  const { id: canisterId } = useParams<{ id: string }>();
 
-  const { canisterId } = useParams<{ canisterId: string }>();
+  const infoToken = useInfoToken(canisterId);
 
-  const { result: tokenInfo } = useTokenInfo(canisterId);
-  const { result: totalHolder } = useTokenTotalHolder(canisterId);
-  const { result: supply } = useTokenSupply(canisterId);
+  const [, token] = useToken(canisterId);
 
-  const [, currency] = useToken(canisterId);
-
-  const ICPPrice = useICPPrice();
-
-  const tokenUSDPrice = useUSDPriceById(currency?.address);
-
+  const icpPrice = useICPPrice();
+  const { result: tokenSupply } = useTokenSupply(canisterId);
+  const { result: tokenAnalysis } = useTokenAnalysis(canisterId);
   const { result: canisterInfo } = useCanisterInfo(canisterId);
   const { result: tokenListInfo } = useTokenListTokenInfo(canisterId);
+  const { result: tokenTVL } = useTokenLatestTVL(canisterId);
+
+  const marketCap = useMemo(() => {
+    if (nonNullArgs(tokenAnalysis) && nonNullArgs(infoToken)) {
+      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.priceUSD).toString();
+    }
+  }, [tokenAnalysis, infoToken]);
+
+  const circulating = useMemo(() => {
+    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
+      return `${new BigNumber(
+        new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
+      ).multipliedBy(100)}%`;
+    }
+  }, [tokenAnalysis, tokenSupply, token]);
 
   const mediaLinks = useMemo(() => {
     if (!tokenListInfo) return [];
-    return tokenListInfo?.mediaLinks.map((mediaLink) => ({ k: mediaLink.mediaType, v: mediaLink.link })) ?? [];
+    return (
+      tokenListInfo?.mediaLinks.map((mediaLink) => ({
+        k: mediaLink.mediaType,
+        v: mediaLink.link,
+        i: `/images/info/tokens/medias/${mediaLink.mediaType}.svg`,
+      })) ?? []
+    );
   }, [tokenListInfo]);
 
-  const handleToTransactions = () => {
-    history.push(`/token/transactions/${canisterId}`);
-  };
+  const dexScreenerId = useTokenDexScreener(canisterId);
+
+  const explorers = useMemo(() => {
+    return [
+      {
+        k: "ii",
+        l: "ICP Dashboard",
+        v: `https://dashboard.internetcomputer.org/canister/${canisterId}`,
+        i: "/images/explorer/ii.svg",
+      },
+      {
+        k: "ic-explorer",
+        l: "IC Explorer",
+        v: `https://www.icexplorer.io/token/details/${canisterId}`,
+        i: "/images/explorer/ic-explorer.svg",
+      },
+      {
+        k: "NFTGeek",
+        v: `https://t5t44-naaaa-aaaah-qcutq-cai.raw.ic0.app/token/${canisterId}`,
+        i: "/images/explorer/NFTGeek.svg",
+      },
+      {
+        k: "ic-house",
+        l: "IC.House",
+        v: `https://637g5-siaaa-aaaaj-aasja-cai.raw.ic0.app/token/${canisterId}`,
+        i: "/images/explorer/ic-house.svg",
+      },
+    ];
+  }, [canisterId]);
+
+  const charts = useMemo(() => {
+    return dexScreenerId
+      ? [
+          {
+            k: "dexscreen",
+            l: "DEXScreener",
+            v: dexScreenerUrl(dexScreenerId),
+            i: "/images/info/chart-icon/dexscreen.svg",
+          },
+          {
+            k: "icpswap",
+            l: "ICPSwap Info",
+            v: `/info-swap/token/details/${canisterId}`,
+            i: "/images/info/chart-icon/icpswap.svg",
+          },
+        ]
+      : [
+          {
+            k: "icpswap",
+            l: "ICPSwap Info",
+            v: `/info-swap/token/details/${canisterId}`,
+            i: "/images/info/chart-icon/icpswap.svg",
+          },
+        ];
+  }, [canisterId, dexScreenerId]);
+
+  // const priceTrackers = useMemo(() => {
+  //   return dexScreenerId
+  //     ? [
+  //         { k: "dexscreen", l: "DEXScreener", v: dexScreenerUrl(dexScreenerId), i: "" },
+  //         { k: "icpswap", l: "ICPSwap Info", v: `/info-swap/token/details/${canisterId}`, i: "" },
+  //       ]
+  //     : [{ k: "icpswap", l: "ICPSwap Info", v: `/info-swap/token/details/${canisterId}`, i: "" }];
+  // }, [canisterId, dexScreenerId]);
+
+  const handleCopy = useCallback(() => {
+    if (copyRef) copyRef.current?.copy();
+  }, [copyRef]);
 
   return (
     <InfoWrapper>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Box sx={{ width: "100%", overflow: "hidden", display: "grid", gap: "20px 0" }}>
-          <MainCard>
-            <Typography fontSize="20px" fontWeight="700">
-              <Trans>Token Details</Trans>
+      <BreadcrumbsV1
+        links={[{ label: <Trans>Tokens</Trans>, link: "/info-tokens" }, { label: <Trans>Token Details</Trans> }]}
+      />
+
+      <Flex gap="0 8px" sx={{ margin: "16px 0 0 0" }}>
+        <TokenImage logo={token?.logo} size="32px" />
+        <Typography color="text.primary" fontWeight={500} fontSize="24px">
+          {token?.symbol}
+        </Typography>
+        <Typography fontSize="20px">({token?.name})</Typography>
+      </Flex>
+
+      <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
+        <Typography color="text.primary" fontWeight={500} fontSize="36px">
+          {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+        </Typography>
+        <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
+      </Flex>
+
+      <Flex gap="0 8px" sx={{ margin: "12px 0 0 0" }}>
+        <Typography fontSize="18px">
+          {infoToken && icpPrice
+            ? `${toSignificantWithGroupSeparator(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
+            : "--"}
+        </Typography>
+      </Flex>
+
+      <Flex fullWidth vertical align="flex-start" gap="16px 0" sx={{ margin: "24px 0 0 0" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "16px",
+            "@media(max-width: 640px)": {
+              gridTemplateColumns: "1fr",
+            },
+          }}
+        >
+          <MainCard level={3}>
+            <Typography fontSize="18px" color="text.primary">
+              <Trans>Overview</Trans>
             </Typography>
 
-            <Box sx={{ margin: "8px 0 32px 0" }}>
-              <Typography sx={{ fontSize: "12px" }}>
-                <Trans>
-                  Disclaimer: Do your own research before investing. While we've collected known information about
-                  tokens on the list, it's essential to conduct your research.
-                </Trans>
-              </Typography>
-            </Box>
+            <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Total Supply</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {tokenSupply && token ? parseTokenAmount(tokenSupply, token.decimals).toFormat() : "--"}
+                </Typography>
+              </Flex>
 
-            <Box mt="20px" sx={{ overflow: "hidden", display: "grid", gap: "12px 0" }}>
-              <Box className={classes.box}>
-                <BoxItem
-                  title={t`Symbol`}
-                  CustomChild={
-                    <Flex fullWidth sx={{ gap: "0 8px", "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
-                      {tokenInfo?.logo ? (
-                        <TokenImage logo={tokenInfo.logo} size="22px" tokenId={tokenInfo.canisterId} />
-                      ) : null}
-                      {tokenInfo?.symbol}
-                      <TokenStandardLabel standard={tokenInfo?.standardType as TOKEN_STANDARD} />
-                    </Flex>
-                  }
-                  border={{ borderRadius: "12px 0 0 0" }}
-                />
-                <Box className={classes.divider} />
-                <BoxItem title={t`Name`} value={tokenInfo?.name} />
-                <Box className={classes.divider} />
-                <BoxItem
-                  title={t`Total Supply`}
-                  value={supply ? parseTokenAmount(supply, tokenInfo?.decimals).toFormat() : "--"}
-                  border={{ borderRadius: "0 0 0 12px" }}
-                />
-              </Box>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Circulating Supply</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {tokenAnalysis ? new BigNumber(tokenAnalysis.marketAmount).toFormat() : "--"}
+                </Typography>
+              </Flex>
 
-              <Box className={classes.box}>
-                <BoxItem
-                  title="Decimals"
-                  value={tokenInfo?.decimals?.toString()}
-                  border={{ borderRadius: "12px 0 0 0" }}
-                />
-                <Box className={classes.divider} />
-                <BoxItem
-                  title={t`Transfer Fee`}
-                  value={parseTokenAmount(tokenInfo?.transFee, tokenInfo?.decimals).toFormat()}
-                />
-                <Box className={classes.divider} />
-                <BoxItem
-                  title={t`Holders`}
-                  CustomChild={
-                    <Flex fullWidth justify="space-between">
-                      <Typography
-                        color="text.primary"
-                        sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                      >
-                        {totalHolder ? String(totalHolder) : "--"}
-                      </Typography>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Decimals</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {token ? token.decimals : "--"}
+                </Typography>
+              </Flex>
 
-                      <TextButton to={`/token/holders/${canisterId}`} sx={{ padding: "0 40px 0 0" }}>
-                        <Trans>Details</Trans>
-                      </TextButton>
-                    </Flex>
-                  }
-                  border={{ borderRadius: "0 0 0 12px" }}
-                />
-              </Box>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Transfer Fee</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {token ? parseTokenAmount(token.transFee, token.decimals).toFormat() : "--"}
+                </Typography>
+              </Flex>
 
-              <Box className={classes.box}>
-                <BoxItem
-                  CustomChild={
-                    <Flex fullWidth justify="space-between">
-                      <Box>
-                        <Typography
-                          color="text.primary"
-                          sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                        >
-                          {tokenUSDPrice && ICPPrice
-                            ? `${toSignificant(new BigNumber(tokenUSDPrice).dividedBy(ICPPrice).toNumber(), 8)} ICP`
-                            : "--"}
-                        </Typography>
-                        <Typography sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
-                          {tokenUSDPrice && ICPPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
-                        </Typography>
-                      </Box>
-                      <TextButton
-                        to={`/swap/token/details/${canisterId}?path=${window.btoa(`/token/list`)}&page=${btoa(
-                          t`Tokens`,
-                        )}`}
-                        sx={{ padding: "0 40px 0 0" }}
-                      >
-                        <Trans>Details</Trans>
-                      </TextButton>
-                    </Flex>
-                  }
-                  title={t`Price`}
-                  border={{ borderRadius: "12px 0 0 12px" }}
-                />
-              </Box>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Holders</Trans>
+                </Typography>
+                <Flex gap="0 25px">
+                  <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                    {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
+                  </Typography>
 
-              <Box className={classes.box}>
-                <BoxItem
-                  CustomChild={
-                    <Flex fullWidth>
-                      <Box>
-                        <Typography
-                          color="text.primary"
-                          sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                        >
-                          {tokenUSDPrice && ICPPrice && supply
-                            ? `${formatAmount(
-                                new BigNumber(tokenUSDPrice)
-                                  .multipliedBy(parseTokenAmount(supply, currency?.decimals))
-                                  .dividedBy(ICPPrice)
-                                  .toNumber(),
-                              )} ICP`
-                            : "--"}
-                        </Typography>
-                        <Typography sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}>
-                          {tokenUSDPrice && ICPPrice && supply
-                            ? formatDollarAmount(
-                                new BigNumber(tokenUSDPrice)
-                                  .multipliedBy(parseTokenAmount(supply, currency?.decimals))
-                                  .toNumber(),
-                              )
-                            : "--"}
-                        </Typography>
-                      </Box>
-                    </Flex>
-                  }
-                  title={t`FDV`}
-                  border={{ borderRadius: "12px 0 0 12px" }}
-                />
-              </Box>
-
-              <Box className={classes.box}>
-                <BoxItem
-                  CustomChild={
-                    <Link
-                      href={explorerLink(canisterId)}
-                      target="_blank"
-                      sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                    >
-                      {canisterId}
-                    </Link>
-                  }
-                  title={t`Canister ID`}
-                  border={{ borderRadius: "12px 0 0 12px" }}
-                />
-              </Box>
-
-              <Box className={classes.box}>
-                <BoxItem
-                  CustomChild={
-                    <Box sx={{ padding: "14px 0 14px 0" }}>
-                      {canisterInfo?.controllers.map((controller, index) => (
-                        <Typography
-                          key={index}
-                          color="text.primary"
-                          sx={{ "@media screen and (max-width: 640px)": { fontSize: "12px" } }}
-                        >
-                          {controller}
-                        </Typography>
-                      ))}
-                    </Box>
-                  }
-                  title={t`Controller`}
-                  border={{ borderRadius: "12px 0 0 12px" }}
-                />
-              </Box>
-            </Box>
+                  <TextButton to={`/info-tokens/holders/${canisterId}`} sx={{ fontSize: "12px" }}>
+                    <Trans>More Details</Trans>
+                  </TextButton>
+                </Flex>
+              </Flex>
+            </Flex>
           </MainCard>
 
-          {mediaLinks.length > 0 ? (
-            <MainCard>
-              <Typography fontWeight={500}>
-                <Trans>Social Media Links</Trans>
-              </Typography>
+          <MainCard level={3}>
+            <Typography fontSize="18px" color="text.primary">
+              <Trans>Market</Trans>
+            </Typography>
 
-              {/* <Box mt="16px">
-                <MediaLinks links={mediaLinks} />
-              </Box> */}
-            </MainCard>
-          ) : null}
+            <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>FDV</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {tokenSupply && token && infoToken
+                    ? formatDollarAmount(
+                        parseTokenAmount(tokenSupply.toString(), token.decimals)
+                          .multipliedBy(infoToken.priceUSD)
+                          .toString(),
+                      )
+                    : "--"}
+                </Typography>
+              </Flex>
 
-          {!!tokenListInfo && tokenListInfo?.introduction ? (
-            <MainCard>
-              <Typography fontWeight={500}>
-                <Trans>Introduction</Trans>
-              </Typography>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Market Cap</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
+                </Typography>
+              </Flex>
 
-              <Box mt="16px">
-                <Typography color="text.primary">{tokenListInfo?.introduction}</Typography>
-              </Box>
-            </MainCard>
-          ) : null}
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>TVL on ICPSwap</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {tokenTVL ? formatDollarAmount(tokenTVL.tvlUSD) : "--"}
+                </Typography>
+              </Flex>
 
-          <MainCard>
-            <Flex
-              fullWidth
-              align="center"
-              justify="space-between"
-              sx={{ cursor: "pointer" }}
-              onClick={handleToTransactions}
-            >
-              <Typography fontWeight={500} color="text.primary">
-                <Trans>Transactions</Trans>
-              </Typography>
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Chart</Trans>
+                </Typography>
 
-              <KeyboardArrowRightIcon color="secondary" />
+                <Flex gap="0 8px" wrap="wrap">
+                  <LinkButtons linkButtons={charts} />
+                </Flex>
+              </Flex>
+            </Flex>
+          </MainCard>
+
+          <MainCard level={3}>
+            <Typography fontSize="18px" color="text.primary">
+              <Trans>Other Info</Trans>
+            </Typography>
+
+            <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Canister ID</Trans>
+                </Typography>
+
+                <Flex gap="0 8px">
+                  <Link link={explorerLink(canisterId)}>
+                    <Typography sx={{ color: "text.theme-primary", fontSize: "16px" }}>{canisterId}</Typography>
+                  </Link>
+                  <CopyIcon color="#ffffff" onClick={handleCopy} style={{ cursor: "pointer" }} />
+                </Flex>
+
+                <Copy ref={copyRef} hide content={canisterId} />
+              </Flex>
+
+              <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Controllers</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  {canisterInfo
+                    ? canisterInfo.controllers.map((e) => {
+                        return <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{e}</Typography>;
+                      })
+                    : "--"}
+                </Typography>
+              </Flex>
+
+              {/* <Flex vertical align="flex-start" gap="8px 0">
+                <Typography>
+                  <Trans>Price Trackers</Trans>
+                </Typography>
+                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                  <LinkButtons linkButtons={priceTrackers} />
+                </Typography>
+              </Flex> */}
             </Flex>
           </MainCard>
         </Box>
-      </Box>
+
+        <MainCard level={3}>
+          <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
+            <Trans>Social Media</Trans>
+          </Typography>
+
+          <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">
+            <LinkButtons linkButtons={mediaLinks} />
+          </Flex>
+        </MainCard>
+
+        {!!tokenListInfo && tokenListInfo?.introduction ? (
+          <MainCard level={3}>
+            <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
+              <Trans>Introduction</Trans>
+            </Typography>
+
+            <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">
+              <Typography sx={{ fontSize: "14px", lineHeight: "20px" }}>{tokenListInfo.introduction}</Typography>
+            </Flex>
+          </MainCard>
+        ) : null}
+
+        <MainCard level={3}>
+          <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
+            <Trans>Token Explorers</Trans>
+          </Typography>
+
+          <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">
+            <LinkButtons linkButtons={explorers} />
+          </Flex>
+        </MainCard>
+      </Flex>
     </InfoWrapper>
   );
 }
 
 export default function Details() {
   const updateTokenStandard = useUpdateTokenStandard();
-  const { canisterId } = useParams<{ canisterId: string }>();
+  const { id: canisterId } = useParams<{ id: string }>();
 
   const { standard } = useParsedQueryString() as { standard: TOKEN_STANDARD };
 

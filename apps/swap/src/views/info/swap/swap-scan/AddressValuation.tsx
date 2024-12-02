@@ -1,4 +1,4 @@
-import { MainCard, Wrapper, FilledTextField, NoData, TokenImage } from "ui-component/index";
+import { MainCard, InfoWrapper, FilledTextField, NoData, TokenImage } from "components/index";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -226,7 +226,7 @@ export default function SwapScanValuation() {
   );
 
   return (
-    <Wrapper>
+    <InfoWrapper>
       <MainCard>
         <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
           <Trans>Swap Scan</Trans>
@@ -346,6 +346,6 @@ export default function SwapScanValuation() {
           </Box>
         </Box>
       </MainCard>
-    </Wrapper>
+    </InfoWrapper>
   );
 }

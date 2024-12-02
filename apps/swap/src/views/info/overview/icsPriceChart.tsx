@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { makeStyles, useTheme, Box, Theme } from "components/Mui";
+import { makeStyles, useTheme, Box, Theme, useMediaQuery } from "components/Mui";
 import ApexCharts from "apexcharts";
 import Chart from "react-apexcharts";
 import { useTokenPriceChart } from "@icpswap/hooks";
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function ICSPriceChart() {
   const classes = useStyles();
   const theme = useTheme();
-
+  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [loading, setLoading] = useState(true);
 
   const { priceChartData } = useTokenPriceChart(ICS.address);
@@ -60,6 +60,7 @@ export function ICSPriceChart() {
   const chartConfig = useMemo(() => {
     return {
       ...defaultChartConfig,
+      height: matchDownMD ? 350 : defaultChartConfig.height,
       series: priceChartData
         ? [
             {
@@ -73,14 +74,14 @@ export function ICSPriceChart() {
           ]
         : [],
     };
-  }, [defaultChartConfig, priceChartData]);
+  }, [defaultChartConfig, matchDownMD, priceChartData]);
 
   useEffect(() => {
     if (chartConfig && chartConfig.series.length > 0) {
       ApexCharts.exec(`support-chart`, "updateOptions", chartConfig.options);
       setLoading(false);
     }
-  }, [chartConfig]);
+  }, [chartConfig, priceChartData]);
 
   return (
     <Box className={classes.card}>
@@ -88,7 +89,7 @@ export function ICSPriceChart() {
         sx={{
           display: loading ? "block" : "none",
           width: "100%",
-          height: "290px",
+          height: matchDownMD ? "100%" : "290px",
           background: theme.palette.background.level3,
           position: "absolute",
           top: 0,

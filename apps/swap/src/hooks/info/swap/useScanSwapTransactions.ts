@@ -1,10 +1,10 @@
 import { getInfoUserTransactions, getBaseStorages, getBaseTransactions, useInfoUserStorageIds } from "@icpswap/hooks";
-import type { PaginationResult, PoolStorageTransaction } from "@icpswap/types";
+import type { Null, PaginationResult, PoolStorageTransaction } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
 
 export interface useUserAllSwapTransactionsProps {
-  principal: string | undefined;
-  pair: string | undefined;
+  principal: string | Null;
+  pair: string | Null;
   offset: number;
   limit: number;
 }

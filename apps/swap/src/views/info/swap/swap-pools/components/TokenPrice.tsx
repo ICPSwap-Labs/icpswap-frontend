@@ -1,11 +1,8 @@
-import { Typography, Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { formatAmount, toSignificant } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
+import { formatAmount, toSignificant, BigNumber } from "@icpswap/utils";
 import { TokenInfo } from "types/token";
-import BigNumber from "bignumber.js";
-import { TokenImage } from "ui-component/index";
+import { TokenImage } from "components/index";
 
 export interface TokenPoolPriceProps {
   token0: TokenInfo | undefined;
@@ -19,7 +16,7 @@ export default function TokenPoolPrice({ token0, token1, price0, price1 }: Token
   const history = useHistory();
 
   const handleClick = () => {
-    history.push(`/swap/token/details/${token0?.canisterId}`);
+    history.push(`/info-swap/token/details/${token0?.canisterId}`);
   };
 
   return price0 && price1 ? (

@@ -5,7 +5,7 @@ import { useAppSelector } from "store/hooks";
 import { useMemo } from "react";
 import { WRAPPED_ICP } from "constants/tokens";
 import { network, NETWORK } from "constants/server";
-import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useInfoToken } from "@icpswap/hooks";
 
 export function useICPPrice(): number | undefined {
   const { ICPPriceList } = useAppSelector((state) => state.global);
@@ -60,27 +60,17 @@ export function useUSDPrice(currency: Token | undefined): string | number | unde
 }
 
 export function useUSDPriceById(tokenId: string | undefined): number | undefined {
-  const _tokenId = useMemo(() => {
-    if (!tokenId) return undefined;
-    if (tokenId === WRAPPED_ICP.address || tokenId === ICP.address) return undefined;
-    return tokenId;
-  }, [tokenId]);
-
-  const graphToken = useInfoToken(_tokenId);
-
-  const icpPriceNumber = useICPPrice();
+  const graphToken = useInfoToken(tokenId);
 
   return useMemo(() => {
-    if (!tokenId || !icpPriceNumber) return undefined;
-
-    if (tokenId === ICP.address || tokenId === WRAPPED_ICP.address) return icpPriceNumber;
+    if (!tokenId) return undefined;
 
     if (graphToken) {
       return graphToken.priceUSD;
     }
 
     return undefined;
-  }, [tokenId, graphToken, icpPriceNumber]);
+  }, [tokenId, graphToken]);
 }
 
 export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {

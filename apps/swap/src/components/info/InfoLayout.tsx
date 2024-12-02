@@ -10,21 +10,7 @@ export function InfoLayout({ children }: { children: ReactNode }) {
     <>
       <InfoNavBar />
 
-      <Box
-        sx={{
-          padding: "32px 16px 16px",
-          [theme.breakpoints.down("md")]: {
-            padding: "16px",
-            minHeight: "calc(100vh - 60px)",
-          },
-          [theme.breakpoints.down("sm")]: {
-            padding: "12px",
-            backgroundColor: "transparent",
-          },
-        }}
-      >
-        {children}
-      </Box>
+      <Box>{children}</Box>
     </>
   );
 }

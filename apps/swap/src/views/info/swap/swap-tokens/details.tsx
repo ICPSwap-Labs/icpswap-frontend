@@ -1,6 +1,6 @@
 import { Typography, Box, Button, useMediaQuery, useTheme } from "components/Mui";
 import { useParams, useHistory } from "react-router-dom";
-import { Wrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "components/index";
+import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatDollarTokenPrice, mockALinkAndOpen } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL, useInfoToken } from "@icpswap/hooks";
@@ -50,7 +50,7 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
 }
 
 export default function TokenDetails() {
-  const { canisterId } = useParams<{ canisterId: string }>();
+  const { id: canisterId } = useParams<{ id: string }>();
   const history = useHistory();
   const [openTips] = useTips();
   const theme = useTheme();
@@ -83,7 +83,7 @@ export default function TokenDetails() {
   };
 
   const handleToTokenDetails = () => {
-    history.push(`/token/details/${canisterId}`);
+    history.push(`/info-tokens/details/${canisterId}`);
   };
 
   useEffect(() => {
@@ -93,9 +93,9 @@ export default function TokenDetails() {
   }, [chartView, tokenChartsRef]);
 
   return (
-    <Wrapper>
+    <InfoWrapper>
       <Breadcrumbs
-        prevLink={path ? atob(path) : "/swap"}
+        prevLink={path ? atob(path) : "/info-swap"}
         prevLabel={page ? atob(page) : <Trans>Swap Tokens</Trans>}
         currentLabel={<Trans>Details</Trans>}
       />
@@ -193,7 +193,7 @@ export default function TokenDetails() {
           },
         }}
       >
-        <MainCard level={2}>
+        <MainCard level={3}>
           <GridAutoRows gap="24px">
             <GridAutoRows gap="4px">
               <Typography>
@@ -280,7 +280,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2}>
+        <MainCard level={3}>
           <Box sx={{ width: "100%", overflow: "auto" }}>
             <TokenPools canisterId={canisterId} />
           </Box>
@@ -288,7 +288,7 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={2}>
+        <MainCard level={3}>
           <Typography variant="h3">
             <Trans>Transactions</Trans>
           </Typography>
@@ -298,6 +298,6 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
       </Box>
-    </Wrapper>
+    </InfoWrapper>
   );
 }

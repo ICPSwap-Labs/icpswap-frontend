@@ -15,7 +15,7 @@ import {
 import dayjs from "dayjs";
 import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import { AnonymousPrincipal } from "@icpswap/constants";
-import { MainCard } from "@icpswap/ui";
+import { MainCard, BreadcrumbsV1 } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import upperFirst from "lodash/upperFirst";
 
@@ -73,7 +73,11 @@ export default function FarmDetails() {
   const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
 
   return (
-    <InfoWrapper>
+    <InfoWrapper size="small">
+      <BreadcrumbsV1
+        links={[{ label: <Trans>Farm</Trans>, link: "/info-farm" }, { label: <Trans>Farm Details</Trans> }]}
+      />
+
       <Box
         sx={{
           backgroundSize: "cover",

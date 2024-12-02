@@ -91,7 +91,7 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
   const { result: token1 } = useTokenInfo(pool.token1Id);
 
   const handlePoolClick = () => {
-    history.push(`/swap/pool/details/${pool.pool}`);
+    history.push(`/info-swap/pool/details/${pool.pool}`);
   };
 
   const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });

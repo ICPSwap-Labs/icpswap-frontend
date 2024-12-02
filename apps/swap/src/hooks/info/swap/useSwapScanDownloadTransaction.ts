@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { useDownloadSwapTransactions } from "hooks/info/swap/useDownloadSwapTransactions";
 import { useDownloadUserTransactions } from "hooks/info/swap/useDownloadSwapUserTransactions";
+import { Null } from "@icpswap/types";
 
 export interface UseSwapScanTransactionDownloadProps {
-  pair: string | undefined;
-  principal: string | undefined;
+  pair: string | Null;
+  principal: string | Null;
 }
 
 export function useSwapScanTransactionDownload({ pair, principal }: UseSwapScanTransactionDownloadProps) {

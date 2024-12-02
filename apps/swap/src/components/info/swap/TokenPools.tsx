@@ -84,7 +84,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
   const { result: token1 } = useTokenInfo(pool.token1Id);
 
   const handlePoolClick = () => {
-    history.push(`/swap/pool/details/${pool.pool}`);
+    history.push(`/info-swap/pool/details/${pool.pool}`);
   };
 
   const apr = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });

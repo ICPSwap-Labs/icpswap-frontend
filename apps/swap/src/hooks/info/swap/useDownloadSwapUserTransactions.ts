@@ -1,14 +1,14 @@
 /* eslint-disable no-loop-func */
 import { getInfoUserTransactions, useInfoUserStorageIds } from "@icpswap/hooks";
-import type { UserStorageTransaction } from "@icpswap/types";
+import type { Null, UserStorageTransaction } from "@icpswap/types";
 import { useMemo, useState, useCallback } from "react";
 import { enumToString, timestampFormat, writeFileOneSheet } from "@icpswap/utils";
 
 const MAX_DOWNLOAD_LENGTH = 10000;
 
 export interface useUserAllSwapTransactionsProps {
-  principal: string | undefined;
-  pair: string | undefined;
+  principal: string | Null;
+  pair: string | Null;
 }
 
 export function useDownloadUserTransactions({ principal, pair }: useUserAllSwapTransactionsProps) {

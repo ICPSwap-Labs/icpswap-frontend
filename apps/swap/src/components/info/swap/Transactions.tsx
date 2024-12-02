@@ -104,7 +104,12 @@ export function Transactions({ transactions, maxItems = 10, loading, hasFilter, 
 
   return (
     <Box>
-      <Header className={classes.wrapper} onSortChange={handleSortChange} defaultSortFiled={sortField}>
+      <Header
+        className={classes.wrapper}
+        onSortChange={handleSortChange}
+        defaultSortFiled={sortField}
+        borderBottom={`1px solid ${theme.palette.border.level1}`}
+      >
         <Box>
           {hasFilter ? (
             <Box sx={{ display: "flex", gap: "0 10px" }}>

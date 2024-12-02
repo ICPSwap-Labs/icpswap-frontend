@@ -5,10 +5,11 @@ import { MainCard, InfoWrapper, Copy } from "components/index";
 import { useParams } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { parseTokenAmount, shorten, explorerLink, cycleValueFormat } from "@icpswap/utils";
+import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "@icpswap/hooks";
+import { BreadcrumbsV1 } from "@icpswap/ui";
 import dayjs from "dayjs";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token";
-import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "@icpswap/hooks";
 import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -56,10 +57,13 @@ export default function PoolsDetails() {
   const state = useStakingPoolState(pool);
 
   return (
-    <InfoWrapper>
+    <InfoWrapper size="small">
+      <BreadcrumbsV1
+        links={[{ label: <Trans>Stake</Trans>, link: "/info-stake" }, { label: <Trans>Stake Details</Trans> }]}
+      />
+
       <Box
         sx={{
-          // background: `url(${DetailBg})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}

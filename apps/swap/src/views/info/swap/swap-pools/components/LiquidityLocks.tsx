@@ -1,6 +1,6 @@
-import { Typography, Box, Popper, ClickAwayListener } from "ui-component/Mui";
+import { Typography, Box, Popper, ClickAwayListener } from "components/Mui";
 import { Trans } from "@lingui/macro";
-import { LiquidityLocks } from "ui-component/LiquidityLocks";
+import { LiquidityLocks } from "components/LiquidityLocks";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { Flex } from "@icpswap/ui";
 import { Unlock } from "react-feather";

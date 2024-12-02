@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { Typography, Box } from "@mui/material";
-import Wrapper from "ui-component/Wrapper";
+import { InfoWrapper, MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
-import { MainCard } from "ui-component/index";
 import { useNodeInfoAllPools } from "@icpswap/hooks";
-import Pools from "ui-component/analytic/Pools";
+import { Pools } from "components/info/swap";
 
 export default function SwapPools() {
   const { result: pools, loading } = useNodeInfoAllPools();
@@ -14,7 +13,7 @@ export default function SwapPools() {
   }, [pools]);
 
   return (
-    <Wrapper>
+    <InfoWrapper>
       <Box>
         <Typography color="text.primary" fontSize="20px" fontWeight="500">
           <Trans>All Pools</Trans>
@@ -39,6 +38,6 @@ export default function SwapPools() {
           </Box>
         </MainCard>
       </Box>
-    </Wrapper>
+    </InfoWrapper>
   );
 }

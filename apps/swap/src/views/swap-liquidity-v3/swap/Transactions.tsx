@@ -1,14 +1,14 @@
 import { Typography, Box, useTheme, Theme } from "components/Mui";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString, BigNumber, mockALinkAndOpen } from "@icpswap/utils";
+import { enumToString, BigNumber } from "@icpswap/utils";
 import { LoadingRow, NoData, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
-import { DAYJS_FORMAT, INFO_URL } from "constants/index";
+import { DAYJS_FORMAT } from "constants/index";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { ArrowUpRight } from "react-feather";
-import { SwapTransactionPriceTip } from "@icpswap/ui";
+import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
 
 export const RECORD_TYPE: { [key: string]: string } = {
   swap: "Swap",
@@ -88,10 +88,6 @@ export function SwapTransactions() {
   const { loading, result } = useUserSwapTransactions(principal, 0, 100);
   const transactions = !principal ? undefined : result?.content;
 
-  const handleViewMore = () => {
-    mockALinkAndOpen(`${INFO_URL}/swap-scan/transactions?principal=${principal}`, "SWAP_TRANSACTIONS_VIEW_MORE");
-  };
-
   return (
     <>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
@@ -118,23 +114,24 @@ export function SwapTransactions() {
       </Box>
 
       {!loading && !!transactions ? (
-        <Typography
-          sx={{
-            display: "flex",
-            gap: "0 3px",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "32px",
-            cursor: "pointer",
-            borderTop: `1px solid ${theme.palette.background.level2}`,
-          }}
-          onClick={handleViewMore}
-        >
-          <Typography sx={{ fontSize: "12px" }} component="span" color="secondary">
-            View more
+        <Link to={`/info-tools/swap-transactions?principal=${principal}`}>
+          <Typography
+            sx={{
+              display: "flex",
+              gap: "0 3px",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "32px",
+              cursor: "pointer",
+              borderTop: `1px solid ${theme.palette.background.level2}`,
+            }}
+          >
+            <Typography sx={{ fontSize: "12px" }} component="span" color="secondary">
+              View more
+            </Typography>
+            <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
           </Typography>
-          <ArrowUpRight color={theme.colors.secondaryMain} size="16px" />
-        </Typography>
+        </Link>
       ) : null}
     </>
   );

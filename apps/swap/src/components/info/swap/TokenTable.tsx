@@ -38,7 +38,7 @@ export function TokenItem({ token, index, align }: { token: TokenData; index: nu
   const { result: tokenInfo } = useTokenInfo(token.address);
 
   const handleTokenClick = () => {
-    history.push(`/swap/token/details/${token.address}`);
+    history.push(`/info-swap/token/details/${token.address}`);
   };
 
   return (

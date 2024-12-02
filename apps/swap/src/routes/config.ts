@@ -27,12 +27,12 @@ const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidit
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
-const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
-const Console = Loadable(lazy(() => import("../views/console/index")));
-const ConsoleBurn = Loadable(lazy(() => import("../views/console/burn")));
+// const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
+// const Console = Loadable(lazy(() => import("../views/console/index")));
+// const ConsoleBurn = Loadable(lazy(() => import("../views/console/burn")));
 
-const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
-const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
+// const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
+// const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 
 // const NFTMarket = Loadable(lazy(() => import("../views/nft")));
@@ -107,11 +107,11 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/token-claim/transactions/:id": TokenClaimTransactions,
   "/token-claim/create": CreateTokenClaim,
 
-  "/console": Console,
-  "/console/burn": ConsoleBurn,
-  "/console/nft/canister/create": NFTCanisterCreate,
-  "/console/nft/mint": NFTMint,
-  "/console/nft/canister/list": NFTCanisterList,
+  // "/console": Console,
+  // "/console/burn": ConsoleBurn,
+  // "/console/nft/canister/create": NFTCanisterCreate,
+  // "/console/nft/mint": NFTMint,
+  // "/console/nft/canister/list": NFTCanisterList,
 
   "/sns/neurons": SnsNeurons,
   "/sns/voting": SnsVotes,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { TextField, Typography, Box, Menu, MenuItem, makeStyles, Theme } from "components/Mui";
+import { TextField, Typography, Box, Menu, MenuItem, makeStyles, Theme, TextFieldProps } from "components/Mui";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Flex, NoData } from "@icpswap/ui";
 
@@ -92,6 +92,7 @@ export interface FilledTextFieldProps {
   placeholderSize?: string;
   background?: string;
   inputPadding?: string;
+  textFiledProps?: TextFieldProps;
   [x: string]: any;
 }
 
@@ -176,6 +177,7 @@ function FilledTextField(
     background,
     labelSize,
     inputPadding,
+    textFiledProps,
     ...props
   }: FilledTextFieldProps,
   ref,
@@ -263,17 +265,20 @@ function FilledTextField(
                   "& textarea::placeholder": {
                     fontSize: props.placeholderSize ?? "16px",
                   },
+                  ...textFiledProps?.sx,
                 }}
+                {...(textFiledProps
+                  ? {
+                      ...textFiledProps,
+                      InputProps: { disableUnderline: true, ...(textFiledProps?.InputProps ?? {}) },
+                    }
+                  : { InputProps: { disableUnderline: true } })}
                 inputRef={inputRef}
                 {...props}
                 variant="standard"
                 onChange={({ target: { value } }) => onChange && onChange(value)}
                 value={value}
                 multiline={multiline}
-                InputProps={{
-                  disableUnderline: true,
-                  ...(InputProps || {}),
-                }}
                 fullWidth
                 disabled={disabled}
                 helperText={helperText}
