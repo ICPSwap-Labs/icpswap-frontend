@@ -50,6 +50,14 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
     async function call() {
       const selfConnector = new WalletConnector();
       await selfConnector.init(value);
+
+      // TODO
+      // The error that ii throw Code: 400 Body: Invalid signature: Invalid basic signature
+      // but if init twice could avert this error
+      if (value === ConnectorType.IC) {
+        await selfConnector.init(value);
+      }
+
       setSelfConnector(selfConnector);
     }
 
