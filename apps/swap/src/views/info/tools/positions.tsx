@@ -305,7 +305,7 @@ export default function Positions() {
               ) : null}
             </Box>
             <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-              <SelectPair value={pair} onPairChange={handlePairChange} search />
+              <SelectPair value={pair} onPairChange={handlePairChange} search showClean={false} />
             </Box>
             {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
           </Box>

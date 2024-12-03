@@ -56,9 +56,9 @@ export default function Tools() {
                 }}
               >
                 <Flex fullWidth justify="center">
-                  <Image src={tool.image} sx={{ width: "50px", height: "50px" }} />
+                  <Image src={tool.image} sx={{ width: "50px", height: "50px", borderRadius: "0px" }} />
                 </Flex>
-                <Typography sx={{ fontSize: "20px", margin: "12px 0 0 0", textAlign: "center" }} color="text.primary">
+                <Typography sx={{ fontSize: "16px", margin: "12px 0 0 0", textAlign: "center" }} color="text.primary">
                   {tool.label}
                 </Typography>
               </Box>

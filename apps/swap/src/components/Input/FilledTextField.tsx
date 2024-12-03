@@ -165,7 +165,6 @@ function FilledTextField(
     maxWidth,
     fullHeight,
     disabled,
-    InputProps,
     borderRadius = "8px",
     contained = false,
     CustomNoData,

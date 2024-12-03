@@ -38,7 +38,9 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
   };
 
   function isActive(route: Route) {
-    return !!route.path && route.key === pathName.split("/")[1];
+    const mainRoute = pathName.split("/")[1];
+
+    return !!route.path && (route.key === mainRoute || route.key === "info" ? mainRoute.includes("info") : false);
   }
 
   const handleRouteClick = (route: Route) => {

@@ -1,4 +1,3 @@
-import { INFO_URL } from "constants/index";
 import TwitterIcon from "./icons/Twitter";
 import TelegramIcon from "./icons/Telegram";
 import DiscordIcon from "./icons/Discord";

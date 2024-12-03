@@ -8,17 +8,17 @@ import { feeAmountToPercentage } from "utils/swap/index";
 import { PaginationType } from "components/index";
 import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
 import { useFarmTvl, useStateColors } from "hooks/staking-farm";
-import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton, Flex } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "180px repeat(5, 1fr) 140px 120px",
+      gridTemplateColumns: "180px repeat(5, 1fr) 140px 60px",
       padding: "16px 0",
       alignItems: "center",
-      minWidth: "1200px",
+      minWidth: "1136px",
       gap: "0 5px",
     },
   };
@@ -53,10 +53,34 @@ function PoolItem({ farmId }: PoolItemProps) {
     </Box>
   ) : (
     <TableRow className={classes.wrapper}>
-      <BodyCell>
+      <BodyCell
+        sx={{
+          overflow: "hidden",
+          " a": {
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          },
+        }}
+        title={farmId}
+      >
         <Link href={explorerLink(farmId)}>{farmId}</Link>
       </BodyCell>
-      <BodyCell>
+      <BodyCell
+        sx={{
+          overflow: "hidden",
+          " a": {
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          },
+        }}
+        title={
+          token0 && token1 && farmInfo
+            ? `${token0.symbol}/${token1.symbol}/${feeAmountToPercentage(Number(farmInfo?.poolFee))}`
+            : ""
+        }
+      >
         {token0 && token1 && farmInfo ? (
           <Link href={explorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
             token1.symbol
@@ -67,10 +91,10 @@ function PoolItem({ farmId }: PoolItemProps) {
       </BodyCell>
       <BodyCell>{dayjs(Number(farmInfo?.startTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
       <BodyCell>{dayjs(Number(farmInfo?.endTime) * 1000).format("YYYY-MM-DD HH:mm")}</BodyCell>
-      <BodyCell>
+      <Flex vertical gap="4px 0" align="flex-start">
         <BodyCell>{String(farmInfo?.numberOfStakes)}</BodyCell>
         <BodyCell sub>{tvl ? `~$${tvl}` : "--"}</BodyCell>
-      </BodyCell>
+      </Flex>
       <BodyCell>
         {farmInfo && rewardToken
           ? `${parseTokenAmount(farmInfo.totalReward, rewardToken.decimals).toFormat()} ${rewardToken.symbol}`

@@ -16,6 +16,7 @@ import {
   PaginationType,
   NoData,
   BreadcrumbsV1,
+  Image,
 } from "@icpswap/ui";
 import { useSwapScanTransactionDownload } from "hooks/info/swap/useSwapScanDownloadTransaction";
 import { useTips, TIP_SUCCESS } from "hooks/index";
@@ -143,13 +144,15 @@ export default function SwapTransactions() {
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
             </Flex>
 
-            <Button
-              variant="contained"
-              onClick={download}
-              disabled={downloadLoading}
-              startIcon={downloadLoading ? <CircularProgress color="inherit" size={22} /> : null}
-            >
-              <Trans>Download: Excel Export</Trans>
+            <Button variant="contained" onClick={download} disabled={downloadLoading}>
+              <Flex gap="0 4px">
+                {downloadLoading ? (
+                  <CircularProgress color="inherit" size={16} />
+                ) : (
+                  <Image src="/images/download.svg" sx={{ width: "16px", height: "16px", borderRadius: "0px" }} />
+                )}
+                <Trans>Export</Trans>
+              </Flex>
             </Button>
           </Box>
         }

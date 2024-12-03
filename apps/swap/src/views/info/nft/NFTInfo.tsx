@@ -1,28 +1,10 @@
-import { useCallback, FC, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { Typography, Grid, Box, makeStyles } from "components/Mui";
+import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Typography, Grid, Box } from "components/Mui";
 import { InfoWrapper, Breadcrumbs } from "components/index";
 import { NFTInfo, NFTActivity, NFTTransactions } from "components/info/nft";
 import { Trans, t } from "@lingui/macro";
 import { MainCard } from "@icpswap/ui";
-
-const useStyles = makeStyles(() => {
-  return {
-    breadcrumbs: {
-      padding: "0 0 25px 16px",
-      "& a": {
-        textDecoration: "none",
-        "&:hover": {
-          textDecoration: "underline",
-        },
-      },
-    },
-    descItem: {
-      fontSize: "12px",
-      lineHeight: "20px",
-    },
-  };
-});
 
 export type Tab = {
   key: string;
@@ -36,15 +18,9 @@ const TabList: Tab[] = [
 ];
 
 export default function NFTView() {
-  const classes = useStyles();
-  const history = useHistory();
   const { canisterId, id: tokenId } = useParams<{ canisterId: string; id: string }>();
 
   const [tab, setTab] = useState<Tab>(TabList[0]);
-
-  const handleLoadPage = useCallback(() => {
-    history.push(`/nft/canister/details/${canisterId}`);
-  }, [history]);
 
   const displayedComponent = () => {
     const ShowedComponent = TabList.filter((item) => item.key === tab.key)[0].component;

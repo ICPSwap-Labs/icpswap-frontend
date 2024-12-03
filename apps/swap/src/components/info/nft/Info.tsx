@@ -6,14 +6,7 @@ import LazyImage from "components/LazyImage";
 import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useTradeOrder } from "@icpswap/hooks";
-import {
-  openBase64ImageInNewWindow,
-  mockALinkAndOpen,
-  shorten,
-  timestampFormat,
-  formatDollarAmount,
-  BigNumber,
-} from "@icpswap/utils";
+import { openBase64ImageInNewWindow, mockALinkAndOpen, shorten, timestampFormat, BigNumber } from "@icpswap/utils";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 // import { useUSDValueFromICPAmount } from "store/global/hooks";
 // import WICPPriceFormat from "ui-component/NFT/WICPPriceFormat";

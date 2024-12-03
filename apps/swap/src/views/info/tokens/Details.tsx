@@ -317,13 +317,13 @@ export function TokenDetail() {
                 <Typography>
                   <Trans>Controllers</Trans>
                 </Typography>
-                <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
+                <Flex vertical gap="8px 0" align="flex-start">
                   {canisterInfo
                     ? canisterInfo.controllers.map((e) => {
                         return <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{e}</Typography>;
                       })
                     : "--"}
-                </Typography>
+                </Flex>
               </Flex>
 
               {/* <Flex vertical align="flex-start" gap="8px 0">
