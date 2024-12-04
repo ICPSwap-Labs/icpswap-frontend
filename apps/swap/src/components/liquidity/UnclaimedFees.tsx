@@ -3,7 +3,7 @@ import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext } from "components/swap/index";
 import { collect } from "@icpswap/hooks";
 import { decodePositionKey } from "utils/swap";
 import { useTips, MessageTypes } from "hooks/useTips";

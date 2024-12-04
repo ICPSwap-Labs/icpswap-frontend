@@ -27,14 +27,11 @@ import { isDarkTheme, toFormat } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, TransferPosition , PositionRangeState } from "components/swap/index";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
-import { PositionRangeState } from "components/swap/index";
-
 import { usePositionState } from "hooks/liquidity";
-import TransferPosition from "./TransferPosition";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {

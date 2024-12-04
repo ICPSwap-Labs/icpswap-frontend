@@ -11,10 +11,9 @@ import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, use
 import { toFormat, PositionState } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
-import TransferPosition from "components/swap/TransferPosition";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -198,7 +197,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              width: "70%",
+              width: "65%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -428,7 +427,7 @@ export function PositionDetails({
                 size={matchDownSM ? "medium" : "large"}
                 onClick={handleStake}
               >
-                <Trans>Farm Details</Trans>
+                {staked ? <Trans>Unstake Farm</Trans> : <Trans>Stake Farm</Trans>}
               </Button>
             ) : null}
 

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
 import { UserPosition, type PositionKey } from "types/swap";
 
 export interface PositionContextProps {
@@ -17,4 +17,4 @@ export interface PositionContextProps {
   setHiddenNumbers: (key: PositionKey, hidden: boolean) => void;
 }
 
-export default createContext<PositionContextProps>({} as PositionContextProps);
+export const PositionContext = createContext<PositionContextProps>({} as PositionContextProps);

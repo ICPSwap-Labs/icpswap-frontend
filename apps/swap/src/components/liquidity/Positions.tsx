@@ -11,7 +11,7 @@ import {
   SelectPositionsSort,
 } from "components/liquidity/index";
 import { FindPositionsModal, Link } from "components/index";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext } from "components/swap/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { PositionSort, PositionFilterState, type UserPosition } from "types/swap";
