@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Box } from "components/Mui";
 import { t } from "@lingui/macro";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
 import {
   ChartDateButtons,
   PoolVolumeChart,
@@ -16,10 +13,6 @@ import {
 } from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
 import { VolumeWindow, ChartTimeEnum } from "@icpswap/types";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 export const chartViews = [
   { label: t`APR`, value: ChartView.APR },
