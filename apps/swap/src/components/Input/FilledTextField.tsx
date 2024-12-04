@@ -266,12 +266,12 @@ function FilledTextField(
                   },
                   ...textFiledProps?.sx,
                 }}
-                {...(textFiledProps
-                  ? {
-                      ...textFiledProps,
-                      InputProps: { disableUnderline: true, ...(textFiledProps?.InputProps ?? {}) },
-                    }
-                  : { InputProps: { disableUnderline: true } })}
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                    ...textFiledProps?.slotProps?.input,
+                  },
+                }}
                 inputRef={inputRef}
                 {...props}
                 variant="standard"
