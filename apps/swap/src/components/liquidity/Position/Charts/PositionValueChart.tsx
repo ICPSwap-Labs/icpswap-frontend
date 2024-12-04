@@ -3,15 +3,8 @@ import { Typography, Box } from "components/Mui";
 import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
 import { usePositionValueChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { LineChartAlt, ImageLoading } from "@icpswap/ui";
-
+import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 export interface TokenChartsProps {
   poolId: string | Null;
@@ -49,6 +42,12 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
         </Box>
       ) : (
         <>
+          {formattedPositionValueChartData.length === 0 ? (
+            <Flex sx={{ width: "100%", minHeight: "300px" }} justify="center">
+              <Typography sx={{ fontSize: "12px" }}>New position added, data updates tomorrow</Typography>
+            </Flex>
+          ) : null}
+
           <Box sx={{ height: "50px" }}>
             {latestPositionValue ? (
               <>

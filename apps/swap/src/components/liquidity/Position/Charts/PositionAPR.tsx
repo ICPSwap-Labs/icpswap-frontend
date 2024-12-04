@@ -3,16 +3,10 @@ import { Typography, Box, useTheme } from "components/Mui";
 import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
-import { LineChartAlt, ImageLoading, ChartAPRLabel } from "@icpswap/ui";
+import { LineChartAlt, ImageLoading, ChartAPRLabel, Flex } from "@icpswap/ui";
 import { ReferenceLine } from "recharts";
 
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 const CHART_HEIGHT = 240;
 
@@ -89,6 +83,12 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
         </Box>
       ) : (
         <>
+          {formattedChartData.length === 0 ? (
+            <Flex sx={{ width: "100%", minHeight: "300px" }} justify="center">
+              <Typography sx={{ fontSize: "12px" }}>New position added, data updates tomorrow</Typography>
+            </Flex>
+          ) : null}
+
           <Box sx={{ height: "50px" }}>
             {latestPositionValue ? (
               <>

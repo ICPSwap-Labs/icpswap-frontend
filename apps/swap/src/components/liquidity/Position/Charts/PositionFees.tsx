@@ -3,15 +3,8 @@ import { Typography, Box } from "components/Mui";
 import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
 import { usePositionFeesChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { LineChartAlt, ImageLoading } from "@icpswap/ui";
-
+import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 interface PositionFeesChartProps {
   poolId: string | Null;
@@ -24,7 +17,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
 
   const { result: positionChartData, loading } = usePositionFeesChartData(poolId, positionId);
 
-  const formattedPositionValueChartData = useMemo(() => {
+  const formattedChartData = useMemo(() => {
     if (positionChartData) {
       return positionChartData.map((data) => {
         return {
@@ -36,10 +29,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
     return [];
   }, [positionChartData]);
 
-  const latestPositionValue =
-    formattedPositionValueChartData.length > 0
-      ? formattedPositionValueChartData[formattedPositionValueChartData.length - 1]
-      : null;
+  const latestPositionValue = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
 
   return (
     <>
@@ -49,15 +39,19 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
         </Box>
       ) : (
         <>
+          {formattedChartData.length === 0 ? (
+            <Flex sx={{ width: "100%", minHeight: "300px" }} justify="center">
+              <Typography sx={{ fontSize: "12px" }}>New position added, data updates tomorrow</Typography>
+            </Flex>
+          ) : null}
+
           <Box sx={{ height: "50px" }}>
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
                   {nonNullArgs(latestValue)
                     ? formatDollarAmount(latestValue)
-                    : formatDollarAmount(
-                        formattedPositionValueChartData[formattedPositionValueChartData.length - 1]?.value,
-                      )}
+                    : formatDollarAmount(formattedChartData[formattedChartData.length - 1]?.value)}
                 </Typography>
 
                 <Typography
@@ -67,9 +61,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
                   }}
                 >
                   {valueLabel ??
-                    dayjs(formattedPositionValueChartData[formattedPositionValueChartData.length - 1]?.time).format(
-                      "MMM D, YYYY HH:mm:ss",
-                    ) ??
+                    dayjs(formattedChartData[formattedChartData.length - 1]?.time).format("MMM D, YYYY HH:mm:ss") ??
                     ""}
                 </Typography>
               </>
@@ -81,9 +73,9 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
               margin: "40px 0 0 0",
             }}
           >
-            {formattedPositionValueChartData.length > 0 ? (
+            {formattedChartData.length > 0 ? (
               <LineChartAlt
-                data={formattedPositionValueChartData}
+                data={formattedChartData}
                 setLabel={setValueLabel}
                 minHeight={260}
                 setValue={setLatestValue}
