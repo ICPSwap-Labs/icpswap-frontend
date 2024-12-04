@@ -90,3 +90,55 @@ export function useUserApr({
     return `${val}%`;
   }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposits]);
 }
+
+export interface UseUserSingleLiquidityAprProps {
+  farmTvlValue: string | undefined;
+  state: FarmState | undefined;
+  farmInitArgs: InitFarmArgs | undefined;
+  rewardToken: Token | undefined;
+  rewardAmount: string | undefined;
+  positionValue: string | undefined;
+  deposit: FarmDepositArgs | undefined;
+}
+
+export function useUserSingleLiquidityApr({
+  farmTvlValue,
+  state,
+  rewardToken,
+  farmInitArgs,
+  positionValue,
+  deposit,
+  rewardAmount,
+}: UseUserSingleLiquidityAprProps) {
+  const rewardTokenPrice = useUSDPriceById(rewardToken?.address);
+
+  return useMemo(() => {
+    if (
+      !farmTvlValue ||
+      !farmInitArgs ||
+      !rewardAmount ||
+      !rewardToken ||
+      !positionValue ||
+      !deposit ||
+      new BigNumber(farmTvlValue).isEqualTo(0)
+    )
+      return undefined;
+
+    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
+
+    const depositTime = deposit.initTime;
+
+    const now = nowInSeconds();
+    const stakedSeconds = new BigNumber(String(BigInt(now) - depositTime)).toString();
+
+    const val = new BigNumber(rewardAmount)
+      .multipliedBy(rewardTokenPrice)
+      .dividedBy(positionValue)
+      .multipliedBy(3600 * 24 * 360)
+      .dividedBy(stakedSeconds)
+      .multipliedBy(100)
+      .toFixed(2);
+
+    return `${val}%`;
+  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposit]);
+}
