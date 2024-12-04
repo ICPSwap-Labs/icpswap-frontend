@@ -10,52 +10,52 @@ export type Route = {
 export const routes: Route[] = [
   {
     key: "info-overview",
-    name: t`Overview`,
+    name: "Overview",
     path: "/info-overview",
   },
   {
-    name: t`Swap`,
+    name: "Swap",
     path: "/info-swap",
     key: "info-swap",
   },
   {
     key: "info-tokens",
-    name: t`Tokens`,
+    name: "Tokens",
     path: "/info-tokens",
   },
   {
     key: "info-stake",
-    name: t`Stake`,
+    name: "Stake",
     path: "/info-stake",
   },
   {
     key: "info-farm",
-    name: t`Farm`,
+    name: "Farm",
     path: "/info-farm",
   },
   {
     key: "info-tools",
-    name: t`Tools`,
+    name: "Tools",
     path: `/info-tools`,
   },
   {
     key: "info-marketplace",
-    name: t`Marketplace`,
+    name: "Marketplace",
     path: `/info-marketplace`,
   },
   {
     key: "info-claim",
-    name: t`Token Claim`,
+    name: "Token Claim",
     path: "/info-claim",
   },
   {
     key: "info-nfts",
-    name: t`NFTs`,
+    name: "NFTs",
     path: `/info-nfts`,
   },
   {
     key: "info-wrap",
-    name: t`WICP`,
+    name: "WICP",
     path: "/info-wrap",
   },
 ];
