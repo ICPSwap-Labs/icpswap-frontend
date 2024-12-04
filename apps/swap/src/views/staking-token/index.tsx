@@ -127,7 +127,16 @@ function MainContent() {
           ))}
         </Box>
 
-        <Flex gap="0 20px">
+        <Flex
+          gap="10px 20px"
+          sx={{
+            "@media(max-width: 640px)": {
+              width: "100%",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            },
+          }}
+        >
           <Flex gap="0 4px">
             <Typography>
               <Trans>Staked Token:</Trans>
