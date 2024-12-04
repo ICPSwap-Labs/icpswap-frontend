@@ -227,16 +227,21 @@ export function useStoreTokenBalance(
 
   useEffect(() => {
     if (result) {
-      setStoreResult(result);
+      if (!address) {
+        setStoreResult(undefined);
+      } else {
+        setStoreResult(result);
+      }
     }
-  }, [result]);
+  }, [result, address]);
 
   return useMemo(() => {
-    if (!tokenId || !storeResult || loading || isNaN(storeResult.toNumber()))
+    if (!tokenId || !storeResult || loading || isNaN(storeResult.toNumber())) {
       return {
         loading,
         result: storeResult && tokenId ? storeResult : undefined,
       };
+    }
 
     return {
       loading,
