@@ -1,9 +1,9 @@
 import { getSwapPosition } from "@icpswap/hooks";
+import { isNullArgs } from "@icpswap/utils";
+import { Null, type FarmInfoWithId } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
 import { UserPosition, UserPositionForFarm } from "types/swap";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { isNullArgs } from "@icpswap/utils";
-import { type FarmInfoWithId } from "@icpswap/types";
 
 type UserPositions = {
   positions: bigint[];
@@ -18,8 +18,8 @@ export function useSwapPositions(data: UserPositions[] | undefined, refresh?: nu
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(data) || isNullArgs(principal)) return;
-      if (data.length === 0) {
+      if (isNullArgs(data)) return;
+      if (data.length === 0 || isNullArgs(principal)) {
         setPositions([]);
         return;
       }
@@ -50,15 +50,14 @@ export function useSwapPositions(data: UserPositions[] | undefined, refresh?: nu
   return useMemo(() => ({ loading, result: positions }), [positions, loading]);
 }
 
-export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | undefined | null, refresh?: number) {
+export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | Null, refresh?: number) {
   const principal = useAccountPrincipal();
   const [loading, setLoading] = useState(false);
   const [positions, setPositions] = useState<UserPositionForFarm[] | undefined>(undefined);
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(farms) || isNullArgs(principal)) return;
-      if (farms.length === 0) {
+      if (isNullArgs(farms) || isNullArgs(principal) || farms.length === 0) {
         setPositions([]);
         return;
       }

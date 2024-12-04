@@ -68,9 +68,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
   const { result: positions, loading } = useUserAllPositions(refreshTrigger);
 
   useEffect(() => {
-    if (positions) {
-      setAllPositions(positions);
-    }
+    setAllPositions(positions);
   }, [positions, setAllPositions]);
 
   const sortedPositions = useSortedPositions<UserPosition>({

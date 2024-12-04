@@ -55,9 +55,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
   const { result: positions, loading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
 
   useEffect(() => {
-    if (positions) {
-      setAllStakedPositions(positions);
-    }
+    setAllStakedPositions(positions);
   }, [positions, setAllStakedPositions]);
 
   const sortedPositions = useSortedPositions<UserPositionForFarm>({

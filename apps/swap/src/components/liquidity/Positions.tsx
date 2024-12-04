@@ -16,6 +16,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { PositionSort, PositionFilterState, type UserPosition } from "types/swap";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 import { Unlock } from "react-feather";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -63,8 +64,8 @@ export function Positions() {
     { [id: string]: BigNumber | undefined } | undefined
   >({});
   const [allPositionFees, setAllPositionFees] = useState<{ [id: string]: BigNumber | undefined } | undefined>({});
-  const [allPositions, setAllPositions] = useState<UserPosition[] | undefined>(undefined);
-  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | undefined>(undefined);
+  const [allPositions, setAllPositions] = useState<UserPosition[] | Null>(undefined);
+  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | Null>(undefined);
   const [__hiddenNumbers, setHiddenNumbers] = useState<{ [id: string]: boolean }>({});
 
   const { subTab } = useParsedQueryString() as { subTab: string | undefined };
@@ -133,6 +134,8 @@ export function Positions() {
     setAllPositionsUSDValue(undefined);
     setAllPositions(undefined);
     setAllStakedPositions(undefined);
+    setAllPositionFees(undefined);
+    setHiddenNumbers({});
   }, [principalString]);
 
   useEffect(() => {
