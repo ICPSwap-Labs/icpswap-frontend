@@ -3,7 +3,7 @@ import { Flex } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import { type FarmTvl } from "@icpswap/types";
 import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
-import { usePositionsValueByInfos } from "hooks/swap/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -54,7 +54,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
       });
   }, [userAllPositions, farmInitArgs, poolMetadata]);
 
-  const allAvailablePositionValue = usePositionsValueByInfos({
+  const allAvailablePositionValue = usePositionsTotalValue({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });
