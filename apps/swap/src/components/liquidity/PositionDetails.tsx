@@ -40,8 +40,7 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
         gap="0 4px"
         sx={{
           flex: 1,
-          "@media(max-width:640px)": {
-            maxWidth: "130px",
+          "@media(max-width: 640px)": {
             justifyContent: "flex-end",
           },
         }}
@@ -235,7 +234,6 @@ export function PositionDetails({
                 inverted ? (
                   <Flex
                     gap="8px"
-                    justify="flex-end"
                     sx={{
                       flex: 1,
                       "@media(max-width: 640px)": {
