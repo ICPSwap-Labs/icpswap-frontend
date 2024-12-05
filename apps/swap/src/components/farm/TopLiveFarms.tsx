@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
 import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
-import { usePositionsValueByInfos } from "hooks/swap/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -51,7 +51,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       });
   }, [userAllPositions, farmInitArgs, poolMetadata]);
 
-  const allAvailablePositionValue = usePositionsValueByInfos({
+  const allAvailablePositionValue = usePositionsTotalValue({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });

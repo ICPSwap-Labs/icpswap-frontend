@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { parseTokenAmount, BigNumber, nowInSeconds, isNullArgs } from "@icpswap/utils";
-import type { InitFarmArgs, FarmRewardMetadata, FarmState, FarmDepositArgs } from "@icpswap/types";
+import type { InitFarmArgs, FarmRewardMetadata, FarmState, FarmDepositArgs, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 
@@ -38,8 +38,7 @@ export interface UseUserAprArgs {
   state: FarmState | undefined;
   farmInitArgs: InitFarmArgs | undefined;
   rewardToken: Token | undefined;
-  rewardAmount: string | undefined;
-  positionValue: string | undefined;
+  positionsValue: (BigNumber | Null)[] | Null;
   deposits: FarmDepositArgs[] | undefined;
 }
 
@@ -49,9 +48,8 @@ export function useUserApr({
   state,
   rewardToken,
   farmInitArgs,
-  positionValue,
+  positionsValue,
   deposits,
-  rewardAmount,
 }: UseUserAprArgs) {
   const rewardTokenPrice = useUSDPriceById(rewardToken?.address);
 
@@ -59,9 +57,8 @@ export function useUserApr({
     if (
       !farmTvlValue ||
       !farmInitArgs ||
-      !rewardAmount ||
       !rewardToken ||
-      !positionValue ||
+      isNullArgs(positionsValue) ||
       !deposits ||
       new BigNumber(farmTvlValue).isEqualTo(0)
     )
@@ -69,26 +66,33 @@ export function useUserApr({
 
     if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
 
-    const depositTime = deposits.reduce((prev, curr) => {
-      if (prev === BigInt(0)) return curr.initTime;
-      return curr.initTime > prev ? curr.initTime : prev;
-    }, BigInt(0));
+    const apr = deposits.reduce(
+      (prev, curr, index) => {
+        const depositTime = curr.initTime;
+        const now = nowInSeconds();
+        const stakedSeconds = new BigNumber(String(BigInt(now) - depositTime)).toString();
 
-    if (depositTime === BigInt(0)) return undefined;
+        const positionValue = positionsValue[index];
 
-    const now = nowInSeconds();
-    const stakedSeconds = new BigNumber(String(BigInt(now) - depositTime)).toString();
+        if (isNullArgs(positionValue)) return prev;
 
-    const val = new BigNumber(rewardAmount)
-      .multipliedBy(rewardTokenPrice)
-      .dividedBy(positionValue)
-      .multipliedBy(3600 * 24 * 360)
-      .dividedBy(stakedSeconds)
-      .multipliedBy(100)
-      .toFixed(2);
+        const val = parseTokenAmount(curr.rewardAmount, rewardToken.decimals)
+          .multipliedBy(rewardTokenPrice)
+          .dividedBy(positionValue)
+          .multipliedBy(3600 * 24 * 360)
+          .dividedBy(stakedSeconds)
+          .multipliedBy(100)
+          .toFixed(2);
 
-    return `${val}%`;
-  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposits]);
+        return new BigNumber(val).plus(prev ?? 0);
+      },
+      null as null | BigNumber,
+    );
+
+    if (isNullArgs(apr)) return undefined;
+
+    return `${apr.dividedBy(deposits.length)}%`;
+  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionsValue, deposits]);
 }
 
 export interface UseUserSingleLiquidityAprProps {
