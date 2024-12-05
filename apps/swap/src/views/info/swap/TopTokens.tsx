@@ -1,4 +1,4 @@
-import { Typography, Box } from "components/Mui";
+import { Typography, Box, useTheme } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { FilledTextField } from "components/index";
 import { useNodeInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
@@ -9,6 +9,7 @@ import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
 
 export default function TopTokens() {
+  const theme = useTheme();
   const [search, setSearch] = useState<null | string>(null);
   const [onlyTokenList, setOnlyTokenList] = useState(true);
 
@@ -89,9 +90,15 @@ export default function TopTokens() {
               fullHeight
               value={search}
               textFiledProps={{
-                placeholder: `Search the canister ID or token`,
+                slotProps: {
+                  input: {
+                    placeholder: `Search the canister ID or token`,
+                  },
+                },
               }}
+              background={theme.palette.background.level1}
               onChange={(value: string) => setSearch(value)}
+              placeholderSize="12px"
             />
           </Box>
 
