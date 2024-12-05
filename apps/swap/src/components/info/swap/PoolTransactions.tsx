@@ -1,16 +1,16 @@
-import { Box } from "components/Mui";
 import { usePoolTransactions } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 
-import { Transactions } from "./Transactions";
+import { Transactions, StyleProps } from "./Transactions";
 
-export function PoolTransactions({ canisterId }: { canisterId: string }) {
-  const { result: transactions, loading } = usePoolTransactions(canisterId, 0, 300);
+interface PoolTransactionsProps {
+  canisterId: string | Null;
+  refresh?: number;
+  styleProps?: StyleProps;
+}
 
-  return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1152px" }}>
-        <Transactions transactions={transactions} loading={loading} hasFilter />
-      </Box>
-    </Box>
-  );
+export function PoolTransactions({ canisterId, styleProps, refresh }: PoolTransactionsProps) {
+  const { result: transactions, loading } = usePoolTransactions(canisterId, 0, 300, refresh);
+
+  return <Transactions transactions={transactions} loading={loading} hasFilter styleProps={styleProps} />;
 }

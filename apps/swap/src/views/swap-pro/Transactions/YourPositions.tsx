@@ -435,7 +435,7 @@ export function YourPositions({ canisterId }: PoolTransactionsProps) {
           </Box>
         ) : null}
 
-        <Box mt="20px">
+        <Box sx={{ padding: "20px 0" }}>
           {!loading && !!filteredPositions?.length ? (
             <SimplePagination
               page={page}

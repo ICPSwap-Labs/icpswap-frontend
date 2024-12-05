@@ -25,8 +25,19 @@ import { Null } from "@icpswap/types";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
+import { Holders } from "components/info/tokens";
 
 import { TokenPrices } from "./components/TokenPrice";
+
+enum TabValue {
+  Transactions = "Transactions",
+  Holders = "Holders",
+}
+
+const tabs = [
+  { value: TabValue.Transactions, label: "Transactions" },
+  { value: TabValue.Holders, label: "Holders" },
+];
 
 interface TokenChartsViewSelectorProps {
   token: TokenInfo | undefined | Token;
@@ -63,6 +74,8 @@ export default function TokenDetails() {
 
   const { result: tokenTVL } = useTokenLatestTVL(canisterId);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [activeTab, setActiveTab] = useState<TabValue>(TabValue.Transactions);
 
   const [chartView, setChartView] = useState<Null | ChartButton>({
     label: "DexScreener",
@@ -288,13 +301,32 @@ export default function TokenDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={3}>
-          <Typography variant="h3">
-            <Trans>Transactions</Trans>
-          </Typography>
+        <MainCard level={3} padding="0px">
+          <Flex
+            gap="0 20px"
+            sx={{
+              padding: "24px",
+              "@media(max-width: 640px)": {
+                padding: "16px",
+              },
+            }}
+          >
+            {tabs.map((tab) => (
+              <Typography
+                variant="h3"
+                sx={{ cursor: "pointer", color: tab.value === activeTab ? "text.primary" : "text.secondary" }}
+                onClick={() => setActiveTab(tab.value)}
+              >
+                {tab.label}
+              </Typography>
+            ))}
+          </Flex>
 
-          <Box mt="20px">
-            <TokenTransactions canisterId={canisterId} />
+          <Box>
+            {activeTab === TabValue.Transactions ? (
+              <TokenTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
+            ) : null}
+            {activeTab === TabValue.Holders ? <Holders tokenId={canisterId} styleProps={{ padding: "24px" }} /> : null}
           </Box>
         </MainCard>
       </Box>

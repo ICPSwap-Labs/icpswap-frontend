@@ -125,7 +125,11 @@ export default function SwapTransactions() {
                   fullHeight
                   value={principal}
                   textFiledProps={{
-                    placeholder: `Search the principal for valuation`,
+                    slotProps: {
+                      input: {
+                        placeholder: `Search the principal for swap transactions`,
+                      },
+                    },
                   }}
                   placeholderSize="12px"
                   onChange={handleAddressChange}

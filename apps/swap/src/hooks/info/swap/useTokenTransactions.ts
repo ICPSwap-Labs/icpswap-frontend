@@ -1,8 +1,8 @@
 import { getTransactionsByToken, useBaseStorages } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { BaseTransaction } from "@icpswap/types";
+import { BaseTransaction, Null } from "@icpswap/types";
 
-export function useTokenTransactions(tokenId: string | undefined, offset: number, limit: number) {
+export function useTokenTransactions(tokenId: string | Null, offset: number, limit: number) {
   const { result: storageIds } = useBaseStorages();
 
   const [loading, setLoading] = useState(false);

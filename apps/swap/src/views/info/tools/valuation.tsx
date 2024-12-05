@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from "react-router-dom";
 import { InfoWrapper, FilledTextField, TokenImage } from "components/index";
-import { makeStyles, Box, Typography, Link } from "components/Mui";
+import { makeStyles, Box, Typography, Link, useTheme } from "components/Mui";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Trans } from "@lingui/macro";
 import {
@@ -111,6 +111,7 @@ function UserTokenBalance({
 
 export default function SwapScanValuation() {
   const classes = useStyles();
+  const theme = useTheme();
   const { principal } = useParsedQueryString() as { principal: string };
   const history = useHistory();
   const location = useLocation();
@@ -271,9 +272,15 @@ export default function SwapScanValuation() {
               fullHeight
               value={principal}
               textFiledProps={{
-                placeholder: `Search the principal for valuation`,
+                slotProps: {
+                  input: {
+                    placeholder: `Search the principal for valuation`,
+                  },
+                },
               }}
               onChange={handleSearchChange}
+              placeholderSize="12px"
+              background={theme.palette.background.level1}
             />
 
             {principal && !isValidPrincipal(principal) ? (

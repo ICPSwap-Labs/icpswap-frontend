@@ -20,6 +20,7 @@ import {
 } from "@icpswap/ui";
 import { Null, IcExplorerTokenHolderDetail } from "@icpswap/types";
 import { useCopySuccess } from "hooks/index";
+import { Holders } from "components/info/tokens";
 
 const useStyles = makeStyles(() => {
   return {
@@ -80,7 +81,7 @@ function HolderRow({ page, sneedLedger, holder, index }: HolderRowProps) {
   );
 }
 
-export default function Holders() {
+export default function __Holders() {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -127,7 +128,7 @@ export default function Holders() {
         <Typography
           sx={{
             fontSize: "20px",
-            padding: "24px 24px",
+            padding: "24px",
             fontWeight: 600,
             borderBottom: `1px solid ${theme.palette.border.level1}`,
           }}
@@ -135,74 +136,7 @@ export default function Holders() {
           <Trans>Holders</Trans>
         </Typography>
 
-        <Box sx={{ width: "100%" }}>
-          <Box sx={{ width: "100%", overflow: "auto" }}>
-            <Box sx={{ minWidth: "1026px" }}>
-              <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-                <HeaderCell field="PositionId">
-                  <Trans>Rank</Trans>
-                </HeaderCell>
-
-                <HeaderCell field="token0Amount">
-                  <Trans>Address</Trans>
-                </HeaderCell>
-
-                <HeaderCell field="token1Amount">
-                  <Trans>Amount</Trans>
-                </HeaderCell>
-
-                <HeaderCell field="priceRange">
-                  <Trans>Value</Trans>
-                </HeaderCell>
-
-                <HeaderCell field="unclaimedFees">
-                  <Trans>%</Trans>
-                </HeaderCell>
-              </Header>
-
-              {!loading
-                ? (result?.list ?? []).map((element, index) => (
-                    <HolderRow
-                      key={index}
-                      page={pagination.pageNum}
-                      holder={element}
-                      index={index}
-                      sneedLedger={sneedLedger}
-                    />
-                  ))
-                : null}
-
-              {(result?.list ?? []).length === 0 && !loading ? <NoData /> : null}
-
-              {loading ? (
-                <Box sx={{ padding: "24px" }}>
-                  <LoadingRow>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </LoadingRow>
-                </Box>
-              ) : null}
-            </Box>
-          </Box>
-
-          <Box sx={{ padding: "24px 24px" }}>
-            {!loading && !!result?.list.length ? (
-              <Pagination
-                num={pagination.pageNum}
-                defaultPageSize={pagination.pageSize}
-                total={result?.total ? Number(result.total) : 0}
-                onPageChange={handlePageChange}
-                mt="0"
-              />
-            ) : null}
-          </Box>
-        </Box>
+        <Holders tokenId={tokenId} />
       </Box>
     </InfoWrapper>
   );

@@ -8,20 +8,26 @@ import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      gap: "1em",
-      alignItems: "center",
-      gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+export interface StyleProps {
+  padding?: string;
+}
 
-      "@media screen and (max-width: 780px)": {
+const useStyles = (styleProps?: StyleProps) =>
+  makeStyles(() => {
+    return {
+      wrapper: {
+        display: "grid",
+        gap: "1em",
+        padding: styleProps?.padding ?? "16px",
+        alignItems: "center",
         gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+        "@media screen and (max-width: 780px)": {
+          gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+          padding: "16px",
+        },
       },
-    },
-  };
-});
+    };
+  });
 
 export interface TransactionsProps {
   transactions: PoolStorageTransaction[] | undefined | null;
@@ -29,13 +35,21 @@ export interface TransactionsProps {
   maxItems?: number;
   hasFilter?: boolean;
   showedTokens?: string[];
+  styleProps?: StyleProps;
 }
 
 type Filter = "all" | "swaps" | "adds" | "removes";
 
-export function Transactions({ transactions, maxItems = 10, loading, hasFilter, showedTokens }: TransactionsProps) {
+export function Transactions({
+  transactions,
+  styleProps,
+  maxItems = 10,
+  loading,
+  hasFilter,
+  showedTokens,
+}: TransactionsProps) {
   const theme = useTheme();
-  const classes = useStyles();
+  const classes = useStyles(styleProps)();
   const [openTip] = useTips();
   const [page, setPage] = useState(1);
 
@@ -103,70 +117,74 @@ export function Transactions({ transactions, maxItems = 10, loading, hasFilter, 
   }, []);
 
   return (
-    <Box>
-      <Header
-        className={classes.wrapper}
-        onSortChange={handleSortChange}
-        defaultSortFiled={sortField}
-        borderBottom={`1px solid ${theme.palette.border.level1}`}
-      >
-        <Box>
-          {hasFilter ? (
-            <Box sx={{ display: "flex", gap: "0 10px" }}>
-              {Filters.map((ele) => (
-                <Typography
-                  key={ele.key}
-                  sx={{
-                    color: filter === ele.key ? "#ffffff" : theme.colors.darkPrimary400,
-                    cursor: "pointer",
-                    fontSize: "16px",
-                  }}
-                  onClick={() => handleFilterChange(ele.key)}
-                >
-                  {ele.value}
-                </Typography>
-              ))}
+    <>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1120px" }}>
+          <Header
+            className={classes.wrapper}
+            onSortChange={handleSortChange}
+            defaultSortFiled={sortField}
+            borderBottom={`1px solid ${theme.palette.border.level1}`}
+          >
+            <Box>
+              {hasFilter ? (
+                <Box sx={{ display: "flex", gap: "0 10px" }}>
+                  {Filters.map((ele) => (
+                    <Typography
+                      key={ele.key}
+                      sx={{
+                        color: filter === ele.key ? "#ffffff" : theme.colors.darkPrimary400,
+                        cursor: "pointer",
+                        fontSize: "16px",
+                      }}
+                      onClick={() => handleFilterChange(ele.key)}
+                    >
+                      {ele.value}
+                    </Typography>
+                  ))}
+                </Box>
+              ) : (
+                <Typography sx={{ color: theme.colors.darkPrimary400 }}>#</Typography>
+              )}
             </Box>
-          ) : (
-            <Typography sx={{ color: theme.colors.darkPrimary400 }}>#</Typography>
-          )}
+
+            <HeaderCell field="amountUSD" isSort>
+              <Trans>Total Value</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="amountToken0" isSort>
+              <Trans>Token Amount</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="amountToken1" isSort>
+              <Trans>Token Amount</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="sender" isSort>
+              <Trans>Account</Trans>
+            </HeaderCell>
+
+            <HeaderCell field="timestamp" isSort>
+              <Trans>Time</Trans>
+            </HeaderCell>
+          </Header>
+
+          {(sortedTransactions ?? []).map((transaction, index) => (
+            <TransactionRow
+              key={`${String(transaction.timestamp)}_${index}`}
+              className={classes.wrapper}
+              transaction={transaction}
+              onAddressClick={handleCopy}
+            />
+          ))}
+
+          {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
+
+          {loading ? <ImageLoading loading={loading} /> : null}
         </Box>
+      </Box>
 
-        <HeaderCell field="amountUSD" isSort>
-          <Trans>Total Value</Trans>
-        </HeaderCell>
-
-        <HeaderCell field="amountToken0" isSort>
-          <Trans>Token Amount</Trans>
-        </HeaderCell>
-
-        <HeaderCell field="amountToken1" isSort>
-          <Trans>Token Amount</Trans>
-        </HeaderCell>
-
-        <HeaderCell field="sender" isSort>
-          <Trans>Account</Trans>
-        </HeaderCell>
-
-        <HeaderCell field="timestamp" isSort>
-          <Trans>Time</Trans>
-        </HeaderCell>
-      </Header>
-
-      {(sortedTransactions ?? []).map((transaction, index) => (
-        <TransactionRow
-          key={`${String(transaction.timestamp)}_${index}`}
-          className={classes.wrapper}
-          transaction={transaction}
-          onAddressClick={handleCopy}
-        />
-      ))}
-
-      {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
-
-      {loading ? <ImageLoading loading={loading} /> : null}
-
-      <Box mt="20px">
+      <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
         {!loading && !!filteredTransactions?.length ? (
           <Pagination
             page={page}
@@ -176,6 +194,6 @@ export function Transactions({ transactions, maxItems = 10, loading, hasFilter, 
           />
         ) : null}
       </Box>
-    </Box>
+    </>
   );
 }

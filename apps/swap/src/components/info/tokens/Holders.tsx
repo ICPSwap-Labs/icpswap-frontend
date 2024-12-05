@@ -17,27 +17,33 @@ import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/util
 import { Null, IcExplorerTokenHolderDetail } from "@icpswap/types";
 import { useCopySuccess } from "hooks/index";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      gap: "1em",
-      alignItems: "center",
-      gridTemplateColumns: "100px repeat(3, 1fr) 100px",
-      padding: "20px 16px",
-    },
-  };
-});
+export interface StyleProps {
+  padding?: string;
+}
+
+const useStyles = (styleProps?: StyleProps) =>
+  makeStyles(() => {
+    return {
+      wrapper: {
+        display: "grid",
+        gap: "1em",
+        alignItems: "center",
+        gridTemplateColumns: "100px repeat(3, 1fr) 100px",
+        padding: styleProps?.padding ?? "20px 16px",
+      },
+    };
+  });
 
 interface HolderRowProps {
   holder: IcExplorerTokenHolderDetail;
   index: number;
   page: number;
   sneedLedger?: string | Null;
+  styleProps?: StyleProps;
 }
 
-function HolderRow({ page, sneedLedger, holder, index }: HolderRowProps) {
-  const classes = useStyles();
+function HolderRow({ page, sneedLedger, holder, index, styleProps }: HolderRowProps) {
+  const classes = useStyles(styleProps)();
   const theme = useTheme();
 
   const isSneed = useMemo(() => {
@@ -80,10 +86,11 @@ const maxItems = 10;
 
 export interface PoolTransactionsProps {
   tokenId: string | Null;
+  styleProps?: StyleProps;
 }
 
-export function Holders({ tokenId }: PoolTransactionsProps) {
-  const classes = useStyles();
+export function Holders({ tokenId, styleProps }: PoolTransactionsProps) {
+  const classes = useStyles(styleProps)();
   const theme = useTheme();
 
   const [page, setPage] = useState(1);
@@ -129,7 +136,14 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
 
           {!loading
             ? (result?.list ?? []).map((element, index) => (
-                <HolderRow key={index} page={page} holder={element} index={index} sneedLedger={sneedLedger} />
+                <HolderRow
+                  key={index}
+                  page={page}
+                  holder={element}
+                  index={index}
+                  sneedLedger={sneedLedger}
+                  styleProps={styleProps}
+                />
               ))
             : null}
 
@@ -152,7 +166,7 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
         </Box>
       </Box>
 
-      <Box mt="20px">
+      <Box sx={{ padding: "20px 0" }}>
         {!loading && !!result?.list.length ? (
           <SimplePagination
             page={page}

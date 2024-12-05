@@ -191,7 +191,7 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
   };
 
   return (
-    <Box sx={{ minWidth: "1200px" }}>
+    <Box sx={{ minWidth: "1136px" }}>
       <Box
         sx={{
           display: "flex",

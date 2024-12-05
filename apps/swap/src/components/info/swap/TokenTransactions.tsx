@@ -1,16 +1,15 @@
-import { Box } from "@mui/material";
 import { useTokenTransactions } from "hooks/info/swap";
+import { Null } from "@icpswap/types";
 
-import { Transactions } from "./Transactions";
+import { Transactions, StyleProps } from "./Transactions";
 
-export function TokenTransactions({ canisterId }: { canisterId: string }) {
+interface TokenTransactionsProps {
+  canisterId: string | Null;
+  styleProps?: StyleProps;
+}
+
+export function TokenTransactions({ canisterId, styleProps }: TokenTransactionsProps) {
   const { result: transactions, loading } = useTokenTransactions(canisterId, 0, 300);
 
-  return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1152px" }}>
-        <Transactions transactions={transactions} loading={loading} hasFilter />
-      </Box>
-    </Box>
-  );
+  return <Transactions transactions={transactions} loading={loading} hasFilter styleProps={styleProps} />;
 }

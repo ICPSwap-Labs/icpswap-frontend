@@ -130,7 +130,11 @@ export default function UserPoolBalance() {
                 fullHeight
                 value={principal}
                 textFiledProps={{
-                  placeholder: `Search the principal for valuation`,
+                  slotProps: {
+                    input: {
+                      placeholder: `Search the principal for user's pool balance`,
+                    },
+                  },
                 }}
                 placeholderSize="12px"
                 onChange={handleAddressChange}

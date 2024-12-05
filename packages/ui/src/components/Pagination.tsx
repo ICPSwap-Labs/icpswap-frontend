@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 
-import { Grid, Pagination as MuiPagination, Box } from "./Mui";
+import { Pagination as MuiPagination } from "./Mui";
 import { MainCard } from "./MainCard";
+import { Flex } from "./Grid";
 
 export type PaginationType = {
   pageNum: number;
@@ -37,8 +38,8 @@ export function Pagination({ total, onPageChange, defaultPageSize = 10, flexEnd,
   };
 
   return (
-    <Grid container justifyContent={flexEnd ? "flex-end" : ""} mt={mt}>
-      <Box>
+    <Flex fullWidth justify={flexEnd ? "flex-end" : ""} sx={{ marginTop: mt ?? "0px" }}>
+      <Flex>
         <MainCard level={4} padding="12px">
           <MuiPagination
             count={Math.ceil(Number(total || "") / defaultPageSize)}
@@ -48,7 +49,7 @@ export function Pagination({ total, onPageChange, defaultPageSize = 10, flexEnd,
             onChange={paginationChange}
           />
         </MainCard>
-      </Box>
-    </Grid>
+      </Flex>
+    </Flex>
   );
 }

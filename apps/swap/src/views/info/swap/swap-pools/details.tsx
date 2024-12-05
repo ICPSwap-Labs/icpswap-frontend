@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -23,15 +23,23 @@ import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { PositionTable } from "components/liquidity/PositionTable";
 
 import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
+enum TabValue {
+  Transactions = "Transactions",
+  Positions = "Positions",
+}
+
 export default function SwapPoolDetails() {
   const { id: canisterId } = useParams<{ id: string }>();
   const theme = useTheme();
   const [openTips] = useTips();
+
+  const [tab, setTab] = useState<TabValue>(TabValue.Transactions);
 
   const { result: pool } = useInfoPool(canisterId);
   const { result: token0 } = useTokenInfo(pool?.token0Id);
@@ -318,13 +326,28 @@ export default function SwapPoolDetails() {
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
-        <MainCard level={3}>
-          <Typography variant="h3">
-            <Trans>Transactions</Trans>
-          </Typography>
+        <MainCard level={3} padding="0px">
+          <Flex gap="0 20px" sx={{ padding: "24px" }}>
+            {Object.keys(TabValue).map((key) => (
+              <Typography
+                variant="h3"
+                key={key}
+                sx={{
+                  cursor: "pointer",
+                  color: tab === key ? "text.primary" : "text.secondary",
+                }}
+                onClick={() => setTab(key as TabValue)}
+              >
+                {TabValue[key]}
+              </Typography>
+            ))}
+          </Flex>
 
-          <Box mt="20px">
-            <PoolTransactions canisterId={canisterId} />
+          <Box>
+            {tab === TabValue.Transactions ? (
+              <PoolTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
+            ) : null}
+            {tab === TabValue.Positions ? <PositionTable poolId={canisterId} /> : null}
           </Box>
         </MainCard>
       </Box>

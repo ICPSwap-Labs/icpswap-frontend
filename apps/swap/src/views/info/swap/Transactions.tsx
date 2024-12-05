@@ -25,14 +25,16 @@ export default function AllTransactions() {
   }, [checked, tokenList]);
 
   return (
-    <MainCard sx={{ width: "100%", overflow: "auto" }}>
+    <MainCard sx={{ width: "100%" }} padding="0px">
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
+          padding: "24px",
           "@media(max-width: 640px)": {
             flexDirection: "column",
             gap: "10px 0",
+            padding: "16px",
           },
         }}
       >
@@ -43,8 +45,14 @@ export default function AllTransactions() {
         <OnlyTokenList onChange={handleCheckChange} checked={checked} />
       </Box>
 
-      <Box sx={{ minWidth: "1140px", margin: "20px 0 0 0" }}>
-        <Transactions transactions={transactions} loading={loading} hasFilter showedTokens={showedTokens} />
+      <Box sx={{ width: "100%" }}>
+        <Transactions
+          transactions={transactions}
+          loading={loading}
+          hasFilter
+          showedTokens={showedTokens}
+          styleProps={{ padding: "24px" }}
+        />
       </Box>
     </MainCard>
   );
