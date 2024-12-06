@@ -57,6 +57,7 @@ function UserTokenBalance({
   displayTokenInList,
   onUpdateUSDValues,
 }: UserTokenBalanceProps) {
+  const theme = useTheme();
   const classes = useStyles();
   const tokenUSDPrice = useUSDPriceById(tokenInfo.canisterId);
 
@@ -73,6 +74,7 @@ function UserTokenBalance({
     <TableRow
       className={classes.wrapper}
       sx={{ display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid" }}
+      borderBottom={`1px solid ${theme.palette.border.level1}`}
     >
       <BodyCell>
         <Box sx={{ display: "flex", gap: "0 10px", alignItems: "center" }}>
@@ -238,7 +240,8 @@ export default function SwapScanValuation() {
       <BreadcrumbsV1
         links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>Wallet Valuation</Trans> }]}
       />
-      <MainCard>
+
+      <MainCard sx={{ margin: "20px 0 0 0" }}>
         <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
           <Trans>Wallet Valuation</Trans>
         </Typography>
@@ -313,7 +316,11 @@ export default function SwapScanValuation() {
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
           <Box sx={{ minWidth: "840px" }}>
-            <Header className={classes.wrapper} sx={{ display: "grid" }}>
+            <Header
+              className={classes.wrapper}
+              borderBottom={`1px solid ${theme.palette.border.level1}`}
+              sx={{ display: "grid" }}
+            >
               <HeaderCell>Token</HeaderCell>
 
               <HeaderCell field="usdValue">

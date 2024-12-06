@@ -164,7 +164,7 @@ export default function SwapTransactions() {
         <Box sx={{ width: "100%", overflow: "auto" }}>
           <Box sx={{ minWidth: "1152px" }}>
             <Box>
-              <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.background.level1}`}>
+              <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
                 <HeaderCell>#</HeaderCell>
 
                 <HeaderCell field="amountUSD">

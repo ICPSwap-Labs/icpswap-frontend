@@ -32,6 +32,7 @@ interface ClaimItemProps {
 
 function ClaimItem({ claim }: ClaimItemProps) {
   const classes = useStyles();
+  const theme = useTheme();
 
   const { result: token0 } = useTokenInfo(claim.token0.address);
   const { result: token1 } = useTokenInfo(claim.token1.address);
@@ -39,7 +40,7 @@ function ClaimItem({ claim }: ClaimItemProps) {
   return (
     <>
       {claim.balance0 !== BigInt(0) && !!token0 ? (
-        <TableRow className={classes.wrapper}>
+        <TableRow className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <BodyCell>
             <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
               <Avatar src={token0.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
@@ -58,7 +59,7 @@ function ClaimItem({ claim }: ClaimItemProps) {
       ) : null}
 
       {claim.balance1 !== BigInt(0) && !!token1 ? (
-        <TableRow className={classes.wrapper}>
+        <TableRow className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <BodyCell>
             <Box sx={{ display: "flex", gap: "0 3px", alignItems: "center" }}>
               <Avatar src={token1.logo} sx={{ width: "24px", height: "24px", margin: "0 8px 0 0" }}>
@@ -156,7 +157,7 @@ export default function UserPoolBalance() {
       >
         <Box sx={{ width: "100%", overflow: "auto" }}>
           <Box sx={{ minWidth: "1200px" }}>
-            <Header className={classes.wrapper}>
+            <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
               <HeaderCell field="amountUSD">
                 <Trans>Token Amount</Trans>
               </HeaderCell>
