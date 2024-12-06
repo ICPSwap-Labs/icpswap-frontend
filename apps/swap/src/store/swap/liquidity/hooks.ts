@@ -18,7 +18,7 @@ import {
   FeeAmount,
 } from "@icpswap/swap-sdk";
 import { getTickToPrice } from "utils/swap/getTickToPrice";
-import { usePool, PoolState, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
+import { usePool, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
 import { t } from "@lingui/macro";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
@@ -28,6 +28,7 @@ import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
 import { useTokenAllBalance } from "hooks/liquidity/index";
 import { useAllowance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { PoolState } from "types/swap";
 
 import {
   updateFiled,

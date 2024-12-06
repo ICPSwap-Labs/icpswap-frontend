@@ -2,26 +2,21 @@ import { useMemo, useEffect, useState } from "react";
 import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
-import { numberToString } from "@icpswap/utils";
-import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
-import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
+import { isNullArgs, nonNullArgs, numberToString } from "@icpswap/utils";
+import type { Null, PoolMetadata } from "@icpswap/types";
+import { getPool_update_call } from "hooks/swap/v3Calls";
 import { NETWORK, network } from "constants/index";
 import { useToken, getTokensFromInfos } from "hooks/useCurrency";
 import { getTokenInfo } from "hooks/token/calls";
-import { TokenInfo } from "types/token";
+import { TokenInfo, PoolState } from "types/index";
 
-export enum PoolState {
-  LOADING = "LOADING",
-  NOT_EXISTS = "NOT_EXISTS",
-  EXISTS = "EXISTS",
-  INVALID = "INVALID",
-  NOT_CHECK = "NOT_CHECK",
-}
+import { getMultiPoolsMetadata } from "./usePoolsMetadata";
+
+const POOL_METADATA_UPDATE_INTERVAL = 60000;
 
 type TypePoolsState = {
   id: string;
   metadata: PoolMetadata | undefined;
-  ticks: TickLiquidityInfo[];
   key: string;
   checked: boolean;
 };
@@ -58,32 +53,26 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
       if (transformedPoolKeys && transformedPoolKeys.length) {
         setLoading(true);
 
-        const result = await Promise.all<TypePoolsState | null>(
-          transformedPoolKeys.map(async (element) => {
-            if (!element) return null;
-
-            const pool = await getPool(element.token0, element.token1, element.fee);
-
-            if (!pool) return null;
-
-            const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
-
-            return {
-              key: transformedKeyToKey(element),
-              id: pool.canisterId.toString(),
-              metadata: poolMetadata,
-              ticks: [],
-              checked: !!withoutVerify,
-            };
-          }),
-        );
-
+        const poolsMetadata = await getMultiPoolsMetadata(poolKeys);
         const pools: { [id: string]: TypePoolsState } = {};
 
-        result.forEach((ele) => {
-          if (ele) {
-            pools[ele.key] = ele;
-          }
+        poolKeys.forEach((poolKey, index) => {
+          const [token0, token1, fee] = poolKey;
+
+          if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return;
+
+          const key = transformedKeyToKey({ token0: token0.address, token1: token1.address, fee });
+
+          const metadataResult = poolsMetadata[index];
+
+          if (isNullArgs(metadataResult)) return;
+
+          pools[key] = {
+            id: metadataResult.poolId,
+            metadata: metadataResult.metadata,
+            key,
+            checked: !!withoutVerify,
+          };
         });
 
         setPools(pools);
@@ -91,7 +80,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
         // Use update call to verify the pool.
         if (withoutVerify === false) {
-          transformedPoolKeys.map(async (element) => {
+          transformedPoolKeys.map(async (element, index) => {
             if (!element) return;
 
             const pool = await getPool_update_call(element.token0, element.token1, element.fee);
@@ -102,18 +91,20 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
                 [transformedKeyToKey(element)]: null,
               }));
             } else {
-              const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
+              const key = transformedKeyToKey(element);
+              const metadataResult = poolsMetadata[index];
 
-              setPools((prevState) => ({
-                ...prevState,
-                [transformedKeyToKey(element)]: {
-                  key: transformedKeyToKey(element),
-                  id: pool.canisterId.toString(),
-                  metadata: poolMetadata,
-                  ticks: [],
-                  checked: true,
-                },
-              }));
+              if (nonNullArgs(metadataResult)) {
+                setPools((prevState) => ({
+                  ...prevState,
+                  [key]: {
+                    key,
+                    id: pool.canisterId.toString(),
+                    metadata: metadataResult.metadata,
+                    checked: true,
+                  },
+                }));
+              }
             }
           });
         }
@@ -122,6 +113,48 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
     call();
   }, [JSON.stringify(transformedPoolKeys), withoutVerify]);
+
+  // Interval update pool's metadata
+  useEffect(() => {
+    let timer: number | null = null;
+
+    async function call() {
+      if (pools) {
+        Object.values(pools).forEach(async (poolResult) => {
+          if (poolResult) {
+            const { id, key, metadata, checked } = poolResult;
+
+            if (!metadata || !pools[key]) return;
+
+            getSwapPoolMetadata(id).then((result) => {
+              if (result) {
+                if (result.liquidity !== metadata.liquidity || result.sqrtPriceX96 !== metadata.sqrtPriceX96) {
+                  setPools((prevState) => ({
+                    ...prevState,
+                    [key]: {
+                      key,
+                      id,
+                      metadata: result,
+                      checked,
+                    },
+                  }));
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+
+    timer = setInterval(() => call(), POOL_METADATA_UPDATE_INTERVAL);
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+  }, [JSON.stringify(pools)]);
 
   return useMemo(() => {
     return transformedPoolKeys.map((transformedKey, index) => {
@@ -143,7 +176,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
         if (!token0 || !token1) return [PoolState.NOT_EXISTS, null];
 
-        // Renew token that standard from the pool metadata
+        // Renew token standard from the pool metadata
         const __token0 = new Token({
           address: token0.address,
           decimals: token0.decimals,
@@ -388,3 +421,5 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
     return { Pools, tokens };
   }, [pools, loading, tokens, canisterIds]);
 }
+
+export { PoolState } from "types/swap";
