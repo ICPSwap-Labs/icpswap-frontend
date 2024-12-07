@@ -1,13 +1,12 @@
 import { Typography } from "components/Mui";
-import { MainCard } from "components/index";
-import { principalToAccount, shorten } from "@icpswap/utils";
-import { Flex, TextButton, Image } from "@icpswap/ui";
+import { IsSneedOwner, MainCard } from "components/index";
+import { shorten } from "@icpswap/utils";
+import { Flex, TextButton } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
-import { useLiquidityLockIds } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState } from "hooks/liquidity";
-import { useRefreshTriggerManager } from "hooks/index";
+import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
 import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
@@ -28,18 +27,8 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return [position.pool.token0.address, position.pool.token1.address];
   }, [position.pool]);
 
-  const { result: locksIds } = useLiquidityLockIds(tokenIds);
-
-  const sneedLedger = useMemo(() => {
-    if (!locksIds) return undefined;
-    return locksIds.find((e) => e.alias[0] === "Sneedlocked")?.ledger_id.toString();
-  }, [locksIds]);
-
-  const isSneed = useMemo(() => {
-    if (!owner || !sneedLedger) return false;
-
-    return principalToAccount(sneedLedger) === owner;
-  }, [sneedLedger, owner]);
+  const sneedLedger = useSneedLedger(tokenIds);
+  const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
   const handleTransferSuccess = useCallback(() => {
     setRefreshTrigger();
@@ -67,7 +56,8 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
 
           <Flex gap="0 4px">
             <Typography color="text.primary">{owner ? shorten(owner) : "--"}</Typography>
-            {isSneed ? <Image src="/images/sneed.svg" alt="" style={{ width: "18px", height: "18px" }} /> : null}
+
+            <IsSneedOwner isSneed={isSneed} />
           </Flex>
         </Flex>
 

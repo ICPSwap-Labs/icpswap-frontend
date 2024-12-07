@@ -9,7 +9,7 @@ import { useCallsData } from "./useCallData";
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
-export function useLiquidityLockIds(tokenIds: string[] | undefined) {
+export function useLiquidityLockIds(tokenIds: string[] | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenIds) return undefined;

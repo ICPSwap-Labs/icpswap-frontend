@@ -30,3 +30,4 @@ export * from "./Checkbox";
 export * from "./Select";
 export * from "./token/TokenStandardLabel";
 export * from "./AddressFormat";
+export * from "./IsSneedOwner";

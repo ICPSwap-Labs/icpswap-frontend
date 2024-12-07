@@ -1,12 +1,13 @@
 import { Trans } from "@lingui/macro";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { usePositions } from "hooks/liquidity/usePositions";
-import { pageArgsFormat } from "@icpswap/utils";
-import { useState } from "react";
+import { isNullArgs, pageArgsFormat } from "@icpswap/utils";
+import { useMemo, useState } from "react";
 import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { PositionRow } from "components/liquidity/PositionRow";
 import { Null } from "@icpswap/types";
+import { useSneedLedger } from "hooks/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -44,6 +45,14 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
     setPagination(pagination);
   };
 
+  const tokenIds = useMemo(() => {
+    if (isNullArgs(pool)) return null;
+
+    return [pool.token0.address, pool.token1.address];
+  }, [pool]);
+
+  const sneedLedger = useSneedLedger(tokenIds);
+
   return (
     <>
       <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
@@ -76,7 +85,13 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
 
           {!loading
             ? positions?.map((ele, index) => (
-                <PositionRow key={index} positionInfo={ele} pool={pool} wrapperClassName={classes.wrapper} />
+                <PositionRow
+                  key={index}
+                  positionInfo={ele}
+                  pool={pool}
+                  wrapperClassName={classes.wrapper}
+                  sneedLedger={sneedLedger}
+                />
               ))
             : null}
 

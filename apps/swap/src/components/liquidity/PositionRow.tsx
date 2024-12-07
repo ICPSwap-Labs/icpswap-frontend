@@ -5,13 +5,15 @@ import { toSignificant, numberToString, formatDollarAmount, shorten, BigNumber }
 import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell } from "@icpswap/ui";
-import { LoadingRow, Copy } from "components/index";
+import { LoadingRow, Copy, IsSneedOwner } from "components/index";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { toFormat } from "utils/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Null } from "@icpswap/types";
+import { useIsSneedOwner } from "hooks/index";
+import { Trans } from "@lingui/macro";
 
 enum Bound {
   LOWER = "LOWER",
@@ -22,9 +24,10 @@ export interface PositionRowProps {
   positionInfo: PositionDetails;
   pool: Pool | Null;
   wrapperClassName?: string;
+  sneedLedger?: string | Null;
 }
 
-export function PositionRow({ positionInfo, pool, wrapperClassName }: PositionRowProps) {
+export function PositionRow({ positionInfo, sneedLedger, pool, wrapperClassName }: PositionRowProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -95,14 +98,18 @@ export function PositionRow({ positionInfo, pool, wrapperClassName }: PositionRo
 
   const { result: owner } = useSwapPositionOwner(positionInfo.poolId, positionInfo.id);
 
+  const isSneed = useIsSneedOwner({ owner, sneedLedger });
+
   return (
     <>
       {pool ? (
         <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-          <BodyCell>
+          <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
               <Typography>{owner ? shorten(owner) : "--"}</Typography>
             </Copy>
+
+            <IsSneedOwner isSneed={isSneed} tooltip={<Trans>The position is locked in Sneed.</Trans>} />
           </BodyCell>
 
           <BodyCell>{positionInfo.id.toString()}</BodyCell>
