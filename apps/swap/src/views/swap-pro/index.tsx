@@ -2,10 +2,9 @@ import { useMemo, useState, useCallback, useEffect } from "react";
 import { Box, useTheme, useMediaQuery } from "components/Mui";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useTokenListTokenInfo } from "@icpswap/hooks";
+import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { type Null } from "@icpswap/types";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
 import { ChartButton, ChartView } from "@icpswap/ui";

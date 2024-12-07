@@ -1,6 +1,5 @@
 import { useUserPoolTransactions } from "@icpswap/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { Null } from "@icpswap/types";
 
 import { Transactions, StyleProps } from "./Transactions";
 

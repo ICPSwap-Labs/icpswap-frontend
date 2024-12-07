@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Typography, Box, Grid, Button, useTheme } from "components/Mui";
+import { Typography, Box, useTheme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount } from "@icpswap/utils";
 import { InfoWrapper } from "components/index";
@@ -17,7 +17,6 @@ import {
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { useHistory } from "react-router-dom";
 import { useChartData } from "hooks/info/useSwapChartData";
 import { VolumeWindow } from "@icpswap/types";
 
@@ -28,19 +27,6 @@ import TopTokens from "./TopTokens";
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
-
-function SearchIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M8.30901 7.68584C9.36902 6.12865 9.20946 3.99011 7.82839 2.60904C6.26641 1.04705 3.73366 1.04692 2.17154 2.60904C0.609422 4.17116 0.609552 6.70391 2.17154 8.26589C3.55261 9.64696 5.69115 9.80652 7.24834 8.74651L9.41938 10.9175L10.48 9.85688L8.30901 7.68584ZM6.76773 3.6697C7.74415 4.64611 7.74406 6.2289 6.76773 7.20523C5.7914 8.18156 4.20861 8.18165 3.2322 7.20523C2.25578 6.22882 2.25587 4.64603 3.2322 3.6697C4.20853 2.69337 5.79132 2.69328 6.76773 3.6697Z"
-        fill="white"
-      />
-    </svg>
-  );
-}
 
 export default function SwapOverview() {
   const { result: protocolData } = useSwapProtocolData();
@@ -95,12 +81,6 @@ export default function SwapOverview() {
 
   const weeklyVolumeData = useTransformedVolumeData(volumeDayData, "week");
   const monthlyVolumeData = useTransformedVolumeData(volumeDayData, "month");
-
-  const history = useHistory();
-
-  const handleToSwapScan = () => {
-    history.push("swap-scan/transactions");
-  };
 
   return (
     <InfoWrapper>

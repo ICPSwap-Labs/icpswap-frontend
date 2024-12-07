@@ -3,7 +3,7 @@ import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator }
 import { ICP } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useInfoToken } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 
 export function BalanceAndValue() {

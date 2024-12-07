@@ -8,7 +8,7 @@ import type { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
 import { ICP, ICS } from "@icpswap/tokens";
-import { useInfoAllTokens } from "hooks/info/useInfoTokens";
+import { useInfoAllTokens } from "@icpswap/hooks";
 import { Proportion } from "@icpswap/ui";
 
 const animationKeyframes = keyframes`
