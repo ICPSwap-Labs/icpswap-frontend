@@ -1,15 +1,16 @@
 import { useHistory } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { Box, Avatar, makeStyles, Typography, useTheme } from "components/Mui";
+import { t, Trans } from "@lingui/macro";
+import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
 import { useTokenInfo } from "hooks/token/index";
 import { UserSwapPoolsBalance } from "hooks/info/tools";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, BreadcrumbsV1, Flex } from "@icpswap/ui";
-import { SelectToken, InfoWrapper, FilledTextField } from "components/index";
-import { parseTokenAmount, locationSearchReplace, isValidPrincipal } from "@icpswap/utils";
+import { SelectToken, InfoWrapper } from "components/index";
+import { parseTokenAmount, locationSearchReplace } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { ToolsWrapper } from "components/info/tools/Wrapper";
+import { ToolsWrapper, PrincipalSearcher } from "components/info/tools";
+import { Null } from "@icpswap/types";
 
 const useStyles = makeStyles(() => {
   return {
@@ -21,6 +22,7 @@ const useStyles = makeStyles(() => {
       padding: "24px",
       "@media screen and (max-width: 780px)": {
         gridTemplateColumns: "1fr 1fr",
+        padding: "16px",
       },
     },
   };
@@ -99,7 +101,7 @@ export default function UserPoolBalance() {
     setSelectTokenId(tokenId);
   };
 
-  const handleAddressChange = (address: string | undefined) => {
+  const handleAddressChange = (address: string | Null) => {
     const search = locationSearchReplace(location.search, "principal", address);
 
     history.push(`/info-tools/user-balances${search}`);
@@ -116,38 +118,19 @@ export default function UserPoolBalance() {
       <ToolsWrapper
         title={<Trans>User's Pool Balance</Trans>}
         action={
-          <Flex gap="0 20px">
-            <Box
-              sx={{
-                width: "343px",
-                height: "40px",
-                "@media(max-width: 640px)": {
-                  width: "100%",
-                },
-              }}
-            >
-              <FilledTextField
-                width="100%"
-                fullHeight
-                value={principal}
-                textFiledProps={{
-                  slotProps: {
-                    input: {
-                      placeholder: `Search the principal for user's pool balance`,
-                    },
-                  },
-                }}
-                placeholderSize="12px"
-                onChange={handleAddressChange}
-                background={theme.palette.background.level1}
-              />
-
-              {principal && !isValidPrincipal(principal) ? (
-                <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
-                  <Trans>Invalid principal</Trans>
-                </Typography>
-              ) : null}
-            </Box>
+          <Flex
+            gap="16px"
+            sx={{
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+              },
+            }}
+          >
+            <PrincipalSearcher
+              placeholder={t`Search the principal for user's pool balance`}
+              onPrincipalChange={handleAddressChange}
+            />
 
             <Box sx={{ width: "240px" }}>
               <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} />

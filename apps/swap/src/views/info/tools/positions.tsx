@@ -1,15 +1,16 @@
 import { Trans } from "@lingui/macro";
-import { Box, Theme, Typography, makeStyles, useTheme } from "components/Mui";
+import { Box, Theme, Typography, makeStyles } from "components/Mui";
 import { usePositions } from "hooks/liquidity/usePositions";
-import { pageArgsFormat, locationSearchReplace, isValidPrincipal } from "@icpswap/utils";
+import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { useState } from "react";
 import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, BreadcrumbsV1 } from "@icpswap/ui";
-import { SelectPair, InfoWrapper, FilledTextField } from "components/index";
+import { SelectPair, InfoWrapper } from "components/index";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useHistory, useLocation } from "react-router-dom";
-import { ToolsWrapper } from "components/info/tools/Wrapper";
+import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { PositionRow } from "components/liquidity/PositionRow";
+import { Null } from "@icpswap/types";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -20,13 +21,15 @@ const useStyles = makeStyles((theme: Theme) => {
       padding: "24px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
       gridTemplateColumns: "200px 120px 120px repeat(3, 1fr)",
+      "@media screen and (max-width: 780px)": {
+        padding: "16px",
+      },
     },
   };
 });
 
 export default function Positions() {
   const classes = useStyles();
-  const theme = useTheme();
   const history = useHistory();
   const location = useLocation();
   const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
@@ -51,7 +54,7 @@ export default function Positions() {
     history.push(`/info-tools/positions${search}`);
   };
 
-  const handleAddressChange = (principal: string | undefined) => {
+  const handleAddressChange = (principal: string | Null) => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
     const search = locationSearchReplace(location.search, "principal", principal);
     history.push(`/info-tools/positions${search}`);
@@ -68,38 +71,21 @@ export default function Positions() {
       <ToolsWrapper
         title={<Trans>Positions</Trans>}
         action={
-          <Box sx={{ display: "flex", gap: "0 16px", alignItems: "center" }}>
-            <Box
-              sx={{
-                width: "343px",
-                height: "40px",
-                "@media(max-width: 640px)": {
-                  width: "100%",
-                },
-              }}
-            >
-              <FilledTextField
-                width="100%"
-                fullHeight
-                value={principal}
-                textFiledProps={{
-                  slotProps: {
-                    input: {
-                      placeholder: `Search the principal for positions`,
-                    },
-                  },
-                }}
-                placeholderSize="12px"
-                onChange={handleAddressChange}
-                background={theme.palette.background.level1}
-              />
-
-              {principal && !isValidPrincipal(principal) ? (
-                <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
-                  <Trans>Invalid principal</Trans>
-                </Typography>
-              ) : null}
-            </Box>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "16px",
+              alignItems: "center",
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+              },
+            }}
+          >
+            <PrincipalSearcher
+              placeholder="Search the principal for positions"
+              onPrincipalChange={handleAddressChange}
+            />
             <Box sx={{ width: "fit-content", minWidth: "214px" }}>
               <SelectPair value={pair} onPairChange={handlePairChange} search showClean={false} />
             </Box>
@@ -144,7 +130,14 @@ export default function Positions() {
             {(positions ?? []).length === 0 && !loading ? <NoData /> : null}
 
             {loading ? (
-              <Box sx={{ padding: "24px" }}>
+              <Box
+                sx={{
+                  padding: "24px",
+                  "@media(max-width: 640px)": {
+                    padding: "16px",
+                  },
+                }}
+              >
                 <LoadingRow>
                   <div />
                   <div />
@@ -162,9 +155,21 @@ export default function Positions() {
           </Box>
         </Box>
 
-        <Box sx={{ padding: "24px" }}>
+        <Box
+          sx={{
+            padding: "24px",
+            "@media(max-width: 640px)": {
+              padding: "16px",
+            },
+          }}
+        >
           {totalElements && Number(totalElements) !== 0 ? (
-            <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+            <Pagination
+              total={Number(totalElements)}
+              num={pagination.pageNum}
+              onPageChange={handlePageChange}
+              mt="0px"
+            />
           ) : null}
         </Box>
       </ToolsWrapper>

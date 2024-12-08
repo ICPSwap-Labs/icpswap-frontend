@@ -1,11 +1,11 @@
 import { useSwapTransactions } from "hooks/info/swap/useScanSwapTransactions";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { SelectPair, FilledTextField, InfoWrapper } from "components/index";
+import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, Button, CircularProgress, makeStyles, useTheme, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { pageArgsFormat, locationSearchReplace, isValidPrincipal } from "@icpswap/utils";
+import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
 import {
   Header,
   HeaderCell,
@@ -21,7 +21,8 @@ import {
 import { useSwapScanTransactionDownload } from "hooks/info/swap/useSwapScanDownloadTransaction";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
-import { ToolsWrapper } from "components/info/tools/Wrapper";
+import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
+import { Null } from "@icpswap/types";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => {
       borderBottom: `1px solid ${theme.palette.background.level1}`,
       "@media screen and (max-width: 780px)": {
         gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+        padding: "16px",
       },
     },
   };
@@ -72,7 +74,7 @@ export default function SwapTransactions() {
     history.push(`/info-tools/swap-transactions${search}`);
   };
 
-  const handleAddressChange = (address: string | undefined) => {
+  const handleAddressChange = (address: string | Null) => {
     setPagination({ pageNum: 1, pageSize: 10 });
 
     const search = locationSearchReplace(location.search, "principal", address);
@@ -102,46 +104,33 @@ export default function SwapTransactions() {
         action={
           <Box
             sx={{
+              width: "100%",
               display: "flex",
-              margin: "10px 0 0 0",
               gap: "10px 16px",
               alignItems: "center",
               justifyContent: "space-between",
               flexWrap: "wrap",
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+              },
             }}
           >
-            <Flex gap="0 16px">
-              <Box
-                sx={{
-                  width: "343px",
-                  height: "40px",
-                  "@media(max-width: 640px)": {
-                    width: "100%",
-                  },
-                }}
-              >
-                <FilledTextField
-                  width="100%"
-                  fullHeight
-                  value={principal}
-                  textFiledProps={{
-                    slotProps: {
-                      input: {
-                        placeholder: `Search the principal for swap transactions`,
-                      },
-                    },
-                  }}
-                  placeholderSize="12px"
-                  onChange={handleAddressChange}
-                  background={theme.palette.background.level1}
-                />
-
-                {principal && !isValidPrincipal(principal) ? (
-                  <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
-                    <Trans>Invalid principal</Trans>
-                  </Typography>
-                ) : null}
-              </Box>
+            <Flex
+              gap="12px 16px"
+              sx={{
+                "@media(max-width: 640px)": {
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                },
+              }}
+            >
+              <PrincipalSearcher
+                placeholder="Search the principal for swap transactions"
+                onPrincipalChange={handleAddressChange}
+              />
               <Box sx={{ width: "fit-content", minWidth: "214px" }}>
                 <SelectPair value={pair} onPairChange={handlePairChange} search />
               </Box>
@@ -215,11 +204,19 @@ export default function SwapTransactions() {
               ) : null}
 
               {!loading && !!transactions?.length ? (
-                <Box sx={{ padding: "24px" }}>
+                <Box
+                  sx={{
+                    padding: "24px",
+                    "@media screen and (max-width: 780px)": {
+                      padding: "16px",
+                    },
+                  }}
+                >
                   <Pagination
                     num={pagination.pageNum}
                     total={result?.totalElements ?? 0}
                     onPageChange={handlePageChange}
+                    mt="0px"
                   />
                 </Box>
               ) : null}
