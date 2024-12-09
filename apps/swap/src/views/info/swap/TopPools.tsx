@@ -83,7 +83,7 @@ export default function TopPools() {
               },
             }}
           >
-            <SelectPair value={selectedPair} onPairChange={handlePairChange} />
+            <SelectPair value={selectedPair} onPairChange={handlePairChange} search />
           </Box>
 
           <OnlyTokenList onChange={handleCheckChange} checked={onlyTokenList} />
