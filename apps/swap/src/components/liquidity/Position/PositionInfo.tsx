@@ -1,9 +1,10 @@
 import { Typography } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
-import { shorten } from "@icpswap/utils";
-import { Flex, TextButton } from "@icpswap/ui";
+import { isNullArgs, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
+import { Flex, TextButton, APRPanel } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
+import { usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState } from "hooks/liquidity";
 import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
@@ -27,12 +28,19 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return [position.pool.token0.address, position.pool.token1.address];
   }, [position.pool]);
 
-  const sneedLedger = useSneedLedger(tokenIds);
-  const isSneed = useIsSneedOwner({ owner, sneedLedger });
+  const { result: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
 
   const handleTransferSuccess = useCallback(() => {
     setRefreshTrigger();
   }, [setRefreshTrigger]);
+
+  const apr = useMemo(() => {
+    if (isNullArgs(positionChartData) || positionChartData.length === 0) return null;
+    return positionChartData[positionChartData.length - 1].apr;
+  }, [positionChartData]);
+
+  const sneedLedger = useSneedLedger(tokenIds);
+  const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
   return (
     <MainCard level={3}>
@@ -61,13 +69,15 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           </Flex>
         </Flex>
 
-        {/* <Flex fullWidth justify="space-between">
+        <Flex fullWidth justify="space-between">
           <Typography>
             <Trans>APR</Trans>
           </Typography>
 
-          <Typography color="text.primary">145</Typography>
-        </Flex> */}
+          <Typography color="text.primary">
+            {nonNullArgs(apr) ? <APRPanel value={numToPercent(apr, 2)} /> : "--"}
+          </Typography>
+        </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>

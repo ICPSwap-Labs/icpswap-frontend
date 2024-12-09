@@ -306,6 +306,7 @@ export function PositionDetails({
         <Box>
           <Typography sx={{ margin: "0  0 10px 0" }}>
             <Trans>Transfer to</Trans>
+            <Trans>(Do Not transfer position to NNS)</Trans>
           </Typography>
 
           <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />

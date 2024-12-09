@@ -19,7 +19,7 @@ import { usePool } from "hooks/swap/usePools";
 import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { CollectFees } from "components/liquidity/index";
-import TransferPosition from "components/swap/TransferPosition";
+import { TransferPosition } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { usePositionState } from "hooks/liquidity";
 

@@ -33,6 +33,8 @@ import NavigationScroll from "./components/NavigationScroll";
 import { theme } from "./theme";
 import Routes from "./routes";
 
+import "utils/dayjs";
+
 initGoogleAnalytics();
 
 export default function App() {

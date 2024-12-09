@@ -17,15 +17,14 @@ import { type FarmInfoWithId } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, PositionRangeState } from "components/swap/index";
 import { FarmStateChip } from "components/farm/index";
 import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
-import { useFarmUserRewardAmountAndValue, useUserApr, useFarmTvlValue } from "hooks/staking-farm/index";
-import { usePositionsValueByInfos } from "hooks/swap/index";
+import { useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr, useFarmTvlValue } from "hooks/staking-farm/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { PositionDetails } from "./PositionDetails";
@@ -236,17 +235,23 @@ export function PositionCardForFarm({
   const { result: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
   const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
-  const stakedPositionsInfo = useMemo(() => {
-    if (!deposits) return undefined;
+  const deposit = useMemo(() => {
+    if (!deposits || isNullArgs(positionId)) return undefined;
 
-    return deposits.map((ele) => ({
+    return deposits.filter((e) => e.positionId === positionId)[0];
+  }, [deposits, positionId]);
+
+  const stakedPositionsInfo = useMemo(() => {
+    if (!deposit) return undefined;
+
+    return [deposit].map((ele) => ({
       liquidity: ele.liquidity,
       tickUpper: ele.tickUpper,
       tickLower: ele.tickLower,
     }));
-  }, [deposits]);
+  }, [deposit]);
 
-  const stakedPositionValue = usePositionsValueByInfos({
+  const stakedPositionValue = usePositionsTotalValue({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });
@@ -263,14 +268,14 @@ export function PositionCardForFarm({
 
   const farmTvlValue = useFarmTvlValue({ farmId: farmInfo.id, token0, token1 });
 
-  const userApr = useUserApr({
+  const userApr = useUserSingleLiquidityApr({
     farmInitArgs,
     rewardToken,
     rewardAmount: userRewardAmount,
     state: farmState,
     farmTvlValue,
     positionValue: stakedPositionValue,
-    deposits,
+    deposit,
   });
 
   return (

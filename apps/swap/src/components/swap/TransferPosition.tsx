@@ -327,7 +327,7 @@ export interface TransferPositionProps {
   state: PositionState | undefined;
 }
 
-export default function TransferPosition({
+export function TransferPosition({
   position,
   showButtons,
   positionId,

@@ -9,10 +9,9 @@ import { isDarkTheme, toFormat } from "utils";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext , PositionRangeState } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
@@ -105,7 +104,7 @@ export interface PositionCardProps {
   showButtons?: boolean;
   position: Position | undefined;
   farmId?: string | undefined;
-  staked?: boolean;
+  staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
 }

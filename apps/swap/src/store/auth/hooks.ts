@@ -103,6 +103,16 @@ export function updateLockStatus(locked: boolean) {
   store.dispatch(_updateLockStatus(locked));
 }
 
+export function useCleanLogState() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(async () => {
+    dispatch(logout());
+    updateLockStatus(true);
+    dispatch(updateConnected({ isConnected: false }));
+  }, [dispatch, updateLockStatus]);
+}
+
 export function useUserLogout() {
   const dispatch = useAppDispatch();
   const walletType = useConnectorType();
