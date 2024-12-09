@@ -1,13 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { Box, Typography } from "components/Mui";
 import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
-import { PoolCurrentPrice } from "components/swap/index";
-import { Trans } from "@lingui/macro";
-import { SWAP_CHART_CURRENT_PRICE_COLOR, SWAP_CHART_RANGE_PRICE_COLOR, Bound } from "constants/swap";
+import { Bound } from "constants/swap";
 import { ChartTimeEnum, Null } from "@icpswap/types";
-import { isNullArgs, nonNullArgs, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
+import { isNullArgs, BigNumber } from "@icpswap/utils";
+import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
+import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 
 import PriceRangeChart from "./RangeCharts";
 
@@ -103,36 +102,9 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
       />
 
       <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>
-        <Flex gap="8px 3px" wrap="wrap">
-          <Flex gap="0 12px">
-            <Box sx={{ background: SWAP_CHART_CURRENT_PRICE_COLOR, width: "8px", height: "2px" }} />
+        <CurrentPriceLabelForChart pool={position.pool} showInverted onInverted={handleInverted} />
 
-            <Typography fontSize="12px">
-              <Trans>Current Price:</Trans>
-            </Typography>
-          </Flex>
-
-          <PoolCurrentPrice pool={position.pool} showInverted onInverted={handleInverted} />
-        </Flex>
-
-        <Flex gap="8px 3px" wrap="wrap">
-          <Flex gap="0 12px">
-            <Box sx={{ background: SWAP_CHART_RANGE_PRICE_COLOR, width: "8px", height: "2px" }} />
-
-            <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
-              <Trans>{time} Price Range:</Trans>&nbsp;
-            </Typography>
-          </Flex>
-
-          <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
-            {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
-              ? `${toSignificantWithGroupSeparator(poolPriceLower, 6)} - ${toSignificantWithGroupSeparator(
-                  poolPriceUpper,
-                  6,
-                )}`
-              : "--"}
-          </Typography>
-        </Flex>
+        <PriceRangeLabel poolPriceLower={poolPriceLower} poolPriceUpper={poolPriceUpper} chartTime={time} />
       </Flex>
     </>
   );
