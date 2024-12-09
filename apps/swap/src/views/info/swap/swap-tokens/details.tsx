@@ -60,6 +60,8 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
   return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
 }
 
+const TradingViewDesc = [ChartView.DexScreener, ChartView.PRICE];
+
 export default function TokenDetails() {
   const { id: canisterId } = useParams<{ id: string }>();
   const history = useHistory();
@@ -282,14 +284,56 @@ export default function TokenDetails() {
           </Box>
         ) : null}
 
-        <TokenCharts
-          ref={tokenChartsRef}
-          canisterId={canisterId}
-          volume={infoToken?.volumeUSD}
-          showTopIfDexScreen={false}
-          dexScreenHeight="486px"
-          priceChart={<TokenPriceChart token={token} />}
-        />
+        <Box
+          sx={{
+            background:
+              chartView && TradingViewDesc.includes(chartView.value) ? theme.palette.background.level3 : "transparent",
+            borderRadius: chartView && TradingViewDesc.includes(chartView.value) ? "16px" : "none",
+          }}
+        >
+          <TokenCharts
+            ref={tokenChartsRef}
+            canisterId={canisterId}
+            volume={infoToken?.volumeUSD}
+            showTopIfDexScreen={false}
+            dexScreenHeight="486px"
+            priceChart={<TokenPriceChart token={token} />}
+            wrapperSx={
+              chartView && TradingViewDesc.includes(chartView.value)
+                ? {
+                    borderBottomLeftRadius: "0px",
+                    borderBottomRightRadius: "0px",
+                  }
+                : null
+            }
+            background={3}
+          />
+
+          {chartView && TradingViewDesc.includes(chartView.value) ? (
+            <Typography
+              sx={{
+                fontSize: "12px",
+                padding: "12px",
+                lineHeight: "16px",
+                background: theme.palette.background.level3,
+                borderBottomLeftRadius: "16px",
+                borderBottomRightRadius: "16px",
+              }}
+            >
+              *Token price charts powered by{" "}
+              <TextButton
+                link="https://www.tradingview.com/chart"
+                sx={{
+                  fontSize: "12px",
+                }}
+              >
+                TradingView
+              </TextButton>
+              , the charting platform and social network that provides users with valuable information on market events
+              through tools such as the economic calendar, stock analyser and others
+            </Typography>
+          ) : null}
+        </Box>
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

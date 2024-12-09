@@ -53,7 +53,7 @@ export default function TokenChartInfo() {
         onPriceTokenIdChange={setPriceTokenId}
       />
 
-      {chartView && chartView.value === ChartView.PRICE ? (
+      {chartView && (chartView.value === ChartView.PRICE || chartView.value === ChartView.DexScreener) ? (
         <Typography sx={{ fontSize: "12px", padding: "12px", lineHeight: "16px" }}>
           *Token price charts powered by&nbsp;
           <TextButton
