@@ -133,7 +133,7 @@ export default function UserPoolBalance() {
             />
 
             <Box sx={{ width: "240px" }}>
-              <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} />
+              <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} search />
             </Box>
           </Flex>
         }

@@ -354,7 +354,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                   </Typography>
                   <Typography
                     sx={{
-                      lineHeight: "14px",
+                      lineHeight: "20px",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
                       },
@@ -387,7 +387,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                   </Typography>
                   <Typography
                     sx={{
-                      lineHeight: "14px",
+                      lineHeight: "20px",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
                       },
