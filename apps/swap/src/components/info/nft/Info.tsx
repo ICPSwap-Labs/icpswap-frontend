@@ -8,9 +8,7 @@ import { Trans, t } from "@lingui/macro";
 import { useTradeOrder } from "@icpswap/hooks";
 import { openBase64ImageInNewWindow, mockALinkAndOpen, shorten, timestampFormat, BigNumber } from "@icpswap/utils";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
-// import { useUSDValueFromICPAmount } from "store/global/hooks";
-// import WICPPriceFormat from "ui-component/NFT/WICPPriceFormat";
-import { TextButton } from "@icpswap/ui";
+import { Flex, TextButton } from "@icpswap/ui";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { useNFTCanisterMetadata } from "hooks/info/nft";
 import ExplorerLink from "components/ExternalLink/Explorer";
@@ -107,25 +105,28 @@ interface DetailsItemProps {
 
 export const DetailsItem = ({ label, value }: DetailsItemProps) => {
   return (
-    <Grid item>
-      <Grid container alignItems="top">
-        <Grid item mr="20px">
-          <Typography>{label}</Typography>
-        </Grid>
-        <Grid item xs>
-          <Grid
-            container
-            justifyContent="flex-end"
-            sx={{
-              wordBreak: "break-word",
-              textAlign: "right",
-            }}
-          >
-            {value}
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+    <Flex fullWidth justify="space-between" align="flex-start" gap="0 20px">
+      <Typography
+        sx={{
+          "@media(max-width: 640px)": {
+            fontSize: "12px",
+          },
+        }}
+      >
+        {label}
+      </Typography>
+      <Typography
+        sx={{
+          wordBreak: "break-word",
+          textAlign: "right",
+          "@media(max-width: 640px)": {
+            fontSize: "12px",
+          },
+        }}
+      >
+        {value}
+      </Typography>
+    </Flex>
   );
 };
 
@@ -303,7 +304,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
 
           <Box className={classes.detailsWrapper}>
             <DetailsToggle title={<Trans>NFT Details</Trans>}>
-              <Grid container flexDirection="column" spacing="15px">
+              <Flex vertical gap="15px" fullWidth align="flex-start">
                 <DetailsItem
                   label={t`Token ID`}
                   value={
@@ -340,21 +341,62 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                     </Copy>
                   }
                 />
-                <DetailsItem label={t`NFT Description`} value={`${metadata ? metadata.introduction : "--"}`} />
-              </Grid>
+
+                <Flex fullWidth vertical align="flex-start" gap="8px">
+                  <Typography
+                    sx={{
+                      "@media(max-width: 640px)": {
+                        fontSize: "12px",
+                      },
+                    }}
+                  >
+                    <Trans>NFT Description</Trans>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      lineHeight: "14px",
+                      "@media(max-width: 640px)": {
+                        fontSize: "12px",
+                      },
+                    }}
+                  >{`${metadata ? metadata.introduction : "--"}`}</Typography>
+                </Flex>
+              </Flex>
             </DetailsToggle>
           </Box>
 
           <Box className={classes.collectionsWrapper}>
             <DetailsToggle title={<Trans>About Collections</Trans>}>
-              <Grid container flexDirection="column" spacing="15px">
+              <Flex fullWidth gap="15px 0" vertical align="flex-start">
                 <DetailsItem
                   label={t`NFT Canister ID`}
                   value={
                     <ExplorerLink label={metadata ? metadata.cId : "--"} value={metadata ? metadata.cId ?? "" : "--"} />
                   }
                 />
-                <DetailsItem label={t`Collections Description`} value={canisterMetadata?.introduction} />
+
+                <Flex fullWidth vertical align="flex-start" gap="8px">
+                  <Typography
+                    sx={{
+                      "@media(max-width: 640px)": {
+                        fontSize: "12px",
+                      },
+                    }}
+                  >
+                    <Trans>Collections Description</Trans>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      lineHeight: "14px",
+                      "@media(max-width: 640px)": {
+                        fontSize: "12px",
+                      },
+                    }}
+                  >
+                    {canisterMetadata?.introduction ?? "--"}
+                  </Typography>
+                </Flex>
+
                 <DetailsItem
                   label={t`Creator`}
                   value={<Copy content={canisterMetadata?.owner ?? ""}>{shorten(canisterMetadata?.owner, 12)}</Copy>}
@@ -363,7 +405,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                   label={t`Creator Royalty`}
                   value={`${new BigNumber(String(canisterMetadata?.royalties ?? 0)).dividedBy(100).toFormat()}%`}
                 />
-              </Grid>
+              </Flex>
               {!!canisterMetadata?.linkMap && canisterMetadata?.linkMap?.length > 0 ? (
                 <Box mt="20px">
                   <CollectionIcons links={canisterMetadata?.linkMap} />
