@@ -8,8 +8,7 @@ import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, isNullArgs, nonNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { PoolCurrentPrice } from "components/swap/index";
+import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
 
@@ -18,6 +17,8 @@ import { FullRangeWarning } from "./FullRangeWarning";
 import { PriceRangeSelector } from "./PriceRangeSelector";
 import { RangeButton } from "./RangeButton";
 import { PriceRangeChartTimeButtons } from "./PriceRangeChartTimeButtons";
+import { PriceRangeLabel } from "./PriceRangeLabel";
+import { CurrentPriceLabelForChart } from "./CurrentPriceLabelForChart";
 
 const useSetPriceStyle = makeStyles((theme: Theme) => {
   return {
@@ -298,34 +299,13 @@ export const PriceRange = memo(
                 </Flex>
 
                 <Flex vertical gap="12px 0" sx={{ margin: "16px 0 0 0" }}>
-                  <Flex fullWidth gap="0 12px">
-                    <Box sx={{ background: "#ffffff", width: "8px", height: "2px" }} />
-                    <Flex gap="0 2px" align="center">
-                      <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
-                        <Trans>Current Price:</Trans>&nbsp;
-                      </Typography>
+                  <CurrentPriceLabelForChart pool={pool} baseCurrency={baseCurrency} />
 
-                      <PoolCurrentPrice pool={pool} token={baseCurrency} sx={{ width: "210px", flexWrap: "wrap" }} />
-                    </Flex>
-                  </Flex>
-
-                  <Flex fullWidth gap="0 12px">
-                    <Box sx={{ background: "#8672FF", width: "8px", height: "2px" }} />
-                    <Flex gap="0 2px" align="center">
-                      <Typography fontSize="12px" sx={{ lineHeight: "16px" }}>
-                        <Trans>{chartTime} Price Range:</Trans>&nbsp;
-                      </Typography>
-
-                      <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
-                        {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
-                          ? `${toSignificantWithGroupSeparator(poolPriceLower, 6)} - ${toSignificantWithGroupSeparator(
-                              poolPriceUpper,
-                              6,
-                            )}`
-                          : "--"}
-                      </Typography>
-                    </Flex>
-                  </Flex>
+                  <PriceRangeLabel
+                    poolPriceLower={poolPriceLower}
+                    poolPriceUpper={poolPriceUpper}
+                    chartTime={chartTime}
+                  />
                 </Flex>
 
                 <Box mt={3}>
