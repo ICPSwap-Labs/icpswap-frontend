@@ -1,16 +1,13 @@
 import { Trans } from "@lingui/macro";
 import { Box, Theme, Typography, makeStyles } from "components/Mui";
-import { usePositions } from "hooks/liquidity/usePositions";
-import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
+import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { useState } from "react";
-import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, BreadcrumbsV1 } from "@icpswap/ui";
+import { BreadcrumbsV1 } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
-import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useHistory, useLocation } from "react-router-dom";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
-import { PositionRow } from "components/liquidity/PositionRow";
 import { Null } from "@icpswap/types";
+import { PositionTable } from "components/liquidity/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -34,28 +31,12 @@ export default function Positions() {
   const location = useLocation();
   const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
 
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-
-  const { loading, result } = usePositions(pair, principal, offset, pagination.pageSize);
-
-  const positions = result?.content;
-  const totalElements = result?.totalElements;
-
-  const [, pool] = usePoolByPoolId(pair);
-
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
-  };
-
   const handlePairChange = (pairId: string | undefined) => {
-    setPagination({ pageNum: 1, pageSize: pagination.pageSize });
     const search = locationSearchReplace(location.search, "pair", pairId);
     history.push(`/info-tools/positions${search}`);
   };
 
   const handleAddressChange = (principal: string | Null) => {
-    setPagination({ pageNum: 1, pageSize: pagination.pageSize });
     const search = locationSearchReplace(location.search, "principal", principal);
     history.push(`/info-tools/positions${search}`);
   };
@@ -93,85 +74,7 @@ export default function Positions() {
           </Box>
         }
       >
-        <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
-          <Box sx={{ minWidth: "1200px" }}>
-            <Header className={classes.wrapper}>
-              <HeaderCell field="Pair">
-                <Trans>Owner</Trans>
-              </HeaderCell>
-
-              <HeaderCell field="Position ID">
-                <Trans>Position ID</Trans>
-              </HeaderCell>
-
-              <HeaderCell field="USDValue">
-                <Trans>Value</Trans>
-              </HeaderCell>
-
-              <HeaderCell field="TokenAmount">
-                <Trans>Token Amount</Trans>
-              </HeaderCell>
-
-              <HeaderCell field="PriceRange">
-                <Trans>Price Range</Trans>
-              </HeaderCell>
-
-              <HeaderCell field="UnclaimedFees">
-                <Trans>Uncollected fees</Trans>
-              </HeaderCell>
-            </Header>
-
-            {!loading
-              ? positions?.map((ele, index) => (
-                  <PositionRow key={index} positionInfo={ele} pool={pool} wrapperClassName={classes.wrapper} />
-                ))
-              : null}
-
-            {(positions ?? []).length === 0 && !loading ? <NoData /> : null}
-
-            {loading ? (
-              <Box
-                sx={{
-                  padding: "24px",
-                  "@media(max-width: 640px)": {
-                    padding: "16px",
-                  },
-                }}
-              >
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            ) : null}
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            padding: "24px",
-            "@media(max-width: 640px)": {
-              padding: "16px",
-            },
-          }}
-        >
-          {totalElements && Number(totalElements) !== 0 ? (
-            <Pagination
-              total={Number(totalElements)}
-              num={pagination.pageNum}
-              onPageChange={handlePageChange}
-              mt="0px"
-            />
-          ) : null}
-        </Box>
+        <PositionTable poolId={pair} principal={principal} wrapperClassName={classes.wrapper} />
       </ToolsWrapper>
     </InfoWrapper>
   );

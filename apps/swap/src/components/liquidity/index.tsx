@@ -16,3 +16,5 @@ export * from "./CollectFees";
 export * from "./PositionPriceRange";
 export * from "./PositionRangeState";
 export * from "./TransferPosition";
+export * from "./PositionTable";
+export * from "./PositionRow";

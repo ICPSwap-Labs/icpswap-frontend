@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { usePositions } from "hooks/liquidity/usePositions";
 import { isNullArgs, pageArgsFormat } from "@icpswap/utils";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { PositionRow } from "components/liquidity/PositionRow";
@@ -52,6 +52,11 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
   }, [pool]);
 
   const sneedLedger = useSneedLedger(tokenIds);
+
+  // Reset pagination when pool or principal change
+  useEffect(() => {
+    setPagination({ pageNum: 1, pageSize: pagination.pageSize });
+  }, [pool, principal]);
 
   return (
     <>
