@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Link } from "components/index";
 import { MenuWrapper, MenuItem } from "@icpswap/ui";
 
-import { Route } from "./config";
+import { Route, routeKey } from "./config";
 
 export interface SubMenuPopperProps {
   route: Route;
@@ -40,7 +40,7 @@ export function SubMenuPopper({
 
   return route.subMenus && route.subMenus.length ? (
     <MenuWrapper
-      open={subMenuKey === route.key}
+      open={subMenuKey === routeKey(route.key)}
       anchor={anchor}
       placement={placement ?? "right-start"}
       onClickAway={onClickAway}
@@ -50,7 +50,7 @@ export function SubMenuPopper({
         const Icon = subRoute.icon;
 
         return (
-          <Link key={subRoute.key} to={subRoute.path} link={subRoute.link}>
+          <Link key={routeKey(subRoute.key)} to={subRoute.path} link={subRoute.link}>
             <MenuItem
               label={subRoute.name}
               active={isActive(subRoute)}

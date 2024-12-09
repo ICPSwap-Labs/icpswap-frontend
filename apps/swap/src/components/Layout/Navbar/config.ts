@@ -15,7 +15,7 @@ export type Route = {
   path?: string;
   link?: string;
   subMenus?: SubMenu[];
-  key: string;
+  key: string | string[];
   icon?: () => JSX.Element;
   disabled?: boolean;
 };
@@ -42,7 +42,7 @@ export const routes: Route[] = [
     path: "/liquidity",
   },
   {
-    key: "stake_farm",
+    key: ["farm", "stake"],
     name: `Earn`,
     subMenus: [
       { key: "farm", name: `Farm`, path: "/farm" },
@@ -115,3 +115,7 @@ export const routes: Route[] = [
     disabled: true,
   },
 ];
+
+export function routeKey(key: string | string[]) {
+  return typeof key === "string" ? key : key.join(",");
+}

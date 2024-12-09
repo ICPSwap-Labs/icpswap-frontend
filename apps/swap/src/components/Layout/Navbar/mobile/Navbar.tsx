@@ -7,7 +7,7 @@ import { Box, Collapse } from "components/Mui";
 import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
 
 import { Routes } from "./Routes";
-import { routes, Route, MOBILE_MAX_NUMBER } from "../config";
+import { routes, Route, MOBILE_MAX_NUMBER, routeKey } from "../config";
 
 export interface MobileNavbarProps {
   onClose?: () => void;
@@ -20,10 +20,10 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
 
   const handleRouteClick = (route: Route) => {
     if (route.subMenus) {
-      if (collapseKey === route.key) {
+      if (collapseKey === routeKey(route.key)) {
         setCollapseKey(undefined);
       } else {
-        setCollapseKey(route.key);
+        setCollapseKey(routeKey(route.key));
       }
 
       return;

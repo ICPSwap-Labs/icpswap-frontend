@@ -3,7 +3,7 @@ import { Box, Typography, Collapse } from "components/Mui";
 import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
 import { useLocation } from "react-router-dom";
 
-import { Route } from "../config";
+import { Route, routeKey } from "../config";
 
 export interface RoutesProps {
   routes: Route[];
@@ -17,10 +17,10 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
 
   const handleRouteClick = (route: Route) => {
     if (route.subMenus) {
-      if (collapseKey === route.key) {
+      if (collapseKey === routeKey(route.key)) {
         setCollapseKey(undefined);
       } else {
-        setCollapseKey(route.key);
+        setCollapseKey(routeKey(route.key));
       }
 
       return;
@@ -56,7 +56,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
               {route.subMenus ? <ArrowDownIcon /> : null}
             </Box>
 
-            <Collapse in={collapseKey === route.key}>
+            <Collapse in={collapseKey === routeKey(route.key)}>
               {route.subMenus && route.subMenus.length ? (
                 <Box sx={{ margin: "16px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
                   {(route.subMenus ?? []).map((subRoute) => {
@@ -64,7 +64,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
 
                     return (
                       <Box
-                        key={subRoute.key}
+                        key={routeKey(subRoute.key)}
                         onClick={() => handleRouteClick(subRoute)}
                         sx={{
                           color: isActive(subRoute) ? "text.primary" : "text.secondary",
