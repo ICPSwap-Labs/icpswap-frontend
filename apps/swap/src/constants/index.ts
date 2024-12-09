@@ -42,7 +42,7 @@ export const CurrencyAmountFormatDecimals = (decimals: number | bigint | undefin
 };
 
 export const INFO_URL_MAP = {
-  [NETWORK.IC]: "https://info.icpswap.com",
+  [NETWORK.IC]: "",
 };
 
 export const INFO_URL = INFO_URL_MAP[network];

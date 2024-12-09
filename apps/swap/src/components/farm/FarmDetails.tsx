@@ -298,7 +298,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
-              <Link link={`${INFO_URL}/farm/details/${farmId}`}>
+              <Link link={`${INFO_URL}/info-farm/details/${farmId}`}>
                 <Typography color="text.theme-secondary">
                   <Trans>Farm Info</Trans>
                 </Typography>

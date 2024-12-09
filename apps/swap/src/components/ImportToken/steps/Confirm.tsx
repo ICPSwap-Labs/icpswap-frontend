@@ -102,7 +102,7 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
             </Box>
 
             <Box mt="24px">
-              <TextButton link={`${INFO_URL}/token/details/${canisterId}?standard=${token?.standard}`}>
+              <TextButton link={`${INFO_URL}/info-tokens/details/${canisterId}?standard=${token?.standard}`}>
                 <Trans>View On Info</Trans>
               </TextButton>
             </Box>

@@ -183,7 +183,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
               </Grid>
               <Typography sx={{ marginTop: "8px" }}>{values.id}</Typography>
               <Box mt="10px">
-                <TextButton link={`${INFO_URL}/token/details/${values.id}`}>
+                <TextButton link={`${INFO_URL}/info-token/details/${values.id}`}>
                   <Trans>View On Info</Trans>
                 </TextButton>
               </Box>

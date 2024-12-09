@@ -214,7 +214,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
       mockALinkAndOpen(
-        `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
+        `${INFO_URL}/info-tokens/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
       );
     }
