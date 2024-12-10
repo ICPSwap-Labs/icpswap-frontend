@@ -132,7 +132,7 @@ export function Ics() {
         <Flex vertical gap="16px 0" align="flex-start">
           <Typography fontSize="16px">Amount Burned</Typography>
           <Flex vertical gap="8px" align="flex-start">
-            <Flex gap="8px" align="flex-end">
+            <Flex gap="4px">
               <Typography fontSize="28px" fontWeight={500} color="text.primary">
                 {tokenBurned ? new BigNumber(tokenBurned).toFormat(2) : "--"}
               </Typography>
