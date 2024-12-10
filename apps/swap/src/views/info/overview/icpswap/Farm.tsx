@@ -45,7 +45,7 @@ export function Farm() {
 
           <Item
             label={t`Total Rewarded Value`}
-            value={globalData?.rewardedTokenTVL ?? "--"}
+            value={globalData.rewardedTokenTVL ? formatDollarAmount(globalData.rewardedTokenTVL) : "--"}
             tooltip={t`The total value of rewards distributed by finished farming pools.`}
           />
           <Item

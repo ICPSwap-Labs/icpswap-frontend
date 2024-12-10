@@ -5,15 +5,14 @@ import { parseTokenAmount, formatDollarAmount, BigNumber, isNullArgs, nonNullArg
 import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
 import { Trans } from "@lingui/macro";
 import { useICPBlocksManager } from "hooks/useICBlocks";
-import { useInfoToken } from "hooks/uesInfoToken";
 import { useTokenSupply } from "hooks/token/calls";
 import { useICPPriceList } from "store/global/hooks";
-import { useTokenAnalysis } from "@icpswap/hooks";
+import { useTokenAnalysis, useInfoToken } from "@icpswap/hooks";
 
 export function Icp() {
   const theme = useTheme();
 
-  const { result: icpTokenInfo } = useInfoToken(ICP.address);
+  const icpTokenInfo = useInfoToken(ICP.address);
   const { result: icpTotalSupply } = useTokenSupply(ICP.address);
   const { result: tokenAnalysis } = useTokenAnalysis(ICP.address);
 

@@ -121,8 +121,8 @@ export function useFarmGlobalData() {
           }
         }
 
-        setRewardedTokenTVL(formatDollarAmount(rewardTVL.toFixed(4)));
-        setStakedTokenTVL(formatDollarAmount(stakedTVL.toFixed(4)));
+        setRewardedTokenTVL(rewardTVL.toFixed(4));
+        setStakedTokenTVL(stakedTVL.toFixed(4));
       }
     }
 
