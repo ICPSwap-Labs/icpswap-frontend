@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { ICP, ICS } from "@icpswap/tokens";
 import { parseTokenAmount, formatAmount, formatDollarAmount, BigNumber, nonNullArgs } from "@icpswap/utils";
-import { useInfoToken, useTokenAnalysis, useTokenSupply } from "@icpswap/hooks";
+import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
 
@@ -15,6 +15,7 @@ export function Ics() {
   const icpInfoToken = useInfoToken(ICP.address);
   const { result: tokenSupply } = useTokenSupply(ICS.address);
   const { result: tokenAnalysis } = useTokenAnalysis(ICS.address);
+  const { result: tokenBurned } = useExplorerTokenBurned(ICS.address);
 
   const marketCap = useMemo(() => {
     if (nonNullArgs(tokenAnalysis) && nonNullArgs(infoToken)) {
@@ -88,7 +89,7 @@ export function Ics() {
               {infoToken ? formatDollarAmount(infoToken.priceUSD) : "--"}
             </Typography>
 
-            <Proportion value={infoToken?.priceUSD} />
+            <Proportion value={infoToken?.priceUSDChange} />
           </Flex>
         </Flex>
 
@@ -130,9 +131,20 @@ export function Ics() {
 
         <Flex vertical gap="16px 0" align="flex-start">
           <Typography fontSize="16px">Amount Burned</Typography>
-          <Typography fontSize="28px" fontWeight={500} color="text.primary">
-            $10.9M
-          </Typography>
+          <Flex vertical gap="8px" align="flex-start">
+            <Flex gap="8px" align="flex-end">
+              <Typography fontSize="28px" fontWeight={500} color="text.primary">
+                {tokenBurned ? new BigNumber(tokenBurned).toFormat(2) : "--"}
+              </Typography>
+              <TokenImage logo={ICS.logo} tokenId={ICS.address} size="20px" />
+            </Flex>
+            <Typography fontSize="16px">
+              ~
+              {tokenBurned && infoToken
+                ? formatDollarAmount(new BigNumber(tokenBurned).multipliedBy(infoToken.priceUSD).toString())
+                : "--"}
+            </Typography>
+          </Flex>
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">

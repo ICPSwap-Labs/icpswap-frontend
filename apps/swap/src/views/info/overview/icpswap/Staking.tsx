@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { t } from "@lingui/macro";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { useStakeIntervalGlobalData } from "@icpswap/hooks";
@@ -7,16 +7,20 @@ import { useICPPrice } from "store/global/hooks";
 import { Typography } from "components/Mui";
 
 import { Item, Card } from "../component";
+import { IcpswapContext } from "./context";
 
 export function Staking() {
   const icpPrice = useICPPrice();
+  const { setStakeTVL } = useContext(IcpswapContext);
 
   const { data } = useStakeIntervalGlobalData();
 
-  const { tvl, rewardedValue, rewardingValue, totalPools } = useMemo(() => {
+  const { tvl, tvlValue, rewardedValue, rewardingValue, totalPools } = useMemo(() => {
     if (!data || !icpPrice) return {};
 
-    const tvl = formatDollarAmount(new BigNumber(data.valueOfStaking).times(icpPrice).toNumber());
+    const tvlValue = new BigNumber(data.valueOfStaking).times(icpPrice).toNumber();
+
+    const tvl = formatDollarAmount(tvlValue);
     const rewardedValue = formatDollarAmount(new BigNumber(data.valueOfRewarded).times(icpPrice).toNumber());
     const rewardingValue = formatDollarAmount(new BigNumber(data.valueOfRewardsInProgress).times(icpPrice).toNumber());
 
@@ -26,8 +30,15 @@ export function Staking() {
       rewardingValue,
       totalPools: data.totalPools.toString(),
       totalStaker: data.totalStaker,
+      tvlValue,
     };
   }, [data, icpPrice]);
+
+  useEffect(() => {
+    if (tvlValue) {
+      setStakeTVL(tvlValue);
+    }
+  }, [tvlValue, setStakeTVL]);
 
   return (
     <Link to="/info-stake">

@@ -4,7 +4,7 @@ import { PositionDetails } from "types/swap";
 import { toSignificant, numberToString, formatDollarAmount, shorten, BigNumber } from "@icpswap/utils";
 import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell } from "@icpswap/ui";
+import { TableRow, BodyCell, Link } from "@icpswap/ui";
 import { LoadingRow, Copy, IsSneedOwner } from "components/index";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
@@ -25,9 +25,16 @@ export interface PositionRowProps {
   pool: Pool | Null;
   wrapperClassName?: string;
   sneedLedger?: string | Null;
+  showDetails?: boolean;
 }
 
-export function PositionRow({ positionInfo, sneedLedger, pool, wrapperClassName }: PositionRowProps) {
+export function PositionRow({
+  positionInfo,
+  sneedLedger,
+  pool,
+  showDetails = true,
+  wrapperClassName,
+}: PositionRowProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -185,6 +192,16 @@ export function PositionRow({ positionInfo, sneedLedger, pool, wrapperClassName 
                 : "--"}
             </Typography>
           </BodyCell>
+
+          {showDetails ? (
+            <BodyCell sx={{ flexDirection: "column" }}>
+              <Link to={`/liquidity/position/${positionInfo.id}/${pool.id}`}>
+                <Typography color="text.theme-secondary">
+                  <Trans>Details</Trans>
+                </Typography>
+              </Link>
+            </BodyCell>
+          ) : null}
         </TableRow>
       ) : (
         <TableRow>

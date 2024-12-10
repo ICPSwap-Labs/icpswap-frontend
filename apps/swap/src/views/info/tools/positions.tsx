@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/macro";
-import { Box, Theme, Typography, makeStyles } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1 } from "@icpswap/ui";
@@ -9,24 +9,7 @@ import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
 import { PositionTable } from "components/liquidity/index";
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    wrapper: {
-      display: "grid",
-      gap: "1em",
-      alignItems: "center",
-      padding: "24px",
-      borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "200px 120px 120px repeat(3, 1fr)",
-      "@media screen and (max-width: 780px)": {
-        padding: "16px",
-      },
-    },
-  };
-});
-
 export default function Positions() {
-  const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
   const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
@@ -74,7 +57,7 @@ export default function Positions() {
           </Box>
         }
       >
-        <PositionTable poolId={pair} principal={principal} wrapperClassName={classes.wrapper} />
+        <PositionTable poolId={pair} principal={principal} />
       </ToolsWrapper>
     </InfoWrapper>
   );

@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "24px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "200px 120px 120px repeat(3, 1fr)",
+      gridTemplateColumns: "120px 120px 120px repeat(3, 1fr) 40px",
+      "@media screen and (max-width: 780px)": {
+        padding: "16px",
+      },
     },
   };
 });
@@ -86,6 +89,8 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
             <HeaderCell field="UnclaimedFees">
               <Trans>Uncollected fees</Trans>
             </HeaderCell>
+
+            <HeaderCell field="None">&nbsp;</HeaderCell>
           </Header>
 
           {!loading
@@ -94,7 +99,7 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
                   key={index}
                   positionInfo={ele}
                   pool={pool}
-                  wrapperClassName={classes.wrapper}
+                  wrapperClassName={wrapperClassName ?? classes.wrapper}
                   sneedLedger={sneedLedger}
                 />
               ))

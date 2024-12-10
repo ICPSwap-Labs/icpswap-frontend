@@ -1,18 +1,26 @@
+import { useContext, useEffect } from "react";
 import { t } from "@lingui/macro";
 import { Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { useSwapProtocolData, useSwapPools } from "@icpswap/hooks";
-import { useFarmGlobalData } from "hooks/staking-farm/index";
 import { useSwapGlobalData } from "hooks/info/index";
 
+import { IcpswapContext } from "./context";
 import { Card, Item } from "../component";
 
 export function Swap() {
-  const globalData = useFarmGlobalData();
+  const { setSwapTVL } = useContext(IcpswapContext);
+
   const { result: swapProtocol } = useSwapProtocolData();
   const { result: allSwapPools } = useSwapPools();
   const { result: swapGlobalData } = useSwapGlobalData();
+
+  useEffect(() => {
+    if (swapProtocol) {
+      setSwapTVL(swapProtocol.tvlUSD);
+    }
+  }, [setSwapTVL, swapProtocol]);
 
   return (
     <Link to="/info-swap">
@@ -35,7 +43,7 @@ export function Swap() {
           />
           <Item
             label={t`Total Volume`}
-            value={swapProtocol ? formatDollarAmount(swapProtocol.volumeUSD) : "--"}
+            value={swapGlobalData ? formatDollarAmount(swapGlobalData?.totalVolume) : "--"}
             // tooltip={t`The total value of rewards distributed by live farming pools.`}
           />
 

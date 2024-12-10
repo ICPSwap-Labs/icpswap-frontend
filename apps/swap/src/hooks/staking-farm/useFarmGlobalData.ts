@@ -71,8 +71,8 @@ export function useFarmGlobalData() {
         }
 
         setData({
-          stakeTokenTVL: formatDollarAmount(stakedTVL.toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(rewardTVL.toFixed(4)),
+          stakeTokenTVL: stakedTVL.toFixed(4),
+          rewardTokenTVL: rewardTVL.toFixed(4),
         });
       }
     }

@@ -23,7 +23,7 @@ export function Icp() {
 
   const { blocks, secondBlocks } = useICPBlocksManager();
 
-  const marketCap = useMemo(() => {
+  const fdv = useMemo(() => {
     if (isNullArgs(icpTotalSupply) || isNullArgs(icpTokenInfo)) return null;
 
     return formatDollarAmount(
@@ -31,7 +31,7 @@ export function Icp() {
     );
   }, [icpTotalSupply, icpTokenInfo]);
 
-  const fdv = useMemo(() => {
+  const marketCap = useMemo(() => {
     if (isNullArgs(tokenAnalysis) || isNullArgs(icpTokenInfo)) return null;
 
     return formatDollarAmount(new BigNumber(tokenAnalysis.marketAmount).multipliedBy(icpTokenInfo.priceUSD).toString());
