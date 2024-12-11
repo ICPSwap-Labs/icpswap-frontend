@@ -11,7 +11,7 @@ import {
   isNullArgs,
 } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
-import { NoData, LoadingRow } from "components/index";
+import { NoData, LoadingRow, TokenStandardLabel } from "components/index";
 import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
@@ -19,17 +19,16 @@ import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
 import XTCTopUpModal from "components/XTCTopup/index";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { Erc20MinterInfo } from "@icpswap/types";
+import { useInfoToken } from "@icpswap/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
 
@@ -241,7 +240,7 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
       mockALinkAndOpen(
-        `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
+        `${INFO_URL}/info-tokens/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
       );
     }

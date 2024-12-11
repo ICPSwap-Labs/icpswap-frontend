@@ -2,16 +2,15 @@ import { useContext, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
+import { PoolTransactions, UserTransactions } from "components/info/swap";
+import { Holders } from "components/info/tokens";
 
 import { SwapProCardWrapper } from "../SwapProWrapper";
 import { SwapProContext } from "../context";
-import { PoolTransactions } from "./PoolTransactions";
-import { UserTransactions } from "./UserTransactions";
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
 import { AddLiquidity } from "./AddLiquidity";
-import { Holders } from "./Holders";
 
 enum Tabs {
   ALL_TRANSACTIONS = "ALL_TRANSACTIONS",
@@ -44,7 +43,7 @@ export default function Transactions() {
   };
 
   return (
-    <SwapProCardWrapper padding="20px 0px">
+    <SwapProCardWrapper padding="20px 0px 0px 0px">
       <Flex
         justify="space-between"
         sx={{

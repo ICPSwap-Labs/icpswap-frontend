@@ -112,6 +112,9 @@ importers:
       shelljs:
         specifier: ^0.8.5
         version: 0.8.5
+      swr:
+        specifier: ^2.2.0
+        version: 2.2.5(react@18.2.0)
       tiny-invariant:
         specifier: ^1.3.1
         version: 1.3.3
@@ -317,9 +320,6 @@ importers:
       sha224:
         specifier: ^1.0.0
         version: 1.0.0
-      swr:
-        specifier: ^2.2.0
-        version: 2.2.5(react@18.2.0)
       toformat:
         specifier: ^2.0.0
         version: 2.0.0
@@ -419,7 +419,7 @@ importers:
         version: 0.3.22(@types/react@18.2.0)(bufferutil@4.0.8)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)(rollup@2.79.2)
       '@honopu/auth-client':
         specifier: 1.0.13
-        version: 1.0.13(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/identity@1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@1.0.1)
+        version: 1.0.13(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/identity@2.1.3(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@1.0.1)
       '@icpswap/actor':
         specifier: workspace:*
         version: link:../../packages/actor
@@ -436,7 +436,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/swap-sdk
       '@icpswap/token-adapter':
-        specifier: 'workspace: *'
+        specifier: workspace:^
         version: link:../../packages/token-adapter
       '@icpswap/tokens':
         specifier: workspace:*
@@ -481,7 +481,7 @@ importers:
         specifier: 7.80.0
         version: 7.80.0
       '@tabler/icons':
-        specifier: ^1.39.1
+        specifier: ^1.119.0
         version: 1.119.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@tanstack/react-query':
         specifier: 5.28.14
@@ -490,34 +490,37 @@ importers:
         specifier: ^5.1.20
         version: 5.1.20
       '@web3-react/core':
-        specifier: ^8.2.0
+        specifier: ^8.2.3
         version: 8.2.3(@types/react@18.2.0)(bufferutil@4.0.8)(immer@9.0.21)(react@18.2.0)
       '@web3-react/metamask':
-        specifier: ^8.2.1
+        specifier: ^8.2.4
         version: 8.2.4(@types/react@18.2.0)(immer@9.0.21)(react@18.2.0)
       '@web3-react/types':
         specifier: ^8.2.3
         version: 8.2.3(@types/react@18.2.0)(immer@9.0.21)(react@18.2.0)
+      apexcharts:
+        specifier: ^3.54.1
+        version: 3.54.1
       bignumber.js:
-        specifier: ^9.0.1
+        specifier: ^9.1.2
         version: 9.1.2
       bip39:
-        specifier: ^3.0.4
+        specifier: ^3.1.0
         version: 3.1.0
       bitcoin-address-validation:
-        specifier: ^2.2.1
+        specifier: ^2.2.3
         version: 2.2.3
       buffer:
         specifier: 6.0.3
         version: 6.0.3
       clsx:
-        specifier: ^1.1.1
+        specifier: ^1.2.1
         version: 1.2.1
       copy-to-clipboard:
-        specifier: ^3.2.0
+        specifier: ^3.3.3
         version: 3.3.3
       core-js:
-        specifier: '2'
+        specifier: ^2.6.12
         version: 2.6.12
       crc:
         specifier: ^3.8.0
@@ -526,7 +529,7 @@ importers:
         specifier: 7.0.0
         version: 7.0.0
       ethers:
-        specifier: ^5.1.4
+        specifier: ^5.7.2
         version: 5.7.2(bufferutil@4.0.8)
       ic-stoic-identity:
         specifier: 6.0.0
@@ -541,10 +544,10 @@ importers:
         specifier: 2.1.3
         version: 2.1.3
       node-vibrant:
-        specifier: ^3.1.5
+        specifier: ^3.1.6
         version: 3.1.6
       polished:
-        specifier: ^3.3.2
+        specifier: ^3.7.2
         version: 3.7.2
       process:
         specifier: 0.11.10
@@ -555,23 +558,26 @@ importers:
       randombytes:
         specifier: ^2.1.0
         version: 2.1.0
+      react-apexcharts:
+        specifier: ^1.6.0
+        version: 1.6.0(apexcharts@3.54.1)(react@18.2.0)
       react-countdown:
         specifier: ^2.3.2
         version: 2.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-countup:
-        specifier: ^6.1.1
+        specifier: ^6.5.3
         version: 6.5.3(react@18.2.0)
       react-device-detect:
         specifier: ^1.17.0
         version: 1.17.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-feather:
-        specifier: ^2.0.8
+        specifier: ^2.0.10
         version: 2.0.10(react@18.2.0)
       react-ga:
-        specifier: ^2.5.7
+        specifier: ^2.7.0
         version: 2.7.0(prop-types@15.8.1)(react@18.2.0)
       react-horizontal-scrolling-menu:
-        specifier: ^3.2.2
+        specifier: ^3.2.5
         version: 3.2.5(react@18.2.0)
       react-infinite-scroll-component:
         specifier: ^6.1.0
@@ -580,7 +586,7 @@ importers:
         specifier: 18.2.0
         version: 18.2.0
       react-markdown:
-        specifier: ^6.0.0
+        specifier: ^6.0.3
         version: 6.0.3(@types/react@18.2.0)(react@18.2.0)
       react-number-format:
         specifier: 5.3.1
@@ -592,13 +598,13 @@ importers:
         specifier: 2.1.12
         version: 2.1.12(prop-types@15.8.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       redux-localstorage-simple:
-        specifier: ^2.3.1
+        specifier: ^2.5.1
         version: 2.5.1
       redux-persist:
         specifier: ^6.0.0
         version: 6.0.0(react@18.2.0)(redux@4.2.1)
       redux-thunk:
-        specifier: ^2.3.0
+        specifier: ^2.4.2
         version: 2.4.2(redux@4.2.1)
       remarkable:
         specifier: ^2.0.1
@@ -612,11 +618,8 @@ importers:
       stream-browserify:
         specifier: 3.0.0
         version: 3.0.0
-      swr:
-        specifier: ^2.2.0
-        version: 2.2.5(react@18.2.0)
       tiny-invariant:
-        specifier: ^1.1.0
+        specifier: ^1.3.3
         version: 1.3.3
       tiny-warning:
         specifier: ^1.0.3
@@ -656,10 +659,10 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       '@types/d3':
-        specifier: ^7.4.0
+        specifier: ^7.4.3
         version: 7.4.3
       '@types/jest':
-        specifier: ^25.2.1
+        specifier: ^25.2.3
         version: 25.2.3
       '@types/ms':
         specifier: ^0.7.34
@@ -668,10 +671,10 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@types/node':
-        specifier: ^13.13.5
+        specifier: ^13.13.52
         version: 13.13.52
       '@types/qrcode.react':
-        specifier: ^1.0.2
+        specifier: ^1.0.5
         version: 1.0.5
       '@types/randombytes':
         specifier: ^2.0.3
@@ -683,31 +686,31 @@ importers:
         specifier: ^4.4.1
         version: 4.4.11
       '@types/react-virtualized-auto-sizer':
-        specifier: ^1.0.0
+        specifier: ^1.0.4
         version: 1.0.4
       '@types/react-window':
-        specifier: ^1.8.2
+        specifier: ^1.8.8
         version: 1.8.8
       '@types/rebass':
         specifier: ^4.0.5
         version: 4.0.15
       '@types/remarkable':
-        specifier: ^2.0.3
+        specifier: ^2.0.8
         version: 2.0.8
       '@types/remove-markdown':
-        specifier: ^0.3.1
+        specifier: ^0.3.4
         version: 0.3.4
       '@types/testing-library__cypress':
-        specifier: ^5.0.5
+        specifier: ^5.0.13
         version: 5.0.13
       '@types/webpack-env':
-        specifier: ^1.16.3
+        specifier: ^1.18.5
         version: 1.18.5
       customize-cra:
         specifier: ^1.0.0
         version: 1.0.0
       cypress:
-        specifier: ^4.11.0
+        specifier: ^4.12.1
         version: 4.12.1
       jest:
         specifier: 26.6.0
@@ -787,9 +790,6 @@ importers:
       bignumber.js:
         specifier: ^9.0.1
         version: 9.1.2
-      swr:
-        specifier: ^2.2.0
-        version: 2.2.5(react@18.2.0)
     devDependencies:
       '@types/node':
         specifier: ^13.13.5
@@ -2120,6 +2120,13 @@ packages:
       '@dfinity/principal': 1.0.1
       '@peculiar/webcrypto': ^1.4.0
 
+  '@dfinity/identity@2.1.3':
+    resolution: {integrity: sha512-qII0V91S1YeIz5/XRHomwrUhTME+C3oqdTnb99tBitXA2Gq6LU2JaCLbKbN7ehhSyW6EjO4tySJxANz6hYENcQ==}
+    peerDependencies:
+      '@dfinity/agent': 1.0.1
+      '@dfinity/principal': 1.0.1
+      '@peculiar/webcrypto': ^1.4.0
+
   '@dfinity/ledger-icp@2.2.0':
     resolution: {integrity: sha512-4Nn5/wAX8XMTb8GJ2LftsuEwGznM1v7lAgbUl+DdnERTIQ2btfP8LWFG+45PQKM7NjWZFFTp5JDbW1gEKM1KbQ==}
     peerDependencies:
@@ -2163,11 +2170,17 @@ packages:
   '@emotion/babel-plugin@11.12.0':
     resolution: {integrity: sha512-y2WQb+oP8Jqvvclh8Q55gLUyb7UFvgv7eJfsj7td5TToBrIUtPay2kMrZi4xjq9qw2vD0ZR5fSho0yqoFgX7Rw==}
 
+  '@emotion/babel-plugin@11.13.5':
+    resolution: {integrity: sha512-pxHCpT2ex+0q+HH91/zsdHkw/lXd468DIN2zvfvLtPKLLMo6gQj7oLObq8PhkrxOZb/gGCq03S3Z7PDhS8pduQ==}
+
   '@emotion/cache@10.0.29':
     resolution: {integrity: sha512-fU2VtSVlHiF27empSbxi1O2JFdNWZO+2NFHfwO0pxgTep6Xa3uGb+3pVKfLww2l/IBGLNEZl5Xf/++A4wAYDYQ==}
 
   '@emotion/cache@11.13.1':
     resolution: {integrity: sha512-iqouYkuEblRcXmylXIwwOodiEK5Ifl7JcX7o6V4jI3iW4mLXX3dmt5xwBtIkJiQEXFAI+pC8X0i67yiPkH9Ucw==}
+
+  '@emotion/cache@11.13.5':
+    resolution: {integrity: sha512-Z3xbtJ+UcK76eWkagZ1onvn/wAVb1GOMuR15s30Fm2wrMgC7jzpnO2JZXr4eujTTqoQFUrZIw/rT0c6Zzjca1g==}
 
   '@emotion/core@10.3.1':
     resolution: {integrity: sha512-447aUEjPIm0MnE6QYIaFz9VQOHSXf4Iu6EWOIqq11EAPqinkSZmfymPTmlOE3QjLv846lH4JVZBUOtwGbuQoww==}
@@ -2240,6 +2253,16 @@ packages:
 
   '@emotion/styled@11.13.0':
     resolution: {integrity: sha512-tkzkY7nQhW/zC4hztlwucpT8QEZ6eUzpXDRhww/Eej4tFfO0FxQYWRyg/c5CCXa4d/f174kqeXYjuQRnhzf6dA==}
+    peerDependencies:
+      '@emotion/react': ^11.0.0-rc.0
+      '@types/react': '*'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@emotion/styled@11.13.5':
+    resolution: {integrity: sha512-gnOQ+nGLPvDXgIx119JqGalys64lhMdnNQA9TMxhDA4K0Hq5+++OE20Zs5GxiCV9r814xQ2K5WmtofSpHVW6BQ==}
     peerDependencies:
       '@emotion/react': ^11.0.0-rc.0
       '@types/react': '*'
@@ -10216,6 +10239,12 @@ packages:
       apexcharts: ^3.41.0
       react: '>=0.13'
 
+  react-apexcharts@1.6.0:
+    resolution: {integrity: sha512-DmokF8EA2MPghdGuxdLMIDOB1rocqb8HhBTWGHQ+xs0U0nU3R0GFQCUP2EQ10siKUeD2aS2wDyCWuHoYYgSNKQ==}
+    peerDependencies:
+      apexcharts: '>=4.0.0'
+      react: '>=0.13'
+
   react-app-polyfill@3.0.0:
     resolution: {integrity: sha512-sZ41cxiU5llIB003yxxQBYrARBqe0repqPTTYBTmMqTz9szeBbE37BehCE891NZsmdZqqP+xWKdT3eo3vOzN8w==}
     engines: {node: '>=14'}
@@ -14723,7 +14752,7 @@ snapshots:
     dependencies:
       '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)
       '@dfinity/candid': 1.0.1(@dfinity/principal@1.0.1)
-      '@dfinity/identity': 1.0.1(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
+      '@dfinity/identity': 2.1.3(@dfinity/agent@1.0.1(@dfinity/candid@1.0.1(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1))(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.5.0)
       '@dfinity/principal': 1.0.1
       idb: 8.0.0
 

@@ -6,6 +6,7 @@ export interface ProportionProps {
   value: bigint | number | string | undefined | null;
   align?: "right" | "left" | "inherit" | "center" | "justify" | undefined;
   fontSize?: string;
+  fontWeight?: number;
   showArrow?: boolean;
 }
 
@@ -53,7 +54,7 @@ export function Proportion({ value, fontSize, showArrow = true, ...props }: Prop
     <Typography
       color={Colors[type]}
       sx={{
-        fontWeight: 500,
+        fontWeight: props.fontWeight ?? 500,
         display: "flex",
         alignItems: "center",
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",

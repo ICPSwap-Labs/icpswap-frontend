@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import store from "store/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { ICP } from "@icpswap/tokens";
-import { registerTokens } from "@icpswap/token-adapter";
+import { registerTokens, tokenAdapter } from "@icpswap/token-adapter";
+
 import { updateTokenStandards } from "./actions";
 
 interface useUpdateTokenStandardProps {
@@ -71,4 +72,14 @@ export function useTokenStandards() {
 
 export function useAllTokenIds() {
   return useAppSelector((state) => state.tokenCache.allTokenIds);
+}
+
+export function useTokenStandardIsRegistered(canisterId: string) {
+  const standards = tokenAdapter.getAll();
+  const canisterIds = [...standards.keys()];
+
+  return useMemo(() => {
+    if (canisterId === "ICP" || canisterId === "aaaaa-aa") return true;
+    return canisterIds.includes(canisterId);
+  }, [canisterId, canisterIds]);
 }

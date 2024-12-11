@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "components/index";
 import { MenuWrapper, MenuItem } from "@icpswap/ui";
 
-import { Route } from "./config";
+import { Route, routeKey } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
 
 export interface ExceedRoutesPopperProps {
@@ -19,7 +19,7 @@ export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickA
 
   const handleSubMenuMouseEnter = (route: Route, target: any) => {
     if (route.subMenus && route.subMenus.length) {
-      setSubMenuOpenKey(route.key);
+      setSubMenuOpenKey(routeKey(route.key));
       setSubMenuTarget(target);
     }
   };

@@ -5,21 +5,20 @@ import { Trans } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
-import { useAllTokensOfSwap } from "@icpswap/hooks";
+import { useAllTokensOfSwap, useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import NoDataIcon from "assets/icons/NoData";
-import type { AllTokenOfSwapTokenInfo, PublicTokenOverview } from "@icpswap/types";
+import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { useInfoAllTokens } from "hooks/info/useInfoTokens";
 import { useGlobalTokenList } from "store/global/hooks";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
-  infoAllTokens: PublicTokenOverview[] | undefined;
+  infoAllTokens: PublicTokenOverview[] | Null;
   onTokenClick?: (token: AllTokenOfSwapTokenInfo) => void;
   inTokenList?: boolean;
 }

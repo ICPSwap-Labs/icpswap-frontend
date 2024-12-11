@@ -114,27 +114,21 @@ export function GlobalData() {
 
       <Item
         label0={<Trans>TVL</Trans>}
-        value0={globalData?.stakeTokenTVL ?? "--"}
+        value0={globalData.stakeTokenTVL ? formatDollarAmount(globalData.stakeTokenTVL) : "--"}
         tooltip0={t`The cumulative value of positions staked across all live farming pools.`}
         label1={<Trans>Total Rewarded Value</Trans>}
-        value1={globalData?.rewardedTokenTVL ?? "--"}
+        value1={globalData.rewardedTokenTVL ? formatDollarAmount(globalData.rewardedTokenTVL) : "--"}
         tooltip1={t`The total value of rewards distributed by finished farming pools.`}
       />
 
       <Item
         label0={<Trans>Total Rewarding Value</Trans>}
-        value0={globalData.rewardTokenTVL ?? "--"}
+        value0={globalData.rewardTokenTVL ? formatDollarAmount(globalData.rewardTokenTVL) : "--"}
         tooltip0={t`The total value of rewards distributed by live farming pools.`}
         label1={<Trans>Total Pools</Trans>}
         value1={globalData.farmAmount?.toString() ?? "--"}
         tooltip1={t`The total number of farming pools, including those that are unstart, live, and finished.`}
       />
-
-      {/* <Item
-        label0={<Trans>Total Stakers</Trans>}
-        value0={globalData.principalAmount?.toString() ?? "--"}
-        tooltip0={t`The total number of unique accounts that have staked in the farming pools.`}
-      /> */}
     </Box>
   );
 }

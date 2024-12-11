@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Typography, Grid, Box, Link, useMediaQuery, Button } from "@mui/material";
-import { useTheme, makeStyles } from "@mui/styles";
+import { Typography, Grid, Box, Link, useMediaQuery, Button, useTheme, makeStyles, Theme } from "components/Mui";
 import Copy from "components/Copy";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import LazyImage from "components/LazyImage";
@@ -9,9 +8,8 @@ import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow, shorten, times
 import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
-import { Theme } from "@mui/material/styles";
 import FileImage from "components/NFT/FileImage";
-import { TextButton, Wrapper } from "components/index";
+import { TextButton, InfoWrapper } from "components/index";
 import DetailsToggle from "components/NFT/DetailsToggle";
 import { type NFTTokenMetadata } from "@icpswap/types";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
@@ -225,7 +223,7 @@ export default function NoAuthNFTInfo() {
           }}
         >
           <Box mt="20px">
-            <Wrapper>
+            <InfoWrapper>
               <Box className={classes.wrapper}>
                 <Box className={classes.leftWrapper}>
                   <Box className={classes.logoWrapper}>
@@ -380,7 +378,7 @@ export default function NoAuthNFTInfo() {
                   ) : null}
                 </Box>
               </Box>
-            </Wrapper>
+            </InfoWrapper>
           </Box>
         </Box>
       </Box>

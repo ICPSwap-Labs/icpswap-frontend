@@ -51,12 +51,13 @@ export function LiquidityLock({
     if (isNullArgs(poolId)) return null;
 
     if (name === FREE_LIQUIDITY_NAME) {
-      return `${INFO_URL}/swap-scan/positions?pair=${poolId}`;
-    } if (name === "Black Hole") {
-      return `${INFO_URL}/swap-scan/positions?pair=${poolId}&principal=aaaaa-aa`;
+      return `${INFO_URL}/info-tools/positions?pair=${poolId}`;
+    }
+    if (name === "Black Hole") {
+      return `${INFO_URL}/info-tools/positions?pair=${poolId}&principal=aaaaa-aa`;
     }
 
-    return `${INFO_URL}/swap-scan/positions?pair=${poolId}&principal=${principalId}`;
+    return `${INFO_URL}/info-tools/positions?pair=${poolId}&principal=${principalId}`;
   }, [poolId, principalId, name]);
 
   return (

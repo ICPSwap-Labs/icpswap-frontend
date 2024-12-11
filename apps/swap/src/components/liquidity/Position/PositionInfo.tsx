@@ -1,13 +1,13 @@
 import { Typography } from "components/Mui";
-import { MainCard } from "components/index";
-import { isNullArgs, nonNullArgs, numToPercent, principalToAccount, shorten } from "@icpswap/utils";
-import { Flex, TextButton, Image, APRPanel } from "@icpswap/ui";
+import { IsSneedOwner, MainCard } from "components/index";
+import { isNullArgs, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
+import { Flex, TextButton, APRPanel } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
-import { useLiquidityLockIds, usePositionAPRChartData } from "@icpswap/hooks";
+import { usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState } from "hooks/liquidity";
-import { useRefreshTriggerManager } from "hooks/index";
+import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
 import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
@@ -29,18 +29,6 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   }, [position.pool]);
 
   const { result: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
-  const { result: locksIds } = useLiquidityLockIds(tokenIds);
-
-  const sneedLedger = useMemo(() => {
-    if (!locksIds) return undefined;
-    return locksIds.find((e) => e.alias[0] === "Sneedlocked")?.ledger_id.toString();
-  }, [locksIds]);
-
-  const isSneed = useMemo(() => {
-    if (!owner || !sneedLedger) return false;
-
-    return principalToAccount(sneedLedger) === owner;
-  }, [sneedLedger, owner]);
 
   const handleTransferSuccess = useCallback(() => {
     setRefreshTrigger();
@@ -50,6 +38,9 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     if (isNullArgs(positionChartData) || positionChartData.length === 0) return null;
     return positionChartData[positionChartData.length - 1].apr;
   }, [positionChartData]);
+
+  const sneedLedger = useSneedLedger(tokenIds);
+  const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
   return (
     <MainCard level={3}>
@@ -73,7 +64,8 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
 
           <Flex gap="0 4px">
             <Typography color="text.primary">{owner ? shorten(owner) : "--"}</Typography>
-            {isSneed ? <Image src="/images/sneed.svg" alt="" style={{ width: "18px", height: "18px" }} /> : null}
+
+            <IsSneedOwner isSneed={isSneed} />
           </Flex>
         </Flex>
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import Exchange from "components/Wrap/Exchange";
 import Record from "components/Wrap/Record";
 import RetryWrap from "components/Wrap/RetryWrap";
@@ -9,8 +8,9 @@ import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
 import { t, Trans } from "@lingui/macro";
 import { INFO_URL } from "constants/index";
 import WrapContext from "components/Wrap/context";
-import { Theme } from "@mui/material/styles";
-import LinkIcon from "assets/images/LinkIcon";
+import { infoRoutesConfigs } from "routes/info.config";
+import { Flex, Link } from "@icpswap/ui";
+import { ArrowUpRight } from "react-feather";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -40,6 +40,7 @@ const SWITCH_BUTTONS = [
 
 export default function Wrap() {
   const classes = useStyles();
+  const theme = useTheme();
   const [activeSwitch, setActiveSwitch] = useState(1);
   const [retryTrigger, setRetryTrigger] = useState(false);
 
@@ -54,19 +55,18 @@ export default function Wrap() {
         <Grid container justifyContent="center">
           <Grid item className={classes.outerBox}>
             <MainCard level={1}>
-              <Grid
-                container
+              <Flex
+                fullWidth
+                justify="space-between"
                 sx={{
                   position: "relative",
                 }}
               >
-                <Grid item xs>
+                <Flex gap="0 24px">
                   {SWITCH_BUTTONS.map((item) => (
                     <Box
                       key={item.id}
                       sx={{
-                        display: "inline-block",
-                        margin: "0 24px 0 0",
                         cursor: "pointer",
                       }}
                       onClick={() => setActiveSwitch(item.id)}
@@ -79,11 +79,15 @@ export default function Wrap() {
                       </Typography>
                     </Box>
                   ))}
-                </Grid>
-                <TextButton link={`${INFO_URL}/wrap`}>
-                  WICP Info <LinkIcon />
-                </TextButton>
-              </Grid>
+                </Flex>
+
+                <Link link={`${INFO_URL}${infoRoutesConfigs.INFO_WRAP}`}>
+                  <Typography color="text.theme-secondary">
+                    <Trans>WICP Info</Trans>
+                  </Typography>
+                </Link>
+                <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
+              </Flex>
               <Box mt={4}>{ActiveComponent()}</Box>
             </MainCard>
             <Box

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { BaseTransaction } from "@icpswap/types";
+import { BaseTransaction, Null } from "@icpswap/types";
 import { getTransactionsByPool, useBaseStorages } from "./info";
 
-export function usePoolTransactions(poolId: string | undefined, offset: number, limit: number, refresh?: number) {
+export function usePoolTransactions(poolId: string | Null, offset: number, limit: number, refresh?: number) {
   const { result: storageIds } = useBaseStorages();
 
   const [loading, setLoading] = useState(false);

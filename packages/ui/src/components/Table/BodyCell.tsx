@@ -7,9 +7,10 @@ export type BodyCellProps = {
   children: React.ReactNode;
   sub?: boolean;
   sx?: TypographyProps["sx"];
+  title?: string;
 };
 
-export default function BodyCell({ sub, sx, align, ...props }: BodyCellProps) {
+export default function BodyCell({ sub, sx, align, title, ...props }: BodyCellProps) {
   const handleClick = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     if (props.onClick) props.onClick(event);
   };
@@ -30,6 +31,7 @@ export default function BodyCell({ sub, sx, align, ...props }: BodyCellProps) {
       color={props.color ?? (sub ? "text.secondary" : "text.primary")}
       onClick={handleClick}
       component="div"
+      title={title}
     >
       {props.children}
     </Typography>

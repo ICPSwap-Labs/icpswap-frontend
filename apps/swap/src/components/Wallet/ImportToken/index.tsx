@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
-import { Modal, TextButton, FilledTextField } from "components/index";
+import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";
@@ -184,7 +183,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
               </Grid>
               <Typography sx={{ marginTop: "8px" }}>{values.id}</Typography>
               <Box mt="10px">
-                <TextButton link={`${INFO_URL}/token/details/${values.id}`}>
+                <TextButton link={`${INFO_URL}/info-token/details/${values.id}`}>
                   <Trans>View On Info</Trans>
                 </TextButton>
               </Box>

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button, Box, Typography, Checkbox, Avatar, useTheme } from "components/Mui";
-import { Modal, TextButton } from "components/index";
+import { Modal, TextButton, TokenStandardLabel } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
@@ -103,7 +102,7 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
             </Box>
 
             <Box mt="24px">
-              <TextButton link={`${INFO_URL}/token/details/${canisterId}?standard=${token?.standard}`}>
+              <TextButton link={`${INFO_URL}/info-tokens/details/${canisterId}?standard=${token?.standard}`}>
                 <Trans>View On Info</Trans>
               </TextButton>
             </Box>

@@ -1,86 +1,48 @@
-import { formatTokenAmount, BigNumber } from "@icpswap/utils";
-import { Price, Token, CurrencyAmount } from "@icpswap/swap-sdk";
+import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
-import { useAppSelector } from "store/hooks";
 import { useMemo } from "react";
 import { WRAPPED_ICP } from "constants/tokens";
-import { network, NETWORK } from "constants/server";
-import { useInfoToken } from "hooks/info/useInfoTokens";
+import { useInfoToken } from "@icpswap/hooks";
 
 export function useICPPrice(): number | undefined {
-  const { ICPPriceList } = useAppSelector((state) => state.global);
+  const icpTokenInfo = useInfoToken(ICP.address);
 
   return useMemo(() => {
-    if (ICPPriceList.length) {
-      return ICPPriceList[ICPPriceList.length - 1].value;
-    }
-
-    return undefined;
-  }, [ICPPriceList]);
+    return icpTokenInfo?.priceUSD;
+  }, [icpTokenInfo]);
 }
 
-export function useUSDPrice(currency: Token | undefined): string | number | undefined {
-  const _currency = useMemo(() => {
-    if (!currency) return undefined;
-    if (currency?.wrapped.equals(WRAPPED_ICP) || currency?.wrapped.equals(ICP)) return undefined;
-    return currency;
-  }, [currency]);
+export function useUSDPrice(token: Token | undefined): string | number | undefined {
+  const tokenId = useMemo(() => {
+    if (isNullArgs(token)) return null;
 
-  const graphToken = useInfoToken(_currency?.wrapped.address);
+    if (token.address === WRAPPED_ICP.address) return ICP.address;
 
-  const baseToken = useMemo(() => {
-    return network === NETWORK.IC ? ICP : WRAPPED_ICP;
-  }, [network, NETWORK]);
+    return token.address;
+  }, [token]);
 
-  const icpPriceNumber = useICPPrice();
-
-  const baseTokenPrice = useMemo(() => {
-    if (icpPriceNumber) {
-      return new Price(
-        baseToken,
-        baseToken,
-        formatTokenAmount(1, baseToken.decimals).toString(),
-        formatTokenAmount(icpPriceNumber, baseToken.decimals).toString(),
-      );
-    }
-    return undefined;
-  }, [icpPriceNumber, baseToken]);
+  const graphToken = useInfoToken(tokenId);
 
   return useMemo(() => {
-    if (!currency || !baseTokenPrice) return undefined;
+    if (!tokenId) return undefined;
 
-    if (currency?.wrapped.equals(ICP) || currency?.wrapped.equals(WRAPPED_ICP)) return baseTokenPrice.toFixed();
-
-    if (graphToken) {
-      return graphToken.priceUSD;
-    }
-
-    return undefined;
-  }, [currency, baseToken, graphToken, baseTokenPrice]);
+    return graphToken?.priceUSD;
+  }, [tokenId, graphToken]);
 }
 
 export function useUSDPriceById(tokenId: string | undefined): number | undefined {
-  const _tokenId = useMemo(() => {
-    if (!tokenId) return undefined;
-    if (tokenId === WRAPPED_ICP.address || tokenId === ICP.address) return undefined;
-    return tokenId;
-  }, [tokenId]);
-
-  const graphToken = useInfoToken(_tokenId);
-
-  const icpPriceNumber = useICPPrice();
+  const graphToken = useInfoToken(tokenId);
 
   return useMemo(() => {
-    if (!tokenId || !icpPriceNumber) return undefined;
-
-    if (tokenId === ICP.address || tokenId === WRAPPED_ICP.address) return icpPriceNumber;
+    if (!tokenId) return undefined;
 
     if (graphToken) {
       return graphToken.priceUSD;
     }
 
     return undefined;
-  }, [tokenId, graphToken, icpPriceNumber]);
+  }, [tokenId, graphToken]);
 }
 
 export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {

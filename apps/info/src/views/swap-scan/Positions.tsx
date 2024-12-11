@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "200px 120px 120px repeat(3, 1fr)",
+      gridTemplateColumns: "200px 120px 120px repeat(3, 1fr) 40px",
     },
   };
 });

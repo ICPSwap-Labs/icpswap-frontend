@@ -123,7 +123,7 @@ export function SelectPanel({
 
       <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         <Box>
-          {nonNullArgs(value) || panel ? (
+          {nonNullArgs(value) || (panel && panel(menu)) ? (
             <Typography color={valueColor ?? "text.primary"} component="div">
               {panel ? panel(menu) : menu?.selectLabel ?? menu?.label}
             </Typography>

@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
+import { isValidPrincipal } from "@icpswap/utils";
+
 import { getUserUnusedBalance, _getSwapPoolAllBalance } from "./calls";
 
 const CALL_LIMITED = 20;
@@ -31,7 +33,7 @@ export function useUserUnUsedBalance(
   }, [selectedTokenId]);
 
   const _fetch = async (poolId: string, fetch_index: number) => {
-    if (!principal) return undefined;
+    if (!principal || !isValidPrincipal(principal)) return undefined;
 
     try {
       if (fetch_index !== unused_fetch_index) {

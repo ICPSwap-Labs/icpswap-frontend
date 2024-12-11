@@ -43,3 +43,35 @@ export type TokenHolerArgs = {
   page: number;
   size: number;
 };
+
+export interface IcExplorerTokenDetail {
+  controllerArray: string[];
+  cycleBalance: number;
+  description: string | null;
+  details: string | null;
+  fee: number;
+  fullyDilutedMarketCap: string | null;
+  holderAmount: string | null;
+  ledgerId: string;
+  logo: string | null;
+  marketCap: string | null;
+  memorySize: number;
+  mintingAccount: string;
+  moduleHash: string;
+  name: string;
+  price: number;
+  priceChange24: string | null;
+  priceICP: number | null;
+  source: string;
+  standardArray: string[];
+  supplyCap: string | null;
+  symbol: string;
+  tokenDecimal: number;
+  totalSupply: number;
+  transactionAmount: string | null;
+  tvl: string | null;
+  txVolume24: string | null;
+  tokenDetail: {
+    [key: string]: string;
+  };
+}

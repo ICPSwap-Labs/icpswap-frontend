@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
 import { _getTokenInfo } from "hooks/token/index";
 import { useFarmUserAllPositions } from "hooks/staking-farm/useUserAllPositions";
@@ -72,8 +71,8 @@ export function useFarmGlobalData() {
         }
 
         setData({
-          stakeTokenTVL: formatDollarAmount(stakedTVL.toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(rewardTVL.toFixed(4)),
+          stakeTokenTVL: stakedTVL.toFixed(4),
+          rewardTokenTVL: rewardTVL.toFixed(4),
         });
       }
     }
@@ -122,8 +121,8 @@ export function useFarmGlobalData() {
           }
         }
 
-        setRewardedTokenTVL(formatDollarAmount(rewardTVL.toFixed(4)));
-        setStakedTokenTVL(formatDollarAmount(stakedTVL.toFixed(4)));
+        setRewardedTokenTVL(rewardTVL.toFixed(4));
+        setStakedTokenTVL(stakedTVL.toFixed(4));
       }
     }
 

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
-import type { PublicTokenOverview } from "@icpswap/types";
+import type { Null, PublicTokenOverview } from "@icpswap/types";
 import { ckUSDC } from "@icpswap/tokens";
 
 import { getNodeInfoAllTokens } from "./node";
@@ -25,7 +25,7 @@ export function useInfoAllTokens() {
   return useMemo(() => data, data);
 }
 
-export function useInfoToken(tokenId: string | undefined): PublicTokenOverview | undefined {
+export function useInfoToken(tokenId: string | Null): PublicTokenOverview | undefined {
   const { data } = useSWRImmutable<PublicTokenOverview[] | undefined>(["info_all_tokens"]);
 
   return useMemo(() => {

@@ -7,6 +7,7 @@ import {
   PublicTokenPricesData,
   TokenPoolsInfo,
   InfoToken,
+  Null,
 } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
@@ -96,7 +97,7 @@ export async function getInfoPoolsOfToken(storageId: string, tokenId: string) {
   return resultFormat<TokenPoolsInfo[]>(await (await tokenStorage(storageId)).getPoolsForToken(tokenId)).data;
 }
 
-export function useInfoPoolsOfToken(storageId: string | undefined, tokenId: string | undefined) {
+export function useInfoPoolsOfToken(storageId: string | Null, tokenId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!storageId || !tokenId) return undefined;

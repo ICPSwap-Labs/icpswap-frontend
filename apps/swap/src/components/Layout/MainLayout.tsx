@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) => {
       "&.small-padding": {
         padding: "0 12px",
       },
+      "&.info": {
+        padding: 0,
+      },
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -86,7 +89,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
         {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
 
-        <main className={`${classes.content} ${isSmallPadding ? "small-padding" : ""}`}>{children}</main>
+        <main
+          className={`${classes.content}${isSmallPadding ? " small-padding" : ""}${
+            location.pathname.includes("info") ? " info" : ""
+          }`}
+        >
+          {children}
+        </main>
       </Box>
 
       <Background />
