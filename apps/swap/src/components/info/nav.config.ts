@@ -37,11 +37,6 @@ export const routes: Route[] = [
     path: `/info-tools`,
   },
   {
-    key: "info-marketplace",
-    name: "Marketplace",
-    path: `/info-marketplace`,
-  },
-  {
     key: "info-claim",
     name: "Token Claim",
     path: "/info-claim",

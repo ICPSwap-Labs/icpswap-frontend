@@ -1,7 +1,6 @@
 import { pageArgsFormat, timestampFormat, cycleValueFormat } from "@icpswap/utils";
 import { useState } from "react";
-import { Typography, Box, Avatar, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Box, Avatar, makeStyles } from "components/Mui";
 import { useNFTCanisterCycles, useNFTCanisterCount } from "hooks/info/nft";
 import { Trans } from "@lingui/macro";
 import { InfoWrapper } from "components/index";
@@ -17,6 +16,7 @@ import {
   HeaderCell,
   TableRow,
   BodyCell,
+  Flex,
 } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
@@ -43,10 +43,10 @@ export function NFTItem({ canister }: NFTItemProps) {
   return (
     <TableRow className={classes.wrapper}>
       <BodyCell>
-        <Grid container alignItems="center" gap="0 6px">
+        <Flex fullWidth gap="0 6px" wrap="nowrap">
           <Avatar src={canister?.image}>&nbsp;</Avatar>
-          <BodyCell>{canister.name}</BodyCell>
-        </Grid>
+          <BodyCell title={canister.name}>{canister.name}</BodyCell>
+        </Flex>
       </BodyCell>
       <BodyCell>{timestampFormat(canister.createTime)}</BodyCell>
       <BodyCell>{canister.cid}</BodyCell>

@@ -53,13 +53,13 @@ export function TokenDetail() {
     }
   }, [tokenAnalysis, infoToken]);
 
-  const circulating = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
-      return `${new BigNumber(
-        new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
-      ).multipliedBy(100)}%`;
-    }
-  }, [tokenAnalysis, tokenSupply, token]);
+  // const circulating = useMemo(() => {
+  //   if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
+  //     return `${new BigNumber(
+  //       new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
+  //     ).multipliedBy(100)}%`;
+  //   }
+  // }, [tokenAnalysis, tokenSupply, token]);
 
   const mediaLinks = useMemo(() => {
     if (!tokenListInfo) return [];
