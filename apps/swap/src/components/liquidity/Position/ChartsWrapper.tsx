@@ -72,7 +72,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
-        <Box sx={{ height: "366px", overflow: "hidden" }}>
+        <Box sx={{ height: "388px", overflow: "hidden" }}>
           {chartView === Charts.PriceRange ? (
             <LiquidityCharts position={position} time={chartTime} />
           ) : chartView === Charts.PositionValue ? (

@@ -2,26 +2,21 @@ import { useMemo, useEffect, useState } from "react";
 import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
-import { numberToString } from "@icpswap/utils";
-import type { Null, PoolMetadata, TickLiquidityInfo } from "@icpswap/types";
-import { getPool, getPool_update_call } from "hooks/swap/v3Calls";
+import { isNullArgs, nonNullArgs, numberToString } from "@icpswap/utils";
+import type { Null, PoolMetadata } from "@icpswap/types";
+import { getPool_update_call } from "hooks/swap/v3Calls";
 import { NETWORK, network } from "constants/index";
 import { useToken, getTokensFromInfos } from "hooks/useCurrency";
 import { getTokenInfo } from "hooks/token/calls";
-import { TokenInfo } from "types/token";
+import { TokenInfo, PoolState } from "types/index";
 
-export enum PoolState {
-  LOADING = "LOADING",
-  NOT_EXISTS = "NOT_EXISTS",
-  EXISTS = "EXISTS",
-  INVALID = "INVALID",
-  NOT_CHECK = "NOT_CHECK",
-}
+import { getMultiPoolsMetadata } from "./usePoolsMetadata";
+
+const POOL_METADATA_UPDATE_INTERVAL = 60000;
 
 type TypePoolsState = {
   id: string;
   metadata: PoolMetadata | undefined;
-  ticks: TickLiquidityInfo[];
   key: string;
   checked: boolean;
 };
@@ -38,52 +33,42 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 
-  const transformedPoolKeys = useMemo(() => {
-    return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
-      if (!currencyA || !currencyB || !feeAmount) return null;
+  const sortedPoolKeys: PoolKey[] = useMemo(() => {
+    return poolKeys.map(([token0, token1, fee]) => {
+      if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return [token0, token1, fee];
 
-      const tokenA = currencyA.wrapped;
-      const tokenB = currencyB.wrapped;
+      const __token0 = token0.sortsBefore(token1) ? token0 : token1;
+      const __token1 = __token0.equals(token0) ? token1 : token0;
 
-      if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null;
-
-      const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA];
-
-      return { token0: token0.address, token1: token1.address, fee: feeAmount } as TransformedKey;
+      return [__token0, __token1, fee];
     });
-  }, [poolKeys]);
+  }, [JSON.stringify(poolKeys)]);
 
   useEffect(() => {
     async function call() {
-      if (transformedPoolKeys && transformedPoolKeys.length) {
+      if (sortedPoolKeys && sortedPoolKeys.length > 0) {
         setLoading(true);
 
-        const result = await Promise.all<TypePoolsState | null>(
-          transformedPoolKeys.map(async (element) => {
-            if (!element) return null;
-
-            const pool = await getPool(element.token0, element.token1, element.fee);
-
-            if (!pool) return null;
-
-            const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
-
-            return {
-              key: transformedKeyToKey(element),
-              id: pool.canisterId.toString(),
-              metadata: poolMetadata,
-              ticks: [],
-              checked: !!withoutVerify,
-            };
-          }),
-        );
-
+        const poolsMetadata = await getMultiPoolsMetadata(sortedPoolKeys);
         const pools: { [id: string]: TypePoolsState } = {};
 
-        result.forEach((ele) => {
-          if (ele) {
-            pools[ele.key] = ele;
-          }
+        sortedPoolKeys.forEach((poolKey, index) => {
+          const [token0, token1, fee] = poolKey;
+
+          if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return;
+
+          const key = transformedKeyToKey({ token0: token0.address, token1: token1.address, fee });
+
+          const metadataResult = poolsMetadata[index];
+
+          if (isNullArgs(metadataResult)) return;
+
+          pools[key] = {
+            id: metadataResult.poolId,
+            metadata: metadataResult.metadata,
+            key,
+            checked: !!withoutVerify,
+          };
         });
 
         setPools(pools);
@@ -91,29 +76,34 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
         // Use update call to verify the pool.
         if (withoutVerify === false) {
-          transformedPoolKeys.map(async (element) => {
-            if (!element) return;
+          sortedPoolKeys.map(async (poolKey, index) => {
+            const [token0, token1, fee] = poolKey;
 
-            const pool = await getPool_update_call(element.token0, element.token1, element.fee);
+            if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return null;
+
+            const pool = await getPool_update_call(token0.address, token1.address, fee);
+
+            const key = transformedKeyToKey({ token0: token0.address, token1: token1.address, fee });
 
             if (!pool) {
               setPools((prevState) => ({
                 ...prevState,
-                [transformedKeyToKey(element)]: null,
+                [key]: null,
               }));
             } else {
-              const poolMetadata = await getSwapPoolMetadata(pool.canisterId.toString());
+              const metadataResult = poolsMetadata[index];
 
-              setPools((prevState) => ({
-                ...prevState,
-                [transformedKeyToKey(element)]: {
-                  key: transformedKeyToKey(element),
-                  id: pool.canisterId.toString(),
-                  metadata: poolMetadata,
-                  ticks: [],
-                  checked: true,
-                },
-              }));
+              if (nonNullArgs(metadataResult)) {
+                setPools((prevState) => ({
+                  ...prevState,
+                  [key]: {
+                    key,
+                    id: pool.canisterId.toString(),
+                    metadata: metadataResult.metadata,
+                    checked: true,
+                  },
+                }));
+              }
             }
           });
         }
@@ -121,29 +111,83 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     }
 
     call();
-  }, [JSON.stringify(transformedPoolKeys), withoutVerify]);
+  }, [JSON.stringify(sortedPoolKeys), withoutVerify]);
+
+  // Interval update pool's metadata
+  useEffect(() => {
+    let timer: number | null = null;
+
+    async function call() {
+      if (pools) {
+        Object.values(pools).forEach(async (poolResult) => {
+          if (poolResult) {
+            const { id, key, metadata, checked } = poolResult;
+
+            if (!metadata || !pools[key]) return;
+
+            getSwapPoolMetadata(id).then((result) => {
+              if (result) {
+                if (result.liquidity !== metadata.liquidity || result.sqrtPriceX96 !== metadata.sqrtPriceX96) {
+                  setPools((prevState) => ({
+                    ...prevState,
+                    [key]: {
+                      key,
+                      id,
+                      metadata: result,
+                      checked,
+                    },
+                  }));
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+
+    timer = setInterval(() => call(), POOL_METADATA_UPDATE_INTERVAL);
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+  }, [JSON.stringify(pools)]);
 
   return useMemo(() => {
-    return transformedPoolKeys.map((transformedKey, index) => {
-      if (!transformedKey) return [PoolState.INVALID, null];
+    return sortedPoolKeys.map((poolKey, index) => {
+      const [token0, token1, fee] = poolKey;
+
+      if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return [PoolState.INVALID, null];
+
       if (loading) return [PoolState.LOADING, null];
 
-      const key = transformedKeyToKey(transformedKey);
+      const key = transformedKeyToKey({ token0: token0.address, token1: token1.address, fee });
+
       const result: TypePoolsState | null | undefined = pools[key];
 
       if (!result) return [PoolState.NOT_EXISTS, null];
 
       const { metadata, id, checked } = result;
 
-      if (!metadata?.token0 || !metadata?.token1 || !metadata?.fee || !id) return [PoolState.NOT_EXISTS, null];
+      if (
+        isNullArgs(metadata) ||
+        isNullArgs(metadata.token0) ||
+        isNullArgs(metadata.token1) ||
+        isNullArgs(metadata.fee) ||
+        isNullArgs(id)
+      )
+        return [PoolState.NOT_EXISTS, null];
 
       try {
         const { fee, sqrtPriceX96, liquidity, tick } = metadata;
+
         const [token0, token1] = poolKeys[index];
 
-        if (!token0 || !token1) return [PoolState.NOT_EXISTS, null];
+        if (isNullArgs(token0) || isNullArgs(token1)) return [PoolState.NOT_EXISTS, null];
 
-        // Renew token that standard from the pool metadata
+        // Renew token standard from the pool metadata
         const __token0 = new Token({
           address: token0.address,
           decimals: token0.decimals,
@@ -181,7 +225,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         return [PoolState.NOT_EXISTS, null];
       }
     });
-  }, [JSON.stringify(pools), loading, poolKeys, JSON.stringify(transformedPoolKeys)]);
+  }, [JSON.stringify(pools), loading, , JSON.stringify(sortedPoolKeys)]);
 }
 
 export function usePool(
@@ -388,3 +432,5 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
     return { Pools, tokens };
   }, [pools, loading, tokens, canisterIds]);
 }
+
+export { PoolState } from "types/swap";
