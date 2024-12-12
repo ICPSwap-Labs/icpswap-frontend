@@ -114,7 +114,7 @@ export default function NFTCanisterCreate() {
         if (filePath) await setCanisterLogoInController(data, filePath);
       }
 
-      history.push("/console/nft/canister/list");
+      history.push("/info-tools/nft/canister/list");
     } else {
       openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
     }
@@ -194,7 +194,7 @@ export default function NFTCanisterCreate() {
       <Breadcrumbs
         prevLabel={<Trans>NFT Canister List</Trans>}
         currentLabel={<Trans>Create an NFT Canister</Trans>}
-        prevLink="/console/nft/canister/list"
+        prevLink="/info-tools/nft/canister/list"
       />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
