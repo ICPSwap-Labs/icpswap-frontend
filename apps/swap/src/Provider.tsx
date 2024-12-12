@@ -23,7 +23,7 @@ export function AppWithProvider() {
   return (
     <LanguageProvider>
       <IdentityKitProvider
-        signers={[NFIDW]}
+        signers={[NFIDW, InternetIdentity]}
         signerClientOptions={{
           maxTimeToLive: MAX_IDENTITY_KIT_TIME_LIVE,
           targets: [],
