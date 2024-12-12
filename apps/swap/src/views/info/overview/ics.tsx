@@ -148,7 +148,7 @@ export function Ics() {
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Holds</Typography>
+          <Typography fontSize="16px">Holders</Typography>
           <Typography fontSize="28px" fontWeight={500} color="text.primary">
             {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
           </Typography>

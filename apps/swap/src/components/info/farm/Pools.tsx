@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Grid, Box, Link, makeStyles } from "components/Mui";
-import { parseTokenAmount, pageArgsFormat, explorerLink } from "@icpswap/utils";
+import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import { useTokenInfo } from "hooks/token/index";
@@ -53,18 +53,8 @@ function PoolItem({ farmId }: PoolItemProps) {
     </Box>
   ) : (
     <TableRow className={classes.wrapper}>
-      <BodyCell
-        sx={{
-          overflow: "hidden",
-          " a": {
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          },
-        }}
-        title={farmId}
-      >
-        <Link href={explorerLink(farmId)}>{farmId}</Link>
+      <BodyCell title={farmId}>
+        <Link href={explorerLink(farmId)}>{shorten(farmId, 6)}</Link>
       </BodyCell>
       <BodyCell
         sx={{
