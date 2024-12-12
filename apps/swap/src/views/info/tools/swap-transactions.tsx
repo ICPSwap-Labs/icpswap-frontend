@@ -131,9 +131,25 @@ export default function SwapTransactions() {
                 placeholder="Search the principal for swap transactions"
                 onPrincipalChange={handleAddressChange}
               />
-              <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-                <SelectPair value={pair} onPairChange={handlePairChange} search />
-              </Box>
+              <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
+                <Typography>
+                  <Trans>Select a Pair:</Trans>
+                </Typography>
+
+                <SelectPair
+                  value={pair}
+                  onPairChange={handlePairChange}
+                  search
+                  showClean={false}
+                  showBackground={false}
+                  panelPadding="0px"
+                  defaultPanel={
+                    <Typography color="text.primary">
+                      <Trans>All Pair</Trans>
+                    </Typography>
+                  }
+                />
+              </Flex>
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
             </Flex>
 

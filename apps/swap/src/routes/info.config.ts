@@ -26,6 +26,7 @@ const ToolsValuation = Loadable(lazy(() => import("../views/info/tools/valuation
 const ToolsSwapTransactions = Loadable(lazy(() => import("../views/info/tools/swap-transactions")));
 const ToolsPositions = Loadable(lazy(() => import("../views/info/tools/positions")));
 const ToolsUserBalances = Loadable(lazy(() => import("../views/info/tools/user-balances")));
+const ToolsLockedPositions = Loadable(lazy(() => import("../views/info/tools/locked-positions")));
 
 export const infoRoutesConfigs = {
   INFO_OVERVIEW: "/info-overview",
@@ -53,6 +54,7 @@ export const infoRoutesConfigs = {
   INFO_TOOLS_SWAP_TRANSACTIONS: "/info-tools/swap-transactions",
   INFO_TOOLS_POSITIONS: "/info-tools/positions",
   INFO_TOOLS_USER_BALANCES: "/info-tools/user-balances",
+  INFO_TOOLS_LOCKED_POSITIONS: "/info-tools/locked-positions",
 };
 
 export const infoRoutes: { [path: string]: (props: any) => JSX.Element | any } = {
@@ -81,4 +83,5 @@ export const infoRoutes: { [path: string]: (props: any) => JSX.Element | any } =
   [infoRoutesConfigs.INFO_TOOLS_SWAP_TRANSACTIONS]: ToolsSwapTransactions,
   [infoRoutesConfigs.INFO_TOOLS_POSITIONS]: ToolsPositions,
   [infoRoutesConfigs.INFO_TOOLS_USER_BALANCES]: ToolsUserBalances,
+  [infoRoutesConfigs.INFO_TOOLS_LOCKED_POSITIONS]: ToolsLockedPositions,
 };

@@ -18,6 +18,7 @@ const tools = [
   },
   { label: t`Wallet Valuation`, image: "/images/info/tools/WalletValuation.svg", path: "/info-tools/valuation" },
   // { label: t`Position Transfer`, image: "/images/info/tools/PositionTransfer.svg", path: "/info-tools/burn" },
+  { label: t`Locked Positions`, image: "/images/info/tools/LockedPositions.svg", path: "/info-tools/locked-positions" },
 ];
 
 export default function Tools() {

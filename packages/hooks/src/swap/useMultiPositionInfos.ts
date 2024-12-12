@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { type UserPositionInfoWithId, type UserPositionInfo } from "@icpswap/types";
+import { type UserPositionInfoWithId, type UserPositionInfo, Null } from "@icpswap/types";
 
 import { getSwapUserPositions, getSwapPosition } from "./calls";
 
-export function useMultiPositionInfos(
-  poolId: string | undefined,
-  principals: (string | undefined)[] | undefined,
-): {
+export interface useMultiPositionInfosResults {
   loading: boolean;
   result: Array<UserPositionInfoWithId[] | undefined> | null;
-} {
+}
+
+export function useMultiPositionInfos(
+  poolId: string | Null,
+  principals: (string | undefined)[] | Null,
+): useMultiPositionInfosResults {
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<null | Array<UserPositionInfoWithId[]>>(null);
 
@@ -30,6 +32,10 @@ export function useMultiPositionInfos(
       }
 
       if (principals && principals.length === 0 && poolId) {
+        setLoading(false);
+      }
+
+      if (!poolId) {
         setLoading(false);
       }
     }

@@ -10,3 +10,4 @@ export * from "./usePoolTVLValue";
 export * from "./usePositionsValue";
 export * from "./usePositionCharts";
 export * from "./useTokenAnalysis";
+export * from "./useMultiPositionInfos";
