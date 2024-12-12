@@ -17,4 +17,5 @@ export * from "./PositionPriceRange";
 export * from "./PositionRangeState";
 export * from "./TransferPosition";
 export * from "./PositionTable";
+export * from "./PositionTableUI";
 export * from "./PositionRow";

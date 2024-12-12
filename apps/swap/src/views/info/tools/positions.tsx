@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { BreadcrumbsV1 } from "@icpswap/ui";
+import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
@@ -50,9 +50,27 @@ export default function Positions() {
               placeholder="Search the principal for positions"
               onPrincipalChange={handleAddressChange}
             />
-            <Box sx={{ width: "fit-content", minWidth: "214px" }}>
-              <SelectPair value={pair} onPairChange={handlePairChange} search showClean={false} />
-            </Box>
+
+            <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
+              <Typography>
+                <Trans>Select a Pair:</Trans>
+              </Typography>
+
+              <SelectPair
+                value={pair}
+                onPairChange={handlePairChange}
+                search
+                showClean={false}
+                showBackground={false}
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>No Pair</Trans>
+                  </Typography>
+                }
+              />
+            </Flex>
+
             {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
           </Box>
         }

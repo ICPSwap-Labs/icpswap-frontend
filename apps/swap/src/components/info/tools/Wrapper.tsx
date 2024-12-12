@@ -27,15 +27,17 @@ export function ToolsWrapper({ title, action, children }: ToolsWrapperProps) {
         </Typography>
       ) : null}
 
-      <Box
-        sx={{
-          padding: "20px 24px",
-          borderBottom: `1px solid ${theme.palette.background.level1}`,
-          "@media(max-width:640px)": { padding: "16px" },
-        }}
-      >
-        {action}
-      </Box>
+      {action ? (
+        <Box
+          sx={{
+            padding: "20px 24px",
+            borderBottom: `1px solid ${theme.palette.background.level1}`,
+            "@media(max-width:640px)": { padding: "16px" },
+          }}
+        >
+          {action}
+        </Box>
+      ) : null}
 
       {children}
     </MainCard>
