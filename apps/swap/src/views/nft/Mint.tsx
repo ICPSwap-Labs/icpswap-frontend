@@ -177,7 +177,7 @@ export default function NFTMint() {
 
   return (
     <CardContent1120>
-      <Breadcrumbs prevLink="/console" prevLabel={<Trans>Console</Trans>} currentLabel={<Trans>Mint NFT</Trans>} />
+      <Breadcrumbs prevLink="/info-tools" prevLabel={<Trans>Tools</Trans>} currentLabel={<Trans>Mint NFT</Trans>} />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
         <Grid container justifyContent="center">
@@ -215,7 +215,7 @@ export default function NFTMint() {
                         }}
                       >
                         <NoData />
-                        <TextButton to="/console/nft/canister/create">
+                        <TextButton to="/info-tools/nft/canister/create">
                           <Trans>Create an NFT canister</Trans>
                         </TextButton>
                       </Grid>

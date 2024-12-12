@@ -49,7 +49,7 @@ export function Title() {
   const matchesMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleCreateCanister = () => {
-    history.push("/console/nft/canister/create");
+    history.push("/info-tools/nft/canister/create");
   };
 
   return (
@@ -138,7 +138,7 @@ export default function NFTCanisterList() {
   };
 
   const handleLoadMintNFT = (canisterInfo: NFTControllerInfo) => {
-    history.push(`/console/nft/mint?canister=${canisterInfo.cid}`);
+    history.push(`/info-tools/nft/mint?canister=${canisterInfo.cid}`);
   };
 
   return (
