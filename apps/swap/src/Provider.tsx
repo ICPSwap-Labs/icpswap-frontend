@@ -23,10 +23,11 @@ export function AppWithProvider() {
   return (
     <LanguageProvider>
       <IdentityKitProvider
-        signers={[NFIDW, Plug, InternetIdentity]}
+        signers={[NFIDW]}
         signerClientOptions={{
           maxTimeToLive: MAX_IDENTITY_KIT_TIME_LIVE,
-          targets: delegationIds ?? [],
+          targets: [],
+          // targets: delegationIds ?? [],
         }}
       >
         <App />

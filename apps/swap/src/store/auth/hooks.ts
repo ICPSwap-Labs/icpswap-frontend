@@ -15,7 +15,7 @@ import { updateLockStatus as _updateLockStatus } from "../session/actions";
 import { NF_IDConnector } from "./NF_IDConnector";
 
 // const IdentityKitConnector = [Connector.NFID, Connector.IC, Connector.PLUG];
-const IdentityKitConnector = [Connector.NFID, Connector.IC];
+const IdentityKitConnector = [Connector.NFID];
 const IdentityKitId = {
   [Connector.IC]: InternetIdentity.id,
   [Connector.NFID]: NFIDW.id,
