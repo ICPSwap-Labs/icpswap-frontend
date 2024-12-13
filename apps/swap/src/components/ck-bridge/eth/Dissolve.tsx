@@ -10,9 +10,7 @@ import { InputWrapper, EthFee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useWeb3React } from "@web3-react/core";
-import { useActiveChain } from "hooks/web3/index";
 import { isAddress } from "utils/web3/index";
-import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
@@ -30,7 +28,6 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   const { account } = useWeb3React();
 
   const principal = useAccountPrincipal();
-  const chainId = useActiveChain();
 
   useFetchUserTxStates();
 
@@ -57,9 +54,8 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   }, [account, setAddress]);
 
   const dissolve_error = useMemo(() => {
-    if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount) return t`Enter the amount`;
     if (!address) return t`Enter the address`;
+    if (!amount) return t`Enter the amount`;
     if (isAddress(address) === false) return t`Invalid ethereum address`;
     if (formatTokenAmount(amount, ckETH.decimals).isLessThan(MIN_WITHDRAW_AMOUNT))
       return `Min amount is ${toSignificantWithGroupSeparator(
@@ -74,7 +70,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       return t`Insufficient Balance`;
 
     return undefined;
-  }, [amount, token, tokenBalance, chain, chainId, address]);
+  }, [amount, token, tokenBalance, address]);
 
   const handleMax = useCallback(() => {
     if (!token || !tokenBalance) return;

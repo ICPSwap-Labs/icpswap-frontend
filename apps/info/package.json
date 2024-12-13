@@ -3,7 +3,6 @@
   "version": "3.1.8",
   "private": true,
   "scripts": {
-    "dev": "pnpm run i18n:extract && pnpm run i18n:compile && ./scripts/env.sh ic && PORT=3001 craco start",
     "dev:local": "pnpm run i18n:extract && pnpm run i18n:compile && ./scripts/env.sh local && PORT=3001 craco start",
     "build": "CI=false && pnpm run i18n:extract && pnpm run i18n:compile  && ./scripts/env.sh ic && craco build",
     "deploy:release": "./scripts/env.sh ic && ./scripts/deploy-release.sh",
