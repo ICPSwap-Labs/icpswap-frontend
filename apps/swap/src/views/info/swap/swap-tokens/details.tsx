@@ -328,17 +328,17 @@ export default function TokenDetails() {
                 borderBottomRightRadius: "16px",
               }}
             >
-              *Token price charts powered by{" "}
+              Token price charts powered by TradingView, the charting platform and social network that provides users
+              with valuable information on market events through tools such as the{" "}
               <TextButton
-                link="https://www.tradingview.com/chart"
+                link="https://www.tradingview.com/economic-calendar"
                 sx={{
                   fontSize: "12px",
                 }}
               >
-                TradingView
+                economic calendar
               </TextButton>
-              , the charting platform and social network that provides users with valuable information on market events
-              through tools such as the economic calendar, stock analyser and others
+              , stock analyser and others
             </Typography>
           ) : null}
         </Box>
