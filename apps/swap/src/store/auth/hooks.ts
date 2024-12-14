@@ -176,7 +176,7 @@ export function useInitialConnect() {
 
       const isConnected = await connectToConnector(connectorType);
 
-      if (connectorType === Connector.ME) {
+      if (isMeWebview()) {
         updateAuth({ walletType: Connector.ME });
       }
 
