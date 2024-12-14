@@ -113,7 +113,7 @@ export default function LockedPositions() {
                 panelPadding="0px"
                 defaultPanel={
                   <Typography color="text.primary">
-                    <Trans>No Pair</Trans>
+                    <Trans>Please select</Trans>
                   </Typography>
                 }
               />
