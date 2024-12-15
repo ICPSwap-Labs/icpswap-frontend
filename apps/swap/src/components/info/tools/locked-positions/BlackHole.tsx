@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { PositionTableUI } from "components/liquidity/index";
-import { useLiquidityLockIds, useMultiPositionInfos } from "@icpswap/hooks";
+import { useLiquidityLockIds, useMultiPositionInfos, useExtraBlackHolePositionInfos } from "@icpswap/hooks";
 import { PositionDetails } from "types/swap";
 
 interface BlackHolePositionsProps {
@@ -27,15 +27,20 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
   }, [liquidityLocks]);
 
   const { result: __positions, loading } = useMultiPositionInfos(poolId, blackHoleIds);
+  const extraPositions = useExtraBlackHolePositionInfos(poolId);
 
   const positions = useMemo(() => {
     if (isNullArgs(__positions)) return null;
 
+    const __extraPositions =
+      extraPositions?.filter((e) => !!e).map((ele) => ({ ...ele, poolId }) as PositionDetails) ?? [];
+
     return __positions
       .filter((e) => !!e)
       .flat()
-      .map((ele) => ({ ...ele, poolId }) as PositionDetails);
-  }, [__positions]);
+      .map((ele) => ({ ...ele, poolId }) as PositionDetails)
+      .concat(__extraPositions);
+  }, [__positions, extraPositions]);
 
   return (
     <PositionTableUI
