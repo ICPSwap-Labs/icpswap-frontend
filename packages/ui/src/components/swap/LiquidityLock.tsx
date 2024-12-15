@@ -53,8 +53,13 @@ export function LiquidityLock({
     if (name === FREE_LIQUIDITY_NAME) {
       return `${INFO_URL}/info-tools/positions?pair=${poolId}`;
     }
+
     if (name === "Black Hole") {
-      return `${INFO_URL}/info-tools/positions?pair=${poolId}&principal=aaaaa-aa`;
+      return `${INFO_URL}/info-tools/locked-positions?pair=${poolId}&panel=BlockHole`;
+    }
+
+    if (name === "Sneedlocked") {
+      return `${INFO_URL}/info-tools/locked-positions?pair=${poolId}&panel=Sneed`;
     }
 
     return `${INFO_URL}/info-tools/positions?pair=${poolId}&principal=${principalId}`;
