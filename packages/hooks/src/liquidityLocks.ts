@@ -57,6 +57,22 @@ export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] |
   return useMemo(() => multiPositions, [multiPositions]);
 }
 
+export function useExtraBlackHolePositionInfos(poolId: string | Null) {
+  const positionIds: bigint[] | undefined = useMemo(() => {
+    if (!poolId) return undefined;
+    if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
+    return undefined;
+  }, [poolId]);
+
+  const { result: positions } = useMultiPositionInfosByIds(poolId, positionIds);
+
+  return useMemo(() => {
+    if (!positions) return null;
+
+    return positions.map((e, index) => (e ? ({ ...e, id: positionIds[index] } as UserPositionInfoWithId) : null));
+  }, [positions]);
+}
+
 export function useAllLiquidityLocks(
   tokenIds: string[] | undefined,
   poolId: string | undefined,
