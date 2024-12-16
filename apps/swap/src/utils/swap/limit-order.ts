@@ -1,4 +1,13 @@
-import { Pool, Position, Token, TICK_SPACINGS, priceToClosestTick, nearestUsableTick, Price } from "@icpswap/swap-sdk";
+import {
+  Pool,
+  Position,
+  Token,
+  TICK_SPACINGS,
+  priceToClosestTick,
+  nearestUsableTick,
+  Price,
+  availableTick,
+} from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { BigNumber, toSignificant } from "@icpswap/utils";
 
@@ -31,7 +40,7 @@ export function priceToClosestUseableTick(price: Price<Token, Token>, pool: Pool
     }
   }
 
-  return useableTick;
+  return availableTick(useableTick);
 }
 
 export function inputValueFormat(inputValue: string | Null) {

@@ -26,6 +26,7 @@ export interface SwapLimitPriceProps {
   currentPrice: string | Null;
   minUseableTick: number | Null;
   isInputTokenSorted: boolean | Null;
+  atLimitedTick: boolean;
 }
 
 export const SwapLimitPrice = forwardRef(
@@ -39,6 +40,7 @@ export const SwapLimitPrice = forwardRef(
       orderPrice,
       minUseableTick,
       isInputTokenSorted,
+      atLimitedTick,
     }: SwapLimitPriceProps,
     ref,
   ) => {
@@ -177,7 +179,8 @@ export const SwapLimitPrice = forwardRef(
         isNullArgs(inputToken) ||
         isNullArgs(outputToken) ||
         isNullArgs(minUseableTick) ||
-        isNullArgs(isInputTokenSorted)
+        isNullArgs(isInputTokenSorted) ||
+        atLimitedTick === true
       )
         return;
 
@@ -191,11 +194,11 @@ export const SwapLimitPrice = forwardRef(
           : minPrice.toFixed(outputToken.decimals),
         inverted,
       );
-    }, [inverted, inputToken, outputToken, selectedPool, minUseableTick]);
+    }, [inverted, inputToken, outputToken, selectedPool, minUseableTick, atLimitedTick]);
 
     const handlePriceChange = useCallback(
       (val: number) => {
-        if (isNullArgs(currentPrice)) return;
+        if (isNullArgs(currentPrice) || atLimitedTick === true) return;
 
         const invertedPrice = new BigNumber(1).dividedBy(currentPrice);
         const invertedNewPrice = inverted
@@ -204,7 +207,7 @@ export const SwapLimitPrice = forwardRef(
 
         handleInputPrice(invertedNewPrice, inverted);
       },
-      [inverted, currentPrice],
+      [inverted, currentPrice, atLimitedTick],
     );
 
     const handleSetDefaultPrice = useCallback(() => {

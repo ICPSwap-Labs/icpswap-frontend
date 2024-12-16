@@ -25,7 +25,7 @@ import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick } from "@icpswap/swap-sdk";
+import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
 
 import {
   selectCurrency,
@@ -159,24 +159,72 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return pool.token0.equals(inputToken);
   }, [pool, inputToken]);
 
+  const atLimitedTick = useMemo(() => {
+    if (isNullArgs(pool)) return false;
+
+    const tickCurrent = pool.tickCurrent;
+
+    return tickCurrent <= TickMath.MIN_TICK || tickCurrent >= TickMath.MAX_TICK;
+  }, [pool]);
+
   // The position tickUpper or tickLower, boundary tick
-  const minUseableTick = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(isInputTokenSorted)) return null;
+  const { minUseableTick, error: tickError } = useMemo(() => {
+    if (isNullArgs(pool) || isNullArgs(isInputTokenSorted)) return { minUseableTick: null, error: false };
 
     const tickCurrent = pool.tickCurrent;
 
     if (isInputTokenSorted) {
       const tickUpper = tickCurrent + TICK_SPACINGS[pool.fee] * 2;
+
+      if (tickUpper < TickMath.MIN_TICK || tickUpper > TickMath.MAX_TICK) {
+        return {
+          minUseableTick: null,
+          error: true,
+        };
+      }
+
       const useableTick = nearestUsableTick(tickUpper, TICK_SPACINGS[pool.fee]);
 
-      if (useableTick - TICK_SPACINGS[pool.fee] * 2 <= tickCurrent) return useableTick + TICK_SPACINGS[pool.fee];
-      return useableTick;
+      if (useableTick - TICK_SPACINGS[pool.fee] * 2 <= tickCurrent) {
+        const __tick = useableTick + TICK_SPACINGS[pool.fee];
+
+        if (__tick < TickMath.MIN_TICK || __tick > TickMath.MAX_TICK) {
+          return {
+            minUseableTick: null,
+            error: true,
+          };
+        }
+
+        return { minUseableTick: __tick, error: false };
+      }
+
+      return { minUseableTick: useableTick, error: false };
     }
 
     const tickLower = tickCurrent - TICK_SPACINGS[pool.fee] * 2;
-    const useableTick = nearestUsableTick(tickLower, TICK_SPACINGS[pool.fee]);
-    if (useableTick + TICK_SPACINGS[pool.fee] * 2 >= tickCurrent) return useableTick - TICK_SPACINGS[pool.fee];
-    return useableTick;
+
+    if (tickLower < TickMath.MIN_TICK || tickLower > TickMath.MAX_TICK) {
+      return {
+        minUseableTick: null,
+        error: true,
+      };
+    }
+
+    const useableTick = nearestUsableTick(availableTick(tickLower), TICK_SPACINGS[pool.fee]);
+    if (useableTick + TICK_SPACINGS[pool.fee] * 2 >= tickCurrent) {
+      const __tick = useableTick - TICK_SPACINGS[pool.fee];
+
+      if (__tick < TickMath.MIN_TICK || __tick > TickMath.MAX_TICK) {
+        return {
+          minUseableTick: null,
+          error: true,
+        };
+      }
+
+      return { minUseableTick: __tick, error: false };
+    }
+
+    return { minUseableTick: useableTick, error: false };
   }, [pool, isInputTokenSorted]);
 
   // The order price tick should be greater than or equal to this tick
@@ -274,6 +322,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken) return t`Select a token`;
     if (!parsedAmount) return t`Enter an amount`;
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (tickError) return t`Invalid tick for this pool`;
 
     const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
 
@@ -315,6 +364,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minUseableTick,
     isInputTokenSorted,
     minSettableTick,
+    tickError,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
@@ -363,6 +413,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     isInputTokenSorted,
     outputAmount,
     minSettableTick,
+    atLimitedTick,
   };
 }
 

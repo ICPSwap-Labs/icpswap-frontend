@@ -110,6 +110,7 @@ export const PlaceOrder = forwardRef(
       outputAmount,
       pool,
       minSettableTick,
+      atLimitedTick,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     const available = useLimitSupported({ canisterId: pool?.id });
@@ -362,6 +363,7 @@ export const PlaceOrder = forwardRef(
           currentPrice={currentPrice}
           minUseableTick={minUseableTick}
           isInputTokenSorted={isInputTokenSorted}
+          atLimitedTick={atLimitedTick}
         />
 
         <CurrentPricePanel inputToken={inputToken} outputToken={outputToken} currentPrice={currentPrice} />
