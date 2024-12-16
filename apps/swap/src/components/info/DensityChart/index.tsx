@@ -241,7 +241,6 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
             justifyContent: "center",
             width: "100%",
             height: "100%",
-            background: theme.palette.background.level2,
             zIndex: 100,
           }}
         >
