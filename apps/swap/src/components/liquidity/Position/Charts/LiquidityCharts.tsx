@@ -21,13 +21,19 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   const pool = position.pool;
   const { token0, token1, fee } = pool;
 
-  const isSorted = token0 && token1 && token0.sortsBefore(token1);
+  const { leftPrice, rightPrice, currentPrice } = useMemo(() => {
+    const leftPrice = !inverted ? position.token0PriceLower : position.token0PriceUpper.invert();
+    const rightPrice = !inverted ? position.token0PriceUpper : position.token0PriceLower.invert();
+    const currentPrice = !inverted
+      ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
+      : position.pool.token1Price.toFixed(position.pool.token1.decimals);
 
-  const leftPrice = isSorted ? position.token0PriceLower : position.token0PriceUpper.invert();
-  const rightPrice = isSorted ? position.token0PriceUpper : position.token0PriceLower.invert();
-  const currentPrice = isSorted
-    ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
-    : position.pool.token1Price.toFixed(position.pool.token1.decimals);
+    return {
+      leftPrice,
+      rightPrice,
+      currentPrice,
+    };
+  }, [inverted, position]);
 
   const { result: periodPriceRange } = usePoolPricePeriodRange(pool.id);
 
@@ -47,7 +53,7 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     [tickSpaceLimits, position],
   );
 
-  const { poolPriceLower, poolPriceUpper, sortedPoolPriceLower, sortedPoolPriceUpper } = useMemo(() => {
+  const { poolPriceLower, poolPriceUpper } = useMemo(() => {
     if (isNullArgs(periodPriceRange)) return {};
 
     let poolPriceLower: number | string | Null = null;
@@ -84,21 +90,28 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     };
   }, [periodPriceRange, inverted, time]);
 
-  const handleInverted = useCallback((inverted: boolean) => {
-    setInverted(inverted);
-  }, []);
+  const handleInverted = useCallback(
+    (inverted: boolean) => {
+      setInverted(inverted);
+    },
+    [setInverted],
+  );
+
+  const [liquidityChartTokenA, liquidityChartTokenB] = useMemo(() => {
+    return inverted ? [token1, token0] : [token0, token1];
+  }, [token0, token1, inverted]);
 
   return (
     <>
       <PriceRangeChart
         priceLower={leftPrice}
         priceUpper={rightPrice}
-        currencyA={token0}
-        currencyB={token1}
+        currencyA={liquidityChartTokenA}
+        currencyB={liquidityChartTokenB}
         price={currentPrice}
         ticksAtLimit={ticksAtLimit}
-        poolPriceLower={sortedPoolPriceLower}
-        poolPriceUpper={sortedPoolPriceUpper}
+        poolPriceLower={poolPriceLower}
+        poolPriceUpper={poolPriceUpper}
       />
 
       <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>

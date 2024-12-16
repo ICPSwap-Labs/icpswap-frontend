@@ -92,7 +92,7 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
             <Typography color="text.primary">{new BigNumber(token1Amount).toFormat()}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
-            </Typography>xx
+            </Typography>
           </Flex>
         </Flex>
       </Flex>
