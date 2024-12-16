@@ -75,7 +75,7 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{token0Amount}</Typography>
+            <Typography color="text.primary">{new BigNumber(token0Amount).toFormat()}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token0USDValue) ? formatDollarAmount(token0USDValue) : "--"}
             </Typography>
@@ -89,10 +89,10 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{token1Amount}</Typography>
+            <Typography color="text.primary">{new BigNumber(token1Amount).toFormat()}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
-            </Typography>
+            </Typography>xx
           </Flex>
         </Flex>
       </Flex>
