@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "24px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "repeat(2, 1fr) repeat(3, 180px)",
+      gridTemplateColumns: "repeat(2, 1fr) repeat(4, 174px)",
       "@media screen and (max-width: 780px)": {
         padding: "16px",
       },
@@ -63,6 +63,10 @@ export function PositionTransactionsTableUI({
 
             <HeaderCell align="right">
               <Trans>To</Trans>
+            </HeaderCell>
+
+            <HeaderCell align="right">
+              <Trans>Operation</Trans>
             </HeaderCell>
           </Header>
 

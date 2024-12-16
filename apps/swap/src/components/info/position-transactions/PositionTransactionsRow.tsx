@@ -1,11 +1,12 @@
 import { useTheme } from "components/Mui";
 import { PositionTransaction } from "@icpswap/types";
-import { TableRow, BodyCell, Flex, Link } from "@icpswap/ui";
-import { TokenImage } from "components/index";
+import { TableRow, BodyCell, Flex, TextButton } from "@icpswap/ui";
+import { Copy, TokenImage } from "components/index";
 import { useToken } from "hooks/index";
 import dayjs from "dayjs";
 import { shorten } from "@icpswap/utils";
 import { useMemo } from "react";
+import { Trans } from "@lingui/macro";
 
 export interface PositionTransactionsRowProps {
   transaction: PositionTransaction;
@@ -41,11 +42,27 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
 
         <BodyCell sx={{ justifyContent: "flex-end" }}>{positionId ? positionId.toString() : "--"}</BodyCell>
 
-        <BodyCell sx={{ color: "text.theme-primary", justifyContent: "flex-end" }}>
-          {shorten(transaction.from)}
+        <BodyCell sx={{ justifyContent: "flex-end" }}>
+          <Copy content={transaction.from}>{shorten(transaction.from)}</Copy>
         </BodyCell>
 
-        <BodyCell sx={{ color: "text.theme-primary", justifyContent: "flex-end" }}>{shorten(transaction.to)}</BodyCell>
+        <BodyCell sx={{ justifyContent: "flex-end" }}>
+          <Copy content={transaction.to}>{shorten(transaction.to)}</Copy>
+        </BodyCell>
+
+        <BodyCell sx={{ justifyContent: "flex-end" }}>
+          <TextButton
+            to={`/liquidity/position/${positionId}/${transaction.poolId}`}
+            sx={{
+              fontSize: "16px",
+              "@media(max-width: 640px)": {
+                fontSize: "14px",
+              },
+            }}
+          >
+            <Trans>Details</Trans>
+          </TextButton>
+        </BodyCell>
       </TableRow>
     </>
   );

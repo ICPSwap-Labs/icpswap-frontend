@@ -5,8 +5,8 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
-import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
-import { Null } from "@icpswap/types";
+import { ToolsWrapper } from "components/info/tools/index";
+// import { Null } from "@icpswap/types";
 import { PositionTransactionsTable } from "components/info/index";
 import { infoRoutesConfigs } from "routes/info.config";
 
@@ -20,10 +20,10 @@ export default function PositionTransactions() {
     history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
   };
 
-  const handleAddressChange = (principal: string | Null) => {
-    const search = locationSearchReplace(location.search, "principal", principal);
-    history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
-  };
+  // const handleAddressChange = (principal: string | Null) => {
+  //   const search = locationSearchReplace(location.search, "principal", principal);
+  //   history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
+  // };
 
   return (
     <InfoWrapper size="small">
@@ -47,11 +47,6 @@ export default function PositionTransactions() {
               },
             }}
           >
-            <PrincipalSearcher
-              placeholder="Search the principal for transactions"
-              onPrincipalChange={handleAddressChange}
-            />
-
             <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
               <Typography>
                 <Trans>Select a Pair:</Trans>
@@ -61,7 +56,6 @@ export default function PositionTransactions() {
                 value={pair}
                 onPairChange={handlePairChange}
                 search
-                showClean={false}
                 showBackground={false}
                 panelPadding="0px"
                 defaultPanel={
