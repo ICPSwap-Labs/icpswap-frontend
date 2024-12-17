@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 
 import { Typography, Box } from "./Mui";
+import { Link } from "./Link";
 
 export interface ALinkProps {
   children: ReactNode;
@@ -118,12 +119,9 @@ export function TextButton({
     <Typography
       color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
       sx={{
-        display: "flex",
         cursor: "pointer",
         userSelect: "none",
         textDecoration,
-        alignItems: "center",
-        gap: "0 5px",
         "&:hover": {
           textDecoration: "underline",
         },
@@ -141,7 +139,66 @@ export function TextButton({
     >
       {children}
 
-      {arrow && <ArrowIcon />}
+      {arrow && (
+        <Box component="span" sx={{ margin: "0 0 0 5px" }}>
+          <ArrowIcon />
+        </Box>
+      )}
     </Typography>
+  );
+}
+
+export interface TextButtonV1Props {
+  children: ReactNode;
+  disabled?: boolean;
+  link?: string;
+  to?: string;
+  sx?: any;
+  arrow?: boolean;
+  color?: "primary" | "white" | "secondary";
+  textDecoration?: "underline" | "none";
+}
+
+export function TextButtonV1({
+  children,
+  disabled,
+  link,
+  to,
+  sx,
+  arrow,
+  color = "secondary",
+  textDecoration = "none",
+}: TextButtonV1Props) {
+  return (
+    <Link to={to} link={link}>
+      <Typography
+        color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0 5px",
+          cursor: "pointer",
+          userSelect: "none",
+          textDecoration,
+          "&:hover": {
+            textDecoration: "underline",
+          },
+          "& +.custom-text-button": {
+            marginLeft: "18px",
+          },
+          ...sx,
+        }}
+        onClick={(event) => {
+          if (disabled) {
+            event.stopPropagation();
+            
+          }
+        }}
+      >
+        {children}
+
+        {arrow && <ArrowIcon />}
+      </Typography>
+    </Link>
   );
 }

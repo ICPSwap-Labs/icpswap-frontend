@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Box, makeStyles, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { Flex, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
+import { Flex, TextButtonV1, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
 import {
   YourPositions,
   StakedPositions,
@@ -193,9 +193,9 @@ export function Positions() {
       </Box>
 
       <Flex fullWidth justify="flex-end" wrap="wrap" sx={{ margin: "32px 0 0 0" }} gap="8px 32px">
-        <TextButton arrow sx={{ fontSize: "12px" }} to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
+        <TextButtonV1 arrow sx={{ fontSize: "12px" }} to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
           <Trans>Check your position transfer history</Trans>
-        </TextButton>
+        </TextButtonV1>
 
         <Flex>
           <Typography
