@@ -118,9 +118,12 @@ export function TextButton({
     <Typography
       color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
       sx={{
+        display: "flex",
         cursor: "pointer",
         userSelect: "none",
         textDecoration,
+        alignItems: "center",
+        gap: "0 5px",
         "&:hover": {
           textDecoration: "underline",
         },
@@ -138,11 +141,7 @@ export function TextButton({
     >
       {children}
 
-      {arrow && (
-        <Box component="span" sx={{ margin: "0 0 0 5px" }}>
-          <ArrowIcon />
-        </Box>
-      )}
+      {arrow && <ArrowIcon />}
     </Typography>
   );
 }
