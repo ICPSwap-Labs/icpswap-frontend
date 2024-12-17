@@ -91,6 +91,7 @@ export interface PriceMutatorProps {
   minUseablePrice: string | Null;
   isInputTokenSorted: boolean | Null;
   minPrice: string | Null;
+  available: boolean;
 }
 
 export function PriceMutator({
@@ -101,6 +102,7 @@ export function PriceMutator({
   onChange,
   onMinMax,
   minPrice,
+  available,
 }: PriceMutatorProps) {
   const theme = useTheme();
 
@@ -151,7 +153,7 @@ export function PriceMutator({
         key="Min"
         onClick={onMinMax}
         onClose={onMinMax}
-        active={isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)}
+        active={(isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)) && available}
         showClose={showPercent}
         tips={
           <Trans>
@@ -163,7 +165,10 @@ export function PriceMutator({
           textDecoration: showPercent ? "none" : "underline",
           textDecorationStyle: "dashed",
           textDecorationColor: theme.colors.darkTextSecondary,
-          color: "text.primary",
+          color:
+            available && (isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice))
+              ? "text.primary"
+              : "text.secondary",
         }}
       >
         {isNullArgs(activePercent) &&

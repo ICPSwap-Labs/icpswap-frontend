@@ -27,6 +27,7 @@ export interface SwapLimitPriceProps {
   minUseableTick: number | Null;
   isInputTokenSorted: boolean | Null;
   atLimitedTick: boolean;
+  available: boolean;
 }
 
 export const SwapLimitPrice = forwardRef(
@@ -41,6 +42,7 @@ export const SwapLimitPrice = forwardRef(
       minUseableTick,
       isInputTokenSorted,
       atLimitedTick,
+      available,
     }: SwapLimitPriceProps,
     ref,
   ) => {
@@ -359,6 +361,7 @@ export const SwapLimitPrice = forwardRef(
             minUseablePrice={minUseablePrice}
             isInputTokenSorted={isInputTokenSorted}
             minPrice={minPrice}
+            available={available}
           />
         </Box>
       </MainCard>

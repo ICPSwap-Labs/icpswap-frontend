@@ -364,6 +364,7 @@ export const PlaceOrder = forwardRef(
           minUseableTick={minUseableTick}
           isInputTokenSorted={isInputTokenSorted}
           atLimitedTick={atLimitedTick}
+          available={available === true && noLiquidity === false}
         />
 
         <CurrentPricePanel inputToken={inputToken} outputToken={outputToken} currentPrice={currentPrice} />
