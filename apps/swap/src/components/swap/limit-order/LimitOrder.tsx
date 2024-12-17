@@ -155,9 +155,9 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                   {limitPrice
                     ? invertPrice
                       ? `1 ${outputToken.symbol} = ${toSignificantWithGroupSeparator(
-                          new BigNumber(1).dividedBy(limitPrice.toFixed()).toString(),
+                          new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
                         )} ${inputToken.symbol}`
-                      : `1 ${inputToken.symbol} = ${limitPrice.toFixed()} ${outputToken.symbol}`
+                      : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`
                     : "--"}
                 </Typography>
                 <Box sx={{ width: "20px", height: "20px", cursor: "pointer" }} onClick={handleInvert}>
@@ -175,7 +175,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                 sx={{ color: "text.primary" }}
                 baseToken={inputToken}
                 quoteToken={outputToken}
-                price={currentPrice?.toFixed()}
+                price={currentPrice?.toFixed(outputToken.decimals)}
                 inverted={invertPrice}
               />
             </Flex>
