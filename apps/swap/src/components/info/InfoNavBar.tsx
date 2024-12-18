@@ -102,11 +102,7 @@ export function InfoNavBar() {
   }
 
   function hidden() {
-    return (
-      pathName.includes("/token/details") &&
-      !pathName.includes("/swap/token/details") &&
-      !pathName.includes("/swap/v2/token/details")
-    );
+    return pathName.includes("/token/details") && !pathName.includes("/swap/token/details");
   }
 
   return (

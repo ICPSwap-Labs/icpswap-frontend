@@ -81,12 +81,14 @@ export default function Wrap() {
                   ))}
                 </Flex>
 
-                <Link link={`${INFO_URL}${infoRoutesConfigs.INFO_WRAP}`}>
-                  <Typography color="text.theme-secondary">
-                    <Trans>WICP Info</Trans>
-                  </Typography>
-                </Link>
-                <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
+                <Flex gap="0 4px">
+                  <Link link={`${INFO_URL}${infoRoutesConfigs.INFO_WRAP}`}>
+                    <Typography color="text.theme-secondary">
+                      <Trans>WICP Info</Trans>
+                    </Typography>
+                  </Link>
+                  <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
+                </Flex>
               </Flex>
               <Box mt={4}>{ActiveComponent()}</Box>
             </MainCard>

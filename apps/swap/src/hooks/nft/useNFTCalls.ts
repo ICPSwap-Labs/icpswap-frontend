@@ -15,7 +15,6 @@ import { resultFormat, principalToAccount, isAvailablePageArgs } from "@icpswap/
 import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
-import { v2SwapNFT } from "actor/swapV2";
 
 export async function approveForAll(identity: Identity, spenderCanisterId: string) {
   const spender = principalToAccount(spenderCanisterId);
@@ -26,17 +25,6 @@ export async function approveForAll(identity: Identity, spenderCanisterId: strin
 export async function allowanceAll(account: string, spenderCanisterId: string) {
   const spender = principalToAccount(spenderCanisterId);
   return resultFormat<boolean>(await (await swapNFT()).isApproveForAll(account, spender)).data;
-}
-
-export async function v2ApproveAll(identity: Identity, spenderCanisterId: string) {
-  const spender = principalToAccount(spenderCanisterId);
-  const result = await (await v2SwapNFT(identity)).approveForAll({ spender: { address: spender }, approved: true });
-  return resultFormat(result);
-}
-
-export async function v2AllowanceAll(account: string, spenderCanisterId: string) {
-  const spender = principalToAccount(spenderCanisterId);
-  return resultFormat<boolean>(await (await v2SwapNFT()).isApproveForAll(account, spender)).data;
 }
 
 export async function findTokenListByPool(principal: Principal, pool: string, offset: number, limit: number) {
@@ -55,17 +43,6 @@ export function useUserNFTs(user: Principal | undefined, offset: number, limit: 
       ).data;
     }, [user]),
   );
-}
-
-export async function findV2TokenListByPool(
-  account: string,
-  searchCondition: { k: string; v: string }[],
-  offset: number,
-  limit: number,
-) {
-  return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (await v2SwapNFT()).findMatchNFTLists({ address: account }, searchCondition, BigInt(offset), BigInt(limit)),
-  ).data;
 }
 
 export async function getSwapNFTTokenURI(tokenId: bigint | number) {

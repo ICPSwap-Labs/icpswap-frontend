@@ -46,8 +46,6 @@ const TokenClaimIndex = Loadable(lazy(() => import("../views/token-claim/index")
 const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
 const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
 
-const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
-const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
 const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
@@ -84,8 +82,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/swap/pcm/reclaim": PCMReclaim,
   "/swap/pro": SwapPro,
 
-  "/swap/v2/liquidity": LiquidityV2,
-  "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
   "/swap/v2/wrap": Wrap,
 
   // "/marketplace/NFT": NFTMarket,
