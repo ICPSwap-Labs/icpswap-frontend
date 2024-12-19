@@ -1,13 +1,13 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { Box, useTheme, useMediaQuery } from "components/Mui";
 
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useTokenListTokenInfo } from "@icpswap/hooks";
+import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { type Null } from "@icpswap/types";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
+import { ChartButton, ChartView } from "@icpswap/ui";
 
 import { SwapProContext } from "./context";
 import HotTokens from "./HotTokens";
@@ -29,6 +29,10 @@ export default function SwapPro() {
   const [inputToken, setInputToken] = useState<Token | Null>(undefined);
   const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
+  const [chartView, setChartView] = useState<ChartButton | null>({
+    label: "DexScreener",
+    value: ChartView.DexScreener,
+  });
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
   const outputTokenInfo = useInfoToken(outputToken?.address);
@@ -70,6 +74,15 @@ export default function SwapPro() {
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
 
+  useEffect(() => {
+    if (token) {
+      setChartView({
+        label: "DexScreener",
+        value: ChartView.DexScreener,
+      });
+    }
+  }, [setChartView, tradePoolId]);
+
   return (
     <SwapContext.Provider
       value={{
@@ -99,6 +112,8 @@ export default function SwapPro() {
           inputTokenPrice,
           outputTokenPrice,
           token,
+          chartView,
+          setChartView,
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -137,6 +152,7 @@ export default function SwapPro() {
                 {matchDownSM ? (
                   <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
                 ) : null}
+
                 <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
               </Box>
 

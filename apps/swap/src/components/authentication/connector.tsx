@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, useTheme, makeStyles, Tooltip } from "components/Mui";
-import { t, Trans } from "@lingui/macro";
+import { Box, Typography, useTheme, makeStyles } from "components/Mui";
+import { t } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector as ConnectorType } from "constants/wallet";
 import { WalletConnector } from "utils/connector";
-import { useWalletConnectorManager } from "store/auth/hooks";
-import { Flex, TextButton } from "@icpswap/ui";
+import { useWalletConnectorManager } from "store/global/hooks";
+import { Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -50,6 +50,14 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
     async function call() {
       const selfConnector = new WalletConnector();
       await selfConnector.init(value);
+
+      // TODO
+      // The error that ii throw Code: 400 Body: Invalid signature: Invalid basic signature
+      // but if init twice could avert this error
+      if (value === ConnectorType.IC) {
+        await selfConnector.init(value);
+      }
+
       setSelfConnector(selfConnector);
     }
 
@@ -110,30 +118,6 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
         <Typography color="text.primary" fontSize="14px" fontWeight={700}>
           {label}
         </Typography>
-
-        {value === ConnectorType.STOIC ? (
-          <Tooltip
-            arrow
-            title={
-              <Trans>
-                This wallet is no longer supported. You can import your Stoic seed phrase into Plug, which will allow
-                you to log in to ICPSwap. Please refer to the tutorial (
-                <TextButton
-                  sx={{ fontSize: "12px" }}
-                  link="https://iloveics.gitbook.io/icpswap/products/wallet/how-to-import-stoic-seed-phrase-into-plug"
-                >
-                  How to Import Stoic Seed Phrase into Plug | ICPSwap
-                </TextButton>
-                ) for guidance.
-              </Trans>
-            }
-          >
-            <Box sx={{ width: "16px", height: "16px", position: "relative" }}>
-              <Box sx={{ width: "16px", height: "16px", position: "absolute", top: 0, left: 0 }} />
-              <img src="/images/notice_icon.svg" width="16px" height="16px" alt="" style={{ borderRadius: "50%" }} />
-            </Box>
-          </Tooltip>
-        ) : null}
       </Flex>
 
       <Box className={`${classes.loadingWrapper}${loading ? " loading" : ""}`}>

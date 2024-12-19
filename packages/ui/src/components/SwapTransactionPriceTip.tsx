@@ -1,18 +1,19 @@
-import { Typography, Box, useTheme, Tooltip } from "@mui/material";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarTokenPrice } from "@icpswap/utils";
+
+import { Typography, Box, useTheme, Tooltip, TypographyProps } from "./Mui";
 
 export interface SwapTransactionPriceTipProps {
   price: number | string;
   symbol: string;
+  symbolSx?: TypographyProps["sx"];
 }
 
-export function SwapTransactionPriceTip({ price, symbol }: SwapTransactionPriceTipProps) {
+export function SwapTransactionPriceTip({ price, symbol, symbolSx }: SwapTransactionPriceTipProps) {
   const theme = useTheme();
 
   return (
     <Tooltip
       PopperProps={{
-        // @ts-ignore
         sx: {
           "& .MuiTooltip-tooltip": {
             padding: "12px",
@@ -23,7 +24,7 @@ export function SwapTransactionPriceTip({ price, symbol }: SwapTransactionPriceT
         <Box>
           <Typography fontSize={12}>Trade Price</Typography>
           <Typography color="#111936" sx={{ margin: "6px 0 0 0" }}>
-            1 {symbol} = {formatDollarAmount(price)}
+            1 {symbol} = {formatDollarTokenPrice({ num: price })}
           </Typography>
         </Box>
       }
@@ -39,6 +40,7 @@ export function SwapTransactionPriceTip({ price, symbol }: SwapTransactionPriceT
           textDecorationLine: "underline",
           textDecorationStyle: "dotted",
           textDecorationColor: theme.palette.text.secondary,
+          ...symbolSx,
         }}
         component="span"
       >

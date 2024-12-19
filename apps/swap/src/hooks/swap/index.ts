@@ -1,11 +1,10 @@
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { NumberType, ResultStatus } from "@icpswap/types";
-import { parseTokenAmount, formatTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import { getPoolCanisterId } from "hooks/swap/v3Calls";
-import { getSwapPosition, depositFrom, withdraw, deposit } from "@icpswap/hooks";
+import { getSwapPosition, depositFrom, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
-import BigNumber from "bignumber.js";
 import { PositionDetail } from "types/swap";
 import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
@@ -254,28 +253,6 @@ export function useSwapTransfer() {
   );
 }
 
-export function useSwapWithdraw() {
-  const [openErrorTip] = useErrorTip();
-
-  return useCallback(async (token: Token, poolId: string, amount: string, openExternalTip?: OpenExternalTip) => {
-    const { status, message } = await withdraw(poolId, token.address, BigInt(token.transFee), BigInt(amount));
-
-    if (status === "err") {
-      if (openExternalTip) {
-        openExternalTip({ message });
-      } else {
-        openErrorTip(
-          `Failed to withdraw ${token.symbol}: ${message}. Please click 'Reclaim Your Tokens' to reclaim your tokens.`,
-        );
-      }
-
-      return false;
-    }
-
-    return true;
-  }, []);
-}
-
 export * from "./useReclaimCallback";
 export * from "./useSwapApprove";
 export * from "./usePositionValue";
@@ -287,3 +264,7 @@ export * from "./usePCMBalances";
 export * from "./useSwapTokenFeeCost";
 export * from "./useLiquidityLocksImage";
 export * from "./useMaxAmountSpend";
+export * from "./useSwapWithdraw";
+export * from "./usePositionFees";
+export * from "./usePosition";
+export * from "./usePools";

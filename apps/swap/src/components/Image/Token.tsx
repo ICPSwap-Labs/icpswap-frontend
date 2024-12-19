@@ -1,11 +1,12 @@
 import { TokenImage as UITokenImage } from "@icpswap/ui";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { SxProps } from "@mui/material";
+import { Null } from "@icpswap/types";
 
 export interface TokenImageProps {
   logo: string | undefined;
   size?: string;
-  tokenId?: string;
+  tokenId?: string | Null;
   sx?: SxProps;
 }
 

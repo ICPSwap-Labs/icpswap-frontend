@@ -1,26 +1,34 @@
-import { useState, useContext, useMemo, useEffect } from "react";
+import { useState, useContext, useMemo, useEffect, useCallback } from "react";
 import { Typography, Box, useTheme, makeStyles } from "components/Mui";
-import { formatDollarAmount, parseTokenAmount, mockALinkAndOpen, BigNumber, principalToAccount } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatDollarTokenPrice,
+  parseTokenAmount,
+  mockALinkAndOpen,
+  BigNumber,
+  principalToAccount,
+  nonNullArgs,
+  isNullArgs,
+} from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
-import { NoData, LoadingRow } from "components/index";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { NoData, LoadingRow, TokenStandardLabel } from "components/index";
+import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { Connector, NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
 import WalletContext from "components/Wallet/context";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
 import XTCTopUpModal from "components/XTCTopup/index";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { Erc20MinterInfo } from "@icpswap/types";
+import { useInfoToken } from "@icpswap/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
 
@@ -87,12 +95,15 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
 
 const SWAP_BUTTON_EXCLUDE = [ICP.address, WRAPPED_ICP.address];
 
+let COUNTER = 0;
+const TOKEN_BALANCE_INTERVAL = 60000;
+
 export interface TokenListItemProps {
   canisterId: string;
   chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
+export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -118,10 +129,33 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
 
   const infoToken = useInfoToken(infoTokenAddress);
   const { result: tokenInfo } = useTokenInfo(canisterId);
-  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useStoreTokenBalance(
+    canisterId,
+    principal,
+    refreshNumber,
+  );
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.priceUSD;
   }, [infoToken]);
+
+  const handleIncreaseCounter = useCallback(() => {
+    setRefreshInnerCounter(COUNTER + 1);
+    COUNTER += 1;
+  }, [setRefreshInnerCounter]);
+
+  // Interval update user's token balance
+  useEffect(() => {
+    let timer: number | null = setInterval(() => {
+      handleIncreaseCounter();
+    }, TOKEN_BALANCE_INTERVAL);
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+  }, [handleIncreaseCounter]);
 
   useEffect(() => {
     if (
@@ -183,13 +217,13 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   };
 
   const handleTransferSuccess = () => {
-    setRefreshInnerCounter(refreshInnerCounter + 1);
+    handleIncreaseCounter();
     handleCloseModal();
     setNFIDTransferOpen(false);
   };
 
   const handleTopUpSuccess = () => {
-    setRefreshInnerCounter(refreshInnerCounter + 1);
+    handleIncreaseCounter();
   };
 
   const handleTransfer = async () => {
@@ -206,7 +240,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const handleLoadToDetail = (tokenInfo: TokenInfo | undefined) => {
     if (tokenInfo && tokenInfo.symbol !== ICP.symbol) {
       mockALinkAndOpen(
-        `${INFO_URL}/token/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
+        `${INFO_URL}/info-tokens/details/${tokenInfo?.canisterId}?standard=${tokenInfo?.standardType}`,
         "TOKEN_DETAILs",
       );
     }
@@ -228,15 +262,21 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
   const isHidden = useMemo(() => {
     let hiddenBySmallBalance = false;
 
-    if (tokenBalance && tokenInfo && tokenUSDPrice) {
-      const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
+    if (isNullArgs(tokenBalance)) return false;
 
-      if (sortBalance === SortBalanceEnum.TEN) {
-        hiddenBySmallBalance = tokenUSDValue.isLessThan(10);
-      } else if (sortBalance === SortBalanceEnum.ONE) {
-        hiddenBySmallBalance = tokenUSDValue.isLessThan(1);
-      } else if (sortBalance === SortBalanceEnum.ZERO) {
-        hiddenBySmallBalance = tokenUSDValue.isEqualTo(0);
+    if (nonNullArgs(tokenInfo)) {
+      if (tokenBalance.isEqualTo(0)) {
+        hiddenBySmallBalance = sortBalance !== SortBalanceEnum.ALL;
+      } else if (nonNullArgs(tokenUSDPrice)) {
+        const tokenUSDValue = parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice);
+
+        if (sortBalance === SortBalanceEnum.TEN) {
+          hiddenBySmallBalance = tokenUSDValue.isLessThan(10);
+        } else if (sortBalance === SortBalanceEnum.ONE) {
+          hiddenBySmallBalance = tokenUSDValue.isLessThan(1);
+        } else if (sortBalance === SortBalanceEnum.ZERO) {
+          hiddenBySmallBalance = tokenUSDValue.isEqualTo(0);
+        }
       }
     }
 
@@ -289,16 +329,17 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Balance</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {parseTokenAmount(tokenBalance, tokenInfo?.decimals).toFormat()}
+            {nonNullArgs(tokenBalance) && tokenInfo
+              ? parseTokenAmount(tokenBalance, tokenInfo.decimals).toFormat()
+              : "--"}
           </Typography>
           <Typography className={classes.tokenAssets} sx={{ margin: "4px 0 0 0" }}>
-            {tokenUSDPrice && tokenBalance
+            {nonNullArgs(tokenUSDPrice) && nonNullArgs(tokenBalance) && tokenInfo
               ? `≈
               ${formatDollarAmount(
-                parseTokenAmount(tokenBalance, tokenInfo?.decimals)
-                  .multipliedBy(tokenUSDPrice)
-                  .toString(),
+                parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice).toString(),
                 4,
+                0.01,
               )}`
               : "--"}
           </Typography>
@@ -306,7 +347,7 @@ export function TokenListItem({ canisterId, chainKeyMinterInfo }: TokenListItemP
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Price</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {tokenUSDPrice ? formatDollarAmount(tokenUSDPrice) : "--"}
+            {tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
           </Typography>
         </Box>
       </Box>
@@ -392,7 +433,7 @@ export interface TokenListProps {
   chainKeyMinterInfo: Erc20MinterInfo | undefined;
 }
 
-export default function TokenList({ tokens, loading, chainKeyMinterInfo }: TokenListProps) {
+export default function Tokens({ tokens, loading, chainKeyMinterInfo }: TokenListProps) {
   return (
     <Box
       sx={{
@@ -411,7 +452,7 @@ export default function TokenList({ tokens, loading, chainKeyMinterInfo }: Token
       }}
     >
       {tokens.map((canisterId) => {
-        return <TokenListItem key={canisterId} canisterId={canisterId} chainKeyMinterInfo={chainKeyMinterInfo} />;
+        return <Token key={canisterId} canisterId={canisterId} chainKeyMinterInfo={chainKeyMinterInfo} />;
       })}
 
       {tokens.length === 0 && !loading ? <NoData /> : null}

@@ -1,39 +1,73 @@
-import { useContext, useMemo } from "react";
-import { Box, useTheme } from "components/Mui";
-import { TokenCharts } from "@icpswap/ui";
+import { useEffect, useContext, useRef, useState } from "react";
+import { Box, Typography, useTheme } from "components/Mui";
+import { TokenCharts, TokenChartsRef, ChartView, TextButton } from "@icpswap/ui";
+import { TokenPriceChart } from "components/Charts/TokenPriceChart";
+import { useToken } from "hooks/index";
+import { Null } from "@icpswap/types";
 
 import { SwapProContext } from "../context";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
+  const [priceTokenId, setPriceTokenId] = useState<string | Null>(null);
+  const { token, chartView, tradePoolId } = useContext(SwapProContext);
 
-  const { inputToken, outputToken, token } = useContext(SwapProContext);
+  const tokenChartsRef = useRef<TokenChartsRef>(null);
 
-  const priceToggles = useMemo(() => {
-    if (!inputToken || !outputToken) return undefined;
-    return [inputToken, outputToken].map((e) => ({ label: e.symbol, id: e.address }));
-  }, [inputToken, outputToken]);
+  useEffect(() => {
+    if (chartView && tokenChartsRef && tokenChartsRef.current) {
+      tokenChartsRef.current.setView(chartView);
+    }
+  }, [chartView, tokenChartsRef]);
+
+  useEffect(() => {
+    if (token) {
+      setPriceTokenId(token.address);
+    }
+  }, [token]);
+
+  const [, priceToken] = useToken(priceTokenId);
 
   return (
     <Box
       sx={{
-        margin: "22px 0 0 0",
+        margin: "10px 0 0 0",
         background: theme.palette.background.level3,
         borderBottomLeftRadius: "12px",
         borderBottomRightRadius: "12px",
         overflow: "hidden",
         "@media(max-width: 640px)": {
-          margin: "16px 0 0 0",
+          margin: "0 0 0 0",
         },
       }}
     >
       <TokenCharts
-        canisterId={token?.address}
+        ref={tokenChartsRef}
+        canisterId={priceToken?.address}
         background={3}
         borderRadius="0px"
-        priceToggles={priceToggles}
         showPrice={false}
+        showTopIfDexScreen={false}
+        dexScreenId={tradePoolId}
+        priceChart={<TokenPriceChart token={priceToken} />}
+        onPriceTokenIdChange={setPriceTokenId}
       />
+
+      {chartView && (chartView.value === ChartView.PRICE || chartView.value === ChartView.DexScreener) ? (
+        <Typography sx={{ fontSize: "12px", padding: "12px", lineHeight: "16px" }}>
+          Token price charts powered by TradingView, the charting platform and social network that provides users with
+          valuable information on market events through tools such as the{" "}
+          <TextButton
+            link="https://www.tradingview.com/economic-calendar"
+            sx={{
+              fontSize: "12px",
+            }}
+          >
+            economic calendar
+          </TextButton>
+          , stock analyser and others
+        </Typography>
+      ) : null}
     </Box>
   );
 }

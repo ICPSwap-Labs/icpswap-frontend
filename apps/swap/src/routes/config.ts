@@ -1,5 +1,7 @@
 import { lazy } from "react";
-import Loadable from "../components/Loading/Loadable";
+import Loadable from "components/Loading/Loadable";
+
+import { infoRoutes } from "./info.config";
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 
@@ -10,7 +12,6 @@ const CreateFarm = Loadable(lazy(() => import("../views/staking-farm/create")));
 const Staking = Loadable(lazy(() => import("../views/staking-token")));
 const StakingDetails = Loadable(lazy(() => import("../views/staking-token/details")));
 const StakingTokenCreate = Loadable(lazy(() => import("../views/staking-token/create")));
-const StakingTokenV1 = Loadable(lazy(() => import("../views/staking-token/v1/index")));
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
 const SwapLimit = Loadable(lazy(() => import("../views/swap-liquidity-v3/limit")));
@@ -24,13 +25,11 @@ const SwapReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/recla
 const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liquidity-v3/MisTransferTokens")));
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
+const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/Position")));
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
 const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
-const Console = Loadable(lazy(() => import("../views/console/index")));
-const ConsoleBurn = Loadable(lazy(() => import("../views/console/burn")));
-
 const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
 const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
@@ -49,8 +48,6 @@ const TokenClaimIndex = Loadable(lazy(() => import("../views/token-claim/index")
 const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
 const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
 
-const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
-const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
 const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
@@ -70,7 +67,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/stake": Staking,
   "/stake/details/:id": StakingDetails,
   "/stake/create": StakingTokenCreate,
-  "/stake/v1": StakingTokenV1,
   "/farm": Farms,
   "/farm/details/:id": Farm,
   "/farm/create": CreateFarm,
@@ -82,6 +78,7 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/liquidity/add/:currencyIdA?/:currencyIdB?/:feeAmount?": AddLiquidity,
   "/liquidity/decrease/:positionId/:pool": DecreaseLiquidity,
   "/liquidity/increase/:positionId/:pool": IncreaseLiquidity,
+  "/liquidity/position/:positionId/:pool": Position,
 
   "/swap/withdraw": SwapReclaim,
   "/swap/find-mis-transferred-token": SwapFindMisTransferToken,
@@ -89,8 +86,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/swap/pcm/reclaim": PCMReclaim,
   "/swap/pro": SwapPro,
 
-  "/swap/v2/liquidity": LiquidityV2,
-  "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
   "/swap/v2/wrap": Wrap,
 
   // "/marketplace/NFT": NFTMarket,
@@ -109,11 +104,9 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/token-claim/transactions/:id": TokenClaimTransactions,
   "/token-claim/create": CreateTokenClaim,
 
-  "/console": Console,
-  "/console/burn": ConsoleBurn,
-  "/console/nft/canister/create": NFTCanisterCreate,
-  "/console/nft/mint": NFTMint,
-  "/console/nft/canister/list": NFTCanisterList,
+  "/info-tools/nft/canister/create": NFTCanisterCreate,
+  "/info-tools/nft/mint": NFTMint,
+  "/info-tools/nft/canister/list": NFTCanisterList,
 
   "/sns/neurons": SnsNeurons,
   "/sns/voting": SnsVotes,
@@ -122,4 +115,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/sns/launch/:root_id": SNSLaunch,
 
   "/ck-bridge": CkBridge,
+
+  ...infoRoutes,
 };

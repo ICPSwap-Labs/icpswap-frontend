@@ -95,7 +95,6 @@ export default function TradePrice({
   token1,
   token1PriceUSDValue,
   poolId,
-  v2,
   fontSize,
 }: TradePriceProps) {
   const theme = useTheme();
@@ -146,7 +145,7 @@ export default function TradePrice({
         </Grid>
       </Grid>
 
-      <TextButton link={`${INFO_URL}/swap/${v2 ? "v2/" : ""}pool/details/${poolId}`}>
+      <TextButton link={`${INFO_URL}/info-swap/pool/details/${poolId}`}>
         Info <LinkIcon />
       </TextButton>
     </Grid>

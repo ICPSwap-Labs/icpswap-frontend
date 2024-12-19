@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { TextField, Typography, Box, Menu, Grid, MenuItem } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { TextField, Typography, Box, Menu, MenuItem, makeStyles, Theme, TextFieldProps } from "components/Mui";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NoData from "components/no-data";
-import { Theme } from "@mui/material/styles";
+import { Flex, NoData } from "@icpswap/ui";
 
 interface UseStylesProps {
   contained: boolean;
   fullHeight?: boolean;
   borderRadius: string;
-  label: boolean;
   border?: string | boolean;
   multiline?: boolean;
   background?: string | "level3";
@@ -23,13 +20,12 @@ const useStyles = ({
   fullHeight,
   multiline,
   borderRadius,
-  label,
   border,
 }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
     return {
       inputBox: {
-        display: label && contained ? "block" : "flex",
+        display: "flex",
         alignItems: "center",
         border: contained
           ? border ?? theme.palette.border.normal
@@ -48,9 +44,9 @@ const useStyles = ({
         gap: "0 5px",
         height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
         ...(multiline ? { minHeight: "48px" } : {}),
-        margin: label ? "12px 0 0 0" : "0",
+        margin: "0px",
         "@media(max-width: 640px)": {
-          padding: inputPadding ?? contained ? `4px 6px` : "0 6px",
+          padding: inputPadding ?? contained ? `4px 6px` : "0 16px",
         },
         "& input": {
           color: theme.palette.text.primary,
@@ -69,12 +65,10 @@ export type FilledTextFiledMenus = {
 };
 
 export interface FilledTextFieldProps {
-  label?: string | React.ReactNode;
   value?: any;
   select?: boolean;
   onChange?: (value: any) => void;
   onFocus?: () => void;
-  required?: boolean;
   menus?: FilledTextFiledMenus[];
   maxWidth?: number;
   fullHeight?: boolean;
@@ -89,11 +83,11 @@ export interface FilledTextFieldProps {
   multiline?: boolean;
   borderRadius?: string;
   border?: string | boolean;
-  labelSize?: string;
   fontSize?: string;
   placeholderSize?: string;
   background?: string;
   inputPadding?: string;
+  textFiledProps?: TextFieldProps;
   [x: string]: any;
 }
 
@@ -157,16 +151,13 @@ function Value({ select, value, menus = [], helperText }: ValueProps) {
 
 function FilledTextField(
   {
-    label,
     value,
     select,
     onChange,
-    required,
     menus = [],
     maxWidth,
     fullHeight,
     disabled,
-    InputProps,
     borderRadius = "8px",
     contained = false,
     CustomNoData,
@@ -176,8 +167,8 @@ function FilledTextField(
     onFocus,
     border,
     background,
-    labelSize,
     inputPadding,
+    textFiledProps,
     ...props
   }: FilledTextFieldProps,
   ref,
@@ -189,7 +180,6 @@ function FilledTextField(
     fullHeight,
     borderRadius,
     border,
-    label: !!label,
     multiline,
   })();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -233,8 +223,7 @@ function FilledTextField(
   };
 
   return (
-    <Box>
-      {label ? <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} /> : null}
+    <>
       <Box
         ref={outerBoxRef}
         className={classes.inputBox}
@@ -246,60 +235,61 @@ function FilledTextField(
         onClick={handleOuterBoxClick}
       >
         <>
-          {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
-          <Grid container alignItems="center" sx={{ flex: 1 }}>
-            <Grid item xs>
-              {!select ? (
-                <TextField
-                  sx={{
-                    "& input": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                    },
-                    "& textarea": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                    },
-                    "& input::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                    "& textarea::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                  }}
-                  inputRef={inputRef}
-                  {...props}
-                  variant="standard"
-                  onChange={({ target: { value } }) => onChange && onChange(value)}
-                  value={value}
-                  multiline={multiline}
-                  InputProps={{
+          <Flex fullWidth sx={{ flex: 1 }} justify="space-between">
+            {!select ? (
+              <TextField
+                sx={{
+                  "& input": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                  },
+                  "& textarea": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                  },
+                  "& input::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                  "& textarea::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                  ...textFiledProps?.sx,
+                }}
+                slotProps={{
+                  input: {
                     disableUnderline: true,
-                    ...(InputProps || {}),
-                  }}
-                  fullWidth
-                  disabled={disabled}
-                  helperText={helperText}
-                  onFocus={onFocus}
-                  autoComplete="off"
-                />
-              ) : value ? (
-                <Value menus={menus} value={value} helperText={helperText} select={select} />
-              ) : (
-                <Typography
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                  color="#c5c5c5"
-                >
-                  {props.placeholder}
-                </Typography>
-              )}
-            </Grid>
+                    ...textFiledProps?.slotProps?.input,
+                  },
+                }}
+                inputRef={inputRef}
+                {...props}
+                variant="standard"
+                onChange={({ target: { value } }) => onChange && onChange(value)}
+                value={value}
+                multiline={multiline}
+                fullWidth
+                disabled={disabled}
+                helperText={helperText}
+                onFocus={onFocus}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            ) : value ? (
+              <Value menus={menus} value={value} helperText={helperText} select={select} />
+            ) : (
+              <Typography
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                color="#c5c5c5"
+              >
+                {props.placeholder}
+              </Typography>
+            )}
             {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
-          </Grid>
+          </Flex>
         </>
       </Box>
 
@@ -335,7 +325,7 @@ function FilledTextField(
           {menus.length === 0 ? CustomNoData || <NoData /> : null}
         </Menu>
       )}
-    </Box>
+    </>
   );
 }
 

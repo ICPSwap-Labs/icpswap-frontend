@@ -1,7 +1,7 @@
-import { Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import LoadingImage from "assets/images/loading.png";
-import { Theme } from "@mui/material/styles";
+
+import { Box, makeStyles, Theme } from "../Mui";
+import { Flex } from "../Grid";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -35,9 +35,9 @@ export function ImageLoading({ loading, mask = false }: ImageLoadingProps) {
   const classes = useStyles();
 
   return loading ? (
-    <Grid className={classes.loadingContainer} container justifyContent="center" alignContent="center">
+    <Flex fullWidth className={classes.loadingContainer} justify="center" align="center">
       <Box className={mask ? classes.mask : ""} />
       <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
-    </Grid>
+    </Flex>
   ) : null;
 }

@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "components/Mui";
+import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui";
 import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarTokenPrice } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import type { TokenInfo } from "types/token";
@@ -10,6 +10,7 @@ import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { ICP } from "@icpswap/tokens";
 
+import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 import { SwapProContext } from "../context";
 
 interface MediasProps {
@@ -133,7 +134,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
 
       <Box
         sx={{
-          margin: "10px 0 0 0",
+          margin: "20px 0 0 0",
           display: "flex",
           justifyContent: "space-between",
           "@media(max-width: 640px)": {
@@ -144,7 +145,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken?.priceUSD ? formatDollarAmount(infoToken.priceUSD) : "--"}
+            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -161,22 +162,12 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
         ) : null}
 
         <Box sx={{ display: "flex", gap: "0 10px" }}>
+          {!matchDownSM ? <TokenChartsViewSelector /> : null}
+
           <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
-            <Box
-              sx={{
-                width: "121px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "#515A81",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography align="center" color="text.primary">
-                <Trans>Add Liquidity</Trans>
-              </Typography>
-            </Box>
+            <Button className="secondary" variant="contained">
+              <Trans>Add Liquidity</Trans>
+            </Button>
           </Link>
 
           <a
@@ -185,21 +176,9 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
             rel="noreferrer"
             style={{ textDecoration: "none" }}
           >
-            <Box
-              sx={{
-                width: "121px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "#515A81",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography align="center" color="text.primary">
-                <Trans>Token Details</Trans>
-              </Typography>
-            </Box>
+            <Button className="secondary" variant="contained">
+              <Trans>Token Details</Trans>
+            </Button>
           </a>
         </Box>
       </Box>

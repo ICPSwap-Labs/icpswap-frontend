@@ -22,7 +22,10 @@ export { default as makeStyles } from "@mui/styles/makeStyles";
 export { default as Tooltip } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as Menu } from "@mui/material/Menu";
+export { default as Pagination } from "@mui/material/Pagination";
 
 export function useTheme() {
   return useMuiTheme() as Theme;
 }
+
+export type { Theme };

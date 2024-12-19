@@ -3,7 +3,7 @@ import Modal from "components/modal";
 import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton } from "components/index";
 import { Connector } from "constants/wallet";
-import { useWalletConnectorManager } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 
 import { ConnectorComponent } from "./connector";
 
@@ -53,9 +53,8 @@ type Wallet = {
 };
 
 export default function WalletConnector() {
-  const [open, walletConnectorManager] = useWalletConnectorManager();
-
   const classes = useStyles();
+  const [open, walletConnectorManager] = useWalletConnectorManager();
 
   const Wallets: Wallet[] = [
     {
@@ -68,7 +67,6 @@ export default function WalletConnector() {
       label: "Stoic Wallet",
       value: Connector.STOIC,
       logo: "/images/connect/stoic.svg",
-      disabled: true,
     },
     {
       label: "ICPSwap Wallet",

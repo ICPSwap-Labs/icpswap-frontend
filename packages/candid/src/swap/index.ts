@@ -50,3 +50,13 @@ export { idlFactory as LimitTransactionInterfaceFactory } from "./LimitTransacti
 
 export type PassCodeResult = Array<[Principal, Array<PassCode>]>;
 export type { PassCode };
+
+export type {
+  _SERVICE as PositionChartsService,
+  PriceIndex as PositionPricePeriodRange,
+  PoolAprIndex as PoolAPRs,
+} from "./PositionCharts";
+export { idlFactory as PositionChartsFactory } from "./PositionCharts.did";
+
+export type { _SERVICE as TokenAnalysisService, TokenDataIndex as TokenAnalysisData } from "./TokenAnalysis";
+export { idlFactory as TokenAnalysisFactory } from "./TokenAnalysis.did";

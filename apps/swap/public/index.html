@@ -35,11 +35,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
   <meta name="referrer" content="origin" />
   <meta http-equiv="Content-Security-Policy" content="
-    script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.google-analytics.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.google-analytics.com;
     object-src 'none';
     img-src 'self' data: https:;
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
-    child-src https:"
+    child-src https: blob:
+    "
   >
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.

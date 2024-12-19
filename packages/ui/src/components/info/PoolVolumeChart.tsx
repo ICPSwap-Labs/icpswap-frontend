@@ -1,13 +1,14 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { VolumeWindow, PublicPoolChartDayData } from "@icpswap/types";
+import { VolumeWindow, PublicPoolChartDayData, Null } from "@icpswap/types";
 import { useTransformedVolumeData, usePoolAllChartData } from "@icpswap/hooks";
 
+import { formatDollarAmount } from "@icpswap/utils";
 import { BarChartAlt } from "../BarChart/alt";
 import { ImageLoading } from "../Loading";
-import { Box } from "../Mui";
+import { Box, Typography } from "../Mui";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -68,23 +69,14 @@ export interface PoolChartProps {
   canisterId: string;
   volumeWindow?: VolumeWindow;
   noData?: React.ReactNode;
-  setLatestValue?: (value: number) => void;
-  setValue: (value: number) => void;
-  loadingBackground?: string;
-  setValueLabel?: (label: string) => void;
-  valueLabel?: string;
+  height?: string;
+  defaultValue?: string | number | Null;
 }
 
-export function PoolVolumeChart({
-  noData,
-  volumeWindow,
-  canisterId,
-  setLatestValue: __setLatestValue,
-  loadingBackground,
-  setValue,
-  setValueLabel,
-  valueLabel,
-}: PoolChartProps) {
+export function PoolVolumeChart({ noData, volumeWindow, canisterId, height = "340px", defaultValue }: PoolChartProps) {
+  const [label, setLabel] = useState<string | undefined>();
+  const [latestValue, setLatestValue] = useState<number | undefined>();
+
   const { result: allChartsData, loading } = usePoolAllChartData(canisterId);
 
   const chartData = useMemo(() => {
@@ -96,8 +88,6 @@ export function PoolVolumeChart({
         return 0;
       });
   }, [allChartsData]);
-
-  const [latestValue, setLatestValue] = useState<number | undefined>();
 
   const volumeData = useMemo(() => {
     if (chartData) {
@@ -132,55 +122,67 @@ export function PoolVolumeChart({
   const weeklyVolumeData = useTransformedVolumeData(volumeData, "week");
   const monthlyVolumeData = useTransformedVolumeData(volumeData, "month");
 
-  const formattedVolumeData = useMemo(() => {
+  const formattedData = useMemo(() => {
     if (volumeWindow === VolumeWindow.daily) return dailyVolumeData;
     if (volumeWindow === VolumeWindow.monthly) return monthlyVolumeData;
     return weeklyVolumeData;
   }, [weeklyVolumeData, monthlyVolumeData, dailyVolumeData, volumeWindow]);
 
-  useEffect(() => {
-    if (__setLatestValue) {
-      __setLatestValue(formattedVolumeData[formattedVolumeData.length - 1]?.value);
-    }
-  }, [__setLatestValue, formattedVolumeData]);
-
-  const handleSetValue = useCallback(
-    (value: number) => {
-      setValue(value);
-      setLatestValue(value);
-    },
-    [setValue, setLatestValue],
-  );
+  const latestData = formattedData.length > 0 ? formattedData[formattedData.length - 1] : null;
 
   return loading ? (
     <Box
       sx={{
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        top: "0",
-        left: "0",
-        justifyContent: "center",
         width: "100%",
-        height: "100%",
-        background: loadingBackground,
-        zIndex: 100,
+        height,
       }}
     >
       <ImageLoading loading />
     </Box>
-  ) : formattedVolumeData && formattedVolumeData.length > 0 ? (
-    <BarChartAlt
-      data={formattedVolumeData}
-      minHeight={340}
-      setValue={handleSetValue}
-      setLabel={setValueLabel}
-      value={latestValue}
-      label={valueLabel}
-      activeWindow={
-        volumeWindow === VolumeWindow.daily ? "daily" : volumeWindow === VolumeWindow.monthly ? "monthly" : "weekly"
-      }
-    />
+  ) : formattedData && formattedData.length > 0 ? (
+    <Box sx={{ height: "100%" }}>
+      <Box>
+        {latestData ? (
+          <>
+            <Typography
+              color="text.primary"
+              fontSize="24px"
+              fontWeight={500}
+              sx={{
+                height: "30px",
+              }}
+            >
+              {latestValue
+                ? formatDollarAmount(latestValue)
+                : formatDollarAmount(defaultValue) ?? formatDollarAmount(latestData.value)}
+            </Typography>
+
+            <Typography
+              color="text.primary"
+              fontWeight={500}
+              sx={{
+                height: "20px",
+              }}
+              fontSize="12px"
+            >
+              {label ?? ""}
+            </Typography>
+          </>
+        ) : null}
+      </Box>
+
+      <BarChartAlt
+        data={formattedData}
+        minHeight={parseInt(height)}
+        setValue={setLatestValue}
+        setLabel={setLabel}
+        value={latestValue}
+        label={label}
+        activeWindow={
+          volumeWindow === VolumeWindow.daily ? "daily" : volumeWindow === VolumeWindow.monthly ? "monthly" : "weekly"
+        }
+      />
+    </Box>
   ) : noData ? (
     <>{noData}</>
   ) : null;

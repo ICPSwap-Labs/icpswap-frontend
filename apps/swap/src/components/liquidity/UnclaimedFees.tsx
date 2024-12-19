@@ -2,13 +2,14 @@ import { useContext, useCallback, useState, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
-import PositionContext from "components/swap/PositionContext";
+import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
+import { PositionContext } from "components/swap/index";
 import { collect } from "@icpswap/hooks";
 import { decodePositionKey } from "utils/swap";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useGlobalContext } from "hooks/index";
 import { ResultStatus } from "@icpswap/types";
+import { useSwapWithdrawByTokenId } from "hooks/swap/index";
 
 export interface UnclaimedFeesProps {
   className?: string;
@@ -19,6 +20,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
   const [openTip, closeTip] = useTips();
   const { positionFeesValue, positionFees } = useContext(PositionContext);
   const { setRefreshTriggers } = useGlobalContext();
+  const withdraw = useSwapWithdrawByTokenId();
 
   const availableFees = useMemo(() => {
     if (!positionFees) return undefined;
@@ -40,25 +42,58 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
 
     await Promise.all(
       availableFees.map(async (key: string) => {
-        const { poolId, positionIndex } = decodePositionKey(key);
+        const { poolId, positionIndex, token0, token0Fee, token1, token1Fee } = decodePositionKey(key);
+
         if (nonNullArgs(poolId) && nonNullArgs(positionIndex)) {
           const result = await collect(poolId, {
             positionId: BigInt(positionIndex),
           });
 
           if (result.status === ResultStatus.OK) {
+            const amount0 = result.data?.amount0;
+            const amount1 = result.data?.amount1;
+
+            const withdrawToken0 = async () => {
+              if (!amount0 || !token0 || !token0Fee) return false;
+              if (!new BigNumber(amount0.toString()).minus(token0Fee).isGreaterThan(0)) return true;
+
+              return await withdraw({
+                tokenId: token0,
+                poolId,
+                amount: amount0,
+                tokenFee: token0Fee,
+              });
+            };
+
+            const withdrawToken1 = async () => {
+              if (!amount1 || !token1 || !token1Fee) return false;
+              if (!new BigNumber(amount1.toString()).minus(token1Fee).isGreaterThan(0)) return true;
+
+              return await withdraw({
+                tokenId: token1,
+                poolId,
+                amount: amount1,
+                tokenFee: token1Fee,
+              });
+            };
+
+            withdrawToken0();
+            withdrawToken1();
+
             setRefreshTriggers(key);
           }
 
           return result;
         }
+
+        return undefined;
       }),
-    );
+    ).catch((error) => console.error("Collect all position fees error: ", JSON.stringify(error)));
 
     closeTip(loading_key);
 
     setLoading(false);
-  }, [positionFees]);
+  }, [positionFees, availableFees]);
 
   return (
     <Box sx={{ width: "260px" }}>

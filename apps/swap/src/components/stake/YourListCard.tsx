@@ -1,5 +1,5 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
+import { Flex, APRPanel } from "@icpswap/ui";
 import { useCallback } from "react";
 import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
+import { Trans } from "@lingui/macro";
 
 interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];
@@ -112,9 +113,16 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.apr" }}>
-          {apr ?? "--"}
-        </Typography>
+        {apr ? (
+          <APRPanel
+            value={apr}
+            tooltip={<Trans>This's the average APR for the pool. The total reward is 100,000 ICS ($3,000).</Trans>}
+          />
+        ) : (
+          <Typography variant="body2" sx={{ color: "text.apr" }}>
+            --
+          </Typography>
+        )}
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">

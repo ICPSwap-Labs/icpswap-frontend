@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { Box, Collapse, Typography, Theme, useTheme } from "components/Mui";
 import { MainCard, Flex, Link, Image } from "components/index";
@@ -299,7 +298,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
-              <Link link={`${INFO_URL}/farm/details/${farmId}`}>
+              <Link link={`${INFO_URL}/info-farm/details/${farmId}`}>
                 <Typography color="text.theme-secondary">
                   <Trans>Farm Info</Trans>
                 </Typography>

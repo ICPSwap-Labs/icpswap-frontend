@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Box, makeStyles, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { Flex, Tooltip, TextButton, NumberLabel } from "@icpswap/ui";
+import { Flex, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
 import {
   YourPositions,
   StakedPositions,
@@ -10,12 +10,14 @@ import {
   SelectPositionState,
   SelectPositionsSort,
 } from "components/liquidity/index";
-import { FindPositionsModal } from "components/index";
-import PositionContext from "components/swap/PositionContext";
+import { FindPositionsModal, Link } from "components/index";
+import { PositionContext } from "components/swap/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { PositionSort, PositionFilterState, type UserPosition } from "types/swap";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
+import { Unlock } from "react-feather";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -62,8 +64,8 @@ export function Positions() {
     { [id: string]: BigNumber | undefined } | undefined
   >({});
   const [allPositionFees, setAllPositionFees] = useState<{ [id: string]: BigNumber | undefined } | undefined>({});
-  const [allPositions, setAllPositions] = useState<UserPosition[] | undefined>(undefined);
-  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | undefined>(undefined);
+  const [allPositions, setAllPositions] = useState<UserPosition[] | Null>(undefined);
+  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | Null>(undefined);
   const [__hiddenNumbers, setHiddenNumbers] = useState<{ [id: string]: boolean }>({});
 
   const { subTab } = useParsedQueryString() as { subTab: string | undefined };
@@ -132,6 +134,8 @@ export function Positions() {
     setAllPositionsUSDValue(undefined);
     setAllPositions(undefined);
     setAllStakedPositions(undefined);
+    setAllPositionFees(undefined);
+    setHiddenNumbers({});
   }, [principalString]);
 
   useEffect(() => {
@@ -250,7 +254,7 @@ export function Positions() {
             gap="0 20px"
             sx={{
               "@media(max-width: 640px)": {
-                gap: "0",
+                gap: "12px 0",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "flex-start",
@@ -258,14 +262,46 @@ export function Positions() {
             }}
           >
             <Flex gap="0 3px">
-              <Typography>Status:</Typography>
+              <Typography>
+                <Trans>Status:</Trans>
+              </Typography>
               <SelectPositionState value={positionFilterState} onChange={setPositionFilterState} />
             </Flex>
 
             <Flex gap="0 3px">
-              <Typography>Value:</Typography>
+              <Typography>
+                <Trans>Sort by:</Trans>
+              </Typography>
               <SelectPositionsSort value={positionSort} onChange={setPositionSort} />
             </Flex>
+
+            <Tooltip
+              tips={
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#111936",
+                      fontSize: "12px",
+                      lineHeight: "18px",
+                    }}
+                  >
+                    <Trans>Need to lock your liquidity? Check out the Sneedlock feature controlled by Sneed DAO:</Trans>
+                  </Typography>
+                  <Link link="https://sneeddao.com/#sneedlock" color="secondary">
+                    https://sneeddao.com/#sneedlock
+                  </Link>
+                </Box>
+              }
+            >
+              <Box sx={{ cursor: "pointer" }}>
+                <Flex gap="0 3px">
+                  <Unlock size={14} />
+                  <Typography color="text.primary">
+                    <Trans>Liquidity Lock</Trans>
+                  </Typography>
+                </Flex>
+              </Box>
+            </Tooltip>
           </Flex>
         </Flex>
 

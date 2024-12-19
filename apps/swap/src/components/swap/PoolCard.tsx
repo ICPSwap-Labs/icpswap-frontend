@@ -50,7 +50,6 @@ export interface PoolCardProps {
   fee: bigint;
   tvlUSD: string | number;
   totalVolumeUSD: string | number;
-  version?: "v2" | "v3";
   token0Symbol?: string;
   token1Symbol?: string;
 }
@@ -63,7 +62,6 @@ export default function PoolCard({
   tvlUSD,
   token0Symbol,
   token1Symbol,
-  version,
 }: PoolCardProps) {
   const history = useHistory();
   const classes = useStyles();
@@ -72,11 +70,7 @@ export default function PoolCard({
   const [, currency1] = useToken(token1);
 
   const handlePoolClick = useCallback(() => {
-    if (version === "v2") {
-      history.push(`/swap/v2/liquidity/add/${token0}/${token1}/${Number(fee)}`);
-    } else {
-      history.push(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
-    }
+    history.push(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
   }, [history]);
 
   return (

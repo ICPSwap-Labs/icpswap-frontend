@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { BigNumber } from "@icpswap/utils";
 import { PositionSort, UserPosition, UserPositionForFarm } from "types/swap";
-import { encodePositionKeyByPool } from "utils/swap/index";
 
 export interface UseSortedPositionsProps {
   sort: PositionSort;
@@ -13,15 +12,19 @@ export interface UseSortedPositionsProps {
 export function useSortedPositions<T>({ positions, sort, feesValue, positionValue }: UseSortedPositionsProps): T[] {
   return useMemo(() => {
     if (!positions) return [];
-    if (sort === PositionSort.Default) return positions;
+
+    if (sort === PositionSort.Default) return [...positions];
 
     if (sort === PositionSort.FeesValue) {
       if (!feesValue) return positions;
+
       if (Object.keys(feesValue).length < positions.length) return positions;
 
-      return positions.sort((a, b) => {
-        const keyA = encodePositionKeyByPool(a.id, a.index);
-        const keyB = encodePositionKeyByPool(b.id, b.index);
+      return [...positions].sort((a, b) => {
+        const allKeys = Object.keys(feesValue);
+
+        const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));
+        const keyB = allKeys.find((key) => key.includes(b.id) && key.includes(b.index.toString()));
 
         if (keyA && keyB) {
           const valueA = feesValue[keyA];
@@ -40,9 +43,11 @@ export function useSortedPositions<T>({ positions, sort, feesValue, positionValu
       if (!positionValue) return positions;
       if (Object.keys(positionValue).length < positions.length) return positions;
 
-      return positions.sort((a, b) => {
-        const keyA = encodePositionKeyByPool(a.id, a.index);
-        const keyB = encodePositionKeyByPool(b.id, b.index);
+      return [...positions].sort((a, b) => {
+        const allKeys = Object.keys(positionValue);
+
+        const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));
+        const keyB = allKeys.find((key) => key.includes(b.id) && key.includes(b.index.toString()));
 
         if (keyA && keyB) {
           const valueA = positionValue[keyA];

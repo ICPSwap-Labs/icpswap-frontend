@@ -1,16 +1,17 @@
 import { useEffect, useState, useMemo } from "react";
 import { XTC, TOKEN_STANDARD, CAT, MOD, BoomDAO } from "constants/tokens";
 import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { getSwapPools } from "@icpswap/hooks";
+import type { SwapPoolData } from "@icpswap/types";
+import { registerTokens } from "@icpswap/token-adapter";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
 import { useGlobalTokenList } from "store/global/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
-import { getSwapPools } from "@icpswap/hooks";
-import { registerTokens } from "@icpswap/token-adapter";
 import { getAllTokenPools } from "hooks/staking-token/index";
 import { getAllClaimEvents } from "hooks/token-claim";
 import { updateCanisters } from "store/allCanisters";
-import type { SwapPoolData } from "@icpswap/types";
+import { updateTokens } from "store/allTokens";
 
 export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH];
 
@@ -77,18 +78,19 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         registerTokens(allTokenStandards);
         updateTokenStandard(allTokenStandards);
 
-        updateCanisters(
-          [
-            ...(allSwapPools?.map((ele) => [ele.canisterId.toString(), ele.token0.address, ele.token1.address]) ?? []),
-            ...(allTokenPools?.map((ele) => [
-              ele.canisterId.toString(),
-              ele.rewardToken.address,
-              ele.stakingToken.address,
-            ]) ?? []),
-          ].reduce((prev, curr) => {
-            return prev.concat(curr);
-          }, [] as string[]),
-        );
+        const allCanisterIds = [
+          ...(allSwapPools?.map((ele) => [ele.canisterId.toString(), ele.token0.address, ele.token1.address]) ?? []),
+          ...(allTokenPools?.map((ele) => [
+            ele.canisterId.toString(),
+            ele.rewardToken.address,
+            ele.stakingToken.address,
+          ]) ?? []),
+        ].reduce((prev, curr) => {
+          return prev.concat(curr);
+        }, [] as string[]);
+
+        updateCanisters(allCanisterIds);
+        updateTokens(allTokenStandards.map((e) => e.canisterId));
 
         setUpdated(true);
       });
@@ -110,7 +112,10 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
       setTokensLoading(false);
 
-      updateCanisters(globalTokenList.map((ele) => ele.canisterId));
+      const tokenIds = globalTokenList.map((ele) => ele.canisterId);
+
+      updateCanisters(tokenIds);
+      updateTokens(tokenIds);
     } else if (!fetchGlobalTokensLoading) {
       setTokensLoading(false);
     }
@@ -127,7 +132,9 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         ]);
       });
 
-      updateCanisters(Tokens.map((ele) => ele.address));
+      const tokenIds = Tokens.map((ele) => ele.address);
+      updateCanisters(tokenIds);
+      updateTokens(tokenIds);
     }
 
     registerTokens([

@@ -13,3 +13,5 @@ export const updateUserLocale = createAction<SupportedLocale>("global/updateUser
 export const updateTokenList = createAction<TokenListMetadata[]>("global/updateTokenList");
 
 export const updateAllSwapTokens = createAction<AllTokenOfSwapTokenInfo[]>("global/updateAllSwapTokens");
+
+export const updateWalletConnector = createAction<boolean>("global/updateWalletConnector");

@@ -1,12 +1,10 @@
 import React, { useMemo, useEffect } from "react";
-import { useTheme, Typography, Box, Grid, useMediaQuery } from "@mui/material";
+import { useTheme, Typography, Box, Grid, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { DotLoading, TokenImage } from "components/index";
-import { Theme } from "@mui/material/styles";
+import { DotLoading, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import {
   parseTokenAmount,
@@ -41,7 +39,7 @@ export function TokenItem({
   isDisabled,
   hidden,
 }: TokenItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -206,7 +204,6 @@ export function TokenItem({
                         .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
                         .toString(),
                       4,
-                      true,
                       0.001,
                     )
                   : "--"}

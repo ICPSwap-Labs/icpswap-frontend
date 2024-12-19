@@ -10,3 +10,4 @@ export * from "./userStorage";
 export * from "./useInfoToken";
 export * from "./usePoolAllChartData";
 export * from "./usePoolTvlChartData";
+export * from "./usePoolAPR";

@@ -9,10 +9,9 @@ import { isDarkTheme, toFormat } from "utils";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext , PositionRangeState } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
@@ -106,7 +105,7 @@ export interface PositionCardProps {
   showButtons?: boolean;
   position: Position | undefined;
   farmId?: string | undefined;
-  staked?: boolean;
+  staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
   isLimit: boolean;
@@ -270,8 +269,11 @@ export function PositionCard({
       <Flex
         justify="space-between"
         fullWidth
-        onClick={handleToggleShow}
+        onClick={() => {
+          handleToggleShow();
+        }}
         sx={{
+          userSelect: "none",
           "@media(max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
@@ -398,38 +400,80 @@ export function PositionCard({
 
           <PositionRangeState state={positionState} width="110px" />
 
-          <Flex
-            sx={{
-              "@media(max-width: 640px)": {
-                width: "100%",
-                justifyContent: "center",
-                visibility: detailShow ? "hidden" : "visible",
-                height: detailShow ? "0px" : "auto",
-              },
-            }}
-          >
-            <Typography
+          {matchDownMD ? (
+            <Flex
               sx={{
-                display: "none",
-                fontSize: "12px",
                 "@media(max-width: 640px)": {
-                  display: "block",
+                  width: "100%",
+                  justifyContent: "center",
+                  visibility: detailShow ? "hidden" : "visible",
+                  height: detailShow ? "0px" : "auto",
                 },
               }}
-              color="text.theme-secondary"
             >
-              <Trans>Detail</Trans>
-            </Typography>
-            {detailShow ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown
+              <Typography
                 sx={{
-                  color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  display: "none",
+                  fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    display: "block",
+                  },
                 }}
-              />
-            )}
-          </Flex>
+                color="text.theme-secondary"
+              >
+                <Trans>Detail</Trans>
+              </Typography>
+
+              {detailShow ? (
+                <KeyboardArrowUp />
+              ) : (
+                <KeyboardArrowDown
+                  sx={{
+                    color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  }}
+                />
+              )}
+            </Flex>
+          ) : (
+            <Flex
+              sx={{
+                justifyContent: "flex-end",
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleShow();
+              }}
+            >
+              {detailShow ? (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowDown
+                    sx={{
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
 

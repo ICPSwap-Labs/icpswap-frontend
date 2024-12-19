@@ -1,4 +1,3 @@
-import { INFO_URL } from "constants/index";
 import TwitterIcon from "./icons/Twitter";
 import TelegramIcon from "./icons/Telegram";
 import DiscordIcon from "./icons/Discord";
@@ -16,7 +15,7 @@ export type Route = {
   path?: string;
   link?: string;
   subMenus?: SubMenu[];
-  key: string;
+  key: string | string[];
   icon?: () => JSX.Element;
   disabled?: boolean;
 };
@@ -43,12 +42,11 @@ export const routes: Route[] = [
     path: "/liquidity",
   },
   {
-    key: "stake_farm",
+    key: ["farm", "stake"],
     name: `Earn`,
     subMenus: [
       { key: "farm", name: `Farm`, path: "/farm" },
       { key: "staking-token", name: `Staking Pool V2`, path: "/stake" },
-      { key: "staking v1", name: `Staking Pool V1`, path: "/stake/v1" },
     ],
   },
   {
@@ -59,7 +57,7 @@ export const routes: Route[] = [
   {
     key: "info",
     name: `Info`,
-    link: INFO_URL,
+    path: "/info-overview",
   },
   {
     key: "marketplace",
@@ -80,11 +78,6 @@ export const routes: Route[] = [
     key: "voting",
     name: `Voting`,
     path: `/voting`,
-  },
-  {
-    key: "console",
-    name: `Console`,
-    path: `/console`,
   },
   {
     key: "followUS",
@@ -122,3 +115,7 @@ export const routes: Route[] = [
     disabled: true,
   },
 ];
+
+export function routeKey(key: string | string[]) {
+  return typeof key === "string" ? key : key.join(",");
+}

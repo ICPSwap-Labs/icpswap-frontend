@@ -3,12 +3,11 @@ import { Box, Typography, useTheme, Button } from "components/Mui";
 import { useCallback } from "react";
 import { Flex } from "@icpswap/ui";
 import { ckETH, ICP } from "@icpswap/tokens";
-import { useChainKeyTransactionPrice } from "@icpswap/hooks";
+import { useChainKeyTransactionPrice, useInfoToken } from "@icpswap/hooks";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import { useHistory } from "react-router-dom";
 
 export function EthFee() {
@@ -42,12 +41,12 @@ export function EthFee() {
           <Typography>
             {transactionPrice && ckETHInfoToken ? (
               <Trans>
-                (Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
+                Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
                 {ckETH.symbol} ($
                 {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
                   .multipliedBy(ckETHInfoToken.priceUSD)
                   .toFormat(2)}
-                ) for gas fees)
+                )
               </Trans>
             ) : (
               "--"

@@ -31,3 +31,26 @@ export const uint8ArrayToBigInt = (array: Uint8Array): bigint => {
 export const asciiStringToByteArray = (text: string): Array<number> => {
   return Array.from(text).map((c) => c.charCodeAt(0));
 };
+
+export const subaccountHexToBytes = (hex: string): number[] => {
+  let new_hex = hex;
+
+  if (new_hex.substr(0, 2) === "0x") {
+    new_hex = hex.replace(/^0x/i, "");
+  }
+
+  const bytes = [];
+
+  let __hex = hex;
+  const hexLength = hex.length;
+
+  for (let i = 0; i < 64 - hexLength; i++) {
+    __hex = `.${hex}`;
+  }
+
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes.push(parseInt(__hex.substr(i, 2), 16));
+  }
+
+  return bytes;
+};

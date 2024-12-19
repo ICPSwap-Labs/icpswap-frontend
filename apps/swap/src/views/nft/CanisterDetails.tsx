@@ -53,7 +53,7 @@ function ICPSwapNFT() {
         </Box>
 
         <Box mt={2}>
-          <MainCard level={2}>
+          <MainCard level={3}>
             <Box mb={3}>
               {Pages.map((page) => (
                 <Typography

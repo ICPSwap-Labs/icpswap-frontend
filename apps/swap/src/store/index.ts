@@ -28,10 +28,6 @@ import { SnsState } from "./sns/states";
 import { LimitOrderState } from "./swap/limit-order/state";
 import { TransactionsState } from "./transactions/reducer";
 
-import { SwapBurnState as SwapV2BurnState } from "./swapv2/burn/state";
-import { SwapLiquidityState as SwapV2LiquidityState } from "./swapv2/liquidity/state";
-import { SwapCacheState as SwapV2CacheState } from "./swapv2/cache/state";
-
 interface PersistPartial {
   _persist: PersistState;
 }
@@ -53,9 +49,6 @@ export interface AllState {
   NFTTrade: NFTTradeState;
   call: CallState;
   step: StepsState;
-  swapV2Burn: SwapV2BurnState;
-  swapV2Liquidity: SwapV2LiquidityState;
-  swapV2Cache: SwapV2CacheState;
   web3: Web3State;
   sns: SnsState;
   transactions: TransactionsState;
@@ -82,8 +75,6 @@ const rootPersistConfig = {
     "swapBurn",
     "call",
     "step",
-    "swapV2Liquidity",
-    "swapV2Burn",
     "sns",
     "limitOrder",
   ],

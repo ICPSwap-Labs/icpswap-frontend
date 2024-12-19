@@ -2,6 +2,7 @@ import { useState, memo, useCallback, useRef } from "react";
 import { Box } from "components/Mui";
 import { MainCard, Flex } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
+import { SwapProButton } from "components/swap/SwapProButton";
 import {
   SwapWrapper,
   type SwapWrapperRef,
@@ -73,10 +74,8 @@ export function SwapMain() {
       }}
     >
       <SwapUIWrapper>
-        <Flex fullWidth justify="center">
-          <Flex
-            vertical
-            align="flex-start"
+        <Flex fullWidth justify="center" align="flex-start">
+          <Box
             sx={{
               width: "570px",
             }}
@@ -107,7 +106,10 @@ export function SwapMain() {
               >
                 <SwapTabPanels currentTab={TABS.SWAP} />
 
-                <SwapSettingIcon type="swap" />
+                <Flex gap="0 4px">
+                  <SwapSettingIcon type="swap" />
+                  <SwapProButton inputToken={inputToken} outputToken={outputToken} />
+                </Flex>
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>
@@ -130,6 +132,7 @@ export function SwapMain() {
                   refreshKey={SWAP_REFRESH_KEY}
                   onInputTokenClick={handleInputTokenClick}
                   inputToken={inputToken}
+                  fontSize="12px"
                 />
               </Box>
             ) : null}
@@ -137,7 +140,7 @@ export function SwapMain() {
             {isConnected && noLiquidity === true ? (
               <CreatePool inputToken={inputToken} outputToken={outputToken} />
             ) : null}
-          </Flex>
+          </Box>
         </Flex>
       </SwapUIWrapper>
     </SwapContext.Provider>

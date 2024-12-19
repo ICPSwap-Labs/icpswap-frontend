@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { Button, Box, Grid, Typography, Checkbox, Avatar, useTheme } from "@mui/material";
-import { Modal, TextButton } from "components/index";
+import { Button, Box, Typography, Checkbox, Avatar, useTheme } from "components/Mui";
+import { Modal, TextButton, TokenStandardLabel } from "components/index";
 import { Trans, t } from "@lingui/macro";
-import TokenStandardLabel from "components/token/TokenStandardLabel";
-import { TOKEN_STANDARD, registerTokens } from "@icpswap/token-adapter";
-import { useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { INFO_URL } from "constants/index";
 import { useTaggedTokenManager } from "store/wallet/hooks";
-import { Theme } from "@mui/material/styles";
-
-import { Verification } from "../types";
+import { useToken } from "hooks/index";
+import { Flex } from "@icpswap/ui";
 
 export function WarningIcon() {
   return (
@@ -43,37 +41,20 @@ export interface ImportTokenModalProps {
   canisterId: string;
   onClose: () => void;
   onImportSuccessfully?: () => void;
-  verification: Verification;
 }
 
-export function ConfirmImport({
-  canisterId,
-  open,
-  onClose,
-  onImportSuccessfully,
-  verification,
-}: ImportTokenModalProps) {
-  const theme = useTheme() as Theme;
+export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully }: ImportTokenModalProps) {
+  const theme = useTheme();
   const [riskWarning, setRiskWarning] = useState(false);
-
-  const updateTokenStandard = useUpdateTokenStandard();
 
   const { updateTaggedTokens } = useTaggedTokenManager();
   const [openSuccessTip] = useSuccessTip();
 
+  const [, token] = useToken(canisterId);
+
   const handleConfirm = () => {
-    if (!verification) return;
+    if (!token) return;
 
-    let __standard = verification.standard;
-
-    // If the imported token support ICRC2, and has no standard registered,
-    // make standard is ICRC2 if user import it as icrc1
-    if (verification.support_icrc2 && verification.standard === TOKEN_STANDARD.ICRC1 && !getTokenStandard(canisterId)) {
-      __standard = TOKEN_STANDARD.ICRC2;
-    }
-
-    updateTokenStandard([{ canisterId, standard: __standard }]);
-    registerTokens([{ canisterId, standard: __standard }]);
     openSuccessTip(t`Imported successfully`);
     updateTaggedTokens([canisterId]);
     if (onImportSuccessfully) onImportSuccessfully();
@@ -81,8 +62,7 @@ export function ConfirmImport({
   };
 
   let error = "";
-  if (getTokenStandard(canisterId) && getTokenStandard(canisterId) !== verification.standard)
-    error = t`Retry after changing token standard.`;
+  if (!getTokenStandard(canisterId)) error = t`No token standard.`;
 
   return (
     <Modal
@@ -100,44 +80,51 @@ export function ConfirmImport({
       }}
     >
       <Box>
-        <Grid container sx={{ background: theme.palette.background.level3, padding: "16px", borderRadius: "12px" }}>
-          <Avatar sx={{ width: "48px", height: "48px", marginRight: "12px" }} src={verification.metadata.logo ?? ""}>
+        <Flex
+          fullWidth
+          sx={{ background: theme.palette.background.level3, padding: "16px", borderRadius: "12px" }}
+          align="flex-start"
+        >
+          <Avatar sx={{ width: "48px", height: "48px", marginRight: "12px" }} src={token?.logo ?? ""}>
             &nbsp;
           </Avatar>
-          <Grid item xs>
+
+          <Flex vertical align="flex-start">
             <Typography fontSize="16px" fontWeight="500" component="span" color="#ffffff">
-              {verification.metadata.symbol}({verification.metadata.name})
+              {token?.symbol}({token?.name})
             </Typography>
             <Typography fontSize="12px" mt="4px">
               {canisterId}
             </Typography>
 
             <Box mt="8px" sx={{ width: "fit-content" }}>
-              <TokenStandardLabel standard={verification.standard} borderRadius="34px" />
+              <TokenStandardLabel standard={token?.standard as TOKEN_STANDARD} borderRadius="34px" />
             </Box>
 
             <Box mt="24px">
-              <TextButton link={`${INFO_URL}/token/details/${canisterId}?standard=${verification.standard}`}>
+              <TextButton link={`${INFO_URL}/info-tokens/details/${canisterId}?standard=${token?.standard}`}>
                 <Trans>View On Info</Trans>
               </TextButton>
             </Box>
-          </Grid>
-        </Grid>
+          </Flex>
+        </Flex>
 
-        <Grid
-          container
-          mt="24px"
+        <Flex
+          fullWidth
           sx={{
             background: "rgba(183, 156, 74, 0.2)",
             border: "1px solid #B79C4A",
             borderRadius: "12px",
             padding: "16px 14px",
+            margin: "24px 0 0 0",
           }}
+          gap="0 16px"
+          align="flex-start"
         >
           <Box sx={{ position: "relative", top: "5px" }}>
             <WarningIcon />
           </Box>
-          <Grid item xs ml="16px">
+          <Box>
             <Typography color="#B79C4A" sx={{ lineHeight: "23px" }}>
               <Trans>
                 Anyone can create a token on Internet Computer with any name and LOGO, including creating fake versions
@@ -151,10 +138,10 @@ export function ConfirmImport({
                 Please DYOR before investing!
               </Trans>
             </Typography>
-          </Grid>
-        </Grid>
+          </Box>
+        </Flex>
 
-        <Grid container alignItems="center" mt="16px">
+        <Flex fullWidth gap="0 4px" sx={{ margin: "16px 0 0 0" }}>
           <Checkbox
             checked={riskWarning}
             onChange={({ target: { checked } }) => {
@@ -165,12 +152,10 @@ export function ConfirmImport({
             }}
           />
 
-          <Grid item xs ml="4px">
-            <Typography sx={{ cursor: "pointer", fontSize: "12px" }} onClick={() => setRiskWarning(!riskWarning)}>
-              <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
-            </Typography>
-          </Grid>
-        </Grid>
+          <Typography sx={{ cursor: "pointer", fontSize: "12px" }} onClick={() => setRiskWarning(!riskWarning)}>
+            <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
+          </Typography>
+        </Flex>
       </Box>
 
       <Box mt="18px">

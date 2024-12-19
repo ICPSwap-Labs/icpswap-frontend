@@ -1,8 +1,15 @@
 /* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme, useTheme, Button } from "components/Mui";
-import { FeeSelector, CurrencySelector, SwapDepositAmount, Reclaim, AddLiquidityButton } from "components/swap/index";
+import { Box, Typography, makeStyles, Theme, useTheme } from "components/Mui";
+import {
+  FeeSelector,
+  CurrencySelector,
+  SwapDepositAmount,
+  Reclaim,
+  AddLiquidityButton,
+  BuyTokenButton,
+} from "components/swap/index";
 import {
   useMintState,
   useMintHandlers,
@@ -27,7 +34,6 @@ import { ReclaimTips } from "components/ReclaimTips";
 import { usePCMMetadata, useParsedQueryString, useUserPCMBalance } from "@icpswap/hooks";
 import { InfoPool, PriceRange } from "components/liquidity/index";
 import { Flex } from "@icpswap/ui";
-import { ICP, ICS } from "@icpswap/tokens";
 import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
 import { useRefreshTrigger } from "hooks/index";
 import { Wrapper } from "components/index";
@@ -337,24 +343,6 @@ export default function AddLiquidity() {
     onFieldBInput(maxAmountFormat(currencyBAmount.toExact(), currencyBAmount.currency.decimals));
   };
 
-  const handleByToken = useCallback(
-    (address: string) => {
-      let input: string = address;
-      let output: string = address;
-
-      if (address === ICP.address) {
-        input = ICS.address;
-        output = ICP.address;
-      } else {
-        input = ICP.address;
-        output = address;
-      }
-
-      history.push(`/swap?input=${input}&output=${output}`);
-    },
-    [history],
-  );
-
   useEffect(() => {
     return () => {
       resetMintState();
@@ -541,22 +529,9 @@ export default function AddLiquidity() {
                     gap: "0 16px",
                   }}
                 >
-                  <Button
-                    className="secondary"
-                    variant="outlined"
-                    fullWidth
-                    onClick={() => handleByToken(baseCurrency.address)}
-                  >
-                    <Trans>Buy {baseCurrency.symbol}</Trans>
-                  </Button>
-                  <Button
-                    className="secondary"
-                    variant="outlined"
-                    fullWidth
-                    onClick={() => handleByToken(quoteCurrency.address)}
-                  >
-                    <Trans>Buy {quoteCurrency.symbol}</Trans>
-                  </Button>
+                  <BuyTokenButton token={baseCurrency} />
+
+                  <BuyTokenButton token={quoteCurrency} />
                 </Flex>
               ) : null}
 
@@ -606,6 +581,7 @@ export default function AddLiquidity() {
                 priceUpper={priceUpper}
                 price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
                 getRangeByPercent={getRangeByPercent}
+                pool={pool}
               />
               <Box
                 mt={2}

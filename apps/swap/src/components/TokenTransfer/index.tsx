@@ -1,31 +1,27 @@
 import React, { useState, useContext, useMemo } from "react";
-import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Button, Typography, Box, InputAdornment, makeStyles, Theme } from "components/Mui";
 import {
   parseTokenAmount,
   formatTokenAmount,
   isValidAccount,
   isValidPrincipal,
   toSignificantWithGroupSeparator,
+  BigNumber,
 } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "locales/services";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
-import { Theme } from "@mui/material/styles";
 import { TokenInfo } from "types/token";
-import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
-import MaxButton from "components/MaxButton";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { MaxButton, Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -61,13 +57,15 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   const account = useAccount();
   const principalString = useAccountPrincipalString();
   const principal = useAccountPrincipal();
-  const [openErrorTip] = useErrorTip();
-  const [openSuccessTip] = useSuccessTip();
+  const [openTip] = useTips();
+  const [openFullLoading, closeFullLoading] = useFullscreenLoading();
 
   const { refreshTotalBalance, setRefreshTotalBalance } = useContext(WalletContext);
 
   const { result: balance } = useTokenBalance(token.canisterId, principal);
   const tokenUSDPrice = useUSDPriceById(token.canisterId);
+
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     to: transferTo ?? "",
@@ -106,9 +104,12 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
     return undefined;
   };
 
-  const handleSubmit = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
+  const handleSubmit = async () => {
     try {
-      if (loading || !account) return;
+      if (!account) return;
+
+      openFullLoading();
+      setLoading(true);
 
       const { status, message } = await tokenTransfer({
         canisterId: token.canisterId.toString(),
@@ -123,21 +124,21 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
       });
 
       if (status === "ok") {
-        openSuccessTip(t`Transferred successfully`);
+        openTip(t`Transferred successfully`, MessageTypes.success);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
         if (token.canisterId.toString() === ICP.address || token.canisterId.toString() === WRAPPED_ICP.address) {
           if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
         }
       } else {
-        openErrorTip(getLocaleMessage(message) ?? t`Failed to transfer`);
+        openTip(getLocaleMessage(message) ?? t`Failed to transfer`, MessageTypes.error);
       }
-
-      closeLoading();
     } catch (error) {
       console.error(error);
-      closeLoading();
     }
+
+    closeFullLoading();
+    setLoading(false);
   };
 
   const actualTransferAmount = useMemo(() => {
@@ -214,7 +215,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
           }}
         />
 
-        <Grid container alignItems="center">
+        <Flex fullWidth gap="0 6px">
           <Typography>
             <Trans>
               Balance:{" "}
@@ -227,13 +228,10 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
               }`}
             </Trans>
           </Typography>
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+
+          <MaxButton onClick={handleMax} />
+        </Flex>
+
         <Typography>
           <Trans>Fee:</Trans> {parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()}
           &nbsp;{token.symbol}&nbsp;(
@@ -259,20 +257,17 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         <Typography color="text.danger">
           <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
         </Typography>
-        <Identity onSubmit={handleSubmit} fullScreenLoading>
-          {({ submit, loading }: CallbackProps) => (
-            <Button
-              variant="contained"
-              fullWidth
-              color="primary"
-              size="large"
-              disabled={loading || !!errorMessage}
-              onClick={submit}
-            >
-              {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
-            </Button>
-          )}
-        </Identity>
+
+        <Button
+          variant="contained"
+          fullWidth
+          color="primary"
+          size="large"
+          disabled={loading || !!errorMessage}
+          onClick={handleSubmit}
+        >
+          {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
+        </Button>
       </Box>
     </Modal>
   );

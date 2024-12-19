@@ -1,4 +1,4 @@
-import { FarmInfoWithId, Override, UserPositionInfo } from "@icpswap/types";
+import { FarmInfoWithId, Override, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
 
 export type PositionDetail = {
   pool: string;
@@ -40,3 +40,13 @@ export enum PositionSort {
 }
 
 export type PositionKey = string;
+
+export type PositionDetails = Override<UserPositionInfoWithId, { poolId: string }>;
+
+export enum PoolState {
+  LOADING = "LOADING",
+  NOT_EXISTS = "NOT_EXISTS",
+  EXISTS = "EXISTS",
+  INVALID = "INVALID",
+  NOT_CHECK = "NOT_CHECK",
+}

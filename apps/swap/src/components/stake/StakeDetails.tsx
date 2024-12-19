@@ -282,7 +282,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
 
             {poolInfo && poolId ? (
               <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
-                <Link href={`${INFO_URL}/stake/details/${poolId}`} target="_blank" color="text.theme-secondary">
+                <Link href={`${INFO_URL}/info-stake/details/${poolId}`} target="_blank" color="text.theme-secondary">
                   <Trans>Staking Pool Info</Trans>
                 </Link>
                 <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />

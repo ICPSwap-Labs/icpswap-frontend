@@ -1,10 +1,10 @@
-import { Box, Avatar } from "@mui/material";
+import { Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapOutAmount } from "store/swap/hooks";
-import { TextButton } from "components/index";
+import { TextButton, TokenImage } from "components/index";
 import type { StepContents } from "types/step";
 
 export interface GetStepsArgs {
@@ -36,28 +36,22 @@ export function getSwapStep({
   const outAmount = getSwapOutAmount(key);
 
   const amount0Value = (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo0}>
-        &nbsp;
-      </Avatar>
+    <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
+      <TokenImage size="16px" logo={logo0} tokenId={inputCurrency.address} />
       {amount0}
     </Box>
   );
 
   const amount1Value = (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo1}>
-        &nbsp;
-      </Avatar>
+    <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
+      <TokenImage size="16px" logo={logo1} tokenId={outputCurrency.address} />
       {amount1}
     </Box>
   );
 
   const outAmountValue = (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Avatar sx={{ width: "16px", height: "16px", margin: "0 4px 0 0" }} src={logo1}>
-        &nbsp;
-      </Avatar>
+      <TokenImage size="16px" logo={logo1} tokenId={outputCurrency.address} />
       {outAmount ? parseTokenAmount(outAmount, outputCurrency.decimals).toFormat() : "--"}
     </Box>
   );

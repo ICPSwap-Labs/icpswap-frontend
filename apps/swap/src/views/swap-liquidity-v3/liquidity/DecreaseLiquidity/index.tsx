@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Box, Typography, makeStyles } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider";
 import HeaderTab from "components/swap/Header";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
@@ -27,17 +28,7 @@ import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
 import ConfirmRemoveLiquidityModal from "./Confirm";
 
-const useStyle = makeStyles(() => {
-  return {
-    container: {
-      width: "100%",
-      maxWidth: "612px",
-    },
-  };
-});
-
 export default function DecreaseLiquidity() {
-  const classes = useStyle();
   const history = useHistory();
 
   const principal = useAccountPrincipal();
@@ -140,6 +131,16 @@ export default function DecreaseLiquidity() {
     history.goBack();
   }, [history, resetBurnState]);
 
+  const handleDecreaseSuccess = () => {
+    resetBurnState();
+
+    if (liquidityToRemove.equalTo(1)) {
+      history.push("/liquidity?tab=Positions");
+    } else {
+      history.goBack();
+    }
+  };
+
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));
 
   const getDecreaseLiquidityCall = useDecreaseLiquidityCallback({
@@ -178,8 +179,8 @@ export default function DecreaseLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t`Removed liquidity successfully`);
-      handleBack();
+      openSuccessTip(t`Withdrawal submitted`);
+      handleDecreaseSuccess();
     }
 
     setLoading(false);
@@ -195,8 +196,14 @@ export default function DecreaseLiquidity() {
 
   return (
     <Wrapper>
-      <Grid container justifyContent="center">
-        <MainCard level={1} className={`${classes.container} lightGray200`}>
+      <Flex fullWidth justify="center">
+        <MainCard
+          level={1}
+          sx={{
+            width: "100%",
+            maxWidth: "612px",
+          }}
+        >
           <HeaderTab title={t`Remove Liquidity`} showArrow showUserSetting slippageType="burn" onBack={handleBack} />
 
           {!positionLoading ? (
@@ -288,7 +295,7 @@ export default function DecreaseLiquidity() {
             </Box>
           ) : null}
         </MainCard>
-      </Grid>
+      </Flex>
 
       {confirmModalShow && (
         <ConfirmRemoveLiquidityModal

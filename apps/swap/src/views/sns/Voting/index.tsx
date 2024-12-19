@@ -1,17 +1,16 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
 import { useListDeployedSNSs, getListProposals, useParsedQueryString } from "@icpswap/hooks";
-import { useMemo, useState, useEffect } from "react";
 import type { ProposalData } from "@icpswap/types";
-import { SnsProposalDecisionStatus } from "@icpswap/constants";
-import { Theme } from "@mui/material/styles";
-import { SelectSns } from "components/sns/SelectSNSTokens";
 import { shortenString, nowInSeconds } from "@icpswap/utils";
+import { useMemo, useState, useEffect } from "react";
+import { SnsProposalDecisionStatus } from "@icpswap/constants";
+import { SelectSns } from "components/sns/SelectSNSTokens";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useHistory } from "react-router-dom";
-import { LoadingRow, Wrapper } from "components/index";
+import { LoadingRow, Wrapper, Link } from "components/index";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
 
@@ -23,8 +22,7 @@ interface ProposalItemProps {
 }
 
 function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
-  const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const { title, summary, seconds, isExecuted } = useMemo(() => {
     const __proposal = proposal.proposal[0];
@@ -43,11 +41,9 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
     };
   }, [proposal]);
 
-  const handleClick = () => {
-    const proposal_id = proposal.id[0]?.id;
-    if (!proposal_id || !governance_id) return;
-    history.push(`/sns/voting/${governance_id}/${proposal_id}`);
-  };
+  const proposal_id = useMemo(() => {
+    return proposal.id[0]?.id;
+  }, [proposal]);
 
   const proposal_status_text = useMemo(() => {
     const proposal_status = getProposalStatus(proposal);
@@ -69,19 +65,18 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
   }, [proposal]);
 
   return (
-    <>
-      <Box
-        sx={{
-          background: theme.palette.background.level4,
-          borderRadius: "12px",
-          padding: "20px",
-          cursor: "pointer",
-          "@media(max-width: 640px)": {
-            padding: "10px",
-          },
-        }}
-        onClick={handleClick}
-      >
+    <Box
+      sx={{
+        background: theme.palette.background.level4,
+        borderRadius: "12px",
+        padding: "20px",
+        cursor: "pointer",
+        "@media(max-width: 640px)": {
+          padding: "10px",
+        },
+      }}
+    >
+      <Link to={`/sns/voting/${governance_id}/${proposal_id}`} width="100%" height="100%" display="block">
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography>ID: {proposal.id[0]?.id.toString() ?? "--"}</Typography>
 
@@ -105,8 +100,8 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
         {isExecuted ? null : (
           <Typography sx={{ margin: "20px 0 0 0" }}>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
         )}
-      </Box>
-    </>
+      </Link>
+    </Box>
   );
 }
 

@@ -29,7 +29,7 @@ export interface TokenStandardLabelProps {
   width?: string;
 }
 
-export default function TokenStandardLabel({
+export function TokenStandardLabel({
   standard,
   height,
   fontSize = "12px",

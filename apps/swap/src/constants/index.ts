@@ -1,3 +1,4 @@
+import { isNullArgs } from "@icpswap/utils";
 import { network, NETWORK } from "./server";
 
 export const ASSETS_DECIMALS = 2;
@@ -35,14 +36,13 @@ export const NFT_UPLOAD_FILES = [
 ];
 
 export const CurrencyAmountFormatDecimals = (decimals: number | bigint | undefined) => {
-  if (!decimals) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
+  if (isNullArgs(decimals)) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   if (Number(decimals) > TOKEN_AMOUNT_DISPLAY_DECIMALS) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   return Number(decimals);
 };
 
 export const INFO_URL_MAP = {
-  [NETWORK.IC]: "https://info.icpswap.com",
-  [NETWORK.LOCAL]: "https://66jms-2yaaa-aaaaa-aabha-cai.dtest.app",
+  [NETWORK.IC]: "",
 };
 
 export const INFO_URL = INFO_URL_MAP[network];

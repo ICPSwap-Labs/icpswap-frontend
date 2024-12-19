@@ -29,6 +29,9 @@ export type {
   LimitOrderValue,
   LimitTransaction,
   LimitTransactionResult,
+  PositionPricePeriodRange,
+  PoolAPRs,
+  TokenAnalysisData,
 } from "@icpswap/candid";
 
 export type LimitOrder = {

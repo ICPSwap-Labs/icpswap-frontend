@@ -35,6 +35,7 @@
     "craco",
     "typechain",
     "Sepolia",
-    "Unstart"
+    "Unstart",
+    "sneed"
   ]
 }

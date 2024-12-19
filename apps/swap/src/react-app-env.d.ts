@@ -80,6 +80,8 @@ interface Window {
       disconnect: () => Promise<void>;
       principalId: string;
       getPrincipal: () => Promise<Principal>;
+      onExternalDisconnect: (callback: () => void) => void;
+      onLockStateChange: (callback: (isLocked: boolean) => void) => void;
     };
     infinityWallet: {
       requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;

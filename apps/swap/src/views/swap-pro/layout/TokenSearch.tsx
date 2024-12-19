@@ -1,33 +1,31 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "components/Mui";
 import { FilledTextField, TokenImage } from "components/index";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
-import { useAllTokensOfSwap } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarAmount, nonNullArgs, shortenString } from "@icpswap/utils";
+import { useAllTokensOfSwap, useInfoAllTokens } from "@icpswap/hooks";
+import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import NoDataIcon from "assets/icons/NoData";
-import type { AllTokenOfSwapTokenInfo, PublicTokenOverview } from "@icpswap/types";
+import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { useInfoAllTokens } from "hooks/info/useInfoTokens";
 import { useGlobalTokenList } from "store/global/hooks";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
-  infoAllTokens: PublicTokenOverview[] | undefined;
+  infoAllTokens: PublicTokenOverview[] | Null;
   onTokenClick?: (token: AllTokenOfSwapTokenInfo) => void;
   inTokenList?: boolean;
 }
 
 function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: SearchItemProps) {
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
 
@@ -93,7 +91,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarAmount(info.priceUSD, 2, true, 0.0001) : "--"}
+        {info ? formatDollarTokenPrice({ num: info.priceUSD, ab: 0.0001, digits: 2 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (
@@ -111,7 +109,7 @@ export interface SearchProps {
 }
 
 export function TokenSearch({ open, onClose }: SearchProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const history = useHistory();
   const [search, setSearch] = useState<string>("");

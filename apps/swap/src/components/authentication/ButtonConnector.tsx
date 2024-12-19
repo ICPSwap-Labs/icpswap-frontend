@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import Button, { ButtonProps } from "@mui/material/Button";
-import { useWalletConnectorManager, useConnectorStateConnected } from "store/auth/hooks";
+import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Override } from "@icpswap/types";
 import { t } from "@lingui/macro";
 import { CircularProgress } from "@mui/material";
@@ -23,7 +24,9 @@ export default function ButtonConnector(props: ButtonConnectorProps) {
       onClick={handleConnect}
       variant={!isConnected ? "contained" : props.variant}
       disabled={!isConnected ? false : !!props.disabled}
-      startIcon={props.loading ? <CircularProgress color="inherit" size={22} /> : null}
+      startIcon={
+        props.startIcon ? props.startIcon : props.loading ? <CircularProgress color="inherit" size={22} /> : null
+      }
     >
       {isConnected ? props.children : t`Connect wallet`}
     </Button>

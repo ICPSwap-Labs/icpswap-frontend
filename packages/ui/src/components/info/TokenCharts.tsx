@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
-import { Typography, Box } from "@mui/material";
-import { BigNumber, toSignificant, formatDollarAmount } from "@icpswap/utils";
+import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
+import { Typography, Box, BoxProps } from "@mui/material";
+import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData, InfoPriceChartData } from "@icpswap/types";
+import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 
 import dayjs from "dayjs";
@@ -12,15 +12,13 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import { LineChartAlt } from "../LineChart/alt";
 import { BarChartAlt } from "../BarChart/alt";
 import { CandleChart } from "../CandleChart/index";
-
 import { SwapAnalyticLoading } from "./Loading";
-
 import { ChartDateButtons } from "./ChartDateButton";
-import { MultipleSmallButtons, ChartView } from "./ChartViewButton";
-
+import { ChartView } from "./types";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
-import { TextButton } from "../TextButton";
+import { DexScreener } from "../DexScreener";
+import { Select } from "../Select";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -66,11 +64,11 @@ function priceChartFormat(data: InfoPriceChartData[]) {
     });
 }
 
-export const chartViews = [
-  { label: `Volume`, value: ChartView.VOL },
-  { label: `TVL`, value: ChartView.TVL },
-  { label: `Price`, value: ChartView.PRICE },
-];
+export interface ChartButton {
+  label: string;
+  value: ChartView;
+  tokenId?: string | undefined;
+}
 
 function volumeDataFormatter(data: PublicTokenChartDayData[]) {
   const oldData = [...data];
@@ -131,269 +129,331 @@ type PriceLine = {
   low: number;
 };
 
-export type PriceToggle = {
-  label: string;
-  id: string;
-};
+export interface TokenChartsRef {
+  setView: (chart: { tokenId?: string; label: string; value: ChartView }) => void;
+}
+
 export interface TokenChartsProps {
   canisterId: string | undefined;
   volume?: number;
   background?: number;
   borderRadius?: string;
-  priceToggles?: PriceToggle[];
   showPrice?: boolean;
-  showDexScreener?: boolean;
+  chartButtons?: ChartButton[];
+  showTopIfDexScreen?: boolean;
+  dexScreenHeight?: string;
+  dexScreenId?: string;
+  priceChart?: ReactNode;
+  onPriceTokenIdChange?: (tokenId: string | Null) => void;
+  wrapperSx?: BoxProps["sx"];
 }
 
-export function TokenCharts({
-  canisterId,
-  volume,
-  borderRadius,
-  priceToggles,
-  showPrice = true,
-  background = 2,
-  showDexScreener,
-}: TokenChartsProps) {
-  const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
+export const TokenCharts = forwardRef(
+  (
+    {
+      canisterId,
+      volume,
+      chartButtons,
+      borderRadius,
+      showPrice = true,
+      background = 2,
+      showTopIfDexScreen = true,
+      dexScreenHeight,
+      dexScreenId,
+      priceChart,
+      onPriceTokenIdChange,
+      wrapperSx,
+    }: TokenChartsProps,
+    ref: Ref<TokenChartsRef>,
+  ) => {
+    const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
 
-  const { result: chartData } = useTokenVolChart(canisterId);
+    const { result: chartData } = useTokenVolChart(canisterId);
 
-  const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
-  const [valueLabel, setValueLabel] = useState<string | undefined>();
-  const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
-  const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
+    const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
+    const [valueLabel, setValueLabel] = useState<string | undefined>();
+    const [latestValue, setLatestValue] = useState<number | undefined>();
+    const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
+    const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-  const { priceChartData: __priceChartData, loading: priceChartLoading } = useTokenPriceChart(
-    priceChartTokenId ?? canisterId,
-  );
+    const { priceChartData: __priceChartData, loading: priceChartLoading } = useTokenPriceChart(
+      priceChartTokenId ?? canisterId,
+    );
 
-  const priceChartData = useMemo(() => {
-    if (!__priceChartData) return undefined;
+    const priceChartData = useMemo(() => {
+      if (!__priceChartData) return undefined;
 
-    return priceChartFormat(__priceChartData);
-  }, [__priceChartData]);
+      return priceChartFormat(__priceChartData);
+    }, [__priceChartData]);
 
-  const { result: tvlChartData } = useTokenTvlChart(canisterId);
+    const { result: tvlChartData } = useTokenTvlChart(canisterId);
 
-  const formattedTvlData = useMemo(() => {
-    if (tvlChartData) {
-      return tvlChartData.map((data) => {
-        return {
-          time: dayjs(Number(data.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.tvlUSD,
-        };
-      });
-    }
-    return [];
-  }, [tvlChartData]);
+    const formattedTvlData = useMemo(() => {
+      if (tvlChartData) {
+        return tvlChartData.map((data) => {
+          return {
+            time: dayjs(Number(data.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
+            value: data.tvlUSD,
+          };
+        });
+      }
+      return [];
+    }, [tvlChartData]);
 
-  const volumeData = useMemo(() => {
-    if (chartData) {
-      return volumeDataFormatter(chartData.filter((ele) => ele.timestamp !== BigInt(0))).map((data) => {
-        return {
-          date: Number(data.timestamp),
-          volumeUSD: data.volumeUSD,
-        };
-      });
-    }
-    return [];
-  }, [chartData]);
+    const volumeData = useMemo(() => {
+      if (chartData) {
+        return volumeDataFormatter(chartData.filter((ele) => ele.timestamp !== BigInt(0))).map((data) => {
+          return {
+            date: Number(data.timestamp),
+            volumeUSD: data.volumeUSD,
+          };
+        });
+      }
+      return [];
+    }, [chartData]);
 
-  const dailyVolumeData = useMemo(() => {
-    if (chartData) {
-      return volumeData.map((ele) => {
-        return {
-          time: dayjs(ele.date * 1000).format("YYYY-MM-DD HH:mm:ss"),
-          value: ele.volumeUSD,
-        };
-      });
-    }
-    return [];
-  }, [volumeData]);
+    const dailyVolumeData = useMemo(() => {
+      if (chartData) {
+        return volumeData.map((ele) => {
+          return {
+            time: dayjs(ele.date * 1000).format("YYYY-MM-DD HH:mm:ss"),
+            value: ele.volumeUSD,
+          };
+        });
+      }
+      return [];
+    }, [volumeData]);
 
-  const handlePriceHoverChange = (data: any) => {
-    setPriceData(data as PriceLine);
-  };
+    const handlePriceHoverChange = (data: any) => {
+      setPriceData(data as PriceLine);
+    };
 
-  const weeklyVolumeData = useTransformedVolumeData(volumeData, "week");
-  const monthlyVolumeData = useTransformedVolumeData(volumeData, "month");
+    const weeklyVolumeData = useTransformedVolumeData(volumeData, "week");
+    const monthlyVolumeData = useTransformedVolumeData(volumeData, "month");
 
-  const formattedVolumeData = useMemo(() => {
-    if (volumeWindow === VolumeWindow.daily) return dailyVolumeData;
-    if (volumeWindow === VolumeWindow.monthly) return monthlyVolumeData;
-    return weeklyVolumeData;
-  }, [weeklyVolumeData, monthlyVolumeData, dailyVolumeData, volumeWindow]);
+    const formattedVolumeData = useMemo(() => {
+      if (volumeWindow === VolumeWindow.daily) return dailyVolumeData;
+      if (volumeWindow === VolumeWindow.monthly) return monthlyVolumeData;
+      return weeklyVolumeData;
+    }, [weeklyVolumeData, monthlyVolumeData, dailyVolumeData, volumeWindow]);
 
-  const handleTokenPrice = (id: string) => {
-    setPriceChartTokenId(id);
-  };
+    useEffect(() => {
+      setPriceChartTokenId(canisterId);
+    }, [canisterId]);
 
-  useEffect(() => {
-    setPriceChartTokenId(canisterId);
-  }, [canisterId]);
+    const handleChartViewChange = useCallback(
+      (chart: { tokenId?: string; label: string; value: ChartView }) => {
+        if (chart.value === ChartView.PRICE) {
+          setPriceChartTokenId(chart.tokenId);
+          if (onPriceTokenIdChange) onPriceTokenIdChange(chart.tokenId);
+        }
 
-  return (
-    <MainCard
-      level={background}
-      borderRadius={borderRadius}
-      sx={{
-        position: "relative",
-      }}
-    >
-      <SwapAnalyticLoading loading={priceChartLoading} />
+        setChartView(chart.value);
+      },
+      [onPriceTokenIdChange],
+    );
 
-      <Box sx={{ height: "70px" }}>
-        <Typography
-          color="text.primary"
-          fontSize="24px"
-          fontWeight={500}
-          sx={{
-            width: "100%",
-            display: "flex",
-            height: "30px",
-            gap: "0 12px",
-            alignItems: "center",
-            "@media(max-width: 640px)": {
-              flexDirection: "column",
-              gap: "4px 0",
-              alignItems: "flex-start",
-              height: "fit-content",
-            },
-          }}
-          component="div"
-        >
-          {latestValue || latestValue === 0
-            ? chartView === ChartView.TRANSACTIONS
-              ? latestValue
-              : formatDollarAmount(latestValue)
-            : chartView === ChartView.VOL
-            ? volume
-              ? formatDollarAmount(volume)
-              : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-            : chartView === ChartView.TVL
-            ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-            : priceChartData
-            ? showPrice
-              ? formatDollarAmount(priceChartData[priceChartData.length - 1]?.close)
-              : ""
-            : "--"}
-        </Typography>
+    useImperativeHandle(
+      ref,
+      () => ({
+        setView: handleChartViewChange,
+      }),
+      [handleChartViewChange],
+    );
 
-        <Typography
-          color="text.primary"
-          fontWeight={500}
-          sx={{
-            height: "20px",
-          }}
-          fontSize="12px"
-        >
-          {valueLabel || ""}
-        </Typography>
-
-        {priceData ? (
-          <Typography
-            color="text.primary"
-            fontWeight={500}
-            sx={{
-              height: "20px",
-            }}
-            fontSize="12px"
-          >
-            O:{toSignificant(priceData.open, 4)} H: {toSignificant(priceData.high, 4)} L:{" "}
-            {toSignificant(priceData.low, 4)} C: {toSignificant(priceData.close, 4)}
-          </Typography>
-        ) : null}
-      </Box>
-
-      <Box
+    return (
+      <MainCard
+        level={background}
+        borderRadius={borderRadius}
         sx={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
+          position: "relative",
+          ...wrapperSx,
         }}
+        padding="0"
       >
-        <Flex gap="0 8px" wrap="wrap-reverse" justify="flex-end" sx={{ "@media(max-width: 640px)": { gap: "8px 0" } }}>
-          {chartView === ChartView.PRICE && priceToggles ? (
-            <MultipleSmallButtons
-              buttons={priceToggles.map((e) => ({ label: e.label, value: e.id }))}
-              active={priceChartTokenId}
-              onClick={(chartView) => handleTokenPrice(chartView.value)}
-            />
-          ) : null}
+        <SwapAnalyticLoading loading={priceChartLoading} />
 
-          {chartView === ChartView.PRICE && showDexScreener ? (
-            <Flex gap="0 4px">
-              <Typography sx={{ fontSize: "12px" }}>
-                Detailed Chart on{" "}
-                <TextButton link={`https://dexscreener.com/icp/${canisterId}`}>DEXScreener</TextButton>
+        <Flex
+          fullWidth
+          justify="space-between"
+          align="flex-start"
+          sx={{
+            height: "70px",
+            padding: "16px",
+            display:
+              chartView === ChartView.PRICE && priceChart
+                ? "none"
+                : chartView === ChartView.DexScreener
+                ? showTopIfDexScreen
+                  ? "flex"
+                  : "none"
+                : "flex",
+          }}
+        >
+          <Box>
+            <Typography
+              color="text.primary"
+              fontSize="24px"
+              fontWeight={500}
+              sx={{
+                width: "100%",
+                display: "flex",
+                height: "30px",
+                gap: "0 12px",
+                alignItems: "center",
+                "@media(max-width: 640px)": {
+                  flexDirection: "column",
+                  gap: "4px 0",
+                  alignItems: "flex-start",
+                  height: "fit-content",
+                },
+              }}
+              component="div"
+            >
+              {latestValue || latestValue === 0
+                ? chartView === ChartView.TRANSACTIONS
+                  ? latestValue
+                  : chartView === ChartView.PRICE
+                  ? formatDollarTokenPrice({ num: latestValue })
+                  : formatDollarAmount(latestValue)
+                : chartView === ChartView.VOL
+                ? volume
+                  ? formatDollarAmount(volume)
+                  : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                : chartView === ChartView.TVL
+                ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                : priceChartData
+                ? showPrice
+                  ? formatDollarTokenPrice({ num: priceChartData[priceChartData.length - 1]?.close })
+                  : ""
+                : "--"}
+            </Typography>
+
+            <Typography
+              color="text.primary"
+              fontWeight={500}
+              sx={{
+                height: "20px",
+              }}
+              fontSize="12px"
+            >
+              {valueLabel || ""}
+            </Typography>
+
+            {priceData ? (
+              <Typography
+                color="text.primary"
+                fontWeight={500}
+                sx={{
+                  height: "20px",
+                }}
+                fontSize="12px"
+              >
+                O:{toSignificant(priceData.open, 4)} H: {toSignificant(priceData.high, 4)} L:{" "}
+                {toSignificant(priceData.low, 4)} C: {toSignificant(priceData.close, 4)}
               </Typography>
-              <img src="/images/dex_screener.svg" alt="" />
-            </Flex>
-          ) : null}
+            ) : null}
+          </Box>
 
-          <MultipleSmallButtons
-            buttons={chartViews}
-            active={chartView}
-            onClick={(chartView) => setChartView(chartView.value)}
-          />
+          <Box>
+            {chartButtons && chartButtons.length > 0 ? (
+              <Flex
+                gap="0 8px"
+                wrap="wrap-reverse"
+                justify="flex-end"
+                sx={{ "@media(max-width: 640px)": { gap: "8px 0" } }}
+              >
+                <Select
+                  menus={chartButtons.map((element) => ({
+                    label: element.label,
+                    value: element.tokenId ? `${element.value}_${element.tokenId}` : element.value,
+                  }))}
+                  minMenuWidth="140px"
+                  menuMaxHeight="240px"
+                  onChange={(value: any) => {
+                    const chart = chartButtons.find(
+                      (element) => (element.tokenId ? `${element.value}_${element.tokenId}` : element.value) === value,
+                    );
+                    handleChartViewChange(chart);
+                  }}
+                  value={chartView === ChartView.PRICE ? `${chartView}_${priceChartTokenId}` : chartView}
+                  showBackground={false}
+                  showClean={false}
+                  panelPadding="0"
+                />
+              </Flex>
+            ) : null}
+
+            {chartView === ChartView.VOL ? (
+              <Box sx={{ margin: "15px 0 0 0" }}>
+                <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
+              </Box>
+            ) : null}
+          </Box>
         </Flex>
 
-        {chartView === ChartView.VOL ? (
-          <Box sx={{ margin: "15px 0 0 0" }}>
-            <ChartDateButtons volume={volumeWindow} onChange={setVolumeWindow} />
-          </Box>
-        ) : null}
-      </Box>
-
-      <Box mt="20px">
-        {chartView === ChartView.TVL ? (
-          formattedTvlData.length > 0 ? (
-            <LineChartAlt
-              data={formattedTvlData}
-              setLabel={setValueLabel}
-              minHeight={340}
-              setValue={setLatestValue}
-              value={latestValue}
-              label={valueLabel}
-            />
-          ) : (
-            <Box sx={{ height: "340px", width: "auto" }} />
-          )
-        ) : chartView === ChartView.VOL ? (
-          formattedVolumeData && formattedVolumeData.length > 0 ? (
-            <BarChartAlt
-              data={formattedVolumeData}
-              minHeight={340}
-              setValue={setLatestValue}
-              setLabel={setValueLabel}
-              value={latestValue}
-              label={valueLabel}
-              activeWindow={
-                volumeWindow === VolumeWindow.daily
-                  ? "daily"
-                  : volumeWindow === VolumeWindow.monthly
-                  ? "monthly"
-                  : "weekly"
-              }
-            />
-          ) : (
-            <Box sx={{ height: "340px", width: "auto" }} />
-          )
-        ) : chartView === ChartView.PRICE ? (
-          priceChartData && priceChartData.length > 0 ? (
-            <CandleChart
-              height={340}
-              data={priceChartData}
-              setValue={setLatestValue}
-              setLabel={setValueLabel}
-              onHoverChange={handlePriceHoverChange}
-            />
-          ) : (
-            <Box sx={{ height: "340px", width: "auto" }} />
-          )
-        ) : null}
-      </Box>
-    </MainCard>
-  );
-}
+        <Box
+          sx={{
+            margin: priceChart
+              ? "0"
+              : chartView === ChartView.DexScreener
+              ? showTopIfDexScreen
+                ? "10px 0 0 0 "
+                : "0px"
+              : "10px 0 0 0",
+          }}
+        >
+          {chartView === ChartView.TVL ? (
+            formattedTvlData.length > 0 ? (
+              <LineChartAlt
+                data={formattedTvlData}
+                setLabel={setValueLabel}
+                minHeight={340}
+                setValue={setLatestValue}
+                value={latestValue}
+                label={valueLabel}
+              />
+            ) : (
+              <Box sx={{ height: "340px", width: "auto" }} />
+            )
+          ) : chartView === ChartView.VOL ? (
+            formattedVolumeData && formattedVolumeData.length > 0 ? (
+              <BarChartAlt
+                data={formattedVolumeData}
+                minHeight={340}
+                setValue={setLatestValue}
+                setLabel={setValueLabel}
+                value={latestValue}
+                label={valueLabel}
+                activeWindow={
+                  volumeWindow === VolumeWindow.daily
+                    ? "daily"
+                    : volumeWindow === VolumeWindow.monthly
+                    ? "monthly"
+                    : "weekly"
+                }
+              />
+            ) : (
+              <Box sx={{ height: "340px", width: "auto" }} />
+            )
+          ) : chartView === ChartView.PRICE ? (
+            priceChart ||
+            (priceChartData && priceChartData.length > 0 ? (
+              <CandleChart
+                height={340}
+                data={priceChartData}
+                setValue={setLatestValue}
+                setLabel={setValueLabel}
+                onHoverChange={handlePriceHoverChange}
+              />
+            ) : (
+              <Box sx={{ height: "340px", width: "auto" }} />
+            ))
+          ) : chartView === ChartView.DexScreener ? (
+            <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
+          ) : null}
+        </Box>
+      </MainCard>
+    );
+  },
+);

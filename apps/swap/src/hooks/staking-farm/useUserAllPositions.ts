@@ -9,7 +9,7 @@ import {
 } from "@icpswap/hooks";
 import { useAccount, useAccountPrincipal } from "store/auth/hooks";
 import { UserPositionInfoWithId, PoolMetadata, InitFarmArgs } from "@icpswap/types";
-import { usePositionsValuesByInfos } from "hooks/swap/index";
+import { useMultiPoolPositionsTotalValue } from "hooks/swap/index";
 
 export function useFarmUserAllPositions() {
   const account = useAccount();
@@ -93,7 +93,7 @@ export function useFarmUserAllPositions() {
     return __positionInfos;
   }, [positionResult]);
 
-  const allPositionUSDValue = usePositionsValuesByInfos(positionInfos);
+  const allPositionUSDValue = useMultiPoolPositionsTotalValue(positionInfos);
 
   return useMemo(
     () => ({ positionsValue: positionInfos?.length === 0 ? "0" : allPositionUSDValue, positionAmount }),

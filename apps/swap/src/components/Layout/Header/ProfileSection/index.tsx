@@ -4,13 +4,8 @@ import { useTheme } from "components/Mui";
 import { shorten } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
-import {
-  useAccountPrincipal,
-  useConnectorStateConnected,
-  useUserLogout,
-  useWalletConnectorManager,
-  useConnectorType,
-} from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected, useConnectorType } from "store/auth/hooks";
+import { useWalletConnectorManager } from "store/global/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
@@ -33,7 +28,6 @@ export default function ProfileSection() {
 
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const logout = useUserLogout();
   const history = useHistory();
   const connectorType = useConnectorType();
 
@@ -49,7 +43,6 @@ export default function ProfileSection() {
   };
 
   const handleConnectWallet = async () => {
-    await logout();
     walletManager(true);
   };
 
@@ -65,12 +58,14 @@ export default function ProfileSection() {
   }, [history]);
 
   return (
-    <Flex gap="0 8px">
-      <Image
-        src="/images/wallet.svg"
-        sx={{ width: "40px", height: "40px", cursor: "pointer" }}
-        onClick={handleToWallet}
-      />
+    <Flex gap="0 4px">
+      {isConnected ? (
+        <Image
+          src="/images/wallet.svg"
+          sx={{ width: "30px", height: "30px", cursor: "pointer" }}
+          onClick={handleToWallet}
+        />
+      ) : null}
 
       <Box ref={anchorRef} onClick={isConnected ? handleToggle : handleConnectWallet} sx={{ zIndex: 10 }}>
         {isConnected ? (
@@ -83,7 +78,7 @@ export default function ProfileSection() {
               cursor: "pointer",
             }}
           >
-            <ConnectorImage size="32px" />
+            <ConnectorImage size="26px" />
             <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
               {principal ? shorten(principal.toString()) : ""}
             </Typography>
@@ -108,7 +103,7 @@ export default function ProfileSection() {
             {
               name: "offset",
               options: {
-                offset: [matchDownMD ? 200 : 0, 14],
+                offset: [matchDownMD ? 200 : 0, 27],
               },
             },
           ],

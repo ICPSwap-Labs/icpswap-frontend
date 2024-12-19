@@ -1,5 +1,5 @@
-import { useState, useMemo, useContext } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { useMemo, useContext } from "react";
+import { Box } from "components/Mui";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
 import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
@@ -9,19 +9,12 @@ import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks"
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
-import { AlertCircle, X } from "react-feather";
-import { Trans } from "@lingui/macro";
-import { Flex, TextButton } from "@icpswap/ui";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
 
 import WalletContext from "./context";
 
 export default function WalletTokenList() {
-  const theme = useTheme();
-  const principal = useAccountPrincipal();
-  const [showTip, setShowTip] = useState(true);
   const { taggedTokens } = useTaggedTokenManager();
   const { allTokenUSDMap, noUSDTokens } = useContext(WalletContext);
   const { sort } = useWalletSortManager();
@@ -55,10 +48,6 @@ export default function WalletTokenList() {
     });
   }, [tokens, allTokenUSDMap, noUSDTokens, sort]);
 
-  const handleCloseTip = () => {
-    setShowTip(false);
-  };
-
   return (
     <>
       <Box
@@ -73,42 +62,6 @@ export default function WalletTokenList() {
         }}
       >
         <TokenListHeader />
-
-        {showTip ? (
-          <Flex
-            justify="space-between"
-            sx={{
-              width: "100%",
-              borderRadius: "12px",
-              padding: "13px 16px",
-              background: "rgba(183, 156,  74, 0.3)",
-            }}
-          >
-            <Flex gap="0 12px">
-              <Box sx={{ width: "16px" }}>
-                <AlertCircle color={theme.colors.warning} size="16px" />
-              </Box>
-
-              <Typography color="text.primary">
-                <Trans>
-                  Click '+' on the right to add tokens and display their balance. You can also check &nbsp;
-                  <TextButton
-                    color="white"
-                    sx={{ textDecoration: "underline" }}
-                    link={`https://info.icpswap.com/swap-scan/valuation?principal=${principal?.toString()}`}
-                  >
-                    'Wallet Valuation'
-                  </TextButton>{" "}
-                  to view all your tokens.
-                </Trans>
-              </Typography>
-            </Flex>
-
-            <Box sx={{ width: "16px" }}>
-              <X color="#ffffff" size="16px" onClick={handleCloseTip} cursor="pointer" />
-            </Box>
-          </Flex>
-        ) : null}
 
         <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
       </Box>

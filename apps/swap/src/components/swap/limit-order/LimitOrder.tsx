@@ -23,7 +23,7 @@ import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { TokenPrice } from "components/swap/index";
-import { usePoolById } from "hooks/swap/usePools";
+import { usePoolByPoolId } from "hooks/swap/usePools";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -45,7 +45,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
 
   const { poolId, userPositionId: positionId, timestamp, token0InAmount, token1InAmount, tickLimit } = order;
 
-  const [, pool] = usePoolById(poolId);
+  const [, pool] = usePoolByPoolId(poolId);
 
   const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId.toString());
 

@@ -7,7 +7,7 @@ import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext } from "components/swap/index";
 import { useFarmsByFilter, useUserLimitOrders } from "@icpswap/hooks";
 import { useSortedPositions } from "hooks/swap/index";
 import { Trans } from "@lingui/macro";
@@ -38,7 +38,7 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
 
   const { result: userLimitOrders } = useUserLimitOrders(position?.pool.id, principal?.toString());
 
-  const availableStakedFarm = useMemo(() => {
+  const availableFarmForLiquidity = useMemo(() => {
     if (!farms) return undefined;
     return farms[0]?.toString();
   }, [farms]);
@@ -49,13 +49,14 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
 
   return (
     <PositionCard
-      farmId={availableStakedFarm}
+      farmId={availableFarmForLiquidity}
       position={position}
       positionId={BigInt(positionDetail.index)}
       showButtons
       filterState={filterState}
       sort={sort}
       isLimit={isLimit}
+      staked={false}
     />
   );
 }
@@ -76,9 +77,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
   const { result: positions, loading } = useUserAllPositions(refreshTrigger);
 
   useEffect(() => {
-    if (positions) {
-      setAllPositions(positions);
-    }
+    setAllPositions(positions);
   }, [positions, setAllPositions]);
 
   const sortedPositions = useSortedPositions<UserPosition>({

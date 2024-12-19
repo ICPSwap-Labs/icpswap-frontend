@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { ChevronDown } from "react-feather";
 import { Link } from "components/index";
 
-import { Route, MAX_NUMBER } from "./config";
+import { Route, MAX_NUMBER, routeKey } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
 
 export interface RoutesProps {
@@ -24,7 +24,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
 
   const handleMenuMouseEnter = (route: Route, target: any) => {
     if (route.subMenus && route.subMenus.length) {
-      setSubMenuOpenKey(route.key);
+      setSubMenuOpenKey(routeKey(route.key));
       setSubMenuTarget(target);
     }
   };
@@ -38,7 +38,13 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
   };
 
   function isActive(route: Route) {
-    return !!route.path && route.key === pathName.split("/")[1];
+    const mainRoute = pathName.split("/")[1];
+
+    if (typeof route.key === "string") {
+      return !!route.path && (route.key === mainRoute || (route.key === "info" ? mainRoute.includes("info") : false));
+    }
+
+    return route.key.includes(mainRoute);
   }
 
   const handleRouteClick = (route: Route) => {

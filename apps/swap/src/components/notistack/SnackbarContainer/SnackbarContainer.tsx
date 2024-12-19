@@ -44,7 +44,7 @@ const useStyles = makeStyles({
     },
   },
   top: {
-    top: `${indents.view.default - indents.snackbar.default}px`,
+    top: "60px",
     flexDirection: "column",
   },
   bottom: {

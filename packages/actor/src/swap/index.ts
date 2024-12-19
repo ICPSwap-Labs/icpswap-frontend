@@ -4,6 +4,7 @@ import {
   LimitTransactionService,
   LimitTransactionInterfaceFactory,
 } from "@icpswap/candid";
+
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
 
@@ -21,3 +22,4 @@ export const limitTransaction = async () =>
   });
 
 export * from "./global";
+export * from "./tokenAnalysis";

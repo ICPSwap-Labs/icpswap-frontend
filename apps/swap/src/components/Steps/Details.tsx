@@ -193,14 +193,15 @@ export default function _StepDetails({
                           sx={{
                             display: "flex",
                             justifyContent: "space-between",
-                            alignItems: "center",
-                            marginTop: index === 0 ? "0px" : "12px",
+                            alignItems: "flex-start",
+                            marginTop: index === 0 ? "0px" : "8px",
+                            gap: "0 4px",
                           }}
                         >
                           <Typography component="div" fontSize="12px">
                             {ele1.label}
                           </Typography>
-                          <Typography component="div" fontSize="12px" align="right">
+                          <Typography component="div" fontSize="12px" sx={{ textAlign: "right" }}>
                             {ele1.value}
                           </Typography>
                         </Box>

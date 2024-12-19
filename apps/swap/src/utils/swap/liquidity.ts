@@ -2,11 +2,24 @@ import { type Position } from "@icpswap/swap-sdk";
 
 export function encodePositionKey(position: Position | undefined, index: bigint | number) {
   if (!position) return undefined;
-  return `${position.pool.id}_${index.toString()}`;
+
+  const { token0, token1 } = position.pool;
+
+  const keyItems = [
+    position.pool.id,
+    index.toString(),
+    token0.address,
+    token0.transFee.toString(),
+    token1.address,
+    token1.transFee.toString(),
+  ];
+
+  return keyItems.join("_");
 }
 
 export function encodePositionKeyByPool(poolId: string | undefined, index: bigint | number) {
   if (!poolId) return undefined;
+
   return `${poolId}_${index.toString()}`;
 }
 
@@ -18,6 +31,10 @@ export function decodePositionKey(key: string | undefined) {
   return {
     poolId: arr[0],
     positionIndex: arr[1],
+    token0: arr[2],
+    token0Fee: arr[3],
+    token1: arr[4],
+    token1Fee: arr[5],
   };
 }
 
