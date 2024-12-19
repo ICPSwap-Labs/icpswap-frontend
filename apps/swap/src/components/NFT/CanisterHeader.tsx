@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
 import { cycleValueFormat } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
-import { useAccount } from "store/global/hooks";
 import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
@@ -147,7 +146,6 @@ export interface NFTCanisterHeaderProps {
 export default function CanisterHeader({ details, cycles, count, loading }: NFTCanisterHeaderProps) {
   const classes = useStyles();
   const history = useHistory();
-  const account = useAccount();
   const theme = useTheme();
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("sm"));
