@@ -338,8 +338,9 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
               ? `≈
               ${formatDollarAmount(
                 parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice).toString(),
-                4,
-                0.01,
+                {
+                  digits: 4,
+                },
               )}`
               : "--"}
           </Typography>
@@ -347,7 +348,7 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Price</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
+            {tokenUSDPrice ? formatDollarTokenPrice(tokenUSDPrice) : "--"}
           </Typography>
         </Box>
       </Box>

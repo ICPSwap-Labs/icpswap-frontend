@@ -155,11 +155,11 @@ export function PositionRow({
             </Typography>
 
             <Typography sx={{ margin: "10px 0 0 0" }}>
-              {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
-                groupSeparator: ",",
-              })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
-                groupSeparator: ",",
-              })} ${pairName}`}
+              {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
+                priceUpper,
+                tickAtLimit,
+                Bound.UPPER,
+              )} ${pairName}`}
             </Typography>
           </BodyCell>
 

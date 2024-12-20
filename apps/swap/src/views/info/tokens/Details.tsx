@@ -157,7 +157,7 @@ export function TokenDetail() {
 
       <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
         <Typography color="text.primary" fontWeight={500} fontSize="36px">
-          {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+          {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
         </Typography>
         <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
       </Flex>

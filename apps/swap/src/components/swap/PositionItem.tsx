@@ -27,7 +27,7 @@ import { isDarkTheme, toFormat } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { PositionContext, TransferPosition , PositionRangeState } from "components/swap/index";
+import { PositionContext, TransferPosition, PositionRangeState } from "components/swap/index";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";

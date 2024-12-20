@@ -135,8 +135,9 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                 {priceUSD !== undefined && nonNullArgs(balance) && nonNullArgs(token)
                   ? formatDollarAmount(
                       new BigNumber(priceUSD).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
-                      4,
-                      0.001,
+                      {
+                        digits: 3,
+                      },
                     )
                   : "--"}
               </Typography>
