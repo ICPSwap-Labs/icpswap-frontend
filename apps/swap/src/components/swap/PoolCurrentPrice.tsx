@@ -5,7 +5,7 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
-import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
 
 export interface PoolCurrentPriceProps {
   pool: Pool | Null;
@@ -51,7 +51,9 @@ export function PoolCurrentPrice({
   const price = useMemo(() => {
     if (isNullArgs(quoteToken) || isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
 
-    return manuallyInverted ? pool.priceOf(quoteToken) : pool.priceOf(baseToken);
+    return manuallyInverted
+      ? pool.priceOf(quoteToken).toFixed(quoteToken.decimals)
+      : pool.priceOf(baseToken).toFixed(baseToken.decimals);
   }, [pool, quoteToken, manuallyInverted]);
 
   const label = useMemo(() => {
@@ -84,7 +86,7 @@ export function PoolCurrentPrice({
               fontSize,
             }}
           >
-            {price?.toSignificant()}
+            {formatTokenPrice(price)}
           </Typography>
 
           <Typography

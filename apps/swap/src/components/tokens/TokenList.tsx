@@ -62,7 +62,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
         </Flex>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell sx={{ width: "100%" }} align="right">
-            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
           </BodyCell>
           <BodyCell sub sx={{ width: "100%" }} align="right">
             {infoToken && icpPrice

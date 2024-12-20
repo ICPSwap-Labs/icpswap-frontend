@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { nonNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { formatTokenPrice, nonNullArgs } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { SWAP_CHART_RANGE_PRICE_COLOR } from "constants/swap";
 
@@ -39,10 +39,7 @@ export function PriceRangeLabel({ poolPriceLower, poolPriceUpper, chartTime }: P
 
       <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
         {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
-          ? `${toSignificantWithGroupSeparator(poolPriceLower, 6)} - ${toSignificantWithGroupSeparator(
-              poolPriceUpper,
-              6,
-            )}`
+          ? `${formatTokenPrice(poolPriceLower)} - ${formatTokenPrice(poolPriceUpper)}`
           : "--"}
       </Typography>
     </Flex>

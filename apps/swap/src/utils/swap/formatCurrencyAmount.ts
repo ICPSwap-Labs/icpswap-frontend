@@ -1,6 +1,6 @@
 import { Price, CurrencyAmount, Token, Fraction } from "@icpswap/swap-sdk";
 import { NONE_PRICE_SYMBOL } from "constants/index";
-import { BigNumber } from "bignumber.js";
+import { BigNumber, formatTokenPrice } from "@icpswap/utils";
 
 export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number | undefined | null) {
   if (!amount) {
@@ -18,30 +18,10 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, 
   return amount.toFixed(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
 }
 
-export function formatTokenAmount(amount: string | BigNumber | number | undefined, sigFigs: number | undefined | null) {
-  if (!amount) {
-    return NONE_PRICE_SYMBOL;
-  }
-
-  if (new BigNumber(amount).isEqualTo(0)) {
-    return "0";
-  }
-
-  if (new BigNumber(amount).isLessThan(new BigNumber(1).dividedBy(100000))) {
-    return "<0.00001";
-  }
-
-  return new BigNumber(amount).toFormat(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
-}
-
-export function formatPrice(price: Price<Token, Token> | undefined, sigFigs: number, format?: object) {
+export function formatPrice(price: Price<Token, Token> | undefined, format?: object) {
   if (!price) {
     return "-";
   }
 
-  if (parseFloat(price.toFixed(sigFigs)) < 0.0001) {
-    return "<0.0001";
-  }
-
-  return price.toSignificant(sigFigs, format);
+  return formatTokenPrice(price.toFixed(100));
 }

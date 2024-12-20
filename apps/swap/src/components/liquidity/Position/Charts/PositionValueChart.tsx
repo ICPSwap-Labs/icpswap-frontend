@@ -93,7 +93,7 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
                 xTickFormatter={(time: string) => {
                   return dayjs(time).format("MMM D, YYYY HH:mm:ss");
                 }}
-                yTickFormatter={(val: string) => formatDollarAmount(val, 2)}
+                yTickFormatter={(val: string) => formatDollarAmount(val)}
                 tipFormat="MMM D, YYYY HH:mm:ss"
               />
             ) : (

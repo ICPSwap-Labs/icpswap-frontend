@@ -3,13 +3,13 @@ import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "com
 import CurrenciesAvatar from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { usePositionFees } from "hooks/swap/usePositionFees";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme, toFormat } from "utils";
+import { isDarkTheme } from "utils/index";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { PositionContext , PositionRangeState } from "components/swap/index";
+import { PositionContext, PositionRangeState } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
@@ -324,13 +324,13 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
               }}
             >
               <Typography color="text.primary">
-                {!!token1 && !!token0
+                {!!token1 && !!token0 && pool
                   ? inverted
-                    ? pool?.priceOf(token1)
-                      ? `${toFormat(pool?.priceOf(token1).toSignificant(6))} ${pairName}`
+                    ? pool.priceOf(token1)
+                      ? `${formatTokenPrice(pool.priceOf(token1).toSignificant(token1.decimals))} ${pairName}`
                       : "--"
-                    : pool?.priceOf(token0)
-                    ? `${toFormat(pool?.priceOf(token0).toSignificant(6))} ${pairName}`
+                    : pool.priceOf(token0)
+                    ? `${formatTokenPrice(pool.priceOf(token0).toFixed(token0.decimals))} ${pairName}`
                     : "--"
                   : "--"}
               </Typography>

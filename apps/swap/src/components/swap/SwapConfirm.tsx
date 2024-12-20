@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import SwapModal from "components/modal/swap";
 import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
-import { TradePriceNoInfo as TradePrice } from "components/swap/TradePrice";
+import { TradePrice } from "components/swap/TradePrice";
 import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
@@ -195,6 +195,7 @@ export function SwapConfirmModal({
                 token1={outputToken}
                 token0PriceUSDValue={inputTokenPrice}
                 token1PriceUSDValue={outputTokenPrice}
+                noInfo
               />
             }
           />

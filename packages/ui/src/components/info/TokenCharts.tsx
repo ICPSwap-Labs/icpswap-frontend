@@ -314,7 +314,7 @@ export const TokenCharts = forwardRef(
                 ? chartView === ChartView.TRANSACTIONS
                   ? latestValue
                   : chartView === ChartView.PRICE
-                  ? formatDollarTokenPrice({ num: latestValue })
+                  ? formatDollarTokenPrice(latestValue)
                   : formatDollarAmount(latestValue)
                 : chartView === ChartView.VOL
                 ? volume
@@ -324,7 +324,7 @@ export const TokenCharts = forwardRef(
                 ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
                 : priceChartData
                 ? showPrice
-                  ? formatDollarTokenPrice({ num: priceChartData[priceChartData.length - 1]?.close })
+                  ? formatDollarTokenPrice(priceChartData[priceChartData.length - 1]?.close)
                   : ""
                 : "--"}
             </Typography>

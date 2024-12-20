@@ -91,7 +91,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarTokenPrice({ num: info.priceUSD, ab: 0.0001, digits: 2 }) : "--"}
+        {info ? formatDollarTokenPrice(info.priceUSD, { min: 0.0001 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (

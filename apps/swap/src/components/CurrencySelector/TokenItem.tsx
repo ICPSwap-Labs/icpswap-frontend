@@ -203,8 +203,7 @@ export function TokenItem({
                       new BigNumber(interfacePrice)
                         .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
                         .toString(),
-                      4,
-                      0.001,
+                      { digits: 4 },
                     )
                   : "--"}
               </Typography>

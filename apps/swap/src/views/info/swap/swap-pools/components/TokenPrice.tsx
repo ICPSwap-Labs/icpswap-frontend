@@ -34,7 +34,7 @@ export default function TokenPoolPrice({ token0, token1, price0, price1 }: Token
       <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} size="18px" sx={{ margin: "0 6px 0 0" }} />
 
       <Typography color="text.primary" fontWeight={500}>
-        1 {token0?.symbol} = {formatAmount(new BigNumber(price0).dividedBy(price1).toNumber(), 4)} {token1?.symbol}
+        1 {token0?.symbol} = {formatAmount(new BigNumber(price0).dividedBy(price1).toNumber())} {token1?.symbol}
       </Typography>
       <Typography color="text.primary" fontWeight={500}>
         &nbsp;= ${toSignificant(price0, 6, { groupSeparator: "," })}

@@ -48,10 +48,10 @@ export function TransactionRow({ transaction, className, onAddressClick }: Trans
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
-      <BodyCell>{formatDollarAmount(transaction.amountUSD, 3)}</BodyCell>
+      <BodyCell>{formatDollarAmount(transaction.amountUSD)}</BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(transaction.token0ChangeAmount, 4)}
+        {formatAmount(transaction.token0ChangeAmount)}
         <SwapTransactionPriceTip
           symbol={transaction.token0Symbol}
           price={transaction.token0Price}
@@ -64,7 +64,7 @@ export function TransactionRow({ transaction, className, onAddressClick }: Trans
       </BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(transaction.token1ChangeAmount, 4)}
+        {formatAmount(transaction.token1ChangeAmount)}
         <SwapTransactionPriceTip
           symbol={transaction.token1Symbol}
           price={transaction.token1Price}
