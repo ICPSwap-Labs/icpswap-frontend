@@ -212,15 +212,15 @@ export const SwapLimitPrice = forwardRef(
       [inverted, currentPrice, atLimitedTick],
     );
 
-    const handleSetDefaultPrice = useCallback(() => {
-      if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
-        return;
+    // const handleSetDefaultPrice = useCallback(() => {
+    //   if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
+    //     return;
 
-      // Force tick range exclude tick current
-      const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
+    //   // Force tick range exclude tick current
+    //   const minPrice = tickToPrice(inputToken, outputToken, minUseableTick);
 
-      handleInputPrice(minPrice.toFixed(outputToken.decimals), false);
-    }, [inputToken, outputToken, selectedPool, minUseableTick]);
+    //   handleInputPrice(minPrice.toFixed(outputToken.decimals), false);
+    // }, [inputToken, outputToken, selectedPool, minUseableTick]);
 
     const handleBlur: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
       if (
@@ -275,7 +275,7 @@ export const SwapLimitPrice = forwardRef(
       <MainCard
         border="level4"
         level={ui === "pro" ? 1 : 3}
-        padding={ui === "pro" ? "10px" : "16px"}
+        padding={ui === "pro" ? "16px" : "16px"}
         borderRadius={ui === "pro" ? "12px" : undefined}
       >
         <Box sx={{ display: "grid", gap: "16px 0", gridTemplateColumns: "1fr" }}>

@@ -61,9 +61,9 @@ export default function App() {
 
   const handleRefreshTriggers = useCallback(
     (key: string) => {
-      setRefreshTriggers({ ...refreshTriggers, [key]: (refreshTriggers[key] ?? 0) + 1 });
+      setRefreshTriggers((prevState) => ({ ...prevState, [key]: (prevState[key] ?? 0) + 1 }));
     },
-    [refreshTriggers, setRefreshTriggers],
+    [setRefreshTriggers],
   );
 
   return (

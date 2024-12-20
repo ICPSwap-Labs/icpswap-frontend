@@ -367,7 +367,12 @@ export const PlaceOrder = forwardRef(
           available={available === true && noLiquidity === false}
         />
 
-        <CurrentPricePanel inputToken={inputToken} outputToken={outputToken} currentPrice={currentPrice} />
+        <CurrentPricePanel
+          inputToken={inputToken}
+          outputToken={outputToken}
+          currentPrice={currentPrice}
+          fontSize={ui === "normal" ? "14px" : "12px"}
+        />
 
         <PriceError
           inputToken={inputToken}
@@ -375,9 +380,10 @@ export const PlaceOrder = forwardRef(
           currentPrice={currentPrice}
           orderPriceTick={orderPriceTick}
           minSettableTick={minSettableTick}
+          ui={ui}
         />
 
-        <LimitSupported available={available} noLiquidity={noLiquidity} />
+        <LimitSupported available={available} noLiquidity={noLiquidity} ui={ui} />
 
         <Button
           fullWidth

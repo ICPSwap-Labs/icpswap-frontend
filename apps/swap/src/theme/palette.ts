@@ -95,6 +95,7 @@ export function themePalette(theme: { [key: string]: any }) {
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
       1: "#38446C",
       2: "rgba(75, 87, 130, 0.68)",
+      3: "#4F5A84",
       level1: theme.colors.darkLevel1,
     },
     avatar: {

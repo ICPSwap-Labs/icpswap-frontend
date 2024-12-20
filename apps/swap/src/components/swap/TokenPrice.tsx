@@ -13,9 +13,19 @@ export interface TokenPriceProps {
   sx?: TypographyProps["sx"];
   onClick?: TypographyProps["onClick"];
   showUSD?: boolean;
+  fontSize?: string;
 }
 
-export function TokenPrice({ baseToken, quoteToken, inverted, price, sx, onClick, showUSD = false }: TokenPriceProps) {
+export function TokenPrice({
+  baseToken,
+  quoteToken,
+  inverted,
+  price,
+  sx,
+  onClick,
+  showUSD = false,
+  fontSize = "14px",
+}: TokenPriceProps) {
   const __price = useMemo(() => {
     if (!price) return undefined;
 
@@ -45,7 +55,9 @@ export function TokenPrice({ baseToken, quoteToken, inverted, price, sx, onClick
         : "--"}
 
       {showUSD && inputTokenUSD ? (
-        <Typography component="span">({formatDollarAmount(inputTokenUSD)})</Typography>
+        <Typography component="span" sx={{ fontSize }}>
+          ({formatDollarAmount(inputTokenUSD)})
+        </Typography>
       ) : null}
     </Typography>
   );

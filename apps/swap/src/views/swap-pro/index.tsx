@@ -22,6 +22,7 @@ export default function SwapPro() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [activeTab, setActiveTab] = useState<"SWAP" | "LIMIT">("SWAP");
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
@@ -114,6 +115,8 @@ export default function SwapPro() {
           token,
           chartView,
           setChartView,
+          activeTab,
+          setActiveTab,
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>

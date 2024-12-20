@@ -15,9 +15,16 @@ export interface PriceErrorProps {
   currentPrice: string | Null;
   orderPriceTick: number | Null;
   minSettableTick: number | Null;
+  ui?: "normal" | "pro";
 }
 
-export function PriceError({ inputToken, outputToken, minSettableTick, orderPriceTick }: PriceErrorProps) {
+export function PriceError({
+  inputToken,
+  outputToken,
+  minSettableTick,
+  orderPriceTick,
+  ui = "normal",
+}: PriceErrorProps) {
   const { selectedPool, inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
@@ -37,11 +44,17 @@ export function PriceError({ inputToken, outputToken, minSettableTick, orderPric
   }, [selectedPool, orderPriceTick, inputToken, minSettableTick, inputToken, outputToken]);
 
   return pricePercent ? (
-    <Box sx={{ padding: "16px", background: "rgba(211, 98, 91, .2)", borderRadius: "16px" }}>
+    <Box
+      sx={{
+        padding: ui === "normal" ? "16px" : "10px",
+        background: "rgba(211, 98, 91, .2)",
+        borderRadius: ui === "normal" ? "16px" : "12px",
+      }}
+    >
       <Flex gap="0 8px">
         <WaringIcon color="#D3625B" />
 
-        <Typography color="#D3625B" sx={{ lineHeight: "20px" }}>
+        <Typography color="#D3625B" sx={{ lineHeight: "20px", fontSize: ui === "normal" ? "14px" : "12px" }}>
           <Trans>
             Your limit price is {inverted ? "higher" : "lower"} than settable limit order price. Adjust your limit price
             to proceed.
