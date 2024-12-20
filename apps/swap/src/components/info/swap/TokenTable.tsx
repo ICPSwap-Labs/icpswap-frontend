@@ -52,7 +52,7 @@ export function TokenItem({ token, index, align }: { token: TokenData; index: nu
         </Grid>
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
-        {formatDollarTokenPrice({ num: token.priceUSD })}
+        {formatDollarTokenPrice(token.priceUSD)}
       </BodyCell>
       <BodyCell align={align}>
         <Proportion align={align} value={token.priceUSDChange} />

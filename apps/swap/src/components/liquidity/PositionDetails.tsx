@@ -335,14 +335,7 @@ export function PositionDetails({
             <PositionDetailItem
               label={t`Price Range`}
               value={
-                <Flex
-                  gap="0 8px"
-                  sx={{
-                    "@media(max-width: 640px)": {
-                      gap: "0 8px",
-                    },
-                  }}
-                >
+                <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
                   <Typography
                     sx={{
                       color: "text.primary",
@@ -355,16 +348,15 @@ export function PositionDetails({
                   >
                     {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
                     {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} {pairName}
-                    <SyncAltIcon
-                      sx={{
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        margin: "0 0 0 4px",
-                        color: theme.palette.text.secondary,
-                      }}
-                      onClick={() => setManuallyInverted(!manuallyInverted)}
-                    />
                   </Typography>
+
+                  <SyncAltIcon
+                    sx={{
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
                 </Flex>
               }
             />

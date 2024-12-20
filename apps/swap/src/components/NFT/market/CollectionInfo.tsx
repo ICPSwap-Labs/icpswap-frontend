@@ -200,7 +200,11 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
 
                   <Box>
                     <CollectionDataItem
-                      value={!!mintSupply || mintSupply === BigInt(0) ? formatAmount(Number(mintSupply), 0) : "--"}
+                      value={
+                        !!mintSupply || mintSupply === BigInt(0)
+                          ? formatAmount(Number(mintSupply), { digits: 0 })
+                          : "--"
+                      }
                       label={<Trans>items</Trans>}
                     />
 
@@ -209,7 +213,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                     <CollectionDataItem
                       value={
                         !!collectionResult?.listSize || collectionResult?.listSize === BigInt(0)
-                          ? formatAmount(Number(collectionResult?.listSize), 0)
+                          ? formatAmount(Number(collectionResult?.listSize), { digits: 0 })
                           : "--"
                       }
                       label={<Trans>listings</Trans>}
@@ -259,14 +263,16 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                   />
 
                   <CollectionDataItem
-                    value={!!mintSupply || mintSupply === BigInt(0) ? formatAmount(Number(mintSupply), 0) : "--"}
+                    value={
+                      !!mintSupply || mintSupply === BigInt(0) ? formatAmount(Number(mintSupply), { digits: 0 }) : "--"
+                    }
                     label={<Trans>items</Trans>}
                   />
 
                   <CollectionDataItem
                     value={
                       !!collectionResult?.listSize || collectionResult?.listSize === BigInt(0)
-                        ? formatAmount(Number(collectionResult?.listSize), 0)
+                        ? formatAmount(Number(collectionResult?.listSize), { digits: 0 })
                         : "--"
                     }
                     label={<Trans>listings</Trans>}

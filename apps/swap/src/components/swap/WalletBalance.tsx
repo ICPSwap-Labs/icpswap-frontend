@@ -17,7 +17,7 @@ export function WalletBalance({ currencyBalance, onClick }: WalletBalanceProps) 
       <WalletIcon />
 
       <Tooltip tips={t`Wallet Balance`}>
-        <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}</Typography>
+        <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact()) : "--"}</Typography>
       </Tooltip>
     </Flex>
   );

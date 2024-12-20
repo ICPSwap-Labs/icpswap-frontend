@@ -12,7 +12,7 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import TradePrice from "components/swap/TradePrice";
+import { TradePrice } from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex, MainCard, Checkbox } from "@icpswap/ui";

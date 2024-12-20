@@ -47,17 +47,17 @@ export function NFTTradeStat({ data }: { data: TradeStateResult }) {
         </TableCell>
         <TableCell>
           <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.floorPrice, WRAPPED_ICP.decimals).toNumber(), 4)}
+            {formatAmount(parseTokenAmount(data.floorPrice, WRAPPED_ICP.decimals).toNumber())}
           </Typography>
         </TableCell>
         <TableCell>
           <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.avgPrice, WRAPPED_ICP.decimals).toNumber(), 4)}
+            {formatAmount(parseTokenAmount(data.avgPrice, WRAPPED_ICP.decimals).toNumber())}
           </Typography>
         </TableCell>
         <TableCell>
           <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.totalTurnover, WRAPPED_ICP.decimals).toNumber(), 2)}
+            {formatAmount(parseTokenAmount(data.totalTurnover, WRAPPED_ICP.decimals).toNumber())}
           </Typography>
         </TableCell>
         <TableCell>

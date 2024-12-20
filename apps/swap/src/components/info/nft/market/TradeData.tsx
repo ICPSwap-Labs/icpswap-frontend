@@ -48,10 +48,7 @@ export function TradeData() {
           <Grid item xs={12} md={6} lg={3}>
             <DataItem
               label={t`Average Price`}
-              value={formatAmount(
-                parseTokenAmount(result?.avgPrice ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber(),
-                4,
-              )}
+              value={formatAmount(parseTokenAmount(result?.avgPrice ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber())}
             />
           </Grid>
         </Grid>

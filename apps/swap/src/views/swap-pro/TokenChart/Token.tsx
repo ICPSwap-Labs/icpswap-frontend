@@ -145,7 +145,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>
