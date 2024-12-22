@@ -22,8 +22,12 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   const { token0, token1, fee } = pool;
 
   const { leftPrice, rightPrice, currentPrice } = useMemo(() => {
-    const leftPrice = !inverted ? position.token0PriceLower : position.token0PriceUpper.invert();
-    const rightPrice = !inverted ? position.token0PriceUpper : position.token0PriceLower.invert();
+    const leftPrice = !inverted
+      ? position.token0PriceLower.toSignificant()
+      : position.token0PriceUpper.invert().toSignificant();
+    const rightPrice = !inverted
+      ? position.token0PriceUpper.toSignificant()
+      : position.token0PriceLower.invert().toSignificant();
     const currentPrice = !inverted
       ? position.pool.token0Price.toFixed(position.pool.token0.decimals)
       : position.pool.token1Price.toFixed(position.pool.token1.decimals);
