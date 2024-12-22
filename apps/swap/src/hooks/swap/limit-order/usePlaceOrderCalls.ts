@@ -240,6 +240,6 @@ export function usePlaceOrderCalls() {
         placeOrder,
       ].filter((fn) => fn !== undefined) as (() => Promise<boolean>)[];
     },
-    [updatePlaceOrderPositionId],
+    [updatePlaceOrderPositionId, approve, transfer, deposit],
   );
 }
