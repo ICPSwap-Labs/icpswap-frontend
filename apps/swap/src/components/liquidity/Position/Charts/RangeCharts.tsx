@@ -9,7 +9,7 @@ import {
   SWAP_CHART_RANGE_LEFT_COLOR,
   SWAP_CHART_RANGE_RIGHT_COLOR,
 } from "constants/swap";
-import { Price, Token } from "@icpswap/swap-sdk";
+import { Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { t } from "@lingui/macro";
@@ -57,8 +57,8 @@ export interface LiquidityChartRangeInputProps {
   currencyB: Token | undefined;
   feeAmount?: FeeAmount;
   price: number | undefined | string;
-  priceLower?: Price<Token, Token>;
-  priceUpper?: Price<Token, Token>;
+  priceLower?: string;
+  priceUpper?: string;
   ticksAtLimit: { [bound in Bound]?: boolean | undefined };
   poolPriceLower: string | number | Null;
   poolPriceUpper: string | number | Null;
@@ -119,8 +119,8 @@ export default function LiquidityChartRangeInput({
               data={{
                 series: formattedData,
                 current: Number(price),
-                lower: priceLower ? Number(priceLower?.toFixed()) : undefined,
-                upper: priceUpper ? Number(priceUpper.toFixed()) : undefined,
+                lower: priceLower ? Number(priceLower) : undefined,
+                upper: priceUpper ? Number(priceUpper) : undefined,
               }}
               dimensions={{ width: wrapperWidth, height: 265 }}
               margins={{ top: 0, right: 0, bottom: 28, left: 0 }}
