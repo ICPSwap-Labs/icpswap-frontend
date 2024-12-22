@@ -55,9 +55,7 @@ export function LimitOrdersTableUI({ poolId, loading, limitTransactions, wrapper
               <Trans>Limit Price</Trans>
             </HeaderCell>
 
-            <HeaderCell align="right">
-              <Trans>Actions</Trans>
-            </HeaderCell>
+            <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
 
           {!loading

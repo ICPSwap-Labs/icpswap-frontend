@@ -5,7 +5,7 @@ import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitOrder, Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
-import { SWAP_LIMIT_REFRESH_KEY } from "constants/swap";
+import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 
 import { LimitOrderRow } from "./LimitOrderRow";
 
@@ -71,9 +71,7 @@ export function LimitOrdersTableUI({
               <Trans>Limit Price</Trans>
             </HeaderCell>
 
-            <HeaderCell align="right">
-              <Trans>Actions</Trans>
-            </HeaderCell>
+            <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
 
           {!loading

@@ -12,8 +12,6 @@ export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
-export const SWAP_LIMIT_REFRESH_KEY = "SWAP_LIMIT";
-
 export const LIQUIDITY_OWNER_REFRESH_KEY = "LIQUIDITY_OWNER_REFRESH_KEY";
 
 export const SWAP_CHART_CURRENT_PRICE_COLOR = "#ffffff";

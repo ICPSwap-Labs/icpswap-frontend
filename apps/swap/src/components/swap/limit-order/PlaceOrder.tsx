@@ -17,8 +17,9 @@ import {
   useCleanSwapState,
   useLoadDefaultParams,
 } from "store/swap/limit-order/hooks";
-import { isNullArgs } from "@icpswap/utils";
-import { SWAP_FIELD, SWAP_LIMIT_REFRESH_KEY, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
+import { isNullArgs, locationMultipleSearchReplace } from "@icpswap/utils";
+import { SWAP_FIELD, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
+import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
 import { TradeState } from "hooks/swap/useTrade";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
 import { usePlaceOrderCallback, useLimitSupported } from "hooks/swap/limit-order";
@@ -168,17 +169,21 @@ export const PlaceOrder = forwardRef(
     const handleTokenBChange = useCallback(
       (token: TokenInfo) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
-        const search = qs.parse(location.search.replace("?", ""));
+        let search = location.search;
 
         if (token.canisterId === currencyA.currencyId) {
-          search.input = ICP.address;
-          search.output = token.canisterId;
+          search = locationMultipleSearchReplace(location.search, [
+            { key: "input", value: ICP.address },
+            { key: "output", value: token.canisterId },
+          ]);
         } else {
-          search.input = currencyA.currencyId;
-          search.output = token.canisterId;
+          search = locationMultipleSearchReplace(location.search, [
+            { key: "input", value: currencyA.currencyId },
+            { key: "output", value: token.canisterId },
+          ]);
         }
 
-        history.push(`${prePath}?${qs.stringify(search)}`);
+        history.push(`${prePath}${search}`);
       },
       [currencyA, location],
     );
@@ -253,6 +258,8 @@ export const PlaceOrder = forwardRef(
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
+        setRefreshTriggers(USER_LIMIT_ORDERS_KEY);
+
         if (limitPriceRef?.current) {
           limitPriceRef?.current?.resetInverted();
           limitPriceRef?.current?.setDefaultPrice();
