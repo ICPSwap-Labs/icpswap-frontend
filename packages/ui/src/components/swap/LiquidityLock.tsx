@@ -55,7 +55,7 @@ export function LiquidityLock({
     }
 
     if (name === "Black Hole") {
-      return `${INFO_URL}/info-tools/locked-positions?pair=${poolId}&panel=BlockHole`;
+      return `${INFO_URL}/info-tools/locked-positions?pair=${poolId}&panel=BlackHole`;
     }
 
     if (name === "Sneedlocked") {
