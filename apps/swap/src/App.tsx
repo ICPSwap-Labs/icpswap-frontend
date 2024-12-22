@@ -47,6 +47,7 @@ export default function App() {
   useFetchICPPrices();
   useFetchAllSwapTokens();
   usePlugExternalDisconnect();
+  useFetchSnsAllTokensInfo();
 
   const { isConnected } = useConnectManager();
 
@@ -54,8 +55,6 @@ export default function App() {
 
   const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
   const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
-
-  useFetchSnsAllTokensInfo();
 
   const queryClient = new QueryClient();
 

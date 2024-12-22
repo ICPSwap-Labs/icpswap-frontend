@@ -1,5 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 
 export const BOB = new Token({
   address: "7pail-xaaaa-aaaas-aabmq-cai",

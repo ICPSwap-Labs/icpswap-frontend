@@ -29,14 +29,14 @@ export function useTokenListTokenInfo(canisterId: string | undefined | null) {
 
 export async function getAllTokensOfSwap(offset: number, limit: number) {
   return resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
-    await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), []),
+    await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
   ).data;
 }
 
 export function useAllTokensOfSwap() {
   const call = async (offset: number, limit: number) => {
     const result = resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
-      await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), []),
+      await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
     ).data;
 
     return result?.content;

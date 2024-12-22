@@ -18,6 +18,7 @@ import { useTokenInfo } from "hooks/token";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { BreadcrumbsV1 } from "@icpswap/ui";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
+import { icrc_standards } from "constants/swap";
 
 export default function Burn() {
   const principal = useAccountPrincipal();
@@ -87,7 +88,7 @@ export default function Burn() {
                       fullHeight
                       onTokenChange={handleTokenChange}
                       filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
-                        tokenInfo.standard !== TOKEN_STANDARD.ICRC1 && tokenInfo.standard !== TOKEN_STANDARD.ICRC2
+                        !icrc_standards.includes(tokenInfo.standard as TOKEN_STANDARD)
                       }
                     />
                   </Box>
