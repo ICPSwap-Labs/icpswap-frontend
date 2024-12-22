@@ -2,10 +2,11 @@ import { Box } from "@mui/material";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
-import { useSwapPools, useAllTokensOfSwap } from "@icpswap/hooks";
+import { useSwapPools } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
 import { Principal } from "@dfinity/principal";
+import { useStateSwapAllTokens } from "store/global/hooks";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
@@ -90,7 +91,7 @@ export function SelectPair({
   const [value, setValue] = useState<string | null | undefined>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
-  const { result: allTokensOfSwap } = useAllTokensOfSwap();
+  const allTokensOfSwap = useStateSwapAllTokens();
   const { result: swapPools } = useSwapPools();
 
   useEffect(() => {

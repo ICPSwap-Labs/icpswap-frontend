@@ -14,7 +14,7 @@ import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { useTokensFromList, useTokenSupply, useInfoToken, useExplorerTokenDetails } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
 import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";

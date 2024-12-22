@@ -26,27 +26,27 @@ interface Metadata {
 }
 
 async function fetch_and_write_file() {
-  const result = (await tokenList.get_token_list(0, 10000, [])) as { ok: { content: Metadata[] } };
+  const result = (await tokenList.get_token_list(0, 10000, [true])) as { ok: { content: Metadata[] } };
 
   if (result.ok) {
     const content = result.ok.content;
 
-    const allTokenMetadata = content.map((e) => ({
-      fee: Number(e.fee),
-      decimals: Number(e.decimals),
-      canisterId: e.ledger_id.toString(),
-      name: e.name,
-      standard: e.standard,
-      symbol: e.symbol,
-    }));
+    const allTokenMetadata = content.map((e) => {
+      const logo = e.logo[0];
+
+      return {
+        fee: Number(e.fee),
+        decimals: Number(e.decimals),
+        canisterId: e.ledger_id.toString(),
+        name: e.name,
+        standard: e.standard === "ICRC-1" ? "ICRC1" : e.standard === "ICRC-2" ? "ICRC2" : e.standard,
+        symbol: e.symbol,
+        logo,
+      };
+    });
 
     fs.writeFileSync(
       path.resolve(__dirname, "../apps/swap/src/.tokens.json"),
-      JSON.stringify(allTokenMetadata, null, 2),
-    );
-
-    fs.writeFileSync(
-      path.resolve(__dirname, "../apps/info/src/.tokens.json"),
       JSON.stringify(allTokenMetadata, null, 2),
     );
   } else {

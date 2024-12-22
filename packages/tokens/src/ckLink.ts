@@ -1,6 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo } from "@icpswap/types";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TokenInfo , TOKEN_STANDARD } from "@icpswap/types";
 
 export const ckLinkTokenInfo: TokenInfo = {
   standardType: TOKEN_STANDARD.ICRC2,
