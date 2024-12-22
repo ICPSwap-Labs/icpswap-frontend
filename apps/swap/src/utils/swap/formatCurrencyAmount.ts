@@ -1,6 +1,6 @@
-import { Price, CurrencyAmount, Token, Fraction } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Token, Fraction } from "@icpswap/swap-sdk";
 import { NONE_PRICE_SYMBOL } from "constants/index";
-import { BigNumber, formatTokenPrice } from "@icpswap/utils";
+import { BigNumber } from "@icpswap/utils";
 
 export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number | undefined | null) {
   if (!amount) {
@@ -16,12 +16,4 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, 
   }
 
   return amount.toFixed(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
-}
-
-export function formatPrice(price: Price<Token, Token> | undefined, format?: object) {
-  if (!price) {
-    return "-";
-  }
-
-  return formatTokenPrice(price.toFixed(100));
 }

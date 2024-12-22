@@ -185,11 +185,11 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         </BodyCell> */}
 
         <BodyCell>
-          {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
-            groupSeparator: ",",
-          })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
-            groupSeparator: ",",
-          })} ${pairName ?? ""}`}
+          {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
+            priceUpper,
+            tickAtLimit,
+            Bound.UPPER,
+          )} ${pairName ?? ""}`}
         </BodyCell>
 
         <BodyCell
