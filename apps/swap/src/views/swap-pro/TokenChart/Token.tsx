@@ -171,7 +171,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           </Link>
 
           <a
-            href={`https://info.icpswap.com/token/details/${tokenId}`}
+            href={`/info-tokens/details/${tokenId}`}
             target="_blank"
             rel="noreferrer"
             style={{ textDecoration: "none" }}
