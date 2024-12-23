@@ -1,8 +1,5 @@
-import { Typography, Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { formatAmount, toSignificant } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
-import BigNumber from "bignumber.js";
+import { Typography, Box, useTheme } from "components/Mui";
+import { formatAmount, BigNumber, toSignificant } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
 
@@ -16,7 +13,7 @@ export interface TokenPoolPriceProps {
 }
 
 export function TokenPoolPrice({ tokenA, tokenB, priceB, priceA, background = "level4" }: TokenPoolPriceProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return priceA && priceB ? (
     <Box
