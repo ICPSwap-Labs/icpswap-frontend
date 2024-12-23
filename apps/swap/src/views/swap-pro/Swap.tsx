@@ -79,7 +79,9 @@ export default function Swap() {
             ))}
           </Flex>
 
-          <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+          {activeTab === Tab.Swap ? (
+            <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+          ) : null}
         </Box>
 
         <Box sx={{ margin: "10px 0 0 0" }}>

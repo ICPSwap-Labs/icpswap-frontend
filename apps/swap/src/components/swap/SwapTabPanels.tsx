@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
 import { t } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
+import { Flex } from "@icpswap/ui";
 
 export enum TABS {
   SWAP = "Swap",
@@ -30,13 +31,18 @@ export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
   );
 
   return (
-    <Box>
+    <Flex
+      gap="0 24px"
+      sx={{
+        "@media(max-width: 640px)": {
+          gap: "0 12px",
+        },
+      }}
+    >
       {Tabs.map((tab) => (
         <Box
           key={tab.value}
           sx={{
-            display: "inline-block",
-            margin: "0 24px 0 0",
             cursor: "pointer",
           }}
           onClick={() => handleTabChange(tab.path)}
@@ -52,6 +58,6 @@ export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
           </Typography>
         </Box>
       ))}
-    </Box>
+    </Flex>
   );
 }
