@@ -4,6 +4,11 @@ import { BigNumber } from "./bignumber";
 import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 import { nonNullArgs } from "./isNullArgs";
 
+function removeUselessZeroes(number: string) {
+  const regexp = /(?:\.0*|(\.\d+?)0+)$/;
+  return number.replace(regexp, "$1");
+}
+
 // Function to transform decimal trailing zeroes to exponent
 function decimalTrailingZeroesToExponent(formattedCurrency: string, maximumDecimalTrailingZeroes: number): string {
   const decimalTrailingZeroesPattern = new RegExp(`(\\.|,)(0{${maximumDecimalTrailingZeroes + 1},})(?=[1-9]?)`);
@@ -104,7 +109,7 @@ export const formatAmount = (num: number | string | Null, options?: FormatAmount
   }
 
   if (new BigNumber(num).isLessThan(max)) {
-    return toSignificantWithGroupSeparator(num, digits);
+    return removeUselessZeroes(new BigNumber(num).toFixed(digits));
   }
 
   return Intl.NumberFormat("en-US", {
