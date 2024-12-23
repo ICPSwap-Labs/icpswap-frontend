@@ -1,7 +1,14 @@
 import { useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { ICP, ICS } from "@icpswap/tokens";
-import { parseTokenAmount, formatAmount, formatDollarAmount, BigNumber, nonNullArgs } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatAmount,
+  formatDollarAmount,
+  BigNumber,
+  nonNullArgs,
+  formatTokenPrice,
+} from "@icpswap/utils";
 import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
@@ -86,7 +93,7 @@ export function Ics() {
         <Flex justify="space-between" fullWidth sx={{ margin: "16px 0 0 0" }}>
           <Flex gap="0 8px" align="flex-end">
             <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-              {infoToken ? formatDollarAmount(infoToken.priceUSD) : "--"}
+              {infoToken ? formatTokenPrice(infoToken.priceUSD) : "--"}
             </Typography>
 
             <Proportion value={infoToken?.priceUSDChange} />
