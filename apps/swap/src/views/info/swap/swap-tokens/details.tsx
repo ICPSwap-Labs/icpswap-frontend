@@ -130,7 +130,7 @@ export default function TokenDetails() {
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
             <Flex fullWidth>
               <TextButton
-                to={`/token/details/${canisterId}`}
+                to={`/info-tokens/details/${canisterId}`}
                 sx={{
                   margin: "0 0 0 6px",
                 }}
