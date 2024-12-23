@@ -303,15 +303,19 @@ export default function CreateTokenClaim() {
                 placeholder={t`Enter total user amount`}
                 onChange={(value) => handleFieldChange(value, "userAmount")}
                 value={values.userAmount}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: 0,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.userAmount,
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: 0,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.userAmount,
+                      },
+                    },
                   },
                 }}
               />

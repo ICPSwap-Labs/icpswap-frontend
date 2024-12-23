@@ -230,11 +230,6 @@ export default function NFTMint() {
                   required
                   placeholder="Enter the NFT name"
                   onChange={(value) => handleFieldChange(value, "name")}
-                  InputProps={{
-                    inputProps: {
-                      maxLength: 200,
-                    },
-                  }}
                 />
               </Box>
 

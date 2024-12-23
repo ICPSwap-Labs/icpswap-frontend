@@ -142,12 +142,16 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             contained
             borderRadius="12px"
             background={theme.palette.background.level1}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconSearch stroke={1.5} size="1rem" />
-                </InputAdornment>
-              ),
+            textFiledProps={{
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconSearch stroke={1.5} size="1rem" />
+                    </InputAdornment>
+                  ),
+                },
+              },
             }}
             fullWidth
             size={matchDownSM ? "small" : undefined}

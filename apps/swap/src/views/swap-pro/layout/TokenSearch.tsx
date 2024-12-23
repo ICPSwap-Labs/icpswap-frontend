@@ -227,12 +227,16 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 fullHeight
                 placeholder="Symbol / Name / Canister ID"
                 borderRadius="12px"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    },
+                  },
                 }}
                 onChange={handleSearchChange}
               />
