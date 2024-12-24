@@ -7,7 +7,7 @@ import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useUserUnusedBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useRefreshTriggerManager, useToken, useTips, MessageTypes } from "hooks/index";
-import { formatAmount, isNullArgs, parseTokenAmount, sleep } from "@icpswap/utils";
+import { BigNumber, formatAmount, isNullArgs, parseTokenAmount, sleep } from "@icpswap/utils";
 import { useSwapWithdraw } from "hooks/swap/index";
 
 export interface WithdrawTokensProps {
@@ -99,7 +99,13 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
           <Flex gap="0 4px">
             <TextButton
               onClick={() => handleWithdraw("input")}
-              disabled={isNullArgs(inputBalance) || isNullArgs(isSorted) || inputBalance === BigInt(0) || loading.input}
+              disabled={
+                isNullArgs(inputBalance) ||
+                isNullArgs(isSorted) ||
+                inputBalance === BigInt(0) ||
+                loading.input ||
+                (inputToken && !new BigNumber(inputBalance.toString()).isGreaterThan(inputToken.transFee))
+              }
             >
               <Trans>Withdraw</Trans>
             </TextButton>
@@ -122,7 +128,11 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
             <TextButton
               onClick={() => handleWithdraw("output")}
               disabled={
-                isNullArgs(outputBalance) || isNullArgs(isSorted) || outputBalance === BigInt(0) || loading.output
+                isNullArgs(outputBalance) ||
+                isNullArgs(isSorted) ||
+                outputBalance === BigInt(0) ||
+                loading.output ||
+                (outputToken && !new BigNumber(outputBalance.toString()).isGreaterThan(outputToken.transFee))
               }
             >
               <Trans>Withdraw</Trans>
