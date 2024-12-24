@@ -2,13 +2,12 @@ import { useMemo, useState, useCallback } from "react";
 import { Box, Typography, makeStyles } from "components/Mui";
 import {
   parseTokenAmount,
-  toSignificant,
   formatDollarAmount,
   formatDollarTokenPrice,
-  formatAmount,
   BigNumber,
   nonNullArgs,
   isNullArgs,
+  formatIcpAmount,
 } from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
@@ -66,7 +65,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
           </BodyCell>
           <BodyCell sub sx={{ width: "100%" }} align="right">
             {infoToken && icpPrice
-              ? `${toSignificant(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toNumber(), 8)} ICP`
+              ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toNumber())} ICP`
               : "--"}
           </BodyCell>
         </Flex>
@@ -85,7 +84,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
           </BodyCell>
           <BodyCell sub align="right" sx={{ width: "100%" }}>
             {infoToken && icpPrice && supply && tokenInfo
-              ? `${formatAmount(
+              ? `${formatIcpAmount(
                   new BigNumber(infoToken.priceUSD)
                     .multipliedBy(parseTokenAmount(supply, tokenInfo.decimals))
                     .dividedBy(icpPrice)
