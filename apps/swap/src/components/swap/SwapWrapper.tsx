@@ -85,7 +85,7 @@ export const SwapWrapper = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
+      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
     }, [tradePoolId, outputToken, inputToken]);
 
     // Auto refresh token balance 5 seconds

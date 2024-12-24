@@ -120,7 +120,7 @@ export const PlaceOrder = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
+      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
     }, [tradePoolId, outputToken, inputToken]);
 
     const isLoadingRoute = swapState === TradeState.LOADING;
