@@ -56,7 +56,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
     <>
       <Box sx={{ background: theme.palette.background.level2, padding: "24px", borderRadius: "16px", width: "100%" }}>
         <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Filled {dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD hh:mm")}</Trans>
+          <Trans>Filled {dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}</Trans>
         </Typography>
 
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>

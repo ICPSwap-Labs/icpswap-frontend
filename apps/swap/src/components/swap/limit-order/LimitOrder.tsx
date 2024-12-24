@@ -108,7 +108,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
     <>
       <Box sx={{ background: theme.palette.background.level2, padding: "24px", borderRadius: "16px", width: "100%" }}>
         <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Created {dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD hh:mm")}</Trans>
+          <Trans>Created {dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm")}</Trans>
         </Typography>
 
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>

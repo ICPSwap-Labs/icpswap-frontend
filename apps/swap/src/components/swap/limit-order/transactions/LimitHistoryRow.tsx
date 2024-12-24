@@ -65,7 +65,7 @@ export function LimitHistoryRow({
           className={wrapperClassName}
           borderBottom={noBorder ? "none!important" : `1px solid ${theme.palette.border.level1}`}
         >
-          <BodyCell>{dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD hh:mm")}</BodyCell>
+          <BodyCell>{dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}</BodyCell>
 
           {/* You pay */}
           <BodyCell sx={{ gap: "0 6px" }}>

@@ -110,7 +110,7 @@ export function LimitOrderRow({
           className={wrapperClassName}
           borderBottom={noBorder ? "none!important" : `1px solid ${theme.palette.border.level1}`}
         >
-          <BodyCell>{dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD hh:mm")}</BodyCell>
+          <BodyCell>{dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm")}</BodyCell>
 
           {/* You pay */}
           <BodyCell sx={{ gap: "0 6px" }}>

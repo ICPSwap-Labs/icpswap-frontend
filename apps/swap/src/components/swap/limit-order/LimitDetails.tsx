@@ -106,7 +106,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
             </Typography>
 
             <Typography sx={{ fontSize: "12px", margin: "8px 0 0 0" }}>
-              {dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD hh:mm")}
+              {dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm")}
             </Typography>
           </Box>
         </Flex>
