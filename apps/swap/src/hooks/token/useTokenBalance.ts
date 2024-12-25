@@ -88,7 +88,7 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
 export function useTokenBalance(
   canisterId: string | undefined,
   account: string | Principal | Null,
-  refresh?: number | boolean,
+  refresh?: number | boolean | Null,
   subAccount?: Uint8Array,
 ) {
   return useLatestDataCall(
