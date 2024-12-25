@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
-import { toSignificant, numberToString, formatDollarAmount, shorten, BigNumber } from "@icpswap/utils";
+import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount } from "@icpswap/utils";
 import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, Link } from "@icpswap/ui";
@@ -123,26 +123,17 @@ export function PositionRow({
 
           <BodyCell>{totalUSDValue ? `$${toFormat(totalUSDValue)}` : "--"}</BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <BodyCell>
-              {position
-                ? `${toSignificant(position.amount0.toExact(), 12, { groupSeparator: "," })} ${pool.token0.symbol}`
-                : "--"}
-            </BodyCell>
-
-            <BodyCell sx={{ margin: "10px 0 0 0" }}>
-              {position
-                ? `${toSignificant(position.amount1.toExact(), 12, { groupSeparator: "," })} ${pool.token1.symbol}`
-                : "--"}
-            </BodyCell>
+          <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
+            <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${pool.token0.symbol}` : "--"}</BodyCell>
+            <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${pool.token1.symbol}` : "--"}</BodyCell>
           </BodyCell>
 
           <BodyCell onClick={() => setManuallyInverted(!manuallyInverted)}>
-            {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
-              groupSeparator: ",",
-            })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
-              groupSeparator: ",",
-            })} ${pairName}`}
+            {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
+              priceUpper,
+              tickAtLimit,
+              Bound.UPPER,
+            )} ${pairName}`}
 
             <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
           </BodyCell>
@@ -150,10 +141,10 @@ export function PositionRow({
           <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
             <BodyCell>
               {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                ? `${toFormat(
-                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFixed(8),
-                  )} ${token0?.symbol} and ${toFormat(
-                    new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toFixed(8),
+                ? `${formatAmount(
+                    currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0,
+                  )} ${token0?.symbol} and ${formatAmount(
+                    currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0,
                   )} ${token1?.symbol}`
                 : "--"}
             </BodyCell>
