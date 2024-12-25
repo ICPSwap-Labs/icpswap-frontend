@@ -122,13 +122,14 @@ export const formatAmount = (num: number | string | Null, options?: FormatAmount
 
 export interface FormatTokenPriceProps {
   digits?: number;
+  digitsIfLessThanOne?: number;
   min?: number;
   max?: number;
 }
 
 // using a currency library here in case we want to add more in future
-export const formatTokenPrice = (num: number | string | Null, options?: FormatTokenPriceProps) => {
-  const { digits = 6, min = 0.00001, max = 1000000 } = options ?? {};
+export function formatTokenPrice(num: number | string | Null, options?: FormatTokenPriceProps) {
+  const { digits = 6, min = 0.00001, digitsIfLessThanOne = 5, max = 1000000 } = options ?? {};
 
   if (num === 0 || num === "0") return "0";
 
@@ -139,7 +140,7 @@ export const formatTokenPrice = (num: number | string | Null, options?: FormatTo
   }
 
   if (new BigNumber(num).isLessThan(1)) {
-    return toSignificantWithGroupSeparator(num, 5);
+    return toSignificantWithGroupSeparator(num, digitsIfLessThanOne);
   }
 
   if (new BigNumber(num).isLessThan(max)) {
@@ -147,7 +148,7 @@ export const formatTokenPrice = (num: number | string | Null, options?: FormatTo
   }
 
   return new BigNumber(num).toFixed(0);
-};
+}
 
 export interface FormatIcpAmountOptions {
   digits?: number;
