@@ -113,7 +113,7 @@ export function PositionRow({
         <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
-              <Typography>{owner ? shorten(owner) : "--"}</Typography>
+              <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
             </Copy>
 
             <IsSneedOwner isSneed={isSneed} tooltip={<Trans>The position is locked in Sneed.</Trans>} />
@@ -124,47 +124,31 @@ export function PositionRow({
           <BodyCell>{totalUSDValue ? `$${toFormat(totalUSDValue)}` : "--"}</BodyCell>
 
           <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography>
+            <BodyCell>
               {position
                 ? `${toSignificant(position.amount0.toExact(), 12, { groupSeparator: "," })} ${pool.token0.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
 
-            <Typography sx={{ margin: "10px 0 0 0" }}>
+            <BodyCell sx={{ margin: "10px 0 0 0" }}>
               {position
                 ? `${toSignificant(position.amount1.toExact(), 12, { groupSeparator: "," })} ${pool.token1.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
           </BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography sx={{ display: "flex", alignItems: "center" }}>
-              {!!token1 && !!token0
-                ? inverted
-                  ? pool?.priceOf(token1)
-                    ? `${toFormat(pool?.priceOf(token1).toSignificant(6))} ${pairName}`
-                    : "--"
-                  : pool?.priceOf(token0)
-                  ? `${toFormat(pool?.priceOf(token0).toSignificant(6))} ${pairName}`
-                  : "--"
-                : "--"}
-              <SyncAltIcon
-                sx={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer", color: "#ffffff" }}
-                onClick={() => setManuallyInverted(!manuallyInverted)}
-              />
-            </Typography>
+          <BodyCell onClick={() => setManuallyInverted(!manuallyInverted)}>
+            {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
+              groupSeparator: ",",
+            })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
+              groupSeparator: ",",
+            })} ${pairName}`}
 
-            <Typography sx={{ margin: "10px 0 0 0" }}>
-              {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
-                priceUpper,
-                tickAtLimit,
-                Bound.UPPER,
-              )} ${pairName}`}
-            </Typography>
+            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
           </BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography>
+          <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
+            <BodyCell>
               {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
                 ? `${toFormat(
                     new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFixed(8),
@@ -172,9 +156,9 @@ export function PositionRow({
                     new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toFixed(8),
                   )} ${token1?.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
 
-            <Typography mt="10px" align="left">
+            <Typography align="left">
               {currencyFeeAmount0 !== undefined &&
               currencyFeeAmount1 !== undefined &&
               !!token0USDPrice &&

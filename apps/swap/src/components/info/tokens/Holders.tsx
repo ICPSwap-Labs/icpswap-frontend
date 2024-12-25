@@ -29,7 +29,7 @@ const useStyles = (styleProps?: StyleProps) =>
         gap: "1em",
         alignItems: "center",
         gridTemplateColumns: "100px repeat(3, 1fr) 100px",
-        padding: styleProps?.padding ?? "20px 16px",
+        padding: styleProps?.padding ?? "16px",
       },
     };
   });

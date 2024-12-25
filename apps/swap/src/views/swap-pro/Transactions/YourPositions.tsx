@@ -1,5 +1,5 @@
 import { useState, useMemo, useContext } from "react";
-import { Box, Button, Typography, useTheme, useMediaQuery, makeStyles } from "components/Mui";
+import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { useTickAtLimit } from "@icpswap/hooks";
 import {
@@ -11,17 +11,12 @@ import {
   formatTickPrice,
 } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination, TextButton } from "@icpswap/ui";
 import type { UserPosition } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
-import { ChevronDown } from "react-feather";
-import { CollectFees } from "components/liquidity/index";
-import { TransferPosition } from "components/swap/index";
-import { useHistory } from "react-router-dom";
-import { usePositionState } from "hooks/liquidity";
 
 import { SwapProContext } from "../context";
 
@@ -31,8 +26,8 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "100px repeat(4, 1fr) 30px",
-      padding: "20px 16px",
+      gridTemplateColumns: "100px repeat(4, 1fr) 60px",
+      padding: "16px",
     },
   };
 });
@@ -49,13 +44,7 @@ enum Bound {
 
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
-  const history = useHistory();
   const theme = useTheme();
-  const matchSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [showButtons, setShowButtons] = useState(false);
-  const [transferOpen, setTransferOpen] = useState(false);
-  const [transferred, setTransferred] = useState(false);
-  const [refreshFeeFlag, setRefreshFeeFlag] = useState<number>(0);
   const { inputTokenPrice, outputTokenPrice, inputToken, outputToken } = useContext(SwapProContext);
 
   const position = usePositionWithPool({
@@ -64,11 +53,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     liquidity: positionInfo.liquidity.toString(),
     pool,
   });
-  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(
-    positionInfo.id,
-    BigInt(positionInfo.index),
-    refreshFeeFlag,
-  );
+
+  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.id, BigInt(positionInfo.index));
 
   const { token0, token1, fee, tickLower, tickUpper } = useMemo(
     () => ({
@@ -106,8 +92,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     };
   }, [nonInvertedTicksAtLimit, inverted]);
 
-  const positionState = usePositionState(position);
-
   const pairName = useMemo(() => {
     if (!currencyQuote || !currencyBase) return undefined;
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
@@ -135,28 +119,10 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     };
   }, [pool, inputTokenPrice, outputTokenPrice, inputToken, outputToken]);
 
-  const handleToggleShowButtons = () => {
-    setShowButtons(!showButtons);
-  };
-
-  const handleClaimedSuccessfully = () => {
-    setRefreshFeeFlag(refreshFeeFlag + 1);
-  };
-
-  const handleLoadPage = (path: string) => {
-    history.push(path);
-  };
-
-  const handleTransferSuccess = () => {
-    setTransferred(true);
-  };
-
   return (
     <Box
       sx={{
         borderBottom: `1px solid ${theme.palette.background.level1}`,
-        display: !transferred ? "block" : "none",
-        background: showButtons ? theme.palette.background.level2 : "none",
       }}
     >
       <TableRow className={classes.wrapper} borderBottom="none">
@@ -165,24 +131,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount0.toExact(), 6)} ` : "--"}</BodyCell>
 
         <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount1.toExact(), 6)} ` : "--"}</BodyCell>
-
-        {/* <BodyCell>
-          {!!token1 && !!token0 && pool ? (
-            inverted ? (
-              <BodyCell>
-                {pool.priceOf(token1).toSignificant(6)}
-                <BodyCell>{pairName ?? ""}</BodyCell>
-              </BodyCell>
-            ) : (
-              <BodyCell>
-                {pool.priceOf(token0).toSignificant(6)}
-                <BodyCell>{pairName ?? ""}</BodyCell>
-              </BodyCell>
-            )
-          ) : (
-            "--"
-          )}
-        </BodyCell> */}
 
         <BodyCell>
           {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
@@ -243,120 +191,15 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
               alignItems: "center",
               position: "sticky",
               right: "0",
-              background: showButtons ? theme.palette.background.level2 : theme.palette.background.level3,
+              background: theme.palette.background.level3,
             },
           }}
         >
-          <ChevronDown
-            style={{ transform: showButtons ? "rotate(180deg)" : "rotate(0deg)" }}
-            color="#8492C4"
-            size="24px"
-            onClick={handleToggleShowButtons}
-          />
+          <TextButton to={`/liquidity/position/${positionInfo.index}/${positionInfo.id}`}>
+            <Trans>Details</Trans>
+          </TextButton>
         </BodyCell>
       </TableRow>
-
-      {showButtons ? (
-        <Box
-          sx={{
-            padding: "0 16px 20px 0",
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "0 16px",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              gap: "8px",
-              "@media(max-width: 640px)": {
-                position: "sticky",
-                right: 0,
-                display: "grid",
-                gridTemplateRows: "2fr",
-              },
-            }}
-          >
-            {matchSM ? (
-              <>
-                <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
-                  <CollectFees
-                    position={position}
-                    positionId={BigInt(positionInfo.index)}
-                    onCollectSuccess={handleClaimedSuccessfully}
-                  >
-                    <Button size={matchSM ? "small" : "medium"} variant="outlined">
-                      <Trans>Collect Fees</Trans>
-                    </Button>
-                  </CollectFees>
-
-                  <Button
-                    size={matchSM ? "small" : "medium"}
-                    variant="contained"
-                    onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
-                  >
-                    <Trans>Increase Liquidity</Trans>
-                  </Button>
-                </Box>
-                <Box sx={{ display: "flex", gap: "0 8px", justifyContent: "flex-end" }}>
-                  <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setTransferOpen(true)}>
-                    <Trans>Transfer Position</Trans>
-                  </Button>
-                  <Button
-                    size={matchSM ? "small" : "medium"}
-                    variant="outlined"
-                    onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
-                  >
-                    <Trans>Remove Liquidity</Trans>
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <>
-                <Button size={matchSM ? "small" : "medium"} variant="outlined" onClick={() => setTransferOpen(true)}>
-                  <Trans>Transfer Position</Trans>
-                </Button>
-                <Button
-                  size={matchSM ? "small" : "medium"}
-                  variant="outlined"
-                  onClick={() => handleLoadPage(`/liquidity/decrease/${positionInfo.index}/${positionInfo.id}`)}
-                >
-                  <Trans>Remove Liquidity</Trans>
-                </Button>
-
-                <CollectFees
-                  position={position}
-                  positionId={BigInt(positionInfo.index)}
-                  onCollectSuccess={handleClaimedSuccessfully}
-                >
-                  <Button size={matchSM ? "small" : "medium"} variant="outlined">
-                    <Trans>Collect Fees</Trans>
-                  </Button>
-                </CollectFees>
-
-                <Button
-                  size={matchSM ? "small" : "medium"}
-                  variant="contained"
-                  onClick={() => handleLoadPage(`/liquidity/increase/${positionInfo.index}/${positionInfo.id}`)}
-                >
-                  <Trans>Increase Liquidity</Trans>
-                </Button>
-              </>
-            )}
-          </Box>
-        </Box>
-      ) : null}
-
-      {transferOpen ? (
-        <TransferPosition
-          open={transferOpen}
-          onClose={() => setTransferOpen(false)}
-          position={position}
-          positionId={BigInt(positionInfo.index)}
-          onTransferSuccess={handleTransferSuccess}
-          state={positionState}
-        />
-      ) : null}
     </Box>
   );
 }
@@ -383,7 +226,7 @@ export function YourPositions({ canisterId }: PoolTransactionsProps) {
 
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ minWidth: "1026px" }}>
+      <Box sx={{ minWidth: "940px" }}>
         <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <HeaderCell field="PositionId">
             <Trans>Position ID</Trans>
@@ -396,10 +239,6 @@ export function YourPositions({ canisterId }: PoolTransactionsProps) {
           <HeaderCell field="token1Amount">
             <Trans>{pool?.token1.symbol} Amount</Trans>
           </HeaderCell>
-
-          {/* <HeaderCell field="currentPrice">
-            <Trans>Current Price</Trans>
-          </HeaderCell> */}
 
           <HeaderCell field="priceRange">
             <Trans>Price Range</Trans>
