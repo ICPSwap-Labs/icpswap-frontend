@@ -16,7 +16,7 @@ import type { UserPosition } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
-import { toSignificantWithGroupSeparator, BigNumber, formatDollarAmount } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatAmount } from "@icpswap/utils";
 
 import { SwapProContext } from "../context";
 
@@ -128,9 +128,9 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       <TableRow className={classes.wrapper} borderBottom="none">
         <BodyCell>{positionInfo.index}</BodyCell>
 
-        <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount0.toExact(), 6)} ` : "--"}</BodyCell>
+        <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ` : "--"}</BodyCell>
 
-        <BodyCell>{position ? `${toSignificantWithGroupSeparator(position.amount1.toExact(), 6)} ` : "--"}</BodyCell>
+        <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ` : "--"}</BodyCell>
 
         <BodyCell>
           {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
@@ -147,19 +147,13 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
         >
           <BodyCell>
             {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined
-              ? `${toSignificantWithGroupSeparator(
-                  new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
-                  6,
-                )} ${token0?.symbol}`
+              ? `${formatAmount(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)} ${token0?.symbol}`
               : "--"}
           </BodyCell>
           {currencyFeeAmount0 !== undefined && currencyFeeAmount1 !== undefined ? (
             <BodyCell>
               and&nbsp;
-              {toSignificantWithGroupSeparator(
-                new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
-                6,
-              )}
+              {formatAmount(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0)}
               &nbsp;{token1?.symbol}
             </BodyCell>
           ) : null}

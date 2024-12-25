@@ -13,7 +13,7 @@ import {
   TextualAddress,
   Image,
 } from "@icpswap/ui";
-import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
+import { BigNumber, formatAmount, formatDollarAmount, principalToAccount } from "@icpswap/utils";
 import { Null, IcExplorerTokenHolderDetail } from "@icpswap/types";
 import { useCopySuccess } from "hooks/index";
 
@@ -73,7 +73,7 @@ function HolderRow({ page, sneedLedger, holder, index, styleProps }: HolderRowPr
         {isSneed ? <Image src="/images/sneed.svg" alt="" style={{ width: "18px", height: "18px" }} /> : null}
       </BodyCell>
 
-      <BodyCell>{new BigNumber(holder.amount).toFormat(holder.tokenDecimal > 8 ? 8 : holder.tokenDecimal)}</BodyCell>
+      <BodyCell>{formatAmount(holder.amount)}</BodyCell>
 
       <BodyCell>{formatDollarAmount(holder.valueUSD)}</BodyCell>
 
