@@ -1,8 +1,9 @@
+import { Null } from "@icpswap/types";
 import { useState, useEffect, useMemo } from "react";
 
 export function useIntervalFetch<T>(
   call: (() => Promise<T | undefined>) | undefined,
-  force: boolean | number = false,
+  force: boolean | number | Null = false,
   interval = 5000,
 ) {
   const [data, setData] = useState<T | undefined>(undefined);

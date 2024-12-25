@@ -4,7 +4,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingPoolInfo } from "@icpswap/types";
+import { Null, StakingPoolInfo } from "@icpswap/types";
 import { useStakePoolStatInfo } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTokenBalance } from "hooks/token";
@@ -18,7 +18,7 @@ export interface StakeMainProps {
   poolInfo: StakingPoolInfo | undefined;
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
-  refreshTrigger: number;
+  refreshTrigger: number | Null;
   handleRefresh: () => void;
 }
 

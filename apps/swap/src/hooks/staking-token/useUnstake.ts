@@ -67,6 +67,7 @@ type UnstakeCallsArgs = {
   amount: bigint;
   poolId: string;
   key: string;
+  refresh?: () => void;
 };
 
 function useCalls() {
@@ -75,21 +76,22 @@ function useCalls() {
   const withdrawRewardToken = useRewardTokenWithdrawCall();
 
   return useCallback(
-    ({ token, amount, poolId, key, rewardToken }: UnstakeCallsArgs) => {
+    ({ token, amount, poolId, key, rewardToken, refresh }: UnstakeCallsArgs) => {
       const call0 = async () => {
         const unStakeResult = await unstake({ token, amount, poolId, key, rewardToken });
 
         if (unStakeResult) {
-          withdraw({ token, amount, poolId });
-          withdrawRewardToken({ token, key, poolId });
+          Promise.all([withdraw({ token, amount, poolId }), withdrawRewardToken({ token, key, poolId })])
+            .then(() => {
+              if (refresh) refresh();
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         }
 
         return unStakeResult;
       };
-      // const call1 = async () => {
-      //   await withdraw({ token, amount, poolId });
-      // };
-      // const call2 = async () => await withdrawRewardToken({ token, key, poolId });
 
       const call1 = async () => {
         await sleep(1000);
@@ -112,6 +114,7 @@ interface UnstakeCallArgs {
   rewardToken: Token;
   amount: bigint;
   poolId: string;
+  refresh?: () => void;
 }
 
 export function useUnstakeCall() {
@@ -120,9 +123,9 @@ export function useUnstakeCall() {
   const getCalls = useCalls();
 
   return useCallback(
-    ({ token, amount, poolId, rewardToken }: UnstakeCallArgs) => {
+    ({ token, amount, poolId, rewardToken, refresh }: UnstakeCallArgs) => {
       const key = newStepKey();
-      const calls = getCalls({ token, amount, poolId, key, rewardToken });
+      const calls = getCalls({ token, amount, poolId, key, rewardToken, refresh });
       const { call, reset, retry } = formatCall(calls, key);
 
       updateStep(key, { token, amount, poolId, rewardToken });
