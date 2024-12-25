@@ -93,7 +93,7 @@ export function Ics() {
         <Flex justify="space-between" fullWidth sx={{ margin: "16px 0 0 0" }}>
           <Flex gap="0 8px" align="flex-end">
             <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-              {infoToken ? formatTokenPrice(infoToken.priceUSD) : "--"}
+              {infoToken ? formatTokenPrice(infoToken.priceUSD, { digitsIfLessThanOne: 3 }) : "--"}
             </Typography>
 
             <Proportion value={infoToken?.priceUSDChange} />
