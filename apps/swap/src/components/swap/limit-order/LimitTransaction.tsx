@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex } from "@icpswap/ui";
@@ -9,6 +9,8 @@ import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
+import { useUserUnusedBalance } from "@icpswap/hooks";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { WithdrawTokens } from "./WithdrawTokens";
 
@@ -18,9 +20,12 @@ export interface LimitTransactionProps {
 
 export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
   const theme = useTheme();
+  const principal = useAccountPrincipal();
 
   const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
   const [invertPrice, setInvertPrice] = useState(false);
+
+  const { result: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal);
 
   const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
@@ -51,6 +56,18 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
   }, [invertPrice, setInvertPrice]);
+
+  const disableWithdraw = useMemo(() => {
+    if (isNullArgs(unusedBalance) || isNullArgs(inputToken) || isNullArgs(outputToken)) return true;
+
+    const token0 = inputToken.sortsBefore(outputToken) ? inputToken : outputToken;
+    const token1 = inputToken.sortsBefore(outputToken) ? outputToken : inputToken;
+
+    return (
+      !new BigNumber(unusedBalance.balance0.toString()).isGreaterThan(token0.transFee) &&
+      !new BigNumber(unusedBalance.balance1.toString()).isGreaterThan(token1.transFee)
+    );
+  }, [unusedBalance, inputToken, outputToken]);
 
   return (
     <>
@@ -111,7 +128,12 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
             </Flex>
           </Box>
 
-          <Button variant="contained" className="secondary" onClick={() => setShowWithdrawTokens(true)}>
+          <Button
+            variant="contained"
+            className="secondary"
+            onClick={() => setShowWithdrawTokens(true)}
+            disabled={disableWithdraw}
+          >
             <Trans>Withdraw</Trans>
           </Button>
         </Flex>

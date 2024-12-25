@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
 import { t } from "@lingui/macro";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Flex } from "@icpswap/ui";
 
 export enum TABS {
@@ -22,12 +22,13 @@ export interface SwapTabPanelsProps {
 
 export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
   const history = useHistory();
+  const location = useLocation();
 
   const handleTabChange = useCallback(
     (path: string) => {
-      history.push(path);
+      history.push(`${path}${location.search}`);
     },
-    [history],
+    [history, location],
   );
 
   return (

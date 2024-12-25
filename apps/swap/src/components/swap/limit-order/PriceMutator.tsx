@@ -106,6 +106,7 @@ export function PriceMutator({
 }: PriceMutatorProps) {
   const theme = useTheme();
 
+  // The percent of  input value / current price
   const percent = useMemo(() => {
     if (isNullArgs(currentPrice) || isNullArgs(inputValue) || inputValue === "") return null;
     const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
@@ -171,11 +172,7 @@ export function PriceMutator({
               : "text.secondary",
         }}
       >
-        {isNullArgs(activePercent) &&
-        nonNullArgs(percent) &&
-        !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
-        nonNullArgs(isMinMaxPrice) &&
-        !isMinMaxPrice ? (
+        {showPercent && nonNullArgs(percent) ? (
           `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
         ) : inverted ? (
           <Trans>Max</Trans>
