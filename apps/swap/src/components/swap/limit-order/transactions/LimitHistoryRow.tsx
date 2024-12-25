@@ -2,9 +2,9 @@ import { Pool } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { Trans } from "@lingui/macro";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
-import { toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
+import { toSignificantWithGroupSeparator, BigNumber, isNullArgs } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
@@ -15,6 +15,7 @@ export interface LimitHistoryRowProps {
   pool: Pool | Null;
   wrapperClassName?: string;
   noBorder?: boolean;
+  unusedBalance: { balance0: bigint; balance1: bigint } | Null;
 }
 
 export function LimitHistoryRow({
@@ -22,11 +23,11 @@ export function LimitHistoryRow({
   pool,
   wrapperClassName,
   noBorder = false,
+  unusedBalance,
 }: LimitHistoryRowProps) {
   const theme = useTheme();
 
   const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
-  const [invertPrice, setInvertPrice] = useState(false);
 
   const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
@@ -54,9 +55,17 @@ export function LimitHistoryRow({
     return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
   }, [outputChangeAmount, outputToken, inputAmount]);
 
-  const handleInvert = useCallback(() => {
-    setInvertPrice(!invertPrice);
-  }, [invertPrice, setInvertPrice]);
+  const disableWithdraw = useMemo(() => {
+    if (isNullArgs(unusedBalance) || isNullArgs(inputToken) || isNullArgs(outputToken)) return true;
+
+    const token0 = inputToken.sortsBefore(outputToken) ? inputToken : outputToken;
+    const token1 = inputToken.sortsBefore(outputToken) ? outputToken : inputToken;
+
+    return (
+      !new BigNumber(unusedBalance.balance0.toString()).isGreaterThan(token0.transFee) &&
+      !new BigNumber(unusedBalance.balance1.toString()).isGreaterThan(token1.transFee)
+    );
+  }, [unusedBalance, inputToken, outputToken]);
 
   return (
     <>
@@ -85,18 +94,12 @@ export function LimitHistoryRow({
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
             <Typography sx={{ color: "text.primary" }}>
-              {limitPrice
-                ? invertPrice
-                  ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
-                      new BigNumber(1).dividedBy(limitPrice).toString(),
-                    )} ${inputToken?.symbol}`
-                  : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
-                : "--"}
+              {limitPrice ? `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}` : "--"}
             </Typography>
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
-            <TextButton onClick={() => setShowWithdrawTokens(true)}>
+            <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
               <Trans>Withdraw</Trans>
             </TextButton>
           </BodyCell>

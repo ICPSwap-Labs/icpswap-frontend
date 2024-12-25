@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Null } from "@icpswap/types";
-import { useUserLimitTransactions } from "@icpswap/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useUserLimitTransactions, useUserUnusedBalance } from "@icpswap/hooks";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { LimitOrdersTableUI } from "./LimitHistoryTableUI";
 
@@ -11,14 +11,20 @@ export interface LimitHistoryTableProps {
 }
 
 export function LimitHistoryTable({ poolId, wrapperClassName }: LimitHistoryTableProps) {
-  const principal = useAccountPrincipalString();
+  const principal = useAccountPrincipal();
 
   const start_time = useMemo(() => {
     const now = parseInt(String(new Date().getTime() / 1000));
     return now - 60 * 24 * 3600;
   }, []);
 
-  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(principal, start_time, 0, 100);
+  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(
+    principal?.toString(),
+    start_time,
+    0,
+    100,
+  );
+  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal);
 
   const limitTransactions = useMemo(() => {
     return limitTransactionsResult?.records;
@@ -30,6 +36,7 @@ export function LimitHistoryTable({ poolId, wrapperClassName }: LimitHistoryTabl
       wrapperClassName={wrapperClassName}
       loading={loading}
       limitTransactions={limitTransactions}
+      unusedBalance={unusedBalance}
     />
   );
 }

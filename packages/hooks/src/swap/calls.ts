@@ -135,11 +135,7 @@ export async function getUserUnusedBalance(canisterId: string, user: Principal) 
   ).data;
 }
 
-export function useUserUnusedBalance(
-  canisterId: string | undefined,
-  user: Principal | undefined,
-  refresh?: number | boolean,
-) {
+export function useUserUnusedBalance(canisterId: string | Null, user: Principal | Null, refresh?: number | boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !user) return undefined;

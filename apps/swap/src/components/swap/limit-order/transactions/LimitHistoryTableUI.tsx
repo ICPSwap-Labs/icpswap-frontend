@@ -27,9 +27,16 @@ export interface PositionTableUIProps {
   poolId: string | Null;
   loading: boolean;
   limitTransactions: LimitTransaction[] | Null;
+  unusedBalance: { balance0: bigint; balance1: bigint } | Null;
 }
 
-export function LimitOrdersTableUI({ poolId, loading, limitTransactions, wrapperClassName }: PositionTableUIProps) {
+export function LimitOrdersTableUI({
+  poolId,
+  loading,
+  limitTransactions,
+  unusedBalance,
+  wrapperClassName,
+}: PositionTableUIProps) {
   const classes = useStyles();
 
   const [, pool] = usePoolByPoolId(poolId);
@@ -66,6 +73,7 @@ export function LimitOrdersTableUI({ poolId, loading, limitTransactions, wrapper
                   pool={pool}
                   wrapperClassName={wrapperClassName ?? classes.wrapper}
                   noBorder={index === limitTransactions.length - 1}
+                  unusedBalance={unusedBalance}
                 />
               ))
             : null}
