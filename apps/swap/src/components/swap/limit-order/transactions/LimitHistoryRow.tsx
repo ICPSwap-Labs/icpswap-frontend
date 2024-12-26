@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { WithdrawTokens } from "components/swap/limit-order/WithdrawTokens";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 export interface LimitHistoryRowProps {
   limitTransaction: LimitTransaction;
@@ -27,6 +28,7 @@ export function LimitHistoryRow({
 }: LimitHistoryRowProps) {
   const theme = useTheme();
 
+  const [invertPrice, setInvertPrice] = useState(false);
   const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
 
   const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
@@ -92,10 +94,17 @@ export function LimitHistoryRow({
             </Typography>
           </BodyCell>
 
-          <BodyCell sx={{ justifyContent: "flex-end" }}>
+          <BodyCell sx={{ justifyContent: "flex-end", gap: "6px" }} onClick={() => setInvertPrice(!invertPrice)}>
             <Typography sx={{ color: "text.primary" }}>
-              {limitPrice ? `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}` : "--"}
+              {limitPrice
+                ? invertPrice
+                  ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
+                      new BigNumber(1).dividedBy(limitPrice).toString(),
+                    )} ${inputToken?.symbol}`
+                  : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
+                : "--"}
             </Typography>
+            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
