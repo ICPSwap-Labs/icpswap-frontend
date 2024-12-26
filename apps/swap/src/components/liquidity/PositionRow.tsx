@@ -9,7 +9,6 @@ import { LoadingRow, Copy, IsSneedOwner } from "components/index";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { toFormat } from "utils/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Null } from "@icpswap/types";
 import { useIsSneedOwner } from "hooks/index";

@@ -42,7 +42,7 @@ export function ChartsWrapper({ position, positionId }: ChartsWrapperProps) {
   const theme = useTheme();
 
   const [chartView, setChartView] = useState(Charts.PriceRange);
-  const [chartTime, setChartTime] = useState(ChartTimeEnum["24H"]);
+  const [chartTime, setChartTime] = useState(ChartTimeEnum["30D"]);
   const [aprChartTime, setAPRChartTime] = useState(ChartTimeEnum["7D"]);
 
   const {
