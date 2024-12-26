@@ -121,7 +121,7 @@ export function PositionRow({
 
           <BodyCell>{positionInfo.id.toString()}</BodyCell>
 
-          <BodyCell>{totalUSDValue ? `$${toFormat(totalUSDValue)}` : "--"}</BodyCell>
+          <BodyCell>{totalUSDValue ? `${formatDollarAmount(totalUSDValue)}` : "--"}</BodyCell>
 
           <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
             <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${pool.token0.symbol}` : "--"}</BodyCell>
