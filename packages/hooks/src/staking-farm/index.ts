@@ -27,7 +27,7 @@ export async function getUserFarmInfo(canisterId: string, principal: string) {
   return resultFormat<FarmInfo>(farmResult).data;
 }
 
-export function useV3UserFarmInfo(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {
+export function useV3UserFarmInfo(canisterId: string | Null, principal: string | Null, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !canisterId) return undefined;
