@@ -14,7 +14,7 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { toFormat, PositionState } from "utils/index";
+import { PositionState } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { PositionContext, TransferPosition } from "components/swap/index";
