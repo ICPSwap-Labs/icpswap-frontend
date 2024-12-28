@@ -41,7 +41,7 @@ export async function getFarmInfo(canisterId: string) {
   return await getUserFarmInfo(canisterId, AnonymousPrincipal);
 }
 
-export function useFarmInfo(canisterId: string | undefined, reload?: boolean) {
+export function useFarmInfo(canisterId: string | Null, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
