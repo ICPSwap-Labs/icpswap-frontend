@@ -1,10 +1,10 @@
-import { Typography, Button, useMediaQuery, useTheme } from "components/Mui";
+import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
 import { isNullArgs, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
 import { Flex, TextButton, APRPanel } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
-import { useParsedQueryString, usePositionAPRChartData, useV3UserFarmInfo } from "@icpswap/hooks";
+import { usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
 import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
@@ -12,7 +12,7 @@ import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useHistory } from "react-router-dom";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 
 interface PositionInfoProps {
   position: Position;
@@ -24,10 +24,8 @@ interface PositionInfoProps {
 export function PositionInfo({ position, positionId, isOwner, owner }: PositionInfoProps) {
   const theme = useTheme();
   const history = useHistory();
-  const principal = useAccountPrincipalString();
   const positionState = usePositionState(position);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { farmId } = useParsedQueryString() as { farmId: string | Null };
 
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
@@ -36,6 +34,12 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   }, [position.pool]);
 
   const { result: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
+  const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position.pool.id });
+  // TODO Multiple farms for this pool
+  const farmId = useMemo(() => {
+    return availableFarmsForPool?.[0];
+  }, [availableFarmsForPool]);
+  const isStakedByOwner = useLiquidityIsStakedByOwner({ positionId, farmId: availableFarmsForPool?.[0] });
 
   const handleTransferSuccess = useCallback(() => {
     setRefreshTrigger();
@@ -61,18 +65,14 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     page: "decrease",
   });
 
-  const handleUnstakeFarm = useCallback(() => {
+  const handleToFarm = useCallback(() => {
     if (!farmId) return;
     history.push(`/farm/details/${farmId}`);
   }, [history, farmId]);
 
-  const { result: userFarmInfo } = useV3UserFarmInfo(farmId, principal);
-
-  const isStakedPositionOwner = useMemo(() => {
-    if (isNullArgs(userFarmInfo)) return false;
-
-    return !!userFarmInfo.positionIds.find((e) => e.toString() === positionId);
-  }, [userFarmInfo, positionId]);
+  const showStakeFarmButton = useMemo(() => {
+    return !!farmId && isStakedByOwner === false;
+  }, [farmId, isStakedByOwner]);
 
   return (
     <MainCard level={3}>
@@ -137,36 +137,55 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
         ) : null}
 
         {isOwner ? (
-          <Flex gap="0 12px" fullWidth>
+          <Box
+            sx={{
+              width: "100%",
+              display: "grid",
+              gridTemplateColumns:
+                matchDownSM && showStakeFarmButton ? "1fr" : showStakeFarmButton ? "1fr 1fr 1fr" : "1fr 1fr",
+              gap: "20px 12px",
+            }}
+          >
             <Button
               variant="contained"
               className="secondary"
-              sx={{ flex: "50%" }}
-              size={matchDownSM ? "small" : "large"}
+              size={matchDownSM ? "small" : "medium"}
               onClick={loadDecreaseLiquidity}
+              sx={{ height: "44px" }}
             >
               <Trans>Remove Liquidity</Trans>
             </Button>
             <Button
               variant="contained"
               className="secondary"
-              sx={{ flex: "50%" }}
-              size={matchDownSM ? "small" : "large"}
+              size={matchDownSM ? "small" : "medium"}
               onClick={loadIncreaseLiquidity}
+              sx={{ height: "44px" }}
             >
               <Trans>Increase Liquidity</Trans>
             </Button>
-          </Flex>
+            {showStakeFarmButton ? (
+              <Button
+                variant="contained"
+                className="secondary"
+                size={matchDownSM ? "small" : "medium"}
+                onClick={handleToFarm}
+                sx={{ height: "44px" }}
+              >
+                <Trans>Stake Farm</Trans>
+              </Button>
+            ) : null}
+          </Box>
         ) : null}
 
-        {farmId && isStakedPositionOwner ? (
+        {farmId && isStakedByOwner === true ? (
           <Button
             fullWidth
             variant="contained"
             className="secondary"
-            sx={{ flex: "50%" }}
-            size={matchDownSM ? "small" : "large"}
-            onClick={handleUnstakeFarm}
+            sx={{ height: "44px" }}
+            size={matchDownSM ? "small" : "medium"}
+            onClick={handleToFarm}
           >
             <Trans>Unstake Farm</Trans>
           </Button>

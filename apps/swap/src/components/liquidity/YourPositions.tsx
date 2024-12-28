@@ -1,4 +1,4 @@
-import { useMemo, useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import { Box, Button } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
@@ -8,10 +8,10 @@ import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
 import { PositionContext } from "components/swap/index";
-import { useFarmsByFilter } from "@icpswap/hooks";
 import { useSortedPositions } from "hooks/swap/index";
 import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
+import { useAvailableFarmsForPool } from "hooks/staking-farm";
 
 interface PositionItemProps {
   position: UserPosition;
@@ -27,21 +27,11 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
     liquidity: positionDetail.liquidity,
   });
 
-  const { result: farms } = useFarmsByFilter({
-    pair: position?.pool.id,
-    state: "LIVE",
-    token: undefined,
-    user: undefined,
-  });
-
-  const availableFarmForLiquidity = useMemo(() => {
-    if (!farms) return undefined;
-    return farms[0]?.toString();
-  }, [farms]);
+  const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position?.pool.id });
 
   return (
     <PositionCard
-      farmId={availableFarmForLiquidity}
+      farmId={availableFarmsForPool ? availableFarmsForPool[0] : undefined}
       position={position}
       positionId={BigInt(positionDetail.index)}
       showButtons
