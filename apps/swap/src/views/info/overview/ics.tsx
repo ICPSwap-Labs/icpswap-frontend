@@ -7,7 +7,7 @@ import {
   formatDollarAmount,
   BigNumber,
   nonNullArgs,
-  formatTokenPrice,
+  formatDollarTokenPrice,
 } from "@icpswap/utils";
 import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
@@ -93,7 +93,7 @@ export function Ics() {
         <Flex justify="space-between" fullWidth sx={{ margin: "16px 0 0 0" }}>
           <Flex gap="0 8px" align="flex-end">
             <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-              {infoToken ? formatTokenPrice(infoToken.priceUSD, { digitsIfLessThanOne: 3 }) : "--"}
+              {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
             </Typography>
 
             <Proportion value={infoToken?.priceUSDChange} />

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Button, Typography } from "components/Mui";
 import { MainCard, Flex } from "components/index";
 import { Trans } from "@lingui/macro";
-import { BigNumber, formatDollarAmount } from "@icpswap/utils";
+import { BigNumber, formatAmount, formatDollarAmount } from "@icpswap/utils";
 import { FarmInfo, InitFarmArgs } from "@icpswap/types";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { usePosition } from "hooks/swap/usePosition";
@@ -126,8 +126,12 @@ export function FarmPositionCard({
         <Flex sx={{ margin: "16px 0 0 0" }} justify="space-between" align="flex-end">
           <Flex vertical gap="8px 0" align="flex-start">
             <Typography>{positionUSDValue ? `~${formatDollarAmount(positionUSDValue)} USD` : "--"}</Typography>
-            <Typography>{token0Amount && token0 ? `${token0Amount} ${token0.symbol}` : "--"}</Typography>
-            <Typography>{token1Amount && token1 ? `${token1Amount} ${token1.symbol}` : "--"}</Typography>
+            <Typography>
+              {token0Amount && token0 ? `${formatAmount(token0Amount, { fullNumber: true })} ${token0.symbol}` : "--"}
+            </Typography>
+            <Typography>
+              {token1Amount && token1 ? `${formatAmount(token1Amount, { fullNumber: true })} ${token1.symbol}` : "--"}
+            </Typography>
           </Flex>
           <Button variant="contained" sx={{ width: "120px", height: "48px" }} onClick={handleClick} disabled={disabled}>
             {unstake ? <Trans>Unstake</Trans> : <Trans>Stake</Trans>}

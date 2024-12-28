@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
 import { Price, Token } from "@icpswap/swap-sdk";
-import { formatDollarAmount, formatTokenPrice } from "@icpswap/utils";
+import { formatDollarTokenPrice, formatTokenPrice } from "@icpswap/utils";
 import { Typography, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton, Flex } from "components/index";
@@ -79,7 +79,7 @@ export function TradePrice({
         </Typography>
         {usdValue ? (
           <Typography onClick={flipPrice} sx={{ color: color ?? "text.secondary", fontSize, cursor: "pointer" }}>
-            ({formatDollarAmount(usdValue)})
+            ({formatDollarTokenPrice(usdValue)})
           </Typography>
         ) : null}
 
