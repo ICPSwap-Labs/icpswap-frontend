@@ -6,7 +6,13 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { BigNumber, formatDollarAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  isNullArgs,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { toFormat, PositionState } from "utils/index";
 import { Trans, t } from "@lingui/macro";
@@ -244,7 +250,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatAmount(amount0, { fullNumber: true })}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
@@ -262,7 +268,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography color="text.primary">{formatAmount(amount1, { fullNumber: true })}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 )
@@ -306,7 +312,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography color="text.primary">{formatAmount(amount1, { fullNumber: true })}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 ) : (
@@ -322,7 +328,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatAmount(amount0, { fullNumber: true })}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}

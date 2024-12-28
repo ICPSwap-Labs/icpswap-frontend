@@ -94,15 +94,21 @@ export interface FormatAmountOptions {
   digits?: number;
   min?: number;
   max?: number;
+  fullNumber?: boolean;
+  fullDigits?: number;
 }
 
 // using a currency library here in case we want to add more in future
 export const formatAmount = (num: number | string | Null, options?: FormatAmountOptions) => {
-  const { digits = 5, min = 0.00001, max = 1000 } = options ?? {};
+  const { digits = 5, min = 0.00001, max = 1000, fullNumber, fullDigits = 5 } = options ?? {};
 
   if (num === 0 || num === "0") return "0";
 
   if (!num) return "-";
+
+  if (fullNumber) {
+    return new BigNumber(num).toFormat(fullDigits);
+  }
 
   if (new BigNumber(num).isLessThan(min)) {
     return `<${min}`;
