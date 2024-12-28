@@ -30,7 +30,13 @@ export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }:
 
     setLoading(true);
 
-    const { call, key } = await getHarvestCall({ token: rewardToken, poolId });
+    const { call, key } = await getHarvestCall({
+      token: rewardToken,
+      poolId,
+      refresh: () => {
+        if (onHarvestSuccess) onHarvestSuccess();
+      },
+    });
 
     const loadingTipKey = openLoadingTip(`Harvest ${rewardToken.symbol}`, {
       extraContent: <StepViewButton step={key} />,
@@ -40,7 +46,6 @@ export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }:
 
     if (result) {
       openTip(t`Harvest successfully`, MessageTypes.success);
-      if (onHarvestSuccess) onHarvestSuccess();
     }
 
     closeLoadingTip(loadingTipKey);
