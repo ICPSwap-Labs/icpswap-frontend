@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, Wrapper } from "components/index";
+import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -41,6 +41,7 @@ function MainContent() {
   const [filterPair, setFilterPair] = useState<string | Null>(null);
   const [filterToken, setFilterToken] = useState<string | Null>(null);
   const [page, setPage] = useState(START_PAGE);
+  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
 
@@ -139,6 +140,23 @@ function MainContent() {
     return slicedFarms.length !== farms.length;
   }, [slicedFarms, farms]);
 
+  const [headerScrollOutOnTop, setHeaderScrollOutOnTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const target = document.querySelector("#farm-list-header");
+      if (target) {
+        const boundingClientRect = target.getBoundingClientRect();
+        setHeaderScrollOutOnTop(boundingClientRect.top < 50);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
     <FarmContext.Provider
       value={{
@@ -147,7 +165,23 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
+      <Box
+        sx={{
+          display: !headerInViewport && headerScrollOutOnTop ? "block" : "none",
+          position: "sticky",
+          top: "64px",
+          background: theme.palette.background.level3,
+          zIndex: 10,
+          width: "100%",
+          maxWidth: "1200px",
+          borderBottom: `1px solid ${theme.palette.background.level1}`,
+        }}
+      >
+        <FarmListHeader state={state} showState={showState} your={your} sx={{ gridTemplateColumns }} />
+      </Box>
+
       <MainCard
+        id="farm-scroll-wrapper"
         padding="0"
         sx={{
           "@media(max-width: 640px)": {
@@ -249,7 +283,18 @@ function MainContent() {
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          <FarmListHeader state={state} showState={showState} your={your} sx={{ gridTemplateColumns }} />
+          <ObserverWrapper
+            scrollInViewport={() => setHeaderInViewport(true)}
+            scrollOutViewport={() => setHeaderInViewport(false)}
+          >
+            <FarmListHeader
+              id="farm-list-header"
+              state={state}
+              showState={showState}
+              your={your}
+              sx={{ gridTemplateColumns }}
+            />
+          </ObserverWrapper>
 
           <InfiniteScroll
             dataLength={slicedFarms?.length ?? 0}
@@ -301,6 +346,8 @@ function MainContent() {
           </InfiniteScroll>
         </Box>
       </MainCard>
+
+      <ScrollTop target="farm-scroll-wrapper" heightShowScrollTop={510} />
     </FarmContext.Provider>
   );
 }
