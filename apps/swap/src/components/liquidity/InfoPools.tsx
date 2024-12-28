@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
-import { NoData, TokenImage, TabPanel, type Tab } from "components/index";
+import { NoData, TokenImage, TabPanel, type Tab, ObserverWrapper, ScrollTop } from "components/index";
 import {
   Header,
   HeaderCell,
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => {
       borderRadius: "12px",
     },
     wrapper: {
+      position: "sticky",
       display: "grid",
       gridGap: "1em",
       alignItems: "center",
@@ -111,7 +112,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
 
   return (
     <Header
-      className={classes.wrapper}
+      className={`${classes.wrapper}`}
       onSortChange={onSortChange}
       defaultSortFiled={defaultSortFiled}
       sx={{
@@ -292,6 +293,7 @@ export function InfoPools() {
   const [page, setPage] = useState(START_PAGE);
   const [timeBase, setTimeBase] = useState<"24H" | "7D">("24H");
   const [debounceSearchToken, debounceSetSearchToken] = useDebouncedChangeHandler(searchToken, setSearchToken, 300);
+  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: tokenList } = useTokensFromList();
@@ -394,126 +396,150 @@ export function InfoPools() {
   );
 
   return (
-    <Box className={classes.card}>
+    <>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "14px 24px",
-          "@media(max-width: 640px)": {
-            flexDirection: "column",
-            gap: "16px 0",
-            padding: "24px 16px",
-          },
+          display: headerInViewport ? "none" : "block",
+          position: "sticky",
+          top: "64px",
+          background: theme.palette.background.level3,
+          zIndex: 10,
+          width: "100%",
+          maxWidth: "1200px",
         }}
       >
-        <Flex gap="0 8px" sx={{ width: "fit-content" }}>
-          <Typography sx={{ whiteSpace: "nowrap" }}>
-            <Trans>Time base</Trans>
-          </Typography>
+        <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
+      </Box>
 
-          <TabPanel
-            size="small"
-            tabs={[
-              { key: "24h", value: "24H" },
-              { key: "7d", value: "7D" },
-            ]}
-            onChange={handleTabChange}
-          />
-        </Flex>
-
-        <Flex
-          align="center"
-          gap="0 16px"
+      <Box className={classes.card} id="scroll-main-wrapper">
+        <Box
           sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "14px 24px",
             "@media(max-width: 640px)": {
               flexDirection: "column",
               gap: "16px 0",
-              alignItems: "flex-start",
+              padding: "24px 16px",
             },
           }}
         >
-          <OnlyTokenList onChange={handleOnlyTokenList} checked={onlyTokenList} />
-          <Box sx={{ width: "260px" }}>
-            <FilledTextField
-              width="100%"
-              fullHeight
-              placeholder={t`Search token`}
-              onChange={handleSearchInput}
-              background="level1"
-              placeholderSize="14px"
-              fontSize="14px"
-              textFiledProps={{
-                slotProps: {
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search size={14} color={theme.colors.darkTextSecondary} />
-                      </InputAdornment>
-                    ),
-                  },
-                },
-              }}
-            />
-          </Box>
-        </Flex>
-      </Box>
+          <Flex gap="0 8px" sx={{ width: "fit-content" }}>
+            <Typography sx={{ whiteSpace: "nowrap" }}>
+              <Trans>Time base</Trans>
+            </Typography>
 
-      <Box sx={{ width: "100%", overflow: "auto" }}>
-        <Box
-          sx={{
-            minWidth: "1200px",
-            "@media(max-width: 640px)": {
-              width: "100%",
-              minWidth: "auto",
-            },
-          }}
-        >
-          <InfiniteScroll
-            dataLength={slicedPools?.length ?? 0}
-            next={handleScrollNext}
-            hasMore={hasMore}
-            loader={
-              <Box sx={{ padding: "24px" }}>
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            }
+            <TabPanel
+              size="small"
+              tabs={[
+                { key: "24h", value: "24H" },
+                { key: "7d", value: "7D" },
+              ]}
+              onChange={handleTabChange}
+            />
+          </Flex>
+
+          <Flex
+            align="center"
+            gap="0 16px"
+            sx={{
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "16px 0",
+                alignItems: "flex-start",
+              },
+            }}
           >
-            {slicedPools && slicedPools.length > 0 ? (
-              <>
-                <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
-                {(slicedPools ?? []).map((pool, index) => (
-                  <PoolItem key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
-                ))}
-              </>
-            ) : isNullArgs(slicedPools) ? (
-              <Box sx={{ padding: "24px" }}>
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            ) : (
-              <NoData />
-            )}
-          </InfiniteScroll>
+            <OnlyTokenList onChange={handleOnlyTokenList} checked={onlyTokenList} />
+            <Box sx={{ width: "260px" }}>
+              <FilledTextField
+                width="100%"
+                fullHeight
+                placeholder={t`Search token`}
+                onChange={handleSearchInput}
+                background="level1"
+                placeholderSize="14px"
+                fontSize="14px"
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search size={14} color={theme.colors.darkTextSecondary} />
+                        </InputAdornment>
+                      ),
+                    },
+                  },
+                }}
+              />
+            </Box>
+          </Flex>
         </Box>
+
+        <Box sx={{ width: "100%", overflow: "auto" }}>
+          <Box
+            sx={{
+              minWidth: "1200px",
+              "@media(max-width: 640px)": {
+                width: "100%",
+                minWidth: "auto",
+              },
+            }}
+          >
+            <InfiniteScroll
+              dataLength={slicedPools?.length ?? 0}
+              next={handleScrollNext}
+              hasMore={hasMore}
+              loader={
+                <Box sx={{ padding: "24px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
+                </Box>
+              }
+            >
+              {slicedPools && slicedPools.length > 0 ? (
+                <>
+                  <ObserverWrapper
+                    scrollInViewport={() => setHeaderInViewport(true)}
+                    scrollOutViewport={() => setHeaderInViewport(false)}
+                  >
+                    <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
+                  </ObserverWrapper>
+
+                  {(slicedPools ?? []).map((pool, index) => (
+                    <PoolItem key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
+                  ))}
+                </>
+              ) : isNullArgs(slicedPools) ? (
+                <Box sx={{ padding: "24px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
+                </Box>
+              ) : (
+                <NoData />
+              )}
+            </InfiniteScroll>
+          </Box>
+        </Box>
+
+        <ScrollTop target="scroll-main-wrapper" heightShowScrollTop={510} />
       </Box>
-    </Box>
+    </>
   );
 }

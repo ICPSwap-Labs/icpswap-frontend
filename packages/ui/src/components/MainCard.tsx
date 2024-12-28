@@ -13,9 +13,20 @@ export interface MainCardProps {
   sx?: BoxProps["sx"];
   borderRadius?: string;
   className?: string;
+  id?: string;
 }
 
-export function MainCard({ border, level, onClick, padding, children, sx, borderRadius, className }: MainCardProps) {
+export function MainCard({
+  id,
+  border,
+  level,
+  onClick,
+  padding,
+  children,
+  sx,
+  borderRadius,
+  className,
+}: MainCardProps) {
   const theme = useTheme();
 
   const cardStyles = useMemo(() => {
@@ -66,6 +77,7 @@ export function MainCard({ border, level, onClick, padding, children, sx, border
 
   return (
     <Box
+      id={id}
       sx={{
         backgroundColor: cardStyles.background,
         ...(cardStyles.border ? { border: cardStyles.border } : {}),

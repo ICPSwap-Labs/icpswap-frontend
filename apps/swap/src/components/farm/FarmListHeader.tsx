@@ -7,11 +7,13 @@ interface FarmListHeaderProps {
   state: "NOT_STARTED" | "LIVE" | "FINISHED" | undefined;
   sx?: BoxProps["sx"];
   your: boolean;
+  id?: string;
 }
 
-export function FarmListHeader({ your, state, showState, sx }: FarmListHeaderProps) {
+export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeaderProps) {
   return (
     <Box
+      id={id}
       sx={{
         display: "grid",
         "& .row-item": {

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { makeStyles, useTheme, Box, Theme } from "components/Mui";
+import { makeStyles, Box, Theme } from "components/Mui";
 import { Flex, GlobalTips } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => {
       }),
       [theme.breakpoints.down("md")]: {
         padding: "0 16px",
-        minHeight: "calc(100vh - 60px)",
       },
       [theme.breakpoints.down("sm")]: {
         padding: "0 12px",
@@ -39,12 +38,8 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     mainContent: {
-      paddingTop: "64px",
       "&.pro": {
         background: theme.palette.background.level1,
-      },
-      [theme.breakpoints.down("md")]: {
-        paddingTop: "60px",
       },
     },
   };
@@ -53,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) => {
 const SMALL_PADDING_PATH = ["/swap/pro"];
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const theme = useTheme() as Theme;
   const classes = useStyles();
   const location = useLocation();
 
@@ -70,15 +64,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Flex
         fullWidth
         sx={{
-          position: "fixed",
+          position: "sticky",
           top: 0,
           padding: "0 20px",
           height: "64px",
           backgroundColor: "#0B132F",
           zIndex: 2,
-          [theme.breakpoints.down("md")]: {
-            height: "60px",
-          },
         }}
       >
         <Header />

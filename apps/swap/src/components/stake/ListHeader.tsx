@@ -7,11 +7,13 @@ export interface PoolListHeaderProps {
   gridTemplateColumns: string;
   your: boolean;
   finished: boolean;
+  id?: string;
 }
 
-export function PoolListHeader({ showState, finished, gridTemplateColumns, your }: PoolListHeaderProps) {
+export function PoolListHeader({ id, showState, finished, gridTemplateColumns, your }: PoolListHeaderProps) {
   return (
     <Box
+      id={id}
       sx={{
         display: "grid",
         gridTemplateColumns,
