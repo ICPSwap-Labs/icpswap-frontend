@@ -17,6 +17,7 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { BigNumber, formatDollarAmount, formatAmount } from "@icpswap/utils";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 import { SwapProContext } from "../context";
 
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      gridTemplateColumns: "100px repeat(4, 1fr) 60px",
+      gridTemplateColumns: "100px repeat(3, 1fr) 60px",
       padding: "16px",
     },
   };
@@ -46,6 +47,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
   const theme = useTheme();
   const { inputTokenPrice, outputTokenPrice, inputToken, outputToken } = useContext(SwapProContext);
+
+  const [manuallyInverted, setManuallyInverted] = useState(false);
 
   const position = usePositionWithPool({
     tickLower: positionInfo.tickLower.toString(),
@@ -76,7 +79,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     priceUpper: pricesFromPosition?.priceUpper,
     quote: pricesFromPosition?.quote,
     base: pricesFromPosition?.base,
-    invert: false,
+    invert: manuallyInverted,
   });
 
   const inverted = token1 ? base?.equals(token1) : undefined;
@@ -128,16 +131,19 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       <TableRow className={classes.wrapper} borderBottom="none">
         <BodyCell>{positionInfo.index}</BodyCell>
 
-        <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ` : "--"}</BodyCell>
+        <BodyCell sx={{ flexDirection: "column", gap: "12px" }}>
+          <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${token0?.symbol}` : "--"}</BodyCell>
+          <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${token1?.symbol}` : "--"}</BodyCell>
+        </BodyCell>
 
-        <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ` : "--"}</BodyCell>
-
-        <BodyCell>
+        <BodyCell onClick={() => setManuallyInverted(!manuallyInverted)}>
           {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
             priceUpper,
             tickAtLimit,
             Bound.UPPER,
-          )} ${pairName ?? ""}`}
+          )} ${pairName}`}
+
+          <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
         </BodyCell>
 
         <BodyCell
@@ -226,12 +232,8 @@ export function YourPositions({ canisterId }: PoolTransactionsProps) {
             <Trans>Position ID</Trans>
           </HeaderCell>
 
-          <HeaderCell field="token0Amount">
-            <Trans>{pool?.token0.symbol} Amount</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="token1Amount">
-            <Trans>{pool?.token1.symbol} Amount</Trans>
+          <HeaderCell field="TokenAmount">
+            <Trans>Token Amount</Trans>
           </HeaderCell>
 
           <HeaderCell field="priceRange">
