@@ -3,7 +3,7 @@ import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useState, useMemo } from "react";
-import { Typography, useTheme } from "components/Mui";
+import { useTheme } from "components/Mui";
 import { toSignificantWithGroupSeparator, BigNumber, isNullArgs } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
@@ -79,23 +79,26 @@ export function LimitHistoryRow({
           <BodyCell>{dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}</BodyCell>
 
           {/* You pay */}
-          <BodyCell sx={{ gap: "0 6px" }}>
+          <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
-            <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
+            <BodyCell>
               {toSignificantWithGroupSeparator(inputAmount)} {inputToken?.symbol}
-            </Typography>
+            </BodyCell>
           </BodyCell>
 
           {/* You receive */}
-          <BodyCell sx={{ gap: "0 6px" }}>
+          <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
-            <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
+            <BodyCell>
               {toSignificantWithGroupSeparator(outputChangeAmount)} {outputToken?.symbol}
-            </Typography>
+            </BodyCell>
           </BodyCell>
 
-          <BodyCell sx={{ justifyContent: "flex-end", gap: "6px" }} onClick={() => setInvertPrice(!invertPrice)}>
-            <Typography sx={{ color: "text.primary" }}>
+          <BodyCell
+            sx={{ justifyContent: "flex-end", gap: "6px", alignItems: "center" }}
+            onClick={() => setInvertPrice(!invertPrice)}
+          >
+            <BodyCell>
               {limitPrice
                 ? invertPrice
                   ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
@@ -103,7 +106,7 @@ export function LimitHistoryRow({
                     )} ${inputToken?.symbol}`
                   : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
             <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
           </BodyCell>
 
