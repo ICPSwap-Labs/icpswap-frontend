@@ -47,12 +47,12 @@ export async function setStorageTokenInfo(tokenInfo: StorageTokenInfo) {
 //   }
 // }
 
-function isNeedUpdateTokenInfo(tokenId: string) {
-  // const storage_time = getTokenStorageTime(tokenId);
-  // if (!storage_time) return true;
-  // return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
-  return false;
-}
+// function isNeedUpdateTokenInfo(tokenId: string) {
+//   const storage_time = getTokenStorageTime(tokenId);
+//   if (!storage_time) return true;
+//   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
+//   return false;
+// }
 
 function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageInfo is StorageTokenInfo {
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
@@ -61,7 +61,7 @@ function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageI
 export async function __getTokenInfo(tokenId: string) {
   const storageInfo = await getStorageTokenInfo(tokenId);
 
-  if (isStorageInfoValid(storageInfo) && !isNeedUpdateTokenInfo(tokenId)) {
+  if (isStorageInfoValid(storageInfo)) {
     return storageInfo;
   }
 
