@@ -2,7 +2,14 @@ import { useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { MainCard, TokenImage } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isNullArgs,
+  nonNullArgs,
+  numToPercent,
+  formatLiquidityAmount,
+} from "@icpswap/utils";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
 import { useUSDPriceById } from "hooks/index";
@@ -62,7 +69,7 @@ export function PositionValue({ position }: PositionValueProps) {
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{new BigNumber(token0Amount).toFormat()}</Typography>
+            <Typography color="text.primary">{formatLiquidityAmount(token0Amount)}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token0USDValue) ? formatDollarAmount(token0USDValue) : "--"}
             </Typography>
@@ -76,7 +83,7 @@ export function PositionValue({ position }: PositionValueProps) {
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{new BigNumber(token1Amount).toFormat()}</Typography>
+            <Typography color="text.primary">{formatLiquidityAmount(token1Amount)}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
             </Typography>
