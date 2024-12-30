@@ -8,10 +8,10 @@ import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
   BigNumber,
-  formatAmount,
   formatDollarAmount,
   isNullArgs,
   toSignificantWithGroupSeparator,
+  formatLiquidityAmount,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
@@ -250,7 +250,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {formatAmount(amount0, { fullNumber: true })}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
@@ -268,7 +268,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{formatAmount(amount1, { fullNumber: true })}</Typography>
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 )
@@ -312,7 +312,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{formatAmount(amount1, { fullNumber: true })}</Typography>
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 ) : (
@@ -328,7 +328,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {formatAmount(amount0, { fullNumber: true })}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}

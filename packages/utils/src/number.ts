@@ -186,6 +186,23 @@ export const formatIcpAmount = (num: number | string | Null, options?: FormatIcp
   }).format(Number(num));
 };
 
+// Format the number of liquidity token amount
+export function formatLiquidityAmount(num: number | string | Null) {
+  if (num === 0 || num === "0") return "0";
+
+  if (!num) return "-";
+
+  if (new BigNumber(num).isLessThan(1)) {
+    return toSignificantWithGroupSeparator(num, 3);
+  }
+
+  const __num = new BigNumber(num).toFormat(5);
+
+  const regexp = /(?:\.0*|(\.\d+?)0+)$/;
+
+  return __num.replace(regexp, "$1");
+}
+
 export function percentToNum(val: string) {
   return new BigNumber(val.replace("%", "")).dividedBy(100).toNumber();
 }
