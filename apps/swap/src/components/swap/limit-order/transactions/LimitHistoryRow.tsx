@@ -94,20 +94,23 @@ export function LimitHistoryRow({
             </BodyCell>
           </BodyCell>
 
-          <BodyCell
-            sx={{ justifyContent: "flex-end", gap: "6px", alignItems: "center" }}
-            onClick={() => setInvertPrice(!invertPrice)}
-          >
-            <BodyCell>
-              {limitPrice
-                ? invertPrice
-                  ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
-                      new BigNumber(1).dividedBy(limitPrice).toString(),
-                    )} ${inputToken?.symbol}`
-                  : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
-                : "--"}
-            </BodyCell>
-            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
+          <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
+            {limitPrice
+              ? invertPrice
+                ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
+                    new BigNumber(1).dividedBy(limitPrice).toString(),
+                  )} ${inputToken?.symbol}`
+                : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
+              : "--"}
+            <SyncAltIcon
+              sx={{
+                fontSize: "1rem",
+                cursor: "pointer",
+                color: "#ffffff",
+                margin: "0 0 0 4px",
+                verticalAlign: "middle",
+              }}
+            />
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
