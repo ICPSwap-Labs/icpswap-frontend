@@ -127,14 +127,22 @@ export function PositionRow({
             <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${pool.token1.symbol}` : "--"}</BodyCell>
           </BodyCell>
 
-          <BodyCell onClick={() => setManuallyInverted(!manuallyInverted)}>
+          <BodyCell sx={{ display: "inline-block" }} onClick={() => setManuallyInverted(!manuallyInverted)}>
             {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
               priceUpper,
               tickAtLimit,
               Bound.UPPER,
             )} ${pairName}`}
 
-            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff" }} />
+            <SyncAltIcon
+              sx={{
+                fontSize: "1rem",
+                cursor: "pointer",
+                color: "#ffffff",
+                margin: "0 0 0 4px",
+                verticalAlign: "middle",
+              }}
+            />
           </BodyCell>
 
           <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
