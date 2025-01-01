@@ -3,10 +3,12 @@
 /* eslint-disable */
 export type { ERC20 } from "./ERC20";
 export type { ERC20Helper } from "./ERC20Helper";
+export type { EthHelper } from "./EthHelper";
 export type { UniswapInterfaceMulticall } from "./UniswapInterfaceMulticall";
 export type { CkETH } from "./CkETH";
 export * as factories from "./factories";
 export { CkETH__factory } from "./factories/CkETH__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { ERC20Helper__factory } from "./factories/ERC20Helper__factory";
+export { EthHelper__factory } from "./factories/EthHelper__factory";
 export { UniswapInterfaceMulticall__factory } from "./factories/UniswapInterfaceMulticall__factory";

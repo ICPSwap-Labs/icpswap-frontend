@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
-import { erc20Minter } from "@icpswap/actor";
+import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
   WithdrawalSearchParameter,
   WithdrawalDetail,
-  Erc20MinterInfo,
+  ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
   Null,
 } from "@icpswap/types";
@@ -25,11 +25,13 @@ export async function withdrawErc20Token({ minter_id, ledger_id, recipient, amou
     cketh_block_index: bigint;
   }>(
     await (
-      await erc20Minter(minter_id, true)
+      await chainKeyETHMinter(minter_id, true)
     ).withdraw_erc20({
       recipient,
       amount,
       ckerc20_ledger_id: ledger_id,
+      from_cketh_subaccount: [],
+      from_ckerc20_subaccount: [],
     }),
   );
 }
@@ -40,7 +42,7 @@ export interface WithdrawErc20TokenStatusArgs {
 }
 
 export async function withdrawErc20TokenStatus({ minter_id, params }: WithdrawErc20TokenStatusArgs) {
-  return resultFormat<WithdrawalDetail[]>(await (await erc20Minter(minter_id)).withdrawal_status(params)).data;
+  return resultFormat<WithdrawalDetail[]>(await (await chainKeyETHMinter(minter_id)).withdrawal_status(params)).data;
 }
 
 export interface UseWithdrawErc20TokenStatusArgs {
@@ -60,7 +62,7 @@ export function useWithdrawErc20TokenStatus({ minter_id, params, refresh }: UseW
 }
 
 export async function getChainKeyMinterInfo(minter_id: string) {
-  return resultFormat<Erc20MinterInfo>(await (await erc20Minter(minter_id)).get_minter_info()).data;
+  return resultFormat<ChainKeyETHMinterInfo>(await (await chainKeyETHMinter(minter_id)).get_minter_info()).data;
 }
 
 export function useChainKeyMinterInfo(minter_id: string | Null) {
@@ -73,7 +75,9 @@ export function useChainKeyMinterInfo(minter_id: string | Null) {
 }
 
 export async function getChainKeyTransactionPrice(minter_id: string) {
-  return resultFormat<Eip1559TransactionPrice>(await (await erc20Minter(minter_id)).eip_1559_transaction_price()).data;
+  return resultFormat<Eip1559TransactionPrice>(
+    await (await chainKeyETHMinter(minter_id)).eip_1559_transaction_price([]),
+  ).data;
 }
 
 export function useChainKeyTransactionPrice(minter_id: string | undefined) {
@@ -82,5 +86,19 @@ export function useChainKeyTransactionPrice(minter_id: string | undefined) {
       if (!minter_id) return undefined;
       return await getChainKeyTransactionPrice(minter_id);
     }, [minter_id]),
+  );
+}
+
+export async function withdraw_eth(minter_id: string, recipient: string, amount: bigint) {
+  return resultFormat<{
+    block_index: bigint;
+  }>(
+    await (
+      await chainKeyETHMinter(minter_id, true)
+    ).withdraw_eth({
+      recipient,
+      amount,
+      from_subaccount: [],
+    }),
   );
 }

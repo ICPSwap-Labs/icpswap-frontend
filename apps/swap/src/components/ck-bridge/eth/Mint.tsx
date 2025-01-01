@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
@@ -20,7 +20,7 @@ import { MintExtraContent } from "./MintExtra";
 export interface EthMintProps {
   token: Token;
   bridgeChain: ckBridgeChain;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
 export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
@@ -35,7 +35,9 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
   const ethBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
 
-  const { loading, mint_call } = useMintCallback();
+  const { loading, mint_call } = useMintCallback({
+    minter_address: minterInfo?.deposit_with_subaccount_helper_contract_address[0],
+  });
 
   const handleMint = useCallback(async () => {
     if (!principal || !amount) return;

@@ -28,7 +28,7 @@ import NFIDTransfer from "components/Wallet/NFIDTransfer";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
-import { Erc20MinterInfo } from "@icpswap/types";
+import { ChainKeyETHMinterInfo } from "@icpswap/types";
 import { useInfoToken } from "@icpswap/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
@@ -101,7 +101,7 @@ const TOKEN_BALANCE_INTERVAL = 60000;
 
 export interface TokenListItemProps {
   canisterId: string;
-  chainKeyMinterInfo: Erc20MinterInfo | undefined;
+  chainKeyMinterInfo: ChainKeyETHMinterInfo | undefined;
 }
 
 export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
@@ -429,7 +429,7 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
 export interface TokenListProps {
   tokens: string[];
   loading?: boolean;
-  chainKeyMinterInfo: Erc20MinterInfo | undefined;
+  chainKeyMinterInfo: ChainKeyETHMinterInfo | undefined;
 }
 
 export default function Tokens({ tokens, loading, chainKeyMinterInfo }: TokenListProps) {

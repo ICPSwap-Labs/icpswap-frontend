@@ -1,9 +1,9 @@
-import { Erc20MinterInterfaceFactory, Erc20MinterService } from "@icpswap/candid";
+import { ChainKeyMinterInterfaceFactory, ChainKeyMinterService } from "@icpswap/candid";
 import { actor } from "../actor";
 
-export const erc20Minter = (canisterId: string, identity?: true) =>
-  actor.create<Erc20MinterService>({
+export const chainKeyETHMinter = (canisterId: string, identity?: true) =>
+  actor.create<ChainKeyMinterService>({
     canisterId,
-    idlFactory: Erc20MinterInterfaceFactory,
+    idlFactory: ChainKeyMinterInterfaceFactory,
     identity,
   });

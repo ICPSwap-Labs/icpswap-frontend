@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
@@ -20,7 +20,7 @@ import ButtonConnector from "components/authentication/ButtonConnector";
 export interface EthDissolveProps {
   token: Token;
   bridgeChain: ckBridgeChain;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
 export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps) {

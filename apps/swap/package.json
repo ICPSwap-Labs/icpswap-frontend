@@ -52,6 +52,7 @@
   "dependencies": {
     "@astrox/sdk-web": "^0.1.41",
     "@astrox/sdk-webview": "^0.1.41",
+    "@dfinity/cketh": "^3.4.2",
     "@emotion/react": "^11.13.5",
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.13.5",

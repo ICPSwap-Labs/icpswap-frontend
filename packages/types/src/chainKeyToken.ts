@@ -7,6 +7,7 @@ export type {
   WithdrawalStatus,
   EthTransaction,
   TxFinalizedStatus,
-  Erc20MinterInfo,
+  ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
+  RetrieveEthStatus,
 } from "@icpswap/candid";
