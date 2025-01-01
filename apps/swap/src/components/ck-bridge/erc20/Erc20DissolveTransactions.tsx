@@ -5,7 +5,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
 import { LoadingRow, Flex } from "@icpswap/ui";
 import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalSearchParameter, WithdrawalDetail, Erc20MinterInfo } from "@icpswap/types";
+import type { WithdrawalSearchParameter, WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
 import { useMemo } from "react";
 import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
 import { Principal } from "@dfinity/principal";
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 interface TransactionProps {
   transaction: WithdrawalDetail;
-  minterInfo: Erc20MinterInfo | undefined;
+  minterInfo: ChainKeyETHMinterInfo | undefined;
 }
 
 function Transaction({ transaction, minterInfo }: TransactionProps) {

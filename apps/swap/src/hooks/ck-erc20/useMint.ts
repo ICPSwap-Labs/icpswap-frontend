@@ -2,7 +2,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback, useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
-import { useERC20MinterHelperContract } from "hooks/web3/useContract";
+import { useEthMinterHelperContract } from "hooks/web3/useContract";
 import { formatTokenAmount } from "@icpswap/utils";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
@@ -10,6 +10,7 @@ import { t } from "@lingui/macro";
 import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
 import { Null } from "@icpswap/types";
 import { useUpdateErc20TX } from "store/web3/hooks";
+import { bytesStringOfNullSubAccount } from "constants/ckETH";
 
 export interface UseMintProps {
   helperContractAddress: string | undefined;
@@ -21,7 +22,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
   const updateErc20Tx = useUpdateErc20TX();
-  const helperContract = useERC20MinterHelperContract(helperContractAddress);
+  const helperContract = useEthMinterHelperContract(helperContractAddress);
 
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +36,10 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
   const bytes32 = useMemo(() => {
     if (principal) return principalToBytes32(principal);
     return undefined;
+  }, [principal]);
+
+  const subAccountBytes32 = useMemo(() => {
+    return bytesStringOfNullSubAccount;
   }, [principal]);
 
   const mint_call = useCallback(
@@ -51,12 +56,12 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
         const formatAmount = formatTokenAmount(amount, erc20.decimals).toString();
 
         const estimatedGas = await helperContract.estimateGas
-          .deposit(erc20.address, formatAmount, bytes32)
+          .depositErc20(erc20.address, formatAmount, bytes32, subAccountBytes32)
           .catch(() => {
-            return helperContract.estimateGas.deposit(erc20.address, formatAmount, bytes32);
+            return helperContract.estimateGas.depositErc20(erc20.address, formatAmount, bytes32, subAccountBytes32);
           });
 
-        const response = await helperContract.deposit(erc20.address, formatAmount, bytes32, {
+        const response = await helperContract.depositErc20(erc20.address, formatAmount, bytes32, subAccountBytes32, {
           gasLimit: calculateGasMargin(estimatedGas),
         });
 
@@ -90,7 +95,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
 
       return undefined;
     },
-    [helperContract, approveState, approve, bytes32, principal, updateErc20Tx],
+    [helperContract, approveState, approve, bytes32, principal, updateErc20Tx, subAccountBytes32],
   );
 
   return useMemo(() => ({ loading, mint_call, approveState }), [loading, mint_call, approveState]);

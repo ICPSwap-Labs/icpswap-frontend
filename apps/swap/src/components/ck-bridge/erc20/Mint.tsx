@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
@@ -22,7 +22,7 @@ import { MintExtraContent } from "./MintExtra";
 export interface Erc20MintProps {
   token: Token;
   bridgeChain: ckBridgeChain;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
   blockNumber: number | string | Null;
 }
 

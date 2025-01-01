@@ -1,9 +1,9 @@
 import { Trans } from "@lingui/macro";
 import { Typography } from "components/Mui";
-import type { Erc20MinterInfo, Null } from "@icpswap/types";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 
 export interface LastSyncBlockProps {
-  minterInfo: Erc20MinterInfo | Null;
+  minterInfo: ChainKeyETHMinterInfo | Null;
 }
 
 export function LastSyncBlock({ minterInfo }: LastSyncBlockProps) {

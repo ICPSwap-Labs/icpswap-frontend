@@ -33,6 +33,8 @@ export interface DefiniteCanisterSettings {
   freezing_threshold: bigint;
   controllers: Array<Principal>;
   reserved_cycles_limit: bigint;
+  log_visibility: LogVisibility;
+  wasm_memory_limit: bigint;
   memory_allocation: bigint;
   compute_allocation: bigint;
 }
@@ -43,6 +45,9 @@ export interface Eip1559TransactionPrice {
   timestamp: [] | [bigint];
   gas_limit: bigint;
 }
+export interface Eip1559TransactionPriceArg {
+  ckerc20_ledger_id: Principal;
+}
 export interface EthTransaction {
   transaction_hash: string;
 }
@@ -50,13 +55,19 @@ export type EthereumNetwork = { Mainnet: null } | { Sepolia: null };
 export interface Event {
   timestamp: bigint;
   payload:
-    | { SkippedBlock: { block_number: bigint } }
+    | {
+        SkippedBlock: {
+          block_number: bigint;
+          contract_address: [] | [string];
+        };
+      }
     | {
         AcceptedErc20Deposit: {
           principal: Principal;
           transaction_hash: string;
           value: bigint;
           log_index: bigint;
+          subaccount: [] | [Subaccount];
           block_number: bigint;
           erc20_contract_address: string;
           from_address: string;
@@ -78,6 +89,7 @@ export interface Event {
           ckerc20_token_symbol: string;
         };
       }
+    | { SyncedDepositWithSubaccountToBlock: { block_number: bigint } }
     | { QuarantinedDeposit: { event_source: EventSource } }
     | { SyncedToBlock: { block_number: bigint } }
     | {
@@ -86,6 +98,7 @@ export interface Event {
           transaction_hash: string;
           value: bigint;
           log_index: bigint;
+          subaccount: [] | [Subaccount];
           block_number: bigint;
           from_address: string;
         };
@@ -221,20 +234,25 @@ export type LedgerError =
         failed_burn_amount: bigint;
       };
     };
+export type LogVisibility = { controllers: null } | { public: null };
 export type MinterArg = { UpgradeArg: UpgradeArg } | { InitArg: InitArg };
 export interface MinterInfo {
+  deposit_with_subaccount_helper_contract_address: [] | [string];
   eth_balance: [] | [bigint];
   eth_helper_contract_address: [] | [string];
   last_observed_block_number: [] | [bigint];
+  evm_rpc_id: [] | [Principal];
   erc20_helper_contract_address: [] | [string];
   last_erc20_scraped_block_number: [] | [bigint];
   supported_ckerc20_tokens: [] | [Array<CkErc20Token>];
   last_gas_fee_estimate: [] | [GasFeeEstimate];
+  cketh_ledger_id: [] | [Principal];
   smart_contract_address: [] | [string];
   last_eth_scraped_block_number: [] | [bigint];
   minimum_withdrawal_amount: [] | [bigint];
   erc20_balances: [] | [Array<{ balance: bigint; erc20_contract_address: string }>];
   minter_address: [] | [string];
+  last_deposit_with_subaccount_scraped_block_number: [] | [bigint];
   ethereum_block_height: [] | [BlockTag];
 }
 export interface QueryStats {
@@ -265,6 +283,7 @@ export type RetrieveEthStatus =
   | { TxSent: EthTransaction }
   | { TxCreated: null }
   | { Pending: null };
+export type Subaccount = Uint8Array | number[];
 export interface TransactionReceipt {
   effective_gas_price: bigint;
   status: { Success: null } | { Failure: null };
@@ -300,17 +319,22 @@ export interface UnsignedTransaction {
   access_list: Array<{ storage_keys: Array<Uint8Array | number[]>; address: string }>;
 }
 export interface UpgradeArg {
+  deposit_with_subaccount_helper_contract_address: [] | [string];
   next_transaction_nonce: [] | [bigint];
+  evm_rpc_id: [] | [Principal];
   ledger_suite_orchestrator_id: [] | [Principal];
   erc20_helper_contract_address: [] | [string];
   last_erc20_scraped_block_number: [] | [bigint];
   ethereum_contract_address: [] | [string];
   minimum_withdrawal_amount: [] | [bigint];
+  last_deposit_with_subaccount_scraped_block_number: [] | [bigint];
   ethereum_block_height: [] | [BlockTag];
 }
 export interface WithdrawErc20Arg {
   ckerc20_ledger_id: Principal;
   recipient: string;
+  from_cketh_subaccount: [] | [Subaccount];
+  from_ckerc20_subaccount: [] | [Subaccount];
   amount: bigint;
 }
 export type WithdrawErc20Error =
@@ -328,6 +352,7 @@ export type WithdrawErc20Error =
   | { RecipientAddressBlocked: { address: string } };
 export interface WithdrawalArg {
   recipient: string;
+  from_subaccount: [] | [Subaccount];
   amount: bigint;
 }
 export interface WithdrawalDetail {
@@ -357,7 +382,7 @@ export type WithdrawalStatus =
   | { Pending: null };
 export interface _SERVICE {
   add_ckerc20_token: ActorMethod<[AddCkErc20Token], undefined>;
-  eip_1559_transaction_price: ActorMethod<[], Eip1559TransactionPrice>;
+  eip_1559_transaction_price: ActorMethod<[[] | [Eip1559TransactionPriceArg]], Eip1559TransactionPrice>;
   get_canister_status: ActorMethod<[], CanisterStatusResponse>;
   get_events: ActorMethod<[{ start: bigint; length: bigint }], { total_event_count: bigint; events: Array<Event> }>;
   get_minter_info: ActorMethod<[], MinterInfo>;

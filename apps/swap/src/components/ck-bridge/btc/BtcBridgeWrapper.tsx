@@ -1,7 +1,7 @@
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { Box } from "components/Mui";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { Wrapper } from "components/index";
 import { useBridgeTokenBalance, useBtcDepositAddress, useBtcCurrentBlock } from "hooks/ck-bridge/index";
@@ -20,7 +20,7 @@ interface BtcBridgeWrapperProps {
   token: Token;
   bridgeChain: ckBridgeChain;
   onTokenChange: (token: Token, chain: ckBridgeChain) => void;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
   bridgeType: "dissolve" | "mint";
   onBridgeChainChange: (chain: ckBridgeChain) => void;
   targetTokenBridgeChain: ckBridgeChain;

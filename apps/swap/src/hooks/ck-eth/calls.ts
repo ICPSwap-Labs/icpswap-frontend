@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { chainKeyETHMinter } from "@icpswap/actor";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useUserWithdrawTxs, useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { TxState } from "types/ckETH";
-import { ckETHMinter } from "actor/ckETH";
+import { MINTER_ID } from "constants/ckETH";
 
 export function isEndedState(state: TxState) {
   return !(state !== "TxFinalized");
@@ -20,7 +21,7 @@ export function useFetchUserTxStates() {
           const transactions = txs[i];
           const block_index = BigInt(transactions.block_index);
 
-          const res = await (await ckETHMinter()).retrieve_eth_status(block_index);
+          const res = await (await chainKeyETHMinter(MINTER_ID)).retrieve_eth_status(block_index);
           updateUserTx(principal, block_index, res, undefined);
         }
       }

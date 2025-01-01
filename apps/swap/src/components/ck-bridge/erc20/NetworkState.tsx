@@ -1,6 +1,6 @@
 import { Flex } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { LinkButtons, LastSyncBlock, EthereumFinalizedBlock } from "components/ck-bridge";
@@ -8,7 +8,7 @@ import { useMemo } from "react";
 
 export interface Erc20NetworkStateProps {
   token: Token;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
 export function Erc20NetworkState({ token, minterInfo }: Erc20NetworkStateProps) {

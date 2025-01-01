@@ -1,7 +1,7 @@
 import { Flex, MainCard } from "@icpswap/ui";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Wrapper } from "components/index";
 import { Box } from "components/Mui";
 import { Erc20DissolveTransactions, Erc20MintTransactions } from "components/ck-bridge";
@@ -17,7 +17,7 @@ export interface Erc20BridgeWrapperProps {
   token: Token;
   bridgeChain: ckBridgeChain;
   onTokenChange: (token: Token, chain: ckBridgeChain) => void;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
   error?: string | Null;
   onBridgeChainChange: (chain: ckBridgeChain) => void;
   targetTokenBridgeChain: ckBridgeChain;

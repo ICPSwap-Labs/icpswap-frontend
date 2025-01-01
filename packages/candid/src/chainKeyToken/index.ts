@@ -1,5 +1,5 @@
 export type {
-  _SERVICE as Erc20MinterService,
+  _SERVICE as ChainKeyMinterService,
   RetrieveErc20Request,
   WithdrawErc20Arg,
   WithdrawalError as WithdrawErc20Error,
@@ -8,7 +8,8 @@ export type {
   WithdrawalStatus,
   EthTransaction,
   TxFinalizedStatus,
-  MinterInfo as Erc20MinterInfo,
+  MinterInfo as ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
-} from "./erc20Minter";
-export { idlFactory as Erc20MinterInterfaceFactory } from "./erc20Minter.did";
+  RetrieveEthStatus,
+} from "./Minter";
+export { idlFactory as ChainKeyMinterInterfaceFactory } from "./Minter.did";

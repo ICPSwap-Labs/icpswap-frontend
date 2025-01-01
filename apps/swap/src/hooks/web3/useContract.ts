@@ -3,14 +3,13 @@ import { useWeb3React } from "@web3-react/core";
 import { chain, SUPPORTED_CHAINS } from "constants/web3";
 import { useMemo } from "react";
 import { getContract } from "utils/web3/index";
-import { ckETH_MINTER_CONTRACT } from "constants/ckETH";
 import { MULTICALL_ADDRESSES } from "@icpswap/constants";
+import { Null } from "@icpswap/types";
 
-import type { UniswapInterfaceMulticall, CkETH, ERC20, ERC20Helper } from "abis/types";
+import type { UniswapInterfaceMulticall, ERC20, EthHelper } from "abis/types";
 import UniswapInterfaceMulticallJson from "abis/UniswapInterfaceMulticall.json";
-import ABI from "abis/ckETH.json";
+import EthHelperABI from "abis/EthHelper.json";
 import ERC20ABI from "abis/ERC20.json";
-import ERC20HelperAbi from "abis/ERC20Helper.json";
 
 import { useEthersWeb3Provider } from "./useEthersProvider";
 
@@ -18,7 +17,7 @@ const { abi: MulticallABI } = UniswapInterfaceMulticallJson;
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
+  addressOrAddressMap: string | { [chainId: number]: string } | Null,
   ABI: any,
   withSignerIfPossible = true,
 ): T | null {
@@ -48,16 +47,12 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, provider, withSignerIfPossible, account]) as T;
 }
 
-export function useEthMinterContract(withSignerIfPossible?: boolean) {
-  return useContract<CkETH>(ckETH_MINTER_CONTRACT, ABI, withSignerIfPossible);
+export function useEthMinterHelperContract(address: string | Null, withSignerIfPossible?: boolean) {
+  return useContract<EthHelper>(address, EthHelperABI, withSignerIfPossible);
 }
 
 export function useERC20Contract(contract: string | undefined, withSignerIfPossible?: boolean) {
   return useContract<ERC20>(contract, ERC20ABI, withSignerIfPossible);
-}
-
-export function useERC20MinterHelperContract(contract: string | undefined, withSignerIfPossible?: boolean) {
-  return useContract<ERC20Helper>(contract, ERC20HelperAbi, withSignerIfPossible);
 }
 
 export function useInterfaceMulticall() {

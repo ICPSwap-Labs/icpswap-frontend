@@ -5,7 +5,7 @@ import { nonNullArgs } from "@icpswap/utils";
 import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
 import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ckETH_MINTER_ID } from "constants/ckETH";
+import { MINTER_ID } from "constants/ckETH";
 import { useToken } from "hooks/useCurrency";
 import { useHistory } from "react-router-dom";
 import { useFetchFinalizedBlock, useFetchBlockNumber } from "hooks/web3/useBlockNumber";
@@ -26,7 +26,7 @@ export default function CkBridge() {
 
   const [, tokenFromUrl] = useToken(tokenId);
 
-  const { result: minterInfo } = useChainKeyMinterInfo(ckETH_MINTER_ID);
+  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_ID);
 
   const bridgeTokenType = useMemo(() => {
     if (!token || !minterInfo) return;

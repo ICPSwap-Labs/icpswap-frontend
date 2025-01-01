@@ -3,5 +3,6 @@
 /* eslint-disable */
 export { ERC20__factory } from "./ERC20__factory";
 export { ERC20Helper__factory } from "./ERC20Helper__factory";
+export { EthHelper__factory } from "./EthHelper__factory";
 export { UniswapInterfaceMulticall__factory } from "./UniswapInterfaceMulticall__factory";
 export { CkETH__factory } from "./CkETH__factory";

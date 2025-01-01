@@ -1,12 +1,12 @@
 import { t } from "@lingui/macro";
-import { withdraw_eth } from "hooks/ck-eth";
 import { useApprove } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { ckETH_MINTER_ID } from "constants/ckETH";
+import { MINTER_ID } from "constants/ckETH";
 import { ckETH } from "@icpswap/tokens";
 import { useState, useCallback, useMemo } from "react";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
+import { withdraw_eth } from "@icpswap/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { Token } from "@icpswap/swap-sdk";
@@ -29,7 +29,7 @@ export function useDissolveCallback() {
 
       const { status, message } = await approve({
         canisterId: ckETH.address,
-        spender: ckETH_MINTER_ID,
+        spender: MINTER_ID,
         value: withdraw_amount,
         account: principal,
       });
@@ -40,7 +40,11 @@ export function useDissolveCallback() {
         return;
       }
 
-      const { status: withdraw_status, message: withdraw_message, data } = await withdraw_eth(address, withdraw_amount);
+      const {
+        status: withdraw_status,
+        message: withdraw_message,
+        data,
+      } = await withdraw_eth(MINTER_ID, address, withdraw_amount);
 
       if (withdraw_status === ResultStatus.ERROR) {
         openTip(withdraw_message ?? t`Transaction for dissolving ckETH failed to submit`, MessageTypes.error);

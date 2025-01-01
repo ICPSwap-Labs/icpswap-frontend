@@ -2,12 +2,18 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useMemo, useState, useCallback } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
-import { useEthMinterContract, useBlockNumber } from "hooks/web3/index";
+import { useEthMinterHelperContract, useBlockNumber } from "hooks/web3/index";
 import { useWeb3React } from "@web3-react/core";
 import { toHexString } from "utils/web3/index";
 import { useUpdateTX } from "store/web3/hooks";
+import { Null } from "@icpswap/types";
+import { bytesStringOfNullSubAccount } from "constants/ckETH";
 
-export function useMintCallback() {
+export interface MinterProps {
+  minter_address: string | Null;
+}
+
+export function useMintCallback({ minter_address }: MinterProps) {
   const principal = useAccountPrincipalString();
   const { provider } = useWeb3React();
   const blockNumber = useBlockNumber();
@@ -20,19 +26,23 @@ export function useMintCallback() {
     return undefined;
   }, [principal]);
 
-  const ethMinter = useEthMinterContract();
+  const subaccount = useMemo(() => {
+    return bytesStringOfNullSubAccount;
+  }, []);
+
+  const ethHelpMinter = useEthMinterHelperContract(minter_address);
 
   const updateUserTx = useUpdateTX();
 
   const mint_call = useCallback(
     async (amount: string) => {
-      if (!ethMinter || !principal || !provider || !bytes32 || !blockNumber) return;
+      if (!ethHelpMinter || !principal || !provider || !bytes32 || !blockNumber) return;
 
       setLoading(true);
 
       const tx = {
-        to: ethMinter.address,
-        data: ethMinter.interface.encodeFunctionData("deposit", [bytes32]),
+        to: ethHelpMinter.address,
+        data: ethHelpMinter.interface.encodeFunctionData("depositEth", [bytes32, subaccount]),
         value: toHexString(amount),
       };
 
@@ -62,7 +72,7 @@ export function useMintCallback() {
 
       return result;
     },
-    [updateUserTx, ethMinter, principal, provider, bytes32, blockNumber],
+    [updateUserTx, ethHelpMinter, principal, provider, bytes32, blockNumber, subaccount],
   );
 
   return useMemo(() => ({ loading, mint_call }), [loading, mint_call]);

@@ -5,12 +5,15 @@ export const idlFactory = ({ IDL }: any) => {
     Latest: IDL.Null,
   });
   const UpgradeArg = IDL.Record({
+    deposit_with_subaccount_helper_contract_address: IDL.Opt(IDL.Text),
     next_transaction_nonce: IDL.Opt(IDL.Nat),
+    evm_rpc_id: IDL.Opt(IDL.Principal),
     ledger_suite_orchestrator_id: IDL.Opt(IDL.Principal),
     erc20_helper_contract_address: IDL.Opt(IDL.Text),
     last_erc20_scraped_block_number: IDL.Opt(IDL.Nat),
     ethereum_contract_address: IDL.Opt(IDL.Text),
     minimum_withdrawal_amount: IDL.Opt(IDL.Nat),
+    last_deposit_with_subaccount_scraped_block_number: IDL.Opt(IDL.Nat),
     ethereum_block_height: IDL.Opt(BlockTag),
   });
   const EthereumNetwork = IDL.Variant({
@@ -37,6 +40,9 @@ export const idlFactory = ({ IDL }: any) => {
     address: IDL.Text,
     ckerc20_token_symbol: IDL.Text,
   });
+  const Eip1559TransactionPriceArg = IDL.Record({
+    ckerc20_ledger_id: IDL.Principal,
+  });
   const Eip1559TransactionPrice = IDL.Record({
     max_priority_fee_per_gas: IDL.Nat,
     max_fee_per_gas: IDL.Nat,
@@ -49,10 +55,16 @@ export const idlFactory = ({ IDL }: any) => {
     stopping: IDL.Null,
     running: IDL.Null,
   });
+  const LogVisibility = IDL.Variant({
+    controllers: IDL.Null,
+    public: IDL.Null,
+  });
   const DefiniteCanisterSettings = IDL.Record({
     freezing_threshold: IDL.Nat,
     controllers: IDL.Vec(IDL.Principal),
     reserved_cycles_limit: IDL.Nat,
+    log_visibility: LogVisibility,
+    wasm_memory_limit: IDL.Nat,
     memory_allocation: IDL.Nat,
     compute_allocation: IDL.Nat,
   });
@@ -72,6 +84,7 @@ export const idlFactory = ({ IDL }: any) => {
     module_hash: IDL.Opt(IDL.Vec(IDL.Nat8)),
     reserved_cycles: IDL.Nat,
   });
+  const Subaccount = IDL.Vec(IDL.Nat8);
   const EventSource = IDL.Record({
     transaction_hash: IDL.Text,
     log_index: IDL.Nat,
@@ -111,12 +124,16 @@ export const idlFactory = ({ IDL }: any) => {
   const Event = IDL.Record({
     timestamp: IDL.Nat64,
     payload: IDL.Variant({
-      SkippedBlock: IDL.Record({ block_number: IDL.Nat }),
+      SkippedBlock: IDL.Record({
+        block_number: IDL.Nat,
+        contract_address: IDL.Opt(IDL.Text),
+      }),
       AcceptedErc20Deposit: IDL.Record({
         principal: IDL.Principal,
         transaction_hash: IDL.Text,
         value: IDL.Nat,
         log_index: IDL.Nat,
+        subaccount: IDL.Opt(Subaccount),
         block_number: IDL.Nat,
         erc20_contract_address: IDL.Text,
         from_address: IDL.Text,
@@ -133,6 +150,9 @@ export const idlFactory = ({ IDL }: any) => {
         address: IDL.Text,
         ckerc20_token_symbol: IDL.Text,
       }),
+      SyncedDepositWithSubaccountToBlock: IDL.Record({
+        block_number: IDL.Nat,
+      }),
       QuarantinedDeposit: IDL.Record({ event_source: EventSource }),
       SyncedToBlock: IDL.Record({ block_number: IDL.Nat }),
       AcceptedDeposit: IDL.Record({
@@ -140,6 +160,7 @@ export const idlFactory = ({ IDL }: any) => {
         transaction_hash: IDL.Text,
         value: IDL.Nat,
         log_index: IDL.Nat,
+        subaccount: IDL.Opt(Subaccount),
         block_number: IDL.Nat,
         from_address: IDL.Text,
       }),
@@ -224,18 +245,22 @@ export const idlFactory = ({ IDL }: any) => {
     timestamp: IDL.Nat64,
   });
   const MinterInfo = IDL.Record({
+    deposit_with_subaccount_helper_contract_address: IDL.Opt(IDL.Text),
     eth_balance: IDL.Opt(IDL.Nat),
     eth_helper_contract_address: IDL.Opt(IDL.Text),
     last_observed_block_number: IDL.Opt(IDL.Nat),
+    evm_rpc_id: IDL.Opt(IDL.Principal),
     erc20_helper_contract_address: IDL.Opt(IDL.Text),
     last_erc20_scraped_block_number: IDL.Opt(IDL.Nat),
     supported_ckerc20_tokens: IDL.Opt(IDL.Vec(CkErc20Token)),
     last_gas_fee_estimate: IDL.Opt(GasFeeEstimate),
+    cketh_ledger_id: IDL.Opt(IDL.Principal),
     smart_contract_address: IDL.Opt(IDL.Text),
     last_eth_scraped_block_number: IDL.Opt(IDL.Nat),
     minimum_withdrawal_amount: IDL.Opt(IDL.Nat),
     erc20_balances: IDL.Opt(IDL.Vec(IDL.Record({ balance: IDL.Nat, erc20_contract_address: IDL.Text }))),
     minter_address: IDL.Opt(IDL.Text),
+    last_deposit_with_subaccount_scraped_block_number: IDL.Opt(IDL.Nat),
     ethereum_block_height: IDL.Opt(BlockTag),
   });
   const EthTransaction = IDL.Record({ transaction_hash: IDL.Text });
@@ -261,6 +286,8 @@ export const idlFactory = ({ IDL }: any) => {
   const WithdrawErc20Arg = IDL.Record({
     ckerc20_ledger_id: IDL.Principal,
     recipient: IDL.Text,
+    from_cketh_subaccount: IDL.Opt(Subaccount),
+    from_ckerc20_subaccount: IDL.Opt(Subaccount),
     amount: IDL.Nat,
   });
   const RetrieveErc20Request = IDL.Record({
@@ -302,6 +329,7 @@ export const idlFactory = ({ IDL }: any) => {
   });
   const WithdrawalArg = IDL.Record({
     recipient: IDL.Text,
+    from_subaccount: IDL.Opt(Subaccount),
     amount: IDL.Nat,
   });
   const RetrieveEthRequest = IDL.Record({ block_index: IDL.Nat });
@@ -339,7 +367,7 @@ export const idlFactory = ({ IDL }: any) => {
   });
   return IDL.Service({
     add_ckerc20_token: IDL.Func([AddCkErc20Token], [], []),
-    eip_1559_transaction_price: IDL.Func([], [Eip1559TransactionPrice], ["query"]),
+    eip_1559_transaction_price: IDL.Func([IDL.Opt(Eip1559TransactionPriceArg)], [Eip1559TransactionPrice], ["query"]),
     get_canister_status: IDL.Func([], [CanisterStatusResponse], []),
     get_events: IDL.Func(
       [IDL.Record({ start: IDL.Nat64, length: IDL.Nat64 })],
@@ -370,19 +398,22 @@ export const idlFactory = ({ IDL }: any) => {
     withdrawal_status: IDL.Func([WithdrawalSearchParameter], [IDL.Vec(WithdrawalDetail)], ["query"]),
   });
 };
-export const init = ({ IDL }: any) => {
+export const init = ({ IDL }) => {
   const BlockTag = IDL.Variant({
     Safe: IDL.Null,
     Finalized: IDL.Null,
     Latest: IDL.Null,
   });
   const UpgradeArg = IDL.Record({
+    deposit_with_subaccount_helper_contract_address: IDL.Opt(IDL.Text),
     next_transaction_nonce: IDL.Opt(IDL.Nat),
+    evm_rpc_id: IDL.Opt(IDL.Principal),
     ledger_suite_orchestrator_id: IDL.Opt(IDL.Principal),
     erc20_helper_contract_address: IDL.Opt(IDL.Text),
     last_erc20_scraped_block_number: IDL.Opt(IDL.Nat),
     ethereum_contract_address: IDL.Opt(IDL.Text),
     minimum_withdrawal_amount: IDL.Opt(IDL.Nat),
+    last_deposit_with_subaccount_scraped_block_number: IDL.Opt(IDL.Nat),
     ethereum_block_height: IDL.Opt(BlockTag),
   });
   const EthereumNetwork = IDL.Variant({
