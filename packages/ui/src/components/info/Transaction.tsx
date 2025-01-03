@@ -78,7 +78,7 @@ export function TransactionRow({ transaction, className, onAddressClick }: Trans
 
       <BodyCell>
         <BodyCell color="primary.main" onClick={() => onAddressClick(transaction.recipient)}>
-          {shorten(transaction.recipient, 8)}
+          {shorten(transaction.recipient, 6)}
         </BodyCell>
       </BodyCell>
 

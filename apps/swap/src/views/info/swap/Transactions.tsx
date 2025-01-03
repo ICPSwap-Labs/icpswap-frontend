@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { useState, useMemo } from "react";
 import { useBaseTransactions } from "hooks/info/index";
 import { Transactions } from "components/info/index";
