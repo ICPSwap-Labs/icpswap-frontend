@@ -37,12 +37,13 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
     <Box
       mt="8px"
       sx={{
+        width: "100%",
         background: "#111936",
         padding: "16px",
         borderRadius: "16px",
       }}
     >
-      <Flex align="center" justify="space-between" gap="0 20px">
+      <Flex fullWidth align="center" justify="space-between" gap="0 20px">
         <Typography sx={{ fontSize: __fontSize, maxWidth: "280px", lineHeight: "20px" }}>
           <Trans>No liquidity available. You can add initial liquidity to earning fees.</Trans>
         </Typography>

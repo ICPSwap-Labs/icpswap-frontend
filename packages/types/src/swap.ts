@@ -25,10 +25,22 @@ export type {
   SwapPoolData,
   SwapPoolToken,
   Ticket,
+  LimitOrderKey,
+  LimitOrderValue,
+  LimitTransaction,
+  LimitTransactionResult,
   PositionPricePeriodRange,
   PoolAPRs,
   TokenAnalysisData,
 } from "@icpswap/candid";
+
+export type LimitOrder = {
+  userPositionId: bigint;
+  token0InAmount: bigint;
+  timestamp: bigint;
+  tickLimit: bigint;
+  token1InAmount: bigint;
+};
 
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";
 

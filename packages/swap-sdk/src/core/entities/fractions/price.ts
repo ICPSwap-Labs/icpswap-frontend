@@ -27,7 +27,10 @@ export class Price<TBase extends Token, TQuote extends Token> extends Fraction {
           },
         ]
   ) {
-    let baseCurrency: TBase; let quoteCurrency: TQuote; let denominator: BigintIsh; let numerator: BigintIsh;
+    let baseCurrency: TBase;
+    let quoteCurrency: TQuote;
+    let denominator: BigintIsh;
+    let numerator: BigintIsh;
 
     if (args.length === 4) {
       [baseCurrency, quoteCurrency, denominator, numerator] = args;
@@ -89,7 +92,7 @@ export class Price<TBase extends Token, TQuote extends Token> extends Fraction {
     return this.adjustedForDecimals.toSignificant(significantDigits, format, rounding);
   }
 
-  public toFixed(decimalPlaces = 4, format?: object, rounding?: Rounding): string {
+  public toFixed(decimalPlaces = 4, format?: object, rounding: Rounding = Rounding.ROUND_DOWN): string {
     return this.adjustedForDecimals.toFixed(decimalPlaces, format, rounding);
   }
 }

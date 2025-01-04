@@ -15,6 +15,7 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
+import { LimitPanel } from "components/LimitPanel";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -107,9 +108,18 @@ export interface PositionCardProps {
   staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
+  isLimit: boolean;
 }
 
-export function PositionCard({ position, showButtons, positionId, farmId, staked, filterState }: PositionCardProps) {
+export function PositionCard({
+  position,
+  showButtons,
+  positionId,
+  farmId,
+  staked,
+  filterState,
+  isLimit,
+}: PositionCardProps) {
   const classes = useStyle();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
@@ -223,6 +233,7 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState)) return true;
+    if (isLimit) return false;
 
     switch (filterState) {
       case PositionFilterState.All:
@@ -238,7 +249,7 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
       default:
         return true;
     }
-  }, [positionState, filterState]);
+  }, [positionState, filterState, isLimit]);
 
   useEffect(() => {
     if (positionKey) {
@@ -287,6 +298,12 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
           </Typography>
 
           <FeeTierPercentLabel feeTier={feeAmount} />
+
+          {isLimit ? (
+            <Flex gap="0 4px">
+              <LimitPanel />
+            </Flex>
+          ) : null}
         </Flex>
 
         <Flex

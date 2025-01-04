@@ -4,6 +4,7 @@ export enum ActorName {
   SwapNFTCanister = "SwapNFT",
   Position = "PositionIndex",
   PassCodeManager = "PassCodeManager",
+  LimitTransaction = "LimitTransaction",
   PositionCharts = "PositionCharts",
 
   SwapGraphRecord = "BaseDataStructure",

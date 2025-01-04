@@ -23,7 +23,7 @@ export default ({ width = "570px", open, children, ...props }: SwapModalProps) =
         sx: {
           "& .MuiDialog-paper": {
             width,
-            backgroundColor: isDarkTheme(theme) ? theme.palette.background.level2 : theme.colors.lightGray200,
+            backgroundColor: isDarkTheme(theme) ? theme.palette.background.level1 : theme.colors.lightGray200,
           },
           ...(props.dialogProps?.sx || {}),
         },

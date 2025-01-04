@@ -153,7 +153,7 @@ export function PositionDetails({
   };
 
   const { amount0, amount1, value0, value1 } = useMemo(() => {
-    if (!position || !token0USDPrice || !token1USDPrice) return {};
+    if (!position || isNullArgs(token0USDPrice) || isNullArgs(token1USDPrice)) return {};
 
     const amount0 = position.amount0.toFixed(CurrencyAmountFormatDecimals(position.amount0.currency.decimals));
     const amount1 = position.amount1.toFixed(CurrencyAmountFormatDecimals(position.amount1.currency.decimals));

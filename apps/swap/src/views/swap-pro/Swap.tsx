@@ -1,4 +1,4 @@
-import { useContext, useCallback, useRef } from "react";
+import { useContext, useCallback, useRef, useState, useEffect } from "react";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { SwapWrapper, type SwapWrapperRef } from "components/swap/SwapWrapper";
@@ -6,16 +6,39 @@ import SwapSettings from "components/swap/SettingIcon";
 import { Reclaim, SwapContext } from "components/swap/index";
 import { MainCard } from "components/index";
 import { SWAP_REFRESH_KEY } from "constants/index";
+import { Flex } from "@icpswap/ui";
+import { LimitWrapper } from "components/swap/limit-order";
+import { useParsedQueryString } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { SwapProContext } from "./context";
+
+enum Tab {
+  Swap = "Swap",
+  Limit = "Limit",
+}
+
+const tabs = [
+  { value: Tab.Swap, label: Tab.Swap },
+  { value: Tab.Limit, label: Tab.Limit },
+];
 
 export default function Swap() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
-  const { setTradePoolId, inputToken, setInputToken, setOutputToken } = useContext(SwapProContext);
+  const {
+    setTradePoolId,
+    inputToken,
+    setInputToken,
+    setOutputToken,
+    setActiveTab: setContextActiveTab,
+  } = useContext(SwapProContext);
   const { selectedPool, noLiquidity } = useContext(SwapContext);
+  const { tab: tabFromUrl } = useParsedQueryString() as { tab: Tab | Null };
+
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
 
   const handleInputTokenClick = useCallback(
     (tokenAmount: string) => {
@@ -25,25 +48,61 @@ export default function Swap() {
     [swapWrapperRef, inputToken],
   );
 
+  useEffect(() => {
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
+
+  useEffect(() => {
+    setContextActiveTab(activeTab === Tab.Swap ? "SWAP" : "LIMIT");
+  }, [activeTab]);
+
   return (
     <>
       <SwapProCardWrapper overflow="visible">
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography color="text.primary" fontSize="18px" fontWeight={600} align="center">
-            ICPSwap Pro
-          </Typography>
+          <Flex gap="0 16px">
+            {tabs.map((tab) => (
+              <Typography
+                key={tab.value}
+                sx={{
+                  color: activeTab === tab.value ? "text.primary" : "text.secondary",
+                  fontSize: "16px",
+                  fontWeight: activeTab === tab.value ? 600 : 400,
+                  cursor: "pointer",
+                }}
+                onClick={() => setActiveTab(tab.value)}
+              >
+                {tab.label}
+              </Typography>
+            ))}
+          </Flex>
 
-          <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+          {activeTab === Tab.Swap ? (
+            <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+          ) : null}
         </Box>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
-          <SwapWrapper
-            ref={swapWrapperRef}
-            ui="pro"
-            onOutputTokenChange={setOutputToken}
-            onTradePoolIdChange={setTradePoolId}
-            onInputTokenChange={setInputToken}
-          />
+          {activeTab === Tab.Swap ? (
+            <SwapWrapper
+              ref={swapWrapperRef}
+              ui="pro"
+              onOutputTokenChange={setOutputToken}
+              onTradePoolIdChange={setTradePoolId}
+              onInputTokenChange={setInputToken}
+            />
+          ) : null}
+
+          {activeTab === Tab.Limit ? (
+            <LimitWrapper
+              ui="pro"
+              onOutputTokenChange={setOutputToken}
+              onTradePoolIdChange={setTradePoolId}
+              onInputTokenChange={setInputToken}
+            />
+          ) : null}
         </Box>
 
         {noLiquidity === false ? (

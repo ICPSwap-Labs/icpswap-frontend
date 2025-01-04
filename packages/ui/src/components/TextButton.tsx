@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 
@@ -101,7 +101,9 @@ export function TextButton({
 }: TextButtonProps) {
   const history = useHistory();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
+    if (disabled) return;
+
     if (link) {
       mockALinkAndOpen(link, "text-button-open-new-window");
       return;
@@ -113,7 +115,7 @@ export function TextButton({
     }
 
     if (onClick) onClick();
-  };
+  }, [link, to, onClick, disabled]);
 
   return (
     <Typography
@@ -132,10 +134,7 @@ export function TextButton({
       }}
       className="custom-text-button"
       component="span"
-      onClick={() => {
-        if (disabled) return;
-        handleClick();
-      }}
+      onClick={handleClick}
     >
       {children}
 
@@ -191,7 +190,6 @@ export function TextButtonV1({
         onClick={(event) => {
           if (disabled) {
             event.stopPropagation();
-            
           }
         }}
       >

@@ -1,9 +1,8 @@
 import { useState, memo, useCallback, useRef } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box } from "components/Mui";
 import { MainCard, Flex } from "components/index";
 import SwapSettingIcon from "components/swap/SettingIcon";
 import { SwapProButton } from "components/swap/SwapProButton";
-import { t } from "@lingui/macro";
 import {
   SwapWrapper,
   type SwapWrapperRef,
@@ -11,6 +10,8 @@ import {
   SwapContext,
   SwapUIWrapper,
   CreatePool,
+  SwapTabPanels,
+  TABS,
 } from "components/swap/index";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -18,20 +19,7 @@ import { useConnectorStateConnected } from "store/auth/hooks";
 import { SWAP_REFRESH_KEY } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
 
-import { SwapTransactions } from "./swap/Transactions";
-
-enum TABS {
-  SWAP = "Swap",
-  TRANSACTIONS = "Transactions",
-}
-
-const Tabs = [
-  { value: TABS.SWAP, label: t`Swap`, component: SwapWrapper },
-  { value: TABS.TRANSACTIONS, label: t`Transactions`, component: SwapTransactions },
-];
-
 export function SwapMain() {
-  const [activeTab, setActiveTab] = useState<TABS>(TABS.SWAP);
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
   const [inputToken, setInputToken] = useState<Token | Null>(null);
@@ -95,12 +83,12 @@ export function SwapMain() {
             <MainCard
               level={1}
               sx={{
-                padding: activeTab === TABS.TRANSACTIONS ? "24px 0 0 0" : "24px",
-                paddingBottom: activeTab === TABS.TRANSACTIONS ? "0!important" : "24px",
+                padding: "24px",
+                paddingBottom: "24px",
                 overflow: "visible",
                 "@media(max-width: 640px)": {
-                  padding: activeTab === TABS.TRANSACTIONS ? "16px 0 0 0" : "16px",
-                  paddingBottom: activeTab === TABS.TRANSACTIONS ? "0!important" : "16px",
+                  padding: "16px",
+                  paddingBottom: "16px",
                 },
               }}
             >
@@ -110,45 +98,22 @@ export function SwapMain() {
                   alignItems: "center",
                   justifyContent: "space-between",
                   position: "relative",
-                  padding: activeTab === TABS.TRANSACTIONS ? "0 24px" : "0",
+                  padding: "0",
                   "@media(max-width: 640px)": {
-                    padding: activeTab === TABS.TRANSACTIONS ? "0 16px" : "0",
+                    padding: "0",
                   },
                 }}
               >
-                <Box>
-                  {Tabs.map((tab) => (
-                    <Box
-                      key={tab.value}
-                      sx={{
-                        display: "inline-block",
-                        margin: "0 24px 0 0",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setActiveTab(tab.value)}
-                    >
-                      <Typography
-                        sx={{
-                          fontSize: "16px",
-                          fontWeight: activeTab === tab.value ? 600 : 400,
-                          color: activeTab === tab.value ? "text.primary" : "text.secondary",
-                        }}
-                      >
-                        {tab.label}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
+                <SwapTabPanels currentTab={TABS.SWAP} />
 
                 <Flex gap="0 4px">
+                  <SwapSettingIcon type="swap" />
                   <SwapProButton inputToken={inputToken} outputToken={outputToken} />
-                  {activeTab === TABS.SWAP ? <SwapSettingIcon type="swap" /> : null}
                 </Flex>
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>
-                {activeTab === TABS.SWAP ? <SwapWrapper ref={swapWrapperRef} /> : null}
-                {activeTab === TABS.TRANSACTIONS ? <SwapTransactions /> : null}
+                <SwapWrapper ref={swapWrapperRef} />
               </Box>
             </MainCard>
 
@@ -156,6 +121,7 @@ export function SwapMain() {
               <Box
                 mt="8px"
                 sx={{
+                  width: "100%",
                   background: "#111936",
                   padding: "16px",
                   borderRadius: "12px",

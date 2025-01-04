@@ -25,6 +25,7 @@ import { CallState } from "./call/states";
 import { StepsState } from "./steps/state";
 import { Web3State } from "./web3/states";
 import { SnsState } from "./sns/states";
+import { LimitOrderState } from "./swap/limit-order/state";
 import { TransactionsState } from "./transactions/reducer";
 
 interface PersistPartial {
@@ -51,6 +52,7 @@ export interface AllState {
   web3: Web3State;
   sns: SnsState;
   transactions: TransactionsState;
+  limitOrder: LimitOrderState;
 }
 
 const defaultStorageConfig = {
@@ -74,6 +76,7 @@ const rootPersistConfig = {
     "call",
     "step",
     "sns",
+    "limitOrder",
   ],
   migrate: (state: any) => {
     let newState = {};

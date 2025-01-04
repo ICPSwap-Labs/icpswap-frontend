@@ -15,6 +15,7 @@ import callReducer from "./call/reducer";
 import StepReducer from "./steps/reducer";
 import SnsReducer from "./sns/reducer";
 import TransactionsReducer from "./transactions/reducer";
+import LimitOrderReducer from "./swap/limit-order/reducer";
 
 import Web3 from "./web3/reducer";
 
@@ -36,6 +37,7 @@ export default {
   step: StepReducer,
   tokenCache: tokenCacheReducer,
   transactions: TransactionsReducer,
+  limitOrder: LimitOrderReducer,
 
   web3: Web3,
   sns: SnsReducer,

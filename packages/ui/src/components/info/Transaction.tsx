@@ -2,7 +2,6 @@ import { formatDollarAmount, formatAmount, enumToString, shorten } from "@icpswa
 import type { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 
-import { Copy } from "../Copy";
 import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
