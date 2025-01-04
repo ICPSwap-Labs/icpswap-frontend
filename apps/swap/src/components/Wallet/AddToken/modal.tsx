@@ -212,13 +212,17 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color={theme.palette.text.secondary} size="14px" />
-                  </InputAdornment>
-                ),
-                maxLength: 50,
+              textFiledProps={{
+                slotProps: {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon color={theme.palette.text.secondary} size="14px" />
+                      </InputAdornment>
+                    ),
+                    maxLength: 50,
+                  },
+                },
               }}
               onChange={debouncedSearch}
             />

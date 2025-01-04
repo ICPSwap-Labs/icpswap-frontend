@@ -7,7 +7,7 @@ import { Identity as AuthIdentity, ResultStatus } from "types";
 import { wrapICP } from "hooks/useWICPCalls";
 import { useSuccessTip, useErrorTip, useFullscreenLoading } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
-import { TextButton, TextFieldNumberComponent, FilledTextField, Modal, AuthButton } from "components/index";
+import { TextButton, Modal, AuthButton, NumberFilledTextField } from "components/index";
 import { useAccount } from "store/global/hooks";
 import isNumber from "lodash/isNumber";
 
@@ -76,18 +76,15 @@ export default function RetryWrap({
             ) : null}
           </Box>
           <Box mt={3}>
-            <FilledTextField
+            <NumberFilledTextField
               label={t`Transaction Block Height`}
               placeholder={t`Please enter the block height of your failed wrap`}
               value={blockHeight}
               onChange={setBlockHeight}
-              InputProps={{
-                inputComponent: TextFieldNumberComponent,
-                inputProps: {
-                  allowNegative: false,
-                  decimalScale: 0,
-                  maxLength: 16,
-                },
+              numericProps={{
+                allowNegative: false,
+                decimalScale: 0,
+                maxLength: 16,
               }}
             />
           </Box>

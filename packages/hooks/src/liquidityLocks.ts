@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { liquidityLocks } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
-import { resultFormat } from "@icpswap/utils";
+import { isNullArgs, nonNullArgs, resultFormat } from "@icpswap/utils";
 import { Pool, Position } from "@icpswap/swap-sdk";
 import { Null, type UserPositionInfoWithId } from "@icpswap/types";
 
@@ -94,6 +94,7 @@ export function useAllLiquidityLocks(
     });
   }, [lockIds]);
 
+  // Notice: positionInfos may be contains undefined
   const { result: positionInfos } = useMultiPositionInfos(poolId, ledgerIds);
 
   useEffect(() => {
@@ -107,15 +108,13 @@ export function useAllLiquidityLocks(
       if (positionInfos && lockIds) {
         setLoading(true);
 
-        const result = positionInfos
+        const result: Array<[UserPositionInfoWithId[], string, string]> = positionInfos
           .map((positionInfos, index) => {
             const alias = lockIds[index].alias[0];
-
-            if (!alias) return undefined;
-
+            if (isNullArgs(positionInfos) || isNullArgs(positionInfos)) return undefined;
             return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];
           })
-          .filter((e) => !!e) as [UserPositionInfoWithId[], string, string][];
+          .filter((element) => nonNullArgs(element));
 
         setResult(
           result.reduce(
@@ -157,10 +156,10 @@ export function useAllLiquidityLocks(
     return result.map(([positionInfos, principalId, name]) => [
       getSinglePoolMultiPositions({
         pool,
-        positionInfos: positionInfos.map((e) => ({
-          tickUpper: e.tickUpper,
-          tickLower: e.tickLower,
-          liquidity: e.liquidity,
+        positionInfos: positionInfos.map((positionInfo) => ({
+          tickUpper: positionInfo.tickUpper,
+          tickLower: positionInfo.tickLower,
+          liquidity: positionInfo.liquidity,
         })),
       }),
       principalId,

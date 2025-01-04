@@ -15,12 +15,9 @@ const useStyles = makeStyles((theme: Theme) => {
       display: "grid",
       gap: "1em",
       alignItems: "center",
-      padding: "24px",
+      padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "120px 120px 120px repeat(3, 1fr) 40px",
-      "@media screen and (max-width: 780px)": {
-        padding: "16px",
-      },
+      gridTemplateColumns: "120px 120px 120px 120px repeat(2, 1fr) 40px",
     },
   };
 });
@@ -58,8 +55,8 @@ export function PositionTableUI({
 
   return (
     <>
-      <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
-        <Box sx={{ minWidth: "1136px" }}>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1090px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
             <HeaderCell field="Pair">
               <Trans>Owner</Trans>

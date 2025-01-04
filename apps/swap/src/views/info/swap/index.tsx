@@ -135,7 +135,7 @@ export default function SwapOverview() {
                       />
                     </Box>
                     <Typography fontSize="32px" fontWeight="500" color="text.primary">
-                      {formatDollarAmount(liquidityHover, 2)}
+                      {formatDollarAmount(liquidityHover)}
                     </Typography>
                     <Typography fontSize="12px" sx={{ height: "14px" }}>
                       {leftLabel || null}
@@ -203,9 +203,9 @@ export default function SwapOverview() {
                     <Typography color="text.primary" fontWeight={600} fontSize="32px">
                       {volumeHover === undefined
                         ? protocolData
-                          ? formatDollarAmount(protocolData.volumeUSD, 2)
+                          ? formatDollarAmount(protocolData.volumeUSD)
                           : ""
-                        : formatDollarAmount(volumeHover, 2)}
+                        : formatDollarAmount(volumeHover)}
                     </Typography>
                     {rightLabel || protocolData?.volumeUSD ? (
                       <Typography fontSize="12px" height="14px">

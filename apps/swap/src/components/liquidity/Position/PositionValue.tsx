@@ -1,12 +1,19 @@
 import { useMemo } from "react";
-import { Typography, Box, useTheme, Button, useMediaQuery } from "components/Mui";
+import { Typography, Box, useTheme } from "components/Mui";
 import { MainCard, TokenImage } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isNullArgs,
+  nonNullArgs,
+  numToPercent,
+  formatLiquidityAmount,
+} from "@icpswap/utils";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
 import { useUSDPriceById } from "hooks/index";
-import { usePositionValue, useLoadLiquidityPageCallback } from "hooks/liquidity";
+import { usePositionValue } from "hooks/liquidity";
 
 interface PositionValueProps {
   position: Position;
@@ -14,9 +21,8 @@ interface PositionValueProps {
   isOwner: boolean;
 }
 
-export function PositionValue({ position, positionId, isOwner }: PositionValueProps) {
+export function PositionValue({ position }: PositionValueProps) {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const positionValue = usePositionValue({ position });
 
   const token0 = position.pool.token0;
@@ -45,18 +51,6 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
     };
   }, [token0USDValue, token1USDValue]);
 
-  const loadIncreaseLiquidity = useLoadLiquidityPageCallback({
-    positionId,
-    poolId: position.pool.id,
-    page: "increase",
-  });
-
-  const loadDecreaseLiquidity = useLoadLiquidityPageCallback({
-    positionId,
-    poolId: position.pool.id,
-    page: "decrease",
-  });
-
   return (
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start">
@@ -75,7 +69,7 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{token0Amount}</Typography>
+            <Typography color="text.primary">{formatLiquidityAmount(token0Amount)}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token0USDValue) ? formatDollarAmount(token0USDValue) : "--"}
             </Typography>
@@ -89,7 +83,7 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
-            <Typography color="text.primary">{token1Amount}</Typography>
+            <Typography color="text.primary">{formatLiquidityAmount(token1Amount)}</Typography>
             <Typography fontSize="12px">
               {nonNullArgs(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
             </Typography>
@@ -164,29 +158,6 @@ export function PositionValue({ position, positionId, isOwner }: PositionValuePr
               ) : null}
             </Box>
           </Box>
-        ) : null}
-
-        {isOwner ? (
-          <Flex gap="0 12px" fullWidth>
-            <Button
-              variant="contained"
-              className="secondary"
-              sx={{ flex: "50%" }}
-              size={matchDownSM ? "small" : "large"}
-              onClick={loadDecreaseLiquidity}
-            >
-              <Trans>Remove Liquidity</Trans>
-            </Button>
-            <Button
-              variant="contained"
-              className="secondary"
-              sx={{ flex: "50%" }}
-              size={matchDownSM ? "small" : "large"}
-              onClick={loadIncreaseLiquidity}
-            >
-              <Trans>Increase Liquidity</Trans>
-            </Button>
-          </Flex>
         ) : null}
       </Flex>
     </MainCard>

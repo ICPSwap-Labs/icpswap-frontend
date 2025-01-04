@@ -58,6 +58,9 @@ export function UnstakeModal({
       amount: BigInt(formatTokenAmount(amount, stakeToken.decimals).toString()),
       token: stakeToken,
       rewardToken,
+      refresh: () => {
+        if (onUnStakeSuccess) onUnStakeSuccess();
+      },
     });
 
     const loadingTipKey = openLoadingTip(`Unstake ${amount} ${stakeToken.symbol}`, {
@@ -68,7 +71,6 @@ export function UnstakeModal({
 
     if (result) {
       openTip(t`Unstake successfully`, MessageTypes.success);
-      if (onUnStakeSuccess) onUnStakeSuccess();
     }
 
     closeLoadingTip(loadingTipKey);

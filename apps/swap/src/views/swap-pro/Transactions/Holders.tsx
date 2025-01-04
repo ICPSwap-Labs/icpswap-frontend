@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => {
       gap: "1em",
       alignItems: "center",
       gridTemplateColumns: "100px repeat(3, 1fr) 100px",
-      padding: "20px 16px",
+      padding: "16px",
     },
   };
 });

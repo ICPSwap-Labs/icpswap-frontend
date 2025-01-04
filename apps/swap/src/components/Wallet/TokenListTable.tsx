@@ -9,6 +9,7 @@ import {
   principalToAccount,
   nonNullArgs,
   isNullArgs,
+  formatAmount,
 } from "@icpswap/utils";
 import TransferModal from "components/TokenTransfer/index";
 import { NoData, LoadingRow, TokenStandardLabel } from "components/index";
@@ -330,7 +331,7 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
           <Typography fontSize="12px">Balance</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
             {nonNullArgs(tokenBalance) && tokenInfo
-              ? parseTokenAmount(tokenBalance, tokenInfo.decimals).toFormat()
+              ? formatAmount(parseTokenAmount(tokenBalance, tokenInfo.decimals).toString())
               : "--"}
           </Typography>
           <Typography className={classes.tokenAssets} sx={{ margin: "4px 0 0 0" }}>
@@ -338,8 +339,6 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
               ? `≈
               ${formatDollarAmount(
                 parseTokenAmount(tokenBalance, tokenInfo.decimals).multipliedBy(tokenUSDPrice).toString(),
-                4,
-                0.01,
               )}`
               : "--"}
           </Typography>
@@ -347,7 +346,7 @@ export function Token({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Price</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {tokenUSDPrice ? formatDollarTokenPrice({ num: tokenUSDPrice }) : "--"}
+            {tokenUSDPrice ? formatDollarTokenPrice(tokenUSDPrice) : "--"}
           </Typography>
         </Box>
       </Box>

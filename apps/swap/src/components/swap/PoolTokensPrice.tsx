@@ -31,10 +31,10 @@ export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
           {nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(pool)
             ? manuallyInverted
               ? `1 ${token1.symbol} = ${pool.priceOf(token1).toSignificant(6)} ${token0.symbol}${
-                  token1USDPrice ? ` = ${formatDollarTokenPrice({ num: token1USDPrice })}` : ""
+                  token1USDPrice ? ` = ${formatDollarTokenPrice(token1USDPrice)}` : ""
                 }`
               : `1 ${token0.symbol} = ${pool.priceOf(token0).toSignificant(6)} ${token1.symbol}${
-                  token0USDPrice ? ` = ${formatDollarTokenPrice({ num: token0USDPrice })}` : ""
+                  token0USDPrice ? ` = ${formatDollarTokenPrice(token0USDPrice)}` : ""
                 }`
             : "--"}
         </Typography>

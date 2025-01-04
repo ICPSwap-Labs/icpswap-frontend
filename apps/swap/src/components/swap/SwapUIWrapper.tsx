@@ -40,16 +40,10 @@ export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
   const buttons = [
     { id: 3, value: t`Wrap`, path: "/swap/v2/wrap", key: "/wrap" },
     {
-      id: 2,
-      key: "/swap/v2/liquidity",
-      value: t`Liquidity V2`,
-      path: "/swap/v2/liquidity",
-    },
-    {
       id: 4,
       key: "swap-v3",
       value: (
-        <Grid container>
+        <Grid container alignItems="center" gap="0 4px">
           <Typography
             sx={{
               fontWeight: 600,
@@ -60,9 +54,8 @@ export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
           >
             Swap V3
           </Typography>
-          <Box sx={{ margin: "0 0 0 3px", position: "relative", top: "-4px" }}>
-            <LinkIcon />
-          </Box>
+
+          <LinkIcon />
         </Grid>
       ),
       path: "/swap",

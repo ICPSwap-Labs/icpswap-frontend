@@ -185,13 +185,17 @@ export default function Selector({
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
-                  </InputAdornment>
-                ),
-                maxLength: 50,
+              textFiledProps={{
+                slotProps: {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
+                      </InputAdornment>
+                    ),
+                    maxLength: 50,
+                  },
+                },
               }}
               onChange={debouncedSearch}
             />

@@ -27,7 +27,6 @@ export function SwapPoolBalance({ token, subAccountBalance, unusedBalance, onCli
                   new BigNumber(unusedBalance.toString()).plus(subAccountBalance),
                   token.decimals,
                 ).toString(),
-                4,
               )
             : "--"}
         </Typography>

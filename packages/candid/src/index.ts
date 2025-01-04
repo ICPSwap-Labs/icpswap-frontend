@@ -13,5 +13,4 @@ export * from "./token";
 export * from "./token-claim";
 export * from "./voting";
 export * from "./other";
-export * from "./analytic";
 export * from "./chainKeyToken";

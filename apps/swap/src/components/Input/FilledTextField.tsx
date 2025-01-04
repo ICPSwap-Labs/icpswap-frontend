@@ -73,7 +73,6 @@ export interface FilledTextFieldProps {
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;

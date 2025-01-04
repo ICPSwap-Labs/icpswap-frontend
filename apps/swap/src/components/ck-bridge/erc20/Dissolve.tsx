@@ -9,8 +9,6 @@ import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useWeb3React } from "@web3-react/core";
-import { useActiveChain } from "hooks/web3/index";
-import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
@@ -27,7 +25,6 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   const { account } = useWeb3React();
 
   const principal = useAccountPrincipal();
-  const chainId = useActiveChain();
 
   const symbol = useTokenSymbol({
     token,
@@ -52,9 +49,8 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   }, [account, setAddress]);
 
   const dissolve_error = useMemo(() => {
-    if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount) return t`Enter the amount`;
     if (!address) return t`Enter the address`;
+    if (!amount) return t`Enter the amount`;
     if (isAddress(address) === false) return t`Invalid ethereum address`;
 
     if (!token || !tokenBalance) return t`Waiting to fetch data`;
@@ -67,7 +63,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     if (formatTokenAmount(amount, token.decimals).isGreaterThan(tokenBalance)) return t`Insufficient Balance`;
 
     return undefined;
-  }, [amount, token, address, tokenBalance, chain, chainId]);
+  }, [amount, token, address, tokenBalance]);
 
   const handleMax = useCallback(() => {
     setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());

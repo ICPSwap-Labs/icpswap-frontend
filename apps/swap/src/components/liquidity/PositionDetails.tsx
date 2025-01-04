@@ -6,9 +6,15 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { BigNumber, formatDollarAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isNullArgs,
+  toSignificantWithGroupSeparator,
+  formatLiquidityAmount,
+} from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { toFormat, PositionState } from "utils/index";
+import { PositionState } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { PositionContext, TransferPosition } from "components/swap/index";
@@ -244,7 +250,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
@@ -262,7 +268,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 )
@@ -306,7 +312,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Typography color="text.primary">{toFormat(amount1)}</Typography>
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
                     <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                   </Flex>
                 ) : (
@@ -322,7 +328,7 @@ export function PositionDetails({
                     }}
                   >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
                     <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
@@ -335,14 +341,7 @@ export function PositionDetails({
             <PositionDetailItem
               label={t`Price Range`}
               value={
-                <Flex
-                  gap="0 8px"
-                  sx={{
-                    "@media(max-width: 640px)": {
-                      gap: "0 8px",
-                    },
-                  }}
-                >
+                <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
                   <Typography
                     sx={{
                       color: "text.primary",
@@ -355,16 +354,15 @@ export function PositionDetails({
                   >
                     {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
                     {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} {pairName}
-                    <SyncAltIcon
-                      sx={{
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        margin: "0 0 0 4px",
-                        color: theme.palette.text.secondary,
-                      }}
-                      onClick={() => setManuallyInverted(!manuallyInverted)}
-                    />
                   </Typography>
+
+                  <SyncAltIcon
+                    sx={{
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
                 </Flex>
               }
             />

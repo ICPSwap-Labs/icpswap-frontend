@@ -43,3 +43,5 @@ export * from "./useUserTvl";
 export * from "./useUserAllFarmsInfo";
 export * from "./useFarmRewardAmountAndValue";
 export * from "./useFarmTvl";
+export * from "./useAvailableFarmsForPool";
+export * from "./useLiquidityIsStaked";

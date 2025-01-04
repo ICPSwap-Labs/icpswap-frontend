@@ -12,11 +12,11 @@ import {
   parseTokenAmount,
   BigNumber,
   formatDollarTokenPrice,
-  toSignificantWithGroupSeparator,
   formatAmount,
   nonNullArgs,
   formatDollarAmount,
   explorerLink,
+  formatIcpAmount,
 } from "@icpswap/utils";
 import {
   useTokenListTokenInfo,
@@ -157,7 +157,7 @@ export function TokenDetail() {
 
       <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
         <Typography color="text.primary" fontWeight={500} fontSize="36px">
-          {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+          {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
         </Typography>
         <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
       </Flex>
@@ -165,7 +165,7 @@ export function TokenDetail() {
       <Flex gap="0 8px" sx={{ margin: "12px 0 0 0" }}>
         <Typography fontSize="18px">
           {infoToken && icpPrice
-            ? `${toSignificantWithGroupSeparator(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
+            ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
             : "--"}
         </Typography>
       </Flex>

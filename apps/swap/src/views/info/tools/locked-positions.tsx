@@ -9,12 +9,12 @@ import { ToolsWrapper, SneedLockedPositions, BlackHolePositions } from "componen
 import { useEffect, useState } from "react";
 
 enum Panel {
-  BlockHole = "BlockHole",
+  BlackHole = "BlackHole",
   Sneed = "Sneed",
 }
 
 const panels = [
-  { value: Panel.BlockHole, label: t`Block Hole` },
+  { value: Panel.BlackHole, label: t`Black Hole` },
   { value: Panel.Sneed, label: t`Sneedlocked` },
 ];
 
@@ -27,7 +27,7 @@ export default function LockedPositions() {
     pair: string | undefined;
   };
 
-  const [activePanel, setActivePanel] = useState<Panel>(Panel.BlockHole);
+  const [activePanel, setActivePanel] = useState<Panel>(Panel.BlackHole);
 
   useEffect(() => {
     if (panel) {
@@ -50,7 +50,7 @@ export default function LockedPositions() {
       <BreadcrumbsV1
         links={[
           { label: <Trans>Tools</Trans>, link: "/info-tools" },
-          { label: activePanel === Panel.BlockHole ? <Trans>Block Hole</Trans> : <Trans>Sneedlocked</Trans> },
+          { label: activePanel === Panel.BlackHole ? <Trans>Black Hole</Trans> : <Trans>Sneedlocked</Trans> },
         ]}
       />
 
@@ -123,7 +123,7 @@ export default function LockedPositions() {
           </Box>
         </Box>
 
-        {activePanel === Panel.BlockHole ? <BlackHolePositions poolId={pair} /> : null}
+        {activePanel === Panel.BlackHole ? <BlackHolePositions poolId={pair} /> : null}
         {activePanel === Panel.Sneed ? <SneedLockedPositions poolId={pair} /> : null}
       </ToolsWrapper>
     </InfoWrapper>

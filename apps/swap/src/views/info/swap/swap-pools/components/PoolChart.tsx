@@ -14,6 +14,7 @@ import {
   ChartView,
   PoolAPRChart,
   APRChartTimeButtons,
+  Flex,
 } from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
 import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
@@ -80,7 +81,7 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
         ) : null}
       </Box>
 
-      <Box sx={{ "@media(max-width: 640px)": { padding: "60px 0 0 0" } }}>
+      <Box sx={{ height: "100%", "@media(max-width: 640px)": { padding: "60px 0 0 0" } }}>
         {chartView === ChartView.VOL ? (
           <PoolVolumeChart
             canisterId={canisterId}
@@ -91,7 +92,9 @@ export default function PoolChart({ canisterId, token0Price, volume24H }: PoolCh
         ) : chartView === ChartView.TVL ? (
           <PoolTvlChart canisterId={canisterId} noData={<Box sx={{ height: "340px", width: "auto" }} />} />
         ) : chartView === ChartView.LIQUIDITY ? (
-          <DensityChart address={canisterId} token0Price={token0Price} />
+          <Flex sx={{ alignItems: "flex-end", height: "100%" }}>
+            <DensityChart address={canisterId} token0Price={token0Price} />
+          </Flex>
         ) : chartView === ChartView.APR ? (
           <PoolAPRChart poolId={canisterId} time={aprTime} />
         ) : null}

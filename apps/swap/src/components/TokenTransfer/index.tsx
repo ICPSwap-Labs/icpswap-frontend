@@ -189,6 +189,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
           autoComplete="To"
           multiline
         />
+
         <NumberFilledTextField
           placeholder="Enter the amount"
           value={values.amount}

@@ -6,13 +6,7 @@ import { DotLoading, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import {
-  parseTokenAmount,
-  formatDollarAmount,
-  BigNumber,
-  isValidPrincipal,
-  toSignificantWithGroupSeparator,
-} from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount, BigNumber, isValidPrincipal, formatAmount } from "@icpswap/utils";
 import { PlusCircle } from "react-feather";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 
@@ -56,7 +50,7 @@ export function TokenItem({
 
   const tokenBalanceAmount = useMemo(() => {
     if (!tokenInfo || balance === undefined) return undefined;
-    return toSignificantWithGroupSeparator(parseTokenAmount(balance, tokenInfo.decimals).toString(), 6);
+    return parseTokenAmount(balance, tokenInfo.decimals).toString();
   }, [tokenInfo, balance]);
 
   const handleItemClick = () => {
@@ -187,7 +181,7 @@ export function TokenItem({
                 }}
                 fontWeight={500}
               >
-                {tokenBalanceAmount ?? "--"}
+                {tokenBalanceAmount ? formatAmount(tokenBalanceAmount) : "--"}
               </Typography>
               <Typography
                 align="right"
@@ -203,8 +197,6 @@ export function TokenItem({
                       new BigNumber(interfacePrice)
                         .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
                         .toString(),
-                      4,
-                      0.001,
                     )
                   : "--"}
               </Typography>

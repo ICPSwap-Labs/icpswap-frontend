@@ -11,15 +11,19 @@ export function NumberFilledTextField(props: NumberFilledTextFieldProps) {
     <FilledTextField
       {...textFieldProps}
       value={props.value}
-      InputProps={{
-        ...(textFieldProps.InputProps ?? {}),
-        inputComponent: TextFieldNumberComponent,
-        inputProps: {
-          decimalScale: numericProps.decimalScale,
-          allowNegative: numericProps.allowNegative ?? false,
-          maxLength: 79,
-          thousandSeparator: numericProps.thousandSeparator ?? false,
-          value: props.value,
+      textFiledProps={{
+        slotProps: {
+          input: {
+            ...(textFieldProps.slotProps?.input ?? {}),
+            inputComponent: TextFieldNumberComponent,
+            inputProps: {
+              decimalScale: numericProps.decimalScale,
+              allowNegative: numericProps.allowNegative ?? false,
+              maxLength: 79,
+              thousandSeparator: numericProps.thousandSeparator ?? false,
+              value: props.value,
+            },
+          },
         },
       }}
     />

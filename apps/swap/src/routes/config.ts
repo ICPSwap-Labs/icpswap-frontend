@@ -27,12 +27,9 @@ const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidit
 
 const NFTView = Loadable(lazy(() => import("../views/nft/View")));
 const WalletNFTView = Loadable(lazy(() => import("../views/nft/WalletNFTView")));
-// const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
-// const Console = Loadable(lazy(() => import("../views/console/index")));
-// const ConsoleBurn = Loadable(lazy(() => import("../views/console/burn")));
-
-// const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
-// const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
+const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
+const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
+const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const NFTCanisterDetails = Loadable(lazy(() => import("../views/nft/CanisterDetails")));
 
 // const NFTMarket = Loadable(lazy(() => import("../views/nft")));
@@ -49,8 +46,6 @@ const TokenClaimIndex = Loadable(lazy(() => import("../views/token-claim/index")
 const TokenClaimTransactions = Loadable(lazy(() => import("../views/token-claim/transactions")));
 const CreateTokenClaim = Loadable(lazy(() => import("../views/token-claim/create")));
 
-const LiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/index")));
-const DecreaseLiquidityV2 = Loadable(lazy(() => import("../views/swap-v2/liquidity/DecreaseLiquidity")));
 const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const SNSLaunches = Loadable(lazy(() => import("../views/sns/Launchpad/Launches")));
@@ -87,8 +82,6 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/swap/pcm/reclaim": PCMReclaim,
   "/swap/pro": SwapPro,
 
-  "/swap/v2/liquidity": LiquidityV2,
-  "/swap/v2/liquidity/decrease/:positionId?": DecreaseLiquidityV2,
   "/swap/v2/wrap": Wrap,
 
   // "/marketplace/NFT": NFTMarket,
@@ -107,11 +100,9 @@ export const routeConfigs: { [path: string]: (props: any) => JSX.Element | any }
   "/token-claim/transactions/:id": TokenClaimTransactions,
   "/token-claim/create": CreateTokenClaim,
 
-  // "/console": Console,
-  // "/console/burn": ConsoleBurn,
-  // "/console/nft/canister/create": NFTCanisterCreate,
-  // "/console/nft/mint": NFTMint,
-  // "/console/nft/canister/list": NFTCanisterList,
+  "/info-tools/nft/canister/create": NFTCanisterCreate,
+  "/info-tools/nft/mint": NFTMint,
+  "/info-tools/nft/canister/list": NFTCanisterList,
 
   "/sns/neurons": SnsNeurons,
   "/sns/voting": SnsVotes,

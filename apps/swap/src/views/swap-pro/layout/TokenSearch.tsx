@@ -5,7 +5,7 @@ import { Trans } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
-import { useAllTokensOfSwap, useInfoAllTokens } from "@icpswap/hooks";
+import { useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import NoDataIcon from "assets/icons/NoData";
 import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
@@ -13,7 +13,7 @@ import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { useGlobalTokenList } from "store/global/hooks";
+import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 
 interface SearchItemProps {
@@ -91,7 +91,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarTokenPrice({ num: info.priceUSD, ab: 0.0001, digits: 2 }) : "--"}
+        {info ? formatDollarTokenPrice(info.priceUSD, { min: 0.0001 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (
@@ -128,7 +128,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
       .slice(0, 5);
   }, [infoAllTokens]);
 
-  const { result: allTokens } = useAllTokensOfSwap();
+  const allTokens = useStateSwapAllTokens();
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -227,12 +227,16 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 fullHeight
                 placeholder="Symbol / Name / Canister ID"
                 borderRadius="12px"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    },
+                  },
                 }}
                 onChange={handleSearchChange}
               />

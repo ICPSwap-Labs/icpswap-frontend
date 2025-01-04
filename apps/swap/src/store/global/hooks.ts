@@ -10,7 +10,8 @@ import {
   getLimitedInfinityCall,
   getAllTokensOfSwap,
 } from "@icpswap/hooks";
-import { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { setStorageTokenInfo } from "hooks/token/index";
 
 import {
   updateXDR2USD,
@@ -166,7 +167,34 @@ export function useFetchAllSwapTokens() {
 
       setLoading(true);
       const data = await getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(fetch, 1000, 2);
-      dispatch(updateAllSwapTokens(data));
+
+      const swapTokens = data.map((e) => {
+        return {
+          ...e,
+          standard:
+            e.standard === "ICRC-1"
+              ? TOKEN_STANDARD.ICRC1
+              : e.standard === "ICRC-2"
+              ? TOKEN_STANDARD.ICRC2
+              : e.standard,
+        };
+      });
+
+      dispatch(updateAllSwapTokens(swapTokens));
+
+      swapTokens.forEach((token) => {
+        setStorageTokenInfo({
+          decimals: Number(token.decimals),
+          name: token.name,
+          symbol: token.symbol,
+          canisterId: token.ledger_id.toString(),
+          logo: token.logo[0] ?? "",
+          totalSupply: "0",
+          transFee: token.fee.toString(),
+          standardType: token.standard as TOKEN_STANDARD,
+        });
+      });
+
       setLoading(false);
     }
 

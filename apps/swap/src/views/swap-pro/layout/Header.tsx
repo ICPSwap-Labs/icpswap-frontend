@@ -63,12 +63,16 @@ export default function Header() {
                   fullHeight
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
+                  textFiledProps={{
+                    slotProps: {
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      },
+                    },
                   }}
                   onFocus={() => setSearchOpen(true)}
                 />

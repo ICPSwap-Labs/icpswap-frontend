@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
 import { cycleValueFormat } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
-import { useAccount } from "store/global/hooks";
 import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
@@ -24,9 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: "12px",
     padding: "20px",
   },
-
   wrapper: {
-    background: theme.palette.background.level2,
+    background: theme.palette.background.level3,
     padding: "30px",
     borderRadius: "12px",
     display: "grid",
@@ -148,18 +146,17 @@ export interface NFTCanisterHeaderProps {
 export default function CanisterHeader({ details, cycles, count, loading }: NFTCanisterHeaderProps) {
   const classes = useStyles();
   const history = useHistory();
-  const account = useAccount();
   const theme = useTheme();
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const isOwner = details?.owner === account;
+  const isOwner = true;
 
   const [topUpCycles, setTopUpCycles] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const handleMintNFT = () => {
-    history.push(`/console/nft/mint?canister=${details.cid}`);
+    history.push(`/info-tools/nft/mint?canister=${details.cid}`);
   };
 
   const handleToMarketplace = () => {

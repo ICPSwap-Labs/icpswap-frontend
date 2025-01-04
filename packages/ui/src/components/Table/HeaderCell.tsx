@@ -1,7 +1,6 @@
 import { useCallback, useContext } from "react";
-import { Typography } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { useTheme } from "@mui/styles";
+
+import { useTheme, Typography } from "../Mui";
 import { UpArrow, DownArrow } from "../Arrow";
 import { SortDirection } from "./types";
 import HeaderContext from "./headerContext";
@@ -18,7 +17,7 @@ export type HeaderCellProps = {
 };
 
 export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const { sortChange, sortField, sortDirection } = useContext(HeaderContext);
 

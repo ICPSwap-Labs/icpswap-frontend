@@ -1,8 +1,8 @@
 import { Typography, Box, Button, useMediaQuery, useTheme } from "components/Mui";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "components/index";
 import { Trans } from "@lingui/macro";
-import { formatDollarAmount, formatDollarTokenPrice, mockALinkAndOpen } from "@icpswap/utils";
+import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL, useInfoToken } from "@icpswap/hooks";
 import {
   GridAutoRows,
@@ -13,6 +13,7 @@ import {
   TokenChartsRef,
   ChartViewSelector,
   ChartButton,
+  Link,
 } from "@icpswap/ui";
 import { TokenTransactions, TokenPools } from "components/info/swap";
 import { Copy } from "react-feather";
@@ -26,6 +27,7 @@ import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
+import { ICP } from "@icpswap/tokens";
 
 import { TokenPrices } from "./components/TokenPrice";
 
@@ -64,7 +66,6 @@ const TradingViewDesc = [ChartView.DexScreener, ChartView.PRICE];
 
 export default function TokenDetails() {
   const { id: canisterId } = useParams<{ id: string }>();
-  const history = useHistory();
   const [openTips] = useTips();
   const theme = useTheme();
   const tokenChartsRef = useRef<TokenChartsRef>(null);
@@ -89,23 +90,22 @@ export default function TokenDetails() {
     openTips("Copy Successfully", TIP_SUCCESS);
   };
 
-  const handleToSwap = () => {
-    mockALinkAndOpen(swapLink(canisterId), "to_swap");
-  };
-
-  const handleToAddLiquidity = () => {
-    mockALinkAndOpen(addLiquidityLink(canisterId), "to_liquidity");
-  };
-
-  const handleToTokenDetails = () => {
-    history.push(`/info-tokens/details/${canisterId}`);
-  };
-
   useEffect(() => {
     if (chartView && tokenChartsRef.current) {
       tokenChartsRef.current.setView(chartView);
     }
   }, [chartView, tokenChartsRef]);
+
+  // Make Price chart first if token is icp
+  useEffect(() => {
+    if (canisterId === ICP.address) {
+      setChartView({
+        label: token?.symbol ?? "Price",
+        value: ChartView.PRICE,
+        tokenId: canisterId,
+      });
+    }
+  }, [token, canisterId]);
 
   return (
     <InfoWrapper>
@@ -130,7 +130,7 @@ export default function TokenDetails() {
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
             <Flex fullWidth>
               <TextButton
-                to={`/token/details/${canisterId}`}
+                to={`/info-tokens/details/${canisterId}`}
                 sx={{
                   margin: "0 0 0 6px",
                 }}
@@ -169,7 +169,7 @@ export default function TokenDetails() {
                 lineHeight: "0.8",
               }}
             >
-              {formatDollarTokenPrice({ num: infoToken?.priceUSD })}
+              {formatDollarTokenPrice(infoToken?.priceUSD)}
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
@@ -183,15 +183,23 @@ export default function TokenDetails() {
             <TokenChartsViewSelector token={token} chartView={chartView} setChartView={setChartView} />
           ) : null}
 
-          <Button variant="contained" className="secondary" onClick={handleToTokenDetails}>
-            Token Details
-          </Button>
-          <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
-            Add Liquidity
-          </Button>
-          <Button variant="contained" onClick={handleToSwap}>
-            Swap
-          </Button>
+          <Link to={`/info-tokens/details/${canisterId}`}>
+            <Button variant="contained" className="secondary">
+              <Trans>Token Details</Trans>
+            </Button>
+          </Link>
+
+          <Link to={addLiquidityLink(canisterId)}>
+            <Button variant="contained" className="secondary">
+              <Trans>Add Liquidity</Trans>
+            </Button>
+          </Link>
+
+          <Link to={swapLink(canisterId)}>
+            <Button variant="contained">
+              <Trans>Swap</Trans>
+            </Button>
+          </Link>
         </Flex>
       </Flex>
 
@@ -320,17 +328,17 @@ export default function TokenDetails() {
                 borderBottomRightRadius: "16px",
               }}
             >
-              *Token price charts powered by{" "}
+              Token price charts powered by TradingView, the charting platform and social network that provides users
+              with valuable information on market events through tools such as the{" "}
               <TextButton
-                link="https://www.tradingview.com/chart"
+                link="https://www.tradingview.com/economic-calendar"
                 sx={{
                   fontSize: "12px",
                 }}
               >
-                TradingView
+                economic calendar
               </TextButton>
-              , the charting platform and social network that provides users with valuable information on market events
-              through tools such as the economic calendar, stock analyser and others
+              , stock analyser and others
             </Typography>
           ) : null}
         </Box>

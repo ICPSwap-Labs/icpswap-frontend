@@ -12,55 +12,56 @@ import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
 
-const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
-const STORAGE_EXPIRE_TIME = 2 * 60 * 60 * 1000; // millisecond
+// const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
+// const STORAGE_EXPIRE_TIME = 2 * 60 * 60 * 1000; // millisecond
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
-async function getStorageTokenInfo(tokenId: string) {
+export async function getStorageTokenInfo(tokenId: string) {
   const storageInfo = await storage.get(`TOKEN_${tokenId}`);
   if (storageInfo) return JSON.parse(storageInfo) as StorageTokenInfo;
   return undefined;
 }
 
-async function setStorageTokenInfo(tokenInfo: StorageTokenInfo) {
+export async function setStorageTokenInfo(tokenInfo: StorageTokenInfo) {
   await storage.set(`TOKEN_${tokenInfo.canisterId}`, JSON.stringify(tokenInfo));
 }
 
-export function getTokenStorageTime(tokenId: string) {
-  const val = window.localStorage.getItem(STORAGE_TIME_KEY);
-  if (!val) return null;
-  return (JSON.parse(val) as { [tokenId: string]: string })[tokenId] ?? null;
-}
+// export function getTokenStorageTime(tokenId: string) {
+//   const val = window.localStorage.getItem(STORAGE_TIME_KEY);
+//   if (!val) return null;
+//   return (JSON.parse(val) as { [tokenId: string]: string })[tokenId] ?? null;
+// }
 
-export function updateTokenStorageTime(tokenId: string) {
-  const time = new Date().getTime();
-  const val = window.localStorage.getItem(STORAGE_TIME_KEY);
+// export function updateTokenStorageTime(tokenId: string) {
+//   const time = new Date().getTime();
+//   const val = window.localStorage.getItem(STORAGE_TIME_KEY);
 
-  if (!val) {
-    window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify({ [tokenId]: time.toString() }));
-  } else {
-    const new_val = JSON.parse(val) as { [tokenId: string]: string };
-    new_val[tokenId] = time.toString();
+//   if (!val) {
+//     window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify({ [tokenId]: time.toString() }));
+//   } else {
+//     const new_val = JSON.parse(val) as { [tokenId: string]: string };
+//     new_val[tokenId] = time.toString();
 
-    window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify(new_val));
-  }
-}
+//     window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify(new_val));
+//   }
+// }
 
-function isNeedUpdateTokenInfo(tokenId: string) {
-  const storage_time = getTokenStorageTime(tokenId);
-  if (!storage_time) return true;
-  return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
-}
+// function isNeedUpdateTokenInfo(tokenId: string) {
+//   const storage_time = getTokenStorageTime(tokenId);
+//   if (!storage_time) return true;
+//   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
+//   return false;
+// }
 
 function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageInfo is StorageTokenInfo {
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
 }
 
-export async function _getTokenInfo(tokenId: string) {
+export async function __getTokenInfo(tokenId: string) {
   const storageInfo = await getStorageTokenInfo(tokenId);
 
-  if (isStorageInfoValid(storageInfo) && !isNeedUpdateTokenInfo(tokenId)) {
+  if (isStorageInfoValid(storageInfo)) {
     return storageInfo;
   }
 
@@ -72,7 +73,8 @@ export async function _getTokenInfo(tokenId: string) {
       totalSupply: "0",
       transFee: baseTokenInfo.transFee.toString(),
     });
-    updateTokenStorageTime(tokenId);
+
+    // updateTokenStorageTime(tokenId);
     return baseTokenInfo as TokenInfo;
   }
 }
@@ -170,7 +172,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       getStorageInfoErrored = true;
     }
 
-    if (!storageInfo || isNeedUpdateTokenInfo(tokenId) || !isStorageInfoValid(storageInfo) || getStorageInfoErrored) {
+    if (!storageInfo || !isStorageInfoValid(storageInfo) || getStorageInfoErrored) {
       const tokenInfo = await getTokenInfo(tokenId);
 
       if (tokenInfo) {
@@ -180,7 +182,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           transFee: tokenInfo.transFee.toString(),
           totalSupply: "0",
         });
-        updateTokenStorageTime(tokenId);
+        // updateTokenStorageTime(tokenId);
 
         // The token standard maybe changed in some case,
         // So get the standard from the storage to upgrade the token info

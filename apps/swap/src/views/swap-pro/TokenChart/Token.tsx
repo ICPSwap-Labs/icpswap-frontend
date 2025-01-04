@@ -145,7 +145,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -171,7 +171,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           </Link>
 
           <a
-            href={`https://info.icpswap.com/token/details/${tokenId}`}
+            href={`/info-tokens/details/${tokenId}`}
             target="_blank"
             rel="noreferrer"
             style={{ textDecoration: "none" }}

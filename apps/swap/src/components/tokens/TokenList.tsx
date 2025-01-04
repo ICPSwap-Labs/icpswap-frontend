@@ -2,19 +2,18 @@ import { useMemo, useState, useCallback } from "react";
 import { Box, Typography, makeStyles } from "components/Mui";
 import {
   parseTokenAmount,
-  toSignificant,
   formatDollarAmount,
   formatDollarTokenPrice,
-  formatAmount,
   BigNumber,
   nonNullArgs,
   isNullArgs,
+  formatIcpAmount,
 } from "@icpswap/utils";
 import { useTokenInfo } from "hooks/token/index";
 import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
-import { TOKEN_STANDARD } from "@icpswap/constants";
+import { TOKEN_STANDARD } from "@icpswap/types";
 import { useTokensFromList, useTokenSupply, useInfoToken, useExplorerTokenDetails } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
 import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";
@@ -62,11 +61,11 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
         </Flex>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell sx={{ width: "100%" }} align="right">
-            {infoToken ? formatDollarTokenPrice({ num: infoToken.priceUSD }) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
           </BodyCell>
           <BodyCell sub sx={{ width: "100%" }} align="right">
             {infoToken && icpPrice
-              ? `${toSignificant(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toNumber(), 8)} ICP`
+              ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toNumber())} ICP`
               : "--"}
           </BodyCell>
         </Flex>
@@ -85,7 +84,7 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
           </BodyCell>
           <BodyCell sub align="right" sx={{ width: "100%" }}>
             {infoToken && icpPrice && supply && tokenInfo
-              ? `${formatAmount(
+              ? `${formatIcpAmount(
                   new BigNumber(infoToken.priceUSD)
                     .multipliedBy(parseTokenAmount(supply, tokenInfo.decimals))
                     .dividedBy(icpPrice)

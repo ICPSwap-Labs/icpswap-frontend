@@ -443,12 +443,16 @@ export function InfoPools() {
               background="level1"
               placeholderSize="14px"
               fontSize="14px"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search size={14} color={theme.colors.darkTextSecondary} />
-                  </InputAdornment>
-                ),
+              textFiledProps={{
+                slotProps: {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size={14} color={theme.colors.darkTextSecondary} />
+                      </InputAdornment>
+                    ),
+                  },
+                },
               }}
             />
           </Box>

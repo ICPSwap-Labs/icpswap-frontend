@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
-import { toSignificant, numberToString, formatDollarAmount, shorten, BigNumber } from "@icpswap/utils";
+import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount } from "@icpswap/utils";
 import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, Link } from "@icpswap/ui";
@@ -9,7 +9,6 @@ import { LoadingRow, Copy, IsSneedOwner } from "components/index";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { toFormat } from "utils/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Null } from "@icpswap/types";
 import { useIsSneedOwner } from "hooks/index";
@@ -113,7 +112,7 @@ export function PositionRow({
         <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
           <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
-              <Typography>{owner ? shorten(owner) : "--"}</Typography>
+              <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
             </Copy>
 
             <IsSneedOwner isSneed={isSneed} tooltip={<Trans>The position is locked in Sneed.</Trans>} />
@@ -121,60 +120,43 @@ export function PositionRow({
 
           <BodyCell>{positionInfo.id.toString()}</BodyCell>
 
-          <BodyCell>{totalUSDValue ? `$${toFormat(totalUSDValue)}` : "--"}</BodyCell>
+          <BodyCell>{totalUSDValue ? `${formatDollarAmount(totalUSDValue)}` : "--"}</BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography>
-              {position
-                ? `${toSignificant(position.amount0.toExact(), 12, { groupSeparator: "," })} ${pool.token0.symbol}`
-                : "--"}
-            </Typography>
-
-            <Typography sx={{ margin: "10px 0 0 0" }}>
-              {position
-                ? `${toSignificant(position.amount1.toExact(), 12, { groupSeparator: "," })} ${pool.token1.symbol}`
-                : "--"}
-            </Typography>
+          <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
+            <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${pool.token0.symbol}` : "--"}</BodyCell>
+            <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${pool.token1.symbol}` : "--"}</BodyCell>
           </BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography sx={{ display: "flex", alignItems: "center" }}>
-              {!!token1 && !!token0
-                ? inverted
-                  ? pool?.priceOf(token1)
-                    ? `${toFormat(pool?.priceOf(token1).toSignificant(6))} ${pairName}`
-                    : "--"
-                  : pool?.priceOf(token0)
-                  ? `${toFormat(pool?.priceOf(token0).toSignificant(6))} ${pairName}`
-                  : "--"
-                : "--"}
-              <SyncAltIcon
-                sx={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer", color: "#ffffff" }}
-                onClick={() => setManuallyInverted(!manuallyInverted)}
-              />
-            </Typography>
+          <BodyCell sx={{ display: "inline-block" }} onClick={() => setManuallyInverted(!manuallyInverted)}>
+            {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
+              priceUpper,
+              tickAtLimit,
+              Bound.UPPER,
+            )} ${pairName}`}
 
-            <Typography sx={{ margin: "10px 0 0 0" }}>
-              {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER, undefined, {
-                groupSeparator: ",",
-              })} - ${formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER, undefined, {
-                groupSeparator: ",",
-              })} ${pairName}`}
-            </Typography>
+            <SyncAltIcon
+              sx={{
+                fontSize: "1rem",
+                cursor: "pointer",
+                color: "#ffffff",
+                margin: "0 0 0 4px",
+                verticalAlign: "middle",
+              }}
+            />
           </BodyCell>
 
-          <BodyCell sx={{ flexDirection: "column" }}>
-            <Typography>
+          <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
+            <BodyCell>
               {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                ? `${toFormat(
-                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toFixed(8),
-                  )} ${token0?.symbol} and ${toFormat(
-                    new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toFixed(8),
+                ? `${formatAmount(
+                    currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0,
+                  )} ${token0?.symbol} and ${formatAmount(
+                    currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0,
                   )} ${token1?.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
 
-            <Typography mt="10px" align="left">
+            <Typography align="left">
               {currencyFeeAmount0 !== undefined &&
               currencyFeeAmount1 !== undefined &&
               !!token0USDPrice &&

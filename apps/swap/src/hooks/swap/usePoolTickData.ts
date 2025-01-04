@@ -97,9 +97,9 @@ export function usePoolActiveLiquidity(
   currencyB: Token | undefined,
   feeAmount: FeeAmount,
 ) {
-  const isSorted = currencyA && currencyB ? currencyA.wrapped.sortsBefore(currencyB.wrapped) : undefined;
-  const token0 = isSorted ? currencyA?.wrapped : currencyB?.wrapped;
-  const token1 = isSorted ? currencyB?.wrapped : currencyA?.wrapped;
+  const isSorted = currencyA && currencyB ? currencyA.sortsBefore(currencyB) : undefined;
+  const token0 = isSorted ? currencyA : currencyB;
+  const token1 = isSorted ? currencyB : currencyA;
   const [poolState, pool] = usePool(currencyA, currencyB, feeAmount, true);
 
   const tickCurrent = pool?.tickCurrent;

@@ -11,8 +11,8 @@ import {
   formatDollarAmount,
   BigNumber,
   isValidPrincipal,
-  toSignificantWithGroupSeparator,
   nonNullArgs,
+  formatAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import { Erc20MinterInfo, Null } from "@icpswap/types";
@@ -37,7 +37,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
 
   const tokenBalanceAmount = useMemo(() => {
     if (!token || balance === undefined) return undefined;
-    return toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString(), 6);
+    return parseTokenAmount(balance, token.decimals).toString();
   }, [token, balance]);
 
   const handleClick = useCallback(() => {
@@ -121,7 +121,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                 }}
                 fontWeight={500}
               >
-                {tokenBalanceAmount ?? "--"}
+                {tokenBalanceAmount ? formatAmount(tokenBalanceAmount) : "--"}
               </Typography>
               <Typography
                 align="right"
@@ -135,8 +135,6 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                 {priceUSD !== undefined && nonNullArgs(balance) && nonNullArgs(token)
                   ? formatDollarAmount(
                       new BigNumber(priceUSD).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
-                      4,
-                      0.001,
                     )
                   : "--"}
               </Typography>

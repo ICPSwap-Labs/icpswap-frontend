@@ -15,6 +15,7 @@ import {
   AprChart,
 } from "components/stake/index";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token";
+import { useRefreshTriggerManager } from "hooks/index";
 
 function ReclaimTab() {
   const { reclaimable } = useContext(ReclaimContext);
@@ -52,7 +53,8 @@ export default function StakeDetail() {
 
   const [reclaimable, setReclaimable] = useState(false);
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("STAKE_DETAILS");
 
   const { id: poolId } = useParams<{ id: string }>();
 
@@ -65,10 +67,6 @@ export default function StakeDetail() {
 
   const handleTabChange = (tab: Tab) => {
     setTabKey(tab.key);
-  };
-
-  const handleRefresh = () => {
-    setRefreshTrigger(refreshTrigger + 1);
   };
 
   return (
@@ -151,14 +149,14 @@ export default function StakeDetail() {
                     rewardToken={rewardToken}
                     stakeToken={stakeToken}
                     refreshTrigger={refreshTrigger}
-                    handleRefresh={handleRefresh}
+                    handleRefresh={setRefreshTrigger}
                   />
                 </Box>
 
                 <Box sx={{ display: tabKey === "reclaim" ? "block" : "none" }}>
                   <Reclaim
                     poolId={poolId}
-                    onReclaimSuccess={handleRefresh}
+                    onReclaimSuccess={setRefreshTrigger}
                     rewardToken={rewardToken}
                     stakeToken={stakeToken}
                     refresh={tabKey === "reclaim"}
