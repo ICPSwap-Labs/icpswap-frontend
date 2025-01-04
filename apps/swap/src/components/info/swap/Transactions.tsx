@@ -169,18 +169,20 @@ export function Transactions({
             </HeaderCell>
           </Header>
 
-          {(sortedTransactions ?? []).map((transaction, index) => (
-            <TransactionRow
-              key={`${String(transaction.timestamp)}_${index}`}
-              className={classes.wrapper}
-              transaction={transaction}
-              onAddressClick={handleCopy}
-            />
-          ))}
-
           {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-          {loading ? <ImageLoading loading={loading} /> : null}
+          {loading ? (
+            <ImageLoading loading={loading} />
+          ) : (
+            (sortedTransactions ?? []).map((transaction, index) => (
+              <TransactionRow
+                key={`${String(transaction.timestamp)}_${index}`}
+                className={classes.wrapper}
+                transaction={transaction}
+                onAddressClick={handleCopy}
+              />
+            ))
+          )}
         </Box>
       </Box>
 
