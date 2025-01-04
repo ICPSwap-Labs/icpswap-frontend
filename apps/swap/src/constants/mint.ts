@@ -55,7 +55,7 @@ export const slippageToPercent = (slippage: BigintIsh) => new Percent(slippage, 
 export const MAX_TRANSACTIONS_DEADLINE = 180;
 export const DEFAULT_TRANSACTIONS_DEADLINE = 30;
 
-export const DEFAULT_MULTIPLE_APPROVE = 5;
+export const DEFAULT_MULTIPLE_APPROVE = 1000;
 
 export const ZOOM_LEVEL_INITIAL_MIN_MAX = {
   [FeeAmount.LOW]: {
