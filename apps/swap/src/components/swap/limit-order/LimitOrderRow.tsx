@@ -7,12 +7,13 @@ import { Trans, t } from "@lingui/macro";
 import { useState, useCallback, useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
 import {
-  toSignificantWithGroupSeparator,
   nanosecond2Millisecond,
   nonNullArgs,
   isNullArgs,
   parseTokenAmount,
   BigNumber,
+  formatTokenPrice,
+  formatAmount,
 } from "@icpswap/utils";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import dayjs from "dayjs";
@@ -116,9 +117,7 @@ export function LimitOrderRow({
           <BodyCell sx={{ gap: "0 6px" }}>
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
-              {inputToken && inputAmount
-                ? `${toSignificantWithGroupSeparator(inputAmount.toString())} ${inputToken.symbol}`
-                : "--"}
+              {inputToken && inputAmount ? `${formatAmount(inputAmount.toString())} ${inputToken.symbol}` : "--"}
             </Typography>
           </BodyCell>
 
@@ -126,9 +125,7 @@ export function LimitOrderRow({
           <BodyCell sx={{ gap: "0 6px" }}>
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
-              {outputToken && outputAmount
-                ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
-                : "--"}
+              {outputToken && outputAmount ? `${formatAmount(outputAmount)} ${outputToken.symbol}` : "--"}
             </Typography>
           </BodyCell>
 
@@ -136,10 +133,12 @@ export function LimitOrderRow({
             <Typography sx={{ color: "text.primary" }}>
               {limitPrice
                 ? invertPrice
-                  ? `1 ${outputToken.symbol} = ${toSignificantWithGroupSeparator(
+                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
                       new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
                     )} ${inputToken.symbol}`
-                  : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`
+                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
+                      outputToken.symbol
+                    }`
                 : "--"}
             </Typography>
           </BodyCell>
