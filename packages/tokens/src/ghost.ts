@@ -1,5 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo , TOKEN_STANDARD } from "@icpswap/types";
+import { TokenInfo, TOKEN_STANDARD } from "@icpswap/types";
 
 export const GHOST_TOKEN_ID = "4c4fd-caaaa-aaaaq-aaa3a-cai";
 

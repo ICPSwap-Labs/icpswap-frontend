@@ -17,7 +17,11 @@ const tools = [
     path: "/info-tools/user-balances",
   },
   { label: t`Wallet Valuation`, image: "/images/info/tools/WalletValuation.svg", path: "/info-tools/valuation" },
-  // { label: t`Position Transfer`, image: "/images/info/tools/PositionTransfer.svg", path: "/info-tools/burn" },
+  {
+    label: t`Position Transfer`,
+    image: "/images/info/tools/PositionTransfer.svg",
+    path: "/info-tools/position-transactions",
+  },
   { label: t`Locked Positions`, image: "/images/info/tools/LockedPositions.svg", path: "/info-tools/locked-positions" },
 ];
 
