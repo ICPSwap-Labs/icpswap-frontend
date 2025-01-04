@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Typography, TypographyProps } from "components/Mui";
-import { BigNumber, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatDollarTokenPrice, formatTokenPrice } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
@@ -51,12 +51,12 @@ export function TokenPrice({
       onClick={onClick}
     >
       {__price && baseTokenInverted && quoteTokenInverted
-        ? `1 ${baseTokenInverted.symbol} = ${toSignificantWithGroupSeparator(__price)} ${quoteTokenInverted.symbol}`
+        ? `1 ${baseTokenInverted.symbol} = ${formatTokenPrice(__price)} ${quoteTokenInverted.symbol}`
         : "--"}
 
       {showUSD && inputTokenUSD ? (
         <Typography component="span" sx={{ fontSize }}>
-          ({formatDollarAmount(inputTokenUSD)})
+          ({formatDollarTokenPrice(inputTokenUSD)})
         </Typography>
       ) : null}
     </Typography>

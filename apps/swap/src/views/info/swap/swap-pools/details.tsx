@@ -2,19 +2,11 @@ import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import {
-  formatDollarAmount,
-  formatAmount,
-  mockALinkAndOpen,
-  parseTokenAmount,
-  explorerLink,
-  cycleValueFormat,
-} from "@icpswap/utils";
-import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper } from "components/index";
+import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, cycleValueFormat } from "@icpswap/utils";
+import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks";
 import { useInfoPool } from "hooks/info/index";
-import { useTokenInfo } from "hooks/token/index";
-import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex } from "@icpswap/ui";
+import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
 import { PoolTransactions } from "components/info/swap";
 import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
@@ -24,8 +16,8 @@ import { useTips, TIP_SUCCESS } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionTable } from "components/liquidity/PositionTable";
+import { useToken } from "hooks/index";
 
-import TokenPrice from "./components/TokenPrice";
 import PoolChart from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
@@ -42,8 +34,8 @@ export default function SwapPoolDetails() {
   const [tab, setTab] = useState<TabValue>(TabValue.Transactions);
 
   const { result: pool } = useInfoPool(canisterId);
-  const { result: token0 } = useTokenInfo(pool?.token0Id);
-  const { result: token1 } = useTokenInfo(pool?.token1Id);
+  const [, token0] = useToken(pool?.token0Id);
+  const [, token1] = useToken(pool?.token1Id);
 
   const { result: poolTVLToken0 } = useTokenBalance(pool?.token0Id, pool?.pool);
   const { result: poolTVLToken1 } = useTokenBalance(pool?.token1Id, pool?.pool);
@@ -63,18 +55,6 @@ export default function SwapPoolDetails() {
   const { result: latestTVL } = usePoolLatestTVL(canisterId);
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-
-  const handleToSwap = () => {
-    if (!token0 || !token1) return;
-    mockALinkAndOpen(swapLinkOfPool(token0.canisterId, token1.canisterId), "to_swap");
-  };
-
-  const handleToAddLiquidity = () => {
-    if (!token0 || !token1) return;
-    const canisterId = token0.canisterId === ICP_TOKEN_INFO.canisterId ? token1.canisterId : token0.canisterId;
-
-    mockALinkAndOpen(addLiquidityLink(canisterId), "to_liquidity");
-  };
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
@@ -100,8 +80,8 @@ export default function SwapPoolDetails() {
         >
           <Box>
             <Flex fullWidth>
-              <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.canisterId} />
-              <TokenImage logo={token1?.logo} size="24px" tokenId={token1?.canisterId} />
+              <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.address} />
+              <TokenImage logo={token1?.logo} size="24px" tokenId={token1?.address} />
               <Typography color="text.primary" sx={{ margin: "0 8px 0 8px" }} fontWeight={500}>
                 {pool?.token0Symbol} / {pool?.token1Symbol}
               </Typography>
@@ -138,6 +118,7 @@ export default function SwapPoolDetails() {
         >
           <Flex
             sx={{
+              gap: "0 20px",
               "@media screen and (max-width: 580px)": {
                 flexDirection: "column",
                 gap: "5px 0",
@@ -145,19 +126,54 @@ export default function SwapPoolDetails() {
               },
             }}
           >
-            <TokenPrice token0={token0} price0={pool?.token0Price} price1={pool?.token1Price} token1={token1} />
-            {matchDownMD ? null : <Box sx={{ width: "20px" }} />}
-            <TokenPrice token0={token1} price0={pool?.token1Price} price1={pool?.token0Price} token1={token0} />
+            <Link to={`/info-swap/token/details/${token0?.address}`}>
+              <TokenPoolPrice
+                tokenA={token0}
+                priceA={pool?.token0Price}
+                priceB={pool?.token1Price}
+                tokenB={token1}
+                fontSize="14px"
+                wrapperSx={{
+                  background: theme.palette.background.level4,
+                  borderRadius: "8px",
+                  padding: "8px 10px",
+                  cursor: "pointer",
+                }}
+              />
+            </Link>
+
+            <Link to={`/info-swap/token/details/${token1?.address}`}>
+              <TokenPoolPrice
+                tokenA={token1}
+                priceA={pool?.token1Price}
+                priceB={pool?.token0Price}
+                tokenB={token0}
+                fontSize="14px"
+                wrapperSx={{
+                  background: theme.palette.background.level4,
+                  borderRadius: "8px",
+                  padding: "8px 10px",
+                  cursor: "pointer",
+                }}
+              />
+            </Link>
           </Flex>
 
-          <Flex gap="0 10px">
-            <Button variant="contained" className="secondary" onClick={handleToAddLiquidity}>
-              Add Liquidity
-            </Button>
-            <Button variant="contained" onClick={handleToSwap}>
-              Swap
-            </Button>
-          </Flex>
+          {token0 && token1 ? (
+            <Flex gap="0 10px">
+              <Link
+                link={addLiquidityLink(token0.address === ICP_TOKEN_INFO.canisterId ? token1.address : token0.address)}
+              >
+                <Button variant="contained" className="secondary">
+                  Add Liquidity
+                </Button>
+              </Link>
+
+              <Link link={swapLinkOfPool(token0.address, token1.address)}>
+                <Button variant="contained">Swap</Button>
+              </Link>
+            </Flex>
+          ) : null}
         </Flex>
       </Box>
 
@@ -183,7 +199,7 @@ export default function SwapPoolDetails() {
 
                 <Flex justify="space-between">
                   <Flex gap="0 8px">
-                    <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
+                    <TokenImage logo={token0?.logo} tokenId={token0?.address} />
 
                     <Typography
                       sx={{
@@ -207,7 +223,7 @@ export default function SwapPoolDetails() {
 
                 <Flex justify="space-between">
                   <Flex gap="0 8px">
-                    <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
+                    <TokenImage logo={token1?.logo} tokenId={token1?.address} />
 
                     <Typography
                       sx={{

@@ -4,7 +4,7 @@ import { LoadingRow, TokenImage } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useState, useMemo } from "react";
 import { useTheme } from "components/Mui";
-import { toSignificantWithGroupSeparator, BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isNullArgs, formatAmount, formatTokenPrice } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
@@ -82,7 +82,7 @@ export function LimitHistoryRow({
           <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
             <BodyCell>
-              {toSignificantWithGroupSeparator(inputAmount)} {inputToken?.symbol}
+              {formatAmount(inputAmount)} {inputToken?.symbol}
             </BodyCell>
           </BodyCell>
 
@@ -90,17 +90,17 @@ export function LimitHistoryRow({
           <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <BodyCell>
-              {toSignificantWithGroupSeparator(outputChangeAmount)} {outputToken?.symbol}
+              {formatAmount(outputChangeAmount)} {outputToken?.symbol}
             </BodyCell>
           </BodyCell>
 
           <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
             {limitPrice
               ? invertPrice
-                ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
+                ? `1 ${outputToken?.symbol} = ${formatTokenPrice(
                     new BigNumber(1).dividedBy(limitPrice).toString(),
                   )} ${inputToken?.symbol}`
-                : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
+                : `1 ${inputToken?.symbol} = ${formatTokenPrice(limitPrice)} ${outputToken?.symbol}`
               : "--"}
             <SyncAltIcon
               sx={{
