@@ -39,7 +39,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
   const helperContractAddress = useMemo(() => {
     if (!minterInfo) return undefined;
-    return minterInfo.erc20_helper_contract_address[0];
+    return minterInfo.deposit_with_subaccount_helper_contract_address[0];
   }, [minterInfo]);
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
