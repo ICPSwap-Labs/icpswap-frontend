@@ -81,8 +81,8 @@ export default function TokenDetails() {
   const [activeTab, setActiveTab] = useState<TabValue>(TabValue.Transactions);
 
   const [chartView, setChartView] = useState<Null | ChartButton>({
-    label: "DexScreener",
-    value: ChartView.DexScreener,
+    label: "Price",
+    value: ChartView.PRICE,
   });
 
   const handleCopy = () => {
