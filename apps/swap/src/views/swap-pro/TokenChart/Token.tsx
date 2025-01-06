@@ -70,7 +70,7 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
     const links = [
       { k: "Dashboard", v: `https://dashboard.internetcomputer.org/canister/${tokenId}` },
       tokenId ? { k: "DexScreener", v: `https://dexscreener.com/icp/${tokenId}` } : undefined,
-      { k: "ICScan", v: `https://icscan.io/canister/${tokenId}` },
+      { k: "Explorer", v: `https://www.icexplorer.io/token/details/${tokenId}` },
     ] as {
       k: string;
       v: string;
