@@ -22,6 +22,7 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -47,7 +48,7 @@ export function LimitOrderRow({
 
   const [showLimitDetails, setShowLimitDetails] = useState(false);
   const [showLimitConfirm, setShowLimitConfirm] = useState(false);
-  const [invertPrice] = useState(false);
+  const [invertPrice, setInvertPrice] = useState(false);
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
@@ -129,18 +130,26 @@ export function LimitOrderRow({
             </Typography>
           </BodyCell>
 
-          <BodyCell sx={{ justifyContent: "flex-end" }}>
-            <Typography sx={{ color: "text.primary" }}>
-              {limitPrice
-                ? invertPrice
-                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
-                      new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                    )} ${inputToken.symbol}`
-                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
-                      outputToken.symbol
-                    }`
-                : "--"}
-            </Typography>
+          <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
+            {limitPrice
+              ? invertPrice
+                ? `1 ${outputToken.symbol} = ${formatTokenPrice(
+                    new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
+                  )} ${inputToken.symbol}`
+                : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
+                    outputToken.symbol
+                  }`
+              : "--"}
+
+            <SyncAltIcon
+              sx={{
+                fontSize: "1rem",
+                cursor: "pointer",
+                color: "#ffffff",
+                margin: "0 0 0 4px",
+                verticalAlign: "middle",
+              }}
+            />
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
