@@ -52,7 +52,14 @@ export function Tooltip({
       arrow
     >
       {children || (
-        <Box sx={{ width: iconSize, height: iconSize }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: iconSize,
+            height: iconSize,
+          }}
+        >
           <HelpCircle size={iconSize} color={iconColor} style={{ cursor: "pointer" }} />
         </Box>
       )}
