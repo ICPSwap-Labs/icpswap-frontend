@@ -1,14 +1,13 @@
 import { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import NFTCard from "components/NFT/NFTCard";
 import { useCanisterNFTList } from "hooks/nft/useNFTCalls";
 import { useAccount } from "store/global/hooks";
 import { pageArgsFormat } from "@icpswap/utils";
+import { NoData, ImageLoading } from "@icpswap/ui";
 import Pagination from "components/pagination";
 import type { NFTTokenMetadata } from "@icpswap/types";
-import Loading from "components/Loading/Static";
-import { NoData } from "components/index";
 
 export default function NFTList({ canisterId }: { canisterId: string }) {
   const history = useHistory();
@@ -113,7 +112,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
             height: "100%",
           }}
         >
-          <Loading loading={loading} mask />
+          <ImageLoading loading={loading} mask />
         </Box>
       ) : null}
     </Box>

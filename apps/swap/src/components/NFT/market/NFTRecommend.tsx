@@ -1,16 +1,13 @@
 import { useHistory } from "react-router-dom";
-import { Box, Typography, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, Grid, makeStyles, Theme } from "components/Mui";
 import NFTCard from "components/NFT/market/NFTCard";
 import { useNFTRecommend } from "hooks/nft/trade";
 import { pageArgsFormat } from "@icpswap/utils";
-import { MainCard , NoData } from "components/index";
-import Loading from "components/Loading/Static";
+import { ImageLoading, MainCard, NoData } from "@icpswap/ui";
 import { TradeOrder } from "types/nft";
 import { Trans } from "@lingui/macro";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     collectionContainer: {
       display: "grid",
@@ -79,7 +76,7 @@ export default function NFTRecommend() {
         ))}
       </Box>
       {content && content.length === 0 && !loading ? <NoData /> : null}
-      <Loading loading={loading} />
+      <ImageLoading loading={loading} />
     </MainCard>
   );
 }

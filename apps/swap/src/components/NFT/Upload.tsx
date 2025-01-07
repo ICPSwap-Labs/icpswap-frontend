@@ -1,14 +1,13 @@
 import { useEffect, useState, useImperativeHandle, forwardRef, Ref, useRef } from "react";
-import { Grid, TextField, Typography, useTheme } from "@mui/material";
-import Loading from "components/Loading";
+import { Grid, TextField, Typography, useTheme, makeStyles, Theme } from "components/Mui";
+import { Loading } from "@icpswap/ui";
 import { isMobile } from "react-device-detect";
 import useFileUpload from "hooks/useNFTUpload";
 import { getFileType } from "utils/type";
 import { t } from "@lingui/macro";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import { Identity as CallIdentity } from "types/index";
 import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
+
 import CloudUploadIcon from "./UploadCloudIcon";
 
 const useStyles = makeStyles((theme: Theme) => {

@@ -1,6 +1,5 @@
-import { Grid, CircularProgress, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { CircularProgress, Box, makeStyles, Theme } from "../Mui";
+import { Flex } from "../Grid";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -23,19 +22,17 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default ({
-  loading,
-  circularSize = 40,
-  maskBorderRadius,
-}: {
+interface LoadingProps {
   loading: boolean;
   circularSize?: number;
   maskBorderRadius?: string;
-}) => {
+}
+
+export function Loading({ loading, circularSize = 40, maskBorderRadius }: LoadingProps) {
   const classes = useStyles();
 
   return loading ? (
-    <Grid className={classes.loadingContainer} container justifyContent="center" alignContent="center">
+    <Flex className={classes.loadingContainer} fullWidth justify="center" align="center">
       <Box
         className={classes.mask}
         sx={{
@@ -43,6 +40,6 @@ export default ({
         }}
       />
       <CircularProgress color="inherit" size={circularSize} />
-    </Grid>
+    </Flex>
   ) : null;
-};
+}

@@ -12,7 +12,6 @@ import RiskStatement from "components/RiskStatement";
 import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
 import WalletConnector from "components/authentication/ConnectorModal";
-import Loader from "components/Loading/LinearLoader";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import GlobalSteps from "components/Steps/index";
 import ActorInitial from "components/Actor";
@@ -23,6 +22,7 @@ import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
 import { PublicTokenOverview, Null } from "@icpswap/types";
+import { LinearLoader } from "@icpswap/ui";
 
 import { GlobalFetch } from "./GlobalFetch";
 import Web3Provider from "./components/Web3Injector";
@@ -88,7 +88,7 @@ export default function App() {
                       <CssBaseline />
                       <NavigationScroll>
                         {isInitialStandardLoading ? (
-                          <Loader />
+                          <LinearLoader />
                         ) : (
                           <ErrorBoundary>
                             <Routes />
