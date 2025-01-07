@@ -16,8 +16,9 @@ export default {
   secondaryLight: "#ffffff",
   secondary200: "#b39ddb",
   secondaryMain: "#5669dc",
-  secondaryDark: "#5669dc",
   secondary800: "#4527a0",
+
+  secondary: "#5669dc",
 
   // success
   successLight: "#b9f6ca",
