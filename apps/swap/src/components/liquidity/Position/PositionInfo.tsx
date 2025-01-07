@@ -1,10 +1,10 @@
 import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
-import { isNullArgs, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
+import { isNullArgs, isValidAccount, isValidPrincipal, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
 import { Flex, TextButton, APRPanel } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
-import { usePositionAPRChartData } from "@icpswap/hooks";
+import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
 import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
@@ -74,6 +74,11 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return !!farmId && isStakedByOwner === false;
   }, [farmId, isStakedByOwner]);
 
+  const { result: addressAlias } = useAddressAlias({
+    account: owner ? (isValidAccount(owner) ? owner : null) : null,
+    principal: owner ? (isValidPrincipal(owner) ? owner : null) : null,
+  });
+
   return (
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start" fullWidth>
@@ -95,7 +100,9 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           </Typography>
 
           <Flex gap="0 4px">
-            <Typography color="text.primary">{owner ? shorten(owner) : "--"}</Typography>
+            <Typography color="text.primary">
+              {owner ? (nonNullArgs(addressAlias) ? addressAlias : shorten(owner)) : "--"}
+            </Typography>
 
             <IsSneedOwner isSneed={isSneed} />
           </Flex>
