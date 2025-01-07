@@ -4,11 +4,11 @@ import { Box } from "@mui/material";
 import NFTCard from "components/NFT/NFTCard";
 import { useCanisterNFTList } from "hooks/nft/useNFTCalls";
 import { useAccount } from "store/global/hooks";
-import NoData from "components/no-data";
 import { pageArgsFormat } from "@icpswap/utils";
 import Pagination from "components/pagination";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import Loading from "components/Loading/Static";
+import { NoData } from "components/index";
 
 export default function NFTList({ canisterId }: { canisterId: string }) {
   const history = useHistory();

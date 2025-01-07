@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
-import NoDataIcon from "assets/icons/NoData";
+import { ReactComponent as NoDataIcon } from "assets/icons/empty.svg";
 import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { useTokenInfo } from "hooks/token";

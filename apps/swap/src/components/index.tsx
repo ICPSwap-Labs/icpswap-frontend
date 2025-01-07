@@ -1,12 +1,10 @@
 export { default as Pagination } from "./pagination";
 export type { PaginationType, PaginationProps } from "./pagination";
-export { default as NoData } from "./no-data";
-export { default as ListLoading } from "./Loading/List";
 export { default as ImageLoading } from "./Loading/Static";
 export { default as Loading } from "./Loading/index";
 export * from "./Loading/Dot";
 export { default as FullscreenLoading } from "./Loading/Fullscreen";
-export { TextButton, ALink, MaxButton, LoadingRow } from "@icpswap/ui";
+export { TextButton, ALink, MaxButton, LoadingRow, NoData, ListLoading } from "@icpswap/ui";
 export * from "./Wrapper";
 export { default as Modal } from "./modal/index";
 export { default as ViewMore } from "./ViewMore/index";

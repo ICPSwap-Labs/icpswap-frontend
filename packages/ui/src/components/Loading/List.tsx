@@ -1,7 +1,5 @@
-import { Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import LoadingImage from "assets/images/loading.png";
-import { Theme } from "@mui/material/styles";
+import { Grid, Box, makeStyles, Theme } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -27,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default ({ loading, mask = true }: { loading: boolean; mask?: boolean }) => {
+export function ListLoading({ loading, mask = true }: { loading: boolean; mask?: boolean }) {
   const classes = useStyles();
 
   return loading ? (
@@ -36,4 +34,4 @@ export default ({ loading, mask = true }: { loading: boolean; mask?: boolean }) 
       <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
     </Grid>
   ) : null;
-};
+}
