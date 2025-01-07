@@ -1,18 +1,16 @@
 import { Link as ReactLink } from "react-router-dom";
 import { Table, TableContainer, TableCell, TableRow, TableHead, TableBody, Typography, Grid } from "@mui/material";
-import NoData from "components/no-data";
-import { parseTokenAmount , nanosecond2Millisecond, shorten } from "@icpswap/utils";
+import { parseTokenAmount, nanosecond2Millisecond, shorten } from "@icpswap/utils";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import Pagination from "components/pagination";
 import { Trans, t } from "@lingui/macro";
 import { TxRecord, ResultStatus } from "types/index";
 import dayjs from "dayjs";
-import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
-import { TextButton } from "components/index";
 import { checkPayment } from "hooks/nft/trade";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import upperFirst from "lodash/upperFirst";
+import { NoData, ListLoading, TextButton } from "components/index";
 
 export const NFTSaleRecord = ({ saleRecord, type }: { saleRecord: TxRecord; type?: string }) => {
   const [openSuccessTip] = useSuccessTip();

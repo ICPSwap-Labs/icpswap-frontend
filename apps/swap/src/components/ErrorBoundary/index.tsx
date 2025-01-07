@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import * as Sentry from "@sentry/react";
-import { Grid, Box, Typography } from "@mui/material";
-import ErrorImage from "assets/images/Error";
+import { Box, Typography, useTheme } from "components/Mui";
+import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
 import { Layout } from "components/Layout/index";
 import { Trans } from "@lingui/macro";
 import copy from "copy-to-clipboard";
+import { Flex } from "@icpswap/ui";
 
 interface FallbackProps {
   error: Error;
@@ -12,6 +13,8 @@ interface FallbackProps {
 }
 
 function Fallback({ error, eventId }: FallbackProps) {
+  const theme = useTheme();
+
   const handleCopyError = () => {
     copy(`${error?.toString() ?? ""}_${eventId}`);
   };
@@ -27,56 +30,55 @@ function Fallback({ error, eventId }: FallbackProps) {
 
   return (
     <Layout info={false}>
-      <Box sx={{ width: "100%", height: "calc(100vh - 280px)" }}>
-        <Grid container alignItems="center" justifyContent="center" sx={{ width: "100%", height: "100%" }}>
-          <Grid item>
-            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center" }}>
-              <Typography color="text.primary" align="center" sx={{ fontSize: "24px", margin: "0 0 20px 0" }}>
-                <Trans>Oops, you've encountered an error</Trans>
-              </Typography>
+      <Box sx={{ width: "100%", height: "calc(100vh - 64px)" }}>
+        <Flex fullWidth align="center" justify="center" sx={{ width: "100%", height: "100%" }}>
+          <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center" }}>
+            <Typography color="text.primary" align="center" sx={{ fontSize: "24px", margin: "0 0 20px 0" }}>
+              <Trans>Oops, you've encountered an error</Trans>
+            </Typography>
 
-              <ErrorImage />
+            <BoundaryErrorImage />
 
+            <Box
+              sx={{
+                width: "374px",
+                height: "182px",
+                background: theme.palette.background.level4,
+                borderRadius: "16px",
+                padding: "24px",
+                margin: "20px 0 0 0",
+              }}
+            >
+              <Box sx={{ height: "112px", overflow: "hidden" }}>
+                <Typography color="text.primary" fontSize="12px" sx={{ wordBreak: "break-word", lineHeight: "20px" }}>
+                  {error.toString()}
+                </Typography>
+
+                <Typography color="text.primary" fontSize="12px" sx={{ wordBreak: "break-word" }}>
+                  {eventId}
+                </Typography>
+              </Box>
               <Box
                 sx={{
-                  width: "374px",
-                  height: "182px",
-                  background: "rgba(17, 25, 54, 0.2)",
-                  borderRadius: "8px",
-                  padding: "24px",
+                  width: "42px",
+                  height: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "10px",
+                  background: "#4F5A84",
+                  borderRadius: "4px",
+                  cursor: "pointer",
                 }}
+                onClick={handleCopyError}
               >
-                <Box sx={{ height: "112px", overflow: "hidden" }}>
-                  <Typography color="text.primary" fontSize="12px" sx={{ wordBreak: "break-word" }}>
-                    {error.toString()}
-                  </Typography>
-
-                  <Typography color="text.primary" fontSize="12px" sx={{ wordBreak: "break-word" }}>
-                    {eventId}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    width: "42px",
-                    height: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: "10px",
-                    background: "#4F5A84",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                  onClick={handleCopyError}
-                >
-                  <Typography color="text.primary" fontSize="12px">
-                    <Trans>Copy</Trans>
-                  </Typography>
-                </Box>
+                <Typography color="text.primary" fontSize="12px">
+                  <Trans>Copy</Trans>
+                </Typography>
               </Box>
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Flex>
       </Box>
     </Layout>
   );
