@@ -1,13 +1,11 @@
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import { MainCard, Wrapper } from "components/index";
 import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import { Theme } from "@mui/material/styles";
 import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
-import Loading from "components/Loading/Static";
+import { ImageLoading } from "@icpswap/ui";
 import CollectionAvatar from "components/NFT/CollectionAvatar";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -142,7 +140,7 @@ export default function MarketplaceCollections() {
           ))}
         </Box>
 
-        {loading ? <Loading loading={loading} /> : null}
+        {loading ? <ImageLoading loading={loading} /> : null}
       </MainCard>
     </Wrapper>
   );

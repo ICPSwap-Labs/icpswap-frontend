@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Box, Button, Typography, Grid, CircularProgress } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Box, Button, Typography, Grid, CircularProgress, makeStyles, useTheme } from "components/Mui";
 import NFTCard from "components/NFT/market/NFTCard";
 import { getTradeOrders } from "hooks/nft/trade";
 import { isValidAccount, pageArgsFormat } from "@icpswap/utils";
-import Loading from "components/Loading/Static";
+import { ImageLoading } from "@icpswap/ui";
 import { TradeOrder } from "types/nft";
 import { Trans } from "@lingui/macro";
 import { NoData } from "components/index";
@@ -70,7 +68,7 @@ export default function NFTMarketOrders({
   canisterId?: string;
 }) {
   const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const [data, setData] = useState<TradeOrder[]>([]);
   const [firstLoading, setFirstLoading] = useState(false);
   const [moreLoading, setMoreLoading] = useState(false);
@@ -200,7 +198,7 @@ export default function NFTMarketOrders({
             height: "100%",
           }}
         >
-          <Loading loading={firstLoading} mask />
+          <ImageLoading loading={firstLoading} mask />
         </Box>
       ) : null}
     </Box>
