@@ -146,7 +146,7 @@ export function formatTokenPrice(num: number | string | Null, options?: FormatTo
   }
 
   if (new BigNumber(num).isLessThan(1)) {
-    return toSignificantWithGroupSeparator(num, digitsIfLessThanOne);
+    return removeUselessZeroes(new BigNumber(num).toFixed(digitsIfLessThanOne));
   }
 
   if (new BigNumber(num).isLessThan(max)) {
