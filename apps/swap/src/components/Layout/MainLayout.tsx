@@ -7,13 +7,13 @@ import Background from "components/Background";
 import V3Event from "./V3Event";
 import Header from "./Header";
 import { SnsTips } from "./SnsTips";
+import { NetworkState } from "./NetworkState";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
     content: {
       background: "transparent",
       width: "100%",
-      minHeight: "calc(100vh - 64px)",
       flexGrow: 1,
       padding: "0 16px",
       borderRadius: "8px",
@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     mainContent: {
+      position: "relative",
+      minHeight: "calc(100vh - 64px)",
+      // For network state
+      paddingBottom: `${90 + 53}px`,
       "&.pro": {
         background: theme.palette.background.level1,
       },
@@ -87,6 +91,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         >
           {children}
         </main>
+
+        <NetworkState />
       </Box>
 
       <Background />

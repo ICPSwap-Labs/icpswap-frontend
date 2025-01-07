@@ -64,6 +64,9 @@ export const SAFE_INTEGER_LENGTH = 12;
 export const SAFE_DECIMALS_LENGTH = 8;
 export const MAX_SWAP_INPUT_LENGTH = 25;
 
+export const ICPSwapSubnet = "lhg73-sax6z-2zank-6oer2-575lz-zgbxx-ptudx-5korm-fy7we-kh4hl-pqe";
+export const ICPSwapStableBlockRate = 2;
+
 export * from "./canister";
 export * from "./server";
 export * from "./tokens";

@@ -19,7 +19,7 @@ export function themePalette(theme: { [key: string]: any }) {
     secondary: {
       light: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryLight,
       main: isDark ? theme.colors.darkSecondaryMain : theme.colors.secondaryMain,
-      dark: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryDark,
+      dark: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryMain,
       200: isDark ? theme.colors.darkSecondary200 : theme.colors.secondary200,
       800: isDark ? theme.colors.darkSecondary800 : theme.colors.secondary800,
     },
@@ -97,6 +97,9 @@ export function themePalette(theme: { [key: string]: any }) {
       2: "rgba(75, 87, 130, 0.68)",
       3: "#4F5A84",
       level1: theme.colors.darkLevel1,
+      level2: theme.colors.darkLevel2,
+      level3: theme.colors.darkLevel3,
+      level4: theme.colors.darkLevel4,
     },
     avatar: {
       gray200BgColor: isDark ? { bgcolor: "#384368" } : { bgcolor: "transparent" },

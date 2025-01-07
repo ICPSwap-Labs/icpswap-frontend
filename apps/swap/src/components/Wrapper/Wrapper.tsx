@@ -15,7 +15,7 @@ export function Wrapper({ children, sx }: WrapperProps) {
           width: "100%",
           maxWidth: "1200px",
           position: "relative",
-          padding: "48px 0",
+          padding: "48px 0 0 0",
           ...sx,
         }}
       >
