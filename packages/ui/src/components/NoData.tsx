@@ -14,14 +14,14 @@ export function NoData({ tip }: NoDataProps) {
         padding: "20px 0",
       }}
     >
-      <img src="/images/empty.svg" alt="" />
+      <img src="/images/empty.svg" alt="" width="100px" height="75px" />
 
       {tip ? (
         <Typography sx={{ maxWidth: "690px" }} color="text.primary" mt="10px" align="center">
           {tip}
         </Typography>
       ) : (
-        <Typography sx={{ fontSize: "16px", textAlign: "center" }}>No result found</Typography>
+        <Typography sx={{ textAlign: "center" }}>No result found</Typography>
       )}
     </Box>
   );
