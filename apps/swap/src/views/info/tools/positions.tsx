@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
@@ -12,7 +13,10 @@ import { PositionTable } from "components/liquidity/index";
 export default function Positions() {
   const history = useHistory();
   const location = useLocation();
-  const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
+  const { pair: pairFromUrl, principal } = useParsedQueryString() as {
+    pair: string | undefined;
+    principal: string | undefined;
+  };
 
   const handlePairChange = (pairId: string | undefined) => {
     const search = locationSearchReplace(location.search, "pair", pairId);
@@ -23,6 +27,9 @@ export default function Positions() {
     const search = locationSearchReplace(location.search, "principal", principal);
     history.push(`/info-tools/positions${search}`);
   };
+
+  // Default ICS/ICP
+  const pair = useMemo(() => pairFromUrl ?? "uizni-yiaaa-aaaag-qjrca-cai", [pairFromUrl]);
 
   return (
     <InfoWrapper size="small">
