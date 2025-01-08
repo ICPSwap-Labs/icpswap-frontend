@@ -66,7 +66,7 @@ export function ScrollTop({ target, heightShowScrollTop, scrollTopTarget }: Scro
   return showScrollTop ? (
     <Box
       id="scroll-top"
-      sx={{ bottom: "20px", position: "fixed", left: `${scrollTopPositionLeft}px`, cursor: "pointer" }}
+      sx={{ bottom: "20px", position: "fixed", left: `${scrollTopPositionLeft}px`, cursor: "pointer", zIndex: 1 }}
       onClick={handleScrollTop}
     >
       <Image src="/images/scroll-top.svg" sx={{ width: "48px", height: "48px" }} />
