@@ -42,7 +42,8 @@ export function NetworkState() {
   return (
     <Box
       sx={{
-        width: "1200px",
+        width: "100%",
+        maxWidth: "1200px",
         position: "absolute",
         bottom: "0px",
         height: `${90 + 53}px`,
@@ -51,7 +52,16 @@ export function NetworkState() {
       }}
     >
       <Flex fullWidth justify="center" sx={{ height: "100%" }} align="flex-end">
-        <Box sx={{ width: "1200px", borderTop: `1px solid ${theme.palette.border.level4}`, padding: "20px 0" }}>
+        <Box
+          sx={{
+            width: "1200px",
+            borderTop: `1px solid ${theme.palette.border.level4}`,
+            padding: "20px 0",
+            "@media(max-width: 1200px)": {
+              padding: "12px",
+            },
+          }}
+        >
           <Flex fullWidth justify="flex-end" gap="0 14px">
             <Flex gap="0 5px">
               <Typography fontSize="12px" sx={{ lineHeight: "12px" }}>
