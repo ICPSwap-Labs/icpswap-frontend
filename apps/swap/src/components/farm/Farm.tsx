@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { Box, Typography, Button, Theme } from "components/Mui";
+import { Box, Typography, Button, useTheme } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
 import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
 import { usePositionsTotalValue, usePositionsValue } from "hooks/swap/index";
-import { useTheme } from "@mui/styles";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
@@ -32,7 +31,7 @@ export interface FarmMainProps {
 }
 
 export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, rewardMetadata }: FarmMainProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const [viewAll, setViewAll] = useState(false);
   const [refreshRewardsTrigger, setRefreshRewardsTrigger] = useState(0);

@@ -1,5 +1,5 @@
 import { nowInSeconds } from "@icpswap/utils";
-import type { FarmInfo, FarmState } from "@icpswap/types";
+import type { FarmInfo, FarmState, Null } from "@icpswap/types";
 
 export function getFarmState(farmInfo: FarmInfo): FarmState {
   const now = nowInSeconds();
@@ -12,7 +12,7 @@ export function getFarmState(farmInfo: FarmInfo): FarmState {
   return "LIVE";
 }
 
-export function useFarmState(farmInfo: FarmInfo | undefined): FarmState | undefined {
+export function useFarmState(farmInfo: FarmInfo | Null): FarmState | undefined {
   if (!farmInfo) return undefined;
 
   return getFarmState(farmInfo);

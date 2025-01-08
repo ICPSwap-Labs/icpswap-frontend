@@ -28,21 +28,21 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
         },
       }}
     >
-      <Typography variant="body2" color="text.400" className="row-item">
+      <Typography color="text.400" className="row-item">
         <Trans>Staked Token</Trans>
       </Typography>
-      <Typography variant="body2" color="text.400" className="row-item">
+      <Typography color="text.400" className="row-item">
         <Trans>Reward Token</Trans>
       </Typography>
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" color="text.400">
+        <Typography color="text.400">
           <Trans>APR</Trans>
         </Typography>
       </Flex>
 
       {finished ? null : (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Available to Stake</Trans>
           </Typography>
         </Flex>
@@ -50,7 +50,7 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
 
       {your || finished ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Staked</Trans>
           </Typography>
         </Flex>
@@ -58,13 +58,13 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Rewards</Trans>
           </Typography>
         </Flex>
       ) : finished ? null : (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Total Staked</Trans>
           </Typography>
         </Flex>
@@ -72,7 +72,7 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
 
       {finished ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Total Reward Tokens</Trans>
           </Typography>
         </Flex>
@@ -80,7 +80,7 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
 
       {showState ? (
         <Flex justify="flex-end">
-          <Typography variant="body2" color="text.400" className="row-item">
+          <Typography color="text.400" className="row-item">
             <Trans>Status</Trans>
           </Typography>
         </Flex>

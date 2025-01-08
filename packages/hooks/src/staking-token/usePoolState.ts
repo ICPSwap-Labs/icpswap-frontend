@@ -1,5 +1,5 @@
 import { nowInSeconds } from "@icpswap/utils";
-import { StakingPoolControllerPoolInfo, StakingState, StakingPoolInfo } from "@icpswap/types";
+import { StakingPoolControllerPoolInfo, StakingState, StakingPoolInfo, Null } from "@icpswap/types";
 
 export function getStakingPoolState(poolInfo: StakingPoolControllerPoolInfo | StakingPoolInfo): StakingState {
   const now = nowInSeconds();
@@ -11,7 +11,7 @@ export function getStakingPoolState(poolInfo: StakingPoolControllerPoolInfo | St
 }
 
 export function useStakingPoolState(
-  poolInfo: StakingPoolControllerPoolInfo | StakingPoolInfo | undefined,
+  poolInfo: StakingPoolControllerPoolInfo | StakingPoolInfo | Null,
 ): StakingState | undefined {
   if (!poolInfo) return undefined;
 

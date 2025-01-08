@@ -11,6 +11,7 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
 import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
+import { State } from "components/farm/State";
 
 const tabs = [
   { key: "stake", value: "Stake" },
@@ -93,10 +94,14 @@ export default function Farm() {
                     <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
                   </Typography>
 
-                  <Typography align="right" mt="12px">
+                  <Typography align="right" mt="8px">
                     <Trans>Stake {token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--"} Positions</Trans>
                   </Typography>
                 </Box>
+              </Flex>
+
+              <Flex justify="flex-end" sx={{ margin: "8px 0 0 0" }}>
+                <State farmInfo={userFarmInfo} />
               </Flex>
 
               <Box mt="24px">

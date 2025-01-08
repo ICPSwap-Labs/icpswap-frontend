@@ -28,21 +28,21 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
         ...sx,
       }}
     >
-      <Typography variant="body2" color="text.400" className="row-item">
+      <Typography color="text.400" className="row-item">
         <Trans>Staked Position</Trans>
       </Typography>
-      <Typography variant="body2" color="text.400" className="row-item">
+      <Typography color="text.400" className="row-item">
         <Trans>Reward Token</Trans>
       </Typography>
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" color="text.400">
+        <Typography color="text.400">
           <Trans>APR</Trans>
         </Typography>
       </Flex>
 
       {state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Available to Stake</Trans>
           </Typography>
         </Flex>
@@ -50,7 +50,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Rewards</Trans>
           </Typography>
         </Flex>
@@ -58,7 +58,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {your || state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Your Staked</Trans>
           </Typography>
         </Flex>
@@ -66,7 +66,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {!your && state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Total Staked</Trans>
           </Typography>
         </Flex>
@@ -74,7 +74,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Total Reward Tokens</Trans>
           </Typography>
         </Flex>
@@ -82,7 +82,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {showState ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" color="text.400">
+          <Typography color="text.400">
             <Trans>Status</Trans>
           </Typography>
         </Flex>

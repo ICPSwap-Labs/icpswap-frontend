@@ -3,7 +3,6 @@ import { Flex, Tooltip, APRPanel } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import { Trans } from "@lingui/macro";
 import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useStateColors } from "hooks/staking-token";
 import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
 import {
@@ -17,13 +16,14 @@ import {
 import { useStakingPoolState, useStakePoolStatInfo } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
-import upperFirst from "lodash/upperFirst";
 import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
 import dayjs from "dayjs";
 import { FilterState } from "types/staking-token";
+
+import { State } from "./State";
 
 const DAYJS_FORMAT0 = "MMMM D, YYYY";
 const DAYJS_FORMAT1 = "h:mm A";
@@ -66,8 +66,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
     rewardToken,
     rewardTokenPrice,
   });
-
-  const stateColor = useStateColors(state);
 
   const handelToDetails = useCallback(() => {
     history.push(`/stake/details/${poolInfo.canisterId.toString()}`);
@@ -113,7 +111,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
         <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="24px" />
 
         <Typography
-          variant="body2"
           sx={{
             color: "text.primary",
             width: "150px",
@@ -129,7 +126,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
         <Typography
-          variant="body2"
           sx={{
             color: "text.primary",
             width: "150px",
@@ -166,15 +162,12 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           {state === StakingState.FINISHED ? (
             <Flex fullWidth justify="flex-end">
-              <Typography variant="body2" sx={{ color: "text.primary" }}>
-                --
-              </Typography>
+              <Typography sx={{ color: "text.primary" }}>--</Typography>
             </Flex>
           ) : (
             <>
               <Flex gap="0 4px" justify="flex-end" fullWidth>
                 <Typography
-                  variant="body2"
                   sx={{
                     color: "text.primary",
                     maxWidth: "230px",
@@ -226,7 +219,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {/* Total Staked */}
       {filterState !== FilterState.FINISHED && !your ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography variant="body2" sx={{ color: "text.primary" }}>
+          <Typography sx={{ color: "text.primary" }}>
             {poolStakeTvl ? formatDollarAmount(poolStakeTvl) : "--"}
           </Typography>
         </Flex>
@@ -237,7 +230,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           <Flex gap="0 4px" justify="flex-end" fullWidth>
             <Typography
-              variant="body2"
               sx={{
                 color: "text.primary",
                 maxWidth: "170px",
@@ -278,7 +270,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {filterState === FilterState.FINISHED ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
           <Flex fullWidth justify="flex-end">
-            <Typography variant="body2" sx={{ color: "text.primary" }}>
+            <Typography sx={{ color: "text.primary" }}>
               {rewardAmount && rewardToken ? `${formatAmount(rewardAmount)} ${rewardToken.symbol}` : "--"}
             </Typography>
           </Flex>
@@ -296,7 +288,6 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           <Flex justify="flex-end" fullWidth>
             <Typography
-              variant="body2"
               sx={{
                 color: "text.primary",
                 maxWidth: "170px",
@@ -334,16 +325,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       ) : null}
       {showState ? (
         <Flex justify="flex-end" className="row-item">
-          {state ? (
-            <Flex gap="0 8px">
-              <Box sx={{ width: "8px", height: "8px", borderRadius: "50%", background: stateColor }} />
-              <Typography variant="body2" sx={{ color: stateColor }}>
-                {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
-              </Typography>
-            </Flex>
-          ) : (
-            "--"
-          )}
+          <State poolInfo={poolInfo} noState={<Typography sx={{ color: "text.primary" }}>--</Typography>} />
         </Flex>
       ) : null}
     </Box>
