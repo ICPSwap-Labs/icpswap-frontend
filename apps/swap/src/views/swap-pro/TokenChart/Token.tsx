@@ -5,7 +5,6 @@ import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
-import type { TokenInfo } from "types/token";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { ICP } from "@icpswap/tokens";
@@ -51,11 +50,10 @@ function Medias({ mediaLinks }: MediasProps) {
 
 export interface TokenChartInfoProps {
   infoToken: PublicTokenOverview | undefined;
-  tokenInfo: TokenInfo | undefined;
   tokenListInfo: TokenListMetadata | undefined;
 }
 
-export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: TokenChartInfoProps) {
+export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartInfoProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { token } = useContext(SwapProContext);
@@ -113,9 +111,9 @@ export default function TokenChartInfo({ tokenInfo, infoToken, tokenListInfo }: 
           }}
         >
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-            <TokenImage size="24px" logo={tokenInfo?.logo} tokenId={tokenId} />
+            <TokenImage size="24px" logo={token?.logo} tokenId={tokenId} />
             <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 600 }}>
-              {tokenInfo ? tokenInfo.symbol : "--"}
+              {token ? token.symbol : "--"}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>

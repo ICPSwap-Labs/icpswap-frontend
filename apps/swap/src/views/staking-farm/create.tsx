@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, TextFieldProps, Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, TextFieldProps, Grid, Box, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, Wrapper, MainCard, NumberFilledTextField } from "components/index";
 import { useTips } from "hooks/useTips";
@@ -17,7 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { timeParser } from "utils/index";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { getSwapTokenArgs } from "hooks/token/index";
 import dayjs from "dayjs";
@@ -127,23 +126,23 @@ export default function CreateProject() {
     call();
   }, [values.rewardToken, values.rewardStandard]);
 
-  const { result: rewardTokenInfo } = useTokenInfo(tokenId);
+  const [, rewardToken] = useToken(tokenId);
   const { result: poolMetadata } = useSwapPoolMetadata(values.pool);
-  const { result: poolToken0 } = useTokenInfo(poolMetadata?.token0.address);
-  const { result: poolToken1 } = useTokenInfo(poolMetadata?.token1.address);
+  const [, poolToken0] = useToken(poolMetadata?.token0.address);
+  const [, poolToken1] = useToken(poolMetadata?.token1.address);
 
   const handleCreateFarmsEvent = async (identity: ActorIdentity) => {
-    if (!identity || loading || !principal || !rewardTokenInfo || !poolToken0 || !poolToken1) return;
+    if (!identity || loading || !principal || !rewardToken || !poolToken0 || !poolToken1) return;
 
     setLoading(true);
 
     const { status, message } = await createV3Farm({
-      rewardToken: getSwapTokenArgs(rewardTokenInfo.canisterId),
+      rewardToken: getSwapTokenArgs(rewardToken.address),
       startTime: BigInt(parseInt(String(values.startDateTime.getTime() / 1000), 10)),
       endTime: BigInt(parseInt(String(values.endDateTime.getTime() / 1000), 10)),
       pool: Principal.fromText(values.pool),
       secondPerCycle: BigInt(values.secondPerCycle),
-      rewardAmount: BigInt(formatTokenAmount(values.reward, rewardTokenInfo.decimals).toString()),
+      rewardAmount: BigInt(formatTokenAmount(values.reward, rewardToken.decimals).toString()),
       refunder: Principal.fromText(values.refunder),
       token0AmountLimit: BigInt(formatTokenAmount(values.token0AmountLimit, poolToken0.decimals).toString()),
       token1AmountLimit: BigInt(formatTokenAmount(values.token1AmountLimit, poolToken1.decimals).toString()),
@@ -162,7 +161,7 @@ export default function CreateProject() {
   let errorMsg = "";
   if (!values.rewardToken) errorMsg = t`Enter the reward token`;
   if (!values.rewardStandard) errorMsg = t`Enter the reward standard`;
-  if (!rewardTokenInfo) errorMsg = t`Invalid reward token`;
+  if (!rewardToken) errorMsg = t`Invalid reward token`;
   if (!values.pool) errorMsg = t`Enter the pool`;
   if (!values.refunder) errorMsg = t`Enter the refunder`;
   if (!values.reward) errorMsg = t`Enter the reward`;

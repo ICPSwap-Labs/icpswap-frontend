@@ -1,6 +1,6 @@
 import { Box, Typography, CircularProgress } from "components/Mui";
 import { Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { useReclaim } from "hooks/swap/useReclaim";
@@ -30,18 +30,18 @@ export function ReclaimForSinglePool({
   margin = "12px",
 }: ReclaimForSinglePoolProps) {
   const [loading, setLoading] = useState(false);
-  const { result: tokenInfo } = useTokenInfo(tokenId);
+  const [, token] = useToken(tokenId);
   const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(SwapContext);
 
   const reclaim = useReclaim();
 
   const handleClaim = useCallback(async () => {
-    if (!tokenInfo || loading) return;
+    if (!token || loading) return;
 
     setLoading(true);
 
     await reclaim({
-      token: tokenInfo,
+      token,
       poolId,
       type,
       balance,
@@ -51,13 +51,13 @@ export function ReclaimForSinglePool({
     });
 
     setLoading(false);
-  }, [tokenInfo, loading, reclaim]);
+  }, [token, loading, reclaim]);
 
   const hide = useMemo(() => {
-    if (!tokenInfo) return false;
+    if (!token) return false;
 
-    return tokenInfo.transFee >= balance;
-  }, [tokenInfo, balance]);
+    return token.transFee >= balance;
+  }, [token, balance]);
 
   useEffect(() => {
     if (hide) {
@@ -67,7 +67,7 @@ export function ReclaimForSinglePool({
     }
   }, [hide, id]);
 
-  return tokenInfo && !hide ? (
+  return token && !hide ? (
     <Box
       sx={{
         display: "flex",
@@ -82,8 +82,8 @@ export function ReclaimForSinglePool({
       <Flex gap="0 8px">
         <Typography component="div" sx={{ fontSize }}>
           <Trans>
-            Your {toSignificantWithGroupSeparator(parseTokenAmount(balance, tokenInfo.decimals).toString())}{" "}
-            {tokenInfo.symbol} to{" "}
+            Your {toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())} {token.symbol}{" "}
+            to{" "}
             <Typography color="secondary" component="span" sx={{ cursor: "pointer", fontSize }} onClick={handleClaim}>
               <Trans>Reclaim</Trans>
             </Typography>

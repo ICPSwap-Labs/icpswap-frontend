@@ -1,25 +1,25 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, useTheme } from "components/Mui";
 import { t } from "@lingui/macro";
 import { useMemo } from "react";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
-import { TokenInfo } from "types/index";
 import { useTokenSupply } from "hooks/token/calls";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
+import { Token } from "@icpswap/swap-sdk";
+
 import { ItemDisplay } from "./ItemDisplay";
 
 export interface LaunchDetailProps {
   ledger_id: string | undefined;
   swap_id: string | undefined;
-  tokenInfo: TokenInfo | undefined;
+  token: Token | undefined;
   saleParameters: SwapSaleParameters | undefined;
   swapInitArgs: SNSSwapInitArgs | undefined;
 }
 
-export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameters }: LaunchDetailProps) {
-  const theme = useTheme() as Theme;
+export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }: LaunchDetailProps) {
+  const theme = useTheme();
 
   const { result: total_supply } = useTokenSupply(ledger_id);
 
@@ -43,15 +43,15 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
         },
       }}
     >
-      <ItemDisplay label={t`Token Name`} value={tokenInfo?.name} />
+      <ItemDisplay label={t`Token Name`} value={token?.name} />
 
-      <ItemDisplay label={t`Token Symbol`} value={tokenInfo?.symbol} />
+      <ItemDisplay label={t`Token Symbol`} value={token?.symbol} />
 
       <ItemDisplay
         label={t`Token Supply`}
         value={
-          !!total_supply && !!tokenInfo
-            ? `${parseTokenAmount(total_supply.toString(), tokenInfo.decimals).toFormat()} ${tokenInfo.symbol}`
+          !!total_supply && !!token
+            ? `${parseTokenAmount(total_supply.toString(), token.decimals).toFormat()} ${token.symbol}`
             : "--"
         }
       />
@@ -59,10 +59,8 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
       <ItemDisplay
         label={t`Tokens Distributed to Participants`}
         value={
-          !!saleParameters && !!tokenInfo
-            ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), tokenInfo.decimals).toFormat()} ${
-                tokenInfo.symbol
-              }`
+          !!saleParameters && !!token
+            ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), token.decimals).toFormat()} ${token.symbol}`
             : "--"
         }
       />
@@ -75,7 +73,7 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
       <ItemDisplay
         label={t`Minimum Participant Commitment`}
         value={
-          !!saleParameters && !!tokenInfo
+          !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.min_participant_icp_e8s.toString(), ICP.decimals).toFormat()} ${
                 ICP.symbol
               }`
@@ -86,7 +84,7 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
       <ItemDisplay
         label={t`Maximum Participant Commitment`}
         value={
-          !!saleParameters && !!tokenInfo
+          !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.max_participant_icp_e8s.toString(), ICP.decimals).toFormat()} ${
                 ICP.symbol
               }`
@@ -97,10 +95,8 @@ export function LaunchDetail({ ledger_id, tokenInfo, swapInitArgs, saleParameter
       <ItemDisplay
         label={t`Maximum Neurons' Fund Commitment`}
         value={
-          !!saleParameters && !!tokenInfo
-            ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), tokenInfo.decimals).toFormat()} ${
-                tokenInfo.symbol
-              }`
+          !!saleParameters && !!token
+            ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), token.decimals).toFormat()} ${token.symbol}`
             : "--"
         }
       />

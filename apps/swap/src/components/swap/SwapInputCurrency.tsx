@@ -13,7 +13,6 @@ import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { Trans } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import { SwapInput } from "components/swap/SwapInput";
 import { impactColor } from "utils/swap/prices";
 import { Null } from "@icpswap/types";
@@ -26,7 +25,7 @@ import { WalletBalance } from "./WalletBalance";
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
-  onTokenChange: (token: TokenInfo) => void;
+  onTokenChange: (token: Token) => void;
   currencyState: UseCurrencyState;
   token: Token | undefined;
   currencyPrice: string | undefined | number;

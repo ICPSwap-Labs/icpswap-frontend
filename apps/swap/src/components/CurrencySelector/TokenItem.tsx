@@ -1,18 +1,26 @@
 import React, { useMemo, useEffect } from "react";
 import { useTheme, Typography, Box, Grid, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { DotLoading, TokenImage, TokenStandardLabel } from "components/index";
-import { TokenInfo } from "types/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { parseTokenAmount, formatDollarAmount, BigNumber, isValidPrincipal, formatAmount } from "@icpswap/utils";
+import {
+  parseTokenAmount,
+  formatDollarAmount,
+  BigNumber,
+  isValidPrincipal,
+  formatAmount,
+  nonNullArgs,
+} from "@icpswap/utils";
 import { PlusCircle } from "react-feather";
 import { useTaggedTokenManager } from "store/wallet/hooks";
+import { Token } from "@icpswap/swap-sdk";
+import { useToken } from "hooks/index";
+import { TOKEN_STANDARD } from "@icpswap/types";
 
 export interface TokenItemProps {
   canisterId: string;
-  onClick?: (token: TokenInfo) => void;
+  onClick?: (token: Token) => void;
   onUpdateTokenAdditional?: (tokenId: string, balance: string) => void;
   searchWord?: string;
   showBalance?: boolean;
@@ -42,20 +50,20 @@ export function TokenItem({
     return undefined;
   }, [showBalance, canisterId]);
 
-  const { result: tokenInfo } = useTokenInfo(canisterId);
+  const [, token] = useToken(canisterId);
   const { result: balance, loading } = useTokenBalance(getBalanceId, principal);
   const interfacePrice = useUSDPriceById(getBalanceId);
 
   const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();
 
   const tokenBalanceAmount = useMemo(() => {
-    if (!tokenInfo || balance === undefined) return undefined;
-    return parseTokenAmount(balance, tokenInfo.decimals).toString();
-  }, [tokenInfo, balance]);
+    if (!token || balance === undefined) return undefined;
+    return parseTokenAmount(balance, token.decimals).toString();
+  }, [token, balance]);
 
   const handleItemClick = () => {
-    if (!tokenInfo) return;
-    if (onClick) onClick(tokenInfo);
+    if (!token) return;
+    if (onClick) onClick(token);
   };
 
   useEffect(() => {
@@ -79,17 +87,17 @@ export function TokenItem({
   const isHidden = useMemo(() => {
     if (hidden) return true;
     if (!searchWord) return false;
-    if (!tokenInfo) return true;
+    if (!token) return true;
 
     if (isValidPrincipal(searchWord)) {
-      return tokenInfo?.canisterId.toString() !== searchWord;
+      return token?.address !== searchWord;
     }
 
     return (
-      !tokenInfo.symbol.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase()) &&
-      !tokenInfo.name.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase())
+      !token.symbol.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase()) &&
+      !token.name.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase())
     );
-  }, [searchWord, tokenInfo, hidden]);
+  }, [searchWord, token, hidden]);
 
   useEffect(() => {
     if (onTokenHide && canisterId) {
@@ -127,7 +135,7 @@ export function TokenItem({
     >
       <Box>
         <Grid container alignItems="center" gap="0 12px">
-          <TokenImage logo={tokenInfo?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={tokenInfo?.canisterId} />
+          <TokenImage logo={token?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={token?.address} />
 
           <Grid item xs sx={{ overflow: "hidden" }}>
             <Grid container alignItems="center">
@@ -145,13 +153,13 @@ export function TokenItem({
                     },
                   }}
                 >
-                  {tokenInfo?.symbol}
+                  {token?.symbol}
                 </Typography>
                 <Typography
                   fontSize="12px"
                   sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", margin: "4px 0 0 0" }}
                 >
-                  {tokenInfo?.name}
+                  {token?.name}
                 </Typography>
               </Box>
             </Grid>
@@ -160,7 +168,12 @@ export function TokenItem({
       </Box>
 
       <Box>
-        <TokenStandardLabel standard={tokenInfo?.standardType} borderRadius="34px" height="20px" fontSize="10px" />
+        <TokenStandardLabel
+          standard={token && token.standard ? (token.standard as TOKEN_STANDARD) : null}
+          borderRadius="34px"
+          height="20px"
+          fontSize="10px"
+        />
       </Box>
 
       <Box>
@@ -192,11 +205,9 @@ export function TokenItem({
                   },
                 }}
               >
-                {interfacePrice !== undefined && balance !== undefined && tokenInfo !== undefined
+                {nonNullArgs(interfacePrice) && nonNullArgs(balance) && nonNullArgs(token)
                   ? formatDollarAmount(
-                      new BigNumber(interfacePrice)
-                        .multipliedBy(parseTokenAmount(balance, tokenInfo.decimals))
-                        .toString(),
+                      new BigNumber(interfacePrice).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
                     )
                   : "--"}
               </Typography>

@@ -1,13 +1,10 @@
 import { useState, useMemo } from "react";
-import { Theme } from "@mui/material/styles";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { TOKEN_STANDARD, ResultStatus, type AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { TokenInfo } from "types/token";
+import { useToken } from "hooks/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { Identity as CallIdentity } from "types/global";
@@ -17,11 +14,12 @@ import {
   MisTransferredResult,
   withdrawMisTransferredToken,
 } from "hooks/swap/useUserMisTransferredTokens";
+import { Token } from "@icpswap/swap-sdk";
 
 interface BalanceItemProps {
   pool: string;
   border?: boolean;
-  token: TokenInfo;
+  token: Token;
   name: string | undefined;
   data: MisTransferredResult;
   balance: bigint;
@@ -30,7 +28,7 @@ interface BalanceItemProps {
 }
 
 export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimSuccess }: BalanceItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const [openTip, closeTip] = useTips();
 
@@ -43,7 +41,7 @@ export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimS
     );
 
     if (data) {
-      const result = await withdrawMisTransferredToken(pool, token.canisterId, "ICRC1");
+      const result = await withdrawMisTransferredToken(pool, token.address, "ICRC1");
 
       if (result.status === ResultStatus.OK) {
         openTip(`Retrieve ${name} ${token?.symbol} successfully`, MessageTypes.success);
@@ -96,9 +94,9 @@ export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimS
 }
 
 export function BalancesItem({ balance }: { end: boolean; balance: MisTransferredResult }) {
-  const { result: token } = useTokenInfo(balance.tokenAddress);
-  const { result: token0 } = useTokenInfo(balance.token0Address);
-  const { result: token1 } = useTokenInfo(balance.token1Address);
+  const [, token] = useToken(balance.tokenAddress);
+  const [, token0] = useToken(balance.token0Address);
+  const [, token1] = useToken(balance.token1Address);
 
   const name = token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--";
 

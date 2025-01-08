@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
-import { useTokenInfo } from "hooks/token/index";
+import { useToken } from "hooks/index";
 import { UserSwapPoolsBalance } from "hooks/info/tools";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
@@ -36,8 +36,8 @@ function ClaimItem({ claim }: ClaimItemProps) {
   const classes = useStyles();
   const theme = useTheme();
 
-  const { result: token0 } = useTokenInfo(claim.token0.address);
-  const { result: token1 } = useTokenInfo(claim.token1.address);
+  const [, token0] = useToken(claim.token0.address);
+  const [, token1] = useToken(claim.token1.address);
 
   return (
     <>

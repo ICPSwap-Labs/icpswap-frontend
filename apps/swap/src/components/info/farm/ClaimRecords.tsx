@@ -6,17 +6,16 @@ import { Trans } from "@lingui/macro";
 import { ListLoading, PaginationType, AddressFormat } from "components/index";
 import { useV3FarmDistributeRecords } from "@icpswap/hooks";
 import type { StakingFarmDistributeTransaction } from "@icpswap/types";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { HeaderCell, BodyCell, Pagination, NoData } from "@icpswap/ui";
 
-function PoolItem({
-  transactions,
-  rewardTokenId,
-}: {
+interface PoolItemProps {
   rewardTokenId: string | undefined;
   transactions: StakingFarmDistributeTransaction;
-}) {
-  const { result: rewardToken } = useTokenInfo(rewardTokenId);
+}
+
+function PoolItem({ transactions, rewardTokenId }: PoolItemProps) {
+  const [, rewardToken] = useToken(rewardTokenId);
 
   return (
     <TableRow>

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { t } from "@lingui/macro";
 import { Override, PublicPoolOverView } from "@icpswap/types";
 import { TokenImage } from "components/index";
-import { useTokenInfo } from "hooks/token/index";
+import { useToken } from "hooks/index";
 import {
   Header,
   HeaderCell,
@@ -87,8 +87,8 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
   const classes = useStyles();
   const history = useHistory();
 
-  const { result: token0 } = useTokenInfo(pool.token0Id);
-  const { result: token1 } = useTokenInfo(pool.token1Id);
+  const [, token0] = useToken(pool.token0Id);
+  const [, token1] = useToken(pool.token1Id);
 
   const handlePoolClick = () => {
     history.push(`/info-swap/pool/details/${pool.pool}`);
@@ -102,8 +102,8 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
       <BodyCell>
         <Grid container alignItems="center" gap="0 8px">
           <Box sx={{ display: "flex" }}>
-            <TokenImage logo={token0?.logo} tokenId={token0?.canisterId} />
-            <TokenImage logo={token1?.logo} tokenId={token1?.canisterId} />
+            <TokenImage logo={token0?.logo} tokenId={token0?.address} />
+            <TokenImage logo={token1?.logo} tokenId={token1?.address} />
           </Box>
 
           <BodyCell>

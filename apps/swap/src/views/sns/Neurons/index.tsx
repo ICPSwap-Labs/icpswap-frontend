@@ -11,10 +11,10 @@ import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns
 import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Clock } from "react-feather";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
-import type { TokenInfo } from "types/token";
+import { Token } from "@icpswap/swap-sdk";
 
 import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
@@ -34,7 +34,7 @@ interface NeuronProps {
   governance_id: string | undefined;
   neuronSystemParameters: NervousSystemParameters | undefined;
   refreshTrigger: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
 }
 
 function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
@@ -236,7 +236,7 @@ export default function Neurons() {
     return listNeurons?.filter((neuron) => neuron.cached_neuron_stake_e8s !== BigInt(0));
   }, [listNeurons]);
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
 
   return (
     <Wrapper>
@@ -261,7 +261,7 @@ export default function Neurons() {
         <Box>
           <StakeToCreateNeuron
             onStakeSuccess={handleRefresh}
-            token={tokenInfo}
+            token={token}
             governance_id={governance_id}
             neuronSystemParameters={neuronSystemParameters}
           />
@@ -293,7 +293,7 @@ export default function Neurons() {
                 governance_id={governance_id}
                 neuronSystemParameters={neuronSystemParameters}
                 refreshTrigger={handleRefresh}
-                token={tokenInfo}
+                token={token}
               />
             ))}
           </Box>

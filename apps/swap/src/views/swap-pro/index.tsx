@@ -1,7 +1,5 @@
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { Box, useTheme, useMediaQuery } from "components/Mui";
-
-import { useTokenInfo } from "hooks/token/useTokenInfo";
 import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { type Null } from "@icpswap/types";
@@ -56,7 +54,6 @@ export default function SwapPro() {
 
   const tokenId = useMemo(() => token?.address, [token]);
 
-  const { result: tokenInfo } = useTokenInfo(tokenId);
   const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
 
   const handleAddKeys = useCallback(
@@ -152,11 +149,9 @@ export default function SwapPro() {
               >
                 <Swap />
 
-                {matchDownSM ? (
-                  <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                ) : null}
+                {matchDownSM ? <TokenChartInfo infoToken={infoToken} tokenListInfo={tokenListInfo} /> : null}
 
-                <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenUI infoToken={infoToken} tokenListInfo={tokenListInfo} />
               </Box>
 
               <Box
@@ -171,7 +166,7 @@ export default function SwapPro() {
                   },
                 }}
               >
-                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenChartWrapper infoToken={infoToken} tokenListInfo={tokenListInfo} />
                 <Transactions />
               </Box>
             </Box>

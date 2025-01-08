@@ -28,6 +28,7 @@ export { default as Menu } from "@mui/material/Menu";
 export { ClickAwayListener } from "@mui/base/ClickAwayListener";
 export { keyframes } from "@emotion/react";
 export { default as Breadcrumbs } from "@mui/material/Breadcrumbs";
+export { default as Input } from "@mui/material/Input";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

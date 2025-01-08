@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { useState, useMemo } from "react";
 import {
   MainCard,
@@ -14,7 +14,7 @@ import { Trans, t } from "@lingui/macro";
 import { useTokenMintingAccount } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { BreadcrumbsV1 } from "@icpswap/ui";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
@@ -31,14 +31,14 @@ export default function Burn() {
     setTokenId(tokenId);
   };
 
-  const { result: tokenInfo } = useTokenInfo(tokenId);
+  const [, token] = useToken(tokenId);
   const { result: mintingAccount } = useTokenMintingAccount(tokenId);
   const { result: balance } = useTokenBalance(tokenId, principal, refreshTrigger);
 
   const handleMax = () => {
-    if (!balance || !tokenInfo) return;
+    if (!balance || !token) return;
 
-    setAmount(parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).toString());
+    setAmount(parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).toString());
   };
 
   const handleBurnSuccess = () => {
@@ -48,19 +48,19 @@ export default function Burn() {
 
   const error = useMemo(() => {
     if (!tokenId) return t`Select a token`;
-    if (!tokenInfo || !balance || !mintingAccount) return t`Waiting to fetch data`;
+    if (!token || !balance || !mintingAccount) return t`Waiting to fetch data`;
     if (!amount) return t`Enter the amount`;
     if (new BigNumber(amount).isEqualTo(0)) return t`Must be greater than 0`;
 
-    if (parseTokenAmount(balance.minus(tokenInfo.transFee.toString()), tokenInfo.decimals).isLessThan(amount))
+    if (parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t`Insufficient Balance`;
-  }, [amount, balance, tokenInfo, mintingAccount, tokenId]);
+  }, [amount, balance, token, mintingAccount, tokenId]);
 
   const showMax = useMemo(() => {
-    if (!balance || !tokenInfo) return false;
-    if (!balance.isGreaterThan(tokenInfo.transFee.toString())) return false;
+    if (!balance || !token) return false;
+    if (!balance.isGreaterThan(token.transFee.toString())) return false;
     return true;
-  }, [balance, tokenInfo]);
+  }, [balance, token]);
 
   return (
     <InfoWrapper size="small">
@@ -117,7 +117,7 @@ export default function Burn() {
                     onChange={(value: string) => setAmount(value)}
                     numericProps={{
                       thousandSeparator: true,
-                      decimalScale: tokenInfo?.decimals ?? 18,
+                      decimalScale: token?.decimals ?? 18,
                       allowNegative: false,
                       maxLength: 20,
                     }}
@@ -130,7 +130,7 @@ export default function Burn() {
                   <Trans>Balance:</Trans>
                   &nbsp;
                   <Typography component="span">
-                    {tokenInfo && balance ? parseTokenAmount(balance, tokenInfo.decimals).toFormat() : "--"}
+                    {token && balance ? parseTokenAmount(balance, token.decimals).toFormat() : "--"}
                   </Typography>
                 </Typography>
                 {showMax ? <MaxButton background="rgba(86, 105, 220, 0.50)" onClick={handleMax} /> : null}
@@ -152,7 +152,7 @@ export default function Burn() {
         </Box>
 
         <BurnConfirmModal
-          token={tokenInfo}
+          token={token}
           open={confirmModalOpen}
           onClose={() => setConfirmModalOpen(false)}
           mintingAccount={mintingAccount}

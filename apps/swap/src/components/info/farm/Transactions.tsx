@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { useV3FarmStakeRecords } from "@icpswap/hooks";
 import { type StakingFarmStakeTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { HeaderCell, BodyCell, NoData, Pagination } from "@icpswap/ui";
 
 function PoolItem({
@@ -17,7 +17,7 @@ function PoolItem({
   rewardTokenId: string | undefined;
   transactions: StakingFarmStakeTransaction;
 }) {
-  const { result: token } = useTokenInfo(rewardTokenId);
+  const [, token] = useToken(rewardTokenId);
 
   const isStaking = enumToString(transactions.transType) === "stake";
 

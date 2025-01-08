@@ -1,22 +1,18 @@
 import { useState, useContext } from "react";
-import { Button, Grid, TextField, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { parseTokenAmount, isValidAccount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { Button, Grid, TextField, Typography, CircularProgress, Theme, makeStyles } from "components/Mui";
+import { parseTokenAmount, isValidAccount, BigNumber } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import { getLocaleMessage } from "locales/services";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
-import { Theme } from "@mui/material/styles";
-import { TokenInfo } from "types/token";
 import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipalString, useAccount } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, NumberTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
 import { NFIDRequestTransfer } from "utils/connector/NF_ID";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -31,17 +27,14 @@ export type Values = {
   amount: string;
 };
 
-export default function NFIDTransferModal({
-  open,
-  onClose,
-  onTransferSuccess,
-  token,
-}: {
+interface NFIDTransferModalProps {
   open: boolean;
   onClose: () => void;
   onTransferSuccess?: () => void;
-  token: TokenInfo;
-}) {
+  token: Token;
+}
+
+export default function NFIDTransferModal({ open, onClose, onTransferSuccess, token }: NFIDTransferModalProps) {
   const classes = useStyles();
   const account = useAccount();
   const principalString = useAccountPrincipalString();
@@ -67,7 +60,7 @@ export default function NFIDTransferModal({
   const getErrorMessage = () => {
     if (!values.to) return t`Enter transfer to`;
 
-    if (token.standardType.includes("DIP20")) {
+    if (token.standard.includes("DIP20")) {
       try {
         Principal.fromText(values.to);
       } catch (error) {
@@ -93,7 +86,7 @@ export default function NFIDTransferModal({
         openSuccessTip(t`Transferred successfully`);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.canisterId.toString() === ICP.address) {
+        if (token.address === ICP.address) {
           if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
         }
       }
@@ -116,8 +109,8 @@ export default function NFIDTransferModal({
 
   const addressHelpText = () => {
     if (
-      (token.standardType.includes("DIP20") && principalString === values.to) ||
-      (!token.standardType.includes("DIP20") && account === values.to)
+      (token.standard.includes("DIP20") && principalString === values.to) ||
+      (!token.standard.includes("DIP20") && account === values.to)
     ) {
       return (
         <span className={classes.warningText}>
@@ -139,7 +132,7 @@ export default function NFIDTransferModal({
           <TextField
             label={t`To`}
             value={values.to}
-            placeholder={token.standardType.includes("DIP20") ? t`Enter the principal ID` : "Enter the account ID"}
+            placeholder={token.standard.includes("DIP20") ? t`Enter the principal ID` : "Enter the account ID"}
             onChange={({ target: { value } }) => handleFieldChange(value, "to")}
             helperText={addressHelpText()}
             fullWidth

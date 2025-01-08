@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { LoadingRow, TokenImage, MainCard, Wrapper } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nowInSeconds } from "@icpswap/utils";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { useHistory, useParams } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 
@@ -32,7 +32,7 @@ export default function Voting() {
 
   const ledger_id = sns?.ledger_canister_id.toString();
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
   const { result: proposal_data, loading } = useProposal(
     governance_id,
     proposal_id ? BigInt(proposal_id) : undefined,
@@ -98,7 +98,7 @@ export default function Voting() {
               ) : (
                 <Box sx={{ width: "100%" }}>
                   <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-                    <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={ledger_id} />
+                    <TokenImage logo={token?.logo} size="24px" tokenId={ledger_id} />
                     <Typography fontSize="16px" fontWeight={500} color="text.primary">
                       {title}
                     </Typography>

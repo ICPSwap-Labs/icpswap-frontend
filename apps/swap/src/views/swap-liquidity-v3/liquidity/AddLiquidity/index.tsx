@@ -26,7 +26,6 @@ import { maxAmountFormat } from "utils/swap";
 import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { TokenInfo } from "types/token";
 import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
 import StepViewButton from "components/Steps/View";
 import { ExternalTipArgs } from "types/index";
@@ -38,6 +37,7 @@ import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
 import { useRefreshTrigger } from "hooks/index";
 import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
+import { Token } from "@icpswap/swap-sdk";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -175,8 +175,8 @@ export default function AddLiquidity() {
   );
 
   const handleTokenChange = useCallback(
-    (token: TokenInfo, isTokenA: boolean) => {
-      const tokenId = token.canisterId.toString();
+    (token: Token, isTokenA: boolean) => {
+      const tokenId = token.address;
       let path = "";
 
       if (isTokenA) {
@@ -400,7 +400,7 @@ export default function AddLiquidity() {
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdA}
-                      onChange={(token: TokenInfo) => handleTokenChange(token, true)}
+                      onChange={(token: Token) => handleTokenChange(token, true)}
                       loading={useCurrencyALoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
                     />
@@ -410,7 +410,7 @@ export default function AddLiquidity() {
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdB}
-                      onChange={(token: TokenInfo) => handleTokenChange(token, false)}
+                      onChange={(token: Token) => handleTokenChange(token, false)}
                       loading={useCurrencyBLoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
                     />

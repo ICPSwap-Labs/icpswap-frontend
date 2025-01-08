@@ -11,8 +11,9 @@ import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/ty
 import Button from "components/authentication/ButtonConnector";
 import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } from "@icpswap/hooks";
 import { read, utils } from "xlsx";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
+
 import EventSelector from "./EventSelector";
 
 type UserClaimItem = {
@@ -36,7 +37,7 @@ export default function EventConfig() {
 
   const { result: event } = useEvent(eventId);
 
-  const { result: tokenInfo } = useTokenInfo(event?.tokenCid);
+  const [, token] = useToken(event?.tokenCid);
 
   const [importLoading, setImportLoading] = useState(false);
 
@@ -93,9 +94,9 @@ export default function EventConfig() {
     };
   };
 
-  const ExcelTotalAmount = tokenInfo
+  const ExcelTotalAmount = token
     ? userClaims.reduce((prev, curr) => {
-        return prev.plus(new BigNumber(curr.amount).toFixed(tokenInfo.decimals, BigNumber.ROUND_DOWN));
+        return prev.plus(new BigNumber(curr.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN));
       }, new BigNumber(0))
     : new BigNumber(0);
 
@@ -115,16 +116,13 @@ export default function EventConfig() {
   };
 
   const handleImportUserData = async (identity: ActorIdentity) => {
-    if (!identity || !tokenInfo) return;
+    if (!identity || !token) return;
 
     const _userClaims = userClaims.map((ele) => ({
       user: isValidPrincipal(ele.address) ? { principal: Principal.fromText(ele.address) } : { address: ele.address },
       quota: BigInt(
         numberToString(
-          formatTokenAmount(
-            new BigNumber(ele.amount).toFixed(tokenInfo.decimals, BigNumber.ROUND_DOWN),
-            tokenInfo.decimals,
-          ),
+          formatTokenAmount(new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN), token.decimals),
         ),
       ),
     }));

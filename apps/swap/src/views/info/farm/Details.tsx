@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard, BreadcrumbsV1 } from "@icpswap/ui";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles(() => {
@@ -70,7 +70,7 @@ export default function FarmDetails() {
 
   const [recordType, setRecordType] = useState("transactions");
 
-  const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
+  const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
 
   return (
     <InfoWrapper size="small">

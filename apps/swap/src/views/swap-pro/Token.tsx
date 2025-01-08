@@ -8,7 +8,6 @@ import { useTokenSupply, useTokenAnalysis } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenImage } from "components/index";
 import type { Null, PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
-import type { TokenInfo } from "types/token";
 import { ChevronDown, ArrowUpRight } from "react-feather";
 import { Copy } from "components/Copy/icon";
 import { Token } from "@icpswap/swap-sdk";
@@ -63,7 +62,6 @@ function Card({ title, titleArrow, padding = "8px", fontSize = "14px", tips, chi
 }
 
 export interface TokenProps {
-  tokenInfo: TokenInfo | undefined;
   infoToken: PublicTokenOverview | undefined;
   tokenListInfo: TokenListMetadata | undefined;
 }
@@ -102,7 +100,6 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
   }, [token0UsdTvl, token1UsdTvl]);
 
   const { result: tokenSupply } = useTokenSupply(tokenId);
-  // const { result: tokenHolders } = useTokenTotalHolder(tokenId);
   const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
 
   const marketCap = useMemo(() => {

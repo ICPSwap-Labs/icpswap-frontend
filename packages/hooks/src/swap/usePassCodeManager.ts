@@ -22,8 +22,8 @@ export async function requestPassCode(token0: Principal, token1: Principal, fee:
   return resultFormat<string>(result);
 }
 
-export async function withdrawPCMBalance(amount: bigint, fee: bigint) {
-  const result = await (await passCodeManager(true)).withdraw({ fee, amount });
+export async function withdrawPCMBalance(amount: bigint, fee: bigint | number) {
+  const result = await (await passCodeManager(true)).withdraw({ fee: BigInt(fee), amount });
   return resultFormat<bigint>(result);
 }
 

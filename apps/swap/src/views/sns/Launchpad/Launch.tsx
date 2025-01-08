@@ -5,7 +5,7 @@ import { LoadingRow, TextButton } from "components/index";
 import AvatarImage from "components/Image/Avatar";
 import { useParams, useHistory } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 
 import { LaunchDetail } from "./components/LaunchDetails";
@@ -34,7 +34,7 @@ export default function Launch() {
     return { ledger_id, swap_id };
   }, [sns]);
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
   const { result: saleParameters } = useSwapSaleParameters(swap_id, reloadCounter);
   const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
 
@@ -76,7 +76,7 @@ export default function Launch() {
                 <LaunchDetail
                   ledger_id={ledger_id}
                   swap_id={swap_id}
-                  tokenInfo={tokenInfo}
+                  token={token}
                   saleParameters={saleParameters}
                   swapInitArgs={swapInitArgs}
                 />
@@ -84,7 +84,7 @@ export default function Launch() {
                 <LaunchStatus
                   ledger_id={ledger_id}
                   swap_id={swap_id}
-                  tokenInfo={tokenInfo}
+                  token={token}
                   saleParameters={saleParameters}
                   swapInitArgs={swapInitArgs}
                 />

@@ -1,21 +1,21 @@
-import { Box, Typography, Checkbox } from "@mui/material";
+import { Box, Typography, Checkbox } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
 import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
 import { Flex, ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
-import type { TokenInfo } from "types/token";
 import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { secondsToDuration } from "@dfinity/utils";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
+import { Token } from "@icpswap/swap-sdk";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
 
 export interface MaturityProps {
   neuron: Neuron;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   onMaturitySuccess?: () => void;

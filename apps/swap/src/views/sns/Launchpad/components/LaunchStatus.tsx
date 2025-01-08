@@ -1,25 +1,25 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useMemo, useState, useContext } from "react";
 import { TextButton } from "components/index";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import dayjs from "dayjs";
-import { TokenInfo } from "types/index";
 import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import Button from "components/authentication/ButtonConnector";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
+import { Token } from "@icpswap/swap-sdk";
+
 import { Participate } from "./Participate";
 import { LaunchContext } from "./context";
 
 export interface LaunchStatusProps {
   ledger_id: string | undefined;
   swap_id: string | undefined;
-  tokenInfo: TokenInfo | undefined;
+  token: Token | undefined;
   saleParameters: SwapSaleParameters | undefined;
   swapInitArgs: SNSSwapInitArgs | undefined;
 }
@@ -33,8 +33,8 @@ const statusTextMapper: { [status: string]: string } = {
   [SnsSwapLifecycle.Adopted]: t`Starting Soon`,
 };
 
-export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {
-  const theme = useTheme() as Theme;
+export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {
+  const theme = useTheme();
 
   const principal = useAccountPrincipal();
   const [participateOpen, setParticipateOpen] = useState(false);
@@ -416,7 +416,7 @@ export function LaunchStatus({ tokenInfo, swap_id, swapInitArgs, saleParameters 
         <Participate
           open={participateOpen}
           onClose={() => setParticipateOpen(false)}
-          tokenInfo={tokenInfo}
+          token={token}
           swapInitArgs={swapInitArgs}
           swap_id={swap_id}
           min_participant={min_participant}

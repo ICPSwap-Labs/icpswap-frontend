@@ -14,16 +14,16 @@ import CircularProgress from "@mui/material/CircularProgress";
 import type { NervousSystemParameters, Neuron } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import { secondsToDissolveDelayDuration, getSnsDelayTimeInSeconds, neuronFormat } from "utils/sns/index";
 import { MinButton } from "components/Button";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface SetDissolveDelayProps {
   open: boolean;
   onClose: () => void;
   onSetSuccess?: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   neuron_stake: bigint;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;

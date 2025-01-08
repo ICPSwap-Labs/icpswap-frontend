@@ -1,16 +1,16 @@
-import { Button, Box, Typography } from "@mui/material";
+import { Button, Box, Typography } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
 import { stakeNeuronMaturity } from "@icpswap/hooks";
 import { Flex, Modal, Progression } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
 import { useMemo, useState } from "react";
-import { TokenInfo } from "types/token";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface StakeMaturityProps {
   neuron: Neuron;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   onStakeMaturitySuccess?: () => void;

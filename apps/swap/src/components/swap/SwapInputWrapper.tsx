@@ -5,7 +5,6 @@ import { useSwapState, useSwapHandlers } from "store/swap/hooks";
 import { BigNumber } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
-import { TokenInfo } from "types/token";
 import { SwapContext } from "components/swap/index";
 import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
@@ -15,8 +14,8 @@ import { SwapInputCurrency } from "./SwapInputCurrency";
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
   onMaxInput: () => void;
-  onTokenAChange: (token: TokenInfo) => void;
-  onTokenBChange: (token: TokenInfo) => void;
+  onTokenAChange: (token: Token) => void;
+  onTokenBChange: (token: Token) => void;
   tokenAPrice: string | number | undefined;
   tokenBPrice: string | number | undefined;
   parsedAmounts: {

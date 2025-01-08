@@ -10,7 +10,7 @@ import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } 
 import { ReactComponent as NoDataIcon } from "assets/icons/empty.svg";
 import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
@@ -27,7 +27,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
   const history = useHistory();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
+  const [, token] = useToken(tokenInfo.ledger_id.toString());
 
   const info = useMemo(() => {
     return infoAllTokens?.find((e) => e.address === tokenInfo.ledger_id.toString());

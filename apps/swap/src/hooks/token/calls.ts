@@ -4,48 +4,10 @@ import { ICP } from "@icpswap/tokens";
 import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
 import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
-// import { tokenList } from "@icpswap/actor";
 import { getTokenStandard } from "store/token/cache/hooks";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { useCallsData } from "@icpswap/hooks";
 import { ResultStatus, StatusResult, TOKEN_STANDARD } from "@icpswap/types";
-
-export async function getTokenTotalHolder(canisterId: string | undefined) {
-  if (!canisterId) return undefined;
-
-  return (
-    await tokenAdapter.totalHolders({
-      canisterId,
-    })
-  ).data;
-}
-
-export function useTokenTotalHolder(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return await getTokenTotalHolder(canisterId);
-    }, [canisterId]),
-    reload,
-  );
-}
-
-export function useTokenHolders(canisterId: string, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return (
-        await tokenAdapter.holders({
-          canisterId,
-          params: {
-            offset: BigInt(offset),
-            limit: BigInt(limit),
-          },
-        })
-      ).data;
-    }, [offset, limit, canisterId]),
-  );
-}
 
 export interface TokenTransferProps {
   canisterId: string;
@@ -170,16 +132,6 @@ export function useTokenMetadata(canisterId: string | undefined) {
     }, [canisterId]),
   );
 }
-
-// export async function getTokenListLogo(canisterId: string | undefined) {
-//   if (!canisterId) return undefined;
-//   return resultFormat<string>(await (await tokenList()).getLogo(canisterId)).data;
-// }
-
-// function isICRCToken(tokenId: string) {
-//   const tokenStandard = getTokenStandard(tokenId);
-//   return tokenStandard === TOKEN_STANDARD.ICRC1 || tokenStandard === TOKEN_STANDARD.ICRC2;
-// }
 
 export async function getTokenInfo(canisterId: string | undefined) {
   if (!canisterId) return undefined;

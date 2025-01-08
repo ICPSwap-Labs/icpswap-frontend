@@ -3,27 +3,23 @@ import { Flex, TokenImage } from "components/index";
 import { useTheme } from "components/Mui";
 import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo } from "types/token";
-import { useTokenInfo } from "hooks/token";
 import { useCallback } from "react";
 
 const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, ckUSDT, BOB];
 
 export interface BaseTokenProps {
   token: Token;
-  onTokenClick: (token: TokenInfo) => void;
+  onTokenClick: (token: Token) => void;
 }
 
 export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
   const theme = useTheme();
 
-  const { result: tokenInfo } = useTokenInfo(token.address);
-
   const handleClick = useCallback(() => {
-    if (tokenInfo) {
-      onTokenClick(tokenInfo);
+    if (token) {
+      onTokenClick(token);
     }
-  }, [onTokenClick, tokenInfo]);
+  }, [onTokenClick, token]);
 
   return (
     <Flex
@@ -57,7 +53,7 @@ export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
 }
 
 export interface BaseTokensProps {
-  onTokenClick: (token: TokenInfo) => void;
+  onTokenClick: (token: Token) => void;
 }
 
 export function BaseTokens({ onTokenClick }: BaseTokensProps) {

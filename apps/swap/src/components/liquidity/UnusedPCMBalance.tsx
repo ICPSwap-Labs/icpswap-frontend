@@ -5,9 +5,8 @@ import { Flex, Tooltip } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { toSignificantWithGroupSeparator, parseTokenAmount, nonNullArgs, isNullArgs, BigNumber } from "@icpswap/utils";
 import { useUserPCMBalance, usePCMMetadata } from "@icpswap/hooks";
-import { useTokenInfo } from "hooks/token";
 import { useWithdrawPCMBalanceCallback, useUserPassCodes, WithdrawPCMBalanceArgs } from "hooks/swap/index";
-import { useRefreshTrigger, useGlobalContext } from "hooks/index";
+import { useRefreshTrigger, useGlobalContext, useToken } from "hooks/index";
 
 const TRIGGER_KEY = "UNUSED_PCM_BALANCE";
 
@@ -22,7 +21,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
 
   const { result: unusedPCMBalance } = useUserPCMBalance(principal, refreshTrigger);
   const { result: pcmMetadata } = usePCMMetadata();
-  const { result: pcmToken } = useTokenInfo(pcmMetadata?.tokenCid.toString());
+  const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
   const { result: passCodes } = useUserPassCodes(refreshTrigger);
 
   const { callback: withdrawPCMBalance, loading: withdrawPCMBalanceLoading } = useWithdrawPCMBalanceCallback();

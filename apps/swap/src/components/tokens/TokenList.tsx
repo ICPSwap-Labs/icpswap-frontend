@@ -9,7 +9,7 @@ import {
   isNullArgs,
   formatIcpAmount,
 } from "@icpswap/utils";
-import { useTokenInfo } from "hooks/token/index";
+import { useToken } from "hooks/index";
 import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
@@ -31,18 +31,18 @@ const useStyles = makeStyles(() => {
   };
 });
 
-function TokenListItem({ token, index }: { token: TokenListMetadata; index: number }) {
+function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetadata; index: number }) {
   const classes = useStyles();
 
-  const { result: tokenInfo } = useTokenInfo(token.canisterId);
-  const { result: supply } = useTokenSupply(token.canisterId);
-  const { result: icExplorerTokenDetails } = useExplorerTokenDetails(token.canisterId);
+  const [, token] = useToken(tokenMetadata.canisterId);
+  const { result: supply } = useTokenSupply(tokenMetadata.canisterId);
+  const { result: icExplorerTokenDetails } = useExplorerTokenDetails(tokenMetadata.canisterId);
 
-  const infoToken = useInfoToken(token.canisterId);
+  const infoToken = useInfoToken(tokenMetadata.canisterId);
   const icpPrice = useICPPrice();
 
   return (
-    <Link to={`/info-tokens/details/${token.canisterId}`}>
+    <Link to={`/info-tokens/details/${tokenMetadata.canisterId}`}>
       <TableRow className={classes.wrapper}>
         <BodyCell>{index + 1}</BodyCell>
         <Flex
@@ -53,11 +53,11 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
             gap: "0 8px",
           }}
         >
-          <TokenImage logo={tokenInfo?.logo} size="40px" tokenId={tokenInfo?.canisterId} />
+          <TokenImage logo={token?.logo} size="40px" tokenId={token?.address} />
           <Typography fontSize="16px" color="text.primary">
             {token?.symbol}
           </Typography>
-          <TokenStandardLabel standard={token.standard as TOKEN_STANDARD} />
+          <TokenStandardLabel standard={tokenMetadata.standard as TOKEN_STANDARD} />
         </Flex>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell sx={{ width: "100%" }} align="right">
@@ -74,19 +74,17 @@ function TokenListItem({ token, index }: { token: TokenListMetadata; index: numb
         </BodyCell>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell align="right" sx={{ width: "100%" }}>
-            {infoToken && icpPrice && supply && tokenInfo
+            {infoToken && icpPrice && supply && token
               ? formatDollarAmount(
-                  new BigNumber(infoToken.priceUSD)
-                    .multipliedBy(parseTokenAmount(supply, tokenInfo.decimals))
-                    .toNumber(),
+                  new BigNumber(infoToken.priceUSD).multipliedBy(parseTokenAmount(supply, token.decimals)).toNumber(),
                 )
               : "--"}
           </BodyCell>
           <BodyCell sub align="right" sx={{ width: "100%" }}>
-            {infoToken && icpPrice && supply && tokenInfo
+            {infoToken && icpPrice && supply && token
               ? `${formatIcpAmount(
                   new BigNumber(infoToken.priceUSD)
-                    .multipliedBy(parseTokenAmount(supply, tokenInfo.decimals))
+                    .multipliedBy(parseTokenAmount(supply, token.decimals))
                     .dividedBy(icpPrice)
                     .toNumber(),
                 )} ICP`

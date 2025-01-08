@@ -1,6 +1,5 @@
 import { Box, useMediaQuery, useTheme } from "components/Mui";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
-import type { TokenInfo } from "types/token";
 
 import Token from "./Token";
 import TokenCharts from "./Charts";
@@ -9,11 +8,10 @@ import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 
 export interface TokenChartWrapperProps {
   infoToken: PublicTokenOverview | undefined;
-  tokenInfo: TokenInfo | undefined;
   tokenListInfo: TokenListMetadata | undefined;
 }
 
-export default function TokenChartWrapper({ infoToken, tokenInfo, tokenListInfo }: TokenChartWrapperProps) {
+export default function TokenChartWrapper({ infoToken, tokenListInfo }: TokenChartWrapperProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -26,7 +24,7 @@ export default function TokenChartWrapper({ infoToken, tokenInfo, tokenListInfo 
       ) : null}
 
       <SwapProCardWrapper padding="0px" background="level2">
-        {!matchDownSM ? <Token infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} /> : null}
+        {!matchDownSM ? <Token infoToken={infoToken} tokenListInfo={tokenListInfo} /> : null}
         <TokenCharts />
       </SwapProCardWrapper>
     </>

@@ -6,7 +6,7 @@ import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import Pagination from "components/pagination/cus";
-import { useTokenInfo } from "hooks/token/index";
+import { useToken } from "hooks/index";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion, NoData, ImageLoading } from "@icpswap/ui";
 import { useAllTokensTVL } from "@icpswap/hooks";
 
@@ -32,13 +32,21 @@ export type HeaderType = {
   end?: boolean;
 };
 
-export function TokenItem({ token, index, align }: { token: TokenData; index: number; align: "left" | "right" }) {
+export function TokenItem({
+  token: infoToken,
+  index,
+  align,
+}: {
+  token: TokenData;
+  index: number;
+  align: "left" | "right";
+}) {
   const classes = useStyles();
   const history = useHistory();
-  const { result: tokenInfo } = useTokenInfo(token.address);
+  const [, token] = useToken(infoToken.address);
 
   const handleTokenClick = () => {
-    history.push(`/info-swap/token/details/${token.address}`);
+    history.push(`/info-swap/token/details/${infoToken.address}`);
   };
 
   return (
@@ -46,22 +54,22 @@ export function TokenItem({ token, index, align }: { token: TokenData; index: nu
       <BodyCell>{index}</BodyCell>
       <BodyCell>
         <Grid container alignItems="center" gap="0 8px">
-          <TokenImage logo={tokenInfo?.logo} tokenId={tokenInfo?.canisterId} size="24px" />
-          <BodyCell>{token.symbol}</BodyCell>
-          {tokenInfo ? <BodyCell sub>({tokenInfo.name})</BodyCell> : null}
+          <TokenImage logo={token?.logo} tokenId={token?.address} size="24px" />
+          <BodyCell>{infoToken.symbol}</BodyCell>
+          {token ? <BodyCell sub>({token.name})</BodyCell> : null}
         </Grid>
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
-        {formatDollarTokenPrice(token.priceUSD)}
+        {formatDollarTokenPrice(infoToken.priceUSD)}
       </BodyCell>
       <BodyCell align={align}>
-        <Proportion align={align} value={token.priceUSDChange} />
+        <Proportion align={align} value={infoToken.priceUSDChange} />
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
-        {formatDollarAmount(token.volumeUSD)}
+        {formatDollarAmount(infoToken.volumeUSD)}
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
-        {formatDollarAmount(token.tvlUSD)}
+        {formatDollarAmount(infoToken.tvlUSD)}
       </BodyCell>
     </TableRow>
   );

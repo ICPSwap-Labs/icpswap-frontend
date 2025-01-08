@@ -2,17 +2,17 @@ import { Modal } from "@icpswap/ui";
 import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
-import { type TokenInfo } from "types/token";
 import { tokenTransfer } from "hooks/token/calls";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { useSuccessTip, useErrorTip, useLoadingTip } from "hooks/useTips";
 import { useState } from "react";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface ConfirmBurnProps {
   open: boolean;
   onClose: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   mintingAccount:
     | {
         owner: string;
@@ -40,7 +40,7 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
     onClose();
 
     const { status, message } = await tokenTransfer({
-      canisterId: token.canisterId,
+      canisterId: token.address,
       to: mintingAccount.owner,
       subaccount: mintingAccount.sub,
       from: principal.toString(),

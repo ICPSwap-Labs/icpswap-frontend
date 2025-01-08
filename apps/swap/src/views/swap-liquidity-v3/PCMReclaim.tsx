@@ -3,19 +3,19 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } fro
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, Tooltip } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { TokenInfo } from "types/token";
+import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useUserPCMBalance, usePassCode, usePCMMetadata, destroyPassCode, withdrawPCMBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { type PassCode, type PCMMetadata, ResultStatus } from "@icpswap/types";
+import { Token } from "@icpswap/swap-sdk";
 
 type ClaimedKey = string | number;
 
 interface BalanceItemProps {
   border?: boolean;
-  token: TokenInfo;
+  token: Token;
   name: string | undefined;
   type: "code" | "unUsed";
   balance: bigint | undefined;
@@ -46,11 +46,7 @@ export function BalanceItem({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const unavailableClaim = !balance
-    ? false
-    : type === "code"
-    ? balance < token.transFee * BigInt(2)
-    : balance < token.transFee;
+  const unavailableClaim = !balance ? false : type === "code" ? balance < token.transFee * 2 : balance < token.transFee;
 
   const isClaimed = useMemo(() => {
     return claimedKeys.includes(claimedKey);
@@ -196,7 +192,7 @@ export function BalancesItem({
   code,
   metadata,
 }: BalancesItemProps) {
-  const { result: token } = useTokenInfo(metadata?.tokenCid.toString());
+  const [, token] = useToken(metadata?.tokenCid.toString());
 
   const name = token ? `${token.symbol}` : "--";
 

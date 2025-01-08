@@ -7,18 +7,18 @@ import BigNumber from "bignumber.js";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface StakeProps {
   open: boolean;
   onClose: () => void;
   onStakeSuccess?: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
   disabled?: boolean;
@@ -32,8 +32,8 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
-  const { result: balance } = useTokenBalance(token?.canisterId, principal);
+  const tokenUSDPrice = useUSDPriceById(token?.address);
+  const { result: balance } = useTokenBalance(token?.address, principal);
 
   const handleSubmit = async () => {
     if (loading || !amount || !principal || !token || !governance_id || !neuron_id) return;
@@ -42,7 +42,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
     openFullscreenLoading();
 
     const { message, status } = await tokenTransfer({
-      canisterId: token.canisterId,
+      canisterId: token.address,
       to: governance_id,
       subaccount: [...neuron_id],
       amount: formatTokenAmount(amount, token.decimals),
