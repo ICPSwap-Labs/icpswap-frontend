@@ -31,8 +31,8 @@ export default function SwapPro() {
   const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
   const [chartView, setChartView] = useState<ChartButton | null>({
-    label: "Price",
-    value: ChartView.PRICE,
+    label: "DexScreener",
+    value: ChartView.DexScreener,
   });
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
@@ -78,9 +78,8 @@ export default function SwapPro() {
   useEffect(() => {
     if (token) {
       setChartView({
-        label: token.symbol,
-        value: ChartView.PRICE,
-        tokenId: token.address,
+        label: "DexScreener",
+        value: ChartView.DexScreener,
       });
     }
   }, [token, setChartView, tradePoolId]);
