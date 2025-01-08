@@ -120,7 +120,7 @@ export default function TokenDetails() {
           <TokenImage logo={token?.logo} size="24px" tokenId={token?.address} />
 
           <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
-            {infoToken?.name}
+            {token?.name}
           </Typography>
 
           <Typography fontSize="20px" fontWeight="500" sx={{ margin: "0 0 0 6px" }}>
