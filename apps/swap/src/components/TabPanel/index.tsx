@@ -101,7 +101,7 @@ export function TabPanel({
               fontSize,
               minWidth: size === "small" ? "auto" : "90px",
               padding: padding1 ?? (size === "small" ? "0 12px" : "0 20px"),
-              height: size === "small" ? "32px" : "45px",
+              height: size === "small" ? "32px" : "40px",
               color: theme.themeOption.textSecondary,
               cursor: "pointer",
               borderRadius: borderRadius ?? (size === "small" ? "6px" : "12px"),

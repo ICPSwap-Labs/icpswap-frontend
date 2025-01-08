@@ -119,17 +119,17 @@ export default function StakeDetail() {
                   />
 
                   <Box>
-                    <Typography color="text.primary" fontSize={24} fontWeight={500} align="right">
+                    <Typography color="text.primary" fontSize={20} fontWeight={500} align="right">
                       <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
                     </Typography>
 
-                    <Typography fontSize={16} align="right" mt="12px">
+                    <Typography align="right" mt="12px">
                       <Trans>Stake {stakeToken ? `${stakeToken.symbol}` : "--"}</Trans>
                     </Typography>
                   </Box>
                 </Flex>
 
-                <Box mt="42px">
+                <Box mt="24px">
                   <TabPanel
                     fullWidth
                     fontNormal

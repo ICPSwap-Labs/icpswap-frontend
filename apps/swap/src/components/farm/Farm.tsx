@@ -158,12 +158,12 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
               />
             </Flex>
-            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+            <Typography sx={{ color: "text.apr", fontSize: "20px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
             </Typography>
           </Box>
 
-          <Box mt="32px">
+          <Box mt="24px">
             <Box
               sx={{
                 display: "grid",
@@ -278,7 +278,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         </MainCard>
       </Box>
 
-      <Box mt="40px">
+      <Box mt="24px">
         <Box>
           <Typography>
             <Trans>Your Positions Available To Stake</Trans>
@@ -390,7 +390,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         </Box>
       </Box>
 
-      <Box sx={{ margin: "32px 0", height: "1px", background: theme.palette.background.level2 }} />
+      <Box sx={{ margin: "24px 0", height: "1px", background: theme.palette.background.level2 }} />
 
       <Box>
         <Box>
