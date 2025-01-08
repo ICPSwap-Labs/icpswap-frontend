@@ -16,6 +16,7 @@ import {
 } from "components/stake/index";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token";
 import { useRefreshTriggerManager } from "hooks/index";
+import { State } from "components/stake/State";
 
 function ReclaimTab() {
   const { reclaimable } = useContext(ReclaimContext);
@@ -123,11 +124,17 @@ export default function StakeDetail() {
                       <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
                     </Typography>
 
-                    <Typography align="right" mt="12px">
+                    <Typography align="right" mt="8px">
                       <Trans>Stake {stakeToken ? `${stakeToken.symbol}` : "--"}</Trans>
                     </Typography>
                   </Box>
                 </Flex>
+
+                {poolInfo ? (
+                  <Flex justify="flex-end" sx={{ margin: "8px 0 0 0" }}>
+                    <State poolInfo={poolInfo} />
+                  </Flex>
+                ) : null}
 
                 <Box mt="24px">
                   <TabPanel
