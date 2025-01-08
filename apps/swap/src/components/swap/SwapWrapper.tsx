@@ -17,7 +17,6 @@ import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
-import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper, SwapConfirmModal, SwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
@@ -131,26 +130,26 @@ export const SwapWrapper = forwardRef(
     };
 
     const handleTokenAChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.canisterId === currencyB.currencyId) {
-          history.push(`${prePath}?input=${token.canisterId}&output=${ICP.address}`);
+        if (token.address === currencyB.currencyId) {
+          history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
         } else {
-          history.push(`${prePath}?input=${token.canisterId}&output=${currencyB.currencyId}`);
+          history.push(`${prePath}?input=${token.address}&output=${currencyB.currencyId}`);
         }
       },
       [currencyB],
     );
 
     const handleTokenBChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.canisterId === currencyA.currencyId) {
-          history.push(`${prePath}?input=${ICP.address}&output=${token.canisterId}`);
+        if (token.address === currencyA.currencyId) {
+          history.push(`${prePath}?input=${ICP.address}&output=${token.address}`);
         } else {
-          history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.canisterId}`);
+          history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.address}`);
         }
       },
       [currencyA],

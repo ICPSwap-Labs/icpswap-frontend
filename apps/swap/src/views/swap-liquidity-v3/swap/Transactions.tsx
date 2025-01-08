@@ -6,7 +6,7 @@ import { LoadingRow, NoData, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT } from "constants/index";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { ArrowUpRight } from "react-feather";
 import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
 
@@ -32,8 +32,8 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
   const symbol0 = transaction.token0Symbol;
   const symbol1 = transaction.token1Symbol;
 
-  const { result: token0 } = useTokenInfo(transaction.token0Id);
-  const { result: token1 } = useTokenInfo(transaction.token1Id);
+  const [, token0] = useToken(transaction.token0Id);
+  const [, token1] = useToken(transaction.token1Id);
 
   return (
     <Box
@@ -52,7 +52,7 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
       }}
     >
       <Box sx={{ display: "flex" }}>
-        <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.canisterId} />
+        <TokenImage logo={token0?.logo} size="24px" tokenId={token0?.address} />
         <TokenImage logo={token1?.logo} size="24px" sx={{ margin: "0 0 0 -6px" }} />
       </Box>
 

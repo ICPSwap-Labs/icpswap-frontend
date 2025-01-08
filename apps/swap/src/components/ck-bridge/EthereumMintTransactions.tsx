@@ -10,7 +10,7 @@ import { useMemo } from "react";
 import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
 import { Principal } from "@dfinity/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { useTheme } from "components/Mui";
 
@@ -41,7 +41,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
     };
   }, [minterInfo, transaction]);
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
 
   return (
     <Box
@@ -108,8 +108,8 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
             <Trans>Amount</Trans>
           </Typography>
           <Typography>
-            {tokenInfo
-              ? parseTokenAmount(transaction.withdrawal_amount.toString(), tokenInfo?.decimals).toFormat()
+            {token
+              ? parseTokenAmount(transaction.withdrawal_amount.toString(), token.decimals).toFormat()
               : transaction.withdrawal_amount.toString()}
           </Typography>
         </Flex>

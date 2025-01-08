@@ -7,13 +7,9 @@ import { IdbStorage } from "@icpswap/utils";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
-// import { generateLogoUrl } from "hooks/token/useTokenLogo";
 
 import { useLocalTokens } from "./useLocalTokens";
 import { getTokenInfo } from "./calls";
-
-// const STORAGE_TIME_KEY = "STORAGE_TIME_KEY";
-// const STORAGE_EXPIRE_TIME = 2 * 60 * 60 * 1000; // millisecond
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
@@ -26,33 +22,6 @@ export async function getStorageTokenInfo(tokenId: string) {
 export async function setStorageTokenInfo(tokenInfo: StorageTokenInfo) {
   await storage.set(`TOKEN_${tokenInfo.canisterId}`, JSON.stringify(tokenInfo));
 }
-
-// export function getTokenStorageTime(tokenId: string) {
-//   const val = window.localStorage.getItem(STORAGE_TIME_KEY);
-//   if (!val) return null;
-//   return (JSON.parse(val) as { [tokenId: string]: string })[tokenId] ?? null;
-// }
-
-// export function updateTokenStorageTime(tokenId: string) {
-//   const time = new Date().getTime();
-//   const val = window.localStorage.getItem(STORAGE_TIME_KEY);
-
-//   if (!val) {
-//     window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify({ [tokenId]: time.toString() }));
-//   } else {
-//     const new_val = JSON.parse(val) as { [tokenId: string]: string };
-//     new_val[tokenId] = time.toString();
-
-//     window.localStorage.setItem(STORAGE_TIME_KEY, JSON.stringify(new_val));
-//   }
-// }
-
-// function isNeedUpdateTokenInfo(tokenId: string) {
-//   const storage_time = getTokenStorageTime(tokenId);
-//   if (!storage_time) return true;
-//   return new Date().getTime() - Number(storage_time) > STORAGE_EXPIRE_TIME;
-//   return false;
-// }
 
 function isStorageInfoValid(storageInfo: StorageTokenInfo | undefined): storageInfo is StorageTokenInfo {
   return !!storageInfo && storageInfo.decimals !== undefined && storageInfo.transFee !== undefined;
@@ -74,7 +43,6 @@ export async function __getTokenInfo(tokenId: string) {
       transFee: baseTokenInfo.transFee.toString(),
     });
 
-    // updateTokenStorageTime(tokenId);
     return baseTokenInfo as TokenInfo;
   }
 }
@@ -93,7 +61,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
   const localTokens = useLocalTokens();
 
   const fetch_token_info = async (tokenId: string | undefined | null) => {
-    if (!tokenId) return;
+    if (!tokenId) return undefined;
 
     let tokeInfo: undefined | TokenInfo;
 
@@ -150,7 +118,6 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           [tokenId]: {
             name: storageInfo.name,
             logo: storageInfo.logo,
-            // logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
@@ -178,11 +145,9 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       if (tokenInfo) {
         await setStorageTokenInfo({
           ...tokenInfo,
-          // logo: generateLogoUrl(tokenId),
           transFee: tokenInfo.transFee.toString(),
           totalSupply: "0",
         });
-        // updateTokenStorageTime(tokenId);
 
         // The token standard maybe changed in some case,
         // So get the standard from the storage to upgrade the token info

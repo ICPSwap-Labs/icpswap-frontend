@@ -29,7 +29,6 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import StepViewButton from "components/Steps/View";
-import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper } from "components/swap/limit-order/index";
 import { useHistory, useLocation } from "react-router-dom";
@@ -154,32 +153,32 @@ export const PlaceOrder = forwardRef(
     }, []);
 
     const handleTokenAChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
 
-        if (token.canisterId === currencyB.currencyId) {
-          history.push(`${prePath}?input=${token.canisterId}&output=${ICP.address}`);
+        if (token.address === currencyB.currencyId) {
+          history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
         } else {
-          history.push(`${prePath}?input=${token.canisterId}&output=${currencyB.currencyId}`);
+          history.push(`${prePath}?input=${token.address}&output=${currencyB.currencyId}`);
         }
       },
       [currencyB],
     );
 
     const handleTokenBChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
         let search = location.search;
 
-        if (token.canisterId === currencyA.currencyId) {
+        if (token.address === currencyA.currencyId) {
           search = locationMultipleSearchReplace(location.search, [
             { key: "input", value: ICP.address },
-            { key: "output", value: token.canisterId },
+            { key: "output", value: token.address },
           ]);
         } else {
           search = locationMultipleSearchReplace(location.search, [
             { key: "input", value: currencyA.currencyId },
-            { key: "output", value: token.canisterId },
+            { key: "output", value: token.address },
           ]);
         }
 

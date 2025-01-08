@@ -1,13 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { Button, Typography, Box, InputAdornment } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAmount } from "@icpswap/utils";
+import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
+import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
-import BigNumber from "bignumber.js";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import type { NervousSystemParameters } from "@icpswap/types";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
@@ -16,11 +13,12 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import randomBytes from "randombytes";
 import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
-import { useUSDPriceById } from "hooks";
+import { useUSDPriceById } from "hooks/index";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   governance_id: string | undefined;
   neuronSystemParameters: NervousSystemParameters | undefined;
 }
@@ -33,8 +31,8 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
-  const { result: balance } = useTokenBalance(token?.canisterId, principal);
+  const tokenUSDPrice = useUSDPriceById(token?.address);
+  const { result: balance } = useTokenBalance(token?.address, principal);
 
   const { neuron_minimum_stake_e8s } = useMemo(() => {
     if (!neuronSystemParameters) return {};
@@ -59,7 +57,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
     const subaccount = buildNeuronStakeSubAccount(nonceBytes, principal);
 
     const { message, status } = await tokenTransfer({
-      canisterId: token.canisterId,
+      canisterId: token.address,
       to: governance_id,
       subaccount: [...subaccount.toUint8Array()],
       amount: formatTokenAmount(amount, token.decimals),

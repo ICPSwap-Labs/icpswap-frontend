@@ -32,7 +32,7 @@ export function useToken(tokenId: string | Null): [UseCurrencyState, Token | und
         name: tokenInfo.name,
         logo: tokenInfo.logo,
         transFee: Number(tokenInfo.transFee),
-        standard: getTokenStandard(tokenInfo.canisterId) ?? TOKEN_STANDARD.EXT,
+        standard: getTokenStandard(tokenInfo.canisterId) ?? TOKEN_STANDARD.ICRC1,
       }),
     ];
   }, [tokenId, tokenInfo, queryLoading]);

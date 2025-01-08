@@ -6,45 +6,6 @@ import type { ActorIdentity, StatusResult } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";
 
-export async function getTokenTotalHolder(canisterId: string | undefined) {
-  return (
-    await tokenAdapter.totalHolders({
-      canisterId: canisterId!,
-    })
-  ).data;
-}
-
-export function useTokenTotalHolder(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return await getTokenTotalHolder(canisterId);
-    }, [canisterId]),
-    reload,
-  );
-}
-
-export async function getTokenHolders(canisterId: string, offset: number, limit: number) {
-  return (
-    await tokenAdapter.holders({
-      canisterId,
-      params: {
-        offset: BigInt(offset),
-        limit: BigInt(limit),
-      },
-    })
-  ).data;
-}
-
-export function useTokenHolders(canisterId: string, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getTokenHolders(canisterId, offset, limit);
-    }, [offset, limit, canisterId]),
-  );
-}
-
 export interface getTokenTransactionProps {
   canisterId: string;
   account: string | undefined | null | Principal;
@@ -201,13 +162,12 @@ export function useApproveCallback(): (approveParams: Approve) => Promise<Status
         value,
         account,
       });
-    } 
-      return await Promise.resolve({
-        status: "ok",
-        data: true,
-        message: "You have approved successfully",
-      } as StatusResult<boolean>);
-    
+    }
+    return await Promise.resolve({
+      status: "ok",
+      data: true,
+      message: "You have approved successfully",
+    } as StatusResult<boolean>);
   }, []);
 }
 

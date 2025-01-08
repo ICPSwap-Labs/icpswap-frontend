@@ -3,7 +3,7 @@ import { Grid, Box, Link, makeStyles } from "components/Mui";
 import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
-import { useTokenInfo } from "hooks/token/index";
+import { useToken } from "hooks/index";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { PaginationType } from "components/index";
 import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
@@ -34,9 +34,9 @@ function PoolItem({ farmId }: PoolItemProps) {
   const { result: farmInfo, loading } = useFarmInfo(farmId);
 
   const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
-  const { result: token0 } = useTokenInfo(swapPool?.token0.address);
-  const { result: token1 } = useTokenInfo(swapPool?.token1.address);
-  const { result: rewardToken } = useTokenInfo(farmInfo?.rewardToken.address);
+  const [, token0] = useToken(swapPool?.token0.address);
+  const [, token1] = useToken(swapPool?.token1.address);
+  const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
 
   const { tvl } = useFarmTvl(farmId);
   const state = useFarmState(farmInfo);

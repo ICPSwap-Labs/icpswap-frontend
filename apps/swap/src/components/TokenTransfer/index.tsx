@@ -14,7 +14,6 @@ import { Trans, t } from "@lingui/macro";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "locales/services";
-import { TokenInfo } from "types/token";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
@@ -22,6 +21,7 @@ import { Principal } from "@dfinity/principal";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { MaxButton, Flex } from "@icpswap/ui";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -48,7 +48,7 @@ export interface TransferModalProps {
   open: boolean;
   onClose: () => void;
   onTransferSuccess?: () => void;
-  token: TokenInfo;
+  token: Token;
   transferTo?: string;
 }
 
@@ -62,8 +62,8 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
 
   const { refreshTotalBalance, setRefreshTotalBalance } = useContext(WalletContext);
 
-  const { result: balance } = useTokenBalance(token.canisterId, principal);
-  const tokenUSDPrice = useUSDPriceById(token.canisterId);
+  const { result: balance } = useTokenBalance(token.address, principal);
+  const tokenUSDPrice = useUSDPriceById(token.address);
 
   const [loading, setLoading] = useState(false);
 
@@ -84,7 +84,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   const getErrorMessage = () => {
     if (!values.to) return t`Enter transfer to`;
 
-    if (usePrincipalStandard(token.canisterId, token.standardType)) {
+    if (usePrincipalStandard(token.address, token.standard)) {
       try {
         Principal.fromText(values.to);
       } catch (error) {
@@ -112,7 +112,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
       setLoading(true);
 
       const { status, message } = await tokenTransfer({
-        canisterId: token.canisterId.toString(),
+        canisterId: token.address.toString(),
         to: values.to,
         amount: formatTokenAmount(
           new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)),
@@ -127,7 +127,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         openTip(t`Transferred successfully`, MessageTypes.success);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.canisterId.toString() === ICP.address || token.canisterId.toString() === WRAPPED_ICP.address) {
+        if (token.address.toString() === ICP.address || token.address.toString() === WRAPPED_ICP.address) {
           if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
         }
       } else {
@@ -148,9 +148,9 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
 
   const addressHelpText = () => {
     if (
-      (usePrincipalStandard(token.canisterId, token.standardType) && principalString === values.to) ||
-      (useAccountStandard(token.canisterId, token.standardType) && account === values.to) ||
-      (useAccountStandard(token.canisterId, token.standardType) &&
+      (usePrincipalStandard(token.address, token.standard) && principalString === values.to) ||
+      (useAccountStandard(token.address, token.standard) && account === values.to) ||
+      (useAccountStandard(token.address, token.standard) &&
         isValidPrincipal(values.to) &&
         principalString === values.to)
     ) {
@@ -179,7 +179,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         <FilledTextField
           value={values.to}
           placeholder={
-            usePrincipalStandard(token.canisterId, token.standardType)
+            usePrincipalStandard(token.address, token.standard)
               ? t`Enter the principal ID`
               : t`Enter the account ID or principal ID`
           }

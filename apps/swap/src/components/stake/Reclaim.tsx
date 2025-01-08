@@ -4,7 +4,7 @@ import { NoData, LoadingRow, TokenImage, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { t, Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
@@ -22,11 +22,11 @@ interface ReclaimItemProps {
 
 function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) {
   const [loading, setLoading] = useState(false);
-  const { result: token } = useTokenInfo(tokenId);
+  const [, token] = useToken(tokenId);
 
   const error = useMemo(() => {
     if (!token || !balance) return t`Reclaim`;
-    if (balance <= token.transFee) return t`Reclaim`;
+    if (balance <= BigInt(token.transFee)) return t`Reclaim`;
 
     return undefined;
   }, [token, balance]);

@@ -1,16 +1,15 @@
 import { useState, useMemo, useCallback } from "react";
 import { Modal } from "components/index";
 import { getPool } from "hooks/swap/v3Calls";
-import { useTheme, Typography, Box, Avatar, CircularProgress, Button } from "@mui/material";
+import { useTheme, Typography, Box, Avatar, CircularProgress, Button } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
-import { TokenInfo } from "types/token";
 import CurrencySelector from "components/CurrencySelector/selector";
 import { getUserPositionIds } from "hooks/swap/useUserPositionIds";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { updateUserPositionPoolId } from "@icpswap/hooks";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { Token } from "@icpswap/swap-sdk";
 
 function AddIcon() {
   return (
@@ -42,16 +41,16 @@ function ArrowIcon() {
 
 interface SelectedTokenProps {
   selectedTokenIds?: string[];
-  onTokenChange: (token: TokenInfo) => void;
+  onTokenChange: (token: Token) => void;
 }
 
 function SelectedToken({ selectedTokenIds, onTokenChange }: SelectedTokenProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
-  const [token, setToken] = useState<null | TokenInfo>(null);
+  const [token, setToken] = useState<null | Token>(null);
   const [selectorOpen, setSelectorOpen] = useState(false);
 
-  const handleTokenChange = (token: TokenInfo) => {
+  const handleTokenChange = (token: Token) => {
     onTokenChange(token);
     setToken(token);
     setSelectorOpen(false);
@@ -112,7 +111,7 @@ export interface FindPositionsModalProps {
 }
 
 export default function FindPositionsModal({ open, onClose }: FindPositionsModalProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const [openTip] = useTips();
 
   const principal = useAccountPrincipal();
@@ -120,15 +119,15 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [tokenA, setTokenA] = useState<null | TokenInfo>(null);
-  const [tokenB, setTokenB] = useState<null | TokenInfo>(null);
+  const [tokenA, setTokenA] = useState<null | Token>(null);
+  const [tokenB, setTokenB] = useState<null | Token>(null);
 
-  const handleTokenAChange = (tokenA: TokenInfo) => {
+  const handleTokenAChange = (tokenA: Token) => {
     setTokenA(tokenA);
     setError("");
   };
 
-  const handleTokenBChange = (tokenB: TokenInfo) => {
+  const handleTokenBChange = (tokenB: Token) => {
     setTokenB(tokenB);
     setError("");
   };
@@ -140,7 +139,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
   }, [onClose, setTokenA, setTokenB]);
 
   const selectedTokenIds = useMemo(() => {
-    return [tokenA?.canisterId, tokenB?.canisterId].filter((ele) => !!ele) as string[];
+    return [tokenA?.address, tokenB?.address].filter((ele) => !!ele) as string[];
   }, [tokenA, tokenB]);
 
   const updateStoreUserPositionPool = useUpdateUserPositionPools();
@@ -150,7 +149,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
 
     setLoading(true);
 
-    const poolData = await getPool(tokenA.canisterId, tokenB.canisterId);
+    const poolData = await getPool(tokenA.address, tokenB.address);
 
     if (!poolData) {
       setError(t`No available pools`);

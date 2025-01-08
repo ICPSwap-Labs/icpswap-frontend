@@ -1,12 +1,10 @@
 import { useState, useMemo } from "react";
-import { Theme } from "@mui/material/styles";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, Grid, Button, CircularProgress, Avatar, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { ICP } from "@icpswap/tokens";
 import { useGlobalContext } from "hooks/useGlobalContext";
@@ -21,17 +19,17 @@ export interface RevokeItemProps {
 }
 
 export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const [openTip, closeTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
   const [revoked, setRevoked] = useState<boolean>(false);
 
-  const { result: token0 } = useTokenInfo(pool.token0.address);
-  const { result: token1 } = useTokenInfo(pool.token1.address);
+  const [, token0] = useToken(pool.token0.address);
+  const [, token1] = useToken(pool.token1.address);
 
   const token = useMemo(() => {
-    return tokenId === token0?.canisterId ? token0 : token1;
+    return tokenId === token0?.address ? token0 : token1;
   }, [tokenId, token0, token1]);
 
   const name = token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--";

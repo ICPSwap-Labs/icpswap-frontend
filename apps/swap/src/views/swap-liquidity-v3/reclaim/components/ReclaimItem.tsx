@@ -3,15 +3,15 @@ import { Typography, Box, Button, CircularProgress, Avatar, useTheme } from "com
 import { Tooltip, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { TokenInfo } from "types/token";
+import { useToken } from "hooks/index";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useReclaim } from "hooks/swap/useReclaim";
+import { Token } from "@icpswap/swap-sdk";
 
 interface ReclaimItemProps {
   poolId: string;
   border?: boolean;
-  token: TokenInfo;
+  token: Token;
   name: string | undefined;
   type: "unDeposit" | "unUsed";
   balance: bigint;
@@ -37,7 +37,7 @@ export function ReclaimItem({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const unavailableClaim = type === "unDeposit" ? balance < token.transFee * BigInt(2) : balance < token.transFee;
+  const unavailableClaim = type === "unDeposit" ? balance < token.transFee * 2 : balance < token.transFee;
 
   const reclaim = useReclaim();
 
@@ -164,12 +164,12 @@ export function ReclaimItems({
   claimedKey,
   claimedKeys,
 }: ReclaimItemsProps) {
-  const { result: token0 } = useTokenInfo(balance.token0);
-  const { result: token1 } = useTokenInfo(balance.token1);
+  const [, token0] = useToken(balance.token0);
+  const [, token1] = useToken(balance.token1);
 
   const token = useMemo(() => {
     if (!token0 || !token1) return undefined;
-    return balance.token === token0.canisterId ? token0 : token1;
+    return balance.token === token0.address ? token0 : token1;
   }, [token0, token1, balance]);
 
   const name = token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--";

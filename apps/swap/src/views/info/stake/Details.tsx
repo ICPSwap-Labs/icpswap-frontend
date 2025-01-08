@@ -9,7 +9,7 @@ import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "
 import { BreadcrumbsV1 } from "@icpswap/ui";
 import dayjs from "dayjs";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import upperFirst from "lodash/upperFirst";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -52,7 +52,7 @@ export default function PoolsDetails() {
 
   const { result: cycles } = useStakingPoolCycles(id);
   const { result: poolTokenBalance } = useTokenBalance(pool?.stakingToken.address, id);
-  const { result: rewardToken } = useTokenInfo(pool?.rewardToken.address);
+  const [, rewardToken] = useToken(pool?.rewardToken.address);
 
   const state = useStakingPoolState(pool);
 

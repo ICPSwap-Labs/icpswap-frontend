@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
-import { Grid, Box, Typography, Avatar, CircularProgress, Button } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Grid, Box, Typography, Avatar, CircularProgress, Button, useTheme } from "components/Mui";
 import { t, Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { TextButton, Wrapper, LoadingRow, ViewMore, NoData } from "components/index";
 import { useUserClaimEvents, getUserClaimEvents, claimToken, useUserClaimEventTransactions } from "@icpswap/hooks";
 import { type ActorIdentity, ResultStatus, type ClaimEventInfo } from "@icpswap/types";
 import { useAccountPrincipalString, useConnectorStateConnected } from "store/auth/hooks";
 import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import Identity, { SubmitLoadingProps, CallbackProps } from "components/Identity";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
 import ConnectWallet from "components/ConnectWallet";
 
 export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
-  const theme = useTheme() as Theme;
-  const { result: tokenInfo } = useTokenInfo(ele.tokenCid);
+  const theme = useTheme();
+  const [, token] = useToken(ele.tokenCid);
 
   const [manuallyClaimed, setManuallyClaimed] = useState(false);
 
@@ -70,11 +68,11 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
       <Box>
         <Typography>{ele.claimEventName}</Typography>
         <Box sx={{ margin: "8px 0 0 0", display: "flex", alignItems: "center" }}>
-          <Avatar src={tokenInfo?.logo ?? ""} sx={{ width: "20px", height: "20px" }}>
+          <Avatar src={token?.logo ?? ""} sx={{ width: "20px", height: "20px" }}>
             &nbsp;
           </Avatar>
           <Typography sx={{ color: "#fff", margin: "0 0 0 8px", fontSize: "24px", fontWeight: 500 }}>
-            {userClaimAmount ? parseTokenAmount(userClaimAmount, tokenInfo?.decimals).toFormat() : "--"}
+            {userClaimAmount ? parseTokenAmount(userClaimAmount, token?.decimals).toFormat() : "--"}
           </Typography>
         </Box>
       </Box>
