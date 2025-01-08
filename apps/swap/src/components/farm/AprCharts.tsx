@@ -48,7 +48,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
       <MainCard
         borderRadius="16px"
         level={1}
-        padding="40px 0 24px 0"
+        padding="24px 0"
         sx={{
           width: "100%",
           overflow: "hidden",
@@ -75,7 +75,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
           <Typography
             sx={{
               margin: "12px 0 0 0",
-              fontSize: "32px",
+              fontSize: "28px",
               fontWeight: 500,
               color: "text.primary",
             }}
@@ -137,7 +137,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
                   axisLine={false}
                   tickLine={false}
                   minTickGap={10}
-                  tick={{ fill: theme.palette.text.secondary }}
+                  tick={{ fill: theme.palette.text.secondary, fontSize: "12px" }}
                 />
                 <Tooltip
                   cursor={{ stroke: "#8572FF" }}

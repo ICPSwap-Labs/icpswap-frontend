@@ -83,7 +83,7 @@ export function MainContent({
                     tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
                   />
                 </Flex>
-                <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+                <Typography sx={{ color: "text.apr", fontSize: "20px", fontWeight: 600, margin: "16px 0 0 0" }}>
                   {apr ?? "--"}
                 </Typography>
               </Box>
@@ -105,7 +105,7 @@ export function MainContent({
             </Box>
           </Box>
 
-          <Box mt="32px">
+          <Box mt="24px">
             <Box
               sx={{
                 display: "grid",
