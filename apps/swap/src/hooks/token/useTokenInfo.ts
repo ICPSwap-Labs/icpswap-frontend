@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import { TOKEN_STANDARD, WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import type { TokenInfo, StorageTokenInfo, Null } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
@@ -60,7 +60,9 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
 
   const localTokens = useLocalTokens();
 
-  const fetch_token_info = async (tokenId: string | undefined | null) => {
+  const tokenIdsKey = useMemo(() => JSON.stringify(tokenIds), [tokenIds]);
+
+  const fetch_token_info = useCallback(async (tokenId: string | undefined | null) => {
     if (!tokenId) return undefined;
 
     let tokeInfo: undefined | TokenInfo;
@@ -169,16 +171,26 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
       ...prevState,
       [tokenId]: false,
     }));
-  };
+  }, [localTokens]);
 
   useEffect(() => {
+    let mounted = true;
+    
     async function call() {
-      const calls = tokenIds.map(async (tokenId) => await fetch_token_info(tokenId));
-      getPromisesAwait(calls, 20);
+      try {
+        const calls = tokenIds.map(async (tokenId) => await fetch_token_info(tokenId));
+        await getPromisesAwait(calls, 20);
+      } catch (error) {
+        console.error('Failed to fetch token infos:', error);
+      }
     }
 
-    call();
-  }, [JSON.stringify(tokenIds)]);
+    if (mounted) call();
+    
+    return () => {
+      mounted = false;
+    };
+  }, [tokenIdsKey, fetch_token_info]);
 
   return useMemo(() => {
     return tokenIds.map((tokenId) => {
