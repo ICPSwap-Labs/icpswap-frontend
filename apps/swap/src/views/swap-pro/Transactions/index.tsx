@@ -182,8 +182,8 @@ export default function Transactions() {
         {activeSubTab === Tabs.ALL_TRANSACTIONS ? (
           <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} />
         ) : null}
-        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions canisterId={tradePoolId} /> : null}
-        {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions canisterId={tradePoolId} /> : null}
+        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions poolId={tradePoolId} /> : null}
+        {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={tradePoolId} /> : null}
         {activeSubTab === Tabs.POSITIONS ? <Positions poolId={tradePoolId} /> : null}
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
         {activeSubTab === Tabs.LIMIT_PENDING ? <LimitOrdersTable poolId={tradePoolId} /> : null}

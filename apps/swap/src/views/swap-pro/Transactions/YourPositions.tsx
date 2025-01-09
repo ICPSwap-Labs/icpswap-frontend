@@ -1,7 +1,7 @@
 import { useState, useMemo, useContext } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { Trans } from "@lingui/macro";
-import { useTickAtLimit } from "@icpswap/hooks";
+import { useTickAtLimit, useUserLimitOrders } from "@icpswap/hooks";
 import {
   CurrencyAmount,
   FeeAmount,
@@ -16,8 +16,9 @@ import type { UserPosition } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
-import { BigNumber, formatDollarAmount, formatAmount } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatAmount, isNullArgs } from "@icpswap/utils";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { SwapProContext } from "../context";
 
@@ -209,18 +210,31 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 const maxItems = 10;
 
 export interface PoolTransactionsProps {
-  canisterId: string | undefined;
+  poolId: string | undefined;
 }
 
-export function YourPositions({ canisterId }: PoolTransactionsProps) {
+export function YourPositions({ poolId }: PoolTransactionsProps) {
   const classes = useStyles();
   const theme = useTheme();
+  const principal = useAccountPrincipal();
+
   const [page, setPage] = useState(1);
-  const { result, loading } = useUserPoolPositions(canisterId);
+  const { result: userPositions, loading } = useUserPoolPositions(poolId);
+  const { result: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
 
   const filteredPositions = useMemo(() => {
-    return result?.filter((e) => e.liquidity !== BigInt(0)).slice(maxItems * (page - 1), page * maxItems);
-  }, [result]);
+    if (isNullArgs(userPositions) || isNullArgs(userLimitOrders)) return null;
+
+    return (
+      userPositions
+        .filter((e) => e.liquidity !== BigInt(0))
+        // Filter the limit order
+        .filter((e) => {
+          return !userLimitOrders.find((limit) => limit.userPositionId === BigInt(e.index));
+        })
+        .slice(maxItems * (page - 1), page * maxItems)
+    );
+  }, [userPositions, userLimitOrders]);
 
   const { inputToken, outputToken } = useContext(SwapProContext);
 
