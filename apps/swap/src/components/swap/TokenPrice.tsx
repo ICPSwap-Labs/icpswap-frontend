@@ -44,7 +44,7 @@ export function TokenPrice({
 
   return (
     <Typography
-      className={`fontSize${fontSize}`}
+      className={fontSize ? `fontSize${fontSize}` : ""}
       sx={{
         color: "text.primary",
         ...sx,
@@ -56,7 +56,7 @@ export function TokenPrice({
         : "--"}
 
       {showUSD && inputTokenUSD ? (
-        <Typography component="span" className={`fontSize${fontSize}`}>
+        <Typography component="span" className={fontSize ? `fontSize${fontSize}` : ""}>
           ({formatDollarTokenPrice(inputTokenUSD)})
         </Typography>
       ) : null}

@@ -146,11 +146,11 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
           }}
         >
           <Flex vertical fullWidth gap="10px 0" align="flex-start">
-            <Flex gap="4px 8px" wrap="wrap">
-              <Typography>
+            <Flex gap="4px 8px">
+              <Typography sx={{ whiteSpace: "nowrap" }}>
                 <Trans>Limit Price</Trans>
               </Typography>
-              <Flex gap="0 2px">
+              <Flex gap="0 2px" sx={{ textAlign: "right", cursor: "pointer" }} onClick={handleInvert}>
                 <Typography sx={{ color: "text.primary" }}>
                   {limitPrice
                     ? invertPrice
@@ -160,7 +160,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                       : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`
                     : "--"}
                 </Typography>
-                <Box sx={{ width: "20px", height: "20px", cursor: "pointer" }} onClick={handleInvert}>
+                <Box sx={{ width: "20px", height: "20px" }}>
                   <img src="/images/ck-bridge-switch.svg" style={{ width: "20px", height: "20px" }} alt="" />
                 </Box>
               </Flex>
