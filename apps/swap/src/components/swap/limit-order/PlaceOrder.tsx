@@ -377,7 +377,7 @@ export const PlaceOrder = forwardRef(
           inputToken={inputToken}
           outputToken={outputToken}
           currentPrice={currentPrice}
-          fontSize={ui === "normal" ? "14px" : "12px"}
+          fontSize={ui === "normal" ? 14 : 12}
         />
 
         <PriceError
