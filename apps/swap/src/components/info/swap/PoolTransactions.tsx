@@ -10,7 +10,13 @@ interface PoolTransactionsProps {
 }
 
 export function PoolTransactions({ canisterId, styleProps, refresh }: PoolTransactionsProps) {
-  const { result: transactions, loading } = usePoolTransactions(canisterId, 0, 300, refresh);
+  const { result: transactions, loading } = usePoolTransactions({
+    poolId: canisterId,
+    offset: 0,
+    limit: 300,
+    refresh,
+    cache: true,
+  });
 
   return <Transactions transactions={transactions} loading={loading} hasFilter styleProps={styleProps} />;
 }
