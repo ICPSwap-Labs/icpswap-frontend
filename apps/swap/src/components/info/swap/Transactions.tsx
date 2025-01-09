@@ -20,9 +20,9 @@ const useStyles = (styleProps?: StyleProps) =>
         gap: "1em",
         padding: styleProps?.padding ?? "16px",
         alignItems: "center",
-        gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+        gridTemplateColumns: "1.5fr repeat(4, 1fr) 170px",
         "@media screen and (max-width: 780px)": {
-          gridTemplateColumns: "1.5fr repeat(5, 1fr)",
+          gridTemplateColumns: "1.5fr repeat(4, 1fr) 170px",
           padding: "16px",
         },
       },
@@ -72,7 +72,7 @@ export function Transactions({
             if (!showedTokens) return true;
             return showedTokens?.includes(ele.token0Id) && showedTokens?.includes(ele.token1Id);
           })
-      : [];
+      : null;
   }, [transactions, filter, showedTokens]);
 
   const sortedTransactions = useMemo(() => {
@@ -91,7 +91,7 @@ export function Transactions({
             return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
-      : [];
+      : null;
   }, [filteredTransactions, maxItems, page, sortField, sortDirection]);
 
   const handleSortChange = (sortField: string, sortDirection: SortDirection) => {
@@ -169,20 +169,18 @@ export function Transactions({
             </HeaderCell>
           </Header>
 
+          {(sortedTransactions ?? []).map((transaction, index) => (
+            <TransactionRow
+              key={`${String(transaction.timestamp)}_${index}`}
+              className={classes.wrapper}
+              transaction={transaction}
+              onAddressClick={handleCopy}
+            />
+          ))}
+
           {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
-          {loading ? (
-            <ImageLoading loading={loading} />
-          ) : (
-            (sortedTransactions ?? []).map((transaction, index) => (
-              <TransactionRow
-                key={`${String(transaction.timestamp)}_${index}`}
-                className={classes.wrapper}
-                transaction={transaction}
-                onAddressClick={handleCopy}
-              />
-            ))
-          )}
+          {loading && !sortedTransactions ? <ImageLoading loading={loading} /> : null}
         </Box>
       </Box>
 

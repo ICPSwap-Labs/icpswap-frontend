@@ -2,7 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { BaseTransaction, Null } from "@icpswap/types";
 import { getTransactionsByPool, useBaseStorages } from "./info";
 
-export function usePoolTransactions(poolId: string | Null, offset: number, limit: number, refresh?: number) {
+interface UsePoolTransactionsProps {
+  poolId: string | Null;
+  offset: number;
+  limit: number;
+  refresh?: number;
+  cache?: boolean;
+}
+
+export function usePoolTransactions({ poolId, offset, limit, cache, refresh }: UsePoolTransactionsProps) {
   const { result: storageIds } = useBaseStorages();
 
   const [loading, setLoading] = useState(false);
@@ -11,14 +19,20 @@ export function usePoolTransactions(poolId: string | Null, offset: number, limit
   useEffect(() => {
     async function call() {
       if (storageIds && poolId) {
-        setTransactions(undefined);
+        if (!cache) {
+          setTransactions(undefined);
+        }
+
         setLoading(true);
+
+        let transactions: BaseTransaction[] = [];
 
         for (let i = 0; i < storageIds.length; i++) {
           const result = await getTransactionsByPool(storageIds[i], offset, limit, poolId);
 
           if (result) {
-            setTransactions((prevState) => [...result.content, ...(prevState ?? [])]);
+            transactions = transactions.concat(result.content);
+
             if (result.content.length === limit) {
               break;
             }
@@ -27,12 +41,13 @@ export function usePoolTransactions(poolId: string | Null, offset: number, limit
           }
         }
 
+        setTransactions(transactions);
         setLoading(false);
       }
     }
 
     call();
-  }, [storageIds, poolId, offset, limit, refresh]);
+  }, [storageIds, cache, poolId, offset, limit, refresh]);
 
   return useMemo(() => ({ loading, result: transactions }), [loading, transactions]);
 }
