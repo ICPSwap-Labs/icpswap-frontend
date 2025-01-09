@@ -4,14 +4,14 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { Transactions, StyleProps } from "./Transactions";
 
 export interface UserTransactionsProps {
-  canisterId: string | undefined;
+  poolId: string | undefined;
   styleProps?: StyleProps;
   refresh?: number;
 }
 
-export function UserTransactions({ canisterId, styleProps }: UserTransactionsProps) {
+export function UserTransactions({ poolId, styleProps }: UserTransactionsProps) {
   const principal = useAccountPrincipalString();
-  const { result: transactions, loading } = useUserPoolTransactions(principal, canisterId, 0, 300);
+  const { result: transactions, loading } = useUserPoolTransactions(principal, poolId, 0, 300);
 
   return <Transactions transactions={transactions} loading={loading} hasFilter styleProps={styleProps} />;
 }
