@@ -108,10 +108,10 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
         >
           <Box>
             <Flex gap="0 8px">
-              <Typography>
+              <Typography sx={{ whiteSpace: "nowrap" }}>
                 <Trans>Limit Price</Trans>
               </Typography>
-              <Flex gap="0 2px">
+              <Flex gap="0 2px" sx={{ textAlign: "right", cursor: "pointer" }} onClick={handleInvert}>
                 <Typography sx={{ color: "text.primary" }}>
                   {limitPrice
                     ? invertPrice
@@ -121,7 +121,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
                       : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`
                     : "--"}
                 </Typography>
-                <Box sx={{ width: "20px", height: "20px", cursor: "pointer" }} onClick={handleInvert}>
+                <Box sx={{ width: "20px", height: "20px" }}>
                   <img src="/images/ck-bridge-switch.svg" style={{ width: "20px", height: "20px" }} alt="" />
                 </Box>
               </Flex>

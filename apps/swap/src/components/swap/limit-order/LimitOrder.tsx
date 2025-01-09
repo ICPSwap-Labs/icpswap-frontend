@@ -145,8 +145,8 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
             },
           }}
         >
-          <Box>
-            <Flex gap="0 8px">
+          <Flex vertical fullWidth gap="10px 0" align="flex-start">
+            <Flex gap="4px 8px" wrap="wrap">
               <Typography>
                 <Trans>Limit Price</Trans>
               </Typography>
@@ -166,7 +166,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
               </Flex>
             </Flex>
 
-            <Flex gap="0 8px" sx={{ margin: "10px 0 0 0" }}>
+            <Flex gap="4px 8px" wrap="wrap">
               <Typography>
                 <Trans>Current Price</Trans>
               </Typography>
@@ -179,7 +179,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                 inverted={invertPrice}
               />
             </Flex>
-          </Box>
+          </Flex>
 
           <Button variant="contained" className="secondary" onClick={() => setShowLimitDetails(true)}>
             <Trans>Cancel</Trans>

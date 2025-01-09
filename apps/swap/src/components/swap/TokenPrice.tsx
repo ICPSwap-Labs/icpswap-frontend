@@ -13,7 +13,7 @@ export interface TokenPriceProps {
   sx?: TypographyProps["sx"];
   onClick?: TypographyProps["onClick"];
   showUSD?: boolean;
-  fontSize?: string;
+  fontSize?: number;
 }
 
 export function TokenPrice({
@@ -24,7 +24,7 @@ export function TokenPrice({
   sx,
   onClick,
   showUSD = false,
-  fontSize = "14px",
+  fontSize = 14,
 }: TokenPriceProps) {
   const __price = useMemo(() => {
     if (!price) return undefined;
@@ -44,6 +44,7 @@ export function TokenPrice({
 
   return (
     <Typography
+      className={`fontSize${fontSize}`}
       sx={{
         color: "text.primary",
         ...sx,
@@ -55,7 +56,7 @@ export function TokenPrice({
         : "--"}
 
       {showUSD && inputTokenUSD ? (
-        <Typography component="span" sx={{ fontSize }}>
+        <Typography component="span" className={`fontSize${fontSize}`}>
           ({formatDollarTokenPrice(inputTokenUSD)})
         </Typography>
       ) : null}
