@@ -4,7 +4,7 @@ import type { CallResult } from "@icpswap/types";
 
 export interface CanisterInfo {
   canister_id: string;
-  controllers: string[];
+  controllers: string[] | undefined;
   module_hash: string;
   subnet_id: string;
 }

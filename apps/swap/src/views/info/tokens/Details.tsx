@@ -318,7 +318,7 @@ export function TokenDetail() {
                   <Trans>Controllers</Trans>
                 </Typography>
                 <Flex vertical gap="8px 0" align="flex-start">
-                  {canisterInfo
+                  {canisterInfo && canisterInfo.controllers
                     ? canisterInfo.controllers.map((e) => {
                         return <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{e}</Typography>;
                       })

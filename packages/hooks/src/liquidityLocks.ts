@@ -110,6 +110,8 @@ export function useAllLiquidityLocks(
 
         const result: Array<[UserPositionInfoWithId[], string, string]> = positionInfos
           .map((positionInfos, index) => {
+            const lockId = lockIds[index];
+            if (!lockId) return undefined;
             const alias = lockIds[index].alias[0];
             if (isNullArgs(positionInfos) || isNullArgs(positionInfos)) return undefined;
             return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];

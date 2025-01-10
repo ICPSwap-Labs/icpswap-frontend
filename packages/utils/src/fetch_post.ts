@@ -11,6 +11,8 @@ export async function fetch_post<T>(api: string, data?: any) {
     body: JSON.stringify(data),
   }).catch(() => undefined);
 
+  if (!fetch_result) return undefined;
+
   const result = (await fetch_result.json()) as IcExplorerResult<T> | undefined;
 
   if (result.statusCode === 600) return resultFormat<T>(result.data);
