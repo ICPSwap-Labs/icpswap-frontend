@@ -24,7 +24,7 @@ export function TokenPrice({
   sx,
   onClick,
   showUSD = false,
-  fontSize = 14,
+  fontSize,
 }: TokenPriceProps) {
   const __price = useMemo(() => {
     if (!price) return undefined;

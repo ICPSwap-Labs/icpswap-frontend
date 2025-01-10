@@ -171,13 +171,15 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                 <Trans>Current Price</Trans>
               </Typography>
 
-              <TokenPrice
-                sx={{ color: "text.primary" }}
-                baseToken={inputToken}
-                quoteToken={outputToken}
-                price={currentPrice?.toFixed(outputToken.decimals)}
-                inverted={invertPrice}
-              />
+              <Flex sx={{ flex: 1, justifyContent: "flex-start" }}>
+                <TokenPrice
+                  sx={{ color: "text.primary" }}
+                  baseToken={inputToken}
+                  quoteToken={outputToken}
+                  price={currentPrice?.toFixed(outputToken.decimals)}
+                  inverted={invertPrice}
+                />
+              </Flex>
             </Flex>
           </Flex>
 
