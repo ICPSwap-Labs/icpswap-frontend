@@ -4,11 +4,11 @@ import { Token } from "@icpswap/swap-sdk";
 
 export function isUseTransfer(token: Token | undefined) {
   if (token === undefined) return false;
-  return token.standard.includes("ICRC1") || token.standard === TOKEN_STANDARD.ICP;
+  return token.standard.includes("ICRC1");
 }
 
 export function isUseTransferByStandard(standard: TOKEN_STANDARD) {
-  return standard.includes("ICRC1") || standard === TOKEN_STANDARD.ICP;
+  return standard.includes("ICRC1");
 }
 
 export function actualAmountToPool(token: Token, amount: string) {

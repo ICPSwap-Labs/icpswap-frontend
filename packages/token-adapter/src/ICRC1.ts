@@ -2,7 +2,6 @@ import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc1, icrcArchive } from "@icpswap/actor";
 import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
-import { Principal } from "@dfinity/principal";
 
 import { TokenHolder, Transaction, Metadata } from "./types";
 import {
@@ -222,10 +221,6 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
       } as Metadata,
       message: "",
     };
-  }
-
-  public async setLogo() {
-    return resultFormat<boolean>({ err: "no approve" });
   }
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
