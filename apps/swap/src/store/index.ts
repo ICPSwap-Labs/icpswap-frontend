@@ -101,9 +101,18 @@ const rootPersistConfig = {
       newState = { ...(state ?? {}) };
     }
 
+    // Reset the multipleApprove to 1000
+    if (state?._persist?.version === 3) {
+      if (state) {
+        newState = { ...state, swapCache: { ...(state.swapCache ?? {}), multipleApprove: 1000 } };
+      }
+    } else {
+      newState = { ...(state ?? {}) };
+    }
+
     return Promise.resolve(newState);
   },
-  version: 3,
+  version: 4,
 };
 
 const SessionPersistConfig = {
