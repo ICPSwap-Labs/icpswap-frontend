@@ -170,15 +170,6 @@ export class TokenAdapter {
     });
   }
 
-  public async setLogo({ canisterId, identity, params }: AdapterIdentityRequest<SetLogoRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.setLogo({
-      canisterId,
-      params,
-      identity,
-    });
-  }
-
   public actualReceivedByTransfer(request: ActualReceivedByTransferRequest) {
     const adapter = this.getAdapter(request.canisterId);
     return adapter!.actualReceivedByTransfer(request);

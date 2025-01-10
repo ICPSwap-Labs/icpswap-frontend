@@ -142,8 +142,6 @@ export abstract class BaseTokenAdapter<T> {
 
   public abstract metadata(request: MetadataRequest): MetadataResult;
 
-  public abstract setLogo(request: SetLogoRequest): SetLogoResult;
-
   public abstract actualReceivedByTransfer(request: ActualReceivedByTransferRequest): ActualReceivedByTransferResult;
 
   public abstract getMintingAccount({
