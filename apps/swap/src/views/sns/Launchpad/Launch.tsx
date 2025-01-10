@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useSwapSaleParameters, useSNSSwapInitArgs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { LoadingRow, TextButton } from "components/index";
+import { LoadingRow, TextButton, Wrapper } from "components/index";
 import AvatarImage from "components/Image/Avatar";
 import { useParams, useHistory } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
@@ -39,71 +39,75 @@ export default function Launch() {
   const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
 
   return (
-    <LaunchContext.Provider value={{ reload: reloadCounter, setReload: setReloadCounter }}>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Box sx={{ maxWidth: "1400px", width: "100%" }}>
-          <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-            <ArrowLeft style={{ cursor: "pointer" }} onClick={() => history.push("/sns/launches")} />
-          </Typography>
+    <Wrapper>
+      <LaunchContext.Provider value={{ reload: reloadCounter, setReload: setReloadCounter }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ maxWidth: "1400px", width: "100%" }}>
+            <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
+              <ArrowLeft style={{ cursor: "pointer" }} onClick={() => history.push("/sns/launches")} />
+            </Typography>
 
-          {sns ? (
-            <Box>
+            {sns ? (
               <Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
-                  <AvatarImage style={{ width: "52px", height: "52px" }} src={sns.meta.logo} />
-                  <Typography color="text.primary" fontSize={24} fontWeight={500}>
-                    {sns.meta.name}
+                <Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
+                    <AvatarImage style={{ width: "52px", height: "52px" }} src={sns.meta.logo} />
+                    <Typography color="text.primary" fontSize={24} fontWeight={500}>
+                      {sns.meta.name}
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>{sns.meta.description}</Typography>
+                  <Typography sx={{ margin: "10px 0 0 0", display: "flex" }} component="div">
+                    <TextButton link={sns.meta.url}>{sns.meta.url}</TextButton>
+                    <TextButton link={`https://dashboard.internetcomputer.org/sns/${root_id}`}>
+                      ICP Dashboard
+                    </TextButton>
                   </Typography>
                 </Box>
-                <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>{sns.meta.description}</Typography>
-                <Typography sx={{ margin: "10px 0 0 0", display: "flex" }} component="div">
-                  <TextButton link={sns.meta.url}>{sns.meta.url}</TextButton>
-                  <TextButton link={`https://dashboard.internetcomputer.org/sns/${root_id}`}>ICP Dashboard</TextButton>
-                </Typography>
-              </Box>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: "0 20px",
-                  margin: "20px 0 0 0",
-                  "@media(max-width: 980px)": {
-                    flexDirection: "column",
-                    gap: "20px 0",
-                  },
-                }}
-              >
-                <LaunchDetail
-                  ledger_id={ledger_id}
-                  swap_id={swap_id}
-                  token={token}
-                  saleParameters={saleParameters}
-                  swapInitArgs={swapInitArgs}
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "0 20px",
+                    margin: "20px 0 0 0",
+                    "@media(max-width: 980px)": {
+                      flexDirection: "column",
+                      gap: "20px 0",
+                    },
+                  }}
+                >
+                  <LaunchDetail
+                    ledger_id={ledger_id}
+                    swap_id={swap_id}
+                    token={token}
+                    saleParameters={saleParameters}
+                    swapInitArgs={swapInitArgs}
+                  />
 
-                <LaunchStatus
-                  ledger_id={ledger_id}
-                  swap_id={swap_id}
-                  token={token}
-                  saleParameters={saleParameters}
-                  swapInitArgs={swapInitArgs}
-                />
+                  <LaunchStatus
+                    ledger_id={ledger_id}
+                    swap_id={swap_id}
+                    token={token}
+                    saleParameters={saleParameters}
+                    swapInitArgs={swapInitArgs}
+                  />
+                </Box>
               </Box>
-            </Box>
-          ) : (
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          )}
+            ) : (
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            )}
+          </Box>
         </Box>
-      </Box>
-    </LaunchContext.Provider>
+      </LaunchContext.Provider>
+    </Wrapper>
   );
 }
