@@ -9,3 +9,4 @@ export * from "./LimitTransactions";
 export * from "./LimitWrapper";
 export * from "./LimitOrderTable";
 export * from "./transactions";
+export * from "./LimitLabel";

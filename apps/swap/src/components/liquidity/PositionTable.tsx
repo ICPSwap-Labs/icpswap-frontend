@@ -1,8 +1,9 @@
 import { usePositions } from "hooks/liquidity/usePositions";
-import { pageArgsFormat } from "@icpswap/utils";
-import { useEffect, useState } from "react";
+import { isNullArgs, pageArgsFormat } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 import { PaginationType } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
+import { useLimitOrders } from "@icpswap/hooks";
 
 import { PositionTableUI } from "./PositionTableUI";
 
@@ -30,6 +31,15 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
   }, [poolId, principal]);
 
+  const { result: allLimitOrdersResult } = useLimitOrders(poolId);
+  const allLimitOrders = useMemo(() => {
+    if (isNullArgs(allLimitOrdersResult)) return null;
+
+    return allLimitOrdersResult.lowerLimitOrders
+      .concat(allLimitOrdersResult.upperLimitOrders)
+      .map((element) => element[1].userPositionId);
+  }, [allLimitOrdersResult]);
+
   return (
     <PositionTableUI
       poolId={poolId}
@@ -39,6 +49,7 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
       onPaginationChange={handlePageChange}
       pagination={pagination}
       totalElements={totalElements}
+      allLimitOrders={allLimitOrders}
     />
   );
 }

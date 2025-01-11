@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
-import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount } from "@icpswap/utils";
+import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount, isNullArgs } from "@icpswap/utils";
 import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, Link } from "@icpswap/ui";
 import { LoadingRow, Copy, IsSneedOwner } from "components/index";
+import { LimitLabel } from "components/swap/limit-order";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
@@ -25,6 +26,7 @@ export interface PositionRowProps {
   wrapperClassName?: string;
   sneedLedger?: string | Null;
   showDetails?: boolean;
+  allLimitOrders?: bigint[] | Null;
 }
 
 export function PositionRow({
@@ -33,6 +35,7 @@ export function PositionRow({
   pool,
   showDetails = true,
   wrapperClassName,
+  allLimitOrders,
 }: PositionRowProps) {
   const theme = useTheme();
 
@@ -106,10 +109,20 @@ export function PositionRow({
 
   const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
+  const isLimitOrder = useMemo(() => {
+    if (isNullArgs(allLimitOrders)) return false;
+    return allLimitOrders.includes(BigInt(positionInfo.id));
+  }, [allLimitOrders, positionInfo]);
+
   return (
     <>
       {pool ? (
         <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
+          <BodyCell sx={{ gap: "8px 4px", alignItems: "center" }}>
+            {positionInfo.id.toString()}
+            {isLimitOrder ? <LimitLabel /> : null}
+          </BodyCell>
+
           <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
               <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
@@ -117,8 +130,6 @@ export function PositionRow({
 
             <IsSneedOwner isSneed={isSneed} tooltip={<Trans>The position is locked in Sneed.</Trans>} />
           </BodyCell>
-
-          <BodyCell>{positionInfo.id.toString()}</BodyCell>
 
           <BodyCell>{totalUSDValue ? `${formatDollarAmount(totalUSDValue)}` : "--"}</BodyCell>
 
