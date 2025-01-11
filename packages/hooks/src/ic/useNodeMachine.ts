@@ -1,4 +1,6 @@
 import { useCallback } from "react";
+import { Null } from "@icpswap/types";
+import { isNullArgs } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
@@ -16,5 +18,42 @@ export function useNodeMachines() {
       if (!fetch_result) return undefined;
       return (await fetch_result.json()) as NodeMachineResult;
     }, []),
+  );
+}
+
+export interface NodeMachinesOfSubnet {
+  alertname: string;
+  dc_id: string;
+  dc_name: string;
+  ip_address: string;
+  node_id: string;
+  node_operator_id: string;
+  node_provider_id: string;
+  node_provider_name: string;
+  node_type: string;
+  owner: string;
+  region: string;
+  status: string;
+  subnet_id: string;
+}
+
+export interface NodeMachinesOfSubnetResult {
+  nodes: NodeMachineResult[];
+}
+
+interface UserNodeMachinesOfSubnetProps {
+  subnet: string | Null;
+}
+
+export function useNodeMachinesOfSubnet({ subnet }: UserNodeMachinesOfSubnetProps) {
+  return useCallsData(
+    useCallback(async () => {
+      if (isNullArgs(subnet)) return undefined;
+      const fetch_result = await fetch(`https://ic-api.internetcomputer.org/api/v3/nodes?subnet=${subnet}`).catch(
+        () => undefined,
+      );
+      if (!fetch_result) return undefined;
+      return (await fetch_result.json()) as NodeMachinesOfSubnetResult;
+    }, [subnet]),
   );
 }
