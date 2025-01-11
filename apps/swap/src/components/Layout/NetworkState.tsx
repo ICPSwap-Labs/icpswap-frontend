@@ -1,7 +1,7 @@
 import { useTheme, Box, Typography } from "components/Mui";
 import { Flex, Link } from "@icpswap/ui";
 import { Trans } from "@lingui/macro";
-import { useNodeMachines, useSubnetBlockRate } from "@icpswap/hooks";
+import { useSubnetBlockRate, useNodeMachinesOfSubnet } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { ArrowUpRight } from "react-feather";
@@ -11,13 +11,12 @@ import { NetworkStateIcon } from "components/NetworkStateIcon";
 export function NetworkState() {
   const theme = useTheme();
 
-  const { result: nodeMachines } = useNodeMachines();
+  const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
   const { result: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
 
   const totalNodeMachines = useMemo(() => {
     if (isNullArgs(nodeMachines)) return null;
-    const val = nodeMachines.total_nodes[0];
-    return val ? val[1] : null;
+    return nodeMachines.nodes.length;
   }, [nodeMachines]);
 
   const blockRateLevel = useMemo(() => {
@@ -75,7 +74,7 @@ export function NetworkState() {
               <Typography fontSize="12px">
                 <Trans>Node Machines:</Trans>
               </Typography>
-              <Link link="https://dashboard.internetcomputer.org/nodes">
+              <Link link={`https://dashboard.internetcomputer.org/subnet/${ICPSwapSubnet}`}>
                 <Flex gap="0 4px">
                   <Typography color="text.primary" fontSize="12px">
                     {totalNodeMachines ?? "--"}
