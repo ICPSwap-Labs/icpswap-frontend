@@ -115,7 +115,7 @@ export function LimitOrderRow({
           <BodyCell>{dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm")}</BodyCell>
 
           {/* You pay */}
-          <BodyCell sx={{ gap: "0 6px" }}>
+          <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {inputToken && inputAmount ? `${formatAmount(inputAmount.toString())} ${inputToken.symbol}` : "--"}
@@ -123,7 +123,7 @@ export function LimitOrderRow({
           </BodyCell>
 
           {/* You receive */}
-          <BodyCell sx={{ gap: "0 6px" }}>
+          <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {outputToken && outputAmount ? `${formatAmount(outputAmount)} ${outputToken.symbol}` : "--"}
