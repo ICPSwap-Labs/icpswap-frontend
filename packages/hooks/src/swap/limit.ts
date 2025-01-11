@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { swapPool, limitTransaction } from "@icpswap/actor";
 import type { LimitOrderKey, LimitOrderValue, Null, LimitTransactionResult, LimitOrder } from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs, nonNullArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, nonNullArgs, isNullArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 
 import { useCallsData } from "../useCallData";
@@ -43,10 +43,10 @@ export async function getLimitOrders(canisterId: string) {
   }>(await (await swapPool(canisterId)).getLimitOrders()).data;
 }
 
-export function useLimitOrders(canisterId: string | undefined) {
+export function useLimitOrders(canisterId: string | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (!canisterId) return undefined;
+      if (isNullArgs(canisterId)) return undefined;
       return await getLimitOrders(canisterId);
     }, [canisterId]),
   );
