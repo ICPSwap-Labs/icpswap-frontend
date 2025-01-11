@@ -105,7 +105,7 @@ export default function Swap() {
           ) : null}
         </Box>
 
-        {noLiquidity === false ? (
+        {noLiquidity === false && activeTab === Tab.Swap ? (
           <MainCard level={1} sx={{ margin: "8px 0 0 0" }} padding="10px" borderRadius="12px">
             <Reclaim
               fontSize="12px"
