@@ -454,8 +454,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(tslib@2.4.0)
       '@nfid/identitykit':
-        specifier: 1.0.3
-        version: 1.0.3(5e2735ssoyj3fkrc5ehibxxrue)
+        specifier: 1.0.4
+        version: 1.0.4(5e2735ssoyj3fkrc5ehibxxrue)
       '@nfid/wallet':
         specifier: ^1.1.0
         version: 1.1.0
@@ -3304,8 +3304,8 @@ packages:
     peerDependencies:
       tslib: 2.4.0
 
-  '@nfid/identitykit@1.0.3':
-    resolution: {integrity: sha512-plONWdPI7/3tsB7C9A5aIFQ3Q3j7onZzTGlh6PFNZpZB400Ry7RoqneffqDymV99zYTtkTHHJ3GmJCHa6bslww==}
+  '@nfid/identitykit@1.0.4':
+    resolution: {integrity: sha512-3RjtUBIh2H2eN840d1+Ebf/eF2Blaz2eT2dpZ/jnox5JEetzWdcLFRqR73557FT4NpiUS1p85ufNMz90oI8PcQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@dfinity/agent': 2.1.2
@@ -11891,6 +11891,7 @@ packages:
 
   sudo-prompt@9.2.1:
     resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   superstruct@1.0.4:
     resolution: {integrity: sha512-7JpaAoX2NGyoFlI9NBh66BQXGONc+uE+MRS5i2iOBKuS4e+ccgMDjATgZldkah+33DakBxDHiss9kvUcGAO8UQ==}
@@ -16651,7 +16652,7 @@ snapshots:
     dependencies:
       tslib: 2.4.0
 
-  '@nfid/identitykit@1.0.3(5e2735ssoyj3fkrc5ehibxxrue)':
+  '@nfid/identitykit@1.0.4(5e2735ssoyj3fkrc5ehibxxrue)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/auth-client': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)

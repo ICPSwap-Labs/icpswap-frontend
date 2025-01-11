@@ -1,12 +1,13 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { principalToAccount, isPrincipal, isNullArgs } from "@icpswap/utils";
+import { ic_host } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
 import { Principal } from "@dfinity/principal";
 import { connector, WalletConnector } from "utils/connector";
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
-import { useIdentityKit, useAgent } from "@nfid/identitykit/react";
+import { useIsInitializing, useAuth, useAgent } from "@nfid/identitykit/react";
 import { NFIDW, Plug, InternetIdentity } from "@nfid/identitykit";
 
 import store from "../index";
@@ -14,7 +15,7 @@ import { login, logout, updateConnected, updateWalletConnector } from "./actions
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
 import { NF_IDConnector } from "./NF_IDConnector";
 
-const IdentityKitConnector = [Connector.NFID, Connector.IC, Connector.PLUG];
+const IdentityKitConnector = [Connector.NFID];
 const IdentityKitId = {
   [Connector.IC]: InternetIdentity.id,
   [Connector.NFID]: NFIDW.id,
@@ -197,8 +198,11 @@ export function useInitialConnect() {
 
 export function useIdentityKitInitialConnect() {
   const dispatch = useAppDispatch();
-  const { user, isInitializing } = useIdentityKit();
-  const agent = useAgent();
+
+  const isInitializing = useIsInitializing();
+
+  const { user } = useAuth();
+  const agent = useAgent({ host: ic_host });
   const disconnect = useDisconnect();
 
   const [loading, setLoading] = useState(true);
@@ -258,7 +262,7 @@ export function useConnectManager() {
   const open = useAppSelector((state) => state.auth.walletConnectorOpen);
   const connector = useAppSelector((state) => state.auth.walletType);
 
-  const { connect, disconnect: identityKitDisconnect } = useIdentityKit();
+  const { connect, disconnect: identityKitDisconnect } = useAuth();
 
   const showConnector = useCallback(
     (open: boolean) => {
