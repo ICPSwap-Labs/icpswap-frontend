@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
-import { Grid } from "@mui/material";
-import { useWalletConnectorManager } from "store/global/hooks";
+import { Flex } from "@icpswap/ui";
+import { useConnectManager } from "store/auth/hooks";
 
 export default function WalletConnector({ children }: { children: ReactNode }) {
-  const [, manager] = useWalletConnectorManager();
+  const { showConnector } = useConnectManager();
 
   return (
-    <Grid container alignItems="center" justifyContent="center" onClick={() => manager(true)}>
+    <Flex fullWidth justify="center" onClick={() => showConnector(true)}>
       {children}
-    </Grid>
+    </Flex>
   );
 }

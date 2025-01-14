@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { t } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
-import { Connector as ConnectorType } from "constants/wallet";
-import { WalletConnector } from "utils/connector";
-import { useWalletConnectorManager } from "store/global/hooks";
+import { Connector } from "constants/wallet";
+import { useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
@@ -31,64 +30,44 @@ const useStyles = makeStyles(() => {
 
 export interface ConnectorProps {
   label: string;
-  value: ConnectorType;
+  value: Connector;
   logo: string;
   disabled?: boolean;
 }
 
 export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
-  const [, walletConnectorManager] = useWalletConnectorManager();
-
   const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();
+  const { showConnector, connect } = useConnectManager();
 
   const [loading, setLoading] = useState(false);
-  const [selfConnector, setSelfConnector] = useState<null | WalletConnector>(null);
-
-  useEffect(() => {
-    async function call() {
-      const selfConnector = new WalletConnector();
-      await selfConnector.init(value);
-
-      // TODO
-      // The error that ii throw Code: 400 Body: Invalid signature: Invalid basic signature
-      // but if init twice could avert this error
-      if (value === ConnectorType.IC) {
-        await selfConnector.init(value);
-      }
-
-      setSelfConnector(selfConnector);
-    }
-
-    call();
-  }, []);
 
   const handleConnect = async () => {
     if (disabled) return;
 
     try {
-      if (loading || !value || !selfConnector) return;
+      if (loading || !value) return;
 
-      if ((!window.ic || !window.ic?.infinityWallet) && value === ConnectorType.INFINITY) {
+      if ((!window.ic || !window.ic?.infinityWallet) && value === Connector.INFINITY) {
         openErrorTip(t`Please install the Bitfinity wallet extension!`);
         return;
       }
 
-      if ((!window.ic || !window.ic?.plug) && value === ConnectorType.PLUG) {
+      if ((!window.ic || !window.ic?.plug) && value === Connector.PLUG) {
         openErrorTip(t`Please install the plug wallet extension!`);
         return;
       }
 
       setLoading(true);
 
-      const connectSuccessful = await selfConnector.connect();
+      const connectSuccessful = await connect(value);
 
       if (!connectSuccessful) {
         openErrorTip(t`An unknown error occurred. Please try connect again.`);
       }
 
-      walletConnectorManager(false);
+      showConnector(false);
       setLoading(false);
     } catch (error: any) {
       console.error(error);

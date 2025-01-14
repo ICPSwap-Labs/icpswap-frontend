@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { useFetchXDR2USD, useFetchGlobalTokenList, useWalletConnectorManager } from "store/global/hooks";
+import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";
 import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
@@ -49,9 +49,7 @@ export default function App() {
   usePlugExternalDisconnect();
   useFetchSnsAllTokensInfo();
 
-  const { isConnected } = useConnectManager();
-
-  const [walletConnectorOpen] = useWalletConnectorManager();
+  const { open: connectorModalOpen, isConnected } = useConnectManager();
 
   const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
   const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
@@ -99,7 +97,7 @@ export default function App() {
                         <GlobalSteps />
                         <GlobalFetch />
                         {isConnected ? <RiskStatement /> : null}
-                        {walletConnectorOpen ? <WalletConnector /> : null}
+                        {connectorModalOpen ? <WalletConnector /> : null}
                       </NavigationScroll>
                     </ActorInitial>
                   </GlobalContext.Provider>

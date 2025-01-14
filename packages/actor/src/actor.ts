@@ -26,7 +26,6 @@ export enum Connector {
   NFID = "NFID",
   INFINITY = "INFINITY",
   ME = "ME",
-  STOIC_MNEMONIC = "STOIC_MNEMONIC",
   Metamask = "Metamask",
 }
 
@@ -85,7 +84,7 @@ export class Actor {
     if (!id && actorName) id = cachedCanisterIds[actorName];
     if (!id) throw new Error("No canister id");
 
-    const _host = host ?? this.host;
+    const __host = host ?? this.host;
 
     const isRejected = false;
 
@@ -109,8 +108,8 @@ export class Actor {
       actor = await createBaseActor<T>({
         canisterId: id,
         interfaceFactory: idlFactory,
-        agent: this.AnonymousAgent(_host),
-        fetchRootKey: _host !== ic_host,
+        agent: await this.AnonymousAgent(__host),
+        fetchRootKey: __host !== ic_host,
       });
     }
 
@@ -136,7 +135,7 @@ export class Actor {
 
           if (this.beforeSubmit) {
             const checkResult = await this.beforeSubmit({
-              canisterId: id ?? "",
+              canisterId: id,
               method: key,
               identity,
               connector: this.connector,
@@ -190,29 +189,9 @@ export class Actor {
     return _actor as ActorSubclass<T>;
   }
 
-  public AnonymousAgent(host?: string) {
-    return new HttpAgent({
+  public async AnonymousAgent(host?: string) {
+    return await HttpAgent.create({
       host: host ?? this.host,
-    });
-  }
-
-  public async createAgent(canisterId: string, host: string, identity?: ActorIdentity): Promise<HttpAgent> {
-    // connector is plug type
-    if (identity === true) {
-      if (this.connector === Connector.PLUG) {
-        await window.ic.plug.createAgent({ whitelist: [canisterId], host });
-        return window.ic.plug.agent;
-      }
-      if (this.connector === Connector.INFINITY) {
-        return new HttpAgent({
-          host,
-        });
-      }
-      return window.icConnector.httpAgent;
-    }
-
-    return new HttpAgent({
-      host,
     });
   }
 

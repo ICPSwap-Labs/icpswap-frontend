@@ -1,8 +1,8 @@
 import { ActorSubclass } from "@dfinity/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
-import { type CreateActorArgs, IConnector, ConnectorType, WalletConnectorConfig } from "./connectors";
+import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
 
-export class InfinityConnector implements IConnector {
+export class InfinityConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;
@@ -12,7 +12,7 @@ export class InfinityConnector implements IConnector {
 
   private principal?: string;
 
-  public type = ConnectorType.INFINITY;
+  public type = Connector.INFINITY;
 
   public get getPrincipal() {
     return this.principal;
@@ -78,5 +78,5 @@ export class InfinityConnector implements IConnector {
 export const InfinitySwapWallet = {
   connector: InfinityConnector,
   id: "infinity",
-  type: ConnectorType.INFINITY,
+  type: Connector.INFINITY,
 };

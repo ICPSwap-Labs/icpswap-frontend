@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Grid, Typography, Box, Checkbox, Button } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Typography, Box, Checkbox, Button, makeStyles, useTheme, Theme } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 import Modal from "components/modal/index";
 import { Trans, t } from "@lingui/macro";
 import { TextButton } from "components/index";
@@ -44,15 +43,13 @@ export async function setRiskStorage(isRead: boolean) {
   await storage.setItem(RISK_STORAGE_NAME, JSON.stringify(isRead));
 }
 
-export default function RiskStatementModal({
-  open,
-  onClose,
-  onRead,
-}: {
+interface RiskStatementModalProps {
   open: boolean;
   onClose: () => void;
   onRead: () => void;
-}) {
+}
+
+export default function RiskStatementModal({ open, onClose, onRead }: RiskStatementModalProps) {
   const classes = useStyles();
 
   const [isRead, setIsRead] = useState(false);
@@ -133,9 +130,9 @@ export default function RiskStatementModal({
         </Box>
       </Box>
       <Box mt="10px">
-        <Grid
-          container
-          alignItems="center"
+        <Flex
+          fullWidth
+          align="center"
           sx={{
             cursor: "pointer",
             userSelect: "none",
@@ -159,7 +156,7 @@ export default function RiskStatementModal({
           >
             <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
           </Typography>
-        </Grid>
+        </Flex>
       </Box>
       <Box mt="10px">
         <Button fullWidth variant="contained" size="large" disabled={!isRead} onClick={handleRead}>

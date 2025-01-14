@@ -1,10 +1,10 @@
 import { ActorSubclass } from "@dfinity/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
-import { type CreateActorArgs, IConnector, ConnectorType, type WalletConnectorConfig } from "./connectors";
+import { type CreateActorArgs, ConnectorAbstract, Connector, type WalletConnectorConfig } from "./connectors";
 
 const MAX_PLUG_WHITELIST_NUMBER = 200;
 
-export class PlugConnector implements IConnector {
+export class PlugConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;
@@ -14,7 +14,7 @@ export class PlugConnector implements IConnector {
 
   private principal?: string;
 
-  public type = ConnectorType.PLUG;
+  public type = Connector.PLUG;
 
   public get getPrincipal() {
     return this.principal;

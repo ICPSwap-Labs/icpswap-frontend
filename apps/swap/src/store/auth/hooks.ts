@@ -1,14 +1,26 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { principalToAccount, isPrincipal } from "@icpswap/utils";
+import { principalToAccount, isPrincipal, isNullArgs } from "@icpswap/utils";
+import { ic_host } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
 import { Principal } from "@dfinity/principal";
-import { getConnectorIsConnected, getConnectorPrincipal, connector, WalletConnector } from "utils/connector";
+import { connector, WalletConnector } from "utils/connector";
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
+import { useIsInitializing, useAuth, useAgent } from "@nfid/identitykit/react";
+import { NFIDW, Plug, InternetIdentity } from "@nfid/identitykit";
+
 import store from "../index";
-import { login, logout, updateConnected } from "./actions";
+import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
+import { NF_IDConnector } from "./NF_IDConnector";
+
+const IdentityKitConnector = [Connector.NFID];
+const IdentityKitId = {
+  [Connector.IC]: InternetIdentity.id,
+  [Connector.NFID]: NFIDW.id,
+  [Connector.PLUG]: Plug.id,
+};
 
 export function useIsUnLocked() {
   return useAppSelector((state) => state.session.isUnLocked);
@@ -28,13 +40,17 @@ export function useConnectorType() {
 export async function connectToConnector(connectorType: Connector) {
   await connector.init(connectorType);
 
-  if (!(await connector.isConnected())) {
+  const isConnected = await connector.isConnected();
+
+  if (!isConnected) {
     await connector.connect();
-  } else if (connector.connector) {
+  }
+
+  if (connector.connector) {
     window.icConnector = connector.connector;
   }
 
-  return await getConnectorIsConnected();
+  return await window.icConnector.isConnected();
 }
 
 export function useConnectorStateConnected() {
@@ -59,44 +75,26 @@ export function getStoreWalletUnlocked() {
 
 export interface UpdateAuthProps {
   walletType: Connector;
+  principal?: string;
+  connected?: boolean;
 }
 
-export async function updateAuth({ walletType }: UpdateAuthProps) {
-  const state = store.getState();
-
-  const principal = await getConnectorPrincipal();
-
-  if (!principal) return;
-
-  const account = principalToAccount(principal);
-
-  const mnemonic =
-    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.mnemonic : "";
-  const password =
-    walletType === Connector.ICPSwap || walletType === Connector.STOIC_MNEMONIC ? state.auth.password : "";
+export async function updateAuth({ principal, walletType, connected }: UpdateAuthProps) {
+  const account = principal ? principalToAccount(principal) : null;
 
   store.dispatch(
     login({
       name: walletType,
-      mnemonic,
       account,
       principal,
       walletType,
-      password,
     }),
   );
 
+  if (connected === false) return;
+
   store.dispatch(updateConnected({ isConnected: true }));
   store.dispatch(_updateLockStatus(false));
-}
-
-export function setActorHttpAgent() {
-  const { auth } = store.getState();
-  const { walletType } = auth;
-
-  if (!walletType) return;
-
-  actor.setConnector(walletType);
 }
 
 export function updateLockStatus(locked: boolean) {
@@ -113,7 +111,7 @@ export function useCleanLogState() {
   }, [dispatch, updateLockStatus]);
 }
 
-export function useUserLogout() {
+export function useDisconnect() {
   const dispatch = useAppDispatch();
   const walletType = useConnectorType();
 
@@ -123,51 +121,6 @@ export function useUserLogout() {
     await updateLockStatus(true);
     dispatch(updateConnected({ isConnected: false }));
   }, [dispatch, updateLockStatus]);
-}
-
-export function useConnectManager() {
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(true);
-
-  const connectorStateConnected = useConnectorStateConnected();
-  const isUnLocked = useIsUnLocked();
-  const logout = useUserLogout();
-
-  useEffect(() => {
-    async function call() {
-      const connectorType = getConnectorType();
-      if (!connectorType) {
-        dispatch(updateConnected({ isConnected: false }));
-        setLoading(false);
-        return;
-      }
-
-      const new_connector = await WalletConnector.create(connectorType);
-      const expired = await new_connector.expired();
-
-      if (expired) {
-        logout();
-        setLoading(false);
-        return;
-      }
-
-      const isConnected = await connectToConnector(connectorType);
-
-      if (connectorType === Connector.ME) {
-        updateAuth({ walletType: Connector.ME });
-      }
-
-      dispatch(updateConnected({ isConnected }));
-
-      if (isConnected) setActorHttpAgent();
-
-      setLoading(false);
-    }
-
-    call();
-  }, [isUnLocked]);
-
-  return useMemo(() => ({ isConnected: connectorStateConnected, loading }), [connectorStateConnected, loading]);
 }
 
 export function useAccountPrincipal(): Principal | undefined {
@@ -198,4 +151,171 @@ export function useAccountPrincipalString() {
   return useMemo(() => {
     return principal?.toString();
   }, [principal]);
+}
+
+export function useInitialConnect() {
+  const dispatch = useAppDispatch();
+  const isUnLocked = useIsUnLocked();
+  const disconnect = useDisconnect();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function call() {
+      const connectorType = getConnectorType();
+
+      if (!connectorType) {
+        dispatch(updateConnected({ isConnected: false }));
+        setLoading(false);
+        return;
+      }
+
+      if (IdentityKitConnector.includes(connectorType)) {
+        setLoading(false);
+        return;
+      }
+
+      const new_connector = await WalletConnector.create(connectorType);
+      const expired = await new_connector.expired();
+
+      if (expired) {
+        disconnect();
+        setLoading(false);
+        return;
+      }
+
+      const isConnected = await connectToConnector(connectorType);
+
+      if (isMeWebview()) {
+        updateAuth({ walletType: Connector.ME });
+      }
+
+      dispatch(updateConnected({ isConnected }));
+
+      if (isConnected) {
+        // Initial actor
+        actor.setConnector(connectorType);
+      }
+
+      setLoading(false);
+    }
+
+    call();
+  }, [isUnLocked]);
+
+  return useMemo(() => ({ loading }), [loading]);
+}
+
+export function useIdentityKitInitialConnect() {
+  const dispatch = useAppDispatch();
+
+  const isInitializing = useIsInitializing();
+
+  const { user } = useAuth();
+  const agent = useAgent({ host: ic_host });
+  const disconnect = useDisconnect();
+
+  const [loading, setLoading] = useState(true);
+
+  // console.log("user: ", user);
+  // console.log("agent: ", agent);
+  // console.log("isInitializing: ", isInitializing);
+
+  useEffect(() => {
+    async function call() {
+      const connector = getConnectorType();
+
+      if (!connector) {
+        dispatch(updateConnected({ isConnected: false }));
+        setLoading(false);
+        return;
+      }
+
+      if (IdentityKitConnector.includes(connector)) {
+        if (isInitializing === false && isNullArgs(user)) {
+          await disconnect();
+          setLoading(false);
+          return;
+        }
+
+        if (user && user.principal) {
+          updateAuth({ walletType: connector, principal: user.principal.toString() });
+          dispatch(updateConnected({ isConnected: true }));
+          // Initial actor
+          actor.setConnector(connector);
+
+          if (agent) {
+            // @ts-ignore
+            window.icConnector = new NF_IDConnector(agent);
+          }
+        }
+      }
+
+      setLoading(false);
+    }
+
+    call();
+  }, [connector, isInitializing, user, agent]);
+
+  return useMemo(
+    () => ({
+      loading,
+    }),
+    [loading],
+  );
+}
+
+export function useConnectManager() {
+  const dispatch = useAppDispatch();
+  const connectorStateConnected = useConnectorStateConnected();
+  const disconnect = useDisconnect();
+  const open = useAppSelector((state) => state.auth.walletConnectorOpen);
+  const connector = useAppSelector((state) => state.auth.walletType);
+
+  const { connect, disconnect: identityKitDisconnect } = useAuth();
+
+  const showConnector = useCallback(
+    (open: boolean) => {
+      dispatch(updateWalletConnector(open));
+    },
+    [dispatch],
+  );
+
+  const __connect = useCallback(async (connector: Connector) => {
+    if (IdentityKitConnector.includes(connector)) {
+      await connect(IdentityKitId[connector]);
+      updateAuth({ walletType: connector, connected: false });
+      return true;
+    }
+
+    const selfConnector = new WalletConnector();
+    await selfConnector.init(connector);
+
+    return await selfConnector.connect();
+  }, []);
+
+  const __disconnect = useCallback(async () => {
+    if (connector) {
+      if (IdentityKitConnector.includes(connector)) {
+        await identityKitDisconnect();
+      }
+    }
+
+    await disconnect();
+  }, [connector]);
+
+  const { loading } = useInitialConnect();
+  useIdentityKitInitialConnect();
+
+  return useMemo(
+    () => ({
+      open,
+      connect: __connect,
+      disconnect: __disconnect,
+      showConnector,
+      isConnected: connectorStateConnected,
+      loading,
+    }),
+    [open, __connect, __disconnect, showConnector, connectorStateConnected, loading],
+  );
 }

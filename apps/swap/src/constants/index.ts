@@ -67,6 +67,9 @@ export const MAX_SWAP_INPUT_LENGTH = 25;
 export const ICPSwapSubnet = "lhg73-sax6z-2zank-6oer2-575lz-zgbxx-ptudx-5korm-fy7we-kh4hl-pqe";
 export const ICPSwapStableBlockRate = 2;
 
+// 24 hours (nanosecond)
+export const MAX_IDENTITY_KIT_TIME_LIVE = BigInt(24 * 3600) * BigInt(1000 * 1000 * 1000);
+
 export * from "./canister";
 export * from "./server";
 export * from "./tokens";

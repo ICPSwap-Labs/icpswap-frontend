@@ -118,7 +118,8 @@ export async function withdraw(poolId: string, token: string, fee: bigint, amoun
 }
 
 export async function quote(poolId: string, args: SwapArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId)).quote(args)).data;
+  const quote_result = await (await swapPool(poolId)).quote(args);
+  return resultFormat<bigint>(quote_result).data;
 }
 
 export async function swap(poolId: string, args: SwapArgs) {
