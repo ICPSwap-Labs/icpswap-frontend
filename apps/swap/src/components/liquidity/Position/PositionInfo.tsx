@@ -6,6 +6,7 @@ import { Position } from "@icpswap/swap-sdk";
 import { Trans } from "@lingui/macro";
 import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
+import { LimitLabel } from "components/swap/limit-order/index";
 import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
 import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
 import { useCallback, useMemo } from "react";
@@ -13,6 +14,7 @@ import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
+import { useIsLimitOrder } from "hooks/swap/limit-order";
 
 interface PositionInfoProps {
   position: Position;
@@ -79,12 +81,17 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     principal: owner ? (isValidPrincipal(owner) ? owner : null) : null,
   });
 
+  const isLimit = useIsLimitOrder({ poolId: position.pool.id, positionId });
+
   return (
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start" fullWidth>
-        <Typography color="text.primary" sx={{ fontWeight: 500 }}>
-          <Trans>Position Info</Trans>
-        </Typography>
+        <Flex fullWidth align="flex-start" justify="space-between">
+          <Typography color="text.primary" sx={{ fontWeight: 500 }}>
+            <Trans>Position Info</Trans>
+          </Typography>
+          {isLimit ? <LimitLabel /> : null}
+        </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>
@@ -129,7 +136,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           </Flex>
         </Flex>
 
-        {isOwner ? (
+        {isOwner && isLimit === false ? (
           <Flex fullWidth>
             <TransferPosition
               position={position}
@@ -143,7 +150,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           </Flex>
         ) : null}
 
-        {isOwner ? (
+        {isOwner && isLimit === false ? (
           <Box
             sx={{
               width: "100%",
@@ -185,7 +192,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           </Box>
         ) : null}
 
-        {farmId && isStakedByOwner === true ? (
+        {farmId && isStakedByOwner === true && isLimit === false ? (
           <Button
             fullWidth
             variant="contained"

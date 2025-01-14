@@ -15,7 +15,7 @@ import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
-import { LimitPanel } from "components/LimitPanel";
+import { LimitLabel } from "components/swap/limit-order/index";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -301,7 +301,7 @@ export function PositionCard({
 
           {isLimit ? (
             <Flex gap="0 4px">
-              <LimitPanel />
+              <LimitLabel />
             </Flex>
           ) : null}
         </Flex>

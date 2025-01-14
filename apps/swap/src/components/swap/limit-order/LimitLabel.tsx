@@ -3,10 +3,7 @@ import { Flex } from "@icpswap/ui";
 
 export function LimitLabel() {
   return (
-    <Flex
-      justify="center"
-      sx={{ width: "46px", height: "24px", borderRadius: "8px", background: "rgb(84 192 129 / 10%)" }}
-    >
+    <Flex sx={{ background: "rgb(84 192 129 / 10%)", borderRadius: "8px", padding: "6px 9px" }}>
       <Typography color="text.success" fontSize="12px">
         Limit
       </Typography>

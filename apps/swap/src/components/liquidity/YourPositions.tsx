@@ -1,18 +1,18 @@
-import { useContext, useEffect, useCallback, useMemo } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import { Box, Button } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { NoData, LoadingRow, Flex } from "components/index";
-import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
 import { PositionContext } from "components/swap/index";
-import { useUserLimitOrders } from "@icpswap/hooks";
 import { useSortedPositions } from "hooks/swap/index";
 import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool } from "hooks/staking-farm";
+import { useIsLimitOrder } from "hooks/swap/limit-order";
 
 interface PositionItemProps {
   position: UserPosition;
@@ -21,8 +21,6 @@ interface PositionItemProps {
 }
 
 function PositionItem({ position: positionDetail, filterState, sort }: PositionItemProps) {
-  const principal = useAccountPrincipal();
-
   const { position } = usePosition({
     poolId: positionDetail.id,
     tickLower: positionDetail.tickLower,
@@ -32,11 +30,7 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
 
   const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position?.pool.id });
 
-  const { result: userLimitOrders } = useUserLimitOrders(position?.pool.id, principal?.toString());
-
-  const isLimit = useMemo(() => {
-    return userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionDetail.index)) : false;
-  }, [userLimitOrders, positionDetail]);
+  const isLimit = useIsLimitOrder({ poolId: position?.pool.id, positionId: positionDetail.index });
 
   return (
     <PositionCard
