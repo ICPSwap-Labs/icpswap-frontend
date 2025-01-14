@@ -11,7 +11,6 @@ import { AuthState } from "./auth/states";
 import { SessionState } from "./session/states";
 import { GlobalState } from "./global/states";
 import { NFTTradeState } from "./NFTTrade/states";
-import { SnackbarState } from "./snackbar/states";
 import { LoadingState } from "./loadingReducer";
 import { NFTState } from "./nft/states";
 import { WalletState } from "./wallet/states";
@@ -37,7 +36,6 @@ export interface AllState {
   global: GlobalState;
   loading: LoadingState;
   cache: any;
-  snackbar: SnackbarState;
   swap: SwapState;
   swapLiquidity: SwapLiquidityState;
   swapBurn: SwapBurnState;

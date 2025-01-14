@@ -91,7 +91,7 @@ export class MetamaskConnector implements IConnector {
   }
 
   async createActor<Service>({ canisterId, interfaceFactory }: CreateActorArgs): Promise<ActorSubclass<Service>> {
-    const httpAgent = new HttpAgent({ identity: this.identity, host: this.config.host });
+    const httpAgent = await HttpAgent.create({ identity: this.identity, host: this.config.host });
 
     return Actor.createActor<Service>(interfaceFactory, {
       agent: httpAgent,

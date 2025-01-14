@@ -18,17 +18,16 @@ export enum TradeState {
 }
 
 export function useBestTrade(
-  inputCurrency: Token | undefined,
-  outputCurrency: Token | undefined,
+  inputToken: Token | undefined,
+  outputToken: Token | undefined,
   typedValue: string | undefined,
 ) {
   const actualSwapValue = typedValue;
 
   // reload when typeValue is changed
-  const { routes, loading: routesLoading, checked, noLiquidity } = useAllRoutes(inputCurrency, outputCurrency);
+  const { routes, loading: routesLoading, checked, noLiquidity } = useAllRoutes(inputToken, outputToken);
 
-  const zeroForOne =
-    inputCurrency && outputCurrency ? inputCurrency.wrapped.sortsBefore(outputCurrency.wrapped) : undefined;
+  const zeroForOne = inputToken && outputToken ? inputToken.sortsBefore(outputToken) : undefined;
 
   const pool = useMemo(() => {
     if (!routes) return undefined;
@@ -76,9 +75,9 @@ export function useBestTrade(
 
   return useMemo(() => {
     if (
-      !inputCurrency ||
-      !outputCurrency ||
-      inputCurrency.equals(outputCurrency) ||
+      !inputToken ||
+      !outputToken ||
+      inputToken.equals(outputToken) ||
       !actualSwapValue ||
       new BigNumber(actualSwapValue).isEqualTo(0)
     ) {
@@ -128,7 +127,7 @@ export function useBestTrade(
       },
     );
 
-    const inputAmount = tryParseAmount(actualSwapValue, inputCurrency);
+    const inputAmount = tryParseAmount(actualSwapValue, inputToken);
 
     if (!bestRoute || !amountOut || !inputAmount) {
       return {
@@ -148,7 +147,7 @@ export function useBestTrade(
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount,
-        outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, amountOut.toString()),
+        outputAmount: CurrencyAmount.fromRawAmount(outputToken, amountOut.toString()),
       }),
       tradePoolId: pool?.id,
       pool,
@@ -156,9 +155,9 @@ export function useBestTrade(
       noLiquidity,
     };
   }, [
-    inputCurrency,
+    inputToken,
+    outputToken,
     actualSwapValue,
-    outputCurrency,
     quotesResults,
     routes,
     routesLoading,

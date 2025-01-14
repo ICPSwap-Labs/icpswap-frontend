@@ -1,8 +1,6 @@
 import { useState, memo, useCallback, useRef } from "react";
 import { Box } from "components/Mui";
 import { MainCard, Flex } from "components/index";
-import SwapSettingIcon from "components/swap/SettingIcon";
-import { SwapProButton } from "components/swap/SwapProButton";
 import {
   SwapWrapper,
   type SwapWrapperRef,
@@ -12,6 +10,8 @@ import {
   CreatePool,
   SwapTabPanels,
   TABS,
+  SwapProEntry,
+  SwapSettings,
 } from "components/swap/index";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -107,8 +107,8 @@ export function SwapMain() {
                 <SwapTabPanels currentTab={TABS.SWAP} />
 
                 <Flex gap="0 4px">
-                  <SwapSettingIcon type="swap" />
-                  <SwapProButton inputToken={inputToken} outputToken={outputToken} />
+                  <SwapSettings type="swap" />
+                  <SwapProEntry inputToken={inputToken} outputToken={outputToken} />
                 </Flex>
               </Box>
 

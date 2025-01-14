@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Typography, Chip, Button, useMediaQuery, Box, makeStyles, useTheme } from "components/Mui";
 import { Modal, Flex } from "@icpswap/ui";
-import CurrenciesAvatar from "components/CurrenciesAvatar";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";

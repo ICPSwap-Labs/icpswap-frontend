@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import CurrenciesAvatar from "components/CurrenciesAvatar";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";

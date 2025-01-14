@@ -6,12 +6,12 @@ import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { nonNullArgs } from "@icpswap/utils";
 
-export interface SwapProButtonProps {
+export interface SwapProEntryProps {
   inputToken: Token | Null;
   outputToken: Token | Null;
 }
 
-export function SwapProButton({ inputToken, outputToken }: SwapProButtonProps) {
+export function SwapProEntry({ inputToken, outputToken }: SwapProEntryProps) {
   const theme = useTheme();
   const history = useHistory();
 

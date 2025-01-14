@@ -1,6 +1,6 @@
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useLimitState } from "store/swap/limit-order/hooks";
+import { useSwapState } from "store/swap/hooks";
 import { BigNumber } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
@@ -64,7 +64,7 @@ export function SwapInputWrapper({
   onSwitchTokens,
 }: SwapInputWrapperProps) {
   const theme = useTheme();
-  const { independentField, typedValue } = useLimitState();
+  const { independentField, typedValue } = useSwapState();
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 

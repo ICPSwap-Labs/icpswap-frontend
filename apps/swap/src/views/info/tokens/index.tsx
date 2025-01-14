@@ -1,6 +1,6 @@
 import { Box, Typography } from "components/Mui";
 import { MainCard } from "@icpswap/ui";
-import { Tokens } from "components/tokens/index";
+import { Tokens } from "components/info/tokens/index";
 import { Trans } from "@lingui/macro";
 import { InfoWrapper } from "components/index";
 

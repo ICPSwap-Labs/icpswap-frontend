@@ -1,6 +1,7 @@
 import { Route, Pool, Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useIsSingleHop } from "store/swap/cache/hooks";
+
 import { useSwapPools } from "./useSwapPools";
 
 function poolEquals(poolA: Pool, poolB: Pool) {

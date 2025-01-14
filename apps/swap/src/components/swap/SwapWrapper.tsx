@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
 import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import { toSignificant, isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
+import { isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useExpertModeManager } from "store/swap/cache/hooks";
@@ -15,10 +15,10 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { TradePrice } from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
-import { Flex, MainCard, Checkbox } from "@icpswap/ui";
+import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
-import { SwapInputWrapper, SwapConfirmModal, SwapContext } from "components/swap/index";
+import { SwapInputWrapper, SwapConfirmModal, SwapContext, Impact } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
@@ -47,7 +47,7 @@ export const SwapWrapper = forwardRef(
     const { setSelectedPool, setNoLiquidity, usdValueChange, setInputToken, setOutputToken } = useContext(SwapContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput } = useSwapHandlers();
-    const handleClearSwapState = useCleanSwapState();
+    const clearSwapState = useCleanSwapState();
     const refreshTrigger = useRefreshTrigger(SWAP_REFRESH_KEY);
 
     const [impactChecked, setImpactChecked] = useState(false);
@@ -56,21 +56,21 @@ export const SwapWrapper = forwardRef(
 
     useLoadDefaultParams();
 
-    const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useSwapState();
+    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId, independentField } = useSwapState();
 
     const {
       inputError: swapInputError,
       parsedAmount,
       trade,
-      tradePoolId,
+      poolId,
       routes,
       state: swapState,
       currencyBalances,
       userSlippageTolerance,
       inputToken,
       outputToken,
-      inputCurrencyState,
-      outputCurrencyState,
+      inputTokenState,
+      outputTokenState,
       inputTokenUnusedBalance,
       inputTokenSubBalance,
       outputTokenSubBalance,
@@ -84,8 +84,8 @@ export const SwapWrapper = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
-    }, [tradePoolId, outputToken, inputToken]);
+      if (onTradePoolIdChange && poolId) onTradePoolIdChange(poolId);
+    }, [poolId, outputToken, inputToken]);
 
     // Auto refresh token balance 5 seconds
     // useEffect(() => {
@@ -103,15 +103,17 @@ export const SwapWrapper = forwardRef(
     const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
     const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
-    const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
-    const outputCurrencyInterfacePrice = useUSDPrice(outputToken);
+    const inputTokenPrice = useUSDPrice(inputToken);
+    const outputTokenPrice = useUSDPrice(outputToken);
 
+    // Set pool for Swap context
     useEffect(() => {
       const pool = routes[0]?.pools[0];
       setSelectedPool(pool);
       setNoLiquidity(noLiquidity);
     }, [routes, setSelectedPool, noLiquidity]);
 
+    // Set token for Swap context
     useEffect(() => {
       setInputToken(inputToken);
       setOutputToken(outputToken);
@@ -125,34 +127,30 @@ export const SwapWrapper = forwardRef(
       [independentField, parsedAmount, trade],
     );
 
-    const handleSwap = () => {
-      setConfirmModalShow(true);
-    };
-
     const handleTokenAChange = useCallback(
       (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.address === currencyB.currencyId) {
+        if (token.address === outputTokenId) {
           history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
         } else {
-          history.push(`${prePath}?input=${token.address}&output=${currencyB.currencyId}`);
+          history.push(`${prePath}?input=${token.address}&output=${outputTokenId}`);
         }
       },
-      [currencyB],
+      [outputTokenId],
     );
 
     const handleTokenBChange = useCallback(
       (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.address === currencyA.currencyId) {
+        if (token.address === inputTokenId) {
           history.push(`${prePath}?input=${ICP.address}&output=${token.address}`);
         } else {
-          history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.address}`);
+          history.push(`${prePath}?input=${inputTokenId}&output=${token.address}`);
         }
       },
-      [currencyA],
+      [inputTokenId],
     );
 
     const handleInput = useCallback((value: string, type: "input" | "output") => {
@@ -179,7 +177,7 @@ export const SwapWrapper = forwardRef(
       }
     }, []);
 
-    const needImpactConfirm = useMemo(() => {
+    const exceedImpact = useMemo(() => {
       if (!usdValueChange) return false;
       return getImpactConfirm(usdValueChange);
     }, [usdValueChange]);
@@ -188,7 +186,7 @@ export const SwapWrapper = forwardRef(
 
     const handleSwapConfirm = useCallback(async () => {
       if (
-        (needImpactConfirm && !impactChecked) ||
+        (exceedImpact && !impactChecked) ||
         swapLoading ||
         !trade ||
         isNullArgs(inputTokenSubBalance) ||
@@ -232,7 +230,7 @@ export const SwapWrapper = forwardRef(
 
       closeLoadingTip(loadingKey);
     }, [
-      needImpactConfirm,
+      exceedImpact,
       impactChecked,
       swapCallback,
       swapLoading,
@@ -259,12 +257,8 @@ export const SwapWrapper = forwardRef(
 
     useEffect(() => {
       return () => {
-        handleClearSwapState();
+        clearSwapState();
       };
-    }, []);
-
-    const handleCheck = useCallback((check: boolean) => {
-      setImpactChecked(check);
     }, []);
 
     useImperativeHandle(
@@ -282,15 +276,15 @@ export const SwapWrapper = forwardRef(
           onInput={handleInput}
           onTokenAChange={handleTokenAChange}
           onTokenBChange={handleTokenBChange}
-          tokenAPrice={inputCurrencyInterfacePrice}
-          tokenBPrice={outputCurrencyInterfacePrice}
+          inputTokenPrice={inputTokenPrice}
+          outputTokenPrice={outputTokenPrice}
           inputToken={inputToken}
           outputToken={outputToken}
-          inputCurrencyState={inputCurrencyState}
-          outputCurrencyState={outputCurrencyState}
+          inputTokenState={inputTokenState}
+          outputTokenState={outputTokenState}
           currencyBalances={currencyBalances}
           parsedAmounts={parsedAmounts}
-          poolId={tradePoolId}
+          poolId={poolId}
           ui={ui}
           inputTokenSubBalance={inputTokenSubBalance}
           outputTokenSubBalance={outputTokenSubBalance}
@@ -319,8 +313,8 @@ export const SwapWrapper = forwardRef(
                   price={trade.executionPrice}
                   token0={inputToken}
                   token1={outputToken}
-                  token0PriceUSDValue={toSignificant(inputCurrencyInterfacePrice ?? 0, 18)}
-                  token1PriceUSDValue={toSignificant(outputCurrencyInterfacePrice ?? 0, 18)}
+                  token0PriceUSDValue={inputTokenPrice}
+                  token1PriceUSDValue={outputTokenPrice}
                   fontSize={ui === "pro" ? "12px" : undefined}
                 />
               ) : null}
@@ -328,44 +322,14 @@ export const SwapWrapper = forwardRef(
           </MainCard>
         ) : null}
 
-        {needImpactConfirm ? (
-          <Box
-            sx={{
-              padding: ui === "pro" ? "10px" : "16px",
-              background: "rgba(211, 98, 91, 0.15)",
-              borderRadius: "16px",
-            }}
-          >
-            <Flex gap="0 8px" align="flex-start">
-              <Box>
-                <Checkbox checked={impactChecked} onCheckedChange={handleCheck} />
-              </Box>
-
-              <Typography
-                style={{
-                  color: "#D3625B",
-                  lineHeight: "15px",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  userSelect: "none",
-                }}
-                onClick={() => handleCheck(!impactChecked)}
-              >
-                <Trans>
-                  Price impact is too high. You would lose a significant portion of your funds in this trade. Please
-                  confirm if you wish to proceed with the swap.
-                </Trans>
-              </Typography>
-            </Flex>
-          </Box>
-        ) : null}
+        <Impact showImpact={exceedImpact} onCheckChange={(checked) => setImpactChecked(checked)} />
 
         <Button
           fullWidth
           variant="contained"
           size="large"
-          onClick={handleSwap}
-          disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (needImpactConfirm && !impactChecked)}
+          onClick={() => setConfirmModalShow(true)}
+          disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked)}
           sx={{
             borderRadius: "16px",
           }}

@@ -1,8 +1,6 @@
 import { useCallback, useMemo, ReactNode } from "react";
-import { openSnackbar } from "store/snackbar/actions";
 import { openLoading, closeLoading } from "store/loadingReducer";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import store from "store";
 import { useSnackbar } from "components/notistack";
 import { ResultStatus } from "types/global";
 
@@ -129,28 +127,4 @@ export function useFullscreenLoading(): [() => void, () => void, boolean] {
   }, [dispatch]);
 
   return useMemo(() => [open, close, isOpen], [open, close, isOpen]);
-}
-
-export function openTip(message: string, type: MessageTypes) {
-  if (type === TIP_ERROR) {
-    store.dispatch(
-      openSnackbar({
-        message,
-        variant: "alert",
-        alertSeverity: "error",
-      }),
-    );
-  } else {
-    store.dispatch(
-      openSnackbar({
-        message,
-        variant: "alert",
-        alertSeverity: "success",
-      }),
-    );
-  }
-}
-
-export function openErrorTip(message: string) {
-  openTip(message, TIP_ERROR);
 }

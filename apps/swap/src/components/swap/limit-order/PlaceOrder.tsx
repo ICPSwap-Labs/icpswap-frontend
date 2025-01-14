@@ -10,15 +10,10 @@ import {
   useRef,
 } from "react";
 import { Box } from "components/Mui";
-import {
-  useLimitState,
-  useLimitHandlers,
-  useLimitOrderInfo,
-  useCleanSwapState,
-  useLoadDefaultParams,
-} from "store/swap/limit-order/hooks";
+import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
+import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
 import { isNullArgs, locationMultipleSearchReplace } from "@icpswap/utils";
-import { SWAP_FIELD, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
+import { SWAP_FIELD } from "constants/swap";
 import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
 import { TradeState } from "hooks/swap/useTrade";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
@@ -35,7 +30,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
-import qs from "qs";
 
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { SwapLimitPrice, LimitPriceRef } from "./Price";
@@ -66,15 +60,15 @@ export const PlaceOrder = forwardRef(
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
     const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken, setInverted } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
-    const { onUserInput } = useLimitHandlers();
-    const handleClearSwapState = useCleanSwapState();
+    const { onUserInput, onSwitchTokens } = useSwapHandlers();
+    const clearSwapState = useCleanSwapState();
     const refreshTrigger = useRefreshTrigger(SWAP_LIMIT_REFRESH_KEY);
 
     useLoadDefaultParams();
 
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-    const { [SWAP_FIELD.INPUT]: currencyA, [SWAP_FIELD.OUTPUT]: currencyB, independentField } = useLimitState();
+    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId, independentField } = useSwapState();
     const limitPriceRef = useRef<LimitPriceRef>();
 
     const {
@@ -156,13 +150,13 @@ export const PlaceOrder = forwardRef(
       (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
 
-        if (token.address === currencyB.currencyId) {
+        if (token.address === outputTokenId) {
           history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
         } else {
-          history.push(`${prePath}?input=${token.address}&output=${currencyB.currencyId}`);
+          history.push(`${prePath}?input=${token.address}&output=${outputTokenId}`);
         }
       },
-      [currencyB],
+      [outputTokenId],
     );
 
     const handleTokenBChange = useCallback(
@@ -170,21 +164,21 @@ export const PlaceOrder = forwardRef(
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
         let search = location.search;
 
-        if (token.address === currencyA.currencyId) {
+        if (token.address === inputTokenId) {
           search = locationMultipleSearchReplace(location.search, [
             { key: "input", value: ICP.address },
             { key: "output", value: token.address },
           ]);
         } else {
           search = locationMultipleSearchReplace(location.search, [
-            { key: "input", value: currencyA.currencyId },
+            { key: "input", value: inputTokenId },
             { key: "output", value: token.address },
           ]);
         }
 
         history.push(`${prePath}${search}`);
       },
-      [currencyA, location],
+      [inputTokenId, location],
     );
 
     const handleInput = (value: string, type: "input" | "output") => {
@@ -293,36 +287,22 @@ export const PlaceOrder = forwardRef(
 
     useEffect(() => {
       return () => {
-        handleClearSwapState();
+        clearSwapState();
       };
     }, []);
 
     const handleSwitchTokens = useCallback(() => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
-      const search = qs.parse(location.search.replace("?", ""));
+      history.push(`${prePath}?input=${outputTokenId}&output=${inputTokenId}`);
+      onSwitchTokens();
 
-      const newSearch: { [key: string]: string | undefined } = {};
-
-      if (search.output) {
-        newSearch.input = search.output as string | undefined;
-      } else {
-        newSearch.input = DEFAULT_SWAP_OUTPUT_ID;
-      }
-
-      if (search.input) {
-        newSearch.output = search.input as string | undefined;
-      } else {
-        newSearch.output = DEFAULT_SWAP_INPUT_ID;
-      }
-
-      history.push(`${prePath}?${qs.stringify(newSearch)}`);
       handleInput("", "input");
       setOrderPrice(null);
       if (limitPriceRef?.current) {
         limitPriceRef?.current?.resetInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
-    }, [ui, history, location, limitPriceRef]);
+    }, [ui, history, location, limitPriceRef, outputTokenId, inputTokenId]);
 
     useImperativeHandle(
       ref,

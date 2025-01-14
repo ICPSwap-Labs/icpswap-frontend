@@ -1,25 +1,20 @@
-import { memo, useCallback, useState, useEffect } from "react";
-import { Grid, Box, Typography, Card, InputAdornment } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { useCallback, useState, useEffect } from "react";
+import { Box, Typography, Card, makeStyles, Theme, InputAdornment } from "components/Mui";
 import Toggle from "components/Toggle";
 import { useExpertModeManager, useSlippageManager, useMultipleApproveManager } from "store/swap/cache/hooks";
 import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
-import BigNumber from "bignumber.js";
-import { Tooltip, NumberTextField, TextButton } from "components/index";
-import { isDarkTheme } from "utils";
-import { Theme } from "@mui/material/styles";
+import { Tooltip, NumberTextField, TextButton, Flex } from "components/index";
 import { Trans } from "@lingui/macro";
+import { BigNumber } from "@icpswap/utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
     card: {
-      backgroundColor: isDarkTheme(theme) ? "#202845" : theme.colors.lightGray200,
+      backgroundColor: "#202845",
       borderRadius: `${theme.radius}px`,
       width: "390px",
       border: theme.palette.border.gray200,
-      ...(isDarkTheme(theme)
-        ? { boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.25)" }
-        : { boxShadow: "0px 4px 16px 0px #00000040" }),
+      boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.25)",
       "@media (max-width: 640px)": {
         width: "288px",
         padding: "12px",
@@ -35,24 +30,6 @@ const useStyles = makeStyles((theme: Theme) => {
         gridTemplateColumns: "1fr",
         gap: "5px 0",
       },
-    },
-    activeTypography: {
-      position: "relative",
-      "&:after": {
-        content: '""',
-        position: "absolute",
-        bottom: "-6px",
-        left: 0,
-        width: "100%",
-        height: "4px",
-        backgroundColor: theme.colors.secondaryMain,
-      },
-    },
-    settingBox: {
-      position: "absolute",
-      right: "0",
-      top: "0",
-      cursor: "pointer",
     },
     slippageButton: {
       width: "48px",
@@ -83,12 +60,12 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export interface UserSettingProps {
+export interface SwapSettingCardProps {
   onClose: () => void;
   type: string;
 }
 
-function SwapUserSetting({ type }: UserSettingProps) {
+export function SwapSettingCard({ type }: SwapSettingCardProps) {
   const classes = useStyles();
 
   const [slippageValue, setSlippageValue] = useState<string>("");
@@ -154,15 +131,13 @@ function SwapUserSetting({ type }: UserSettingProps) {
         Setting
       </Typography>
       <Box mt={3}>
-        <Grid container alignItems="center">
-          <Typography mr={1} color="textPrimary">
-            Slippage tolerance
-          </Typography>
+        <Flex fullWidth gap="0 8px">
+          <Typography color="text.primary">Slippage tolerance</Typography>
           <Tooltip
             tips="Your transaction will revert if the price changes unfavorably
                   by more than this percentage."
           />
-        </Grid>
+        </Flex>
         <Box className={classes.tolerance}>
           <NumberTextField
             className={classes.settingInput}
@@ -178,9 +153,8 @@ function SwapUserSetting({ type }: UserSettingProps) {
             onChange={handleSlippageInput}
             onBlur={handleSlippageBlur}
           />
-          <Grid
-            container
-            alignContent="center"
+          <Flex
+            fullWidth
             sx={{
               justifyContent: "flex-end",
               "@media (max-width: 640px)": {
@@ -189,43 +163,41 @@ function SwapUserSetting({ type }: UserSettingProps) {
             }}
           >
             {SLIPPAGE_TOLERANCE.map((slippage, index) => (
-              <Grid
+              <Flex
+                fullWidth
+                justify="center"
                 className={`${classes.slippageButton} ${
                   slippageTolerance === slippage.value && slippageValue !== "" ? "active" : ""
                 }`}
-                item
                 key={index}
-                container
-                alignItems="center"
-                justifyContent="center"
                 onClick={() => handleToggleSlippage(slippage)}
               >
                 <Typography>{new BigNumber(slippage.value).div(1000).toNumber()}%</Typography>
-              </Grid>
+              </Flex>
             ))}
-          </Grid>
+          </Flex>
         </Box>
       </Box>
       <Box mt={3}>
-        <Grid container alignItems="center">
+        <Flex fullWidth>
           <Typography mr={1} color="textPrimary">
             <Trans>Toggle Expert Mode</Trans>
           </Typography>
           <Tooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
-        </Grid>
+        </Flex>
         <Box mt={1}>
           <Toggle isActive={expertMode} onToggleChange={toggleExpertMode} />
         </Box>
       </Box>
 
       <Box mt={3}>
-        <Grid container alignItems="center">
+        <Flex fullWidth>
           <Typography mr={1} color="textPrimary">
             <Trans>Approval Limit Settings</Trans>
           </Typography>
 
           {/* <Tooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk."></Tooltip> */}
-        </Grid>
+        </Flex>
         <Box mt={1} sx={{ display: "flex", alignItems: "center", gap: "0 9px" }}>
           <Box sx={{ width: "70px" }}>
             <NumberTextField
@@ -261,5 +233,3 @@ function SwapUserSetting({ type }: UserSettingProps) {
     </Card>
   );
 }
-
-export default memo(SwapUserSetting);

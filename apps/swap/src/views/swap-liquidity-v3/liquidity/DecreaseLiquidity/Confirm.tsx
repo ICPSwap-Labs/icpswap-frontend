@@ -1,61 +1,50 @@
-import { Box, Typography, Grid, Button } from "@mui/material";
-import SwapModal from "components/modal/swap";
-import CurrencyAvatar from "components/CurrencyAvatar";
+import { Box, Typography, Button } from "components/Mui";
 import { BURN_FIELD } from "constants/swap";
 import { Trans } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { toFormat } from "utils/index";
+import { Flex, TokenImage, Modal } from "components/index";
 
-export default function DecreaseLiquidityConfirm({
-  open,
-  onCancel,
-  onConfirm,
-  formattedAmounts,
-  currencyA,
-  currencyB,
-}: {
+interface DecreaseLiquidityConfirmProps {
   open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
   currencyA: Token | undefined;
   currencyB: Token | undefined;
   formattedAmounts: { [key in BURN_FIELD]?: string };
-}) {
+}
+
+export function DecreaseLiquidityConfirm({
+  open,
+  onCancel,
+  onConfirm,
+  formattedAmounts,
+  currencyA,
+  currencyB,
+}: DecreaseLiquidityConfirmProps) {
   return (
-    <SwapModal open={open} onClose={onCancel} title="Remove Liquidity">
-      <>
-        <Box mt={1}>
-          <Grid container mt={1} alignItems="center">
-            <Grid item xs container alignItems="center">
-              <Grid item mr={1}>
-                <CurrencyAvatar currency={currencyA} />
-              </Grid>
-              <Grid item>
-                <Typography>{currencyA?.symbol}</Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs>
-              <Typography align="right">{toFormat(formattedAmounts[BURN_FIELD.CURRENCY_A] ?? 0)}</Typography>
-            </Grid>
-          </Grid>
-          <Grid container mt={2} alignItems="center">
-            <Grid item xs container alignItems="center">
-              <Grid item mr={1}>
-                <CurrencyAvatar currency={currencyB} />
-              </Grid>
-              <Grid item>
-                <Typography>{currencyB?.symbol}</Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs>
-              <Typography align="right">{toFormat(formattedAmounts[BURN_FIELD.CURRENCY_B] ?? 0)}</Typography>
-            </Grid>
-          </Grid>
-        </Box>
-        <Button variant="contained" size="large" fullWidth sx={{ marginTop: "40px" }} onClick={onConfirm}>
-          <Trans>Remove</Trans>
-        </Button>
-      </>
-    </SwapModal>
+    <Modal open={open} onClose={onCancel} title="Remove Liquidity">
+      <Box>
+        <Flex fullWidth justify="space-between">
+          <Flex gap="0 8px">
+            <TokenImage tokenId={currencyA?.address} logo={currencyA?.logo} size="24px" />
+            <Typography>{currencyA?.symbol}</Typography>
+          </Flex>
+          <Typography align="right">{toFormat(formattedAmounts[BURN_FIELD.CURRENCY_A] ?? 0)}</Typography>
+        </Flex>
+
+        <Flex fullWidth sx={{ margin: "16px 0 0 0" }} justify="space-between">
+          <Flex gap="0 8px">
+            <TokenImage tokenId={currencyB?.address} logo={currencyB?.logo} size="24px" />
+            <Typography>{currencyB?.symbol}</Typography>
+          </Flex>
+          <Typography align="right">{toFormat(formattedAmounts[BURN_FIELD.CURRENCY_B] ?? 0)}</Typography>
+        </Flex>
+      </Box>
+
+      <Button variant="contained" size="large" fullWidth sx={{ marginTop: "40px" }} onClick={onConfirm}>
+        <Trans>Remove</Trans>
+      </Button>
+    </Modal>
   );
 }

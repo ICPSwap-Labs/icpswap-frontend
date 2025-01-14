@@ -52,7 +52,7 @@ export interface TransferModalProps {
   transferTo?: string;
 }
 
-export default function TransferModal({ open, onClose, onTransferSuccess, token, transferTo }: TransferModalProps) {
+export function TokenTransferModal({ open, onClose, onTransferSuccess, token, transferTo }: TransferModalProps) {
   const classes = useStyles();
   const account = useAccount();
   const principalString = useAccountPrincipalString();
