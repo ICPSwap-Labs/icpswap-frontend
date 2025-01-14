@@ -32,7 +32,6 @@ export { default as Switch } from "./switch";
 export * from "./Button/index";
 export { default as AuthButton } from "./authentication/ButtonConnector";
 export * from "./Checkbox";
-export * from "./LimitPanel";
 export * from "./Select";
 export * from "./AddressFormat";
 export * from "./IsSneedOwner";
