@@ -1,7 +1,7 @@
 import React from "react";
-import { useTheme } from "@mui/material";
+import { useTheme } from "components/Mui";
 import { isDarkTheme } from "utils";
-import { Theme } from "@mui/material/styles";
+
 import Modal from "./index";
 
 export interface SwapModalProps {
@@ -12,7 +12,7 @@ export interface SwapModalProps {
 }
 
 export default ({ width = "570px", open, children, ...props }: SwapModalProps) => {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Modal
@@ -23,7 +23,7 @@ export default ({ width = "570px", open, children, ...props }: SwapModalProps) =
         sx: {
           "& .MuiDialog-paper": {
             width,
-            backgroundColor: isDarkTheme(theme) ? theme.palette.background.level2 : theme.colors.lightGray200,
+            backgroundColor: isDarkTheme(theme) ? theme.palette.background.level1 : theme.colors.lightGray200,
           },
           ...(props.dialogProps?.sx || {}),
         },

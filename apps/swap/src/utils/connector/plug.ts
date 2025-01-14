@@ -79,7 +79,11 @@ export class PlugConnector implements ConnectorAbstract {
   }
 
   async disconnect() {
-    await window.ic.plug.disconnect();
+    try {
+      await window.ic.plug.disconnect();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async expired() {

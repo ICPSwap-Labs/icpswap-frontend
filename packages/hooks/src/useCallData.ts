@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import type { ApiResult, CallResult, PaginationResult } from "@icpswap/types";
+import type { ApiResult, CallResult, Null, PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
 
 export type Call<T> = () => Promise<ApiResult<T>>;
@@ -19,16 +19,15 @@ export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean)
     }
   }, [fn, reload]);
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    return {
       result: result.current,
       loading,
-    }),
-    [result, loading],
-  );
+    };
+  }, [result.current, loading]);
 }
 
-export function useLatestDataCall<T>(fn: Call<T>, refresh?: number | string | boolean) {
+export function useLatestDataCall<T>(fn: Call<T>, refresh?: number | string | boolean | Null) {
   const [loading, setLoading] = useState(false);
 
   const indexRef = useRef<number>(0);

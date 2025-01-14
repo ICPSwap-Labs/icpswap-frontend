@@ -13,7 +13,6 @@ import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { Trans } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import { SwapInput } from "components/swap/SwapInput";
 import { impactColor } from "utils/swap/prices";
 import { Null } from "@icpswap/types";
@@ -26,7 +25,7 @@ import { WalletBalance } from "./WalletBalance";
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
-  onTokenChange: (token: TokenInfo) => void;
+  onTokenChange: (token: Token) => void;
   currencyState: UseCurrencyState;
   token: Token | undefined;
   currencyPrice: string | undefined | number;
@@ -43,6 +42,7 @@ export interface SwapInputCurrencyProps {
   maxInputAmount?: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
   poolId: string | Null;
+  showUSDChange?: boolean;
 }
 
 export function SwapInputCurrency({
@@ -64,6 +64,7 @@ export function SwapInputCurrency({
   maxInputAmount,
   noLiquidity,
   poolId,
+  showUSDChange = true,
 }: SwapInputCurrencyProps) {
   const theme = useTheme();
 
@@ -128,7 +129,7 @@ export function SwapInputCurrency({
         </Flex>
 
         <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
-          <SwapInput value={formattedAmount ?? ""} token={token} onUserInput={onInput} disabled={disabled} />
+          <SwapInput value={formattedAmount} token={token} onUserInput={onInput} disabled={disabled} />
         </Box>
       </Box>
 
@@ -156,7 +157,7 @@ export function SwapInputCurrency({
             {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
           </Flex>
 
-          {currencyBalanceUSDValue ? (
+          {currencyBalanceUSDValue && showUSDChange ? (
             <Typography component="div">
               ~{formatDollarAmount(currencyBalanceUSDValue)}
               {usdChange ? (

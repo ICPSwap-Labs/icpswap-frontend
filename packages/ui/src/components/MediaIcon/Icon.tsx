@@ -12,7 +12,7 @@ import OtherIcon from "./Other";
 import GithubIcon from "./Github";
 import OpenChatIcon from "./OpenChat";
 import Dashboard from "./Dashboard";
-import ICScan from "./ICScan";
+import Explorer from "./Explorer";
 import DexScreener from "./DexScreener";
 
 export const Icons: { [key: string]: FC<{ width?: number }> } = {
@@ -28,7 +28,7 @@ export const Icons: { [key: string]: FC<{ width?: number }> } = {
   Github: GithubIcon,
   OpenChat: OpenChatIcon,
   Dashboard,
-  ICScan,
+  Explorer,
   DexScreener,
 };
 

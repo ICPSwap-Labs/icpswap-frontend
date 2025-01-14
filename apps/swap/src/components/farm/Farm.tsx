@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { Box, Typography, Button, Theme } from "components/Mui";
+import { Box, Typography, Button, useTheme } from "components/Mui";
 import { MainCard, Flex, Tooltip, Link } from "components/index";
 import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
-import { usePositionsValueByInfos } from "hooks/swap/index";
-import { useTheme } from "@mui/styles";
+import { usePositionsTotalValue, usePositionsValue } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
@@ -32,7 +31,7 @@ export interface FarmMainProps {
 }
 
 export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, rewardMetadata }: FarmMainProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const [viewAll, setViewAll] = useState(false);
   const [refreshRewardsTrigger, setRefreshRewardsTrigger] = useState(0);
@@ -77,7 +76,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [userAvailablePositions]);
 
-  const allAvailablePositionValue = usePositionsValueByInfos({
+  const allAvailablePositionValue = usePositionsTotalValue({
     metadata: swapPoolMetadata,
     positionInfos: availablePositionsInfo,
   });
@@ -92,7 +91,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     }));
   }, [deposits]);
 
-  const stakedPositionValue = usePositionsValueByInfos({
+  const stakedPositionsValues = usePositionsValue({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });
@@ -127,9 +126,8 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
     rewardToken,
     farmInitArgs,
     farmTvlValue,
-    positionValue: stakedPositionValue,
+    positionsValue: stakedPositionsValues,
     deposits,
-    rewardAmount: userRewardAmount,
   });
 
   const handleSuccess = () => {
@@ -159,12 +157,12 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
               />
             </Flex>
-            <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+            <Typography sx={{ color: "text.apr", fontSize: "20px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
             </Typography>
           </Box>
 
-          <Box mt="32px">
+          <Box mt="24px">
             <Box
               sx={{
                 display: "grid",
@@ -270,7 +268,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                   />
                 </Flex>
 
-                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
+                <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.apr" }}>
                   {userApr ? `${userApr}` : "--"}
                 </Typography>
               </Box>
@@ -279,7 +277,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         </MainCard>
       </Box>
 
-      <Box mt="40px">
+      <Box mt="24px">
         <Box>
           <Typography>
             <Trans>Your Positions Available To Stake</Trans>
@@ -391,7 +389,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         </Box>
       </Box>
 
-      <Box sx={{ margin: "32px 0", height: "1px", background: theme.palette.background.level2 }} />
+      <Box sx={{ margin: "24px 0", height: "1px", background: theme.palette.background.level2 }} />
 
       <Box>
         <Box>

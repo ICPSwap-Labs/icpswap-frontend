@@ -7,12 +7,7 @@ import { useMemo, useState } from "react";
 import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
 import { BigNumber } from "@icpswap/utils";
-
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
 
@@ -70,7 +65,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
       <MainCard
         borderRadius="16px"
         level={1}
-        padding="40px 0 24px 0"
+        padding="24px 0"
         sx={{
           width: "100%",
           overflow: "hidden",
@@ -97,7 +92,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
           <Typography
             sx={{
               margin: "12px 0 0 0",
-              fontSize: "32px",
+              fontSize: "28px",
               fontWeight: 500,
               color: "text.primary",
             }}
@@ -159,7 +154,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
                   axisLine={false}
                   tickLine={false}
                   minTickGap={10}
-                  tick={{ fill: theme.palette.text.secondary }}
+                  tick={{ fill: theme.palette.text.secondary, fontSize: "12px" }}
                 />
                 <Tooltip
                   cursor={{ stroke: "#8572FF" }}

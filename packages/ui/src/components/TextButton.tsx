@@ -1,8 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 
 import { Typography, Box } from "./Mui";
+import { Link } from "./Link";
 
 export interface ALinkProps {
   children: ReactNode;
@@ -100,7 +101,9 @@ export function TextButton({
 }: TextButtonProps) {
   const history = useHistory();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
+    if (disabled) return;
+
     if (link) {
       mockALinkAndOpen(link, "text-button-open-new-window");
       return;
@@ -112,7 +115,7 @@ export function TextButton({
     }
 
     if (onClick) onClick();
-  };
+  }, [link, to, onClick, disabled]);
 
   return (
     <Typography
@@ -131,10 +134,7 @@ export function TextButton({
       }}
       className="custom-text-button"
       component="span"
-      onClick={() => {
-        if (disabled) return;
-        handleClick();
-      }}
+      onClick={handleClick}
     >
       {children}
 
@@ -144,5 +144,59 @@ export function TextButton({
         </Box>
       )}
     </Typography>
+  );
+}
+
+export interface TextButtonV1Props {
+  children: ReactNode;
+  disabled?: boolean;
+  link?: string;
+  to?: string;
+  sx?: any;
+  arrow?: boolean;
+  color?: "primary" | "white" | "secondary";
+  textDecoration?: "underline" | "none";
+}
+
+export function TextButtonV1({
+  children,
+  disabled,
+  link,
+  to,
+  sx,
+  arrow,
+  color = "secondary",
+  textDecoration = "none",
+}: TextButtonV1Props) {
+  return (
+    <Link to={to} link={link}>
+      <Typography
+        color={disabled ? "#4F5A84" : color === "primary" ? "primary" : color === "white" ? "#ffffff" : "secondary"}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0 5px",
+          cursor: "pointer",
+          userSelect: "none",
+          textDecoration,
+          "&:hover": {
+            textDecoration: "underline",
+          },
+          "& +.custom-text-button": {
+            marginLeft: "18px",
+          },
+          ...sx,
+        }}
+        onClick={(event) => {
+          if (disabled) {
+            event.stopPropagation();
+          }
+        }}
+      >
+        {children}
+
+        {arrow && <ArrowIcon />}
+      </Typography>
+    </Link>
   );
 }

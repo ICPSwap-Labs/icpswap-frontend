@@ -30,12 +30,12 @@ export default ({
 
   const handleMintNFT = () => {
     onClose();
-    history.push("/console/nft/canister/list");
+    history.push("/info-tools/nft/canister/list");
   };
 
   const handleToList = () => {
     onClose();
-    history.push("/console/nft/canister/list");
+    history.push("/info-tools/nft/canister/list");
   };
 
   return (

@@ -1,4 +1,4 @@
-import type { FarmState } from "@icpswap/types";
+import type { FarmState, Null } from "@icpswap/types";
 
 export const COLORS = {
   NOT_START: "#5669DC",
@@ -8,6 +8,6 @@ export const COLORS = {
   DEFAULT: "#8492C4",
 };
 
-export function useStateColors(state: FarmState | undefined): string {
+export function useStateColors(state: FarmState | Null): string {
   return COLORS[state ?? "DEFAULT"];
 }

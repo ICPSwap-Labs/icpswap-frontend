@@ -9,8 +9,11 @@ import {
   TransferRequest,
   MetadataRequest,
   ActualReceivedByTransferRequest,
+  ApproveRequest,
+  AllowanceRequest,
 } from "./BaseTokenAdapter";
 import { icrc1Adapter } from "./ICRC1";
+import { icrc2Adapter } from "./ICRC2";
 
 export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   public async holders() {
@@ -125,12 +128,12 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
     });
   }
 
-  public async approve() {
-    return resultFormat<boolean>({ err: "no approve" });
+  public async approve({ canisterId, params, identity }: ApproveRequest) {
+    return icrc2Adapter.approve({ canisterId, params, identity });
   }
 
-  public async allowance() {
-    return resultFormat<bigint>({ err: "no allowance" });
+  public async allowance({ canisterId, params }: AllowanceRequest) {
+    return icrc2Adapter.allowance({ canisterId, params });
   }
 
   public async metadata({ canisterId }: MetadataRequest) {
@@ -151,10 +154,6 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
       } as Metadata,
       message: "",
     };
-  }
-
-  public async setLogo() {
-    return resultFormat<boolean>({ err: "no approve" });
   }
 
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {

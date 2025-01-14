@@ -11,11 +11,11 @@ import {
   formatDollarAmount,
   BigNumber,
   isValidPrincipal,
-  toSignificantWithGroupSeparator,
   nonNullArgs,
+  formatAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { ckBTC, ckETH } from "@icpswap/tokens";
 
@@ -37,7 +37,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
 
   const tokenBalanceAmount = useMemo(() => {
     if (!token || balance === undefined) return undefined;
-    return toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString(), 6);
+    return parseTokenAmount(balance, token.decimals).toString();
   }, [token, balance]);
 
   const handleClick = useCallback(() => {
@@ -121,7 +121,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                 }}
                 fontWeight={500}
               >
-                {tokenBalanceAmount ?? "--"}
+                {tokenBalanceAmount ? formatAmount(tokenBalanceAmount) : "--"}
               </Typography>
               <Typography
                 align="right"
@@ -135,9 +135,6 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                 {priceUSD !== undefined && nonNullArgs(balance) && nonNullArgs(token)
                   ? formatDollarAmount(
                       new BigNumber(priceUSD).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
-                      4,
-                      true,
-                      0.001,
                     )
                   : "--"}
               </Typography>
@@ -180,21 +177,21 @@ interface SelectorTokenForErc20TokenProps {
   hidden?: boolean;
   chain: ckBridgeChain;
   token: Token | Null;
-  minterInfo: Erc20MinterInfo | Null;
+  minterInfo: ChainKeyETHMinterInfo | Null;
 }
 
 function SelectorTokenForErc20Token({ token, onClick, hidden, chain, minterInfo }: SelectorTokenForErc20TokenProps) {
-  const erc20MinterInfo = useMemo(() => {
+  const ChainKeyETHMinterInfo = useMemo(() => {
     if (!token) return undefined;
 
-    const erc20MinterInfo = minterInfo?.supported_ckerc20_tokens[0]?.find(
+    const ChainKeyETHMinterInfo = minterInfo?.supported_ckerc20_tokens[0]?.find(
       (minterInfo) => minterInfo.ledger_canister_id.toString() === token.address,
     );
 
-    return erc20MinterInfo;
+    return ChainKeyETHMinterInfo;
   }, [minterInfo, token]);
 
-  const { result: balance, loading } = useERC20Balance(erc20MinterInfo?.erc20_contract_address);
+  const { result: balance, loading } = useERC20Balance(ChainKeyETHMinterInfo?.erc20_contract_address);
 
   const priceUSD = useUSDPriceById(token?.address);
 
@@ -266,7 +263,7 @@ export interface SelectorTokenProps {
   searchWord?: string;
   hidden?: boolean;
   chain: ckBridgeChain;
-  minterInfo: Erc20MinterInfo | Null;
+  minterInfo: ChainKeyETHMinterInfo | Null;
   updateTokenHide: (tokenId: string, hidden: boolean) => void;
 }
 

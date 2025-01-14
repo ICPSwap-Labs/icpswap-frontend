@@ -1,19 +1,4 @@
 {
-  "V2SwapCanisterController": {
-    "ic": "jncgo-2iaaa-aaaan-qatba-cai"
-  },
-  "V2SwapFactory": {
-    "ic": "jkda2-xqaaa-aaaan-qatbq-cai"
-  },
-  "V2SwapFeeHolder": {
-    "ic": "j7erx-wyaaa-aaaan-qatca-cai"
-  },
-  "V2SwapPositionManager": {
-    "ic": "jyfxd-3aaaa-aaaan-qatcq-cai"
-  },
-  "V2SwapRouter": {
-    "ic": "jrg47-niaaa-aaaan-qatda-cai"
-  },
   "V3SwapNFTCanister": {
     "ic": "jwh2l-aqaaa-aaaan-qatdq-cai"
   },
@@ -88,5 +73,14 @@
   },
   "LiquidityLocks": {
     "ic": "ihzcl-aiaaa-aaaah-aebvq-cai"
+  },
+  "PositionCharts": {
+    "ic": "ppuf3-gyaaa-aaaag-qkpuq-cai"
+  },
+  "TokenAnalysis": {
+    "ic": "no3fa-eqaaa-aaaag-qkq4q-cai"
+  },
+  "LimitTransaction": {
+    "ic": "kxmnw-xyaaa-aaaag-qndsq-cai"
   }
 }

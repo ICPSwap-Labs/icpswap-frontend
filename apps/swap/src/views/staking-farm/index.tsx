@@ -1,19 +1,19 @@
-import { useCallback, useMemo, useState } from "react";
-import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { NoData, MainCard, Flex, Wrapper } from "components/index";
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { useHistory } from "react-router-dom";
+import { isNullArgs } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
-import { FarmListCard, GlobalData, TopLiveFarms } from "components/farm/index";
+import { useHistory } from "react-router-dom";
+import { FarmListCard, FarmListHeader, GlobalData, TopLiveFarms } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 import { SelectToken } from "components/Select/SelectToken";
 import { SelectPair } from "components/Select/SelectPair";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import FarmContext from "./context";
 
@@ -25,8 +25,11 @@ const Tabs = [
   { label: t`Your Farms`, state: FilterState.YOUR },
 ];
 
+const PAGE_SIZE = 10;
+const START_PAGE = 1;
+
 function MainContent() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -37,6 +40,8 @@ function MainContent() {
 
   const [filterPair, setFilterPair] = useState<string | Null>(null);
   const [filterToken, setFilterToken] = useState<string | Null>(null);
+  const [page, setPage] = useState(START_PAGE);
+  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
 
@@ -73,6 +78,12 @@ function MainContent() {
     token: filterToken,
     user: filterUser,
   });
+
+  const slicedFarms = useMemo(() => {
+    if (isNullArgs(farms)) return undefined;
+
+    return farms.slice(0, PAGE_SIZE * page);
+  }, [farms, page]);
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
     history.push(`/farm?state=${value.state}`);
@@ -120,6 +131,32 @@ function MainContent() {
     setFilterToken(tokenId);
   };
 
+  const handleScrollNext = useCallback(() => {
+    setPage(page + 1);
+  }, [setPage, page]);
+
+  const hasMore = useMemo(() => {
+    if (!slicedFarms || !farms) return false;
+    return slicedFarms.length !== farms.length;
+  }, [slicedFarms, farms]);
+
+  const [headerScrollOutOnTop, setHeaderScrollOutOnTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const target = document.querySelector("#farm-list-header");
+      if (target) {
+        const boundingClientRect = target.getBoundingClientRect();
+        setHeaderScrollOutOnTop(boundingClientRect.top < 50);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
     <FarmContext.Provider
       value={{
@@ -128,7 +165,23 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
+      <Box
+        sx={{
+          display: !headerInViewport && headerScrollOutOnTop ? "block" : "none",
+          position: "sticky",
+          top: "64px",
+          background: theme.palette.background.level3,
+          zIndex: 10,
+          width: "100%",
+          maxWidth: "1200px",
+          borderBottom: `1px solid ${theme.palette.background.level1}`,
+        }}
+      >
+        <FarmListHeader state={state} showState={showState} your={your} sx={{ gridTemplateColumns }} />
+      </Box>
+
       <MainCard
+        id="farm-scroll-wrapper"
         padding="0"
         sx={{
           "@media(max-width: 640px)": {
@@ -230,99 +283,71 @@ function MainContent() {
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns,
-              "& .row-item": {
-                padding: "16px 0",
-                "&:first-of-type": {
-                  padding: "16px 0 16px 24px",
-                },
-                "&:last-of-type": {
-                  padding: "16px 24px 16px 0",
-                },
-              },
-            }}
+          <ObserverWrapper
+            scrollInViewport={() => setHeaderInViewport(true)}
+            scrollOutViewport={() => setHeaderInViewport(false)}
           >
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Staked Position</Trans>
-            </Typography>
-            <Typography variant="body2" color="text.400" className="row-item">
-              <Trans>Reward Token</Trans>
-            </Typography>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>APR</Trans>
-              </Typography>
-            </Flex>
-            <Flex justify="flex-end" className="row-item">
-              <Typography variant="body2" color="text.400">
-                <Trans>Your Available to Stake</Trans>
-              </Typography>
-            </Flex>
-            {your ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Your Rewards</Trans>
-                </Typography>
-              </Flex>
-            ) : null}
-            {your ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Your Staked</Trans>
-                </Typography>
-              </Flex>
+            <FarmListHeader
+              id="farm-list-header"
+              state={state}
+              showState={showState}
+              your={your}
+              sx={{ gridTemplateColumns }}
+            />
+          </ObserverWrapper>
+
+          <InfiniteScroll
+            dataLength={slicedFarms?.length ?? 0}
+            next={handleScrollNext}
+            hasMore={hasMore}
+            loader={
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            }
+          >
+            {loading ? (
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
             ) : (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Total Staked</Trans>
-                </Typography>
-              </Flex>
+              <>
+                {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? <NoData /> : null}
+
+                {slicedFarms?.map((farmId) => (
+                  <FarmListCard
+                    key={farmId.toString()}
+                    farmId={farmId.toString()}
+                    wrapperSx={{
+                      display: "grid",
+                      gridTemplateColumns,
+                    }}
+                    showState={showState}
+                    your={your}
+                    filterState={__state}
+                  />
+                ))}
+              </>
             )}
-            {showState ? (
-              <Flex justify="flex-end" className="row-item">
-                <Typography variant="body2" color="text.400">
-                  <Trans>Status</Trans>
-                </Typography>
-              </Flex>
-            ) : null}
-          </Box>
-
-          {loading ? (
-            <Box sx={{ padding: "24px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : (
-            <>
-              {(unStakedFarms.length === farms?.length || !farms?.length) && !loading && <NoData />}
-
-              {farms?.map((farmId) => (
-                <FarmListCard
-                  key={farmId.toString()}
-                  farmId={farmId.toString()}
-                  wrapperSx={{
-                    display: "grid",
-                    gridTemplateColumns,
-                  }}
-                  showState={showState}
-                  your={your}
-                />
-              ))}
-            </>
-          )}
+          </InfiniteScroll>
         </Box>
       </MainCard>
+
+      <ScrollTop target="farm-scroll-wrapper" heightShowScrollTop={510} />
     </FarmContext.Provider>
   );
 }

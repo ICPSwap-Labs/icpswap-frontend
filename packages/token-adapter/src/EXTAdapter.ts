@@ -190,10 +190,6 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     };
   }
 
-  public async setLogo({ canisterId, params, identity }: SetLogoRequest) {
-    return resultFormat<boolean>(await (await this.actor(canisterId, identity)).setLogo(params));
-  }
-
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
   }

@@ -1,15 +1,14 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
-import NoData from "components/no-data";
-import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
 import { useNFTTransaction } from "hooks/nft/useNFTCalls";
-import { pageArgsFormat, enumToString, arrayBufferToString , shorten, timestampFormat } from "@icpswap/utils";
+import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 import { encodeTokenIdentifier } from "utils/index";
 import Pagination from "components/pagination";
 import { Trans } from "@lingui/macro";
 import type { NFTTransaction, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
+import { NoData, ListLoading } from "components/index";
 
 export default function NFTTransaction({
   canisterId,

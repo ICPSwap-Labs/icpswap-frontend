@@ -1,3 +1,4 @@
+import { isNullArgs } from "@icpswap/utils";
 import { network, NETWORK } from "./server";
 
 export const ASSETS_DECIMALS = 2;
@@ -35,13 +36,13 @@ export const NFT_UPLOAD_FILES = [
 ];
 
 export const CurrencyAmountFormatDecimals = (decimals: number | bigint | undefined) => {
-  if (!decimals) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
+  if (isNullArgs(decimals)) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   if (Number(decimals) > TOKEN_AMOUNT_DISPLAY_DECIMALS) return TOKEN_AMOUNT_DISPLAY_DECIMALS;
   return Number(decimals);
 };
 
 export const INFO_URL_MAP = {
-  [NETWORK.IC]: "https://info.icpswap.com",
+  [NETWORK.IC]: "",
 };
 
 export const INFO_URL = INFO_URL_MAP[network];
@@ -65,6 +66,9 @@ export const MAX_SWAP_INPUT_LENGTH = 25;
 
 // 24 hours (nanosecond)
 export const MAX_IDENTITY_KIT_TIME_LIVE = BigInt(24 * 3600) * BigInt(1000 * 1000 * 1000);
+
+export const ICPSwapSubnet = "lhg73-sax6z-2zank-6oer2-575lz-zgbxx-ptudx-5korm-fy7we-kh4hl-pqe";
+export const ICPSwapStableBlockRate = 2;
 
 export * from "./canister";
 export * from "./server";

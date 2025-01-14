@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import { parseTokenAmount, formatDollarAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
-import { _getTokenInfo } from "hooks/token/index";
+import { __getTokenInfo } from "hooks/token/index";
 import { useFarmUserAllPositions } from "hooks/staking-farm/useUserAllPositions";
 import { useUserStakedPositions } from "hooks/staking-farm/useUserStakedPositions";
 
@@ -52,9 +51,9 @@ export function useFarmGlobalData() {
           const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
             ?.priceUSD;
 
-          const token0Info = await _getTokenInfo(token0Principal.toString());
-          const token1Info = await _getTokenInfo(token1Principal.toString());
-          const rewardTokenInfo = await _getTokenInfo(rewardTokenPrincipal.toString());
+          const token0Info = await __getTokenInfo(token0Principal.toString());
+          const token1Info = await __getTokenInfo(token1Principal.toString());
+          const rewardTokenInfo = await __getTokenInfo(rewardTokenPrincipal.toString());
 
           if (!token0Price || !token1Price || !rewardTokenPrice || !token0Info || !token1Info || !rewardTokenInfo) {
             stakedTVL = stakedTVL.plus(0);
@@ -72,8 +71,8 @@ export function useFarmGlobalData() {
         }
 
         setData({
-          stakeTokenTVL: formatDollarAmount(stakedTVL.toFixed(4)),
-          rewardTokenTVL: formatDollarAmount(rewardTVL.toFixed(4)),
+          stakeTokenTVL: stakedTVL.toFixed(4),
+          rewardTokenTVL: rewardTVL.toFixed(4),
         });
       }
     }
@@ -103,9 +102,9 @@ export function useFarmGlobalData() {
           const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
             ?.priceUSD;
 
-          const token0Info = await _getTokenInfo(token0Principal.toString());
-          const token1Info = await _getTokenInfo(token1Principal.toString());
-          const rewardTokenInfo = await _getTokenInfo(rewardTokenPrincipal.toString());
+          const token0Info = await __getTokenInfo(token0Principal.toString());
+          const token1Info = await __getTokenInfo(token1Principal.toString());
+          const rewardTokenInfo = await __getTokenInfo(rewardTokenPrincipal.toString());
 
           if (!token0Price || !token1Price || !rewardTokenPrice || !token0Info || !token1Info || !rewardTokenInfo) {
             stakedTVL = stakedTVL.plus(0);
@@ -122,8 +121,8 @@ export function useFarmGlobalData() {
           }
         }
 
-        setRewardedTokenTVL(formatDollarAmount(rewardTVL.toFixed(4)));
-        setStakedTokenTVL(formatDollarAmount(stakedTVL.toFixed(4)));
+        setRewardedTokenTVL(rewardTVL.toFixed(4));
+        setStakedTokenTVL(stakedTVL.toFixed(4));
       }
     }
 

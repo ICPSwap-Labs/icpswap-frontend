@@ -7,3 +7,5 @@ export * from "./ckUSDC";
 export * from "./erc20";
 export * from "./ckETH";
 export * from "./ckLink";
+export * from "./bob";
+export * from "./ckUSDT";

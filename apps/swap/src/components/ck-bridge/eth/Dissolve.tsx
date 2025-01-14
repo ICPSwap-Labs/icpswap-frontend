@@ -2,29 +2,25 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Erc20MinterInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
 import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, EthFee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Web3ButtonConnector } from "components/web3/index";
 import { useWeb3React } from "@web3-react/core";
-import { useActiveChain } from "hooks/web3/index";
 import { isAddress } from "utils/web3/index";
-import { chainIdToNetwork, chain } from "constants/web3";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { useFetchUserTxStates } from "hooks/ck-eth";
-import { isMobile } from "react-device-detect";
 import ButtonConnector from "components/authentication/ButtonConnector";
 
 export interface EthDissolveProps {
   token: Token;
   bridgeChain: ckBridgeChain;
-  minterInfo?: Erc20MinterInfo | Null;
+  minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
 export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps) {
@@ -32,7 +28,6 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   const { account } = useWeb3React();
 
   const principal = useAccountPrincipal();
-  const chainId = useActiveChain();
 
   useFetchUserTxStates();
 
@@ -59,9 +54,8 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   }, [account, setAddress]);
 
   const dissolve_error = useMemo(() => {
-    if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount) return t`Enter the amount`;
     if (!address) return t`Enter the address`;
+    if (!amount) return t`Enter the amount`;
     if (isAddress(address) === false) return t`Invalid ethereum address`;
     if (formatTokenAmount(amount, ckETH.decimals).isLessThan(MIN_WITHDRAW_AMOUNT))
       return `Min amount is ${toSignificantWithGroupSeparator(
@@ -76,7 +70,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       return t`Insufficient Balance`;
 
     return undefined;
-  }, [amount, token, tokenBalance, chain, chainId, address]);
+  }, [amount, token, tokenBalance, address]);
 
   const handleMax = useCallback(() => {
     if (!token || !tokenBalance) return;
@@ -116,40 +110,36 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
         </Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          {!account && !isMobile ? (
-            <Web3ButtonConnector />
-          ) : (
-            <TextField
-              sx={{
-                "& input": {
-                  lineHeight: "1.15rem",
-                  fontSize: "16px",
-                },
-                "& textarea": {
-                  lineHeight: "1.15rem",
-                  fontSize: "16px",
-                },
-                "& input::placeholder": {
-                  fontSize: "16px",
-                },
-                "& textarea::placeholder": {
-                  fontSize: "16px",
-                },
-              }}
-              variant="standard"
-              onChange={({ target: { value } }) => setAddress(value)}
-              value={address}
-              multiline
-              slotProps={{
-                input: {
-                  disableUnderline: true,
-                },
-              }}
-              fullWidth
-              autoComplete="off"
-              placeholder="Enter the address"
-            />
-          )}
+          <TextField
+            sx={{
+              "& input": {
+                lineHeight: "1.15rem",
+                fontSize: "16px",
+              },
+              "& textarea": {
+                lineHeight: "1.15rem",
+                fontSize: "16px",
+              },
+              "& input::placeholder": {
+                fontSize: "16px",
+              },
+              "& textarea::placeholder": {
+                fontSize: "16px",
+              },
+            }}
+            variant="standard"
+            onChange={({ target: { value } }) => setAddress(value)}
+            value={address}
+            multiline
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
+            }}
+            fullWidth
+            autoComplete="off"
+            placeholder="Enter the address"
+          />
         </Box>
       </Box>
 

@@ -117,10 +117,6 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
     return await icrc1Adapter.metadata({ canisterId });
   }
 
-  public async setLogo() {
-    return resultFormat<boolean>({ err: "no approve" });
-  }
-
   public actualReceivedByTransfer({ amount }: ActualReceivedByTransferRequest) {
     return amount;
   }

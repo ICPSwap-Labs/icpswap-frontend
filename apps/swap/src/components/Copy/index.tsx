@@ -8,6 +8,7 @@ const useStyles = makeStyles({
   copy: {
     display: "inline-block",
     cursor: "pointer",
+    height: "fit-content",
   },
 });
 

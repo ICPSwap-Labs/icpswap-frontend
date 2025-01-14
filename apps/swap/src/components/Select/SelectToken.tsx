@@ -4,9 +4,9 @@ import { Select } from "components/Select/ForToken";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import { useAllTokensOfSwap } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
+import { useStateSwapAllTokens } from "store/global/hooks";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
@@ -79,7 +79,7 @@ export function SelectToken({
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
-  const { result: allTokensOfSwap } = useAllTokensOfSwap();
+  const allTokensOfSwap = useStateSwapAllTokens();
 
   useEffect(() => {
     if (tokenId) {

@@ -2,6 +2,7 @@ import { HttpAgent, ActorSubclass } from "@dfinity/agent";
 import { ActorIdentity } from "@icpswap/types";
 import { IDL } from "@dfinity/candid";
 import { ic_host } from "@icpswap/constants";
+import isObject from "lodash/isObject";
 
 import { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
@@ -148,15 +149,24 @@ export class Actor {
           const result = actor[key](...args) as Promise<any>;
           return await result;
         } catch (error) {
-          const _error = String(error);
-
           let message = "";
-          if (_error.includes("Reject text:")) {
-            const _message = _error.split(`Reject text: `)[1]?.split(" at") ?? "";
-            message = _message ? _message[0]?.trim() : _error;
+
+          if (isObject(error)) {
+            if ("message" in error) {
+              message = error.message as string;
+            } else {
+              message = JSON.stringify(error);
+            }
           } else {
-            const _message = _error.includes(`"Message"`) ? _error.split(`"Message": `)[1]?.split('"') : "";
-            message = _error.includes(`"Message"`) && !!_message ? _message[1] : _error;
+            const __error = String(error);
+
+            if (__error.includes("Reject text:")) {
+              const _message = __error.split(`Reject text: `)[1]?.split(" at") ?? "";
+              message = _message ? _message[0]?.trim() : __error;
+            } else {
+              const _message = __error.includes(`"Message"`) ? __error.split(`"Message": `)[1]?.split('"') : "";
+              message = __error.includes(`"Message"`) && !!_message ? _message[1] : __error;
+            }
           }
 
           if (this.log) {

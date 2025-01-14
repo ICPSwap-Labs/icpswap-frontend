@@ -19,6 +19,7 @@ import type {
   TickInfoWithId,
   ActorIdentity,
   PaginationResult,
+  Null,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -58,7 +59,7 @@ export async function getSwapPoolMetadata(canisterId: string) {
   return resultFormat<PoolMetadata>(await (await swapPool(canisterId)).metadata()).data;
 }
 
-export function useSwapPoolMetadata(canisterId: string | undefined) {
+export function useSwapPoolMetadata(canisterId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
@@ -135,11 +136,7 @@ export async function getUserUnusedBalance(canisterId: string, user: Principal) 
   ).data;
 }
 
-export function useUserUnusedBalance(
-  canisterId: string | undefined,
-  user: Principal | undefined,
-  refresh?: number | boolean,
-) {
+export function useUserUnusedBalance(canisterId: string | Null, user: Principal | Null, refresh?: number | boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !user) return undefined;
@@ -315,7 +312,7 @@ export async function getSwapPositions(canisterId: string, offset: number, limit
   ).data;
 }
 
-export function useSwapPositions(canisterId: string | undefined, offset: number, limit: number) {
+export function useSwapPositions(canisterId: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
@@ -452,11 +449,7 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(
-  poolId: string | undefined,
-  principal: string | undefined,
-  refresh?: boolean | number,
-) {
+export function useSwapUserPositions(poolId: string | Null, principal: string | Null, refresh?: boolean | number) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !poolId) return undefined;
@@ -476,12 +469,17 @@ export async function getSwapPositionOwner(poolId: string, positionIndex: number
   return resultFormat<string>(await (await swapPool(poolId)).getUserByPositionId(BigInt(positionIndex))).data;
 }
 
-export function useSwapPositionOwner(poolId: string | undefined, positionIndex: number | bigint | undefined) {
+export function useSwapPositionOwner(
+  poolId: string | undefined,
+  positionIndex: number | bigint | undefined,
+  refresh?: number,
+) {
   return useCallsData(
     useCallback(async () => {
       if (!poolId || positionIndex === undefined) return undefined;
       return await getSwapPositionOwner(poolId, positionIndex);
     }, [positionIndex, poolId]),
+    refresh,
   );
 }
 

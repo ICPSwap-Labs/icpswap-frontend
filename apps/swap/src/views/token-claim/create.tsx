@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Box, Input } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
@@ -16,10 +15,11 @@ import Button from "components/authentication/ButtonConnector";
 import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
 import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
+
 import Config from "./Config";
 
 export const TokenStandards = [
@@ -113,7 +113,7 @@ export default function CreateTokenClaim() {
     }
   }, [values.standard, values.id]);
 
-  const { result: tokenInfo } = useTokenInfo(tokenId);
+  const [, token] = useToken(tokenId);
 
   const handleFieldChange = (value: string, field: string) => {
     setValues({ ...values, [field]: value });
@@ -175,18 +175,18 @@ export default function CreateTokenClaim() {
   };
 
   const handleCreateClaimEvent = async (identity: ActorIdentity) => {
-    if (!identity || loading || !tokenInfo || !principal) return;
+    if (!identity || loading || !token || !principal) return;
     setLoading(true);
 
     const { status, message, data } = await createClaimEvent(
       {
-        tokenName: tokenInfo.name,
-        tokenSymbol: tokenInfo.symbol,
-        tokenDecimals: tokenInfo.decimals,
-        tokenCid: tokenInfo.canisterId,
+        tokenName: token.name,
+        tokenSymbol: token.symbol,
+        tokenDecimals: token.decimals,
+        tokenCid: token.address,
         tokenStandard: values.standard,
         totalUserAmount: BigInt(values.userAmount),
-        totalTokenAmount: BigInt(numberToString(formatTokenAmount(values.tokenAmount, tokenInfo.decimals))),
+        totalTokenAmount: BigInt(numberToString(formatTokenAmount(values.tokenAmount, token.decimals))),
         claimedTokenAmount: BigInt(0),
         claimEventId: "1",
         claimEventName: values.name,
@@ -205,10 +205,7 @@ export default function CreateTokenClaim() {
         user: isValidPrincipal(ele.address) ? { principal: Principal.fromText(ele.address) } : { address: ele.address },
         quota: BigInt(
           numberToString(
-            formatTokenAmount(
-              new BigNumber(ele.amount).toFixed(tokenInfo.decimals, BigNumber.ROUND_DOWN),
-              tokenInfo.decimals,
-            ),
+            formatTokenAmount(new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN), token.decimals),
           ),
         ),
       }));
@@ -243,9 +240,9 @@ export default function CreateTokenClaim() {
     setLoading(false);
   };
 
-  const ExcelTotalAmount = tokenInfo
+  const ExcelTotalAmount = token
     ? userClaims.reduce((prev, curr) => {
-        return prev.plus(new BigNumber(curr.amount).toFixed(tokenInfo.decimals, BigNumber.ROUND_DOWN));
+        return prev.plus(new BigNumber(curr.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN));
       }, new BigNumber(0))
     : new BigNumber(0);
 
@@ -291,7 +288,7 @@ export default function CreateTokenClaim() {
                   inputComponent: TextFieldNumberComponent,
                   inputProps: {
                     thousandSeparator: true,
-                    decimalScale: tokenInfo?.decimals ?? 8,
+                    decimalScale: token?.decimals ?? 8,
                     allowNegative: false,
                     maxLength: 100,
                     value: values.tokenAmount,
@@ -303,15 +300,19 @@ export default function CreateTokenClaim() {
                 placeholder={t`Enter total user amount`}
                 onChange={(value) => handleFieldChange(value, "userAmount")}
                 value={values.userAmount}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: 0,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.userAmount,
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: 0,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.userAmount,
+                      },
+                    },
                   },
                 }}
               />

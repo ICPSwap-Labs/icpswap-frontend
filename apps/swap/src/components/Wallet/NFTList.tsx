@@ -1,15 +1,14 @@
 import { useMemo, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Box, Typography, Avatar, useTheme } from "@mui/material";
+import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
+import { ImageLoading } from "@icpswap/ui";
 import NFTListHeader from "components/Wallet/NFTListHeader";
 import { useAccount } from "store/global/hooks";
-import NoData from "components/no-data";
+import { NoData } from "components/index";
 import { isICPSwapOfficial } from "utils/index";
-import { useSelectedCanistersManager , useEXTManager } from "store/nft/hooks";
+import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
-import Loading from "components/Loading/Static";
 import WalletContext from "components/Wallet/context";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 
@@ -27,7 +26,7 @@ export interface NFTCardUIProps {
 }
 
 function NFTCardUI({ number, name, src, onClick }: NFTCardUIProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Box
@@ -191,7 +190,7 @@ export default function NFTList() {
         </Box>
       </Box>
 
-      {loading ? <Loading loading /> : null}
+      {loading ? <ImageLoading loading /> : null}
 
       {list && list.length === 0 && !!importedNFTs && importedNFTs.length === 0 && !loading ? <NoData /> : null}
     </Box>

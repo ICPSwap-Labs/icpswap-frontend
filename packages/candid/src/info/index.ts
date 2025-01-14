@@ -1,30 +1,17 @@
 export { idlFactory as NodeIndexInterfaceFactory } from "./node_index.did";
-export type {
-  _SERVICE as NodeIndex,
-  PublicPoolOverView,
-  PublicTokenOverview,
-} from "./node_index";
+export type { _SERVICE as NodeIndex, PublicPoolOverView, PublicTokenOverview } from "./node_index";
 
 export { idlFactory as BaseIndexInterfaceFactory } from "./BaseIndex.did";
 export type { _SERVICE as BaseIndex } from "./BaseIndex";
 
 export { idlFactory as BaseStorageInterfaceFactory } from "./BaseStorage.did";
-export type {
-  _SERVICE as BaseStorage,
-  Transaction as BaseTransaction,
-} from "./BaseStorage";
+export type { _SERVICE as BaseStorage, Transaction as BaseTransaction } from "./BaseStorage";
 
 export { idlFactory as GlobalIndexInterfaceFactory } from "./GlobalIndex.did";
-export type {
-  _SERVICE as GlobalIndex,
-  PublicProtocolData,
-} from "./GlobalIndex";
+export type { _SERVICE as GlobalIndex, PublicProtocolData } from "./GlobalIndex";
 
 export { idlFactory as GlobalStorageInterfaceFactory } from "./GlobalStorage.did";
-export type {
-  _SERVICE as GlobalStorage,
-  PublicSwapChartDayData,
-} from "./GlobalStorage";
+export type { _SERVICE as GlobalStorage, PublicSwapChartDayData } from "./GlobalStorage";
 
 export { idlFactory as GlobalTVLInterfaceFactory } from "./GlobalTVL.did";
 export type { _SERVICE as GlobalTVL, TvlChartDayData } from "./GlobalTVL";
@@ -48,7 +35,10 @@ export type {
 } from "./TokenStorage";
 
 export { idlFactory as UserStorageInterfaceFactory } from "./UserStorage.did";
+export type { _SERVICE as UserStorage, Transaction as UserStorageTransaction } from "./UserStorage";
+
+export { idlFactory as PositionTransactionsStorageFactory } from "./PositionTransactionsStorage.did";
 export type {
-  _SERVICE as UserStorage,
-  Transaction as UserStorageTransaction,
-} from "./UserStorage";
+  _SERVICE as PositionTransactionsStorage,
+  Transaction as PositionTransaction,
+} from "./PositionTransactionsStorage";

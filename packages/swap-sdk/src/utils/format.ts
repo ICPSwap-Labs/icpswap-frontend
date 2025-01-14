@@ -1,4 +1,6 @@
 import JSBI from "jsbi";
+import { formatTokenPrice } from "@icpswap/utils";
+
 import { Price, Token, CurrencyAmount, Fraction } from "../core";
 
 export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number) {
@@ -15,18 +17,6 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, 
   return amount.toFixed(sigFigs ? (sigFigs > 8 ? 8 : sigFigs) : 4, { groupSeparator: "," });
 }
 
-export function formatPrice(price: Price<Token, Token> | undefined, sigFigs: number, format?: object) {
-  if (!price) {
-    return "-";
-  }
-
-  if (parseFloat(price.toFixed(sigFigs)) < 0.0001) {
-    return "<0.0001";
-  }
-
-  return price.toSignificant(sigFigs, format);
-}
-
 enum Bound {
   LOWER = "LOWER",
   UPPER = "UPPER",
@@ -37,7 +27,6 @@ export function formatTickPrice(
   atLimit: { [bound in Bound]?: boolean | undefined },
   direction: Bound,
   placeholder?: string,
-  format?: object,
 ) {
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? "0" : "∞";
@@ -47,5 +36,5 @@ export function formatTickPrice(
     return placeholder;
   }
 
-  return formatPrice(price, 5, format);
+  return formatTokenPrice(price?.toFixed(100));
 }

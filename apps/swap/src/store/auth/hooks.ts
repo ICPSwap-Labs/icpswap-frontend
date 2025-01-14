@@ -113,6 +113,16 @@ export function useDisconnect() {
   }, [dispatch, updateLockStatus]);
 }
 
+export function useCleanLogState() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(async () => {
+    dispatch(logout());
+    updateLockStatus(true);
+    dispatch(updateConnected({ isConnected: false }));
+  }, [dispatch, updateLockStatus]);
+}
+
 export function useAccountPrincipal(): Principal | undefined {
   const principal = useAppSelector((state) => state.auth.principal);
   const walletType = useAppSelector((state) => state.auth.walletType);
@@ -258,11 +268,11 @@ export function useIdentityKitInitialConnect() {
 export function useConnectManager() {
   const dispatch = useAppDispatch();
   const connectorStateConnected = useConnectorStateConnected();
-  const disconnect = useDisconnect();
+  const __disconnect = useDisconnect();
   const open = useAppSelector((state) => state.auth.walletConnectorOpen);
   const connector = useAppSelector((state) => state.auth.walletType);
 
-  const { connect, disconnect: identityKitDisconnect } = useAuth();
+  const { connect: identityKitConnect, disconnect: identityKitDisconnect } = useAuth();
 
   const showConnector = useCallback(
     (open: boolean) => {
@@ -271,9 +281,9 @@ export function useConnectManager() {
     [dispatch],
   );
 
-  const __connect = useCallback(async (connector: Connector) => {
+  const connect = useCallback(async (connector: Connector) => {
     if (IdentityKitConnector.includes(connector)) {
-      await connect(IdentityKitId[connector]);
+      await identityKitConnect(IdentityKitId[connector]);
       updateAuth({ walletType: connector, connected: false });
       return true;
     }
@@ -284,14 +294,14 @@ export function useConnectManager() {
     return await selfConnector.connect();
   }, []);
 
-  const __disconnect = useCallback(async () => {
+  const disconnect = useCallback(async () => {
     if (connector) {
       if (IdentityKitConnector.includes(connector)) {
         await identityKitDisconnect();
       }
     }
 
-    await disconnect();
+    await __disconnect();
   }, [connector]);
 
   const { loading } = useInitialConnect();
@@ -300,12 +310,12 @@ export function useConnectManager() {
   return useMemo(
     () => ({
       open,
-      connect: __connect,
-      disconnect: __disconnect,
+      connect,
+      disconnect,
       showConnector,
       isConnected: connectorStateConnected,
       loading,
     }),
-    [open, __connect, __disconnect, showConnector, connectorStateConnected, loading],
+    [open, connect, disconnect, showConnector, connectorStateConnected, loading],
   );
 }

@@ -114,7 +114,7 @@ export default function NFTCanisterCreate() {
         if (filePath) await setCanisterLogoInController(data, filePath);
       }
 
-      history.push("/console/nft/canister/list");
+      history.push("/info-tools/nft/canister/list");
     } else {
       openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
     }
@@ -194,7 +194,7 @@ export default function NFTCanisterCreate() {
       <Breadcrumbs
         prevLabel={<Trans>NFT Canister List</Trans>}
         currentLabel={<Trans>Create an NFT Canister</Trans>}
-        prevLink="/console/nft/canister/list"
+        prevLink="/info-tools/nft/canister/list"
       />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
@@ -220,10 +220,14 @@ export default function NFTCanisterCreate() {
                 onChange={(value: string) => onFieldChange(value, "name")}
                 placeholderSize="16px"
                 fontSize="16px"
-                InputProps={{
-                  disableUnderline: true,
-                  inputProps: {
-                    maxLength: 50,
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputProps: {
+                        maxLength: 50,
+                      },
+                    },
                   },
                 }}
               />
@@ -242,10 +246,14 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the canister description`}
                 onChange={(value: string) => onFieldChange(value, "introduction")}
-                InputProps={{
-                  disableUnderline: true,
-                  inputProps: {
-                    maxLength: 500,
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputProps: {
+                        maxLength: 500,
+                      },
+                    },
                   },
                 }}
               />
@@ -262,10 +270,14 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the creator`}
                 onChange={(value: string) => onFieldChange(value, "minter")}
-                InputProps={{
-                  disableUnderline: true,
-                  inputProps: {
-                    maxLength: 50,
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputProps: {
+                        maxLength: 50,
+                      },
+                    },
                   },
                 }}
               />
@@ -329,23 +341,27 @@ export default function NFTCanisterCreate() {
                         placeholderSize="16px"
                         placeholder={t`Enter your link, e.g. https://yoursite.io`}
                         onChange={(value: string) => handleMediaInput(value, index)}
-                        InputProps={{
-                          disableUnderline: true,
-                          inputProps: {
-                            maxLength: 100,
+                        textFiledProps={{
+                          slotProps: {
+                            input: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <HighlightOffIcon
+                                    sx={{
+                                      color: "#8492C4",
+                                      fontSize: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => handleMediaDelete(index)}
+                                  />
+                                </InputAdornment>
+                              ),
+                              disableUnderline: true,
+                              inputProps: {
+                                maxLength: 100,
+                              },
+                            },
                           },
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <HighlightOffIcon
-                                sx={{
-                                  color: "#8492C4",
-                                  fontSize: "20px",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() => handleMediaDelete(index)}
-                              />
-                            </InputAdornment>
-                          ),
                         }}
                       />
                     </Grid>

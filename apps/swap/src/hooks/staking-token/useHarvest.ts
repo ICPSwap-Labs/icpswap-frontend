@@ -39,6 +39,7 @@ interface UnstakeCallsArgs {
   token: Token;
   poolId: string;
   key: string;
+  refresh?: () => void;
 }
 
 function useCalls() {
@@ -46,10 +47,15 @@ function useCalls() {
   const withdraw = useRewardTokenWithdrawCall();
 
   return useCallback(
-    ({ token, key, poolId }: UnstakeCallsArgs) => {
+    ({ token, key, poolId, refresh }: UnstakeCallsArgs) => {
       const call0 = async () => {
         const harvestResult = await harvest({ token, poolId, key });
-        if (harvestResult) withdraw({ token, poolId, key });
+        if (harvestResult) {
+          withdraw({ token, poolId, key }).then(() => {
+            if (refresh) refresh();
+          });
+        }
+
         return harvestResult;
       };
 
@@ -67,6 +73,7 @@ function useCalls() {
 export interface UnstakeCallArgs {
   token: Token;
   poolId: string;
+  refresh?: () => void;
 }
 
 export function useHarvestCall() {
@@ -75,9 +82,9 @@ export function useHarvestCall() {
   const getCalls = useCalls();
 
   return useCallback(
-    ({ token, poolId }: UnstakeCallArgs) => {
+    ({ token, poolId, refresh }: UnstakeCallArgs) => {
       const key = newStepKey();
-      const calls = getCalls({ token, poolId, key });
+      const calls = getCalls({ token, poolId, key, refresh });
       const { call, reset, retry } = formatCall(calls, key);
 
       updateStep(key, { token, poolId });

@@ -5,7 +5,6 @@ import { useGlobalTokenList } from "store/global/hooks";
 import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { FilledTextField, NoData } from "components/index";
-import { TokenInfo } from "types/token";
 import { isValidPrincipal } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
@@ -14,6 +13,7 @@ import { TokenListMetadata } from "types/token-list";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import { Token } from "@icpswap/swap-sdk";
 
 import { TokenItem } from "./TokenItem";
 import { BaseTokens } from "./BaseToken";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => {
 
 export interface SelectorProps {
   open: boolean;
-  onChange: (token: TokenInfo) => void;
+  onChange: (token: Token) => void;
   onClose: () => void;
   disabledCurrencyIds?: string[];
   activeCurrencyIds?: string[];
@@ -86,8 +86,8 @@ export default function Selector({
   }, [globalTokenList, yourTokens, snsAllTokensInfo]);
 
   const handleTokenClick = useCallback(
-    (token: TokenInfo) => {
-      if (disabledCurrencyIds.includes(token?.canisterId.toString())) return;
+    (token: Token) => {
+      if (disabledCurrencyIds.includes(token?.address.toString())) return;
       if (onChange) onChange(token);
     },
     [disabledCurrencyIds],
@@ -185,13 +185,17 @@ export default function Selector({
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
-                  </InputAdornment>
-                ),
-                maxLength: 50,
+              textFiledProps={{
+                slotProps: {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
+                      </InputAdornment>
+                    ),
+                    maxLength: 50,
+                  },
+                },
               }}
               onChange={debouncedSearch}
             />

@@ -1,29 +1,25 @@
 import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
 import { useTheme } from "components/Mui";
-import { ICP, ICS, ckBTC, ckETH, ckUSDC } from "@icpswap/tokens";
+import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo } from "types/token";
-import { useTokenInfo } from "hooks/token";
 import { useCallback } from "react";
 
-const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH];
+const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, ckUSDT, BOB];
 
 export interface BaseTokenProps {
   token: Token;
-  onTokenClick: (token: TokenInfo) => void;
+  onTokenClick: (token: Token) => void;
 }
 
 export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
   const theme = useTheme();
 
-  const { result: tokenInfo } = useTokenInfo(token.address);
-
   const handleClick = useCallback(() => {
-    if (tokenInfo) {
-      onTokenClick(tokenInfo);
+    if (token) {
+      onTokenClick(token);
     }
-  }, [onTokenClick, tokenInfo]);
+  }, [onTokenClick, token]);
 
   return (
     <Flex
@@ -57,7 +53,7 @@ export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
 }
 
 export interface BaseTokensProps {
-  onTokenClick: (token: TokenInfo) => void;
+  onTokenClick: (token: Token) => void;
 }
 
 export function BaseTokens({ onTokenClick }: BaseTokensProps) {
@@ -67,13 +63,11 @@ export function BaseTokens({ onTokenClick }: BaseTokensProps) {
         margin: "16px 0 0 0",
         padding: "0 24px",
         "@media(max-width: 640px)": {
-          gap: "12px",
           justifyContent: "flex-start",
           padding: "0 16px",
         },
       }}
-      gap="0 12px"
-      justify="center"
+      gap="12px"
       wrap="wrap"
     >
       {BASE_TOKENS.map((base_token) => (

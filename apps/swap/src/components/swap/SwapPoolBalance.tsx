@@ -4,8 +4,7 @@ import { nonNullArgs, formatAmount, parseTokenAmount, BigNumber } from "@icpswap
 import { t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
-
-import { CanisterIcon } from "./icons/CanisterIcon";
+import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 
 export interface SwapPoolBalanceProps {
   token: Token | Null;
@@ -27,7 +26,6 @@ export function SwapPoolBalance({ token, subAccountBalance, unusedBalance, onCli
                   new BigNumber(unusedBalance.toString()).plus(subAccountBalance),
                   token.decimals,
                 ).toString(),
-                4,
               )
             : "--"}
         </Typography>

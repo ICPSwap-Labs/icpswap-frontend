@@ -1,6 +1,6 @@
-import { Override } from "./global";
 import type { SwapPoolData } from "@icpswap/candid";
 import type { Principal } from "@dfinity/principal";
+import { Override } from "./global";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
@@ -25,7 +25,22 @@ export type {
   SwapPoolData,
   SwapPoolToken,
   Ticket,
+  LimitOrderKey,
+  LimitOrderValue,
+  LimitTransaction,
+  LimitTransactionResult,
+  PositionPricePeriodRange,
+  PoolAPRs,
+  TokenAnalysisData,
 } from "@icpswap/candid";
+
+export type LimitOrder = {
+  userPositionId: bigint;
+  token0InAmount: bigint;
+  timestamp: bigint;
+  tickLimit: bigint;
+  token1InAmount: bigint;
+};
 
 export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";
 

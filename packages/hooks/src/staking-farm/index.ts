@@ -27,7 +27,7 @@ export async function getUserFarmInfo(canisterId: string, principal: string) {
   return resultFormat<FarmInfo>(farmResult).data;
 }
 
-export function useV3UserFarmInfo(canisterId: string | undefined, principal: string | undefined, reload?: boolean) {
+export function useV3UserFarmInfo(canisterId: string | Null, principal: string | Null, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!principal || !canisterId) return undefined;
@@ -41,7 +41,7 @@ export async function getFarmInfo(canisterId: string) {
   return await getUserFarmInfo(canisterId, AnonymousPrincipal);
 }
 
-export function useFarmInfo(canisterId: string | undefined, reload?: boolean) {
+export function useFarmInfo(canisterId: string | Null, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;

@@ -3,19 +3,19 @@ import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "com
 import CurrenciesAvatar from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { usePositionFees } from "hooks/swap/usePositionFees";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme, toFormat } from "utils";
+import { isDarkTheme } from "utils/index";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, PositionRangeState } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
+import { LimitPanel } from "components/LimitPanel";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -105,12 +105,21 @@ export interface PositionCardProps {
   showButtons?: boolean;
   position: Position | undefined;
   farmId?: string | undefined;
-  staked?: boolean;
+  staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
+  isLimit: boolean;
 }
 
-export function PositionCard({ position, showButtons, positionId, farmId, staked, filterState }: PositionCardProps) {
+export function PositionCard({
+  position,
+  showButtons,
+  positionId,
+  farmId,
+  staked,
+  filterState,
+  isLimit,
+}: PositionCardProps) {
   const classes = useStyle();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
@@ -224,6 +233,7 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState)) return true;
+    if (isLimit) return false;
 
     switch (filterState) {
       case PositionFilterState.All:
@@ -239,7 +249,7 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
       default:
         return true;
     }
-  }, [positionState, filterState]);
+  }, [positionState, filterState, isLimit]);
 
   useEffect(() => {
     if (positionKey) {
@@ -259,8 +269,11 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
       <Flex
         justify="space-between"
         fullWidth
-        onClick={handleToggleShow}
+        onClick={() => {
+          handleToggleShow();
+        }}
         sx={{
+          userSelect: "none",
           "@media(max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
@@ -285,6 +298,12 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
           </Typography>
 
           <FeeTierPercentLabel feeTier={feeAmount} />
+
+          {isLimit ? (
+            <Flex gap="0 4px">
+              <LimitPanel />
+            </Flex>
+          ) : null}
         </Flex>
 
         <Flex
@@ -322,13 +341,13 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
               }}
             >
               <Typography color="text.primary">
-                {!!token1 && !!token0
+                {!!token1 && !!token0 && pool
                   ? inverted
-                    ? pool?.priceOf(token1)
-                      ? `${toFormat(pool?.priceOf(token1).toSignificant(6))} ${pairName}`
+                    ? pool.priceOf(token1)
+                      ? `${formatTokenPrice(pool.priceOf(token1).toSignificant(token1.decimals))} ${pairName}`
                       : "--"
-                    : pool?.priceOf(token0)
-                    ? `${toFormat(pool?.priceOf(token0).toSignificant(6))} ${pairName}`
+                    : pool.priceOf(token0)
+                    ? `${formatTokenPrice(pool.priceOf(token0).toFixed(token0.decimals))} ${pairName}`
                     : "--"
                   : "--"}
               </Typography>
@@ -381,38 +400,80 @@ export function PositionCard({ position, showButtons, positionId, farmId, staked
 
           <PositionRangeState state={positionState} width="110px" />
 
-          <Flex
-            sx={{
-              "@media(max-width: 640px)": {
-                width: "100%",
-                justifyContent: "center",
-                visibility: detailShow ? "hidden" : "visible",
-                height: detailShow ? "0px" : "auto",
-              },
-            }}
-          >
-            <Typography
+          {matchDownMD ? (
+            <Flex
               sx={{
-                display: "none",
-                fontSize: "12px",
                 "@media(max-width: 640px)": {
-                  display: "block",
+                  width: "100%",
+                  justifyContent: "center",
+                  visibility: detailShow ? "hidden" : "visible",
+                  height: detailShow ? "0px" : "auto",
                 },
               }}
-              color="text.theme-secondary"
             >
-              <Trans>Detail</Trans>
-            </Typography>
-            {detailShow ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown
+              <Typography
                 sx={{
-                  color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  display: "none",
+                  fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    display: "block",
+                  },
                 }}
-              />
-            )}
-          </Flex>
+                color="text.theme-secondary"
+              >
+                <Trans>Detail</Trans>
+              </Typography>
+
+              {detailShow ? (
+                <KeyboardArrowUp />
+              ) : (
+                <KeyboardArrowDown
+                  sx={{
+                    color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  }}
+                />
+              )}
+            </Flex>
+          ) : (
+            <Flex
+              sx={{
+                justifyContent: "flex-end",
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleShow();
+              }}
+            >
+              {detailShow ? (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowDown
+                    sx={{
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
 

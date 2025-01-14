@@ -19,7 +19,7 @@ import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
 import { feeAmountToPercentage, PositionState } from "utils/swap/index";
-import { CollectFeesModal } from "components/swap/CollectFeesModal";
+import { CollectFees } from "components/liquidity/CollectFees/index";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { numberToString, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
@@ -27,14 +27,11 @@ import { isDarkTheme, toFormat } from "utils";
 import { Trans, t } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, TransferPosition, PositionRangeState } from "components/swap/index";
 import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
-import { PositionRangeState } from "components/swap/index";
-
 import { usePositionState } from "hooks/liquidity";
-import TransferPosition from "./TransferPosition";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -336,9 +333,11 @@ export function PositionDetails({
               <Box />
             )}
             {hasUnclaimedFees ? (
-              <Button fullWidth variant="outlined" size={matchDownSM ? "medium" : "medium"} onClick={handleCollectFee}>
-                <Trans>Collect Fees</Trans>
-              </Button>
+              <CollectFees position={position} positionId={positionId} onCollectSuccess={handleClaimedSuccessfully}>
+                <Button fullWidth variant="outlined" size={matchDownSM ? "medium" : "medium"}>
+                  <Trans>Collect Fees</Trans>
+                </Button>
+              </CollectFees>
             ) : null}
             {!invalid ? (
               <Button
@@ -413,18 +412,6 @@ export function PositionDetails({
           </Box>
         )}
       </Grid>
-
-      <CollectFeesModal
-        pool={pool}
-        positionId={positionId}
-        open={collectFeesShow}
-        currencyFeeAmount0={currencyFeeAmount0}
-        currencyFeeAmount1={currencyFeeAmount1}
-        onClose={() => {
-          setCollectFeesShow(false);
-        }}
-        onClaimedSuccessfully={handleClaimedSuccessfully}
-      />
 
       {transferShow ? (
         <TransferPosition

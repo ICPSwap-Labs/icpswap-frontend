@@ -4,10 +4,19 @@ import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { batch } from "react-redux";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import {
+  Bound,
+  FeeAmount,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  SWAP_CHART_RANGE_LEFT_COLOR,
+  SWAP_CHART_RANGE_RIGHT_COLOR,
+  SWAP_CHART_RANGE_AREA_COLOR,
+} from "constants/swap";
 import { Price, Token } from "@icpswap/swap-sdk";
-import { Box, Grid, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { Flex } from "components/index";
 import { t } from "@lingui/macro";
+import { Null } from "@icpswap/types";
 
 import { ZoomLevels } from "./types";
 import { Chart } from "./Chart";
@@ -35,20 +44,14 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
 
 function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      sx={{ height: "100%", minHeight: "200px" }}
-      flexDirection="column"
-    >
+    <Flex fullWidth justify="center" align="center" sx={{ height: "100%", minHeight: "200px" }} vertical>
       {icon}
       {message && (
         <Typography variant="h3" color="textPrimary" align="center" sx={{ marginTop: "20px" }}>
           {message}
         </Typography>
       )}
-    </Grid>
+    </Flex>
   );
 }
 
@@ -60,9 +63,10 @@ export interface LiquidityChartRangeInputProps {
   price: number | undefined | string;
   priceLower?: Price<Token, Token>;
   priceUpper?: Price<Token, Token>;
-  onLeftRangeInput: (typedValue: string) => void;
-  onRightRangeInput: (typedValue: string) => void;
-  interactive: boolean;
+  onLeftRangeInput?: (typedValue: string) => void;
+  onRightRangeInput?: (typedValue: string) => void;
+  poolPriceLower: string | number | Null;
+  poolPriceUpper: string | number | Null;
 }
 
 export default function LiquidityChartRangeInput({
@@ -75,13 +79,10 @@ export default function LiquidityChartRangeInput({
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
-  interactive,
+  poolPriceLower,
+  poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
-
-  const tokenAColor = "#788686";
-  const tokenBColor = "#bb8d00";
-  const COLOR_BLUE = "#0068FC";
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped);
 
@@ -106,13 +107,13 @@ export default function LiquidityChartRangeInput({
           (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === "handle" || mode === "reset") &&
           leftRangeValue > 0
         ) {
-          onLeftRangeInput(leftRangeValue.toFixed(6));
+          if (onLeftRangeInput) onLeftRangeInput(leftRangeValue.toFixed(6));
         }
         if ((!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === "reset") && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
-            onRightRangeInput(rightRangeValue.toFixed(6));
+            if (onRightRangeInput) onRightRangeInput(rightRangeValue.toFixed(6));
           }
         }
       });
@@ -120,7 +121,7 @@ export default function LiquidityChartRangeInput({
     [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   );
 
-  const _interactive = interactive && Boolean(formattedData?.length);
+  const interactive = Boolean(formattedData?.length);
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
     const leftPrice = isSorted ? priceLower : priceUpper?.invert();
@@ -168,30 +169,32 @@ export default function LiquidityChartRangeInput({
           icon={<BarChart2 size={56} stroke={theme.palette.background.level3} />}
         />
       ) : (
-        <Grid container alignItems="center" justifyContent="center">
+        <Flex fullWidth justify="center">
           <Chart
             data={{ series: formattedData, current: Number(price) }}
-            dimensions={{ width: 400, height: 200 }}
-            margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
+            dimensions={{ width: 400, height: 240 }}
+            margins={{ top: 0, right: 0, bottom: 30, left: 0 }}
             styles={{
               area: {
-                selection: COLOR_BLUE,
+                selection: SWAP_CHART_RANGE_AREA_COLOR,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor),
-                  east: saturate(0.1, tokenBColor) ?? COLOR_BLUE,
+                  west: saturate(0.1, SWAP_CHART_RANGE_LEFT_COLOR),
+                  east: saturate(0.1, SWAP_CHART_RANGE_RIGHT_COLOR),
                 },
               },
             }}
-            interactive={_interactive}
+            interactive={interactive}
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
             ticksAtLimit={ticksAtLimit}
+            poolPriceLower={poolPriceLower}
+            poolPriceUpper={poolPriceUpper}
           />
-        </Grid>
+        </Flex>
       )}
     </Box>
   );

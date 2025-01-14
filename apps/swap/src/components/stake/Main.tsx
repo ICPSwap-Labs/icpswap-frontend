@@ -4,7 +4,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingPoolInfo } from "@icpswap/types";
+import { Null, StakingPoolInfo } from "@icpswap/types";
 import { useStakePoolStatInfo } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTokenBalance } from "hooks/token";
@@ -18,7 +18,7 @@ export interface StakeMainProps {
   poolInfo: StakingPoolInfo | undefined;
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
-  refreshTrigger: number;
+  refreshTrigger: number | Null;
   handleRefresh: () => void;
 }
 
@@ -83,7 +83,7 @@ export function MainContent({
                     tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
                   />
                 </Flex>
-                <Typography sx={{ color: "text.apr", fontSize: "24px", fontWeight: 600, margin: "16px 0 0 0" }}>
+                <Typography sx={{ color: "text.apr", fontSize: "20px", fontWeight: 600, margin: "16px 0 0 0" }}>
                   {apr ?? "--"}
                 </Typography>
               </Box>
@@ -105,7 +105,7 @@ export function MainContent({
             </Box>
           </Box>
 
-          <Box mt="32px">
+          <Box mt="24px">
             <Box
               sx={{
                 display: "grid",

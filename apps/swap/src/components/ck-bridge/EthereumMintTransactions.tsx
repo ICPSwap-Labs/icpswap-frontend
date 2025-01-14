@@ -5,18 +5,18 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
 import { LoadingRow, Flex } from "@icpswap/ui";
 import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalSearchParameter, WithdrawalDetail, Erc20MinterInfo } from "@icpswap/types";
+import type { WithdrawalSearchParameter, WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
 import { useMemo } from "react";
 import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
 import { Principal } from "@dfinity/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { useTheme } from "components/Mui";
 
 interface TransactionProps {
   transaction: WithdrawalDetail;
-  minterInfo: Erc20MinterInfo | undefined;
+  minterInfo: ChainKeyETHMinterInfo | undefined;
 }
 
 function Transaction({ transaction, minterInfo }: TransactionProps) {
@@ -41,7 +41,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
     };
   }, [minterInfo, transaction]);
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
 
   return (
     <Box
@@ -108,8 +108,8 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
             <Trans>Amount</Trans>
           </Typography>
           <Typography>
-            {tokenInfo
-              ? parseTokenAmount(transaction.withdrawal_amount.toString(), tokenInfo?.decimals).toFormat()
+            {token
+              ? parseTokenAmount(transaction.withdrawal_amount.toString(), token.decimals).toFormat()
               : transaction.withdrawal_amount.toString()}
           </Typography>
         </Flex>

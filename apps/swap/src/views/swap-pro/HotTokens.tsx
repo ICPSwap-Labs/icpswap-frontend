@@ -1,14 +1,13 @@
 import { useMemo } from "react";
-import { Box, Typography, useTheme, keyframes } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, useTheme, keyframes } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import HotIcon from "assets/icons/swap-pro/hot.svg";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import type { PublicTokenOverview } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
 import { ICP, ICS } from "@icpswap/tokens";
-import { useInfoAllTokens } from "hooks/info/useInfoTokens";
+import { useInfoAllTokens } from "@icpswap/hooks";
 import { Proportion } from "@icpswap/ui";
 
 const animationKeyframes = keyframes`
@@ -51,7 +50,7 @@ function TokenItem({ tokenInfo, index }: TokenItemProps) {
     history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.address}`);
   };
 
-  const { result: token } = useTokenInfo(tokenInfo.address);
+  const [, token] = useToken(tokenInfo.address);
 
   return (
     <Box sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }} onClick={handleTokenClick}>
@@ -111,7 +110,7 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
 }
 
 export default function HotTokens() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const infoAllTokens = useInfoAllTokens();
 
   const tokenList = useMemo(() => {

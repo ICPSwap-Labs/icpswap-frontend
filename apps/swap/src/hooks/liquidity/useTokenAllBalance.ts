@@ -28,13 +28,13 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
 
   const { result: token0SubAccountBalance } = useTokenBalance({
     canisterId: token0?.address,
-    address: poolId,
+    address: sub ? poolId : undefined,
     sub,
     refresh,
   });
   const { result: token1SubAccountBalance } = useTokenBalance({
     canisterId: token1?.address,
-    address: poolId,
+    address: sub ? poolId : undefined,
     sub,
     refresh,
   });

@@ -1,11 +1,8 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { Box, useTheme, useMediaQuery } from "components/Mui";
-
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { useTokenListTokenInfo } from "@icpswap/hooks";
+import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { type Null } from "@icpswap/types";
-import { useInfoToken } from "hooks/info/useInfoTokens";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
 import { ChartButton, ChartView } from "@icpswap/ui";
@@ -23,6 +20,7 @@ export default function SwapPro() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [activeTab, setActiveTab] = useState<"SWAP" | "LIMIT">("SWAP");
   const [usdValueChange, setUSDValueChange] = useState<string | null>(null);
   const [selectedPool, setSelectedPool] = useState<Pool | null | undefined>(null);
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
@@ -31,7 +29,7 @@ export default function SwapPro() {
   const [outputToken, setOutputToken] = useState<Token | Null>(undefined);
   const [tradePoolId, setTradePoolId] = useState<string | undefined>(undefined);
   const [chartView, setChartView] = useState<ChartButton | null>({
-    label: `Dexscreener`,
+    label: "DexScreener",
     value: ChartView.DexScreener,
   });
 
@@ -56,7 +54,6 @@ export default function SwapPro() {
 
   const tokenId = useMemo(() => token?.address, [token]);
 
-  const { result: tokenInfo } = useTokenInfo(tokenId);
   const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
 
   const handleAddKeys = useCallback(
@@ -74,6 +71,15 @@ export default function SwapPro() {
     },
     [unavailableBalanceKeys, setUnavailableBalanceKeys],
   );
+
+  useEffect(() => {
+    if (token) {
+      setChartView({
+        label: "DexScreener",
+        value: ChartView.DexScreener,
+      });
+    }
+  }, [token, setChartView, tradePoolId]);
 
   return (
     <SwapContext.Provider
@@ -106,6 +112,8 @@ export default function SwapPro() {
           token,
           chartView,
           setChartView,
+          activeTab,
+          setActiveTab,
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -141,10 +149,9 @@ export default function SwapPro() {
               >
                 <Swap />
 
-                {matchDownSM ? (
-                  <TokenChartInfo infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
-                ) : null}
-                <TokenUI infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                {matchDownSM ? <TokenChartInfo infoToken={infoToken} tokenListInfo={tokenListInfo} /> : null}
+
+                <TokenUI infoToken={infoToken} tokenListInfo={tokenListInfo} />
               </Box>
 
               <Box
@@ -159,7 +166,7 @@ export default function SwapPro() {
                   },
                 }}
               >
-                <TokenChartWrapper infoToken={infoToken} tokenInfo={tokenInfo} tokenListInfo={tokenListInfo} />
+                <TokenChartWrapper infoToken={infoToken} tokenListInfo={tokenListInfo} />
                 <Transactions />
               </Box>
             </Box>

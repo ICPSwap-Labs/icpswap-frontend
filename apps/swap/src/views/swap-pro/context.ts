@@ -15,6 +15,8 @@ export interface SwapProContextProps {
   token: Token | undefined;
   setChartView: (view: ChartButton) => void;
   chartView: ChartButton | Null;
+  activeTab: "SWAP" | "LIMIT";
+  setActiveTab: (tab: "SWAP" | "LIMIT") => void;
 }
 
 export const SwapProContext = createContext({} as SwapProContextProps);

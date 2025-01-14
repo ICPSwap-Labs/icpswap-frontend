@@ -77,13 +77,13 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
       }}
     >
       <Box>
-        <Typography>
+        <Typography sx={{ lineHeight: "20px" }}>
           <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
         </Typography>
       </Box>
       <Box className={classes.content}>
         <Box>
-          <Typography sx={{ lineHeight: "18px" }}>
+          <Typography sx={{ lineHeight: "20px" }}>
             <Trans>
               1. ICPSwap is a decentralized financial hub of the Internet Computer, providing the transaction function
               of various tokens and NFTs within its ecosystem and other services. All the services are deployed on the
@@ -93,7 +93,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography sx={{ lineHeight: "18px" }}>
+          <Typography sx={{ lineHeight: "20px" }}>
             <Trans>
               2. The Internet Computer ecosystem is in its growth stage. All functions of ICPSwap have undergone
               multiple rounds of internal and public testing and also iterative repair, The ICPSwap DApp is now under
@@ -102,7 +102,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography sx={{ lineHeight: "18px" }}>
+          <Typography sx={{ lineHeight: "20px" }}>
             <Trans>
               3. Anyone who has the seed phrase of a wallet address has control of the funds in that wallet. Never share
               your seed phrase under any circumstances whatsoever, including with the ICPSwap team.
@@ -110,7 +110,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography sx={{ lineHeight: "18px" }}>
+          <Typography sx={{ lineHeight: "20px" }}>
             <Trans>
               4. Please stay vigilant to phishing attacks and make sure you are visiting{" "}
               <Typography color="primary" component="span">
@@ -121,7 +121,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
           </Typography>
         </Box>
         <Box mt="30px">
-          <Typography sx={{ lineHeight: "18px" }}>
+          <Typography sx={{ lineHeight: "20px" }}>
             <Trans>
               5. For any events and news about ICPSwap, please refer to ICPSwap's Twitter:{" "}
               <TextButton link="https://twitter.com/icpswap">https://twitter.com/icpswap</TextButton> or @ICPSwap
@@ -151,7 +151,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
             sx={{
               fontSize: "12px",
               wordBreak: "break-word",
-              lineHeight: "18px",
+              lineHeight: "20px",
             }}
           >
             <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
@@ -164,7 +164,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
         </Button>
       </Box>
       <Box mt="5px">
-        <Typography fontSize="10px" sx={{ lineHeight: "18px" }}>
+        <Typography fontSize="10px" sx={{ lineHeight: "20px" }}>
           <Trans>* The ICPSwap founding team reserves right for the final explanation of all the statements.</Trans>
         </Typography>
       </Box>

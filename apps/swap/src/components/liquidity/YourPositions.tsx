@@ -1,17 +1,18 @@
-import { useMemo, useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect, useCallback, useMemo } from "react";
 import { Box, Button } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { NoData, LoadingRow, Flex } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
-import PositionContext from "components/swap/PositionContext";
-import { useFarmsByFilter } from "@icpswap/hooks";
+import { PositionContext } from "components/swap/index";
+import { useUserLimitOrders } from "@icpswap/hooks";
 import { useSortedPositions } from "hooks/swap/index";
 import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
+import { useAvailableFarmsForPool } from "hooks/staking-farm";
 
 interface PositionItemProps {
   position: UserPosition;
@@ -20,6 +21,8 @@ interface PositionItemProps {
 }
 
 function PositionItem({ position: positionDetail, filterState, sort }: PositionItemProps) {
+  const principal = useAccountPrincipal();
+
   const { position } = usePosition({
     poolId: positionDetail.id,
     tickLower: positionDetail.tickLower,
@@ -27,26 +30,24 @@ function PositionItem({ position: positionDetail, filterState, sort }: PositionI
     liquidity: positionDetail.liquidity,
   });
 
-  const { result: farms } = useFarmsByFilter({
-    pair: position?.pool.id,
-    state: "LIVE",
-    token: undefined,
-    user: undefined,
-  });
+  const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position?.pool.id });
 
-  const availableStakedFarm = useMemo(() => {
-    if (!farms) return undefined;
-    return farms[0]?.toString();
-  }, [farms]);
+  const { result: userLimitOrders } = useUserLimitOrders(position?.pool.id, principal?.toString());
+
+  const isLimit = useMemo(() => {
+    return userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionDetail.index)) : false;
+  }, [userLimitOrders, positionDetail]);
 
   return (
     <PositionCard
-      farmId={availableStakedFarm}
+      farmId={availableFarmsForPool ? availableFarmsForPool[0] : undefined}
       position={position}
       positionId={BigInt(positionDetail.index)}
       showButtons
       filterState={filterState}
       sort={sort}
+      isLimit={isLimit}
+      staked={false}
     />
   );
 }
@@ -67,9 +68,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
   const { result: positions, loading } = useUserAllPositions(refreshTrigger);
 
   useEffect(() => {
-    if (positions) {
-      setAllPositions(positions);
-    }
+    setAllPositions(positions);
   }, [positions, setAllPositions]);
 
   const sortedPositions = useSortedPositions<UserPosition>({

@@ -1,5 +1,5 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
+import { Flex, APRPanel } from "@icpswap/ui";
 import { useCallback } from "react";
 import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
 import { useStateColors } from "hooks/staking-token";
@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
+import { Trans } from "@lingui/macro";
 
 interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];
@@ -80,7 +81,6 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
         <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="24px" />
 
         <Typography
-          variant="body2"
           sx={{
             color: "text.primary",
             maxWidth: "150px",
@@ -97,7 +97,6 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
         <Typography
-          variant="body2"
           sx={{
             color: "text.primary",
             maxWidth: "150px",
@@ -112,23 +111,25 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.apr" }}>
-          {apr ?? "--"}
-        </Typography>
+        {apr ? (
+          <APRPanel
+            value={apr}
+            tooltip={<Trans>This's the average APR for the pool. The total reward is 100,000 ICS ($3,000).</Trans>}
+          />
+        ) : (
+          <Typography sx={{ color: "text.apr" }}>--</Typography>
+        )}
       </Flex>
 
       <Flex vertical gap="5px 0" className="row-item" justify="center">
         {state === StakingState.FINISHED ? (
           <Flex fullWidth justify="flex-end">
-            <Typography variant="body2" sx={{ color: "text.primary" }}>
-              --
-            </Typography>
+            <Typography sx={{ color: "text.primary" }}>--</Typography>
           </Flex>
         ) : (
           <>
             <Flex gap="0 4px" justify="flex-end" fullWidth>
               <Typography
-                variant="body2"
                 sx={{
                   color: "text.primary",
                   maxWidth: "230px",
@@ -167,7 +168,6 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       <Flex vertical gap="5px 0" className="row-item" justify="center">
         <Flex gap="0 4px" justify="flex-end" fullWidth>
           <Typography
-            variant="body2"
             sx={{
               color: "text.primary",
               maxWidth: "170px",
@@ -206,7 +206,6 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
       <Flex vertical gap="5px 0" className="row-item" justify="center">
         <Flex justify="flex-end" fullWidth>
           <Typography
-            variant="body2"
             sx={{
               color: "text.primary",
               maxWidth: "170px",
@@ -247,7 +246,7 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
           {state ? (
             <Flex gap="0 8px">
               <Box sx={{ width: "8px", height: "8px", borderRadius: "50%", background: stateColor }} />
-              <Typography variant="body2" sx={{ color: stateColor }}>
+              <Typography sx={{ color: stateColor }}>
                 {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
               </Typography>
             </Flex>

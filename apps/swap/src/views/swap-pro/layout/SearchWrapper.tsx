@@ -16,12 +16,16 @@ export function SearchWrapper() {
           placeholder="Symbol / Name / Canister ID"
           borderRadius="52px"
           background="level3"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search color="#ffffff" size="12px" />
-              </InputAdornment>
-            ),
+          textFiledProps={{
+            slotProps: {
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search color="#ffffff" size="12px" />
+                  </InputAdornment>
+                ),
+              },
+            },
           }}
           onFocus={() => setSearchOpen(true)}
         />

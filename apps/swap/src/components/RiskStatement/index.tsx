@@ -79,7 +79,7 @@ export default function RiskStatement() {
           className={classes.container}
         >
           <Grid item xs>
-            <Typography color="text.primary" fontSize={matchDownSM ? "12px" : "14px"}>
+            <Typography color="text.primary" fontSize={matchDownSM ? "12px" : "14px"} lineHeight="20px">
               <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
             </Typography>
           </Grid>

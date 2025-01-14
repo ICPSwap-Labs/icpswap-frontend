@@ -20,8 +20,7 @@ export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refr
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(poolIds) || isNullArgs(principal)) return;
-      if (poolIds.length === 0) {
+      if (isNullArgs(poolIds) || poolIds.length === 0 || isNullArgs(principal)) {
         setPositions([]);
         return;
       }

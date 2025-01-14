@@ -6,16 +6,20 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { CollectFeesModal } from "components/swap/CollectFeesModal";
-import { BigNumber, formatDollarAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isNullArgs,
+  toSignificantWithGroupSeparator,
+  formatLiquidityAmount,
+} from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { toFormat, PositionState } from "utils/index";
+import { PositionState } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
-import TransferPosition from "components/swap/TransferPosition";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -29,17 +33,21 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Flex fullWidth justify="space-between" align="flex-start">
-      <Typography {...(matchDownSM ? { fontSize: "12px" } : {})} component="div">
+    <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
+      <Typography
+        {...(matchDownSM ? { fontSize: "12px" } : {})}
+        component="div"
+        sx={{ width: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", lineHeight: "14px" }}
+      >
         {label}
       </Typography>
 
       <Flex
-        justify="flex-end"
         gap="0 4px"
         sx={{
-          "@media(max-width:640px)": {
-            maxWidth: "130px",
+          flex: 1,
+          "@media(max-width: 640px)": {
+            justifyContent: "flex-end",
           },
         }}
       >
@@ -79,7 +87,6 @@ export interface PositionDetailsProps {
 
 export function PositionDetails({
   position,
-  showButtons,
   positionId,
   manuallyInverted,
   setManuallyInverted,
@@ -90,7 +97,6 @@ export function PositionDetails({
   feeUSDValue,
   feeAmount0,
   feeAmount1,
-  onClaimSuccess,
   onHide,
   farmId,
   staked,
@@ -98,13 +104,10 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const history = useHistory();
   const theme = useTheme();
-
-  const [collectFeesShow, setCollectFeesShow] = useState(false);
+  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
   const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
-
-  const noLiquidity = position?.liquidity.toString() === "0";
 
   const { pool, tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -139,30 +142,18 @@ export function PositionDetails({
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
   }, [currencyQuote, currencyBase]);
 
-  const hasUnclaimedFees = useMemo(() => {
-    if (!feeAmount0 && !feeAmount1) return false;
-    return true;
-  }, [feeAmount0, feeAmount1]);
-
-  const feeIsZero = useMemo(() => {
-    if (!feeAmount0 || !feeAmount1) return true;
-    return new BigNumber(feeAmount0.toExact()).plus(feeAmount1.toExact()).isEqualTo(0);
-  }, [feeAmount0, feeAmount1]);
-
   useEffect(() => {
     if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked]);
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-
   const handleTransferSuccess = () => {
     setRefreshTrigger();
   };
 
   const { amount0, amount1, value0, value1 } = useMemo(() => {
-    if (!position || !token0USDPrice || !token1USDPrice) return {};
+    if (!position || isNullArgs(token0USDPrice) || isNullArgs(token1USDPrice)) return {};
 
     const amount0 = position.amount0.toFixed(CurrencyAmountFormatDecimals(position.amount0.currency.decimals));
     const amount1 = position.amount1.toFixed(CurrencyAmountFormatDecimals(position.amount1.currency.decimals));
@@ -178,33 +169,15 @@ export function PositionDetails({
     };
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const handleLoadRemoveLiquidity = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/decrease/${String(positionId)}/${position.pool.id}`);
-  }, [history, positionId, position]);
-
-  const handleLoadIncreaseLiquidity = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/increase/${String(positionId)}/${position.pool.id}`);
-  }, [positionId, position]);
-
-  const handleCollectFee = useCallback(() => {
-    setCollectFeesShow(true);
-  }, [setCollectFeesShow]);
-
-  const handleTransferPosition = useCallback(() => {
-    setTransferShow(true);
-  }, [setTransferShow]);
-
   const handleStake = useCallback(() => {
     if (!farmId) return;
     history.push(`/farm/details/${farmId}`);
   }, [history, farmId]);
 
-  const handleUnStake = useCallback(() => {
-    if (!farmId) return;
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
+  const handleDetails = useCallback(() => {
+    if (!position) return;
+    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`);
+  }, [position, history, farmId]);
 
   return (
     <>
@@ -218,8 +191,8 @@ export function PositionDetails({
         }}
       >
         <Flex
-          align="flex-start"
-          gap="0 66px"
+          align="flex-end"
+          justify="space-between"
           sx={{
             "@media(max-width: 640px)": {
               flexDirection: "column",
@@ -229,7 +202,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              flex: "50%",
+              width: "65%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -249,8 +222,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
@@ -260,23 +238,39 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 ) : (
-                  <Box>
-                    <Typography color="text.primary" align="right">
-                      {toFormat(amount1)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
-                      {value1 ? formatDollarAmount(value1) : "--"}
-                    </Typography>
-                  </Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
+                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
+                  </Flex>
                 )
               }
             />
@@ -291,8 +285,13 @@ export function PositionDetails({
                   />
                   <Typography
                     sx={{
+                      width: "136px",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
                       "@media(max-width: 640px)": {
                         fontSize: "12px",
+                        width: "116px",
                       },
                     }}
                   >
@@ -302,53 +301,47 @@ export function PositionDetails({
               }
               value={
                 inverted ? (
-                  <Box>
-                    <Typography color="text.primary" align="right">
-                      {toFormat(amount1)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
-                      {value1 ? formatDollarAmount(value1) : "--"}
-                    </Typography>
-                  </Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
+                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
+                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
+                  </Flex>
                 ) : (
-                  <Box>
+                  <Flex
+                    gap="8px"
+                    sx={{
+                      flex: 1,
+                      "@media(max-width: 640px)": {
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-start",
+                      },
+                    }}
+                  >
                     <Typography color="text.primary" align="right">
-                      {toFormat(amount0)}
+                      {formatLiquidityAmount(amount0)}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px", margin: "4px 0 0 0" }} align="right">
+                    <Typography sx={{ fontSize: "12px" }} align="right">
                       {value0 ? formatDollarAmount(value0) : "--"}
                     </Typography>
-                  </Box>
+                  </Flex>
                 )
               }
             />
-          </Flex>
 
-          {matchDownSM ? null : (
-            <Box sx={{ width: "1px", height: "100%", minHeight: "120px", background: "#242E54" }} />
-          )}
-
-          <Flex
-            sx={{
-              flex: "50%",
-              "@media(max-width: 640px)": {
-                width: "100%",
-              },
-            }}
-            vertical
-            gap="16px 0"
-          >
             <PositionDetailItem
               label={t`Price Range`}
               value={
-                <Flex
-                  gap="0 8px"
-                  sx={{
-                    "@media(max-width: 640px)": {
-                      gap: "0 8px",
-                    },
-                  }}
-                >
+                <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
                   <Typography
                     sx={{
                       color: "text.primary",
@@ -361,16 +354,15 @@ export function PositionDetails({
                   >
                     {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
                     {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} {pairName}
-                    <SyncAltIcon
-                      sx={{
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        margin: "0 0 0 4px",
-                        color: theme.palette.text.secondary,
-                      }}
-                      onClick={() => setManuallyInverted(!manuallyInverted)}
-                    />
                   </Typography>
+
+                  <SyncAltIcon
+                    sx={{
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
                 </Flex>
               }
             />
@@ -378,7 +370,17 @@ export function PositionDetails({
             <PositionDetailItem
               label={t`Uncollected fees`}
               value={
-                <Box>
+                <Flex
+                  gap="8px"
+                  justify="flex-end"
+                  sx={{
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
                   <Typography
                     color="text.primary"
                     align="right"
@@ -399,7 +401,6 @@ export function PositionDetails({
                       : "--"}
                   </Typography>
                   <Typography
-                    mt="5px"
                     align="right"
                     sx={{
                       "@media(max-width: 640px)": {
@@ -409,99 +410,29 @@ export function PositionDetails({
                   >
                     {feeUSDValue ? formatDollarAmount(feeUSDValue) : "--"}
                   </Typography>
-                </Box>
+                </Flex>
               }
             />
           </Flex>
-        </Flex>
 
-        {showButtons && (
-          <Flex
-            sx={{
-              margin: "32px 0 0 0",
-              gap: "0 8px",
-              flexWrap: "wrap",
-              "@media(max-width: 640px)": {
-                flexWrap: "wrap",
-                gap: "12px 8px",
-              },
-            }}
-            justify="flex-end"
-          >
-            {staked ? (
+          <Flex gap="17px" wrap="wrap" justify="flex-end">
+            {farmId ? (
               <Button
                 variant="contained"
                 className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleUnStake}
-              >
-                <Trans>Unstake</Trans>
-              </Button>
-            ) : null}
-            {!staked && farmId ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
+                size={matchDownSM ? "medium" : "large"}
                 onClick={handleStake}
               >
-                <Trans>Stake</Trans>
-              </Button>
-            ) : null}
-            {!noLiquidity && !staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleLoadRemoveLiquidity}
-              >
-                <Trans>Remove Liquidity</Trans>
+                {staked ? <Trans>Unstake Farm</Trans> : <Trans>Stake Farm</Trans>}
               </Button>
             ) : null}
 
-            {hasUnclaimedFees && !staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleCollectFee}
-                disabled={feeIsZero}
-              >
-                <Trans>Collect Fees</Trans>
-              </Button>
-            ) : null}
-
-            {!staked ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "small" : "medium"}
-                onClick={handleTransferPosition}
-              >
-                <Trans>Transfer Position</Trans>
-              </Button>
-            ) : null}
-
-            {!staked ? (
-              <Button variant="contained" size={matchDownSM ? "small" : "medium"} onClick={handleLoadIncreaseLiquidity}>
-                <Trans>Increase Liquidity</Trans>
-              </Button>
-            ) : null}
+            <Button variant="contained" size={matchDownSM ? "medium" : "large"} onClick={handleDetails}>
+              <Trans>Position Details</Trans>
+            </Button>
           </Flex>
-        )}
+        </Flex>
       </Box>
-
-      <CollectFeesModal
-        open={collectFeesShow}
-        pool={pool}
-        positionId={positionId}
-        currencyFeeAmount0={feeAmount0}
-        currencyFeeAmount1={feeAmount1}
-        onClose={() => {
-          setCollectFeesShow(false);
-        }}
-        onClaimedSuccessfully={onClaimSuccess}
-      />
 
       {transferShow ? (
         <TransferPosition

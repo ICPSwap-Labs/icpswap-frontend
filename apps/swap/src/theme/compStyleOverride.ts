@@ -41,6 +41,18 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
       styleOverrides: {
         root: {
           lineHeight: 1,
+          "&.fontSize14": {
+            fontSize: "14px",
+            "@media(max-width: 640px)": {
+              fontSize: "12px",
+            },
+          },
+          "&.fontSize12": {
+            fontSize: "12px",
+            "@media(max-width: 640px)": {
+              fontSize: "12px",
+            },
+          },
         },
       },
     },
@@ -86,9 +98,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         },
         containedPrimary: {
           background: globalButtonBackground,
-          "&.MuiButton-sizeLarge": {
-            padding: "11px 22px",
-          },
         },
         containedSecondary: {
           background: isDark ? theme.colors.darkLevel4 : "#EFEFFF",

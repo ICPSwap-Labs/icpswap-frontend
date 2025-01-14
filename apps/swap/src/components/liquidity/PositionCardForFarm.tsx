@@ -11,21 +11,20 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { FeeTierPercentLabel, Flex, APR } from "@icpswap/ui";
+import { FeeTierPercentLabel, Flex, APRPanel } from "@icpswap/ui";
 import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
 import { type FarmInfoWithId } from "@icpswap/types";
 import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext, PositionRangeState } from "components/swap/index";
 import { FarmStateChip } from "components/farm/index";
 import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionRangeState } from "components/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
-import { useFarmUserRewardAmountAndValue, useUserApr, useFarmTvlValue } from "hooks/staking-farm/index";
-import { usePositionsValueByInfos } from "hooks/swap/index";
+import { useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr, useFarmTvlValue } from "hooks/staking-farm/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { PositionDetails } from "./PositionDetails";
@@ -236,17 +235,23 @@ export function PositionCardForFarm({
   const { result: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
   const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
-  const stakedPositionsInfo = useMemo(() => {
-    if (!deposits) return undefined;
+  const deposit = useMemo(() => {
+    if (!deposits || isNullArgs(positionId)) return undefined;
 
-    return deposits.map((ele) => ({
+    return deposits.filter((e) => e.positionId === positionId)[0];
+  }, [deposits, positionId]);
+
+  const stakedPositionsInfo = useMemo(() => {
+    if (!deposit) return undefined;
+
+    return [deposit].map((ele) => ({
       liquidity: ele.liquidity,
       tickUpper: ele.tickUpper,
       tickLower: ele.tickLower,
     }));
-  }, [deposits]);
+  }, [deposit]);
 
-  const stakedPositionValue = usePositionsValueByInfos({
+  const stakedPositionValue = usePositionsTotalValue({
     metadata: swapPoolMetadata,
     positionInfos: stakedPositionsInfo,
   });
@@ -263,14 +268,14 @@ export function PositionCardForFarm({
 
   const farmTvlValue = useFarmTvlValue({ farmId: farmInfo.id, token0, token1 });
 
-  const userApr = useUserApr({
+  const userApr = useUserSingleLiquidityApr({
     farmInitArgs,
     rewardToken,
     rewardAmount: userRewardAmount,
     state: farmState,
     farmTvlValue,
     positionValue: stakedPositionValue,
-    deposits,
+    deposit,
   });
 
   return (
@@ -285,7 +290,6 @@ export function PositionCardForFarm({
       <Flex
         justify="space-between"
         fullWidth
-        onClick={handleToggleShow}
         sx={{
           "@media(max-width: 640px)": {
             flexDirection: "column",
@@ -293,6 +297,9 @@ export function PositionCardForFarm({
             justifyContent: "flex-start",
             gap: "18px 0",
           },
+        }}
+        onClick={() => {
+          handleToggleShow();
         }}
       >
         {!position && <Loading loading={!position} circularSize={28} />}
@@ -361,7 +368,7 @@ export function PositionCardForFarm({
                 "@media(max-width: 640px)": { width: "fit-content" },
               }}
             >
-              <Typography color="text.primary">{userApr ? <APR value={userApr} /> : "--"}</Typography>
+              {userApr ? <APRPanel value={userApr} /> : <Typography color="text.primary">--</Typography>}
             </Flex>
           </Flex>
 
@@ -403,38 +410,80 @@ export function PositionCardForFarm({
 
           <PositionRangeState state={positionState} width="110px" />
 
-          <Flex
-            sx={{
-              "@media(max-width: 640px)": {
-                width: "100%",
-                justifyContent: "center",
-                visibility: detailShow ? "hidden" : "visible",
-                height: detailShow ? "0px" : "auto",
-              },
-            }}
-          >
-            <Typography
+          {matchDownMD ? (
+            <Flex
               sx={{
-                display: "none",
-                fontSize: "12px",
                 "@media(max-width: 640px)": {
-                  display: "block",
+                  width: "100%",
+                  justifyContent: "center",
+                  visibility: detailShow ? "hidden" : "visible",
+                  height: detailShow ? "0px" : "auto",
                 },
               }}
-              color="text.theme-secondary"
             >
-              <Trans>Detail</Trans>
-            </Typography>
-            {detailShow ? (
-              <KeyboardArrowUp />
-            ) : (
-              <KeyboardArrowDown
+              <Typography
                 sx={{
-                  color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  display: "none",
+                  fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    display: "block",
+                  },
                 }}
-              />
-            )}
-          </Flex>
+                color="text.theme-secondary"
+              >
+                <Trans>Detail</Trans>
+              </Typography>
+
+              {detailShow ? (
+                <KeyboardArrowUp />
+              ) : (
+                <KeyboardArrowDown
+                  sx={{
+                    color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
+                  }}
+                />
+              )}
+            </Flex>
+          ) : (
+            <Flex
+              sx={{
+                justifyContent: "flex-end",
+              }}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                handleToggleShow();
+              }}
+            >
+              {detailShow ? (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                    background: theme.palette.background.level4,
+                    borderRadius: "50%",
+                  }}
+                >
+                  <KeyboardArrowDown
+                    sx={{
+                      color: theme.palette.text.secondary,
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
+          )}
         </Flex>
       </Flex>
 

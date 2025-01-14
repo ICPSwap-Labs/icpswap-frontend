@@ -34,7 +34,7 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const [, token0] = useToken(token0Address) ?? undefined;
   const [, token1] = useToken(token1Address) ?? undefined;
 
-  const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, fee ? Number(fee) : undefined);
+  const [poolState, pool] = usePool(token0, token1, fee ? Number(fee) : undefined, true);
 
   const available = useSwapPoolAvailable(pool?.id);
 

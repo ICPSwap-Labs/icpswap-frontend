@@ -5,9 +5,7 @@ import { Box, Button, Typography, Grid } from "@mui/material";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC } from "constants/tokens";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
-import { parseTokenAmount, formatTokenAmount, numberToString, isValidPrincipal } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { parseTokenAmount, formatTokenAmount, numberToString, isValidPrincipal, BigNumber } from "@icpswap/utils";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
@@ -28,7 +26,6 @@ export interface Values {
 
 export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProps) {
   const principal = useAccountPrincipal();
-  const { result: token } = useTokenInfo(XTC.address);
   const { result: balance, loading } = useTokenBalance(XTC.address, principal);
 
   const defaultValues = {
@@ -49,7 +46,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   const XTCTopUp = useXTCTopUp();
 
   const handleTopUp = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
-    if (loading || !token) return;
+    if (loading) return;
 
     onClose();
     setValues(defaultValues);
@@ -59,7 +56,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
     const { status, message } = await XTCTopUp({
       identity,
       canisterId: values.canisterId,
-      amount: BigInt(numberToString(formatTokenAmount(values.amount, token.decimals).minus(Number(token.transFee)))),
+      amount: BigInt(numberToString(formatTokenAmount(values.amount, XTC.decimals).minus(Number(XTC.transFee)))),
     });
 
     closeTip(loadingTipKey);
@@ -73,10 +70,10 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   };
 
   const handleMax = () => {
-    if (balance && token) {
+    if (balance) {
       setValues((prevState) => ({
         ...prevState,
-        amount: parseTokenAmount(balance, token.decimals).toNumber(),
+        amount: parseTokenAmount(balance, XTC.decimals).toNumber(),
       }));
     }
   };
@@ -84,8 +81,8 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   let errorMessage = "";
   if (
     values.amount &&
-    token &&
-    new BigNumber(Number(values.amount)).isGreaterThan(parseTokenAmount(balance ?? 0, token.decimals))
+    XTC &&
+    new BigNumber(Number(values.amount)).isGreaterThan(parseTokenAmount(balance ?? 0, XTC.decimals))
   )
     errorMessage = t`Insufficient balance`;
   if (!values.amount) errorMessage = t`Enter top-up XTC amount`;
@@ -125,7 +122,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
         </Typography>
         &nbsp;
         <Typography color="text.primary" component="span" sx={{ marginRight: "4px" }}>
-          {balance ? parseTokenAmount(balance, token?.decimals).toFormat() : loading ? "--" : 0}
+          {balance ? parseTokenAmount(balance, XTC?.decimals).toFormat() : loading ? "--" : 0}
         </Typography>
         <MaxButton onClick={handleMax} />
       </Grid>
@@ -136,7 +133,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
         </Typography>
         &nbsp;
         <Typography color="text.primary" component="span">
-          {token ? parseTokenAmount(token.transFee, token?.decimals).toFormat() : 0}
+          {XTC ? parseTokenAmount(XTC.transFee, XTC?.decimals).toFormat() : 0}
         </Typography>
       </Grid>
 

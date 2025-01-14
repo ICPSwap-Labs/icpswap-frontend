@@ -3,8 +3,7 @@ import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatAmount } from "@icpswap/utils";
-
-import { WalletIcon } from "./icons/WalletIcon";
+import { WalletIcon } from "assets/icons/swap/WalletIcon";
 
 export interface WalletBalanceProps {
   currencyBalance: CurrencyAmount<Token> | undefined;
@@ -17,7 +16,7 @@ export function WalletBalance({ currencyBalance, onClick }: WalletBalanceProps) 
       <WalletIcon />
 
       <Tooltip tips={t`Wallet Balance`}>
-        <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact(), 4) : "--"}</Typography>
+        <Typography>{currencyBalance ? formatAmount(currencyBalance.toExact()) : "--"}</Typography>
       </Tooltip>
     </Flex>
   );

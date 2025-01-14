@@ -1,8 +1,9 @@
 import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
-import { Grid, Box, Typography, CircularProgress } from "components/Mui";
+import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import { toSignificant, isNullArgs, BigNumber } from "@icpswap/utils";
+import { toSignificant, isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
+import { SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { maxAmountFormat } from "utils/swap/index";
@@ -11,12 +12,11 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import TradePrice from "components/swap/TradePrice";
+import { TradePrice } from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
 import Button from "components/authentication/ButtonConnector";
 import { Flex, MainCard, Checkbox } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
-import { TokenInfo } from "types/token";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper, SwapConfirmModal, SwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
@@ -84,7 +84,7 @@ export const SwapWrapper = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange) onTradePoolIdChange(tradePoolId);
+      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
     }, [tradePoolId, outputToken, inputToken]);
 
     // Auto refresh token balance 5 seconds
@@ -130,38 +130,54 @@ export const SwapWrapper = forwardRef(
     };
 
     const handleTokenAChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.canisterId === currencyB.currencyId) {
-          history.push(`${prePath}?input=${token.canisterId}&output=${ICP.address}`);
+        if (token.address === currencyB.currencyId) {
+          history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
         } else {
-          history.push(`${prePath}?input=${token.canisterId}&output=${currencyB.currencyId}`);
+          history.push(`${prePath}?input=${token.address}&output=${currencyB.currencyId}`);
         }
       },
       [currencyB],
     );
 
     const handleTokenBChange = useCallback(
-      (token: TokenInfo) => {
+      (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
-        if (token.canisterId === currencyA.currencyId) {
-          history.push(`${prePath}?input=${ICP.address}&output=${token.canisterId}`);
+        if (token.address === currencyA.currencyId) {
+          history.push(`${prePath}?input=${ICP.address}&output=${token.address}`);
         } else {
-          history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.canisterId}`);
+          history.push(`${prePath}?input=${currencyA.currencyId}&output=${token.address}`);
         }
       },
       [currencyA],
     );
 
-    const handleInput = (value: string, type: "input" | "output") => {
+    const handleInput = useCallback((value: string, type: "input" | "output") => {
+      const numDecimals = getNumberDecimals(value);
+
       if (type === "input") {
-        onUserInput(SWAP_FIELD.INPUT, value);
+        onUserInput(
+          SWAP_FIELD.INPUT,
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
+            ? "0"
+            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
       } else {
-        onUserInput(SWAP_FIELD.OUTPUT, value);
+        onUserInput(
+          SWAP_FIELD.OUTPUT,
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
+            ? "0"
+            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
       }
-    };
+    }, []);
 
     const needImpactConfirm = useMemo(() => {
       if (!usdValueChange) return false;
@@ -293,10 +309,10 @@ export const SwapWrapper = forwardRef(
           >
             <Box sx={{ display: "grid", gap: "20px 0", gridTemplateColumns: "1fr" }}>
               {isLoadingRoute ? (
-                <Grid container justifyContent="flex-start" alignItems="center">
+                <Flex fullWidth justify="flex-start" align="center">
                   <CircularProgress size={14} color="inherit" />
                   <Typography sx={{ margin: "0 0 0 4px" }}>Fetching price...</Typography>
-                </Grid>
+                </Flex>
               ) : trade ? (
                 <TradePrice
                   poolId={trade.swaps[0].route.pools[0].id}

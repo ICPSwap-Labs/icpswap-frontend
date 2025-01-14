@@ -1,6 +1,4 @@
-import { makeStyles } from "@mui/styles";
-import LinearProgress from "@mui/material/LinearProgress";
-import { Theme } from "@mui/material/styles";
+import { makeStyles, Theme, LinearProgress } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

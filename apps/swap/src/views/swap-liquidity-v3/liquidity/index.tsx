@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme, Button } from "components/Mui";
 import { useSwapPools, useParsedQueryString } from "@icpswap/hooks";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "constants/tokens";
@@ -7,6 +7,7 @@ import { LoadingRow, Flex, Wrapper } from "components/index";
 import { Trans } from "@lingui/macro";
 import { InfoPools, Positions } from "components/liquidity/index";
 import { useHistory } from "react-router-dom";
+import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 
 enum TabName {
   TopPools = "TopPools",
@@ -70,6 +71,8 @@ export default function Liquidity() {
   const { result: pools } = useSwapPools();
 
   const updateTokenStandards = useUpdateTokenStandard();
+
+  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: undefined, token1: undefined });
 
   useEffect(() => {
     async function call() {
@@ -139,7 +142,19 @@ export default function Liquidity() {
             <Trans>Explore the top pools for high-yield opportunities!</Trans>
           </Typography>
 
-          <Box mt="56px">
+          <Flex
+            fullWidth
+            sx={{
+              margin: "56px 0 0 0",
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "30px 0",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              },
+            }}
+            justify="space-between"
+          >
             <Flex gap="0 33px">
               {tabs.map((tab) => (
                 <Tab
@@ -151,9 +166,13 @@ export default function Liquidity() {
                 />
               ))}
             </Flex>
-          </Box>
 
-          <Box mt="35px">
+            <Button variant="contained" onClick={loadAddLiquidity}>
+              <Trans>Add Liquidity</Trans>
+            </Button>
+          </Flex>
+
+          <Box sx={{ margin: "35px 0 0 0" }}>
             <Box sx={{ display: activeTab === TabName.TopPools ? "block" : "none" }}>
               <InfoPools />
             </Box>

@@ -3,7 +3,7 @@ import { Flex } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import { type FarmTvl } from "@icpswap/types";
 import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
-import { usePositionsValueByInfos } from "hooks/swap/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -54,7 +54,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
       });
   }, [userAllPositions, farmInitArgs, poolMetadata]);
 
-  const allAvailablePositionValue = usePositionsValueByInfos({
+  const allAvailablePositionValue = usePositionsTotalValue({
     metadata: poolMetadata,
     positionInfos: userAvailablePositions,
   });
@@ -112,26 +112,22 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
           <TokenImage logo={token1?.logo} tokenId={token1?.address} size="24px" />
         </Flex>
 
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
+        <Typography sx={{ color: "text.primary" }}>
           {token0 && token1 ? `${token0.symbol}/${token1.symbol} ` : "--"}
         </Typography>
       </Flex>
 
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {rewardToken ? `${rewardToken.symbol} ` : "--"}
-        </Typography>
+        <Typography sx={{ color: "text.primary" }}>{rewardToken ? `${rewardToken.symbol} ` : "--"}</Typography>
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.apr" }}>
-          {apr ?? "--"}
-        </Typography>
+        <Typography sx={{ color: "text.apr" }}>{apr ?? "--"}</Typography>
       </Flex>
 
       <Flex gap="0 4px" justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
+        <Typography sx={{ color: "text.primary" }}>
           {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
         </Typography>
         {userAvailablePositions ? (
@@ -152,9 +148,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
       </Flex>
 
       <Flex justify="flex-end" className="row-item">
-        <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}
-        </Typography>
+        <Typography sx={{ color: "text.primary" }}>{farmTvlValue ? formatDollarAmount(farmTvlValue) : "--"}</Typography>
       </Flex>
 
       {showState ? (
@@ -162,7 +156,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
           {state ? (
             <Flex gap="0 8px">
               <Box sx={{ width: "8px", height: "8px", borderRadius: "50%", background: stateColor }} />
-              <Typography variant="body2" sx={{ color: stateColor }}>
+              <Typography sx={{ color: stateColor }}>
                 {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
               </Typography>
             </Flex>

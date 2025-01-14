@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-
 import { ArrowUpRight } from "react-feather";
 import { Flex } from "@icpswap/ui";
 import { useTheme, Typography } from "components/Mui";

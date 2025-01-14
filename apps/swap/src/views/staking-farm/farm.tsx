@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, TabPanel, type Tab } from "components/index";
 import { useIntervalUserFarmInfo } from "hooks/staking-farm";
-import { useTheme } from "@mui/styles";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { t, Trans } from "@lingui/macro";
 import { useV3FarmRewardMetadata } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
 import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
+import { State } from "components/farm/State";
 
 const tabs = [
   { key: "stake", value: "Stake" },
@@ -20,7 +19,7 @@ const tabs = [
 ];
 
 export default function Farm() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
 
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
@@ -42,7 +41,7 @@ export default function Farm() {
   };
 
   return (
-    <Flex sx={{ width: "100%" }} justify="center">
+    <Flex sx={{ width: "100%", padding: "0 0 24px 0" }} justify="center">
       <Box sx={{ width: "100%", maxWidth: "1120px", margin: "16px 0 0 0" }}>
         <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="back" />
 
@@ -74,7 +73,7 @@ export default function Farm() {
             <MainCard
               borderRadius="16px"
               level={1}
-              padding="40px 24px 24px 24px"
+              padding="24px 24px"
               sx={{
                 width: "100%",
                 overflow: "hidden",
@@ -91,17 +90,21 @@ export default function Farm() {
                 />
 
                 <Box>
-                  <Typography color="text.primary" fontSize={24} fontWeight={500} align="right">
+                  <Typography color="text.primary" fontSize={20} fontWeight={500} align="right">
                     <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
                   </Typography>
 
-                  <Typography fontSize={16} align="right" mt="12px">
+                  <Typography align="right" mt="8px">
                     <Trans>Stake {token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--"} Positions</Trans>
                   </Typography>
                 </Box>
               </Flex>
 
-              <Box mt="42px">
+              <Flex justify="flex-end" sx={{ margin: "8px 0 0 0" }}>
+                <State farmInfo={userFarmInfo} />
+              </Flex>
+
+              <Box mt="24px">
                 <TabPanel
                   fullWidth
                   fontNormal

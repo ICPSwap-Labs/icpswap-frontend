@@ -1,35 +1,33 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "components/Mui";
 import { FilledTextField, TokenImage } from "components/index";
 import { Trans } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
-import { useAllTokensOfSwap } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarAmount, nonNullArgs, shortenString } from "@icpswap/utils";
-import NoDataIcon from "assets/icons/NoData";
-import type { AllTokenOfSwapTokenInfo, PublicTokenOverview } from "@icpswap/types";
+import { useInfoAllTokens } from "@icpswap/hooks";
+import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
+import { ReactComponent as NoDataIcon } from "assets/icons/empty.svg";
+import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { useInfoAllTokens } from "hooks/info/useInfoTokens";
-import { useGlobalTokenList } from "store/global/hooks";
+import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
-  infoAllTokens: PublicTokenOverview[] | undefined;
+  infoAllTokens: PublicTokenOverview[] | Null;
   onTokenClick?: (token: AllTokenOfSwapTokenInfo) => void;
   inTokenList?: boolean;
 }
 
 function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: SearchItemProps) {
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { result: token } = useTokenInfo(tokenInfo.ledger_id.toString());
+  const [, token] = useToken(tokenInfo.ledger_id.toString());
 
   const info = useMemo(() => {
     return infoAllTokens?.find((e) => e.address === tokenInfo.ledger_id.toString());
@@ -93,7 +91,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarAmount(info.priceUSD, 2, true, 0.0001) : "--"}
+        {info ? formatDollarTokenPrice(info.priceUSD, { min: 0.0001 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (
@@ -111,7 +109,7 @@ export interface SearchProps {
 }
 
 export function TokenSearch({ open, onClose }: SearchProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const history = useHistory();
   const [search, setSearch] = useState<string>("");
@@ -130,7 +128,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
       .slice(0, 5);
   }, [infoAllTokens]);
 
-  const { result: allTokens } = useAllTokensOfSwap();
+  const allTokens = useStateSwapAllTokens();
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -229,12 +227,16 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 fullHeight
                 placeholder="Symbol / Name / Canister ID"
                 borderRadius="12px"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+                textFiledProps={{
+                  slotProps: {
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    },
+                  },
                 }}
                 onChange={handleSearchChange}
               />

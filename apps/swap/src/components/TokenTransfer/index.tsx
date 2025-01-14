@@ -9,14 +9,11 @@ import {
   BigNumber,
 } from "@icpswap/utils";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "locales/services";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
-import { TokenInfo } from "types/token";
-import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
@@ -24,6 +21,7 @@ import { Principal } from "@dfinity/principal";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { MaxButton, Flex } from "@icpswap/ui";
+import { Token } from "@icpswap/swap-sdk";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -50,7 +48,7 @@ export interface TransferModalProps {
   open: boolean;
   onClose: () => void;
   onTransferSuccess?: () => void;
-  token: TokenInfo;
+  token: Token;
   transferTo?: string;
 }
 
@@ -59,13 +57,15 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   const account = useAccount();
   const principalString = useAccountPrincipalString();
   const principal = useAccountPrincipal();
-  const [openErrorTip] = useErrorTip();
-  const [openSuccessTip] = useSuccessTip();
+  const [openTip] = useTips();
+  const [openFullLoading, closeFullLoading] = useFullscreenLoading();
 
   const { refreshTotalBalance, setRefreshTotalBalance } = useContext(WalletContext);
 
-  const { result: balance } = useTokenBalance(token.canisterId, principal);
-  const tokenUSDPrice = useUSDPriceById(token.canisterId);
+  const { result: balance } = useTokenBalance(token.address, principal);
+  const tokenUSDPrice = useUSDPriceById(token.address);
+
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     to: transferTo ?? "",
@@ -84,7 +84,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
   const getErrorMessage = () => {
     if (!values.to) return t`Enter transfer to`;
 
-    if (usePrincipalStandard(token.canisterId, token.standardType)) {
+    if (usePrincipalStandard(token.address, token.standard)) {
       try {
         Principal.fromText(values.to);
       } catch (error) {
@@ -104,12 +104,15 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
     return undefined;
   };
 
-  const handleSubmit = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
+  const handleSubmit = async () => {
     try {
-      if (loading || !account) return;
+      if (!account) return;
+
+      openFullLoading();
+      setLoading(true);
 
       const { status, message } = await tokenTransfer({
-        canisterId: token.canisterId.toString(),
+        canisterId: token.address.toString(),
         to: values.to,
         amount: formatTokenAmount(
           new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)),
@@ -121,21 +124,21 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
       });
 
       if (status === "ok") {
-        openSuccessTip(t`Transferred successfully`);
+        openTip(t`Transferred successfully`, MessageTypes.success);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.canisterId.toString() === ICP.address || token.canisterId.toString() === WRAPPED_ICP.address) {
+        if (token.address.toString() === ICP.address || token.address.toString() === WRAPPED_ICP.address) {
           if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
         }
       } else {
-        openErrorTip(getLocaleMessage(message) ?? t`Failed to transfer`);
+        openTip(getLocaleMessage(message) ?? t`Failed to transfer`, MessageTypes.error);
       }
-
-      closeLoading();
     } catch (error) {
       console.error(error);
-      closeLoading();
     }
+
+    closeFullLoading();
+    setLoading(false);
   };
 
   const actualTransferAmount = useMemo(() => {
@@ -145,9 +148,9 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
 
   const addressHelpText = () => {
     if (
-      (usePrincipalStandard(token.canisterId, token.standardType) && principalString === values.to) ||
-      (useAccountStandard(token.canisterId, token.standardType) && account === values.to) ||
-      (useAccountStandard(token.canisterId, token.standardType) &&
+      (usePrincipalStandard(token.address, token.standard) && principalString === values.to) ||
+      (useAccountStandard(token.address, token.standard) && account === values.to) ||
+      (useAccountStandard(token.address, token.standard) &&
         isValidPrincipal(values.to) &&
         principalString === values.to)
     ) {
@@ -176,7 +179,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         <FilledTextField
           value={values.to}
           placeholder={
-            usePrincipalStandard(token.canisterId, token.standardType)
+            usePrincipalStandard(token.address, token.standard)
               ? t`Enter the principal ID`
               : t`Enter the account ID or principal ID`
           }
@@ -186,6 +189,7 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
           autoComplete="To"
           multiline
         />
+
         <NumberFilledTextField
           placeholder="Enter the amount"
           value={values.amount}
@@ -254,20 +258,17 @@ export default function TransferModal({ open, onClose, onTransferSuccess, token,
         <Typography color="text.danger">
           <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
         </Typography>
-        <Identity onSubmit={handleSubmit} fullScreenLoading>
-          {({ submit, loading }: CallbackProps) => (
-            <Button
-              variant="contained"
-              fullWidth
-              color="primary"
-              size="large"
-              disabled={loading || !!errorMessage}
-              onClick={submit}
-            >
-              {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
-            </Button>
-          )}
-        </Identity>
+
+        <Button
+          variant="contained"
+          fullWidth
+          color="primary"
+          size="large"
+          disabled={loading || !!errorMessage}
+          onClick={handleSubmit}
+        >
+          {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
+        </Button>
       </Box>
     </Modal>
   );

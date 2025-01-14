@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Box, makeStyles, Theme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { Flex, Tooltip, TextButton, NumberLabel } from "@icpswap/ui";
+import { Flex, TextButtonV1, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
 import {
   YourPositions,
   StakedPositions,
@@ -10,12 +10,15 @@ import {
   SelectPositionState,
   SelectPositionsSort,
 } from "components/liquidity/index";
-import { FindPositionsModal } from "components/index";
-import PositionContext from "components/swap/PositionContext";
+import { FindPositionsModal, Link } from "components/index";
+import { PositionContext } from "components/swap/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { PositionSort, PositionFilterState, type UserPosition } from "types/swap";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
+import { Unlock } from "react-feather";
+import { infoRoutesConfigs } from "routes/info.config";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -62,8 +65,8 @@ export function Positions() {
     { [id: string]: BigNumber | undefined } | undefined
   >({});
   const [allPositionFees, setAllPositionFees] = useState<{ [id: string]: BigNumber | undefined } | undefined>({});
-  const [allPositions, setAllPositions] = useState<UserPosition[] | undefined>(undefined);
-  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | undefined>(undefined);
+  const [allPositions, setAllPositions] = useState<UserPosition[] | Null>(undefined);
+  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | Null>(undefined);
   const [__hiddenNumbers, setHiddenNumbers] = useState<{ [id: string]: boolean }>({});
 
   const { subTab } = useParsedQueryString() as { subTab: string | undefined };
@@ -132,6 +135,8 @@ export function Positions() {
     setAllPositionsUSDValue(undefined);
     setAllPositions(undefined);
     setAllStakedPositions(undefined);
+    setAllPositionFees(undefined);
+    setHiddenNumbers({});
   }, [principalString]);
 
   useEffect(() => {
@@ -187,15 +192,16 @@ export function Positions() {
         </Flex>
       </Box>
 
-      <Flex justify="flex-end" sx={{ margin: "32px 0 0 0" }}>
-        <Typography component="div">
+      <Flex fullWidth justify="flex-end" wrap="wrap" sx={{ margin: "32px 0 0 0" }} gap="8px 32px">
+        <TextButtonV1 arrow sx={{ fontSize: "12px" }} to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
+          <Trans>Check your position transfer history</Trans>
+        </TextButtonV1>
+
+        <Flex>
           <Typography
-            component="span"
             sx={{
               color: "text.primary",
-              "@media(max-width: 640px)": {
-                fontSize: "12px",
-              },
+              fontSize: "12px",
             }}
           >
             <Trans>Don't see a pair you joined?</Trans>&nbsp;
@@ -203,14 +209,12 @@ export function Positions() {
           <TextButton
             onClick={handleFindPosition}
             sx={{
-              "@media(max-width: 640px)": {
-                fontSize: "12px",
-              },
+              fontSize: "12px",
             }}
           >
             <Trans>Find other positions</Trans>
           </TextButton>
-        </Typography>
+        </Flex>
       </Flex>
 
       <Box className={classes.card} sx={{ margin: "16px 0 0 0" }}>
@@ -250,7 +254,7 @@ export function Positions() {
             gap="0 20px"
             sx={{
               "@media(max-width: 640px)": {
-                gap: "0",
+                gap: "12px 0",
                 flexDirection: "column",
                 alignItems: "flex-start",
                 justifyContent: "flex-start",
@@ -258,14 +262,46 @@ export function Positions() {
             }}
           >
             <Flex gap="0 3px">
-              <Typography>Status:</Typography>
+              <Typography>
+                <Trans>Status:</Trans>
+              </Typography>
               <SelectPositionState value={positionFilterState} onChange={setPositionFilterState} />
             </Flex>
 
             <Flex gap="0 3px">
-              <Typography>Sort by:</Typography>
+              <Typography>
+                <Trans>Sort by:</Trans>
+              </Typography>
               <SelectPositionsSort value={positionSort} onChange={setPositionSort} />
             </Flex>
+
+            <Tooltip
+              tips={
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#111936",
+                      fontSize: "12px",
+                      lineHeight: "18px",
+                    }}
+                  >
+                    <Trans>Need to lock your liquidity? Check out the Sneedlock feature controlled by Sneed DAO:</Trans>
+                  </Typography>
+                  <Link link="https://sneeddao.com/#sneedlock" color="secondary">
+                    https://sneeddao.com/#sneedlock
+                  </Link>
+                </Box>
+              }
+            >
+              <Box sx={{ cursor: "pointer" }}>
+                <Flex gap="0 3px">
+                  <Unlock size={14} />
+                  <Typography color="text.primary">
+                    <Trans>Liquidity Lock</Trans>
+                  </Typography>
+                </Flex>
+              </Box>
+            </Tooltip>
           </Flex>
         </Flex>
 

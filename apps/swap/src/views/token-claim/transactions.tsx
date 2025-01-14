@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, makeStyles } from "components/Mui";
 import { t, Trans } from "@lingui/macro";
 import { Wrapper, Breadcrumbs, MainCard, Pagination, PaginationType, ImageLoading, NoData } from "components/index";
 import { Header, HeaderCell, BodyCell, Row } from "components/Table/index";
 import { useUserClaimEventTransactions } from "@icpswap/hooks";
 import { ClaimTransaction } from "@icpswap/types";
-import { useTokenInfo } from "hooks/token/useTokenInfo";
+import { useToken } from "hooks/index";
 import { timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
@@ -24,14 +23,14 @@ const useStyles = makeStyles(() => {
 export function TokenClaimTransaction({ transaction }: { transaction: ClaimTransaction }) {
   const classes = useStyles();
 
-  const { result: tokenInfo } = useTokenInfo(transaction.tokenCid);
+  const [, token] = useToken(transaction.tokenCid);
 
   return (
     <Row className={classes.wrapper}>
       <BodyCell>{transaction.claimTime[0] ? timestampFormat(transaction.claimTime[0]) : "--"}</BodyCell>
       <BodyCell>{transaction.claimEventName}</BodyCell>
       <BodyCell>
-        {parseTokenAmount(transaction.claimAmount, tokenInfo?.decimals).toFormat()} {tokenInfo?.symbol}
+        {parseTokenAmount(transaction.claimAmount, token?.decimals).toFormat()} {token?.symbol}
       </BodyCell>
     </Row>
   );

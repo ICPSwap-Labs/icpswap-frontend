@@ -98,13 +98,22 @@
     // Exchange
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state", "memo"] }],
     "react/require-default-props": 0,
-    "max-classes-per-file": 0
+    "max-classes-per-file": 0,
     // End temporary rules
+    "jsx-a11y/anchor-is-valid": 0
   },
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020
   },
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["**/*.did.ts", "**/*.did.js", "craco.config.js", "**/*.css", "**/*.d.ts"]
+  "ignorePatterns": [
+    "**/*.did.ts",
+    "**/*.did.js",
+    "craco.config.js",
+    "**/*.css",
+    "**/*.d.ts",
+    "**/scripts/*.js",
+    "**/charting_library/*"
+  ]
 }

@@ -1,27 +1,23 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar, Box, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Grid, Typography, Avatar, Box, useMediaQuery, useTheme } from "components/Mui";
 import { pageArgsFormat } from "@icpswap/utils";
 import { Wrapper, MainCard, Pagination, PaginationType, NoData, ImageLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import { ProjectInfo } from "@icpswap/types";
 import { useVotingProjects } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 
 export interface VoteItemProps {
   project: ProjectInfo;
 }
 
 export function VoteItem({ project }: VoteItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
 
   const handleEnter = () => {
     history.push(`/voting/${project.projectCid}`);
   };
-
-  // const { result: totalHolder } = useTokenTotalHolder(project.tokenCid);
 
   return (
     <MainCard level={4}>

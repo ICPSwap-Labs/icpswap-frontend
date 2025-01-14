@@ -158,21 +158,22 @@ export function Modal({
 
         {showConfirm || showCancel ? (
           <Box
-            mt="40px"
             sx={{
-              display: "flex",
+              display: "grid",
               justifyContent: "flex-end",
               gridTemplateColumns: down760 ? "1fr" : showConfirm && showCancel ? "1fr 1fr" : "1fr",
               gap: down760 ? "10px 10px" : "0 10px",
+              margin: "32px 0 0 0",
             }}
           >
             {showCancel ? (
-              <Button onClick={onCancel} variant="outlined">
+              <Button onClick={onCancel} variant="contained" className="secondary" size="large">
                 {cancelText}
               </Button>
             ) : null}
+
             {showConfirm ? (
-              <Button disabled={confirmDisabled} variant="contained" onClick={onConfirm}>
+              <Button disabled={confirmDisabled} variant="contained" onClick={onConfirm} size="large">
                 {confirmText}
               </Button>
             ) : null}

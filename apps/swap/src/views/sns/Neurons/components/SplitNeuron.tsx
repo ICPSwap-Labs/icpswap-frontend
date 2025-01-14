@@ -1,29 +1,28 @@
 import React, { useMemo, useState } from "react";
-import { Button, Grid, Typography, Box, InputAdornment } from "@mui/material";
+import { Button, Grid, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
 import {
   parseTokenAmount,
   formatTokenAmount,
   uint8ArrayToBigInt,
   toSignificantWithGroupSeparator,
   formatDollarAmount,
+  BigNumber,
 } from "@icpswap/utils";
 import { splitNeuron } from "@icpswap/hooks";
-import BigNumber from "bignumber.js";
-import CircularProgress from "@mui/material/CircularProgress";
 import type { NervousSystemParameters } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
-import { TokenInfo } from "types/token";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
 import randomBytes from "randombytes";
-import { useUSDPriceById } from "hooks";
+import { useUSDPriceById } from "hooks/index";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface SplitNeuronProps {
   open: boolean;
   onClose: () => void;
   onSplitSuccess?: () => void;
-  token: TokenInfo | undefined;
+  token: Token | undefined;
   neuron_stake: bigint;
   governance_id: string | undefined;
   neuron_id: Uint8Array | number[] | undefined;
@@ -46,7 +45,7 @@ export function SplitNeuron({
   const [loading, setLoading] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenUSDPrice = useUSDPriceById(token?.canisterId);
+  const tokenUSDPrice = useUSDPriceById(token?.address);
 
   const neuron_minimum_stake = useMemo(() => {
     if (!neuronSystemParameters) return undefined;
@@ -112,7 +111,7 @@ export function SplitNeuron({
     token &&
     neuron_minimum_stake &&
     new BigNumber(amount)
-      .plus(parseTokenAmount(neuron_minimum_stake + token.transFee, token.decimals))
+      .plus(parseTokenAmount(neuron_minimum_stake + BigInt(token.transFee), token.decimals))
       .isGreaterThan(parseTokenAmount(neuron_stake, token.decimals))
   )
     error = t`Amount is too large`;
@@ -132,7 +131,7 @@ export function SplitNeuron({
       .isGreaterThan(neuron_minimum_stake?.toString())
   )
     error = t`Amount must be greater than ${parseTokenAmount(
-      neuron_minimum_stake + token.transFee,
+      neuron_minimum_stake + BigInt(token.transFee),
       token.decimals,
     ).toFormat()} ${token.symbol}`;
 

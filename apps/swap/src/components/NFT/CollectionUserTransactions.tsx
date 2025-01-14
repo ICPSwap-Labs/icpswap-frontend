@@ -1,15 +1,13 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
-import NoData from "components/no-data";
-import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
 import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
-import { Pagination, TextButton } from "components/index";
+import { Pagination, TextButton, NoData, ListLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import type { PaginationResult, NFTTransaction } from "@icpswap/types";
 import { useAccount } from "store/global/hooks";
 import upperFirst from "lodash/upperFirst";
-import { pageArgsFormat, enumToString, arrayBufferToString , shorten, timestampFormat } from "@icpswap/utils";
+import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 
 export default function CollectionUserTransactions({ canisterId }: { canisterId: string }) {
   const [pageNum, setPageNum] = useState(1);

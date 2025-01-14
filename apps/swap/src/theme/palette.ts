@@ -19,7 +19,7 @@ export function themePalette(theme: { [key: string]: any }) {
     secondary: {
       light: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryLight,
       main: isDark ? theme.colors.darkSecondaryMain : theme.colors.secondaryMain,
-      dark: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryDark,
+      dark: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryMain,
       200: isDark ? theme.colors.darkSecondary200 : theme.colors.secondary200,
       800: isDark ? theme.colors.darkSecondary800 : theme.colors.secondary800,
     },
@@ -74,6 +74,11 @@ export function themePalette(theme: { [key: string]: any }) {
       "theme-secondary": theme.colors.darkSecondaryMain,
       apr: theme.colors.apr,
       success: theme.colors["text.success"],
+      default: theme.colors.darkTextSecondary,
+      tooltip: theme.colors.darkLevel1,
+    },
+    textSize: {
+      tooltip: "12px",
     },
     background: {
       paper: theme.paper,
@@ -88,6 +93,13 @@ export function themePalette(theme: { [key: string]: any }) {
       normal: isDark ? "1px solid #313A5A" : `1px solid ${theme.colors.lightGray200BorderColor}`,
       border0: "1px solid #4F5A84",
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
+      1: "#38446C",
+      2: "rgba(75, 87, 130, 0.68)",
+      3: "#4F5A84",
+      level1: theme.colors.darkLevel1,
+      level2: theme.colors.darkLevel2,
+      level3: theme.colors.darkLevel3,
+      level4: theme.colors.darkLevel4,
     },
     avatar: {
       gray200BgColor: isDark ? { bgcolor: "#384368" } : { bgcolor: "transparent" },

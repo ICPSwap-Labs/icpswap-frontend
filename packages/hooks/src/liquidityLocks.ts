@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { liquidityLocks } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
-import { resultFormat } from "@icpswap/utils";
+import { isNullArgs, nonNullArgs, resultFormat } from "@icpswap/utils";
 import { Pool, Position } from "@icpswap/swap-sdk";
 import { Null, type UserPositionInfoWithId } from "@icpswap/types";
 
@@ -9,7 +9,7 @@ import { useCallsData } from "./useCallData";
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
-export function useLiquidityLockIds(tokenIds: string[] | undefined) {
+export function useLiquidityLockIds(tokenIds: string[] | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenIds) return undefined;
@@ -57,6 +57,22 @@ export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] |
   return useMemo(() => multiPositions, [multiPositions]);
 }
 
+export function useExtraBlackHolePositionInfos(poolId: string | Null) {
+  const positionIds: bigint[] | undefined = useMemo(() => {
+    if (!poolId) return undefined;
+    if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
+    return undefined;
+  }, [poolId]);
+
+  const { result: positions } = useMultiPositionInfosByIds(poolId, positionIds);
+
+  return useMemo(() => {
+    if (!positions) return null;
+
+    return positions.map((e, index) => (e ? ({ ...e, id: positionIds[index] } as UserPositionInfoWithId) : null));
+  }, [positions]);
+}
+
 export function useAllLiquidityLocks(
   tokenIds: string[] | undefined,
   poolId: string | undefined,
@@ -78,6 +94,7 @@ export function useAllLiquidityLocks(
     });
   }, [lockIds]);
 
+  // Notice: positionInfos may be contains undefined
   const { result: positionInfos } = useMultiPositionInfos(poolId, ledgerIds);
 
   useEffect(() => {
@@ -91,15 +108,15 @@ export function useAllLiquidityLocks(
       if (positionInfos && lockIds) {
         setLoading(true);
 
-        const result = positionInfos
+        const result: Array<[UserPositionInfoWithId[], string, string]> = positionInfos
           .map((positionInfos, index) => {
+            const lockId = lockIds[index];
+            if (!lockId) return undefined;
             const alias = lockIds[index].alias[0];
-
-            if (!alias) return undefined;
-
+            if (isNullArgs(positionInfos) || isNullArgs(positionInfos)) return undefined;
             return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];
           })
-          .filter((e) => !!e) as [UserPositionInfoWithId[], string, string][];
+          .filter((element) => nonNullArgs(element));
 
         setResult(
           result.reduce(
@@ -141,10 +158,10 @@ export function useAllLiquidityLocks(
     return result.map(([positionInfos, principalId, name]) => [
       getSinglePoolMultiPositions({
         pool,
-        positionInfos: positionInfos.map((e) => ({
-          tickUpper: e.tickUpper,
-          tickLower: e.tickLower,
-          liquidity: e.liquidity,
+        positionInfos: positionInfos.map((positionInfo) => ({
+          tickUpper: positionInfo.tickUpper,
+          tickLower: positionInfo.tickLower,
+          liquidity: positionInfo.liquidity,
         })),
       }),
       principalId,

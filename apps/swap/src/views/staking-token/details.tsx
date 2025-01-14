@@ -15,6 +15,8 @@ import {
   AprChart,
 } from "components/stake/index";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token";
+import { useRefreshTriggerManager } from "hooks/index";
+import { State } from "components/stake/State";
 
 function ReclaimTab() {
   const { reclaimable } = useContext(ReclaimContext);
@@ -52,7 +54,8 @@ export default function StakeDetail() {
 
   const [reclaimable, setReclaimable] = useState(false);
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("STAKE_DETAILS");
 
   const { id: poolId } = useParams<{ id: string }>();
 
@@ -65,10 +68,6 @@ export default function StakeDetail() {
 
   const handleTabChange = (tab: Tab) => {
     setTabKey(tab.key);
-  };
-
-  const handleRefresh = () => {
-    setRefreshTrigger(refreshTrigger + 1);
   };
 
   return (
@@ -121,17 +120,23 @@ export default function StakeDetail() {
                   />
 
                   <Box>
-                    <Typography color="text.primary" fontSize={24} fontWeight={500} align="right">
+                    <Typography color="text.primary" fontSize={20} fontWeight={500} align="right">
                       <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
                     </Typography>
 
-                    <Typography fontSize={16} align="right" mt="12px">
+                    <Typography align="right" mt="8px">
                       <Trans>Stake {stakeToken ? `${stakeToken.symbol}` : "--"}</Trans>
                     </Typography>
                   </Box>
                 </Flex>
 
-                <Box mt="42px">
+                {poolInfo ? (
+                  <Flex justify="flex-end" sx={{ margin: "8px 0 0 0" }}>
+                    <State poolInfo={poolInfo} />
+                  </Flex>
+                ) : null}
+
+                <Box mt="24px">
                   <TabPanel
                     fullWidth
                     fontNormal
@@ -151,14 +156,14 @@ export default function StakeDetail() {
                     rewardToken={rewardToken}
                     stakeToken={stakeToken}
                     refreshTrigger={refreshTrigger}
-                    handleRefresh={handleRefresh}
+                    handleRefresh={setRefreshTrigger}
                   />
                 </Box>
 
                 <Box sx={{ display: tabKey === "reclaim" ? "block" : "none" }}>
                   <Reclaim
                     poolId={poolId}
-                    onReclaimSuccess={handleRefresh}
+                    onReclaimSuccess={setRefreshTrigger}
                     rewardToken={rewardToken}
                     stakeToken={stakeToken}
                     refresh={tabKey === "reclaim"}

@@ -4,7 +4,6 @@ import { Trans, t } from "@lingui/macro";
 import { useState } from "react";
 import { NumberFilledTextField, Modal } from "components/index";
 import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
-import { TokenInfo } from "types/index";
 import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import Button from "components/authentication/ButtonConnector";
@@ -13,10 +12,11 @@ import { useTokenBalance } from "hooks/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { SnsSwapLifecycle } from "@icpswap/constants";
+import { Token } from "@icpswap/swap-sdk";
 
 export interface ParticipateProps {
   swap_id: string | undefined;
-  tokenInfo: TokenInfo | undefined;
+  token: Token | undefined;
   swapInitArgs: SNSSwapInitArgs | undefined;
   open: boolean;
   onClose: () => void;

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { Grid, Pagination as MuiPagination, Box } from "@mui/material";
+
+import { Pagination as MuiPagination } from "./Mui";
 import { MainCard } from "./MainCard";
+import { Flex } from "./Grid";
 
 export type PaginationType = {
   pageNum: number;
@@ -13,15 +15,10 @@ export interface PaginationProps {
   flexEnd?: boolean;
   num?: number;
   defaultPageSize?: number;
+  mt?: string;
 }
 
-export function Pagination({
-  total,
-  onPageChange = () => {},
-  defaultPageSize = 10,
-  flexEnd,
-  num,
-}: PaginationProps) {
+export function Pagination({ total, onPageChange, defaultPageSize = 10, flexEnd, num, mt = "15px" }: PaginationProps) {
   const [pageNum, setPageNum] = React.useState(1);
 
   useEffect(() => {
@@ -30,10 +27,7 @@ export function Pagination({
     }
   }, [num]);
 
-  const paginationChange = (
-    e: React.ChangeEvent<unknown>,
-    pageNum: number
-  ): void => {
+  const paginationChange = (e: React.ChangeEvent<unknown>, pageNum: number): void => {
     setPageNum(pageNum);
     if (onPageChange) {
       onPageChange({
@@ -44,8 +38,8 @@ export function Pagination({
   };
 
   return (
-    <Grid container justifyContent={flexEnd ? "flex-end" : ""} mt="15px">
-      <Box>
+    <Flex fullWidth justify={flexEnd ? "flex-end" : ""} sx={{ marginTop: mt ?? "0px" }}>
+      <Flex>
         <MainCard level={4} padding="12px">
           <MuiPagination
             count={Math.ceil(Number(total || "") / defaultPageSize)}
@@ -55,7 +49,7 @@ export function Pagination({
             onChange={paginationChange}
           />
         </MainCard>
-      </Box>
-    </Grid>
+      </Flex>
+    </Flex>
   );
 }

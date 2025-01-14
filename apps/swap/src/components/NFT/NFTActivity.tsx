@@ -1,10 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
-import NoData from "components/no-data";
-import ListLoading from "components/Loading/List";
 import Copy from "components/Copy";
 import { useTradeTxList } from "hooks/nft/trade";
-import { pageArgsFormat, parseTokenAmount , shorten, timestampFormat } from "@icpswap/utils";
+import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
+import { NoData, ListLoading } from "components/index";
 import Pagination from "components/pagination";
 import { Trans } from "@lingui/macro";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";

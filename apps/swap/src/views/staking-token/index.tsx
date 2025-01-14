@@ -1,18 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, SelectToken, Wrapper } from "components/index";
+import { NoData, MainCard, Flex, SelectToken, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
-import {
-  GlobalData,
-  TopLiveStaking,
-  PoolListCard,
-  PoolListHeader,
-  YourPoolListHeader,
-  YourPoolListCard,
-} from "components/stake/index";
+import { GlobalData, TopLiveStaking, PoolListCard, PoolListHeader } from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
 import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
@@ -29,6 +22,7 @@ function MainContent() {
   const theme = useTheme();
   const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const [stakeTokenId, setStakeTokenId] = useState<string | undefined | null>(null);
   const [rewardTokenId, setRewardTokenId] = useState<string | undefined | null>(null);
@@ -85,129 +79,176 @@ function MainContent() {
     [setRewardTokenId],
   );
 
+  const [headerScrollOutOnTop, setHeaderScrollOutOnTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const target = document.querySelector("#stake-list-header");
+      if (target) {
+        const boundingClientRect = target.getBoundingClientRect();
+        setHeaderScrollOutOnTop(boundingClientRect.top < 200);
+        return;
+      }
+
+      setHeaderScrollOutOnTop(false);
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
-    <MainCard
-      padding="0"
-      sx={{
-        "@media(max-width: 640px)": {
-          padding: "0",
-        },
-      }}
-    >
-      <Flex
-        justify="space-between"
+    <>
+      <Box
         sx={{
-          padding: "24px",
-          "@media (max-width:640px)": {
-            flexDirection: "column",
-            gap: "24px 0",
-            padding: "16px",
+          display: !headerInViewport && headerScrollOutOnTop ? "block" : "none",
+          position: "sticky",
+          top: "64px",
+          background: theme.palette.background.level3,
+          zIndex: 10,
+          width: "100%",
+          maxWidth: "1200px",
+          borderBottom: `1px solid ${theme.palette.background.level1}`,
+        }}
+      >
+        <PoolListHeader
+          showState={showState}
+          gridTemplateColumns={gridTemplateColumns}
+          your={__state === FilterState.YOUR}
+          finished={__state === FilterState.FINISHED}
+        />
+      </Box>
+
+      <MainCard
+        id="stake-scroll-wrapper"
+        padding="0"
+        sx={{
+          "@media(max-width: 640px)": {
+            padding: "0",
           },
         }}
       >
-        <Box
+        <Flex
+          justify="space-between"
           sx={{
-            display: "flex",
-            gap: "0 20px",
+            padding: "24px",
             "@media (max-width:640px)": {
-              gap: "0 9px",
+              flexDirection: "column",
+              gap: "24px 0",
+              padding: "16px",
             },
           }}
         >
-          {Tabs.map((tab) => (
-            <Typography
-              key={tab.state}
-              color={__state === tab.state ? "text.primary" : "textTertiary"}
-              onClick={() => handleToggle(tab)}
-              sx={{
-                fontSize: "18px",
-                fontWeight: 500,
-                cursor: "pointer",
-                textTransform: "capitalize",
-                "@media (max-width:640px)": {
-                  fontSize: "14px",
-                },
-              }}
-            >
-              {tab.label}
-            </Typography>
-          ))}
-        </Box>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0 20px",
+              "@media (max-width:640px)": {
+                gap: "0 9px",
+              },
+            }}
+          >
+            {Tabs.map((tab) => (
+              <Typography
+                key={tab.state}
+                color={__state === tab.state ? "text.primary" : "textTertiary"}
+                onClick={() => handleToggle(tab)}
+                sx={{
+                  fontSize: "18px",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  textTransform: "capitalize",
+                  "@media (max-width:640px)": {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {tab.label}
+              </Typography>
+            ))}
+          </Box>
 
-        <Flex gap="0 20px">
-          <Flex gap="0 4px">
-            <Typography>
-              <Trans>Staked Token:</Trans>
-            </Typography>
-            <SelectToken
-              showBackground={false}
-              search
-              panelPadding="0px"
-              defaultPanel={
-                <Typography color="text.primary">
-                  <Trans>All Token</Trans>
-                </Typography>
-              }
-              onTokenChange={handleStakeTokenChange}
-            />
-          </Flex>
-          <Flex gap="0 4px">
-            <Typography>
-              <Trans>Reward Token:</Trans>
-            </Typography>
-            <SelectToken
-              showBackground={false}
-              search
-              panelPadding="0px"
-              defaultPanel={
-                <Typography color="text.primary">
-                  <Trans>All Token</Trans>
-                </Typography>
-              }
-              onTokenChange={handleRewardTokenChange}
-            />
+          <Flex
+            gap="10px 20px"
+            sx={{
+              "@media(max-width: 640px)": {
+                width: "100%",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              },
+            }}
+          >
+            <Flex gap="0 4px">
+              <Typography>
+                <Trans>Staked Token:</Trans>
+              </Typography>
+              <SelectToken
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Token</Trans>
+                  </Typography>
+                }
+                onTokenChange={handleStakeTokenChange}
+              />
+            </Flex>
+            <Flex gap="0 4px">
+              <Typography>
+                <Trans>Reward Token:</Trans>
+              </Typography>
+              <SelectToken
+                showBackground={false}
+                search
+                panelPadding="0px"
+                defaultPanel={
+                  <Typography color="text.primary">
+                    <Trans>All Token</Trans>
+                  </Typography>
+                }
+                onTokenChange={handleRewardTokenChange}
+              />
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
 
-      <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
+        <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
-      <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-        {__state === FilterState.YOUR ? (
-          <YourPoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
-        ) : (
-          <PoolListHeader showState={showState} gridTemplateColumns={gridTemplateColumns} />
-        )}
+        <Box sx={{ width: "100%", overflow: "auto hidden" }}>
+          <ObserverWrapper
+            scrollInViewport={() => setHeaderInViewport(true)}
+            scrollOutViewport={() => setHeaderInViewport(false)}
+          >
+            <PoolListHeader
+              id="stake-list-header"
+              showState={showState}
+              gridTemplateColumns={gridTemplateColumns}
+              your={__state === FilterState.YOUR}
+              finished={__state === FilterState.FINISHED}
+            />
+          </ObserverWrapper>
 
-        {loading ? (
-          <Box sx={{ padding: "24px" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          </Box>
-        ) : (
-          <>
-            {!pools?.length && !loading && <NoData />}
+          {loading ? (
+            <Box sx={{ padding: "24px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : (
+            <>
+              {!pools?.length && !loading && <NoData />}
 
-            {pools?.map((pool) =>
-              __state === FilterState.YOUR ? (
-                <YourPoolListCard
-                  key={pool.canisterId.toString()}
-                  poolInfo={pool}
-                  showState={showState}
-                  wrapperSx={{
-                    display: "grid",
-                    gridTemplateColumns,
-                  }}
-                />
-              ) : (
+              {pools?.map((pool) => (
                 <PoolListCard
                   key={pool.canisterId.toString()}
                   poolInfo={pool}
@@ -216,13 +257,17 @@ function MainContent() {
                     display: "grid",
                     gridTemplateColumns,
                   }}
+                  filterState={__state}
+                  your={__state === FilterState.YOUR}
                 />
-              ),
-            )}
-          </>
-        )}
-      </Box>
-    </MainCard>
+              ))}
+            </>
+          )}
+        </Box>
+      </MainCard>
+
+      <ScrollTop target="stake-scroll-wrapper" heightShowScrollTop={510} />
+    </>
   );
 }
 

@@ -7,7 +7,7 @@ import {
   getPaginationAllData,
   useInterval,
 } from "@icpswap/hooks";
-import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo } from "@icpswap/types";
+import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo, Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { UnusedBalance } from "types/staking-token";
 import { Principal } from "@dfinity/principal";
@@ -97,7 +97,7 @@ export function useUserUnusedTokens(reload?: boolean | number) {
 export function useIntervalUserPoolInfo(
   poolId: string | undefined,
   principal: Principal | undefined,
-  refresh?: number | boolean,
+  refresh?: number | Null,
 ) {
   const callback = useCallback(async () => {
     if (!poolId || !principal) return;

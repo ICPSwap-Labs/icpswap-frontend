@@ -27,7 +27,7 @@ export function useUserAvailableTokensValue() {
 
   useEffect(() => {
     async function call() {
-      if (allAvailableStakeTokens && principal && allTokensInfo) {
+      if (allAvailableStakeTokens && principal && allTokensInfo && infoAllTokens) {
         const result = await Promise.all(
           allAvailableStakeTokens.map(async (tokenId) => {
             const result = await getTokenBalance(tokenId, principal);
@@ -54,7 +54,7 @@ export function useUserAvailableTokensValue() {
     }
 
     call();
-  }, [allAvailableStakeTokens, setAvailableTokens, allTokensInfo, principal]);
+  }, [allAvailableStakeTokens, setAvailableTokens, allTokensInfo, principal, infoAllTokens]);
 
   return useMemo(
     () => ({

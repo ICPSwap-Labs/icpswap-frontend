@@ -5,7 +5,7 @@ import { usePosition } from "hooks/swap/usePosition";
 import { NoData, LoadingRow, Flex } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useSwapPositionsMultipleFarm, useSortedPositions } from "hooks/swap/index";
-import PositionContext from "components/swap/PositionContext";
+import { PositionContext } from "components/swap/index";
 import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
 import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
 import { Trans } from "@lingui/macro";
@@ -55,9 +55,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
   const { result: positions, loading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
 
   useEffect(() => {
-    if (positions) {
-      setAllStakedPositions(positions);
-    }
+    setAllStakedPositions(positions);
   }, [positions, setAllStakedPositions]);
 
   const sortedPositions = useSortedPositions<UserPositionForFarm>({

@@ -1,11 +1,10 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useListDeployedSNSs, useProposal, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { LoadingRow, TokenImage, MainCard } from "components/index";
-import { Theme } from "@mui/material/styles";
+import { LoadingRow, TokenImage, MainCard, Wrapper } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nowInSeconds } from "@icpswap/utils";
-import { useTokenInfo } from "hooks/token";
+import { useToken } from "hooks/index";
 import { useHistory, useParams } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 
@@ -15,7 +14,7 @@ import { ProposalSummary } from "./components/Summary";
 import { ProposalPayload } from "./components/Payload";
 
 export default function Voting() {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const principal = useAccountPrincipalString();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
@@ -33,7 +32,7 @@ export default function Voting() {
 
   const ledger_id = sns?.ledger_canister_id.toString();
 
-  const { result: tokenInfo } = useTokenInfo(ledger_id);
+  const [, token] = useToken(ledger_id);
   const { result: proposal_data, loading } = useProposal(
     governance_id,
     proposal_id ? BigInt(proposal_id) : undefined,
@@ -74,78 +73,80 @@ export default function Voting() {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Box sx={{ width: "100%", maxWidth: "1400px" }}>
-        <MainCard>
-          <Box sx={{ margin: "0 0 12px 0" }}>
-            <ArrowLeft color="#ffffff" size="20px" cursor="pointer" onClick={handleBack} />
-          </Box>
+    <Wrapper>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ width: "100%", maxWidth: "1400px" }}>
+          <MainCard>
+            <Box sx={{ margin: "0 0 12px 0" }}>
+              <ArrowLeft color="#ffffff" size="20px" cursor="pointer" onClick={handleBack} />
+            </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            {loading ? (
-              <Box sx={{ width: "100%" }}>
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            ) : (
-              <Box sx={{ width: "100%" }}>
-                <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-                  <TokenImage logo={tokenInfo?.logo} size="24px" tokenId={ledger_id} />
-                  <Typography fontSize="16px" fontWeight={500} color="text.primary">
-                    {title}
-                  </Typography>
-                  <Box
-                    sx={{
-                      padding: "3px 10px",
-                      borderRadius: "12px",
-                      background: !isExecuted ? theme.colors.successDark : theme.palette.background.level1,
-                    }}
-                  >
-                    <Typography color="text.primary">{isExecuted ? "Executed" : "Open"}</Typography>
-                  </Box>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              {loading ? (
+                <Box sx={{ width: "100%" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
                 </Box>
-
-                <MainCard level={4} sx={{ margin: "20px 0 0 0" }}>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "0 20px",
-                      "@media(max-width: 980px)": {
-                        gridTemplateColumns: "1fr",
-                        gap: "40px 0",
-                      },
-                    }}
-                  >
-                    <ProposalDetails proposal_data={proposal_data} />
-
-                    <VotingResult
-                      proposal_id={proposal_id}
-                      governance_id={governance_id}
-                      proposal_data={proposal_data}
-                      neurons={listNeurons}
-                      neuronSystemParameters={neuronSystemParameters}
-                      onRefresh={() => setRefreshTrigger(refreshTrigger + 1)}
-                    />
+              ) : (
+                <Box sx={{ width: "100%" }}>
+                  <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
+                    <TokenImage logo={token?.logo} size="24px" tokenId={ledger_id} />
+                    <Typography fontSize="16px" fontWeight={500} color="text.primary">
+                      {title}
+                    </Typography>
+                    <Box
+                      sx={{
+                        padding: "3px 10px",
+                        borderRadius: "12px",
+                        background: !isExecuted ? theme.colors.successDark : theme.palette.background.level1,
+                      }}
+                    >
+                      <Typography color="text.primary">{isExecuted ? "Executed" : "Open"}</Typography>
+                    </Box>
                   </Box>
-                </MainCard>
 
-                <ProposalSummary proposal_data={proposal_data} />
+                  <MainCard level={4} sx={{ margin: "20px 0 0 0" }}>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "0 20px",
+                        "@media(max-width: 980px)": {
+                          gridTemplateColumns: "1fr",
+                          gap: "40px 0",
+                        },
+                      }}
+                    >
+                      <ProposalDetails proposal_data={proposal_data} />
 
-                <ProposalPayload proposal_data={proposal_data} />
-              </Box>
-            )}
-          </Box>
-        </MainCard>
+                      <VotingResult
+                        proposal_id={proposal_id}
+                        governance_id={governance_id}
+                        proposal_data={proposal_data}
+                        neurons={listNeurons}
+                        neuronSystemParameters={neuronSystemParameters}
+                        onRefresh={() => setRefreshTrigger(refreshTrigger + 1)}
+                      />
+                    </Box>
+                  </MainCard>
+
+                  <ProposalSummary proposal_data={proposal_data} />
+
+                  <ProposalPayload proposal_data={proposal_data} />
+                </Box>
+              )}
+            </Box>
+          </MainCard>
+        </Box>
       </Box>
-    </Box>
+    </Wrapper>
   );
 }
