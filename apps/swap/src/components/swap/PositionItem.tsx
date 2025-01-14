@@ -12,7 +12,7 @@ import {
   useTheme,
   makeStyles,
 } from "components/Mui";
-import CurrenciesAvatar from "components/CurrenciesAvatar";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";

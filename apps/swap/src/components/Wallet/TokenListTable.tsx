@@ -11,8 +11,7 @@ import {
   isNullArgs,
   formatAmount,
 } from "@icpswap/utils";
-import TransferModal from "components/TokenTransfer/index";
-import { NoData, LoadingRow, TokenStandardLabel } from "components/index";
+import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal } from "components/index";
 import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
@@ -368,7 +367,12 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
       </Box>
 
       {open && !!token ? (
-        <TransferModal open={open} onClose={handleCloseModal} token={token} onTransferSuccess={handleTransferSuccess} />
+        <TokenTransferModal
+          open={open}
+          onClose={handleCloseModal}
+          token={token}
+          onTransferSuccess={handleTransferSuccess}
+        />
       ) : null}
 
       {XTCTopUpShow ? (

@@ -8,8 +8,8 @@ import { TextButton, TokenImage } from "components/index";
 import type { StepContents } from "types/step";
 
 export interface GetStepsArgs {
-  inputCurrency: Token;
-  outputCurrency: Token;
+  inputToken: Token;
+  outputToken: Token;
   amount0: string;
   amount1: string;
   key: string;
@@ -19,48 +19,45 @@ export interface GetStepsArgs {
 }
 
 export function getSwapStep({
-  inputCurrency,
-  outputCurrency,
+  inputToken,
+  outputToken,
   key,
   amount0,
   amount1,
   handleReclaim,
   keepTokenInPools,
 }: GetStepsArgs) {
-  const symbol0 = inputCurrency.symbol;
-  const symbol1 = outputCurrency.symbol;
-  const address0 = inputCurrency.wrapped.address;
-  const logo0 = inputCurrency.logo;
-  const logo1 = outputCurrency.logo;
+  const { symbol: symbol0, address: address0, logo: logo0 } = inputToken;
+  const { symbol: symbol1, logo: logo1 } = outputToken;
 
   const outAmount = getSwapOutAmount(key);
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-      <TokenImage size="16px" logo={logo0} tokenId={inputCurrency.address} />
+      <TokenImage size="16px" logo={logo0} tokenId={inputToken.address} />
       {amount0}
     </Box>
   );
 
   const amount1Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
-      <TokenImage size="16px" logo={logo1} tokenId={outputCurrency.address} />
+      <TokenImage size="16px" logo={logo1} tokenId={outputToken.address} />
       {amount1}
     </Box>
   );
 
   const outAmountValue = (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <TokenImage size="16px" logo={logo1} tokenId={outputCurrency.address} />
-      {outAmount ? parseTokenAmount(outAmount, outputCurrency.decimals).toFormat() : "--"}
+      <TokenImage size="16px" logo={logo1} tokenId={outputToken.address} />
+      {outAmount ? parseTokenAmount(outAmount, outputToken.decimals).toFormat() : "--"}
     </Box>
   );
 
   const withdrawAmountLessThanZero = outAmount
-    ? new BigNumber(outAmount.toString()).minus(outputCurrency.transFee).isLessThan(0)
+    ? new BigNumber(outAmount.toString()).minus(outputToken.transFee).isLessThan(0)
     : false;
 
-  const isTokenInUseTransfer = isUseTransfer(inputCurrency.wrapped);
+  const isTokenInUseTransfer = isUseTransfer(inputToken.wrapped);
 
   const steps: StepContents[] = [
     {
@@ -88,7 +85,6 @@ export function getSwapStep({
       ],
       errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
     },
-
     {
       title: t`Swap ${symbol0} to ${symbol1}`,
       step: 2,

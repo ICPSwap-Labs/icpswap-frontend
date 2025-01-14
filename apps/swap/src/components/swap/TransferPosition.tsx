@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Typography, Grid, Chip, Button, useMediaQuery, Box } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
-import CurrenciesAvatar from "components/CurrenciesAvatar";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";

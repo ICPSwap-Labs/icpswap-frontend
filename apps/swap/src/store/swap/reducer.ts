@@ -23,32 +23,31 @@ export default createReducer(initialState, (builder) => {
       const { field, currencyId } = payload;
 
       const otherField = field === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
-      if (currencyId === state[otherField].currencyId) {
+      if (currencyId === state[otherField]) {
         return {
           ...state,
           independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
-          [field]: { currencyId },
-          [otherField]: { currencyId: state[field].currencyId },
+          [field]: currencyId,
+          [otherField]: state[field],
         };
-      } 
-        // the normal case
-        return {
-          ...state,
-          [field]: { currencyId },
-        };
-      
+      }
+
+      // the normal case
+      return {
+        ...state,
+        [field]: currencyId,
+      };
     })
     .addCase(switchCurrencies, (state) => {
       return {
         ...state,
         typedValue: "",
         independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
-        [SWAP_FIELD.INPUT]: { currencyId: state[SWAP_FIELD.OUTPUT].currencyId },
-        [SWAP_FIELD.OUTPUT]: { currencyId: state[SWAP_FIELD.INPUT].currencyId },
       };
     })
-    .addCase(clearSwapState, () => {
-      return initialState;
+    // Do not clear the input/output tokens
+    .addCase(clearSwapState, (state) => {
+      return { ...initialState, [SWAP_FIELD.INPUT]: state.INPUT, [SWAP_FIELD.OUTPUT]: state.OUTPUT };
     })
     .addCase(updatePoolCanisterIds, (state, { payload }) => {
       state.poolCanisterIds[payload.key] = payload.id;

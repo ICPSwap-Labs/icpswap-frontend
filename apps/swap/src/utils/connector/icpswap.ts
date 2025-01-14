@@ -59,7 +59,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
     canisterId,
     interfaceFactory,
   }: CreateActorArgs): Promise<ActorSubclass<Service> | undefined> {
-    const agent = new HttpAgent({
+    const agent = await HttpAgent.create({
       host: this.config.host,
       identity: this.identity,
     });

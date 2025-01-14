@@ -58,7 +58,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
     canisterId,
     interfaceFactory,
   }: CreateActorArgs): Promise<ActorSubclass<Service> | undefined> {
-    const agent = new HttpAgent({
+    const agent = await HttpAgent.create({
       ...this.config,
       identity: this.identity,
     });

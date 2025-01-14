@@ -9,9 +9,14 @@ import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
-import useDebounce from "hooks/useDebounce";
 import store from "store/index";
-import { useParsedQueryString, useUserUnusedBalance, useTokenBalance, useDebouncedChangeHandler } from "@icpswap/hooks";
+import {
+  useParsedQueryString,
+  useUserUnusedBalance,
+  useTokenBalance,
+  useDebouncedChangeHandler,
+  useDebounce,
+} from "@icpswap/hooks";
 import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
@@ -47,7 +52,7 @@ export function useSwapHandlers() {
     dispatch(switchCurrencies());
   }, [dispatch]);
 
-  const [, debouncedSwitchTokens] = useDebouncedChangeHandler<any>(undefined, onSwitchTokens, 500);
+  const [, debouncedSwitchTokens] = useDebouncedChangeHandler<void>(undefined, onSwitchTokens, 500);
 
   const onUserInput = useCallback(
     (field: SWAP_FIELD, typedValue: string) => {
@@ -88,12 +93,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const {
     independentField,
     typedValue,
-    [SWAP_FIELD.INPUT]: { currencyId: inputCurrencyId },
-    [SWAP_FIELD.OUTPUT]: { currencyId: outputCurrencyId },
+    [SWAP_FIELD.INPUT]: inputCurrencyId,
+    [SWAP_FIELD.OUTPUT]: outputCurrencyId,
   } = useSwapState();
 
-  const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
-  const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
+  const [inputTokenState, inputToken] = useToken(inputCurrencyId);
+  const [outputTokenState, outputToken] = useToken(outputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
@@ -106,11 +111,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   };
 
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
-
-  const currencies = {
-    [SWAP_FIELD.INPUT]: inputToken ?? undefined,
-    [SWAP_FIELD.OUTPUT]: outputToken ?? undefined,
-  };
 
   const otherCurrency = (isExactIn ? outputToken : inputToken) ?? undefined;
 
@@ -197,7 +197,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const inputError = useMemo(() => {
-    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT]) return t`Select a token`;
+    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t`Select a token`;
     if (!parsedAmount) return t`Enter an amount`;
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
     if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
@@ -206,24 +206,23 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
 
     return null;
-  }, [typedValue, parsedAmount, currencies, inputTokenSubBalance, inputTokenUnusedBalance, Trade, tokenInsufficient]);
+  }, [typedValue, parsedAmount, inputTokenSubBalance, inputTokenUnusedBalance, Trade, tokenInsufficient]);
 
   return {
-    currencies,
     inputError,
     parsedAmount,
     trade: Trade?.trade,
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
-    tradePoolId: Trade?.tradePoolId,
+    poolId: Trade?.tradePoolId,
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
     userSlippageTolerance,
     inputToken,
     outputToken,
-    inputCurrencyState,
-    outputCurrencyState,
+    inputTokenState,
+    outputTokenState,
     unusedBalance,
     inputTokenUnusedBalance,
     outputTokenUnusedBalance,

@@ -1,6 +1,5 @@
 import { TradeType } from "@icpswap/constants";
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
-import BigNumber from "bignumber.js";
 import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
 import { useSlippageManager, useSwapKeepTokenInPools } from "store/swap/cache/hooks";
@@ -26,7 +25,7 @@ import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
-import { isNullArgs, parseTokenAmount, sleep, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { isNullArgs, parseTokenAmount, sleep, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -58,15 +57,12 @@ export function useInitialSwapSteps() {
       const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
       const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-      const pool = trade.route.pools[0];
-      const token0 = pool.token0;
-      const token1 = pool.token1;
-      const inputCurrency = token0.address === trade.inputAmount.currency.address ? token0 : token1;
-      const outputCurrency = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+      const inputToken = trade.inputAmount.currency;
+      const outputToken = trade.outputAmount.currency;
 
       const content = getSwapStep({
-        inputCurrency,
-        outputCurrency,
+        inputToken,
+        outputToken,
         amount0,
         amount1,
         key: key.toString(),

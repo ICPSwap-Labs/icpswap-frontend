@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Box, ClickAwayListener, Typography, useTheme } from "components/Mui";
-import UserSetting from "components/swap/UserSetting";
 import { Flex } from "@icpswap/ui";
 import { useSlippageManager } from "store/swap/cache/hooks";
 import { BigNumber } from "@icpswap/utils";
+
+import { SwapSettingCard } from "./SwapSettings";
 
 export interface SwapSettingsProps {
   type: string;
@@ -11,7 +12,7 @@ export interface SwapSettingsProps {
   ui?: "pro";
 }
 
-export default function SwapSettingIcon({ type, ui, position = "right" }: SwapSettingsProps) {
+export function SwapSettings({ type, ui, position = "right" }: SwapSettingsProps) {
   const theme = useTheme();
   const [settingShow, setSettingShow] = useState(false);
   const [slippageTolerance] = useSlippageManager(type);
@@ -58,7 +59,7 @@ export default function SwapSettingIcon({ type, ui, position = "right" }: SwapSe
               ...(position === "right" ? { right: 0 } : { left: 0 }),
             }}
           >
-            <UserSetting type={type} onClose={() => setSettingShow(false)} />
+            <SwapSettingCard type={type} onClose={() => setSettingShow(false)} />
           </Box>
         )}
       </Box>

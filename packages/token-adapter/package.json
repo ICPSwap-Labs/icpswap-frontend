@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --pretty --noEmit",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf build",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch",
     "test": "jest --passWithNoTests"
   },

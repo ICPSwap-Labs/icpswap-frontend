@@ -26,7 +26,7 @@ import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 
 import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
-import ConfirmRemoveLiquidityModal from "./Confirm";
+import { DecreaseLiquidityConfirm } from "./Confirm";
 
 export default function DecreaseLiquidity() {
   const history = useHistory();
@@ -298,7 +298,7 @@ export default function DecreaseLiquidity() {
       </Flex>
 
       {confirmModalShow && (
-        <ConfirmRemoveLiquidityModal
+        <DecreaseLiquidityConfirm
           open={confirmModalShow}
           onConfirm={handleConfirm}
           onCancel={handleCancel}

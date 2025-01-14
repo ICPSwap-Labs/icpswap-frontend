@@ -1,26 +1,8 @@
-import { Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import CurrencyAvatar from "components/CurrencyAvatar";
 import { Token } from "@icpswap/swap-sdk";
+import { Flex } from "@icpswap/ui";
+import { Box } from "components/Mui";
 
-const useStyles = makeStyles(() => {
-  return {
-    floatLeft: {
-      float: "left",
-    },
-    avatarBox: {
-      clear: "both",
-      overflow: "hidden",
-      "& .currencyB": {
-        marginLeft: "-8px",
-        float: "left",
-      },
-      "& .currencyA ": {
-        float: "left",
-      },
-    },
-  };
-});
+import { CurrencyAvatar } from "./CurrencyAvatar";
 
 export interface CurrenciesAvatarProps {
   currencyA: Token | undefined;
@@ -31,31 +13,19 @@ export interface CurrenciesAvatarProps {
   size?: string;
 }
 
-export default function CurrenciesAvatar({
+export function CurrenciesAvatar({
   currencyA,
   currencyB,
   borderColor = "#ffffff",
   bgColor = "#97a4ef",
   size,
 }: CurrenciesAvatarProps) {
-  const classes = useStyles();
-
   return (
-    <Box className={classes.avatarBox}>
-      <CurrencyAvatar
-        className="currencyA"
-        borderColor={borderColor}
-        bgColor={bgColor}
-        currency={currencyA}
-        size={size}
-      />
-      <CurrencyAvatar
-        className="currencyB"
-        borderColor={borderColor}
-        bgColor={bgColor}
-        currency={currencyB}
-        size={size}
-      />
-    </Box>
+    <Flex sx={{ "& .currencyB": { position: "relative", left: "-8px" } }}>
+      <CurrencyAvatar borderColor={borderColor} bgColor={bgColor} currency={currencyA} size={size} />
+      <Box className="currencyB">
+        <CurrencyAvatar borderColor={borderColor} bgColor={bgColor} currency={currencyB} size={size} />
+      </Box>
+    </Flex>
   );
 }

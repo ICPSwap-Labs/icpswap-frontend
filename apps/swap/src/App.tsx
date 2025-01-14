@@ -28,7 +28,6 @@ import { GlobalFetch } from "./GlobalFetch";
 import Web3Provider from "./components/Web3Injector";
 import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
-import Snackbar from "./components/Snackbar";
 import NavigationScroll from "./components/NavigationScroll";
 import { theme } from "./theme";
 import Routes from "./routes";
@@ -92,7 +91,6 @@ export default function App() {
                             <Routes />
                           </ErrorBoundary>
                         )}
-                        <Snackbar />
                         <FullscreenLoading />
                         <GlobalSteps />
                         <GlobalFetch />

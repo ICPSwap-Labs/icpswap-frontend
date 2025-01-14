@@ -2,7 +2,7 @@ import type { ActorSubclass } from "@dfinity/agent";
 import { AstroXWebViewHandler } from "@astrox/sdk-webview";
 import { IC as AuthClient } from "@astrox/sdk-web";
 import { Connector } from "@icpswap/actor";
-import type { IConnector, CreateActorArgs, WalletConnectorConfig } from "./connectors";
+import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
 const MeExpireTime = 7 * 24 * 3600; // seconds
 const MAX_DELEGATION_TARGETS = 900;
@@ -13,7 +13,7 @@ export function isMeWebview() {
 
 const astrox = new AstroXWebViewHandler();
 
-export class MeConnector implements IConnector {
+export class MeConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;

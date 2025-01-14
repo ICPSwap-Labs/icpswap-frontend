@@ -1,11 +1,11 @@
-import { Avatar, Box, SxProps } from "@mui/material";
+import { Avatar, Box, BoxProps } from "./Mui";
 import { SnsIcon } from "../assets/icons/SNS";
 
 export interface TokenImageProps {
   logo: string | undefined | null;
   size?: string;
   sns?: boolean;
-  sx?: SxProps;
+  sx?: BoxProps["sx"];
 }
 
 export function TokenImage({ logo, size, sx, sns }: TokenImageProps) {

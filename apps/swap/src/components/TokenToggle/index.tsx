@@ -1,8 +1,6 @@
-import { ButtonBase, Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { ButtonBase, Grid, makeStyles, Theme } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils";
-import { Theme } from "@mui/material/styles";
 
 const useStyle = makeStyles((theme: Theme) => ({
   container: {

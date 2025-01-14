@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { SWAP_FIELD } from "constants/swap";
 import { useToken } from "hooks/useCurrency";
@@ -6,80 +6,20 @@ import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
-import useDebounce from "hooks/useDebounce";
 import store from "store/index";
-import { useParsedQueryString, useUserUnusedBalance, useTokenBalance, useDebouncedChangeHandler } from "@icpswap/hooks";
-import {
-  isValidPrincipal,
-  formatTokenAmount,
-  isNullArgs,
-  BigNumber,
-  parseTokenAmount,
-  nonNullArgs,
-} from "@icpswap/utils";
+import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
+import { formatTokenAmount, isNullArgs, BigNumber, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
 import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
+import { useSwapState } from "store/swap/hooks";
 
-import {
-  selectCurrency,
-  switchCurrencies,
-  typeInput,
-  clearSwapState,
-  updateSwapOutAmount,
-  updatePlaceOrderPositionId,
-} from "./actions";
-
-export function useLimitHandlers() {
-  const dispatch = useAppDispatch();
-
-  const onCurrencySelection = useCallback(
-    (field: SWAP_FIELD, currencyId: string | undefined) => {
-      dispatch(
-        selectCurrency({
-          field,
-          currencyId,
-        }),
-      );
-    },
-    [dispatch],
-  );
-
-  const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies());
-  }, [dispatch]);
-
-  const [, debouncedSwitchTokens] = useDebouncedChangeHandler<any>(undefined, onSwitchTokens, 500);
-
-  const onUserInput = useCallback(
-    (field: SWAP_FIELD, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }));
-    },
-    [dispatch],
-  );
-
-  return {
-    onCurrencySelection,
-    onSwitchTokens: debouncedSwitchTokens,
-    onUserInput,
-  };
-}
-
-export function useLimitState() {
-  return useAppSelector((state) => state.limitOrder);
-}
-
-export function useCleanSwapState() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(() => dispatch(clearSwapState()), [dispatch]);
-}
+import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
 
 export interface UseSwapInfoArgs {
   refresh?: number | boolean;
@@ -87,7 +27,6 @@ export interface UseSwapInfoArgs {
 
 export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const principal = useAccountPrincipal();
-  const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
   const [__orderPrice, setOrderPrice] = useState<string | Null>(null);
 
@@ -98,9 +37,9 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const {
     independentField,
     typedValue,
-    [SWAP_FIELD.INPUT]: { currencyId: inputCurrencyId },
-    [SWAP_FIELD.OUTPUT]: { currencyId: outputCurrencyId },
-  } = useLimitState();
+    [SWAP_FIELD.INPUT]: inputCurrencyId,
+    [SWAP_FIELD.OUTPUT]: outputCurrencyId,
+  } = useSwapState();
 
   const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
   const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
@@ -385,7 +324,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
-    userSlippageTolerance,
     inputToken,
     outputToken,
     inputCurrencyState,
@@ -415,32 +353,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     atLimitedTick,
   };
-}
-
-export function useLoadDefaultParams() {
-  const dispatch = useAppDispatch();
-
-  const { input, output } = useParsedQueryString() as { input: string | undefined; output: string | undefined };
-
-  useEffect(() => {
-    if (input !== undefined && isValidPrincipal(input)) {
-      dispatch(
-        selectCurrency({
-          field: SWAP_FIELD.INPUT,
-          currencyId: input,
-        }),
-      );
-    }
-
-    if (output !== undefined && isValidPrincipal(output)) {
-      dispatch(
-        selectCurrency({
-          field: SWAP_FIELD.OUTPUT,
-          currencyId: output,
-        }),
-      );
-    }
-  }, [input, output, dispatch]);
 }
 
 export function useSwapOutAmount() {

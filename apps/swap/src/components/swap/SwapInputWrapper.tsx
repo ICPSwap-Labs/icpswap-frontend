@@ -1,4 +1,4 @@
-import { useMemo, useContext, useEffect } from "react";
+import { useMemo, useContext, useEffect, useCallback } from "react";
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState, useSwapHandlers } from "store/swap/hooks";
@@ -8,6 +8,7 @@ import { UseCurrencyState } from "hooks/useCurrency";
 import { SwapContext } from "components/swap/index";
 import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
+import { useHistory } from "react-router-dom";
 
 import { SwapInputCurrency } from "./SwapInputCurrency";
 
@@ -16,8 +17,8 @@ export interface SwapInputWrapperProps {
   onMaxInput: () => void;
   onTokenAChange: (token: Token) => void;
   onTokenBChange: (token: Token) => void;
-  tokenAPrice: string | number | undefined;
-  tokenBPrice: string | number | undefined;
+  inputTokenPrice: string | number | undefined;
+  outputTokenPrice: string | number | undefined;
   parsedAmounts: {
     INPUT: CurrencyAmount<Token> | undefined;
     OUTPUT: CurrencyAmount<Token> | undefined;
@@ -29,8 +30,8 @@ export interface SwapInputWrapperProps {
   };
   inputToken: Token | undefined;
   outputToken: Token | undefined;
-  inputCurrencyState: UseCurrencyState;
-  outputCurrencyState: UseCurrencyState;
+  inputTokenState: UseCurrencyState;
+  outputTokenState: UseCurrencyState;
   ui?: "pro" | "normal";
   inputTokenUnusedBalance: bigint | Null;
   outputTokenUnusedBalance: bigint | Null;
@@ -45,14 +46,14 @@ export function SwapInputWrapper({
   onMaxInput,
   onTokenAChange,
   onTokenBChange,
-  tokenAPrice,
-  tokenBPrice,
+  inputTokenPrice,
+  outputTokenPrice,
   parsedAmounts,
   currencyBalances,
   inputToken,
   outputToken,
-  inputCurrencyState,
-  outputCurrencyState,
+  inputTokenState,
+  outputTokenState,
   inputTokenUnusedBalance,
   outputTokenUnusedBalance,
   inputTokenSubBalance,
@@ -62,8 +63,14 @@ export function SwapInputWrapper({
   noLiquidity,
   poolId,
 }: SwapInputWrapperProps) {
+  const history = useHistory();
   const theme = useTheme();
-  const { independentField, typedValue } = useSwapState();
+  const {
+    independentField,
+    typedValue,
+    [SWAP_FIELD.INPUT]: inputTokenId,
+    [SWAP_FIELD.OUTPUT]: outputTokenId,
+  } = useSwapState();
   const { setUSDValueChange } = useContext(SwapContext);
   const { onSwitchTokens } = useSwapHandlers();
 
@@ -76,15 +83,15 @@ export function SwapInputWrapper({
 
   const inputBalanceUSDValue = useMemo(() => {
     const amount = formattedAmounts[SWAP_FIELD.INPUT];
-    if (!tokenAPrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(tokenAPrice).toNumber();
-  }, [tokenAPrice, formattedAmounts]);
+    if (!inputTokenPrice || !amount) return undefined;
+    return new BigNumber(amount).multipliedBy(inputTokenPrice).toNumber();
+  }, [inputTokenPrice, formattedAmounts]);
 
   const outputBalanceUSDValue = useMemo(() => {
     const amount = formattedAmounts[SWAP_FIELD.OUTPUT];
-    if (!tokenBPrice || !amount) return undefined;
-    return new BigNumber(amount).multipliedBy(tokenBPrice).toNumber();
-  }, [tokenBPrice, formattedAmounts]);
+    if (!outputTokenPrice || !amount) return undefined;
+    return new BigNumber(amount).multipliedBy(outputTokenPrice).toNumber();
+  }, [outputTokenPrice, formattedAmounts]);
 
   const USDChange = useMemo(() => {
     return !!outputBalanceUSDValue && !!inputBalanceUSDValue
@@ -100,19 +107,25 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
+  const handleSwitchTokens = useCallback(() => {
+    const prePath = ui === "pro" ? "/swap/pro" : "/swap";
+    history.push(`${prePath}?input=${outputTokenId}&output=${inputTokenId}`);
+    onSwitchTokens();
+  }, [onSwitchTokens, inputTokenId, outputTokenId]);
+
   return (
     <Box>
       <Box sx={{ position: "relative" }}>
         <SwapInputCurrency
           noLiquidity={noLiquidity}
           token={inputToken}
-          currencyPrice={tokenAPrice}
+          currencyPrice={inputTokenPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.INPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.INPUT]}
           onMax={onMaxInput}
           onInput={(value: string) => onInput(value, "input")}
           onTokenChange={onTokenAChange}
-          currencyState={inputCurrencyState}
+          currencyState={inputTokenState}
           parsedAmount={parsedAmounts[SWAP_FIELD.INPUT]}
           background={ui === "pro" ? "level1" : "level3"}
           unusedBalance={inputTokenUnusedBalance}
@@ -138,7 +151,7 @@ export function SwapInputWrapper({
             alignItems: "center",
             justifyContent: "center",
           }}
-          onClick={onSwitchTokens}
+          onClick={handleSwitchTokens}
         >
           <Image
             src={ui === "pro" ? "/images/icon_exchange_pro.svg" : "/images/icon_exchange.svg"}
@@ -150,12 +163,12 @@ export function SwapInputWrapper({
       <Box sx={{ marginTop: "6px" }}>
         <SwapInputCurrency
           token={outputToken}
-          currencyPrice={tokenBPrice}
+          currencyPrice={outputTokenPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
           currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
           onInput={(value: string) => onInput(value, "output")}
           onTokenChange={onTokenBChange}
-          currencyState={outputCurrencyState}
+          currencyState={outputTokenState}
           parsedAmount={parsedAmounts[SWAP_FIELD.OUTPUT]}
           usdChange={USDChange}
           background={ui === "pro" ? "level1" : "level3"}
