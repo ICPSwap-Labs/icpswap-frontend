@@ -1,5 +1,5 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex, Tooltip, APRPanel } from "@icpswap/ui";
+import { Flex, Tooltip, APRPanel, BodyCell } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
 import { Trans } from "@lingui/macro";
 import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
@@ -109,10 +109,8 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
     >
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="24px" />
-
-        <Typography
+        <BodyCell
           sx={{
-            color: "text.primary",
             width: "150px",
             overflow: "hidden",
             whiteSpace: "nowrap",
@@ -121,13 +119,12 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
           title={stakeToken?.symbol ?? ""}
         >
           {stakeToken ? `${stakeToken.symbol} ` : "--"}
-        </Typography>
+        </BodyCell>
       </Flex>
       <Flex gap="0 8px" className="row-item">
         <TokenImage logo={rewardToken?.logo} tokenId={rewardToken?.address} size="24px" />
-        <Typography
+        <BodyCell
           sx={{
-            color: "text.primary",
             width: "150px",
             overflow: "hidden",
             whiteSpace: "nowrap",
@@ -136,7 +133,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
           title={rewardToken?.symbol ?? ""}
         >
           {rewardToken ? `${rewardToken.symbol} ` : "--"}
-        </Typography>
+        </BodyCell>
       </Flex>
       <Flex justify="flex-end" className="row-item">
         {apr ? (
@@ -162,14 +159,13 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           {state === StakingState.FINISHED ? (
             <Flex fullWidth justify="flex-end">
-              <Typography sx={{ color: "text.primary" }}>--</Typography>
+              <BodyCell>--</BodyCell>
             </Flex>
           ) : (
             <>
               <Flex gap="0 4px" justify="flex-end" fullWidth>
-                <Typography
+                <BodyCell
                   sx={{
-                    color: "text.primary",
                     maxWidth: "230px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
@@ -188,7 +184,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
                         parseTokenAmount(userStakeTokenBalance, stakeToken.decimals).toString(),
                       )} ${stakeToken.symbol}`
                     : "--"}
-                </Typography>
+                </BodyCell>
 
                 {state === StakingState.NOT_STARTED ? (
                   <Tooltip
@@ -219,9 +215,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {/* Total Staked */}
       {filterState !== FilterState.FINISHED && !your ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography sx={{ color: "text.primary" }}>
-            {poolStakeTvl ? formatDollarAmount(poolStakeTvl) : "--"}
-          </Typography>
+          <BodyCell>{poolStakeTvl ? formatDollarAmount(poolStakeTvl) : "--"}</BodyCell>
         </Flex>
       ) : null}
 
@@ -229,9 +223,8 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {your || filterState === FilterState.FINISHED ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           <Flex gap="0 4px" justify="flex-end" fullWidth>
-            <Typography
+            <BodyCell
               sx={{
-                color: "text.primary",
                 maxWidth: "170px",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
@@ -250,7 +243,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
                     parseTokenAmount(userPoolInfo.stakeAmount, stakeToken.decimals).toString(),
                   )} ${stakeToken.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
           </Flex>
           <Flex gap="0 4px" justify="flex-end" fullWidth>
             <Typography sx={{ fontSize: "12px" }}>
@@ -270,9 +263,9 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {filterState === FilterState.FINISHED ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center" align="flex-end">
           <Flex fullWidth justify="flex-end">
-            <Typography sx={{ color: "text.primary" }}>
+            <BodyCell>
               {rewardAmount && rewardToken ? `${formatAmount(rewardAmount)} ${rewardToken.symbol}` : "--"}
-            </Typography>
+            </BodyCell>
           </Flex>
 
           <Flex gap="0 4px" justify="flex-end" fullWidth>
@@ -287,9 +280,8 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
       {your ? (
         <Flex vertical gap="5px 0" className="row-item" justify="center">
           <Flex justify="flex-end" fullWidth>
-            <Typography
+            <BodyCell
               sx={{
-                color: "text.primary",
                 maxWidth: "170px",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
@@ -308,7 +300,7 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
                     parseTokenAmount(userPoolInfo.pendingReward, rewardToken.decimals).toString(),
                   )} ${rewardToken.symbol}`
                 : "--"}
-            </Typography>
+            </BodyCell>
           </Flex>
           <Flex gap="0 4px" justify="flex-end" fullWidth>
             <Typography sx={{ fontSize: "12px" }}>
