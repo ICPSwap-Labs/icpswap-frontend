@@ -285,8 +285,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(tslib@2.4.0)
       '@nfid/identitykit':
-        specifier: 1.0.4
-        version: 1.0.4(fwupomt6nf24ozyc3j4x3rroqa)
+        specifier: 1.0.7
+        version: 1.0.7(fwupomt6nf24ozyc3j4x3rroqa)
       '@nfid/wallet':
         specifier: ^1.1.0
         version: 1.1.0
@@ -3084,8 +3084,8 @@ packages:
     peerDependencies:
       tslib: 2.4.0
 
-  '@nfid/identitykit@1.0.4':
-    resolution: {integrity: sha512-3RjtUBIh2H2eN840d1+Ebf/eF2Blaz2eT2dpZ/jnox5JEetzWdcLFRqR73557FT4NpiUS1p85ufNMz90oI8PcQ==}
+  '@nfid/identitykit@1.0.7':
+    resolution: {integrity: sha512-nO7pFv24CQ4pBxIipjACxCa/jyMS+Ztt2EQhGKJ+Jx1KrsPWnI0SfxHQrP5Fel2tb0YpwsDnMv30ITosMCtnrw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@dfinity/agent': 2.1.2
@@ -16182,7 +16182,7 @@ snapshots:
     dependencies:
       tslib: 2.4.0
 
-  '@nfid/identitykit@1.0.4(fwupomt6nf24ozyc3j4x3rroqa)':
+  '@nfid/identitykit@1.0.7(fwupomt6nf24ozyc3j4x3rroqa)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/auth-client': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
