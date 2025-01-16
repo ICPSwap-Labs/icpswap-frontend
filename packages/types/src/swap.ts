@@ -32,6 +32,7 @@ export type {
   PositionPricePeriodRange,
   PoolAPRs,
   TokenAnalysisData,
+  PoolInstaller,
 } from "@icpswap/candid";
 
 export type LimitOrder = {

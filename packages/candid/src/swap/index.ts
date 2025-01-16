@@ -11,6 +11,7 @@ export type {
   CreatePoolArgs,
   PoolData as SwapPoolData,
   Token as SwapPoolToken,
+  PoolInstaller,
 } from "./Factory";
 
 export { idlFactory as SwapNFTInterfaceFactory } from "./SwapNFT.did";

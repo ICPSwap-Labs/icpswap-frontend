@@ -20,7 +20,7 @@ import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { useHistory } from "react-router-dom";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import type { PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
+import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import { BigNumber } from "@icpswap/utils";
@@ -45,6 +45,7 @@ interface AddLiquidityCallsArgs {
     balance0: bigint;
     balance1: bigint;
   };
+  subnet?: string | Null;
 }
 
 function useAddLiquidityCalls() {
@@ -72,6 +73,7 @@ function useAddLiquidityCalls() {
       token0SubAccountBalance,
       token1SubAccountBalance,
       unusedBalance,
+      subnet,
     }: AddLiquidityCallsArgs) => {
       const approveOrTransferPCMToken = async () => {
         return isUseTransfer(pcmToken)
@@ -111,12 +113,13 @@ function useAddLiquidityCalls() {
       const _createPool = async () => {
         const { token0, token1, fee, sqrtRatioX96 } = position.pool;
 
-        const { status, message, data } = await createPool(
-          token0.address,
-          token1.address,
+        const { status, message, data } = await createPool({
+          token0: token0.address,
+          token1: token1.address,
           fee,
-          sqrtRatioX96.toString(),
-        );
+          sqrtPriceX96: sqrtRatioX96.toString(),
+          subnet,
+        });
 
         if (status === "err" || !data) {
           openErrorTip(message);
@@ -384,6 +387,7 @@ export interface AddLiquidityCallProps {
     balance0: bigint;
     balance1: bigint;
   };
+  subnet?: string | Null;
 }
 
 export function useAddLiquidityCall() {
@@ -405,6 +409,7 @@ export function useAddLiquidityCall() {
       token0SubAccountBalance,
       token1SubAccountBalance,
       unusedBalance,
+      subnet,
     }: AddLiquidityCallProps) => {
       let hasPassCode = false;
 
@@ -437,6 +442,7 @@ export function useAddLiquidityCall() {
         token0SubAccountBalance,
         token1SubAccountBalance,
         unusedBalance,
+        subnet,
       });
       const { call, reset, retry } = formatCall(calls, key);
 
