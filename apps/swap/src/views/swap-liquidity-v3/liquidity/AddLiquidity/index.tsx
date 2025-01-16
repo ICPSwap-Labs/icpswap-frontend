@@ -30,7 +30,7 @@ import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
 import StepViewButton from "components/Steps/View";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
-import { usePCMMetadata, useParsedQueryString, useUserPCMBalance } from "@icpswap/hooks";
+import { usePCMMetadata, useParsedQueryString, useUserPCMBalance, useSwapInstallers } from "@icpswap/hooks";
 import { InfoPool, PriceRange } from "components/liquidity/index";
 import { Flex } from "@icpswap/ui";
 import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
@@ -235,6 +235,7 @@ export default function AddLiquidity() {
 
   const { result: pcmMetadata } = usePCMMetadata();
   const { result: userPCMBalance } = useUserPCMBalance(principal);
+  const { result: installers } = useSwapInstallers();
 
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
   const getAddLiquidityCall = useAddLiquidityCall();
@@ -253,11 +254,20 @@ export default function AddLiquidity() {
       isNullArgs(token1Balance) ||
       isNullArgs(token0SubAccountBalance) ||
       isNullArgs(token1SubAccountBalance) ||
-      isNullArgs(unusedBalance)
+      isNullArgs(unusedBalance) ||
+      isNullArgs(installers)
     )
       return;
 
     const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
+
+    const subnets = installers
+      .sort((a, b) => {
+        if (a.weight > b.weight) return -1;
+        if (a.weight < b.weight) return 1;
+        return 0;
+      })
+      .map((e) => e.subnet);
 
     const { call, key } = await getAddLiquidityCall({
       token0Balance,
@@ -274,6 +284,7 @@ export default function AddLiquidity() {
       openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
         openErrorTip(<ReclaimTips message={message} tipKey={tipKey} tokenId={tokenId} poolId={poolId} />);
       },
+      subnet: subnets[0],
     });
 
     const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
@@ -305,6 +316,7 @@ export default function AddLiquidity() {
     token1SubAccountBalance,
     unusedBalance,
     noLiquidity,
+    installers,
   ]);
 
   const handleOnCancel = useCallback(() => {

@@ -12,7 +12,7 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isAvailablePageArgs, isNullArgs } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isNullArgs, availableArgsNull } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
 import BigNumber from "bignumber.js";
@@ -46,7 +46,15 @@ export async function getPool_update_call(token0: string, token1: string, fee: F
   ).data;
 }
 
-export async function createPool(token0: string, token1: string, fee: FeeAmount, sqrtPriceX96: string) {
+export interface CreatePoolArgs {
+  token0: string;
+  token1: string;
+  fee: FeeAmount;
+  sqrtPriceX96: string;
+  subnet?: string | Null;
+}
+
+export async function createPool({ token0, token1, fee, sqrtPriceX96, subnet }: CreatePoolArgs) {
   let _token0 = token0;
   let _token1 = token1;
 
@@ -60,7 +68,7 @@ export async function createPool(token0: string, token1: string, fee: FeeAmount,
     token0: getSwapTokenArgs(_token0),
     token1: getSwapTokenArgs(_token1),
     sqrtPriceX96,
-    subnet: [],
+    subnet: availableArgsNull(subnet),
   });
 }
 
