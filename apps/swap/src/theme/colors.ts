@@ -115,6 +115,6 @@ export default {
   border1: "#353C5D",
 
   apr: "#54C081",
-
+  success: "#54C081",
   "text.success": "#54C081",
 };

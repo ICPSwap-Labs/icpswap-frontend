@@ -22,7 +22,7 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { Trans, t } from "@lingui/macro";
-import Button from "components/authentication/ButtonConnector";
+import { AuthButton } from "components/index";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper } from "components/swap/limit-order/index";
@@ -371,7 +371,7 @@ export const PlaceOrder = forwardRef(
 
         <LimitSupported available={available} noLiquidity={noLiquidity} ui={ui} />
 
-        <Button
+        <AuthButton
           fullWidth
           variant="contained"
           size="large"
@@ -391,7 +391,7 @@ export const PlaceOrder = forwardRef(
             ) : (
               <Trans>Submit Limit Order</Trans>
             ))}
-        </Button>
+        </AuthButton>
 
         {confirmModalShow && trade && (
           <LimitOrderConfirm

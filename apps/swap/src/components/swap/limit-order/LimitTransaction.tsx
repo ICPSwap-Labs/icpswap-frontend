@@ -2,11 +2,10 @@ import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { BigNumber, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Trans } from "@lingui/macro";
-import Button from "components/authentication/ButtonConnector";
 import { Flex } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
 import { LimitTransaction } from "@icpswap/types";
-import { TokenImage } from "components/index";
+import { TokenImage, AuthButton } from "components/index";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
 import { useUserUnusedBalance } from "@icpswap/hooks";
@@ -128,14 +127,14 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
             </Flex>
           </Box>
 
-          <Button
+          <AuthButton
             variant="contained"
             className="secondary"
             onClick={() => setShowWithdrawTokens(true)}
             disabled={disableWithdraw}
           >
             <Trans>Withdraw</Trans>
-          </Button>
+          </AuthButton>
         </Flex>
       </Box>
 
