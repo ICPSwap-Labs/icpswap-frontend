@@ -4,10 +4,9 @@ import { principalToAccount } from "@icpswap/utils";
 import { useSwapPositionOwner } from "@icpswap/hooks";
 import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
 import { Typography, Box } from "components/Mui";
-import { Wrapper, Breadcrumbs, TokenImage } from "components/index";
+import { Wrapper, Breadcrumbs, TokenImage, AuthButton } from "components/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { Trans, t } from "@lingui/macro";
-import Button from "components/authentication/ButtonConnector";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { InfoPool } from "components/liquidity/index";
@@ -110,9 +109,9 @@ export default function PositionDetails() {
             </Flex>
           </Box>
 
-          <Button className="secondary" variant="contained" onClick={loadAddLiquidity}>
+          <AuthButton className="secondary" variant="contained" onClick={loadAddLiquidity}>
             <Trans>Create New Position</Trans>
-          </Button>
+          </AuthButton>
         </Flex>
 
         {!position ? (

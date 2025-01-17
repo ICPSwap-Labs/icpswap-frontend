@@ -14,7 +14,7 @@ import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TradePrice } from "components/swap/TradePrice";
 import { Trans, t } from "@lingui/macro";
-import Button from "components/authentication/ButtonConnector";
+import { AuthButton } from "components/index";
 import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -324,7 +324,7 @@ export const SwapWrapper = forwardRef(
 
         <Impact showImpact={exceedImpact} onCheckChange={(checked) => setImpactChecked(checked)} />
 
-        <Button
+        <AuthButton
           fullWidth
           variant="contained"
           size="large"
@@ -348,7 +348,7 @@ export const SwapWrapper = forwardRef(
             ) : (
               <Trans>Swap</Trans>
             ))}
-        </Button>
+        </AuthButton>
 
         {confirmModalShow && trade && (
           <SwapConfirmModal

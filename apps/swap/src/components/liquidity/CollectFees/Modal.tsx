@@ -1,9 +1,8 @@
 import { Box, Typography, CircularProgress, useTheme } from "components/Mui";
-import { TokenImage, Modal, Flex } from "components/index";
+import { TokenImage, Modal, Flex, AuthButton } from "components/index";
 import { Trans, t } from "@lingui/macro";
 import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
-import Button from "components/authentication/ButtonConnector";
 import { useMemo, useState } from "react";
 import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
 import { ExternalTipArgs } from "types/index";
@@ -121,7 +120,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
           <Trans>You can collect the liquidity incentive reward from the transaction according to your position.</Trans>
         </Typography>
 
-        <Button
+        <AuthButton
           variant="contained"
           size="large"
           fullWidth
@@ -131,7 +130,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
           <Trans>Collect</Trans>
-        </Button>
+        </AuthButton>
       </>
     </Modal>
   );

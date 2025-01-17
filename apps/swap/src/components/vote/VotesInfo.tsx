@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import { Grid, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { ResultStatus , ProposalInfo } from "@icpswap/types";
+import { ResultStatus, ProposalInfo } from "@icpswap/types";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as CallIdentity } from "types/global";
 import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
-import Button from "components/authentication/ButtonConnector";
+import { AuthButton } from "components/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
 import { useUserVotePower } from "hooks/voting/useUserVotePower";
@@ -91,7 +91,7 @@ export function CastVotes({ proposal, onVoteSuccess }: CastVotesProps) {
         </Box>
       ))}
 
-      <Button
+      <AuthButton
         fullWidth
         size="large"
         variant="contained"
@@ -100,7 +100,7 @@ export function CastVotes({ proposal, onVoteSuccess }: CastVotesProps) {
         loading={loading}
       >
         {isClosed ? <Trans>Closed</Trans> : <Trans>Vote</Trans>}
-      </Button>
+      </AuthButton>
 
       {showConfirm ? (
         <Identity onSubmit={handleVote}>

@@ -2,11 +2,10 @@ import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "@mu
 import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useState } from "react";
-import { NumberFilledTextField, Modal } from "components/index";
+import { NumberFilledTextField, Modal, AuthButton } from "components/index";
 import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
 import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import Button from "components/authentication/ButtonConnector";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -193,10 +192,10 @@ export function Participate({
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
-        <Button variant="contained" onClick={handleParticipate} disabled={participateLoading || !!error} fullWidth>
+        <AuthButton variant="contained" onClick={handleParticipate} disabled={participateLoading || !!error} fullWidth>
           {participateLoading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
           {error || <Trans>Participate</Trans>}
-        </Button>
+        </AuthButton>
       </Box>
     </Modal>
   );

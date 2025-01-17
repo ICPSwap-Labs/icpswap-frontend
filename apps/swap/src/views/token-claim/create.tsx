@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard } from "components/index";
+import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
@@ -11,7 +11,6 @@ import { Theme } from "@mui/material/styles";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
-import Button from "components/authentication/ButtonConnector";
 import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
@@ -344,9 +343,9 @@ export default function CreateTokenClaim() {
                   }}
                   onChange={handleFileChange}
                 />
-                <Button variant="outlined" fullWidth size="large" loading={importLoading}>
+                <AuthButton variant="outlined" fullWidth size="large" loading={importLoading}>
                   <Trans>Import Data</Trans>
-                </Button>
+                </AuthButton>
                 {!!userClaims.length || !!inValidUserClaims.length ? (
                   <Box mt="4px">
                     <Typography component="span" fontSize="12px">
@@ -372,7 +371,7 @@ export default function CreateTokenClaim() {
             <Box mt={4}>
               <Identity onSubmit={handleCreateClaimEvent}>
                 {({ submit }: CallbackProps) => (
-                  <Button
+                  <AuthButton
                     variant="contained"
                     fullWidth
                     size="large"
@@ -381,7 +380,7 @@ export default function CreateTokenClaim() {
                     loading={loading}
                   >
                     {errorMsg || t`Create claim event`}
-                  </Button>
+                  </AuthButton>
                 )}
               </Identity>
             </Box>

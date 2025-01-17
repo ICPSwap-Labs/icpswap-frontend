@@ -25,8 +25,7 @@ import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { TextButton } from "components/index";
-import Button from "components/authentication/ButtonConnector";
+import { TextButton, AuthButton } from "components/index";
 import FileImage from "../FileImage";
 
 export default function NFTBuyReview({
@@ -238,7 +237,7 @@ export default function NFTBuyReview({
       <Box mt={3}>
         <Identity onSubmit={handleBuyNFT} fullScreenLoading>
           {({ submit, loading }: CallbackProps) => (
-            <Button
+            <AuthButton
               variant="contained"
               onClick={submit}
               disabled={loading}
@@ -247,7 +246,7 @@ export default function NFTBuyReview({
               startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
             >
               <Trans>Confirm</Trans>
-            </Button>
+            </AuthButton>
           )}
         </Identity>
       </Box>
