@@ -7,8 +7,6 @@ import {
   formatTokenAmount,
   parseTokenAmount,
   BigNumber,
-  isNullArgs,
-  nonNullArgs,
 } from "@icpswap/utils";
 import { Modal, Line } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
@@ -22,14 +20,16 @@ import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
-import { LimitOrder as LimitOrderType, Null, Override } from "@icpswap/types";
+import { LimitOrder } from "@icpswap/types";
+
+import { LimitDealRatio } from "./LimitDealRatio";
 
 export interface LimitDetailsProps {
   open: boolean;
   position: Position;
   onClose: () => void;
   onCancelLimit: () => void;
-  order: Override<LimitOrderType, { poolId: string | Null }>;
+  order: LimitOrder;
 }
 
 export function LimitDetails({ open, position, order, onClose, onCancelLimit }: LimitDetailsProps) {
@@ -40,25 +40,13 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
     pool: { id: poolId, token0 },
   } = position;
 
-  const { timestamp, token0InAmount, token1InAmount, tickLimit } = order;
+  const { timestamp, tickLimit } = order;
 
-  const { inputToken, outputToken, limitPrice, currentPrice } = useLimitDetails({
+  const { inputToken, outputToken, limitPrice, currentPrice, inputAmount, outputAmount } = useLimitDetails({
     position,
     tickLimit,
+    limit: order,
   });
-
-  const inputAmount = useMemo(() => {
-    if (isNullArgs(inputToken)) return null;
-    return new BigNumber(token0InAmount.toString()).isEqualTo(0)
-      ? parseTokenAmount(token1InAmount, inputToken.decimals).toString()
-      : parseTokenAmount(token0InAmount, inputToken.decimals).toString();
-  }, [token0InAmount, token1InAmount, inputToken]);
-
-  const outputAmount = useMemo(() => {
-    if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
-      return new BigNumber(inputAmount).multipliedBy(limitPrice.toFixed(outputToken.decimals)).toString();
-    }
-  }, [inputAmount, limitPrice, outputToken]);
 
   const inputTokenPrice = useUSDPriceById(inputToken?.address);
 
@@ -83,7 +71,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
     subAccountBalance: inputTokenSubBalance,
     tokenBalance: inputTokenBalance,
     unusedBalance: inputToken?.address === token0.address ? unusedBalance?.balance0 : unusedBalance?.balance1,
-    amount: formatTokenAmount(inputAmount?.toString(), inputToken?.decimals).toString(),
+    amount: formatTokenAmount(inputAmount?.toExact(), inputToken?.decimals).toString(),
   });
 
   return (
@@ -117,7 +105,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
           <Flex gap="0 12px">
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
             <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }}>
-              {inputAmount ? toSignificantWithGroupSeparator(inputAmount.toString()) : "--"} {inputToken?.symbol}
+              {inputAmount ? toSignificantWithGroupSeparator(inputAmount.toExact()) : "--"} {inputToken?.symbol}
             </Typography>
           </Flex>
 
@@ -128,7 +116,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
           <Flex gap="0 12px">
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
             <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }}>
-              {outputAmount ? toSignificantWithGroupSeparator(outputAmount) : "--"} {outputToken?.symbol}
+              {outputAmount ? toSignificantWithGroupSeparator(outputAmount.toExact()) : "--"} {outputToken?.symbol}
             </Typography>
           </Flex>
         </Flex>
@@ -136,6 +124,20 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
         <Line />
 
         <Flex vertical align="flex-start" gap="16px 0" fullWidth>
+          <Flex fullWidth justify="space-between" gap="0 12px">
+            <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
+              <Typography
+                sx={{
+                  "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
+                }}
+              >
+                <Trans>Filled</Trans>
+              </Typography>
+            </Flex>
+
+            <LimitDealRatio position={position} limit={order} />
+          </Flex>
+
           <Flex fullWidth justify="space-between" gap="0 12px">
             <Flex gap="0 4px" sx={{ "@media(max-width: 640px)": { maxWidth: "128px" } }}>
               <Typography
@@ -201,7 +203,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
             <Typography sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px" } }}>
               {outputToken && outputAmount
                 ? `${toSignificantWithGroupSeparator(
-                    new BigNumber(outputAmount).multipliedBy(0.003).multipliedBy(0.8).toString(),
+                    new BigNumber(outputAmount.toExact()).multipliedBy(0.003).multipliedBy(0.8).toString(),
                   )} ${outputToken.symbol}`
                 : "--"}
             </Typography>

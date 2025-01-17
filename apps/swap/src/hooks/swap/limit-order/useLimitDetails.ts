@@ -1,27 +1,43 @@
 import { useMemo } from "react";
-import { isNullArgs, BigNumber, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
+import { isNullArgs, BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { Position, tickToPrice, CurrencyAmount } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { LimitOrder, Null } from "@icpswap/types";
+
+export interface UseLimitTokenAndAmountProps {
+  position: Position | Null;
+  limit: LimitOrder | Null;
+}
+
+export function useLimitTokenAndAmount({ limit, position }: UseLimitTokenAndAmountProps) {
+  const { token0, token1 } = position?.pool ?? {};
+
+  return useMemo(() => {
+    if (isNullArgs(limit) || isNullArgs(token0) || isNullArgs(token1)) return {};
+
+    const { token0InAmount, token1InAmount } = limit;
+
+    const inputToken = new BigNumber(token0InAmount.toString()).isEqualTo(0) ? token1 : token0;
+    const outputToken = inputToken.address === token0.address ? token1 : token0;
+    const inputAmount =
+      inputToken.address === token0.address
+        ? CurrencyAmount.fromRawAmount(token0, token0InAmount.toString())
+        : CurrencyAmount.fromRawAmount(token1, token1InAmount.toString());
+
+    return { inputToken, outputToken, inputAmount };
+  }, [token0, token1, position, limit]);
+}
 
 export interface UseLimitDetailsProps {
   position: Position | Null;
   tickLimit: bigint;
+  limit: LimitOrder | Null;
 }
 
-export function useLimitDetails({ position, tickLimit }: UseLimitDetailsProps) {
-  const { mintAmounts, pool } = position ?? {};
-  const { token0, token1 } = pool ?? {};
-  const { amount0: __amount0, amount1: __amount1 } = mintAmounts ?? {};
-  const amount0 = __amount0 && token0 ? parseTokenAmount(__amount0.toString(), token0.decimals).toString() : undefined;
-  const amount1 = __amount1 && token1 ? parseTokenAmount(__amount1.toString(), token1.decimals).toString() : undefined;
+export function useLimitDetails({ limit, position, tickLimit }: UseLimitDetailsProps) {
+  const { inputAmount, inputToken, outputToken } = useLimitTokenAndAmount({ limit, position });
 
   return useMemo(() => {
-    if (isNullArgs(amount0) || isNullArgs(amount1) || isNullArgs(token0) || isNullArgs(token1) || isNullArgs(position))
-      return {};
-
-    const inputToken = new BigNumber(amount0.toString()).isEqualTo(0) ? token1 : token0;
-    const outputToken = inputToken.address === token0.address ? token1 : token0;
-    const inputAmount = new BigNumber(amount0.toString()).isEqualTo(0) ? amount1 : amount0;
+    if (isNullArgs(inputAmount) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(position)) return {};
 
     const baseToken = inputToken;
     const quoteToken = outputToken;
@@ -33,11 +49,13 @@ export function useLimitDetails({ position, tickLimit }: UseLimitDetailsProps) {
     const outputAmount = CurrencyAmount.fromRawAmount(
       outputToken,
       formatTokenAmount(
-        new BigNumber(limitPrice.toFixed()).multipliedBy(inputAmount.toString()).toFixed(outputToken.decimals),
+        new BigNumber(limitPrice.toFixed(outputToken.decimals))
+          .multipliedBy(inputAmount.toExact())
+          .toFixed(outputToken.decimals),
         outputToken.decimals,
       ).toString(),
     );
 
     return { inputToken, outputToken, inputAmount, outputAmount, limitPrice, currentPrice };
-  }, [token0, token1, amount0, amount1, position, tickLimit]);
+  }, [position, tickLimit, inputAmount, inputToken, outputToken]);
 }

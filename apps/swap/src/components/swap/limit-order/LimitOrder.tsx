@@ -1,18 +1,10 @@
-import { useState, useCallback, useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import {
-  BigNumber,
-  toSignificantWithGroupSeparator,
-  nanosecond2Millisecond,
-  nonNullArgs,
-  isNullArgs,
-  parseTokenAmount,
-} from "@icpswap/utils";
+import { useState, useCallback } from "react";
+import { Box, Typography, useTheme, Button } from "components/Mui";
+import { BigNumber, toSignificantWithGroupSeparator, nanosecond2Millisecond } from "@icpswap/utils";
 import { Trans, t } from "@lingui/macro";
-import Button from "components/authentication/ButtonConnector";
 import { Flex } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
-import { LimitOrder as LimitOrderType, Null, Override } from "@icpswap/types";
+import { LimitOrder as LimitOrderType } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -27,13 +19,15 @@ import { usePoolByPoolId } from "hooks/swap/usePools";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
+import { LimitDealRatio } from "./LimitDealRatio";
 
 export interface LimitOrderProps {
   onCancelSuccess?: () => void;
-  order: Override<LimitOrderType, { poolId: string | Null }>;
+  order: LimitOrderType;
+  poolId: string;
 }
 
-export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
+export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) {
   const theme = useTheme();
 
   const [showLimitDetails, setShowLimitDetails] = useState(false);
@@ -43,7 +37,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
-  const { poolId, userPositionId: positionId, timestamp, token0InAmount, token1InAmount, tickLimit } = order;
+  const { userPositionId: positionId, timestamp, tickLimit } = order;
 
   const [, pool] = usePoolByPoolId(poolId);
 
@@ -56,23 +50,11 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
     liquidity: positionDetails?.liquidity,
   });
 
-  const { inputToken, outputToken, limitPrice, currentPrice } = useLimitDetails({
+  const { inputToken, outputToken, limitPrice, currentPrice, inputAmount, outputAmount } = useLimitDetails({
     position,
     tickLimit,
+    limit: order,
   });
-
-  const inputAmount = useMemo(() => {
-    if (isNullArgs(inputToken)) return null;
-    return new BigNumber(token0InAmount.toString()).isEqualTo(0)
-      ? parseTokenAmount(token1InAmount, inputToken.decimals).toString()
-      : parseTokenAmount(token0InAmount, inputToken.decimals).toString();
-  }, [token0InAmount, token1InAmount, inputToken]);
-
-  const outputAmount = useMemo(() => {
-    if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
-      return new BigNumber(inputAmount).multipliedBy(limitPrice.toFixed(outputToken.decimals)).toString();
-    }
-  }, [inputAmount, limitPrice, outputToken]);
 
   const cancelLimit = useCancelLimitCallback();
 
@@ -116,7 +98,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
             <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {inputToken && inputAmount
-                ? `${toSignificantWithGroupSeparator(inputAmount.toString())} ${inputToken.symbol}`
+                ? `${toSignificantWithGroupSeparator(inputAmount.toExact())} ${inputToken.symbol}`
                 : "--"}
             </Typography>
           </Flex>
@@ -127,7 +109,7 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
               {outputToken && outputAmount
-                ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
+                ? `${toSignificantWithGroupSeparator(outputAmount.toExact())} ${outputToken.symbol}`
                 : "--"}
             </Typography>
           </Flex>
@@ -180,6 +162,11 @@ export function LimitOrder({ order, onCancelSuccess }: LimitOrderProps) {
                   inverted={invertPrice}
                 />
               </Flex>
+            </Flex>
+
+            <Flex sx={{ margin: "10px 0 0 0" }} gap="0 8px">
+              <Typography>Filled</Typography>
+              <LimitDealRatio limit={order} position={position} />
             </Flex>
           </Flex>
 

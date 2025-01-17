@@ -64,6 +64,7 @@ export function LimitOrderRow({
   const { inputToken, outputToken, limitPrice } = useLimitDetails({
     position,
     tickLimit,
+    limit: limitOrder,
   });
 
   const inputAmount = useMemo(() => {

@@ -80,8 +80,9 @@ export function LimitOrders({ pool: __pool }: LimitOrdersProps) {
         <Flex vertical align="flex-start" fullWidth gap="6px 0" sx={{ margin: "16px 0 0 0" }}>
           {userLimitOrders.map((limitOrder) => (
             <LimitOrder
-              key={limitOrder.userPositionId.toString()}
-              order={limitOrder}
+              key={limitOrder[0].userPositionId.toString()}
+              order={limitOrder[0]}
+              poolId={limitOrder[1]}
               onCancelSuccess={handleCancelSuccess}
             />
           ))}
