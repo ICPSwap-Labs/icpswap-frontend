@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, TextFieldProps, Grid, Box, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { FilledTextField, Wrapper, MainCard, NumberFilledTextField } from "components/index";
+import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
 import { useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { formatTokenAmount } from "@icpswap/utils";
-import Button from "components/authentication/ButtonConnector";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { type ActorIdentity, ResultStatus } from "@icpswap/types";
@@ -333,7 +332,7 @@ export default function CreateProject() {
             <Box mt={4}>
               <Identity onSubmit={handleCreateFarmsEvent}>
                 {({ submit }: CallbackProps) => (
-                  <Button
+                  <AuthButton
                     variant="contained"
                     fullWidth
                     size="large"
@@ -342,7 +341,7 @@ export default function CreateProject() {
                     loading={loading}
                   >
                     {errorMsg || t`Create farm`}
-                  </Button>
+                  </AuthButton>
                 )}
               </Identity>
             </Box>

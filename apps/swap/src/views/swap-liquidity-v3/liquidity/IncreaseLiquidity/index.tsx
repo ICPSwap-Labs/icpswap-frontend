@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Grid, Typography, Box, makeStyles, Theme, useTheme } from "components/Mui";
-import { MainCard, Wrapper } from "components/index";
+import { MainCard, Wrapper, AuthButton } from "components/index";
 import HeaderTab from "components/swap/Header";
 import { SwapDepositAmount, Reclaim } from "components/swap/index";
 import { FIELD, INCREASE_LIQUIDITY_REFRESH_KEY, NONE_TOKEN_SYMBOL } from "constants/index";
@@ -15,7 +15,6 @@ import { isDarkTheme } from "utils/index";
 import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
-import Button from "components/authentication/ButtonConnector";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import { useIncreaseLiquidityCall } from "hooks/swap/useIncreaseLiquidity";
 import StepViewButton from "components/Steps/View";
@@ -335,7 +334,7 @@ export default function IncreaseLiquidity() {
                   </Box>
 
                   <Box sx={{ margin: "20px 0 0 0" }}>
-                    <Button
+                    <AuthButton
                       fullWidth
                       variant="contained"
                       disabled={!isValid}
@@ -343,7 +342,7 @@ export default function IncreaseLiquidity() {
                       onClick={() => setConfirmModalShow(true)}
                     >
                       {isValid ? t`Add` : errorMessage}
-                    </Button>
+                    </AuthButton>
                   </Box>
                 </>
               ) : null}

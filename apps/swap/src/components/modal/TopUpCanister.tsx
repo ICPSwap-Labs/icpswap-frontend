@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Grid, InputAdornment, Typography, Box } from "@mui/material";
-import { NumberTextField } from "components/index";
+import { NumberTextField, AuthButton } from "components/index";
 import { cycleValueFormat, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
@@ -11,7 +11,6 @@ import { Principal } from "@dfinity/principal";
 import Identity, { Submit } from "components/Identity";
 import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import Button from "components/authentication/ButtonConnector";
 import MaxButton from "components/MaxButton";
 import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
@@ -165,7 +164,7 @@ export default function TopUpCanister({
       <Box mt={2}>
         <Identity onSubmit={handleTopUpCanister}>
           {({ submit }: { submit: Submit }) => (
-            <Button
+            <AuthButton
               variant="contained"
               sx={{ my: 3 }}
               fullWidth
@@ -176,7 +175,7 @@ export default function TopUpCanister({
               onClick={submit}
             >
               {ErrorMessage || <Trans>Top up</Trans>}
-            </Button>
+            </AuthButton>
           )}
         </Identity>
       </Box>

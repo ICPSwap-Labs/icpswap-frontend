@@ -2,7 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "@mui/material";
 import { useAccount } from "store/global/hooks";
-import { FilledTextField, TextFieldNumberComponent, TextButton, MainCard, NoData, Breadcrumbs } from "components/index";
+import {
+  FilledTextField,
+  TextFieldNumberComponent,
+  TextButton,
+  MainCard,
+  NoData,
+  Breadcrumbs,
+  AuthButton,
+} from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
 import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR } from "hooks/useTips";
@@ -19,7 +27,6 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
 import BigNumber from "bignumber.js";
 import { getLocaleMessage } from "locales/services";
-import Button from "components/authentication/ButtonConnector";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 
@@ -408,7 +415,7 @@ export default function NFTMint() {
             <Box mt={8}>
               <Identity onSubmit={handleMintNFT} fullScreenLoading>
                 {({ submit, loading }: CallbackProps) => (
-                  <Button
+                  <AuthButton
                     variant="contained"
                     fullWidth
                     size="large"
@@ -417,7 +424,7 @@ export default function NFTMint() {
                     startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
                   >
                     {errorMsg || t`Mint`}
-                  </Button>
+                  </AuthButton>
                 )}
               </Identity>
               <Grid container mt="20px">

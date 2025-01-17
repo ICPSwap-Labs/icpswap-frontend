@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, InputAdornment } from "@mui/material";
-import { MainCard, Breadcrumbs } from "components/index";
+import { MainCard, Breadcrumbs, AuthButton } from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
 import { WRAPPED_ICP_TOKEN_INFO, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
 import { createCanister, setCanisterLogo, useNFTMintInfo, setCanisterLogoInController } from "hooks/nft/useNFTCalls";
@@ -19,7 +19,6 @@ import { useApprove } from "hooks/token/useApprove";
 import { useAccount } from "store/global/hooks";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
-import Button from "components/authentication/ButtonConnector";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 
 export default function NFTCanisterCreate() {
@@ -435,7 +434,7 @@ export default function NFTCanisterCreate() {
                 Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
                 {WRAPPED_ICP_TOKEN_INFO.symbol}
               </Typography>
-              <Button
+              <AuthButton
                 fullWidth
                 variant="contained"
                 sx={{
@@ -445,7 +444,7 @@ export default function NFTCanisterCreate() {
                 onClick={() => setConfirmModal(true)}
               >
                 {errorMsg || t`Create`}
-              </Button>
+              </AuthButton>
             </Box>
           </Box>
         </Grid>

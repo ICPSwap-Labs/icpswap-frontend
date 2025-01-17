@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Typography, Grid, Box } from "@mui/material";
-import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField } from "components/index";
+import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField, AuthButton } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { t } from "@lingui/macro";
 import { numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import Button from "components/authentication/ButtonConnector";
 import { createStakingPool } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
@@ -336,7 +335,7 @@ export default function CreateStakingTokenPool() {
             </Box>
 
             <Box mt={4}>
-              <Button
+              <AuthButton
                 variant="contained"
                 fullWidth
                 size="large"
@@ -345,7 +344,7 @@ export default function CreateStakingTokenPool() {
                 loading={loading}
               >
                 {errorMsg || t`Create staking pool`}
-              </Button>
+              </AuthButton>
             </Box>
           </Box>
         </Grid>

@@ -2,12 +2,11 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { useMemo, useState, useContext } from "react";
-import { TextButton } from "components/index";
+import { TextButton, AuthButton } from "components/index";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import dayjs from "dayjs";
 import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import Button from "components/authentication/ButtonConnector";
 import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
@@ -406,9 +405,9 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
 
       {swap_life_cycle && swap_life_cycle === SnsSwapLifecycle.Open ? (
         <Box sx={{ margin: "20px 0 0 0" }}>
-          <Button variant="contained" onClick={handleParticipate} disabled={!!error || location_code === undefined}>
+          <AuthButton variant="contained" onClick={handleParticipate} disabled={!!error || location_code === undefined}>
             {error ?? <Trans>Participate</Trans>}
-          </Button>
+          </AuthButton>
         </Box>
       ) : null}
 

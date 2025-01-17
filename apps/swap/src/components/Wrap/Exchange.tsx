@@ -4,7 +4,7 @@ import { SwapInput } from "components/swap/SwapInput";
 import { SWAP_FIELD, WRAPPED_ICP as WICP } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
-import { useDebouncedChangeHandler , useParsedQueryString } from "@icpswap/hooks";
+import { useDebouncedChangeHandler, useParsedQueryString } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { CurrencySelectorButton } from "components/CurrencySelector/button";
 import { useAccount } from "store/global/hooks";
@@ -17,7 +17,7 @@ import { tokenTransfer } from "hooks/token/calls";
 import { getLocaleMessage } from "locales/services";
 import Identity, { CallbackProps } from "components/Identity";
 import WrapContext from "components/Wrap/context";
-import Button from "components/authentication/ButtonConnector";
+import { AuthButton } from "components/index";
 import { WICPCanisterId } from "constants/canister";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { StatusResult } from "@icpswap/types";
@@ -378,9 +378,9 @@ export default function Exchange() {
         </Typography>
       </Box>
       <Box mt={4}>
-        <Button fullWidth variant="contained" size="large" onClick={handleExchange} disabled={!!errorMessage}>
+        <AuthButton fullWidth variant="contained" size="large" onClick={handleExchange} disabled={!!errorMessage}>
           {errorMessage || (isWrap ? <Trans>Wrap</Trans> : <Trans>Unwrap</Trans>)}
-        </Button>
+        </AuthButton>
       </Box>
       {confirmModalShow && (
         <Identity onSubmit={handleExchangeConfirm}>

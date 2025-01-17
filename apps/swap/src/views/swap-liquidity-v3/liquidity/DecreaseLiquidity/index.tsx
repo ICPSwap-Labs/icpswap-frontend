@@ -16,12 +16,11 @@ import { t, Trans } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
 import { PoolState } from "hooks/swap/usePools";
-import Button from "components/authentication/ButtonConnector";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
-import { ReclaimTips, LoadingRow, MainCard, Wrapper } from "components/index";
+import { ReclaimTips, LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
 import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 
 import Unclaimed from "./Unclaimed";
@@ -261,7 +260,7 @@ export default function DecreaseLiquidity() {
               </Box>
 
               <Box mt="24px">
-                <Button
+                <AuthButton
                   variant="contained"
                   fullWidth
                   disabled={!isValid || loading}
@@ -269,7 +268,7 @@ export default function DecreaseLiquidity() {
                   onClick={handleDecreaseLiquidity}
                 >
                   {isValid ? t`Remove` : error}
-                </Button>
+                </AuthButton>
               </Box>
             </>
           ) : null}

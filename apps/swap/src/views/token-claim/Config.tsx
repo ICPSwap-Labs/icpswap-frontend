@@ -1,14 +1,13 @@
 /* eslint-disable no-param-reassign */
 import React, { useState } from "react";
 import { Typography, Box, Input } from "@mui/material";
-import { FilledTextField } from "components/index";
+import { FilledTextField, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
-import Button from "components/authentication/ButtonConnector";
 import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } from "@icpswap/hooks";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
@@ -162,7 +161,7 @@ export default function EventConfig() {
             <Identity onSubmit={handleSetReady}>
               {({ submit, loading }: CallbackProps) => {
                 return (
-                  <Button
+                  <AuthButton
                     variant="contained"
                     fullWidth
                     disabled={!eventId || loading}
@@ -170,7 +169,7 @@ export default function EventConfig() {
                     loading={loading}
                   >
                     {eventId ? "Ready" : "Select an event"}
-                  </Button>
+                  </AuthButton>
                 );
               }}
             </Identity>
@@ -190,9 +189,9 @@ export default function EventConfig() {
 
           <Identity onSubmit={handleSetState}>
             {({ submit, loading }: CallbackProps) => (
-              <Button variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
+              <AuthButton variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
                 {eventId ? "Set State" : "Select an event"}
-              </Button>
+              </AuthButton>
             )}
           </Identity>
         </Box>
@@ -227,16 +226,16 @@ export default function EventConfig() {
               }}
               onChange={handleFileChange}
             />
-            <Button variant="outlined" fullWidth size="large" loading={importLoading}>
+            <AuthButton variant="outlined" fullWidth size="large" loading={importLoading}>
               <Trans>Import Data</Trans>
-            </Button>
+            </AuthButton>
           </Box>
 
           <Identity onSubmit={handleImportUserData}>
             {({ submit, loading }: CallbackProps) => (
-              <Button variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
+              <AuthButton variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
                 {eventId ? "Set user data" : "Select an event"}
-              </Button>
+              </AuthButton>
             )}
           </Identity>
 
