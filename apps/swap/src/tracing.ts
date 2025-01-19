@@ -3,6 +3,8 @@ import { ClientOptions, ErrorEvent } from "@sentry/types";
 import { isSentryEnabled, getEnvName } from "utils/env";
 import { BrowserTracing } from "@sentry/browser";
 
+import { version } from "./.version";
+
 export function shouldRejectError(error: ErrorEvent) {
   // User reject plug connect
   if (error.message?.includes("The agent creation was rejected")) return true;
@@ -37,7 +39,7 @@ export const beforeSend: Required<ClientOptions>["beforeSend"] = (event: ErrorEv
     return null;
   }
 
-  return event;
+  return { ...event, extra: { version } };
 };
 
 Sentry.init({

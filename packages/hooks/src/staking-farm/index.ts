@@ -93,6 +93,7 @@ export function useFarmUserTVL(canisterId: string | undefined, principal: string
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !principal) return undefined;
+
       return await getFarmUserTVL(canisterId, principal);
     }, [canisterId, principal]),
     reload,
@@ -115,14 +116,14 @@ export function useV3FarmRewardMeta(canisterId: string | undefined, reload?: boo
     useCallback(async () => {
       if (!canisterId) return undefined;
 
-      return resultFormat<V3FarmRewardMeta>(await (await farm(canisterId!)).getRewardMeta()).data;
+      return resultFormat<V3FarmRewardMeta>(await (await farm(canisterId)).getRewardMeta()).data;
     }, [canisterId]),
     reload,
   );
 }
 
 export async function getV3UserFarmRewardInfo(canisterId: string, positionIds: bigint[]) {
-  return resultFormat<bigint>(await (await farm(canisterId!)).getRewardInfo(positionIds)).data;
+  return resultFormat<bigint>(await (await farm(canisterId)).getRewardInfo(positionIds)).data;
 }
 
 export function useV3UserFarmRewardInfo(
@@ -205,7 +206,8 @@ export function useV3FarmRewardMetadata(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getV3FarmRewardMetadata(canisterId!);
+
+      return await getV3FarmRewardMetadata(canisterId);
     }, [canisterId]),
   );
 }
@@ -218,7 +220,8 @@ export function useFarmInitArgs(canisterId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId) return undefined;
-      return await getFarmInitArgs(canisterId!);
+
+      return await getFarmInitArgs(canisterId);
     }, [canisterId]),
   );
 }

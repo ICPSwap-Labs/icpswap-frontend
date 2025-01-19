@@ -8,7 +8,7 @@ export function useExplorerTokenBurned(tokenId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenId) return undefined;
-      return (await fetch_post<string>(`https://api.icexplorer.io/api/token/burned`, { ledgerId: tokenId })).data;
+      return (await fetch_post<string>(`https://api.icexplorer.io/api/token/burned`, { ledgerId: tokenId }))?.data;
     }, [tokenId]),
   );
 }
