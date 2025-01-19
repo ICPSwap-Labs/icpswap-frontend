@@ -19,7 +19,7 @@ export function useExplorerTokenHolders(tokenId: string | Null, pageNum: number,
         },
       );
 
-      return result.data;
+      return result?.data;
     }, [tokenId, pageNum, pageSize, isDesc]),
   );
 }
