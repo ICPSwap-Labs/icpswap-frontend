@@ -1,6 +1,7 @@
-import { Box, BoxProps, Typography } from "components/Mui";
+import { Box, BoxProps } from "components/Mui";
 import { Flex } from "components/index";
 import { Trans } from "@lingui/macro";
+import { HeaderCell } from "@icpswap/ui";
 
 interface FarmListHeaderProps {
   showState: boolean;
@@ -28,63 +29,63 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
         ...sx,
       }}
     >
-      <Typography color="text.400" className="row-item">
+      <HeaderCell className="row-item">
         <Trans>Staked Position</Trans>
-      </Typography>
-      <Typography color="text.400" className="row-item">
+      </HeaderCell>
+      <HeaderCell className="row-item">
         <Trans>Reward Token</Trans>
-      </Typography>
+      </HeaderCell>
       <Flex justify="flex-end" className="row-item">
-        <Typography color="text.400">
+        <HeaderCell>
           <Trans>APR</Trans>
-        </Typography>
+        </HeaderCell>
       </Flex>
 
       {state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Your Available to Stake</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Your Rewards</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
 
       {your || state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Your Staked</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
 
       {!your && state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Total Staked</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
 
       {state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Total Reward Tokens</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
 
       {showState ? (
         <Flex justify="flex-end" className="row-item">
-          <Typography color="text.400">
+          <HeaderCell>
             <Trans>Status</Trans>
-          </Typography>
+          </HeaderCell>
         </Flex>
       ) : null}
     </Box>
