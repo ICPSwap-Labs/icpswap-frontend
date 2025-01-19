@@ -12,7 +12,7 @@ import {
 import { Box } from "components/Mui";
 import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
 import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { isNullArgs, locationMultipleSearchReplace } from "@icpswap/utils";
+import { isNullArgs, locationMultipleSearchReplace, nonNullArgs } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
 import { TradeState } from "hooks/swap/useTrade";
@@ -118,7 +118,7 @@ export const PlaceOrder = forwardRef(
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
-    const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;
+    const invalid = nonNullArgs(swapInputError) || swapState !== TradeState.VALID;
     const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
     const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
@@ -376,14 +376,14 @@ export const PlaceOrder = forwardRef(
           variant="contained"
           size="large"
           onClick={handleShowConfirmModal}
-          disabled={!isValid || isPoolNotChecked || !available}
+          disabled={invalid || isPoolNotChecked || !available}
           sx={{
             borderRadius: "16px",
           }}
         >
           {swapInputError ||
             (isLoadingRoute ? (
-              <Trans>Submit Limit Order</Trans>
+              <Trans>Loading route</Trans>
             ) : isNoRouteFound ? (
               <Trans>No route for this trade.</Trans>
             ) : isPoolNotChecked ? (
