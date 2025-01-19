@@ -71,6 +71,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
       refresh: () => {
         if (onCancelSuccess) onCancelSuccess();
       },
+      limit: order,
     });
 
     const loadingKey = openLoadingTip(t`Cancel Limit Order`, {
@@ -80,7 +81,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
     await call();
 
     closeLoadingTip(loadingKey);
-  }, [position, positionId, cancelLimit]);
+  }, [position, positionId, cancelLimit, order]);
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
