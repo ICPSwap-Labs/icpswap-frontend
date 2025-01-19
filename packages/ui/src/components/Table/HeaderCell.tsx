@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { useTheme, Typography } from "../Mui";
+import { useTheme, Typography, BoxProps } from "../Mui";
 import { UpArrow, DownArrow } from "../Arrow";
 import { SortDirection } from "./types";
 import HeaderContext from "./headerContext";
@@ -14,6 +14,7 @@ export type HeaderCellProps = {
   align?: "right" | "left" | "inherit" | "center" | "justify" | undefined;
   onClick?: (event: any) => void;
   children: React.ReactNode;
+  className?: BoxProps["className"];
 };
 
 export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps) {
@@ -53,6 +54,7 @@ export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps)
       color={props.color}
       onClick={handleClick}
       component="div"
+      className={props?.className}
     >
       {props.children} {field ? arrow(field) : null}
     </Typography>
