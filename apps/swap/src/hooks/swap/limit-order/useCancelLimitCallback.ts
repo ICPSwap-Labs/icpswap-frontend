@@ -16,6 +16,9 @@ import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
+import { LimitOrder } from "@icpswap/types";
+
+import { getLimitTokenAndAmount } from "./useLimitDetails";
 
 type updateStepsArgs = {
   positionId: bigint;
@@ -23,6 +26,7 @@ type updateStepsArgs = {
   principal: Principal | undefined;
   key: string;
   position: Position;
+  limit: LimitOrder;
 };
 
 function useUpdateStepContent() {
@@ -31,14 +35,14 @@ function useUpdateStepContent() {
   const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
-    ({ position, positionId, principal, key }: updateStepsArgs) => {
+    ({ position, positionId, principal, limit, key }: updateStepsArgs) => {
       const content = getCancelLimitSteps({
         position,
         positionId,
         principal,
         key,
         handleReclaim,
-        keepTokenInPools,
+        limit,
       });
 
       updateStep(String(key), {
@@ -57,6 +61,7 @@ interface CancelLimitCallsArgs {
   openExternalTip: OpenExternalTip;
   tipKey: string;
   refresh?: () => void;
+  limit: LimitOrder;
 }
 
 function useCancelLimitCalls() {
@@ -68,76 +73,96 @@ function useCancelLimitCalls() {
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
 
-  return useCallback(({ position, poolId, positionId, openExternalTip, tipKey, refresh }: CancelLimitCallsArgs) => {
-    const __removeOrder = async () => {
-      const { status, message } = await removeOrder(poolId, positionId);
+  return useCallback(
+    ({ position, poolId, positionId, openExternalTip, tipKey, limit, refresh }: CancelLimitCallsArgs) => {
+      const __removeOrder = async () => {
+        const { status, message } = await removeOrder(poolId, positionId);
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      return true;
-    };
+        return true;
+      };
 
-    const withdrawToken = async () => {
-      const { amount0, amount1 } = getDecreaseLiquidityAmount(tipKey);
+      const withdrawTokens = async () => {
+        const { amount0, amount1 } = getDecreaseLiquidityAmount(tipKey);
+        const { inputToken, outputToken } = getLimitTokenAndAmount({ limit, position });
 
-      const token = position.amount0.equalTo(0) ? position.pool.token1 : position.pool.token0;
-      const amount = position.amount0.equalTo(0) ? amount1 : amount0;
+        const inputAmount = inputToken.equals(position.amount0.currency) ? amount0 : amount1;
+        const outputAmount = inputToken.equals(position.amount1.currency) ? amount0 : amount1;
 
-      if (!token || amount === undefined) return false;
-      // skip if amount is less than 0 or is 0
-      if (amount - BigInt(token.transFee) <= BigInt(0)) return "skip";
+        const withdrawInputToken = async () => {
+          if (inputAmount) {
+            // skip if amount is less than 0 or is 0
+            if (inputAmount - BigInt(inputToken.transFee) <= BigInt(0)) return;
 
-      const result = await withdraw(token, poolId, amount.toString(), ({ message }: ExternalTipArgs) => {
-        openExternalTip({ message, tipKey, poolId });
-      });
+            await withdraw(inputToken, poolId, inputAmount.toString(), ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey, poolId });
+            });
+          }
+        };
 
-      if (refresh) refresh();
+        const withdrawOutputToken = async () => {
+          if (outputAmount) {
+            // skip if amount is less than 0 or is 0
+            if (outputAmount - BigInt(outputToken.transFee) <= BigInt(0)) return;
 
-      return result;
-    };
+            await withdraw(outputToken, poolId, outputAmount.toString(), ({ message }: ExternalTipArgs) => {
+              openExternalTip({ message, tipKey, poolId });
+            });
+          }
+        };
 
-    const __decreaseLiquidity = async () => {
-      if (!principal) return false;
+        await Promise.all([withdrawInputToken(), withdrawOutputToken()]);
 
-      const { status, message, data } = await decreaseLiquidity(poolId, {
-        positionId,
-        liquidity: position.liquidity.toString(),
-      });
+        if (refresh) refresh();
+      };
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+      const __decreaseLiquidity = async () => {
+        if (!principal) return false;
 
-      updateDecreaseLiquidityAmount(tipKey, data?.amount0, data?.amount1);
+        const { status, message, data } = await decreaseLiquidity(poolId, {
+          positionId,
+          liquidity: position.liquidity.toString(),
+        });
 
-      updateStepContent({
-        position,
-        positionId,
-        principal,
-        key: tipKey,
-      });
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      withdrawToken();
+        updateDecreaseLiquidityAmount(tipKey, data?.amount0, data?.amount1);
 
-      return true;
-    };
+        updateStepContent({
+          position,
+          positionId,
+          principal,
+          limit,
+          key: tipKey,
+        });
 
-    const step1 = async () => {
-      await sleep(2000);
+        withdrawTokens();
 
-      openSuccessTip(t`Cancellation successful, withdrawal submitted`);
+        return true;
+      };
 
-      if (refresh) refresh();
+      const mockStep = async () => {
+        await sleep(1000);
+        return true;
+      };
 
-      return true;
-    };
+      const finalStep = async () => {
+        await sleep(1000);
+        openSuccessTip(t`Cancellation successful, withdrawal submitted`);
+        return true;
+      };
 
-    return [__removeOrder, __decreaseLiquidity, step1];
-  }, []);
+      return [__removeOrder, __decreaseLiquidity, mockStep, finalStep];
+    },
+    [],
+  );
 }
 
 export interface CancelLimitCallbackProps {
@@ -146,6 +171,7 @@ export interface CancelLimitCallbackProps {
   poolId: string;
   openExternalTip: OpenExternalTip;
   refresh?: () => void;
+  limit: LimitOrder;
 }
 
 export function useCancelLimitCallback() {
@@ -154,10 +180,9 @@ export function useCancelLimitCallback() {
   const getStepCalls = useStepCalls();
   const stepContentManage = useStepContentManager();
   const handleReclaim = useReclaimCallback();
-  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
 
   return useCallback(
-    ({ position, positionId, poolId, openExternalTip, refresh }: CancelLimitCallbackProps) => {
+    ({ position, positionId, poolId, openExternalTip, limit, refresh }: CancelLimitCallbackProps) => {
       const key = newStepKey();
 
       const calls = getCalls({
@@ -167,6 +192,7 @@ export function useCancelLimitCallback() {
         tipKey: key,
         openExternalTip,
         refresh,
+        limit,
       });
 
       const { call, reset, retry } = getStepCalls(calls, key);
@@ -177,7 +203,7 @@ export function useCancelLimitCallback() {
         principal,
         handleReclaim,
         key,
-        keepTokenInPools,
+        limit,
       });
 
       stepContentManage(String(key), {
@@ -187,6 +213,6 @@ export function useCancelLimitCallback() {
 
       return { call, reset, retry, key };
     },
-    [getStepCalls, stepContentManage, keepTokenInPools],
+    [getStepCalls, stepContentManage],
   );
 }

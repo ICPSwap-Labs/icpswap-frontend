@@ -174,7 +174,7 @@ export function LimitOrderRow({
         <LimitDetails
           open={showLimitDetails}
           position={position}
-          order={{ ...limitOrder, poolId: pool?.id }}
+          order={limitOrder}
           onClose={() => {
             setShowLimitDetails(false);
           }}
