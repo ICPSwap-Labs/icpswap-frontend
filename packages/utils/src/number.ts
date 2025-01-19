@@ -103,7 +103,7 @@ export const formatAmount = (num: number | string | Null, options?: FormatAmount
   const { digits = 5, min = 0.00001, max = 1000, fullNumber, fullDigits = 5 } = options ?? {};
 
   if (isNullArgs(num)) return "-";
-  if (new BigNumber(num).isEqualTo(0)) return "$0.00";
+  if (new BigNumber(num).isEqualTo(0)) return "0.00";
 
   if (fullNumber) {
     return new BigNumber(num).toFormat(fullDigits);
@@ -137,7 +137,7 @@ export function formatTokenPrice(num: number | string | Null, options?: FormatTo
   const { digits = 6, min = 0.00001, digitsIfLessThanOne = 5, max = 1000000 } = options ?? {};
 
   if (isNullArgs(num)) return "-";
-  if (new BigNumber(num).isEqualTo(0)) return "$0.00";
+  if (new BigNumber(num).isEqualTo(0)) return "0.00";
 
   if (new BigNumber(num).isLessThan(min)) {
     return `<${min}`;
@@ -165,7 +165,7 @@ export const formatIcpAmount = (num: number | string | Null, options?: FormatIcp
   const { digits = 2, min = 0.01, max = 1000 } = options ?? {};
 
   if (isNullArgs(num)) return "-";
-  if (new BigNumber(num).isEqualTo(0)) return "$0.00";
+  if (new BigNumber(num).isEqualTo(0)) return "0.00";
 
   if (new BigNumber(num).isLessThan(min)) {
     return `<${min}`;
@@ -186,7 +186,7 @@ export const formatIcpAmount = (num: number | string | Null, options?: FormatIcp
 // Format the number of liquidity token amount
 export function formatLiquidityAmount(num: number | string | Null) {
   if (isNullArgs(num)) return "-";
-  if (new BigNumber(num).isEqualTo(0)) return "$0.00";
+  if (new BigNumber(num).isEqualTo(0)) return "0.00";
 
   if (new BigNumber(num).isLessThan(1)) {
     return toSignificantWithGroupSeparator(num, 3);
