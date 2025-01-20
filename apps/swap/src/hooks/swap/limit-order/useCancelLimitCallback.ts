@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
-import { sleep } from "@icpswap/utils";
+import { BigNumber, sleep } from "@icpswap/utils";
 import { removeOrder } from "@icpswap/hooks";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
@@ -75,6 +75,8 @@ function useCancelLimitCalls() {
 
   return useCallback(
     ({ position, poolId, positionId, openExternalTip, tipKey, limit, refresh }: CancelLimitCallsArgs) => {
+      const { amount0: positionAmount0, amount1: positionAmount1 } = position;
+
       const __removeOrder = async () => {
         const { status, message } = await removeOrder(poolId, positionId);
 
@@ -148,18 +150,21 @@ function useCancelLimitCalls() {
         return true;
       };
 
-      const mockStep = async () => {
+      const mockStep0 = async () => {
         await sleep(1000);
         return true;
       };
 
-      const finalStep = async () => {
+      const mockStep1 = async () => {
         await sleep(1000);
         openSuccessTip(t`Cancellation successful, withdrawal submitted`);
         return true;
       };
 
-      return [__removeOrder, __decreaseLiquidity, mockStep, finalStep];
+      return new BigNumber(positionAmount0.toExact()).isEqualTo(0) ||
+        new BigNumber(positionAmount1.toExact()).isEqualTo(0)
+        ? [__removeOrder, __decreaseLiquidity, mockStep1]
+        : [__removeOrder, __decreaseLiquidity, mockStep0, mockStep1];
     },
     [],
   );
