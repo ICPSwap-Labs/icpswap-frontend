@@ -24,7 +24,7 @@ import { TokenInfo } from "types/token";
 import { useState, useEffect, useRef } from "react";
 import { Null } from "@icpswap/types";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
-import { useToken } from "hooks/index";
+import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
 import { ICP } from "@icpswap/tokens";
@@ -50,6 +50,7 @@ interface TokenChartsViewSelectorProps {
 function TokenChartsViewSelector({ token, chartView, setChartView }: TokenChartsViewSelectorProps) {
   const ChartsViewButtons = [
     { label: `Dexscreener`, value: ChartView.DexScreener },
+    { label: `DexTools`, value: ChartView.DexTools },
     {
       label: token?.symbol ?? "Price",
       value: ChartView.PRICE,
@@ -106,6 +107,8 @@ export default function TokenDetails() {
       });
     }
   }, [token, canisterId]);
+
+  const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
 
   return (
     <InfoWrapper>
@@ -315,6 +318,7 @@ export default function TokenDetails() {
                 : null
             }
             background={3}
+            tokenPairWithIcp={tokenPairWithIcp}
           />
 
           {chartView && TradingViewDesc.includes(chartView.value) ? (

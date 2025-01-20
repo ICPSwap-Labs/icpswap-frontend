@@ -2,7 +2,7 @@ import { useEffect, useContext, useRef, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { TokenCharts, TokenChartsRef, ChartView, TextButton } from "@icpswap/ui";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
-import { useToken } from "hooks/index";
+import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Null } from "@icpswap/types";
 
 import { SwapProContext } from "../context";
@@ -28,6 +28,8 @@ export default function TokenChartInfo() {
 
   const [, priceToken] = useToken(priceTokenId);
 
+  const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: priceToken?.address });
+
   return (
     <Box
       sx={{
@@ -49,6 +51,7 @@ export default function TokenChartInfo() {
         showPrice={false}
         showTopIfDexScreen={false}
         dexScreenId={tradePoolId}
+        tokenPairWithIcp={tokenPairWithIcp}
         priceChart={<TokenPriceChart token={priceToken} />}
         onPriceTokenIdChange={setPriceTokenId}
       />
