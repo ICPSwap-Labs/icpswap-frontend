@@ -33,7 +33,11 @@ function TokenAmount({ token, amount }: TokenAmountProps) {
 }
 
 export function getCancelLimitSteps({ principal, handleReclaim, position, limit, key }: CancelLimitStepsProps) {
-  const { token0 } = position.pool;
+  const {
+    pool: { token0 },
+    amount0: positionAmount0,
+    amount1: positionAmount1,
+  } = position;
 
   const { amount0: liquidityAmount0, amount1: liquidityAmount1 } = getDecreaseLiquidityAmount(key) ?? {};
 
@@ -42,8 +46,13 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
     position,
   });
 
-  const inputRemainingAmount = inputToken.equals(token0) ? liquidityAmount0 : liquidityAmount1;
-  const outputDealAmount = inputToken.equals(token0) ? liquidityAmount1 : liquidityAmount0;
+  const noInverted = inputToken.equals(token0);
+
+  const inputPositionAmount = noInverted ? positionAmount0 : positionAmount1;
+  const outputPositionAmount = noInverted ? positionAmount1 : positionAmount0;
+
+  const inputRemainingAmount = noInverted ? liquidityAmount0 : liquidityAmount1;
+  const outputDealAmount = noInverted ? liquidityAmount1 : liquidityAmount0;
 
   const inputWithdrawAmount = isNullArgs(inputRemainingAmount)
     ? undefined
@@ -55,7 +64,6 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
   const inputWithdrawAmountLessThanFee = isNullArgs(inputRemainingAmount)
     ? false
     : new BigNumber(inputRemainingAmount.toString()).minus(inputToken.transFee).isLessThan(0);
-
   const outputWithdrawAmountLessThanFee = isNullArgs(outputDealAmount)
     ? false
     : new BigNumber(outputDealAmount.toString()).minus(outputToken.transFee).isLessThan(0);
@@ -93,47 +101,53 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
       ],
     },
     // Withdraw input token
-    {
-      title: inputWithdrawAmountLessThanFee
-        ? t`Unable to withdraw ${inputToken.symbol}`
-        : t`Withdraw ${inputToken.symbol}`,
-      children: [
-        {
-          label: t`Amount`,
-          value: <TokenAmount amount={inputWithdrawAmount} token={inputToken} />,
+    new BigNumber(inputPositionAmount.toExact()).isEqualTo(0)
+      ? null
+      : {
+          title: inputWithdrawAmountLessThanFee
+            ? t`Unable to withdraw ${inputToken.symbol}`
+            : t`Withdraw ${inputToken.symbol}`,
+          children: [
+            {
+              label: t`Amount`,
+              value: <TokenAmount amount={inputWithdrawAmount} token={inputToken} />,
+            },
+            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+          ],
+          skipError: inputWithdrawAmountLessThanFee
+            ? t`The amount of withdrawal is less than the transfer fee`
+            : undefined,
+          errorActions: [
+            <TextButton onClick={handleReclaim}>
+              <Trans>Reclaim</Trans>
+            </TextButton>,
+          ],
+          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
         },
-        { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-      ],
-      skipError: inputWithdrawAmountLessThanFee ? t`The amount of withdrawal is less than the transfer fee` : undefined,
-      errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-      ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-    },
     // Withdraw output token
-    {
-      title: outputWithdrawAmountLessThanFee
-        ? t`Unable to withdraw ${outputToken.symbol}`
-        : t`Withdraw ${outputToken.symbol}`,
-      children: [
-        {
-          label: t`Amount`,
-          value: <TokenAmount amount={outputWithdrawAmount} token={outputToken} />,
+    new BigNumber(outputPositionAmount.toExact()).isEqualTo(0)
+      ? null
+      : {
+          title: outputWithdrawAmountLessThanFee
+            ? t`Unable to withdraw ${outputToken.symbol}`
+            : t`Withdraw ${outputToken.symbol}`,
+          children: [
+            {
+              label: t`Amount`,
+              value: <TokenAmount amount={outputWithdrawAmount} token={outputToken} />,
+            },
+            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+          ],
+          skipError: outputWithdrawAmountLessThanFee
+            ? t`The amount of withdrawal is less than the transfer fee`
+            : undefined,
+          errorActions: [
+            <TextButton onClick={handleReclaim}>
+              <Trans>Reclaim</Trans>
+            </TextButton>,
+          ],
+          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
         },
-        { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
-      ],
-      skipError: outputWithdrawAmountLessThanFee
-        ? t`The amount of withdrawal is less than the transfer fee`
-        : undefined,
-      errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-      ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
-    },
   ];
 
   return contents.filter((e) => !!e).map((element, index) => ({ ...element, step: index })) as StepContents[];
