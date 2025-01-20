@@ -18,6 +18,7 @@ import { ChartView } from "./types";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";
+import { DexTools } from "../DexTools";
 import { Select } from "../Select";
 
 // format dayjs with the libraries that we need
@@ -146,6 +147,7 @@ export interface TokenChartsProps {
   priceChart?: ReactNode;
   onPriceTokenIdChange?: (tokenId: string | Null) => void;
   wrapperSx?: BoxProps["sx"];
+  tokenPairWithIcp?: string | Null;
 }
 
 export const TokenCharts = forwardRef(
@@ -163,6 +165,7 @@ export const TokenCharts = forwardRef(
       priceChart,
       onPriceTokenIdChange,
       wrapperSx,
+      tokenPairWithIcp,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -283,7 +286,7 @@ export const TokenCharts = forwardRef(
             display:
               chartView === ChartView.PRICE && priceChart
                 ? "none"
-                : chartView === ChartView.DexScreener
+                : chartView === ChartView.DexScreener || chartView === ChartView.DexTools
                 ? showTopIfDexScreen
                   ? "flex"
                   : "none"
@@ -451,6 +454,8 @@ export const TokenCharts = forwardRef(
             ))
           ) : chartView === ChartView.DexScreener ? (
             <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
+          ) : chartView === ChartView.DexTools ? (
+            <DexTools id={tokenPairWithIcp ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : null}
         </Box>
       </MainCard>

@@ -268,3 +268,4 @@ export * from "./useSwapWithdraw";
 export * from "./usePositionFees";
 export * from "./usePosition";
 export * from "./usePools";
+export * from "./useTokenPairWithIcp";

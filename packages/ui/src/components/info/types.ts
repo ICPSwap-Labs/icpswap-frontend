@@ -7,4 +7,5 @@ export enum ChartView {
   TRANSACTIONS,
   DexScreener,
   APR,
+  DexTools,
 }
