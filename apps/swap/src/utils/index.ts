@@ -95,6 +95,10 @@ export function timeParser(time: any): Date {
   return new Date(date.getTime() - seconds * 1000);
 }
 
+export function isSafari() {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
 export * from "./type";
 export * from "./nft";
 export * from "./swap";

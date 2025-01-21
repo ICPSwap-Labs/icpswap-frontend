@@ -79,3 +79,4 @@ export * from "./types";
 export * from "./icp";
 export * from "./wallet";
 export * from "./ckERC20";
+export * from "./auth";
