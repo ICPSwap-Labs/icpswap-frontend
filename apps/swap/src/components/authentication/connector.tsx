@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { t } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
-import { Connector } from "constants/wallet";
+import { Connector, IdentityKitConnector } from "constants/index";
 import { useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
+import { isSafari } from "utils/index";
+import { WalletConnector } from "utils/connector";
 
 const useStyles = makeStyles(() => {
   return {
@@ -42,6 +44,24 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
   const { showConnector, connect } = useConnectManager();
 
   const [loading, setLoading] = useState(false);
+  const [initialedConnector, setInitialedConnector] = useState<null | WalletConnector>(null);
+
+  // Only safari need init connector first for fix pop-up was
+  // blocked when there has a asynchronous call before connecting the wallet
+  useEffect(() => {
+    async function call() {
+      // Filter connector like NFID
+      if (!IdentityKitConnector.includes(value)) {
+        const initialedConnector = new WalletConnector();
+        await initialedConnector.init(value);
+        setInitialedConnector(initialedConnector);
+      }
+    }
+
+    if (isSafari()) {
+      call();
+    }
+  }, []);
 
   const handleConnect = async () => {
     if (disabled) return;
@@ -61,7 +81,7 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
 
       setLoading(true);
 
-      const connectSuccessful = await connect(value);
+      const connectSuccessful = await connect(value, initialedConnector);
 
       if (!connectSuccessful) {
         openErrorTip(t`An unknown error occurred. Please try connect again.`);

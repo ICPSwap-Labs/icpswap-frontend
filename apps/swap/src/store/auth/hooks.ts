@@ -2,25 +2,18 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { principalToAccount, isPrincipal, isNullArgs } from "@icpswap/utils";
 import { ic_host } from "@icpswap/constants";
-import { Connector } from "constants/wallet";
+import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import { connector, WalletConnector } from "utils/connector";
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
 import { useIsInitializing, useAuth, useAgent } from "@nfid/identitykit/react";
-import { NFIDW, Plug, InternetIdentity } from "@nfid/identitykit";
+import { isSafari } from "utils/index";
 
 import store from "../index";
 import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
 import { NF_IDConnector } from "./NF_IDConnector";
-
-const IdentityKitConnector = [Connector.NFID];
-const IdentityKitId = {
-  [Connector.IC]: InternetIdentity.id,
-  [Connector.NFID]: NFIDW.id,
-  [Connector.PLUG]: Plug.id,
-};
 
 export function useIsUnLocked() {
   return useAppSelector((state) => state.session.isUnLocked);
@@ -217,10 +210,6 @@ export function useIdentityKitInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
-  // console.log("user: ", user);
-  // console.log("agent: ", agent);
-  // console.log("isInitializing: ", isInitializing);
-
   useEffect(() => {
     async function call() {
       const connector = getConnectorType();
@@ -268,11 +257,11 @@ export function useIdentityKitInitialConnect() {
 export function useConnectManager() {
   const dispatch = useAppDispatch();
   const connectorStateConnected = useConnectorStateConnected();
-  const disconnect = useDisconnect();
+  const authDisconnect = useDisconnect();
   const open = useAppSelector((state) => state.auth.walletConnectorOpen);
   const connector = useAppSelector((state) => state.auth.walletType);
 
-  const { connect, disconnect: identityKitDisconnect } = useAuth();
+  const { connect: identityKitConnect, disconnect: identityKitDisconnect } = useAuth();
 
   const showConnector = useCallback(
     (open: boolean) => {
@@ -281,27 +270,35 @@ export function useConnectManager() {
     [dispatch],
   );
 
-  const __connect = useCallback(async (connector: Connector) => {
+  const connect = useCallback(async (connector: Connector, connectorOutside?: null | WalletConnector) => {
     if (IdentityKitConnector.includes(connector)) {
-      await connect(IdentityKitId[connector]);
+      await identityKitConnect(IdentityKitId[connector]);
       updateAuth({ walletType: connector, connected: false });
       return true;
     }
 
+    // Fix pop-up window was blocked when there is a asynchronous call before connecting the wallet
+    if (isSafari()) {
+      if (connectorOutside) {
+        return await connectorOutside.connect();
+      }
+
+      throw new Error("Some unknown error happened. Please refresh the page to reconnect.");
+    }
+
     const selfConnector = new WalletConnector();
     await selfConnector.init(connector);
-
     return await selfConnector.connect();
   }, []);
 
-  const __disconnect = useCallback(async () => {
+  const disconnect = useCallback(async () => {
     if (connector) {
       if (IdentityKitConnector.includes(connector)) {
         await identityKitDisconnect();
       }
     }
 
-    await disconnect();
+    await authDisconnect();
   }, [connector]);
 
   const { loading } = useInitialConnect();
@@ -310,12 +307,12 @@ export function useConnectManager() {
   return useMemo(
     () => ({
       open,
-      connect: __connect,
-      disconnect: __disconnect,
+      connect,
+      disconnect,
       showConnector,
       isConnected: connectorStateConnected,
       loading,
     }),
-    [open, __connect, __disconnect, showConnector, connectorStateConnected, loading],
+    [open, connect, disconnect, showConnector, connectorStateConnected, loading],
   );
 }
