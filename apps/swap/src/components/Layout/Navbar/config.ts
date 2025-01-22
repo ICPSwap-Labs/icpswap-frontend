@@ -8,6 +8,8 @@ import GitbookIcon from "./icons/Gitbook";
 import DSCVRIcon from "./icons/DSCVR";
 import SimpleModeIcon from "./icons/SimpleMode";
 import ProModeIcon from "./icons/ProMode";
+import LimitIcon from "./icons/Limit";
+
 import { version } from "../../../.version";
 
 export type Route = {
@@ -34,6 +36,7 @@ export const routes: Route[] = [
     subMenus: [
       { key: "simple-mode", name: `Simple mode`, path: "/swap", icon: SimpleModeIcon },
       { key: "pro-mode", name: `Pro mode`, path: "/swap/pro", icon: ProModeIcon },
+      { key: "limit-order", name: `Limit order`, path: "/swap/limit", icon: LimitIcon },
     ],
   },
   {
