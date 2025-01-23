@@ -11,7 +11,7 @@ export * from "./availableArgsNull";
 export * from "./resultFormat";
 export * from "./isBigIntMemo";
 export * from "./enumToString";
-export * from "./principalToAccount";
+export * from "./principal";
 export * from "./isValidAccount";
 export * from "./isAvailablePageArgs";
 export * from "./tokenAmount";

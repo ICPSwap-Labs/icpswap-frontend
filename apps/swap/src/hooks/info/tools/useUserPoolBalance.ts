@@ -3,7 +3,7 @@ import { Override } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
 import type { SwapPoolData } from "@icpswap/types";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { principalToSubaccount } from "@icpswap/utils";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
@@ -26,7 +26,7 @@ export function useUserUnDepositBalance(
 
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
-      const sub = SubAccount.fromPrincipal(Principal.fromText(principal!)).toUint8Array();
+      const sub = principalToSubaccount(principal!);
 
       const call = async (token: { address: string; standard: string }) =>
         token.standard.includes("DIP20")
