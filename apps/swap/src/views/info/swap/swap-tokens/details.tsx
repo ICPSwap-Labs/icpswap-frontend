@@ -119,32 +119,30 @@ export default function TokenDetails() {
       />
 
       <Box mt="20px">
-        <Flex fullWidth>
-          <TokenImage logo={token?.logo} size="24px" tokenId={token?.address} />
-
-          <Typography fontSize="20px" fontWeight="500" color="text.primary" sx={{ margin: "0 0 0 10px" }}>
-            {token?.name}
-          </Typography>
-
-          <Typography fontSize="20px" fontWeight="500" sx={{ margin: "0 0 0 6px" }}>
-            ({infoToken?.symbol})
-          </Typography>
-
-          <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
-            <Flex fullWidth>
-              <TextButton
-                to={`/info-tokens/details/${canisterId}`}
-                sx={{
-                  margin: "0 0 0 6px",
-                }}
-              >
-                {canisterId}
-              </TextButton>
-
-              <Box sx={{ width: "4px" }} />
-              <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
+        <Flex
+          fullWidth
+          gap="0 6px"
+          sx={{ "@media (max-width: 640px)": { flexDirection: "column", alignItems: "flex-start", gap: "6px 0" } }}
+        >
+          <Flex gap="0 6px">
+            <Flex gap="0 10px">
+              <TokenImage logo={token?.logo} size="24px" tokenId={token?.address} />
+              <Typography fontSize="20px" fontWeight="500" color="text.primary">
+                {token?.name}
+              </Typography>
             </Flex>
-          </Box>
+
+            <Typography fontSize="20px" fontWeight="500">
+              ({infoToken?.symbol})
+            </Typography>
+          </Flex>
+
+          <Flex gap="0 4px">
+            <TextButton to={`/info-tokens/details/${canisterId}`}>{canisterId}</TextButton>
+
+            <Box sx={{ width: "4px" }} />
+            <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
+          </Flex>
         </Flex>
       </Box>
 

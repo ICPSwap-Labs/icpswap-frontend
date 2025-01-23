@@ -73,7 +73,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           padding: "0 20px",
           height: "64px",
           backgroundColor: "#0B132F",
-          zIndex: 2,
+          zIndex: 3,
         }}
       >
         <Header />
