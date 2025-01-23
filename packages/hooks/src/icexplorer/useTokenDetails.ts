@@ -8,9 +8,12 @@ export function useExplorerTokenDetails(tokenId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenId) return undefined;
-      return (
-        await fetch_post<IcExplorerTokenDetail>(`https://api.icexplorer.io/api/token/detail`, { ledgerId: tokenId })
-      ).data;
+
+      const result = await fetch_post<IcExplorerTokenDetail>(`https://api.icexplorer.io/api/token/detail`, {
+        ledgerId: tokenId,
+      });
+
+      return result?.data;
     }, [tokenId]),
   );
 }

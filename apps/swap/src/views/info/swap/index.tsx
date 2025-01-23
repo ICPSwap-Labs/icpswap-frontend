@@ -15,18 +15,12 @@ import {
   Flex,
 } from "@icpswap/ui";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
 import { useChartData } from "hooks/info/useSwapChartData";
 import { VolumeWindow } from "@icpswap/types";
 
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
 import TopTokens from "./TopTokens";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 export default function SwapOverview() {
   const { result: protocolData } = useSwapProtocolData();
