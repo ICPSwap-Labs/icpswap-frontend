@@ -1,9 +1,9 @@
 import { Box, useMediaQuery, useTheme } from "components/Mui";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
+import { SwapProCardWrapper } from "components/swap/pro";
 
 import Token from "./Token";
 import TokenCharts from "./Charts";
-import { SwapProCardWrapper } from "../SwapProWrapper";
 import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 
 export interface TokenChartWrapperProps {

@@ -3,8 +3,12 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 
 export interface SwapContextProps {
-  selectedPool: Pool | undefined | null;
+  poolId: string | Null;
+  setPoolId: (poolId: string) => void;
+  selectedPool: Pool | Null;
   setSelectedPool: (pool: Pool) => void;
+  cachedPool: Pool | Null;
+  setCachedPool: (pool: Pool) => void;
   inputToken: Token | Null;
   setInputToken: (token: Token | Null) => void;
   outputToken: Token | Null;

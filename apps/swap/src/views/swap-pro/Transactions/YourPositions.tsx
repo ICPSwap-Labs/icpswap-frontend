@@ -19,8 +19,9 @@ import { usePool } from "hooks/swap/usePools";
 import { BigNumber, formatDollarAmount, formatAmount, isNullArgs } from "@icpswap/utils";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useAccountPrincipal } from "store/auth/hooks";
-
-import { SwapProContext } from "../context";
+import { SwapProContext } from "components/swap/pro";
+import { Null } from "@icpswap/types";
+import { SwapContext } from "components/swap";
 
 const useStyles = makeStyles(() => {
   return {
@@ -47,7 +48,8 @@ enum Bound {
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const classes = useStyles();
   const theme = useTheme();
-  const { inputTokenPrice, outputTokenPrice, inputToken, outputToken } = useContext(SwapProContext);
+  const { inputToken, outputToken } = useContext(SwapContext);
+  const { inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
@@ -210,13 +212,14 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 const maxItems = 10;
 
 export interface PoolTransactionsProps {
-  poolId: string | undefined;
+  poolId: string | Null;
 }
 
 export function YourPositions({ poolId }: PoolTransactionsProps) {
   const classes = useStyles();
   const theme = useTheme();
   const principal = useAccountPrincipal();
+  const { inputToken, outputToken } = useContext(SwapContext);
 
   const [page, setPage] = useState(1);
   const { result: userPositions, loading } = useUserPoolPositions(poolId);
@@ -235,8 +238,6 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
         .slice(maxItems * (page - 1), page * maxItems)
     );
   }, [userPositions, userLimitOrders]);
-
-  const { inputToken, outputToken } = useContext(SwapProContext);
 
   const [, pool] = usePool(inputToken, outputToken, FeeAmount.MEDIUM);
 

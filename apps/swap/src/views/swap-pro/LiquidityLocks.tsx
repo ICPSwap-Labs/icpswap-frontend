@@ -6,11 +6,11 @@ import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Flex } from "components/index";
 import { ChevronDown } from "react-feather";
 import { Position } from "@icpswap/swap-sdk";
-import { SwapContext } from "components/swap/index";
 import { useLiquidityLocksImage } from "hooks/swap/index";
 import { Null } from "@icpswap/types";
 import { LoadingRow, LiquidityLock, Tooltip } from "@icpswap/ui";
 import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
+import { SwapContext } from "components/swap";
 
 interface LiquidityLocksItemProps {
   name: string;
@@ -56,17 +56,18 @@ function LiquidityLocksItem({
 const DEFAULT_DISPLAY_NUMBER = 2;
 
 export interface LiquidityLocksProps {
-  poolId: string | undefined;
+  poolId: string | Null;
 }
 
 export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
   const theme = useTheme();
   const [moreInformation, setMoreInformation] = useState(false);
+  const [tokenIds, setTokenIds] = useState<[string, string] | null>(null);
   const [locksValue, setLocksValue] = useState<null | { [name: string]: string }>(null);
 
-  const { selectedPool } = useContext(SwapContext);
+  const { cachedPool: pool } = useContext(SwapContext);
 
-  const poolTvlValue = usePoolTVLValue({ pool: selectedPool });
+  const poolTvlValue = usePoolTVLValue({ pool });
 
   useEffect(() => {
     // Reset locks value if pool changed
@@ -75,11 +76,13 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
     }
   }, [poolId]);
 
-  const tokenIds = useMemo(() => {
-    return selectedPool ? [selectedPool.token0.address, selectedPool.token1.address] : undefined;
-  }, [selectedPool]);
+  useEffect(() => {
+    if (pool) {
+      setTokenIds([pool.token0.address, pool.token1.address]);
+    }
+  }, [pool]);
 
-  const { result: allLiquidityLocks, loading } = useAllLiquidityLocks(tokenIds, poolId, selectedPool);
+  const { result: allLiquidityLocks, loading } = useAllLiquidityLocks(tokenIds, poolId, pool);
 
   const handleLocksValue = useCallback(
     (name: string, value: string) => {

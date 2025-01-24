@@ -21,3 +21,4 @@ export * from "./TransferPosition";
 export * from "./Impact";
 export * from "./SwapProEntry";
 export * from "./settings";
+export * from "./SwapContextProvider";

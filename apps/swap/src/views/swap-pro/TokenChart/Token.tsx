@@ -8,9 +8,9 @@ import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { ICP } from "@icpswap/tokens";
+import { SwapProContext } from "components/swap/pro";
 
 import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
-import { SwapProContext } from "../context";
 
 interface MediasProps {
   mediaLinks: undefined | { k: string; v: string }[];

@@ -4,13 +4,14 @@ import { TokenCharts, TokenChartsRef, ChartView, TextButton } from "@icpswap/ui"
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Null } from "@icpswap/types";
-
-import { SwapProContext } from "../context";
+import { SwapProContext } from "components/swap/pro";
+import { SwapContext } from "components/swap/index";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
   const [priceTokenId, setPriceTokenId] = useState<string | Null>(null);
-  const { token, chartView, tradePoolId } = useContext(SwapProContext);
+  const { token, chartView } = useContext(SwapProContext);
+  const { poolId } = useContext(SwapContext);
 
   const tokenChartsRef = useRef<TokenChartsRef>(null);
 
@@ -50,7 +51,7 @@ export default function TokenChartInfo() {
         borderRadius="0px"
         showPrice={false}
         showTopIfDexScreen={false}
-        dexScreenId={tradePoolId}
+        dexScreenId={poolId}
         tokenPairWithIcp={tokenPairWithIcp}
         priceChart={<TokenPriceChart token={priceToken} />}
         onPriceTokenIdChange={setPriceTokenId}
