@@ -1,4 +1,4 @@
-import { principalToAccount } from "./principalToAccount";
+import { principalToAccount } from "./principal";
 
 export function explorerLink(address: string) {
   if (address.length > 27) {

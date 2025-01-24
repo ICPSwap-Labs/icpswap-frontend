@@ -1,34 +1,49 @@
-import React, { ReactNode, useContext, useMemo, useState } from "react";
+import React, { useEffect, ReactNode, useContext, useMemo, useState, useCallback } from "react";
+import { SwapProCardWrapper } from "components/swap/pro";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { TokenPoolPrice } from "components/TokenPoolPrice";
+import { TokenImage } from "components/index";
 import { Box, BoxProps, Typography, useTheme } from "components/Mui";
 import { Trans, t } from "@lingui/macro";
-import { BigNumber, shorten, formatDollarAmount, formatAmount, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { TokenPoolPrice } from "components/TokenPoolPrice";
-import { useTokenSupply, useTokenAnalysis } from "@icpswap/hooks";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { TokenImage } from "components/index";
-import type { Null, PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
-import { ChevronDown, ArrowUpRight } from "react-feather";
-import { Copy } from "components/Copy/icon";
+import type { Null } from "@icpswap/types";
+import { ArrowUpRight } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
+import { useInfoToken } from "@icpswap/hooks";
+import { SwapContext } from "components/swap";
 
-import { SwapProCardWrapper } from "./SwapProWrapper";
-import { SwapProContext } from "./context";
 import { LiquidityLocks } from "./LiquidityLocks";
 
 interface TokenTvlProps {
   token: Token | Null;
-  balance: BigNumber | Null;
-  tvlUsd: string | undefined;
+  poolId: string | Null;
+  onUpdateTvl: (tvl: string | undefined) => void;
 }
 
-function TokenTvl({ token, balance, tvlUsd }: TokenTvlProps) {
+function TokenTvl({ token, poolId, onUpdateTvl }: TokenTvlProps) {
+  const { result: tokenBalance } = useTokenBalance(token?.address, poolId);
+  const infoToken = useInfoToken(token?.address);
+
+  const tokenPrice = useMemo(() => infoToken?.priceUSD, [infoToken]);
+
+  const tokenUsdTvl = useMemo(() => {
+    if (!tokenBalance || !tokenPrice || !token) return undefined;
+    return new BigNumber(tokenPrice).multipliedBy(parseTokenAmount(tokenBalance, token.decimals)).toString();
+  }, [tokenBalance, tokenPrice, token]);
+
+  useEffect(() => {
+    if (tokenUsdTvl) {
+      onUpdateTvl(tokenUsdTvl);
+    }
+  }, [tokenUsdTvl]);
+
   return (
     <Box sx={{ display: "flex", gap: "0 6px", alignItems: "center" }}>
       <TokenImage logo={token?.logo} tokenId={token?.address} size="18px" />
       <Typography color="text.primary" fontSize="12px">
-        {balance ? formatAmount(parseTokenAmount(balance, token?.decimals).toNumber()) : "--"} {token?.symbol ?? "--"} (
-        {formatDollarAmount(tvlUsd)})
+        {tokenBalance ? formatAmount(parseTokenAmount(tokenBalance, token?.decimals).toNumber()) : "--"}{" "}
+        {token?.symbol ?? "--"} ({formatDollarAmount(tokenUsdTvl)})
       </Typography>
     </Box>
   );
@@ -61,115 +76,66 @@ function Card({ title, titleArrow, padding = "8px", fontSize = "14px", tips, chi
   );
 }
 
-export interface TokenProps {
-  infoToken: PublicTokenOverview | undefined;
-  tokenListInfo: TokenListMetadata | undefined;
+interface TvlValue {
+  tvl0: string | Null;
+  tvl1: string | Null;
 }
 
-export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
+export default function TokenUI() {
   const theme = useTheme();
-  const { token, tradePoolId, inputToken, outputToken, inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
-  const [moreInformation, setMoreInformation] = useState(true);
+  const { poolId, inputToken, outputToken } = useContext(SwapContext);
 
-  const tokenId = useMemo(() => token?.address, [token]);
+  const [token0, setToken0] = useState<Token | Null>(null);
+  const [token1, setToken1] = useState<Token | Null>(null);
 
-  const { result: token0Balance } = useTokenBalance(inputToken?.address, tradePoolId);
-  const { result: token1Balance } = useTokenBalance(outputToken?.address, tradePoolId);
+  useEffect(() => {
+    if (inputToken && outputToken) {
+      const sorted = inputToken.sortsBefore(outputToken);
 
-  const tokenPrice = useMemo(() => {
-    return token?.address === inputToken?.address ? inputTokenPrice : outputTokenPrice;
-  }, [inputToken, outputToken, token]);
+      const token0 = sorted ? inputToken : outputToken;
+      const token1 = sorted ? outputToken : inputToken;
 
-  // const icpPrice = useICPPrice();
+      setToken0(token0);
+      setToken1(token1);
+    }
+  }, [inputToken, outputToken]);
 
-  const token0UsdTvl = useMemo(() => {
-    if (!token0Balance || !inputTokenPrice || !inputToken) return undefined;
-    return new BigNumber(inputTokenPrice).multipliedBy(parseTokenAmount(token0Balance, inputToken.decimals)).toString();
-  }, [token0Balance, inputTokenPrice, inputToken]);
+  const infoToken0 = useInfoToken(token0?.address);
+  const infoToken1 = useInfoToken(token1?.address);
 
-  const token1UsdTvl = useMemo(() => {
-    if (!token1Balance || !outputTokenPrice || !outputToken) return undefined;
-    return new BigNumber(outputTokenPrice)
-      .multipliedBy(parseTokenAmount(token1Balance, outputToken.decimals))
-      .toString();
-  }, [token1Balance, outputTokenPrice, outputToken]);
+  const [tvlValue, setTvlValue] = useState<TvlValue>({
+    tvl0: null,
+    tvl1: null,
+  });
 
   const totalTVL = useMemo(() => {
-    if (!token0UsdTvl || !token1UsdTvl) return undefined;
-    return formatDollarAmount(new BigNumber(token0UsdTvl).plus(token1UsdTvl).toString());
-  }, [token0UsdTvl, token1UsdTvl]);
+    if (!tvlValue.tvl0 || !tvlValue.tvl1) return undefined;
+    return formatDollarAmount(new BigNumber(tvlValue.tvl0).plus(tvlValue.tvl1).toString());
+  }, [tvlValue]);
 
-  const { result: tokenSupply } = useTokenSupply(tokenId);
-  const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
-
-  const marketCap = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenPrice)) {
-      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(tokenPrice).toString();
-    }
-  }, [tokenAnalysis, tokenPrice]);
-
-  const circulating = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
-      return `${new BigNumber(
-        new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
-      ).multipliedBy(100)}%`;
-    }
-  }, [tokenAnalysis, tokenSupply, token]);
+  const handleUpdateTvl = useCallback((key: keyof TvlValue, tvl: string | undefined) => {
+    setTvlValue((prevState) => ({ ...prevState, [key]: tvl }));
+  }, []);
 
   return (
     <SwapProCardWrapper padding="0px">
-      <Box sx={{ padding: !(tokenListInfo && token && tokenListInfo.introduction) ? "16px" : "16px 16px 0 16px" }}>
-        <Typography color="text.primary" fontWeight={600}>
-          <Trans>Token Name</Trans>
-          <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
-            {token?.name}
-          </Typography>
-        </Typography>
-
-        <Box sx={{ display: "flex", justifyContent: "space-between", margin: "12px 0 0 0" }}>
-          <Typography
-            color="text.primary"
-            fontSize="12px"
-            component="div"
-            sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
-          >
-            <Trans>Token</Trans>
-            <Typography component="span" color="text.theme-secondary" fontSize="12px">
-              {token ? shorten(token.address, 5) : "--"}
-            </Typography>
-            <Copy content={tokenId} />
-          </Typography>
-
-          <Typography
-            color="text.primary"
-            fontSize="12px"
-            component="div"
-            sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
-          >
-            <Trans>Pool</Trans>
-            <Typography component="span" color="text.theme-secondary" fontSize="12px">
-              {tradePoolId ? shorten(tradePoolId) : "--"}
-            </Typography>
-            <Copy content={tradePoolId} />
-          </Typography>
-        </Box>
-
-        <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "8px 0" }}>
-          {inputToken && outputToken ? (
+      <Box sx={{ padding: "16px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+          {token0 && token1 ? (
             <Card title={t`Price swap with ICP`} fontSize="12px">
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0", padding: "0 0 0 4px" }}>
                 <TokenPoolPrice
-                  tokenA={inputToken}
-                  tokenB={outputToken}
-                  priceA={inputTokenPrice}
-                  priceB={outputTokenPrice}
+                  tokenA={token0}
+                  tokenB={token1}
+                  priceA={infoToken0?.priceUSD}
+                  priceB={infoToken1?.priceUSD}
                   background="none"
                 />
                 <TokenPoolPrice
-                  tokenA={outputToken}
-                  tokenB={inputToken}
-                  priceA={outputTokenPrice}
-                  priceB={inputTokenPrice}
+                  tokenA={token1}
+                  tokenB={token0}
+                  priceA={infoToken1?.priceUSD}
+                  priceB={infoToken0?.priceUSD}
                   background="none"
                 />
               </Box>
@@ -188,209 +154,23 @@ export default function TokenUI({ infoToken, tokenListInfo }: TokenProps) {
               </Box>
               <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
-                <TokenTvl token={inputToken} tvlUsd={token0UsdTvl} balance={token0Balance} />
-                <TokenTvl token={outputToken} tvlUsd={token1UsdTvl} balance={token1Balance} />
+                <TokenTvl
+                  token={token0}
+                  poolId={poolId}
+                  onUpdateTvl={(tvl: string | undefined) => handleUpdateTvl("tvl0", tvl)}
+                />
+                <TokenTvl
+                  token={token1}
+                  poolId={poolId}
+                  onUpdateTvl={(tvl: string | undefined) => handleUpdateTvl("tvl1", tvl)}
+                />
               </Box>
             </Box>
           </Card>
 
-          <LiquidityLocks poolId={tradePoolId} />
-
-          {moreInformation ? (
-            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              <Card title={t`Total Supply`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && token
-                    ? formatAmount(parseTokenAmount(tokenSupply.toString(), token.decimals).toNumber())
-                    : "--"}
-                </Typography>
-              </Card>
-              <Card
-                title={t`FDV (USD)`}
-                fontSize="12px"
-                tips={
-                  <Flex vertical gap="8px 0" align="flex-start">
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>
-                        Fully-diluted Valuation (FDV): The Valuation assuming all possible tokens are in circulation.
-                      </Trans>
-                    </Typography>
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>FDV = Price x Max Supply.</Trans>
-                    </Typography>
-                  </Flex>
-                }
-              >
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenSupply && token && tokenPrice
-                    ? formatDollarAmount(
-                        parseTokenAmount(tokenSupply.toString(), token.decimals).multipliedBy(tokenPrice).toString(),
-                      )
-                    : "--"}
-                </Typography>
-              </Card>
-              <Card
-                title={t`Circulating Supply`}
-                fontSize="12px"
-                tips={
-                  <Trans>
-                    The number of coins currently available and circulating in the public market, similar to the
-                    floating shares in stocks.
-                  </Trans>
-                }
-              >
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {nonNullArgs(tokenAnalysis) ? formatAmount(tokenAnalysis.marketAmount) : "--"}
-                </Typography>
-              </Card>
-              <Card
-                title={t`Market Cap`}
-                fontSize="12px"
-                tips={
-                  <Flex vertical gap="8px 0" align="flex-start">
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>
-                        Market Cap: The total market value of a cryptocurrency's circulating supply, similar to
-                        free-float market cap in stocks.
-                      </Trans>
-                    </Typography>
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>Market Cap = Current Price x Circulating Supply.</Trans>
-                    </Typography>
-                  </Flex>
-                }
-              >
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
-                </Typography>
-              </Card>
-              <Card
-                title={t`Circulating %`}
-                fontSize="12px"
-                tips={
-                  <Flex vertical gap="8px 0" align="flex-start">
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>
-                        The proportion of a cryptocurrency's total supply that is currently in circulation and available
-                        for trading.
-                      </Trans>
-                    </Typography>
-                    <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                      <Trans>Circulating Supply Percentage = (Circulating Supply / Total Supply) x 100%.</Trans>
-                    </Typography>
-                  </Flex>
-                }
-              >
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {nonNullArgs(circulating) ? circulating : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`Holders`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`Volume 24H`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
-                </Typography>
-              </Card>
-              {/* <Card title={t`Volume 7D`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
-                </Typography>
-              </Card> */}
-              <Card title={t`Decimals`} fontSize="12px">
-                <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                  {token ? token.decimals : "--"}
-                </Typography>
-              </Card>
-              <Card title={t`Transfer Fee`} fontSize="12px">
-                <Typography
-                  color="text.primary"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontSize: "12px",
-                    fontWeight: 500,
-                  }}
-                  component="div"
-                >
-                  {token ? parseTokenAmount(token.transFee.toString(), token.decimals).toFormat() : "--"}
-                  <Typography
-                    color="text.primary"
-                    sx={{
-                      fontSize: "12px",
-                      fontWeight: 500,
-                      maxWidth: "86px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    (
-                    {tokenSupply && token && tokenPrice
-                      ? formatDollarAmount(
-                          parseTokenAmount(token.transFee.toString(), token.decimals)
-                            .multipliedBy(tokenPrice)
-                            .toString(),
-                        )
-                      : "--"}
-                    )
-                  </Typography>
-                </Typography>
-              </Card>
-            </Box>
-          ) : null}
+          <LiquidityLocks poolId={poolId} />
         </Box>
-
-        {tokenListInfo && token && tokenListInfo.introduction && moreInformation ? (
-          <Box sx={{ margin: "20px 0 0 0" }}>
-            <Typography sx={{ fontWeight: 600 }} color="text.primary">
-              <Trans>Introduction</Trans>
-            </Typography>
-
-            <Typography
-              sx={{
-                margin: "8px 0 0 0",
-                fontSize: "12px",
-                display: "-webkit-box",
-                WebkitLineClamp: moreInformation ? "none" : 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                lineHeight: "16px",
-              }}
-            >
-              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme-secondary", fontWeight: 600 }}>
-                {token?.symbol}
-              </Typography>
-              {tokenListInfo.introduction}
-            </Typography>
-          </Box>
-        ) : null}
       </Box>
-
-      {token ? (
-        <Box
-          sx={{
-            margin: "12px 0 0 0",
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: theme.palette.background.level4,
-            cursor: "pointer",
-          }}
-          onClick={() => setMoreInformation(!moreInformation)}
-        >
-          <Typography sx={{ fontSize: "12px", fontWeight: 500, margin: "0 3px 0 0" }}>
-            {moreInformation ? <Trans>less information</Trans> : <Trans>more information </Trans>}
-          </Typography>
-          <ChevronDown style={{ transform: moreInformation ? "rotate(180deg)" : "rotate(0deg)" }} size="16px" />
-        </Box>
-      ) : null}
     </SwapProCardWrapper>
   );
 }

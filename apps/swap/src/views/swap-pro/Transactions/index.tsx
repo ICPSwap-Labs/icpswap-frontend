@@ -5,9 +5,9 @@ import { Flex } from "@icpswap/ui";
 import { PoolTransactions, UserTransactions } from "components/info/swap";
 import { Holders } from "components/info/tokens";
 import { LimitOrdersTable, LimitHistoryTable } from "components/swap/limit-order/index";
+import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
+import { SwapContext } from "components/swap";
 
-import { SwapProCardWrapper } from "../SwapProWrapper";
-import { SwapProContext } from "../context";
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
@@ -58,7 +58,8 @@ let AUTO_REFRESH_COUNTER = 0;
 
 export default function Transactions() {
   const theme = useTheme();
-  const { tradePoolId, inputToken, outputToken, token, activeTab: contextActiveTab } = useContext(SwapProContext);
+  const { poolId, inputToken, outputToken } = useContext(SwapContext);
+  const { token, activeTab: contextActiveTab } = useContext(SwapProContext);
 
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.TRANSACTIONS);
   const [activeSubTab, setActiveSubTab] = useState<Tabs | null>(Tabs.ALL_TRANSACTIONS);
@@ -179,15 +180,13 @@ export default function Transactions() {
       ) : null}
 
       <Box>
-        {activeSubTab === Tabs.ALL_TRANSACTIONS ? (
-          <PoolTransactions canisterId={tradePoolId} refresh={autoRefresh} />
-        ) : null}
-        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions poolId={tradePoolId} /> : null}
-        {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={tradePoolId} /> : null}
-        {activeSubTab === Tabs.POSITIONS ? <Positions poolId={tradePoolId} /> : null}
+        {activeSubTab === Tabs.ALL_TRANSACTIONS ? <PoolTransactions canisterId={poolId} refresh={autoRefresh} /> : null}
+        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions poolId={poolId} /> : null}
+        {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={poolId} /> : null}
+        {activeSubTab === Tabs.POSITIONS ? <Positions poolId={poolId} /> : null}
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
-        {activeSubTab === Tabs.LIMIT_PENDING ? <LimitOrdersTable poolId={tradePoolId} /> : null}
-        {activeSubTab === Tabs.LIMIT_HISTORY ? <LimitHistoryTable poolId={tradePoolId} /> : null}
+        {activeSubTab === Tabs.LIMIT_PENDING ? <LimitOrdersTable poolId={poolId} /> : null}
+        {activeSubTab === Tabs.LIMIT_HISTORY ? <LimitHistoryTable poolId={poolId} /> : null}
       </Box>
     </SwapProCardWrapper>
   );

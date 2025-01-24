@@ -1,10 +1,11 @@
 import { useUserPoolTransactions } from "@icpswap/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { Null } from "@icpswap/types";
 
 import { Transactions, StyleProps } from "./Transactions";
 
 export interface UserTransactionsProps {
-  poolId: string | undefined;
+  poolId: string | Null;
   styleProps?: StyleProps;
   refresh?: number;
 }

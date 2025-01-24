@@ -74,9 +74,9 @@ export function useExtraBlackHolePositionInfos(poolId: string | Null) {
 }
 
 export function useAllLiquidityLocks(
-  tokenIds: string[] | undefined,
-  poolId: string | undefined,
-  pool: Pool | undefined | null,
+  tokenIds: string[] | Null,
+  poolId: string | Null,
+  pool: Pool | Null,
 ): {
   loading: boolean;
   result: [Position[], string, string][] | null;

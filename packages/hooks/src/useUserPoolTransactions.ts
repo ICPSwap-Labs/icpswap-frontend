@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { BaseTransaction } from "@icpswap/types";
+import { BaseTransaction, Null } from "@icpswap/types";
 import { useInfoUserStorageIds, getInfoUserTransactions } from "./info";
 
 export function useUserPoolTransactions(
-  principal: string | undefined,
-  poolId: string | undefined,
+  principal: string | Null,
+  poolId: string | Null,
   offset: number,
   limit: number,
 ) {

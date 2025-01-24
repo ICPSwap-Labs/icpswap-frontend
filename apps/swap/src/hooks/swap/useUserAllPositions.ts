@@ -4,6 +4,7 @@ import { UserPosition } from "types/swap";
 import { useStoreUserPositionPools } from "store/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isNullArgs } from "@icpswap/utils";
+import { Null } from "@icpswap/types";
 
 import { getUserPositionIds } from "./useUserPositionIds";
 
@@ -66,7 +67,7 @@ export function useUserAllPositions(refresh?: number) {
   return useUserAllPositionsByPoolIds(userPositionPools, refresh);
 }
 
-export function useUserPoolPositions(poolId: string | undefined, refresh?: number) {
+export function useUserPoolPositions(poolId: string | Null, refresh?: number) {
   const [loading, setLoading] = useState(false);
   const [positions, setPositions] = useState<UserPosition[]>([]);
 

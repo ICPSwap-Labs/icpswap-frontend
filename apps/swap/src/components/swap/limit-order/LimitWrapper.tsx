@@ -11,7 +11,7 @@ interface LimitWrapperProps {
   ui?: "pro" | "normal";
   onInputTokenChange?: (token: Token | undefined) => void;
   onOutputTokenChange?: (tokenId: Token | undefined) => void;
-  onTradePoolIdChange?: (poolId: string | undefined) => void;
+  onTradePoolIdChange?: (poolId: string) => void;
 }
 
 export function LimitWrapper({

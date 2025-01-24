@@ -8,9 +8,7 @@ import { Flex } from "@icpswap/ui";
 import { LimitWrapper } from "components/swap/limit-order";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
-
-import { SwapProCardWrapper } from "./SwapProWrapper";
-import { SwapProContext } from "./context";
+import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 
 enum Tab {
   Swap = "Swap",
@@ -26,14 +24,8 @@ export default function Swap() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
-  const {
-    setTradePoolId,
-    inputToken,
-    setInputToken,
-    setOutputToken,
-    setActiveTab: setContextActiveTab,
-  } = useContext(SwapProContext);
-  const { selectedPool, noLiquidity } = useContext(SwapContext);
+  const { setActiveTab: setContextActiveTab } = useContext(SwapProContext);
+  const { setPoolId, selectedPool, inputToken, setInputToken, setOutputToken, noLiquidity } = useContext(SwapContext);
   const { tab: tabFromUrl } = useParsedQueryString() as { tab: Tab | Null };
 
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
@@ -83,21 +75,13 @@ export default function Swap() {
         </Box>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
-          {activeTab === Tab.Swap ? (
-            <SwapWrapper
-              ref={swapWrapperRef}
-              ui="pro"
-              onOutputTokenChange={setOutputToken}
-              onTradePoolIdChange={setTradePoolId}
-              onInputTokenChange={setInputToken}
-            />
-          ) : null}
+          {activeTab === Tab.Swap ? <SwapWrapper ref={swapWrapperRef} ui="pro" /> : null}
 
           {activeTab === Tab.Limit ? (
             <LimitWrapper
               ui="pro"
               onOutputTokenChange={setOutputToken}
-              onTradePoolIdChange={setTradePoolId}
+              onTradePoolIdChange={setPoolId}
               onInputTokenChange={setInputToken}
             />
           ) : null}
