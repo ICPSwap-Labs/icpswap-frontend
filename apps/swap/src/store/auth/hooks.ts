@@ -73,12 +73,9 @@ export interface UpdateAuthProps {
 }
 
 export async function updateAuth({ principal, walletType, connected }: UpdateAuthProps) {
-  const account = principal ? principalToAccount(principal) : null;
-
   store.dispatch(
     login({
       name: walletType,
-      account,
       principal,
       walletType,
     }),
@@ -178,10 +175,6 @@ export function useInitialConnect() {
       }
 
       const isConnected = await connectToConnector(connectorType);
-
-      if (isMeWebview()) {
-        updateAuth({ walletType: Connector.ME });
-      }
 
       dispatch(updateConnected({ isConnected }));
 

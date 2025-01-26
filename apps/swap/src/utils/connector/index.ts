@@ -4,6 +4,7 @@ import { Connector } from "constants/wallet";
 import { host } from "constants/server";
 import { updateAuth } from "store/auth/hooks";
 import { getDelegationIds } from "constants/connector";
+import { nonNullArgs } from "@icpswap/utils";
 
 import { InternetIdentityConnector } from "./internet-identity";
 import { StoicConnector } from "./stoic";
@@ -11,7 +12,7 @@ import type { ConnectorAbstract } from "./connectors";
 import { PlugConnector } from "./plug";
 import { ICPSwapConnector } from "./icpswap";
 import { InfinityConnector } from "./infinity";
-import { MeConnector } from "./me";
+import { isMeWebview, MeConnector } from "./me";
 import { MetamaskConnector } from "./metamask";
 
 export class WalletConnector {
@@ -23,8 +24,15 @@ export class WalletConnector {
   public async init(connectorType: Connector) {
     const connector = await WalletConnector.create(connectorType);
     this.connectorType = connectorType;
-    await connector?.init();
+    await connector.init();
     this.connector = connector;
+
+    // For only Me wallet app
+    if (isMeWebview()) {
+      if (nonNullArgs(this.connector.getPrincipal)) {
+        updateAuth({ walletType: this.connectorType, principal: this.connector.getPrincipal });
+      }
+    }
   }
 
   public static async create(connector: Connector) {
@@ -60,7 +68,7 @@ export class WalletConnector {
 
     window.icConnector = this.connector;
 
-    if (window.icConnector.getPrincipal) {
+    if (nonNullArgs(window.icConnector.getPrincipal)) {
       updateAuth({ walletType: this.connectorType, principal: window.icConnector.getPrincipal });
     }
 
