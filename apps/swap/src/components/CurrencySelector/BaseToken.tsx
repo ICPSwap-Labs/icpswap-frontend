@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
 import { useTheme } from "components/Mui";
-import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB } from "@icpswap/tokens";
+import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB, ALICE } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
 
-const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, ckUSDT, BOB];
+const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, ckUSDT, BOB, ALICE];
 
 export interface BaseTokenProps {
   token: Token;

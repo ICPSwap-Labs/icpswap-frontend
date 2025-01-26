@@ -9,3 +9,4 @@ export * from "./ckETH";
 export * from "./ckLink";
 export * from "./bob";
 export * from "./ckUSDT";
+export * from "./alice";
