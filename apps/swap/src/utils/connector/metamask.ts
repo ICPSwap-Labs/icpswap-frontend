@@ -1,13 +1,13 @@
 import { type ActorSubclass, Actor, HttpAgent } from "@dfinity/agent";
 import { Connector } from "@icpswap/actor";
 import { MsqClient, MsqIdentity } from "@fort-major/msq-client";
-import type { IConnector, CreateActorArgs, WalletConnectorConfig } from "./connectors";
+import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 const EXPIRE_TIME_STORAGE_NAME = "metamask-expire-time";
 // const REQUEST_LINK_DOMAIN = "https://app.icpswap.com";
 
-export class MetamaskConnector implements IConnector {
+export class MetamaskConnector implements ConnectorAbstract {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;

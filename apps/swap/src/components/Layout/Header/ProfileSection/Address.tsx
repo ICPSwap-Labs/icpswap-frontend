@@ -50,7 +50,7 @@ export function AddressSection({ label, link, address }: AddressSectionProps) {
         }}
         onClick={handleCopy}
       >
-        {shorten(address)}
+        {address ? shorten(address) : "--"}
       </Typography>
 
       <Copy content={address ?? ""} hide ref={copyRef} />
