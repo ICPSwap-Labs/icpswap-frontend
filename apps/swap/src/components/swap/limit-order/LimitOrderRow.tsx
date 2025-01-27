@@ -95,6 +95,7 @@ export function LimitOrderRow({
       refresh: () => {
         if (onCancelSuccess) onCancelSuccess();
       },
+      limit: limitOrder,
     });
 
     const loadingKey = openLoadingTip(t`Cancel Limit Order`, {
@@ -104,7 +105,7 @@ export function LimitOrderRow({
     await call();
 
     closeLoadingTip(loadingKey);
-  }, [position, positionId, cancelLimit]);
+  }, [position, positionId, limitOrder, cancelLimit]);
 
   return (
     <>
