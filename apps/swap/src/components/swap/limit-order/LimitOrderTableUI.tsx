@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 160px",
+      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 1.5fr 160px",
     },
   };
 });
@@ -66,6 +66,10 @@ export function LimitOrdersTableUI({
 
             <HeaderCell align="right">
               <Trans>Limit Price</Trans>
+            </HeaderCell>
+
+            <HeaderCell align="right">
+              <Trans>Filled</Trans>
             </HeaderCell>
 
             <HeaderCell align="right">&nbsp;</HeaderCell>
