@@ -26,6 +26,7 @@ import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
+import { LimitDealRatio } from "./LimitDealRatio";
 
 export interface LimitOrderRowProps {
   limitOrder: LimitOrder;
@@ -132,6 +133,7 @@ export function LimitOrderRow({
             </Typography>
           </BodyCell>
 
+          {/* Limit Price */}
           <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
             {limitPrice
               ? invertPrice
@@ -152,6 +154,11 @@ export function LimitOrderRow({
                 verticalAlign: "middle",
               }}
             />
+          </BodyCell>
+
+          {/* Filled */}
+          <BodyCell sx={{ justifyContent: "flex-end" }}>
+            <LimitDealRatio position={position} limit={limitOrder} />
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
