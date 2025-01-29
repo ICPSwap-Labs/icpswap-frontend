@@ -49,8 +49,6 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const SMALL_PADDING_PATH = ["/swap/pro"];
-
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const classes = useStyles();
   const location = useLocation();
@@ -59,8 +57,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const [globalTipShow, setGlobalTipShow] = useState(false);
   const [snsTipShow, setSnsTipShow] = useState(true);
 
-  const isSmallPadding = useMemo(() => {
-    return SMALL_PADDING_PATH.includes(location.pathname);
+  const isSwapPro = useMemo(() => {
+    return location.pathname === "/swap/pro";
   }, [location]);
 
   return (
@@ -85,14 +83,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
 
         <main
-          className={`${classes.content}${isSmallPadding ? " small-padding" : ""}${
+          className={`${classes.content}${isSwapPro ? " small-padding" : ""}${
             location.pathname.includes("info") ? " info" : ""
           }`}
         >
           {children}
         </main>
 
-        <NetworkState />
+        <NetworkState fullWidth={isSwapPro} />
       </Box>
 
       <Background />

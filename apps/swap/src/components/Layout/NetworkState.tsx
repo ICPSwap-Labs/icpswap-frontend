@@ -8,7 +8,11 @@ import { ArrowUpRight } from "react-feather";
 import { ICPSwapSubnet, ICPSwapStableBlockRate } from "constants/index";
 import { NetworkStateIcon } from "components/NetworkStateIcon";
 
-export function NetworkState() {
+export interface NetworkStateProps {
+  fullWidth?: boolean;
+}
+
+export function NetworkState({ fullWidth }: NetworkStateProps) {
   const theme = useTheme();
 
   const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
@@ -42,7 +46,7 @@ export function NetworkState() {
     <Box
       sx={{
         width: "100%",
-        maxWidth: "1200px",
+        maxWidth: fullWidth ? "100%" : "1200px",
         position: "absolute",
         bottom: "0px",
         height: `${90 + 53}px`,
@@ -53,7 +57,7 @@ export function NetworkState() {
       <Flex fullWidth justify="center" sx={{ height: "100%" }} align="flex-end">
         <Box
           sx={{
-            width: "1200px",
+            width: fullWidth ? "100%" : "1200px",
             borderTop: `1px solid ${theme.palette.border.level4}`,
             padding: "20px 0",
             "@media(max-width: 1200px)": {
