@@ -6,7 +6,7 @@ import { Trans } from "@lingui/macro";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { makeStyles } from "@mui/styles";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import type { EXTCollection } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import Avatar from "components/Image/Avatar";

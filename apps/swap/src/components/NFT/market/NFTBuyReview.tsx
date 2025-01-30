@@ -1,8 +1,7 @@
-import { Grid, Typography, CircularProgress, useTheme, Box } from "@mui/material";
+import { Grid, Typography, CircularProgress, useTheme, Box, Theme } from "components/Mui";
 import Modal from "components/modal/index";
 import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import { TradeOrder } from "types/nft";
 import { type NFTTokenMetadata, type ActorIdentity, ResultStatus } from "@icpswap/types";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
@@ -15,9 +14,9 @@ import {
   WRAPPED_ICP_TOKEN_INFO,
   NFTTradeFee,
 } from "constants/index";
-import { parseTokenAmount, numberToString, formatDollarAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import { useICPAmountUSDValue, useAccount } from "store/global/hooks";
+import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { useICPAmountUSDValue } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import LazyImage from "components/LazyImage";
 import { getLocaleMessage } from "locales/services";
@@ -26,6 +25,7 @@ import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TextButton, AuthButton } from "components/index";
+
 import FileImage from "../FileImage";
 
 export default function NFTBuyReview({

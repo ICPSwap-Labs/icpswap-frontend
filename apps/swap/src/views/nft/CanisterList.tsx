@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import { useHistory } from "react-router-dom";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo } from "@icpswap/types";

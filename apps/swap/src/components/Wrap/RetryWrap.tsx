@@ -8,7 +8,7 @@ import { wrapICP } from "hooks/useWICPCalls";
 import { useSuccessTip, useErrorTip, useFullscreenLoading } from "hooks/useTips";
 import { getLocaleMessage } from "locales/services";
 import { TextButton, Modal, AuthButton, NumberFilledTextField } from "components/index";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import isNumber from "lodash/isNumber";
 
 export default function RetryWrap({

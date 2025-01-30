@@ -2,7 +2,8 @@ import { useState, useCallback } from "react";
 import { useUserTradeTxList } from "hooks/nft/trade";
 import { pageArgsFormat } from "@icpswap/utils";
 import { TxRecord } from "types/nft";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
+
 import NFTSaleRecords from "./NFTSaleRecords";
 
 export default function NFTUserSaleRecords({ canisterId }: { canisterId?: string }) {

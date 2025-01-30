@@ -7,7 +7,7 @@ import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import { useDebouncedChangeHandler, useParsedQueryString } from "@icpswap/hooks";
 import { Trans, t } from "@lingui/macro";
 import { CurrencySelectorButton } from "components/CurrencySelector/button";
-import { useAccount } from "store/global/hooks";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import { formatDollarAmount, BigNumber, formatTokenAmount, parseTokenAmount, principalToAccount } from "@icpswap/utils";
@@ -23,6 +23,7 @@ import { useICPPrice } from "hooks/useUSDPrice";
 import { StatusResult } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
 import { Image } from "@icpswap/ui";
+import { Principal } from "@dfinity/principal";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export default function Exchange() {
   const classes = useStyles();
-  const account = useAccount();
+  const principal = useAccountPrincipalString();
   const { retryTrigger, setRetryTrigger } = useContext(WrapContext);
 
   const { input } = useParsedQueryString() as { input: string };
@@ -70,8 +71,8 @@ export default function Exchange() {
 
   const ICPPrice = useICPPrice();
 
-  const { result: _ICPBalance } = useTokenBalance(ICP.address, account, retryTrigger);
-  const { result: WICPBalance } = useTokenBalance(WICP.address, account, retryTrigger);
+  const { result: _ICPBalance } = useTokenBalance(ICP.address, principal, retryTrigger);
+  const { result: WICPBalance } = useTokenBalance(WICP.address, principal, retryTrigger);
 
   const ICPBalance = (_ICPBalance ?? new BigNumber(0)).toString();
   const isWrap = inputCurrency.equals(ICP);
@@ -170,7 +171,7 @@ export default function Exchange() {
 
   const handleExchangeConfirm = useCallback(
     async (identity, { loading, closeLoading }) => {
-      if (loading) return;
+      if (loading || !principal) return;
 
       setConfirmModalShow(false);
 
@@ -194,7 +195,7 @@ export default function Exchange() {
           canisterId: ICP.address,
           to: WICPAccount,
           amount: formatTokenAmount(new BigNumber(formattedAmounts[SWAP_FIELD.INPUT]).minus(ICPFee), ICP.decimals),
-          from: account,
+          from: principal,
           decimals: ICP.decimals,
         });
 
@@ -206,12 +207,12 @@ export default function Exchange() {
         }
 
         result = await wrapICP(identity, {
-          to: { address: account },
+          to: { principal: Principal.fromText(principal) },
           blockHeight: data,
         });
       } else {
         result = await unwrapICP(identity, {
-          to: { address: account },
+          to: { principal: Principal.fromText(principal) },
           amount: BigInt(formatTokenAmount(typedValue, ICP.decimals).toString()),
         });
       }
@@ -230,7 +231,7 @@ export default function Exchange() {
 
       closeLoading();
     },
-    [formattedAmounts],
+    [formattedAmounts, principal],
   );
 
   const errorMessage = useMemo(() => {

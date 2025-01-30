@@ -21,10 +21,6 @@ import {
   updateWalletConnector,
 } from "./actions";
 
-export function useAccount() {
-  return useAppSelector((state: AppState) => state.auth.account);
-}
-
 export function useGlobalTokenList() {
   return useAppSelector((state: AppState) => state.global.tokenList);
 }

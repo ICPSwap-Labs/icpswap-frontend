@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
 import { ImageLoading } from "@icpswap/ui";
 import NFTListHeader from "components/Wallet/NFTListHeader";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import { NoData } from "components/index";
 import { isICPSwapOfficial } from "utils/index";
 import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";

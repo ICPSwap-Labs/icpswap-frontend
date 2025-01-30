@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Box } from "components/Mui";
 import NFTCard from "components/NFT/NFTCard";
 import { useCanisterNFTList } from "hooks/nft/useNFTCalls";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import { pageArgsFormat } from "@icpswap/utils";
 import { NoData, ImageLoading } from "@icpswap/ui";
 import Pagination from "components/pagination";

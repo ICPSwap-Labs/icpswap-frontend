@@ -1,9 +1,16 @@
 import { useCallback, useState, useMemo } from "react";
-import { Button, Grid, Typography, CircularProgress, Box, InputAdornment, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { formatTokenAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import {
+  Button,
+  Grid,
+  Typography,
+  CircularProgress,
+  Box,
+  InputAdornment,
+  useTheme,
+  makeStyles,
+  Theme,
+} from "components/Mui";
+import { formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { sell, approve } from "hooks/nft/trade";
 import { t, Trans } from "@lingui/macro";
@@ -16,7 +23,8 @@ import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import LazyImage from "components/LazyImage";
 import { encodeTokenIdentifier } from "utils/nft/index";
 import { getLocaleMessage } from "locales/services";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
+
 import FileImage from "../FileImage";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -60,7 +68,7 @@ export default function NFTSell({
   onSellSuccess?: (result: any) => void;
 }) {
   const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [price, setPrice] = useState<null | number | string>(null);
@@ -69,7 +77,7 @@ export default function NFTSell({
 
   const handleSell = useCallback(
     async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-      if (loading || new BigNumber(price ?? 0).isEqualTo(0)) return;
+      if (loading || !account || new BigNumber(price ?? 0).isEqualTo(0)) return;
 
       const tokenIdentifier = encodeTokenIdentifier(canisterId, Number(nft.tokenId));
 
@@ -96,7 +104,7 @@ export default function NFTSell({
 
       if (onSellSuccess) onSellSuccess(result);
     },
-    [nft, price],
+    [nft, account, price],
   );
 
   const handleClose = useCallback(() => {

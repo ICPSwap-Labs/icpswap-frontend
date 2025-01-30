@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback, useContext } from "react";
 import { TableContainer, Table, TableCell, TableRow, TableHead, TableBody, Typography } from "@mui/material";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import { NoData, Pagination, ListLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserExchangeRecord } from "hooks/useWICPCalls";

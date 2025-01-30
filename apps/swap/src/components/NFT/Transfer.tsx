@@ -1,19 +1,28 @@
 import { useCallback, useState, useMemo } from "react";
 import LazyImage from "components/LazyImage";
-import { Button, Grid, TextField, Typography, CircularProgress, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  CircularProgress,
+  Box,
+  makeStyles,
+  useTheme,
+  Theme,
+} from "components/Mui";
 import { stringToArrayBuffer, encodeTokenIdentifier } from "utils";
 import { isValidAccount } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import { useNFTTransferCallback, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
-import { Theme } from "@mui/material/styles";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { getLocaleMessage } from "locales/services";
+
 import FileImage from "./FileImage";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -72,7 +81,7 @@ export default function NFTTransfer({
 
   const transferSubmitCallback = useCallback(
     async (identity, { loading, closeLoading }) => {
-      if (loading) return;
+      if (loading || !account) return;
 
       const result = await nftTransfer(canisterId, identity, {
         from: { address: account },
@@ -95,7 +104,7 @@ export default function NFTTransfer({
 
       if (onTransferSuccess) onTransferSuccess(result);
     },
-    [nftTransfer, nft, memo, to],
+    [nftTransfer, account, nft, memo, to],
   );
 
   const addressHelpText = useMemo(() => {

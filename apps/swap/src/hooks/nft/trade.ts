@@ -4,7 +4,7 @@ import { useCallsData } from "@icpswap/hooks";
 import { StatusResult1, PaginationResult, getCanisterId, CANISTER_NAMES } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import { TradeOrder, TxRecord, Identity } from "types";
-import type { NFTSaleArgs } from "@icpswap/types";
+import type { NFTSaleArgs, Null } from "@icpswap/types";
 import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 import { NFTTradeCanister } from "@icpswap/actor";
 
@@ -159,9 +159,9 @@ export function useTradeTxList(
 }
 
 export function useUserTradeTxList(
-  account: string,
-  canisterId: string | null | undefined,
-  name: string | null,
+  account: string | Null,
+  canisterId: string | Null,
+  name: string | Null,
   offset: number,
   limit: number,
   sort: string,

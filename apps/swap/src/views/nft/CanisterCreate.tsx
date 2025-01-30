@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Box, InputAdornment } from "@mui/material";
+import { Typography, Grid, Box, InputAdornment } from "components/Mui";
 import { MainCard, Breadcrumbs, AuthButton } from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
 import { WRAPPED_ICP_TOKEN_INFO, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
@@ -16,7 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { BigNumber, parseTokenAmount, isValidUrl, numberToString } from "@icpswap/utils";
 import { useApprove } from "hooks/token/useApprove";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { getLocaleMessage } from "locales/services";
 import { CardContent1120 } from "components/Layout/CardContent1120";

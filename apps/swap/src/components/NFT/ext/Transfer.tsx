@@ -1,19 +1,26 @@
 import { useCallback, useState, useMemo } from "react";
 import LazyImage from "components/LazyImage";
-import { Button, Grid, TextField, Typography, CircularProgress, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  CircularProgress,
+  Box,
+  makeStyles,
+  useTheme,
+  Theme,
+} from "components/Mui";
 import { isValidAccount, isValidPrincipal, resultFormat } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { useAccount } from "store/global/hooks";
 import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import type { EXTCollection, ExtNft } from "@icpswap/types";
 import { getLocaleMessage } from "locales/services";
 import { ext_nft } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccountPrincipal, useAccount } from "store/auth/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

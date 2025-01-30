@@ -9,6 +9,7 @@ import type {
   NFTBatchMintArgs,
   NFTControllerInfo,
   StatusResult,
+  Null,
 } from "@icpswap/types";
 import { OLD_CANISTER_IDS } from "constants/nft";
 import { resultFormat, principalToAccount, isAvailablePageArgs } from "@icpswap/utils";
@@ -102,15 +103,17 @@ export function useNFTTransaction(
   );
 }
 
-export function useUserNFTTransactions(canisterId: string, account: string, offset: number, limit: number) {
+export function useUserNFTTransactions(canisterId: string, principal: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
-      if (!canisterId || !account || !isAvailablePageArgs(offset, limit)) return undefined;
+      if (!canisterId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<NFTTransaction>>(
-        await (await NFTCanister(canisterId)).findTokenTxRecord({ address: account }, BigInt(offset), BigInt(limit)),
+        await (
+          await NFTCanister(canisterId)
+        ).findTokenTxRecord({ principal: Principal.fromText(principal) }, BigInt(offset), BigInt(limit)),
       ).data;
-    }, [account, offset, limit]),
+    }, [principal, offset, limit]),
   );
 }
 
@@ -206,15 +209,17 @@ export function useCanisterLogo(canisterId: string) {
   );
 }
 
-export function useCanisterNFTList(canisterId: string, account: string, offset: number, limit: number) {
+export function useCanisterNFTList(canisterId: string, principal: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
-      if (!canisterId || !account || !isAvailablePageArgs(offset, limit)) return undefined;
+      if (!canisterId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<NFTTokenMetadata>>(
-        await (await NFTCanister(canisterId)).findTokenList({ address: account }, BigInt(offset), BigInt(limit)),
+        await (
+          await NFTCanister(canisterId)
+        ).findTokenList({ principal: Principal.fromText(principal) }, BigInt(offset), BigInt(limit)),
       ).data;
-    }, [canisterId, account, offset, limit]),
+    }, [canisterId, principal, offset, limit]),
   );
 }
 

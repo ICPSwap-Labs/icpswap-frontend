@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, Button, Box } from "@mui/material";
-import { useTheme, makeStyles } from "@mui/styles";
+import { Grid, Typography, Button, Box, useTheme, makeStyles, Theme } from "components/Mui";
 import { Trans } from "@lingui/macro";
 import { TradeOrder } from "types";
-import { Theme } from "@mui/material/styles";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { parseTokenAmount } from "@icpswap/utils";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";

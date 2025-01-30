@@ -5,7 +5,7 @@ import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
 import { Pagination, TextButton, NoData, ListLoading } from "components/index";
 import { Trans } from "@lingui/macro";
 import type { PaginationResult, NFTTransaction } from "@icpswap/types";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import upperFirst from "lodash/upperFirst";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 

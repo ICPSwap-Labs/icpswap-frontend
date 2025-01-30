@@ -7,7 +7,7 @@ import CanisterHeader from "components/NFT/CanisterHeader";
 import { useCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import { MainCard, Breadcrumbs, Wrapper } from "components/index";
 import { t, Trans } from "@lingui/macro";
-import { useAccount } from "store/global/hooks";
+import { useAccount } from "store/auth/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { useEXTManager } from "store/nft/hooks";
 
