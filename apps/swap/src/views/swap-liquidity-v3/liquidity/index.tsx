@@ -15,8 +15,8 @@ enum TabName {
 }
 
 const tabs = [
-  { label: "Top Pools", value: TabName.TopPools },
   { label: "Your Liquidity Positions", value: TabName.Positions },
+  { label: "Top Pools", value: TabName.TopPools },
 ];
 
 interface TabProps {
@@ -63,6 +63,7 @@ function Tab({ label, value, active, onClick }: TabProps) {
 }
 
 export default function Liquidity() {
+  const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
   const history = useHistory();
   const { tab } = useParsedQueryString() as { tab: TabName | undefined };
 
@@ -109,8 +110,14 @@ export default function Liquidity() {
   );
 
   const activeTab = useMemo(() => {
-    return tab ?? TabName.TopPools;
+    return tab ?? TabName.Positions;
   }, [tab]);
+
+  useEffect(() => {
+    if (!loadedTabs.includes(activeTab)) {
+      setLoadedTabs([...loadedTabs, activeTab]);
+    }
+  }, [activeTab, loadedTabs]);
 
   return (
     <Wrapper>
@@ -173,11 +180,12 @@ export default function Liquidity() {
           </Flex>
 
           <Box sx={{ margin: "35px 0 0 0" }}>
-            <Box sx={{ display: activeTab === TabName.TopPools ? "block" : "none" }}>
-              <InfoPools />
-            </Box>
             <Box sx={{ display: activeTab === TabName.Positions ? "block" : "none" }}>
-              <Positions />
+              {loadedTabs.includes(TabName.Positions) ? <Positions /> : null}
+            </Box>
+
+            <Box sx={{ display: activeTab === TabName.TopPools ? "block" : "none" }}>
+              {loadedTabs.includes(TabName.TopPools) ? <InfoPools /> : null}
             </Box>
           </Box>
         </>
