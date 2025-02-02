@@ -194,7 +194,7 @@ export default function SwapPoolDetails() {
             <MainCard level={4}>
               <GridAutoRows gap="12px">
                 <Typography>
-                  <Trans>Total Tokens Locked</Trans>
+                  <Trans>Pool balance</Trans>
                 </Typography>
 
                 <Flex justify="space-between">
