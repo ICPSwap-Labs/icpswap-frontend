@@ -1,6 +1,6 @@
 import { Typography, Box, Button, useMediaQuery, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard } from "components/index";
+import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard, ImportToNns } from "components/index";
 import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL, useInfoToken } from "@icpswap/hooks";
@@ -179,10 +179,16 @@ export default function TokenDetails() {
           </Flex>
         </Box>
 
-        <Flex justify="flex-end" sx={{ gap: "0 10px" }}>
+        <Flex justify="flex-end" wrap="wrap" sx={{ gap: "10px" }}>
           {!matchDownSM ? (
             <TokenChartsViewSelector token={token} chartView={chartView} setChartView={setChartView} />
           ) : null}
+
+          <ImportToNns tokenId={canisterId}>
+            <Button variant="contained" className="secondary">
+              <Trans>Add to NNS</Trans>
+            </Button>
+          </ImportToNns>
 
           <Link to={`/info-tokens/details/${canisterId}`}>
             <Button variant="contained" className="secondary">

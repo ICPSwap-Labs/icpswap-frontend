@@ -1,20 +1,11 @@
 import { useMemo } from "react";
-import { useGlobalTokenList } from "store/global/hooks";
+import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+import { Null } from "@icpswap/types";
 
-export function useTokenInSNS(tokenId: string | undefined) {
-  const globalTokenList = useGlobalTokenList();
+export function useIsSnsToken(tokenId: string | Null) {
+  const root_canister_id = useSNSTokenRootId(tokenId);
 
   return useMemo(() => {
-    if (!tokenId || !globalTokenList) return undefined;
-
-    const token = globalTokenList.filter((token) => token.canisterId === tokenId)[0];
-
-    if (!token) return false;
-
-    const snsConfig = token.configs.find((c) => c.name === "SNS");
-
-    if (!snsConfig) return false;
-
-    return snsConfig.value === "true";
-  }, [tokenId, globalTokenList]);
+    return !!root_canister_id;
+  }, [tokenId, root_canister_id]);
 }

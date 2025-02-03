@@ -1,9 +1,9 @@
-import { Typography, Box } from "components/Mui";
+import { Typography, Box, Button } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useToken } from "hooks/index";
 import { Trans } from "@lingui/macro";
-import { InfoWrapper, MainCard, TokenImage, Link } from "components/index";
+import { InfoWrapper, MainCard, TokenImage, Link, ImportToNns } from "components/index";
 import Copy, { CopyRef } from "components/Copy";
 import { LinkButtons } from "components/info/tokens";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
@@ -147,27 +147,43 @@ export function TokenDetail() {
         links={[{ label: <Trans>Tokens</Trans>, link: "/info-tokens" }, { label: <Trans>Token Details</Trans> }]}
       />
 
-      <Flex gap="0 8px" sx={{ margin: "16px 0 0 0" }}>
-        <TokenImage logo={token?.logo} size="32px" />
-        <Typography color="text.primary" fontWeight={500} fontSize="24px">
-          {token?.symbol}
-        </Typography>
-        <Typography fontSize="20px">({token?.name})</Typography>
-      </Flex>
+      <Flex
+        sx={{
+          margin: "16px 0 0 0",
+        }}
+        justify="space-between"
+        align="flex-end"
+      >
+        <Box>
+          <Flex gap="0 8px">
+            <TokenImage logo={token?.logo} size="32px" />
+            <Typography color="text.primary" fontWeight={500} fontSize="24px">
+              {token?.symbol}
+            </Typography>
+            <Typography fontSize="20px">({token?.name})</Typography>
+          </Flex>
 
-      <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
-        <Typography color="text.primary" fontWeight={500} fontSize="36px">
-          {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
-        </Typography>
-        <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
-      </Flex>
+          <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
+            <Typography color="text.primary" fontWeight={500} fontSize="36px">
+              {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
+            </Typography>
+            <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
+          </Flex>
 
-      <Flex gap="0 8px" sx={{ margin: "12px 0 0 0" }}>
-        <Typography fontSize="18px">
-          {infoToken && icpPrice
-            ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
-            : "--"}
-        </Typography>
+          <Flex gap="0 8px" sx={{ margin: "12px 0 0 0" }}>
+            <Typography fontSize="18px">
+              {infoToken && icpPrice
+                ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
+                : "--"}
+            </Typography>
+          </Flex>
+        </Box>
+
+        <ImportToNns tokenId={canisterId}>
+          <Button variant="contained">
+            <Trans>Add to NNS</Trans>
+          </Button>
+        </ImportToNns>
       </Flex>
 
       <Flex fullWidth vertical align="flex-start" gap="16px 0" sx={{ margin: "24px 0 0 0" }}>

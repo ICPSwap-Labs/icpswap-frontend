@@ -4,6 +4,7 @@ import store from "store/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { ICP } from "@icpswap/tokens";
 import { registerTokens, tokenAdapter } from "@icpswap/token-adapter";
+import { Null } from "@icpswap/types";
 
 import { updateTokenStandards } from "./actions";
 
@@ -46,7 +47,7 @@ export function useUpdateTokenStandard() {
   );
 }
 
-export function useTokenStandard(canisterId: string | undefined) {
+export function useTokenStandard(canisterId: string | Null) {
   const standards = useAppSelector((state) => state.tokenCache.standards);
 
   return useMemo(() => {
