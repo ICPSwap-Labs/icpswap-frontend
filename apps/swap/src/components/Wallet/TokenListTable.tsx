@@ -11,7 +11,7 @@ import {
   isNullArgs,
   formatAmount,
 } from "@icpswap/utils";
-import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal } from "components/index";
+import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
 import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import { t } from "@lingui/macro";
@@ -341,6 +341,10 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
           <Button label="Send" onClick={handleTransfer} />
           <Button label="Receive" onClick={handleReceive} />
+
+          <ImportToNns tokenId={canisterId}>
+            <Button label="Add to NNS" />
+          </ImportToNns>
 
           <TransactionButton
             tokenId={canisterId}
