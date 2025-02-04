@@ -155,7 +155,7 @@ export default function TokenDetails() {
           "@media (max-width: 640px)": {
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: "10px 0",
+            gap: "16px 0",
           },
         }}
       >
@@ -179,7 +179,16 @@ export default function TokenDetails() {
           </Flex>
         </Box>
 
-        <Flex justify="flex-end" wrap="wrap" sx={{ gap: "10px" }}>
+        <Flex
+          justify="flex-end"
+          wrap="wrap"
+          sx={{
+            gap: "10px",
+            "@media(max-width: 640px)": {
+              justifyContent: "flex-start",
+            },
+          }}
+        >
           {!matchDownSM ? (
             <TokenChartsViewSelector token={token} chartView={chartView} setChartView={setChartView} />
           ) : null}
