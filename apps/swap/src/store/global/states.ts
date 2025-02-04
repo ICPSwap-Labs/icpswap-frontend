@@ -13,6 +13,7 @@ export interface GlobalState {
   poolStandardUpdated: boolean;
   allSwapTokens: AllTokenOfSwapTokenInfo[];
   walletConnector: boolean;
+  bridgeTokens: string[];
 }
 
 export const initialState: GlobalState = {
@@ -25,4 +26,5 @@ export const initialState: GlobalState = {
   poolStandardUpdated: false,
   allSwapTokens: [],
   walletConnector: false,
+  bridgeTokens: [],
 };

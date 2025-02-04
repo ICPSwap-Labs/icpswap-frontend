@@ -12,6 +12,7 @@ import {
 } from "@icpswap/hooks";
 import { AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
+import { useAllBridgeTokens } from "hooks/ck-bridge";
 
 import {
   updateXDR2USD,
@@ -19,6 +20,7 @@ import {
   updateTokenList,
   updateAllSwapTokens,
   updateWalletConnector,
+  updateBridgeTokens,
 } from "./actions";
 
 export function useGlobalTokenList() {
@@ -212,4 +214,19 @@ export function useWalletConnectorManager(): [boolean, (open: boolean) => void] 
   );
 
   return [open, manage];
+}
+
+export function useFetchBridgeTokens() {
+  const dispatch = useAppDispatch();
+  const allBridgeTokens = useAllBridgeTokens();
+
+  useEffect(() => {
+    if (allBridgeTokens && allBridgeTokens.length > 0) {
+      dispatch(updateBridgeTokens(allBridgeTokens));
+    }
+  }, [allBridgeTokens]);
+}
+
+export function useBridgeTokens() {
+  return useAppSelector((state) => state.global.bridgeTokens);
 }

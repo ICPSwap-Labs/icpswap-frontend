@@ -150,6 +150,11 @@ export function TokenDetail() {
       <Flex
         sx={{
           margin: "16px 0 0 0",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "10px",
+            alignItems: "flex-start",
+          },
         }}
         justify="space-between"
         align="flex-end"
