@@ -6,6 +6,7 @@ import {
   updateTokenList,
   updateAllSwapTokens,
   updateWalletConnector,
+  updateBridgeTokens,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -28,5 +29,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateWalletConnector, (state, { payload }) => {
       state.walletConnector = payload;
+    })
+    .addCase(updateBridgeTokens, (state, { payload }) => {
+      state.bridgeTokens = payload;
     });
 });

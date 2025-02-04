@@ -15,3 +15,5 @@ export const updateTokenList = createAction<TokenListMetadata[]>("global/updateT
 export const updateAllSwapTokens = createAction<AllTokenOfSwapTokenInfo[]>("global/updateAllSwapTokens");
 
 export const updateWalletConnector = createAction<boolean>("global/updateWalletConnector");
+
+export const updateBridgeTokens = createAction<string[]>("global/updateBridgeTokens");
