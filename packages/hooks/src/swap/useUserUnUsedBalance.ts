@@ -12,25 +12,26 @@ let unused_fetch_index = -1;
 
 export function useUserUnUsedBalance(
   principal: string | undefined,
-  _pools: SwapPoolData[] | undefined,
-  selectedTokenId?: string,
+  targetPools: SwapPoolData[] | undefined,
+  tokenId?: string,
   reload?: boolean | number,
 ) {
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState<(UserSwapPoolsBalance | undefined)[]>([]);
 
   const pools = useMemo(() => {
-    if (!selectedTokenId) return _pools;
-    return _pools?.filter((pool) => pool.token0.address === selectedTokenId || pool.token1.address === selectedTokenId);
-  }, [_pools, selectedTokenId]);
+    if (!tokenId) return targetPools;
+    return targetPools?.filter((pool) => pool.token0.address === tokenId || pool.token1.address === tokenId);
+  }, [targetPools, tokenId]);
 
   const poolIds = useMemo(() => {
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
+  // When tokenId or targetPools is changed, update the index, and the _fetch would be abort if index is not match
   useEffect(() => {
     unused_fetch_index++;
-  }, [selectedTokenId]);
+  }, [tokenId, targetPools]);
 
   const _fetch = async (poolId: string, fetch_index: number) => {
     if (!principal || !isValidPrincipal(principal)) return undefined;
@@ -95,16 +96,16 @@ export function useUserUnUsedBalance(
   }, [poolIds, reload, principal]);
 
   return useMemo(() => {
-    const _balances = !selectedTokenId
+    const _balances = !tokenId
       ? balances
       : (balances.filter((e) => !!e) as UserSwapPoolsBalance[]).map((e) => {
           return {
             ...e,
-            balance0: e.token0.address === selectedTokenId ? e.balance0 : BigInt(0),
-            balance1: e.token1.address === selectedTokenId ? e.balance1 : BigInt(0),
+            balance0: e.token0.address === tokenId ? e.balance0 : BigInt(0),
+            balance1: e.token1.address === tokenId ? e.balance1 : BigInt(0),
           };
         });
 
     return { loading, balances: _balances };
-  }, [loading, balances, selectedTokenId]);
+  }, [loading, balances, tokenId]);
 }

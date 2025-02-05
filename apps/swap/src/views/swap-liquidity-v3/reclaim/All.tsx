@@ -21,11 +21,11 @@ type Balance = {
 export function ReclaimAll() {
   const principal = useAccountPrincipalString();
 
-  const { pools, loading, balances } = useUserSwapPoolBalances(principal);
+  const { loading, balances } = useUserSwapPoolBalances({ principal });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
 
-  const _balances = useMemo(() => {
+  const filteredBalances = useMemo(() => {
     if (!balances) return [];
 
     return balances
@@ -55,11 +55,11 @@ export function ReclaimAll() {
 
         return arr;
       }, [] as Balance[]);
-  }, [pools, balances]);
+  }, [balances]);
 
   const totalClaimedNumbers = useMemo(() => {
-    return _balances.length;
-  }, [_balances]);
+    return filteredBalances.length;
+  }, [filteredBalances]);
 
   const { hideUnavailableClaim, updateHideUnavailableClaim } = useHideUnavailableClaimManager();
 
@@ -187,7 +187,7 @@ export function ReclaimAll() {
               margin: "-16px 0 0 0",
             }}
           >
-            {_balances.map((balance, index) => (
+            {filteredBalances.map((balance, index) => (
               <ReclaimItems
                 key={index}
                 balance={balance}

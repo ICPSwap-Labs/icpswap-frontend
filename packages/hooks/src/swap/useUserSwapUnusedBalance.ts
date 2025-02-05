@@ -1,32 +1,47 @@
-/* eslint-disable no-console */
 import { useMemo } from "react";
 import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
 import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 
-export function useUserSwapPoolBalances(principal: string | Null, selectedTokenId?: string, reload?: boolean) {
-  const { result: pools } = useSwapPools();
+export function useUserSwapPoolBalances({
+  principal,
+  tokenId,
+  reload,
+  poolId,
+}: {
+  principal: string | Null;
+  tokenId?: string | Null;
+  reload?: boolean;
+  poolId?: string | Null;
+}) {
+  const { result: allSwapPools } = useSwapPools();
+
+  const targetSwapPools = useMemo(() => {
+    if (!poolId || !allSwapPools) return allSwapPools;
+
+    return allSwapPools.filter((e) => e.canisterId.toString() === poolId);
+  }, [allSwapPools, poolId]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal,
-    pools,
-    selectedTokenId,
+    targetSwapPools,
+    tokenId,
     reload,
   );
   const { loading: unUsedBalanceLoading, balances: unUsedBalances } = useUserUnUsedBalance(
     principal,
-    pools,
-    selectedTokenId,
+    targetSwapPools,
+    tokenId,
     reload,
   );
 
   return useMemo(
     () => ({
       loading: unUsedBalanceLoading || unDepositBalanceLoading,
-      pools,
+      allSwapPools,
       balances: unUsedBalances.concat(unDepositBalances).filter((balances) => !!balances) as UserSwapPoolsBalance[],
     }),
-    [pools, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
+    [allSwapPools, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
   );
 }
