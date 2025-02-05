@@ -1,4 +1,4 @@
-import { useTheme, Box, Typography } from "components/Mui";
+import { useTheme, Box, Typography, BoxProps } from "components/Mui";
 import { Flex, Link } from "@icpswap/ui";
 import { Trans } from "@lingui/macro";
 import { useSubnetBlockRate, useNodeMachinesOfSubnet } from "@icpswap/hooks";
@@ -8,11 +8,12 @@ import { ArrowUpRight } from "react-feather";
 import { ICPSwapSubnet, ICPSwapStableBlockRate } from "constants/index";
 import { NetworkStateIcon } from "components/NetworkStateIcon";
 
-export interface NetworkStateProps {
+export interface SubnetStateProps {
   fullWidth?: boolean;
+  wrapperSx?: BoxProps["sx"];
 }
 
-export function NetworkState({ fullWidth }: NetworkStateProps) {
+export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
   const theme = useTheme();
 
   const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
@@ -52,6 +53,7 @@ export function NetworkState({ fullWidth }: NetworkStateProps) {
         height: `${90 + 53}px`,
         left: "50%",
         transform: "translate(-50%,0)",
+        ...wrapperSx,
       }}
     >
       <Flex fullWidth justify="center" sx={{ height: "100%" }} align="flex-end">

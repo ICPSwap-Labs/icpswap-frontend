@@ -7,7 +7,7 @@ import Background from "components/Background";
 import V3Event from "./V3Event";
 import Header from "./Header";
 import { SnsTips } from "./SnsTips";
-import { NetworkState } from "./NetworkState";
+import { SubnetState } from "./SubnetState";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => {
       borderRadius: "8px",
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
-      "&.small-padding": {
+      "&.pro-padding": {
         padding: "0 12px",
       },
       "&.info": {
@@ -83,14 +83,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
 
         <main
-          className={`${classes.content}${isSwapPro ? " small-padding" : ""}${
+          className={`${classes.content}${isSwapPro ? " pro-padding" : ""}${
             location.pathname.includes("info") ? " info" : ""
           }`}
         >
           {children}
         </main>
 
-        <NetworkState fullWidth={isSwapPro} />
+        <SubnetState fullWidth={isSwapPro} wrapperSx={{ padding: isSwapPro ? "0 12px" : "0px" }} />
       </Box>
 
       <Background />
