@@ -3,8 +3,9 @@ import { Box, useTheme, useMediaQuery } from "components/Mui";
 import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
-import { ChartButton, ChartView } from "@icpswap/ui";
+import { ChartButton } from "@icpswap/ui";
 import { SwapProContext, PoolTokensInformation } from "components/swap/pro";
+import { DefaultChartView } from "constants/index";
 
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
@@ -21,10 +22,7 @@ export function SwapProContextWrapper() {
   const { inputToken, outputToken, poolId } = useContext(SwapContext);
 
   const [activeTab, setActiveTab] = useState<"SWAP" | "LIMIT">("SWAP");
-  const [chartView, setChartView] = useState<ChartButton | null>({
-    label: "DexScreener",
-    value: ChartView.DexScreener,
-  });
+  const [chartView, setChartView] = useState<ChartButton | null>(DefaultChartView);
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
   const outputTokenInfo = useInfoToken(outputToken?.address);
@@ -51,10 +49,7 @@ export function SwapProContextWrapper() {
 
   useEffect(() => {
     if (token) {
-      setChartView({
-        label: "DexScreener",
-        value: ChartView.DexScreener,
-      });
+      setChartView(DefaultChartView);
     }
   }, [token, setChartView, poolId]);
 
