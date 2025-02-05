@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { ChartViewSelector, ChartView } from "@icpswap/ui";
 import { SwapProContext } from "components/swap/pro";
+import { SwapContext } from "components/swap/index";
 
 export function TokenChartsViewSelector() {
-  const { inputToken, outputToken, setChartView, chartView } = useContext(SwapProContext);
+  const { inputToken, outputToken } = useContext(SwapContext);
+  const { setChartView, chartView } = useContext(SwapProContext);
 
   const ChartsViewButtons = [
     { label: `Dexscreener`, value: ChartView.DexScreener },
