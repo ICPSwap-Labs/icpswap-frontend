@@ -143,7 +143,7 @@ export interface TokenChartsProps {
   chartButtons?: ChartButton[];
   showTopIfDexScreen?: boolean;
   dexScreenHeight?: string;
-  dexScreenId?: string;
+  dexScreenId?: string | Null;
   priceChart?: ReactNode;
   onPriceTokenIdChange?: (tokenId: string | Null) => void;
   wrapperSx?: BoxProps["sx"];

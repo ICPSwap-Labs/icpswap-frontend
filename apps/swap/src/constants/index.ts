@@ -80,3 +80,4 @@ export * from "./icp";
 export * from "./wallet";
 export * from "./ckERC20";
 export * from "./auth";
+export * from "./swap-pro";

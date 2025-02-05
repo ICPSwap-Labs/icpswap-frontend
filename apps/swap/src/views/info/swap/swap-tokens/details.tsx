@@ -28,6 +28,7 @@ import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
 import { ICP } from "@icpswap/tokens";
+import { DefaultChartView } from "constants/index";
 
 import { TokenPrices } from "./components/TokenPrice";
 
@@ -81,10 +82,7 @@ export default function TokenDetails() {
 
   const [activeTab, setActiveTab] = useState<TabValue>(TabValue.Transactions);
 
-  const [chartView, setChartView] = useState<Null | ChartButton>({
-    label: "DexScreener",
-    value: ChartView.DexScreener,
-  });
+  const [chartView, setChartView] = useState<Null | ChartButton>(DefaultChartView);
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
