@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Typography, Box, Checkbox } from "@mui/material";
+import { Typography, Box, Checkbox } from "components/Mui";
 import { NoData, LoadingRow, SelectToken, Tooltip } from "components/index";
 import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
@@ -24,11 +24,11 @@ export function ReclaimWithToken() {
   const principal = useAccountPrincipalString();
   const history = useHistory();
   const { tokenId } = useParsedQueryString() as { tokenId: string };
-  const { pools, loading, balances } = useUserSwapPoolBalances(principal, tokenId);
+  const { loading, balances } = useUserSwapPoolBalances({ principal, tokenId });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
 
-  const _balances = useMemo(() => {
+  const filteredBalances = useMemo(() => {
     if (!balances) return [];
 
     return balances
@@ -58,11 +58,11 @@ export function ReclaimWithToken() {
 
         return arr;
       }, [] as Balance[]);
-  }, [pools, balances]);
+  }, [balances]);
 
   const totalClaimedNumbers = useMemo(() => {
-    return _balances.length;
-  }, [_balances]);
+    return filteredBalances.length;
+  }, [filteredBalances]);
 
   const { hideUnavailableClaim, updateHideUnavailableClaim } = useHideUnavailableClaimManager();
 
@@ -214,7 +214,7 @@ export function ReclaimWithToken() {
               margin: "-16px 0 0 0",
             }}
           >
-            {_balances.map((balance, index) => (
+            {filteredBalances.map((balance, index) => (
               <ReclaimItems
                 key={index}
                 balance={balance}

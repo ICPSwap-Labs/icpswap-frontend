@@ -4,11 +4,10 @@ import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
 import { UserSwapPoolsBalance } from "hooks/info/tools";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, BreadcrumbsV1, Flex } from "@icpswap/ui";
-import { SelectToken, InfoWrapper } from "components/index";
+import { SelectToken, InfoWrapper, SelectPair } from "components/index";
 import { parseTokenAmount, locationSearchReplace } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools";
 import { Null } from "@icpswap/types";
 
@@ -87,23 +86,30 @@ export default function UserPoolBalance() {
   const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
-  const { principal } = useParsedQueryString() as {
+  const { principal, tokenId, pair } = useParsedQueryString() as {
     principal: string | undefined;
+    tokenId: string | undefined;
+    pair: string | undefined;
   };
-  const [selectedTokenId, setSelectTokenId] = useState<string | undefined>(ICP.address);
-  const { balances, loading } = useUserSwapPoolBalances(principal, selectedTokenId);
+
+  const { balances, loading } = useUserSwapPoolBalances({ principal, tokenId, poolId: pair });
 
   const allClaims = useMemo(() => {
     return balances?.filter((ele) => ele.balance0 !== BigInt(0) || ele.balance1 !== BigInt(0));
   }, [balances]);
 
   const handleTokenChange = (tokenId: string) => {
-    setSelectTokenId(tokenId);
+    const search = locationSearchReplace(location.search, "tokenId", tokenId);
+    history.push(`/info-tools/user-balances${search}`);
   };
 
   const handleAddressChange = (address: string | Null) => {
     const search = locationSearchReplace(location.search, "principal", address);
+    history.push(`/info-tools/user-balances${search}`);
+  };
 
+  const handlePairChange = (pair: string | Null) => {
+    const search = locationSearchReplace(location.search, "pair", pair);
     history.push(`/info-tools/user-balances${search}`);
   };
 
@@ -133,7 +139,11 @@ export default function UserPoolBalance() {
             />
 
             <Box sx={{ width: "240px" }}>
-              <SelectToken value={selectedTokenId} onTokenChange={handleTokenChange} search />
+              <SelectToken value={tokenId} onTokenChange={handleTokenChange} search />
+            </Box>
+
+            <Box sx={{ width: "240px" }}>
+              <SelectPair value={pair} onPairChange={handlePairChange} search />
             </Box>
           </Flex>
         }
