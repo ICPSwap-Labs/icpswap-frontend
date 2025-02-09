@@ -5,7 +5,6 @@ import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
@@ -18,6 +17,7 @@ import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
 import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import { useTranslation } from "react-i18next";
 
 import Config from "./Config";
 
@@ -78,6 +78,7 @@ type ExcelClaimItem = {
 };
 
 export default function CreateTokenClaim() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const principal = useAccountPrincipal();
@@ -344,7 +345,7 @@ export default function CreateTokenClaim() {
                   onChange={handleFileChange}
                 />
                 <AuthButton variant="outlined" fullWidth size="large" loading={importLoading}>
-                  <Trans>Import Data</Trans>
+                  {t("claim.import.data")}
                 </AuthButton>
                 {!!userClaims.length || !!inValidUserClaims.length ? (
                   <Box mt="4px">

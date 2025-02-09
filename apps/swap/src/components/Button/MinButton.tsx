@@ -1,5 +1,6 @@
-import { TypographyProps } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { TypographyProps } from "components/Mui";
+import { useTranslation } from "react-i18next";
+
 import { SmallButton } from "./SmallButton";
 
 export interface MinButtonProps {
@@ -7,9 +8,7 @@ export interface MinButtonProps {
 }
 
 export function MinButton({ onClick }: MinButtonProps) {
-  return (
-    <SmallButton onClick={onClick}>
-      <Trans>MIN</Trans>
-    </SmallButton>
-  );
+  const { t } = useTranslation();
+
+  return <SmallButton onClick={onClick}>{t("common.min.upper")}</SmallButton>;
 }

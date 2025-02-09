@@ -1,9 +1,9 @@
 import { GridAutoRows, GridRowFixed } from "@icpswap/ui";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, useTheme } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
-import { Theme } from "@mui/material/styles";
-import { useTheme } from "@mui/styles";
 import { toSignificant } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
+
 import { ChartEntry } from "./type";
 
 interface LabelProps {
@@ -20,7 +20,8 @@ interface CurrentPriceLabelProps {
 }
 
 export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentPriceLabelProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const labelData = chartProps as LabelProps;
   const entryData = data?.[labelData.index];
 
@@ -43,7 +44,7 @@ export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentP
             <GridAutoRows gap="6px">
               <GridRowFixed align="center">
                 <Typography color="text.primary" mr="6px">
-                  Current Price
+                  {t("common.current.price")}
                 </Typography>
                 <div
                   style={{

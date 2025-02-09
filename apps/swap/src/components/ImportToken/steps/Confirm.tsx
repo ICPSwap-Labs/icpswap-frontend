@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, Box, Typography, Checkbox, Avatar, useTheme } from "components/Mui";
 import { Modal, TextButton, TokenStandardLabel } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
@@ -9,6 +8,7 @@ import { INFO_URL } from "constants/index";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { useToken } from "hooks/index";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export function WarningIcon() {
   return (
@@ -44,6 +44,7 @@ export interface ImportTokenModalProps {
 }
 
 export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully }: ImportTokenModalProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [riskWarning, setRiskWarning] = useState(false);
 
@@ -103,7 +104,7 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
 
             <Box mt="24px">
               <TextButton link={`${INFO_URL}/info-tokens/details/${canisterId}?standard=${token?.standard}`}>
-                <Trans>View On Info</Trans>
+                {t("common.view.info")}
               </TextButton>
             </Box>
           </Flex>
@@ -126,17 +127,11 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
           </Box>
           <Box>
             <Typography color="#B79C4A" sx={{ lineHeight: "23px" }}>
-              <Trans>
-                Anyone can create a token on Internet Computer with any name and LOGO, including creating fake versions
-                of existing tokens and tokens that claim to represent projects that do not have a token.
-              </Trans>
+              {t("common.tokens.waring")}
             </Typography>
 
             <Typography color="#B79C4A" mt="20px" sx={{ lineHeight: "23px" }}>
-              <Trans>
-                These risks are always present. If you purchase these fake tokens, it may result in a loss of assets.
-                Please DYOR before investing!
-              </Trans>
+              {t("common.tokens.waring1")}
             </Typography>
           </Box>
         </Flex>
@@ -153,14 +148,14 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
           />
 
           <Typography sx={{ cursor: "pointer", fontSize: "12px" }} onClick={() => setRiskWarning(!riskWarning)}>
-            <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
+            {t("common.token.risk.agree")}
           </Typography>
         </Flex>
       </Box>
 
       <Box mt="18px">
         <Button variant="contained" size="large" fullWidth disabled={!!error || !riskWarning} onClick={handleConfirm}>
-          {error || <Trans>Confirm</Trans>}
+          {error || t("common.confirm")}
         </Button>
       </Box>
     </Modal>

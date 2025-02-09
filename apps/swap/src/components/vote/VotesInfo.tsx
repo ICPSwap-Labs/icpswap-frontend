@@ -1,18 +1,15 @@
 import { useState, useMemo } from "react";
-import { Grid, Typography, Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Grid, Typography, Box, useTheme } from "components/Mui";
 import { ResultStatus, ProposalInfo } from "@icpswap/types";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as CallIdentity } from "types/global";
-import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { AuthButton } from "components/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useUserVotePower } from "hooks/voting/useUserVotePower";
 import { useAccount } from "store/auth/hooks";
 import { voting, useVotingProposal } from "@icpswap/hooks";
 import BigNumber from "bignumber.js";
+import { useTranslation } from "react-i18next";
+
 import VoteConfirm from "./VoteConfirm";
 
 export interface CastVotesProps {
@@ -21,6 +18,7 @@ export interface CastVotesProps {
 }
 
 export function CastVotes({ proposal, onVoteSuccess }: CastVotesProps) {
+  const { t } = useTranslation();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const account = useAccount();
@@ -35,19 +33,13 @@ export function CastVotes({ proposal, onVoteSuccess }: CastVotesProps) {
   const { result: powers } = useUserVotePower(proposal.storageCanisterId, proposal.id, account, 0, 10, reload);
   const noPower = powers === BigInt(0) || !powers;
 
-  const handleVote = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
+  const handleVote = async () => {
     if (loading || noPower || !powers || !activeVote) return;
 
     setLoading(true);
     setShowConfirm(false);
 
-    const { status, message } = await voting(
-      identity,
-      proposal.storageCanisterId,
-      proposal.id,
-      activeVote,
-      Number(powers),
-    );
+    const { status, message } = await voting(true, proposal.storageCanisterId, proposal.id, activeVote, Number(powers));
 
     if (status === ResultStatus.OK) {
       openSuccessTip(t`Voted successfully`);
@@ -99,31 +91,28 @@ export function CastVotes({ proposal, onVoteSuccess }: CastVotesProps) {
         disabled={loading || !activeVote || isClosed}
         loading={loading}
       >
-        {isClosed ? <Trans>Closed</Trans> : <Trans>Vote</Trans>}
+        {isClosed ? t("common.closed") : t("common.vote")}
       </AuthButton>
 
       {showConfirm ? (
-        <Identity onSubmit={handleVote}>
-          {({ submit }: CallbackProps) => (
-            <VoteConfirm
-              open={showConfirm}
-              onClose={() => setShowConfirm(false)}
-              onConfirm={submit}
-              optionLabel={activeVote}
-              powers={powers}
-              noPower={noPower}
-            />
-          )}
-        </Identity>
+        <VoteConfirm
+          open={showConfirm}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={handleVote}
+          optionLabel={activeVote}
+          powers={powers}
+          noPower={noPower}
+        />
       ) : null}
     </Box>
   );
 }
 
 export function VotesResult({ proposal: _proposal }: { proposal: ProposalInfo }) {
+  const { t } = useTranslation();
   const { result: proposal } = useVotingProposal(_proposal.storageCanisterId, _proposal.id);
 
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const total = useMemo(() => {
     return proposal?.options.reduce(
@@ -159,7 +148,7 @@ export function VotesResult({ proposal: _proposal }: { proposal: ProposalInfo })
               </Grid>
 
               <Typography fontSize={12}>
-                <Trans>{new BigNumber(String(_option?.v ?? 0)).toFormat()} Votes</Trans>
+                {t("vote.votes.amount", { amount: new BigNumber(String(_option?.v ?? 0)).toFormat() })}
               </Typography>
             </Grid>
 

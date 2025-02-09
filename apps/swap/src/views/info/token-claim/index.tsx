@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Typography, Box, makeStyles } from "components/Mui";
 import { InfoWrapper } from "components/index";
 import { pageArgsFormat, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { useClaimEvents } from "@icpswap/hooks";
 import type { ClaimEventInfo } from "@icpswap/types";
 import { getEventState } from "utils/info/token-claim";
@@ -18,6 +17,7 @@ import {
   Pagination,
   PaginationType,
 } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -36,6 +36,7 @@ export interface ClaimEventItemProps {
 }
 
 function ClaimEventItem({ ele }: ClaimEventItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const state = getEventState(ele);
 
@@ -53,15 +54,14 @@ function ClaimEventItem({ ele }: ClaimEventItemProps) {
       </BodyCell>
       <BodyCell>{state}</BodyCell>
       <BodyCell>
-        <TextButton to={`/info-claim/transactions/${ele.claimEventId}`}>
-          <Trans>Details</Trans>
-        </TextButton>
+        <TextButton to={`/info-claim/transactions/${ele.claimEventId}`}>{t("common.details")}</TextButton>
       </BodyCell>
     </TableRow>
   );
 }
 
 export default function TokenClaim() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
@@ -79,40 +79,22 @@ export default function TokenClaim() {
       <MainCard>
         <Box style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Typography variant="h3" component="div">
-            <Trans>Claim event records</Trans>
+            {t("claim.event.records")}
           </Typography>
         </Box>
 
         <Box mt="20px" sx={{ overflow: "auto", width: "100%" }}>
           <Box sx={{ padding: "0 0 20px 0" }}>
             <Header className={classes.wrapper}>
-              <HeaderCell>
-                <Trans>Claim Event</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Canister ID</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Token</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Token addresses</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Total Tokens</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Claimed addresses</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Claimed Tokens</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Balance</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>State</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("claim.event")}</HeaderCell>
+              <HeaderCell>{t("common.canister.id")}</HeaderCell>
+              <HeaderCell>{t("common.token")}</HeaderCell>
+              <HeaderCell>{t("claim.token.addresses")}</HeaderCell>
+              <HeaderCell>{t("claim.total.tokens")}</HeaderCell>
+              <HeaderCell>{t("claim.claimed.addresses")}</HeaderCell>
+              <HeaderCell>{t("claim.claimed.tokens")}</HeaderCell>
+              <HeaderCell>{t("common.balance")}</HeaderCell>
+              <HeaderCell>{t("common.state")}</HeaderCell>
               <HeaderCell>&nbsp;</HeaderCell>
             </Header>
 

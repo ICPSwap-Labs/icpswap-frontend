@@ -1,9 +1,9 @@
 import { Typography, Box, useTheme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Tooltip } from "@icpswap/ui";
 import { useFarmIsPending } from "hooks/staking-farm/useFarmIsPending";
 import type { FarmState, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 interface PendingPanelProps {
   state: FarmState | Null;
@@ -12,6 +12,7 @@ interface PendingPanelProps {
 }
 
 export function PendingPanel({ farmId, state, rewardToken }: PendingPanelProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const isPending = useFarmIsPending({ farmId, state, rewardToken });
@@ -24,18 +25,8 @@ export function PendingPanel({ farmId, state, rewardToken }: PendingPanelProps) 
         padding: "6px 8px",
       }}
     >
-      <Tooltip
-        tips={
-          <Trans>
-            Although staking has started, the project's reward tokens haven't been deposited into the staking pool yet.
-            This delay may be due to technical or operational issues, temporarily preventing users from receiving
-            rewards. Once the tokens are added, rewards will be distributed.
-          </Trans>
-        }
-      >
-        <Typography sx={{ color: "#F7B231", fontSize: "12px" }}>
-          <Trans>Pending</Trans>
-        </Typography>
+      <Tooltip tips={t("farm.pending.panel.description")}>
+        <Typography sx={{ color: "#F7B231", fontSize: "12px" }}>{t("common.pending")}</Typography>
       </Tooltip>
     </Box>
   ) : null;

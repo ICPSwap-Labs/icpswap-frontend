@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import { Neuron } from "@icpswap/types";
 
 import { AddFolloweeModal } from "./AddFolloweeModal";
@@ -19,7 +18,7 @@ export function AddFollowee({ func_id, onFollowSuccess, neuron, governance_id, n
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained">
-        <Trans>Add Followee</Trans>
+        t("nns.followee.add")
       </Button>
 
       <AddFolloweeModal

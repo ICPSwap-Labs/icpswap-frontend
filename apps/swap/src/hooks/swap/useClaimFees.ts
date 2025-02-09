@@ -1,9 +1,7 @@
 import { useCallback } from "react";
-import BigNumber from "bignumber.js";
 import { Pool, CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -11,7 +9,8 @@ import { useSwapWithdraw, useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { sleep } from "@icpswap/utils";
+import { sleep, BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
   return await collect(pool, {
@@ -33,6 +32,7 @@ function useCollectFeeCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
   const withdraw = useSwapWithdraw();
+  const { t } = useTranslation();
 
   return useCallback(
     ({
@@ -130,6 +130,7 @@ interface AddLiquidityStepsArgs {
 }
 
 function useCollectFeeSteps() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const stepContentManage = useStepContentManager();
 
@@ -148,7 +149,7 @@ function useCollectFeeSteps() {
 
       stepContentManage(String(key), {
         content,
-        title: t`Collect Fees Details`,
+        title: t("swap.claim.fees.details"),
       });
     },
     [principal],

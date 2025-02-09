@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { Box, Typography, useTheme, Button } from "components/Mui";
 import { BigNumber, toSignificantWithGroupSeparator, nanosecond2Millisecond } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
 import { LimitOrder as LimitOrderType } from "@icpswap/types";
@@ -16,6 +15,7 @@ import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { TokenPrice } from "components/swap/index";
 import { usePoolByPoolId } from "hooks/swap/usePools";
+import { useTranslation } from "react-i18next";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -28,6 +28,7 @@ export interface LimitOrderProps {
 }
 
 export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [showLimitDetails, setShowLimitDetails] = useState(false);
@@ -91,7 +92,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
     <>
       <Box sx={{ background: theme.palette.background.level2, padding: "24px", borderRadius: "16px", width: "100%" }}>
         <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Created {dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm")}</Trans>
+          {t("common.created.time", { time: dayjs(nanosecond2Millisecond(timestamp)).format("YYYY-MM-DD HH:mm") })}
         </Typography>
 
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>
@@ -130,9 +131,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
         >
           <Flex vertical fullWidth gap="10px 0" align="flex-start">
             <Flex gap="4px 8px">
-              <Typography sx={{ whiteSpace: "nowrap" }}>
-                <Trans>Limit Price</Trans>
-              </Typography>
+              <Typography sx={{ whiteSpace: "nowrap" }}>{t("common.limit.price")}</Typography>
               <Flex gap="0 2px" sx={{ textAlign: "right", cursor: "pointer" }} onClick={handleInvert}>
                 <Typography sx={{ color: "text.primary" }}>
                   {limitPrice
@@ -150,9 +149,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
             </Flex>
 
             <Flex gap="4px 8px" wrap="wrap">
-              <Typography>
-                <Trans>Current Price</Trans>
-              </Typography>
+              <Typography>{t("common.current.price")}</Typography>
 
               <Flex sx={{ flex: 1, justifyContent: "flex-start" }}>
                 <TokenPrice
@@ -172,7 +169,7 @@ export function LimitOrder({ order, poolId, onCancelSuccess }: LimitOrderProps) 
           </Flex>
 
           <Button variant="contained" className="secondary" onClick={() => setShowLimitDetails(true)}>
-            <Trans>Cancel</Trans>
+            {t("common.cancel")}
           </Button>
         </Flex>
       </Box>

@@ -1,10 +1,10 @@
 import { Box, Avatar } from "components/Mui";
 import { Position } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { StepContents } from "types/step";
 import { TextButton } from "components/index";
+import i18n from "i18n/index";
 
 export interface IncreaseLiquidityStepsProps {
   position: Position;
@@ -54,58 +54,54 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       title: isToken0UseTransfer ? `Transfer ${symbol0}` : `Approve ${symbol0}`,
       step: 0,
       children: [
-        { label: t`Amount`, value: amount0Value },
-        { label: t`Canister Id`, value: position.pool.token0.address },
+        { label: i18n.t("common.amount"), value: amount0Value },
+        { label: i18n.t("common.canister.id"), value: position.pool.token0.address },
       ],
     },
     {
-      title: t`Deposit ${symbol0}`,
+      title: i18n.t("common.deposit.amount", { amount: symbol0 }),
       step: 1,
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount0Value,
         },
-        { label: t`Canister Id`, value: position.pool.token0.address },
+        { label: i18n.t("common.canister.id"), value: position.pool.token0.address },
       ],
       errorActions: [
         <>
-          <TextButton onClick={handleReclaim}>
-            <Trans>Reclaim</Trans>
-          </TextButton>
+          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
         </>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: isToken1UseTransfer ? t`Transfer ${symbol1}` : t`Approve ${symbol1}`,
+      title: isToken1UseTransfer ? i18n.t`Transfer ${symbol1}` : i18n.t`Approve ${symbol1}`,
       step: 2,
       children: [
-        { label: t`Amount`, value: amount1Value },
-        { label: t`Canister Id`, value: position.pool.token1.address },
+        { label: i18n.t("common.amount"), value: amount1Value },
+        { label: i18n.t("common.canister.id"), value: position.pool.token1.address },
       ],
     },
     {
-      title: t`Deposit ${symbol1}`,
+      title: i18n.t("common.deposit.amount", { amount: symbol1 }),
       step: 3,
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount1Value,
         },
-        { label: t`Canister Id`, value: position.pool.token1.address },
+        { label: i18n.t("common.canister.id"), value: position.pool.token1.address },
       ],
       errorActions: [
         <>
-          <TextButton onClick={handleReclaim}>
-            <Trans>Reclaim</Trans>
-          </TextButton>
+          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
         </>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: t`Increase liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
+      title: i18n.t`Increase liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
       step: 4,
       children: [
         { label: symbol0, value: amount0Value },
@@ -113,12 +109,10 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       ],
       errorActions: [
         <>
-          <TextButton onClick={handleReclaim}>
-            <Trans>Reclaim</Trans>
-          </TextButton>
+          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
         </>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
   ] as StepContents[];
 }

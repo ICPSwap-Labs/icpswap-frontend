@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNeuronSystemFunctions } from "@icpswap/hooks";
 import { Box, Checkbox, Typography } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
 import { Modal } from "@icpswap/ui";
 import { Filter } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 export interface SelectNeuronFuncsProps {
   onConfirm: (ids: bigint[], exclude_ids: bigint[]) => void;
@@ -11,6 +11,7 @@ export interface SelectNeuronFuncsProps {
 }
 
 export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFuncsProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [filterFuncIds, setFilterFuncIds] = useState<bigint[]>([]);
   const [selectedFuncIds, setSelectedFuncIds] = useState<bigint[]>([]);
@@ -72,9 +73,7 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
         onClick={() => setOpen(true)}
       >
         <Filter size="16px" />
-        <Typography>
-          <Trans>Types</Trans>
-        </Typography>
+        <Typography>{t("common.types")}</Typography>
         {functions ? (
           <Typography>
             ({filterFuncIds.length}/{functions.length})
@@ -82,13 +81,13 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
         ) : null}
       </Box>
 
-      <Modal open={open} title={t`Types`} onClose={() => setOpen(false)} showConfirm onConfirm={handleConfirm}>
+      <Modal open={open} title={t("common.types")} onClose={() => setOpen(false)} showConfirm onConfirm={handleConfirm}>
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0 10px" }}>
           <Typography sx={{ fontSize: "16px", cursor: "pointer" }} onClick={handleSelectAll}>
-            <Trans>Select All</Trans>
+            {t("common.select.all")}
           </Typography>
           <Typography sx={{ fontSize: "16px", cursor: "pointer" }} onClick={handleClear}>
-            <Trans>Clear</Trans>
+            {t("common.clear")}
           </Typography>
         </Box>
 

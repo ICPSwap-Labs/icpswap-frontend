@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { NumberTextField, MaxButton } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useCallback } from "react";
@@ -8,6 +7,7 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useTokenSymbol } from "hooks/ck-bridge";
+import { useTranslation } from "react-i18next";
 
 import { TokenImageWithChain } from "./ChainImage";
 
@@ -21,6 +21,7 @@ export interface InputWrapperProps {
 }
 
 export function InputWrapper({ value, token, balance, chain, onInput, onMax }: InputWrapperProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const symbol = useTokenSymbol({ token, bridgeChain: chain });
@@ -77,7 +78,7 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
 
       <Flex justify="flex-end" gap="0 6px">
         <Typography>
-          <Trans>Balance:</Trans>&nbsp;
+          {t("common.balance.colon")}&nbsp;
           {balance && token
             ? toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())
             : "--"}

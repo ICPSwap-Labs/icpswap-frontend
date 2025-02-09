@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
 import { ArrowLeft } from "react-feather";
 import { Null } from "@icpswap/types";
 import { TabPanel, Tab } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import { LimitOrders } from "./LimitOrders";
 import { LimitHistory } from "./LimitHistory";
@@ -17,6 +17,7 @@ export interface LimitTransactionsProps {
 }
 
 export function LimitTransactions({ ui = "normal", pool, onBack }: LimitTransactionsProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [activeTab, setActiveTab] = useState("Pending");
@@ -30,9 +31,7 @@ export function LimitTransactions({ ui = "normal", pool, onBack }: LimitTransact
       <Flex justify="space-between">
         <Flex gap="0 8px" sx={{ cursor: "pointer" }} onClick={onBack}>
           <ArrowLeft size={18} />
-          <Typography>
-            <Trans>Back</Trans>
-          </Typography>
+          <Typography>{t("common.back")}</Typography>
         </Flex>
       </Flex>
 

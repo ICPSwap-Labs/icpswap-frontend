@@ -1,7 +1,6 @@
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { useTheme, Box, Typography, CircularProgress, TextField } from "components/Mui";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
@@ -13,6 +12,7 @@ import { useDissolve } from "hooks/ck-btc/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { validate } from "bitcoin-address-validation";
 import ButtonConnector from "components/authentication/ButtonConnector";
+import { useTranslation } from "react-i18next";
 
 interface BtcBridgeDissolveProps {
   token: Token;
@@ -20,6 +20,7 @@ interface BtcBridgeDissolveProps {
 }
 
 export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const chainId = useActiveChain();
 
@@ -33,9 +34,10 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
   const dissolve_error = useMemo(() => {
     if (!address) return t`Enter the address`;
     if (!validate(address)) return t`Invalid bitcoin address`;
-    if (!amount) return t`Enter the amount`;
+    if (!amount) return t("common.error.input.amount");
     if (!new BigNumber(amount).isGreaterThan(0.001)) return t`Min amount is 0.001 ckBTC`;
-    if (parseTokenAmount(tokenBalance, token.decimals).isLessThan(amount)) return t`Insufficient balance`;
+    if (parseTokenAmount(tokenBalance, token.decimals).isLessThan(amount))
+      return t("common.error.insufficient.balance");
 
     return undefined;
   }, [amount, token, chainId, address]);
@@ -81,9 +83,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
           borderRadius: "16px",
         }}
       >
-        <Typography sx={{ fontSize: "16px" }}>
-          <Trans>BTC Receiving Address</Trans>
-        </Typography>
+        <Typography sx={{ fontSize: "16px" }}>{t("ck.receiving.address", { symbol: "BTC" })}</Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           <TextField
@@ -138,13 +138,9 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
       >
         <Flex fullWidth justify="space-between" align="flex-start">
           <Box>
-            <Typography>
-              <Trans>Fee</Trans>
-            </Typography>
+            <Typography>{t("common.fee")}</Typography>
 
-            <Typography sx={{ margin: "4px 0 0 0" }}>
-              <Trans>(Excludes Bitcoin Network Tx fees)</Trans>
-            </Typography>
+            <Typography sx={{ margin: "4px 0 0 0" }}>{t("ck.btc.tx.fee")}</Typography>
           </Box>
 
           <Typography>{DISSOLVE_FEE}ckBTC</Typography>

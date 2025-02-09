@@ -1,5 +1,4 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useListDeployedSNSs, getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import type { ProposalData } from "@icpswap/types";
 import { shortenString, nowInSeconds } from "@icpswap/utils";
@@ -13,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import { LoadingRow, Wrapper, Link } from "components/index";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
+import { useTranslation } from "react-i18next";
 
 import { getProposalStatus } from "./proposal.utils";
 
@@ -22,6 +22,7 @@ interface ProposalItemProps {
 }
 
 function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { title, summary, seconds, isExecuted } = useMemo(() => {

@@ -1,12 +1,12 @@
 import { Typography, Box } from "components/Mui";
 import { useStakeIntervalGlobalData, useUserStakedTokens, useInfoAllTokens } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
 import { Tooltip, Flex } from "components/index";
 import React, { useMemo } from "react";
 import { useICPPrice } from "store/global/hooks";
 import { formatDollarAmount, BigNumber, nonNullArgs } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUserAvailableTokensValue } from "hooks/staking-token/useUserAvailableTokens";
+import { useTranslation } from "react-i18next";
 
 interface ItemProps {
   label0: React.ReactNode;
@@ -55,6 +55,7 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
 }
 
 export function GlobalData() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const icpPrice = useICPPrice();
   const { data } = useStakeIntervalGlobalData();
@@ -109,7 +110,7 @@ export function GlobalData() {
       }}
     >
       <Item
-        label0={<Trans>Your Available Tokens</Trans>}
+        label0={t("stake.your.available.tokens")}
         value0={
           nonNullArgs(userAvailableTokensValue) && nonNullArgs(availableTokensNumber) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
@@ -127,7 +128,7 @@ export function GlobalData() {
           )
         }
         tooltip0={t`The number of tokens currently available in your account for staking.`}
-        label1={<Trans>Your Staked Tokens</Trans>}
+        label1={t("stake.your.staked.tokens")}
         value1={
           nonNullArgs(allStakedTokensUSDValue) && nonNullArgs(userStakedTokens) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
@@ -147,19 +148,19 @@ export function GlobalData() {
       />
 
       <Item
-        label0={<Trans>TVL</Trans>}
+        label0={t("common.tvl")}
         value0={tvl ?? "--"}
         tooltip0={t`The cumulative value of tokens staked across all live pools.`}
-        label1={<Trans>Total Rewarded Value</Trans>}
+        label1={t("common.total.rewarded.value")}
         value1={rewardedValue ?? "--"}
         tooltip1={t`The total value of rewards distributed by finished pools.`}
       />
 
       <Item
-        label0={<Trans>Total Rewarding Value</Trans>}
+        label0={t("common.total.rewarding.value")}
         value0={rewardingValue ?? "--"}
         tooltip0={t`The total value of rewards distributed by live pools.`}
-        label1={<Trans>Total Pools</Trans>}
+        label1={t("common.total.pools")}
         value1={totalPools ?? "--"}
         tooltip1={t`The total number of pools, including those that are unstart, live, and finished.`}
       />

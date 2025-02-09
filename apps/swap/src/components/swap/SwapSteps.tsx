@@ -1,11 +1,11 @@
 import { Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { t, Trans } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapOutAmount } from "store/swap/hooks";
 import { TextButton, TokenImage } from "components/index";
 import type { StepContents } from "types/step";
+import i18n from "i18n/index";
 
 export interface GetStepsArgs {
   inputToken: Token;
@@ -64,29 +64,25 @@ export function getSwapStep({
       title: isTokenInUseTransfer ? `Transfer ${symbol0}` : `Approve ${symbol0}`,
       step: 0,
       children: [
-        { label: t`Amount`, value: amount0Value },
-        { label: t`Canister Id`, value: address0 },
+        { label: i18n.t("common.amount"), value: amount0Value },
+        { label: i18n.t("common.canister.id"), value: address0 },
       ],
     },
     {
-      title: t`Deposit ${symbol0}`,
+      title: i18n.t("common.deposit.amount", { amount: symbol0 }),
       step: 1,
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount0Value,
         },
-        { label: t`Canister Id`, value: address0 },
+        { label: i18n.t("common.canister.id"), value: address0 },
       ],
-      errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-      ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: t`Swap ${symbol0} to ${symbol1}`,
+      title: i18n.t("swap.to", { symbol0, symbol1 }),
       step: 2,
       children: [
         { label: symbol0, value: amount0Value },
@@ -98,13 +94,13 @@ export function getSwapStep({
   if (!keepTokenInPools) {
     steps.push({
       title: !outAmount
-        ? t`Withdraw ${symbol1}`
+        ? i18n.t("common.withdraw.amount", { symbol: symbol1 })
         : withdrawAmountLessThanZero
-        ? t`Unable to withdraw ${symbol1}`
-        : t`Withdraw ${symbol1}`,
+        ? i18n.t("common.unable.withdraw", { symbol: symbol1 })
+        : i18n.t("common.withdraw.amount", { symbol: symbol1 }),
       step: 3,
       children: [{ label: symbol1, value: outAmountValue }],
-      skipError: withdrawAmountLessThanZero ? t`The amount of withdrawal is less than the transfer fee` : undefined,
+      skipError: withdrawAmountLessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
     });
   }
 

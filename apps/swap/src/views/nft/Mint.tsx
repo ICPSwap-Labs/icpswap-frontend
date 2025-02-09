@@ -15,7 +15,6 @@ import Upload, { UploadRef } from "components/NFT/Upload";
 import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR } from "hooks/useTips";
 import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
-import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Identity as TypeIdentity } from "types/index";
 import { type NFTControllerInfo } from "@icpswap/types";
@@ -26,9 +25,11 @@ import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
 import BigNumber from "bignumber.js";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { CardContent1120 } from "components/Layout/CardContent1120";
+import { useTranslation } from "react-i18next";
+import { isNullArgs } from "@icpswap/utils";
 
 export type Metadata = { label: string; value: string; key: number };
 
@@ -37,6 +38,7 @@ export type MintTokenInfo = { metadata: Metadata[]; [key: string]: any };
 let metadataKey = 0;
 
 export default function NFTMint() {
+  const { t } = useTranslation();
   const history = useHistory();
   const account = useAccount();
   const [mintTokenInfo, setMintTokenInfo] = useState<MintTokenInfo>({} as MintTokenInfo);
@@ -70,7 +72,7 @@ export default function NFTMint() {
   const mintNFTCallback = useMintNFTCallback();
 
   const handleMintNFT = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
+    if (loading || isNullArgs(account)) return;
 
     const { filePath, fileType } = (await uploadRef.current?.uploadCb()) ?? {};
 
@@ -184,14 +186,12 @@ export default function NFTMint() {
 
   return (
     <CardContent1120>
-      <Breadcrumbs prevLink="/info-tools" prevLabel={<Trans>Tools</Trans>} currentLabel={<Trans>Mint NFT</Trans>} />
+      <Breadcrumbs prevLink="/info-tools" prevLabel={t("common.tools")} currentLabel={t("nft.mint")} />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
         <Grid container justifyContent="center">
           <Box sx={{ maxWidth: "474px", margin: "28px 0 0 0" }}>
-            <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
-              <Trans>Mint NFT</Trans>
-            </Typography>
+            <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>{t("nft.mint")}</Typography>
 
             <Grid
               mt="32px"
@@ -201,7 +201,7 @@ export default function NFTMint() {
               <Box className="grid-box">
                 <Box>
                   <FilledTextField
-                    label={<Trans>NFT Canister</Trans>}
+                    label={t("nft.canister")}
                     required
                     select
                     placeholder="Select the NFT canister"
@@ -222,9 +222,7 @@ export default function NFTMint() {
                         }}
                       >
                         <NoData />
-                        <TextButton to="/info-tools/nft/canister/create">
-                          <Trans>Create an NFT canister</Trans>
-                        </TextButton>
+                        <TextButton to="/info-tools/nft/canister/create">{t("nft.create.canister")}</TextButton>
                       </Grid>
                     }
                   />
@@ -233,7 +231,7 @@ export default function NFTMint() {
 
               <Box className="grid-box">
                 <FilledTextField
-                  label={<Trans>NFT Name</Trans>}
+                  label={t("nft.name")}
                   required
                   placeholder="Enter the NFT name"
                   onChange={(value) => handleFieldChange(value, "name")}
@@ -246,11 +244,11 @@ export default function NFTMint() {
                     <Grid item xs>
                       <RequiredMark />
                       <Typography component="span" fontSize="16px" color="text.secondary">
-                        <Trans>Supply</Trans>
+                        {t("common.supply")}
                       </Typography>
                     </Grid>
                     <Typography component="span" fontSize="14px" color="text.primary">
-                      <Trans>Max Supply:</Trans>
+                      {t("common.max.supply.colon")}
                       &nbsp;
                       {new BigNumber(canisterMetadata?.totalSupply ? String(canisterMetadata?.totalSupply) : 0)
                         .minus(canisterMetadata?.mintSupply ? String(canisterMetadata?.mintSupply) : 0)
@@ -284,8 +282,8 @@ export default function NFTMint() {
               <Box className="grid-box">
                 <Box>
                   <FilledTextField
-                    label={<Trans>Description</Trans>}
-                    placeholder={t`Enter the NFT description`}
+                    label={t("common.description")}
+                    placeholder={t("nft.description.input")}
                     multiline
                     rows={5}
                     maxRows={5}
@@ -303,7 +301,7 @@ export default function NFTMint() {
                 <Grid container>
                   <Grid item xs>
                     <Typography component="span" fontSize="16px" color="text.secondary">
-                      <Trans>Metadata</Trans>
+                      {t("common.metadata")}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -321,9 +319,7 @@ export default function NFTMint() {
                       onClick={handleMetadataAdd}
                     >
                       <AddIcon fontSize="small" />
-                      <Typography color="text.primary">
-                        <Trans>Add</Trans>
-                      </Typography>
+                      <Typography color="text.primary">{t("common.add")}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -387,7 +383,7 @@ export default function NFTMint() {
                   <Box>
                     <RequiredMark />
                     <Typography component="span" fontSize="16px" color="text.secondary">
-                      <Trans>Upload NFT File</Trans>
+                      {t("nft.upload.file")}
                     </Typography>
                   </Box>
                   <Box mt={2}>
@@ -404,9 +400,7 @@ export default function NFTMint() {
                         onFileSelected={handleFileChange}
                         onFileError={handleFileError}
                       />
-                      <Typography sx={{ marginTop: "5px" }}>
-                        <Trans>Support : image / txt / json / pdf / ppt / excel / word Size: ≤200K</Trans>
-                      </Typography>
+                      <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
                     </Box>
                   </Box>
                 </>
@@ -439,10 +433,7 @@ export default function NFTMint() {
                 </Box>
                 <Grid item xs>
                   <Typography sx={{ cursor: "pointer" }} onClick={() => setAgree(!agree)}>
-                    <Trans>
-                      I declare this is the original artwork and agree I won’t violate the intellectual property and
-                      assume all consequences!
-                    </Trans>
+                    {t("nft.create.agreement")}
                   </Typography>
                 </Grid>
               </Grid>

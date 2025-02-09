@@ -1,12 +1,12 @@
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid } from "components/Mui";
 import { Modal } from "components/index";
-import { t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { Identity as CallIdentity } from "types/global";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { Principal } from "@dfinity/principal";
 import { deleteVotingAuthorityUsers } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 export default function DeleteAuthorityUser({
   open,
@@ -21,12 +21,13 @@ export default function DeleteAuthorityUser({
   canisterId: string;
   user: string;
 }) {
+  const { t } = useTranslation();
   const [openTip, closeTip] = useTips();
 
   const handleDeleteUser = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
     if (!identity || loading) return;
 
-    const tipKey = openTip(t`Delete user ${user}`, MessageTypes.loading);
+    const tipKey = openTip(t("vote.delete.user.loading", { user }), MessageTypes.loading);
 
     onClose();
 
@@ -49,7 +50,7 @@ export default function DeleteAuthorityUser({
         <Modal
           open={open}
           onClose={onClose}
-          title={t`Delete User`}
+          title={t("vote.delete.user")}
           onConfirm={submit}
           onCancel={onClose}
           showCancel
@@ -63,7 +64,7 @@ export default function DeleteAuthorityUser({
               color="text.primary"
               align="center"
             >
-              {t`Are you sure want to delete ${user}`}
+              {t("vote.confirm.delete.ser", { user })}
             </Typography>
           </Grid>
         </Modal>

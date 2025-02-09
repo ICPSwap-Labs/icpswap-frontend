@@ -1,9 +1,8 @@
-import { Box, Grid, Avatar, Typography, Button, makeStyles } from "components/Mui";
-import { Trans } from "@lingui/macro";
+import { Box, Grid, Avatar, Typography, Button, makeStyles, Theme } from "components/Mui";
 import type { NFTCanisterInfo } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import { mockALinkAndOpen, cycleValueFormat } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
@@ -65,6 +64,7 @@ export interface NFTCanisterHeaderProps {
 }
 
 export function NFTLayoutHeader({ details, cycles }: NFTCanisterHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const handleToMarketplace = () => {
@@ -90,9 +90,7 @@ export function NFTLayoutHeader({ details, cycles }: NFTCanisterHeaderProps) {
 
           <Box mt="20px">
             <Grid sx={{ width: "100%" }} container alignItems="center">
-              <Typography color="text.primary">
-                <Trans>Canister ID:</Trans>
-              </Typography>
+              <Typography color="text.primary">{t("common.canister.id.colon")}</Typography>
               {details ? (
                 <Grid item xs ml="5px">
                   <ExplorerLink label={details.cid} value={details.cid} />
@@ -109,7 +107,7 @@ export function NFTLayoutHeader({ details, cycles }: NFTCanisterHeaderProps) {
 
           <Box mt="20px">
             <Button variant="contained" size="large" onClick={handleToMarketplace}>
-              <Trans>Marketplace</Trans>
+              {t("nft.marketplace")}
             </Button>
           </Box>
         </Box>
@@ -129,7 +127,7 @@ export function NFTLayoutHeader({ details, cycles }: NFTCanisterHeaderProps) {
                 marginTop: "4px",
               }}
             >
-              <Trans>Cycles</Trans>
+              {t("common.cycles")}
             </Typography>
           </Box>
         </Box>

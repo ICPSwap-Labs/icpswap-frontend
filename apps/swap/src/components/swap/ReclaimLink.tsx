@@ -2,7 +2,6 @@ import { useHistory } from "react-router-dom";
 import { useCallback, useMemo, useState } from "react";
 import { Box, Typography, useTheme, Collapse, makeStyles, CircularProgress, Theme } from "components/Mui";
 import { Tooltip, DotLoading } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
@@ -15,6 +14,7 @@ import { useReclaim } from "hooks/swap/useReclaim";
 import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useGlobalContext } from "hooks/index";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -33,12 +33,13 @@ interface DepositButtonProps {
 }
 
 function DepositButton({ token, pool, fontSize, onDepositSuccess }: DepositButtonProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <TextButton onClick={() => setOpen(true)} sx={{ fontSize }}>
-        Deposit
+        {t("common.deposit")}
       </TextButton>
       {open && pool && token ? (
         <DepositModal
@@ -132,6 +133,7 @@ export function Reclaim({
   onInputTokenClick,
   inputToken,
 }: ReclaimLinkProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const theme = useTheme();
   const classes = useStyles();
@@ -207,9 +209,7 @@ export function Reclaim({
           ) : (
             <>
               <Typography sx={{ fontSize: __fontSize }}>
-                <Trans>
-                  Your Balance in {token0?.symbol ?? "--"}/{token1?.symbol ?? "--"} Swap Pool
-                </Trans>
+                {t("swap.balance.in.pool", { pair: `${token0?.symbol ?? "--"}/${token1?.symbol ?? "--"}` })}
               </Typography>
               <Tooltip
                 tips={t`Pre-depositing tokens into the swap pool lets you initiate swap anytime, reducing the risk of sandwich attacks by bots. You can keep swapped tokens in the pool for future use. This process removes deposit wait times and may lower transfer fees. You can manage your balance anytime, with options to deposit or withdraw as needed.`}
@@ -240,14 +240,10 @@ export function Reclaim({
                     sx={{ fontSize: __fontSize, cursor: "pointer" }}
                     onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
                   >
-                    <Trans>
-                      {token0?.symbol ?? "--"}:{" "}
-                      {token0TotalAmount && token0
-                        ? toSignificantWithGroupSeparator(
-                            parseTokenAmount(token0TotalAmount, token0.decimals).toString(),
-                          )
-                        : "--"}
-                    </Trans>
+                    {token0?.symbol ?? "--"}:{" "}
+                    {token0TotalAmount && token0
+                      ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
+                      : "--"}
                   </Typography>
                 </Flex>
               ) : (
@@ -299,7 +295,7 @@ export function Reclaim({
 
         <Flex gap="0 4px" sx={{ cursor: "pointer", margin: "12px 0 0 0" }} onClick={handleViewAll} justify="center">
           <Typography color="secondary" sx={{ fontSize: fontSize ?? "14px", textAlign: "center" }}>
-            <Trans>Missing Tokens? Check All Your Pool Balances Here</Trans>
+            {t("swap.missing.tokens")}
             <ArrowUpRight color={theme.colors.secondaryMain} size="16px" style={{ position: "relative", top: "4px" }} />
           </Typography>
         </Flex>

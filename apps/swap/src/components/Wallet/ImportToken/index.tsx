@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
 import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
 import { standardCheck } from "utils/token/standardCheck";
@@ -12,6 +11,7 @@ import { INFO_URL } from "constants/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useUpdateTaggedTokenCallback } from "store/wallet/hooks";
+import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -53,6 +53,7 @@ export interface ImportTokenModalProps {
 }
 
 export default function ImportTokenModal({ open, onClose, onImportSuccessfully }: ImportTokenModalProps) {
+  const { t } = useTranslation();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<{ [key: string]: any }>({ standard: TOKEN_STANDARD.ICRC1 });
@@ -140,7 +141,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
     >
       <Box>
         <FilledTextField
-          label={t`Token Standard`}
+          label={t("common.token.standard")}
           select
           menus={TokenStandards}
           placeholder={t`Select the token standard`}
@@ -161,7 +162,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
       {checkFailed ? (
         <Box mt="16px">
           <Typography color="text.danger">
-            <Trans>This canister id did not match the token standard "{values.standard}"</Trans>
+            {t("wallet.import.standard.invalid", { standard: values.standard })}
           </Typography>
         </Box>
       ) : null}
@@ -183,9 +184,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
               </Grid>
               <Typography sx={{ marginTop: "8px" }}>{values.id}</Typography>
               <Box mt="10px">
-                <TextButton link={`${INFO_URL}/info-token/details/${values.id}`}>
-                  <Trans>View On Info</Trans>
-                </TextButton>
+                <TextButton link={`${INFO_URL}/info-token/details/${values.id}`}>{t("common.view.info")}</TextButton>
               </Box>
             </Grid>
           </Grid>
@@ -205,17 +204,11 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
             </Box>
             <Grid item xs ml="16px">
               <Typography color="#B79C4A" sx={{ lineHeight: "23px" }}>
-                <Trans>
-                  Anyone can create a token on Internet Computer with any name and LOGO, including creating fake
-                  versions of existing tokens and tokens that claim to represent projects that do not have a token.
-                </Trans>
+                {t("common.tokens.waring")}
               </Typography>
 
               <Typography color="#B79C4A" mt="20px" sx={{ lineHeight: "23px" }}>
-                <Trans>
-                  These risks are always present. If you purchase these fake tokens, it may result in a loss of assets.
-                  Please DYOR before investing!
-                </Trans>
+                {t("common.tokens.waring1")}
               </Typography>
             </Grid>
           </Grid>
@@ -233,7 +226,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
 
             <Grid item xs ml="4px">
               <Typography sx={{ cursor: "pointer" }} onClick={() => setRiskWarning(!riskWarning)}>
-                <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
+                {t("common.token.risk.agree")}
               </Typography>
             </Grid>
           </Grid>
@@ -249,7 +242,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
           onClick={step === 1 ? handleConfirm : handleStandardCheck}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {error || (step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>)}
+          {error || (step === 1 ? t("common.confirm") : t("common.import"))}
         </Button>
       </Box>
     </Modal>

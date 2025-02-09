@@ -1,9 +1,8 @@
 import { useState, memo } from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
 import { MainCard } from "components/index";
-import { t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import i18n from "i18n/index";
+
 import Exchange from "./Exchange";
 import Record from "./Record";
 
@@ -29,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const SWITCH_BUTTONS = [
-  { id: 1, value: t`Exchange`, component: Exchange },
-  { id: 2, value: t`Record`, component: Record },
+  { id: 1, value: i18n.t("wrap.exchange"), component: Exchange },
+  { id: 2, value: i18n.t("common.record"), component: Record },
 ];
 
 export default memo(() => {

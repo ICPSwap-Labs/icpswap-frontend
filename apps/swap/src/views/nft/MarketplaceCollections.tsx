@@ -3,10 +3,10 @@ import { useHistory } from "react-router-dom";
 import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import { MainCard, Wrapper } from "components/index";
 import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { ImageLoading } from "@icpswap/ui";
 import CollectionAvatar from "components/NFT/CollectionAvatar";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -111,6 +111,7 @@ const filteredNFTs = [
 ];
 
 export default function MarketplaceCollections() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { result, loading } = useNFTCanisterList(0, 1000);
 
@@ -122,7 +123,7 @@ export default function MarketplaceCollections() {
     <Wrapper>
       <Box sx={{ margin: "0 0 40px 0" }}>
         <Typography color="text.primary" fontWeight="700" fontSize="30px">
-          <Trans>Collections</Trans>
+          {t("nft.collections")}
         </Typography>
       </Box>
 

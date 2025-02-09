@@ -1,5 +1,5 @@
 import React, { useState, useContext, useMemo } from "react";
-import { Button, Typography, Box, InputAdornment, makeStyles, Theme } from "components/Mui";
+import { Button, Typography, Box, InputAdornment, makeStyles, Theme, CircularProgress } from "components/Mui";
 import {
   parseTokenAmount,
   formatTokenAmount,
@@ -8,12 +8,10 @@ import {
   toSignificantWithGroupSeparator,
   BigNumber,
 } from "@icpswap/utils";
-import CircularProgress from "@mui/material/CircularProgress";
 import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import WalletContext from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
@@ -22,6 +20,7 @@ import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { MaxButton, Flex } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -53,6 +52,7 @@ export interface TransferModalProps {
 }
 
 export function TokenTransferModal({ open, onClose, onTransferSuccess, token, transferTo }: TransferModalProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const account = useAccount();
   const principalString = useAccountPrincipalString();
@@ -92,12 +92,12 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
       }
     } else if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;
 
-    if (!values.amount) return t`Enter an amount`;
+    if (!values.amount) return t("common.error.input.amount");
     if (
       values.amount &&
       new BigNumber(values.amount ?? 0).isGreaterThan(parseTokenAmount(balance ?? 0, token.decimals))
     )
-      return t`Insufficient balance`;
+      return t`t("common.error.insufficient.balance");`;
     if (!new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0))
       return t`Must be greater than trans fee`;
 
@@ -154,11 +154,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         isValidPrincipal(values.to) &&
         principalString === values.to)
     ) {
-      return (
-        <span className={classes.warningText}>
-          <Trans>Be careful, you are transferring tokens to your own address!</Trans>
-        </span>
-      );
+      return <span className={classes.warningText}>{t("common.warning.transfer")}</span>;
     }
   };
 
@@ -218,46 +214,47 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
 
         <Flex fullWidth gap="0 6px">
           <Typography>
-            <Trans>
-              Balance:{" "}
-              {`${
+            {t("common.balance.colon.amount", {
+              amount: `${
                 balance
                   ? new BigNumber(
                       parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
                     ).toFormat()
                   : "--"
-              }`}
-            </Trans>
+              }`,
+            })}
           </Typography>
 
           <MaxButton onClick={handleMax} />
         </Flex>
 
         <Typography>
-          <Trans>Fee:</Trans> {parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()}
-          &nbsp;{token.symbol}&nbsp;(
-          {tokenUSDPrice && token
-            ? `$${toSignificantWithGroupSeparator(
-                parseTokenAmount(token.transFee.toString(), token.decimals).multipliedBy(tokenUSDPrice).toString(),
-                4,
-              )}`
-            : "--"}
-          )
+          {t("common.balance.colon.fee", {
+            amount: `${parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()} ${token.symbol} (
+          ${
+            tokenUSDPrice && token
+              ? `$${toSignificantWithGroupSeparator(
+                  parseTokenAmount(token.transFee.toString(), token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                  4,
+                )}`
+              : "--"
+          }
+          )`,
+          })}
         </Typography>
         <Typography>
-          <Trans>Actually:</Trans> {toSignificantWithGroupSeparator(actualTransferAmount, 18)}
-          &nbsp;{token.symbol}&nbsp;(
-          {tokenUSDPrice && token
-            ? `$${toSignificantWithGroupSeparator(
-                new BigNumber(actualTransferAmount).multipliedBy(tokenUSDPrice).toString(),
-                4,
-              )}`
-            : "--"}
-          )
+          {t("wallet.token.transfer.actually.colon", {
+            amount: `${toSignificantWithGroupSeparator(actualTransferAmount, 18)} ${token.symbol} ${
+              tokenUSDPrice && token
+                ? `$${toSignificantWithGroupSeparator(
+                    new BigNumber(actualTransferAmount).multipliedBy(tokenUSDPrice).toString(),
+                    4,
+                  )}`
+                : "--"
+            }`,
+          })}
         </Typography>
-        <Typography color="text.danger">
-          <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
-        </Typography>
+        <Typography color="text.danger">{t("common.warning.transfer.address.supports")}</Typography>
 
         <Button
           variant="contained"
@@ -267,7 +264,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
           disabled={loading || !!errorMessage}
           onClick={handleSubmit}
         >
-          {errorMessage || (!loading ? <Trans>Confirm</Trans> : <CircularProgress size={26} color="inherit" />)}
+          {errorMessage || (!loading ? t("common.confirm") : <CircularProgress size={26} color="inherit" />)}
         </Button>
       </Box>
     </Modal>

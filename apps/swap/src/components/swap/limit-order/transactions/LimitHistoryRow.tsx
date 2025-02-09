@@ -1,7 +1,6 @@
 import { Pool } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useState, useMemo } from "react";
 import { useTheme } from "components/Mui";
 import { BigNumber, isNullArgs, formatAmount, formatTokenPrice } from "@icpswap/utils";
@@ -10,6 +9,7 @@ import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { WithdrawTokens } from "components/swap/limit-order/WithdrawTokens";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export interface LimitHistoryRowProps {
   limitTransaction: LimitTransaction;
@@ -26,6 +26,7 @@ export function LimitHistoryRow({
   noBorder = false,
   unusedBalance,
 }: LimitHistoryRowProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [invertPrice, setInvertPrice] = useState(false);
@@ -115,7 +116,7 @@ export function LimitHistoryRow({
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
             <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
-              <Trans>Withdraw</Trans>
+              {t("common.withdraw")}
             </TextButton>
           </BodyCell>
         </TableRow>

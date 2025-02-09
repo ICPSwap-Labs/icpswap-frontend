@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { Typography, Button, CircularProgress, Box } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { toSignificantWithGroupSeparator, parseTokenAmount, nonNullArgs, isNullArgs, BigNumber } from "@icpswap/utils";
 import { useUserPCMBalance, usePCMMetadata } from "@icpswap/hooks";
 import { useWithdrawPCMBalanceCallback, useUserPassCodes, WithdrawPCMBalanceArgs } from "hooks/swap/index";
 import { useRefreshTrigger, useGlobalContext, useToken } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 const TRIGGER_KEY = "UNUSED_PCM_BALANCE";
 
@@ -15,6 +15,7 @@ export interface UnusedPCMBalanceProps {
 }
 
 export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const { setRefreshTriggers } = useGlobalContext();
   const refreshTrigger = useRefreshTrigger(TRIGGER_KEY);
@@ -64,9 +65,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   return (
     <Box sx={{ width: "260px" }}>
       <Flex gap="0 4px">
-        <Typography>
-          <Trans>Unused {pcmToken ? pcmToken.symbol : "--"}</Trans>
-        </Typography>
+        <Typography>{t("swap.unused.token", { symbol: pcmToken ? pcmToken.symbol : "--" })}</Typography>
         <Tooltip tips={t`ICP fee wasn't used because of the failed pool creation.`} />
       </Flex>
 
@@ -85,7 +84,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
           startIcon={withdrawPCMBalanceLoading ? <CircularProgress color="inherit" size={16} /> : null}
           disabled={withdrawPCMBalanceLoading || isNullArgs(totalTokenAmount) || totalTokenAmount.isEqualTo(0)}
         >
-          <Trans>Withdraw</Trans>
+          {t("common.withdraw")}
         </Button>
       </Flex>
     </Box>

@@ -1,18 +1,19 @@
 import { Typography, Box } from "components/Mui";
 import { InfoWrapper } from "components/index";
 import { MainCard } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { useNodeInfoAllTokens } from "@icpswap/hooks";
 import { TokenTable } from "components/info";
+import { useTranslation } from "react-i18next";
 
 export default function Tokens() {
+  const { t } = useTranslation();
   const { result: tokens, loading } = useNodeInfoAllTokens();
 
   return (
     <InfoWrapper>
       <Box>
         <Typography color="text.primary" fontSize="20px" fontWeight="500">
-          <Trans>All Tokens</Trans>
+          {t("info.all.tokens")}
         </Typography>
       </Box>
 

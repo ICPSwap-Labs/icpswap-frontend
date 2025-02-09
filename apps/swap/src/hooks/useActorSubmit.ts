@@ -1,7 +1,7 @@
 import { actor, BeforeSubmitArgs, Connector } from "@icpswap/actor";
 import { useEffect } from "react";
 import store from "store/index";
-import { t } from "@lingui/macro";
+import i18n from "i18n/index";
 
 async function isCurrentAccount() {
   // const { principal } = store.getState().auth;
@@ -22,7 +22,7 @@ export function useActorSubmit() {
         if (!(await isCurrentAccount())) {
           return {
             success: false,
-            message: t`There was an error when tried to interact with Plug. Please reconnect the plug.`,
+            message: i18n.t`There was an error when tried to interact with Plug. Please reconnect the plug.`,
           };
         }
       }

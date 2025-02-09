@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Box, makeStyles, Theme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { Flex, TextButtonV1, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
 import {
   YourPositions,
@@ -19,6 +18,7 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { Unlock } from "react-feather";
 import { infoRoutesConfigs } from "routes/info.config";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export function Positions() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const principalString = useAccountPrincipalString();
 
@@ -175,9 +176,7 @@ export function Positions() {
         >
           <Box sx={{ width: "260px" }}>
             <Flex gap="0 4px">
-              <Typography>
-                <Trans>Total Value</Trans>
-              </Typography>
+              <Typography>{t("common.total.value")}</Typography>
               <Tooltip tips={t`The total value of your liquidity positions`} />
             </Flex>
 
@@ -194,7 +193,7 @@ export function Positions() {
 
       <Flex fullWidth justify="flex-end" wrap="wrap" sx={{ margin: "32px 0 0 0" }} gap="8px 32px">
         <TextButtonV1 arrow sx={{ fontSize: "12px" }} to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
-          <Trans>Check your position transfer history</Trans>
+          {t("liquidity.check.position.transactions")}
         </TextButtonV1>
 
         <Flex>
@@ -204,15 +203,16 @@ export function Positions() {
               fontSize: "12px",
             }}
           >
-            <Trans>Don't see a pair you joined?</Trans>&nbsp;
+            {t("liquidity.no.pair")}
           </Typography>
+          &nbsp;
           <TextButton
             onClick={handleFindPosition}
             sx={{
               fontSize: "12px",
             }}
           >
-            <Trans>Find other positions</Trans>
+            {t("liquidity.find.positions")}
           </TextButton>
         </Flex>
       </Flex>
@@ -233,7 +233,7 @@ export function Positions() {
           <Flex gap="0 28px">
             <Flex align="center" gap="0 4px">
               <Typography className={`${classes.tab}${tab === "YOUR" ? " active" : ""}`} onClick={() => setTab("YOUR")}>
-                <Trans>Your Positions</Trans>
+                {t("liquidity.your.positions")}
               </Typography>
               <NumberLabel num={allPositions ? allPositions.length - hiddenNumbersOfYourPositions : "--"} />
             </Flex>
@@ -243,7 +243,7 @@ export function Positions() {
                 className={`${classes.tab}${tab === "STAKED" ? " active" : ""}`}
                 onClick={() => setTab("STAKED")}
               >
-                <Trans>Staked Positions</Trans>
+                {t("liquidity.staked.positions")}
               </Typography>
 
               <NumberLabel num={allStakedPositions?.length ?? "--"} />
@@ -262,16 +262,12 @@ export function Positions() {
             }}
           >
             <Flex gap="0 3px">
-              <Typography>
-                <Trans>Status:</Trans>
-              </Typography>
+              <Typography>{t("common.status.colon")}</Typography>
               <SelectPositionState value={positionFilterState} onChange={setPositionFilterState} />
             </Flex>
 
             <Flex gap="0 3px">
-              <Typography>
-                <Trans>Sort by:</Trans>
-              </Typography>
+              <Typography>{t("common.sort.by.colon")}</Typography>
               <SelectPositionsSort value={positionSort} onChange={setPositionSort} />
             </Flex>
 
@@ -285,7 +281,7 @@ export function Positions() {
                       lineHeight: "18px",
                     }}
                   >
-                    <Trans>Need to lock your liquidity? Check out the Sneedlock feature controlled by Sneed DAO:</Trans>
+                    {t("liquidity.sneed.locked.description")}
                   </Typography>
                   <Link link="https://sneeddao.com/#sneedlock" color="secondary">
                     https://sneeddao.com/#sneedlock
@@ -296,9 +292,7 @@ export function Positions() {
               <Box sx={{ cursor: "pointer" }}>
                 <Flex gap="0 3px">
                   <Unlock size={14} />
-                  <Typography color="text.primary">
-                    <Trans>Liquidity Lock</Trans>
-                  </Typography>
+                  <Typography color="text.primary">{t("liquidity.lock")}</Typography>
                 </Flex>
               </Box>
             </Tooltip>

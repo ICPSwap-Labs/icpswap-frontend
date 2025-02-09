@@ -3,8 +3,8 @@ import { Box, Button, Dialog, DialogTitle, DialogContent, Typography, useMediaQu
 import { makeStyles, useTheme } from "@mui/styles";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { Theme } from "@mui/material/styles";
-import { t } from "@lingui/macro";
 import { isElement } from "react-is";
+import i18n from "i18n/index";
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
@@ -86,8 +86,8 @@ export default function Modal({
   title,
   children,
   open,
-  confirmText = t`Confirm`,
-  cancelText = t`Cancel`,
+  confirmText = i18n.t("common.confirm"),
+  cancelText = i18n.t("common.cancel"),
   onClose,
   onConfirm,
   onCancel,

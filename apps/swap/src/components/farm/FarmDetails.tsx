@@ -1,8 +1,7 @@
 import React from "react";
-import { Box, Collapse, Typography, Theme, useTheme } from "components/Mui";
+import { Box, Collapse, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, Link, Image } from "components/index";
 import { INFO_URL } from "constants/index";
-import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
@@ -18,8 +17,11 @@ import { STATE } from "types/staking-farm";
 import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
 import { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+  const { t } = useTranslation();
+
   const nowTime = parseInt(String(Date.now() / 1000));
   let expand = false;
   let date = startTime;
@@ -34,13 +36,7 @@ const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: numb
     date = 0;
   }
 
-  return expand ? (
-    <Typography color="text.primary">
-      <Trans>End</Trans>
-    </Typography>
-  ) : (
-    <Countdown date={date} />
-  );
+  return expand ? <Typography color="text.primary">{t("common.end")}</Typography> : <Countdown date={date} />;
 };
 
 export interface FarmDetailsProps {
@@ -62,7 +58,8 @@ export function FarmDetails({
   rewardMetadata,
   farmInfo,
 }: FarmDetailsProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -106,9 +103,7 @@ export function FarmDetails({
                       `/farm/details/${farmId}`,
                     )}`}
                   >
-                    <Typography color="text.secondary">
-                      <Trans>Get Position</Trans>
-                    </Typography>
+                    <Typography color="text.secondary">{t("farm.get.position")}</Typography>
                   </Link>
 
                   <Image src="/images/external-link.svg" sx={{ width: "24px", height: "24px", cursor: "pointer" }} />
@@ -117,16 +112,12 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Total Number of Staked Position</Trans>
-              </Typography>
+              <Typography>{t("farm.total.staked.positions")}</Typography>
               <Typography color="text.primary">{farmInfo ? farmInfo.numberOfStakes.toString() : "--"}</Typography>
             </Flex>
 
             <Flex fullWidth justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Claimed Rewards</Trans>
-              </Typography>
+              <Typography>{t("farm.claimed.rewards")}</Typography>
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
                   {!rewardMetadata || !rewardToken
@@ -153,9 +144,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Unclaimed Rewards</Trans>
-              </Typography>
+              <Typography>{t("farm.unclaimed.rewards")}</Typography>
 
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
@@ -183,9 +172,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Min Stake Number</Trans>
-              </Typography>
+              <Typography>{t("farm.min.stake.number")}</Typography>
               <Typography color="text.primary" component="div">
                 {farmInitArgs && token0 && token1
                   ? `${toSignificantWithGroupSeparator(
@@ -198,9 +185,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Trading Pair Canister ID</Trans>
-              </Typography>
+              <Typography>{t("farm.trading.pair.id")}</Typography>
               <Typography color="text.primary" component="div">
                 {farmInfo ? (
                   <Link link={explorerLink(farmInfo.pool.toString())}>
@@ -214,7 +199,7 @@ export function FarmDetails({
 
             <Flex fullWidth justify="space-between">
               <Typography>
-                <Trans>Reward Token Canister ID</Trans>
+                <Typography>{t("farm.reward.id")}</Typography>
               </Typography>
               <Typography color="text.primary" component="div">
                 {rewardToken ? (
@@ -228,18 +213,14 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Distribution Interval</Trans>
-              </Typography>
+              <Typography>{t("farm.distribution.interval")}</Typography>
               <Typography color="text.primary">
-                {Number(rewardMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                {Number(rewardMetadata?.secondPerCycle ?? 0) / 60} {t("common.min")}
               </Typography>
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Amount per Distribution</Trans>
-              </Typography>
+              <Typography>{t("farm.amount.per.distribution")}</Typography>
               <Typography color="text.primary">
                 {rewardMetadata && rewardToken
                   ? `${toSignificantWithGroupSeparator(
@@ -251,23 +232,19 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Starting At</Trans>
-              </Typography>
+              <Typography>{t("common.starting")}</Typography>
               <Typography color="text.primary">{timestampFormat(Number(farmInfo?.startTime) * 1000)}</Typography>
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>{state === STATE.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}</Typography>
+              <Typography>{state === STATE.NOT_STARTED ? t("common.left") : t("common.end.in")}</Typography>
               <Typography color="text.primary" component="div">
                 <CountdownBox startTime={Number(farmInfo?.startTime)} endTime={Number(farmInfo?.endTime)} />
               </Typography>
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Creator</Trans>
-              </Typography>
+              <Typography>{t("common.creator")}</Typography>
               <Typography color="text.primary.main">
                 {farmInfo ? (
                   <Link link={explorerLink(farmInfo.creator.toString())}>
@@ -280,9 +257,7 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Canister ID</Trans>
-              </Typography>
+              <Typography>{t("common.canister.id")}</Typography>
               <Typography color="text.primary">
                 <Link link={explorerLink(farmId)}>
                   <Typography color="text.theme-secondary"> {shorten(farmId)}</Typography>
@@ -291,17 +266,13 @@ export function FarmDetails({
             </Flex>
 
             <Flex fullWidth justify="space-between">
-              <Typography>
-                <Trans>Cycles Left</Trans>
-              </Typography>
+              <Typography>{t("common.cycles.left")}</Typography>
               <Typography color="text.primary">{cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}</Typography>
             </Flex>
 
             <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
               <Link link={`${INFO_URL}/info-farm/details/${farmId}`}>
-                <Typography color="text.theme-secondary">
-                  <Trans>Farm Info</Trans>
-                </Typography>
+                <Typography color="text.theme-secondary">{t("farm.info")}</Typography>
               </Link>
               <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
             </Flex>

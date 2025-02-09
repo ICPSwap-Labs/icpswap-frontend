@@ -1,19 +1,18 @@
-import { Box, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography } from "components/Mui";
 import { MainCard } from "components/index";
+import { useTranslation } from "react-i18next";
 
 export default function LiquidityPoolIntro() {
+  const { t } = useTranslation();
+
   return (
     <MainCard level={1} sx={{ height: "244px" }} className="lightGray200">
       <Typography variant="h3" align="center" color="text.primary">
-        <Trans>Liquidity Pool</Trans>
+        {t("liquidity.pool")}
       </Typography>
       <Box mt={2}>
         <Typography fontSize={16} align="center">
-          <Trans>
-            80% of the trading fees are rewarded to the liquidity providers, and the remaining 20% of the trading fees
-            are put into the ICS Repurchase-and-Burn Pool.
-          </Trans>
+          {t("liquidity.descriptions")}
         </Typography>
       </Box>
     </MainCard>

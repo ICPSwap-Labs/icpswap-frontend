@@ -1,9 +1,9 @@
 import { Grid, Typography } from "@mui/material";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
-import { Trans } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 export interface SwapInputLabelProps {
   type: "from" | "to";
@@ -12,6 +12,7 @@ export interface SwapInputLabelProps {
 }
 
 export default function SwapInputLabel({ type, currency, refreshBalance }: SwapInputLabelProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const { result: balance } = useCurrencyBalance(principal, currency ?? undefined, refreshBalance);
@@ -19,7 +20,7 @@ export default function SwapInputLabel({ type, currency, refreshBalance }: SwapI
   return (
     <Grid container>
       <Grid item xs={2}>
-        <Typography color="textPrimary">{type === "from" ? <Trans>From</Trans> : <Trans>To</Trans>} </Typography>
+        <Typography color="textPrimary">{type === "from" ? t("common.from") : t("common.to")} </Typography>
       </Grid>
       <Grid item xs={10}>
         <Typography align="right">

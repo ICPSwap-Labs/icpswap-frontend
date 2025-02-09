@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Typography, Box, Input } from "@mui/material";
 import { FilledTextField, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
@@ -12,6 +11,7 @@ import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } f
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 import EventSelector from "./EventSelector";
 
@@ -27,6 +27,7 @@ type ExcelClaimItem = {
 };
 
 export default function EventConfig() {
+  const { t } = useTranslation();
   const [eventId, setEventId] = useState("");
   const [stateValue, setStateValue] = useState("");
   const [openTip] = useTips();
@@ -182,7 +183,7 @@ export default function EventConfig() {
           <FilledTextField
             select
             menus={States}
-            placeholder={t`Select claim event`}
+            placeholder={t("claim.select.event")}
             onChange={(value: string) => setStateValue(value)}
             value={stateValue}
           />
@@ -227,7 +228,7 @@ export default function EventConfig() {
               onChange={handleFileChange}
             />
             <AuthButton variant="outlined" fullWidth size="large" loading={importLoading}>
-              <Trans>Import Data</Trans>
+              {t("claim.import.data")}
             </AuthButton>
           </Box>
 

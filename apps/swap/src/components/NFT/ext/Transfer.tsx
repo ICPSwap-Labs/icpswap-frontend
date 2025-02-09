@@ -14,13 +14,13 @@ import {
 import { isValidAccount, isValidPrincipal, resultFormat } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import type { EXTCollection, ExtNft } from "@icpswap/types";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { ext_nft } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
 import { useAccountPrincipal, useAccount } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -61,9 +61,10 @@ export interface NFTTransferProps {
 }
 
 export function NFTTransfer({ image, collection, open, onClose, nft, index, onTransferSuccess }: NFTTransferProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const account = useAccount();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [to, setTo] = useState<string>("");
@@ -100,12 +101,7 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
   );
 
   const addressHelpText = useMemo(() => {
-    if (account === to)
-      return (
-        <span className={classes.warningText}>
-          <Trans>Be careful, you are transferring tokens to your own address!</Trans>
-        </span>
-      );
+    if (account === to) return <span className={classes.warningText}>{t("common.warning.transfer")}</span>;
 
     return undefined;
   }, [account, to]);
@@ -175,9 +171,7 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
 
       <Grid container mt="20px">
         <Grid item xs={12} className={classes.inputBox}>
-          <Typography>
-            <Trans>Transfer to</Trans>
-          </Typography>
+          <Typography>{t("common.transfer.to")}</Typography>
           <TextField
             variant="standard"
             placeholder={t`Account address`}
@@ -191,9 +185,7 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
           />
         </Grid>
         <Grid item xs={12} mt="10px">
-          <Typography color="text.danger">
-            <Trans>Please ensure that the receiving address supports this Token/NFT!</Trans>
-          </Typography>
+          <Typography color="text.danger">{t("common.warning.transfer.address.supports")}</Typography>
         </Grid>
         <Grid item xs={12} mt={3}>
           <Identity onSubmit={transferSubmitCallback}>

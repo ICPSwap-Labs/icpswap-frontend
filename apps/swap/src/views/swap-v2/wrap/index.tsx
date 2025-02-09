@@ -5,12 +5,12 @@ import Record from "components/Wrap/Record";
 import RetryWrap from "components/Wrap/RetryWrap";
 import { TextButton, MainCard } from "components/index";
 import { SwapV2Wrapper } from "components/swap/SwapUIWrapper";
-import { t, Trans } from "@lingui/macro";
 import { INFO_URL } from "constants/index";
 import WrapContext from "components/Wrap/context";
 import { infoRoutesConfigs } from "routes/info.config";
 import { Flex, Link } from "@icpswap/ui";
 import { ArrowUpRight } from "react-feather";
+import i18n from "i18n/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -34,8 +34,8 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const SWITCH_BUTTONS = [
-  { id: 1, value: t`Wrap`, component: Exchange },
-  { id: 2, value: t`Transactions`, component: Record },
+  { id: 1, value: i18n.t("common.wrap"), component: Exchange },
+  { id: 2, value: i18n.t("common.transactions"), component: Record },
 ];
 
 export default function Wrap() {
@@ -83,9 +83,7 @@ export default function Wrap() {
 
                 <Flex gap="0 4px">
                   <Link link={`${INFO_URL}${infoRoutesConfigs.INFO_WRAP}`}>
-                    <Typography color="text.theme-secondary">
-                      <Trans>WICP Info</Trans>
-                    </Typography>
+                    <Typography color="text.theme-secondary">{i18n.t("wrap.info")}</Typography>
                   </Link>
                   <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
                 </Flex>
@@ -100,9 +98,7 @@ export default function Wrap() {
             >
               <RetryWrap onRetrySuccess={() => setRetryTrigger(!retryTrigger)}>
                 {({ onClick }: { onClick: () => void }) => (
-                  <TextButton onClick={onClick}>
-                    <Trans>Retry any of your failed wrap</Trans>
-                  </TextButton>
+                  <TextButton onClick={onClick}>{i18n.t("wrap.button")}</TextButton>
                 )}
               </RetryWrap>
             </Box>

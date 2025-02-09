@@ -2,8 +2,8 @@ import Modal from "components/modal/index";
 import { Typography, Box, Grid, Button } from "@mui/material";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { CanisterCreateDetails } from "types/index";
-import { Trans, t } from "@lingui/macro";
 import { parseTokenAmount } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export default ({
   open,
@@ -18,12 +18,14 @@ export default ({
   details: CanisterCreateDetails;
   mintInfo: [bigint, bigint, string, string] | undefined | null;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Modal open={open} title={t`Creation Details`} onClose={onClose}>
         <Box>
           <Typography color="text.tertiary" align="center">
-            <Trans>Pay</Trans>
+            {t("common.pay")}
           </Typography>
           <Typography
             variant="h2"
@@ -42,9 +44,7 @@ export default ({
           <Grid container mt={2}>
             <Grid container mt={3}>
               <Grid item xs>
-                <Typography>
-                  <Trans>Collection Name</Trans>
-                </Typography>
+                <Typography>{t("nft.collection.name")}</Typography>
               </Grid>
               <Grid item xs>
                 <Typography color="textPrimary" align="right">
@@ -54,9 +54,7 @@ export default ({
             </Grid>
             <Grid container mt={3}>
               <Grid item xs>
-                <Typography>
-                  <Trans>Creator</Trans>
-                </Typography>
+                <Typography>{t("common.creator")}</Typography>
               </Grid>
               <Grid item xs>
                 <Typography color="textPrimary" align="right">
@@ -67,9 +65,7 @@ export default ({
 
             <Grid container mt={3}>
               <Grid item xs>
-                <Typography>
-                  <Trans>Royalties</Trans>
-                </Typography>
+                <Typography>{t("nft.create.royalties")}</Typography>
               </Grid>
               <Grid item xs>
                 <Typography color="textPrimary" align="right">
@@ -80,9 +76,7 @@ export default ({
 
             <Grid container mt={3}>
               <Grid item xs>
-                <Typography>
-                  <Trans>Social Media Links</Trans>
-                </Typography>
+                <Typography>{t("common.social.media.links")}</Typography>
               </Grid>
               {(details.socialMediaLinks ?? []).length > 0 ? (
                 <Grid item xs>
@@ -107,7 +101,7 @@ export default ({
             </Grid>
 
             <Grid mt={3}>
-              <Typography>Collection Description</Typography>
+              {t("nft.collection.description")}
               <Typography
                 color="text.tertiary"
                 sx={{
@@ -122,12 +116,12 @@ export default ({
           <Grid mt={4} container spacing={3}>
             <Grid item xs>
               <Button size="large" variant="outlined" fullWidth onClick={onClose}>
-                Cancel
+                {t("common.cancel")}
               </Button>
             </Grid>
             <Grid item xs>
               <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
-                <Trans>Confirm</Trans>
+                {t("common.confirm")}
               </Button>
             </Grid>
           </Grid>

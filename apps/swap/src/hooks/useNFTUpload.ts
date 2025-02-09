@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { fileCanisterId, network, NETWORK, host } from "constants/index";
-import { t } from "@lingui/macro";
 import { NFTCanister } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 
@@ -58,7 +57,7 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
     const batch_id = result.data?.batch_id;
 
     if (!batch_id && batch_id !== BigInt(0)) {
-      setFileError(t`Failed to create batch${result.message ? `, ${result.message}` : ""}`);
+      setFileError(`Failed to create batch${result.message ? `, ${result.message}` : ""}`);
       setUploading(false);
       return;
     }
@@ -81,12 +80,12 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
 
     const chunkIds = await Promise.all(promises).catch((err) => {
       console.error(err);
-      setFileError(t`Failed to upload, please try again`);
+      setFileError(`Failed to upload, please try again`);
       setUploading(false);
     });
 
     if (!chunkIds) {
-      setFileError(t`Failed to upload, please try again`);
+      setFileError(`Failed to upload, please try again`);
       setUploading(false);
       return;
     }

@@ -1,12 +1,13 @@
 import { useCallback } from "react";
-import { t } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 import { useTips, MessageTypes } from "./useTips";
 
 export function useCopySuccess() {
+  const { t } = useTranslation();
   const [openTip] = useTips();
 
   return useCallback(() => {
-    openTip(t`Copy success`, MessageTypes.success);
+    openTip(t("common.copy.success"), MessageTypes.success);
   }, []);
 }

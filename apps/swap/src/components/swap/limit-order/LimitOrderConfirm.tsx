@@ -11,12 +11,12 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import { t, Trans } from "@lingui/macro";
 import { isElement } from "react-is";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -111,6 +111,7 @@ export function LimitOrderConfirm({
   outputToken,
   inputAmount,
 }: LimitOrderConfirmProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyle();
 
@@ -140,7 +141,7 @@ export function LimitOrderConfirm({
   );
 
   return (
-    <SwapModal open={open} title={t`Submit Limit Order`} onClose={onClose}>
+    <SwapModal open={open} title={t("limit.submit")} onClose={onClose}>
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -148,7 +149,7 @@ export function LimitOrderConfirm({
               <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
               <Flex gap="8px 0" vertical align="flex-start">
                 <Flex gap="0 4px">
-                  <Typography>You pay</Typography>
+                  <Typography>{t("common.you.pay")}</Typography>
                   <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
                 </Flex>
 
@@ -180,7 +181,7 @@ export function LimitOrderConfirm({
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: "16px 0", margin: "24px 0 0 0" }}>
           <DetailItem
-            label={t`Limit Price`}
+            label={t("common.limit.price")}
             value={
               <TradePrice
                 price={orderPrice}
@@ -200,7 +201,7 @@ export function LimitOrderConfirm({
           />
 
           <DetailItem
-            label={t`Current Price`}
+            label={t("common.current.price")}
             value={
               <TradePrice
                 price={currentPrice}
@@ -213,7 +214,7 @@ export function LimitOrderConfirm({
           />
 
           <DetailItem
-            label={t`Estimated trading fee earnings`}
+            label={t("limit.estimated.earning")}
             value={
               outputToken && outputAmount
                 ? `${toSignificantWithGroupSeparator(
@@ -231,7 +232,7 @@ export function LimitOrderConfirm({
           />
 
           <DetailItem
-            label={t`Estimated transfer fee for limit order`}
+            label={t("limit.estimated.fee")}
             value={
               swapFeeCost && inputToken && inputTokenPrice
                 ? `${parseTokenAmount(swapFeeCost, inputToken.decimals).toFormat()} ${
@@ -253,28 +254,14 @@ export function LimitOrderConfirm({
           <Box sx={{ borderRadius: "12px", background: theme.palette.background.level2, padding: "14px 16px" }}>
             {viewAll ? (
               <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-                <Trans>
-                  The Limit Order feature on ICPSwap utilizes an innovative approach by integrating limit orders as part
-                  of the liquidity positions in trading. When the liquidity from a limit order is fully converted into
-                  the target token, the ICPSwap Swap Pool canister will automatically remove the liquidity, allowing you
-                  to withdraw your target tokens from the Swap Pool balance for that trading pair. Due to this approach,
-                  limit orders do not need to pay the 0.3% trading fee and can instead earn a 0.24% trading fee. Please
-                  note that the Limit Order feature cannot guarantee that all limit orders will be executed 100% of the
-                  time.
-                </Trans>
+                {t("limit.confirm.description0")}
 
                 <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
-                  <Trans>
-                    Limit order will execute if someone else's swap matches your order exactly at the price you set.
-                  </Trans>
+                  {t("limit.confirm.description1")}
                 </Typography>
 
                 <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
-                  <Trans>
-                    There might be a situation where swap price reaches your limit order price but doesn’t get executed.
-                    For example, a swap order (buying or selling) could hit your limit order price, but the swap volume
-                    might not be enough to fill your limit order.
-                  </Trans>
+                  {t("limit.confirm.description2")}
                 </Typography>
 
                 <Typography
@@ -286,15 +273,12 @@ export function LimitOrderConfirm({
                   color="secondary"
                   onClick={() => handleViewAll(false)}
                 >
-                  <Trans>Hide</Trans>
+                  {t("common.hide")}
                 </Typography>
               </Typography>
             ) : (
               <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-                <Trans>
-                  The Limit Order feature on ICPSwap utilizes an innovative approach by integrating limit orders as part
-                  of the liquidity positions in trading.
-                </Trans>
+                {t("limit.confirm.description3")}
 
                 <Typography
                   component="span"
@@ -305,7 +289,7 @@ export function LimitOrderConfirm({
                   color="secondary"
                   onClick={() => handleViewAll(true)}
                 >
-                  <Trans>View All</Trans>
+                  {t("common.view.all")}
                 </Typography>
               </Typography>
             )}
@@ -314,7 +298,7 @@ export function LimitOrderConfirm({
 
         <Box sx={{ margin: "16px 0 0 0" }}>
           <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
-            {t`Place order`}
+            {t("limit.place.order")}
           </Button>
         </Box>
       </>

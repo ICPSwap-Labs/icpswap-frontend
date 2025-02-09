@@ -3,7 +3,6 @@ import { Typography, Grid, Box } from "@mui/material";
 import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField, AuthButton } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { createStakingPool } from "@icpswap/hooks";
@@ -18,6 +17,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TokenInfo } from "types/token";
+import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -48,6 +48,7 @@ type Values = {
 };
 
 export default function CreateStakingTokenPool() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const updateTokenStandard = useUpdateTokenStandard();
 

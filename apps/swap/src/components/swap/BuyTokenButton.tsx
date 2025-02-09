@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Button, ButtonProps } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { ICP, ICS } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 interface BuyTokenButtonProps {
   token: Token | Null;
@@ -12,6 +12,7 @@ interface BuyTokenButtonProps {
 }
 
 export function BuyTokenButton({ token, variant = "outlined" }: BuyTokenButtonProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
 
@@ -36,7 +37,7 @@ export function BuyTokenButton({ token, variant = "outlined" }: BuyTokenButtonPr
 
   return (
     <Button className="secondary" variant={variant} fullWidth onClick={handleByToken} sx={{ height: "44px" }}>
-      <Trans>Buy {token?.symbol}</Trans>
+      {t("common.buy.token", { symbol: token?.symbol })}
     </Button>
   );
 }

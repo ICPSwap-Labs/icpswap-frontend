@@ -24,7 +24,6 @@ import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import { isDarkTheme } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
 import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
 import StepViewButton from "components/Steps/View";
@@ -38,6 +37,7 @@ import { useRefreshTrigger } from "hooks/index";
 import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -76,6 +76,7 @@ interface URLParams {
 }
 
 export default function AddLiquidity() {
+  const { t } = useTranslation();
   const classes = useStyle();
   const history = useHistory();
   const principal = useAccountPrincipal();
@@ -287,9 +288,12 @@ export default function AddLiquidity() {
       subnet: subnets[0],
     });
 
-    const loadingTipKey = openLoadingTip(t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity`, {
-      extraContent: <StepViewButton step={key} />,
-    });
+    const loadingTipKey = openLoadingTip(
+      t("swap.liquidity.add.loadingTips", { symbol0: baseCurrency?.symbol, symbol1: quoteCurrency?.symbol }),
+      {
+        extraContent: <StepViewButton step={key} />,
+      },
+    );
 
     setConfirmModalShow(false);
 
@@ -374,11 +378,11 @@ export default function AddLiquidity() {
             />
 
             <Typography variant="h3" color="textPrimary" align="center">
-              <Trans>Add Liquidity</Trans>
+              {t("common.liquidity.add")}
             </Typography>
 
             <Typography sx={{ cursor: "pointer" }} color="secondary" component="span" onClick={clearAll}>
-              <Trans>clear all</Trans>
+              {t("common.clear.all")}
             </Typography>
           </Flex>
 
@@ -404,7 +408,7 @@ export default function AddLiquidity() {
               }}
             >
               <Typography variant="h4" color="textPrimary">
-                <Trans>Select Pair</Trans>
+                {t("common.select.pair")}
               </Typography>
 
               <Flex gap="0 12px" sx={{ margin: "12px 0 0 0" }}>
@@ -454,7 +458,7 @@ export default function AddLiquidity() {
               }}
             >
               <Typography variant="h4" color="textPrimary">
-                <Trans>Deposit Amounts</Trans>
+                {t("swap.liquidity.deposit.amounts")}
               </Typography>
 
               <SwapDepositAmount

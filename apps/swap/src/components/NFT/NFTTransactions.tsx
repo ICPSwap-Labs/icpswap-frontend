@@ -5,10 +5,10 @@ import { useNFTTransaction } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 import { encodeTokenIdentifier } from "utils/index";
 import Pagination from "components/pagination";
-import { Trans } from "@lingui/macro";
 import type { NFTTransaction, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { NoData, ListLoading } from "components/index";
+import { useTranslation } from "react-i18next";
 
 export default function NFTTransaction({
   canisterId,
@@ -19,6 +19,7 @@ export default function NFTTransaction({
   tokenId: number;
   reload?: boolean;
 }) {
+  const { t } = useTranslation();
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
 
@@ -52,21 +53,11 @@ export default function NFTTransaction({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Type</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>From</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>To</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Memo</Trans>
-              </TableCell>
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("common.type")}</TableCell>
+              <TableCell>{t("common.from")}</TableCell>
+              <TableCell>{t("common.to")}</TableCell>
+              <TableCell>{t("common.memo")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

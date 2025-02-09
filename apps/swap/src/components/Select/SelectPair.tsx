@@ -7,6 +7,7 @@ import type { AllTokenOfSwapTokenInfo, Null } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
 import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
+import { useTranslation } from "react-i18next";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
@@ -92,6 +93,7 @@ export function SelectPair({
   customPanel,
   allPair,
 }: SelectPairProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState<string | null | undefined>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
@@ -167,7 +169,7 @@ export function SelectPair({
 
   return (
     <Select
-      placeholder="Select a pair"
+      placeholder={t("common.select.a.pair")}
       menus={menus}
       minMenuWidth="214px"
       menuMaxHeight="240px"

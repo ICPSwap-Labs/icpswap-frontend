@@ -1,6 +1,5 @@
 import { Box, Typography, CircularProgress, useTheme } from "components/Mui";
 import { TokenImage, Modal, Flex, AuthButton } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
@@ -10,6 +9,7 @@ import { ReclaimTips } from "components/ReclaimTips";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import StepViewButton from "components/Steps/View";
 import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useTranslation } from "react-i18next";
 
 export interface CollectFeeModalProps {
   open: boolean;
@@ -20,6 +20,7 @@ export interface CollectFeeModalProps {
 }
 
 export function CollectFeesModal({ open, onClose, position, positionId, onCollectSuccess }: CollectFeeModalProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
@@ -117,7 +118,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
         </Box>
 
         <Typography mt={1} lineHeight="18px">
-          <Trans>You can collect the liquidity incentive reward from the transaction according to your position.</Trans>
+          {t("swap.collect.description")}
         </Typography>
 
         <AuthButton
@@ -129,7 +130,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
           disabled={loading || disabled}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          <Trans>Collect</Trans>
+          {t("common.collect")}
         </AuthButton>
       </>
     </Modal>

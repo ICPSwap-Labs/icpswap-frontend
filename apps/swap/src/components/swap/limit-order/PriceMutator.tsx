@@ -1,11 +1,11 @@
 import { useMemo, ReactNode } from "react";
 import { Box, Typography, useTheme, BoxProps, TypographyProps } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
 import { X } from "react-feather";
 import { Null } from "@icpswap/types";
 import { inputValueFormat } from "utils/swap/limit-order";
+import { useTranslation } from "react-i18next";
 
 const VALUES = [0.1, 0.3, 0.5];
 const MIN_STEP = 0.01;
@@ -103,6 +103,7 @@ export function PriceMutator({
   onMinMax,
   minPrice,
 }: PriceMutatorProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   // The percent of  input value / current price
@@ -155,12 +156,7 @@ export function PriceMutator({
         onClose={onMinMax}
         active={isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)}
         showClose={showPercent}
-        tips={
-          <Trans>
-            ICPSwap’s limit orders require a specified minimum or maximum price to ensure the order can be executed as
-            intended.
-          </Trans>
-        }
+        tips={t("limit.price.specified.description")}
         textSx={{
           textDecoration: showPercent ? "none" : "underline",
           textDecorationStyle: "dashed",
@@ -171,13 +167,11 @@ export function PriceMutator({
               : "text.secondary",
         }}
       >
-        {showPercent && nonNullArgs(percent) ? (
-          `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
-        ) : inverted ? (
-          <Trans>Max</Trans>
-        ) : (
-          <Trans>Min</Trans>
-        )}
+        {showPercent && nonNullArgs(percent)
+          ? `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
+          : inverted
+          ? t("common.max")
+          : t("common.min")}
       </Mutator>
 
       {VALUES.map((val) => (

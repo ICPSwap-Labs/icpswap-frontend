@@ -1,6 +1,5 @@
-import { Box, Typography, useTheme, Theme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
 import { useEffect, useMemo } from "react";
 import { Flex, LoadingRow, Wrapper } from "components/index";
 import type { SnsTokensInfo } from "@icpswap/types";
@@ -12,13 +11,15 @@ import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Tabs } from "components/sns/Tab";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useTranslation } from "react-i18next";
 
 interface LaunchpadProps {
   sns: SnsTokensInfo;
 }
 
 function Launchpad({ sns }: LaunchpadProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const history = useHistory();
 
   const { swap_id, root_id } = useMemo(() => {
@@ -70,7 +71,9 @@ function Launchpad({ sns }: LaunchpadProps) {
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", margin: "20px 0 0 0" }}>
-        <Typography>{sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed ? t`Status` : t`Deadline`}</Typography>
+        <Typography>
+          {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed ? t`Status` : t("common.dead.line")}
+        </Typography>
         <Typography color="text.primary">
           {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed
             ? t`Complete`
@@ -84,6 +87,7 @@ function Launchpad({ sns }: LaunchpadProps) {
 }
 
 export default function LaunchpadList() {
+  const { t } = useTranslation();
   const { result: listedSNS } = useListDeployedSNSs();
   const { result: _allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
 
@@ -128,7 +132,7 @@ export default function LaunchpadList() {
       <Tabs />
 
       <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "10px 0 20px 0" }} color="text.primary">
-        <Trans>Current Launches</Trans>
+        {t("nns.launches")}
       </Typography>
 
       {!loading ? (
@@ -166,7 +170,7 @@ export default function LaunchpadList() {
 
       <Box sx={{ margin: "30px 0 0 0" }}>
         <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-          <Trans>Upcoming Launches</Trans>
+          {t("nns.upcoming.launches")}
         </Typography>
 
         {!loading ? (
@@ -205,7 +209,7 @@ export default function LaunchpadList() {
 
       <Box sx={{ margin: "30px 0 0 0" }}>
         <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-          <Trans>Launched</Trans>
+          {t("nns.launch.launched")}
         </Typography>
 
         {!loading ? (

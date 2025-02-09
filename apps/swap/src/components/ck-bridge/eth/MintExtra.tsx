@@ -1,11 +1,11 @@
 import { Flex } from "@icpswap/ui";
 import { BigNumber, parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import Copy from "components/Copy";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 interface MintExtraContentProps {
   token: Token | Null;
@@ -13,6 +13,7 @@ interface MintExtraContentProps {
 }
 
 export function MintExtraContent({ token, balance }: MintExtraContentProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -20,9 +21,7 @@ export function MintExtraContent({ token, balance }: MintExtraContentProps) {
     <>
       <Flex fullWidth vertical gap="12px 0" align="flex-start" sx={{ margin: "16px 0 0 0" }}>
         <Flex justify="space-between" fullWidth>
-          <Typography>
-            <Trans>Your wallet of IC network</Trans>
-          </Typography>
+          <Typography>{t("ck.wallet.of.ic")}</Typography>
 
           <Copy content={principal ? principal.toString() : ""}>
             <Typography sx={{ cursor: "pointer" }}>{principal ? shorten(principal.toString(), 5) : "--"}</Typography>
@@ -30,9 +29,7 @@ export function MintExtraContent({ token, balance }: MintExtraContentProps) {
         </Flex>
 
         <Flex justify="space-between" fullWidth>
-          <Typography>
-            <Trans>{token?.symbol} Balance</Trans>
-          </Typography>
+          <Typography>{t("common.balance.symbol", { symbol: token?.symbol })}</Typography>
 
           <Typography>
             {token && balance

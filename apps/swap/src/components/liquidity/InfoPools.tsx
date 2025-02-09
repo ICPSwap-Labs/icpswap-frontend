@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import { NoData, TokenImage, TabPanel, type Tab, ObserverWrapper, ScrollTop } from "components/index";
 import {
   Header,
@@ -31,6 +30,7 @@ import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { PoolTvlTooltip } from "components/swap/index";
+import { useTranslation } from "react-i18next";
 
 import { PoolCharts } from "./PoolCharts";
 
@@ -86,6 +86,7 @@ export interface PoolTableHeaderProps {
 }
 
 export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase }: PoolTableHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -102,7 +103,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
         { label: timeBase === "24H" ? t`APR 24H` : t`APR 7D`, key: "apr", sort: false, align: "right" },
         { label: timeBase === "24H" ? t`Fees 24H` : t`Fees 7D`, key: "fees24", sort: false, align: "right" },
         {
-          label: timeBase === "24H" ? t`Volume 24H` : t`Volume 7D`,
+          label: timeBase === "24H" ? t("common.volume24h") : t("common.volume7d"),
           key: "volumeUSD",
           sort: true,
           align: "right",
@@ -136,6 +137,7 @@ export interface PoolItemProps {
 }
 
 export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -258,17 +260,17 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
         <BodyCell>
           <Flex fullWidth gap="0 5px" justify="flex-end">
             <Box className={`${classes.button} outlined`} onClick={handleChart}>
-              <Trans>Chart</Trans>
+              {t("common.chart")}
             </Box>
             <Box
               className={`${classes.button} outlined`}
               onClick={handleSwap}
               sx={{ "@media(max-width: 640px)": { display: "none" } }}
             >
-              <Trans>Swap</Trans>
+              {t("common.swap")}
             </Box>
             <Box className={`${classes.button} primary`} onClick={handleAdd}>
-              <Trans>Add</Trans>
+              {t("common.add")}
             </Box>
           </Flex>
         </BodyCell>
@@ -283,6 +285,7 @@ const PAGE_SIZE = 10;
 const START_PAGE = 2;
 
 export function InfoPools() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [searchToken, setSearchToken] = useState<string | undefined>("");
   const [onlyTokenList, setOnlyTokenList] = useState(true);
@@ -425,9 +428,7 @@ export function InfoPools() {
           }}
         >
           <Flex gap="0 8px" sx={{ width: "fit-content" }}>
-            <Typography sx={{ whiteSpace: "nowrap" }}>
-              <Trans>Time base</Trans>
-            </Typography>
+            <Typography sx={{ whiteSpace: "nowrap" }}>{t("common.time.base")}</Typography>
 
             <TabPanel
               size="small"

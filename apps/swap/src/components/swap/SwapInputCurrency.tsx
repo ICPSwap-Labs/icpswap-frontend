@@ -12,12 +12,12 @@ import {
 import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { UseCurrencyState } from "hooks/useCurrency";
-import { Trans } from "@lingui/macro";
 import { SwapInput } from "components/swap/SwapInput";
 import { impactColor } from "utils/swap/prices";
 import { Null } from "@icpswap/types";
 import { useBalanceMaxSpend, usePoolBalanceMaxSpend } from "hooks/swap";
 import { maxAmountFormat } from "utils/index";
+import { useTranslation } from "react-i18next";
 
 import { SwapBalancesSlider } from "./SwapBalancesSlider";
 import { SwapPoolBalance } from "./SwapPoolBalance";
@@ -66,6 +66,7 @@ export function SwapInputCurrency({
   poolId,
   showUSDChange = true,
 }: SwapInputCurrencyProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmount?.equalTo(maxInputAmount));
@@ -178,7 +179,7 @@ export function SwapInputCurrency({
                           lineHeight: "18px",
                         }}
                       >
-                        <Trans>Value difference = (Received value - Paid value) / Paid value</Trans>
+                        {t("swap.value.difference")}
                       </Typography>
 
                       <Typography
@@ -188,11 +189,7 @@ export function SwapInputCurrency({
                           lineHeight: "18px",
                         }}
                       >
-                        <Trans>
-                          When you trade a certain amount of tokens, it affects the liquidity pool's depth. This will
-                          affect the overall availability and price of the tokens, leading to noticeable price
-                          differences.
-                        </Trans>
+                        {t("swap.value.difference.descriptions")}
                       </Typography>
                     </Typography>
                   }

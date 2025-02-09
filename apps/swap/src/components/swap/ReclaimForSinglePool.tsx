@@ -1,11 +1,11 @@
 import { Box, Typography, CircularProgress } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import { SwapContext } from "components/swap/index";
+import { useTranslation } from "react-i18next";
 
 export interface ReclaimForSinglePoolProps {
   balance: bigint;
@@ -29,6 +29,7 @@ export function ReclaimForSinglePool({
   fontSize = "14px",
   margin = "12px",
 }: ReclaimForSinglePoolProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [, token] = useToken(tokenId);
   const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(SwapContext);
@@ -81,13 +82,15 @@ export function ReclaimForSinglePool({
     >
       <Flex gap="0 8px">
         <Typography component="div" sx={{ fontSize }}>
-          <Trans>
-            Your {toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())} {token.symbol}{" "}
-            to{" "}
-            <Typography color="secondary" component="span" sx={{ cursor: "pointer", fontSize }} onClick={handleClaim}>
-              <Trans>Reclaim</Trans>
-            </Typography>
-          </Trans>
+          {t("swap.your.to.reclaim", {
+            amount: `${toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())} ${
+              token.symbol
+            }`,
+          })}
+
+          <Typography color="secondary" component="span" sx={{ cursor: "pointer", fontSize }} onClick={handleClaim}>
+            {t("common.reclaim")}
+          </Typography>
         </Typography>
 
         {loading ? <CircularProgress size={fontSize === "14px" ? 14 : 12} sx={{ color: "#ffffff" }} /> : null}

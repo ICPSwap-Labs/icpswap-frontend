@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { t } from "@lingui/macro";
 import { getHarvestSteps } from "components/stake/HarvestSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export type HarvestCallsStepArgs = {
   token: Token;
@@ -10,6 +10,7 @@ export type HarvestCallsStepArgs = {
 };
 
 export function useHarvestSteps() {
+  const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
   return useCallback((key: string, { token }: HarvestCallsStepArgs) => {
@@ -20,7 +21,7 @@ export function useHarvestSteps() {
 
     initialAndUpdateDetails(String(key), {
       content,
-      title: t`Harvest Details`,
+      title: t("stake.harvest.details"),
     });
   }, []);
 }

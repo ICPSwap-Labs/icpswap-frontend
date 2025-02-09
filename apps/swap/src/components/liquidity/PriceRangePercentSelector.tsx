@@ -6,11 +6,12 @@ import { Bound, FeeAmount } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { TokenToggle } from "components/TokenToggle";
 import { isDarkTheme } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
 import { toSignificantWithGroupSeparator } from "@icpswap/utils";
+import i18n from "i18n/index";
 
+import { useTranslation } from "react-i18next";
 import PriceRangeChart from "./PriceRangeChart";
 import { FullRangeWarning } from "./FullRangeWarning";
 
@@ -65,7 +66,7 @@ export interface PriceRangeSelectorProps {
 }
 
 export function PriceRangeSelector({
-  label = t`Min Price`,
+  label = i18n.t("common.min.price"),
   value,
   increment,
   decrement,
@@ -246,6 +247,7 @@ export const PriceRange = memo(
     handleTokenToggle,
     poolLoading,
   }: PriceRangeProps) => {
+    const { t } = useTranslation();
     const [isFullRange, setFullRange] = useState(false);
     const classes = useSetPriceStyle();
     const theme = useTheme() as Theme;
@@ -276,18 +278,12 @@ export const PriceRange = memo(
         {noLiquidity && (
           <>
             <Typography variant="h4" color="textPrimary">
-              <Trans>Set Starting Price</Trans>
+              {t("liquidity.set.price")}
             </Typography>
             <Box mt={2}>
               <Box className={classes.startPriceDescription}>
                 <Typography color={theme.colors.warningDark} fontSize={12}>
-                  <Trans>
-                    Before you can add liquidity, this pool needs to be initialized. Creating a trading pair incurs 1
-                    ICP fee for setting up the Swap pool canister. To begin, select an initial price for the pool,
-                    determine your liquidity price range, and decide on the deposit amount. Please be aware that if the
-                    liquidity pool is being established for the first time, the creation of a new canister might require
-                    some time.
-                  </Trans>
+                  {t("liquidity.set.price.description")}
                 </Typography>
               </Box>
               <Box mt={2}>
@@ -307,7 +303,7 @@ export const PriceRange = memo(
               </Box>
               <Grid container mt={2} mb={2} className={classes.startPrice} alignItems="center">
                 <Typography sx={{ marginRight: "8px" }}>
-                  <Trans>Current {baseCurrency?.symbol} Price:</Trans>
+                  {t("liquidity.current.token.price", { symbol: baseCurrency?.symbol })}
                 </Typography>
                 <Grid item xs>
                   <Grid container alignItems="center">
@@ -350,7 +346,7 @@ export const PriceRange = memo(
         <Box>
           <Flex justify="space-between">
             <Typography variant="h4" color="text.primary">
-              <Trans>Set Price Range</Trans>
+              {t("liquidity.set.price.range")}
             </Typography>
             {baseCurrency && quoteCurrency && (
               <Box sx={{ width: "fit-content" }}>
@@ -374,7 +370,7 @@ export const PriceRange = memo(
               <Box mt={3} sx={{ position: "relative" }}>
                 <Grid sx={{ height: "28px" }} container alignItems="center">
                   <Typography color="textPrimary" fontSize="12px">
-                    <Trans>Current Price: </Trans> {price ? toSignificantWithGroupSeparator(price) : "--"}
+                    {t("common.current.price.colon")} {price ? toSignificantWithGroupSeparator(price) : "--"}
                     <Typography component="span" sx={{ marginLeft: "5px" }} fontSize="12px">
                       {quoteCurrency?.symbol} per {baseCurrency?.symbol}
                     </Typography>
@@ -405,7 +401,7 @@ export const PriceRange = memo(
                 <Grid container justifyContent="space-between">
                   <Grid item sx={{ width: "48%" }}>
                     <PriceRangeSelector
-                      label={t`Min Price`}
+                      label={t("common.min.price")}
                       value={
                         ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
                       }
@@ -445,7 +441,7 @@ export const PriceRange = memo(
                       className={classes.fullRangeButton}
                       onClick={handleFullRangeClick}
                     >
-                      <Trans>Full Range</Trans>
+                      {t("common.full.range")}
                     </Button>
                   </Box>
                 )}

@@ -3,9 +3,8 @@ import { Position, Token, Percent } from "@icpswap/swap-sdk";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getDecreaseLiquiditySteps } from "components/swap/DecreaseLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -16,6 +15,7 @@ import { BURN_FIELD } from "constants/swap";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 import { sleep } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 type updateStepsArgs = {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -28,6 +28,7 @@ type updateStepsArgs = {
 };
 
 function useUpdateStepContent() {
+  const { t } = useTranslation();
   const updateStep = useStepContentManager();
   const handleReclaim = useReclaimCallback();
   const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
@@ -47,7 +48,7 @@ function useUpdateStepContent() {
 
       updateStep(String(key), {
         content,
-        title: t`Remove Liquidity Details`,
+        title: t("swap.remove.liquidity.details"),
       });
     },
     [keepTokenInPools],
@@ -189,6 +190,7 @@ export function useDecreaseLiquidityCallback({
   feeAmount0,
   feeAmount1,
 }: DecreaseLiquidityCallbackProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const getCalls = useDecreaseLiquidityCalls();
   const getStepCalls = useStepCalls();
@@ -227,7 +229,7 @@ export function useDecreaseLiquidityCallback({
 
       stepContentManage(String(key), {
         content,
-        title: t`Remove Liquidity Details`,
+        title: t("swap.remove.liquidity.details"),
       });
 
       return { call, reset, retry, key };

@@ -1,10 +1,9 @@
-import { Typography, TypographyProps } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { Trans } from "@lingui/macro";
+import { Typography, TypographyProps, useTheme } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export default function MaxButton(props: TypographyProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Typography
@@ -20,7 +19,7 @@ export default function MaxButton(props: TypographyProps) {
         ...(props.sx ?? {}),
       }}
     >
-      <Trans>Max</Trans>
+      {t("common.max")}
     </Typography>
   );
 }

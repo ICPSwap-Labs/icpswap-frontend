@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogTitle, DialogContent, Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Trans } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
@@ -39,6 +39,7 @@ export default function LogoutConfirmModal({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   return (
@@ -46,29 +47,24 @@ export default function LogoutConfirmModal({
       <DialogTitle>
         <Typography className={classes.titleContainer} component="div">
           <Typography className={classes.title} component="span" color="textPrimary">
-            <Trans>Log Out</Trans>
+            {t("common.logout")}
           </Typography>
         </Typography>
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Typography lineHeight="1.15rem">
-              <Trans>
-                When you log out, your account information will be cleared for asset security. Please ensure that you
-                have safely backed up your wallet's mnemonic phrase.
-              </Trans>
-            </Typography>
+            <Typography lineHeight="1.15rem">{t("logout.description")}</Typography>
           </Grid>
           <Grid container item justifyContent="flex-end" spacing={2} alignItems="center">
             <Grid item>
               <Button disableElevation fullWidth type="submit" variant="outlined" color="primary" onClick={onCancel}>
-                <Trans>Cancel</Trans>
+                {t("common.cancel")}
               </Button>
             </Grid>
             <Grid item>
               <Button disableElevation fullWidth type="submit" variant="contained" color="primary" onClick={onConfirm}>
-                <Trans>Confirm</Trans>
+                {t("common.confirm")}
               </Button>
             </Grid>
           </Grid>

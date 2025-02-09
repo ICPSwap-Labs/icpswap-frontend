@@ -20,7 +20,6 @@ import {
 import { getTickToPrice } from "utils/swap/getTickToPrice";
 import { usePool, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
-import { t } from "@lingui/macro";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
@@ -29,6 +28,7 @@ import { useTokenAllBalance } from "hooks/liquidity/index";
 import { useAllowance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { PoolState } from "types/swap";
+import { useTranslation } from "react-i18next";
 
 import {
   updateFiled,
@@ -61,6 +61,7 @@ export function useMintInfo(
   inverted?: boolean | undefined,
   refresh?: number,
 ) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const {
     independentField,
@@ -463,21 +464,23 @@ export function useMintInfo(
   });
 
   const error = useMemo(() => {
-    if (hasPairWithBaseToken !== true) return t`No pair with icp`;
-    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
-    if (poolState === PoolState.INVALID) return t`Invalid pair`;
-    if (invalidPrice) return t`Invalid price input`;
-    if (invalidRange) return t`Invalid Range`;
+    if (hasPairWithBaseToken !== true) return t("swap.error.pair.with.icp");
+    if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
+    if (poolState === PoolState.INVALID) return t("swap.error.pair.invalid");
+    if (invalidPrice) return t("swap.error.price.invalid");
+    if (invalidRange) return t("swap.error.range.invalid");
     if (
       (!parsedAmounts[FIELD.CURRENCY_A] && !depositADisabled) ||
       (!parsedAmounts[FIELD.CURRENCY_B] && !depositBDisabled)
     )
-      return t`Enter an amount`;
+      return t("common.error.input.amount");
 
     if (typeof available === "boolean" && !available) return t`This pool is not available now`;
     if (poolState === PoolState.NOT_CHECK) return t`Waiting for verify the pool...`;
-    if (token0Insufficient === "INSUFFICIENT") return t`Insufficient ${token0?.symbol} balance`;
-    if (token1Insufficient === "INSUFFICIENT") return t`Insufficient ${token1?.symbol} balance`;
+    if (token0Insufficient === "INSUFFICIENT")
+      return t("common.error.insufficient.balance.symbol", { symbol: token0?.symbol });
+    if (token1Insufficient === "INSUFFICIENT")
+      t("common.error.insufficient.balance.symbol", { symbol: token1?.symbol });
 
     if (
       tokenA &&
@@ -485,7 +488,7 @@ export function useMintInfo(
       !depositADisabled &&
       !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
     ) {
-      return t`${tokenA?.symbol} amount must greater than trans fee`;
+      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenA?.symbol });
     }
 
     if (
@@ -494,14 +497,14 @@ export function useMintInfo(
       !depositBDisabled &&
       !currencyBAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenB.wrapped, tokenB.transFee))
     )
-      return t`${tokenB?.symbol} amount must greater than trans fee`;
+      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenB?.symbol });
 
     if (
       (!VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenB?.address)) ||
         !VALID_TOKEN_STANDARDS_CREATE_POOL.includes(getTokenStandard(tokenA?.address))) &&
       noLiquidity
     )
-      return t`Only ICRC1 and ICRC2 support`;
+      return t("swap.error.standards.support");
   }, [
     hasPairWithBaseToken,
     typedValue,

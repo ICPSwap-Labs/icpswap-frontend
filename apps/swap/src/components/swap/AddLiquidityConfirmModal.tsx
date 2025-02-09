@@ -3,10 +3,10 @@ import { Typography, Grid, Button } from "@mui/material";
 import SwapModal from "components/modal/swap";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { Bound } from "constants/swap";
-import { Trans } from "@lingui/macro";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
+import { useTranslation } from "react-i18next";
 
 export interface AddLiquidityConfirmModalProps {
   open: boolean;
@@ -23,6 +23,7 @@ export default function AddLiquidityConfirmModal({
   position,
   baseCurrencyDefault,
 }: AddLiquidityConfirmModalProps) {
+  const { t } = useTranslation();
   const currency0 = position?.pool?.token0;
   const currency1 = position?.pool?.token1;
 
@@ -75,9 +76,7 @@ export default function AddLiquidityConfirmModal({
       <>
         <Grid container flexDirection="column" spacing={3}>
           <Grid item container>
-            <Typography>
-              <Trans>Deposited Amount</Trans>
-            </Typography>
+            <Typography>{t("liquidity.deposited.amount")}</Typography>
             <Grid item xs container flexDirection="column" justifyContent="flex-end">
               <Typography color="textPrimary" align="right">
                 {`${position.amount0.toSignificant(6, { groupSeparator: "," })} ${currency0.symbol}`}
@@ -94,9 +93,7 @@ export default function AddLiquidityConfirmModal({
             </Grid>
           </Grid>
           <Grid item container>
-            <Typography>
-              <Trans>Current Price</Trans>
-            </Typography>
+            <Typography>{t("common.current.price")}</Typography>
             <Grid item xs container justifyContent="flex-end">
               <Typography color="textPrimary" align="right">
                 {`${price.toSignificant(5, { groupSeparator: "," })} ${quoteCurrency.symbol} per ${
@@ -107,9 +104,7 @@ export default function AddLiquidityConfirmModal({
             </Grid>
           </Grid>
           <Grid item container>
-            <Typography>
-              <Trans>Price Range</Trans>
-            </Typography>
+            <Typography>{t("common.price.range")}</Typography>
             <Grid item xs container justifyContent="flex-end">
               <Typography color="textPrimary" align="right">
                 {`${formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}`} -{" "}
@@ -121,7 +116,7 @@ export default function AddLiquidityConfirmModal({
           </Grid>
         </Grid>
         <Button variant="contained" size="large" fullWidth sx={{ marginTop: "40px" }} onClick={onConfirm}>
-          <Trans>Add</Trans>
+          {t("common.add")}
         </Button>
       </>
     </SwapModal>

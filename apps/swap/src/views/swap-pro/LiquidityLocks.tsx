@@ -1,6 +1,5 @@
 import { useCallback, useContext, useMemo, useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Flex } from "components/index";
@@ -11,6 +10,7 @@ import { Null } from "@icpswap/types";
 import { LoadingRow, LiquidityLock, Tooltip } from "@icpswap/ui";
 import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
 import { SwapContext } from "components/swap";
+import { useTranslation } from "react-i18next";
 
 interface LiquidityLocksItemProps {
   name: string;
@@ -60,6 +60,7 @@ export interface LiquidityLocksProps {
 }
 
 export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [moreInformation, setMoreInformation] = useState(false);
   const [tokenIds, setTokenIds] = useState<[string, string] | null>(null);
@@ -134,9 +135,7 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
   return (
     <Box sx={{ background: theme.palette.background.level1, borderRadius: "8px", padding: "12px 0 0 0" }}>
       <Flex justify="center" gap="0 4px">
-        <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Liquidity locks</Trans>
-        </Typography>
+        <Typography sx={{ fontSize: "12px" }}>{t("common.liquidity.locks")}</Typography>
 
         <Tooltip
           iconSize="12px"
@@ -186,7 +185,7 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
           onClick={() => setMoreInformation(!moreInformation)}
         >
           <Typography sx={{ fontSize: "12px", fontWeight: 500, margin: "0 3px 0 0" }}>
-            {moreInformation ? <Trans>less information</Trans> : <Trans>more information </Trans>}
+            {moreInformation ? t("common.less.information") : t("common.more.information")}
           </Typography>
           <ChevronDown style={{ transform: moreInformation ? "rotate(180deg)" : "rotate(0deg)" }} size="16px" />
         </Box>

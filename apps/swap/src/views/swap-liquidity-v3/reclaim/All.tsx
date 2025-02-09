@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
 import { NoData, LoadingRow, Tooltip } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -19,6 +19,7 @@ type Balance = {
 };
 
 export function ReclaimAll() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
 
   const { loading, balances } = useUserSwapPoolBalances({ principal });
@@ -111,20 +112,9 @@ export function ReclaimAll() {
             },
           }}
         >
-          <Typography color="text.primary">
-            <Trans>All</Trans>
-          </Typography>
+          <Typography color="text.primary">{t("common.all")}</Typography>
 
-          {isMobile ? (
-            <Tooltip
-              tips={
-                <Trans>
-                  If you select All, please note that selecting it may involve querying all trading pairs, resulting in
-                  longer wait times. This process may take around 5 minutes. Thank you for your patience.
-                </Trans>
-              }
-            />
-          ) : null}
+          {isMobile ? <Tooltip tips={t("swap.reclaim.all.description")} /> : null}
         </Box>
 
         <Box
@@ -148,21 +138,14 @@ export function ReclaimAll() {
               }}
             />
 
-            <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide non-withdrawable tokens.</Trans>
-            </Typography>
+            <Typography sx={{ userSelect: "none" }}>{t("swap.reclaim.hide.tokens")}</Typography>
           </Box>
         </Box>
       </Box>
 
       {!isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography sx={{ lineHeight: "18px" }}>
-            <Trans>
-              If you select All, please note that selecting it may involve querying all trading pairs, resulting in
-              longer wait times. This process may take around 5 minutes. Thank you for your patience.
-            </Trans>
-          </Typography>
+          <Typography sx={{ lineHeight: "18px" }}>{t("swap.reclaim.all.description")}</Typography>
         </Box>
       ) : null}
 

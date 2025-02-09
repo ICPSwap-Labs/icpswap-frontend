@@ -4,8 +4,8 @@ import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
 import { useMarketplaceRecommendCanisters } from "hooks/nft/tradeData";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import CarouselArrow from "assets/images/nft/CarouselArrow";
+import { useTranslation } from "react-i18next";
 
 import CollectionAvatar from "../CollectionAvatar";
 
@@ -191,6 +191,7 @@ export function Collection({ collection }: { collection: NFTControllerInfo }) {
 }
 
 export default function MarketCarousel() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
 
@@ -300,7 +301,7 @@ export default function MarketCarousel() {
         onClick={handleLoadCollections}
       >
         <Typography color="text.primary" fontSize="18px" fontWeight="600" sx={{ marginRight: "10px" }}>
-          <Trans>View All</Trans>
+          {t("common.view.all")}
         </Typography>
         <ViewAllArrow />
       </Grid>

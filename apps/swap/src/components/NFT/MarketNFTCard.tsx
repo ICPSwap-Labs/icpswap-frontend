@@ -1,11 +1,9 @@
 import { useHistory } from "react-router";
-import { Grid, Typography, ButtonBase, Box } from "@mui/material";
-import { useTheme, makeStyles } from "@mui/styles";
+import { Grid, Typography, Box, useTheme, makeStyles, Theme } from "components/Mui";
 import CollectionDemo from "assets/images/nft/collection_demo.svg";
 import CollectionLogo from "assets/images/nft/collection_logo.svg";
-import { Trans } from "@lingui/macro";
 import { TradeOrder } from "types/nft";
-import { Theme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 export const BorderColor = "#384572";
 
@@ -42,9 +40,10 @@ export default function MarketNFTCard({
   order: TradeOrder;
   onCardClick?: (value: TradeOrder) => void;
 }) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const handleCardClick = () => {
     history.push(`/marketplace/NFT/view/${Number(order.tokenIndex)}`);
@@ -98,7 +97,7 @@ export default function MarketNFTCard({
               </Typography>
             </Box>
             <Typography fontSize="12px" sx={{ marginTop: "10px" }}>
-              <Trans>Floor Price</Trans>
+              {t("common.floor.price")}
             </Typography>
           </Grid>
           <Grid
@@ -119,7 +118,7 @@ export default function MarketNFTCard({
                 </Typography>
               </Box>
               <Typography fontSize="12px" sx={{ marginTop: "10px" }}>
-                <Trans>Listings</Trans>
+                {t("nft.listings.upper")}
               </Typography>
             </Grid>
           </Grid>
@@ -134,7 +133,7 @@ export default function MarketNFTCard({
                 </Typography>
               </Box>
               <Typography fontSize="12px" sx={{ marginTop: "10px" }}>
-                <Trans>Volume</Trans>
+                {t("common.volume")}
               </Typography>
             </Grid>
           </Grid>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
 import { Box, Checkbox, Typography } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
 import { Modal } from "@icpswap/ui";
 import { Filter } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 const SnsProposalDecisionStatusMap = [
   { value: SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN, label: "Open" },
@@ -19,6 +19,7 @@ export interface SelectNeuronProposalStatusProps {
 }
 
 export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNeuronProposalStatusProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<SnsProposalDecisionStatus[]>([]);
   const [filteredStatus, setFilteredStatus] = useState<SnsProposalDecisionStatus[]>([]);
@@ -69,9 +70,7 @@ export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNe
         onClick={() => setOpen(true)}
       >
         <Filter size="16px" />
-        <Typography>
-          <Trans>Proposal Status</Trans>
-        </Typography>
+        <Typography>{t("nns.proposal.status")}</Typography>
         <Typography>
           ({filteredStatus.length}/{SnsProposalDecisionStatusMap.length})
         </Typography>
@@ -79,17 +78,17 @@ export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNe
 
       <Modal
         open={open}
-        title={t`Proposal Status`}
+        title={t("nns.proposal.status")}
         onClose={() => setOpen(false)}
         showConfirm
         onConfirm={handleConfirm}
       >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "0 10px" }}>
           <Typography sx={{ fontSize: "16px", cursor: "pointer" }} onClick={handleSelectAll}>
-            <Trans>Select All</Trans>
+            {t("common.select.all")}
           </Typography>
           <Typography sx={{ fontSize: "16px", cursor: "pointer" }} onClick={handleClear}>
-            <Trans>Clear</Trans>
+            {t("common.clear")}
           </Typography>
         </Box>
 

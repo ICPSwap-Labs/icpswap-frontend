@@ -2,7 +2,6 @@ import { Typography, Box, Button } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useToken } from "hooks/index";
-import { Trans } from "@lingui/macro";
 import { InfoWrapper, MainCard, TokenImage, Link, ImportToNns } from "components/index";
 import Copy, { CopyRef } from "components/Copy";
 import { LinkButtons } from "components/info/tokens";
@@ -31,8 +30,10 @@ import { Flex, Proportion, TextButton, BreadcrumbsV1, dexScreenerUrl } from "@ic
 import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/token/cache/hooks";
 import { useTokenDexScreener } from "hooks/info";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { useTranslation } from "react-i18next";
 
 export function TokenDetail() {
+  const { t } = useTranslation();
   const copyRef = useRef<CopyRef>(null);
   const { id: canisterId } = useParams<{ id: string }>();
 
@@ -144,7 +145,7 @@ export function TokenDetail() {
   return (
     <InfoWrapper>
       <BreadcrumbsV1
-        links={[{ label: <Trans>Tokens</Trans>, link: "/info-tokens" }, { label: <Trans>Token Details</Trans> }]}
+        links={[{ label: t("common.tokens"), link: "/info-tokens" }, { label: t("common.token.details") }]}
       />
 
       <Flex
@@ -185,9 +186,7 @@ export function TokenDetail() {
         </Box>
 
         <ImportToNns tokenId={canisterId}>
-          <Button variant="contained">
-            <Trans>Add to NNS</Trans>
-          </Button>
+          <Button variant="contained">{t("common.nns.token.add")}</Button>
         </ImportToNns>
       </Flex>
 
@@ -205,57 +204,47 @@ export function TokenDetail() {
         >
           <MainCard level={3}>
             <Typography fontSize="18px" color="text.primary">
-              <Trans>Overview</Trans>
+              {t("common.overview")}
             </Typography>
 
             <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Total Supply</Trans>
-                </Typography>
+                <Typography>{t("common.total.supply")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {tokenSupply && token ? parseTokenAmount(tokenSupply, token.decimals).toFormat() : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Circulating Supply</Trans>
-                </Typography>
+                <Typography>{t("common.circulating.supply")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {tokenAnalysis ? new BigNumber(tokenAnalysis.marketAmount).toFormat() : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Decimals</Trans>
-                </Typography>
+                <Typography>{t("common.decimals")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {token ? token.decimals : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Transfer Fee</Trans>
-                </Typography>
+                <Typography>{t("common.transfer.fee")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {token ? parseTokenAmount(token.transFee, token.decimals).toFormat() : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Holders</Trans>
-                </Typography>
+                <Typography>{t("common.holders")}</Typography>
                 <Flex gap="0 25px">
                   <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                     {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
                   </Typography>
 
                   <TextButton to={`/info-tokens/holders/${canisterId}`} sx={{ fontSize: "12px" }}>
-                    <Trans>More Details</Trans>
+                    {t("common.more.details")}
                   </TextButton>
                 </Flex>
               </Flex>
@@ -264,14 +253,12 @@ export function TokenDetail() {
 
           <MainCard level={3}>
             <Typography fontSize="18px" color="text.primary">
-              <Trans>Market</Trans>
+              {t("common.market")}
             </Typography>
 
             <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>FDV</Trans>
-                </Typography>
+                <Typography>{t("common.fdv")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {tokenSupply && token && infoToken
                     ? formatDollarAmount(
@@ -284,27 +271,21 @@ export function TokenDetail() {
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Market Cap</Trans>
-                </Typography>
+                <Typography>{t("common.market.cap")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>TVL on ICPSwap</Trans>
-                </Typography>
+                <Typography>{t("info.tokens.tvl")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
                   {tokenTVL ? formatDollarAmount(tokenTVL.tvlUSD) : "--"}
                 </Typography>
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Chart</Trans>
-                </Typography>
+                <Typography>{t("common.chart")}</Typography>
 
                 <Flex gap="0 8px" wrap="wrap">
                   <LinkButtons linkButtons={charts} />
@@ -315,14 +296,12 @@ export function TokenDetail() {
 
           <MainCard level={3}>
             <Typography fontSize="18px" color="text.primary">
-              <Trans>Other Info</Trans>
+              {t("info.other.info")}
             </Typography>
 
             <Flex sx={{ margin: "24px 0 0 0" }} gap="24px 0" vertical align="flex-start">
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Canister ID</Trans>
-                </Typography>
+                <Typography>{t("common.canister.id")}</Typography>
 
                 <Flex gap="0 8px">
                   <Link link={explorerLink(canisterId)}>
@@ -335,9 +314,7 @@ export function TokenDetail() {
               </Flex>
 
               <Flex vertical align="flex-start" gap="8px 0">
-                <Typography>
-                  <Trans>Controllers</Trans>
-                </Typography>
+                <Typography>{t("common.controllers")}</Typography>
                 <Flex vertical gap="8px 0" align="flex-start">
                   {canisterInfo && canisterInfo.controllers
                     ? canisterInfo.controllers.map((e) => {
@@ -361,7 +338,7 @@ export function TokenDetail() {
 
         <MainCard level={3}>
           <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
-            <Trans>Social Media</Trans>
+            {t("common.social.media")}
           </Typography>
 
           <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">
@@ -372,7 +349,7 @@ export function TokenDetail() {
         {!!tokenListInfo && tokenListInfo?.introduction ? (
           <MainCard level={3}>
             <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
-              <Trans>Introduction</Trans>
+              {t("common.introduction")}
             </Typography>
 
             <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">
@@ -383,7 +360,7 @@ export function TokenDetail() {
 
         <MainCard level={3}>
           <Typography sx={{ color: "text.primary", fontSize: "18px", fontWeight: 500 }}>
-            <Trans>Token Explorers</Trans>
+            {t("info.tokens.explorers")}
           </Typography>
 
           <Flex sx={{ margin: "24px 0 0 0" }} gap="8px" wrap="wrap">

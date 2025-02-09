@@ -8,11 +8,12 @@ import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { ckETH } from "constants/ckETH";
 import { useApprove } from "hooks/token/index";
 import { ResultStatus } from "@icpswap/types";
-import { t } from "@lingui/macro";
 import { withdrawErc20Token } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 export function useDissolveCallback() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
 
@@ -43,7 +44,10 @@ export function useDissolveCallback() {
       });
 
       if (ckETHApproveResult.status === ResultStatus.ERROR) {
-        openTip(ckETHApproveResult.message ?? t`Failed to approve ${ckETH.symbol}`, MessageTypes.error);
+        openTip(
+          ckETHApproveResult.message ?? t("common.failed.approve.error", { message: ckETH.symbol }),
+          MessageTypes.error,
+        );
         setLoading(false);
         return;
       }
@@ -56,7 +60,10 @@ export function useDissolveCallback() {
       });
 
       if (erc20TokenApproveResult.status === ResultStatus.ERROR) {
-        openTip(erc20TokenApproveResult.message ?? t`Failed to approve ${ckErc20Token.symbol}`, MessageTypes.error);
+        openTip(
+          erc20TokenApproveResult.message ?? t("common.failed.approve.error", { message: ckErc20Token.symbol }),
+          MessageTypes.error,
+        );
         setLoading(false);
         return;
       }
@@ -72,10 +79,13 @@ export function useDissolveCallback() {
         if (result.message.includes("InsufficientFunds")) {
           openTip(t`Your wallet doesn't have enough ckETH (Gas fee) or ckUSDC to dissolve.`, MessageTypes.error);
         } else {
-          openTip(result.message ?? t`Failed to withdraw ${ckErc20Token.symbol}`, MessageTypes.error);
+          openTip(
+            result.message ?? t("common.failed.withdraw.error", { message: ckErc20Token.symbol }),
+            MessageTypes.error,
+          );
         }
       } else {
-        openTip(t`Withdraw ${rawAmount} ${ckErc20Token.symbol} successfully`, MessageTypes.success);
+        openTip(t("common.withdraw.success", { message: `${rawAmount} ${ckErc20Token.symbol}` }), MessageTypes.success);
       }
 
       setLoading(false);

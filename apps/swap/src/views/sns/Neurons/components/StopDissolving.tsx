@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { stopDissolvingNeuron } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { ConfirmModal } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface StopDissolvingProps {
   onStopSuccess?: () => void;
@@ -13,6 +13,7 @@ export interface StopDissolvingProps {
 }
 
 export function StopDissolving({ onStopSuccess, governance_id, neuron_id, disabled }: StopDissolvingProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -48,13 +49,13 @@ export function StopDissolving({ onStopSuccess, governance_id, neuron_id, disabl
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
-        <Trans>Stop Dissolving</Trans>
+        {t("nns.stop.dissolving")}
       </Button>
 
       <ConfirmModal
         open={open}
         onClose={() => setOpen(false)}
-        title={t`Stop Dissolving`}
+        title={t("nns.stop.dissolving")}
         onConfirm={handleConfirm}
         text={t`Are you sure you want to stop the dissolve process?`}
       />

@@ -4,13 +4,13 @@ import { Typography, Button, Box } from "components/Mui";
 import { MaxButton, NumberTextField } from "components/index";
 import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Token, Pool } from "@icpswap/swap-sdk";
-import { t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider/ui";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapDepositTokenBalance } from "hooks/swap/useSwapDeposit";
 import { MessageTypes, useTips } from "hooks/useTips";
+import { useTranslation } from "react-i18next";
 
 export interface DepositModalProps {
   open: boolean;
@@ -21,6 +21,7 @@ export interface DepositModalProps {
 }
 
 export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: DepositModalProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [openTip, closeTip] = useTips();
 
@@ -92,7 +93,9 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     setLoading(true);
 
     const key = openTip(
-      t`Deposit ${toSignificantWithGroupSeparator(amount, token.decimals)} ${token.symbol}`,
+      t("common.deposit.amount", {
+        amount: `${toSignificantWithGroupSeparator(amount, token.decimals)} ${token.symbol}`,
+      }),
       MessageTypes.loading,
     );
 
@@ -111,7 +114,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   const error = useMemo(() => {
     if (amount === "") return t`Please enter the amount`;
     if (!balance || !token || !maxDepositAmount) return t`Confirm`;
-    if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t`Insufficient balance`;
+    if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
   }, [amount, balance, token, maxDepositAmount]);

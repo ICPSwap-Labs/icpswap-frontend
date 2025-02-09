@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import BigNumber from "bignumber.js";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { useApprove } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isUseTransferByStandard } from "utils/token/index";
@@ -25,7 +24,7 @@ export function useTokenSubAccountTransfer() {
   return useCallback(
     async ({ token, address, amount, options }: UseTokenSubAccountTransferArgs) => {
       if (!principal) {
-        openErrorTip(t`Failed to transfer: no principal`);
+        openErrorTip(`Failed to transfer: no principal`);
         return false;
       }
 

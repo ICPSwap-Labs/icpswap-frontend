@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Grid, Box, Typography, Avatar, CircularProgress, Button, useTheme } from "components/Mui";
-import { t, Trans } from "@lingui/macro";
 import { TextButton, Wrapper, LoadingRow, ViewMore, NoData } from "components/index";
 import { useUserClaimEvents, getUserClaimEvents, claimToken, useUserClaimEventTransactions } from "@icpswap/hooks";
 import { type ActorIdentity, ResultStatus, type ClaimEventInfo } from "@icpswap/types";
@@ -9,10 +8,12 @@ import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import Identity, { SubmitLoadingProps, CallbackProps } from "components/Identity";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import ConnectWallet from "components/ConnectWallet";
+import { useTranslation } from "react-i18next";
 
 export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [, token] = useToken(ele.tokenCid);
 
@@ -23,7 +24,7 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
   const handleClaim = async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
     if (!identity || loading) return;
 
-    const loadingKey = openTip(t`Claiming ${ele.claimEventName}`, MessageTypes.loading);
+    const loadingKey = openTip(t("claim.loading.key", { name: ele.claimEventName }), MessageTypes.loading);
 
     const { status, message } = await claimToken(ele.claimEventId, ele.claimCanisterId, identity);
 
@@ -31,7 +32,7 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
       setManuallyClaimed(true);
     }
 
-    openTip(status === ResultStatus.OK ? t`Claimed successfully` : getLocaleMessage(message), status);
+    openTip(status === ResultStatus.OK ? t("claim.success") : getLocaleMessage(message), status);
 
     closeTip(loadingKey);
 
@@ -88,9 +89,9 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
               {claimTransactionLoading ? (
                 <CircularProgress size={20} color="inherit" />
               ) : claimed || manuallyClaimed ? (
-                <Trans>Claimed</Trans>
+                t("common.claimed")
               ) : (
-                <Trans>Claim</Trans>
+                t("common.claim")
               )}
             </Button>
           )}
@@ -101,6 +102,7 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
 }
 
 export default function TokenClaim() {
+  const { t } = useTranslation();
   const principalString = useAccountPrincipalString();
 
   const pageSize = 5;
@@ -142,10 +144,11 @@ export default function TokenClaim() {
         <Box sx={{ maxWidth: "800px", width: "100%", margin: " 0 auto" }}>
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography color="text.primary" fontWeight={500} fontSize="24px">
-              <Trans>Claim Your Tokens</Trans>
+              {t("claim.your.tokens")}
             </Typography>
             <TextButton sx={{ fontSize: "16px", fontWeight: 500 }} to={`/token-claim/transactions/${principalString}`}>
-              <Trans>Your records</Trans> &gt;
+              {t("claim.your.records")}
+              &gt;
             </TextButton>
           </Grid>
 

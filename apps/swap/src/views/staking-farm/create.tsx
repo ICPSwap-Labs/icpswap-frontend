@@ -4,7 +4,6 @@ import { Typography, TextFieldProps, Grid, Box, makeStyles } from "components/Mu
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
 import { useTips } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { formatTokenAmount } from "@icpswap/utils";
@@ -22,6 +21,7 @@ import dayjs from "dayjs";
 import { FarmControllerId } from "constants/canister";
 import { standardCheck } from "utils/token/standardCheck";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -83,6 +83,7 @@ const DefaultValue = {
 } as Values;
 
 export default function CreateProject() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const principal = useAccountPrincipal();

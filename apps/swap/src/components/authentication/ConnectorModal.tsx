@@ -1,9 +1,9 @@
 import { Box, makeStyles, Theme, Typography } from "components/Mui";
 import Modal from "components/modal";
-import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton } from "components/index";
 import { Connector } from "constants/wallet";
 import { useConnectManager } from "store/auth/hooks";
+import { useTranslation, Trans } from "react-i18next";
 
 import { ConnectorComponent } from "./connector";
 
@@ -88,6 +88,7 @@ const Wallets: Wallet[] = [
 ];
 
 export default function WalletConnector() {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const { open, showConnector } = useConnectManager();
@@ -102,22 +103,22 @@ export default function WalletConnector() {
               lineHeight: "20px",
             }}
           >
-            <Trans>
-              By connecting a wallet, you agree to ICPSwap’s{" "}
-              <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service">
-                Terms of Service
-              </TextButton>{" "}
-              and acknowledge that you have read and understand the{" "}
-              <TextButton
-                link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
-                sx={{
-                  marginLeft: "0!important",
-                }}
-              >
-                ICPSwap Disclaimer
-              </TextButton>
-              .
-            </Trans>
+            <Trans
+              components={{
+                highlight0: (
+                  <TextButton link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-terms-of-service" />
+                ),
+                highlight1: (
+                  <TextButton
+                    link="https://iloveics.gitbook.io/icpswap/legal-and-privacy/icpswap-disclaimer"
+                    sx={{
+                      marginLeft: "0!important",
+                    }}
+                  />
+                ),
+              }}
+              i18nKey="wallet.authentication.agree"
+            />
           </Typography>
 
           <Box mt="24px">

@@ -1,25 +1,20 @@
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
-import { t } from "@lingui/macro";
 import { ButtonChip } from "components/ButtonChip";
 import { Flex } from "components/index";
 import { Box, useMediaQuery, useTheme } from "components/Mui";
-import { Theme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 const READ_CLAIM = "READ_CLAIM";
-
-// function getReadClaim() {
-//   const val = window.localStorage.getItem(READ_CLAIM);
-//   return val === "true";
-// }
 
 function setReadClaim() {
   window.localStorage.setItem(READ_CLAIM, "true");
 }
 
 export default function TokenClaim() {
+  const { t } = useTranslation();
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [isRead, setIsRead] = useState(true);
 
@@ -28,11 +23,6 @@ export default function TokenClaim() {
     setIsRead(true);
     history.push("/token-claim");
   };
-
-  // useEffect(() => {
-  //   const isRead = getReadClaim();
-  //   setIsRead(isRead);
-  // }, []);
 
   return (
     <>
@@ -44,7 +34,7 @@ export default function TokenClaim() {
         ) : null}
 
         <Box sx={{ position: "relative" }}>
-          <ButtonChip label={t`Claim`} border="primary" onClick={handleTokenClaim} />
+          <ButtonChip label={t("common.claim")} border="primary" onClick={handleTokenClaim} />
           {matchDownSM && isRead === false ? (
             <Box
               sx={{

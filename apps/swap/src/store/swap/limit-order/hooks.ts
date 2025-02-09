@@ -6,7 +6,6 @@ import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
@@ -18,6 +17,7 @@ import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
 import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
 import { useSwapState } from "store/swap/hooks";
+import { useTranslation } from "react-i18next";
 
 import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
 
@@ -26,6 +26,7 @@ export interface UseSwapInfoArgs {
 }
 
 export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const [__orderPrice, setOrderPrice] = useState<string | Null>(null);
@@ -258,16 +259,17 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   }, [pool, inputToken, outputToken]);
 
   const inputError = useMemo(() => {
-    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken) return t`Select a token`;
-    if (!parsedAmount) return t`Enter an amount`;
+    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken)
+      return t("common.select.a.token");
+    if (!parsedAmount) return t("common.error.input.amount");
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
     if (tickError) return t`Invalid tick for this pool`;
 
     const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
 
     if (inputToken.transFee > 0 && minimumAmount.isGreaterThan(typedValue))
-      return t`Amount must exceed ${minimumAmount.toFormat()} ${inputToken.symbol}`;
-    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
+      return t("limit.error.amount.exceed", { amount: `${minimumAmount.toFormat()} ${inputToken.symbol}` });
+    if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
@@ -283,7 +285,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       Trade?.noLiquidity === true ||
       isNullArgs(minUseableTick)
     )
-      return t`Submit Limit Order`;
+      return t("limit.submit");
 
     if (isInputTokenSorted && orderPriceTick <= minSettableTick) return t`Adjust your limit price to proceed.`;
     if (!isInputTokenSorted && orderPriceTick >= minSettableTick) return t`Adjust your limit price to proceed.`;

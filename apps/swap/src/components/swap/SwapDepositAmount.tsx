@@ -6,12 +6,12 @@ import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
 import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
 import { Null } from "@icpswap/types";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -57,6 +57,7 @@ interface LockMaskProps {
 }
 
 const LockMask = ({ type }: LockMaskProps) => {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   return (
@@ -96,7 +97,7 @@ const LockMask = ({ type }: LockMaskProps) => {
       >
         <LockIcon />
         <Typography align="center" color="textPrimary">
-          <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
+          {t("swap.single.deposit.descriptions")}
         </Typography>
       </Grid>
     </Box>

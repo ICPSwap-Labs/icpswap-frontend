@@ -24,6 +24,9 @@ export { default as Chip } from "@mui/material/Chip";
 export { default as Menu } from "@mui/material/Menu";
 export { default as Pagination } from "@mui/material/Pagination";
 export { default as LinearProgress } from "@mui/material/LinearProgress";
+export { default as Dialog } from "@mui/material/Dialog";
+export { default as DialogContent } from "@mui/material/DialogContent";
+export { default as DialogTitle } from "@mui/material/DialogTitle";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

@@ -1,5 +1,4 @@
-import { Box, Typography } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
+import { Box, Typography , useTheme } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
@@ -12,7 +11,7 @@ import { Principal } from "@dfinity/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
-import { useTheme } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 interface TransactionProps {
   transaction: WithdrawalDetail;
@@ -20,6 +19,7 @@ interface TransactionProps {
 }
 
 function Transaction({ transaction, minterInfo }: TransactionProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { state, hash } = formatWithdrawalStatus(transaction.status);
 
@@ -54,23 +54,17 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
     >
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Withdrawal ID</Trans>
-          </Typography>
+          <Typography>{t("common.withdrawal.id")}</Typography>
           <Typography>{transaction.withdrawal_id.toString()}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>State</Trans>
-          </Typography>
+          <Typography>{t("common.state")}</Typography>
           <Typography>{state}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Txid</Trans>
-          </Typography>
+          <Typography>{t("common.txid")}</Typography>
           <Typography>
             {hash ? (
               <Typography
@@ -97,16 +91,12 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Token</Trans>
-          </Typography>
+          <Typography>{t("common.token")}</Typography>
           <Typography>{transaction.token_symbol}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
           <Typography>
             {token
               ? parseTokenAmount(transaction.withdrawal_amount.toString(), token.decimals).toFormat()
@@ -115,9 +105,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>From</Trans>
-          </Typography>
+          <Typography>{t("common.from")}</Typography>
           <Typography
             sx={{
               maxWidth: "400px",
@@ -131,9 +119,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Recipient</Trans>
-          </Typography>
+          <Typography>{t("common.recipient")}</Typography>
 
           <Typography
             sx={{
@@ -164,7 +150,8 @@ export interface DissolveRecordsProps {
   blockNumber: number | undefined;
 }
 
-export function Erc20DissolveTransactions({ refresh, blockNumber, token }: DissolveRecordsProps) {
+export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
@@ -199,9 +186,7 @@ export function Erc20DissolveTransactions({ refresh, blockNumber, token }: Disso
 
   return (
     <MainCard level={1}>
-      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-        <Trans>Transactions</Trans>
-      </Typography>
+      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.transactions")}</Typography>
 
       <Box>
         {loading ? (

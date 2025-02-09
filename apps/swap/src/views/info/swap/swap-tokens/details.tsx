@@ -1,7 +1,6 @@
 import { Typography, Box, Button, useMediaQuery, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard, ImportToNns } from "components/index";
-import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useParsedQueryString, useTokenLatestTVL, useInfoToken } from "@icpswap/hooks";
 import {
@@ -29,6 +28,8 @@ import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
 import { ICP } from "@icpswap/tokens";
 import { DefaultChartView } from "constants/index";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 import { TokenPrices } from "./components/TokenPrice";
 
@@ -38,8 +39,8 @@ enum TabValue {
 }
 
 const tabs = [
-  { value: TabValue.Transactions, label: "Transactions" },
-  { value: TabValue.Holders, label: "Holders" },
+  { value: TabValue.Transactions, label: i18n.t("common.transactions") },
+  { value: TabValue.Holders, label: i18n.t("common.holders") },
 ];
 
 interface TokenChartsViewSelectorProps {
@@ -67,6 +68,7 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
 const TradingViewDesc = [ChartView.DexScreener, ChartView.PRICE];
 
 export default function TokenDetails() {
+  const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
   const [openTips] = useTips();
   const theme = useTheme();
@@ -112,8 +114,8 @@ export default function TokenDetails() {
     <InfoWrapper>
       <Breadcrumbs
         prevLink={path ? atob(path) : "/info-swap"}
-        prevLabel={page ? atob(page) : <Trans>Swap Tokens</Trans>}
-        currentLabel={<Trans>Details</Trans>}
+        prevLabel={page ? atob(page) : t("info.swap.tokens")}
+        currentLabel={t("common.details")}
       />
 
       <Box mt="20px">
@@ -193,26 +195,24 @@ export default function TokenDetails() {
 
           <ImportToNns tokenId={canisterId}>
             <Button variant="contained" className="secondary">
-              <Trans>Add to NNS</Trans>
+              {t("common.nns.token.add")}
             </Button>
           </ImportToNns>
 
           <Link to={`/info-tokens/details/${canisterId}`}>
             <Button variant="contained" className="secondary">
-              <Trans>Token Details</Trans>
+              {t("common.token.details")}
             </Button>
           </Link>
 
           <Link to={addLiquidityLink(canisterId)}>
             <Button variant="contained" className="secondary">
-              <Trans>Add Liquidity</Trans>
+              {t("common.liquidity.add")}
             </Button>
           </Link>
 
           <Link to={swapLink(canisterId)}>
-            <Button variant="contained">
-              <Trans>Swap</Trans>
-            </Button>
+            <Button variant="contained">{t("common.swap")}</Button>
           </Link>
         </Flex>
       </Flex>
@@ -233,9 +233,7 @@ export default function TokenDetails() {
         <MainCard level={3}>
           <GridAutoRows gap="24px">
             <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>TVL</Trans>
-              </Typography>
+              <Typography>{t("common.tvl")}</Typography>
               <Typography
                 color="text.primary"
                 sx={{
@@ -250,9 +248,7 @@ export default function TokenDetails() {
             </GridAutoRows>
 
             <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>Volume 24H</Trans>
-              </Typography>
+              <Typography>{t("common.volume24h")}</Typography>
               <Typography
                 color="text.primary"
                 sx={{
@@ -280,9 +276,7 @@ export default function TokenDetails() {
             </GridAutoRows> */}
 
             <GridAutoRows gap="4px">
-              <Typography>
-                <Trans>Fee 24H</Trans>
-              </Typography>
+              <Typography>{t("common.fee24h")}</Typography>
               <Typography
                 color="text.primary"
                 sx={{

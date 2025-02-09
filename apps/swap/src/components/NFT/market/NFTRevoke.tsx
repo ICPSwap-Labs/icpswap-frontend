@@ -1,11 +1,11 @@
 import { Button } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
 import { cancel } from "hooks/nft/trade";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { ResultStatus, Identity as TypeIdentity } from "types/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import type { NFTTokenMetadata } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 export default function NFTInfo({
   metadata,
@@ -14,6 +14,7 @@ export default function NFTInfo({
   metadata: NFTTokenMetadata;
   onRevokeSuccess?: () => void;
 }) {
+  const { t } = useTranslation();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
 
@@ -25,7 +26,7 @@ export default function NFTInfo({
     if (status === ResultStatus.ERROR) {
       openErrorTip(getLocaleMessage(message));
     } else {
-      openSuccessTip(t`Cancelled Successfully`);
+      openSuccessTip(t("common.cancelled.success"));
       if (onRevokeSuccess) onRevokeSuccess();
     }
 
@@ -44,7 +45,7 @@ export default function NFTInfo({
           onClick={submit}
           disabled={loading}
         >
-          <Trans>Cancel Listing</Trans>
+          {t("nft.cancel.listings")}
         </Button>
       )}
     </Identity>

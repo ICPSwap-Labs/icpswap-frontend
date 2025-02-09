@@ -3,9 +3,9 @@ import { Typography, Box } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { NFTs, NFTLayoutHeader } from "components/info/nft";
 import { useNFTCanisterMetadata, useNFTUserCanisterCount, useNFTCanisterCycles } from "hooks/info/nft";
-import { t, Trans } from "@lingui/macro";
 import { InfoWrapper, LoadingRow, Breadcrumbs } from "components/index";
 import { MainCard } from "@icpswap/ui";
+import i18n from "i18n/index";
 
 type PageType = {
   component: React.FC<{ canisterId: string }>;
@@ -13,7 +13,7 @@ type PageType = {
   label: React.ReactNode;
 };
 
-const Pages: PageType[] = [{ key: "NFTs", label: t`NFTs`, component: NFTs }];
+const Pages: PageType[] = [{ key: "NFTs", label: i18n.t("nfts"), component: NFTs }];
 
 export default function NFTCanisterDetails() {
   const { id: canisterId } = useParams<{ id: string }>();
@@ -34,8 +34,8 @@ export default function NFTCanisterDetails() {
       <Box>
         <Breadcrumbs
           prevLink="/info-nfts/canisters"
-          prevLabel={<Trans>NFT Canisters</Trans>}
-          currentLabel={<Trans>NFTs</Trans>}
+          prevLabel={i18n.t("nft.canisters")}
+          currentLabel={i18n.t("nfts")}
         />
 
         <Box mt={2}>

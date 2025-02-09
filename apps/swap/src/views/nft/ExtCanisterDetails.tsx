@@ -1,15 +1,14 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Theme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import NFTList from "components/NFT/ext/NFTList";
 import { MainCard, Breadcrumbs, Wrapper, LoadingRow } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { useAccount } from "store/auth/hooks";
 import type { EXTCollection } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import Avatar from "components/Image/Avatar";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
@@ -71,6 +70,7 @@ export interface NFTCanisterHeaderProps {
 }
 
 export function CanisterHeader({ collection, count, loading }: NFTCanisterHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   return (
@@ -101,9 +101,7 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
 
             <Box mt="20px">
               <Grid sx={{ width: "100%" }} container alignItems="center">
-                <Typography color="text.primary">
-                  <Trans>Canister ID:</Trans>
-                </Typography>
+                <Typography color="text.primary">{t("common.canister.id.colon")}</Typography>
                 <Grid item xs ml="5px">
                   <Typography>{collection.id}</Typography>
                 </Grid>
@@ -127,7 +125,7 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
                   marginTop: "4px",
                 }}
               >
-                <Trans>NFT count</Trans>
+                {t("nft.nft.count")}
               </Typography>
             </Box>
           </Box>
@@ -138,6 +136,7 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
 }
 
 export function ExtNftCollectionDetail() {
+  const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
   const account = useAccount();
 
@@ -163,7 +162,7 @@ export function ExtNftCollectionDetail() {
   return (
     <Wrapper>
       <Box>
-        <Breadcrumbs prevLink="/wallet" prevLabel={<Trans>Wallet NFTs</Trans>} currentLabel={<Trans>NFTs</Trans>} />
+        <Breadcrumbs prevLink="/wallet" prevLabel={t("nft.wallet.nfts")} currentLabel={t("nfts")} />
 
         <Box mt={2}>
           <CanisterHeader loading={!collection} collection={collection} count={count ?? "--"} />
@@ -179,7 +178,7 @@ export function ExtNftCollectionDetail() {
                 component="span"
                 sx={{ marginRight: "20px", cursor: "pointer" }}
               >
-                NFT List
+                {t("nft.list")}
               </Typography>
             </Box>
 

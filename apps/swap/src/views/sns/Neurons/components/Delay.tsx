@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Typography, Box, useTheme, Theme } from "components/Mui";
+import { Button, Typography, Box, useTheme } from "components/Mui";
 import {
   parseTokenAmount,
   toHexString,
@@ -13,11 +13,11 @@ import { MaxButton } from "@icpswap/ui";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { NervousSystemParameters, Neuron } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { Modal, NumberFilledTextField } from "components/index";
 import { secondsToDissolveDelayDuration, getSnsDelayTimeInSeconds, neuronFormat } from "utils/sns/index";
 import { MinButton } from "components/Button";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface SetDissolveDelayProps {
   open: boolean;
@@ -42,7 +42,8 @@ export function SetDissolveDelay({
   neuron,
   disabled,
 }: SetDissolveDelayProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -201,7 +202,7 @@ export function SetDissolveDelay({
 
   if (!day) error = t`Enter the dissolve delay`;
 
-  if (token === undefined) error = t`Some unknown error happened`;
+  if (token === undefined) error = t("common.error.unknown");
   if (day && Number(day) === 0) error = t`The new dissolve delay must be greater than the current value`;
   if (
     day &&
@@ -219,7 +220,7 @@ export function SetDissolveDelay({
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
-        <Trans>Delay</Trans>
+        {t("common.delay")}
       </Button>
 
       <Modal open={open} onClose={() => setOpen(false)} title={t`Set Dissolve Delay`}>
@@ -241,25 +242,17 @@ export function SetDissolveDelay({
           </Box>
 
           <Box>
-            <Typography color="text.primary">
-              <Trans>Dissolve Delay</Trans>
-            </Typography>
+            <Typography color="text.primary">{t("nns.dissolve.delay")}</Typography>
             <Typography sx={{ padding: "5px", fontSize: "12px", lineHeight: "16px" }}>
-              <Trans>
-                Dissolve delay is the minimum amount of time you have to wait for the neuron to unlock, and ICS to be
-                available again. Note, that dissolve delay only decreases when the neuron is in a dissolving state.
-                Voting power is given to neurons with a dissolve delay of at least&nbsp;
-                {neuron_minimum_dissolve_seconds
+              {t("nns.dissolve.delay.description", {
+                seconds: neuron_minimum_dissolve_seconds
                   ? secondsToDissolveDelayDuration(neuron_minimum_dissolve_seconds)
-                  : "--"}
-                .
-              </Trans>
+                  : "--",
+              })}
             </Typography>
           </Box>
 
-          <Typography color="text.primary">
-            <Trans>Dissolve Delay (in days)</Trans>
-          </Typography>
+          <Typography color="text.primary">{t("nns.dissolve.delay.0")}</Typography>
 
           <Box sx={{ padding: "5px" }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", padding: "0 5px 5px 0" }}>
@@ -284,9 +277,7 @@ export function SetDissolveDelay({
           neuron_minimum_dissolve_seconds &&
           new BigNumber(day).isLessThan(secondsToDays(Number(neuron_minimum_dissolve_seconds))) ? (
             <Box>
-              <Typography sx={{ color: theme.palette.warning.dark }}>
-                <Trans>The neuron will not have voting power unless the dissolve delay is increased.</Trans>
-              </Typography>
+              <Typography sx={{ color: theme.palette.warning.dark }}>{t("nns.voting.power.description")}</Typography>
             </Box>
           ) : null}
 
@@ -313,15 +304,11 @@ export function SetDissolveDelay({
             <Box sx={{ display: "flex", justifyContent: "space-around", margin: "12px 0 0 0" }}>
               <Box>
                 <Typography>{votingPower}</Typography>
-                <Typography>
-                  <Trans>Voting Power</Trans>
-                </Typography>
+                <Typography>{t("nns.voting.power")}</Typography>
               </Box>
               <Box>
                 <Typography>{day}</Typography>
-                <Typography>
-                  <Trans>Dissolve Delay</Trans>
-                </Typography>
+                <Typography>{t("nns.dissolve.delay")}</Typography>
               </Box>
             </Box>
           </Box>
@@ -334,7 +321,7 @@ export function SetDissolveDelay({
             onClick={handleSubmit}
             startIcon={loading ? <CircularProgress size={26} color="inherit" /> : null}
           >
-            {error || <Trans>Confirm</Trans>}
+            {error || t("common.confirm")}
           </Button>
         </Box>
       </Modal>

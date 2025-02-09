@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Box, Typography, useTheme, CircularProgress } from "components/Mui";
 import { Modal, TextButton, Flex } from "@icpswap/ui";
-import { t, Trans } from "@lingui/macro";
 import { LimitTransaction } from "@icpswap/types";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useUserUnusedBalance } from "@icpswap/hooks";
@@ -9,6 +8,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { useRefreshTriggerManager, useToken, useTips, MessageTypes } from "hooks/index";
 import { BigNumber, formatAmount, isNullArgs, parseTokenAmount, sleep } from "@icpswap/utils";
 import { useSwapWithdraw } from "hooks/swap/index";
+import { Trans, useTranslation } from "react-i18next";
 
 export interface WithdrawTokensProps {
   open: boolean;
@@ -17,6 +17,7 @@ export interface WithdrawTokensProps {
 }
 
 export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -53,7 +54,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
             setRefreshTrigger();
           }
         });
-        openTip(t`withdrawal submitted`, MessageTypes.success);
+        openTip(t("withdrawal.submitted"), MessageTypes.success);
         await sleep(2000);
         setLoading((prevState) => ({ ...prevState, input: false }));
       } else {
@@ -63,7 +64,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
             setRefreshTrigger();
           }
         });
-        openTip(t`withdrawal submitted`, MessageTypes.success);
+        openTip(t("withdrawal.submitted"), MessageTypes.success);
         await sleep(2000);
         setLoading((prevState) => ({ ...prevState, output: false }));
       }
@@ -75,13 +76,16 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
     <Modal open={open} title={t`Withdraw Tokens`} onClose={onClose} background="level1">
       <Box sx={{ padding: "14px 16px", borderRadius: "12px", background: theme.palette.background.level2 }}>
         <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-          <Trans>
-            Your limit order has been filled, and the swapped tokens have been added to your pool balance, available for
-            withdrawal at any time. To learn more about limit orders,{" "}
-            <TextButton sx={{ fontSize: "12px" }} link="https://iloveics.gitbook.io/icpswap/products/limit-order">
-              <Trans>click here.</Trans>
-            </TextButton>
-          </Trans>
+          <Trans
+            components={{
+              highlight: (
+                <TextButton sx={{ fontSize: "12px" }} link="https://iloveics.gitbook.io/icpswap/products/limit-order">
+                  <Trans>click here.</Trans>
+                </TextButton>
+              ),
+            }}
+            i18nKey="limit.filled.descriptions"
+          />
         </Typography>
       </Box>
       <Box mt="24px">
@@ -107,7 +111,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
                 (inputToken && !new BigNumber(inputBalance.toString()).isGreaterThan(inputToken.transFee))
               }
             >
-              <Trans>Withdraw</Trans>
+              {t("common.withdraw")}
             </TextButton>
             {loading.input ? <CircularProgress size={12} sx={{ color: "#ffffff" }} /> : null}
           </Flex>
@@ -135,7 +139,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
                 (outputToken && !new BigNumber(outputBalance.toString()).isGreaterThan(outputToken.transFee))
               }
             >
-              <Trans>Withdraw</Trans>
+              {t("common.withdraw")}
             </TextButton>
             {loading.output ? <CircularProgress size={12} sx={{ color: "#ffffff" }} /> : null}
           </Flex>

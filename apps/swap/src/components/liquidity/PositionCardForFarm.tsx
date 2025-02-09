@@ -14,7 +14,6 @@ import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverte
 import { FeeTierPercentLabel, Flex, APRPanel } from "@icpswap/ui";
 import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
 import { type FarmInfoWithId } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionContext, PositionRangeState } from "components/swap/index";
@@ -26,6 +25,7 @@ import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/
 import { useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr, useFarmTvlValue } from "hooks/staking-farm/index";
 import { usePositionsTotalValue } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -128,6 +128,7 @@ export function PositionCardForFarm({
   filterState,
   farmInfo,
 }: PositionCardForFarmProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
@@ -334,9 +335,7 @@ export function PositionCardForFarm({
           }}
         >
           <Flex className={classes.item} sx={{ width: "240px", "@media(max-width: 640px)": { width: "100%" } }}>
-            <Typography className={classes.label}>
-              <Trans>Reward Token</Trans>
-            </Typography>
+            <Typography className={classes.label}>{t("common.reward.token")}</Typography>
 
             <Flex
               gap="0 4px"
@@ -357,9 +356,7 @@ export function PositionCardForFarm({
           </Flex>
 
           <Flex className={classes.item} sx={{ width: "70px", "@media(max-width: 640px)": { width: "fit-content" } }}>
-            <Typography className={classes.label}>
-              <Trans>APR</Trans>
-            </Typography>
+            <Typography className={classes.label}>{t("common.apr")}</Typography>
 
             <Flex
               fullWidth
@@ -378,9 +375,7 @@ export function PositionCardForFarm({
               justify="flex-end"
               sx={{ width: "80px", "@media(max-width: 640px)": { width: "fit-content" } }}
             >
-              <Typography className={classes.label}>
-                <Trans>Value</Trans>
-              </Typography>
+              <Typography className={classes.label}>{t("common.value")}</Typography>
 
               <Flex
                 fullWidth
@@ -399,9 +394,7 @@ export function PositionCardForFarm({
             justify="flex-end"
             sx={{ width: "110px", "@media(max-width: 640px)": { width: "fit-content" } }}
           >
-            <Typography className={classes.label}>
-              <Trans>Uncollected Fees</Trans>
-            </Typography>
+            <Typography className={classes.label}>{t("common.uncollected.fee")}</Typography>
 
             <Flex fullWidth justify="flex-end">
               <Typography color="text.primary">{feeUSDValue ? formatDollarAmount(feeUSDValue) : "--"}</Typography>
@@ -431,7 +424,7 @@ export function PositionCardForFarm({
                 }}
                 color="text.theme-secondary"
               >
-                <Trans>Detail</Trans>
+                {t("common.details")}
               </Typography>
 
               {detailShow ? (

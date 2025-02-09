@@ -1,7 +1,7 @@
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds, BigNumber } from "@icpswap/utils";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
-import { t } from "@lingui/macro";
+import i18n from "i18n/index";
 
 const PROPOSAL_TYPES = [
   {
@@ -86,10 +86,10 @@ export function convertProposalNumberToText(action: bigint) {
 }
 
 export const SnsRewordsText = {
-  "0": t`Unknown`,
-  "1": t`Accepting Votes`,
-  "2": t`Ready to Settle`,
-  "3": t`Settled`,
+  "0": i18n.t("common.unknown"),
+  "1": i18n.t("nns.voting.accepting.votes"),
+  "2": i18n.t("nns.voting.ready.settle"),
+  "3": i18n.t("nns.voting.settled"),
 };
 
 export enum SnsProposalRewardStatus {

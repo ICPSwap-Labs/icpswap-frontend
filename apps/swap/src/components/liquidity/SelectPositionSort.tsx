@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { t } from "@lingui/macro";
 import { PositionSort } from "types/swap";
-import { Typography } from "@mui/material";
+import { Typography } from "components/Mui";
+import i18n from "i18n/index";
 
 type MenuProps = { label: string; value: PositionSort };
 
 const menus: MenuProps[] = [
-  { label: t`Default`, value: PositionSort.Default },
-  { label: t`Position value`, value: PositionSort.PositionValue },
-  { label: t`Uncollected fees`, value: PositionSort.FeesValue },
+  { label: i18n.t("common.default"), value: PositionSort.Default },
+  { label: i18n.t("common.position.value"), value: PositionSort.PositionValue },
+  { label: i18n.t("common.uncollected.fees"), value: PositionSort.FeesValue },
 ];
 
 export interface SelectSortProps {

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Box, makeStyles } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs, Copy, InfoWrapper } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { useClaimEventTransactions } from "@icpswap/hooks";
 import { type ClaimTransaction } from "@icpswap/types";
 import { getClaimEventState } from "utils/info/token-claim";
@@ -18,6 +17,7 @@ import {
   PaginationType,
 } from "@icpswap/ui";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount, isPrincipalUser } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -53,6 +53,7 @@ function ClaimEventTransaction({ ele }: { ele: ClaimTransaction }) {
 }
 
 export default function TokenClaimTransactions() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
 
@@ -69,24 +70,16 @@ export default function TokenClaimTransactions() {
 
   return (
     <InfoWrapper>
-      <Breadcrumbs prevLabel={t`Claim event records`} currentLabel={t`Details`} prevLink="/info-claim" />
+      <Breadcrumbs prevLabel={t("claim.event.records")} currentLabel={t("common.details")} prevLink="/info-claim" />
 
       <Box mt="20px">
         <MainCard>
           <Box sx={{ overflow: "auto" }}>
             <Header className={classes.wrapper}>
-              <HeaderCell>
-                <Trans>Address</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Token</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>Claim Time</Trans>
-              </HeaderCell>
-              <HeaderCell>
-                <Trans>State</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.address.colon")}</HeaderCell>
+              <HeaderCell>{t("common.token")}</HeaderCell>
+              <HeaderCell>{t("claim.time")}</HeaderCell>
+              <HeaderCell>{t("common.state")}</HeaderCell>
             </Header>
 
             {result?.content?.map((ele, index) => <ClaimEventTransaction key={index} ele={ele} />)}

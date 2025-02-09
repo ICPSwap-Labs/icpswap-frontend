@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getIncreaseLiquiditySteps } from "components/swap/IncreaseLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -21,6 +20,7 @@ import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap";
 import { TOKEN_STANDARD } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export interface IncreaseLiquidityArgs {
   positionId: string;
@@ -39,6 +39,7 @@ export interface IncreaseLiquidityArgs {
 }
 
 export function useIncreaseLiquidityCalls() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [openSuccessTip] = useSuccessTip();
 
@@ -204,6 +205,7 @@ export interface InitialAddLiquidityStepsArgs {
 }
 
 function useInitialAddLiquiditySteps() {
+  const { t } = useTranslation();
   const stepContentManage = useStepContentManager();
 
   const handleReclaim = useReclaimCallback();

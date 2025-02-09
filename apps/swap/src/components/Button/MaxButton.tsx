@@ -1,5 +1,6 @@
-import { TypographyProps } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { TypographyProps } from "components/Mui";
+
+import { useTranslation } from "react-i18next";
 import { SmallButton } from "./SmallButton";
 
 export interface MaxButtonProps {
@@ -8,9 +9,11 @@ export interface MaxButtonProps {
 }
 
 export function MaxButton({ onClick, background }: MaxButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <SmallButton onClick={onClick} background={background}>
-      <Trans>MAX</Trans>
+      {t("common.max")}
     </SmallButton>
   );
 }

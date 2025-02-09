@@ -3,15 +3,16 @@ import { useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box, useMediaQuery, useTheme } from "components/Mui";
 import { pageArgsFormat } from "@icpswap/utils";
 import { Wrapper, MainCard, Pagination, PaginationType, NoData, ImageLoading } from "components/index";
-import { Trans } from "@lingui/macro";
 import { ProjectInfo } from "@icpswap/types";
 import { useVotingProjects } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export interface VoteItemProps {
   project: ProjectInfo;
 }
 
 export function VoteItem({ project }: VoteItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
 
@@ -31,11 +32,7 @@ export function VoteItem({ project }: VoteItemProps) {
           {project.name}
         </Typography>
       </Box>
-      {/* <Box mt="10px">
-        <Typography fontSize="14px" align="center">
-          {totalHolder !== undefined ? formatAmount(Number(totalHolder), 0) : "--"} holders
-        </Typography>
-      </Box> */}
+
       <Grid container justifyContent="center" mt="40px" mb="20px">
         <Box
           sx={{
@@ -51,7 +48,7 @@ export function VoteItem({ project }: VoteItemProps) {
           onClick={handleEnter}
         >
           <Typography color="text.primary" fontSize="14px" fontWeight={500} component="span">
-            <Trans>Enter</Trans>
+            {t("common.enter")}
           </Typography>
         </Box>
       </Grid>
@@ -60,6 +57,7 @@ export function VoteItem({ project }: VoteItemProps) {
 }
 
 export default function Voting() {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -79,9 +77,7 @@ export default function Voting() {
       <MainCard>
         <Grid container alignItems="center">
           <Grid item xs>
-            <Typography variant="h3">
-              <Trans>Voting</Trans>
-            </Typography>
+            <Typography variant="h3">{t("voting")}</Typography>
           </Grid>
         </Grid>
 

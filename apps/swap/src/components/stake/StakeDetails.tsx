@@ -3,7 +3,6 @@ import { Box, Collapse, Typography, useTheme } from "components/Mui";
 import { Link } from "@mui/material";
 import { MainCard, Flex, Image } from "components/index";
 import { INFO_URL } from "constants/index";
-import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
@@ -20,8 +19,11 @@ import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
 import { StakingPoolInfo, StakingState } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
+import { useTranslation } from "react-i18next";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+  const { t } = useTranslation();
+
   const nowTime = parseInt(String(Date.now() / 1000));
   let expand = false;
   let date = startTime;
@@ -36,13 +38,7 @@ const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: numb
     date = 0;
   }
 
-  return expand ? (
-    <Typography color="text.primary">
-      <Trans>End</Trans>
-    </Typography>
-  ) : (
-    <Countdown date={date} />
-  );
+  return expand ? <Typography color="text.primary">{t("common.end")}</Typography> : <Countdown date={date} />;
 };
 
 export interface StakeDetailsProps {
@@ -54,6 +50,7 @@ export interface StakeDetailsProps {
 }
 
 export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice, poolInfo }: StakeDetailsProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [expanded, setExpanded] = React.useState(false);
@@ -85,7 +82,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             }}
             onClick={handleExpandClick}
           >
-            {expanded ? t`Hide` : t`Details`}
+            {expanded ? t("common.hide") : t("common.details")}
           </Typography>
         </Flex>
 
@@ -106,9 +103,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Total Rewarded</Trans>
-              </Typography>
+              <Typography>{t("common.total.rewarded")}</Typography>
 
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
@@ -124,9 +119,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
 
             {stakeToken ? (
               <Flex sx={{ width: "100%" }} justify="space-between">
-                <Typography>
-                  <Trans>Stake Token</Trans>({stakeToken.symbol})
-                </Typography>
+                <Typography>{t("stake.details.token", { symbol: stakeToken.symbol })}</Typography>
 
                 <Link href={explorerLink(stakeToken.address.toString())} target="_blank" color="text.theme-secondary">
                   {shorten(stakeToken.address.toString())}
@@ -137,7 +130,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             {rewardToken ? (
               <Flex sx={{ width: "100%" }} justify="space-between">
                 <Typography>
-                  <Trans>Reward Token</Trans>({rewardToken.symbol})
+                  {t("common.reward.token")}({rewardToken.symbol})
                 </Typography>
 
                 <Link href={explorerLink(rewardToken.address.toString())} target="_blank" color="text.theme-secondary">
@@ -147,9 +140,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             ) : null}
 
             <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Reward Per Second</Trans>
-              </Typography>
+              <Typography>{t("stake.reward.per.second")}</Typography>
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
                   {!rewardToken || !poolInfo
@@ -173,9 +164,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
-              <Typography>
-                <Trans>Reward Per Day</Trans>
-              </Typography>
+              <Typography>{t("stake.reward.per.day")}</Typography>
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
                   {!rewardToken || !poolInfo
@@ -202,9 +191,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Total Staked</Trans>
-              </Typography>
+              <Typography>{t("stake.total.staked")}</Typography>
 
               <Flex vertical align="flex-end">
                 <Typography color="text.primary">
@@ -219,34 +206,26 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Total Staker</Trans>
-              </Typography>
+              <Typography>{t("stake.total.staker")}</Typography>
               <Typography color="text.primary" component="div">
                 {nonNullArgs(totalStaker) ? `${totalStaker.toString()}` : "--"}
               </Typography>
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Starting At</Trans>
-              </Typography>
+              <Typography>{t("common.starting")}</Typography>
               <Typography color="text.primary">{timestampFormat(Number(poolInfo?.startTime) * 1000)}</Typography>
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                {state === StakingState.NOT_STARTED ? <Trans>Left</Trans> : <Trans>End In</Trans>}
-              </Typography>
+              <Typography>{state === StakingState.NOT_STARTED ? t("common.left") : t("common.end.in")}</Typography>
               <Typography color="text.primary" component="div">
                 <CountdownBox startTime={Number(poolInfo?.startTime)} endTime={Number(poolInfo?.bonusEndTime)} />
               </Typography>
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Creator</Trans>
-              </Typography>
+              <Typography>{t("common.creator")}</Typography>
               <Typography color="text.primary.main">
                 {poolInfo ? (
                   <Link href={explorerLink(poolInfo.creator.toString())} target="_blank" color="text.theme-secondary">
@@ -259,9 +238,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Canister ID</Trans>
-              </Typography>
+              <Typography>{t("common.canister.id")}</Typography>
               <Typography color="text.primary">
                 {poolId ? (
                   <Link href={explorerLink(poolId)} target="_blank" color="text.theme-secondary">
@@ -274,16 +251,14 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between">
-              <Typography>
-                <Trans>Cycles Left</Trans>
-              </Typography>
+              <Typography>{t("common.cycles.left")}</Typography>
               <Typography color="text.primary">{cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}</Typography>
             </Flex>
 
             {poolInfo && poolId ? (
               <Flex justify="flex-end" sx={{ width: "100%" }} align="center">
                 <Link href={`${INFO_URL}/info-stake/details/${poolId}`} target="_blank" color="text.theme-secondary">
-                  <Trans>Staking Pool Info</Trans>
+                  {t("stake.link.text")}
                 </Link>
                 <ArrowUpRight size="16px" color={theme.colors.secondaryMain} />
               </Flex>

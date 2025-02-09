@@ -1,6 +1,7 @@
 import { useMemo, useContext } from "react";
-import { Typography, Box } from "@mui/material";
-import { t } from "@lingui/macro";
+import { Typography, Box } from "components/Mui";
+import i18n from "i18n/index";
+
 import walletContext from "./context";
 
 type Item = {
@@ -10,11 +11,11 @@ type Item = {
 
 const DISPLAY_ITEMS: Item[] = [
   {
-    name: t`Token`,
+    name: i18n.t("common.token"),
     pageName: "token",
   },
   {
-    name: t`NFT`,
+    name: i18n.t("common.nft"),
     pageName: "nft",
   },
 ];

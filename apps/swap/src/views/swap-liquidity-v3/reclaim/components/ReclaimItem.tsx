@@ -2,11 +2,11 @@ import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { Tooltip, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 interface ReclaimItemProps {
   poolId: string;
@@ -32,6 +32,7 @@ export function ReclaimItem({
   claimedKey,
   claimedKeys,
 }: ReclaimItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { hideUnavailableClaim } = useHideUnavailableClaimManager();
 
@@ -132,7 +133,7 @@ export function ReclaimItem({
             onClick={handleClaim}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            <Trans>Withdraw</Trans>
+            {t("common.withdraw")}
           </Button>
         </Box>
       </Box>

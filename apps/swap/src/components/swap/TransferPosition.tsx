@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Typography, Grid, Chip, Button, useMediaQuery, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { Typography, Grid, Chip, Button, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
@@ -23,15 +22,13 @@ import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverte
 import { isDarkTheme } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";
 import SwapModal from "components/modal/swap";
 import { Principal } from "@dfinity/principal";
-
 import { PositionRangeState } from "components/swap/index";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -115,6 +112,7 @@ export function PositionDetails({
   token1USDPrice,
   onPrincipalChange,
 }: PositionDetailsProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};
@@ -168,9 +166,9 @@ export function PositionDetails({
         className={classes.detailContainer}
         sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
       >
-        <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
+        <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
         <PositionDetailItem
-          label={t`${currencyQuote?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
           value={
             !position
               ? "--"
@@ -184,7 +182,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`${currencyBase?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
           value={
             !position
               ? "--"
@@ -198,7 +196,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`Current Price`}
+          label={t("common.current.price")}
           value={
             !!token1 && !!token0 && pool
               ? inverted
@@ -210,7 +208,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Price Range`}
+          label={t("common.price.range")}
           value={
             <Box>
               <Typography
@@ -242,7 +240,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Uncollected fees`}
+          label={t("common.uncollected.fees")}
           value={
             <Box>
               <Typography
@@ -305,9 +303,7 @@ export function PositionDetails({
         />
 
         <Box>
-          <Typography sx={{ margin: "0  0 10px 0" }}>
-            <Trans>Transfer to</Trans>
-          </Typography>
+          <Typography sx={{ margin: "0  0 10px 0" }}>{t("common.transfer.to")}</Typography>
 
           <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
         </Box>
@@ -337,6 +333,7 @@ export function TransferPosition({
   onTransferSuccess,
   state,
 }: TransferPositionProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme() as Theme;
 
@@ -397,7 +394,7 @@ export function TransferPosition({
 
     const poolId = position.pool.id;
 
-    const loadingKey = openLoadingTip(t`Transferring your position, ID is ${positionId}`);
+    const loadingKey = openLoadingTip(t("liquidity.transferring.loading.tips", { id: positionId }));
 
     const { status, message } = resultFormat<boolean>(
       await (
@@ -458,9 +455,7 @@ export function TransferPosition({
 
           {!closed ? (
             <Grid container mt="10px">
-              <Typography>
-                <Trans>Value:</Trans>&nbsp;
-              </Typography>
+              <Typography>{t("common.value.colon")}&nbsp;</Typography>
               <Typography color="text.primary">{totalUSDValue ? formatDollarAmount(totalUSDValue) : "--"}</Typography>
             </Grid>
           ) : null}
@@ -488,7 +483,7 @@ export function TransferPosition({
 
       <Box mt="20px">
         <Button fullWidth size="medium" variant="contained" disabled={!!error || loading} onClick={handleTransfer}>
-          {error || <Trans>Transfer</Trans>}
+          {error || t("common.transfer")}
         </Button>
       </Box>
     </SwapModal>

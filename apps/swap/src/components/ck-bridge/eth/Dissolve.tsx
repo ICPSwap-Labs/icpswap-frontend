@@ -4,7 +4,6 @@ import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { ckETH } from "@icpswap/tokens";
-import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, EthFee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
@@ -16,6 +15,7 @@ import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { useFetchUserTxStates } from "hooks/ck-eth";
 import ButtonConnector from "components/authentication/ButtonConnector";
+import { useTranslation } from "react-i18next";
 
 export interface EthDissolveProps {
   token: Token;
@@ -24,6 +24,7 @@ export interface EthDissolveProps {
 }
 
 export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
 
@@ -55,7 +56,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
   const dissolve_error = useMemo(() => {
     if (!address) return t`Enter the address`;
-    if (!amount) return t`Enter the amount`;
+    if (!amount) return t("common.error.input.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
     if (formatTokenAmount(amount, ckETH.decimals).isLessThan(MIN_WITHDRAW_AMOUNT))
       return `Min amount is ${toSignificantWithGroupSeparator(
@@ -67,7 +68,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       tokenBalance &&
       !formatTokenAmount(amount, ckETH.decimals).plus(token.transFee.toString()).isLessThan(tokenBalance)
     )
-      return t`Insufficient Balance`;
+      return t("common.error.insufficient.balance");
 
     return undefined;
   }, [amount, token, tokenBalance, address]);
@@ -105,9 +106,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
           borderRadius: "16px",
         }}
       >
-        <Typography sx={{ fontSize: "16px" }}>
-          <Trans>{symbol} Receiving Address</Trans>
-        </Typography>
+        <Typography sx={{ fontSize: "16px" }}>{t("ck.receiving.address", { symbol })}</Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           <TextField
@@ -162,7 +161,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
         onClick={handleDissolve}
       >
-        {dissolve_error || <Trans>Dissolve {token?.symbol ?? "--"}</Trans>}
+        {dissolve_error || t("common.dissolve.symbol", { symbol: token?.symbol ?? "--" })}
       </ButtonConnector>
     </>
   );

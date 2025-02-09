@@ -1,9 +1,9 @@
 import { Box, Avatar } from "@mui/material";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { formatTokenAmount, shorten } from "@icpswap/utils";
-import { t, Trans } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { Principal } from "@dfinity/principal";
+import i18n from "i18n/index";
 
 export interface CollectStepsProps {
   positionId: bigint;
@@ -56,51 +56,43 @@ export function getCollectFeeSteps({
       title: `Collect ${tokenA.symbol} and ${tokenB.symbol}`,
       step: 0,
       children: [
-        { label: t`Position ID`, value: positionId.toString() },
+        { label: i18n.t("common.position.id"), value: positionId.toString() },
         {
-          label: t`Token0`,
+          label: i18n.t`Token0`,
           value: <TokenAmount amount={withdrawAmountA} logo={tokenA.logo} />,
         },
         {
-          label: t`Token1`,
+          label: i18n.t`Token1`,
           value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
         },
       ],
-      errorActions: [
-        <TextButton onClick={retry}>
-          <Trans>Retry</Trans>
-        </TextButton>,
-      ],
+      errorActions: [<TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>],
     },
     {
       title:
         withdrawAmountALessThanZero && withdrawAmountBLessThanZero
-          ? t`Unable to withdraw ${tokenA.symbol} and ${tokenB.symbol}`
-          : t`Withdraw ${tokenA.symbol} and ${tokenB.symbol}`,
+          ? i18n.t("common.unable.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol })
+          : i18n.t("common.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol }),
       step: 1,
       children: [
         {
-          label: t`Amount0`,
+          label: i18n.t`Amount0`,
           value: <TokenAmount amount={withdrawAmountA} logo={tokenA.logo} />,
         },
         {
-          label: t`Amount1`,
+          label: i18n.t`Amount1`,
           value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
         },
-        { label: t`Principal ID`, value: principalString },
+        { label: i18n.t("common.principal.id"), value: principalString },
       ],
       errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-        <TextButton onClick={retry}>
-          <Trans>Retry</Trans>
-        </TextButton>,
+        <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
+        <TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
       skipError:
         withdrawAmountALessThanZero && withdrawAmountBLessThanZero
-          ? t`The amount of withdrawal is less than the transfer fee`
+          ? i18n.t("common.amount.withdrawal.less.than.fee")
           : undefined,
     },
   ];

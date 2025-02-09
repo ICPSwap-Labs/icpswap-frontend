@@ -1,15 +1,14 @@
 import { ReactNode, useMemo } from "react";
-import { Typography, Grid, Box, useMediaQuery, Avatar } from "@mui/material";
-import { createTheme, Theme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { Typography, Grid, Box, useMediaQuery, Avatar, makeStyles, Theme } from "components/Mui";
+import { createTheme } from "@mui/material/styles";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
 import { useCollectionData } from "hooks/nft/tradeData";
-import { Trans } from "@lingui/macro";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import { formatAmount } from "@icpswap/utils";
 import { LoadingRow, Breadcrumbs } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import CollectionLinks from "../collectionsIcon/index";
 
@@ -82,6 +81,7 @@ function CollectionDataItem({ label, value }: { label: ReactNode; value: ReactNo
 }
 
 export default function CollectionInfo({ canisterId }: { canisterId: string }) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const { result: canister, loading } = useCanisterMetadata(canisterId);
@@ -107,7 +107,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
       <Box mb="40px">
         <Breadcrumbs
           prevLink="/marketplace/collections"
-          prevLabel={<Trans>Marketplace</Trans>}
+          prevLabel={t("nft.marketplace")}
           currentLabel={canister?.name}
         />
       </Box>
@@ -172,7 +172,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                           "--"
                         )
                       }
-                      label={<Trans>floor price</Trans>}
+                      label={t("nft.floor.price")}
                     />
 
                     <Box sx={{ height: "20px", width: "1px" }} />
@@ -194,7 +194,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                           "--"
                         )
                       }
-                      label={<Trans>total volume</Trans>}
+                      label={t("nft.total.volume")}
                     />
                   </Box>
 
@@ -205,7 +205,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                           ? formatAmount(Number(mintSupply), { digits: 0 })
                           : "--"
                       }
-                      label={<Trans>items</Trans>}
+                      label={t("nft.items")}
                     />
 
                     <Box sx={{ height: "20px", width: "1px" }} />
@@ -216,7 +216,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                           ? formatAmount(Number(collectionResult?.listSize), { digits: 0 })
                           : "--"
                       }
-                      label={<Trans>listings</Trans>}
+                      label={t("nft.listings")}
                     />
                   </Box>
                 </>
@@ -239,7 +239,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                         "--"
                       )
                     }
-                    label={<Trans>floor price</Trans>}
+                    label={t("nft.floor.price")}
                   />
 
                   <CollectionDataItem
@@ -259,14 +259,14 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                         "--"
                       )
                     }
-                    label={<Trans>total volume</Trans>}
+                    label={t("nft.total.volume")}
                   />
 
                   <CollectionDataItem
                     value={
                       !!mintSupply || mintSupply === BigInt(0) ? formatAmount(Number(mintSupply), { digits: 0 }) : "--"
                     }
-                    label={<Trans>items</Trans>}
+                    label={t("nft.items")}
                   />
 
                   <CollectionDataItem
@@ -275,7 +275,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
                         ? formatAmount(Number(collectionResult?.listSize), { digits: 0 })
                         : "--"
                     }
-                    label={<Trans>listings</Trans>}
+                    label={t("nft.listings")}
                   />
                 </>
               )}

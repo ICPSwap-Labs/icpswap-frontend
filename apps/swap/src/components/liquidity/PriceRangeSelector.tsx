@@ -4,8 +4,8 @@ import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { Token } from "@icpswap/swap-sdk";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils/index";
-import { t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
+import i18n from "i18n/index";
 
 const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
   return {
@@ -58,7 +58,7 @@ export interface PriceRangeSelectorProps {
 }
 
 export function PriceRangeSelector({
-  label = t`Min Price`,
+  label = i18n.t("common.min.price"),
   value,
   increment,
   decrement,

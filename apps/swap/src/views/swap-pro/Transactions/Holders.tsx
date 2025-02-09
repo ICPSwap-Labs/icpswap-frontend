@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { Box, makeStyles, useTheme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { useExplorerTokenHolders, useLiquidityLockIds } from "@icpswap/hooks";
 import {
   Header,
@@ -16,6 +15,7 @@ import {
 import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
 import { Null, IcExplorerTokenHolderDetail } from "@icpswap/types";
 import { useCopySuccess } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -85,6 +85,7 @@ export interface PoolTransactionsProps {
 export function Holders({ tokenId }: PoolTransactionsProps) {
   const classes = useStyles();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const [page, setPage] = useState(1);
 
@@ -106,25 +107,15 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ minWidth: "1026px" }}>
           <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-            <HeaderCell field="PositionId">
-              <Trans>Rank</Trans>
-            </HeaderCell>
+            <HeaderCell field="PositionId">{t("common.rank")}</HeaderCell>
 
-            <HeaderCell field="token0Amount">
-              <Trans>Address</Trans>
-            </HeaderCell>
+            <HeaderCell field="token0Amount">{t("common.address.colon")}</HeaderCell>
 
-            <HeaderCell field="token1Amount">
-              <Trans>Amount</Trans>
-            </HeaderCell>
+            <HeaderCell field="token1Amount">{t("common.amount")}</HeaderCell>
 
-            <HeaderCell field="priceRange">
-              <Trans>Value</Trans>
-            </HeaderCell>
+            <HeaderCell field="priceRange">{t("common.value")}</HeaderCell>
 
-            <HeaderCell field="unclaimedFees">
-              <Trans>%</Trans>
-            </HeaderCell>
+            <HeaderCell field="unclaimedFees">%</HeaderCell>
           </Header>
 
           {!loading

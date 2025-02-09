@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { UnstakeModal } from "components/stake/UnstakeModal";
 import { isNullArgs } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export interface UnstakeProps {
   poolId: string | undefined;
@@ -25,6 +25,7 @@ export function Unstake({
   rewardTokenPrice,
   rewardAmount,
 }: UnstakeProps) {
+  const { t } = useTranslation();
   const [unStakeOpen, setUnstakeOpen] = useState(false);
 
   const handleUnstake = () => {
@@ -40,7 +41,7 @@ export function Unstake({
         onClick={handleUnstake}
         disabled={isNullArgs(stakeAmount) || stakeAmount === BigInt(0)}
       >
-        <Trans>Unstake</Trans>
+        {t("common.unstake")}
       </Button>
 
       <UnstakeModal

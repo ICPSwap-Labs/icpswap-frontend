@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Typography, Box, Checkbox, Button, makeStyles, useTheme, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import Modal from "components/modal/index";
-import { Trans, t } from "@lingui/macro";
-import { TextButton } from "components/index";
+import { TextButton, Modal } from "components/index";
 import storage from "redux-persist/lib/storage";
+import { Trans, useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -50,6 +49,7 @@ interface RiskStatementModalProps {
 }
 
 export default function RiskStatementModal({ open, onClose, onRead }: RiskStatementModalProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const [isRead, setIsRead] = useState(false);
@@ -77,55 +77,34 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
       }}
     >
       <Box>
-        <Typography sx={{ lineHeight: "20px" }}>
-          <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
-        </Typography>
+        <Typography sx={{ lineHeight: "20px" }}>{t("risk.description0")}</Typography>
       </Box>
       <Box className={classes.content}>
         <Box>
+          <Typography sx={{ lineHeight: "20px" }}>{t("risk.description1")}</Typography>
+        </Box>
+        <Box mt="30px">
+          <Typography sx={{ lineHeight: "20px" }}>{t("risk.description2")}</Typography>
+        </Box>
+        <Box mt="30px">
+          <Typography sx={{ lineHeight: "20px" }}>{t("risk.description3")}</Typography>
+        </Box>
+        <Box mt="30px">
           <Typography sx={{ lineHeight: "20px" }}>
-            <Trans>
-              1. ICPSwap is a decentralized financial hub of the Internet Computer, providing the transaction function
-              of various tokens and NFTs within its ecosystem and other services. All the services are deployed on the
-              Internet Computer, and all transactions can be checked on the Internet Computer protocol. Only you can be
-              responsible for your own funds. Please make sure to keep your funds safe and be vigilant of fraud.
-            </Trans>
+            <Trans
+              components={{ highlight: <Typography color="primary" component="span" /> }}
+              i18nKey="risk.description4"
+            />
           </Typography>
         </Box>
         <Box mt="30px">
           <Typography sx={{ lineHeight: "20px" }}>
-            <Trans>
-              2. The Internet Computer ecosystem is in its growth stage. All functions of ICPSwap have undergone
-              multiple rounds of internal and public testing and also iterative repair, The ICPSwap DApp is now under
-              SNS control, enhancing its security!
-            </Trans>
-          </Typography>
-        </Box>
-        <Box mt="30px">
-          <Typography sx={{ lineHeight: "20px" }}>
-            <Trans>
-              3. Anyone who has the seed phrase of a wallet address has control of the funds in that wallet. Never share
-              your seed phrase under any circumstances whatsoever, including with the ICPSwap team.
-            </Trans>
-          </Typography>
-        </Box>
-        <Box mt="30px">
-          <Typography sx={{ lineHeight: "20px" }}>
-            <Trans>
-              4. Please stay vigilant to phishing attacks and make sure you are visiting{" "}
-              <Typography color="primary" component="span">
-                https://app.icpswap.com
-              </Typography>{" "}
-              - check the URL carefully.
-            </Trans>
-          </Typography>
-        </Box>
-        <Box mt="30px">
-          <Typography sx={{ lineHeight: "20px" }}>
-            <Trans>
-              5. For any events and news about ICPSwap, please refer to ICPSwap's Twitter:{" "}
-              <TextButton link="https://twitter.com/icpswap">https://twitter.com/icpswap</TextButton> or @ICPSwap
-            </Trans>
+            <Trans
+              components={{
+                highlight: <TextButton link="https://twitter.com/icpswap">https://twitter.com/icpswap</TextButton>,
+              }}
+              i18nKey="risk.description5"
+            />
           </Typography>
         </Box>
       </Box>
@@ -154,18 +133,18 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
               lineHeight: "20px",
             }}
           >
-            <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
+            {t("common.token.risk.agree")}
           </Typography>
         </Flex>
       </Box>
       <Box mt="10px">
         <Button fullWidth variant="contained" size="large" disabled={!isRead} onClick={handleRead}>
-          <Trans>Close</Trans>
+          {t("common.close")}
         </Button>
       </Box>
       <Box mt="5px">
         <Typography fontSize="10px" sx={{ lineHeight: "20px" }}>
-          <Trans>* The ICPSwap founding team reserves right for the final explanation of all the statements.</Trans>
+          {t("risk.statements")}
         </Typography>
       </Box>
     </Modal>

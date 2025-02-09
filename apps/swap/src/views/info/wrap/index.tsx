@@ -1,6 +1,5 @@
 import { useState, ReactNode } from "react";
 import { Grid, Typography, Box, Link, Theme, makeStyles } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { WICPCanisterId } from "constants/canister";
 import {
   parseTokenAmount,
@@ -17,6 +16,7 @@ import { Copy, PaginationType, MainCard, InfoWrapper } from "components/index";
 import { WRAPPED_ICP, ICP } from "@icpswap/tokens";
 import upperFirst from "lodash/upperFirst";
 import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   box: {
@@ -129,6 +129,7 @@ export const ExchangeTypes: { [key: string]: string } = {
 
 export default function Wrap() {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const { balance, supply, holders, cyclesBalance, counts } = useWrapOverview();
 
@@ -187,7 +188,7 @@ export default function Wrap() {
       <Box mt="20px">
         <MainCard>
           <Typography variant="h3" component="div">
-            <Trans>Transactions</Trans>
+            {t("common.transactions")}
           </Typography>
 
           <Box sx={{ width: "100%", overflow: "auto" }}>
@@ -202,21 +203,11 @@ export default function Wrap() {
             >
               <>
                 <Header className={classes.wrapper}>
-                  <HeaderCell>
-                    <Trans>Time</Trans>
-                  </HeaderCell>
-                  <HeaderCell>
-                    <Trans>From</Trans>
-                  </HeaderCell>
-                  <HeaderCell>
-                    <Trans>To</Trans>
-                  </HeaderCell>
-                  <HeaderCell>
-                    <Trans>Type</Trans>
-                  </HeaderCell>
-                  <HeaderCell>
-                    <Trans>Amount</Trans>
-                  </HeaderCell>
+                  <HeaderCell>{t("common.time")}</HeaderCell>
+                  <HeaderCell>{t("common.from")}</HeaderCell>
+                  <HeaderCell>{t("common.to")}</HeaderCell>
+                  <HeaderCell>{t("common.type")}</HeaderCell>
+                  <HeaderCell>{t("common.amount")}</HeaderCell>
                 </Header>
 
                 {(loading ? [] : content).map((row, index) => (

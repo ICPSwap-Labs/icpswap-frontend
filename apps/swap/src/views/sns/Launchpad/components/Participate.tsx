@@ -1,6 +1,5 @@
 import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "@mui/material";
 import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
 import { useState } from "react";
 import { NumberFilledTextField, Modal, AuthButton } from "components/index";
 import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
@@ -12,6 +11,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface ParticipateProps {
   swap_id: string | undefined;
@@ -33,6 +33,7 @@ export function Participate({
   max_participant,
   onParticipateSuccessfully,
 }: ParticipateProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const [amount, setAmount] = useState<string | number | null>(null);
@@ -103,39 +104,36 @@ export function Participate({
 
   let error: boolean | string = false;
 
-  if (!risk) error = t`Read the risk statement`;
-  if (!amount) error = t`Enter the amount`;
+  if (!risk) error = t("launch.participate.error.risk");
+  if (!amount) error = t("common.error.input.amount");
   if (!!balance && !!amount && parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).isLessThan(amount))
-    error = t`Insufficient Balance`;
+    error = t("common.error.insufficient.balance");
   if (!!amount && !formatTokenAmount(amount, ICP.decimals).isGreaterThan(ICP.transFee))
-    error = t`Amount must be greater than 0.0001 ICP`;
+    error = t("common.error.amount.greater.than", { amount: "0.0001 ICP" });
   if (
     !!amount &&
     min_participant !== undefined &&
     formatTokenAmount(amount, ICP.decimals).isLessThan(min_participant.toString())
   )
-    error = t`Amount must be greater than ${parseTokenAmount(
-      min_participant?.toString(),
-      ICP.decimals,
-    ).toFormat()} ICP`;
+    error = t("common.error.amount.greater.than", {
+      amount: `${parseTokenAmount(min_participant?.toString(), ICP.decimals).toFormat()} ICP`,
+    });
   if (
     !!amount &&
     max_participant !== undefined &&
     formatTokenAmount(amount, ICP.decimals).isGreaterThan(max_participant.toString())
   )
-    error = t`Amount must be less than ${parseTokenAmount(max_participant?.toString(), ICP.decimals).toFormat()} ICP`;
+    error = t("common.error.amount.less", {
+      amount: `${parseTokenAmount(max_participant?.toString(), ICP.decimals).toFormat()} ICP`,
+    });
 
   return (
     <Modal open={open} onClose={onClose} title={t`Participate`}>
       <Box>
         <Box sx={{ display: "flex", justifyContent: "space-between", margin: "0 0 10px 0", alignItems: "center" }}>
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-            <Typography>
-              <Trans>Balance:</Trans>
-            </Typography>
+            <Typography>{t("common.balance.colon")}</Typography>
             <Typography color="text.primary">
               {balance
                 ? toSignificant(parseTokenAmount(balance, ICP.decimals).toString(), 8, { groupSeparator: "," })
@@ -167,9 +165,7 @@ export function Participate({
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <Typography>
-          <Trans>Transaction Fee(billed to source)</Trans>
-        </Typography>
+        <Typography>{t("launch.participate.transaction.fee")}</Typography>
         <Typography>
           {parseTokenAmount(ICP.transFee, ICP.decimals).toFormat()} {ICP.symbol}
         </Typography>
@@ -184,17 +180,14 @@ export function Participate({
         />
 
         <Typography sx={{ cursor: "pointer", userSelect: "none", fontSize: "12px" }} onClick={() => setRisk(!risk)}>
-          <Trans>
-            I confirm my understanding of the responsibilities and risks associated with participation in this token
-            swap.
-          </Trans>
+          {t("launch.participate.confirm")}
         </Typography>
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         <AuthButton variant="contained" onClick={handleParticipate} disabled={participateLoading || !!error} fullWidth>
           {participateLoading ? <CircularProgress color="inherit" size={22} sx={{ margin: "0 5px 0 0" }} /> : null}
-          {error || <Trans>Participate</Trans>}
+          {error || t("common.participate")}
         </AuthButton>
       </Box>
     </Modal>

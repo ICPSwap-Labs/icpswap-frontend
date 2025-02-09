@@ -6,7 +6,6 @@ import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import LazyImage from "components/LazyImage";
 import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow, shorten, timestampFormat } from "@icpswap/utils";
 import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import FileImage from "components/NFT/FileImage";
 import { TextButton, InfoWrapper } from "components/index";
@@ -16,6 +15,7 @@ import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import CollectionIcons from "components/NFT/collectionsIcon";
 import NFTCanisterLink from "components/info/NFTCanisterLink";
 import Logo from "components/Logo";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -159,7 +159,8 @@ export type PositionSVG = {
 };
 
 export default function NoAuthNFTInfo() {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
   const { canisterId, tokenId } = useParams<{ canisterId: string; tokenId: string }>();
@@ -209,7 +210,7 @@ export default function NoAuthNFTInfo() {
           </Grid>
 
           <Button variant="contained" size="medium" onClick={handleLogIn}>
-            <Trans>Log in to ICPSwap</Trans>
+            {t("nft.login")}
           </Button>
         </Grid>
 
@@ -251,7 +252,7 @@ export default function NoAuthNFTInfo() {
 
                   {!matchDownMD && NFTMetadata.length > 0 ? (
                     <Box className={classes.metadataWrapper}>
-                      <DetailsToggle title={<Trans>Metadata</Trans>}>
+                      <DetailsToggle title={t("common.metadata")}>
                         <Grid container spacing="10px">
                           {NFTMetadata.map((metadata, index) => (
                             <Grid item xs={4} key={index}>
@@ -292,14 +293,14 @@ export default function NoAuthNFTInfo() {
                     </Box>
                     <Box mt="18px">
                       <Typography component="span" sx={{ marginRight: "5px" }}>
-                        <Trans>Owned by</Trans>
+                        {t("common.owned.by")}
                       </Typography>
                       <TextButton>{shorten(metadata.owner, 12)}</TextButton>
                     </Box>
                   </Box>
 
                   <Box className={classes.detailsWrapper}>
-                    <DetailsToggle title={<Trans>NFT Details</Trans>}>
+                    <DetailsToggle title={t("nft.details")}>
                       <Grid container flexDirection="column" spacing="15px">
                         <DetailsItem
                           label={t`Token ID`}
@@ -330,18 +331,18 @@ export default function NoAuthNFTInfo() {
                           label={t`Minter`}
                           value={<Copy content={metadata.minter ?? ""}>{shorten(metadata.minter, 12)}</Copy>}
                         />
-                        <DetailsItem label={t`NFT Description`} value={`${metadata?.introduction ?? "--"}`} />
+                        <DetailsItem label={t("nft.description")} value={`${metadata?.introduction ?? "--"}`} />
                       </Grid>
                     </DetailsToggle>
                   </Box>
 
                   <Box className={classes.collectionsWrapper}>
-                    <DetailsToggle title={<Trans>About Collections</Trans>}>
+                    <DetailsToggle title={t("common.about.collections")}>
                       <Grid container flexDirection="column" spacing="15px">
                         <DetailsItem label={t`NFT Canister ID`} value={<NFTCanisterLink canisterId={metadata.cId} />} />
                         <DetailsItem label={t`Collections Description`} value={canisterMetadata?.introduction} />
                         <DetailsItem
-                          label={t`Creator`}
+                          label={t("common.creator")}
                           value={
                             <Copy content={canisterMetadata?.owner ?? ""}>
                               {shorten(canisterMetadata?.owner ?? "", 12)}
@@ -349,7 +350,7 @@ export default function NoAuthNFTInfo() {
                           }
                         />
                         <DetailsItem
-                          label={t`Creator Royalty`}
+                          label={t("nft.creator.royalty")}
                           value={`${new BigNumber(String(canisterMetadata?.royalties ?? 0))
                             .dividedBy(100)
                             .toFormat()}%`}
@@ -365,7 +366,7 @@ export default function NoAuthNFTInfo() {
 
                   {matchDownMD && NFTMetadata.length > 0 ? (
                     <Box className={classes.metadataWrapper}>
-                      <DetailsToggle title={<Trans>Metadata</Trans>}>
+                      <DetailsToggle title={t("common.metadata")}>
                         <Grid container spacing="10px">
                           {NFTMetadata.map((metadata, index) => (
                             <Grid item xs={4} key={index}>

@@ -1,5 +1,4 @@
 import { Typography, Box, useTheme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { FilledTextField } from "components/index";
 import { useNodeInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
 import { TokenTable } from "components/info/swap";
@@ -7,8 +6,10 @@ import { useState, useMemo, useEffect } from "react";
 import { isValidPrincipal } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export default function TopTokens() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [search, setSearch] = useState<null | string>(null);
   const [onlyTokenList, setOnlyTokenList] = useState(true);
@@ -60,9 +61,7 @@ export default function TopTokens() {
           },
         }}
       >
-        <Typography variant="h4">
-          <Trans>Top Tokens</Trans>
-        </Typography>
+        <Typography variant="h4">{t("info.top.tokens")}</Typography>
 
         <Box
           sx={{

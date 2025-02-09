@@ -1,5 +1,4 @@
 import { useHistory } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
 import { UserSwapPoolsBalance } from "hooks/info/tools";
@@ -10,6 +9,7 @@ import { SelectToken, InfoWrapper, SelectPair } from "components/index";
 import { parseTokenAmount, locationSearchReplace } from "@icpswap/utils";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -83,6 +83,7 @@ function ClaimItem({ claim }: ClaimItemProps) {
 }
 
 export default function UserPoolBalance() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const history = useHistory();
@@ -115,14 +116,12 @@ export default function UserPoolBalance() {
 
   return (
     <InfoWrapper size="small">
-      <BreadcrumbsV1
-        links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>User's Pool Balance</Trans> }]}
-      />
+      <BreadcrumbsV1 links={[{ label: t("common.tools"), link: "/info-tools" }, { label: t("tools.user.balance") }]} />
 
       <Box sx={{ height: "20px", width: "100%" }} />
 
       <ToolsWrapper
-        title={<Trans>User's Pool Balance</Trans>}
+        title={t("tools.user.balance")}
         action={
           <Flex
             gap="16px"
@@ -151,13 +150,9 @@ export default function UserPoolBalance() {
         <Box sx={{ width: "100%", overflow: "auto" }}>
           <Box sx={{ minWidth: "1200px" }}>
             <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-              <HeaderCell field="amountUSD">
-                <Trans>Token Amount</Trans>
-              </HeaderCell>
+              <HeaderCell field="amountUSD">{t("common.token.amount")}</HeaderCell>
 
-              <HeaderCell field="amountToken0">
-                <Trans>Token Pair</Trans>
-              </HeaderCell>
+              <HeaderCell field="amountToken0">{t("common.token.pair")}</HeaderCell>
             </Header>
 
             {allClaims.map((ele) => (

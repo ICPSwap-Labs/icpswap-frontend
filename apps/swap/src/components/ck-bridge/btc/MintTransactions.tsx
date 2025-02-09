@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Flex, LoadingRow } from "@icpswap/ui";
@@ -9,6 +8,7 @@ import { Null } from "@icpswap/types";
 import dayjs from "dayjs";
 import { RotateCcw } from "react-feather";
 import { useRefreshTriggerManager } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -45,6 +45,7 @@ interface TransactionProps {
 }
 
 function Transaction({ transaction, address, block }: TransactionProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
 
@@ -59,9 +60,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
     >
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>Time</Trans>
-          </Typography>
+          <Typography>{t("common.time")}</Typography>
           <Typography color="text.primary">
             {transaction.status.block_time ? (
               <>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</>
@@ -72,9 +71,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>Height</Trans>
-          </Typography>
+          <Typography>{t("common.height")}</Typography>
           <Typography color="text.primary">
             {transaction.status.block_height ? (
               <ALink
@@ -91,9 +88,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>Txid</Trans>
-          </Typography>
+          <Typography>{t("common.txid")}</Typography>
 
           <Typography className={classes.txLink}>
             <ALink
@@ -108,9 +103,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>From</Trans>
-          </Typography>
+          <Typography>{t("common.from")}</Typography>
           <Typography className={classes.txLink}>
             <ALink
               link={`https://explorer.btc.com/btc/address/${transaction.vin[0]?.prevout.scriptpubkey_address}`}
@@ -124,9 +117,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>To</Trans>
-          </Typography>
+          <Typography>{t("common.to")}</Typography>
           <Typography className={classes.txLink}>
             <ALink
               link={`https://explorer.btc.com/btc/address/${address}`}
@@ -140,18 +131,14 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
           <Typography color="text.primary">
             {parseTokenAmount(getTransactionAmountOut(transaction, address), 8).toFormat()}
           </Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Confirmations</Trans>
-          </Typography>
+          <Typography>{t("common.confirmations")}</Typography>
           <Typography color="text.primary">
             {block && transaction.status.block_height ? Number(block) - transaction.status.block_height : "--"}
           </Typography>
@@ -185,6 +172,7 @@ export interface MintTransactionProps {
 }
 
 export function MintTransactions({ btc_address, block }: MintTransactionProps) {
+  const { t } = useTranslation();
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("BtcMintTransactions");
 
   const { result: transactions, loading } = useBtcTransactions(btc_address, refreshTrigger);
@@ -197,18 +185,13 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
   return (
     <MainCard level={1}>
       <Flex gap="0 8px">
-        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-          <Trans>Latest Transactions</Trans>
-        </Typography>
+        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.latest.transactions")}</Typography>
 
         <RotateCcw color="#ffffff" size={14} style={{ cursor: "pointer" }} onClick={setRefreshTrigger} />
       </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
-        <Trans>
-          After the IC's Bitcoin network syncs to the Bitcoin mainnet height and the transaction receives 6 block
-          confirmations, your ckBTC balance will be updated accordingly.
-        </Trans>
+        {t("ck.bitcoin.sync.block")}
       </Typography>
 
       <Box sx={{ margin: "16px 0 0 0" }}>

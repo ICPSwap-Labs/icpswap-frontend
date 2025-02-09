@@ -3,13 +3,14 @@ import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCel
 import Copy from "components/Copy";
 import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
 import { Pagination, TextButton, NoData, ListLoading } from "components/index";
-import { Trans } from "@lingui/macro";
 import type { PaginationResult, NFTTransaction } from "@icpswap/types";
 import { useAccount } from "store/auth/hooks";
 import upperFirst from "lodash/upperFirst";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export default function CollectionUserTransactions({ canisterId }: { canisterId: string }) {
+  const { t } = useTranslation();
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
 
@@ -39,27 +40,13 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Type</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Name</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>NFT ID</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>From</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>To</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Memo</Trans>
-              </TableCell>
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("common.type")}</TableCell>
+              <TableCell>{t("common.name")}</TableCell>
+              <TableCell>{t("nft.id")}</TableCell>
+              <TableCell>{t("common.from")}</TableCell>
+              <TableCell>{t("common.to")}</TableCell>
+              <TableCell>{t("common.memo")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

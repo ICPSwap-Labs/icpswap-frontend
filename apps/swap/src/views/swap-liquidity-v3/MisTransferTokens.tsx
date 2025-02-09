@@ -3,7 +3,6 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } fro
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { TOKEN_STANDARD, ResultStatus, type AllTokenOfSwapTokenInfo } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -15,6 +14,7 @@ import {
   withdrawMisTransferredToken,
 } from "hooks/swap/useUserMisTransferredTokens";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 interface BalanceItemProps {
   pool: string;
@@ -28,6 +28,7 @@ interface BalanceItemProps {
 }
 
 export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimSuccess }: BalanceItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [openTip, closeTip] = useTips();
@@ -83,7 +84,7 @@ export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimS
                 onClick={submit}
                 startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
               >
-                <Trans>Retrieve</Trans>
+                {t("common.retrieve")}
               </Button>
             )}
           </Identity>
@@ -122,6 +123,7 @@ export function BalancesItem({ balance }: { end: boolean; balance: MisTransferre
 }
 
 export default function SwapFindMisTransferTokens() {
+  const { t } = useTranslation();
   const [selectedTokenId, setSelectedTokenId] = useState<string>(ICP.address);
 
   const { result, loading } = useUserMisTransferredTokens({ tokenId: selectedTokenId });
@@ -140,32 +142,19 @@ export default function SwapFindMisTransferTokens() {
   return (
     <Wrapper>
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <Breadcrumbs
-          prevLink="/swap"
-          prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>Retrieve Your Tokens</Trans>}
-        />
+        <Breadcrumbs prevLink="/swap" prevLabel={t("common.swap")} currentLabel={t("swap.retrieve.your.tokens")} />
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", margin: "40px 0 0 0" }}>
         <Box sx={{ width: "800px" }}>
           <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
-            <Trans>Retrieve Your Tokens</Trans>
+            {t("swap.retrieve.your.tokens")}
           </Typography>
 
-          <Typography sx={{ margin: "10px 0 0 0" }}>
-            <Trans>
-              This function is designed to help you retrieve tokens that you may have accidentally sent to ICPSwap's
-              swap pool canisters. It automatically searches for tokens that may have been misplaced in the Swap Pools
-              and assists in transferring them back to you. First, select the token type you wish to retrieve, and then
-              click on ' Retrieve ' after it complete searching.
-            </Trans>
-          </Typography>
+          <Typography sx={{ margin: "10px 0 0 0" }}>{t("swap.retrieve.descriptions")}</Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px", margin: "32px 0 0 0" }}>
-            <Typography color="text.primary">
-              <Trans>Select Token</Trans>
-            </Typography>
+            <Typography color="text.primary">{t("common.select.token")}</Typography>
 
             <Box sx={{ minWidth: "106px" }}>
               <SelectToken

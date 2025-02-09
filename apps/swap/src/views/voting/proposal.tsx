@@ -1,12 +1,9 @@
 import { useState, useRef, useMemo } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar, Box, CircularProgress, useMediaQuery } from "components/Mui";
-import { useTheme } from "@mui/styles";
+import { Grid, Typography, Avatar, Box, CircularProgress, useMediaQuery, useTheme } from "components/Mui";
 import { valueofUser, isPrincipal, shorten, principalToAccount } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs } from "components/index";
-import { Trans } from "@lingui/macro";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
-import { Theme } from "@mui/material/styles";
 import { VotesResult, CastVotes } from "components/vote/VotesInfo";
 import VoteRecords from "components/vote/Records";
 import BaseMarkdown from "components/markdown/BaseMarkdown";
@@ -14,10 +11,12 @@ import { useDownloadPowers } from "hooks/voting/useDownloadPowers";
 import { useVotingProposal } from "@icpswap/hooks";
 import DeleteProposalModal from "components/vote/DeleteProposal";
 import { useAccount } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 export default function VotingProposal() {
+  const { t } = useTranslation();
   const account = useAccount();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
   const { id, canisterId } = useParams<{ id: string; canisterId: string }>();
   const proposalRef = useRef<HTMLDivElement>(null);
@@ -65,8 +64,8 @@ export default function VotingProposal() {
     <Wrapper>
       <Breadcrumbs
         prevLink={`/voting/${canisterId}`}
-        prevLabel={<Trans>Proposals</Trans>}
-        currentLabel={<Trans>Details</Trans>}
+        prevLabel={t("common.proposals")}
+        currentLabel={t("common.details")}
       />
 
       <Box mt="25px">
@@ -103,7 +102,7 @@ export default function VotingProposal() {
                 }}
               >
                 <Typography fontSize="12px">
-                  <Trans>Creator:</Trans>
+                  {t("common.creator.colon")}
                   {shorten(proposal?.createUser ?? "", 8)}
                 </Typography>
               </Box>
@@ -121,7 +120,7 @@ export default function VotingProposal() {
               >
                 {downloading ? <CircularProgress size="14px" sx={{ color: "#ffffff", marginRight: "5px" }} /> : null}
                 <Typography fontSize="12px" color="text.primary">
-                  <Trans>Voting Power Snapshot</Trans>
+                  {t("voting.snapshot")}
                 </Typography>
               </Box>
 
@@ -139,7 +138,7 @@ export default function VotingProposal() {
                   onClick={() => setDeleteProposalShow(true)}
                 >
                   <Typography fontSize="12px" color="text.primary">
-                    <Trans>Delete proposal</Trans>
+                    {t("voting.delete.proposal")}
                   </Typography>
                 </Box>
               ) : null}
@@ -172,7 +171,7 @@ export default function VotingProposal() {
                   onClick={handleToggleTruncateBody}
                 >
                   <Typography fontSize="16px" color="text.primary">
-                    {!showMore ? <Trans>Show more</Trans> : <Trans>Show less</Trans>}
+                    {!showMore ? t("common.show.more") : t("common.show.less")}
                   </Typography>
                 </Box>
               ) : null}
@@ -191,14 +190,14 @@ export default function VotingProposal() {
       >
         <MainCard>
           <Typography color="text.primary" fontWeight="500" sx={{ marginBottom: "20px" }}>
-            <Trans>Cast your vote</Trans>
+            {t("voting.cast.vote")}
           </Typography>
           {proposal ? <CastVotes proposal={proposal} onVoteSuccess={handleVoteSuccess} /> : null}
         </MainCard>
 
         <MainCard>
           <Typography color="text.primary" fontWeight="500" sx={{ marginBottom: "20px" }}>
-            <Trans>Current Results</Trans>
+            {t("voting.current.results")}
           </Typography>
           {proposal ? <VotesResult proposal={proposal} /> : null}
         </MainCard>

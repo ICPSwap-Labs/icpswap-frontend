@@ -4,7 +4,6 @@ import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAm
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import type { NervousSystemParameters } from "@icpswap/types";
 import { Modal, NumberFilledTextField } from "components/index";
 import MaxButton from "components/MaxButton";
@@ -15,6 +14,7 @@ import randomBytes from "randombytes";
 import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
 import { useUSDPriceById } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
@@ -24,6 +24,7 @@ export interface StakeProps {
 }
 
 export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neuronSystemParameters }: StakeProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -102,29 +103,31 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   };
 
   let error: string | undefined;
-  if (!amount) error = t`Enter the amount`;
-  if (token === undefined) error = t`Some unknown error happened`;
+  if (!amount) error = t("common.error.input.amount");
+  if (token === undefined) error = t("common.error.unknown");
   if (
     amount &&
     token &&
     balance &&
     parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount)
   )
-    error = t`There are not enough funds in this account`;
+    error = t("common.error.insufficient.balance");
 
   if (amount && neuron_minimum_stake_e8s && parseTokenAmount(neuron_minimum_stake_e8s, 8).isGreaterThan(amount))
-    error = t`At least ${parseTokenAmount(neuron_minimum_stake_e8s, 8).toString()} ${token?.symbol}`;
+    error = t("common.at.least", {
+      amount: `${parseTokenAmount(neuron_minimum_stake_e8s, 8).toString()} ${token?.symbol}`,
+    });
 
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small">
-        <Trans>Stake</Trans>
+        {t("common.stake")}
       </Button>
 
       <Modal open={open} onClose={handleClose} title={t`Create Neuron Stake`}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
-            placeholder={t`Enter the amount`}
+            placeholder={t("common.error.input.amount")}
             value={amount}
             onChange={(value: string) => setAmount(value)}
             fullWidth
@@ -145,14 +148,13 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
           <Typography>
             {token && balance && tokenUSDPrice ? (
               <>
-                <Trans>
-                  Balance:&nbsp;
-                  {`${new BigNumber(
+                {t("common.balance.colon.amount", {
+                  amount: `${new BigNumber(
                     parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
                   ).toFormat()} ${token.symbol} (${formatDollarAmount(
                     parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
-                  )})`}
-                </Trans>
+                  )})`,
+                })}
               </>
             ) : (
               "--"
@@ -160,15 +162,11 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
           </Typography>
 
           <Typography>
-            {token ? (
-              <>
-                <Trans>Fee:</Trans>&nbsp;
-                {parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
-                {token.symbol}
-              </>
-            ) : (
-              "--"
-            )}
+            {token
+              ? t("common.fee.colon.amount", {
+                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()} ${token.symbol}}`,
+                })
+              : "--"}
           </Typography>
 
           <Button
@@ -179,7 +177,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
             onClick={handleSubmit}
             startIcon={loading ? <CircularProgress size={26} color="inherit" /> : null}
           >
-            {error || <Trans>Confirm</Trans>}
+            {error || t("common.confirm")}
           </Button>
         </Box>
       </Modal>

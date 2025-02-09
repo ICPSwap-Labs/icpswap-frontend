@@ -3,13 +3,14 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, formatDollarAmount, BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { useICPBlocksManager } from "hooks/useICBlocks";
 import { useTokenSupply } from "hooks/token/calls";
 import { useICPPriceList } from "store/global/hooks";
 import { useTokenAnalysis, useInfoToken } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export function Icp() {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const icpTokenInfo = useInfoToken(ICP.address);
@@ -84,9 +85,7 @@ export function Icp() {
           }}
         >
           <Box>
-            <Typography>
-              <Trans>Price</Trans>
-            </Typography>
+            <Typography>{t("common.price")}</Typography>
             <Flex gap="0 4px" align="flex-end">
               <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
                 {icpTokenInfo ? formatDollarAmount(icpTokenInfo.priceUSD) : "--"}
@@ -97,36 +96,28 @@ export function Icp() {
           </Box>
 
           <Box>
-            <Typography>
-              <Trans>Market Cap</Trans>
-            </Typography>
+            <Typography>{t("common.market.cap")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
               {nonNullArgs(marketCap) ? marketCap : "--"}
             </Typography>
           </Box>
 
           <Box>
-            <Typography>
-              <Trans>Fully Diluted Market Cap</Trans>
-            </Typography>
+            <Typography>{t("common.fully.diluted.cap")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
               {nonNullArgs(fdv) ? fdv : "--"}
             </Typography>
           </Box>
 
           <Box>
-            <Typography>
-              <Trans>Blocks</Trans>
-            </Typography>
+            <Typography>{t("common.blocks")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
               {blocks ? new BigNumber(blocks).toFormat() : "--"}
             </Typography>
           </Box>
 
           <Box>
-            <Typography>
-              <Trans>Blocks/second</Trans>
-            </Typography>
+            <Typography>{t("common.blocks.each.second")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
               {secondBlocks ? new BigNumber(secondBlocks).toFixed(2) : "--"}
             </Typography>

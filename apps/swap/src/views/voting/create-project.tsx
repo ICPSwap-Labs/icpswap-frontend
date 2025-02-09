@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Grid, Button, Typography, Box, CircularProgress } from "@mui/material";
+import { Grid, Button, Typography, Box, CircularProgress } from "components/Mui";
 import { Wrapper, MainCard, FilledTextField } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import Upload from "components/upload/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { createVotingCanister } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TOKEN_STANDARD } from "constants/tokens";
+import { useTranslation } from "react-i18next";
 
 export type Values = {
   name: string;
@@ -23,6 +23,7 @@ export const TokenStandards = [
 ];
 
 export default function CreateVotingProject() {
+  const { t } = useTranslation();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [loading, setLoading] = useState(false);
@@ -80,16 +81,12 @@ export default function CreateVotingProject() {
           <Box sx={{ width: "100%", maxWidth: "570px" }}>
             <Box mt="20px">
               <Box mt="20px">
-                <FilledTextField
-                  label={<Trans>Token Canister Id</Trans>}
-                  onChange={(value) => onFiledChange(value, "tokenId")}
-                />
+                <FilledTextField label={t("token.canister.id")} onChange={(value) => onFiledChange(value, "tokenId")} />
               </Box>
 
               <Box mt="20px">
                 <FilledTextField
-                  label={<Trans>Token Standard</Trans>}
-                  select
+                  label={t("common.token.standard")}
                   menus={TokenStandards}
                   placeholder={t`Select the token standard`}
                   onChange={(value) => onFiledChange(value, "standard")}
@@ -98,13 +95,11 @@ export default function CreateVotingProject() {
               </Box>
 
               <Box mt="20px">
-                <FilledTextField label={<Trans>Name</Trans>} onChange={(value) => onFiledChange(value, "name")} />
+                <FilledTextField label={t("common.name")} onChange={(value) => onFiledChange(value, "name")} />
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.secondary">
-                  <Trans>Logo</Trans>
-                </Typography>
+                <Typography color="text.secondary">{t("common.logo")}</Typography>
 
                 <Box mt="20px">
                   <Box
@@ -125,13 +120,11 @@ export default function CreateVotingProject() {
                     />
                   </Box>
                   <Box mt={1}>
-                    <Typography>
-                      <Trans>Support : png / jpg / gif; Size: ≤1M</Trans>
-                    </Typography>
+                    <Typography>{t("voting.create.support")}</Typography>
                   </Box>
                   <Box mt="10px">
                     <FilledTextField
-                      label={<Trans>Or</Trans>}
+                      label={t("common.or")}
                       value={values.logo}
                       onChange={(value: string) => onFiledChange(value, "logo")}
                       fullWidth
@@ -142,7 +135,7 @@ export default function CreateVotingProject() {
 
               <Box mt="20px">
                 <FilledTextField
-                  label={<Trans>Manager Principal</Trans>}
+                  label={t("voting.manager.principal")}
                   onChange={(value) => onFiledChange(value, "manager")}
                 />
               </Box>

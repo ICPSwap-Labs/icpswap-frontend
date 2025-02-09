@@ -1,15 +1,16 @@
 import { useContext, useEffect } from "react";
-import { t } from "@lingui/macro";
 import { Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { formatDollarAmount, formatAmount } from "@icpswap/utils";
 import { useSwapProtocolData, useSwapPools } from "@icpswap/hooks";
 import { useSwapGlobalData } from "hooks/info/index";
+import { useTranslation } from "react-i18next";
 
 import { IcpswapContext } from "./context";
 import { Card, Item } from "../component";
 
 export function Swap() {
+  const { t } = useTranslation();
   const { setSwapTVL } = useContext(IcpswapContext);
 
   const { result: swapProtocol } = useSwapProtocolData();
@@ -37,12 +38,12 @@ export function Swap() {
       >
         <Flex vertical gap="32px 0" align="flex-start" sx={{ margin: "32px 0 0 0" }}>
           <Item
-            label={t`TVL`}
+            label={t("common.tvl")}
             value={swapProtocol ? formatDollarAmount(swapProtocol.tvlUSD) : "--"}
             // tooltip={t`The cumulative value of positions staked across all live farming pools.`}
           />
           <Item
-            label={t`Total Volume`}
+            label={t("common.total.volume")}
             value={swapGlobalData ? formatDollarAmount(swapGlobalData?.totalVolume) : "--"}
             // tooltip={t`The total value of rewards distributed by live farming pools.`}
           />

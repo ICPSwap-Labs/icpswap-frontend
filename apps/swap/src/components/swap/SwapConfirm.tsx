@@ -6,11 +6,11 @@ import { TradePrice } from "components/swap/TradePrice";
 import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
-import { t } from "@lingui/macro";
 import { isElement } from "react-is";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useTranslation } from "react-i18next";
 
 import FormattedPriceImpact from "./FormattedPriceImpact";
 
@@ -105,6 +105,7 @@ export function SwapConfirmModal({
   inputTokenUnusedBalance,
   inputTokenSubBalance,
 }: SwapConfirmModalProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount } = useMemo(() => {
@@ -149,7 +150,7 @@ export function SwapConfirmModal({
               <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
               <Flex gap="8px 0" vertical align="flex-start">
                 <Flex gap="0 4px">
-                  <Typography>You pay</Typography>
+                  <Typography>{t("common.you.pay")}</Typography>
                   <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
                 </Flex>
 

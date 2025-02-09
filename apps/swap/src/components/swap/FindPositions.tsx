@@ -2,7 +2,6 @@ import { useState, useMemo, useCallback } from "react";
 import { Modal } from "components/index";
 import { getPool } from "hooks/swap/v3Calls";
 import { useTheme, Typography, Box, Avatar, CircularProgress, Button } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import CurrencySelector from "components/CurrencySelector/selector";
 import { getUserPositionIds } from "hooks/swap/useUserPositionIds";
 import { useUpdateUserPositionPools } from "store/hooks";
@@ -10,6 +9,7 @@ import { updateUserPositionPoolId } from "@icpswap/hooks";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 function AddIcon() {
   return (
@@ -45,6 +45,7 @@ interface SelectedTokenProps {
 }
 
 function SelectedToken({ selectedTokenIds, onTokenChange }: SelectedTokenProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [token, setToken] = useState<null | Token>(null);
@@ -87,9 +88,7 @@ function SelectedToken({ selectedTokenIds, onTokenChange }: SelectedTokenProps) 
           </Box>
         ) : (
           <Box>
-            <Typography color="text.primary">
-              <Trans>Select a token</Trans>
-            </Typography>
+            <Typography color="text.primary">{t("common.select.a.token")}</Typography>
           </Box>
         )}
         <ArrowIcon />
@@ -111,6 +110,7 @@ export interface FindPositionsModalProps {
 }
 
 export default function FindPositionsModal({ open, onClose }: FindPositionsModalProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [openTip] = useTips();
 
@@ -218,7 +218,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
           disabled={!!error}
           startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
         >
-          {error || <Trans>Import</Trans>}
+          {error || t("common.import")}
         </Button>
       </Box>
     </Modal>

@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback } from "react";
-import { t, Trans } from "@lingui/macro";
 import { enumToString } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
@@ -7,6 +6,7 @@ import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
+import { useTranslation } from "react-i18next";
 
 export interface StyleProps {
   padding?: string;
@@ -48,6 +48,7 @@ export function Transactions({
   hasFilter,
   showedTokens,
 }: TransactionsProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles(styleProps)();
   const [openTip] = useTips();
@@ -149,23 +150,23 @@ export function Transactions({
             </Box>
 
             <HeaderCell field="amountUSD" isSort>
-              <Trans>Total Value</Trans>
+              {t("common.total.value")}
             </HeaderCell>
 
             <HeaderCell field="amountToken0" isSort>
-              <Trans>Token Amount</Trans>
+              {t("common.token.amount")}
             </HeaderCell>
 
             <HeaderCell field="amountToken1" isSort>
-              <Trans>Token Amount</Trans>
+              {t("common.token.amount")}
             </HeaderCell>
 
             <HeaderCell field="sender" isSort>
-              <Trans>Account</Trans>
+              {t("common.account")}
             </HeaderCell>
 
             <HeaderCell field="timestamp" isSort>
-              <Trans>Time</Trans>
+              {t("common.time")}
             </HeaderCell>
           </Header>
 

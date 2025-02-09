@@ -1,13 +1,14 @@
 import { Box, Typography, useTheme, ButtonBase } from "components/Mui";
 import WarningIcon from "assets/images/swap/warning";
-import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 interface FullRangeWarningProps {
   onUnderstand: () => void;
 }
 
 export function FullRangeWarning({ onUnderstand }: FullRangeWarningProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   return (
@@ -33,7 +34,7 @@ export function FullRangeWarning({ onUnderstand }: FullRangeWarningProps) {
             fontSize: "16px",
           }}
         >
-          <Trans>Efficiency Comparison</Trans>
+          {t("liquidity.efficiency")}
         </Typography>
       </Flex>
 
@@ -44,7 +45,7 @@ export function FullRangeWarning({ onUnderstand }: FullRangeWarningProps) {
           lineHeight: "18px",
         }}
       >
-        <Trans>Full range positions may earn less fees than concentrated positions.</Trans>
+        {t("liquidity.full.range.descriptions")}
       </Typography>
       <ButtonBase
         sx={{
@@ -57,7 +58,7 @@ export function FullRangeWarning({ onUnderstand }: FullRangeWarningProps) {
         }}
         onClick={onUnderstand}
       >
-        <Trans>I Understand</Trans>
+        {t("liquidity.i.understand")}
       </ButtonBase>
     </Box>
   );

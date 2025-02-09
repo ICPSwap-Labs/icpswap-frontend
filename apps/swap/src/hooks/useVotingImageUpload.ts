@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { network, NETWORK, host } from "constants/index";
-import { t } from "@lingui/macro";
 import { createVotingBatch, createVotingChunk, commitVotingChunk } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -91,7 +90,7 @@ export default function useVotingImageUpload(): [
       })
       .catch((err) => {
         console.error(err);
-        setFileError(t`Failed to upload, please try again`);
+        setFileError(`Failed to upload, please try again`);
         setUploading(false);
         return undefined;
       });
@@ -113,7 +112,7 @@ export default function useVotingImageUpload(): [
     );
 
     if (status === ResultStatus.ERROR) {
-      openTip(t`Failed to upload: ${message}`, MessageTypes.error);
+      openTip(`Failed to upload: ${message}`, MessageTypes.error);
       setUploading(false);
       return;
     }

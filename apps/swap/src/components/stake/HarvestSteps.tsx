@@ -1,10 +1,10 @@
 import { Box } from "components/Mui";
 import { parseTokenAmount } from "@icpswap/utils";
-import { t } from "@lingui/macro";
 import { toFormat } from "utils/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
 import { getStepData } from "store/steps/hooks";
+import i18n from "i18n/index";
 
 export interface GetStepsProps {
   token: Token;
@@ -26,16 +26,16 @@ export function getHarvestSteps({ token, key }: GetStepsProps) {
 
   const steps: any[] = [
     {
-      title: t`Harvest ${token.symbol}`,
+      title: i18n.t("common.harvest.symbol", { symbol: token.symbol }),
     },
     {
-      title: t`Withdraw ${token.symbol}`,
+      title: i18n.t("common.withdraw.amount", { symbol: token.symbol }),
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount0Value,
         },
-        { label: t`Canister Id`, value: token.address },
+        { label: i18n.t("common.canister.id"), value: token.address },
       ],
     },
   ];

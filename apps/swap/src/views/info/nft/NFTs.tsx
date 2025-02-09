@@ -2,7 +2,6 @@ import { pageArgsFormat, timestampFormat, cycleValueFormat } from "@icpswap/util
 import { useState } from "react";
 import { Typography, Box, Avatar, makeStyles } from "components/Mui";
 import { useNFTCanisterCycles, useNFTCanisterCount } from "hooks/info/nft";
-import { Trans } from "@lingui/macro";
 import { InfoWrapper } from "components/index";
 import { NFTCanisterInfo } from "@icpswap/types";
 import { useNFTCanisters } from "@icpswap/hooks";
@@ -18,6 +17,7 @@ import {
   BodyCell,
   Flex,
 } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -36,6 +36,7 @@ export interface NFTItemProps {
 }
 
 export function NFTItem({ canister }: NFTItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { result: cycles } = useNFTCanisterCycles(canister.cid);
   const { result: count } = useNFTCanisterCount(canister.cid);
@@ -53,15 +54,14 @@ export function NFTItem({ canister }: NFTItemProps) {
       <BodyCell>{cycleValueFormat(cycles ?? "")}</BodyCell>
       <BodyCell>{String(count ?? 0)}</BodyCell>
       <BodyCell>
-        <TextButton to={`/info-nfts/canister/${canister.cid}`}>
-          <Trans>Details</Trans>
-        </TextButton>
+        <TextButton to={`/info-nfts/canister/${canister.cid}`}>{t("common.details")}</TextButton>
       </BodyCell>
     </TableRow>
   );
 }
 
 export default function NFTInfo() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
@@ -73,28 +73,16 @@ export default function NFTInfo() {
     <InfoWrapper>
       <MainCard>
         <Box mb="20px">
-          <Typography variant="h3">
-            <Trans>NFT Canisters</Trans>
-          </Typography>
+          <Typography variant="h3">{t("nft.canisters")}</Typography>
         </Box>
 
         <Box sx={{ overflow: "auto" }}>
           <Header className={classes.wrapper}>
-            <HeaderCell>
-              <Trans>Name</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Time</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Canister ID</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>Cycles</Trans>
-            </HeaderCell>
-            <HeaderCell>
-              <Trans>NFT count</Trans>
-            </HeaderCell>
+            <HeaderCell>{t("common.name")}</HeaderCell>
+            <HeaderCell>{t("common.time")}</HeaderCell>
+            <HeaderCell>{t("common.canister.id")}</HeaderCell>
+            <HeaderCell>{t("common.cycles")}</HeaderCell>
+            <HeaderCell>{t("nft.nft.count")}</HeaderCell>
             <HeaderCell>&nbsp;</HeaderCell>
           </Header>
 

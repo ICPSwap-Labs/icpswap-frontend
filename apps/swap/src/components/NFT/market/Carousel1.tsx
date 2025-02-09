@@ -1,7 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Trans } from "@lingui/macro";
+import { Box, Button, Typography, makeStyles } from "components/Mui";
 import CollectionBg from "assets/images/nft/collection_bg.jpg";
 
 const useStyles = makeStyles(() => {
@@ -27,6 +26,7 @@ const useStyles = makeStyles(() => {
 });
 
 export default function MarketCarousel() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
 
@@ -38,15 +38,15 @@ export default function MarketCarousel() {
     <Box mt="30px" sx={{ width: "100%", height: "320px", position: "relative" }}>
       <Box className={classes.container}>
         <Typography color="text.primary" fontSize="22px" fontWeight="500">
-          <Trans>Create-and-Trade Your NFTs Freely on the</Trans>
+          {t("nft.icpswap.marketplace.create.description")}
         </Typography>
 
         <Typography color="text.primary" fontSize="42px" fontWeight="700" sx={{ marginTop: "16px" }}>
-          <Trans>ICPSwap Marketplace</Trans>
+          {t("nft.icpswap.marketplace")}
         </Typography>
 
         <Button variant="contained" className={classes.viewAll} onClick={handleLoadCollections}>
-          <Trans>View All</Trans>
+          {t("common.view.all")}
         </Button>
       </Box>
 

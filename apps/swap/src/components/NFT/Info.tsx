@@ -6,7 +6,6 @@ import { useAccount } from "store/auth/hooks";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
 import { formatDollarAmount, mockALinkAndOpen, shorten, timestampFormat, BigNumber } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { useNFTOrderInfo } from "hooks/nft/trade";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import NFTTransfer from "components/NFT/Transfer";
@@ -21,6 +20,7 @@ import NFTCanisterLink from "components/info/NFTCanisterLink";
 import { TwitterIcon } from "assets/images/Twitter";
 import { APP_URL } from "constants/index";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 import NFTAvatar from "./NFTAvatar";
 import CollectionIcons from "./collectionsIcon";
@@ -184,6 +184,7 @@ export default function NFTInfo({
   tokenId: number | bigint;
   isView?: boolean;
 }) {
+  const { t } = useTranslation();
   const account = useAccount();
   const theme = useTheme() as Theme;
   const classes = useStyles();
@@ -253,7 +254,7 @@ export default function NFTInfo({
 
           {!matchDownMD && NFTMetadata.length > 0 ? (
             <Box className={classes.metadataWrapper}>
-              <DetailsToggle title={<Trans>Metadata</Trans>}>
+              <DetailsToggle title={t("common.metadata")}>
                 <Grid container spacing="10px">
                   {NFTMetadata.map((metadata, index) => (
                     <Grid item xs={4} key={index}>
@@ -306,7 +307,7 @@ export default function NFTInfo({
             </Box>
             <Box mt="18px">
               <Typography component="span" sx={{ marginRight: "5px" }}>
-                <Trans>Owned by</Trans>
+                {t("common.owned.by")}
               </Typography>
               <TextButton>{shorten(metadata.owner, 12)}</TextButton>
             </Box>
@@ -366,7 +367,7 @@ export default function NFTInfo({
                         variant="contained"
                         onClick={() => setTransferModalOpen(true)}
                       >
-                        <Trans>Transfer</Trans>
+                        {t("common.transfer")}
                       </Button>
                     )}
                     {isOwner && isOnSale && <NFTRevoke metadata={metadata} onRevokeSuccess={handleRevokeSuccess} />}
@@ -377,7 +378,7 @@ export default function NFTInfo({
           </Box>
 
           <Box className={classes.detailsWrapper}>
-            <DetailsToggle title={<Trans>NFT Details</Trans>}>
+            <DetailsToggle title={t("nft.details")}>
               <Flex fullWidth vertical gap="15px" align="flex-start">
                 <DetailsItem
                   label={t`Token ID`}
@@ -416,7 +417,7 @@ export default function NFTInfo({
                       },
                     }}
                   >
-                    <Trans>NFT Description</Trans>
+                    {t("nft.description")}
                   </Typography>
                   <Typography
                     sx={{
@@ -432,7 +433,7 @@ export default function NFTInfo({
           </Box>
 
           <Box className={classes.collectionsWrapper}>
-            <DetailsToggle title={<Trans>About Collections</Trans>}>
+            <DetailsToggle title={t("common.about.collections")}>
               <Flex fullWidth vertical gap="15px" align="flex-start">
                 <DetailsItem label={t`NFT Canister ID`} value={<NFTCanisterLink canisterId={metadata.cId} />} />
                 <Flex fullWidth vertical align="flex-start" gap="8px">
@@ -443,7 +444,7 @@ export default function NFTInfo({
                       },
                     }}
                   >
-                    <Trans>Collections Description</Trans>
+                    {t("nft.collection.description")}
                   </Typography>
                   <Typography
                     sx={{
@@ -457,13 +458,13 @@ export default function NFTInfo({
                   </Typography>
                 </Flex>
                 <DetailsItem
-                  label={t`Creator`}
+                  label={t("common.creator")}
                   value={
                     <Copy content={canisterMetadata?.owner ?? ""}>{shorten(canisterMetadata?.owner ?? "", 12)}</Copy>
                   }
                 />
                 <DetailsItem
-                  label={t`Creator Royalty`}
+                  label={t("nft.creator.royalty")}
                   value={`${new BigNumber(String(canisterMetadata?.royalties ?? 0)).dividedBy(100).toFormat()}%`}
                 />
               </Flex>
@@ -477,7 +478,7 @@ export default function NFTInfo({
 
           {matchDownMD && NFTMetadata.length > 0 ? (
             <Box className={classes.metadataWrapper}>
-              <DetailsToggle title={<Trans>Metadata</Trans>}>
+              <DetailsToggle title={t("common.metadata")}>
                 <Grid container spacing="10px">
                   {NFTMetadata.map((metadata, index) => (
                     <Grid item xs={4} key={index}>

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Typography, Box } from "@mui/material";
 import { InfoWrapper, MainCard } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useNodeInfoAllPools } from "@icpswap/hooks";
 import { Pools } from "components/info/swap";
 
@@ -16,7 +15,7 @@ export default function SwapPools() {
     <InfoWrapper>
       <Box>
         <Typography color="text.primary" fontSize="20px" fontWeight="500">
-          <Trans>All Pools</Trans>
+          {t("common.pools.all")}
         </Typography>
       </Box>
 

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import { Trans } from "@lingui/macro";
 import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, cycleValueFormat } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks";
@@ -17,6 +16,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionTable } from "components/liquidity/PositionTable";
 import { useToken } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 import PoolChart from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
@@ -27,6 +27,7 @@ enum TabValue {
 }
 
 export default function SwapPoolDetails() {
+  const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
   const theme = useTheme();
   const [openTips] = useTips();
@@ -67,7 +68,7 @@ export default function SwapPoolDetails() {
 
   return (
     <InfoWrapper>
-      <Breadcrumbs prevLink="/info-swap" prevLabel={<Trans>Pools</Trans>} currentLabel={<Trans>Details</Trans>} />
+      <Breadcrumbs prevLink="/info-swap" prevLabel={t("common.pools")} currentLabel={t("common.details")} />
 
       <Box mt="20px">
         <Box
@@ -193,9 +194,7 @@ export default function SwapPoolDetails() {
           <GridAutoRows gap="24px">
             <MainCard level={4}>
               <GridAutoRows gap="12px">
-                <Typography>
-                  <Trans>Pool balance</Trans>
-                </Typography>
+                <Typography>{t("info.swap.pool.balance")}</Typography>
 
                 <Flex justify="space-between">
                   <Flex gap="0 8px">
@@ -259,9 +258,7 @@ export default function SwapPoolDetails() {
               }}
             >
               <GridAutoRows gap="4px">
-                <Typography>
-                  <Trans>TVL (Real-Time)</Trans>
-                </Typography>
+                <Typography>{t("info.swap.pool.tvl.realTime")}</Typography>
                 <Typography
                   color="text.primary"
                   sx={{
@@ -276,9 +273,7 @@ export default function SwapPoolDetails() {
               </GridAutoRows>
 
               <GridAutoRows gap="4px">
-                <Typography>
-                  <Trans>Volume 24H</Trans>
-                </Typography>
+                <Typography>{t("common.volume24h")}</Typography>
                 <Typography
                   color="text.primary"
                   sx={{
@@ -291,9 +286,7 @@ export default function SwapPoolDetails() {
               </GridAutoRows>
 
               <GridAutoRows gap="4px">
-                <Typography>
-                  <Trans>Volume 7D</Trans>
-                </Typography>
+                <Typography>{t("common.volume7d")}</Typography>
                 <Typography
                   color="text.primary"
                   sx={{
@@ -306,9 +299,7 @@ export default function SwapPoolDetails() {
               </GridAutoRows>
 
               <GridAutoRows gap="4px">
-                <Typography>
-                  <Trans>Fee 24H</Trans>
-                </Typography>
+                <Typography>{t("common.fee24h")}</Typography>
                 <Typography
                   color="text.primary"
                   sx={{
@@ -321,9 +312,7 @@ export default function SwapPoolDetails() {
               </GridAutoRows>
 
               <GridAutoRows gap="4px">
-                <Typography>
-                  <Trans>APR 24H</Trans>
-                </Typography>
+                <Typography>{t("common.apr24h")}</Typography>
                 <Typography
                   color="text.apr"
                   sx={{

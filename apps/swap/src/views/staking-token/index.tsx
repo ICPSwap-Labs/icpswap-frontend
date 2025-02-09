@@ -2,23 +2,25 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, SelectToken, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
 import { GlobalData, TopLiveStaking, PoolListCard, PoolListHeader } from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
 import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 const Tabs = [
-  { label: t`All Pools`, state: FilterState.ALL },
-  { label: t`Live`, state: FilterState.LIVE },
-  { label: t`Unstart`, state: FilterState.NOT_STARTED },
-  { label: t`Finished`, state: FilterState.FINISHED },
-  { label: t`Your Pools`, state: FilterState.YOUR },
+  { label: i18n.t("common.pools.all"), state: FilterState.ALL },
+  { label: i18n.t("common.live"), state: FilterState.LIVE },
+  { label: i18n.t("common.unstart"), state: FilterState.NOT_STARTED },
+  { label: i18n.t("common.finished"), state: FilterState.FINISHED },
+  { label: i18n.t("common.pools.your"), state: FilterState.YOUR },
 ];
 
 function MainContent() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -181,34 +183,22 @@ function MainContent() {
             }}
           >
             <Flex gap="0 4px">
-              <Typography>
-                <Trans>Staked Token:</Trans>
-              </Typography>
+              <Typography>{t("stake.token.colon")}</Typography>
               <SelectToken
                 showBackground={false}
                 search
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>All Token</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.token.all")}</Typography>}
                 onTokenChange={handleStakeTokenChange}
               />
             </Flex>
             <Flex gap="0 4px">
-              <Typography>
-                <Trans>Reward Token:</Trans>
-              </Typography>
+              <Typography>{t("common.reward.token.colon")}</Typography>
               <SelectToken
                 showBackground={false}
                 search
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>All Token</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.token.all")}</Typography>}
                 onTokenChange={handleRewardTokenChange}
               />
             </Flex>
@@ -284,18 +274,18 @@ function V2Icon() {
 }
 
 export default function Staking() {
+  const { t } = useTranslation();
+
   return (
     <Wrapper>
       <Flex gap="0 12px">
         <Typography sx={{ fontSize: "32px", color: "text.primary", fontWeight: 600 }}>
-          <Trans>Staking Pool</Trans>
+          {t("stake.staking.pool")}
         </Typography>
         <V2Icon />
       </Flex>
 
-      <Typography sx={{ fontSize: "16px", margin: "24px 0 0 0" }}>
-        <Trans>Stake Your Tokens Now, Reap the Rewards Next Moment!</Trans>
-      </Typography>
+      <Typography sx={{ fontSize: "16px", margin: "24px 0 0 0" }}>{t("stake.staking.description")}</Typography>
 
       <Box
         sx={{

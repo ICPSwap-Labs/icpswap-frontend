@@ -13,7 +13,6 @@ import {
 import { formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { sell, approve } from "hooks/nft/trade";
-import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Modal, NumberTextField } from "components/index";
 import { WRAPPED_ICP_TOKEN_INFO, ResultStatus } from "constants/index";
@@ -22,7 +21,7 @@ import { NFTTradeFee } from "constants/nft";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import LazyImage from "components/LazyImage";
 import { encodeTokenIdentifier } from "utils/nft/index";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useAccount } from "store/auth/hooks";
 
 import FileImage from "../FileImage";
@@ -97,7 +96,7 @@ export default function NFTSell({
       closeLoading();
 
       if (result.status === ResultStatus.OK) {
-        openSuccessTip(t`Listed Successfully`);
+        openSuccessTip(`Listed Successfully`);
       } else {
         openErrorTip(getLocaleMessage(result.message));
       }
@@ -113,8 +112,8 @@ export default function NFTSell({
   }, [onClose, setPrice]);
 
   const errorMsg = useMemo(() => {
-    if (!price) return t`Enter the price`;
-    if (price && new BigNumber(price).isLessThan(0.001)) return t`Price must be greater than 0.001`;
+    if (!price) return `Enter the price`;
+    if (price && new BigNumber(price).isLessThan(0.001)) return `Price must be greater than 0.001`;
   }, [price]);
 
   const receiveTokenAmount = useMemo(() => {
@@ -127,7 +126,7 @@ export default function NFTSell({
   }, [price]);
 
   return open ? (
-    <Modal open={open} onClose={handleClose} title={t`List item for sale`} background={theme.palette.background.level2}>
+    <Modal open={open} onClose={handleClose} title="List item for sale" background={theme.palette.background.level2}>
       <Grid
         container
         sx={{
@@ -186,16 +185,14 @@ export default function NFTSell({
             </Typography>
           </Box>
           <Box mt="28px">
-            <Typography fontSize="12px">
-              <Trans>Listing is free. Once sold, the following fees will be deducted:</Trans>
-            </Typography>
+            <Typography fontSize="12px">Listing is free. Once sold, the following fees will be deducted:</Typography>
             <Box>
               <Typography fontSize="12px" component="span">
-                <Trans>Transaction Fees: {new BigNumber(NFTTradeFee).multipliedBy(100).toNumber()}%</Trans>
+                Transaction Fees: {new BigNumber(NFTTradeFee).multipliedBy(100).toNumber()}%
               </Typography>
               &nbsp;
               <Typography fontSize="12px" component="span">
-                <Trans>Creator Royalty: {new BigNumber(String(nft.royalties ?? 0)).dividedBy(100).toNumber()}%</Trans>
+                Creator Royalty: {new BigNumber(String(nft.royalties ?? 0)).dividedBy(100).toNumber()}%
               </Typography>
             </Box>
           </Box>
@@ -204,14 +201,12 @@ export default function NFTSell({
 
       <Grid container mt="20px">
         <Grid item xs={12} className={classes.inputBox}>
-          <Typography>
-            <Trans>Sell Price</Trans>
-          </Typography>
+          <Typography>Sell Price</Typography>
           <NumberTextField
             fullWidth
             variant="standard"
             value={price}
-            placeholder={t`Enter the price`}
+            placeholder="Enter the price"
             onChange={({ target: { value } }) => setPrice(value)}
             numericProps={{
               thousandSeparator: true,
@@ -238,7 +233,7 @@ export default function NFTSell({
               fontSize: "12px",
             }}
           >
-            <Trans>You will receive: {receiveTokenAmount}</Trans>
+            You will receive: {receiveTokenAmount}
           </Typography>
           <img width="16px" src={WICPCurrencyImage} alt="" />
         </Grid>
@@ -254,7 +249,7 @@ export default function NFTSell({
                 onClick={submit}
                 startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
               >
-                {errorMsg || (loading ? "" : t`Confirm`)}
+                {errorMsg || (loading ? "" : `Confirm`)}
               </Button>
             )}
           </Identity>

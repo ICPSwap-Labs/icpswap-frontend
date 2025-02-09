@@ -1,5 +1,4 @@
-import { Typography, Box } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Typography, Box } from "components/Mui";
 import { SelectPair } from "components/index";
 import { useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
 import Pools from "components/info/Pools";
@@ -7,8 +6,10 @@ import { useState, useMemo } from "react";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
 import { HIDDEN_POOLS } from "constants/info";
+import { useTranslation } from "react-i18next";
 
 export default function TopPools() {
+  const { t } = useTranslation();
   const [onlyTokenList, setOnlyTokenList] = useState(true);
   const [selectedPair, setSelectedPair] = useState<undefined | string>(undefined);
 
@@ -57,9 +58,7 @@ export default function TopPools() {
           },
         }}
       >
-        <Typography variant="h4">
-          <Trans>Top Pools</Trans>
-        </Typography>
+        <Typography variant="h4">{t("info.top.pools")}</Typography>
 
         <Box
           sx={{

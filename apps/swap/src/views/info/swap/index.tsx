@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { formatDollarAmount } from "@icpswap/utils";
 import { InfoWrapper } from "components/index";
 import { useSwapProtocolData, useTransformedVolumeData } from "@icpswap/hooks";
@@ -17,12 +16,14 @@ import {
 import dayjs from "dayjs";
 import { useChartData } from "hooks/info/useSwapChartData";
 import { VolumeWindow } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 import Transactions from "./Transactions";
 import TopPools from "./TopPools";
 import TopTokens from "./TopTokens";
 
 export default function SwapOverview() {
+  const { t } = useTranslation();
   const { result: protocolData } = useSwapProtocolData();
   const protocolChart = useChartData();
   const theme = useTheme();
@@ -81,7 +82,7 @@ export default function SwapOverview() {
       <GridAutoRows gap="20px">
         <Flex fullWidth>
           <Typography sx={{ color: theme.colors.darkPrimary400 }} fontSize="16px" fontWeight="500">
-            <Trans>Swap Overview V3</Trans>
+            {t("info.swap.overview")}
           </Typography>
         </Flex>
 

@@ -1,10 +1,10 @@
 import { useHistory } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { Box, Typography, Button } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface CreatePoolProps {
   fontSize?: "12px" | "14px";
@@ -16,6 +16,7 @@ export interface CreatePoolProps {
 }
 
 export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: CreatePoolProps) {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const __fontSize = useMemo(() => {
@@ -45,11 +46,11 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
     >
       <Flex fullWidth align="center" justify="space-between" gap="0 20px">
         <Typography sx={{ fontSize: __fontSize, maxWidth: "280px", lineHeight: "20px" }}>
-          <Trans>No liquidity available. You can add initial liquidity to earning fees.</Trans>
+          {t("liquidity.no.liquidity.descriptions")}
         </Typography>
 
         <Button sx={{ minWidth: "98px" }} variant="contained" size="small" onClick={handleCreatePool}>
-          <Trans>Add Liquidity</Trans>
+          {t("common.liquidity.add")}
         </Button>
       </Flex>
     </Box>

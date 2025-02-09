@@ -4,7 +4,6 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
 import { TokenImage } from "components/index";
 import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import { Flex, Tooltip } from "@icpswap/ui";
 import type { Null } from "@icpswap/types";
@@ -12,6 +11,7 @@ import { ArrowUpRight } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
 import { useInfoToken } from "@icpswap/hooks";
 import { SwapContext } from "components/swap";
+import { useTranslation } from "react-i18next";
 
 import { LiquidityLocks } from "./LiquidityLocks";
 
@@ -82,6 +82,7 @@ interface TvlValue {
 }
 
 export default function TokenUI() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { poolId, inputToken, outputToken } = useContext(SwapContext);
 
@@ -146,7 +147,7 @@ export default function TokenUI() {
             <Box sx={{ display: "flex", gap: "0 16px" }}>
               <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                 <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
-                  <Trans>TVL</Trans>
+                  {t("common.tvl")}
                 </Typography>
                 <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
                   {totalTVL ?? "--"}

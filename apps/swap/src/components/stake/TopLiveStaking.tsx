@@ -1,6 +1,5 @@
 import { Typography, Box } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { StakingTokenImages } from "components/stake/StakingTokenImage";
@@ -14,12 +13,14 @@ import { useApr } from "hooks/staking-token/useApr";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 interface TopLiveCardProps {
   pool: StakingPoolControllerPoolInfo;
 }
 
 function TopLiveCard({ pool }: TopLiveCardProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const principal = useAccountPrincipal();
 
@@ -60,21 +61,15 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
       <Flex justify="space-between" gap="0 20px">
         <StakingTokenImages stakeToken={stakeToken} rewardToken={rewardToken} />
         <Typography fontSize={12} textAlign="right" lineHeight="18px">
-          {rewardToken && stakeToken && rewardToken ? (
-            <Trans>
-              Stake {stakeToken.symbol} to earn {rewardToken.symbol}
-            </Trans>
-          ) : (
-            "--"
-          )}
+          {rewardToken && stakeToken && rewardToken
+            ? t("stake.to.earn", { symbol0: stakeToken.symbol, symbol1: rewardToken.symbol })
+            : "--"}
         </Typography>
       </Flex>
 
       <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 8px">
         <Box style={{ maxWidth: "123px" }}>
-          <Typography fontSize={12}>
-            <Trans>Reward Token</Trans>
-          </Typography>
+          <Typography fontSize={12}>{t("common.reward.token")}</Typography>
           <Typography
             sx={{
               fontSize: "24px",
@@ -93,7 +88,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
         <Box>
           <Typography fontSize={12} align="right">
-            <Trans>APR</Trans>
+            {t("common.apr")}
           </Typography>
           <Typography
             align="right"
@@ -116,9 +111,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
       <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }} gap="0 8px">
         <Box sx={{ maxWidth: "150px" }}>
-          <Typography fontSize={12}>
-            <Trans>Your Available to Stake</Trans>
-          </Typography>
+          <Typography fontSize={12}>{t("common.your.available.stake")}</Typography>
           <Flex gap="0 2px" sx={{ margin: "6px 0 0 0" }}>
             <Typography
               sx={{
@@ -147,7 +140,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
         <Box sx={{ maxWidth: "81px" }}>
           <Typography fontSize={12} align="right">
-            <Trans>Total Staked</Trans>
+            {t("stake.total.staked")}
           </Typography>
           <Typography
             sx={{
@@ -170,6 +163,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 }
 
 export function TopLiveStaking() {
+  const { t } = useTranslation();
   const { result: allLivePools, loading } = useStakingPools(getStateValue(StakingState.LIVE), 0, 100);
 
   const topLivePools = useMemo(() => {
@@ -181,7 +175,7 @@ export function TopLiveStaking() {
   return (
     <MainCard>
       <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
-        <Trans>Top Live Pools</Trans>
+        {t("stake.top.live.pools")}
       </Typography>
 
       <Box mt="24px">

@@ -1,12 +1,12 @@
 import { useTheme, Box, Typography, BoxProps } from "components/Mui";
 import { Flex, Link } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { useSubnetBlockRate, useNodeMachinesOfSubnet } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { ArrowUpRight } from "react-feather";
 import { ICPSwapSubnet, ICPSwapStableBlockRate } from "constants/index";
 import { NetworkStateIcon } from "components/NetworkStateIcon";
+import { useTranslation } from "react-i18next";
 
 export interface SubnetStateProps {
   fullWidth?: boolean;
@@ -14,6 +14,7 @@ export interface SubnetStateProps {
 }
 
 export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
@@ -70,16 +71,14 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
           <Flex fullWidth justify="flex-end" gap="0 14px">
             <Flex gap="0 5px">
               <Typography fontSize="12px" sx={{ lineHeight: "12px" }}>
-                <Trans>{ICPSwapSubnet.slice(0, 5)} Subnet State:</Trans>
+                {t("subnet.state", { subnet: ICPSwapSubnet.slice(0, 5) })}
               </Typography>
 
               {blockRateLevel ? <NetworkStateIcon level={blockRateLevel} /> : null}
             </Flex>
 
             <Flex gap="0 5px">
-              <Typography fontSize="12px">
-                <Trans>Node Machines:</Trans>
-              </Typography>
+              <Typography fontSize="12px">{t("subnet.node.machines")}</Typography>
               <Link link={`https://dashboard.internetcomputer.org/subnet/${ICPSwapSubnet}`}>
                 <Flex gap="0 4px">
                   <Typography color="text.primary" fontSize="12px">

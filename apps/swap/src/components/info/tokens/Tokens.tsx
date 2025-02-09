@@ -10,7 +10,6 @@ import {
   formatIcpAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
-import { Trans } from "@lingui/macro";
 import { NoData, LoadingRow, TokenImage, TokenStandardLabel } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
 import { TOKEN_STANDARD } from "@icpswap/types";
@@ -18,6 +17,7 @@ import { useTokensFromList, useTokenSupply, useInfoToken, useExplorerTokenDetail
 import { useICPPrice } from "store/global/hooks";
 import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -105,6 +105,7 @@ const PAGE_SIZE = 10;
 const START_PAGE = 1;
 
 export function Tokens() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [page, setPage] = useState(START_PAGE);
   const { result: allTokens } = useTokensFromList();
@@ -140,9 +141,7 @@ export function Tokens() {
 
   return (
     <Box>
-      <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-        <Trans>Token List</Trans>
-      </Typography>
+      <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>{t("common.token.list")}</Typography>
 
       <Box sx={{ width: "100%", overflow: "auto", margin: "24px 0 0 0" }}>
         <InfiniteScroll
@@ -163,24 +162,12 @@ export function Tokens() {
           {slicedTokens && slicedTokens.length > 0 ? (
             <>
               <Header className={classes.wrapper}>
-                <HeaderCell>
-                  <Trans>Index</Trans>
-                </HeaderCell>
-                <HeaderCell>
-                  <Trans>Symbol</Trans>
-                </HeaderCell>
-                <HeaderCell align="right">
-                  <Trans>Price</Trans>
-                </HeaderCell>
-                <HeaderCell align="right">
-                  <Trans>Price Change</Trans>
-                </HeaderCell>
-                <HeaderCell align="right">
-                  <Trans>FDV</Trans>
-                </HeaderCell>
-                <HeaderCell align="right">
-                  <Trans>Holders</Trans>
-                </HeaderCell>
+                <HeaderCell>{t("common.index")}</HeaderCell>
+                <HeaderCell>{t("common.symbol")}</HeaderCell>
+                <HeaderCell align="right">{t("common.price")}</HeaderCell>
+                <HeaderCell align="right">{t("common.price.change")}</HeaderCell>
+                <HeaderCell align="right">{t("common.fdv")}</HeaderCell>
+                <HeaderCell align="right">{t("common.holders")}</HeaderCell>
               </Header>
 
               {(slicedTokens ?? []).map((token, index) => (

@@ -1,9 +1,10 @@
 import { Box, Typography, Button } from "components/Mui";
 import { Modal } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { FarmPositionCard } from "components/farm/index";
 import type { FarmInfo, InitFarmArgs, UserPositionInfoWithId } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
+import { position } from "polished";
 
 export interface AllPositionsProps {
   farmId: string;
@@ -30,12 +31,12 @@ export function AllPositions({
   refreshData,
   farmInitArgs,
 }: AllPositionsProps) {
+  const { t } = useTranslation();
+
   return (
     <Modal open={open} onClose={onClose} title={`${token0?.symbol}/${token1?.symbol} Positions`} background="level1">
       <Box mt="16px">
-        <Typography mt="8px">
-          <Trans>{positions.length} Position Available To Stake</Trans>
-        </Typography>
+        <Typography mt="8px">{t("farm.available.positions.stake", { number: position.length })}</Typography>
 
         <Box sx={{ margin: "8px 0 0 0", maxHeight: "432px", overflow: "hidden auto" }}>
           {positions.map((ele) => (
@@ -74,7 +75,7 @@ export function AllPositions({
           size="large"
           href={`/liquidity/add/${token0?.address}/${token1?.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
         >
-          <Trans>Add Liquidity</Trans>
+          {t("common.liquidity.add")}
         </Button>
       </Box>
     </Modal>

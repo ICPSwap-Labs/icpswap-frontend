@@ -1,12 +1,9 @@
 import { useState, useRef } from "react";
-import { Box, Grid, Typography, Button, useTheme, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Grid, Typography, Button, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { cycleValueFormat } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import type { NFTControllerInfo } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import ExternalLink from "components/ExternalLink/index";
 import TopUpCanister from "components/modal/TopUpCanister";
 import { INFO_URL } from "constants/index";
@@ -15,6 +12,7 @@ import Upload, { UploadRef } from "components/NFT/Upload";
 import { setCanisterLogo } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR, TIP_SUCCESS } from "hooks/useTips";
 import Avatar from "components/Image/Avatar";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
@@ -75,6 +73,7 @@ export interface UploadImageModalProps {
 }
 
 function UploadImageModal({ canisterId, open, onClose }: UploadImageModalProps) {
+  const { t } = useTranslation();
   const uploadRef = useRef<UploadRef>(null);
 
   const [file, setFile] = useState<File | null>(null);
@@ -122,14 +121,12 @@ function UploadImageModal({ canisterId, open, onClose }: UploadImageModalProps) 
           uploadWithIdentity
           minHeight="220px"
         />
-        <Typography sx={{ marginTop: "5px" }}>
-          <Trans>Support : image Size: ≤200K</Trans>
-        </Typography>
+        <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.image.support")}</Typography>
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         <Button fullWidth variant="contained" onClick={handleUpload} disabled={!file || !!fileError}>
-          <Trans>Upload</Trans>
+          {t("common.upload")}
         </Button>
       </Box>
     </Modal>
@@ -144,6 +141,7 @@ export interface NFTCanisterHeaderProps {
 }
 
 export default function CanisterHeader({ details, cycles, count, loading }: NFTCanisterHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -198,9 +196,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
 
             <Box mt="20px">
               <Grid sx={{ width: "100%" }} container alignItems="center">
-                <Typography color="text.primary">
-                  <Trans>Canister ID:</Trans>
-                </Typography>
+                <Typography color="text.primary">{t("common.canister.id.colon")}</Typography>
                 <Grid item xs ml="5px">
                   <ExternalLink label={details.cid} value={`${INFO_URL}/nft/canister/details/${details.cid}`} />
                 </Grid>
@@ -222,7 +218,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
                 }}
                 onClick={handleToMarketplace}
               >
-                <Trans>Marketplace</Trans>
+                {t("nft.marketplace")}
               </Button>
 
               {isOwner ? (
@@ -235,7 +231,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
                   }}
                   onClick={handleMintNFT}
                 >
-                  <Trans>Mint NFT</Trans>
+                  {t("nft.mint")}
                 </Button>
               ) : null}
 
@@ -245,7 +241,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
                 color="secondary"
                 onClick={() => setTopUpCycles(true)}
               >
-                <Trans>Top-up Canister</Trans>
+                {t("nft.topUp.canister")}
               </Button>
             </Grid>
           </Box>
@@ -265,7 +261,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
                   marginTop: "4px",
                 }}
               >
-                <Trans>Cycles</Trans>
+                {t("common.cycles")}
               </Typography>
             </Box>
             <Box className={classes.infoCard}>
@@ -277,7 +273,7 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
                   marginTop: "4px",
                 }}
               >
-                <Trans>NFT count</Trans>
+                {t("nft.nft.count")}
               </Typography>
             </Box>
           </Box>

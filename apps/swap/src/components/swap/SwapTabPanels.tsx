@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
 import { Flex } from "@icpswap/ui";
+import i18n from "i18n/index";
 
 export enum TABS {
   SWAP = "Swap",
@@ -11,9 +11,9 @@ export enum TABS {
 }
 
 const Tabs = [
-  { value: TABS.SWAP, label: t`Swap`, path: "/swap" },
-  { value: TABS.LIMIT, label: t`Limit`, path: "/swap/limit" },
-  { value: TABS.TRANSACTIONS, label: t`Transactions`, path: "/swap/transaction" },
+  { value: TABS.SWAP, label: i18n.t("common.swap"), path: "/swap" },
+  { value: TABS.LIMIT, label: i18n.t("common.limit"), path: "/swap/limit" },
+  { value: TABS.TRANSACTIONS, label: i18n.t("common.transactions"), path: "/swap/transaction" },
 ];
 
 export interface SwapTabPanelsProps {

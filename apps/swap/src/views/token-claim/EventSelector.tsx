@@ -1,6 +1,6 @@
 import { FilledTextField } from "components/index";
-import { t } from "@lingui/macro";
 import { useClaimEvents } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export default function EventSelector({
   onChange,
@@ -9,6 +9,7 @@ export default function EventSelector({
   value: string | undefined;
   onChange?: (eventId: string) => void;
 }) {
+  const { t } = useTranslation();
   const { result: claimEvents } = useClaimEvents(0, 10000);
 
   const menus = claimEvents?.content.map((ele) => {
@@ -22,7 +23,7 @@ export default function EventSelector({
     <FilledTextField
       select
       menus={menus}
-      placeholder={t`Select claim event`}
+      placeholder={t("claim.select.event")}
       onChange={(value: string) => {
         if (onChange) onChange(value);
       }}

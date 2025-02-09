@@ -1,10 +1,10 @@
 import { Typography, Box } from "components/Mui";
-import { t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Modal, MainCard } from "@icpswap/ui";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { PoolCharts as InfoPoolCharts } from "components/info/PoolCharts";
+import { useTranslation } from "react-i18next";
 
 export interface PoolChartsProps {
   showOnlyTokenList?: boolean;
@@ -14,8 +14,10 @@ export interface PoolChartsProps {
 }
 
 export function PoolCharts({ open, onClose, pool }: PoolChartsProps) {
+  const { t } = useTranslation();
+
   return (
-    <Modal open={open} title={t`Chart`} onClose={onClose} background="level1">
+    <Modal open={open} title={t("common.chart")} onClose={onClose} background="level1">
       <>
         <Flex gap="0 8px">
           <Flex>

@@ -3,7 +3,6 @@ import { IsSneedOwner, MainCard } from "components/index";
 import { isNullArgs, isValidAccount, isValidPrincipal, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
 import { Flex, TextButton, APRPanel } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
-import { Trans } from "@lingui/macro";
 import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { LimitLabel } from "components/swap/limit-order/index";
@@ -15,6 +14,7 @@ import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
+import { useTranslation } from "react-i18next";
 
 interface PositionInfoProps {
   position: Position;
@@ -24,6 +24,7 @@ interface PositionInfoProps {
 }
 
 export function PositionInfo({ position, positionId, isOwner, owner }: PositionInfoProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
   const positionState = usePositionState(position);
@@ -88,23 +89,19 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
       <Flex vertical gap="20px 0" align="flex-start" fullWidth>
         <Flex fullWidth align="flex-start" justify="space-between">
           <Typography color="text.primary" sx={{ fontWeight: 500 }}>
-            <Trans>Position Info</Trans>
+            {t("liquidity.position.info")}
           </Typography>
           {isLimit ? <LimitLabel /> : null}
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Position ID</Trans>
-          </Typography>
+          <Typography>{t("common.position.id")}</Typography>
 
           <Typography color="text.primary">{positionId}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Owner</Trans>
-          </Typography>
+          <Typography>{t("common.owner")}</Typography>
 
           <Flex gap="0 4px">
             <Typography color="text.primary">
@@ -116,9 +113,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>APR</Trans>
-          </Typography>
+          <Typography>{t("common.apr")}</Typography>
 
           <Typography color="text.primary">
             {nonNullArgs(apr) ? <APRPanel value={numToPercent(apr, 2)} /> : "--"}
@@ -126,9 +121,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>
-            <Trans>Price Range</Trans>
-          </Typography>
+          <Typography>{t("common.price.range")}</Typography>
 
           <Flex vertical gap="7px 0" align="flex-end">
             <PositionPriceRange position={position} />
@@ -143,9 +136,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               positionId={BigInt(positionId)}
               onTransferSuccess={handleTransferSuccess}
             >
-              <TextButton sx={{ fontWeight: 500 }}>
-                <Trans>Transfer Position</Trans>
-              </TextButton>
+              <TextButton sx={{ fontWeight: 500 }}>{t("common.transfer.position")}</TextButton>
             </TransferPosition>
           </Flex>
         ) : null}
@@ -167,7 +158,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               onClick={loadDecreaseLiquidity}
               sx={{ height: "44px" }}
             >
-              <Trans>Remove Liquidity</Trans>
+              {t("common.remove.liquidity")}
             </Button>
             <Button
               variant="contained"
@@ -176,7 +167,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               onClick={loadIncreaseLiquidity}
               sx={{ height: "44px" }}
             >
-              <Trans>Increase Liquidity</Trans>
+              {t("common.increase.liquidity")}
             </Button>
             {showStakeFarmButton ? (
               <Button
@@ -186,7 +177,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
                 onClick={handleToFarm}
                 sx={{ height: "44px" }}
               >
-                <Trans>Stake Farm</Trans>
+                {t("stake.farm")}
               </Button>
             ) : null}
           </Box>
@@ -201,7 +192,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
             size={matchDownSM ? "small" : "medium"}
             onClick={handleToFarm}
           >
-            <Trans>Unstake Farm</Trans>
+            {t("unstake.farm")}
           </Button>
         ) : null}
       </Flex>

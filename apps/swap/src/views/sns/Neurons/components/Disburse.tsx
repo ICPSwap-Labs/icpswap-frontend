@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { disburseNeuron } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { ConfirmModal } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface DisburseProps {
   onDisburseSuccess?: () => void;
@@ -13,6 +13,7 @@ export interface DisburseProps {
 }
 
 export function Disburse({ onDisburseSuccess, governance_id, neuron_id, disabled }: DisburseProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -49,7 +50,7 @@ export function Disburse({ onDisburseSuccess, governance_id, neuron_id, disabled
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
-        <Trans>Disburse</Trans>
+        {t("nns.disburse")}
       </Button>
 
       <ConfirmModal

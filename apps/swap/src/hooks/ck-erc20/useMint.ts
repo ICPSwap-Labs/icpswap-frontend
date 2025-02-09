@@ -6,11 +6,11 @@ import { useEthMinterHelperContract } from "hooks/web3/useContract";
 import { formatTokenAmount } from "@icpswap/utils";
 import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
-import { t } from "@lingui/macro";
 import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
 import { Null } from "@icpswap/types";
 import { useUpdateErc20TX } from "store/web3/hooks";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
+import { useTranslation } from "react-i18next";
 
 export interface UseMintProps {
   helperContractAddress: string | undefined;
@@ -19,6 +19,7 @@ export interface UseMintProps {
 }
 
 export function useMintCallback({ helperContractAddress, amount, erc20Token }: UseMintProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
   const updateErc20Tx = useUpdateErc20TX();
@@ -66,10 +67,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
         });
 
         if (response) {
-          openTip(
-            t`ck${erc20.symbol} minting in progress: Transaction submitted and pending confirmation.`,
-            MessageTypes.success,
-          );
+          openTip(t("ck.minting.progress", { symbol: `ck${erc20.symbol}` }), MessageTypes.success);
         }
 
         if (response && response.hash) {

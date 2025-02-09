@@ -2,12 +2,12 @@ import { parseTokenAmount, BigNumber, shorten, formatTokenPrice, isNullArgs, for
 import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Principal } from "@dfinity/principal";
 import { LimitOrder } from "@icpswap/types";
-import { t, Trans } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
 import { StepContents } from "types/step";
 import { Typography } from "components/Mui";
 import { getLimitTokenAndAmount } from "hooks/swap/limit-order";
 import { getDecreaseLiquidityAmount } from "store/swap/hooks";
+import i18n from "i18n/index";
 
 export interface CancelLimitStepsProps {
   positionId: bigint;
@@ -81,9 +81,9 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
 
   const contents = [
     {
-      title: t`Cancel the limit order`,
+      title: i18n.t`Cancel the limit order`,
       children: [
-        { label: t`Limit Price`, value: LimitPrice },
+        { label: i18n.t("common.limit.price"), value: LimitPrice },
         {
           label: `${inputToken.symbol}`,
           value: <TokenAmount amount={inputAmount.toExact()} token={inputToken} />,
@@ -91,9 +91,9 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
       ],
     },
     {
-      title: t`Remove the tokens from the limit order`,
+      title: i18n.t`Remove the tokens from the limit order`,
       children: [
-        { label: t`Limit Price`, value: LimitPrice },
+        { label: i18n.t("common.limit.price"), value: LimitPrice },
         {
           label: `${inputToken.symbol}`,
           value: <TokenAmount amount={inputAmount.toExact()} token={inputToken} />,
@@ -105,48 +105,36 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
       ? null
       : {
           title: inputWithdrawAmountLessThanFee
-            ? t`Unable to withdraw ${inputToken.symbol}`
-            : t`Withdraw ${inputToken.symbol}`,
+            ? i18n.t("common.unable.withdraw", { symbol: inputToken.symbol })
+            : i18n.t("common.withdraw.amount", { amount: inputToken.symbol }),
           children: [
             {
-              label: t`Amount`,
+              label: i18n.t("common.amount"),
               value: <TokenAmount amount={inputWithdrawAmount} token={inputToken} />,
             },
-            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+            { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
           ],
-          skipError: inputWithdrawAmountLessThanFee
-            ? t`The amount of withdrawal is less than the transfer fee`
-            : undefined,
-          errorActions: [
-            <TextButton onClick={handleReclaim}>
-              <Trans>Reclaim</Trans>
-            </TextButton>,
-          ],
-          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+          skipError: inputWithdrawAmountLessThanFee ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+          errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+          errorMessage: i18n.t("common.check.balance.tips"),
         },
     // Withdraw output token
     new BigNumber(outputPositionAmount.toExact()).isEqualTo(0)
       ? null
       : {
           title: outputWithdrawAmountLessThanFee
-            ? t`Unable to withdraw ${outputToken.symbol}`
-            : t`Withdraw ${outputToken.symbol}`,
+            ? i18n.t("common.unable.withdraw", { amount: outputToken.symbol })
+            : i18n.t("common.withdraw.amount", { amount: outputToken.symbol }),
           children: [
             {
-              label: t`Amount`,
+              label: i18n.t("common.amount"),
               value: <TokenAmount amount={outputWithdrawAmount} token={outputToken} />,
             },
-            { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+            { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
           ],
-          skipError: outputWithdrawAmountLessThanFee
-            ? t`The amount of withdrawal is less than the transfer fee`
-            : undefined,
-          errorActions: [
-            <TextButton onClick={handleReclaim}>
-              <Trans>Reclaim</Trans>
-            </TextButton>,
-          ],
-          errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+          skipError: outputWithdrawAmountLessThanFee ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+          errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+          errorMessage: i18n.t("common.check.balance.tips"),
         },
   ];
 

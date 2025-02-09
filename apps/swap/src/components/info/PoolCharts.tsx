@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Box } from "components/Mui";
-import { t } from "@lingui/macro";
 import {
   ChartDateButtons,
   PoolVolumeChart,
@@ -13,12 +12,13 @@ import {
 } from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
 import { VolumeWindow, ChartTimeEnum } from "@icpswap/types";
+import i18n from "i18n/index";
 
 export const chartViews = [
-  { label: t`APR`, value: ChartView.APR },
-  { label: t`Volume`, value: ChartView.VOL },
-  { label: t`TVL`, value: ChartView.TVL },
-  { label: t`Liquidity`, value: ChartView.LIQUIDITY },
+  { label: i18n.t("common.apr"), value: ChartView.APR },
+  { label: i18n.t("common.volume"), value: ChartView.VOL },
+  { label: i18n.t("common.tvl"), value: ChartView.TVL },
+  { label: i18n.t("common.liquidity"), value: ChartView.LIQUIDITY },
 ];
 
 export interface PoolChartProps {

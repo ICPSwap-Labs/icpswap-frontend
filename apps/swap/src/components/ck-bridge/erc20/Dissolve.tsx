@@ -3,7 +3,6 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
@@ -13,6 +12,7 @@ import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
+import { useTranslation } from "react-i18next";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -21,6 +21,7 @@ export interface Erc20DissolveProps {
 }
 
 export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
 
@@ -50,7 +51,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
   const dissolve_error = useMemo(() => {
     if (!address) return t`Enter the address`;
-    if (!amount) return t`Enter the amount`;
+    if (!amount) return t("common.error.input.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
 
     if (!token || !tokenBalance) return t`Waiting to fetch data`;
@@ -60,7 +61,8 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         parseTokenAmount(token.transFee, token.decimals).toString(),
       )} ${token.symbol}`;
 
-    if (formatTokenAmount(amount, token.decimals).isGreaterThan(tokenBalance)) return t`Insufficient Balance`;
+    if (formatTokenAmount(amount, token.decimals).isGreaterThan(tokenBalance))
+      return t("common.error.insufficient.balance");
 
     return undefined;
   }, [amount, token, address, tokenBalance]);
@@ -94,9 +96,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
           borderRadius: "16px",
         }}
       >
-        <Typography sx={{ fontSize: "16px" }}>
-          <Trans>{symbol} Receiving Address</Trans>
-        </Typography>
+        <Typography sx={{ fontSize: "16px" }}>{t("ck.receiving.address", { symbol })}</Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
           <Box sx={{ width: "100%" }}>
@@ -153,7 +153,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
         onClick={handleDissolve}
       >
-        {dissolve_error || <Trans>Dissolve {token?.symbol ?? "--"}</Trans>}
+        {dissolve_error || t("common.dissolve.symbol", { symbol })}
       </ButtonConnector>
     </>
   );

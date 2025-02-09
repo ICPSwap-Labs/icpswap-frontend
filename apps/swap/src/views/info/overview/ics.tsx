@@ -12,10 +12,12 @@ import {
 import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import { ICSPriceChart } from "./icsPriceChart";
 
 export function Ics() {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const infoToken = useInfoToken(ICS.address);
@@ -130,7 +132,7 @@ export function Ics() {
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Fully Diluted Market Cap</Typography>
+          <Typography fontSize="16px">{t("common.fully.diluted.cap")}</Typography>
           <Typography fontSize="28px" fontWeight={500} color="text.primary">
             {fdv ? formatDollarAmount(fdv) : "--"}
           </Typography>

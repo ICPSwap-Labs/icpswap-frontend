@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { Button, Typography } from "components/Mui";
 import { MainCard, Flex } from "components/index";
-import { Trans } from "@lingui/macro";
 import { BigNumber, formatAmount, formatDollarAmount } from "@icpswap/utils";
 import { FarmInfo, InitFarmArgs } from "@icpswap/types";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { usePosition } from "hooks/swap/usePosition";
 import { Token } from "@icpswap/swap-sdk";
 import { useFarmState } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 import PositionRangeState from "./PositionState";
 import { Unstake } from "./Unstake";
@@ -39,6 +39,7 @@ export function FarmPositionCard({
   farmInitArgs,
   resetData,
 }: FarmPositionCardProps) {
+  const { t } = useTranslation();
   const [unstakeOpen, setUnstakeOpen] = useState(false);
   const [stakeOpen, setStakeOpen] = useState(false);
 
@@ -134,7 +135,7 @@ export function FarmPositionCard({
             </Typography>
           </Flex>
           <Button variant="contained" sx={{ width: "120px", height: "48px" }} onClick={handleClick} disabled={disabled}>
-            {unstake ? <Trans>Unstake</Trans> : <Trans>Stake</Trans>}
+            {unstake ? t("common.unstake") : t("common.stake")}
           </Button>
         </Flex>
       </MainCard>

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { useTheme, Box, Typography, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
 import { toSignificant, parseTokenAmount } from "@icpswap/utils";
@@ -9,6 +8,7 @@ import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "co
 import { useTransaction } from "hooks/web3/useTransaction";
 import { Flex } from "@icpswap/ui";
 import { usePrincipalTX } from "store/web3/hooks";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -26,6 +26,7 @@ interface TransactionProps {
 }
 
 function Transaction({ transaction }: TransactionProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const trans = useTransaction(transaction.hash);
@@ -42,16 +43,12 @@ function Transaction({ transaction }: TransactionProps) {
     >
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Time</Trans>
-          </Typography>
+          <Typography>{t("common.time")}</Typography>
           <Typography>{dayjs(Number(transaction.timestamp)).format("YYYY-MM-DD HH:mm:ss")}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Height</Trans>
-          </Typography>
+          <Typography>{t("common.height")}</Typography>
           <Typography>
             {trans?.blockNumber ? (
               <ALink
@@ -68,9 +65,7 @@ function Transaction({ transaction }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Txid</Trans>
-          </Typography>
+          <Typography>{t("common.txid")}</Typography>
 
           <Typography className={classes.txLink}>
             <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="secondary" textDecorationColor="secondary">
@@ -80,9 +75,7 @@ function Transaction({ transaction }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>From</Trans>
-          </Typography>
+          <Typography>{t("common.from")}</Typography>
 
           <Typography className={classes.txLink}>
             <ALink
@@ -96,9 +89,7 @@ function Transaction({ transaction }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>To</Trans>
-          </Typography>
+          <Typography>{t("common.to")}</Typography>
 
           <Typography className={classes.txLink}>
             {transaction.to ? (
@@ -116,17 +107,13 @@ function Transaction({ transaction }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
 
           <Typography>{toSignificant(parseTokenAmount(transaction.value, 18).toString())}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Confirmations</Trans>
-          </Typography>
+          <Typography>{t("common.confirmations")}</Typography>
 
           <Typography>{trans ? trans.confirmations : "--"}</Typography>
         </Flex>
@@ -136,20 +123,16 @@ function Transaction({ transaction }: TransactionProps) {
 }
 
 export function EthMintTransactions() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const transactions = usePrincipalTX(principal);
 
   return (
     <MainCard level={1}>
-      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-        <Trans>Transactions</Trans>
-      </Typography>
+      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.transactions")}</Typography>
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
-        <Trans>
-          Once the IC’s Ethereum network syncs with the Ethereum mainnet’s latest finalized block containing your ETH
-          transaction, your ckETH balance will be updated accordingly.
-        </Trans>
+        {t("ck.ether.sync", { symbol0: "ETH", symbol1: "ckETH" })}
       </Typography>
 
       <Box>

@@ -3,9 +3,9 @@ import * as Sentry from "@sentry/react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
 import { Layout } from "components/Layout/index";
-import { Trans } from "@lingui/macro";
 import copy from "copy-to-clipboard";
 import { Flex } from "@icpswap/ui";
+import i18n from "i18n/index";
 
 interface FallbackProps {
   error: Error;
@@ -34,7 +34,7 @@ function Fallback({ error, eventId }: FallbackProps) {
         <Flex fullWidth align="center" justify="center" sx={{ width: "100%", height: "100%" }}>
           <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center" }}>
             <Typography color="text.primary" align="center" sx={{ fontSize: "24px", margin: "0 0 20px 0" }}>
-              <Trans>Oops, you've encountered an error</Trans>
+              {t("error.boundary.oops")}
             </Typography>
 
             <BoundaryErrorImage />
@@ -73,7 +73,7 @@ function Fallback({ error, eventId }: FallbackProps) {
                 onClick={handleCopyError}
               >
                 <Typography color="text.primary" fontSize="12px">
-                  <Trans>Copy</Trans>
+                  {i18n.t("common.copy")}
                 </Typography>
               </Box>
             </Box>

@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { useApprove } from "hooks/token";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { MINTER_ID } from "constants/ckETH";
@@ -10,8 +9,10 @@ import { withdraw_eth } from "@icpswap/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserWithdrawTx } from "store/web3/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export function useDissolveCallback() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +48,7 @@ export function useDissolveCallback() {
       } = await withdraw_eth(MINTER_ID, address, withdraw_amount);
 
       if (withdraw_status === ResultStatus.ERROR) {
-        openTip(withdraw_message ?? t`Transaction for dissolving ckETH failed to submit`, MessageTypes.error);
+        openTip(withdraw_message ?? t("ck.ether.dissolve.loading"), MessageTypes.error);
       } else {
         openTip("ckETH dissolution transaction submitted: Awaiting completion.", MessageTypes.success);
         if (data?.block_index) {

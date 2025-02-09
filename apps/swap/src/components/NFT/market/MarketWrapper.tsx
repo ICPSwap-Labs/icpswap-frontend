@@ -11,11 +11,13 @@ import {
   makeStyles,
 } from "components/Mui";
 import { MainCard, FilledTextField, Wrapper } from "components/index";
-import { t } from "@lingui/macro";
 import { IconSearch } from "@tabler/icons";
 import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";
 import debounce from "lodash/debounce";
 import { useParsedQueryString } from "@icpswap/hooks";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
+
 import NFTMarketplace from "./NFTMarket";
 import NFTMarketSaleRecords from "./NFTMarketSaleRecords";
 import NFTUserSaleRecords from "./NFTUserSaleRecords";
@@ -60,10 +62,15 @@ export type MarketPageConfig = {
 };
 
 export const Pages: MarketPageConfig[] = [
-  { label: t`On Sale`, key: "on-sale", path: "/marketplace/NFT", component: NFTMarketplace },
-  { label: t`Activity`, key: "sales", path: "/marketplace/NFT/sales", component: NFTMarketSaleRecords },
+  { label: i18n.t("nft.market.on.sale"), key: "on-sale", path: "/marketplace/NFT", component: NFTMarketplace },
   {
-    label: t`Your Transactions`,
+    label: i18n.t("common.activity"),
+    key: "sales",
+    path: "/marketplace/NFT/sales",
+    component: NFTMarketSaleRecords,
+  },
+  {
+    label: i18n.t("common.your.transactions"),
     key: "your-sales",
     path: "/marketplace/NFT/sales/user",
     component: NFTUserSaleRecords,
@@ -71,10 +78,10 @@ export const Pages: MarketPageConfig[] = [
 ];
 
 const SortBy = [
-  { label: t`Recently Listed`, value: "time" },
-  { label: t`Price: Low to High`, value: "price" },
-  { label: t`Price: High to Low`, value: "price-desc" },
-  { label: t`Oldest`, value: "time-desc" },
+  { label: i18n.t("common.recently.listed"), value: "time" },
+  { label: i18n.t("common.price.low.to.high"), value: "price" },
+  { label: i18n.t("common.price.high.to.low"), value: "price-desc" },
+  { label: i18n.t("common.oldest"), value: "time-desc" },
 ];
 
 export interface MarketWrapperProps {
@@ -94,6 +101,7 @@ export default function MarketWrapper({
   defaultSortBy = "time",
   title,
 }: MarketWrapperProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme() as Theme;
 
@@ -127,7 +135,6 @@ export default function MarketWrapper({
 
   return (
     <Wrapper>
-      {/* <Box>{!!canisterId ? <CollectionInfo canisterId={canisterId} /> : <MarketCarousel />}</Box> */}
       <Box>{title}</Box>
 
       <Box mt={canisterId ? (matchDown1120 ? "40px" : "97px") : matchDown1120 ? "40px" : "20px"}>
@@ -178,7 +185,7 @@ export default function MarketWrapper({
                       }}
                       fullWidth
                       size={matchDownSM ? "small" : "small"}
-                      placeholder={t`Search NFTs by name and accounts`}
+                      placeholder={t("nft.market.searching")}
                       onChange={handleSearch}
                     />
                   </Box>
@@ -193,7 +200,7 @@ export default function MarketWrapper({
                         fullHeight
                         alignCenter
                         select
-                        placeholder={t`Sort By`}
+                        placeholder={t("common.sort.by")}
                         required
                         value={sortBy}
                         onChange={(value) => handleSortByChange(value)}

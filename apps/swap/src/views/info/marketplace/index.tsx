@@ -18,8 +18,8 @@ import { useNFTCanisterMetadata, useNFTOtherStat } from "hooks/info/nft";
 import { formatAmount, parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import { WRAPPED_ICP } from "@icpswap/tokens";
 import { TradeStateResult } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import { useNFTsStat } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export function NFTTradeStat({ data }: { data: TradeStateResult }) {
   const { result: metadata } = useNFTCanisterMetadata(data.cid);
@@ -69,6 +69,7 @@ export function NFTTradeStat({ data }: { data: TradeStateResult }) {
 }
 
 export default function MarketPlace() {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -90,39 +91,25 @@ export default function MarketPlace() {
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Name</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.name")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Items</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.items")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Holders</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.holders")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Floor Price</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.floor.price")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Average Price</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.average.price")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Total Volume</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("common.total.volume")}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontSize="16px">
-                      <Trans>Transactions Listings</Trans>
-                    </Typography>
+                    <Typography fontSize="16px">{t("nft.transactions.listings")}</Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>

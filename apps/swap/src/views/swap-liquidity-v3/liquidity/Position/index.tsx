@@ -6,7 +6,6 @@ import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
 import { Typography, Box } from "components/Mui";
 import { Wrapper, Breadcrumbs, TokenImage, AuthButton } from "components/index";
 import { usePosition } from "hooks/swap/usePosition";
-import { Trans, t } from "@lingui/macro";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { InfoPool } from "components/liquidity/index";
@@ -16,8 +15,10 @@ import { useMemo } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useRefreshTriggerManager } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 export default function PositionDetails() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
   const [refreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
@@ -110,7 +111,7 @@ export default function PositionDetails() {
           </Box>
 
           <AuthButton className="secondary" variant="contained" onClick={loadAddLiquidity}>
-            <Trans>Create New Position</Trans>
+            {t("liquidity.create.position")}
           </AuthButton>
         </Flex>
 

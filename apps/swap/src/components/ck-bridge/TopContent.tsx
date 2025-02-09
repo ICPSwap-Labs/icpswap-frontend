@@ -1,8 +1,10 @@
 import { Flex, TextButton, Tooltip } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export function TopContent() {
+  const { t } = useTranslation();
+
   return (
     <Flex gap="0 8px">
       <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>ck-Bridge</Typography>
@@ -18,11 +20,7 @@ export function TopContent() {
               }}
               component="span"
             >
-              <Trans>
-                Chain Fusion technology enables blockchains like Bitcoin, Ethereum, and Solana to be "fused" together
-                with ICP, creating a seamless single-chain end-user experience for multi-chain DApps. Mint native
-                Bitcoin, Ethereum, USDC, USDT, and more on ICP using the ck-Bridge.
-              </Trans>
+              {t("ck.description")}
             </Typography>
             &nbsp;
             <TextButton
@@ -33,7 +31,7 @@ export function TopContent() {
               }}
               link="https://internetcomputer.org/docs/current/developer-docs/smart-contracts/signatures/t-ecdsa"
             >
-              <Trans>View All</Trans>
+              {t("common.view.all")}
             </TextButton>
           </Typography>
         }

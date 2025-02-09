@@ -1,13 +1,13 @@
 import { Box, Avatar } from "@mui/material";
 import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import { t, Trans } from "@lingui/macro";
 import { TextButton } from "components/index";
 import { BURN_FIELD } from "constants/swap";
 import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
 import { getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { StepContents } from "types/step";
+import i18n from "i18n/index";
 
 export interface DecreaseLiquidityStepsProps {
   formattedAmounts: { [key in BURN_FIELD]?: string };
@@ -81,7 +81,7 @@ export function getDecreaseLiquiditySteps({
             title: `Remove liquidity ${currencyA?.symbol} and ${currencyB.symbol}`,
             step: 0,
             children: [
-              { label: t`Position ID`, value: positionId.toString() },
+              { label: i18n.t("common.position.id"), value: positionId.toString() },
               {
                 label: `${currencyA.symbol}`,
                 value: <TokenAmount amount={toFormat(formattedAmounts[BURN_FIELD.CURRENCY_A])} logo={currencyA.logo} />,
@@ -95,49 +95,37 @@ export function getDecreaseLiquiditySteps({
           !keepTokenInPools
             ? {
                 title: withdrawAmountALessThanZero
-                  ? t`Unable to withdraw ${currencyA.symbol}`
-                  : t`Withdraw ${currencyA.symbol}`,
+                  ? i18n.t("common.unable.withdraw", { symbol: currencyA.symbol })
+                  : i18n.t("common.withdraw.amount", { symbol: currencyA.symbol }),
                 step: 1,
                 children: [
                   {
-                    label: t`Amount`,
+                    label: i18n.t("common.amount"),
                     value: <TokenAmount amount={withdrawAmountA} logo={currencyA.logo} />,
                   },
-                  { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+                  { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
                 ],
-                skipError: withdrawAmountALessThanZero
-                  ? t`The amount of withdrawal is less than the transfer fee`
-                  : undefined,
-                errorActions: [
-                  <TextButton onClick={handleReclaim}>
-                    <Trans>Reclaim</Trans>
-                  </TextButton>,
-                ],
-                errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+                skipError: withdrawAmountALessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+                errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+                errorMessage: i18n.t("common.check.balance.tips"),
               }
             : null,
           !keepTokenInPools
             ? {
                 title: withdrawAmountBLessThanZero
-                  ? t`Unable to withdraw ${currencyB.symbol}`
-                  : t`Withdraw ${currencyB.symbol}`,
+                  ? i18n.t("common.unable.withdraw", { symbol: currencyB.symbol })
+                  : i18n.t("common.withdraw.amount", { symbol: currencyB.symbol }),
                 step: 2,
                 children: [
                   {
-                    label: t`Amount`,
+                    label: i18n.t("common.amount"),
                     value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
                   },
-                  { label: t`Principal ID`, value: shorten(principal?.toString() ?? "", 6) },
+                  { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
                 ],
-                skipError: withdrawAmountBLessThanZero
-                  ? t`The amount of withdrawal is less than the transfer fee`
-                  : undefined,
-                errorActions: [
-                  <TextButton onClick={handleReclaim}>
-                    <Trans>Reclaim</Trans>
-                  </TextButton>,
-                ],
-                errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+                skipError: withdrawAmountBLessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+                errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+                errorMessage: i18n.t("common.check.balance.tips"),
               }
             : undefined,
         ]

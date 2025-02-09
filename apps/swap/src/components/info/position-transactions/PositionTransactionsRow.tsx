@@ -6,7 +6,7 @@ import { useToken } from "hooks/index";
 import dayjs from "dayjs";
 import { shorten } from "@icpswap/utils";
 import { useMemo } from "react";
-import { Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 export interface PositionTransactionsRowProps {
   transaction: PositionTransaction;
@@ -14,6 +14,7 @@ export interface PositionTransactionsRowProps {
 }
 
 export function PositionTransactionsRow({ transaction, wrapperClassName }: PositionTransactionsRowProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const positionId = useMemo(() => {
@@ -60,7 +61,7 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
               },
             }}
           >
-            <Trans>Details</Trans>
+            {t("common.details")}
           </TextButton>
         </BodyCell>
       </TableRow>

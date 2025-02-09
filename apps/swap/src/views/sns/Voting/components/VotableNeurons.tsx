@@ -1,10 +1,10 @@
-import { Trans } from "@lingui/macro";
 import { useEffect, useMemo, useState } from "react";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten } from "@icpswap/utils";
 import { Collapse, Typography, Box, Checkbox } from "components/Mui";
 import { neuronFormat, votingPowerFormat, getVotingPowers, getVotingPower } from "utils/sns/index";
 import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 export interface ProposalDetailsProps {
   voteableNeurons: Neuron[];
@@ -13,6 +13,7 @@ export interface ProposalDetailsProps {
 }
 
 export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: ProposalDetailsProps) {
+  const { t } = useTranslation();
   const [checkedNeurons, setCheckedNeurons] = useState<string[]>([]);
   const [votableOpen, setVoteableOpen] = useState(false);
 
@@ -99,17 +100,13 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
       >
         <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center", width: "fit-content" }}>
           <Typography>
-            <Trans>
-              Vote with {checkedNeurons.length}/{voteableNeurons.length} Neurons
-            </Trans>
+            {t("nns.voting.with.neurons", { checked: checkedNeurons.length, voteable: voteableNeurons.length })}
           </Typography>
 
           <ChevronDown size="18px" style={{ transform: votableOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
         </Box>
 
-        <Typography>
-          <Trans>Voting Power: {votingPowerFormat(votingPowers)}</Trans>
-        </Typography>
+        <Typography>{t("nns.voting.power.amount", { amount: votingPowerFormat(votingPowers) })}</Typography>
       </Box>
 
       <Collapse in={votableOpen}>

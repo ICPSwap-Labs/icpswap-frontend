@@ -4,7 +4,6 @@ import { Loading } from "@icpswap/ui";
 import { isMobile } from "react-device-detect";
 import useFileUpload from "hooks/useNFTUpload";
 import { getFileType } from "utils/type";
-import { t } from "@lingui/macro";
 import { Identity as CallIdentity } from "types/index";
 import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
 
@@ -170,18 +169,18 @@ const Upload = forwardRef(
       }
 
       if (!targetFile) {
-        setFileError(t`No file selected`);
+        setFileError(`No file selected`);
         return;
       }
 
       if (types.length && !types.includes(fileType)) {
-        setFileError(t`Not allowed this file type`);
+        setFileError(`Not allowed this file type`);
         return;
       }
       setFileError("");
 
       if (maxSize && targetFile.size > maxSize) {
-        setFileError(t`File is large than ${maxSize} bytes`);
+        setFileError(`File is large than ${maxSize} bytes`);
         return;
       }
       setFileError("");

@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
-import { Trans, t } from "@lingui/macro";
 import { disburseNeuronMaturity } from "@icpswap/hooks";
 import { ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
 import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
+import { useTranslation } from "react-i18next";
 
 export interface DisburseMaturityProps {
   neuron: Neuron;
@@ -21,6 +21,7 @@ export function DisburseMaturity({
   onDisburseMaturitySuccess,
   disabled,
 }: DisburseMaturityProps) {
+  const { t } = useTranslation();
   const [disburseOpen, setDisburseOpen] = useState(false);
 
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -72,7 +73,7 @@ export function DisburseMaturity({
         size="small"
         disabled={available_maturity.toString() === "0" || disabled}
       >
-        <Trans>Disburse</Trans>
+        {t("nns.disburse")}
       </Button>
 
       <ConfirmModal

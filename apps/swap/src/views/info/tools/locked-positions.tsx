@@ -1,4 +1,3 @@
-import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -7,6 +6,8 @@ import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { ToolsWrapper, SneedLockedPositions, BlackHolePositions } from "components/info/tools/index";
 import { useEffect, useState } from "react";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 enum Panel {
   BlackHole = "BlackHole",
@@ -14,11 +15,12 @@ enum Panel {
 }
 
 const panels = [
-  { value: Panel.BlackHole, label: t`Black Hole` },
-  { value: Panel.Sneed, label: t`Sneedlocked` },
+  { value: Panel.BlackHole, label: i18n.t("common.black.hole") },
+  { value: Panel.Sneed, label: i18n.t("common.sneed.locked") },
 ];
 
 export default function LockedPositions() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
   const location = useLocation();
@@ -49,8 +51,8 @@ export default function LockedPositions() {
     <InfoWrapper size="small">
       <BreadcrumbsV1
         links={[
-          { label: <Trans>Tools</Trans>, link: "/info-tools" },
-          { label: activePanel === Panel.BlackHole ? <Trans>Black Hole</Trans> : <Trans>Sneedlocked</Trans> },
+          { label: t("common.tools"), link: "/info-tools" },
+          { label: activePanel === Panel.BlackHole ? t("common.black.hole") : t("common.sneed.locked") },
         ]}
       />
 
@@ -100,9 +102,7 @@ export default function LockedPositions() {
             }}
           >
             <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
-              <Typography>
-                <Trans>Select a Pair:</Trans>
-              </Typography>
+              <Typography>{t("common.select.pair.colon")}</Typography>
 
               <SelectPair
                 value={pair}
@@ -111,11 +111,7 @@ export default function LockedPositions() {
                 showClean={false}
                 showBackground={false}
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>Please select</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.please.select")}</Typography>}
               />
             </Flex>
 

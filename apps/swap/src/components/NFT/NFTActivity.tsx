@@ -5,10 +5,10 @@ import { useTradeTxList } from "hooks/nft/trade";
 import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
 import { NoData, ListLoading } from "components/index";
 import Pagination from "components/pagination";
-import { Trans } from "@lingui/macro";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { TxRecord } from "types/index";
 import upperFirst from "lodash/upperFirst";
+import { useTranslation } from "react-i18next";
 
 export default function NFTActivity({
   canisterId,
@@ -19,6 +19,7 @@ export default function NFTActivity({
   tokenId: number;
   reload?: boolean;
 }) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -42,24 +43,11 @@ export default function NFTActivity({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              {/* <TableCell>
-                <Trans>Type</Trans>
-              </TableCell> */}
-              <TableCell>
-                <Trans>seller</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>buyer</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>price</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>status</Trans>
-              </TableCell>
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("common.seller")}</TableCell>
+              <TableCell>{t("common.buyer")}</TableCell>
+              <TableCell>{t("common.price")}</TableCell>
+              <TableCell>{t("common.status")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

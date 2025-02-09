@@ -1,13 +1,13 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "@mui/material";
 import { NoData, LoadingRow, Tooltip } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
 import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -21,6 +21,7 @@ type Balance = {
 };
 
 export function ReclaimWithPair() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const history = useHistory();
   const { poolId } = useParsedQueryString() as { poolId: string };
@@ -125,11 +126,9 @@ export function ReclaimWithPair() {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: "0 8px" }}>
-            <Typography color="text.primary">
-              <Trans>Select a pair</Trans>
-            </Typography>
+            <Typography color="text.primary">{t("common.select.a.pair")}</Typography>
 
-            {isMobile ? <Tooltip tips={<Trans>Select the trading pair you wish to withdraw.</Trans>} /> : null}
+            {isMobile ? <Tooltip tips={t("swap.reclaim.select.pair")} /> : null}
           </Box>
 
           <Box sx={{ minWidth: "200px" }}>
@@ -158,18 +157,14 @@ export function ReclaimWithPair() {
               }}
             />
 
-            <Typography sx={{ userSelect: "none" }}>
-              <Trans>Hide non-withdrawable tokens.</Trans>
-            </Typography>
+            <Typography sx={{ userSelect: "none" }}>{t("swap.reclaim.hide.tokens")}</Typography>
           </Box>
         </Box>
       </Box>
 
       {!isMobile ? (
         <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography>
-            <Trans>Select the trading pair you wish to withdraw.</Trans>
-          </Typography>
+          <Typography>{t("swap.reclaim.select.pair")}</Typography>
         </Box>
       ) : null}
 

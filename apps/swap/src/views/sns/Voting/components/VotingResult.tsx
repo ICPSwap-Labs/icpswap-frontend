@@ -1,11 +1,8 @@
-import { useTheme } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import type { Neuron, ProposalData, NervousSystemParameters } from "@icpswap/types";
 import { nowInSeconds, formatPercentage, BigNumber, shorten, toHexString } from "@icpswap/utils";
 import { CollapseText } from "components/index";
-import { Collapse, Typography, Button, Box } from "components/Mui";
-import { Theme } from "@mui/material/styles";
+import { Collapse, Typography, Button, Box, useTheme, Theme } from "components/Mui";
 import { secondsToDuration } from "@dfinity/utils";
 import {
   filterIneligibleNeurons,
@@ -15,6 +12,7 @@ import {
   secondsToDissolveDelayDuration,
 } from "utils/sns/index";
 import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { snsRewardStatus, SnsProposalRewardStatus } from "../proposal.utils";
 
 import { VotableNeurons } from "./VotableNeurons";
@@ -39,6 +37,7 @@ export function VotingResult({
   neuronSystemParameters,
   onRefresh,
 }: ProposalDetailsProps) {
+  const { t } = useTranslation();
   const theme = useTheme() as Theme;
   const [checkedNeuronIds, setCheckedNeuronIds] = useState<string[]>([]);
   const [ineligibleOpen, setIneligibleOpen] = useState(false);
@@ -165,22 +164,20 @@ export function VotingResult({
   return (
     <Box>
       <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "16px" }}>
-        <Trans>Voting Results</Trans>
+        {t("nns.voting.results")}
       </Typography>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box>
-            <Typography sx={{ color: YesColor }}>
-              <Trans>Yes</Trans>
-            </Typography>
+            <Typography sx={{ color: YesColor }}>{t("common.yes")}</Typography>
             <Typography sx={{ fontSize: "22px", fontWeight: 500, color: YesColor }}>
               {yesProportion !== undefined ? formatPercentage(yesProportion) : "--"}
             </Typography>
           </Box>
           <Box>
             <Typography align="right" sx={{ color: NoColor }}>
-              <Trans>No</Trans>
+              {t("common.no")}
             </Typography>
             <Typography sx={{ fontSize: "22px", fontWeight: 500, color: NoColor }} align="right">
               {noProportion !== undefined ? formatPercentage(noProportion) : "--"}
@@ -206,7 +203,7 @@ export function VotingResult({
                 {yes ? new BigNumber(yes).toFormat(0) : "--"}&nbsp;
               </Typography>
               <Typography sx={{ fontSize: "12px" }} component="span">
-                <Trans>Voting Power</Trans>
+                {t("nns.voting.power")}
               </Typography>
             </Typography>
 
@@ -215,22 +212,20 @@ export function VotingResult({
                 {castVotesYes !== undefined ? formatPercentage(castVotesYes) : "--"}&nbsp;
               </Typography>
               <Typography sx={{ fontSize: "12px" }} component="span">
-                <Trans>of cast votes</Trans>
+                {t("nns.voting.of.cast")}
               </Typography>
 
               <Typography sx={{ fontSize: "12px" }}>
-                <Trans>
-                  (Yes needs {immediateMajorityPercent === undefined ? "--" : `${immediateMajorityPercent}%`})
-                </Trans>
+                {t("nns.voting.yes.needs", {
+                  percent: immediateMajorityPercent === undefined ? "--" : `${immediateMajorityPercent}%`,
+                })}
               </Typography>
             </Typography>
           </Box>
 
           {isExecuted ? null : (
             <Box>
-              <Typography sx={{ fontSize: "12px", textAlign: "center" }}>
-                <Trans>Expiration date</Trans>
-              </Typography>
+              <Typography sx={{ fontSize: "12px", textAlign: "center" }}>{t("nns.voting.expiration")}</Typography>
               <Typography sx={{ fontSize: "12px", textAlign: "center", margin: "5px 0 0 0" }}>
                 {seconds ? secondsToDuration({ seconds }) : "--"}
               </Typography>
@@ -243,7 +238,7 @@ export function VotingResult({
                 {no ? new BigNumber(no).toFormat(0) : "--"}&nbsp;
               </Typography>
               <Typography sx={{ fontSize: "12px" }} component="span">
-                <Trans>Voting Power</Trans>
+                {t("nns.voting.power")}
               </Typography>
             </Typography>
 
@@ -252,7 +247,7 @@ export function VotingResult({
                 {castVotesNo !== undefined ? formatPercentage(castVotesNo) : "--"}&nbsp;
               </Typography>
               <Typography sx={{ fontSize: "12px" }} component="span">
-                <Trans>of cast votes</Trans>
+                {t("nns.voting.of.cast")}
               </Typography>
             </Typography>
           </Box>
@@ -261,7 +256,7 @@ export function VotingResult({
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         <Typography color="text.primary" fontWeight={500}>
-          <Trans>There are two ways a critical proposal can be decided:</Trans>
+          {t("nns.voting.proposal.decided")}
         </Typography>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
@@ -329,7 +324,7 @@ export function VotingResult({
                 disabled={!canVote}
                 onClick={handleAdopt}
               >
-                <Trans>Adopt</Trans>
+                {t("nns.adopt")}
               </Button>
             </Box>
 
@@ -346,7 +341,7 @@ export function VotingResult({
                 disabled={!canVote}
                 onClick={handleReject}
               >
-                <Trans>Reject</Trans>
+                {t("nns.reject")}
               </Button>
             </Box>
           </Box>
@@ -361,9 +356,7 @@ export function VotingResult({
             />
           </Box>
         ) : (
-          <Typography sx={{ margin: "10px 0 0 0" }}>
-            <Trans>You don't have any neurons to vote</Trans>
-          </Typography>
+          <Typography sx={{ margin: "10px 0 0 0" }}>{t("nns.voting.no.neurons.to.vote")}</Typography>
         )}
 
         <VotedNeurons votedNeurons={votedNeurons} proposal_data={proposal_data} />
@@ -374,20 +367,12 @@ export function VotingResult({
               sx={{ display: "flex", gap: "0 5px", alignItems: "center", cursor: "pointer" }}
               onClick={() => setIneligibleOpen(!ineligibleOpen)}
             >
-              <Typography>
-                <Trans>{ineligibleNeurons.length} Ineligible neurons</Trans>
-              </Typography>
+              <Typography>{t("nns.voting.ineligible.neurons", { number: ineligibleNeurons.length })}</Typography>
               <ChevronDown size="18px" style={{ transform: ineligibleOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
             </Box>
             <Collapse in={ineligibleOpen}>
               <Box sx={{ padding: "12px" }}>
-                <Typography sx={{ fontSize: "12px" }}>
-                  <Trans>
-                    The following neurons are not eligible to vote. They either have dissolve delays of less than 1
-                    month, 1 day at the time when the proposal was submitted, or they were created after the proposal
-                    was submitted.
-                  </Trans>
-                </Typography>
+                <Typography sx={{ fontSize: "12px" }}>{t("nns.voting.eligible.descriptions")}</Typography>
 
                 <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "10px 0" }}>
                   {ineligibleNeurons.map((ineligibleNeuron, index) => (
@@ -409,9 +394,9 @@ export function VotingResult({
                       </Typography>
                       {minimumDissolveDelaySeconds !== undefined ? (
                         <Typography sx={{ fontSize: "12px" }}>
-                          <Trans>
-                            dissolve delay &lt; {secondsToDissolveDelayDuration(minimumDissolveDelaySeconds)}
-                          </Trans>
+                          {t("nns.voting.dissolve.delay.less", {
+                            duration: secondsToDissolveDelayDuration(minimumDissolveDelaySeconds),
+                          })}
                         </Typography>
                       ) : null}
                     </Box>

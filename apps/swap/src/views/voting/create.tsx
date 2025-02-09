@@ -6,7 +6,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
 import { type StatusResult } from "@icpswap/types";
-import { Trans, t } from "@lingui/macro";
 import { timeParser } from "utils/index";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -22,6 +21,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export type ExcelPower = {
   "Address(Account ID or Principal ID)": string;
@@ -47,6 +47,7 @@ export type Values = {
 };
 
 export default function VotingCreateProposal() {
+  const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
   const history = useHistory();
 
@@ -278,14 +279,12 @@ export default function VotingCreateProposal() {
                   }}
                   onClick={() => setPreview(true)}
                 >
-                  <Typography fontSize="12px">
-                    <Trans>Preview</Trans>
-                  </Typography>
+                  <Typography fontSize="12px">{t("common.preview")}</Typography>
                 </Grid>
               </Grid>
 
               <Box>
-                <FilledTextField label={<Trans>Title</Trans>} onChange={(value) => onFiledChange(value, "title")} />
+                <FilledTextField label={t("common.title")} onChange={(value) => onFiledChange(value, "title")} />
               </Box>
 
               <Box mt="20px">
@@ -297,9 +296,7 @@ export default function VotingCreateProposal() {
               </Box>
 
               <Box mt="20px">
-                <Typography color="text.secondary">
-                  <Trans>Start/End Time</Trans>
-                </Typography>
+                <Typography color="text.secondary">{t("common.start.end.time")}</Typography>
                 <Box mt={2}>
                   <Box
                     sx={{
@@ -359,7 +356,7 @@ export default function VotingCreateProposal() {
 
               <Box mt="20px">
                 <NumberFilledTextField
-                  label={<Trans>Amount of voters</Trans>}
+                  label={t("voting.amount.voters")}
                   value={values.userAmount}
                   onChange={(value: number) => onFiledChange(value, "userAmount")}
                   numericProps={{
@@ -374,9 +371,7 @@ export default function VotingCreateProposal() {
             <Box mt="20px">
               <Grid container>
                 <Grid item xs>
-                  <Typography color="text.secondary">
-                    <Trans>Set up the Choices</Trans>
-                  </Typography>
+                  <Typography color="text.secondary">{t("voting.set.choices")}</Typography>
                 </Grid>
                 <Grid
                   container
@@ -392,9 +387,7 @@ export default function VotingCreateProposal() {
                   onClick={handleOptionsAdd}
                 >
                   <AddIcon fontSize="small" />
-                  <Typography color="text.primary">
-                    <Trans>Add</Trans>
-                  </Typography>
+                  <Typography color="text.primary">{t("common.add")}</Typography>
                 </Grid>
               </Grid>
 
@@ -448,13 +441,11 @@ export default function VotingCreateProposal() {
                       size="large"
                       startIcon={importLoading ? <CircularProgress size={24} color="inherit" /> : null}
                     >
-                      <Trans>Import list of voting power</Trans>
+                      {t("voting.import.power")}
                     </Button>
                   </label>
                   <Grid container justifyContent="flex-end" mt="4px">
-                    <TextButton onClick={handleDownloadTemplate}>
-                      <Trans>Download the template</Trans>
-                    </TextButton>
+                    <TextButton onClick={handleDownloadTemplate}>{t("voting.download.template")}</TextButton>
                   </Grid>
                 </Box>
                 {!!values.powers?.length || !!values.invalidPowers?.length ? (
@@ -467,11 +458,11 @@ export default function VotingCreateProposal() {
                     }}
                   >
                     <Typography fontSize="12px">
-                      <Trans>{values.powers.length} valid voters</Trans>
+                      {t("voting.valid.voters", { amount: values.powers.length })}
                     </Typography>
                     {values.invalidPowers?.length ? (
                       <Typography fontSize="12px">
-                        <Trans>{values.invalidPowers.length} invalid voters</Trans> (
+                        {t("voting.invalid.voters", { amount: values.powers.length })}(
                         {values.invalidPowers.reduce((prev, curr) => {
                           return `${prev ? `${prev}, ` : ""}row ${curr.__rowNum__ + 1}`;
                         }, "")}
@@ -517,9 +508,7 @@ export default function VotingCreateProposal() {
                       }}
                       onClick={() => setPreview(false)}
                     >
-                      <Typography fontSize="12px">
-                        <Trans>Back</Trans>
-                      </Typography>
+                      <Typography fontSize="12px">{t("common.back")}</Typography>
                     </Grid>
                   </Grid>
                   <Preview title={values.title} content={values.content} />

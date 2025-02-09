@@ -6,7 +6,6 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
-import { Trans } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionContext, PositionRangeState } from "components/swap/index";
@@ -16,6 +15,7 @@ import { PositionFilterState, PositionSort } from "types/swap";
 import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
 import { LimitLabel } from "components/swap/limit-order/index";
+import { useTranslation } from "react-i18next";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -120,6 +120,7 @@ export function PositionCard({
   filterState,
   isLimit,
 }: PositionCardProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
@@ -328,9 +329,7 @@ export function PositionCard({
               },
             }}
           >
-            <Typography className={classes.label}>
-              <Trans>Current Price</Trans>
-            </Typography>
+            <Typography className={classes.label}>{t("common.current.price")}</Typography>
 
             <Flex
               gap="0 4px"
@@ -362,9 +361,7 @@ export function PositionCard({
               justify="flex-end"
               sx={{ width: "80px", "@media(max-width: 640px)": { width: "fit-content" } }}
             >
-              <Typography className={classes.label}>
-                <Trans>Value</Trans>
-              </Typography>
+              <Typography className={classes.label}>{t("common.value")}</Typography>
 
               <Flex
                 justify="flex-end"
@@ -383,9 +380,7 @@ export function PositionCard({
             justify="flex-end"
             sx={{ width: "110px", "@media(max-width: 640px)": { width: "fit-content" } }}
           >
-            <Typography className={classes.label}>
-              <Trans>Uncollected Fees</Trans>
-            </Typography>
+            <Typography className={classes.label}>{t("common.uncollected.fee")}</Typography>
 
             <Flex
               fullWidth
@@ -421,7 +416,7 @@ export function PositionCard({
                 }}
                 color="text.theme-secondary"
               >
-                <Trans>Detail</Trans>
+                {t("common.details")}
               </Typography>
 
               {detailShow ? (

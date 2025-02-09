@@ -1,5 +1,4 @@
 import { Box, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useMemo } from "react";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import dayjs from "dayjs";
@@ -7,6 +6,7 @@ import { useTokenSupply } from "hooks/token/calls";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { ItemDisplay } from "./ItemDisplay";
 
@@ -19,6 +19,7 @@ export interface LaunchDetailProps {
 }
 
 export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }: LaunchDetailProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { result: total_supply } = useTokenSupply(ledger_id);

@@ -1,13 +1,14 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
-import { Trans } from "@lingui/macro";
 import { ArrowRight } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 interface UserLimitOrdersProps {
   onClick: () => void;
 }
 
 export function UserLimitPanel({ onClick }: UserLimitOrdersProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   return (
@@ -23,9 +24,7 @@ export function UserLimitPanel({ onClick }: UserLimitOrdersProps) {
       }}
     >
       <Flex justify="space-between" onClick={onClick}>
-        <Typography>
-          <Trans>Limit Order History</Trans>
-        </Typography>
+        <Typography>{t("limit.order.history")}</Typography>
         <ArrowRight size={18} />
       </Flex>
     </Box>

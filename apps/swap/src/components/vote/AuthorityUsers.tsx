@@ -1,15 +1,26 @@
 import { useState } from "react";
-import { Grid, Typography, Button , Table, TableContainer, TableCell, TableRow, TableHead, TableBody } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Button,
+  Table,
+  TableContainer,
+  TableCell,
+  TableRow,
+  TableHead,
+  TableBody,
+} from "@mui/material";
 import { pageArgsFormat } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { Pagination, PaginationType, NoData, MainCard, ListLoading } from "components/index";
 import { useVotingAuthorityUsers } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddAuthorityUser from "components/vote/AddAuthorityUser";
 import DeleteAuthorityUser from "components/vote/DeleteAuthorityUser";
+import { useTranslation } from "react-i18next";
 
 export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
+  const { t } = useTranslation();
   const [addShow, setAddShow] = useState(false);
   const [deletedUser, setDeletedUser] = useState<undefined | string>(undefined);
   const [refresh, setRefresh] = useState(false);
@@ -33,7 +44,7 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
     <MainCard>
       <Grid container alignItems="center" justifyContent="flex-end">
         <Button variant="contained" size="large" onClick={() => setAddShow(true)}>
-          <Trans>Add User</Trans>
+          {t("vote.add.user")}
         </Button>
       </Grid>
 
@@ -41,9 +52,7 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Principal ID</Trans>
-              </TableCell>
+              <TableCell>{t("common.principal.id")}</TableCell>
               <TableCell>&nbsp;</TableCell>
             </TableRow>
           </TableHead>
@@ -56,7 +65,7 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
                 </TableCell>
                 <TableCell>
                   <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => setDeletedUser(user.toString())}>
-                    <Trans>Delete</Trans>
+                    {t("common.delete")}
                   </Button>
                 </TableCell>
               </TableRow>

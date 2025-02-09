@@ -21,7 +21,6 @@ import { usePlaceOrderCallback, useLimitSupported } from "hooks/swap/limit-order
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { Trans, t } from "@lingui/macro";
 import { AuthButton } from "components/index";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -30,6 +29,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { SwapLimitPrice, LimitPriceRef } from "./Price";
@@ -54,6 +54,7 @@ export const PlaceOrder = forwardRef(
     { ui = "normal", onInputTokenChange, onOutputTokenChange, onTradePoolIdChange }: PlaceOrderProps,
     ref: Ref<PlaceOrderRef>,
   ) => {
+    const { t } = useTranslation();
     const history = useHistory();
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
@@ -233,7 +234,10 @@ export const PlaceOrder = forwardRef(
       const amount0 = trade.inputAmount.toSignificant(6, { groupSeparator: "," });
 
       const loadingKey = openLoadingTip(
-        t`Submit a limit order of ${amount0} ${inputToken.symbol} for the ${inputToken.symbol}/${outputToken.symbol} trading pair`,
+        t("limit.submit.loading", {
+          amount: `${amount0} ${inputToken.symbol}`,
+          pair: `${inputToken.symbol}/${outputToken.symbol}`,
+        }),
         {
           extraContent: <StepViewButton step={key} />,
         },
@@ -382,15 +386,13 @@ export const PlaceOrder = forwardRef(
           }}
         >
           {swapInputError ||
-            (isLoadingRoute ? (
-              <Trans>Loading route</Trans>
-            ) : isNoRouteFound ? (
-              <Trans>No route for this trade.</Trans>
-            ) : isPoolNotChecked ? (
-              <Trans>Waiting for verifying the pool...</Trans>
-            ) : (
-              <Trans>Submit Limit Order</Trans>
-            ))}
+            (isLoadingRoute
+              ? t("swap.loading.route")
+              : isNoRouteFound
+              ? t("swap.no.route")
+              : isPoolNotChecked
+              ? t("swap.waiting.verifying")
+              : t("limit.submit"))}
         </AuthButton>
 
         {confirmModalShow && trade && (

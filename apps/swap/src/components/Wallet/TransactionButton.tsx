@@ -1,16 +1,15 @@
 import { useState, useCallback, useRef } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { Flex, MenuWrapper, Image, ALink } from "@icpswap/ui";
 import { getTransactionExplorerLink, TransactionLink } from "@icpswap/hooks";
 
 import { Button } from "./Button";
 
 const TRANSACTIONS: { label: string; img: string; value: TransactionLink }[] = [
-  { label: t`IC Explorer`, img: "/images/explorer/ic-explorer.svg", value: "ic-explorer" },
-  { label: t`Internet Computer Dashboard`, img: "/images/explorer/ii.svg", value: "dashboard" },
-  { label: t`NFTGeek`, img: "/images/explorer/NFTGeek.svg", value: "NFTGeek" },
-  { label: t`IC.House`, img: "/images/explorer/ic-house.svg", value: "ic-house" },
+  { label: `IC Explorer`, img: "/images/explorer/ic-explorer.svg", value: "ic-explorer" },
+  { label: `Internet Computer Dashboard`, img: "/images/explorer/ii.svg", value: "dashboard" },
+  { label: `NFTGeek`, img: "/images/explorer/NFTGeek.svg", value: "NFTGeek" },
+  { label: `IC.House`, img: "/images/explorer/ic-house.svg", value: "ic-house" },
 ];
 
 export interface TransactionButtonProps {

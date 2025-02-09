@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import { Modal, FilledTextField } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { isValidPrincipal } from "@icpswap/utils";
 import { addVotingAuthorityUsers } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
@@ -9,6 +8,7 @@ import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity
 import { Identity as CallIdentity } from "types/global";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 export interface AddAuthorityUserProps {
   canisterId: string;
@@ -18,6 +18,7 @@ export interface AddAuthorityUserProps {
 }
 
 export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess }: AddAuthorityUserProps) {
+  const { t } = useTranslation();
   const [user, setUser] = useState("");
 
   const [openTip, closeTip] = useTips();
@@ -29,7 +30,7 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
   const handleAdd = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
     if (!identity || loading) return;
 
-    const tipKey = openTip(t`Add user ${user}`, MessageTypes.loading);
+    const tipKey = openTip(`Add user ${user}`, MessageTypes.loading);
 
     onClose();
 
@@ -56,13 +57,13 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
         <Modal
           open={open}
           onClose={onClose}
-          title={t`Add User`}
+          title={t("vote.add.user")}
           showCancel
           showConfirm
           onCancel={onClose}
           onConfirm={submit}
           confirmDisabled={!!error || loading}
-          confirmText={error || <Trans>Confirm</Trans>}
+          confirmText={error || t("common.confirm")}
         >
           <FilledTextField placeholder={t`Enter the user's principal id`} onChange={handleChange} />
           <Box sx={{ height: "40px" }} />

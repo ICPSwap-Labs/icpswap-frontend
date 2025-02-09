@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { Trans } from "@lingui/macro";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitOrder, Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
 import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
+import { useTranslation } from "react-i18next";
 
 import { LimitOrderRow } from "./LimitOrderRow";
 
@@ -37,6 +37,7 @@ export function LimitOrdersTableUI({
   wrapperClassName,
   setLimitOrdersRefreshTrigger,
 }: PositionTableUIProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const [, pool] = usePoolByPoolId(poolId);
@@ -52,26 +53,11 @@ export function LimitOrdersTableUI({
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ minWidth: "1096px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell>
-              <Trans>Time</Trans>
-            </HeaderCell>
-
-            <HeaderCell>
-              <Trans>You pay</Trans>
-            </HeaderCell>
-
-            <HeaderCell>
-              <Trans>You receive</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>Limit Price</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>Filled</Trans>
-            </HeaderCell>
-
+            <HeaderCell>{t("common.time")}</HeaderCell>
+            <HeaderCell>{t("common.you.pay")}</HeaderCell>
+            <HeaderCell>{t("common.you.receive")}</HeaderCell>
+            <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
+            <HeaderCell align="right">{t("common.filled")}</HeaderCell>
             <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
 

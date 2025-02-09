@@ -3,12 +3,12 @@ import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui
 import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { ICP } from "@icpswap/tokens";
 import { SwapProContext } from "components/swap/pro";
+import { useTranslation } from "react-i18next";
 
 import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 
@@ -54,6 +54,7 @@ export interface TokenChartInfoProps {
 }
 
 export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartInfoProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { token } = useContext(SwapProContext);
@@ -164,7 +165,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
 
           <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
             <Button className="secondary" variant="contained">
-              <Trans>Add Liquidity</Trans>
+              {t("common.liquidity.add")}
             </Button>
           </Link>
 
@@ -175,7 +176,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
             style={{ textDecoration: "none" }}
           >
             <Button className="secondary" variant="contained">
-              <Trans>Token Details</Trans>
+              {t("common.token.details")}
             </Button>
           </a>
         </Box>

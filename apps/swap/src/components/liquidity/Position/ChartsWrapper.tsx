@@ -3,8 +3,8 @@ import { useTheme, Box } from "components/Mui";
 import { MainCard } from "components/index";
 import { Position } from "@icpswap/swap-sdk";
 import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
-import { t } from "@lingui/macro";
 import { ChartTimeEnum } from "@icpswap/types";
+import i18n from "i18n/index";
 
 import { LiquidityCharts, PositionValueChart, PositionFeesChart, PositionAPRChart } from "./Charts";
 
@@ -16,21 +16,21 @@ enum Charts {
 }
 
 const Tabs = [
-  { label: t`Price Range`, value: Charts.PriceRange },
-  { label: t`Position Value`, value: Charts.PositionValue },
-  { label: t`APR`, value: Charts.APR },
-  { label: t`Fees`, value: Charts.Fees },
+  { label: i18n.t("common.price.range"), value: Charts.PriceRange },
+  { label: i18n.t("liquidity.position.value"), value: Charts.PositionValue },
+  { label: i18n.t("common.apr"), value: Charts.APR },
+  { label: i18n.t("common.fees"), value: Charts.Fees },
 ];
 
 const PriceRangeTimeTabs = [
-  { label: t`24H`, value: ChartTimeEnum["24H"] },
-  { label: t`7D`, value: ChartTimeEnum["7D"] },
-  { label: t`30D`, value: ChartTimeEnum["30D"] },
+  { label: i18n.t("24H"), value: ChartTimeEnum["24H"] },
+  { label: i18n.t("7D"), value: ChartTimeEnum["7D"] },
+  { label: i18n.t("30D"), value: ChartTimeEnum["30D"] },
 ];
 
 const APRTimeTabs = [
-  { label: t`7D`, value: ChartTimeEnum["7D"] },
-  { label: t`30D`, value: ChartTimeEnum["30D"] },
+  { label: i18n.t("7D"), value: ChartTimeEnum["7D"] },
+  { label: i18n.t("30D"), value: ChartTimeEnum["30D"] },
 ];
 
 interface ChartsWrapperProps {

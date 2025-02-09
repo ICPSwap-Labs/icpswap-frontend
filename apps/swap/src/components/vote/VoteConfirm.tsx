@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
-import { Typography, Box, Grid } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Box, Grid, useTheme } from "components/Mui";
 import Modal from "components/modal/index";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 export default function VoteConfirm({
   open,
@@ -20,7 +18,8 @@ export default function VoteConfirm({
   powers: bigint | undefined | null;
   noPower: boolean;
 }) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   return (
     <Modal
@@ -31,7 +30,7 @@ export default function VoteConfirm({
       confirmDisabled={noPower}
       onConfirm={onConfirm}
       onCancel={onClose}
-      confirmText={noPower ? <Trans>No powers</Trans> : <Trans>Vote</Trans>}
+      confirmText={noPower ? t("voting.no.powers") : t("common.vote")}
     >
       <Grid container alignItems="center" justifyContent="center">
         <Typography
@@ -41,7 +40,7 @@ export default function VoteConfirm({
           color="text.primary"
           align="center"
         >
-          <Trans>Are you sure want to cast this vote? This action cannot be undone</Trans>
+          {t("voting.cast.description")}
         </Typography>
       </Grid>
 
@@ -55,18 +54,14 @@ export default function VoteConfirm({
       >
         <Grid container>
           <Grid item xs>
-            <Typography fontWeight={600}>
-              <Trans>Options</Trans>
-            </Typography>
+            <Typography fontWeight={600}>{t("common.options")}</Typography>
           </Grid>
           <Typography color="text.primary">{optionLabel}</Typography>
         </Grid>
 
         <Grid container sx={{ marginTop: "24px" }}>
           <Grid item xs>
-            <Typography fontWeight={600}>
-              <Trans>Your voting power</Trans>
-            </Typography>
+            <Typography fontWeight={600}>{t("voting.your.power")}</Typography>
           </Grid>
           <Typography color="text.primary">{String(powers ?? BigInt(0))} Votes</Typography>
         </Grid>

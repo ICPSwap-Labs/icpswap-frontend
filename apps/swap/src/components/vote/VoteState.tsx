@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { Typography, Box } from "@mui/material";
-import { t } from "@lingui/macro";
+import { Typography, Box } from "components/Mui";
 import { ProposalInfo } from "@icpswap/types";
 import { useCounter } from "hooks/useTimeCounter";
 import { ProposalLabel, ProposalState } from "constants/vote";
@@ -133,10 +132,10 @@ export function VoteStateCount({ proposal }: VoteItemProps) {
         }}
       >
         {proposalState === ProposalState.ACTIVE
-          ? t`${count?.hour}:${count?.min}:${count?.sec} left`
+          ? `${count?.hour}:${count?.min}:${count?.sec} left`
           : proposalState === ProposalState.PENDING
-          ? t`start in ${count?.hour}:${count?.min}:${count?.sec}`
-          : t`${String(total)} Votes`}
+          ? `start in ${count?.hour}:${count?.min}:${count?.sec}`
+          : `${String(total)} Votes`}
       </Typography>
     </Box>
   ) : null;

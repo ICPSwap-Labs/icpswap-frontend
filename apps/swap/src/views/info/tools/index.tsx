@@ -1,28 +1,36 @@
 import { Typography, Box, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { InfoWrapper } from "components/index";
 import { Flex, Image, Link } from "@icpswap/ui";
+import i18n from "i18n/index";
 
 const tools = [
-  { label: t`Burn tool`, image: "/images/info/tools/Burn.svg", path: "/info-tools/burn" },
+  { label: i18n.t`Burn tool`, image: "/images/info/tools/Burn.svg", path: "/info-tools/burn" },
   {
-    label: t`Swap Transactions`,
+    label: i18n.t`Swap Transactions`,
     image: "/images/info/tools/SwapTransactions.svg",
     path: "/info-tools/swap-transactions",
   },
-  { label: t`Liquidity Positions`, image: "/images/info/tools/Positions.svg", path: "/info-tools/positions" },
+  { label: i18n.t`Liquidity Positions`, image: "/images/info/tools/Positions.svg", path: "/info-tools/positions" },
   {
-    label: t`Users’ Pool Balances`,
+    label: i18n.t`Users’ Pool Balances`,
     image: "/images/info/tools/UserPoolBalance.svg",
     path: "/info-tools/user-balances",
   },
-  { label: t`Wallet Valuation`, image: "/images/info/tools/WalletValuation.svg", path: "/info-tools/valuation" },
   {
-    label: t`Position Transfer`,
+    label: i18n.t("tools.wallet.valuation"),
+    image: "/images/info/tools/WalletValuation.svg",
+    path: "/info-tools/valuation",
+  },
+  {
+    label: i18n.t("common.position.transfer"),
     image: "/images/info/tools/PositionTransfer.svg",
     path: "/info-tools/position-transactions",
   },
-  { label: t`Locked Positions`, image: "/images/info/tools/LockedPositions.svg", path: "/info-tools/locked-positions" },
+  {
+    label: i18n.t`Locked Positions`,
+    image: "/images/info/tools/LockedPositions.svg",
+    path: "/info-tools/locked-positions",
+  },
 ];
 
 export default function Tools() {

@@ -9,10 +9,10 @@ import {
   toSignificantWithGroupSeparator,
   BigNumber,
 } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useUSDPriceById, useRefreshTriggerManager } from "hooks/index";
 import { CollectFees } from "components/liquidity/CollectFees";
+import { useTranslation } from "react-i18next";
 
 export interface UncollectedFeesProps {
   position: Position | undefined;
@@ -21,6 +21,7 @@ export interface UncollectedFeesProps {
 }
 
 export function UncollectedFees({ position, positionId, isOwner }: UncollectedFeesProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("CollectFees");
@@ -73,7 +74,7 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start">
         <Typography color="text.primary" fontWeight={500}>
-          Uncollected Fees
+          {t("common.uncollected.fee")}
         </Typography>
 
         <Flex fullWidth justify="space-between">
@@ -94,7 +95,7 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
                 sx={{ height: "44px", background: theme.colors.secondaryMain }}
                 disabled={disableCollect}
               >
-                <Trans>Collect Fees</Trans>
+                {t("common.collect.fees")}
               </Button>
             </CollectFees>
           ) : null}

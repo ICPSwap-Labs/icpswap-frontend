@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from "react";
 import { Typography, Button, Box } from "components/Mui";
 import { MainCard, Flex, TokenImage, NumberTextField, MaxButton, StepViewButton } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
   formatDollarAmount,
@@ -18,6 +17,7 @@ import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import PercentageSlider from "components/PercentageSlider/ui";
 import { useStakingPoolState } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export interface StakeProps {
   poolId: string | undefined;
@@ -29,6 +29,7 @@ export interface StakeProps {
 }
 
 export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onStakeSuccess }: StakeProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [percent, setPercent] = useState(0);
   const [amount, setAmount] = useState<string>("");
@@ -120,14 +121,15 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   };
 
   const error = useMemo(() => {
-    if (!state) return t`Stake`;
-    if (state !== StakingState.LIVE) return t`Stake`;
-    if (!stakeToken || !balance) return t`Stake`;
-    if (!amount) return t`Enter the amount`;
-    if (new BigNumber(amount).isEqualTo(0)) return t`Amount must be greater than 0`;
-    if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount)) return t`Insufficient balance`;
+    if (!state) return t("common.stake");
+    if (state !== StakingState.LIVE) return t("common.stake");
+    if (!stakeToken || !balance) return t("common.stake");
+    if (!amount) return t("common.error.input.amount");
+    if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.greater.than", { amount: 0 });
+    if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount))
+      return t`t("common.error.insufficient.balance");`;
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))
-      return t`Amount must be greater than the transfer fee`;
+      return t("common.error.amount.greater.than.fee");
 
     return null;
   }, [amount, balance, stakeToken, state]);
@@ -188,7 +190,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
         <Flex justify="space-between" sx={{ margin: "8px 0 0 0", width: "100%" }}>
           <Flex gap="0 5px">
             <Typography>
-              <Trans>Balance:</Trans>&nbsp;
+              {t("common.balance.colon")}&nbsp;
               {balance && stakeToken
                 ? toSignificantWithGroupSeparator(parseTokenAmount(balance, stakeToken.decimals).toString(), 8)
                 : "--"}
@@ -216,7 +218,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
           disabled={!!error}
           onClick={handleStaking}
         >
-          {error ?? <Trans>Stake</Trans>}
+          {error ?? t("common.stake")}
         </Button>
       </MainCard>
     </>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Modal from "components/modal/index";
-import { Trans, t } from "@lingui/macro";
 import type { EXTCollection } from "@icpswap/types";
 import { NFT_STANDARDS } from "@icpswap/constants";
 import { FilledTextField } from "components/index";
@@ -8,6 +7,7 @@ import { useEXTAllCollections } from "@icpswap/hooks";
 import { Button, Box } from "@mui/material";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useEXTManager } from "store/nft/hooks";
+import { useTranslation } from "react-i18next";
 
 export const Standards = [{ label: "EXT", value: NFT_STANDARDS.EXT }];
 
@@ -43,6 +43,7 @@ export function WarningIcon() {
 }
 
 export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState(0);
   const [metadata, setMetadata] = useState<null | undefined | EXTCollection>(null);
   const [values, setValues] = useState<Value>({ standard: NFT_STANDARDS.EXT } as Value);
@@ -128,80 +129,6 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
         />
       </Box>
 
-      {/* {!checkFailed && metadata ? (
-        <Box mt="40px">
-          <Grid container>
-            <Avatar sx={{ width: "48px", height: "48px", marginRight: "12px" }} src={metadata?.avatar ?? ""}>
-              &nbsp;
-            </Avatar>
-            <Grid item xs>
-              <Grid container alignItems="center">
-                <Typography fontSize="16px" fontWeight="500" component="span" color="#ffffff">
-                  ({metadata.name})
-                </Typography>
-                <Grid item xs ml="8px">
-                  <TokenStandardLabel standard={values.standard} />
-                </Grid>
-              </Grid>
-              <Typography sx={{ marginTop: "8px" }}>{values.id}</Typography>
-              <Box mt="10px">
-                <TextButton link={`${INFO_URL}/token/details/${values.id}`}>
-                  <Trans>View On Info</Trans>
-                </TextButton>
-              </Box>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            mt="24px"
-            sx={{
-              background: "rgba(183, 156, 74, 0.2)",
-              border: "1px solid #B79C4A",
-              borderRadius: "12px",
-              padding: "16px 14px",
-            }}
-          >
-            <Box sx={{ position: "relative", top: "5px" }}>
-              <WarningIcon />
-            </Box>
-            <Grid item xs ml="16px">
-              <Typography color="#B79C4A" sx={{ lineHeight: "23px" }}>
-                <Trans>
-                  Anyone can create a token on Internet Computer with any name and LOGO, including creating fake
-                  versions of existing tokens and tokens that claim to represent projects that do not have a token.
-                </Trans>
-              </Typography>
-
-              <Typography color="#B79C4A" mt="20px" sx={{ lineHeight: "23px" }}>
-                <Trans>
-                  These risks are always present. If you purchase these fake tokens, it may result in a loss of assets.
-                  Please DYOR before investing!
-                </Trans>
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid container alignItems="center" mt="24px">
-            <Checkbox
-              checked={riskWarning}
-              onChange={({ target: { checked } }) => {
-                setRiskWarning(checked);
-              }}
-              sx={{
-                padding: "0",
-              }}
-            />
-
-            <Grid item xs ml="4px">
-              <Typography sx={{ cursor: "pointer" }} onClick={() => setRiskWarning(!riskWarning)}>
-                <Trans>I have read the risk warning carefully and agree to take the risk myself</Trans>
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-      ) : null} */}
-
       <Box mt="30px">
         <Button
           variant="contained"
@@ -209,9 +136,8 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
           fullWidth
           disabled={!!error || (!riskWarning && step === 1)}
           onClick={handleImport}
-          // startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {error || (step === 1 ? <Trans>Confirm</Trans> : <Trans>Import</Trans>)}
+          {error || (step === 1 ? t("common.confirm") : t("common,import"))}
         </Button>
       </Box>
     </Modal>

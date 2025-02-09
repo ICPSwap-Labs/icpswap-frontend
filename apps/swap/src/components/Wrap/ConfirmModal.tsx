@@ -1,12 +1,10 @@
 import SwapModal from "components/modal/swap";
-import { Typography, Box, Grid, Button, CircularProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Box, Grid, Button, CircularProgress, makeStyles, Theme } from "components/Mui";
 import { ArrowRightAlt } from "@mui/icons-material";
-import { t } from "@lingui/macro";
 import { SWAP_FIELD } from "constants/swap";
 import { Token } from "@icpswap/swap-sdk";
-import { Theme } from "@mui/material/styles";
 import { TokenImage } from "components/index";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -75,10 +73,11 @@ export default function ConfirmModal({
   onConfirm,
   onClose,
 }: ConfirmModalProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   return (
-    <SwapModal open={open} title={isWrap ? t`Confirm Wrap` : t`Confirm Unwrap`} onClose={onClose}>
+    <SwapModal open={open} title={isWrap ? t("wrap.confirm") : t("unwrap.confirm")} onClose={onClose}>
       <Box>
         <Box className={classes.transferBox}>
           <SwapCurrency currency={inputCurrency} currencyAmount={formattedAmounts?.[SWAP_FIELD.INPUT]} />
@@ -97,7 +96,7 @@ export default function ConfirmModal({
           disabled={loading}
           startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {loading ? "" : isWrap ? t`Confirm Wrap` : t`Confirm Unwrap`}
+          {loading ? "" : isWrap ? t("wrap.confirm") : t("unwrap.confirm")}
         </Button>
       </Grid>
     </SwapModal>

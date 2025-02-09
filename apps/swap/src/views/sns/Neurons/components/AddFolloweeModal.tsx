@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, CircularProgress } from "components/Mui";
 import { toHexString, hexToBytes } from "@icpswap/utils";
 import { setNeuronFollows } from "@icpswap/hooks";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { Modal, FilledTextField } from "components/index";
 import { Neuron } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 export interface AddFolloweeModalProps {
   open: boolean;
@@ -27,6 +26,7 @@ export function AddFolloweeModal({
   open,
   onClose,
 }: AddFolloweeModalProps) {
+  const { t } = useTranslation();
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
@@ -98,16 +98,14 @@ export function AddFolloweeModal({
   }, [neuronId]);
 
   let error: string | undefined;
-  if (available_neuron_id === false) error = t`Invalid neuron id`;
-  if (neuronId === undefined) error = t`Enter the neuron id`;
+  if (available_neuron_id === false) error = t("nns.error.neuron.invalid");
+  if (neuronId === undefined) error = t("nns.error.neuron.input");
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Add Followee`}>
+    <Modal open={open} onClose={onClose} title={t("nns.followee.add")}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
         <Box>
-          <Typography sx={{ margin: "0 0 10px 0" }}>
-            <Trans>Followee's Neuron Id</Trans>
-          </Typography>
+          <Typography sx={{ margin: "0 0 10px 0" }}>{t("nns.followee.neuron.id")}</Typography>
 
           <FilledTextField
             placeholder={t`Neuron Id`}
@@ -126,7 +124,7 @@ export function AddFolloweeModal({
           onClick={handleSubmit}
           startIcon={loading ? <CircularProgress size={26} color="inherit" /> : null}
         >
-          {error || <Trans>Confirm</Trans>}
+          {error || t("common.confirm")}
         </Button>
       </Box>
     </Modal>

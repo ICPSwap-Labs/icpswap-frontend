@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { updateUserPositionPoolId, getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
-import { t } from "@lingui/macro";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getAddLiquidityStepDetails } from "components/swap/AddLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -104,7 +103,7 @@ function useAddLiquidityCalls() {
         );
 
         if (data !== "ok") {
-          openErrorTip(message ?? t`Failed to request pcm code`);
+          openErrorTip(message ?? `Failed to request pcm code`);
         }
 
         return data === "ok";
@@ -289,7 +288,7 @@ function useAddLiquidityCalls() {
         });
 
         if (status === "ok") {
-          openSuccessTip(t`Add Liquidity Successfully`);
+          openSuccessTip(`Add Liquidity Successfully`);
 
           updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
@@ -364,7 +363,7 @@ function useInitialAddLiquiditySteps() {
 
       initialStepContent(String(key), {
         content,
-        title: t`Add Liquidity Details`,
+        title: `Add Liquidity Details`,
       });
     },
     [],

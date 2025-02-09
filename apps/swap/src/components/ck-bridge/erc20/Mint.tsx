@@ -3,7 +3,6 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
@@ -16,6 +15,7 @@ import { ApprovalState } from "hooks/web3/useApproveCallback";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
+import { useTranslation } from "react-i18next";
 
 import { MintExtraContent } from "./MintExtra";
 
@@ -27,6 +27,7 @@ export interface Erc20MintProps {
 }
 
 export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20MintProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
 
@@ -58,10 +59,10 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
   }, [mint_call, token, erc20Token, principal, amount, blockNumber]);
 
   const mint_error = useMemo(() => {
-    if (!!chainId && chain !== chainId) return t`Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t`Enter the amount`;
+    if (!!chainId && chain !== chainId) return t("ck.switch.wallet", { network: chainIdToNetwork[chain] });
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.error.input.amount");
     if (ercTokenBalance && erc20Token && parseTokenAmount(ercTokenBalance, erc20Token.decimals).isLessThan(amount))
-      return t`Insufficient Balance`;
+      return t("common.error.insufficient.balance");
 
     return undefined;
   }, [chainId, chain, amount, erc20Token, ercTokenBalance, approveState]);
@@ -84,9 +85,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
           borderRadius: "16px",
         }}
       >
-        <Typography>
-          <Trans>Your wallet of Metamask</Trans>
-        </Typography>
+        <Typography>{t("ck.wallet.metamask")}</Typography>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           {account ? (
@@ -116,7 +115,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
       >
         {mint_error === undefined
           ? approveState === ApprovalState.APPROVED || approveState === ApprovalState.PENDING
-            ? t`Mint ck${erc20Token?.symbol}`
+            ? t("ck.mint.symbol", { symbol: `ck${erc20Token?.symbol}` })
             : t`Approve`
           : mint_error}
       </ButtonConnector>

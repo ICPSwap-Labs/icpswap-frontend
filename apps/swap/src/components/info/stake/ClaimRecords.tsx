@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import { useStakingPoolClaimTransactions } from "@icpswap/hooks";
 import { ListLoading, PaginationType, AddressFormat } from "components/index";
 import { type StakingPoolTransaction } from "@icpswap/types";
 import { HeaderCell, BodyCell, Pagination, NoData } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
   return (
@@ -27,6 +27,7 @@ function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
 }
 
 export function StakeClaimTransactions({ id }: { id: string | undefined }) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -43,19 +44,13 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <HeaderCell>
-                <Trans>Time</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.time")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Token Amount</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.token.amount")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Address</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.address.colon")}</HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>
