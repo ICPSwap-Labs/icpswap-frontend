@@ -10,7 +10,7 @@ import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
-import { formatTokenAmount, isNullArgs, BigNumber, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
+import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
@@ -18,6 +18,8 @@ import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
 import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
 import { useSwapState } from "store/swap/hooks";
+import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
+import { useUSDPriceById } from "hooks/index";
 
 import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
 
@@ -43,6 +45,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
   const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
+  const inputCurrencyPrice = useUSDPriceById(inputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
@@ -263,10 +266,10 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
     if (tickError) return t`Invalid tick for this pool`;
 
-    const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
+    if (!inputCurrencyPrice) return t`Submit Limit Order`;
 
-    if (inputToken.transFee > 0 && minimumAmount.isGreaterThan(typedValue))
-      return t`Amount must exceed ${minimumAmount.toFormat()} ${inputToken.symbol}`;
+    if (new BigNumber(typedValue).multipliedBy(inputCurrencyPrice).isLessThan(MIN_LIMIT_ORDER_VALUE))
+      return t`The minimum limit order must be worth $20`;
     if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
     if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
@@ -304,6 +307,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     isInputTokenSorted,
     minSettableTick,
     tickError,
+    inputCurrencyPrice,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
