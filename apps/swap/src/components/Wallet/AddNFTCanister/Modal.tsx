@@ -167,7 +167,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
               <TableHead>
                 <TableRow>
                   <TableCell>{t("common.name")}</TableCell>
-                  <TableCell>{t("common.address.colon")}</TableCell>
+                  <TableCell>{t("common.address")}</TableCell>
                   <TableCell>&nbsp;</TableCell>
                 </TableRow>
               </TableHead>

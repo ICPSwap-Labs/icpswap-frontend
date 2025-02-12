@@ -76,7 +76,9 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: isToken1UseTransfer ? i18n.t`Transfer ${symbol1}` : i18n.t`Approve ${symbol1}`,
+      title: isToken1UseTransfer
+        ? i18n.t("swap.transfer", { symbol: symbol1 })
+        : i18n.t("swap.approve", { symbol: symbol1 }),
       step: 2,
       children: [
         { label: i18n.t("common.amount"), value: amount1Value },
@@ -101,7 +103,10 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: i18n.t`Increase liquidity ${position.pool.token0.symbol} and ${position.pool.token1.symbol}`,
+      title: i18n.t("swap.increase.liquidity", {
+        symbol0: position.pool.token0.symbol,
+        symbol1: position.pool.token1.symbol,
+      }),
       step: 4,
       children: [
         { label: symbol0, value: amount0Value },

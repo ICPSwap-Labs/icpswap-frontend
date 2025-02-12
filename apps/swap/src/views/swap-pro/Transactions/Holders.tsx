@@ -109,7 +109,7 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
           <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
             <HeaderCell field="PositionId">{t("common.rank")}</HeaderCell>
 
-            <HeaderCell field="token0Amount">{t("common.address.colon")}</HeaderCell>
+            <HeaderCell field="token0Amount">{t("common.address")}</HeaderCell>
 
             <HeaderCell field="token1Amount">{t("common.amount")}</HeaderCell>
 

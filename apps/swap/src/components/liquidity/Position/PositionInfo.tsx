@@ -158,7 +158,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               onClick={loadDecreaseLiquidity}
               sx={{ height: "44px" }}
             >
-              {t("common.remove.liquidity")}
+              {t("swap.remove.liquidity")}
             </Button>
             <Button
               variant="contained"

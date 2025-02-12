@@ -3,12 +3,15 @@ import { useMemo } from "react";
 import { MainCard } from "components/index";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export interface ProposalSummaryProps {
   proposal_data: ProposalData | undefined;
 }
 
 export function ProposalSummary({ proposal_data }: ProposalSummaryProps) {
+  const { t } = useTranslation();
+
   const { title, summary } = useMemo(() => {
     if (!proposal_data) return {};
 

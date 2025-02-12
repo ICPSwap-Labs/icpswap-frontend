@@ -82,7 +82,7 @@ export function FarmTransactions({ id, rewardTokenId }: FarmTransactionsProps) {
               <HeaderCell>{t("common.type")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>{t("common.address.colon")}</HeaderCell>
+              <HeaderCell>{t("common.address")}</HeaderCell>
             </TableCell>
             <TableCell>
               <HeaderCell>{t("common.reward.amount")}</HeaderCell>

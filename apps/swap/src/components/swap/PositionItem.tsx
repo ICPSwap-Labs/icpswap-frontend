@@ -328,7 +328,7 @@ export function PositionDetails({
                 size={matchDownSM ? "medium" : "medium"}
                 onClick={handleLoadRemoveLiquidity}
               >
-                {t("common.remove.liquidity")}
+                {t("swap.remove.liquidity")}
               </Button>
             ) : (
               <Box />

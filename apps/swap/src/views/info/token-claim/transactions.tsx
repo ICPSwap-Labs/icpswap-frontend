@@ -76,7 +76,7 @@ export default function TokenClaimTransactions() {
         <MainCard>
           <Box sx={{ overflow: "auto" }}>
             <Header className={classes.wrapper}>
-              <HeaderCell>{t("common.address.colon")}</HeaderCell>
+              <HeaderCell>{t("common.address")}</HeaderCell>
               <HeaderCell>{t("common.token")}</HeaderCell>
               <HeaderCell>{t("claim.time")}</HeaderCell>
               <HeaderCell>{t("common.state")}</HeaderCell>

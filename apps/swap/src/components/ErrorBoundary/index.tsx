@@ -34,7 +34,7 @@ function Fallback({ error, eventId }: FallbackProps) {
         <Flex fullWidth align="center" justify="center" sx={{ width: "100%", height: "100%" }}>
           <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", justifyContent: "center" }}>
             <Typography color="text.primary" align="center" sx={{ fontSize: "24px", margin: "0 0 20px 0" }}>
-              {t("error.boundary.oops")}
+              {i18n.t("error.boundary.oops")}
             </Typography>
 
             <BoundaryErrorImage />

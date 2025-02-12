@@ -50,7 +50,7 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
               <HeaderCell>{t("common.token.amount")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>{t("common.address.colon")}</HeaderCell>
+              <HeaderCell>{t("common.address")}</HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>

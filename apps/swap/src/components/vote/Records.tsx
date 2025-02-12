@@ -126,7 +126,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
             </Box>
 
             <Box>
-              <Typography>{t("common.address.colon")}</Typography>
+              <Typography>{t("common.address")}</Typography>
             </Box>
 
             <Box>
