@@ -159,10 +159,10 @@ export function GlobalData() {
       <Item
         label0={t("common.total.rewarding.value")}
         value0={rewardingValue ?? "--"}
-        tooltip0={t`The total value of rewards distributed by live pools.`}
+        tooltip0={t("stake.total.value.rewards.descriptions")}
         label1={t("common.total.pools")}
         value1={totalPools ?? "--"}
-        tooltip1={t`The total number of pools, including those that are unstart, live, and finished.`}
+        tooltip1={t("info.stake.total.pools.descriptions")}
       />
 
       {/* <Item

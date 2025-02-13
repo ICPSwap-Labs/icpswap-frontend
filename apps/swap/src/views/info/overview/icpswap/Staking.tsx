@@ -63,7 +63,7 @@ export function Staking() {
           <Item
             label={t("common.total.rewarding.value")}
             value={rewardingValue ?? "--"}
-            tooltip={t`The total value of rewards distributed by live pools.`}
+            tooltip={t("stake.total.value.rewards.descriptions")}
           />
 
           <Item
@@ -74,7 +74,7 @@ export function Staking() {
           <Item
             label={t("common.total.pools")}
             value={totalPools ?? "--"}
-            tooltip={t`The total number of pools, including those that are unstart, live, and finished.`}
+            tooltip={t("info.stake.total.pools.descriptions")}
           />
         </Flex>
       </Card>

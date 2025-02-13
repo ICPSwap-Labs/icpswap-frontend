@@ -312,7 +312,7 @@ export default function Exchange() {
 
               {showMaxButton && (
                 <Typography fontSize="12px" className={classes.maxButton} onClick={handleMaxInput}>
-                  {t("common.max.upper")}
+                  {t("common.max")}
                 </Typography>
               )}
 

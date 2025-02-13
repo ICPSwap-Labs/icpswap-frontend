@@ -229,7 +229,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         </Flex>
 
         <Typography>
-          {t("common.balance.colon.fee", {
+          {t("common.fee.colon.amount", {
             amount: `${parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()} ${token.symbol} (
           ${
             tokenUSDPrice && token

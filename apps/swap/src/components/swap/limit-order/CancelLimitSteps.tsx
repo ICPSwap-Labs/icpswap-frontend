@@ -106,7 +106,7 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
       : {
           title: inputWithdrawAmountLessThanFee
             ? i18n.t("common.unable.withdraw", { symbol: inputToken.symbol })
-            : i18n.t("common.withdraw.amount", { amount: inputToken.symbol }),
+            : i18n.t("common.withdraw.amount", { symbol: inputToken.symbol }),
           children: [
             {
               label: i18n.t("common.amount"),
@@ -123,8 +123,8 @@ export function getCancelLimitSteps({ principal, handleReclaim, position, limit,
       ? null
       : {
           title: outputWithdrawAmountLessThanFee
-            ? i18n.t("common.unable.withdraw", { amount: outputToken.symbol })
-            : i18n.t("common.withdraw.amount", { amount: outputToken.symbol }),
+            ? i18n.t("common.unable.withdraw", { symbol: outputToken.symbol })
+            : i18n.t("common.withdraw.amount", { symbol: outputToken.symbol }),
           children: [
             {
               label: i18n.t("common.amount"),

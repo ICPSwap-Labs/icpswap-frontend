@@ -49,6 +49,8 @@ function Closed() {
 }
 
 function OutOfRange() {
+  const { t } = useTranslation();
+
   return (
     <Flex gap="0 4px">
       <AlertCircle size="12px" color="#FFC107" />
@@ -58,6 +60,7 @@ function OutOfRange() {
 }
 
 function InRange() {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   return (
