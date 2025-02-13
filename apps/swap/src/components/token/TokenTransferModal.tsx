@@ -230,28 +230,26 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
 
         <Typography>
           {t("common.fee.colon.amount", {
-            amount: `${parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()} ${token.symbol} (
-          ${
-            tokenUSDPrice && token
-              ? `$${toSignificantWithGroupSeparator(
-                  parseTokenAmount(token.transFee.toString(), token.decimals).multipliedBy(tokenUSDPrice).toString(),
-                  4,
-                )}`
-              : "--"
-          }
-          )`,
+            amount: `${parseTokenAmount(token?.transFee?.toString(), token.decimals).toFormat()} ${token.symbol} (${
+              tokenUSDPrice && token
+                ? `$${toSignificantWithGroupSeparator(
+                    parseTokenAmount(token.transFee.toString(), token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                    4,
+                  )}`
+                : "--"
+            })`,
           })}
         </Typography>
         <Typography>
           {t("wallet.token.transfer.actually.colon", {
-            amount: `${toSignificantWithGroupSeparator(actualTransferAmount, 18)} ${token.symbol} ${
+            amount: `${toSignificantWithGroupSeparator(actualTransferAmount, 18)} ${token.symbol} (${
               tokenUSDPrice && token
                 ? `$${toSignificantWithGroupSeparator(
                     new BigNumber(actualTransferAmount).multipliedBy(tokenUSDPrice).toString(),
                     4,
                   )}`
                 : "--"
-            }`,
+            })`,
           })}
         </Typography>
         <Typography color="text.danger">{t("common.warning.transfer.address.supports")}</Typography>

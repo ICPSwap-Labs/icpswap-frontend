@@ -165,8 +165,5 @@ export const MessageMaps: Locals = {
 };
 
 export const getLocaleMessage = (message: string): string => {
-  const id = MessageMaps[message];
-  const msg = t({ id });
-
-  return msg || message;
+  return MessageMaps[message];
 };

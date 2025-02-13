@@ -66,6 +66,7 @@ interface CancelLimitCallsArgs {
 }
 
 function useCancelLimitCalls() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
   const [openSuccessTip] = useSuccessTip();
