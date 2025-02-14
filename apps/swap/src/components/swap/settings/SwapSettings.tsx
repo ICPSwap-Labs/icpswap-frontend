@@ -133,7 +133,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
       </Typography>
       <Box mt={3}>
         <Flex fullWidth gap="0 8px">
-          <Typography color="text.primary">Slippage tolerance</Typography>
+          <Typography color="text.primary">{t("swap.slippage.tolerance")}</Typography>
           <Tooltip
             tips="Your transaction will revert if the price changes unfavorably
                   by more than this percentage."

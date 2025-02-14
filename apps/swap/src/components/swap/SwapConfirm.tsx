@@ -216,7 +216,7 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label={t`Slippage tolerance`}
+            label={t("swap.slippage.tolerance")}
             value={`${slippageTolerance?.toFixed(2)}%`}
             tooltip={
               <Tooltip

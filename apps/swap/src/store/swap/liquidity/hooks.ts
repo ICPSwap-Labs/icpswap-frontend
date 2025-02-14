@@ -464,6 +464,7 @@ export function useMintInfo(
   });
 
   const error = useMemo(() => {
+    if (!token0 || !token1) return t("common.swap");
     if (hasPairWithBaseToken !== true) return t("swap.error.pair.with.icp");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (poolState === PoolState.INVALID) return t("swap.error.pair.invalid");
@@ -476,11 +477,11 @@ export function useMintInfo(
       return t("common.error.input.amount");
 
     if (typeof available === "boolean" && !available) return t`This pool is not available now`;
-    if (poolState === PoolState.NOT_CHECK) return t`Waiting for verify the pool...`;
+    if (poolState === PoolState.NOT_CHECK) return t("swap.waiting.verify");
     if (token0Insufficient === "INSUFFICIENT")
-      return t("common.error.insufficient.balance.symbol", { symbol: token0?.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: token0.symbol });
     if (token1Insufficient === "INSUFFICIENT")
-      t("common.error.insufficient.balance.symbol", { symbol: token1?.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: token1.symbol });
 
     if (
       tokenA &&

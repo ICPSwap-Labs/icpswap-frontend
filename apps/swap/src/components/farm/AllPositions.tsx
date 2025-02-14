@@ -4,7 +4,6 @@ import { FarmPositionCard } from "components/farm/index";
 import type { FarmInfo, InitFarmArgs, UserPositionInfoWithId } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
-import { position } from "polished";
 
 export interface AllPositionsProps {
   farmId: string;
@@ -36,7 +35,7 @@ export function AllPositions({
   return (
     <Modal open={open} onClose={onClose} title={`${token0?.symbol}/${token1?.symbol} Positions`} background="level1">
       <Box mt="16px">
-        <Typography mt="8px">{t("farm.available.positions.stake", { number: position.length })}</Typography>
+        <Typography mt="8px">{t("farm.available.positions.stake", { number: positions.length })}</Typography>
 
         <Box sx={{ margin: "8px 0 0 0", maxHeight: "432px", overflow: "hidden auto" }}>
           {positions.map((ele) => (

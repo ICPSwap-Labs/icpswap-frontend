@@ -202,7 +202,7 @@ export default function CreateStakingTokenPool() {
           <Box sx={{ maxWidth: "474px", width: "100%", display: "grid", gap: "20px 0" }}>
             <Box>
               <FilledTextField
-                label={t`Staking pool's name`}
+                label={t("stake.create.name")}
                 placeholder={t`Enter staking pool's name`}
                 onChange={(value) => handleFieldChange(value, "name")}
                 value={values.name}

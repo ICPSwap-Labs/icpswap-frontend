@@ -62,11 +62,11 @@ export function Unstake({
 
     if (status === ResultStatus.OK) {
       await farmWithdraw(farmId);
-      openTip(getLocaleMessage(message) ?? t`Unstake successfully`, ResultStatus.OK);
+      openTip("Unstake successfully", ResultStatus.OK);
 
       if (resetData) resetData();
     } else {
-      openTip(getLocaleMessage(message) ?? t`Failed to unstake`, ResultStatus.ERROR);
+      openTip(getLocaleMessage(message) ?? message, ResultStatus.ERROR);
     }
 
     setConfirmLoading(false);

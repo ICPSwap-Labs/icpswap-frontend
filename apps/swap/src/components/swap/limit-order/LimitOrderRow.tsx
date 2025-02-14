@@ -100,7 +100,7 @@ export function LimitOrderRow({
       limit: limitOrder,
     });
 
-    const loadingKey = openLoadingTip(t`Cancel Limit Order`, {
+    const loadingKey = openLoadingTip(t("limit.cancel.loading.tips"), {
       extraContent: <StepViewButton step={key} />,
     });
 

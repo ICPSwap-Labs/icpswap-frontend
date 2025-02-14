@@ -94,7 +94,7 @@ export default function WalletConnector() {
   const { open, showConnector } = useConnectManager();
 
   return (
-    <Modal open={open} onClose={() => showConnector(false)} title={t`Connect a wallet`}>
+    <Modal open={open} onClose={() => showConnector(false)} title={t("auth.connect.a.wallet")}>
       <Flex align="center">
         <Box className={classes.wrapper}>
           <Typography

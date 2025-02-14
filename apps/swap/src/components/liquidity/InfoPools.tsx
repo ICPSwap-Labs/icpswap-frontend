@@ -99,9 +99,19 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
     : [
         { label: "#", key: "#", sort: false },
         { label: t`Pairs`, key: "pool", sort: false },
-        { label: t`TVL`, key: "tvlUSD", sort: true, align: "right" },
-        { label: timeBase === "24H" ? t`APR 24H` : t`APR 7D`, key: "apr", sort: false, align: "right" },
-        { label: timeBase === "24H" ? t`Fees 24H` : t`Fees 7D`, key: "fees24", sort: false, align: "right" },
+        { label: t("common.tvl"), key: "tvlUSD", sort: true, align: "right" },
+        {
+          label: timeBase === "24H" ? t("common.apr24h") : t("common.apr.7d"),
+          key: "apr",
+          sort: false,
+          align: "right",
+        },
+        {
+          label: timeBase === "24H" ? t("swap.fees.24h") : t("swap.fees.7d"),
+          key: "fees24",
+          sort: false,
+          align: "right",
+        },
         {
           label: timeBase === "24H" ? t("common.volume24h") : t("common.volume7d"),
           key: "volumeUSD",
