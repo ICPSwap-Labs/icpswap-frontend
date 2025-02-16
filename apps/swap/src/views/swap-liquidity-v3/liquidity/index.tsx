@@ -145,7 +145,7 @@ export default function Liquidity() {
       ) : (
         <>
           <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-            {t("swap.liquidity.pools")}
+            {t("swap.liquidity.pools.title")}
           </Typography>
           <Typography sx={{ fontSize: "16px", margin: "16px 0 0 0", lineHeight: "24px" }}>
             {t("swap.liquidity.description")}
