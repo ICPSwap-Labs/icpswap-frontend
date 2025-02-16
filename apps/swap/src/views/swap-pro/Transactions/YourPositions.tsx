@@ -250,7 +250,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
           <HeaderCell field="PositionId">{t("common.position.id")}</HeaderCell>
           <HeaderCell field="TokenAmount">{t("common.token.amount")}</HeaderCell>
           <HeaderCell field="priceRange">{t("common.price.range")}</HeaderCell>
-          <HeaderCell field="unclaimedFees">{t("common.uncollected.fee")}</HeaderCell>
+          <HeaderCell field="unclaimedFees">{t("common.uncollected.fees")}</HeaderCell>
           <HeaderCell>&nbsp;</HeaderCell>
         </Header>
 

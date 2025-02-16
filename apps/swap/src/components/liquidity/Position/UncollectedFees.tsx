@@ -74,7 +74,7 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start">
         <Typography color="text.primary" fontWeight={500}>
-          {t("common.uncollected.fee")}
+          {t("common.uncollected.fees")}
         </Typography>
 
         <Flex fullWidth justify="space-between">

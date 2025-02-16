@@ -99,7 +99,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
   return (
     <Box sx={{ width: "260px" }}>
       <Flex gap="0 4px">
-        <Typography>{t("common.uncollected.fee")}</Typography>
+        <Typography>{t("common.uncollected.fees")}</Typography>
         <Tooltip tips={t`Earnings from your liquidity that haven’t been collected.`} />
       </Flex>
 

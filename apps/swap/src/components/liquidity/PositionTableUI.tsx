@@ -71,7 +71,7 @@ export function PositionTableUI({
 
             <HeaderCell field="PriceRange">{t("common.price.range")}</HeaderCell>
 
-            <HeaderCell field="UnclaimedFees">{t("common.uncollected.fee")}</HeaderCell>
+            <HeaderCell field="UnclaimedFees">{t("common.uncollected.fees")}</HeaderCell>
 
             <HeaderCell field="None">&nbsp;</HeaderCell>
           </Header>

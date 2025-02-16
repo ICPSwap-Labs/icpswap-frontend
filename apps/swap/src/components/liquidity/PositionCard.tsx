@@ -380,7 +380,7 @@ export function PositionCard({
             justify="flex-end"
             sx={{ width: "110px", "@media(max-width: 640px)": { width: "fit-content" } }}
           >
-            <Typography className={classes.label}>{t("common.uncollected.fee")}</Typography>
+            <Typography className={classes.label}>{t("common.uncollected.fees")}</Typography>
 
             <Flex
               fullWidth
