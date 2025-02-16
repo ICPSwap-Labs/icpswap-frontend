@@ -165,7 +165,7 @@ export default function NFTCanisterCreate() {
   };
 
   const getErrorMsg = (values: CanisterCreateDetails) => {
-    if (!values.name) return t`Enter collection name`;
+    if (!values.name) return t("nft.enter.collection.name");
     if (values.name && values.name.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
     if (!values.minter) return t`Enter the creator`;
     if (values.minter && values.minter.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
@@ -216,7 +216,7 @@ export default function NFTCanisterCreate() {
                 required
                 fullWidth
                 border="none"
-                placeholder={t`Enter the collection name`}
+                placeholder={t("nft.create.collection.name.placeholder")}
                 onChange={(value: string) => onFieldChange(value, "name")}
                 placeholderSize="16px"
                 fontSize="16px"

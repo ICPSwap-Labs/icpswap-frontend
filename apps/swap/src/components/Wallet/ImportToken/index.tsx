@@ -121,7 +121,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
   if (values.id && isValidPrincipal(values.id) && isExisted(values.id)) error = t`The token exists`;
   if (values.id && values.standard && getTokenStandard(values.id) && getTokenStandard(values.id) !== values.standard)
     error = t`Retry after changing token standard.`;
-  if (values.id && !isValidPrincipal(values.id)) error = t`Invalid canister id`;
+  if (values.id && !isValidPrincipal(values.id)) error = t("common.error.invalid.canister.id");
   if (!values.id) error = t`Enter the canister id`;
   if (!values.standard) error = t`Select the token standard`;
 
@@ -129,7 +129,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
     <Modal
       open={open}
       onClose={onClose}
-      title={t`Import Token`}
+      title={t("common.import.token")}
       dialogProps={{
         sx: {
           "& .MuiPaper-root": {

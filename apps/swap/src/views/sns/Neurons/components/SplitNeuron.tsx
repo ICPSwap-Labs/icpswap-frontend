@@ -104,7 +104,7 @@ export function SplitNeuron({
 
   let error: string | undefined;
 
-  if (amount === undefined) error = t("common.error.input.amount");
+  if (amount === undefined) error = t("common.enter.input.amount");
   if (token === undefined) error = t("common.error.unknown");
 
   if (
@@ -156,7 +156,7 @@ export function SplitNeuron({
       <Modal open={open} onClose={() => setOpen(false)} title={t("nns.neuron.split")}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
-            placeholder={t("common.error.input.amount")}
+            placeholder={t("common.enter.input.amount")}
             value={amount}
             onChange={(value: string) => setAmount(value)}
             fullWidth

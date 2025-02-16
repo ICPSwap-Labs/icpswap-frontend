@@ -70,7 +70,7 @@ export default function CreateVotingProject() {
   if (!values.name) errorMessage = t`Enter the name`;
   if (!values.logo) errorMessage = t`Enter the logo`;
   if (!values.standard) errorMessage = t`Select the token standard`;
-  if (!values.manager) errorMessage = t`Enter the manager principal`;
+  if (!values.manager) errorMessage = t("vote.create.enter.manager");
   if (values.manager && !isValidPrincipal(values.manager)) errorMessage = t`Invalid principal`;
   if (!values.tokenId) errorMessage = t`Enter the token id`;
 

@@ -168,7 +168,7 @@ export function LimitOrderConfirm({
             <Flex gap="0 12px">
               <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
               <Flex gap="8px 0" vertical align="flex-start">
-                <Typography>You Receive</Typography>
+                <Typography>{t("common.you.receive")}</Typography>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
                   {outputAmount && outputToken
                     ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
@@ -191,13 +191,7 @@ export function LimitOrderConfirm({
                 token1={outputToken}
               />
             }
-            tooltip={
-              <Tooltip
-                background="#ffffff"
-                tips={t`Limit price is the set price for buying or selling your token.`}
-                iconSize="14px"
-              />
-            }
+            tooltip={<Tooltip background="#ffffff" tips={t("common.limit.price.tips")} iconSize="14px" />}
           />
 
           <DetailItem
@@ -242,13 +236,7 @@ export function LimitOrderConfirm({
                   )})`
                 : "--"
             }
-            tooltip={
-              <Tooltip
-                iconSize="14px"
-                background="#ffffff"
-                tips={t`Each order requires the transfer fee, determined by the token's canister.`}
-              />
-            }
+            tooltip={<Tooltip iconSize="14px" background="#ffffff" tips={t("limit.estimated.fee.tips")} />}
           />
 
           <Box sx={{ borderRadius: "12px", background: theme.palette.background.level2, padding: "14px 16px" }}>

@@ -62,10 +62,10 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
         if (onMaturitySuccess) onMaturitySuccess();
       } else {
         const message = stop_dissolving_neuron_error.error_message;
-        openTip(message === "" ? t`Failed to set automatically stake new maturity` : message, TIP_ERROR);
+        openTip(message === "" ? t("nns.failed.set.automatically.maturity") : message, TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to set automatically stake new maturity`, TIP_ERROR);
+      openTip(message ?? t("nns.failed.set.automatically.maturity"), TIP_ERROR);
     }
 
     setLoading(false);
@@ -86,7 +86,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
 
     if (status === "ok") {
       if (!neuron_error) {
-        openTip(t`Disburse maturity successfully`, TIP_SUCCESS);
+        openTip(t("nns.disburse.success"), TIP_SUCCESS);
         setDisburseOpen(false);
         setLoading(false);
       } else {
@@ -195,16 +195,14 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
         title={t`Maturity`}
         onConfirm={handleConfirm}
         text={
-          auto_stake_maturity
-            ? t`Are you sure that you would like to automatically stake new maturity of this neuron?`
-            : t`Are you sure that you would like to stop automatically staking new maturity of this neuron?`
+          auto_stake_maturity ? t("nns.maturity.automatically.confirm") : t("nns.maturity.stop.automatically.confirm")
         }
       />
 
       <ConfirmModal
         open={disburseOpen}
         onClose={() => setDisburseOpen(false)}
-        title={t`Disburse Maturity`}
+        title={t("nns.disburse.maturity")}
         onConfirm={handleDisburseMaturity}
         text={t`Are you sure you want to disburse this neuron?`}
       />

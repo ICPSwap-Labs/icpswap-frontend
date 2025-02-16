@@ -177,7 +177,7 @@ export function Positions() {
           <Box sx={{ width: "260px" }}>
             <Flex gap="0 4px">
               <Typography>{t("common.total.value")}</Typography>
-              <Tooltip tips={t`The total value of your liquidity positions`} />
+              <Tooltip tips={t("liquidity.total.value.tips")} />
             </Flex>
 
             <Typography className={classes.value} sx={{ margin: "15px 0 0 0" }}>

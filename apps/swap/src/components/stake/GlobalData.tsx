@@ -150,7 +150,7 @@ export function GlobalData() {
       <Item
         label0={t("common.tvl")}
         value0={tvl ?? "--"}
-        tooltip0={t`The cumulative value of tokens staked across all live pools.`}
+        tooltip0={t("common.tvl.tips")}
         label1={t("common.total.rewarded.value")}
         value1={rewardedValue ?? "--"}
         tooltip1={t`The total value of rewards distributed by finished pools.`}
@@ -164,12 +164,6 @@ export function GlobalData() {
         value1={totalPools ?? "--"}
         tooltip1={t("info.stake.total.pools.descriptions")}
       />
-
-      {/* <Item
-        label0={<Trans>Total Stakers</Trans>}
-        value0={totalStaker?.toString() ?? "--"}
-        tooltip0={t`The total number of unique accounts that have staked in the pools.`}
-      /> */}
     </Box>
   );
 }

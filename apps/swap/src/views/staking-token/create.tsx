@@ -187,8 +187,8 @@ export default function CreateStakingTokenPool() {
 
   let errorMsg = "";
   if (!values.name) errorMsg = t`Enter the name`;
-  if (!values.rewardStandard) errorMsg = t`Enter the reward token standard`;
-  if (!values.rewardToken) errorMsg = t`Enter the reward token`;
+  if (!values.rewardStandard) errorMsg = t("stake.create.enter.reward.standard");
+  if (!values.rewardToken) errorMsg = t("stake.create.enter.reward.token");
   if (!values.startDateTime) errorMsg = t`Enter the start time`;
   if (!values.endDateTime) errorMsg = t`Enter the bonus end time`;
   if (!values.outputPerSecond) errorMsg = t`Enter the output per second`;
@@ -211,8 +211,8 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Reward token id`}
-                placeholder={t`Enter reward token id`}
+                label={t("stake.reward.id")}
+                placeholder={t("stake.enter.reward.id")}
                 onChange={(value) => handleFieldChange(value, "rewardToken")}
                 value={values.rewardToken}
               />
@@ -223,7 +223,7 @@ export default function CreateStakingTokenPool() {
                 select
                 label={t`Reward token standard`}
                 menus={TokenStandards}
-                placeholder={t`Select reward token standard`}
+                placeholder={t("stake.create.select.reward.token.standard")}
                 onChange={(value) => handleFieldChange(value, "rewardStandard")}
                 value={values.rewardStandard}
               />
@@ -231,8 +231,8 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Staking token id`}
-                placeholder={t`Enter staking token id`}
+                label={t("stake.create.stake.id")}
+                placeholder={t("stake.create.id.placeholder")}
                 onChange={(value) => handleFieldChange(value, "stakingToken")}
                 value={values.stakingToken}
               />
@@ -240,17 +240,17 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Staking token standard`}
+                label={t("stake.create.staking.standard")}
                 select
                 menus={TokenStandards}
-                placeholder={t`Select staking token standard`}
+                placeholder={t("stake.create.select.standard")}
                 onChange={(value) => handleFieldChange(value, "stakingStandard")}
                 value={values.stakingStandard}
               />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Start/End Time</Typography>
+              <Typography color="text.primary">{t("common.start.end.time")}</Typography>
               <Box mt="12px">
                 <Grid container justifyContent="space-between">
                   <Grid
@@ -317,8 +317,8 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Output Per Second`}
-                placeholder={t`Enter output per second`}
+                label={t("stake.create.output.per.second")}
+                placeholder={t("stake.create.enter.output.per.second")}
                 onChange={(value) => handleFieldChange(value, "outputPerSecond")}
                 value={values.outputPerSecond}
                 InputProps={{

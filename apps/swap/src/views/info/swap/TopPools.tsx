@@ -58,7 +58,7 @@ export default function TopPools() {
           },
         }}
       >
-        <Typography variant="h4">{t("info.top.pools")}</Typography>
+        <Typography variant="h4">{t("swap.top.pools")}</Typography>
 
         <Box
           sx={{

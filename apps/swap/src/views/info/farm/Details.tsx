@@ -114,9 +114,12 @@ export default function FarmDetails() {
                   </Copy>
                 }
               />
-              <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
               <PoolDetailItem
-                label={t`Reward Token Amount:`}
+                label={t("info.farm.staking.positions.amount")}
+                value={String(farmInfo?.numberOfStakes ?? 0)}
+              />
+              <PoolDetailItem
+                label={t("info.farm.reward.token.amount")}
                 value={
                   <Typography component="span" color="text.primary">
                     {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
@@ -127,7 +130,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Claimed Rewards:`}
+                label={t("info.farm.claimed.rewards.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -145,7 +148,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Unclaimed Rewards:`}
+                label={t("common.unclaimed.rewards.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -166,7 +169,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Distribution Interval:`}
+                label={t("farm.distribution.interval.colon")}
                 value={
                   farmMetadata ? (
                     <>
@@ -181,7 +184,7 @@ export default function FarmDetails() {
 
             <Box className="columns">
               <PoolDetailItem
-                label={t`Amount per Distribution:`}
+                label={t("info.farm.amount.distribution.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -198,8 +201,8 @@ export default function FarmDetails() {
                   )
                 }
               />
-              <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
-              <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
+              <PoolDetailItem label={t("common.start.time.colon")} value={timeFormatter(farmInfo?.startTime)} />
+              <PoolDetailItem label={t("common.end.time.colon")} value={timeFormatter(farmInfo?.endTime)} />
               <PoolDetailItem
                 label={t("common.creator.colon")}
                 value={
@@ -209,7 +212,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Cycles left:`}
+                label={t("common.cycles.left.colon")}
                 value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
               />
             </Box>

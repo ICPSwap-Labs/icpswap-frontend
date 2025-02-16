@@ -316,7 +316,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                 />
                 {metadata && !metadata.filePath?.includes("base64") ? (
                   <DetailsItem
-                    label={t`File Link`}
+                    label={t("common.file.link")}
                     value={
                       <Link
                         href={metadata.filePath}
@@ -331,11 +331,11 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                   />
                 ) : null}
                 <DetailsItem
-                  label={t`Mint Time`}
+                  label={t("nft.mint.time")}
                   value={metadata ? timestampFormat(metadata.mintTime?.toString() ?? "--") : "--"}
                 />
                 <DetailsItem
-                  label={t`Minter`}
+                  label={t("nft.minter")}
                   value={
                     <Copy content={metadata ? metadata.minter : ""}>
                       {metadata ? shorten(metadata.minter, 12) : "--"}

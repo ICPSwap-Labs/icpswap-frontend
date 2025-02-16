@@ -91,7 +91,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
 
           <Box>
             <Typography color="text.primary" fontSize="16px">
-              Limit pending
+              {t("limit.pending")}
             </Typography>
 
             <Typography sx={{ fontSize: "12px", margin: "8px 0 0 0" }}>
@@ -148,7 +148,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
               >
                 {t("common.limit.price")}
               </Typography>
-              <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} iconSize="14px" />
+              <Tooltip tips={t("common.limit.price.tips")} iconSize="14px" />
             </Flex>
 
             <Typography
@@ -221,10 +221,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
               >
                 {t("limit.estimated.fee")}
                 <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
-                  <Tooltip
-                    tips={t`Each order requires the transfer fee, determined by the token's canister.`}
-                    iconSize="14px"
-                  />
+                  <Tooltip tips={t("limit.estimated.fee.tips")} iconSize="14px" />
                 </Box>
               </Typography>
             </Flex>

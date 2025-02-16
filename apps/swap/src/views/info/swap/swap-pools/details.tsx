@@ -166,12 +166,12 @@ export default function SwapPoolDetails() {
                 link={addLiquidityLink(token0.address === ICP_TOKEN_INFO.canisterId ? token1.address : token0.address)}
               >
                 <Button variant="contained" className="secondary">
-                  Add Liquidity
+                  {t("swap.add.liquidity")}
                 </Button>
               </Link>
 
               <Link link={swapLinkOfPool(token0.address, token1.address)}>
-                <Button variant="contained">Swap</Button>
+                <Button variant="contained">{t("common.swap")}</Button>
               </Link>
             </Flex>
           ) : null}

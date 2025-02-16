@@ -58,7 +58,7 @@ export function Participate({
     const life_cycle = swap_life_cycle_result.lifecycle[0];
 
     if (life_cycle !== SnsSwapLifecycle.Open) {
-      openTip(t`Wrong swap life cycle.`, TIP_ERROR);
+      openTip(t("launch.participate.wrong.life.cycle"), TIP_ERROR);
       return;
     }
 
@@ -105,7 +105,7 @@ export function Participate({
   let error: boolean | string = false;
 
   if (!risk) error = t("launch.participate.error.risk");
-  if (!amount) error = t("common.error.input.amount");
+  if (!amount) error = t("common.enter.input.amount");
   if (!!balance && !!amount && parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).isLessThan(amount))
     error = t("common.error.insufficient.balance");
   if (!!amount && !formatTokenAmount(amount, ICP.decimals).isGreaterThan(ICP.transFee))
@@ -155,7 +155,7 @@ export function Participate({
             endAdornment: (
               <InputAdornment position="start">
                 <Typography sx={{ cursor: "pointer" }} color="primary" onClick={handleMAX}>
-                  MAX
+                  {t("common.max")}
                 </Typography>
               </InputAdornment>
             ),

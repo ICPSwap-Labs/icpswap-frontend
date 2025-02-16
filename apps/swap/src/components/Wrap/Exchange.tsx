@@ -227,7 +227,7 @@ export default function Exchange() {
       closeTip(loadingKey);
 
       if (status === "ok") {
-        openTip(isWrap ? t`Wrapped successfully` : t`Unwrapped Successfully`, TIP_SUCCESS);
+        openTip(isWrap ? t`Wrapped successfully` : t("unwrap.success"), TIP_SUCCESS);
         debouncedTypeInput("");
         setRetryTrigger(!retryTrigger);
       } else {
@@ -258,7 +258,7 @@ export default function Exchange() {
       errorMessage = t("common.error.amount.greater.than", { amount: "0.0001" });
     if (inputCurrency.equals(ICP) && !typedValueMinFee.isGreaterThan(0))
       errorMessage = t("common.error.amount.greater.than", { amount: "0.0001" });
-    if (!typedValue) errorMessage = t("common.error.input.amount");
+    if (!typedValue) errorMessage = t("common.enter.input.amount");
 
     return errorMessage;
   }, [

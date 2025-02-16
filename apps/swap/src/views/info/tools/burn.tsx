@@ -49,10 +49,9 @@ export default function Burn() {
 
   const error = useMemo(() => {
     if (!tokenId) return t("common.select.a.token");
-    if (!token || !balance || !mintingAccount) return t`Waiting to fetch data`;
-    if (!amount) return t("common.error.input.amount");
-    if (new BigNumber(amount).isEqualTo(0)) return t`Must be greater than 0`;
-
+    if (!token || !balance || !mintingAccount) return t("common.waiting.fetching");
+    if (!amount) return t("common.enter.input.amount");
+    if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
     if (parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
   }, [amount, balance, token, mintingAccount, tokenId]);

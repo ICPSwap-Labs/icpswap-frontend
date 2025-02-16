@@ -45,7 +45,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
     const result = await refreshBtcBalance(principal.toString(), undefined);
 
     if ("OK" in result) {
-      openTip(t`ckBTC Minted successfully`, MessageTypes.success);
+      openTip(t("ck.bitcoin.mint.success"), MessageTypes.success);
       setRefreshTrigger();
       setLoading(false);
       return;
@@ -59,18 +59,18 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         const required_confirmations = err.NoNewUtxos.required_confirmations;
 
         if (!current_confirmations) {
-          openTip(t`No new confirmed BTC`, MessageTypes.error);
+          openTip(t("ck.bitcoin.no.confirmations"), MessageTypes.error);
         } else {
-          openTip(t("bitcoin.confirmations.less.than", { number: required_confirmations }), MessageTypes.error);
+          openTip(t("ck.bitcoin.confirmations.less.than", { number: required_confirmations }), MessageTypes.error);
         }
       } else if ("AlreadyProcessing" in err) {
-        openTip(t`Already processing`, MessageTypes.error);
+        openTip(t("ck.bitcoin.processing"), MessageTypes.error);
       } else if ("GenericError" in err) {
         openTip(err.GenericError.error_message, MessageTypes.error);
       } else if ("TemporarilyUnavailable" in err) {
         openTip(err.TemporarilyUnavailable, MessageTypes.error);
       } else {
-        openTip(t`Failed to check`, MessageTypes.error);
+        openTip(t("ck.bitcoin.failed.check"), MessageTypes.error);
       }
     }
 

@@ -95,7 +95,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
           <NoData />
           <Flex fullWidth justify="center">
             <Button size="large" sx={{ width: "240px" }} variant="contained" onClick={handleAddLiquidity}>
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Button>
           </Flex>
         </Box>

@@ -133,7 +133,7 @@ export default function UserPoolBalance() {
             }}
           >
             <PrincipalSearcher
-              placeholder={t`Search the principal for user's pool balance`}
+              placeholder={t('tools.search.for.pool.balance')}
               onPrincipalChange={handleAddressChange}
             />
 

@@ -50,7 +50,7 @@ export function useDissolveCallback() {
       if (withdraw_status === ResultStatus.ERROR) {
         openTip(withdraw_message ?? t("ck.ether.dissolve.loading"), MessageTypes.error);
       } else {
-        openTip("ckETH dissolution transaction submitted: Awaiting completion.", MessageTypes.success);
+        openTip(t("ck.ether.dissolution.submitted"), MessageTypes.success);
         if (data?.block_index) {
           updateUserTx(principal, data.block_index, undefined, withdraw_amount.toString());
         }

@@ -50,7 +50,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
         </Typography>
 
         <Button sx={{ minWidth: "98px" }} variant="contained" size="small" onClick={handleCreatePool}>
-          {t("common.liquidity.add")}
+          {t("swap.add.liquidity")}
         </Button>
       </Flex>
     </Box>

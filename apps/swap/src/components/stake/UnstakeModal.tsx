@@ -97,7 +97,7 @@ export function UnstakeModal({
 
   const errorMessage = useMemo(() => {
     if (!stakeToken || !stakeAmount) return t`Confirm`;
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.error.input.amount");
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.enter.input.amount");
     if (formatTokenAmount(amount, stakeToken.decimals).isGreaterThan(stakeAmount.toString()))
       return t("common.error.insufficient.balance");
 

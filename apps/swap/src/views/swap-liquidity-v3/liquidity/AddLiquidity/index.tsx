@@ -378,7 +378,7 @@ export default function AddLiquidity() {
             />
 
             <Typography variant="h3" color="textPrimary" align="center">
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Typography>
 
             <Typography sx={{ cursor: "pointer" }} color="secondary" component="span" onClick={clearAll}>

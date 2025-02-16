@@ -23,6 +23,7 @@ import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import { BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 let SwapPoolId: undefined | string;
 
@@ -50,6 +51,7 @@ interface AddLiquidityCallsArgs {
 function useAddLiquidityCalls() {
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
+  const { t } = useTranslation();
 
   const approve = useSwapApprove();
   const deposit = useSwapDeposit();
@@ -288,7 +290,7 @@ function useAddLiquidityCalls() {
         });
 
         if (status === "ok") {
-          openSuccessTip(`Add Liquidity Successfully`);
+          openSuccessTip(t("liquidity.add.success"));
 
           updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
@@ -363,7 +365,7 @@ function useInitialAddLiquiditySteps() {
 
       initialStepContent(String(key), {
         content,
-        title: `Add Liquidity Details`,
+        title: t("swap.add.liquidity.details"),
       });
     },
     [],

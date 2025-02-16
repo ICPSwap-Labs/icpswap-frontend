@@ -85,7 +85,10 @@ export function useDissolveCallback() {
           );
         }
       } else {
-        openTip(t("common.withdraw.success", { message: `${rawAmount} ${ckErc20Token.symbol}` }), MessageTypes.success);
+        openTip(
+          t("common.withdraw.success.message", { message: `${rawAmount} ${ckErc20Token.symbol}` }),
+          MessageTypes.success,
+        );
       }
 
       setLoading(false);

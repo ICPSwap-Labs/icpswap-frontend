@@ -11,6 +11,7 @@ import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import i18n from "i18n";
 
 import { Participate } from "./Participate";
 import { LaunchContext } from "./context";
@@ -24,12 +25,12 @@ export interface LaunchStatusProps {
 }
 
 const statusTextMapper: { [status: string]: string } = {
-  [SnsSwapLifecycle.Unspecified]: `Unspecified`,
+  [SnsSwapLifecycle.Unspecified]: i18n.t("common.unspecified"),
   [SnsSwapLifecycle.Pending]: `Upcoming swap`,
-  [SnsSwapLifecycle.Open]: `Accepting Participation`,
+  [SnsSwapLifecycle.Open]: i18n.t("launch.accepting.participation"),
   [SnsSwapLifecycle.Committed]: `Completed`,
   [SnsSwapLifecycle.Aborted]: `Aborted`,
-  [SnsSwapLifecycle.Adopted]: `Starting Soon`,
+  [SnsSwapLifecycle.Adopted]: i18n.t("launch.staring.soon"),
 };
 
 export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {

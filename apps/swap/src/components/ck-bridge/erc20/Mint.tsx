@@ -60,7 +60,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return t("ck.switch.wallet", { network: chainIdToNetwork[chain] });
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.error.input.amount");
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.enter.input.amount");
     if (ercTokenBalance && erc20Token && parseTokenAmount(ercTokenBalance, erc20Token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
 

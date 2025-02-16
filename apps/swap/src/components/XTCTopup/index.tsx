@@ -90,11 +90,11 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   )
     errorMessage = t`t("common.error.insufficient.balance");`;
   if (!values.amount) errorMessage = t`Enter top-up XTC amount`;
-  if (values.canisterId && !isValidPrincipal(values.canisterId)) errorMessage = t`Invalid canister id`;
-  if (!values.canisterId) errorMessage = t`Enter top-up canister id`;
+  if (values.canisterId && !isValidPrincipal(values.canisterId)) errorMessage = t("common.error.invalid.canister.id");
+  if (!values.canisterId) errorMessage = t("xtc.enter.canister");
 
   return (
-    <Modal open={open} title={t`Top-up a Canister by XTC`} onClose={onClose}>
+    <Modal open={open} title={t("wallet.topUp.xtc")} onClose={onClose}>
       <Box>
         <FilledTextField
           label={t("common.canister.id")}

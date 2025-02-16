@@ -125,9 +125,7 @@ export default function SwapOverview() {
                     <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
                       <Typography fontSize="16px">TVL</Typography>
 
-                      <Tooltip
-                        tips={t`TVL is calculated only based on the total value of tokens listed on the Tokenlist.`}
-                      />
+                      <Tooltip tips={t("info.swap.tvl.tips")} />
                     </Box>
                     <Typography fontSize="32px" fontWeight="500" color="text.primary">
                       {formatDollarAmount(liquidityHover)}

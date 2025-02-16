@@ -192,7 +192,7 @@ export default function NFTTransfer({
           <Typography>{t("common.transfer.to")}</Typography>
           <TextField
             variant="standard"
-            placeholder={t`Account address`}
+            placeholder={t("common.account.address")}
             onChange={({ target: { value } }) => setTo(value)}
             helperText={addressHelpText}
             fullWidth

@@ -150,12 +150,15 @@ export default function Wrap() {
           <Grid item xs={12}>
             <Box className={classes.box}>
               <DetailItem
-                title={t`Total Supply`}
+                title={t("common.total.supply")}
                 value={parseTokenAmount(supply, ICP.decimals).toFormat()}
                 border={{ borderRadius: "12px 0 0 0" }}
               />
               <Box className={classes.divider} />
-              <DetailItem title={t`ICP Balance`} value={parseTokenAmount(balance, ICP.decimals).toFormat()} />
+              <DetailItem
+                title={t("common.balance.symbol", { symbol: "ICP" })}
+                value={parseTokenAmount(balance, ICP.decimals).toFormat()}
+              />
               <Box className={classes.divider} />
               <DetailItem title={t`Holders`} value={String(holders)} border={{ borderRadius: "0 0 0 12px" }} />
             </Box>
@@ -176,7 +179,7 @@ export default function Wrap() {
               <DetailItem title={t`Transactions`} value={String(counts)} />
               <Box className={classes.divider} />
               <DetailItem
-                title={t`Cycles Balance`}
+                title={t("common.cycles.balance")}
                 value={cycleValueFormat(cyclesBalance)}
                 border={{ borderRadius: "0 0 0 12px" }}
               />

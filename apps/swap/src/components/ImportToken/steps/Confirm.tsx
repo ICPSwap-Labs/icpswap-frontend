@@ -69,7 +69,7 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
     <Modal
       open={open}
       onClose={onClose}
-      title={t`Import Token`}
+      title={t("common.import.token")}
       dialogProps={{
         sx: {
           "& .MuiPaper-root": {

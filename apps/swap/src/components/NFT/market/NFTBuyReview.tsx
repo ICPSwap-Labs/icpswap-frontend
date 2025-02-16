@@ -81,7 +81,7 @@ export default function NFTBuyReview({
     if (status === ResultStatus.ERROR) {
       openErrorTip(getLocaleMessage(message) ?? "Transaction failed");
     } else {
-      openSuccessTip(t`Traded successfully`);
+      openSuccessTip(t("nft.trade.success"));
       if (onTradeSuccess) onTradeSuccess();
     }
 
@@ -98,7 +98,7 @@ export default function NFTBuyReview({
   const { result: tradeTokenBalance } = useTokenBalance(NFTTradeTokenCanisterId, account);
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Confirm Buying`} background={theme.palette.background.level2}>
+    <Modal open={open} onClose={onClose} title={t("nft.confirm.buying")} background={theme.palette.background.level2}>
       <Box
         sx={{
           borderRadius: "12px",

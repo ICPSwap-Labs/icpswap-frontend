@@ -93,10 +93,10 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
         if (onRemoveSuccess) onRemoveSuccess();
       } else {
         const message = manage_neuron_error.error_message;
-        openTip(message !== "" ? message : t`Failed to remove hotkeys`, TIP_ERROR);
+        openTip(message !== "" ? message : t("nns.failed.remove.hotkeys"), TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to remove hotkeys`, TIP_ERROR);
+      openTip(message ?? t("nns.failed.remove.hotkeys"), TIP_ERROR);
     }
 
     closeFullscreenLoading();
@@ -109,7 +109,7 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
   }, [neuron, principal]);
 
   let error: string | undefined;
-  if (!hotKey) error = t`Enter the hotkey`;
+  if (!hotKey) error = t("nns.hotkey.enter");
   if (hotKey && !isValidPrincipal(hotKey)) error = t`Invalid principal ID`;
 
   return (

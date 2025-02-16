@@ -209,7 +209,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
               <Box>
                 <Grid container justifyContent="center" alignItems="center" flexDirection="column">
                   <Typography fontSize="12px" fontWeight="500">
-                    Max Price
+                    {t("common.max.price")}
                   </Typography>
                   <Typography fontSize="20px" fontWeight="700" color="text.primary" sx={{ margin: "6px 0" }}>
                     {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}

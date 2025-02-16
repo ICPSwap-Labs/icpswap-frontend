@@ -159,12 +159,12 @@ export default function CreateProject() {
   };
 
   let errorMsg = "";
-  if (!values.rewardToken) errorMsg = t`Enter the reward token`;
-  if (!values.rewardStandard) errorMsg = t`Enter the reward standard`;
+  if (!values.rewardToken) errorMsg = t("stake.create.enter.reward.token");
+  if (!values.rewardStandard) errorMsg = t("stake.create.enter.reward.standard");
   if (!rewardToken) errorMsg = t`Invalid reward token`;
   if (!values.pool) errorMsg = t`Enter the pool`;
   if (!values.refunder) errorMsg = t`Enter the refunder`;
-  if (!values.reward) errorMsg = t`Enter the reward`;
+  if (!values.reward) errorMsg = t("farm.create.enter.reward");
   if (!values.token0AmountLimit && values.token0AmountLimit !== 0)
     errorMsg = t`Enter the token0 minimum staking amount `;
   if (!values.token1AmountLimit && values.token1AmountLimit !== 0)
@@ -178,7 +178,7 @@ export default function CreateProject() {
             <Grid mt="30px" container className={classes.mintInfoBox}>
               <FilledTextField
                 label="Reward Token"
-                placeholder={t`Enter reward token id`}
+                placeholder={t("stake.enter.reward.id")}
                 onChange={(value) => handleFieldChange(value, "rewardToken")}
                 value={values.rewardToken}
               />
@@ -203,7 +203,7 @@ export default function CreateProject() {
                 value={values.refunder}
               />
               <Box>
-                <Typography color="text.secondary">Start/End Time</Typography>
+                <Typography color="text.secondary">{t("common.start.end.time")}</Typography>
                 <Box mt={2}>
                   <Grid container justifyContent="space-between">
                     <Grid
@@ -267,7 +267,7 @@ export default function CreateProject() {
 
               <NumberFilledTextField
                 label="Reward"
-                placeholder={t`Enter total token claimed amount`}
+                placeholder={t("common.enter.token.claimed")}
                 onChange={(value: number) => handleFieldChange(value, "reward")}
                 value={values.reward}
                 numericProps={{
@@ -320,7 +320,7 @@ export default function CreateProject() {
               <FilledTextField
                 select
                 label="PriceInsideLimit"
-                placeholder={t`Select the PriceInsideLimit`}
+                placeholder={t("stake.set.price.inside.limit")}
                 onChange={(value) => handleFieldChange(value, "priceInsideLimit")}
                 value={values.priceInsideLimit}
                 menus={[

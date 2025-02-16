@@ -223,10 +223,10 @@ export function SetDissolveDelay({
         {t("common.delay")}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Set Dissolve Delay`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.set.dissolve.delay")}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "12px 0" }}>
           <Box>
-            <Typography color="text.primary">Neuron ID</Typography>
+            <Typography color="text.primary">{t("nns.neuron.id")}</Typography>
             <Typography sx={{ fontSize: "12px", padding: "5px" }}>
               {neuron_id ? toHexString(neuron_id) : "--"}
             </Typography>

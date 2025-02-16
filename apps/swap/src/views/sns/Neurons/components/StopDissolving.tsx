@@ -57,7 +57,7 @@ export function StopDissolving({ onStopSuccess, governance_id, neuron_id, disabl
         onClose={() => setOpen(false)}
         title={t("nns.stop.dissolving")}
         onConfirm={handleConfirm}
-        text={t`Are you sure you want to stop the dissolve process?`}
+        text={t("nns.stop.dissolving.confirm")}
       />
     </>
   );

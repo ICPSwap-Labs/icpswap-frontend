@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { TypographyProps } from "../Mui";
 import { SmallButton } from "./SmallButton";
 
@@ -8,9 +10,11 @@ export interface MaxButtonProps {
 }
 
 export function MaxButton({ onClick, background, color }: MaxButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <SmallButton onClick={onClick} background={background} color={color} fontWeight={600}>
-      MAX
+      {t("common.max")}
     </SmallButton>
   );
 }

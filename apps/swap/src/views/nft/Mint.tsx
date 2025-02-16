@@ -178,7 +178,7 @@ export default function NFTMint() {
   };
 
   let errorMsg = "";
-  if (!agree) errorMsg = t`Agree the statement`;
+  if (!agree) errorMsg = t("nft.mint.agree.statement");
   if (fileError) errorMsg = t`File error`;
   if (!file) errorMsg = t`Selected the file`;
   if (!mintTokenInfo.name) errorMsg = t`Enter the name`;
@@ -338,7 +338,7 @@ export default function NFTMint() {
                       <Box mr="10px" sx={{ width: "145px" }}>
                         <FilledTextField
                           fullWidth
-                          placeholder={t`Metadata Key`}
+                          placeholder={t("nft.metadata.key")}
                           InputProps={{
                             disableUnderline: true,
                             inputProps: {
@@ -351,7 +351,7 @@ export default function NFTMint() {
                       <Grid item xs>
                         <FilledTextField
                           fullWidth
-                          placeholder={t`Metadata Value`}
+                          placeholder={t("nft.metadata.value")}
                           onChange={(value: string) => handleMetadataValueInput(value, index)}
                           InputProps={{
                             disableUnderline: true,

@@ -345,7 +345,7 @@ export const PriceRange = memo(
                   </Flex>
                   <Flex sx={{ width: "48%" }}>
                     <PriceRangeSelector
-                      label={t`Max Price`}
+                      label={t("common.max.price")}
                       value={
                         ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
                       }

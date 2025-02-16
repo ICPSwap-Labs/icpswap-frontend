@@ -224,7 +224,7 @@ export default function VotingCreateProposal() {
   if (!values.startDateTime || !values.endDateTime) errorMessage = t`Invalid date range`;
   if (!values.userAmount) errorMessage = t`Enter the amount of voters`;
   if (!values.options || values.options.length < 2 || hasEmptyOption) errorMessage = t`Invalid options`;
-  if (!values.powers || values.powers.length < 1) errorMessage = t`Import the powers`;
+  if (!values.powers || values.powers.length < 1) errorMessage = t("vote.create.error.powers");
 
   const down640 = useMediaQuery("(max-width:640px)");
 
@@ -257,7 +257,7 @@ export default function VotingCreateProposal() {
 
   return (
     <Wrapper>
-      <Breadcrumbs prevLabel={t`Project`} currentLabel={t`Create proposal`} prevLink={`/voting/${canisterId}`} />
+      <Breadcrumbs prevLabel={t`Project`} currentLabel={t("vote.create.proposal")} prevLink={`/voting/${canisterId}`} />
 
       <Box mt="20px" />
 
@@ -482,7 +482,7 @@ export default function VotingCreateProposal() {
                   size="large"
                   startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
                 >
-                  {errorMessage || t`Create proposal`}
+                  {errorMessage || t("vote.create.proposal")}
                 </Button>
               </Box>
             </Box>

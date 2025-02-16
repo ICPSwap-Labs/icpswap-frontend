@@ -113,12 +113,12 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
     if (typedValue && String(typedValue) !== "0") {
       error = error ?? t("common.error.insufficient.balance");
     } else {
-      error = error ?? t("common.error.input.amount");
+      error = error ?? t("common.enter.input.amount");
     }
   }
 
   if (typeof available === "boolean" && !available) {
-    error = error ?? t`This pool is not available now`;
+    error = error ?? t("swap.pool.not.available");
   }
 
   return {

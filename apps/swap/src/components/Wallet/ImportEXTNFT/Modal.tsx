@@ -89,7 +89,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
 
   let error = "";
   if (values.id && isValidPrincipal(values.id) && isExisted(values.id)) error = t`The token exists`;
-  if (values.id && !isValidPrincipal(values.id)) error = t`Invalid canister id`;
+  if (values.id && !isValidPrincipal(values.id)) error = t("common.error.invalid.canister.id");
   if (values.id && !!extAllCollections?.length && !extAllCollections.find((e) => e.id === values.id))
     error = t`Non-existent canister id `;
   if (!values.id) error = t`Enter the canister id`;
@@ -99,7 +99,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
     <Modal
       open={open}
       onClose={onClose}
-      title={t`Import NFT`}
+      title={t("nft.import")}
       dialogProps={{
         sx: {
           "& .MuiPaper-root": {

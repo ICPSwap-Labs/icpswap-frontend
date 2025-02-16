@@ -72,7 +72,7 @@ export default function AddLiquidityConfirmModal({
   };
 
   return (
-    <SwapModal open={open} onClose={onCancel} title="Add Liquidity">
+    <SwapModal open={open} onClose={onCancel} title={t("swap.add.liquidity")}>
       <>
         <Grid container flexDirection="column" spacing={3}>
           <Grid item container>

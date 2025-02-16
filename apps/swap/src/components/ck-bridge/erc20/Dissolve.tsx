@@ -50,11 +50,11 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   }, [account, setAddress]);
 
   const dissolve_error = useMemo(() => {
-    if (!address) return t`Enter the address`;
-    if (!amount) return t("common.error.input.amount");
+    if (!address) return t("common.enter.address");
+    if (!amount) return t("common.enter.input.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
 
-    if (!token || !tokenBalance) return t`Waiting to fetch data`;
+    if (!token || !tokenBalance) return t("common.waiting.fetching");
 
     if (!formatTokenAmount(amount, token.decimals).isGreaterThan(token.transFee))
       return `Min amount is ${toSignificantWithGroupSeparator(
@@ -128,7 +128,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
               }}
               fullWidth
               autoComplete="off"
-              placeholder="Enter the address"
+              placeholder={t("common.enter.address")}
             />
           </Box>
         </Box>

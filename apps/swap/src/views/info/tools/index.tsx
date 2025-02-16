@@ -4,15 +4,19 @@ import { Flex, Image, Link } from "@icpswap/ui";
 import i18n from "i18n/index";
 
 const tools = [
-  { label: i18n.t`Burn tool`, image: "/images/info/tools/Burn.svg", path: "/info-tools/burn" },
+  { label: i18n.t("tools.burn"), image: "/images/info/tools/Burn.svg", path: "/info-tools/burn" },
   {
     label: i18n.t`Swap Transactions`,
     image: "/images/info/tools/SwapTransactions.svg",
     path: "/info-tools/swap-transactions",
   },
-  { label: i18n.t`Liquidity Positions`, image: "/images/info/tools/Positions.svg", path: "/info-tools/positions" },
   {
-    label: i18n.t`Users’ Pool Balances`,
+    label: i18n.t("info.tools.liquidity.positions"),
+    image: "/images/info/tools/Positions.svg",
+    path: "/info-tools/positions",
+  },
+  {
+    label: i18n.t("info.tools.users'.pool.balance"),
     image: "/images/info/tools/UserPoolBalance.svg",
     path: "/info-tools/user-balances",
   },
@@ -27,7 +31,7 @@ const tools = [
     path: "/info-tools/position-transactions",
   },
   {
-    label: i18n.t`Locked Positions`,
+    label: i18n.t("common.locked.positions"),
     image: "/images/info/tools/LockedPositions.svg",
     path: "/info-tools/locked-positions",
   },

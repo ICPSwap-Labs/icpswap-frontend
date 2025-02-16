@@ -161,7 +161,6 @@ function MainContent() {
                   fontSize: "18px",
                   fontWeight: 500,
                   cursor: "pointer",
-                  textTransform: "capitalize",
                   "@media (max-width:640px)": {
                     fontSize: "14px",
                   },
@@ -280,7 +279,7 @@ export default function Staking() {
     <Wrapper>
       <Flex gap="0 12px">
         <Typography sx={{ fontSize: "32px", color: "text.primary", fontWeight: 600 }}>
-          {t("stake.staking.pool")}
+          {t("stake.staking.pool.title")}
         </Typography>
         <V2Icon />
       </Flex>

@@ -99,7 +99,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Pool Balance:`}
+              label={t("pool.balance.colon")}
               value={
                 poolTokenBalance && pool ? (
                   <Typography component="span" color="text.primary">
@@ -114,7 +114,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Total Rewards:`}
+              label={t("common.total.rewards.colon")}
               value={
                 <Typography component="span" color="text.primary">
                   {parseTokenAmount(pool?.rewardDebt, pool?.rewardTokenDecimals).toFormat()}
@@ -125,7 +125,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Reward Per Second:`}
+              label={t("common.reward.per.second.colon")}
               value={
                 <>
                   {pool && rewardToken
@@ -137,9 +137,9 @@ export default function PoolsDetails() {
                 </>
               }
             />
-            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(pool?.startTime)} />
-            <PoolDetailItem label={t`End Time:`} value={timeFormatter(pool?.bonusEndTime)} />
-            <PoolDetailItem label={t`Last Reward Time:`} value={timeFormatter(pool?.lastRewardTime)} />
+            <PoolDetailItem label={t("common.start.time.colon")} value={timeFormatter(pool?.startTime)} />
+            <PoolDetailItem label={t("common.end.time.colon")} value={timeFormatter(pool?.bonusEndTime)} />
+            <PoolDetailItem label={t("common.last.reward.time.colon")} value={timeFormatter(pool?.lastRewardTime)} />
             <PoolDetailItem
               label={t("common.creator.colon")}
               value={
@@ -153,7 +153,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Cycles Left:`}
+              label={t("common.cycles.left.colon")}
               value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
             />
           </Box>

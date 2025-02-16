@@ -74,7 +74,7 @@ export function AllPositions({
           size="large"
           href={`/liquidity/add/${token0?.address}/${token1?.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
         >
-          {t("common.liquidity.add")}
+          {t("swap.add.liquidity")}
         </Button>
       </Box>
     </Modal>

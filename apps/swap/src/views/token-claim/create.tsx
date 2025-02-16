@@ -248,7 +248,7 @@ export default function CreateTokenClaim() {
 
   let errorMsg = "";
   if (!values.userAmount) errorMsg = t`Enter the claimed token amount`;
-  if (!values.tokenAmount) errorMsg = t`Enter user amount`;
+  if (!values.tokenAmount) errorMsg = t("claim.enter.user.amount");
   if (!values.standard) errorMsg = t`Select the token standard`;
   if (!values.id) errorMsg = t`Enter the token canister id`;
   if (!values.name) errorMsg = t`Enter the claim event name`;
@@ -280,7 +280,7 @@ export default function CreateTokenClaim() {
               />
 
               <FilledTextField
-                placeholder={t`Enter total token claimed amount`}
+                placeholder={t("common.enter.token.claimed")}
                 onChange={(value) => handleFieldChange(value, "tokenAmount")}
                 value={values.tokenAmount}
                 InputProps={{

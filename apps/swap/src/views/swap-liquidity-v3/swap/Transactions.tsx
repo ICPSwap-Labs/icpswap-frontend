@@ -10,14 +10,15 @@ import { useToken } from "hooks/index";
 import { ArrowUpRight } from "react-feather";
 import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
+import i18n from "i18n";
 
 export const RECORD_TYPE: { [key: string]: string } = {
-  swap: "Swap",
-  increaseLiquidity: "Add Liquidity",
-  decreaseLiquidity: "Remove Liquidity",
-  mint: "Add Liquidity",
-  addLiquidity: "Add Liquidity",
-  claim: "Collect",
+  swap: i18n.t("common.swap"),
+  increaseLiquidity: i18n.t("swap.add.liquidity"),
+  decreaseLiquidity: i18n.t("swap.remove.liquidity"),
+  mint: i18n.t("swap.add.liquidity"),
+  addLiquidity: i18n.t("swap.add.liquidity"),
+  claim: i18n.t("common.collect"),
 };
 
 interface SwapTransactionItemProps {

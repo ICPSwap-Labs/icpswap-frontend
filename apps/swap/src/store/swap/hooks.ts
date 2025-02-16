@@ -199,11 +199,11 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   const inputError = useMemo(() => {
     if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
-    if (!parsedAmount) return t("common.error.input.amount");
+    if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
     if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
-    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
 
     return null;

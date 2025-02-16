@@ -61,7 +61,7 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Confirm Burn`}>
+    <Modal open={open} onClose={onClose} title={t("burn.confirm")}>
       <Box sx={{ padding: "30px 0 0 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <TokenImage logo={token?.logo} size="56px" />
         <Typography sx={{ fontSize: "20px", fontWeight: 600, color: "text.primary", margin: "12px 0 0 0" }}>

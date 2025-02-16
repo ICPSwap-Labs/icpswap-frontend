@@ -83,7 +83,7 @@ export function StakeMaturity({
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title={t`Stake Maturity`}
+        title={t("nns.stake.maturity")}
         showCancel
         showConfirm
         onConfirm={handleStakeMaturity}

@@ -65,7 +65,7 @@ export default function RetryWrap({
     <>
       {isFunction(children) ? children({ onClick }) : children}
       {open ? (
-        <Modal title={t`Retry Wrap`} open={open} onClose={handleClose}>
+        <Modal title={t("wrap.retry")} open={open} onClose={handleClose}>
           <Box>
             <Typography component="span">{t("wrap.retry.descriptions")}</Typography>
             {account ? (

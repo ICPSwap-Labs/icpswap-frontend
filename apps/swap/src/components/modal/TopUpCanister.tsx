@@ -121,7 +121,7 @@ export default function TopUpCanister({
     <Modal title={t`Top-up canister`} open={open} onClose={onClose}>
       <NumberTextField
         name="amount"
-        label={t`Amount *`}
+        label={t("common.amount")}
         value={amount}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setAmount(event.target.value);

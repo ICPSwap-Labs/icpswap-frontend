@@ -23,6 +23,7 @@ import LazyImage from "components/LazyImage";
 import { encodeTokenIdentifier } from "utils/nft/index";
 import { getLocaleMessage } from "i18n/service";
 import { useAccount } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 import FileImage from "../FileImage";
 
@@ -66,6 +67,7 @@ export default function NFTSell({
   nft: NFTTokenMetadata;
   onSellSuccess?: (result: any) => void;
 }) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const [openSuccessTip] = useSuccessTip();
@@ -113,7 +115,8 @@ export default function NFTSell({
 
   const errorMsg = useMemo(() => {
     if (!price) return `Enter the price`;
-    if (price && new BigNumber(price).isLessThan(0.001)) return `Price must be greater than 0.001`;
+    if (price && new BigNumber(price).isLessThan(0.001))
+      return t("common.must.greater.than", { symbol: "Price", amount: "0.001" });
   }, [price]);
 
   const receiveTokenAmount = useMemo(() => {
@@ -188,11 +191,13 @@ export default function NFTSell({
             <Typography fontSize="12px">Listing is free. Once sold, the following fees will be deducted:</Typography>
             <Box>
               <Typography fontSize="12px" component="span">
-                Transaction Fees: {new BigNumber(NFTTradeFee).multipliedBy(100).toNumber()}%
+                {t("nft.transactions.fees", { fee: new BigNumber(NFTTradeFee).multipliedBy(100).toNumber() })}
               </Typography>
               &nbsp;
               <Typography fontSize="12px" component="span">
-                Creator Royalty: {new BigNumber(String(nft.royalties ?? 0)).dividedBy(100).toNumber()}%
+                {t("nft.creator.royalty.percent", {
+                  royalty: new BigNumber(String(nft.royalties ?? 0)).dividedBy(100).toNumber(),
+                })}
               </Typography>
             </Box>
           </Box>
@@ -201,7 +206,7 @@ export default function NFTSell({
 
       <Grid container mt="20px">
         <Grid item xs={12} className={classes.inputBox}>
-          <Typography>Sell Price</Typography>
+          <Typography>{t("nft.sell.price")}</Typography>
           <NumberTextField
             fullWidth
             variant="standard"

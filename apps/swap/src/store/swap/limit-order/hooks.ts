@@ -261,7 +261,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const inputError = useMemo(() => {
     if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken)
       return t("common.select.a.token");
-    if (!parsedAmount) return t("common.error.input.amount");
+    if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
     if (tickError) return t`Invalid tick for this pool`;
 
@@ -270,7 +270,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (inputToken.transFee > 0 && minimumAmount.isGreaterThan(typedValue))
       return t("limit.error.amount.exceed", { amount: `${minimumAmount.toFormat()} ${inputToken.symbol}` });
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
-    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
     if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;

@@ -87,7 +87,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
   }, [feeAmount0, feeAmount1]);
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Collect Fees`}>
+    <Modal open={open} onClose={onClose} title={t("common.collect.fees")}>
       <>
         <Box sx={{ padding: "16px 16px", borderRadius: "12px", background: theme.palette.background.level3 }}>
           <Flex fullWidth justify="space-between">

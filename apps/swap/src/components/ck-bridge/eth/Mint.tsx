@@ -52,7 +52,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return `Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.error.input.amount");
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.enter.input.amount");
     if (ethBalance && ethBalance.isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
@@ -102,7 +102,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
         disabled={loading || !account || !!mint_error}
         loading={loading}
       >
-        {mint_error === undefined ? t`Mint ckETH` : mint_error}
+        {mint_error === undefined ? t("common.mint.symbol", { symbol: "ckETH" }) : mint_error}
       </ButtonConnector>
 
       <MintExtraContent token={token} balance={tokenBalance} />

@@ -25,7 +25,7 @@ export const AddLiquidity = memo(({ token0, token1 }: AddLiquidityProps) => {
 
   return (
     <Button onClick={handleLoadPage} variant="contained" style={{ width: "fit-content" }}>
-      {t("common.liquidity.add")}
+      {t("swap.add.liquidity")}
     </Button>
   );
 });

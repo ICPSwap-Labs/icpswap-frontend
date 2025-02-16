@@ -8,6 +8,7 @@ import { InfoPools, Positions } from "components/liquidity/index";
 import { useHistory } from "react-router-dom";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { useTranslation } from "react-i18next";
+import i18n from "i18n";
 
 enum TabName {
   TopPools = "TopPools",
@@ -15,8 +16,8 @@ enum TabName {
 }
 
 const tabs = [
-  { label: "Your Liquidity Positions", value: TabName.Positions },
-  { label: "Top Pools", value: TabName.TopPools },
+  { label: "Your liquidity positions", value: TabName.Positions },
+  { label: i18n.t("swap.top.pools"), value: TabName.TopPools },
 ];
 
 interface TabProps {
@@ -176,7 +177,7 @@ export default function Liquidity() {
             </Flex>
 
             <Button variant="contained" onClick={loadAddLiquidity}>
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Button>
           </Flex>
 

@@ -49,7 +49,7 @@ export default function DeleteProposal({
         <Modal
           open={open}
           onClose={onClose}
-          title={t`Delete Proposal`}
+          title={t("vote.delete.proposal")}
           onConfirm={submit}
           onCancel={onClose}
           showCancel

@@ -74,7 +74,7 @@ export function useInitialSwapSteps() {
 
       updateStep(String(key), {
         content,
-        title: t`Swap Details`,
+        title: t("swap.details"),
         description: t`If you have sufficient balance in the swap pool, you may be able to swap directly without needing to deposit.`,
       });
     },

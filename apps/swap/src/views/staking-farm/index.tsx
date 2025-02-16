@@ -221,7 +221,6 @@ function MainContent() {
                   fontSize: "18px",
                   fontWeight: 500,
                   cursor: "pointer",
-                  textTransform: "capitalize",
                   "@media (max-width:640px)": {
                     fontSize: "14px",
                   },

@@ -93,7 +93,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               </Typography>
             </Card>
             <Card
-              title={t`FDV (USD)`}
+              title={t("common.fdv.usd")}
               fontSize="12px"
               tips={
                 <Flex vertical gap="8px 0" align="flex-start">

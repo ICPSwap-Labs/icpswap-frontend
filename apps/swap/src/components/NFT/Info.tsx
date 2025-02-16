@@ -354,7 +354,7 @@ export default function NFTInfo({
                         variant="contained"
                         onClick={() => setBuyReviewShow(true)}
                       >
-                        {t`Buy NFT`}
+                        {t("nft.buy")}
                       </Button>
                     ) : null}
                     {isOwner && !isOnSale && (
@@ -390,7 +390,7 @@ export default function NFTInfo({
                 />
                 {!metadata.filePath?.includes("base64") ? (
                   <DetailsItem
-                    label={t`File Link`}
+                    label={t("common.file.link")}
                     value={
                       <Link
                         href={metadata.filePath}
@@ -404,9 +404,9 @@ export default function NFTInfo({
                     }
                   />
                 ) : null}
-                <DetailsItem label={t`Mint Time`} value={timestampFormat(metadata.mintTime)} />
+                <DetailsItem label={t("nft.mint.time")} value={timestampFormat(metadata.mintTime)} />
                 <DetailsItem
-                  label={t`Minter`}
+                  label={t("nft.minter")}
                   value={<Copy content={metadata.minter ?? ""}>{shorten(metadata.minter, 12)}</Copy>}
                 />
                 <Flex fullWidth vertical align="flex-start" gap="8px">

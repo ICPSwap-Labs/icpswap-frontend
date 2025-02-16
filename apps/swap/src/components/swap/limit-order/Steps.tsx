@@ -107,7 +107,7 @@ export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim 
       children: [
         { label: i18n.t("common.limit.price"), value: LimitPrice },
         { label: i18n.t("common.price.range"), value: PriceRange },
-        { label: i18n.t("common.you.pay.upper"), value: InputTokenAmount },
+        { label: i18n.t("common.you.pay"), value: InputTokenAmount },
       ],
       errorActions: [
         <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
@@ -119,8 +119,8 @@ export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim 
       title: i18n.t("limit.submit"),
       children: [
         { label: i18n.t("common.limit.price"), value: LimitPrice },
-        { label: i18n.t("common.you.pay.upper"), value: InputTokenAmount },
-        { label: i18n.t("limit.expect.recevie"), value: OutputTokenAmount },
+        { label: i18n.t("common.you.pay"), value: InputTokenAmount },
+        { label: i18n.t("limit.expect.receive"), value: OutputTokenAmount },
       ],
     },
   ];

@@ -76,7 +76,7 @@ function Launchpad({ sns }: LaunchpadProps) {
         </Typography>
         <Typography color="text.primary">
           {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed
-            ? t`Complete`
+            ? t("common.complete")
             : deadline !== undefined
             ? dayjs(Number(deadline)).format("YYYY-MM-DD HH:mm:ss")
             : "--"}

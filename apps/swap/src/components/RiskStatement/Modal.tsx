@@ -64,7 +64,7 @@ export default function RiskStatementModal({ open, onClose, onRead }: RiskStatem
 
   return (
     <Modal
-      title={t`Risk Warning`}
+      title={t("risk.warning")}
       open={open}
       onClose={onClose}
       type="warning"

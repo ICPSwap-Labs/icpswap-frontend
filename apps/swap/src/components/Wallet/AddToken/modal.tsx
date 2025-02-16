@@ -171,7 +171,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
       <Modal
         open={open}
         onClose={onClose}
-        title={t`Add Tokens`}
+        title={t("wallet.add.tokens")}
         dialogProps={{
           sx: {
             "& .MuiPaper-root": {

@@ -103,7 +103,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   };
 
   let error: string | undefined;
-  if (!amount) error = t("common.error.input.amount");
+  if (!amount) error = t("common.enter.input.amount");
   if (token === undefined) error = t("common.error.unknown");
   if (
     amount &&
@@ -124,10 +124,10 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
         {t("common.stake")}
       </Button>
 
-      <Modal open={open} onClose={handleClose} title={t`Create Neuron Stake`}>
+      <Modal open={open} onClose={handleClose} title={t("nns.create.neuron")}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
-            placeholder={t("common.error.input.amount")}
+            placeholder={t("common.enter.input.amount")}
             value={amount}
             onChange={(value: string) => setAmount(value)}
             fullWidth

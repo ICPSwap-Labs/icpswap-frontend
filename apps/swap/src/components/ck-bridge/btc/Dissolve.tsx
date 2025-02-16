@@ -32,9 +32,9 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, refresh: refreshTrigger });
 
   const dissolve_error = useMemo(() => {
-    if (!address) return t`Enter the address`;
+    if (!address) return t("common.enter.address");
     if (!validate(address)) return t`Invalid bitcoin address`;
-    if (!amount) return t("common.error.input.amount");
+    if (!amount) return t("common.enter.input.amount");
     if (!new BigNumber(amount).isGreaterThan(0.001)) return t`Min amount is 0.001 ckBTC`;
     if (parseTokenAmount(tokenBalance, token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
@@ -114,7 +114,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
             }}
             fullWidth
             autoComplete="off"
-            placeholder="Enter the address"
+            placeholder={t("common.enter.address")}
           />
         </Box>
       </Box>

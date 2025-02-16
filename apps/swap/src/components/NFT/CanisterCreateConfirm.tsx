@@ -22,7 +22,7 @@ export default ({
 
   return (
     <>
-      <Modal open={open} title={t`Creation Details`} onClose={onClose}>
+      <Modal open={open} title={t("nft.creation.details")} onClose={onClose}>
         <Box>
           <Typography color="text.tertiary" align="center">
             {t("common.pay")}

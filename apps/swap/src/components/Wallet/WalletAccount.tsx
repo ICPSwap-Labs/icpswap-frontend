@@ -167,7 +167,7 @@ export default function WalletAccount() {
           <AddressWrapper
             address={principal ? principalToAccount(principal?.toString()) : "--"}
             label={t`Account ID`}
-            tips={t`Account ID (AID): Derived from the Principal ID using a subaccount number, used to identify owners of ICP and NFTs. It adds an extra layer of privacy. It supports ICP, EXT standard tokens, and NFT transfers and transactions.`}
+            tips={t("wallet.account.tips")}
           />
         </Box>
         <Box

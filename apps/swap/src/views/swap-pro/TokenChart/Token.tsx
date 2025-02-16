@@ -165,7 +165,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
 
           <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
             <Button className="secondary" variant="contained">
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Button>
           </Link>
 

@@ -69,7 +69,7 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
     errorMessage = t("common.error.insufficient.balance");
   if (amount && token && !parseTokenAmount(token.transFee, token.decimals).isLessThan(amount))
     errorMessage = t("common.error.amount.greater.than.fee");
-  if (!amount || new BigNumber(amount).isEqualTo(0)) errorMessage = t("common.error.input.amount");
+  if (!amount || new BigNumber(amount).isEqualTo(0)) errorMessage = t("common.enter.input.amount");
   if (
     amount &&
     balance &&

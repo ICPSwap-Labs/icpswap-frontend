@@ -312,7 +312,7 @@ export default function NoAuthNFTInfo() {
                         />
                         {!metadata.filePath?.includes("base64") ? (
                           <DetailsItem
-                            label={t`File Link`}
+                            label={t("common.file.link")}
                             value={
                               <Link
                                 href={metadata.filePath}
@@ -326,9 +326,9 @@ export default function NoAuthNFTInfo() {
                             }
                           />
                         ) : null}
-                        <DetailsItem label={t`Mint Time`} value={timestampFormat(metadata.mintTime)} />
+                        <DetailsItem label={t("nft.mint.time")} value={timestampFormat(metadata.mintTime)} />
                         <DetailsItem
-                          label={t`Minter`}
+                          label={t("nft.minter")}
                           value={<Copy content={metadata.minter ?? ""}>{shorten(metadata.minter, 12)}</Copy>}
                         />
                         <DetailsItem label={t("nft.description")} value={`${metadata?.introduction ?? "--"}`} />

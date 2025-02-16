@@ -474,9 +474,9 @@ export function useMintInfo(
       (!parsedAmounts[FIELD.CURRENCY_A] && !depositADisabled) ||
       (!parsedAmounts[FIELD.CURRENCY_B] && !depositBDisabled)
     )
-      return t("common.error.input.amount");
+      return t("common.enter.input.amount");
 
-    if (typeof available === "boolean" && !available) return t`This pool is not available now`;
+    if (typeof available === "boolean" && !available) return t("swap.pool.not.available");
     if (poolState === PoolState.NOT_CHECK) return t("swap.waiting.verify");
     if (token0Insufficient === "INSUFFICIENT")
       return t("common.error.insufficient.balance.symbol", { symbol: token0.symbol });

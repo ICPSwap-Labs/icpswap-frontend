@@ -236,7 +236,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
         {t("nns.following")}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Follow neurons`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.follow.neurons")}>
         <Typography fontSize="12px" lineHeight="16px">
           {t("nns.following.topics")}
         </Typography>

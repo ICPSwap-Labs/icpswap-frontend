@@ -35,7 +35,7 @@ export function Reclaim({ farmId, farmInfo }: ReclaimProps) {
     const { status, message } = await farmWithdraw(farmId);
 
     if (status === ResultStatus.OK) {
-      openTip(t`Withdraw successfully`, MessageTypes.success);
+      openTip(t("common.withdraw.success"), MessageTypes.success);
       setRefreshRewardsTrigger(refreshRewardsTrigger + 1);
       setReclaimOpen(false);
     } else {

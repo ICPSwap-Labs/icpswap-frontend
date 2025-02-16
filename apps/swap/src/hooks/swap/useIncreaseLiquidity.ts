@@ -179,7 +179,7 @@ export function useIncreaseLiquidityCalls() {
         });
 
         if (status === "ok") {
-          openSuccessTip(t`Add Liquidity Successfully`);
+          openSuccessTip(t("liquidity.add.success"));
         } else {
           openExternalTip({ message: getLocaleMessage(message), tipKey: stepKey });
           return false;
@@ -218,7 +218,7 @@ function useInitialAddLiquiditySteps() {
 
     stepContentManage(String(key), {
       content,
-      title: t`Add Liquidity Details`,
+      title: t("swap.add.liquidity.details"),
     });
   }, []);
 }

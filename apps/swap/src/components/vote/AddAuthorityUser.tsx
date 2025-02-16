@@ -40,7 +40,7 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
       openTip(t`Add successfully`, MessageTypes.success);
       if (onSuccess) onSuccess();
     } else {
-      openTip(message ?? t`Failed to add user`, ResultStatus.ERROR);
+      openTip(message, ResultStatus.ERROR);
     }
 
     closeLoading();
@@ -49,7 +49,7 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
 
   let error = "";
   if (user && !isValidPrincipal(user)) error = t`Invalid principal id`;
-  if (!user) error = t`Enter the user's principal id`;
+  if (!user) error = t("vote.enter.user");
 
   return (
     <Identity onSubmit={handleAdd}>
@@ -65,7 +65,7 @@ export default function AddAuthorityUser({ open, onClose, canisterId, onSuccess 
           confirmDisabled={!!error || loading}
           confirmText={error || t("common.confirm")}
         >
-          <FilledTextField placeholder={t`Enter the user's principal id`} onChange={handleChange} />
+          <FilledTextField placeholder={t("vote.enter.user")} onChange={handleChange} />
           <Box sx={{ height: "40px" }} />
         </Modal>
       )}

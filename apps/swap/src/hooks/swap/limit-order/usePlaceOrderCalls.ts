@@ -222,7 +222,7 @@ export function usePlaceOrderCalls() {
         if (status === ResultStatus.OK) {
           openSuccessTip(t`Add limit order successfully`);
         } else {
-          openErrorTip(message ?? t`Failed to add limit order`);
+          openErrorTip(message ?? t("limit.failed.add"));
         }
 
         return status === ResultStatus.OK;

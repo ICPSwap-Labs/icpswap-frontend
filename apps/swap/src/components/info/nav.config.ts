@@ -1,3 +1,5 @@
+import i18n from "i18n";
+
 export type Route = {
   key: string;
   name: string;
@@ -38,7 +40,7 @@ export const routes: Route[] = [
   },
   {
     key: "info-claim",
-    name: "Token Claim",
+    name: i18n.t("nav.token.claim"),
     path: "/info-claim",
   },
   {

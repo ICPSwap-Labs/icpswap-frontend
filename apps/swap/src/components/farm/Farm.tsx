@@ -254,9 +254,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
               <Box>
                 <Flex gap="0 4px">
                   <Typography>{t("common.apr.your")}</Typography>
-                  <Tooltip
-                    tips={t`The APR estimated based on the cumulative rewards you have received. The APR depends on the concentration of the price range selected for your staked positions, the staking duration, and the number of tokens staked.`}
-                  />
+                  <Tooltip tips={t("farm.your.apr.tips")} />
                 </Flex>
 
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.apr" }}>
@@ -367,7 +365,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                       )}`}
                     >
                       <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
-                        {t("common.liquidity.add")}
+                        {t("swap.add.liquidity")}
                       </Button>
                     </Link>
                   </Box>
@@ -426,7 +424,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             to={`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
           >
             <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Button>
           </Link>
         </Box>

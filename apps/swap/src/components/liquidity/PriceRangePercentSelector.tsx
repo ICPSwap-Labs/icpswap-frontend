@@ -416,7 +416,7 @@ export const PriceRange = memo(
                   </Grid>
                   <Grid item sx={{ width: "48%" }}>
                     <PriceRangeSelector
-                      label={t`Max Price`}
+                      label={t("common.max.price")}
                       value={
                         ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
                       }

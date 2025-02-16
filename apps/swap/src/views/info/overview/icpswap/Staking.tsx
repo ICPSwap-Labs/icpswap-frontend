@@ -55,11 +55,7 @@ export function Staking() {
         }
       >
         <Flex vertical gap="32px 0" align="flex-start" sx={{ margin: "32px 0 0 0" }}>
-          <Item
-            label={t("common.tvl")}
-            value={tvl ?? "--"}
-            tooltip={t`The cumulative value of tokens staked across all live pools.`}
-          />
+          <Item label={t("common.tvl")} value={tvl ?? "--"} tooltip={t("common.tvl.tips")} />
           <Item
             label={t("common.total.rewarding.value")}
             value={rewardingValue ?? "--"}

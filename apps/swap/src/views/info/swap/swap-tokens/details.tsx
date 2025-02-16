@@ -207,7 +207,7 @@ export default function TokenDetails() {
 
           <Link to={addLiquidityLink(canisterId)}>
             <Button variant="contained" className="secondary">
-              {t("common.liquidity.add")}
+              {t("swap.add.liquidity")}
             </Button>
           </Link>
 

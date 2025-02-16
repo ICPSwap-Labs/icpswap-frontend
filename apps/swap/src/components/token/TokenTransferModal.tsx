@@ -82,7 +82,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   };
 
   const getErrorMessage = () => {
-    if (!values.to) return t`Enter transfer to`;
+    if (!values.to) return t("wallet.transfer.enter.to");
 
     if (usePrincipalStandard(token.address, token.standard)) {
       try {
@@ -92,7 +92,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
       }
     } else if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;
 
-    if (!values.amount) return t("common.error.input.amount");
+    if (!values.amount) return t("common.enter.input.amount");
     if (
       values.amount &&
       new BigNumber(values.amount ?? 0).isGreaterThan(parseTokenAmount(balance ?? 0, token.decimals))
@@ -177,7 +177,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
           placeholder={
             usePrincipalStandard(token.address, token.standard)
               ? t`Enter the principal ID`
-              : t`Enter the account ID or principal ID`
+              : t("wallet.transfer.enter.account.principal")
           }
           onChange={(value: string) => handleFieldChange(value, "to")}
           helperText={addressHelpText()}

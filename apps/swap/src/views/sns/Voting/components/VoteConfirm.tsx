@@ -92,7 +92,7 @@ export function VoteConfirm({
       open={open}
       onConfirm={handleVote}
       onClose={onClose}
-      title={rejected ? t`Reject Proposal` : t`Adopt Proposal`}
+      title={rejected ? t("nns.reject.proposal") : t("nns.adopt.proposal")}
       text={
         rejected
           ? t("nns.voting.cast.reject.confirm", { powers: votingPowerFormat(votingPowers) })

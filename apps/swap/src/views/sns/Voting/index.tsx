@@ -51,7 +51,7 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
 
     switch (proposal_status) {
       case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_ADOPTED:
-        return t`Adopted`;
+        return t("common.adopted");
       case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_EXECUTED:
         return t`Executed`;
       case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_FAILED:
@@ -61,7 +61,7 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
       case SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_REJECTED:
         return t`Rejected`;
       default:
-        return "Unspecified";
+        return t("common.unspecified");
     }
   }, [proposal]);
 

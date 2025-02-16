@@ -125,7 +125,7 @@ export function Ics() {
         }}
       >
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Market Cap</Typography>
+          <Typography fontSize="16px">{t("common.market.cap")}</Typography>
           <Typography fontSize="28px" fontWeight={500} color="text.primary">
             {marketCap ? formatDollarAmount(marketCap) : "--"}
           </Typography>
@@ -139,7 +139,7 @@ export function Ics() {
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Amount Burned</Typography>
+          <Typography fontSize="16px">{t("common.amount.burned")}</Typography>
           <Flex vertical gap="8px" align="flex-start">
             <Flex gap="4px">
               <Typography fontSize="28px" fontWeight={500} color="text.primary">

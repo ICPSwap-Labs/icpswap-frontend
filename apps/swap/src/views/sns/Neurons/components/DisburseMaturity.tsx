@@ -50,7 +50,7 @@ export function DisburseMaturity({
 
     if (status === "ok") {
       if (!neuron_error) {
-        openTip(t`Disburse maturity successfully`, TIP_SUCCESS);
+        openTip(t("nns.disburse.success"), TIP_SUCCESS);
         setDisburseOpen(false);
         if (onDisburseMaturitySuccess) onDisburseMaturitySuccess();
       } else {
@@ -79,7 +79,7 @@ export function DisburseMaturity({
       <ConfirmModal
         open={disburseOpen}
         onClose={() => setDisburseOpen(false)}
-        title={t`Disburse Maturity`}
+        title={t("nns.disburse.maturity")}
         onConfirm={handleDisburseMaturity}
         text={t`Are you sure you want to disburse this neuron?`}
       />

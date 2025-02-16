@@ -49,12 +49,12 @@ export function Swap() {
           />
 
           <Item
-            label={t`Total Trading Pairs`}
+            label={t("swap.total.trading.pairs")}
             value={allSwapPools ? allSwapPools.length : "--"}
             // tooltip={t`The total value of rewards distributed by finished farming pools.`}
           />
           <Item
-            label={t`Total Users`}
+            label={t("swap.total.users")}
             value={swapGlobalData?.totalUser === undefined ? "--" : formatAmount(Number(swapGlobalData.totalUser))}
             // tooltip={t`The total number of farming pools, including those that are unstart, live, and finished.`}
           />

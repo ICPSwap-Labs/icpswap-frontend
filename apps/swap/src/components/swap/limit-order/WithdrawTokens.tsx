@@ -73,7 +73,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
   );
 
   return (
-    <Modal open={open} title={t`Withdraw Tokens`} onClose={onClose} background="level1">
+    <Modal open={open} title={t("limit.withdraw.tokens")} onClose={onClose} background="level1">
       <Box sx={{ padding: "14px 16px", borderRadius: "12px", background: theme.palette.background.level2 }}>
         <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
           <Trans

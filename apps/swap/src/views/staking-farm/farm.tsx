@@ -44,7 +44,7 @@ export default function Farm() {
   return (
     <Flex sx={{ width: "100%", padding: "0 0 24px 0" }} justify="center">
       <Box sx={{ width: "100%", maxWidth: "1120px", margin: "16px 0 0 0" }}>
-        <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="back" />
+        <Breadcrumbs prevLabel={t`Farm`} currentLabel={t("farm.stake.positions.label")} prevLink="back" />
 
         <Flex
           sx={{
