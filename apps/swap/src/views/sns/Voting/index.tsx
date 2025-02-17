@@ -92,7 +92,9 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
           </Box>
         </Box>
 
-        <Typography sx={{ color: "text.primary", margin: "10px 0 0 0" }}>{title}</Typography>
+        <Typography sx={{ color: "text.primary", wordBreak: "break-all", lineHeight: "16px", margin: "10px 0 0 0" }}>
+          {title}
+        </Typography>
 
         <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "16px" }}>
           {summary ? shortenString(summary, 150) : "--"}
@@ -110,27 +112,23 @@ const sns_proposals_limit = 50;
 
 export default function Votes() {
   const history = useHistory();
-  const { root_id } = useParsedQueryString() as { root_id: string };
+  const { root_id: root_id_url } = useParsedQueryString() as { root_id: string };
   const [loading, setLoading] = useState(false);
   const [fetchDone, setFetchDone] = useState(false);
   const [allProposals, setAllProposals] = useState<ProposalData[]>([]);
   const [filterStatus, setFilterStatus] = useState<SnsProposalDecisionStatus[]>([]);
   const [excludeFuncIds, setExcludeFuncIds] = useState<bigint[]>([]);
 
-  const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
-
-  useEffect(() => {
-    if (root_id) {
-      setSelectedNeuron(root_id);
-    }
-  }, [root_id]);
+  const root_id = useMemo(() => {
+    return root_id_url ?? "csyra-haaaa-aaaaq-aacva-cai";
+  }, [root_id_url]);
 
   const { result: listedSNS } = useListDeployedSNSs();
 
   const sns = useMemo(() => {
-    if (!selectedNeuron || !listedSNS) return undefined;
-    return listedSNS.instances.find((e) => e.root_canister_id.toString() === selectedNeuron);
-  }, [listedSNS, selectedNeuron]);
+    if (!root_id || !listedSNS) return undefined;
+    return listedSNS.instances.find((e) => e.root_canister_id.toString() === root_id);
+  }, [listedSNS, root_id]);
 
   const { governance_id } = useMemo(() => {
     if (!sns) return { governance_id: undefined, ledger_id: undefined };
@@ -150,7 +148,6 @@ export default function Votes() {
   const handleSelectNeuronChange = (id: string) => {
     reset_state();
     history.push(`/sns/voting?root_id=${id}`);
-    setSelectedNeuron(id);
   };
 
   const proposals = useMemo(() => {
@@ -213,7 +210,7 @@ export default function Votes() {
           flexWrap: "wrap",
         }}
       >
-        <SelectSns value={selectedNeuron} onChange={handleSelectNeuronChange} />
+        <SelectSns value={root_id} onChange={handleSelectNeuronChange} />
 
         <SelectNeuronFuncs governance_id={governance_id} onConfirm={handleSelectNeuronFuncs} />
 
