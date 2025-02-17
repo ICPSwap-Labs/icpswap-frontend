@@ -100,6 +100,7 @@ export async function depositFrom(canisterId: string, token: string, amount: big
 }
 
 export async function mint(canisterId: string, args: MintArgs) {
+  console.log("mint args: ", args);
   return resultFormat<bigint>(await (await swapPool(canisterId, true)).mint(args));
 }
 

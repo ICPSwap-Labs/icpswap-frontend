@@ -229,6 +229,8 @@ export function useMintInfo(
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {};
 
+  console.log("price ticks: ", ticks);
+
   const _ticksAtLimit = useMemo(
     () => ({
       [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
