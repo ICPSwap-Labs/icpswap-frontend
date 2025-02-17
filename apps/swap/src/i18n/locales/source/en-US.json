@@ -693,7 +693,7 @@
   "common.check.balance.tips": "Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.",
   "UdwEX9": "Set event user data successfully",
   "risk.description2": "2. The Internet Computer ecosystem is in its growth stage. All functions of ICPSwap have undergone multiple rounds of internal and public testing and also iterative repair, The ICPSwap DApp is now under SNS control, enhancing its security!",
-  "nns.voting.cast.agree.confirm": "You are about to cast {0} votes for this proposal, are you sure you want to proceed?",
+  "nns.voting.cast.agree.confirm": "You are about to cast {{powers}} votes for this proposal, are you sure you want to proceed?",
   "Uif/ev": "Failed to approve ckBTC",
   "common.left": "Left",
   "Uz2jLa": "Select the reward token standard",
