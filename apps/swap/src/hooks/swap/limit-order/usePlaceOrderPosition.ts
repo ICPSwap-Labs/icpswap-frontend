@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { Price, TICK_SPACINGS, Pool, Position, Token, CurrencyAmount, priceToClosestTick } from "@icpswap/swap-sdk";
 import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
-import { useSwapState } from "store/swap/hooks";
 import { priceToClosestUseableTick } from "utils/swap/limit-order";
 
 interface usePlaceOrderPositionProps {
@@ -10,6 +9,7 @@ interface usePlaceOrderPositionProps {
   orderPrice: string | Null;
   inputToken: Token | Null;
   isInputTokenSorted: boolean | Null;
+  inputAmount: string | Null;
 }
 
 export function usePlaceOrderPosition({
@@ -17,9 +17,8 @@ export function usePlaceOrderPosition({
   pool,
   orderPrice,
   isInputTokenSorted,
+  inputAmount,
 }: usePlaceOrderPositionProps) {
-  const { typedValue: inputAmount } = useSwapState();
-
   const { token0, token1, fee: feeAmount } = pool ?? {};
 
   const { orderPriceTick, closetUseableTick } = useMemo(() => {

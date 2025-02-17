@@ -1,14 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useContext,
-  forwardRef,
-  Ref,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { useState, useCallback, useEffect, useContext, forwardRef, Ref, useImperativeHandle, useRef } from "react";
 import { Box } from "components/Mui";
 import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
 import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
@@ -69,14 +59,13 @@ export const PlaceOrder = forwardRef(
 
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId, independentField } = useSwapState();
+    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId } = useSwapState();
     const limitPriceRef = useRef<LimitPriceRef>();
 
     const {
       inputError: swapInputError,
-      parsedAmount,
       trade,
-      tradePoolId,
+      poolId,
       state: swapState,
       currencyBalances,
       inputToken,
@@ -102,10 +91,10 @@ export const PlaceOrder = forwardRef(
       setOrderPrice,
       minUseableTick,
       isInputTokenSorted,
-      outputAmount,
       pool,
       minSettableTick,
       atLimitedTick,
+      parsedAmounts,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     const available = useLimitSupported({ canisterId: pool?.id });
@@ -114,8 +103,8 @@ export const PlaceOrder = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
-    }, [tradePoolId, outputToken, inputToken]);
+      if (onTradePoolIdChange && poolId) onTradePoolIdChange(poolId);
+    }, [poolId, outputToken, inputToken]);
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -134,14 +123,6 @@ export const PlaceOrder = forwardRef(
       setInputToken(inputToken);
       setOutputToken(outputToken);
     }, [inputToken, outputToken, setInputToken, setOutputToken]);
-
-    const parsedAmounts = useMemo(
-      () => ({
-        [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
-        [SWAP_FIELD.OUTPUT]: outputAmount,
-      }),
-      [independentField, parsedAmount, trade],
-    );
 
     const handleShowConfirmModal = useCallback(() => {
       setConfirmModalShow(true);
@@ -185,6 +166,8 @@ export const PlaceOrder = forwardRef(
     const handleInput = (value: string, type: "input" | "output") => {
       if (type === "input") {
         onUserInput(SWAP_FIELD.INPUT, value);
+      } else if (type === "output") {
+        onUserInput(SWAP_FIELD.OUTPUT, value);
       }
     };
 
@@ -331,7 +314,7 @@ export const PlaceOrder = forwardRef(
           outputCurrencyState={outputCurrencyState}
           currencyBalances={currencyBalances}
           parsedAmounts={parsedAmounts}
-          poolId={tradePoolId}
+          poolId={poolId}
           ui={ui}
           inputTokenSubBalance={inputTokenSubBalance}
           outputTokenSubBalance={outputTokenSubBalance}
@@ -395,7 +378,7 @@ export const PlaceOrder = forwardRef(
               : t("limit.submit"))}
         </AuthButton>
 
-        {confirmModalShow && trade && (
+        {confirmModalShow && parsedAmounts[SWAP_FIELD.INPUT] && (
           <LimitOrderConfirm
             open={confirmModalShow}
             onClose={() => setConfirmModalShow(false)}
@@ -407,7 +390,7 @@ export const PlaceOrder = forwardRef(
             currentPrice={currentPrice}
             inputToken={inputToken}
             outputToken={outputToken}
-            inputAmount={trade.inputAmount.toExact()}
+            inputAmount={parsedAmounts[SWAP_FIELD.INPUT].toExact()}
           />
         )}
       </Box>
