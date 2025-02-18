@@ -20,6 +20,7 @@ import type {
   ActorIdentity,
   PaginationResult,
   Null,
+  DepositFromAndSwapArgs,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
@@ -124,6 +125,11 @@ export async function quote(poolId: string, args: SwapArgs) {
 
 export async function swap(poolId: string, args: SwapArgs) {
   return resultFormat<bigint>(await (await swapPool(poolId, true)).swap(args));
+}
+
+export async function depositAndSwap(poolId: string, args: DepositFromAndSwapArgs) {
+  console.log("args: ", args);
+  return resultFormat<bigint>(await (await swapPool(poolId, true)).depositFromAndSwap(args));
 }
 
 export async function collect(poolId: string, args: ClaimArgs) {

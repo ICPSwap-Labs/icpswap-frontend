@@ -1052,7 +1052,7 @@
   "kc+zZA": "Demo",
   "kc8v8D": "Order is locked",
   "kfcwlE": "Sync failed, please try again",
-  "kh4IwG": "If you have sufficient balance in the swap pool, you may be able to swap directly without needing to deposit.",
+  "swap.details.descriptions": "If you have sufficient balance in the swap pool, you may be able to swap directly without needing to deposit.",
   "common.deposit": "Deposit",
   "kjKZRI": "Select the proposal type",
   "kjqEGF": "Total unused swap pool creation fess: {0} ICP",
