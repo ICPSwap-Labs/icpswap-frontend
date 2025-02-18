@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Box, Checkbox, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 import { Tooltip } from "./Tooltip";
+import { Box, Checkbox, Typography } from "./Mui";
 
 export interface OnlyTokenListProps {
   onChange?: (checked: boolean) => void;
@@ -9,6 +10,8 @@ export interface OnlyTokenListProps {
 }
 
 export function OnlyTokenList({ checked: _checked, onChange }: OnlyTokenListProps) {
+  const { t } = useTranslation();
+
   const [checked, setChecked] = useState(false);
 
   const handleClick = () => {
@@ -38,7 +41,7 @@ export function OnlyTokenList({ checked: _checked, onChange }: OnlyTokenListProp
         />
 
         <Typography color="text.primary" sx={{ userSelect: "none" }}>
-          Display Only Tokens in Tokenlist
+          {t("common.display.only.list")}
         </Typography>
       </Box>
 

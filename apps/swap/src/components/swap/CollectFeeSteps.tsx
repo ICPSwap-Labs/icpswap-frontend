@@ -53,7 +53,7 @@ export function getCollectFeeSteps({
 
   return [
     {
-      title: `Collect ${tokenA.symbol} and ${tokenB.symbol}`,
+      title: i18n.t("swap.collect.tokens", { symbol0: tokenA.symbol, symbol1: tokenB.symbol }),
       step: 0,
       children: [
         { label: i18n.t("common.position.id"), value: positionId.toString() },
