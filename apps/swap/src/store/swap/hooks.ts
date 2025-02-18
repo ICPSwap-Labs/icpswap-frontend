@@ -200,7 +200,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const inputError = useMemo(() => {
     if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
-    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
     if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");

@@ -295,8 +295,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
     if (!independentFieldAmount) return t("common.enter.input.amount");
     if (!inputSwapAmount || formatTokenAmount(inputSwapAmount, inputToken.decimals).isLessThan(inputToken.transFee))
-      return t`Amount should large than trans fee`;
-    if (tickError) return t`Invalid tick for this pool`;
+      return t("common.error.amount.large.than.fee");
+    if (tickError) return t("limit.error.invalid.tick");
 
     const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
 
