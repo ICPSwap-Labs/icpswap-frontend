@@ -273,7 +273,7 @@ export default function SwapScanValuation() {
               width="100%"
               fullHeight
               value={principal}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     placeholder: `Search the principal for valuation`,

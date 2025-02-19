@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => {
     wrapper: {
       display: "grid",
       alignItems: "center",
-      gridTemplateColumns: "1.5fr 120px repeat(4, 1fr) 170px",
+      gridTemplateColumns: "1.5fr 120px repeat(4, 1fr) 120px",
     },
   };
 });

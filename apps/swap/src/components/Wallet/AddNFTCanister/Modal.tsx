@@ -144,7 +144,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             contained
             borderRadius="12px"
             background={theme.palette.background.level1}
-            textFiledProps={{
+            textFieldProps={{
               slotProps: {
                 input: {
                   startAdornment: (

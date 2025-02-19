@@ -72,7 +72,6 @@ export interface FilledTextFieldProps {
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
@@ -158,7 +157,6 @@ function UIFilledTextField(
     maxWidth,
     fullHeight,
     disabled,
-    InputProps,
     borderRadius = "8px",
     contained = false,
     CustomNoData,
@@ -255,9 +253,10 @@ function UIFilledTextField(
                   onChange={({ target: { value } }) => onChange && onChange(value)}
                   value={value}
                   multiline={multiline}
-                  InputProps={{
-                    disableUnderline: true,
-                    ...(InputProps || {}),
+                  slotProps={{
+                    input: {
+                      disableUnderline: true,
+                    },
                   }}
                   fullWidth
                   disabled={disabled}

@@ -51,19 +51,15 @@ export async function getSwapNFTTokenURI(tokenId: bigint | number) {
   return JSON.parse(data ?? "") as { image: string; [key: string]: any };
 }
 
-export function useMintNFTCallback(): (
-  canisterId: string,
-  identity: Identity,
-  params: NFTBatchMintArgs,
-) => Promise<StatusResult<bigint>> {
-  return useCallback(async (canisterId, identity, params) => {
+export function useMintNFTCallback(): (canisterId: string, params: NFTBatchMintArgs) => Promise<StatusResult<bigint>> {
+  return useCallback(async (canisterId, params) => {
     if (params.count && BigInt(params.count) > 1) {
-      return resultFormat<bigint>(await (await NFTCanister(canisterId, identity)).mint_batch(params));
+      return resultFormat<bigint>(await (await NFTCanister(canisterId, true)).mint_batch(params));
     }
 
     return resultFormat<bigint>(
       await (
-        await NFTCanister(canisterId, identity)
+        await NFTCanister(canisterId, true)
       ).mint({
         ...params,
       }),

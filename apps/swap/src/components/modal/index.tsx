@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Box, Button, Dialog, DialogTitle, DialogContent, Typography, useMediaQuery } from "@mui/material";
 import { makeStyles, useTheme } from "@mui/styles";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
@@ -61,9 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface ModalProps {
-  title?: string | React.ReactNode;
+  title?: string | ReactNode;
   showClose?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   open: boolean;
   confirmText?: ReactNode;
   cancelText?: ReactNode;

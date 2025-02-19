@@ -151,14 +151,18 @@ export function Participate({
             allowNegative: false,
             maxLength: 100,
           }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">
-                <Typography sx={{ cursor: "pointer" }} color="primary" onClick={handleMAX}>
-                  {t("common.max")}
-                </Typography>
-              </InputAdornment>
-            ),
+          textFieldProps={{
+            slotProps: {
+              input: {
+                endAdornment: (
+                  <InputAdornment position="start">
+                    <Typography sx={{ cursor: "pointer" }} color="primary" onClick={handleMAX}>
+                      {t("common.max")}
+                    </Typography>
+                  </InputAdornment>
+                ),
+              },
+            },
           }}
           onChange={handleAmountChange}
         />

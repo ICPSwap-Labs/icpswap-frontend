@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, Typography, Box, useTheme } from "components/Mui";
+import { Button, Typography, Box, useTheme, CircularProgress } from "components/Mui";
 import {
   parseTokenAmount,
   toHexString,
@@ -9,13 +9,11 @@ import {
   BigNumber,
 } from "@icpswap/utils";
 import { increaseNeuronDelay } from "@icpswap/hooks";
-import { MaxButton } from "@icpswap/ui";
-import CircularProgress from "@mui/material/CircularProgress";
+import { MaxButton, MinButton } from "@icpswap/ui";
 import type { NervousSystemParameters, Neuron } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Modal, NumberFilledTextField } from "components/index";
 import { secondsToDissolveDelayDuration, getSnsDelayTimeInSeconds, neuronFormat } from "utils/sns/index";
-import { MinButton } from "components/Button";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 

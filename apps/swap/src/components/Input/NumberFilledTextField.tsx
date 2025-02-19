@@ -5,16 +5,16 @@ import { TextFieldNumberComponent, NumericProps } from "components/Input/NumberT
 export type NumberFilledTextFieldProps = Override<FilledTextFieldProps, { numericProps: NumericProps }>;
 
 export function NumberFilledTextField(props: NumberFilledTextFieldProps) {
-  const { numericProps, ...textFieldProps } = props;
+  const { numericProps, ...otherProps } = props;
 
   return (
     <FilledTextField
-      {...textFieldProps}
+      {...otherProps}
       value={props.value}
-      textFiledProps={{
+      textFieldProps={{
         slotProps: {
           input: {
-            ...(textFieldProps.slotProps?.input ?? {}),
+            ...(otherProps?.textFieldProps?.slotProps?.input ?? {}),
             inputComponent: TextFieldNumberComponent,
             inputProps: {
               decimalScale: numericProps.decimalScale,

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Grid, InputAdornment, Typography, Box } from "@mui/material";
+import { InputAdornment, Typography, Box } from "components/Mui";
 import { NumberTextField, AuthButton } from "components/index";
 import { cycleValueFormat, formatTokenAmount, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
@@ -7,12 +7,12 @@ import { useICP2CyclesManager } from "store/global/hooks";
 import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import { useAccountPrincipal } from "store/auth/hooks";
-import MaxButton from "components/MaxButton";
 import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { useTokenBalance } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+import { Flex, MaxButton } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 
 import Modal from "./index";
@@ -118,7 +118,7 @@ export default function TopUpCanister({
   if (!amount) ErrorMessage = t("common.error.");
 
   return (
-    <Modal title={t`Top-up canister`} open={open} onClose={onClose}>
+    <Modal title={t("nft.topUp.canister")} open={open} onClose={onClose}>
       <NumberTextField
         name="amount"
         label={t("common.amount")}
@@ -132,25 +132,22 @@ export default function TopUpCanister({
           allowNegative: false,
           maxLength: 15,
         }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Typography>{`${topUpCycles} T Cycles`}</Typography>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <Typography>{`${topUpCycles} T Cycles`}</Typography>
+              </InputAdornment>
+            ),
+          },
         }}
       />
 
       <Box mt={1}>
-        <Grid container alignItems="center">
+        <Flex fullWidth align="center" gap="0 6px">
           <Typography>Balance: {`${new BigNumber(balance).toFormat()} ICP`}</Typography>
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+          <MaxButton onClick={handleMax} />
+        </Flex>
 
         <Box mt={1}>
           <Typography>

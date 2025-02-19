@@ -90,7 +90,7 @@ const Upload = forwardRef(
       data: { filePath: _filePath, batchId },
     } = values;
 
-    const textFiledProps = {
+    const textFieldProps = {
       ...props,
       defaultValue: undefined,
     };
@@ -258,7 +258,7 @@ const Upload = forwardRef(
         )}
 
         <TextField
-          {...textFiledProps}
+          {...textFieldProps}
           sx={{
             display: uploadLoading ? "none" : "block",
             position: "absolute",

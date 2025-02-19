@@ -265,7 +265,7 @@ export default function CreateStakingTokenPool() {
                           <FilledTextField
                             fullWidth
                             {...params}
-                            InputProps={{
+                            textFieldProps={{
                               ...(params?.InputProps ?? {}),
                               disableUnderline: true,
                             }}
@@ -296,7 +296,7 @@ export default function CreateStakingTokenPool() {
                           <FilledTextField
                             fullWidth
                             {...params}
-                            InputProps={{
+                            textFieldProps={{
                               ...(params?.InputProps ?? {}),
                               disableUnderline: true,
                             }}
@@ -321,15 +321,19 @@ export default function CreateStakingTokenPool() {
                 placeholder={t("stake.create.enter.output.per.second")}
                 onChange={(value) => handleFieldChange(value, "outputPerSecond")}
                 value={values.outputPerSecond}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: rewardTokenInfo?.decimals ?? 8,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.outputPerSecond,
+                textFieldProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: rewardTokenInfo?.decimals ?? 8,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.outputPerSecond,
+                      },
+                    },
                   },
                 }}
               />

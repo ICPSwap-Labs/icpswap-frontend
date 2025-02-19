@@ -63,7 +63,7 @@ export default function Header() {
                   fullHeight
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
-                  textFiledProps={{
+                  textFieldProps={{
                     slotProps: {
                       input: {
                         startAdornment: (

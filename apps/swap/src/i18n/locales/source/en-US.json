@@ -238,7 +238,7 @@
   "farm.amount.per.distribution": "Amount per distribution",
   "9Mgfpd": "Insufficient WICP balance",
   "limit.set.order": "Set limit order",
-  "9UcYk/": "Enter top-up amount",
+  "xtc.topUp.enter.amount": "Enter top-up amount",
   "common.enter": "Enter",
   "token.canister": "{{symbol}} canister",
   "nns.voting.proposal.summary": "Proposal summary",
@@ -257,10 +257,8 @@
   "AF3+F4": "Incorrect file content",
   "AFvSfx": "Tx fee settle error",
   "wallet.token.sync": "Sync your tokens here",
-  "AIZhBz": "Top-up canister",
   "stake.enter.reward.id": "Enter reward token ID",
   "nft.create.canister.to.mint": "Create a canister to mint your NFTs",
-  "AUYALh": "Coming soon",
   "ether.latest.block": "Last Ethereum synced block height: {{block}}",
   "voting.cast.description": "Are you sure want to cast this vote? This action cannot be undone",
   "info.swap.pool.empty": "If the token or trading pair you're searching for isn't in the Tokenlist, try adjusting the settings to display all tokens and trading pairs.",
@@ -1400,5 +1398,6 @@
   "wrap.unwrapping": "Unwrapping {{fromAmount}} WICP to {{toAmount}} ICP",
   "farm.not_start.descriptions": "As soon as the Farm goes live on {{liveTime0}} at {{liveTime1}}, you can start staking.",
   "service.stake.create.storage.canister": "Failed to created storage canister",
-  "common.display.only.list": "Display only tokens in Tokenlist"
+  "common.display.only.list": "Display only tokens in Tokenlist",
+  "common.transfer.to": "Transfer to"
 }

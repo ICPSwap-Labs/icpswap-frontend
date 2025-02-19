@@ -73,8 +73,10 @@ export default function DecreaseLiquidityInput({
               allowNegative: false,
               maxLength: MAX_SWAP_INPUT_LENGTH,
             }}
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onUserInput(e.target.value);

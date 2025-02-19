@@ -86,7 +86,7 @@ export interface FilledTextFieldProps {
   placeholderSize?: string;
   background?: string;
   inputPadding?: string;
-  textFiledProps?: TextFieldProps;
+  textFieldProps?: TextFieldProps;
   [x: string]: any;
 }
 
@@ -167,7 +167,7 @@ function FilledTextField(
     border,
     background,
     inputPadding,
-    textFiledProps,
+    textFieldProps,
     ...props
   }: FilledTextFieldProps,
   ref,
@@ -252,12 +252,12 @@ function FilledTextField(
                   "& textarea::placeholder": {
                     fontSize: props.placeholderSize ?? "16px",
                   },
-                  ...textFiledProps?.sx,
+                  ...textFieldProps?.sx,
                 }}
                 slotProps={{
                   input: {
                     disableUnderline: true,
-                    ...textFiledProps?.slotProps?.input,
+                    ...textFieldProps?.slotProps?.input,
                   },
                 }}
                 inputRef={inputRef}

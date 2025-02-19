@@ -471,7 +471,7 @@ export function InfoPools() {
                 background="level1"
                 placeholderSize="14px"
                 fontSize="14px"
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       startAdornment: (

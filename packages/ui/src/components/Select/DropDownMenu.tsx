@@ -135,13 +135,15 @@ export function DropDownMenu({
                 variant="standard"
                 onChange={({ target: { value } }) => handleSearchChange(value)}
                 value={search}
-                InputProps={{
-                  disableUnderline: true,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search size="12px" color={theme.palette.text.secondary} />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size="12px" color={theme.palette.text.secondary} />
+                      </InputAdornment>
+                    ),
+                  },
                 }}
                 fullWidth
               />

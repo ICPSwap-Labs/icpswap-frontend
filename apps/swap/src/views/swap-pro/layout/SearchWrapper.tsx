@@ -16,7 +16,7 @@ export function SearchWrapper() {
           placeholder="Symbol / Name / Canister ID"
           borderRadius="52px"
           background="level3"
-          textFiledProps={{
+          textFieldProps={{
             slotProps: {
               input: {
                 startAdornment: (

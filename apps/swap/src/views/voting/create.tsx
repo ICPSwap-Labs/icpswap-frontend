@@ -313,7 +313,7 @@ export default function VotingCreateProposal() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
+                              textFieldProps={{
                                 ...(params?.InputProps ?? {}),
                               }}
                               helperText=""
@@ -336,7 +336,7 @@ export default function VotingCreateProposal() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
+                              textFieldProps={{
                                 ...(params?.InputProps ?? {}),
                               }}
                               helperText=""
@@ -397,23 +397,27 @@ export default function VotingCreateProposal() {
                     <FilledTextField
                       value={option}
                       onChange={(value: any) => onOptionChange(value, index)}
-                      InputProps={{
-                        disableUnderline: true,
-                        inputProps: {
-                          maxLength: 100,
+                      textFieldProps={{
+                        slotProps: {
+                          input: {
+                            disableUnderline: true,
+                            inputProps: {
+                              maxLength: 100,
+                            },
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <HighlightOffIcon
+                                  sx={{
+                                    color: "#8492C4",
+                                    fontSize: "20px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => handleOptionDelete(index)}
+                                />
+                              </InputAdornment>
+                            ),
+                          },
                         },
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <HighlightOffIcon
-                              sx={{
-                                color: "#8492C4",
-                                fontSize: "20px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleOptionDelete(index)}
-                            />
-                          </InputAdornment>
-                        ),
                       }}
                     />
                   </Box>

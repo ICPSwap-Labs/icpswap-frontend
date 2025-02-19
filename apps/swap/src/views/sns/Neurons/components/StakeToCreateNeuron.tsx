@@ -5,8 +5,7 @@ import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import type { NervousSystemParameters } from "@icpswap/types";
-import { Modal, NumberFilledTextField } from "components/index";
-import MaxButton from "components/MaxButton";
+import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
@@ -136,12 +135,16 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
               decimalScale: token?.decimals,
             }}
             autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <MaxButton onClick={handleMax} />
-                </InputAdornment>
-              ),
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MaxButton onClick={handleMax} />
+                    </InputAdornment>
+                  ),
+                },
+              },
             }}
           />
 

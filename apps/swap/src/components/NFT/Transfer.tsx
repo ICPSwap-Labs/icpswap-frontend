@@ -197,8 +197,10 @@ export default function NFTTransfer({
             helperText={addressHelpText}
             fullWidth
             autoComplete="To"
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
         </Grid>
@@ -210,8 +212,10 @@ export default function NFTTransfer({
             onChange={({ target: { value } }) => setMemo(value)}
             fullWidth
             autoComplete="off"
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
         </Grid>

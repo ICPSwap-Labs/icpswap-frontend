@@ -283,15 +283,19 @@ export default function CreateTokenClaim() {
                 placeholder={t("common.enter.token.claimed")}
                 onChange={(value) => handleFieldChange(value, "tokenAmount")}
                 value={values.tokenAmount}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: token?.decimals ?? 8,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.tokenAmount,
+                textFieldProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: token?.decimals ?? 8,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.tokenAmount,
+                      },
+                    },
                   },
                 }}
               />
@@ -300,7 +304,7 @@ export default function CreateTokenClaim() {
                 placeholder={t`Enter total user amount`}
                 onChange={(value) => handleFieldChange(value, "userAmount")}
                 value={values.userAmount}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,

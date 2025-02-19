@@ -219,12 +219,14 @@ export default function NFTSell({
               allowNegative: false,
               maxLength: 20,
             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <img width="18px" src={WICPCurrencyImage} alt="" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <img width="18px" src={WICPCurrencyImage} alt="" />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Grid>

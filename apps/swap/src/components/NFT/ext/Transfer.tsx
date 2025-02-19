@@ -179,8 +179,10 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
             helperText={addressHelpText}
             fullWidth
             autoComplete="To"
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
         </Grid>

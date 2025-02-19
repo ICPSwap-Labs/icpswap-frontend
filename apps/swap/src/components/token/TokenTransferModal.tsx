@@ -97,7 +97,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
       values.amount &&
       new BigNumber(values.amount ?? 0).isGreaterThan(parseTokenAmount(balance ?? 0, token.decimals))
     )
-      return t`t("common.error.insufficient.balance");`;
+      return t("common.error.insufficient.balance");
     if (!new BigNumber(values.amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0))
       return t`Must be greater than trans fee`;
 
@@ -196,19 +196,23 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
             decimalScale: token.decimals,
           }}
           autoComplete="off"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Typography color="text.primary">
-                  {tokenUSDPrice && values.amount
-                    ? `~$${toSignificantWithGroupSeparator(
-                        new BigNumber(values.amount).multipliedBy(tokenUSDPrice).toString(),
-                        4,
-                      )}`
-                    : "--"}
-                </Typography>
-              </InputAdornment>
-            ),
+          textFieldProps={{
+            slotProps: {
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography color="text.primary">
+                      {tokenUSDPrice && values.amount
+                        ? `~$${toSignificantWithGroupSeparator(
+                            new BigNumber(values.amount).multipliedBy(tokenUSDPrice).toString(),
+                            4,
+                          )}`
+                        : "--"}
+                    </Typography>
+                  </InputAdornment>
+                ),
+              },
+            },
           }}
         />
 

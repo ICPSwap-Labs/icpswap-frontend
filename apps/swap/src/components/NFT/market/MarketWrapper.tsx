@@ -176,12 +176,14 @@ export default function MarketWrapper({
                       sx={{
                         width: "320px",
                       }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="1rem" />
-                          </InputAdornment>
-                        ),
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <IconSearch stroke={1.5} size="1rem" />
+                            </InputAdornment>
+                          ),
+                        },
                       }}
                       fullWidth
                       size={matchDownSM ? "small" : "small"}

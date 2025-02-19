@@ -129,8 +129,10 @@ export function PriceRangeSelector({
               className={classes.input}
               placeholder="0.0"
               variant="standard"
-              InputProps={{
-                disableUnderline: true,
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
               }}
               onChange={(e) => setLocalValue(e.target.value)}
               onBlur={handleOnBlur}
