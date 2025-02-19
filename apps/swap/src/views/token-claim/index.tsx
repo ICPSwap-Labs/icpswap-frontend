@@ -131,50 +131,48 @@ export default function TokenClaim() {
 
   const isConnected = useConnectorStateConnected();
 
-  return (
+  return isConnected ? (
     <Wrapper>
-      {isConnected ? (
-        <Box sx={{ maxWidth: "800px", width: "100%", margin: " 0 auto" }}>
-          <Flex fullWidth justify="space-between">
-            <Typography color="text.primary" fontWeight={500} fontSize="24px">
-              {t("claim.your.tokens")}
-            </Typography>
-            <TextButton sx={{ fontSize: "16px", fontWeight: 500 }} to={`/token-claim/transactions/${principalString}`}>
-              {t("claim.your.records")}
-              &gt;
-            </TextButton>
-          </Flex>
+      <Box sx={{ maxWidth: "800px", width: "100%", margin: " 0 auto" }}>
+        <Flex fullWidth justify="space-between">
+          <Typography color="text.primary" fontWeight={500} fontSize="24px">
+            {t("claim.your.tokens")}
+          </Typography>
+          <TextButton sx={{ fontSize: "16px", fontWeight: 500 }} to={`/token-claim/transactions/${principalString}`}>
+            {t("claim.your.records")}
+            &gt;
+          </TextButton>
+        </Flex>
 
-          <Box mt="16px" sx={{ display: "grid", gridTemplateRows: "1fr", gap: "16px 0" }}>
-            {loading ? (
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            ) : (
-              userClaimEvents.map((ele) => {
-                return <TokenClaimItem key={ele.claimEventId} ele={ele} />;
-              })
-            )}
+        <Box mt="16px" sx={{ display: "grid", gridTemplateRows: "1fr", gap: "16px 0" }}>
+          {loading ? (
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          ) : (
+            userClaimEvents.map((ele) => {
+              return <TokenClaimItem key={ele.claimEventId} ele={ele} />;
+            })
+          )}
 
-            {!loading && userClaimEvents.length === 0 ? <NoData /> : null}
+          {!loading && userClaimEvents.length === 0 ? <NoData /> : null}
 
-            {!loading && Number(_userClaimEvents?.totalElements ?? 0) !== userClaimEvents.length ? (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <ViewMore loading={loadingMore} onClick={handleMore} />
-              </Box>
-            ) : null}
-          </Box>
+          {!loading && Number(_userClaimEvents?.totalElements ?? 0) !== userClaimEvents.length ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <ViewMore loading={loadingMore} onClick={handleMore} />
+            </Box>
+          ) : null}
         </Box>
-      ) : (
-        <ConnectWallet />
-      )}
+      </Box>
     </Wrapper>
+  ) : (
+    <ConnectWallet />
   );
 }
