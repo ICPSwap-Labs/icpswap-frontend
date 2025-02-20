@@ -12,16 +12,16 @@ function poolEquals(poolA: Pool, poolB: Pool) {
 }
 
 export function computeAllRoutes(
-  currencyIn: Token,
-  currencyOut: Token,
+  inputToken: Token,
+  outputToken: Token,
   pools: (Pool | null)[],
   currentPath: Pool[],
   allPaths: Route<Token, Token>[],
-  startCurrencyIn: Token = currencyIn,
+  startCurrencyIn: Token = inputToken,
   maxHops = 2,
 ) {
-  const tokenIn = currencyIn?.wrapped;
-  const tokenOut = currencyOut?.wrapped;
+  const tokenIn = inputToken?.wrapped;
+  const tokenOut = outputToken?.wrapped;
 
   if (!tokenIn || !tokenOut) throw new Error("Missing tokenIn/tokenOut");
 
@@ -30,23 +30,23 @@ export function computeAllRoutes(
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0;
     if (outputToken.equals(tokenOut)) {
-      allPaths.push(new Route([...currentPath, pool], startCurrencyIn, currencyOut));
+      allPaths.push(new Route([...currentPath, pool], startCurrencyIn, outputToken));
     } else if (maxHops > 1) {
-      computeAllRoutes(outputToken, currencyOut, pools, [...currentPath, pool], allPaths, startCurrencyIn, maxHops - 1);
+      computeAllRoutes(outputToken, outputToken, pools, [...currentPath, pool], allPaths, startCurrencyIn, maxHops - 1);
     }
   }
 
   return allPaths;
 }
 
-export function useAllRoutes(currencyIn: Token | undefined, currencyOut: Token | undefined) {
-  const { pools, loading: poolsLoading, checked, noLiquidity } = useSwapPools(currencyIn, currencyOut);
+export function useAllRoutes(inputToken: Token | undefined, outputToken: Token | undefined) {
+  const { pools, loading: poolsLoading, checked, noLiquidity } = useSwapPools(inputToken, outputToken);
 
   const singleHopOnly = useIsSingleHop();
 
   return useMemo(() => {
-    if (poolsLoading || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [], checked: false };
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, [], [], currencyIn, singleHopOnly ? 1 : 2);
+    if (poolsLoading || !pools || !inputToken || !outputToken) return { loading: true, routes: [], checked: false };
+    const routes = computeAllRoutes(inputToken, outputToken, pools, [], [], inputToken, singleHopOnly ? 1 : 2);
     return { loading: false, routes, checked, noLiquidity };
-  }, [currencyIn, currencyOut, pools, poolsLoading, singleHopOnly, checked, noLiquidity]);
+  }, [inputToken, outputToken, pools, poolsLoading, singleHopOnly, checked, noLiquidity]);
 }

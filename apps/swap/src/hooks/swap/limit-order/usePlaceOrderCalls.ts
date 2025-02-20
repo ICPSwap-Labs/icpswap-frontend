@@ -83,8 +83,6 @@ export function usePlaceOrderCalls() {
       });
 
       const approveToken0 = async () => {
-        const token0 = position.pool.token0;
-
         if (noApproveByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {

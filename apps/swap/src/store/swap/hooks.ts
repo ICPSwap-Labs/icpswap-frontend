@@ -98,22 +98,23 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     [SWAP_FIELD.OUTPUT]: outputCurrencyId,
   } = useSwapState();
 
-  const [inputTokenState, inputToken] = useToken(inputCurrencyId);
-  const [outputTokenState, outputToken] = useToken(outputCurrencyId);
+  // Force to use token from pool, the token standard is using from pool metadata
+  const [inputTokenState, __inputToken] = useToken(inputCurrencyId);
+  const [outputTokenState, __outputToken] = useToken(outputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
 
-  const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputToken, refresh);
-  const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputToken, refresh);
+  const { result: inputCurrencyBalance } = useCurrencyBalance(principal, __inputToken, refresh);
+  const { result: outputCurrencyBalance } = useCurrencyBalance(principal, __outputToken, refresh);
 
   const currencyBalances = {
     [SWAP_FIELD.INPUT]: inputCurrencyBalance,
     [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
   };
 
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
+  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? __inputToken : __outputToken) ?? undefined);
 
-  const otherCurrency = (isExactIn ? outputToken : inputToken) ?? undefined;
+  const otherCurrency = (isExactIn ? __outputToken : __inputToken) ?? undefined;
 
   const [debouncedTypedValue] = useDebounce(
     useMemo(() => [typedValue, otherCurrency], [typedValue, otherCurrency]),
@@ -121,12 +122,23 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   );
 
   const Trade = useBestTrade(
-    inputToken,
-    outputToken,
+    __inputToken,
+    __outputToken,
     !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
-  const poolId = useMemo(() => Trade?.tradePoolId, [Trade]);
+  // Force to use token from pool, the token standard is using from pool metadata
+  const { poolId, pool, inputToken, outputToken } = useMemo(() => {
+    if (!Trade) return {};
+
+    const pool = Trade.routes[0]?.pools[0];
+    const { token0, token1 } = pool ?? {};
+
+    const inputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token0 : token1) : undefined;
+    const outputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token1 : token0) : undefined;
+
+    return { poolId: Trade.tradePoolId, pool, inputToken, outputToken };
+  }, [Trade, __inputToken, __outputToken]);
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
@@ -155,9 +167,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
-    if (!poolId || !unusedBalance || !inputToken) return {};
-
-    const pool = Trade.routes[0].pools[0];
+    if (!poolId || !unusedBalance || !inputToken || !pool) return {};
 
     return {
       inputTokenUnusedBalance:
@@ -165,7 +175,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
       outputTokenUnusedBalance:
         pool.token0.address === inputToken.address ? unusedBalance.balance1 : unusedBalance.balance0,
     };
-  }, [Trade, inputToken, unusedBalance]);
+  }, [Trade, inputToken, unusedBalance, pool]);
 
   const allowanceTokenId = useMemo(() => {
     if (!inputToken) return undefined;
@@ -220,8 +230,9 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
     userSlippageTolerance,
-    inputToken,
-    outputToken,
+    // Tokens for react
+    inputToken: __inputToken,
+    outputToken: __outputToken,
     inputTokenState,
     outputTokenState,
     unusedBalance,

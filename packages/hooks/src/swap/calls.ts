@@ -128,7 +128,6 @@ export async function swap(poolId: string, args: SwapArgs) {
 }
 
 export async function depositAndSwap(poolId: string, args: DepositFromAndSwapArgs) {
-  console.log("args: ", args);
   return resultFormat<bigint>(await (await swapPool(poolId, true)).depositFromAndSwap(args));
 }
 
