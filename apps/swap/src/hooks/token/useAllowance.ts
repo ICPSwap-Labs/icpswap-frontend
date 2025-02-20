@@ -38,7 +38,8 @@ export interface useAllowanceArgs {
 export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub }: useAllowanceArgs) {
   return useCallsData(
     useCallback(async () => {
-      if (!spender || !owner || isNullArgs(canisterId)) return undefined;
+      if (isNullArgs(spender) || isNullArgs(owner) || isNullArgs(canisterId)) return undefined;
+
       return await allowance({
         spender,
         spenderSub,
