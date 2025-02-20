@@ -15,6 +15,8 @@ import {
   getTokenActualTransferRawAmount,
   getTokenActualDepositRawAmount,
   getTokenInsufficient,
+  noApproveOrTransferByTokenInsufficient,
+  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getLocaleMessage } from "i18n/service";
@@ -164,8 +166,7 @@ export function useSwapCalls() {
 
             const step0 = async () => {
               if (isNullArgs(tokenInsufficient)) return false;
-
-              if (tokenInsufficient === "NO_TRANSFER_APPROVE" || tokenInsufficient === "NEED_DEPOSIT") return true;
+              if (noApproveOrTransferByTokenInsufficient(tokenInsufficient)) return true;
 
               if (isUseTransfer(inputToken)) {
                 const needTransferAmount = new BigNumber(userInputAmount)
@@ -190,8 +191,7 @@ export function useSwapCalls() {
 
             const step1 = async () => {
               if (isNullArgs(tokenInsufficient)) return false;
-
-              if (tokenInsufficient === "NO_TRANSFER_APPROVE") return true;
+              if (noDepositByTokenInsufficient(tokenInsufficient)) return true;
 
               const needDepositAmount = new BigNumber(userInputAmount).minus(unusedBalance.toString()).toString();
 

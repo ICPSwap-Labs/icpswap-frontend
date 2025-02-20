@@ -9,6 +9,9 @@ import {
   getTokenActualTransferRawAmount,
   getTokenActualDepositRawAmount,
   getTokenInsufficient,
+  noApproveByTokenInsufficient,
+  noTransferByTokenInsufficient,
+  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
@@ -82,7 +85,7 @@ export function usePlaceOrderCalls() {
       const approveToken0 = async () => {
         const token0 = position.pool.token0;
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await approve({
@@ -97,7 +100,7 @@ export function usePlaceOrderCalls() {
       };
 
       const approveToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await approve({
@@ -112,7 +115,7 @@ export function usePlaceOrderCalls() {
       };
 
       const transferToken0 = async () => {
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await transfer(
@@ -132,7 +135,7 @@ export function usePlaceOrderCalls() {
       };
 
       const transferToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await transfer(
@@ -152,7 +155,7 @@ export function usePlaceOrderCalls() {
       };
 
       const depositToken0 = async () => {
-        if (token0Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token0Insufficient)) return true;
         if (amount0Desired === "0") return true;
 
         // Mins 1 token fee by backend, so the deposit amount should add 1 token fee if use deposit
@@ -171,7 +174,7 @@ export function usePlaceOrderCalls() {
       };
 
       const depositToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token1Insufficient)) return true;
         if (amount1Desired === "0") return true;
 
         return await deposit({

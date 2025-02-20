@@ -1,7 +1,15 @@
 import { Token } from "@icpswap/swap-sdk";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { isUseTransfer } from "utils/token";
+
+enum TokenInsufficient {
+  NO_TRANSFER_APPROVE = "NO_TRANSFER_APPROVE",
+  NEED_DEPOSIT_FROM_SUB = "NEED_DEPOSIT_FROM_SUB",
+  NO_APPROVE = "NO_APPROVE",
+  NEED_TRANSFER_APPROVE = "NEED_TRANSFER_APPROVE",
+  INSUFFICIENT = "INSUFFICIENT",
+}
 
 export interface GetTokenInsufficientProps {
   token: Token | undefined;
@@ -35,14 +43,25 @@ export function getTokenInsufficient({
   // console.log("xxxx balance:", balance.toString());
   // console.log("allowance:", allowance);
 
-  if (!new BigNumber(unusedBalance.toString()).isLessThan(formatTokenAmount)) return "NO_TRANSFER_APPROVE";
+  if (!new BigNumber(unusedBalance.toString()).isLessThan(formatTokenAmount))
+    return TokenInsufficient.NO_TRANSFER_APPROVE;
 
+  const depositAmount = new BigNumber(unusedBalance.toString()).plus(subAccountBalance).minus(formatTokenAmount).abs();
+
+  // For token not support approve
   if (
     !new BigNumber(unusedBalance.toString())
       .plus(subAccountBalance)
       .isLessThan(new BigNumber(formatTokenAmount).plus(token.transFee))
   )
-    return "NEED_DEPOSIT";
+    return TokenInsufficient.NEED_DEPOSIT_FROM_SUB;
+
+  // For token use approve
+  if (!isUseTransfer(token) && nonNullArgs(allowance)) {
+    if (new BigNumber(allowance.toString()).isGreaterThan(depositAmount)) {
+      return TokenInsufficient.NO_APPROVE;
+    }
+  }
 
   if (
     !new BigNumber(unusedBalance.toString())
@@ -60,7 +79,49 @@ export function getTokenInsufficient({
         ),
       )
   )
-    return "NEED_TRANSFER_APPROVE";
+    return TokenInsufficient.NEED_TRANSFER_APPROVE;
 
-  return "INSUFFICIENT";
+  return TokenInsufficient.INSUFFICIENT;
+}
+
+export function isApproveByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return (
+    tokenInsufficient !== TokenInsufficient.NO_APPROVE &&
+    tokenInsufficient !== TokenInsufficient.NEED_TRANSFER_APPROVE &&
+    tokenInsufficient !== TokenInsufficient.NEED_DEPOSIT_FROM_SUB
+  );
+}
+
+export function noApproveByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return !isApproveByTokenInsufficient(tokenInsufficient);
+}
+
+export function isTransferByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return (
+    tokenInsufficient === TokenInsufficient.NEED_TRANSFER_APPROVE ||
+    tokenInsufficient === TokenInsufficient.INSUFFICIENT
+  );
+}
+
+export function noTransferByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return !isTransferByTokenInsufficient(tokenInsufficient);
+}
+
+export function isApproveOrTransferByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return (
+    tokenInsufficient === TokenInsufficient.NEED_TRANSFER_APPROVE ||
+    tokenInsufficient === TokenInsufficient.INSUFFICIENT
+  );
+}
+
+export function noApproveOrTransferByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return !isApproveOrTransferByTokenInsufficient(tokenInsufficient);
+}
+
+export function isDepositByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return tokenInsufficient !== TokenInsufficient.NO_TRANSFER_APPROVE;
+}
+
+export function noDepositByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
+  return !isDepositByTokenInsufficient(tokenInsufficient);
 }

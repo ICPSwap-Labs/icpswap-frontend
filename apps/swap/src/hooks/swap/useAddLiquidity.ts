@@ -10,8 +10,11 @@ import {
   useSwapDeposit,
   useSwapTransfer,
   getTokenInsufficient,
+  noApproveByTokenInsufficient,
   getTokenActualTransferRawAmount,
   getTokenActualDepositRawAmount,
+  noTransferByTokenInsufficient,
+  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
 import { isUseTransfer } from "utils/token/index";
 import { createPool, mint as __mint } from "hooks/swap/v3Calls";
@@ -160,7 +163,7 @@ function useAddLiquidityCalls() {
         const poolId = getPoolId();
         const token0 = position.pool.token0;
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await approve({
@@ -177,7 +180,7 @@ function useAddLiquidityCalls() {
       const approveToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await approve({
@@ -194,7 +197,7 @@ function useAddLiquidityCalls() {
       const transferToken0 = async () => {
         const poolId = getPoolId();
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await transfer(
@@ -216,7 +219,7 @@ function useAddLiquidityCalls() {
       const transferToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await transfer(
@@ -238,7 +241,7 @@ function useAddLiquidityCalls() {
       const depositToken0 = async () => {
         const poolId = getPoolId();
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token0Insufficient)) return true;
         if (amount0Desired === "0") return true;
 
         // Mins 1 token fee by backend, so the deposit amount should add 1 token fee if use deposit
@@ -259,7 +262,7 @@ function useAddLiquidityCalls() {
       const depositToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token1Insufficient)) return true;
         if (amount1Desired === "0") return true;
 
         return await deposit({
