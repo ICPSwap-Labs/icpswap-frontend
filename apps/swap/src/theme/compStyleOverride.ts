@@ -1,5 +1,5 @@
 import { isDarkTheme } from "utils/index";
-import { createTheme, keyframes } from "@mui/material";
+import { createTheme, keyframes } from "components/Mui";
 
 import colors from "./colors";
 

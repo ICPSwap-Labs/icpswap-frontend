@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Menu, MenuItem, Pagination as PaginationComponent } from "@mui/material";
+import { Grid, Menu, MenuItem, Pagination as PaginationComponent } from "components/Mui";
 import { MainCard } from "components/index";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 

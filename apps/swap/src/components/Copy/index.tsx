@@ -1,7 +1,7 @@
 import copyToClipboard from "copy-to-clipboard";
 import { ReactNode, forwardRef, useImperativeHandle, Ref } from "react";
-import { Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, makeStyles } from "components/Mui";
+
 import { useTips, TIP_SUCCESS } from "../../hooks/useTips";
 
 const useStyles = makeStyles({

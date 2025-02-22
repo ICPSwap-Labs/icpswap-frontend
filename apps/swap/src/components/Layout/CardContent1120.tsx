@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 
 export interface CardContent1120Props {
   children: React.ReactNode;

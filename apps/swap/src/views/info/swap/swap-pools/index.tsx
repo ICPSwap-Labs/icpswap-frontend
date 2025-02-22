@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box } from "components/Mui";
 import { InfoWrapper, MainCard } from "components/index";
 import { useNodeInfoAllPools } from "@icpswap/hooks";
 import { Pools } from "components/info/swap";

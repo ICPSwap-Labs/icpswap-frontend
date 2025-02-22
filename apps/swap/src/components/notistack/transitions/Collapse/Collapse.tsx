@@ -5,7 +5,8 @@
  */
 import * as React from "react";
 import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "components/Mui";
+
 import TransitionComponent, { TransitionStatus } from "../Transition";
 import useForkRef from "../useForkRef";
 import { TransitionHandlerProps, TransitionProps } from "../../types";

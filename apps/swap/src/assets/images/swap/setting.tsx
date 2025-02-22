@@ -1,4 +1,4 @@
-import { SvgIcon } from "@mui/material";
+import { SvgIcon } from "components/Mui";
 
 export default ({ strokeColor = "#212121", ...props }: { strokeColor?: string; [key: string]: any }) => {
   return (

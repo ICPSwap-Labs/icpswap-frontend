@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
+import { makeStyles, Box } from "components/Mui";
 import Copy from "components/Copy";
 import { useNFTTransaction } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
@@ -7,8 +7,18 @@ import { encodeTokenIdentifier } from "utils/index";
 import Pagination from "components/pagination";
 import type { NFTTransaction, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
-import { NoData, ListLoading } from "components/index";
+import { NoData } from "components/index";
 import { useTranslation } from "react-i18next";
+import { Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "1.5fr 1fr 1fr 1fr 1fr",
+    },
+  };
+});
 
 export default function NFTTransaction({
   canisterId,
@@ -19,6 +29,7 @@ export default function NFTTransaction({
   tokenId: number;
   reload?: boolean;
 }) {
+  const classes = useStyles();
   const { t } = useTranslation();
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
@@ -49,60 +60,40 @@ export default function NFTTransaction({
 
   return (
     <>
-      <TableContainer className={loading ? "with-loading" : ""}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t("common.time")}</TableCell>
-              <TableCell>{t("common.type")}</TableCell>
-              <TableCell>{t("common.from")}</TableCell>
-              <TableCell>{t("common.to")}</TableCell>
-              <TableCell>{t("common.memo")}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ width: "100%", minWidth: "960px" }}>
+          <Header className={classes.wrapper}>
+            <HeaderCell>{t("common.time")}</HeaderCell>
+            <HeaderCell>{t("common.type")}</HeaderCell>
+            <HeaderCell>{t("common.from")}</HeaderCell>
+            <HeaderCell>{t("common.to")}</HeaderCell>
+            <HeaderCell>{t("common.memo")}</HeaderCell>
+          </Header>
+
+          <>
             {list.map((row, index) => (
-              <TableRow key={`${Number(row.tokenId)}_${index}`}>
-                <TableCell>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">{timestampFormat(row.time)}</Typography>
-                    </Grid>
-                  </Grid>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">{upperFirst(enumToString(row.txType))}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">
-                        <Copy content={row.from}>{shorten(row.from, 18)}</Copy>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </TableCell>
-                <TableCell>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">
-                        <Copy content={row.to}>{shorten(row.to, 18)}</Copy>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">
-                    {row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}
-                  </Typography>
-                </TableCell>
+              <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
+                <BodyCell>{timestampFormat(row.time)}</BodyCell>
+
+                <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
+
+                <BodyCell>
+                  <Copy content={row.from}>{shorten(row.from, 6)}</Copy>
+                </BodyCell>
+
+                <Copy content={row.to}>
+                  <BodyCell>{shorten(row.to, 6)}</BodyCell>
+                </Copy>
+
+                <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
               </TableRow>
             ))}
-          </TableBody>
-        </Table>
+          </>
+        </Box>
         {list.length === 0 && !loading ? <NoData /> : null}
-        <ListLoading loading={loading} />
-      </TableContainer>
+        <ImageLoading loading={loading} />
+      </Box>
+
       {list.length ? <Pagination count={Number(totalElements)} onPageChange={onPageChange} /> : null}
     </>
   );

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "./Mui";
 
 export function dexToolsUrl(id: string) {
   return `https://www.dextools.io/widget-chart/en/icp/pe-light/${id}?theme=dark&chartType=1&chartResolution=30&drawingToolbars=false`;

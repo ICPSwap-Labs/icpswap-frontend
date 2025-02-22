@@ -1,15 +1,4 @@
 import { useState } from "react";
-import {
-  Grid,
-  Typography,
-  Button,
-  Table,
-  TableContainer,
-  TableCell,
-  TableRow,
-  TableHead,
-  TableBody,
-} from "@mui/material";
 import { pageArgsFormat } from "@icpswap/utils";
 import { Pagination, PaginationType, NoData, MainCard, ListLoading } from "components/index";
 import { useVotingAuthorityUsers } from "@icpswap/hooks";
@@ -18,9 +7,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddAuthorityUser from "components/vote/AddAuthorityUser";
 import DeleteAuthorityUser from "components/vote/DeleteAuthorityUser";
 import { useTranslation } from "react-i18next";
+import { Header, HeaderCell, BodyCell, TableRow, Flex } from "@icpswap/ui";
+import { Button, makeStyles, Box } from "components/Mui";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "2fr 1fr",
+    },
+  };
+});
 
 export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
   const { t } = useTranslation();
+  const classes = useStyles();
+
   const [addShow, setAddShow] = useState(false);
   const [deletedUser, setDeletedUser] = useState<undefined | string>(undefined);
   const [refresh, setRefresh] = useState(false);
@@ -42,36 +44,32 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
 
   return (
     <MainCard>
-      <Grid container alignItems="center" justifyContent="flex-end">
+      <Flex fullWidth align="center" justify="flex-end">
         <Button variant="contained" size="large" onClick={() => setAddShow(true)}>
           {t("vote.add.user")}
         </Button>
-      </Grid>
+      </Flex>
 
-      <TableContainer className={loading ? "with-loading" : ""}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t("common.principal.id")}</TableCell>
-              <TableCell>&nbsp;</TableCell>
-            </TableRow>
-          </TableHead>
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box>
+          <Header className={classes.wrapper}>
+            <HeaderCell>{t("common.principal.id")}</HeaderCell>
+            <HeaderCell>&nbsp;</HeaderCell>
+          </Header>
 
-          <TableBody>
+          <>
             {list.map((user) => (
-              <TableRow key={user.toString()}>
-                <TableCell>
-                  <Typography>{user.toString()}</Typography>
-                </TableCell>
-                <TableCell>
+              <TableRow key={user.toString()} className={classes.wrapper}>
+                <BodyCell>{user.toString()}</BodyCell>
+                <BodyCell>
                   <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => setDeletedUser(user.toString())}>
                     {t("common.delete")}
                   </Button>
-                </TableCell>
+                </BodyCell>
               </TableRow>
             ))}
-          </TableBody>
-        </Table>
+          </>
+        </Box>
 
         {list.length === 0 && !loading ? <NoData /> : null}
 
@@ -84,7 +82,7 @@ export default function AuthorityUsers({ canisterId }: { canisterId: string }) {
             onPageChange={handlePageChange}
           />
         ) : null}
-      </TableContainer>
+      </Box>
 
       {addShow ? (
         <AddAuthorityUser

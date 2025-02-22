@@ -1,10 +1,8 @@
 import Modal from "components/modal/index";
 import { useHistory } from "react-router-dom";
-import { Typography, Box, Grid, Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Box, Grid, Button, makeStyles, Theme } from "components/Mui";
 import CheckCircleIcon from "@mui/icons-material/CheckCircleOutline";
 import ExplorerLink from "components/ExternalLink/Explorer";
-import { Theme } from "@mui/material/styles";
 import { CanisterCreateDetails } from "types/nft";
 
 const useStyles = makeStyles((theme: Theme) => ({

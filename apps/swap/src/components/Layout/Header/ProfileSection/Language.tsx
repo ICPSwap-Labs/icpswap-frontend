@@ -1,8 +1,5 @@
-import { useRef, ReactNode , useState } from "react";
-import { makeStyles } from "@mui/styles";
-import { MenuList, MenuItem, Popper, Box, Typography } from "@mui/material";
-import { ClickAwayListener } from "@mui/base";
-import { Theme } from "@mui/material/styles";
+import { useRef, ReactNode, useState } from "react";
+import { MenuList, MenuItem, Popper, Box, Typography, makeStyles, Theme, ClickAwayListener } from "components/Mui";
 import { SUPPORTED_LOCALES, getLocalLabel, SupportedLocale } from "constants/locales";
 import { useLocaleManager } from "hooks/useActiveLocale";
 

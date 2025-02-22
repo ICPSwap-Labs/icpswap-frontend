@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button } from "components/Mui";
 import { Neuron } from "@icpswap/types";
 
 import { AddFolloweeModal } from "./AddFolloweeModal";

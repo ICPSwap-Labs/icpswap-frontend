@@ -1,10 +1,9 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy, Wrapper } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
-import { Theme } from "@mui/material/styles";
 import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns/neurons";
@@ -38,7 +37,7 @@ interface NeuronProps {
 }
 
 function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refreshTrigger }: NeuronProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const principal = useAccountPrincipal();
   const [splitNeuronOpen, setSplitNeuronOpen] = useState(false);
 

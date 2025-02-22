@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography } from "@mui/material";
+
+import { Typography } from "../Mui";
 import { Modal } from "./Modal";
 
 export interface ConfirmModalProps {

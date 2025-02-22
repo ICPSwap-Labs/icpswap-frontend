@@ -1,5 +1,4 @@
-import { Box, Grid, Avatar } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Grid, Avatar, makeStyles } from "components/Mui";
 import type { NFTControllerInfo } from "@icpswap/types";
 import VerifyNFT from "components/NFT/VerifyNFT";
 

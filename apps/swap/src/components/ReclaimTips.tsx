@@ -1,5 +1,5 @@
 import { TextButton } from "components/index";
-import { Typography } from "@mui/material";
+import { Typography } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { useCloseStep } from "hooks/useStepCall";
 

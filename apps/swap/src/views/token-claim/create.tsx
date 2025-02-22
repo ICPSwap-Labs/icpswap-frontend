@@ -1,12 +1,11 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
+import { Typography, Grid, Box, Input, makeStyles, Theme } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import Identity, { CallbackProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";

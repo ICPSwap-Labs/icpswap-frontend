@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "@mui/material";
+import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "components/Mui";
 import { useAccount } from "store/auth/hooks";
 import {
   FilledTextField,

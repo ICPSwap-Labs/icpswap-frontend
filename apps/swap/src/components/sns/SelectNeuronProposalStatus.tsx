@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
-import { Box, Checkbox, Typography } from "@mui/material";
+import { Box, Checkbox, Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
 import { Filter } from "react-feather";
 import { useTranslation } from "react-i18next";

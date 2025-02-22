@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link } from "@mui/material";
+import { Link } from "components/Mui";
 
 export default function ExternalLink({ label, value }: { label: ReactNode; value: string }) {
   return (

@@ -1,15 +1,11 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
-import { Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 import { usePrevious } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { GridRowBetween } from "../Grid/Row";
 
-dayjs.extend(utc);
+import { Box, useTheme } from "../Mui";
+import { GridRowBetween } from "../Grid/Row";
 
 const DEFAULT_HEIGHT = 300;
 
@@ -39,7 +35,7 @@ export function BarChart({
   minHeight = DEFAULT_HEIGHT,
   ...rest
 }: BarChartProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const textColor = "#fff";
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartCreated, setChart] = useState<IChartApi | undefined>();

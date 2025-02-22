@@ -1,75 +1,62 @@
 import { useState } from "react";
 import { TradeData } from "components/info/nft";
 import { InfoWrapper, ListLoading } from "components/index";
-import { MainCard, NoData, Pagination, PaginationType } from "@icpswap/ui";
 import {
-  Typography,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
+  MainCard,
+  NoData,
+  Pagination,
+  PaginationType,
   TableRow,
-  TableHead,
-  TableContainer,
-  Avatar,
-  Grid,
-} from "@mui/material";
+  Header,
+  HeaderCell,
+  BodyCell,
+  Flex,
+} from "@icpswap/ui";
 import { useNFTCanisterMetadata, useNFTOtherStat } from "hooks/info/nft";
 import { formatAmount, parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import { WRAPPED_ICP } from "@icpswap/tokens";
 import { TradeStateResult } from "@icpswap/types";
 import { useNFTsStat } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
+import { Avatar, Box, makeStyles } from "components/Mui";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "repeat(7, 1fr)",
+    },
+  };
+});
 
 export function NFTTradeStat({ data }: { data: TradeStateResult }) {
+  const classes = useStyles();
   const { result: metadata } = useNFTCanisterMetadata(data.cid);
   const { result: stat } = useNFTOtherStat(data.cid);
   const [, holders] = stat ?? [0, "--"];
 
   return (
-    <TableRow>
-      <>
-        <TableCell>
-          <Grid container alignItems="center">
-            <Avatar src={metadata?.image}>&nbsp;</Avatar>
-            <Typography fontSize="14px" color="text.primary" sx={{ margin: "0px 0px 0px 5px" }}>
-              {metadata?.name ?? "--"}
-            </Typography>
-          </Grid>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {metadata?.mintSupply ? Number(metadata?.mintSupply) : "--"}
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>{String(holders)}</Typography>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.floorPrice, WRAPPED_ICP.decimals).toNumber())}
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.avgPrice, WRAPPED_ICP.decimals).toNumber())}
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>
-            {formatAmount(parseTokenAmount(data.totalTurnover, WRAPPED_ICP.decimals).toNumber())}
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography sx={{ fontSize: "16px", color: "#ffffff" }}>{Number(data.listSize)}</Typography>
-        </TableCell>
-      </>
+    <TableRow className={classes.wrapper}>
+      <BodyCell>
+        <Flex align="center" gap="0 5px">
+          <Avatar src={metadata?.image}>&nbsp;</Avatar>
+          <BodyCell>{metadata?.name ?? "--"}</BodyCell>
+        </Flex>
+      </BodyCell>
+
+      <BodyCell>{metadata?.mintSupply ? Number(metadata?.mintSupply) : "--"}</BodyCell>
+      <BodyCell>{String(holders)}</BodyCell>
+      <BodyCell>{formatAmount(parseTokenAmount(data.floorPrice, WRAPPED_ICP.decimals).toNumber())}</BodyCell>
+      <BodyCell>{formatAmount(parseTokenAmount(data.avgPrice, WRAPPED_ICP.decimals).toNumber())}</BodyCell>
+      <BodyCell>{formatAmount(parseTokenAmount(data.totalTurnover, WRAPPED_ICP.decimals).toNumber())}</BodyCell>
+      <BodyCell>{Number(data.listSize)}</BodyCell>
     </TableRow>
   );
 }
 
 export default function MarketPlace() {
   const { t } = useTranslation();
+  const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -86,42 +73,27 @@ export default function MarketPlace() {
 
       <Box mt="24px">
         <MainCard>
-          <TableContainer className={loading ? "with-loading" : ""}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.name")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.items")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.holders")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.floor.price")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.average.price")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("common.total.volume")}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontSize="16px">{t("nft.transactions.listings")}</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+          <Box sx={{ width: "100%", overflow: "auto" }}>
+            <Box sx={{ width: "100%", minWidth: "960px" }}>
+              <Header className={classes.wrapper}>
+                <HeaderCell>{t("common.name")}</HeaderCell>
+                <HeaderCell>{t("common.items")}</HeaderCell>
+                <HeaderCell>{t("common.holders")}</HeaderCell>
+                <HeaderCell>{t("common.floor.price")}</HeaderCell>
+                <HeaderCell>{t("common.average.price")}</HeaderCell>
+                <HeaderCell>{t("common.total.volume")}</HeaderCell>
+                <HeaderCell>{t("nft.transactions.listings")}</HeaderCell>
+              </Header>
+
+              <>
                 {content.map((stat) => (
                   <NFTTradeStat key={stat.cid} data={stat} />
                 ))}
-              </TableBody>
-            </Table>
+              </>
+            </Box>
             {content.length === 0 && !loading ? <NoData /> : null}
             <ListLoading loading={loading} />
-          </TableContainer>
+          </Box>
 
           {totalElements && Number(totalElements) !== 0 ? (
             <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />

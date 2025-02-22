@@ -1,6 +1,7 @@
-import { Box } from "@mui/material";
 import { useCallback } from "react";
 import { Check } from "react-feather";
+
+import { Box } from "./Mui";
 
 export interface CheckboxProps {
   checked: boolean;

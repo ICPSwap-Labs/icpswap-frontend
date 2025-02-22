@@ -1,4 +1,4 @@
-import { Typography, Box } from "@mui/material";
+import { Typography, Box } from "components/Mui";
 import BaseMarkdown from "components/markdown/BaseMarkdown";
 
 export default function Preview({ title, content }: { title: string | undefined; content: string | undefined }) {

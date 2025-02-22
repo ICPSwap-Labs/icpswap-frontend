@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "@mui/material";
+import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "components/Mui";
 import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
 import { useState } from "react";
 import { NumberFilledTextField, Modal, AuthButton } from "components/index";

@@ -1,4 +1,4 @@
-import { Grid, Box } from "@mui/material";
+import { Grid, Box } from "components/Mui";
 import { useEffect, useState } from "react";
 import { DefaultDarkImage } from "components/LazyImage/DefaultDarkImage";
 

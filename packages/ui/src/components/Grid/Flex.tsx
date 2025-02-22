@@ -1,5 +1,6 @@
-import { Box, BoxProps } from "@mui/material";
 import { ReactNode } from "react";
+
+import { Box, BoxProps } from "../Mui";
 
 export interface FlexProps {
   width?: string;

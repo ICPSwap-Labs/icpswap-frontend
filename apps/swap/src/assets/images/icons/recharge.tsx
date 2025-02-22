@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
+import { SvgIcon, SvgIconProps } from "components/Mui";
 
 export default function RechargeIcon(props: SvgIconProps) {
   return (

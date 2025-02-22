@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Box, Collapse, Typography, useTheme } from "components/Mui";
-import { Link } from "@mui/material";
+import { Box, Collapse, Typography, useTheme, Link } from "components/Mui";
 import { MainCard, Flex, Image } from "components/index";
 import { INFO_URL } from "constants/index";
 import {

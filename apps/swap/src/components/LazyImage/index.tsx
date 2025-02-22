@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Grid, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { Grid, Box, makeStyles, useTheme } from "components/Mui";
 import ErrorImage from "@mui/icons-material/BrokenImage";
-import { Theme } from "@mui/material/styles";
+
 import { LoadingDarkImage } from "./LoadingDarkImage";
 import { LoadingLightImage } from "./LoadingLightImage";
 import { DefaultDarkImage } from "./DefaultDarkImage";
@@ -46,7 +45,7 @@ export interface LazyImageProps {
 }
 
 export default function LazyImage(props: LazyImageProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const classes = useStyle();
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);

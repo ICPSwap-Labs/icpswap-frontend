@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid } from "components/Mui";
 import VerifyImage from "assets/images/nft/verify.svg";
 
 export function NFTVerifyLabel() {

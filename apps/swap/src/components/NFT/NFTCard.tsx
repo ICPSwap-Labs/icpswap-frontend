@@ -1,13 +1,11 @@
 import { MainCard } from "components/index";
-import { Grid, Typography, Box } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
-// import NFTVerifyLabel from "./VerifyLabel";
+import { Grid, Typography, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { isDarkTheme } from "utils";
 import { useNFTOrderInfo } from "hooks/nft/trade";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import type { NFTTokenMetadata } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import NFTAvatar from "components/NFT/NFTAvatar";
+
 import WICPPriceFormat from "./WICPPriceFormat";
 import OnSaleLabel from "./OnSaleLabel";
 

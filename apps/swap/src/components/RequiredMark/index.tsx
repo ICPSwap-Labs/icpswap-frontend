@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography } from "components/Mui";
 
 export default function RequiredMark() {
   return (

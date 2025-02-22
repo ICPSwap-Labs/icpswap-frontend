@@ -19,7 +19,7 @@ export { default as InputAdornment } from "@mui/material/InputAdornment";
 export { default as Avatar, type AvatarProps } from "@mui/material/Avatar";
 export { default as Link } from "@mui/material/Link";
 export { default as makeStyles } from "@mui/styles/makeStyles";
-export { default as Tooltip } from "@mui/material/Tooltip";
+export { default as Tooltip, tooltipClasses } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as Menu } from "@mui/material/Menu";
 export { default as Pagination } from "@mui/material/Pagination";
@@ -27,6 +27,10 @@ export { default as LinearProgress } from "@mui/material/LinearProgress";
 export { default as Dialog } from "@mui/material/Dialog";
 export { default as DialogContent } from "@mui/material/DialogContent";
 export { default as DialogTitle } from "@mui/material/DialogTitle";
+export { default as Slider } from "@mui/material/Slider";
+
+export { styled } from "@mui/styles";
+export { keyframes } from "@emotion/react";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

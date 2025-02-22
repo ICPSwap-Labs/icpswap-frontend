@@ -1,33 +1,39 @@
 import { useState } from "react";
-import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { useStakingPoolClaimTransactions } from "@icpswap/hooks";
-import { ListLoading, PaginationType, AddressFormat } from "components/index";
+import { PaginationType, AddressFormat } from "components/index";
 import { type StakingPoolTransaction } from "@icpswap/types";
-import { HeaderCell, BodyCell, Pagination, NoData } from "@icpswap/ui";
+import { HeaderCell, BodyCell, Pagination, NoData, Header, TableRow, ImageLoading } from "@icpswap/ui";
+import { Box, makeStyles } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "1fr  1fr 1fr",
+    },
+  };
+});
+
 function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
+  const classes = useStyles();
+
   return (
-    <TableRow>
-      <TableCell>
-        <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
-      </TableCell>
-      <TableCell>
-        <BodyCell>{`${parseTokenAmount(transactions.amount, Number(transactions.rewardTokenDecimals)).toFormat()} ${
-          transactions.rewardTokenSymbol
-        }`}</BodyCell>
-      </TableCell>
-      <TableCell>
-        <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
-      </TableCell>
+    <TableRow className={classes.wrapper}>
+      <BodyCell>{dayjs(Number(transactions.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
+      <BodyCell>{`${parseTokenAmount(transactions.amount, Number(transactions.rewardTokenDecimals)).toFormat()} ${
+        transactions.rewardTokenSymbol
+      }`}</BodyCell>
+      <AddressFormat address={transactions.to.toString()} sx={{ fontSize: "16px" }} />
     </TableRow>
   );
 }
 
 export function StakeClaimTransactions({ id }: { id: string | undefined }) {
   const { t } = useTranslation();
+  const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -39,39 +45,32 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
   };
 
   return (
-    <TableContainer className={loading || !id ? "with-loading" : ""}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <HeaderCell>{t("common.time")}</HeaderCell>
-            </TableCell>
-            <TableCell>
-              <HeaderCell>{t("common.token.amount")}</HeaderCell>
-            </TableCell>
-            <TableCell>
-              <HeaderCell>{t("common.address")}</HeaderCell>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    <Box sx={{ width: "100%", overflow: "auto" }}>
+      <Box sx={{ width: "100%", minWidth: "1200px" }}>
+        <Header className={classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.token.amount")}</HeaderCell>
+          <HeaderCell>{t("common.address")}</HeaderCell>
+        </Header>
+
+        <>
           {list
             .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
             .map((transactions, index) => (
               <PoolItem key={index} transactions={transactions} />
             ))}
-        </TableBody>
-      </Table>
-      {list.length === 0 && !loading && !!id ? <NoData /> : null}
-      {loading || !id ? <ListLoading loading={loading || !id} /> : null}
-      {Number(totalElements) > 0 ? (
-        <Pagination
-          total={Number(totalElements)}
-          onPageChange={handlePageChange}
-          num={pagination.pageNum}
-          defaultPageSize={pagination.pageSize}
-        />
-      ) : null}
-    </TableContainer>
+        </>
+        {list.length === 0 && !loading && !!id ? <NoData /> : null}
+        {loading || !id ? <ImageLoading loading={loading || !id} /> : null}
+        {Number(totalElements) > 0 ? (
+          <Pagination
+            total={Number(totalElements)}
+            onPageChange={handlePageChange}
+            num={pagination.pageNum}
+            defaultPageSize={pagination.pageSize}
+          />
+        ) : null}
+      </Box>
+    </Box>
   );
 }
