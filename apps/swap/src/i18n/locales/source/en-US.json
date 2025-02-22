@@ -645,7 +645,7 @@
   "info.overview.tokens": "{{amount}} Tokens",
   "SWBS1z": "Request error",
   "nns.reject.proposal": "Reject proposal",
-  "limit.error.amount.exceed": "Amount must exceed {{amount}}",
+  "limit.error.minimum.amount": "The minimum limit order must be worth $20",
   "ScqQsI": "Enter the content",
   "common.position.value": "Position value",
   "Se9Zol": "Please select the token standard first",

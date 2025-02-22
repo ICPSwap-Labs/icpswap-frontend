@@ -9,7 +9,7 @@ import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
-import { formatTokenAmount, isNullArgs, BigNumber, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
+import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
@@ -19,6 +19,8 @@ import { Token, CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick,
 import { useSwapState } from "store/swap/hooks";
 import { useTranslation } from "react-i18next";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
+import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
+import { useUSDPriceById } from "hooks/index";
 
 import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
 
@@ -45,6 +47,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
   const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
+  const inputCurrencyPrice = useUSDPriceById(inputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
@@ -293,15 +296,19 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   const inputError = useMemo(() => {
     if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
-    if (!independentFieldAmount) return t("common.enter.input.amount");
+    if (!independentFieldAmount || !parsedAmounts[SWAP_FIELD.INPUT]) return t("common.enter.input.amount");
     if (!inputSwapAmount || formatTokenAmount(inputSwapAmount, inputToken.decimals).isLessThan(inputToken.transFee))
       return t("common.error.amount.large.than.fee");
     if (tickError) return t("limit.error.invalid.tick");
 
-    const minimumAmount = parseTokenAmount(inputToken.transFee, inputToken.decimals).multipliedBy(10000);
+    if (!inputCurrencyPrice) return t`Submit Limit Order`;
 
-    if (inputToken.transFee > 0 && minimumAmount.isGreaterThan(inputSwapAmount))
-      return t("limit.error.amount.exceed", { amount: `${minimumAmount.toFormat()} ${inputToken.symbol}` });
+    if (
+      new BigNumber(parsedAmounts[SWAP_FIELD.INPUT].toExact())
+        .multipliedBy(inputCurrencyPrice)
+        .isLessThan(MIN_LIMIT_ORDER_VALUE)
+    )
+      return t("limit.error.minimum.amount");
     if (inputNumberCheck(inputSwapAmount) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
@@ -323,6 +330,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (isInputTokenSorted && orderPriceTick <= minSettableTick) return t`Adjust your limit price to proceed.`;
     if (!isInputTokenSorted && orderPriceTick >= minSettableTick) return t`Adjust your limit price to proceed.`;
   }, [
+    parsedAmounts,
     inputSwapAmount,
     independentFieldAmount,
     inputTokenSubBalance,
@@ -338,6 +346,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     isInputTokenSorted,
     minSettableTick,
     tickError,
+    inputCurrencyPrice,
   ]);
 
   const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
