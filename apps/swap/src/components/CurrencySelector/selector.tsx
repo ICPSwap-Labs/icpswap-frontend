@@ -3,7 +3,6 @@ import SwapModal from "components/modal/swap";
 import { InputAdornment, useTheme, Typography, Box, useMediaQuery, makeStyles } from "components/Mui";
 import { useGlobalTokenList } from "store/global/hooks";
 import { isDarkTheme } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { FilledTextField, NoData } from "components/index";
 import { isValidPrincipal } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
@@ -14,6 +13,7 @@ import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { TokenItem } from "./TokenItem";
 import { BaseTokens } from "./BaseToken";
@@ -44,6 +44,7 @@ export default function Selector({
   disabledCurrencyIds = [],
   activeCurrencyIds = [],
 }: SelectorProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isDark = isDarkTheme(theme);
   const classes = useStyles();
@@ -144,7 +145,7 @@ export default function Selector({
     <>
       <SwapModal
         open={open}
-        title={t`Select a token`}
+        title={t("common.select.a.token")}
         onClose={onClose}
         dialogProps={{
           sx: {
@@ -166,8 +167,7 @@ export default function Selector({
         >
           <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "12px 0 0 0" }}>
             <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
-              Do your own research before investing. While we've collected known information about tokens on the list,
-              it's essential to conduct your research.
+              {t("common.disclaimer.descriptions")}
             </Typography>
           </Box>
 
@@ -185,7 +185,7 @@ export default function Selector({
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (
@@ -217,9 +217,7 @@ export default function Selector({
             <Box>
               {searchKeyword ? null : (
                 <Box className={classes.wrapper}>
-                  <Typography fontSize="16px">
-                    <Trans>Your Tokens</Trans>
-                  </Typography>
+                  <Typography fontSize="16px">{t("swap.currency.selector.your.tokens")}</Typography>
                 </Box>
               )}
 
@@ -242,14 +240,14 @@ export default function Selector({
             <Box mt={searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
               {searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? null : (
                 <Typography className={classes.wrapper} fontSize="16px">
-                  <Trans>Token List</Trans>
+                  {t("common.token.list")}
                 </Typography>
               )}
 
               <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
                 {searchKeyword || (snsTokens ?? []).length === 0 ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    <Trans>SNS Tokens</Trans>
+                    {t("common.sns.tokens")}
                   </Typography>
                 )}
 
@@ -271,7 +269,7 @@ export default function Selector({
               <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
                 {searchKeyword || (noneSnsTokens ?? []).length === 0 ? null : (
                   <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    <Trans>Other Tokens</Trans>
+                    {t("common.other.tokens")}
                   </Typography>
                 )}
 

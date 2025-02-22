@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { t } from "@lingui/macro";
 import { getUnstakeSteps } from "components/stake/UnstakeSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export type UnstakeCallsStepArgs = {
   token: Token;
@@ -12,6 +12,7 @@ export type UnstakeCallsStepArgs = {
 };
 
 export function useUnstakeSteps() {
+  const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
   return useCallback((key: string, { token, amount, rewardToken }: UnstakeCallsStepArgs) => {
@@ -24,7 +25,7 @@ export function useUnstakeSteps() {
 
     initialAndUpdateDetails(String(key), {
       content,
-      title: t`Unstake Details`,
+      title: t("stake.unstake.details"),
     });
   }, []);
 }

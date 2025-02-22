@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { makeStyles, Typography, Box, Grid } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import { NoData, ImageLoading, TokenImage } from "components/index";
 import { useToken } from "hooks/index";
 import {
@@ -20,6 +19,7 @@ import { ICP } from "@icpswap/tokens";
 import { formatDollarAmount } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { HIDDEN_POOLS } from "constants/info";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -48,6 +48,7 @@ interface PoolTableHeaderProps {
 }
 
 function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const headers: HeaderType[] = [
@@ -55,9 +56,9 @@ function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeade
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
     { label: t`APR(24H)`, key: "apr", sort: false },
-    { label: t`Volume 24H`, key: "volumeUSD", sort: true },
-    { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
-    { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },
+    { label: t("common.volume24h"), key: "volumeUSD", sort: true },
+    { label: t("common.volume7d"), key: "volumeUSD7d", sort: true },
+    { label: t("common.total.volume"), key: "totalVolumeUSD", sort: true },
   ];
 
   return (
@@ -128,6 +129,7 @@ export interface TokenPoolsProps {
 }
 
 export function TokenPools({ canisterId }: TokenPoolsProps) {
+  const { t } = useTranslation();
   const [checked, setChecked] = useState(true);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
@@ -202,9 +204,7 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
           },
         }}
       >
-        <Typography variant="h4">
-          <Trans>Pools</Trans>
-        </Typography>
+        <Typography variant="h4">{t("common.pools")}</Typography>
 
         <OnlyTokenList onChange={handleCheckChange} checked={checked} />
       </Box>

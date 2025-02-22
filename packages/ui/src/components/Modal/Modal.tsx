@@ -1,9 +1,19 @@
 import React, { ReactNode } from "react";
-import { Box, Button, Dialog, DialogTitle, DialogContent, Typography, useMediaQuery } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
 import { XCircle } from "react-feather";
-import { Theme } from "@mui/material/styles";
 import { isElement } from "react-is";
+
+import {
+  makeStyles,
+  useTheme,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  useMediaQuery,
+  Theme,
+  Box,
+} from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
@@ -84,8 +94,8 @@ export function Modal({
   title,
   children,
   open,
-  confirmText = `Confirm`,
-  cancelText = `Cancel`,
+  confirmText = "Confirm",
+  cancelText = "Cancel",
   onClose,
   onConfirm,
   onCancel,

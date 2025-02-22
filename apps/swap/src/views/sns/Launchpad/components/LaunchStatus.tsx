@@ -1,6 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
 import { useMemo, useState, useContext } from "react";
 import { TextButton, AuthButton } from "components/index";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
@@ -11,6 +10,8 @@ import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
+import i18n from "i18n";
 
 import { Participate } from "./Participate";
 import { LaunchContext } from "./context";
@@ -24,15 +25,16 @@ export interface LaunchStatusProps {
 }
 
 const statusTextMapper: { [status: string]: string } = {
-  [SnsSwapLifecycle.Unspecified]: t`Unspecified`,
-  [SnsSwapLifecycle.Pending]: t`Upcoming swap`,
-  [SnsSwapLifecycle.Open]: t`Accepting Participation`,
-  [SnsSwapLifecycle.Committed]: t`Completed`,
-  [SnsSwapLifecycle.Aborted]: t`Aborted`,
-  [SnsSwapLifecycle.Adopted]: t`Starting Soon`,
+  [SnsSwapLifecycle.Unspecified]: i18n.t("common.unspecified"),
+  [SnsSwapLifecycle.Pending]: `Upcoming swap`,
+  [SnsSwapLifecycle.Open]: i18n.t("launch.accepting.participation"),
+  [SnsSwapLifecycle.Committed]: `Completed`,
+  [SnsSwapLifecycle.Aborted]: `Aborted`,
+  [SnsSwapLifecycle.Adopted]: i18n.t("launch.staring.soon"),
 };
 
 export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: LaunchStatusProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const principal = useAccountPrincipal();
@@ -200,9 +202,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>
-          <Trans>Current Total Participants</Trans>
-        </Typography>
+        <Typography>{t("nns.launch.current.participants")}</Typography>
         <Typography color="text.primary" align="right" sx={{ wordBreak: "break-all" }}>
           {total_participants || "--"}
         </Typography>
@@ -212,9 +212,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
             <Box sx={{ width: "8px", height: "8px", background: theme.colors.secondaryMain, borderRadius: "50%" }} />
-            <Typography>
-              <Trans>Direct Commitment</Trans>
-            </Typography>
+            <Typography>{t("nns.launch.direct.commitment")}</Typography>
           </Box>
           <Typography color="text.primary" align="right" sx={{ wordBreak: "break-all" }}>
             {direct_participation_icp
@@ -268,7 +266,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
         <Box sx={{ margin: "5px 0 0 0", display: "flex", justifyContent: "space-between" }}>
           <Box>
             <Typography color={fill_min_direct ? theme.colors.secondaryMain : "textSecondary"}>
-              <Trans>Min. Direct Commitment</Trans>
+              {t("nns.launch.min.direct.commitment")}
             </Typography>
             <Typography
               sx={{ margin: "5px 0 0 0", color: fill_min_direct ? theme.colors.secondaryMain : "textSecondary" }}
@@ -284,7 +282,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
                 color: fill_max_direct ? theme.colors.secondaryMain : "textSecondary",
               }}
             >
-              <Trans>Max. Direct Commitment</Trans>
+              {t("nns.launch.max.direct.commitment")}
             </Typography>
             <Typography
               sx={{ margin: "5px 0 0 0", color: fill_max_direct ? theme.colors.secondaryMain : "textSecondary" }}
@@ -300,9 +298,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
             <Box sx={{ width: "8px", height: "8px", background: theme.colors.primaryMain, borderRadius: "50%" }} />
-            <Typography>
-              <Trans>Neurons' Fund Commitment</Trans>
-            </Typography>
+            <Typography>{t("nns.launch.fund.commitment")}</Typography>
           </Box>
           <Typography color="text.primary" align="right" sx={{ wordBreak: "break-all" }}>
             {neurons_fund_icp
@@ -339,15 +335,11 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
 
         <Box sx={{ margin: "5px 0 0 0", display: "flex", justifyContent: "space-between" }}>
           <Box>
-            <Typography>
-              <Trans>Min. Neurons’ Fund Commitment</Trans>
-            </Typography>
+            <Typography>{t("nns.launch.min.fund.commitment")}</Typography>
             <Typography sx={{ margin: "5px 0 0 0" }}>{`0 ${ICP.symbol}`}</Typography>
           </Box>
           <Box>
-            <Typography align="right">
-              <Trans>Max. Neurons’ Fund Commitment</Trans>
-            </Typography>
+            <Typography align="right">{t("nns.launch.max.fund.commitment")}</Typography>
             <Typography sx={{ margin: "5px 0 0 0" }} align="right">
               {max_neurons_fund_commitment
                 ? `${toSignificant(parseTokenAmount(max_neurons_fund_commitment, ICP.decimals).toString(), 8, {
@@ -360,9 +352,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
       </Box>
 
       <Box sx={{ margin: "10px 0 0 0", display: "flex", justifyContent: "space-between" }}>
-        <Typography>
-          <Trans>Overall Commitment</Trans>
-        </Typography>
+        <Typography>{t("nns.launch.overall.commitment")}</Typography>
 
         <Typography color="text.primary">
           {buyer_total_icp
@@ -374,9 +364,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>
-          <Trans>My Commitment</Trans>
-        </Typography>
+        <Typography>{t("nns.launch.my.commitment")}</Typography>
 
         <Typography color="text.primary">
           {buyer_total_icp
@@ -388,9 +376,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography>
-          <Trans>Deadline</Trans>
-        </Typography>
+        <Typography>{t("common.dead.line")}</Typography>
 
         <Typography color="text.primary">
           {buyer_total_icp
@@ -406,7 +392,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
       {swap_life_cycle && swap_life_cycle === SnsSwapLifecycle.Open ? (
         <Box sx={{ margin: "20px 0 0 0" }}>
           <AuthButton variant="contained" onClick={handleParticipate} disabled={!!error || location_code === undefined}>
-            {error ?? <Trans>Participate</Trans>}
+            {error ?? t("common.participate")}
           </AuthButton>
         </Box>
       ) : null}

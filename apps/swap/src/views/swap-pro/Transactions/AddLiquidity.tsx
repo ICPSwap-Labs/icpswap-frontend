@@ -1,9 +1,9 @@
 import { Button } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { memo } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export interface AddLiquidityProps {
   token0: Token | Null;
@@ -11,6 +11,7 @@ export interface AddLiquidityProps {
 }
 
 export const AddLiquidity = memo(({ token0, token1 }: AddLiquidityProps) => {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const handleLoadPage = () => {
@@ -24,7 +25,7 @@ export const AddLiquidity = memo(({ token0, token1 }: AddLiquidityProps) => {
 
   return (
     <Button onClick={handleLoadPage} variant="contained" style={{ width: "fit-content" }}>
-      <Trans>Add Liquidity</Trans>
+      {t("swap.add.liquidity")}
     </Button>
   );
 });

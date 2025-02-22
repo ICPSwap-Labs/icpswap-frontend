@@ -1,7 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { BigNumber, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
 import { LimitTransaction } from "@icpswap/types";
@@ -10,6 +9,7 @@ import dayjs from "dayjs";
 import { useToken } from "hooks/index";
 import { useUserUnusedBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 import { WithdrawTokens } from "./WithdrawTokens";
 
@@ -18,6 +18,7 @@ export interface LimitTransactionProps {
 }
 
 export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -72,7 +73,9 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
     <>
       <Box sx={{ background: theme.palette.background.level2, padding: "24px", borderRadius: "16px", width: "100%" }}>
         <Typography sx={{ fontSize: "12px" }}>
-          <Trans>Filled {dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}</Trans>
+          {t("common.filled.time", {
+            time: dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm"),
+          })}
         </Typography>
 
         <Flex gap="0 16px" sx={{ margin: "12px 0 0 0" }} fullWidth>
@@ -107,9 +110,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
         >
           <Box>
             <Flex gap="0 8px">
-              <Typography sx={{ whiteSpace: "nowrap" }}>
-                <Trans>Limit Price</Trans>
-              </Typography>
+              <Typography sx={{ whiteSpace: "nowrap" }}>{t("common.limit.price")}</Typography>
               <Flex gap="0 2px" sx={{ textAlign: "right", cursor: "pointer" }} onClick={handleInvert}>
                 <Typography sx={{ color: "text.primary" }}>
                   {limitPrice
@@ -133,7 +134,7 @@ export function LimitTransactionCard({ transaction }: LimitTransactionProps) {
             onClick={() => setShowWithdrawTokens(true)}
             disabled={disableWithdraw}
           >
-            <Trans>Withdraw</Trans>
+            {t("common.withdraw")}
           </AuthButton>
         </Flex>
       </Box>

@@ -4,10 +4,11 @@ import { useSwapPools, useParsedQueryString } from "@icpswap/hooks";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { LoadingRow, Flex, Wrapper } from "components/index";
-import { Trans } from "@lingui/macro";
 import { InfoPools, Positions } from "components/liquidity/index";
 import { useHistory } from "react-router-dom";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { useTranslation } from "react-i18next";
+import i18n from "i18n";
 
 enum TabName {
   TopPools = "TopPools",
@@ -15,8 +16,8 @@ enum TabName {
 }
 
 const tabs = [
-  { label: "Your Liquidity Positions", value: TabName.Positions },
-  { label: "Top Pools", value: TabName.TopPools },
+  { label: "Your liquidity positions", value: TabName.Positions },
+  { label: i18n.t("swap.top.pools"), value: TabName.TopPools },
 ];
 
 interface TabProps {
@@ -63,6 +64,7 @@ function Tab({ label, value, active, onClick }: TabProps) {
 }
 
 export default function Liquidity() {
+  const { t } = useTranslation();
   const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
   const history = useHistory();
   const { tab } = useParsedQueryString() as { tab: TabName | undefined };
@@ -143,10 +145,10 @@ export default function Liquidity() {
       ) : (
         <>
           <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-            <Trans>Liquidity Pools</Trans>
+            {t("swap.liquidity.pools.title")}
           </Typography>
           <Typography sx={{ fontSize: "16px", margin: "16px 0 0 0", lineHeight: "24px" }}>
-            <Trans>Explore the top pools for high-yield opportunities!</Trans>
+            {t("swap.liquidity.description")}
           </Typography>
 
           <Flex
@@ -175,7 +177,7 @@ export default function Liquidity() {
             </Flex>
 
             <Button variant="contained" onClick={loadAddLiquidity}>
-              <Trans>Add Liquidity</Trans>
+              {t("swap.add.liquidity")}
             </Button>
           </Flex>
 

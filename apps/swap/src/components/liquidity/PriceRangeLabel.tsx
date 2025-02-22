@@ -1,9 +1,9 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatTokenPrice, nonNullArgs } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { SWAP_CHART_RANGE_PRICE_COLOR } from "constants/swap";
+import { useTranslation } from "react-i18next";
 
 export interface PriceRangeLabelProps {
   poolPriceLower: string | number | Null;
@@ -12,6 +12,8 @@ export interface PriceRangeLabelProps {
 }
 
 export function PriceRangeLabel({ poolPriceLower, poolPriceUpper, chartTime }: PriceRangeLabelProps) {
+  const { t } = useTranslation();
+
   const theme = useTheme();
 
   return (
@@ -19,7 +21,7 @@ export function PriceRangeLabel({ poolPriceLower, poolPriceUpper, chartTime }: P
       <Flex gap="0 12px">
         <Box sx={{ background: SWAP_CHART_RANGE_PRICE_COLOR, width: "8px", height: "2px" }} />
         <Flex gap="0 2px" align="center">
-          <Tooltip tips={<Trans>Price data updates hourly</Trans>}>
+          <Tooltip tips={t("liquidity.price.updates")}>
             <Typography
               fontSize="12px"
               sx={{
@@ -31,7 +33,7 @@ export function PriceRangeLabel({ poolPriceLower, poolPriceUpper, chartTime }: P
                 cursor: "pointer",
               }}
             >
-              <Trans>{chartTime} Price Range:</Trans>&nbsp;
+              {t("liquidity.chart.price.range", { chartTime })}&nbsp;
             </Typography>
           </Tooltip>
         </Flex>

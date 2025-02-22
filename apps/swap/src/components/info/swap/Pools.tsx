@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
-import { Box, Grid, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
+import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { t } from "@lingui/macro";
 import { Override, PublicPoolOverView } from "@icpswap/types";
 import { ImageLoading, TokenImage } from "components/index";
 import { useToken } from "hooks/index";
@@ -19,6 +18,7 @@ import Pagination from "components/pagination/cus";
 import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
 import { HIDDEN_POOLS } from "constants/info";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -48,6 +48,7 @@ interface PoolTableHeaderProps {
 }
 
 function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTableHeaderProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const headers: HeaderType[] = [
@@ -55,9 +56,9 @@ function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: PoolTab
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
     { label: t`APR(24H)`, key: "apr", sort: false },
-    { label: t`Volume 24H`, key: "volumeUSD", sort: true },
-    { label: t`Volume 7D`, key: "volumeUSD7d", sort: true },
-    { label: t`Total Volume`, key: "totalVolumeUSD", sort: true },
+    { label: t("common.volume24h"), key: "volumeUSD", sort: true },
+    { label: t("common.volume7d"), key: "volumeUSD7d", sort: true },
+    { label: t("common.total.volume"), key: "totalVolumeUSD", sort: true },
   ];
 
   return (
@@ -130,7 +131,8 @@ export interface PoolsProps {
 }
 
 export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>("volumeUSD");
@@ -192,11 +194,7 @@ export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
         <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} align={align} />
       ))}
 
-      {sortedPools?.length === 0 && !loading ? (
-        <NoData
-          tip={t`If the token or trading pair you're searching for isn't in the Tokenlist, try adjusting the settings to display all tokens and trading pairs.`}
-        />
-      ) : null}
+      {sortedPools?.length === 0 && !loading ? <NoData tip={t("info.swap.pool.description")} /> : null}
 
       {loading ? <ImageLoading loading={loading} /> : null}
 

@@ -23,7 +23,6 @@ import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverte
 import { isDarkTheme } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Trans, t } from "@lingui/macro";
 import { Theme } from "@mui/material/styles";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
@@ -31,6 +30,7 @@ import { isElement } from "react-is";
 import { Principal } from "@dfinity/principal";
 import { PositionRangeState } from "components/swap/index";
 import { usePositionState } from "hooks/liquidity";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -114,6 +114,7 @@ export function PositionDetails({
   token1USDPrice,
   onPrincipalChange,
 }: PositionDetailsProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};
@@ -167,9 +168,9 @@ export function PositionDetails({
         className={classes.detailContainer}
         sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
       >
-        <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
+        <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
         <PositionDetailItem
-          label={t`${currencyQuote?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
           value={
             !position
               ? "--"
@@ -183,7 +184,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`${currencyBase?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
           value={
             !position
               ? "--"
@@ -197,7 +198,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`Current Price`}
+          label={t("common.current.price")}
           value={
             !!token1 && !!token0 && pool
               ? inverted
@@ -209,7 +210,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Price Range`}
+          label={t("common.price.range")}
           value={
             <Box>
               <Typography
@@ -241,7 +242,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Uncollected fees`}
+          label={t("common.uncollected.fees")}
           value={
             <Box>
               <Typography
@@ -305,8 +306,8 @@ export function PositionDetails({
 
         <Box>
           <Typography sx={{ margin: "0  0 10px 0" }}>
-            <Trans>Transfer to</Trans>
-            <Trans>(Do Not transfer position to NNS)</Trans>
+            {t("common.transfer.to")}
+            {t("common.not.transfer.nns")}
           </Typography>
 
           <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
@@ -335,6 +336,7 @@ export function TransferPositionModal({
   onClose,
   onTransferSuccess,
 }: TransferPositionModalProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
 
@@ -397,7 +399,7 @@ export function TransferPositionModal({
 
     const poolId = position.pool.id;
 
-    const loadingKey = openLoadingTip(t`Transferring your position, ID is ${positionId}`);
+    const loadingKey = openLoadingTip(t("liquidity.transferring.loading.tips", { id: positionId }));
 
     const { status, message } = resultFormat<boolean>(
       await (
@@ -452,9 +454,7 @@ export function TransferPositionModal({
 
           {!closed ? (
             <Flex fullWidth sx={{ margin: "10px 0 0 0" }}>
-              <Typography>
-                <Trans>Value:</Trans>&nbsp;
-              </Typography>
+              <Typography>{t("common.value.colon")}&nbsp;</Typography>
               <Typography color="text.primary">{totalUSDValue ? formatDollarAmount(totalUSDValue) : "--"}</Typography>
             </Flex>
           ) : null}
@@ -478,7 +478,7 @@ export function TransferPositionModal({
 
       <Box mt="20px">
         <Button fullWidth size="large" variant="contained" disabled={!!error || loading} onClick={handleTransfer}>
-          {error || <Trans>Transfer</Trans>}
+          {error || t("common.transfer")}
         </Button>
       </Box>
     </Modal>

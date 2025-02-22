@@ -1,7 +1,7 @@
-import { Trans } from "@lingui/macro";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, PaginationProps } from "@icpswap/ui";
 import { Null, PositionTransaction } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 import { PositionTransactionsRow } from "./PositionTransactionsRow";
 
@@ -38,6 +38,7 @@ export function PositionTransactionsTableUI({
   onPaginationChange,
   pagination,
 }: PositionTransactionsTableUIProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   return (
@@ -45,29 +46,12 @@ export function PositionTransactionsTableUI({
       <Box sx={{ width: "100%", overflow: "auto", margin: "10px 0 0 0" }}>
         <Box sx={{ minWidth: "1136px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell>
-              <Trans>Time</Trans>
-            </HeaderCell>
-
-            <HeaderCell>
-              <Trans>Pair</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>Position ID</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>From</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>To</Trans>
-            </HeaderCell>
-
-            <HeaderCell align="right">
-              <Trans>Operation</Trans>
-            </HeaderCell>
+            <HeaderCell>{t("common.time")}</HeaderCell>
+            <HeaderCell>{t("common.pair")}</HeaderCell>
+            <HeaderCell align="right">{t("common.position.id")}</HeaderCell>
+            <HeaderCell align="right">{t("common.from")}</HeaderCell>
+            <HeaderCell align="right">{t("common.to")}</HeaderCell>
+            <HeaderCell align="right">{t("common.operation")}</HeaderCell>
           </Header>
 
           {!loading

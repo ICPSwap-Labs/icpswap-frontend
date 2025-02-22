@@ -1,8 +1,8 @@
-import { Box, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography } from "components/Mui";
 import { Switch } from "components/index";
 import { useSwapProAutoRefreshManager } from "store/swap/cache/hooks";
 import { memo, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const AUTO_REFRESH_SECONDS = 30;
 
@@ -12,6 +12,7 @@ export interface AutoRefreshProps {
 }
 
 export const AutoRefresh = memo(({ initSeconds = AUTO_REFRESH_SECONDS, trigger }: AutoRefreshProps) => {
+  const { t } = useTranslation();
   const [seconds, setSeconds] = useState(initSeconds);
   const [autoRefresh, updateAutoRefresh] = useSwapProAutoRefreshManager();
 
@@ -49,7 +50,8 @@ export const AutoRefresh = memo(({ initSeconds = AUTO_REFRESH_SECONDS, trigger }
   return (
     <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
       <Typography fontSize="12px">
-        <Trans>Auto Refresh</Trans>
+        {t("common.auto.refresh")}
+
         {autoRefresh ? (
           <>
             (

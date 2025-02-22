@@ -1,5 +1,4 @@
 import { Modal } from "@icpswap/ui";
-import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { tokenTransfer } from "hooks/token/calls";
@@ -8,6 +7,7 @@ import { BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { useSuccessTip, useErrorTip, useLoadingTip } from "hooks/useTips";
 import { useState } from "react";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface ConfirmBurnProps {
   open: boolean;
@@ -24,6 +24,7 @@ export interface ConfirmBurnProps {
 }
 
 export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount, onBurnSuccess }: ConfirmBurnProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
 
     setLoading(true);
 
-    const loadingKey = openLoadingTip(t`Burning ${amount} ${token.symbol}`);
+    const loadingKey = openLoadingTip(t("tools.burning.amount", { amount: `${amount} ${token.symbol}` }));
     onClose();
 
     const { status, message } = await tokenTransfer({
@@ -60,7 +61,7 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Confirm Burn`}>
+    <Modal open={open} onClose={onClose} title={t("burn.confirm")}>
       <Box sx={{ padding: "30px 0 0 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
         <TokenImage logo={token?.logo} size="56px" />
         <Typography sx={{ fontSize: "20px", fontWeight: 600, color: "text.primary", margin: "12px 0 0 0" }}>
@@ -70,16 +71,12 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
 
       <Box sx={{ margin: "32px 0 0 0" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>
-            <Trans>Minting Account</Trans>
-          </Typography>
+          <Typography>{t("tools.minting.account")}</Typography>
           <Typography color="text.primary">{mintingAccount?.owner}</Typography>
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", margin: "20px 0 0 0" }}>
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
           <Typography color="text.primary">{amount ? new BigNumber(amount).toFormat() : "--"}</Typography>
         </Box>
       </Box>
@@ -92,7 +89,7 @@ export function BurnConfirmModal({ open, onClose, token, mintingAccount, amount,
           startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
           onClick={handleConfirm}
         >
-          <Trans>Confirm Burn</Trans>
+          {t("common.confirm")}
         </Button>
       </Box>
     </Modal>

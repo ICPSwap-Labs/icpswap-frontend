@@ -1,11 +1,12 @@
 import type { FarmInfo } from "@icpswap/types";
+import i18n from "i18n";
 
 export enum POOL_STATE {
   LIVE = "Live",
   CLOSURE = "Closure",
   UN_STARTED = "Unstarted",
   FINISHED = "Finished",
-  Unspecified = "Unspecified",
+  Unspecified = i18n.t("common.unspecified"),
 }
 
 export function getFarmsState(pool: FarmInfo | undefined): POOL_STATE {

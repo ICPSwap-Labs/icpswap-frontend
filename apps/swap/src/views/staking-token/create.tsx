@@ -3,7 +3,6 @@ import { Typography, Grid, Box } from "@mui/material";
 import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField, AuthButton } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { numberToString } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { createStakingPool } from "@icpswap/hooks";
@@ -18,6 +17,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TokenInfo } from "types/token";
+import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -48,6 +48,7 @@ type Values = {
 };
 
 export default function CreateStakingTokenPool() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const updateTokenStandard = useUpdateTokenStandard();
 
@@ -186,8 +187,8 @@ export default function CreateStakingTokenPool() {
 
   let errorMsg = "";
   if (!values.name) errorMsg = t`Enter the name`;
-  if (!values.rewardStandard) errorMsg = t`Enter the reward token standard`;
-  if (!values.rewardToken) errorMsg = t`Enter the reward token`;
+  if (!values.rewardStandard) errorMsg = t("stake.create.enter.reward.standard");
+  if (!values.rewardToken) errorMsg = t("stake.create.enter.reward.token");
   if (!values.startDateTime) errorMsg = t`Enter the start time`;
   if (!values.endDateTime) errorMsg = t`Enter the bonus end time`;
   if (!values.outputPerSecond) errorMsg = t`Enter the output per second`;
@@ -201,7 +202,7 @@ export default function CreateStakingTokenPool() {
           <Box sx={{ maxWidth: "474px", width: "100%", display: "grid", gap: "20px 0" }}>
             <Box>
               <FilledTextField
-                label={t`Staking pool's name`}
+                label={t("stake.create.name")}
                 placeholder={t`Enter staking pool's name`}
                 onChange={(value) => handleFieldChange(value, "name")}
                 value={values.name}
@@ -210,8 +211,8 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Reward token id`}
-                placeholder={t`Enter reward token id`}
+                label={t("stake.reward.id")}
+                placeholder={t("stake.enter.reward.id")}
                 onChange={(value) => handleFieldChange(value, "rewardToken")}
                 value={values.rewardToken}
               />
@@ -222,7 +223,7 @@ export default function CreateStakingTokenPool() {
                 select
                 label={t`Reward token standard`}
                 menus={TokenStandards}
-                placeholder={t`Select reward token standard`}
+                placeholder={t("stake.create.select.reward.token.standard")}
                 onChange={(value) => handleFieldChange(value, "rewardStandard")}
                 value={values.rewardStandard}
               />
@@ -230,8 +231,8 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Staking token id`}
-                placeholder={t`Enter staking token id`}
+                label={t("stake.create.stake.id")}
+                placeholder={t("stake.create.id.placeholder")}
                 onChange={(value) => handleFieldChange(value, "stakingToken")}
                 value={values.stakingToken}
               />
@@ -239,17 +240,17 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Staking token standard`}
+                label={t("stake.create.staking.standard")}
                 select
                 menus={TokenStandards}
-                placeholder={t`Select staking token standard`}
+                placeholder={t("stake.create.select.standard")}
                 onChange={(value) => handleFieldChange(value, "stakingStandard")}
                 value={values.stakingStandard}
               />
             </Box>
 
             <Box>
-              <Typography color="text.primary">Start/End Time</Typography>
+              <Typography color="text.primary">{t("common.start.end.time")}</Typography>
               <Box mt="12px">
                 <Grid container justifyContent="space-between">
                   <Grid
@@ -264,7 +265,7 @@ export default function CreateStakingTokenPool() {
                           <FilledTextField
                             fullWidth
                             {...params}
-                            InputProps={{
+                            textFieldProps={{
                               ...(params?.InputProps ?? {}),
                               disableUnderline: true,
                             }}
@@ -295,7 +296,7 @@ export default function CreateStakingTokenPool() {
                           <FilledTextField
                             fullWidth
                             {...params}
-                            InputProps={{
+                            textFieldProps={{
                               ...(params?.InputProps ?? {}),
                               disableUnderline: true,
                             }}
@@ -316,19 +317,23 @@ export default function CreateStakingTokenPool() {
 
             <Box>
               <FilledTextField
-                label={t`Output Per Second`}
-                placeholder={t`Enter output per second`}
+                label={t("stake.create.output.per.second")}
+                placeholder={t("stake.create.enter.output.per.second")}
                 onChange={(value) => handleFieldChange(value, "outputPerSecond")}
                 value={values.outputPerSecond}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: rewardTokenInfo?.decimals ?? 8,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.outputPerSecond,
+                textFieldProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: rewardTokenInfo?.decimals ?? 8,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.outputPerSecond,
+                      },
+                    },
                   },
                 }}
               />

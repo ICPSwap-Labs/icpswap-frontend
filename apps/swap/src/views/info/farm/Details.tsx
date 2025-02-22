@@ -2,9 +2,7 @@ import { useState, ReactNode } from "react";
 import { Grid, Box, Typography, Link, makeStyles } from "components/Mui";
 import { Copy, InfoWrapper } from "components/index";
 import { FarmClaimTransactions, FarmTransactions } from "components/info/farm";
-// import DetailBg from "assets/images/detail_bg.svg";
 import { useParams } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import {
   parseTokenAmount,
   shorten,
@@ -18,6 +16,7 @@ import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard, BreadcrumbsV1 } from "@icpswap/ui";
 import { useToken } from "hooks/index";
 import upperFirst from "lodash/upperFirst";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -60,6 +59,7 @@ export function timeFormatter(dateTime: bigint | undefined) {
 }
 
 export default function FarmDetails() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { id: farmId } = useParams<{ id: string }>();
   const { result: farmInfo } = useV3UserFarmInfo(farmId, AnonymousPrincipal);
@@ -74,9 +74,7 @@ export default function FarmDetails() {
 
   return (
     <InfoWrapper size="small">
-      <BreadcrumbsV1
-        links={[{ label: <Trans>Farm</Trans>, link: "/info-farm" }, { label: <Trans>Farm Details</Trans> }]}
-      />
+      <BreadcrumbsV1 links={[{ label: t("common.farm"), link: "/info-farm" }, { label: t("farm.details") }]} />
 
       <Box
         sx={{
@@ -109,16 +107,19 @@ export default function FarmDetails() {
           <Box mt="30px" className={classes.details}>
             <Box className="columns">
               <PoolDetailItem
-                label={t`Canister ID:`}
+                label={t("common.canister.id.colon")}
                 value={
                   <Copy content={farmId}>
                     <Typography color="text.primary">{shorten(farmId, 8)}</Typography>
                   </Copy>
                 }
               />
-              <PoolDetailItem label={t`Staking Positions Amount:`} value={String(farmInfo?.numberOfStakes ?? 0)} />
               <PoolDetailItem
-                label={t`Reward Token Amount:`}
+                label={t("info.farm.staking.positions.amount")}
+                value={String(farmInfo?.numberOfStakes ?? 0)}
+              />
+              <PoolDetailItem
+                label={t("info.farm.reward.token.amount")}
                 value={
                   <Typography component="span" color="text.primary">
                     {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
@@ -129,7 +130,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Claimed Rewards:`}
+                label={t("info.farm.claimed.rewards.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -147,7 +148,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Unclaimed Rewards:`}
+                label={t("common.unclaimed.rewards.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -168,11 +169,11 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Distribution Interval:`}
+                label={t("farm.distribution.interval.colon")}
                 value={
                   farmMetadata ? (
                     <>
-                      {Number(farmMetadata?.secondPerCycle ?? 0) / 60} <Trans>min</Trans>
+                      {Number(farmMetadata?.secondPerCycle ?? 0) / 60} {t("common.min")}
                     </>
                   ) : (
                     "--"
@@ -183,7 +184,7 @@ export default function FarmDetails() {
 
             <Box className="columns">
               <PoolDetailItem
-                label={t`Amount per Distribution:`}
+                label={t("info.farm.amount.distribution.colon")}
                 value={
                   farmMetadata && rewardToken ? (
                     <>
@@ -200,10 +201,10 @@ export default function FarmDetails() {
                   )
                 }
               />
-              <PoolDetailItem label={t`Start Time:`} value={timeFormatter(farmInfo?.startTime)} />
-              <PoolDetailItem label={t`End Time:`} value={timeFormatter(farmInfo?.endTime)} />
+              <PoolDetailItem label={t("common.start.time.colon")} value={timeFormatter(farmInfo?.startTime)} />
+              <PoolDetailItem label={t("common.end.time.colon")} value={timeFormatter(farmInfo?.endTime)} />
               <PoolDetailItem
-                label={t`Creator:`}
+                label={t("common.creator.colon")}
                 value={
                   <Copy content={farmInfo?.creator.toString() ?? ""}>
                     <Typography color="text.primary">{shorten(farmInfo?.creator.toString() ?? "", 8)}</Typography>
@@ -211,7 +212,7 @@ export default function FarmDetails() {
                 }
               />
               <PoolDetailItem
-                label={t`Cycles left:`}
+                label={t("common.cycles.left.colon")}
                 value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
               />
             </Box>
@@ -231,7 +232,7 @@ export default function FarmDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Staked Positions</Trans>
+              {t("liquidity.staked.positions")}
             </Typography>
             <Typography
               color={recordType !== "transactions" ? "text.primary" : ""}
@@ -242,7 +243,7 @@ export default function FarmDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Reward Tokens</Trans>
+              {t("common.reward.tokens")}
             </Typography>
           </Grid>
           <Grid item container justifyContent="center" mt="20px">

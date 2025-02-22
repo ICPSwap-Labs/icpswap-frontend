@@ -3,7 +3,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { withdraw } from "@icpswap/hooks";
 import { useErrorTip } from "hooks/useTips";
 import { OpenExternalTip } from "types/index";
-import { t } from "@lingui/macro";
+import i18n from "i18n/index";
 
 export function useSwapWithdraw() {
   const [openErrorTip] = useErrorTip();
@@ -15,9 +15,7 @@ export function useSwapWithdraw() {
       if (openExternalTip) {
         openExternalTip({ message });
       } else {
-        openErrorTip(
-          t`Failed to withdraw ${token.symbol}: ${message}. Please click 'Reclaim Your Tokens' to reclaim your tokens.`,
-        );
+        openErrorTip(i18n.t("common.failed.withdraw.error.with.reclaimMsg", { symbol: token.symbol, message }));
       }
 
       return false;
@@ -45,7 +43,7 @@ export function useSwapWithdrawByTokenId() {
       if (openExternalTip) {
         openExternalTip({ message });
       } else {
-        openErrorTip(t`Failed to withdraw: ${message}. Please click 'Reclaim Your Tokens' to reclaim your tokens.`);
+        openErrorTip(i18n.t("common.failed.withdraw.error.with.reclaimMsg", { symbol: "", message }));
       }
 
       return false;

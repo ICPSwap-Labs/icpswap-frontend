@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
-import { Trans, t } from "@lingui/macro";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { isNullArgs } from "@icpswap/utils";
@@ -14,21 +13,24 @@ import { SelectPair } from "components/Select/SelectPair";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useTranslation } from "react-i18next";
+import i18n from "i18n/index";
 
 import FarmContext from "./context";
 
 const Tabs = [
-  { label: t`All Farms`, state: FilterState.ALL },
-  { label: t`Live`, state: FilterState.LIVE },
-  { label: t`Unstart`, state: FilterState.NOT_STARTED },
-  { label: t`Finished`, state: FilterState.FINISHED },
-  { label: t`Your Farms`, state: FilterState.YOUR },
+  { label: i18n.t("farm.tabs.all"), state: FilterState.ALL },
+  { label: i18n.t("common.live"), state: FilterState.LIVE },
+  { label: i18n.t("common.unstart"), state: FilterState.NOT_STARTED },
+  { label: i18n.t("common.finished"), state: FilterState.FINISHED },
+  { label: i18n.t("farm.tabs.your"), state: FilterState.YOUR },
 ];
 
 const PAGE_SIZE = 10;
 const START_PAGE = 1;
 
 function MainContent() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
   const principal = useAccountPrincipal();
@@ -219,7 +221,6 @@ function MainContent() {
                   fontSize: "18px",
                   fontWeight: 500,
                   cursor: "pointer",
-                  textTransform: "capitalize",
                   "@media (max-width:640px)": {
                     fontSize: "14px",
                   },
@@ -243,37 +244,25 @@ function MainContent() {
             gap="0 20px"
           >
             <Flex sx={{ width: "fit-content" }} gap="0 4px">
-              <Typography>
-                <Trans>Select a Pair:</Trans>
-              </Typography>
+              <Typography>{t("common.select.pair.colon")}</Typography>
 
               <SelectPair
                 showBackground={false}
                 search
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>All Pair</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
                 onPairChange={handlePairChange}
               />
             </Flex>
 
             <Flex sx={{ width: "fit-content" }} gap="0 4px">
-              <Typography>
-                <Trans>Reward Token: </Trans>
-              </Typography>
+              <Typography>{t("common.reward.token.colon")}</Typography>
 
               <SelectToken
                 showBackground={false}
                 search
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>All Token</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.token.all")}</Typography>}
                 onTokenChange={handleTokenChange}
               />
             </Flex>
@@ -353,14 +342,16 @@ function MainContent() {
 }
 
 export default function Farms() {
+  const { t } = useTranslation();
+
   return (
     <Wrapper>
       <Box>
         <Typography color="text.primary" sx={{ fontSize: "32px", fontWeight: 600 }}>
-          <Trans>Farm</Trans>
+          {t("common.farm")}
         </Typography>
         <Typography fontSize={16} mt="16px">
-          <Trans>Farm Your Liquidity, Harvest Your Rewards!</Trans>
+          {t("common.farm.description")}
         </Typography>
       </Box>
 

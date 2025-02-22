@@ -12,9 +12,9 @@ import {
 import { Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
-import { t } from "@lingui/macro";
 import type { Null } from "@icpswap/types";
 import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import { useTranslation } from "react-i18next";
 
 import { Chart } from "./Chart";
 
@@ -75,6 +75,7 @@ export default function LiquidityChartRangeInput({
   poolPriceLower,
   poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const wrapperRef = useRef<HTMLDivElement>();
 
@@ -97,19 +98,19 @@ export default function LiquidityChartRangeInput({
     <Box style={{ minHeight: "200px" }} ref={wrapperRef}>
       {isUninitialized ? (
         <InfoBox
-          message={t`Your position will appear here.`}
+          message={t("liquidity.position.appear")}
           icon={<Inbox size={56} stroke={theme.palette.background.level3} />}
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.palette.background.level3} />} />
       ) : isError ? (
         <InfoBox
-          message={t`Liquidity data not available.`}
+          message={t("liquidity.data.not.available")}
           icon={<CloudOff size={56} stroke={theme.palette.background.level3} />}
         />
       ) : !formattedData || formattedData.length === 0 || !price ? (
         <InfoBox
-          message={t`There is no liquidity data.`}
+          message={t("liquidity.no.data")}
           icon={<BarChart2 size={56} stroke={theme.palette.background.level3} />}
         />
       ) : (

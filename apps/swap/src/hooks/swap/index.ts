@@ -8,7 +8,6 @@ import { usePoolCanisterIdManager } from "store/swap/hooks";
 import { PositionDetail } from "types/swap";
 import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
@@ -209,7 +208,7 @@ export function useSwapDeposit() {
         openExternalTip({ message });
       } else {
         openErrorTip(
-          `Failed to deposit ${token.symbol}: ${message}. Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+          `Failed to deposit ${token.symbol}: ${message}. Please check your balance in the swap pool to see if tokens have been transferred to the swap pool.`,
         );
       }
 
@@ -228,7 +227,7 @@ export function useSwapTransfer() {
   return useCallback(
     async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
       if (!principal) {
-        openErrorTip(t`Failed to transfer: no principal`);
+        openErrorTip(`Failed to transfer: no principal`);
         return false;
       }
 

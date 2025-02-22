@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Box } from "@mui/material";
-import { t } from "@lingui/macro";
+import { Box } from "components/Mui";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -18,16 +17,17 @@ import {
 } from "@icpswap/ui";
 import { DensityChart } from "components/info/DensityChart";
 import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
+import i18n from "i18n/index";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
 dayjs.extend(weekOfYear);
 
 export const chartViews = [
-  { label: t`APR`, value: ChartView.APR },
-  { label: t`Volume`, value: ChartView.VOL },
-  { label: t`TVL`, value: ChartView.TVL },
-  { label: t`Liquidity`, value: ChartView.LIQUIDITY },
+  { label: i18n.t("common.apr"), value: ChartView.APR },
+  { label: i18n.t("common.volume"), value: ChartView.VOL },
+  { label: i18n.t("common.tvl"), value: ChartView.TVL },
+  { label: i18n.t("common.liquidity"), value: ChartView.LIQUIDITY },
 ];
 
 export interface PoolChartProps {

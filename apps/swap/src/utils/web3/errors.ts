@@ -1,4 +1,4 @@
-import { t } from "@lingui/macro";
+import i18n from "i18n/index";
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
 // The benefit is that you can distinguish this error from other errors using didUserReject().
@@ -19,6 +19,6 @@ export function toReadableError(errorText: string, error: unknown) {
 
 export class WrongChainError extends Error {
   constructor() {
-    super(t`Your wallet is connected to the wrong network.`);
+    super(i18n.t("wallet.connect.wrong.network.error"));
   }
 }

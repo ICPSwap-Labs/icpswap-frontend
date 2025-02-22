@@ -2,8 +2,8 @@ import { shorten } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Copy } from "components/Copy/icon";
+import { useTranslation } from "react-i18next";
 
 interface PoolAndTokenBaseInfoProps {
   token: Token;
@@ -11,10 +11,12 @@ interface PoolAndTokenBaseInfoProps {
 }
 
 export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProps) {
+  const { t } = useTranslation();
+
   return (
     <Box>
       <Typography color="text.primary" fontWeight={600}>
-        <Trans>Token Name</Trans>
+        {t("common.token.name")}
         <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
           {token?.name}
         </Typography>
@@ -27,7 +29,7 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
           component="div"
           sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
         >
-          <Trans>Token</Trans>
+          {t("common.token")}
           <Typography component="span" color="text.theme-secondary" fontSize="12px">
             {token ? shorten(token.address, 5) : "--"}
           </Typography>
@@ -40,7 +42,7 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
           component="div"
           sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
         >
-          <Trans>Pool</Trans>
+          {t("common.pool")}
           <Typography component="span" color="text.theme-secondary" fontSize="12px">
             {poolId ? shorten(poolId) : "--"}
           </Typography>

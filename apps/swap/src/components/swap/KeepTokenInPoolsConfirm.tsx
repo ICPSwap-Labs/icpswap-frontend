@@ -1,8 +1,8 @@
 import { Typography, Button, Box } from "components/Mui";
 import SwapModal from "components/modal/swap";
-import { Trans } from "@lingui/macro";
 import { AlertTriangle } from "react-feather";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface KeepTokenInPoolsConfirmModalProps {
   open: boolean;
@@ -11,6 +11,8 @@ export interface KeepTokenInPoolsConfirmModalProps {
 }
 
 export function KeepTokenInPoolsConfirmModal({ open, onCancel, onConfirm }: KeepTokenInPoolsConfirmModalProps) {
+  const { t } = useTranslation();
+
   return (
     <SwapModal open={open} onClose={onCancel} title="Note">
       <Box
@@ -26,17 +28,13 @@ export function KeepTokenInPoolsConfirmModal({ open, onCancel, onConfirm }: Keep
             <AlertTriangle color="rgba(183, 156, 74, 1)" size={16} />
           </Box>
           <Typography color="#B79C4A" sx={{ fontSize: "12px", lineHeight: "20px" }}>
-            <Trans>
-              Please note that by checking the box, you agree to keep your swapped tokens in the Swap Pools. Click "View
-              All" below to see all the tokens you've stored. You can manage them anytime, with options to deposit or
-              withdraw as needed.
-            </Trans>
+            {t("swap.keep.in.pool.confirms")}
           </Typography>
         </Flex>
       </Box>
 
       <Button variant="contained" size="large" fullWidth sx={{ marginTop: "16px" }} onClick={onConfirm}>
-        <Trans>Confirm</Trans>
+        {t("common.confirm")}
       </Button>
     </SwapModal>
   );

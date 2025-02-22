@@ -7,6 +7,7 @@ import { TokenImage } from "components/index";
 import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
+import { useTranslation } from "react-i18next";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
@@ -76,6 +77,7 @@ export function SelectToken({
   panelPadding,
   defaultPanel,
 }: SelectTokenProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
@@ -116,7 +118,7 @@ export function SelectToken({
 
   return (
     <Select
-      placeholder="Select a token"
+      placeholder={t("common.select.a.token")}
       menus={menus}
       minMenuWidth="180px"
       menuMaxHeight="240px"

@@ -24,7 +24,6 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { numberToString, BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme, toFormat } from "utils";
-import { Trans, t } from "@lingui/macro";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionContext, TransferPosition, PositionRangeState } from "components/swap/index";
@@ -32,6 +31,7 @@ import { isElement } from "react-is";
 import { isMobile } from "react-device-detect";
 import { ClickAwayListener } from "@mui/base";
 import { usePositionState } from "hooks/liquidity";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -122,6 +122,7 @@ export function PositionDetails({
   token1USDPrice,
   state,
 }: PositionDetailsProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const history = useHistory();
   const moreRef = useRef(null);
@@ -219,9 +220,9 @@ export function PositionDetails({
   return (
     <>
       <Grid mt={1} className={classes.detailContainer} sx={{ display: show ? "block" : "none" }}>
-        <PositionDetailItem label={t`Position ID`} value={positionId.toString()} />
+        <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
         <PositionDetailItem
-          label={t`${currencyQuote?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
           value={
             inverted
               ? toFormat(position?.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)))
@@ -229,7 +230,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`${currencyBase?.symbol} Amount`}
+          label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
           value={
             inverted
               ? toFormat(position?.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)))
@@ -237,7 +238,7 @@ export function PositionDetails({
           }
         />
         <PositionDetailItem
-          label={t`Current Price`}
+          label={t("common.current.price")}
           value={
             !!token1 && !!token0
               ? inverted
@@ -253,7 +254,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Price Range`}
+          label={t("common.price.range")}
           value={`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
             priceUpper,
             tickAtLimit,
@@ -263,7 +264,7 @@ export function PositionDetails({
           onConvertClick={() => setManuallyInverted(!manuallyInverted)}
         />
         <PositionDetailItem
-          label={t`Uncollected fees`}
+          label={t("common.uncollected.fees")}
           value={
             <Box>
               <Typography
@@ -327,7 +328,7 @@ export function PositionDetails({
                 size={matchDownSM ? "medium" : "medium"}
                 onClick={handleLoadRemoveLiquidity}
               >
-                <Trans>Remove Liquidity</Trans>
+                {t("swap.remove.liquidity")}
               </Button>
             ) : (
               <Box />
@@ -335,7 +336,7 @@ export function PositionDetails({
             {hasUnclaimedFees ? (
               <CollectFees position={position} positionId={positionId} onCollectSuccess={handleClaimedSuccessfully}>
                 <Button fullWidth variant="outlined" size={matchDownSM ? "medium" : "medium"}>
-                  <Trans>Collect Fees</Trans>
+                  {t("common.collect.fees")}
                 </Button>
               </CollectFees>
             ) : null}
@@ -346,7 +347,7 @@ export function PositionDetails({
                 size={matchDownSM ? "medium" : "medium"}
                 onClick={handleLoadIncreaseLiquidity}
               >
-                <Trans>Increase Liquidity</Trans>
+                {t("common.increase.liquidity")}
               </Button>
             ) : (
               <Box />
@@ -401,9 +402,7 @@ export function PositionDetails({
                         setTransferPopperShow(false);
                       }}
                     >
-                      <Typography color="text.primary">
-                        <Trans>Transfer position</Trans>
-                      </Typography>
+                      <Typography color="text.primary">{t("liquidity.transfer.position")}</Typography>
                     </Box>
                   </ClickAwayListener>
                 </Popper>
@@ -442,6 +441,7 @@ export default function PositionItem({
   invalid = false,
   closed,
 }: PositionItemProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme() as Theme;
 
@@ -538,9 +538,7 @@ export default function PositionItem({
 
           {!closed ? (
             <Grid container mt="10px">
-              <Typography>
-                <Trans>Value:</Trans>&nbsp;
-              </Typography>
+              <Typography>{t("common.value.colon")}&nbsp;</Typography>
               <Typography color="text.primary">{totalUSDValue ? formatDollarAmount(totalUSDValue) : "--"}</Typography>
             </Grid>
           ) : null}

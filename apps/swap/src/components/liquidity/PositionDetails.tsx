@@ -15,11 +15,11 @@ import {
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -102,6 +102,7 @@ export function PositionDetails({
   staked,
   state,
 }: PositionDetailsProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -232,7 +233,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Trans>{currencyQuote?.symbol} Amount</Trans>
+                    {t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
                   </Typography>
                 </Flex>
               }
@@ -295,7 +296,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    <Trans>{currencyBase?.symbol} Amount</Trans>
+                    {t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
                   </Typography>
                 </Flex>
               }
@@ -339,7 +340,7 @@ export function PositionDetails({
             />
 
             <PositionDetailItem
-              label={t`Price Range`}
+              label={t("common.price.range")}
               value={
                 <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
                   <Typography
@@ -368,7 +369,7 @@ export function PositionDetails({
             />
 
             <PositionDetailItem
-              label={t`Uncollected fees`}
+              label={t("common.uncollected.fees")}
               value={
                 <Flex
                   gap="8px"
@@ -423,12 +424,12 @@ export function PositionDetails({
                 size={matchDownSM ? "medium" : "large"}
                 onClick={handleStake}
               >
-                {staked ? <Trans>Unstake Farm</Trans> : <Trans>Stake Farm</Trans>}
+                {staked ? t("unstake.farm") : t("stake.farm")}
               </Button>
             ) : null}
 
             <Button variant="contained" size={matchDownSM ? "medium" : "large"} onClick={handleDetails}>
-              <Trans>Position Details</Trans>
+              {t("liquidity.details")}
             </Button>
           </Flex>
         </Flex>
@@ -469,7 +470,7 @@ export function PositionDetails({
           }}
           color="text.theme-secondary"
         >
-          <Trans>Hide</Trans>
+          {t("common.hide")}
         </Typography>
         <KeyboardArrowUp
           sx={{

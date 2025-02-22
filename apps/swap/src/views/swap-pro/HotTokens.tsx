@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Box, Typography, useTheme, keyframes } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import HotIcon from "assets/icons/swap-pro/hot.svg";
 import { useToken } from "hooks/index";
 import type { PublicTokenOverview } from "@icpswap/types";
@@ -9,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { ICP, ICS } from "@icpswap/tokens";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { Proportion } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const animationKeyframes = keyframes`
   0% {
@@ -110,6 +110,7 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
 }
 
 export default function HotTokens() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const infoAllTokens = useInfoAllTokens();
 
@@ -166,9 +167,7 @@ export default function HotTokens() {
           }}
         >
           <img width="20px" height="20px" src={HotIcon} alt="" />
-          <Typography sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-            <Trans>Hot Tokens</Trans>
-          </Typography>
+          <Typography sx={{ "@media(max-width: 640px)": { display: "none" } }}>{t("swap.hot.tokens")}</Typography>
         </Box>
 
         <Box

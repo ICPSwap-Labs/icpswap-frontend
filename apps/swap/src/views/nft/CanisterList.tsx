@@ -15,14 +15,13 @@ import {
   TableHead,
   TableContainer,
 } from "@mui/material";
-import { makeStyles, useTheme } from "@mui/styles";
+import { makeStyles, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { useAccount } from "store/auth/hooks";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import type { NFTControllerInfo } from "@icpswap/types";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import CanSVG from "assets/images/nft/CanSVG";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -43,9 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export function Title() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchesMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleCreateCanister = () => {
@@ -57,12 +57,12 @@ export function Title() {
       <Grid item xs>
         <Box>
           <Typography className={classes.title} fontWeight="700">
-            <Trans>Create a canister to mint your NFTs</Trans>
+            {t("nft.create.canister.to.mint")}
           </Typography>
         </Box>
         <Box mt="20px">
           <Button size="large" variant="contained" onClick={handleCreateCanister}>
-            <Trans>Create a canister</Trans>
+            {t("nft.create.a.canister")}
           </Button>
         </Box>
       </Grid>
@@ -90,6 +90,7 @@ export function NFTCanisterListItem({
   onDetailsClick: (canister: NFTControllerInfo) => void;
   onMintNFTClick: (canister: NFTControllerInfo) => void;
 }) {
+  const { t } = useTranslation();
   const { result: cycles } = useCanisterCycles(canister.cid);
   const account = useAccount();
   const { result: count } = useCanisterUserNFTCount(canister.cid, account);
@@ -112,18 +113,15 @@ export function NFTCanisterListItem({
         <Typography>{cycleValueFormat(cycles ?? "")}</Typography>
       </TableCell>
       <TableCell>
-        <TextButton onClick={() => onDetailsClick(canister)}>
-          <Trans>Details</Trans>
-        </TextButton>
-        <TextButton onClick={() => onMintNFTClick(canister)}>
-          <Trans>Mint NFT</Trans>
-        </TextButton>
+        <TextButton onClick={() => onDetailsClick(canister)}>{t("common.details")}</TextButton>
+        <TextButton onClick={() => onMintNFTClick(canister)}>{t("nft.mint")}</TextButton>
       </TableCell>
     </TableRow>
   );
 }
 
 export default function NFTCanisterList() {
+  const { t } = useTranslation();
   const account = useAccount();
   const history = useHistory();
 
@@ -148,29 +146,17 @@ export default function NFTCanisterList() {
         <Grid mt="20px">
           <MainCard>
             <Box mb={3}>
-              <Typography variant="h3">
-                <Trans>Canister List</Trans>
-              </Typography>
+              <Typography variant="h3">{t("canister.list")}</Typography>
             </Box>
             <TableContainer className={loading ? "with-loading" : ""}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>
-                      <Trans>Name</Trans>
-                    </TableCell>
-                    <TableCell>
-                      <Trans>Time</Trans>
-                    </TableCell>
-                    <TableCell>
-                      <Trans>Canister ID</Trans>
-                    </TableCell>
-                    <TableCell>
-                      <Trans>NFTs count</Trans>
-                    </TableCell>
-                    <TableCell>
-                      <Trans>Cycles</Trans>
-                    </TableCell>
+                    <TableCell>{t("common.name")}</TableCell>
+                    <TableCell>{t("common.time")}</TableCell>
+                    <TableCell>{t("common.canister.id")}</TableCell>
+                    <TableCell>{t("nft.nfts.count")}</TableCell>
+                    <TableCell>{t("common.cycles")}</TableCell>
                     <TableCell>&nbsp;</TableCell>
                   </TableRow>
                 </TableHead>

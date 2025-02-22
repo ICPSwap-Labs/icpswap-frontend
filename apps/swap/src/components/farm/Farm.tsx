@@ -4,7 +4,6 @@ import { MainCard, Flex, Tooltip, Link } from "components/index";
 import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
 import { usePositionsTotalValue, usePositionsValue } from "hooks/swap/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import {
   useFarmUserPositions,
@@ -18,6 +17,7 @@ import { useFarmApr, useUserApr } from "hooks/staking-farm/useFarmApr";
 import { FarmPositionCard } from "components/farm/index";
 import { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { AllPositions } from "./AllPositions";
 
@@ -31,6 +31,7 @@ export interface FarmMainProps {
 }
 
 export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, rewardMetadata }: FarmMainProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
   const [viewAll, setViewAll] = useState(false);
@@ -149,9 +150,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         >
           <Box sx={{ padding: "0 16px" }}>
             <Flex gap="0 4px" align="center">
-              <Typography>
-                <Trans>APR</Trans>
-              </Typography>
+              <Typography>{t("common.apr")}</Typography>
               <Tooltip
                 iconSize="14px"
                 tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
@@ -175,9 +174,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
               }}
             >
               <Box>
-                <Typography>
-                  <Trans>Total Reward</Trans>
-                </Typography>
+                <Typography>{t("farm.total.reward")}</Typography>
 
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
                   {farmInfo && rewardToken ? (
@@ -202,9 +199,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
               </Box>
 
               <Box>
-                <Typography>
-                  <Trans>Total Value Staked</Trans>
-                </Typography>
+                <Typography>{t("farm.total.value.staked")}</Typography>
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.primary" }}>
                   {farmTvlValue ? `${formatDollarAmount(farmTvlValue)}` : "--"}
                 </Typography>
@@ -233,9 +228,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             >
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>
-                    <Trans>Reward Token</Trans>
-                  </Typography>
+                  <Typography>{t("common.reward.token")}</Typography>
 
                   <Tooltip
                     tips={t`You will receive the reward tokens you have earned after unstaking the staked positions.`}
@@ -260,12 +253,8 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>
-                    <Trans>Your APR</Trans>
-                  </Typography>
-                  <Tooltip
-                    tips={t`The APR estimated based on the cumulative rewards you have received. The APR depends on the concentration of the price range selected for your staked positions, the staking duration, and the number of tokens staked.`}
-                  />
+                  <Typography>{t("common.apr.your")}</Typography>
+                  <Tooltip tips={t("farm.your.apr.tips")} />
                 </Flex>
 
                 <Typography sx={{ fontSize: "20px", fontWeight: 600, margin: "12px 0 0 0", color: "text.apr" }}>
@@ -279,9 +268,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
       <Box mt="24px">
         <Box>
-          <Typography>
-            <Trans>Your Positions Available To Stake</Trans>
-          </Typography>
+          <Typography>{t("farm.positions.stake.title")}</Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>
             {allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}
@@ -291,18 +278,18 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
         <Box mt="24px">
           <Flex gap="0 4px">
             <Typography>
-              <Trans>
-                {userAvailablePositions ? userAvailablePositions.length : "--"} Position Available For Staking
-              </Trans>
+              {t("farm.position.staking", { amount: userAvailablePositions ? userAvailablePositions.length : "--" })}
             </Typography>
 
             {farmInitArgs && token0 && token1 ? (
               <Tooltip
-                tips={t`Minimum Stake Number: ${`${toSignificantWithGroupSeparator(
-                  parseTokenAmount(farmInitArgs.token0AmountLimit.toString(), token0.decimals).toString(),
-                )} ${token0.symbol} / ${toSignificantWithGroupSeparator(
-                  parseTokenAmount(farmInitArgs.token1AmountLimit.toString(), token1.decimals).toString(),
-                )} ${token1.symbol}`}`}
+                tips={t("farm.minimum.stake", {
+                  amount: `${toSignificantWithGroupSeparator(
+                    parseTokenAmount(farmInitArgs.token0AmountLimit.toString(), token0.decimals).toString(),
+                  )} ${token0.symbol} / ${toSignificantWithGroupSeparator(
+                    parseTokenAmount(farmInitArgs.token1AmountLimit.toString(), token1.decimals).toString(),
+                  )} ${token1.symbol}`,
+                })}
               />
             ) : null}
           </Flex>
@@ -329,7 +316,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                     }}
                     onClick={() => setViewAll(true)}
                   >
-                    <Trans>View All</Trans>
+                    {t("common.view.all")}
                   </Button>
                 </Flex>
 
@@ -378,7 +365,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                       )}`}
                     >
                       <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
-                        <Trans>Add Liquidity</Trans>
+                        {t("swap.add.liquidity")}
                       </Button>
                     </Link>
                   </Box>
@@ -393,9 +380,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
       <Box>
         <Box>
-          <Typography>
-            <Trans>Your Total Value Staked</Trans>
-          </Typography>
+          <Typography>{t("farm.your.total.staked")}</Typography>
 
           <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary", margin: "10px 0 0 0" }}>
             {userTvlValue ? `${formatDollarAmount(userTvlValue)}` : "--"}
@@ -404,9 +389,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
 
         <Box mt="24px">
           <Flex gap="0 4px">
-            <Typography>
-              <Trans>{deposits ? deposits.length : "--"} Staked Positions</Trans>
-            </Typography>
+            <Typography>{t("farm.staked.positions", { amount: deposits ? deposits.length : "--" })}</Typography>
 
             <Tooltip tips={t`There are currently N positions staked.`} />
           </Flex>
@@ -441,7 +424,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             to={`/liquidity/add/${token0.address}/${token1.address}?path=${window.btoa(`/farm/details/${farmId}`)}`}
           >
             <Button fullWidth variant="contained" size="large" sx={{ height: "48px" }}>
-              <Trans>Add Liquidity</Trans>
+              {t("swap.add.liquidity")}
             </Button>
           </Link>
         </Box>

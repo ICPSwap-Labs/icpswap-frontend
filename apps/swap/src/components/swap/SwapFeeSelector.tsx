@@ -1,17 +1,16 @@
 import { useState, useMemo, memo } from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, Theme, makeStyles } from "components/Mui";
 import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
 import { isDarkTheme } from "utils";
-import { Trans, t } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { BigNumber } from "@icpswap/utils";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 export const FEE_DESCRIPTION = {
-  [FeeAmount.LOW]: t`Best for stable pairs`,
-  [FeeAmount.MEDIUM]: t`Best for most pairs`,
-  [FeeAmount.HIGH]: t`Best for exotic pairs`,
+  [FeeAmount.LOW]: i18n.t`Best for stable pairs`,
+  [FeeAmount.MEDIUM]: i18n.t`Best for most pairs`,
+  [FeeAmount.HIGH]: i18n.t`Best for exotic pairs`,
 };
 
 const NO_LIQUIDITY = "NO_LIQUIDITY";
@@ -101,6 +100,7 @@ export const FeeItemComponent = memo(
     activeFee: FeeAmount;
     getPercentage: (value: FeeItem) => string;
   }) => {
+    const { t } = useTranslation();
     const classes = useStyle();
 
     const liquidityPercentage = getPercentage(fee);
@@ -111,7 +111,7 @@ export const FeeItemComponent = memo(
         onClick={() => onClick(fee)}
       >
         <Typography variant="h4" color="textPrimary">
-          <Trans>{feeFormat(fee.feeTier)} fee</Trans>
+          {t("swap.fee.tier", { tier: feeFormat(fee.feeTier) })}
         </Typography>
         <Box mt={1}>
           <Typography fontSize="12px" align="left">
@@ -125,7 +125,9 @@ export const FeeItemComponent = memo(
             color="textPrimary"
             fontSize="12px"
           >
-            {liquidityPercentage === NO_LIQUIDITY ? t`Not created` : t`${liquidityPercentage} selected`}
+            {liquidityPercentage === NO_LIQUIDITY
+              ? t("swap.not.created")
+              : t("swap.fee.selected", { percent: liquidityPercentage })}
           </Typography>
         </Box>
       </Box>
@@ -141,6 +143,7 @@ export interface SwapFeeSelectorProps {
 }
 
 export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount.MEDIUM }: SwapFeeSelectorProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const [activeFee] = useState<FeeAmount>(defaultActiveFee);
@@ -221,7 +224,7 @@ export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount
       <Grid container sx={{ p: 2 }} className={classes.activeFee}>
         <Grid item xs={8}>
           <Typography variant="h4" color="textPrimary">
-            <Trans>{feeFormat(activeFeeObject.feeTier)} fee</Trans>
+            {t("swap.fee.tier", { tier: feeFormat(activeFeeObject.feeTier) })}
           </Typography>
           {/* <Box mt={1}>
             <Typography className={classes.button} component="span" color="textPrimary" fontSize="12px">

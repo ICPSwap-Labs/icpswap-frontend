@@ -2,7 +2,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { InfoWrapper, FilledTextField, TokenImage } from "components/index";
 import { makeStyles, Box, Typography, Link, useTheme } from "components/Mui";
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { Trans } from "@lingui/macro";
 import {
   isValidPrincipal,
   toSignificant,
@@ -28,6 +27,7 @@ import { getAllTokens } from "store/allTokens";
 import { useTokensInfo } from "hooks/token";
 import { TokenInfo } from "types/token";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -112,6 +112,7 @@ function UserTokenBalance({
 }
 
 export default function SwapScanValuation() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const { principal } = useParsedQueryString() as { principal: string };
@@ -238,13 +239,11 @@ export default function SwapScanValuation() {
   return (
     <InfoWrapper size="small">
       <BreadcrumbsV1
-        links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>Wallet Valuation</Trans> }]}
+        links={[{ label: t("common.tools"), link: "/info-tools" }, { label: t("tools.wallet.valuation") }]}
       />
 
       <MainCard sx={{ margin: "20px 0 0 0" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-          <Trans>Wallet Valuation</Trans>
-        </Typography>
+        <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>{t("tools.wallet.valuation")}</Typography>
 
         <Box
           sx={{
@@ -274,7 +273,7 @@ export default function SwapScanValuation() {
               width="100%"
               fullHeight
               value={principal}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     placeholder: `Search the principal for valuation`,
@@ -288,7 +287,7 @@ export default function SwapScanValuation() {
 
             {principal && !isValidPrincipal(principal) ? (
               <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
-                <Trans>Invalid principal</Trans>
+                {t("common.invalid.principal.id")}
               </Typography>
             ) : null}
           </Box>
@@ -297,18 +296,13 @@ export default function SwapScanValuation() {
         <Box sx={{ margin: "20px 0 0 0" }}>
           <Box sx={{ display: "flex", gap: "0 5px" }}>
             <Typography color="text.primary" fontSize="16px" fontWeight={500}>
-              <Trans>Total Value:</Trans>
+              {t("common.total.values.colon")}
             </Typography>
             <Typography color="text.primary" fontSize="18px" fontWeight={500}>
               ${toSignificant(totalUSDValues.toString(), 6, { groupSeparator: "," })}
             </Typography>
           </Box>
-          <Typography sx={{ margin: "12px 0" }}>
-            <Trans>
-              Searching for all valuable tokens in this wallet may take some time; please be patient. Note that some
-              tokens might have poor liquidity and may not be tradable.
-            </Trans>
-          </Typography>
+          <Typography sx={{ margin: "12px 0" }}>{t("tools.wallet.valuation.descriptions")}</Typography>
           <Box>
             <OnlyTokenList onChange={handleCheckChange} checked={checked} />
           </Box>
@@ -321,19 +315,13 @@ export default function SwapScanValuation() {
               borderBottom={`1px solid ${theme.palette.border.level1}`}
               sx={{ display: "grid" }}
             >
-              <HeaderCell>Token</HeaderCell>
+              <HeaderCell>{t("common.token")}</HeaderCell>
 
-              <HeaderCell field="usdValue">
-                <Trans>Value</Trans>
-              </HeaderCell>
+              <HeaderCell field="usdValue">{t("common.value")}</HeaderCell>
 
-              <HeaderCell field="price">
-                <Trans>Price</Trans>
-              </HeaderCell>
+              <HeaderCell field="price">{t("common.price")}</HeaderCell>
 
-              <HeaderCell field="amountToken1">
-                <Trans>Canister ID</Trans>
-              </HeaderCell>
+              <HeaderCell field="amountToken1">{t("common.canister.id")}</HeaderCell>
             </Header>
 
             {loading ? (

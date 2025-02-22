@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { t } from "@lingui/macro";
 import { Typography } from "components/Mui";
 import { PositionFilterState } from "types/swap";
+import i18n from "i18n/index";
 
 const menus: { label: string; value: string }[] = [
-  { label: t`Default`, value: PositionFilterState.Default },
-  { label: t`All`, value: PositionFilterState.All },
-  { label: t`In ranges`, value: PositionFilterState.InRanges },
-  { label: t`Out of ranges`, value: PositionFilterState.OutOfRanges },
-  { label: t`Closed`, value: PositionFilterState.Closed },
+  { label: i18n.t("common.default"), value: PositionFilterState.Default },
+  { label: i18n.t("common.all"), value: PositionFilterState.All },
+  { label: i18n.t("common.in.ranges"), value: PositionFilterState.InRanges },
+  { label: i18n.t("common.out.of.ranges"), value: PositionFilterState.OutOfRanges },
+  { label: i18n.t("common.closed"), value: PositionFilterState.Closed },
 ];
 
 export interface SelectStateProps {

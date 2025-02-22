@@ -2,12 +2,12 @@ import React, { useMemo } from "react";
 import { Button, CircularProgress, Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { isNullArgs } from "@icpswap/utils";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { StepViewButton } from "components/index";
 import { useHarvestCall } from "hooks/staking-token/useHarvest";
+import { useTranslation } from "react-i18next";
 
 export interface HarvestProps {
   rewardToken: Token | undefined | null;
@@ -17,6 +17,7 @@ export interface HarvestProps {
 }
 
 export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }: HarvestProps) {
+  const { t } = useTranslation();
   const walletIsConnected = useConnectorStateConnected();
   const principal = useAccountPrincipal();
   const [openTip] = useTips();
@@ -45,7 +46,7 @@ export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }:
     const result = await call();
 
     if (result) {
-      openTip(t`Harvest successfully`, MessageTypes.success);
+      openTip(t("stake.harvest.success"), MessageTypes.success);
     }
 
     closeLoadingTip(loadingTipKey);
@@ -73,7 +74,7 @@ export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }:
           onClick={handleHarvest}
           startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
         >
-          {t`Harvest`}
+          {t("common.harvest")}
         </Button>
       ) : (
         <ConnectWallet style={{ whiteSpace: "nowrap" }} />

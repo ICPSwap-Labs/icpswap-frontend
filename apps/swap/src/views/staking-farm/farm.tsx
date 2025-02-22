@@ -5,13 +5,13 @@ import { useIntervalUserFarmInfo } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
 import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { t, Trans } from "@lingui/macro";
 import { useV3FarmRewardMetadata } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
 import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
 import { State } from "components/farm/State";
+import { useTranslation } from "react-i18next";
 
 const tabs = [
   { key: "stake", value: "Stake" },
@@ -19,6 +19,7 @@ const tabs = [
 ];
 
 export default function Farm() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -43,7 +44,7 @@ export default function Farm() {
   return (
     <Flex sx={{ width: "100%", padding: "0 0 24px 0" }} justify="center">
       <Box sx={{ width: "100%", maxWidth: "1120px", margin: "16px 0 0 0" }}>
-        <Breadcrumbs prevLabel={t`Farm`} currentLabel={t`Stake Positions`} prevLink="back" />
+        <Breadcrumbs prevLabel={t`Farm`} currentLabel={t("farm.stake.positions.label")} prevLink="back" />
 
         <Flex
           sx={{
@@ -91,11 +92,11 @@ export default function Farm() {
 
                 <Box>
                   <Typography color="text.primary" fontSize={20} fontWeight={500} align="right">
-                    <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
+                    {t("common.earn.symbol", { symbol: rewardToken?.symbol ?? "--" })}
                   </Typography>
 
                   <Typography align="right" mt="8px">
-                    <Trans>Stake {token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--"} Positions</Trans>
+                    {t("farm.stake.positions", { pair: token0 && token1 ? `${token0.symbol}/${token1.symbol}` : "--" })}
                   </Typography>
                 </Box>
               </Flex>

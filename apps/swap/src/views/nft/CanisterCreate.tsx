@@ -9,7 +9,6 @@ import { useErrorTip } from "hooks/useTips";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
-import { Trans, t } from "@lingui/macro";
 import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
 import PercentageSlider from "components/PercentageSlider/Marks";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,10 +17,12 @@ import { BigNumber, parseTokenAmount, isValidUrl, numberToString } from "@icpswa
 import { useApprove } from "hooks/token/useApprove";
 import { useAccount } from "store/auth/hooks";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { CardContent1120 } from "components/Layout/CardContent1120";
+import { useTranslation } from "react-i18next";
 
 export default function NFTCanisterCreate() {
+  const { t } = useTranslation();
   const history = useHistory();
   const account = useAccount();
 
@@ -164,7 +165,7 @@ export default function NFTCanisterCreate() {
   };
 
   const getErrorMsg = (values: CanisterCreateDetails) => {
-    if (!values.name) return t`Enter collection name`;
+    if (!values.name) return t("nft.enter.collection.name");
     if (values.name && values.name.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
     if (!values.minter) return t`Enter the creator`;
     if (values.minter && values.minter.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
@@ -191,8 +192,8 @@ export default function NFTCanisterCreate() {
   return (
     <CardContent1120>
       <Breadcrumbs
-        prevLabel={<Trans>NFT Canister List</Trans>}
-        currentLabel={<Trans>Create an NFT Canister</Trans>}
+        prevLabel={t("nft.canister.list")}
+        currentLabel={t("nft.create.canister")}
         prevLink="/info-tools/nft/canister/list"
       />
 
@@ -205,21 +206,21 @@ export default function NFTCanisterCreate() {
             }}
           >
             <Typography sx={{ margin: "28px 0 0 0", fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
-              <Trans>Create an NFT Canister</Trans>
+              {t("nft.create.canister")}
             </Typography>
 
             <Box mt="32px">
               <FilledTextField
-                label={<Trans>Collection Name</Trans>}
+                label={t("nft.collection.name")}
                 labelSize="16px"
                 required
                 fullWidth
                 border="none"
-                placeholder={t`Enter the collection name`}
+                placeholder={t("nft.create.collection.name.placeholder")}
                 onChange={(value: string) => onFieldChange(value, "name")}
                 placeholderSize="16px"
                 fontSize="16px"
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -234,7 +235,7 @@ export default function NFTCanisterCreate() {
 
             <Box mt={3}>
               <FilledTextField
-                label={<Trans>Collection Description</Trans>}
+                label={t("nft.collection.description")}
                 labelSize="16px"
                 required
                 fullWidth
@@ -245,7 +246,7 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the canister description`}
                 onChange={(value: string) => onFieldChange(value, "introduction")}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -260,7 +261,7 @@ export default function NFTCanisterCreate() {
 
             <Box mt={3}>
               <FilledTextField
-                label={<Trans>Creator</Trans>}
+                label={t("common.creator")}
                 labelSize="16px"
                 required
                 fullWidth
@@ -269,7 +270,7 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the creator`}
                 onChange={(value: string) => onFieldChange(value, "minter")}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -286,7 +287,7 @@ export default function NFTCanisterCreate() {
               <Grid container>
                 <Grid item xs>
                   <Typography component="span" fontSize="16px">
-                    <Trans>Social Media Links</Trans>
+                    {t("common.social.media.links")}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -304,9 +305,7 @@ export default function NFTCanisterCreate() {
                     onClick={handleSocialMediaAdd}
                   >
                     <AddIcon fontSize="small" />
-                    <Typography color="text.primary">
-                      <Trans>Add</Trans>
-                    </Typography>
+                    <Typography color="text.primary">{t("common.add")}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -340,7 +339,7 @@ export default function NFTCanisterCreate() {
                         placeholderSize="16px"
                         placeholder={t`Enter your link, e.g. https://yoursite.io`}
                         onChange={(value: string) => handleMediaInput(value, index)}
-                        textFiledProps={{
+                        textFieldProps={{
                           slotProps: {
                             input: {
                               endAdornment: (
@@ -370,7 +369,7 @@ export default function NFTCanisterCreate() {
             </Box>
 
             <Box mt={3}>
-              <FilledTextFieldLabel label={<Trans>Upload Collection Avatar</Trans>} labelSize="16px" required />
+              <FilledTextFieldLabel label={t("nft.upload.avatar")} labelSize="16px" required />
 
               <Box mt={2}>
                 <Box
@@ -398,16 +397,14 @@ export default function NFTCanisterCreate() {
                   />
                 </Box>
                 <Box mt={1}>
-                  <Typography>
-                    <Trans>Support : png / jpg / gif; Size: ≤2M</Trans>
-                  </Typography>
+                  <Typography>{t("nft.create.avatar.support")}</Typography>
                 </Box>
               </Box>
             </Box>
 
             <Box mt={3}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <FilledTextFieldLabel label={<Trans>Creator Royalty Fee</Trans>} labelSize="16px" required />
+                <FilledTextFieldLabel label={t("nft.create.royalty.fee")} labelSize="16px" required />
 
                 {values.royalties || String(values.royalties) === "0" ? (
                   <Typography component="span" fontSize="16px">

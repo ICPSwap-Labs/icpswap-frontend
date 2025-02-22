@@ -1,10 +1,10 @@
 import { Flex } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { LinkButtons, LastSyncBlock, EthereumFinalizedBlock } from "components/ck-bridge";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface Erc20NetworkStateProps {
   token: Token;
@@ -12,6 +12,8 @@ export interface Erc20NetworkStateProps {
 }
 
 export function Erc20NetworkState({ token, minterInfo }: Erc20NetworkStateProps) {
+  const { t } = useTranslation();
+
   const tokenMinterInfo = useMemo(() => {
     if (!minterInfo) return undefined;
     return minterInfo.supported_ckerc20_tokens[0]?.find((e) => e.ledger_canister_id.toString() === token.address);
@@ -19,9 +21,7 @@ export function Erc20NetworkState({ token, minterInfo }: Erc20NetworkStateProps)
 
   return (
     <Flex vertical gap="12px 0" align="flex-start" sx={{ margin: "16px 0 0 0" }}>
-      <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
-        <Trans>Network State</Trans>
-      </Typography>
+      <Typography sx={{ color: "text.primary", fontSize: "12px" }}>{t("common.network.state")}</Typography>
 
       <LinkButtons ckToken={token} contract={tokenMinterInfo?.erc20_contract_address} />
 

@@ -1,10 +1,10 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Flex } from "@icpswap/ui";
 import { FilledTextField } from "components/index";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 interface PrincipalSearcherProps {
   onPrincipalChange: (principal: string | Null) => void;
@@ -12,6 +12,7 @@ interface PrincipalSearcherProps {
 }
 
 export function PrincipalSearcher({ onPrincipalChange, placeholder }: PrincipalSearcherProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
 
@@ -39,7 +40,7 @@ export function PrincipalSearcher({ onPrincipalChange, placeholder }: PrincipalS
           width="100%"
           fullHeight
           value={principal}
-          textFiledProps={{
+          textFieldProps={{
             slotProps: {
               input: {
                 placeholder: placeholder ?? `Search the principal`,
@@ -53,7 +54,7 @@ export function PrincipalSearcher({ onPrincipalChange, placeholder }: PrincipalS
       </Box>
       {principal && !isValidPrincipal(principal) ? (
         <Typography sx={{ margin: "3px 0 0 2px", fontSize: "12px" }} color="error.main">
-          <Trans>Invalid principal</Trans>
+          {t("common.invalid.principal.id")}
         </Typography>
       ) : null}
     </Flex>

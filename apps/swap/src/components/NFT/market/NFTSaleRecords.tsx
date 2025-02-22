@@ -3,7 +3,6 @@ import { Table, TableContainer, TableCell, TableRow, TableHead, TableBody, Typog
 import { parseTokenAmount, nanosecond2Millisecond, shorten } from "@icpswap/utils";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import Pagination from "components/pagination";
-import { Trans, t } from "@lingui/macro";
 import { TxRecord, ResultStatus } from "types/index";
 import dayjs from "dayjs";
 import Copy from "components/Copy";
@@ -11,8 +10,10 @@ import { checkPayment } from "hooks/nft/trade";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import upperFirst from "lodash/upperFirst";
 import { NoData, ListLoading, TextButton } from "components/index";
+import { useTranslation } from "react-i18next";
 
 export const NFTSaleRecord = ({ saleRecord, type }: { saleRecord: TxRecord; type?: string }) => {
+  const { t } = useTranslation();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
   const [openFullscreenLoading, closeFullscreenLoading, loading] = useFullscreenLoading();
@@ -23,7 +24,7 @@ export const NFTSaleRecord = ({ saleRecord, type }: { saleRecord: TxRecord; type
     const { message, status } = await checkPayment(saleRecord.hash);
 
     if (status === ResultStatus.OK) {
-      openSuccessTip(t`Checked payment successfully`);
+      openSuccessTip(t("nft.payment.check.tips"));
     } else {
       openErrorTip(message);
     }
@@ -105,41 +106,23 @@ export default function NFTSaleRecords({
   pagination: { pageNum: number; pageSize: number };
   type?: string;
 }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <TableContainer className={loading ? "with-loading" : ""}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>NFT Name</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>NFT ID</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Tx</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Seller</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Buyer</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Price</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Status</Trans>
-              </TableCell>
-              {type === "User" ? (
-                <TableCell>
-                  <Trans>Action</Trans>
-                </TableCell>
-              ) : null}
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("nft.name")}</TableCell>
+              <TableCell>{t("nft.id")}</TableCell>
+              <TableCell>{t("common.tx")}</TableCell>
+              <TableCell>{t("common.seller")}</TableCell>
+              <TableCell>{t("common.buyer")}</TableCell>
+              <TableCell>{t("common.price")}</TableCell>
+              <TableCell>{t("common.state")}</TableCell>
+              {type === "User" ? <TableCell>{t("common.action")}</TableCell> : null}
             </TableRow>
           </TableHead>
           <TableBody>

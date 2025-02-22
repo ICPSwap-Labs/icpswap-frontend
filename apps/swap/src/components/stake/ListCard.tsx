@@ -1,7 +1,6 @@
 import { Typography, Box, BoxProps, useTheme } from "components/Mui";
 import { Flex, Tooltip, APRPanel, BodyCell } from "@icpswap/ui";
 import { useCallback, useMemo } from "react";
-import { Trans } from "@lingui/macro";
 import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useToken } from "hooks/useCurrency";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -23,6 +22,7 @@ import { useTokenBalance } from "hooks/token";
 import dayjs from "dayjs";
 import { FilterState } from "types/staking-token";
 
+import { useTranslation } from "react-i18next";
 import { State } from "./State";
 
 const DAYJS_FORMAT0 = "MMMM D, YYYY";
@@ -37,6 +37,7 @@ interface FarmListCardProps {
 }
 
 export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState }: FarmListCardProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const theme = useTheme();
   const history = useHistory();
@@ -140,13 +141,12 @@ export function PoolListCard({ poolInfo, wrapperSx, filterState, your, showState
           <APRPanel
             value={apr}
             tooltip={
-              rewardToken && rewardAmount ? (
-                <Trans>
-                  This's the average APR for the pool. The total reward is {formatAmount(rewardAmount)}{" "}
-                  {rewardToken.symbol} ({rewardsUSDValue ? formatDollarAmount(rewardsUSDValue) : "--"}
-                  ).
-                </Trans>
-              ) : null
+              rewardToken && rewardAmount
+                ? t("farm.apr.descriptions", {
+                    reward: `${formatAmount(rewardAmount)} ${rewardToken.symbol}`,
+                    rewardUsd: rewardsUSDValue ? formatDollarAmount(rewardsUSDValue) : "--",
+                  })
+                : null
             }
           />
         ) : (

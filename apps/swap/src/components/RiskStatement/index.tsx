@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { Grid, Typography, Box, useTheme, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Grid, Typography, Box, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
 import { RISK_WARNING_INDEX } from "constants/zIndex";
+import { useTranslation } from "react-i18next";
 
 import RiskStatementModal, { getRiskStorage } from "./Modal";
 
@@ -38,8 +36,9 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export default function RiskStatement() {
+  const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const [riskStatementShow, setRickStatementShow] = useState(false);
   const [isRead, setIsRead] = useState(true);
@@ -80,16 +79,17 @@ export default function RiskStatement() {
         >
           <Grid item xs>
             <Typography color="text.primary" fontSize={matchDownSM ? "12px" : "14px"} lineHeight="20px">
-              <Trans>There is always some potential risk in using Tokens and/or Cryptos. DYOR before investing.</Trans>
+              {t("risk.description0")}
             </Typography>
           </Grid>
           <Box className={classes.button} onClick={handleRead}>
             <Typography color="secondary" fontWeight="500" fontSize={matchDownSM ? "12px" : "14px"}>
-              <Trans>Read risk warning and close</Trans>
+              {t("risk.read.close")}
             </Typography>
           </Box>
         </Grid>
       </Box>
+
       {riskStatementShow ? (
         <RiskStatementModal
           open={riskStatementShow}

@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { t } from "@lingui/macro";
 import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
@@ -9,6 +8,8 @@ import Pagination from "components/pagination/cus";
 import { useToken } from "hooks/index";
 import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion, NoData, ImageLoading } from "@icpswap/ui";
 import { useAllTokensTVL } from "@icpswap/hooks";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -17,7 +18,6 @@ const useStyles = makeStyles(() => {
       gridGap: "1em",
       alignItems: "center",
       gridTemplateColumns: "20px 2fr repeat(4, 1fr)",
-
       "@media screen and (max-width: 500px)": {
         gridTemplateColumns: "20px 1fr repeat(4, 1fr)",
       },
@@ -85,14 +85,15 @@ export interface TokenTableProps {
 
 const headers: HeaderType[] = [
   { label: "#", key: "#", sort: false },
-  { label: t`Name`, key: "name", sort: true },
-  { label: t`Price`, key: "priceUSD", sort: true },
-  { label: t`Price Change`, key: "priceUSDChange", sort: true },
-  { label: t`Volume 24H`, key: "volumeUSD", sort: true },
-  { label: t`TVL`, key: "tvlUSD", sort: true },
+  { label: i18n.t("common.name"), key: "name", sort: true },
+  { label: i18n.t("common.price"), key: "priceUSD", sort: true },
+  { label: i18n.t("common.price.range"), key: "priceUSDChange", sort: true },
+  { label: i18n.t("common.volume24h"), key: "volumeUSD", sort: true },
+  { label: i18n.t("common.tvl"), key: "tvlUSD", sort: true },
 ];
 
 export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTableProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const [page, setPage] = useState(1);
@@ -168,11 +169,7 @@ export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTab
         <TokenItem key={String(token.address)} index={(page - 1) * maxItems + index + 1} token={token} align={align} />
       ))}
 
-      {tokens?.length === 0 && !loading ? (
-        <NoData
-          tip={t`If the token or trading pair you're searching for isn't in the Tokenlist, try adjusting the settings to display all tokens and trading pairs.`}
-        />
-      ) : null}
+      {tokens?.length === 0 && !loading ? <NoData tip={t("info.swap.pool.empty")} /> : null}
 
       {loading ? <ImageLoading loading={loading} /> : null}
 

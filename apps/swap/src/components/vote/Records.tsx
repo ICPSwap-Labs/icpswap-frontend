@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { Grid, Typography, Box, CircularProgress } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Grid, Typography, Box, CircularProgress, useTheme } from "components/Mui";
 import { valueofUser, timestampFormat, pageArgsFormat } from "@icpswap/utils";
 import { getVotingTransactions } from "@icpswap/hooks";
-import { Trans } from "@lingui/macro";
 import { UserVoteRecord } from "@icpswap/types";
 import { NoData, ImageLoading, MainCard } from "components/index";
-import { Theme } from "@mui/material/styles";
 import { useDownloadVotes } from "hooks/voting/useDownloadVotes";
+import { useTranslation } from "react-i18next";
 
 export function DownloadIcon() {
   return (
@@ -21,7 +19,8 @@ export function DownloadIcon() {
 }
 
 export default function VoteRecords({ canisterId, id }: { canisterId: string; id: string }) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   const [totalElements, setTotalElements] = useState<bigint | number>(BigInt(0));
   const [records, setRecords] = useState<UserVoteRecord[]>([] as UserVoteRecord[]);
@@ -74,7 +73,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
         <Grid item xs>
           <Grid container alignItems="center">
             <Typography color="text.primary" fontWeight="500">
-              <Trans>Votes</Trans>
+              {t("vote.votes")}
             </Typography>
             <Box
               sx={{
@@ -101,9 +100,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
           <Grid container alignItems="center" sx={{ cursor: "pointer" }} onClick={downloadVotes}>
             {downloading ? <CircularProgress sx={{ color: "#8492C4" }} size="16px" /> : <DownloadIcon />}
 
-            <Typography sx={{ marginLeft: "8px" }}>
-              <Trans>Download</Trans>
-            </Typography>
+            <Typography sx={{ marginLeft: "8px" }}>{t("common.download")}</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -125,27 +122,19 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
             }}
           >
             <Box>
-              <Typography>
-                <Trans>Voting Time</Trans>
-              </Typography>
+              <Typography>{t("vote.time")}</Typography>
             </Box>
 
             <Box>
-              <Typography>
-                <Trans>Address</Trans>
-              </Typography>
+              <Typography>{t("common.address")}</Typography>
             </Box>
 
             <Box>
-              <Typography>
-                <Trans>Option</Trans>
-              </Typography>
+              <Typography>{t("vote.option")}</Typography>
             </Box>
 
             <Box>
-              <Typography>
-                <Trans>Powers</Trans>
-              </Typography>
+              <Typography>{t("vote.powers")}</Typography>
             </Box>
           </Box>
           {records.map((record, index) => (
@@ -174,9 +163,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
               </Box>
 
               <Box>
-                <Typography>
-                  <Trans>{record.usedProof.toString()} Votes</Trans>
-                </Typography>
+                <Typography>{t("vote.votes.amount", { amount: record.usedProof.toString() })}</Typography>
               </Box>
             </Box>
           ))}
@@ -193,13 +180,7 @@ export default function VoteRecords({ canisterId, id }: { canisterId: string; id
               }}
               onClick={handleSeeMore}
             >
-              {loading ? (
-                <CircularProgress size={22} />
-              ) : (
-                <Typography>
-                  <Trans>See more</Trans>
-                </Typography>
-              )}
+              {loading ? <CircularProgress size={22} /> : <Typography>{t("common.see.more")}</Typography>}
             </Grid>
           )}
 

@@ -1,5 +1,4 @@
 import { Box, Typography, Checkbox } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
 import { Flex, ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
@@ -9,6 +8,7 @@ import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/util
 import { secondsToDuration } from "@dfinity/utils";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
@@ -23,6 +23,7 @@ export interface MaturityProps {
 }
 
 export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySuccess, permissions }: MaturityProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [disburseOpen, setDisburseOpen] = useState(false);
 
@@ -61,10 +62,10 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
         if (onMaturitySuccess) onMaturitySuccess();
       } else {
         const message = stop_dissolving_neuron_error.error_message;
-        openTip(message === "" ? t`Failed to set automatically stake new maturity` : message, TIP_ERROR);
+        openTip(message === "" ? t("nns.failed.set.automatically.maturity") : message, TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to set automatically stake new maturity`, TIP_ERROR);
+      openTip(message ?? t("nns.failed.set.automatically.maturity"), TIP_ERROR);
     }
 
     setLoading(false);
@@ -85,7 +86,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
 
     if (status === "ok") {
       if (!neuron_error) {
-        openTip(t`Disburse maturity successfully`, TIP_SUCCESS);
+        openTip(t("nns.disburse.success"), TIP_SUCCESS);
         setDisburseOpen(false);
         setLoading(false);
       } else {
@@ -103,11 +104,11 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
     <Box sx={{ margin: "20px 0 0 0" }}>
       <Flex align="center" justify="space-between">
         <Typography color="text.primary" fontSize="16px" fontWeight={600}>
-          <Trans>Maturity</Trans>
+          {t("nns.maturity")}
         </Typography>
       </Flex>
       <Typography fontSize="12px" sx={{ margin: "5px 0 0 0" }}>
-        <Trans>Earn rewards by voting on proposals and/or following active neurons.</Trans>
+        {t("nns.earn.rewards.description")}
       </Typography>
 
       <Flex gap="0 5px" justify="space-between" align="center" margin="10px 0 0 0">
@@ -154,7 +155,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
       {neuron.disburse_maturity_in_progress.length > 0 ? (
         <Box sx={{ margin: "10px 0 0 0" }}>
           <Typography color="text.primary" fontWeight={500}>
-            <Trans>Disbursing countdown</Trans>
+            {t("nns.disbursing.countdown")}
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: "10px 0", margin: "10px 0 0 0" }}>
@@ -184,9 +185,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
             checked={auto_stake_maturity}
             disabled={!permissions.includes(SnsNeuronPermissionType.NEURON_PERMISSION_TYPE_STAKE_MATURITY)}
           />
-          <Typography>
-            <Trans>Automatically stake new maturity.</Trans>
-          </Typography>
+          <Typography>{t("nns.auto.stake.maturity")}</Typography>
         </Flex>
       </Box>
 
@@ -196,16 +195,14 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
         title={t`Maturity`}
         onConfirm={handleConfirm}
         text={
-          auto_stake_maturity
-            ? t`Are you sure that you would like to automatically stake new maturity of this neuron?`
-            : t`Are you sure that you would like to stop automatically staking new maturity of this neuron?`
+          auto_stake_maturity ? t("nns.maturity.automatically.confirm") : t("nns.maturity.stop.automatically.confirm")
         }
       />
 
       <ConfirmModal
         open={disburseOpen}
         onClose={() => setDisburseOpen(false)}
-        title={t`Disburse Maturity`}
+        title={t("nns.disburse.maturity")}
         onConfirm={handleDisburseMaturity}
         text={t`Are you sure you want to disburse this neuron?`}
       />

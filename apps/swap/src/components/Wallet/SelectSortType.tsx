@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { t } from "@lingui/macro";
 import { WalletSortType } from "types/index";
+import i18n from "i18n/index";
 
 const menus: { label: string; value: WalletSortType }[] = [
-  { label: t`Highest value`, value: "High" },
-  { label: t`Lowest value`, value: "Low" },
-  { label: t`Default`, value: "Default" },
+  { label: i18n.t("common.highest.value"), value: "High" },
+  { label: i18n.t("common.lowest.value"), value: "Low" },
+  { label: i18n.t("common.default"), value: "Default" },
 ];
 
 export interface SelectSortTypeProps {

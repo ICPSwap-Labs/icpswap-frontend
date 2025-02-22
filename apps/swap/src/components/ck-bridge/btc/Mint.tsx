@@ -1,6 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { useTheme, Box, Typography, Button, CircularProgress } from "components/Mui";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Null } from "@icpswap/types";
@@ -12,6 +11,7 @@ import { useRefreshBtcBalanceCallback } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useRefreshTriggerManager } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 interface BtcBridgeMintProps {
   token: Token;
@@ -20,6 +20,7 @@ interface BtcBridgeMintProps {
 }
 
 export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
   const copyRef = useRef<CopyRef>(null);
@@ -44,7 +45,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
     const result = await refreshBtcBalance(principal.toString(), undefined);
 
     if ("OK" in result) {
-      openTip(t`ckBTC Minted successfully`, MessageTypes.success);
+      openTip(t("ck.bitcoin.mint.success"), MessageTypes.success);
       setRefreshTrigger();
       setLoading(false);
       return;
@@ -58,18 +59,18 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         const required_confirmations = err.NoNewUtxos.required_confirmations;
 
         if (!current_confirmations) {
-          openTip(t`No new confirmed BTC`, MessageTypes.error);
+          openTip(t("ck.bitcoin.no.confirmations"), MessageTypes.error);
         } else {
-          openTip(t`Bitcoin network block confirmations are less than ${required_confirmations}`, MessageTypes.error);
+          openTip(t("ck.bitcoin.confirmations.less.than", { number: required_confirmations }), MessageTypes.error);
         }
       } else if ("AlreadyProcessing" in err) {
-        openTip(t`Already processing`, MessageTypes.error);
+        openTip(t("ck.bitcoin.processing"), MessageTypes.error);
       } else if ("GenericError" in err) {
         openTip(err.GenericError.error_message, MessageTypes.error);
       } else if ("TemporarilyUnavailable" in err) {
         openTip(err.TemporarilyUnavailable, MessageTypes.error);
       } else {
-        openTip(t`Failed to check`, MessageTypes.error);
+        openTip(t("ck.bitcoin.failed.check"), MessageTypes.error);
       }
     }
 
@@ -120,9 +121,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         }}
       >
         <Box>
-          <Typography align="center">
-            <Trans>Balance</Trans>
-          </Typography>
+          <Typography align="center">{t("common.balance")}</Typography>
 
           <Flex gap="0 4px" sx={{ margin: "8px 0 0 0" }} justify="center">
             <Typography
@@ -163,9 +162,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         >
           <Box>
             <Box>
-              <Typography>
-                <Trans>BTC Deposit Address</Trans>
-              </Typography>
+              <Typography>{t("bitcoin.deposit.address")}</Typography>
               <Typography
                 component="div"
                 sx={{
@@ -188,7 +185,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
               </Typography>
 
               <TextButton sx={{ fontSize: "12px" }} link={`https://mempool.space/address/${btc_address}`}>
-                <Trans>Check on Bitcoin Explorer</Trans>
+                {t("bitcoin.check.explorer")}
               </TextButton>
             </Box>
 
@@ -205,7 +202,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
                 onClick={handleRefreshBalance}
                 startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}
               >
-                <Trans>Check for incoming BTC</Trans>
+                {t("bitcoin.check.incoming")}
               </Button>
             </Box>
           </Box>
@@ -244,13 +241,8 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         </Flex> */}
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>KYT Fee</Trans>
-          </Typography>
-
-          <Typography>
-            <Trans>0.00002 ckBTC</Trans>
-          </Typography>
+          <Typography>{t("bitcoin.kyt.fee")}</Typography>
+          <Typography>0.00002 ckBTC</Typography>
         </Flex>
       </Flex>
     </>

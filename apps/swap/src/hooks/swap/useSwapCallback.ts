@@ -17,15 +17,15 @@ import {
   getTokenInsufficient,
 } from "hooks/swap/index";
 import { StepCallback, useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { isUseTransfer } from "utils/token/index";
 import { getSwapStep } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import { useHistory } from "react-router-dom";
 import { isNullArgs, parseTokenAmount, sleep, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -44,6 +44,7 @@ export function useInitialSwapSteps() {
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
   const keepTokenInPools = useSwapKeepTokenInPools();
+  const { t } = useTranslation();
 
   const handleReclaim = () => {
     history.push("/swap/withdraw");
@@ -73,7 +74,7 @@ export function useInitialSwapSteps() {
 
       updateStep(String(key), {
         content,
-        title: t`Swap Details`,
+        title: t("swap.details"),
         description: t`If you have sufficient balance in the swap pool, you may be able to swap directly without needing to deposit.`,
       });
     },

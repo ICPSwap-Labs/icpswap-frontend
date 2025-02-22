@@ -1,5 +1,4 @@
 import { Box, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useMemo } from "react";
 import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import dayjs from "dayjs";
@@ -7,6 +6,7 @@ import { useTokenSupply } from "hooks/token/calls";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { ItemDisplay } from "./ItemDisplay";
 
@@ -19,6 +19,7 @@ export interface LaunchDetailProps {
 }
 
 export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }: LaunchDetailProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { result: total_supply } = useTokenSupply(ledger_id);
@@ -43,12 +44,12 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
         },
       }}
     >
-      <ItemDisplay label={t`Token Name`} value={token?.name} />
+      <ItemDisplay label={t("common.token.name")} value={token?.name} />
 
-      <ItemDisplay label={t`Token Symbol`} value={token?.symbol} />
+      <ItemDisplay label={t("common.token.symbol")} value={token?.symbol} />
 
       <ItemDisplay
-        label={t`Token Supply`}
+        label={t("common.token.supply")}
         value={
           !!total_supply && !!token
             ? `${parseTokenAmount(total_supply.toString(), token.decimals).toFormat()} ${token.symbol}`
@@ -57,7 +58,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
       />
 
       <ItemDisplay
-        label={t`Tokens Distributed to Participants`}
+        label={t("nns.tokens.distributed.participants")}
         value={
           !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), token.decimals).toFormat()} ${token.symbol}`
@@ -66,12 +67,12 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
       />
 
       <ItemDisplay
-        label={t`Minimum Participants`}
+        label={t("launch.minimum.participants")}
         value={saleParameters ? `${saleParameters.min_participants.toString()}` : "--"}
       />
 
       <ItemDisplay
-        label={t`Minimum Participant Commitment`}
+        label={t("nns.minimum.participant.commitment")}
         value={
           !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.min_participant_icp_e8s.toString(), ICP.decimals).toFormat()} ${
@@ -82,7 +83,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
       />
 
       <ItemDisplay
-        label={t`Maximum Participant Commitment`}
+        label={t("launch.maximum.participant")}
         value={
           !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.max_participant_icp_e8s.toString(), ICP.decimals).toFormat()} ${
@@ -93,7 +94,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
       />
 
       <ItemDisplay
-        label={t`Maximum Neurons' Fund Commitment`}
+        label={t("launch.maximum.neurons.commitment")}
         value={
           !!saleParameters && !!token
             ? `${parseTokenAmount(saleParameters.sns_token_e8s.toString(), token.decimals).toFormat()} ${token.symbol}`
@@ -102,7 +103,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
       />
 
       <ItemDisplay
-        label={t`Swap End`}
+        label={t("nns.swap.end")}
         value={
           saleParameters
             ? `${dayjs(Number(saleParameters.swap_due_timestamp_seconds * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss")}`
@@ -110,7 +111,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
         }
       />
 
-      <ItemDisplay label={t`Persons Excluded`} value={restricted_countries ?? "--"} />
+      <ItemDisplay label={t("nns.persons.excluded")} value={restricted_countries ?? "--"} />
     </Box>
   );
 }

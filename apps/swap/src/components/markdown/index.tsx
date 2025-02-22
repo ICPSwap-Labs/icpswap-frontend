@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Grid, Box, Input, Typography, CircularProgress } from "@mui/material";
-import { useTheme, makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Grid, Box, Input, Typography, CircularProgress, useTheme, makeStyles, Theme } from "components/Mui";
 import useVotingImageUpload from "hooks/useVotingImageUpload";
 import { getFileType } from "utils/type";
 import { useErrorTip } from "hooks/useTips";
-import { t, Trans } from "@lingui/macro";
 import { UploadCloud } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -41,6 +39,7 @@ export default function Markdown({
   fileCanisterId: string;
   projectId: string;
 }) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -146,9 +145,7 @@ export default function Markdown({
   return (
     <Box>
       <Grid container justifyContent="space-between">
-        <Typography>
-          <Trans>Description</Trans>
-        </Typography>
+        <Typography>{t("common.description")}</Typography>
         <Typography>
           {value.length}/{limit}
         </Typography>
@@ -225,7 +222,7 @@ export default function Markdown({
                   marginLeft: "10px",
                 }}
               >
-                <Trans>Uploading image</Trans>
+                {t("markdown.uploading.image")}
               </Typography>
             </Grid>
           ) : (
@@ -246,7 +243,7 @@ export default function Markdown({
                   },
                 }}
               >
-                <Trans>Attach images by dragging & dropping, selecting or pasting them.</Trans>
+                {t("markdown.file.select")}
                 <Box sx={{ width: "5px" }} />
                 <UploadCloud size={14} strokeWidth={2} />
               </Box>

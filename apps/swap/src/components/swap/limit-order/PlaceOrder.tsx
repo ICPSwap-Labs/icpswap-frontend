@@ -1,14 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useContext,
-  forwardRef,
-  Ref,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { useState, useCallback, useEffect, useContext, forwardRef, Ref, useImperativeHandle, useRef } from "react";
 import { Box } from "components/Mui";
 import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
 import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
@@ -21,7 +11,6 @@ import { usePlaceOrderCallback, useLimitSupported } from "hooks/swap/limit-order
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { Trans, t } from "@lingui/macro";
 import { AuthButton } from "components/index";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
@@ -30,6 +19,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { SwapLimitPrice, LimitPriceRef } from "./Price";
@@ -54,11 +44,12 @@ export const PlaceOrder = forwardRef(
     { ui = "normal", onInputTokenChange, onOutputTokenChange, onTradePoolIdChange }: PlaceOrderProps,
     ref: Ref<PlaceOrderRef>,
   ) => {
+    const { t } = useTranslation();
     const history = useHistory();
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken, setInverted } = useContext(LimitContext);
+    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput, onSwitchTokens } = useSwapHandlers();
     const clearSwapState = useCleanSwapState();
@@ -68,14 +59,13 @@ export const PlaceOrder = forwardRef(
 
     const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [swapLoading, setSwapLoading] = useState(false);
-    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId, independentField } = useSwapState();
+    const { [SWAP_FIELD.INPUT]: inputTokenId, [SWAP_FIELD.OUTPUT]: outputTokenId } = useSwapState();
     const limitPriceRef = useRef<LimitPriceRef>();
 
     const {
       inputError: swapInputError,
-      parsedAmount,
       trade,
-      tradePoolId,
+      poolId,
       state: swapState,
       currencyBalances,
       inputToken,
@@ -101,10 +91,10 @@ export const PlaceOrder = forwardRef(
       setOrderPrice,
       minUseableTick,
       isInputTokenSorted,
-      outputAmount,
       pool,
       minSettableTick,
       atLimitedTick,
+      parsedAmounts,
     } = useLimitOrderInfo({ refresh: refreshTrigger });
 
     const available = useLimitSupported({ canisterId: pool?.id });
@@ -113,8 +103,8 @@ export const PlaceOrder = forwardRef(
     useEffect(() => {
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
-      if (onTradePoolIdChange && tradePoolId) onTradePoolIdChange(tradePoolId);
-    }, [tradePoolId, outputToken, inputToken]);
+      if (onTradePoolIdChange && poolId) onTradePoolIdChange(poolId);
+    }, [poolId, outputToken, inputToken]);
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -133,14 +123,6 @@ export const PlaceOrder = forwardRef(
       setInputToken(inputToken);
       setOutputToken(outputToken);
     }, [inputToken, outputToken, setInputToken, setOutputToken]);
-
-    const parsedAmounts = useMemo(
-      () => ({
-        [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
-        [SWAP_FIELD.OUTPUT]: outputAmount,
-      }),
-      [independentField, parsedAmount, trade],
-    );
 
     const handleShowConfirmModal = useCallback(() => {
       setConfirmModalShow(true);
@@ -184,6 +166,8 @@ export const PlaceOrder = forwardRef(
     const handleInput = (value: string, type: "input" | "output") => {
       if (type === "input") {
         onUserInput(SWAP_FIELD.INPUT, value);
+      } else if (type === "output") {
+        onUserInput(SWAP_FIELD.OUTPUT, value);
       }
     };
 
@@ -233,7 +217,10 @@ export const PlaceOrder = forwardRef(
       const amount0 = trade.inputAmount.toSignificant(6, { groupSeparator: "," });
 
       const loadingKey = openLoadingTip(
-        t`Submit a limit order of ${amount0} ${inputToken.symbol} for the ${inputToken.symbol}/${outputToken.symbol} trading pair`,
+        t("limit.submit.loading", {
+          amount: `${amount0} ${inputToken.symbol}`,
+          pair: `${inputToken.symbol}/${outputToken.symbol}`,
+        }),
         {
           extraContent: <StepViewButton step={key} />,
         },
@@ -244,19 +231,17 @@ export const PlaceOrder = forwardRef(
 
       handleInput("", "input");
       handleInput("", "output");
-      setOrderPrice("");
-      setInverted(false);
 
       const addSuccessful = await call();
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
         setRefreshTriggers(USER_LIMIT_ORDERS_KEY);
+      }
 
-        if (limitPriceRef?.current) {
-          limitPriceRef?.current?.resetInverted();
-          limitPriceRef?.current?.setDefaultPrice();
-        }
+      if (limitPriceRef?.current) {
+        limitPriceRef.current.resetInverted();
+        limitPriceRef.current.setDefaultPrice();
       }
 
       closeLoadingTip(loadingKey);
@@ -327,7 +312,7 @@ export const PlaceOrder = forwardRef(
           outputCurrencyState={outputCurrencyState}
           currencyBalances={currencyBalances}
           parsedAmounts={parsedAmounts}
-          poolId={tradePoolId}
+          poolId={poolId}
           ui={ui}
           inputTokenSubBalance={inputTokenSubBalance}
           outputTokenSubBalance={outputTokenSubBalance}
@@ -382,18 +367,16 @@ export const PlaceOrder = forwardRef(
           }}
         >
           {swapInputError ||
-            (isLoadingRoute ? (
-              <Trans>Loading route</Trans>
-            ) : isNoRouteFound ? (
-              <Trans>No route for this trade.</Trans>
-            ) : isPoolNotChecked ? (
-              <Trans>Waiting for verifying the pool...</Trans>
-            ) : (
-              <Trans>Submit Limit Order</Trans>
-            ))}
+            (isLoadingRoute
+              ? t("swap.loading.route")
+              : isNoRouteFound
+              ? t("swap.no.route")
+              : isPoolNotChecked
+              ? t("swap.waiting.verifying")
+              : t("limit.submit"))}
         </AuthButton>
 
-        {confirmModalShow && trade && (
+        {confirmModalShow && parsedAmounts[SWAP_FIELD.INPUT] && (
           <LimitOrderConfirm
             open={confirmModalShow}
             onClose={() => setConfirmModalShow(false)}
@@ -405,7 +388,7 @@ export const PlaceOrder = forwardRef(
             currentPrice={currentPrice}
             inputToken={inputToken}
             outputToken={outputToken}
-            inputAmount={trade.inputAmount.toExact()}
+            inputAmount={parsedAmounts[SWAP_FIELD.INPUT].toExact()}
           />
         )}
       </Box>

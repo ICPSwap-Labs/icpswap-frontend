@@ -1,10 +1,9 @@
-import { Button, Typography, CircularProgress } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { Trans } from "@lingui/macro";
+import { Button, Typography, CircularProgress, useTheme } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export default function ViewMore({ loading, onClick }: { loading: boolean; onClick: () => void }) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   return (
     <Button
@@ -21,9 +20,7 @@ export default function ViewMore({ loading, onClick }: { loading: boolean; onCli
       onClick={onClick}
     >
       {loading ? <CircularProgress size={18} color="inherit" sx={{ margin: "0 4px 0 0" }} /> : null}
-      <Typography fontWeight={600}>
-        <Trans>View More</Trans>
-      </Typography>
+      <Typography fontWeight={600}>{t("common.view.more")}</Typography>
     </Button>
   );
 }

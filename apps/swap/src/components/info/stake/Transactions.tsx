@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import { PaginationType, ListLoading, AddressFormat } from "components/index";
 import dayjs from "dayjs";
 import { useStakingPoolTransactions } from "@icpswap/hooks";
@@ -8,6 +7,7 @@ import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
 import { StakingPoolTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { HeaderCell, BodyCell, NoData, Pagination } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
   const tokenType = useMemo(() => {
@@ -56,6 +56,7 @@ interface TransactionsProps {
 }
 
 export function StakeTransactions({ id }: TransactionsProps) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -72,29 +73,19 @@ export function StakeTransactions({ id }: TransactionsProps) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <HeaderCell>
-                <Trans>Time</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.time")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Type</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.type")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>From</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.from")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>To</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.to")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Amount</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.amount")}</HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>

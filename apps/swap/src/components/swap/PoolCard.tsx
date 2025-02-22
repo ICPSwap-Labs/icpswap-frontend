@@ -1,13 +1,11 @@
 import { useCallback } from "react";
-import { Box, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { useToken } from "hooks/useCurrency";
 import { feeAmountToPercentage } from "utils/swap/index";
 import { useHistory } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { formatDollarAmount } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -63,6 +61,7 @@ export default function PoolCard({
   token0Symbol,
   token1Symbol,
 }: PoolCardProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const classes = useStyles();
 
@@ -96,9 +95,7 @@ export default function PoolCard({
       <Grid container className={classes.poolData}>
         <Grid container flexDirection="column" item xs={6}>
           <Grid item container justifyContent="flex-start">
-            <Typography className="title">
-              <Trans>TVL</Trans>
-            </Typography>
+            <Typography className="title">{t("common.tvl")}</Typography>
           </Grid>
           <Grid item mt={1} container justifyContent="flex-start">
             <Typography className="value" color="#ffffff" fontWeight={700} fontSize={16}>
@@ -108,9 +105,7 @@ export default function PoolCard({
         </Grid>
         <Grid container item xs={6} flexDirection="column" justifyContent="flex-end">
           <Grid item container justifyContent="flex-end">
-            <Typography className="title">
-              <Trans>Total Volume</Trans>
-            </Typography>
+            <Typography className="title">{t("common.total.volume")}</Typography>
           </Grid>
           <Grid mt={1} item container justifyContent="flex-end">
             <Typography className="value" color="#ffffff" fontWeight={700} fontSize={16}>

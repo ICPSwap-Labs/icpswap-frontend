@@ -11,12 +11,11 @@ import {
 import { splitNeuron } from "@icpswap/hooks";
 import type { NervousSystemParameters } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
-import { Modal, NumberFilledTextField } from "components/index";
-import MaxButton from "components/MaxButton";
+import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import randomBytes from "randombytes";
 import { useUSDPriceById } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface SplitNeuronProps {
   open: boolean;
@@ -39,6 +38,7 @@ export function SplitNeuron({
   neuronSystemParameters,
   disabled,
 }: SplitNeuronProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -103,8 +103,8 @@ export function SplitNeuron({
 
   let error: string | undefined;
 
-  if (amount === undefined) error = t`Enter the amount`;
-  if (token === undefined) error = t`Some unknown error happened`;
+  if (amount === undefined) error = t("common.enter.input.amount");
+  if (token === undefined) error = t("common.error.unknown");
 
   if (
     amount &&
@@ -114,13 +114,15 @@ export function SplitNeuron({
       .plus(parseTokenAmount(neuron_minimum_stake + BigInt(token.transFee), token.decimals))
       .isGreaterThan(parseTokenAmount(neuron_stake, token.decimals))
   )
-    error = t`Amount is too large`;
+    error = t("common.error.amount.large");
   if (
     amount &&
     token &&
     !new BigNumber(amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0)
   )
-    error = t`Must be greater than trans fee`;
+    error = t("common.error.amount.greater.than", {
+      amount: "trans fee",
+    });
 
   if (
     amount &&
@@ -130,10 +132,11 @@ export function SplitNeuron({
       .minus(token.transFee.toString())
       .isGreaterThan(neuron_minimum_stake?.toString())
   )
-    error = t`Amount must be greater than ${parseTokenAmount(
-      neuron_minimum_stake + BigInt(token.transFee),
-      token.decimals,
-    ).toFormat()} ${token.symbol}`;
+    error = t("common.error.amount.greater.than", {
+      amount: `${parseTokenAmount(neuron_minimum_stake + BigInt(token.transFee), token.decimals).toFormat()} ${
+        token.symbol
+      }`,
+    });
 
   const canSplit = useMemo(() => {
     const neuron_minimum_stake_e8s = neuronSystemParameters?.neuron_minimum_stake_e8s[0];
@@ -146,13 +149,13 @@ export function SplitNeuron({
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={!canSplit || disabled}>
-        <Trans>Split Neuron</Trans>
+        {t("nns.neuron.split")}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Split Neuron`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.neuron.split")}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
-            placeholder={t`Enter the amount`}
+            placeholder={t("common.enter.input.amount")}
             value={amount}
             onChange={(value: string) => setAmount(value)}
             fullWidth
@@ -161,41 +164,42 @@ export function SplitNeuron({
               decimalScale: token?.decimals,
             }}
             autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <MaxButton onClick={handleMax} />
-                </InputAdornment>
-              ),
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MaxButton onClick={handleMax} />
+                    </InputAdornment>
+                  ),
+                  disableUnderline: true,
+                  inputProps: {
+                    maxLength: 100,
+                  },
+                },
+              },
             }}
           />
 
           <Grid container alignItems="center">
             <Typography>
-              {token && tokenUSDPrice ? (
-                <Trans>
-                  Balance:{" "}
-                  {`${toSignificantWithGroupSeparator(
-                    parseTokenAmount(neuron_stake, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                  )} ${token.symbol} (${formatDollarAmount(
-                    parseTokenAmount(neuron_stake, token.decimals).multipliedBy(tokenUSDPrice).toString(),
-                  )})`}
-                </Trans>
-              ) : (
-                "--"
-              )}
+              {token && tokenUSDPrice
+                ? t("common.balance.colon.amount", {
+                    amount: `${toSignificantWithGroupSeparator(
+                      parseTokenAmount(neuron_stake, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
+                    )} ${token.symbol} (${formatDollarAmount(
+                      parseTokenAmount(neuron_stake, token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                    )})`,
+                  })
+                : "--"}
             </Typography>
           </Grid>
           <Typography>
-            {token ? (
-              <>
-                <Trans>Fee:</Trans>
-                {parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
-                {token.symbol}
-              </>
-            ) : (
-              "--"
-            )}
+            {token
+              ? t("common.fee.colon.amount", {
+                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()} ${token.symbol}`,
+                })
+              : "--"}
           </Typography>
 
           <Button
@@ -206,7 +210,7 @@ export function SplitNeuron({
             onClick={handleSubmit}
             startIcon={loading ? <CircularProgress size={26} color="inherit" /> : null}
           >
-            {error || <Trans>Confirm</Trans>}
+            {error || t("common.confirm")}
           </Button>
         </Box>
       </Modal>

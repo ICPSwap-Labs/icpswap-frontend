@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, Checkbox } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface ImpactProps {
   onCheckChange: (checked: boolean) => void;
@@ -10,6 +10,7 @@ export interface ImpactProps {
 }
 
 export const Impact = ({ showImpact, onCheckChange, ui }: ImpactProps) => {
+  const { t } = useTranslation();
   const [impactChecked, setImpactChecked] = useState(false);
 
   const handleCheck = useCallback((check: boolean) => {
@@ -40,10 +41,7 @@ export const Impact = ({ showImpact, onCheckChange, ui }: ImpactProps) => {
           }}
           onClick={() => handleCheck(!impactChecked)}
         >
-          <Trans>
-            Price impact is too high. You would lose a significant portion of your funds in this trade. Please confirm
-            if you wish to proceed with the swap.
-          </Trans>
+          {t("swap.price.impact.high.descriptions")}
         </Typography>
       </Flex>
     </Box>

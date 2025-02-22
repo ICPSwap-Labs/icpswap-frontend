@@ -77,7 +77,7 @@ function ArrowIcon() {
 }
 
 export interface TextButtonProps {
-  children: ReactNode;
+  children?: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   link?: string;

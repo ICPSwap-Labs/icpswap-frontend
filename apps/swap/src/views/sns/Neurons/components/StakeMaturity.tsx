@@ -1,5 +1,4 @@
 import { Button, Box, Typography } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { stakeNeuronMaturity } from "@icpswap/hooks";
 import { Flex, Modal, Progression } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
@@ -7,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface StakeMaturityProps {
   neuron: Neuron;
@@ -25,6 +25,7 @@ export function StakeMaturity({
   onStakeMaturitySuccess,
   disabled,
 }: StakeMaturityProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -76,13 +77,13 @@ export function StakeMaturity({
         size="small"
         disabled={available_maturity.toString() === "0" || disabled}
       >
-        <Trans>Stake</Trans>
+        {t("common.stake")}
       </Button>
 
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title={t`Stake Maturity`}
+        title={t("nns.stake.maturity")}
         showCancel
         showConfirm
         onConfirm={handleStakeMaturity}
@@ -90,9 +91,7 @@ export function StakeMaturity({
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: "10px 0" }}>
           <Flex justify="space-between" align="center">
-            <Typography color="text.primary">
-              <Trans>Maturity Available</Trans>
-            </Typography>
+            <Typography color="text.primary">{t("nns.maturity.available")}</Typography>
             <Typography>
               {token
                 ? toSignificantWithGroupSeparator(parseTokenAmount(available_maturity, token?.decimals).toString())
@@ -100,9 +99,7 @@ export function StakeMaturity({
             </Typography>
           </Flex>
 
-          <Typography>
-            <Trans>Choose how much of the maturity available to stake into this neuron.</Trans>
-          </Typography>
+          <Typography>{t("nns.choose.maturity")}</Typography>
 
           <Box sx={{ padding: "0 20px 0 0" }}>
             <Progression value={maturityPercent} onChange={(value: number) => setMaturityPercent(value)} />

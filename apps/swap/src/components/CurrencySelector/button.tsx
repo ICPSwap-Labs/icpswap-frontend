@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { isDarkTheme } from "utils";
-import { Trans } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage, Loading } from "components/index";
 import { Flex } from "@icpswap/ui";
 import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 export interface CurrencySelectorButtonProps {
   currency: undefined | null | Token;
@@ -16,6 +16,7 @@ export interface CurrencySelectorButtonProps {
 }
 
 export function CurrencySelectorButton({ currency, onClick, bgGray = false, loading }: CurrencySelectorButtonProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const handleButtonClick = useCallback(() => {
@@ -70,9 +71,7 @@ export function CurrencySelectorButton({ currency, onClick, bgGray = false, load
       onClick={handleButtonClick}
     >
       <Flex gap="0 8px" sx={{ width: "fit-content" }}>
-        <Typography color="text.primary">
-          <Trans>Select a token</Trans>
-        </Typography>
+        <Typography color="text.primary">{t("common.select.a.token")}</Typography>
 
         <ChevronDown size={14} color="#ffffff" />
       </Flex>

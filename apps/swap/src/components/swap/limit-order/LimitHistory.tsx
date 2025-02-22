@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import { Flex, LoadingRow, NoData } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 import { LimitTransactionCard } from "./LimitTransaction";
 
 export function LimitHistory() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const start_time = useMemo(() => {
@@ -28,9 +29,7 @@ export function LimitHistory() {
 
   return (
     <>
-      <Typography sx={{ margin: "16px 0 0 0" }}>
-        <Trans>Show Only the Last 6 Months of Records</Trans>
-      </Typography>
+      <Typography sx={{ margin: "16px 0 0 0" }}>{t("swap.limit.history.description")}</Typography>
 
       {loading ? (
         <Box>

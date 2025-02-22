@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Typography, Avatar, Box, Grid, useMediaQuery } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Trans } from "@lingui/macro";
 import { Wrapper, MainCard } from "components/index";
 import { useVotingProjectDetails } from "@icpswap/hooks";
 import { Theme } from "@mui/material/styles";
 import AuthorityUsers from "components/vote/AuthorityUsers";
 import Proposals from "components/vote/Proposals";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export default function VotingProject() {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const { canisterId } = useParams<{ canisterId: string }>();
@@ -117,33 +118,16 @@ export default function VotingProject() {
                         className={`${classes.nav1} ${page === "proposal" ? "active" : ""}`}
                         onClick={() => handleTogglePage("proposal")}
                       >
-                        <Typography>
-                          <Trans>Proposals</Trans>
-                        </Typography>
+                        <Typography>{t("common.proposals")}</Typography>
                       </Box>
                       <Box className={classes.nav1} onClick={handleNewProposal}>
-                        <Typography>
-                          <Trans>New proposal</Trans>
-                        </Typography>
+                        <Typography>{t("voting.new.proposal")}</Typography>
                       </Box>
-                      {/* <Box className={classes.nav1}>
-                        <Grid container alignItems="center" onClick={handleAbout}>
-                          <Typography sx={{ margin: "0 6px 0 0" }}>
-                            <Trans>About</Trans>
-                          </Typography>
-
-                          <Box sx={{ position: "relative", top: "-3px" }}>
-                            <ArrowIcon></ArrowIcon>
-                          </Box>
-                        </Grid>
-                      </Box> */}
                       <Box
                         className={`${classes.nav1} ${page === "setting" ? "active" : ""}`}
                         onClick={() => handleTogglePage("setting")}
                       >
-                        <Typography>
-                          <Trans>Settings</Trans>
-                        </Typography>
+                        <Typography>{t("common.settings")}</Typography>
                       </Box>
                     </Box>
                   </ScrollMenu>
@@ -164,45 +148,22 @@ export default function VotingProject() {
                 </Typography>
               </Box>
 
-              {/* <Box mt="5px">
-                <Typography align="center">
-                  {totalHolder !== undefined ? formatAmount(Number(totalHolder), 0) : "--"} holders
-                </Typography>
-              </Box> */}
-
               <Box mt="40px" sx={{ display: "grid", gridTemplateRows: "1fr 1fr 1px 1fr 1fr", gap: "20px 0" }}>
                 <Box
                   className={`${classes.nav} ${page === "proposal" ? "active" : ""}`}
                   onClick={() => handleTogglePage("proposal")}
                 >
-                  <Typography>
-                    <Trans>Proposals</Trans>
-                  </Typography>
+                  <Typography>{t("common.proposals")}</Typography>
                 </Box>
                 <Box className={classes.nav} onClick={handleNewProposal}>
-                  <Typography>
-                    <Trans>New proposal</Trans>
-                  </Typography>
+                  <Typography>{t("voting.new.proposal")}</Typography>
                 </Box>
                 <Box sx={{ background: "rgba(255, 255, 255, 0.04)", height: "1px" }} />
-                {/* <Box className={classes.nav}>
-                  <Grid container alignItems="center" onClick={handleAbout}>
-                    <Typography sx={{ margin: "0 6px 0 0" }}>
-                      <Trans>About</Trans>
-                    </Typography>
-
-                    <Box sx={{ position: "relative", top: "-3px" }}>
-                      <ArrowIcon></ArrowIcon>
-                    </Box>
-                  </Grid>
-                </Box> */}
                 <Box
                   className={`${classes.nav} ${page === "setting" ? "active" : ""}`}
                   onClick={() => handleTogglePage("setting")}
                 >
-                  <Typography>
-                    <Trans>Settings</Trans>
-                  </Typography>
+                  <Typography>{t("common.settings")}</Typography>
                 </Box>
               </Box>
             </MainCard>

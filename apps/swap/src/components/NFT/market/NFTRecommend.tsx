@@ -5,7 +5,7 @@ import { useNFTRecommend } from "hooks/nft/trade";
 import { pageArgsFormat } from "@icpswap/utils";
 import { ImageLoading, MainCard, NoData } from "@icpswap/ui";
 import { TradeOrder } from "types/nft";
-import { Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => {
 });
 
 export default function NFTRecommend() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [offset] = pageArgsFormat(1, 10);
@@ -61,11 +62,11 @@ export default function NFTRecommend() {
       <Grid container alignItems="center">
         <Grid item xs>
           <Typography variant="h3" color="text.primary">
-            <Trans>Recommend</Trans>
+            {t("common.recommend")}
           </Typography>
         </Grid>
         <Typography sx={{ cursor: "pointer" }} onClick={handleMoreClick}>
-          <Trans>More</Trans>
+          {t("common.more")}
         </Typography>
       </Grid>
       <Box mt="30px" className={classes.collectionContainer}>

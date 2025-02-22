@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import { Button, Typography, Box, InputAdornment } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, formatDollarAmount } from "@icpswap/utils";
+import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
+import { parseTokenAmount, formatTokenAmount, formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { claimOrRefreshNeuron } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
-import BigNumber from "bignumber.js";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
-import { Modal, NumberFilledTextField } from "components/index";
-import MaxButton from "components/MaxButton";
+import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface StakeProps {
   open: boolean;
@@ -25,6 +22,7 @@ export interface StakeProps {
 }
 
 export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disabled }: StakeProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
@@ -68,26 +66,26 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
   };
 
   let error: string | undefined;
-  if (amount === undefined) error = t`Enter the amount`;
-  if (token === undefined) error = t`Some unknown error happened`;
+  if (amount === undefined) error = t("common.enter.input.amount");
+  if (token === undefined) error = t("common.error.unknown");
   if (
     amount &&
     token &&
     balance &&
     parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount)
   )
-    error = t`There are not enough funds in this account`;
+    error = t("common.error.insufficient.balance");
 
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
-        <Trans>Stake</Trans>
+        {t("common.stake")}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Increase Neuron Stake`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.increase.stake")}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
-            placeholder={t`Enter the amount`}
+            placeholder={t("common.enter.input.amount")}
             value={amount}
             onChange={(value: string) => setAmount(value)}
             fullWidth
@@ -96,40 +94,38 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
               decimalScale: token?.decimals,
             }}
             autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <MaxButton onClick={handleMax} />
-                </InputAdornment>
-              ),
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MaxButton onClick={handleMax} />
+                    </InputAdornment>
+                  ),
+                },
+              },
             }}
           />
 
           <Typography>
-            {token && balance && tokenUSDPrice ? (
-              <Trans>
-                Balance:&nbsp;
-                {`${new BigNumber(
-                  parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
-                ).toFormat()} ${token.symbol} (${formatDollarAmount(
-                  parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
-                )})`}
-              </Trans>
-            ) : (
-              "--"
-            )}
+            {token && balance && tokenUSDPrice
+              ? t("common.balance.colon.amount", {
+                  amount: `${new BigNumber(
+                    parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
+                  ).toFormat()} ${token.symbol} (${formatDollarAmount(
+                    parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
+                  )})`,
+                })
+              : "--"}
           </Typography>
 
           <Typography>
-            {token ? (
-              <>
-                <Trans>Fee:</Trans>&nbsp;
-                {parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
-                {token.symbol}
-              </>
-            ) : (
-              "--"
-            )}
+            {token
+              ? t("common.fee.colon.amount", {
+                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
+                ${token.symbol}`,
+                })
+              : "--"}
           </Typography>
 
           <Button
@@ -140,7 +136,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
             onClick={handleSubmit}
             startIcon={loading ? <CircularProgress size={26} color="inherit" /> : null}
           >
-            {error || <Trans>Confirm</Trans>}
+            {error || t("common.confirm")}
           </Button>
         </Box>
       </Modal>

@@ -3,13 +3,13 @@ import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { NoData, LoadingRow, TokenImage, Flex } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
-import { t, Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
 import { usePendingRewardsByPool } from "hooks/staking-token/usePendingRewards";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { ReclaimContext } from "./reclaimContext";
 
@@ -21,6 +21,7 @@ interface ReclaimItemProps {
 }
 
 function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [, token] = useToken(tokenId);
 
@@ -57,7 +58,7 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
           disabled={!!error || loading}
           startIcon={loading ? <CircularProgress color="inherit" size={18} /> : null}
         >
-          {error ?? <Trans>Reclaim</Trans>}
+          {error ?? t("common.reclaim")}
         </Button>
       </Box>
     </Flex>
@@ -73,6 +74,7 @@ export interface ReclaimProps {
 }
 
 export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuccess }: ReclaimProps) {
+  const { t } = useTranslation();
   const [openTip] = useTips();
   const { setReclaimable } = useContext(ReclaimContext);
   const [trigger, setTrigger] = useState(0);
@@ -97,9 +99,9 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
 
     if (status === ResultStatus.ERROR) {
       if (message === "The claim amount is less than the transfer fee of the staking token") {
-        openTip(t`The claim seems to have been successful. Please refresh the page and try again.`, MessageTypes.error);
+        openTip(`The claim seems to have been successful. Please refresh the page and try again.`, MessageTypes.error);
       } else {
-        openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+        openTip(message ?? `Failed to reclaim`, MessageTypes.error);
       }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
@@ -117,11 +119,11 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
         message === "The withdraw amount is less than the transfer fee of the reward token"
       ) {
         openTip(
-          t`The withdrawal seems to have been successful. Please refresh the page and try again.`,
+          `The withdrawal seems to have been successful. Please refresh the page and try again.`,
           MessageTypes.error,
         );
       } else {
-        openTip(message ?? t`Failed to reclaim`, MessageTypes.error);
+        openTip(message ?? `Failed to reclaim`, MessageTypes.error);
       }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
@@ -149,12 +151,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
   return (
     <>
       <Typography sx={{ margin: "16px 0", fontSize: "12px", lineHeight: "18px" }}>
-        <Trans>
-          For your funds' safety on ICPSwap and to make it more convenient for you to reclaim your staked or reward
-          tokens, we've implemented the 'Reclaim' feature. You can use this feature in case of issues during staking,
-          unstaking, reward claims, or transaction failures due to token canister issues. It allows you to retrieve and
-          reclaim your tokens when issues occur!
-        </Trans>
+        {t("stake.reclaim.descriptions")}
       </Typography>
 
       <>

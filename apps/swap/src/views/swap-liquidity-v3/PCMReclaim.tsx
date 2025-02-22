@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, Tooltip } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -10,6 +9,7 @@ import { useUserPCMBalance, usePassCode, usePCMMetadata, destroyPassCode, withdr
 import { useAccountPrincipal } from "store/auth/hooks";
 import { type PassCode, type PCMMetadata, ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 type ClaimedKey = string | number;
 
@@ -39,6 +39,7 @@ export function BalanceItem({
   metadata,
   code,
 }: BalanceItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { hideUnavailableClaim } = useHideUnavailableClaimManager();
 
@@ -165,7 +166,7 @@ export function BalanceItem({
             onClick={handleClaim}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            <Trans>Withdraw</Trans>
+            {t("common.withdraw")}
           </Button>
         </Box>
       </Box>
@@ -213,6 +214,7 @@ export function BalancesItem({
 }
 
 export default function PCMBalanceReclaim() {
+  const { t } = useTranslation();
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<ClaimedKey[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<ClaimedKey[]>([]);
 
@@ -256,31 +258,21 @@ export default function PCMBalanceReclaim() {
   return (
     <Wrapper>
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <Breadcrumbs
-          prevLink="/swap"
-          prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>Withdraw unused swap pool creation fees</Trans>}
-        />
+        <Breadcrumbs prevLink="/swap" prevLabel={t("Swap")} currentLabel={t("swap.reclaim.unused.pool")} />
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", margin: "40px 0 0 0" }}>
         <Box sx={{ width: "800px" }}>
           <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
-            <Trans>Withdraw unused swap pool creation fees</Trans>
+            {t("swap.reclaim.unused.pool")}
           </Typography>
 
-          <Typography sx={{ margin: "10px 0 0 0" }}>
-            <Trans>
-              Creating a Swap pool requires a payment of 1 ICP as a Swap pool creation fee. If after payment, the Swap
-              pool is not created, users can withdraw the unused Swap pool creation fee.
-            </Trans>
-          </Typography>
+          <Typography sx={{ margin: "10px 0 0 0" }}>{t("swap.reclaim.pcm.descriptions")}</Typography>
 
           <Typography sx={{ fontSize: "16px", fontWeight: 500, margin: "20px 0 0 0" }} color="text.primary">
-            <Trans>
-              Total unused swap pool creation fees:{" "}
-              {total_unused !== undefined ? parseTokenAmount(total_unused, 8).toFormat() : "--"}&nbsp;ICP
-            </Trans>
+            {t("swap.reclaim.total.unused.in.pool", {
+              amount: `${total_unused !== undefined ? parseTokenAmount(total_unused, 8).toFormat() : "--"} ICP`,
+            })}
           </Typography>
 
           <Box sx={{ margin: "20px 0 0 0" }}>

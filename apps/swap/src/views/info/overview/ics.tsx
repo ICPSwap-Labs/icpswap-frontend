@@ -12,10 +12,12 @@ import {
 import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import { ICSPriceChart } from "./icsPriceChart";
 
 export function Ics() {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const infoToken = useInfoToken(ICS.address);
@@ -123,21 +125,21 @@ export function Ics() {
         }}
       >
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Market Cap</Typography>
+          <Typography fontSize="16px">{t("common.market.cap")}</Typography>
           <Typography fontSize="28px" fontWeight={500} color="text.primary">
             {marketCap ? formatDollarAmount(marketCap) : "--"}
           </Typography>
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Fully Diluted Market Cap</Typography>
+          <Typography fontSize="16px">{t("common.fully.diluted.cap")}</Typography>
           <Typography fontSize="28px" fontWeight={500} color="text.primary">
             {fdv ? formatDollarAmount(fdv) : "--"}
           </Typography>
         </Flex>
 
         <Flex vertical gap="16px 0" align="flex-start">
-          <Typography fontSize="16px">Amount Burned</Typography>
+          <Typography fontSize="16px">{t("common.amount.burned")}</Typography>
           <Flex vertical gap="8px" align="flex-start">
             <Flex gap="4px">
               <Typography fontSize="28px" fontWeight={500} color="text.primary">

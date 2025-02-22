@@ -20,14 +20,15 @@ import Modal from "components/modal/index";
 import { IconSearch } from "@tabler/icons";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import { useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import { Trans, t } from "@lingui/macro";
 import { OFFICIAL_CANISTER_IDS } from "constants/index";
 import { isICPSwapOfficial } from "utils";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Theme } from "@mui/material/styles";
 import { NoData, FilledTextField } from "components/index";
+import { useTranslation } from "react-i18next";
 
 export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
+  const { t } = useTranslation();
   const { result: logo } = useCanisterLogo(data.cid);
 
   const [userSelectedCanisters, setUserSelectedCanisters, deleteUserSelectedCanister] = useSelectedCanistersManager();
@@ -89,7 +90,7 @@ export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
               startIcon={<HorizontalRuleIcon />}
               onClick={() => handleDeleteNFTCanister(data.cid)}
             >
-              <Trans>Delete</Trans>
+              {t("common.delete")}
             </Button>
           ) : (
             <Button
@@ -99,7 +100,7 @@ export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
               startIcon={<AddIcon />}
               onClick={() => handleAddNFTCanister(data.cid)}
             >
-              <Trans>Add</Trans>
+              {t("common.add")}
             </Button>
           )
         ) : null}
@@ -109,6 +110,7 @@ export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
 }
 
 export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useTranslation();
   const theme = useTheme() as Theme;
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchValue, setSearchValue] = useState("");
@@ -142,7 +144,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             contained
             borderRadius="12px"
             background={theme.palette.background.level1}
-            textFiledProps={{
+            textFieldProps={{
               slotProps: {
                 input: {
                   startAdornment: (
@@ -164,12 +166,8 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Trans>Name</Trans>
-                  </TableCell>
-                  <TableCell>
-                    <Trans>Address</Trans>
-                  </TableCell>
+                  <TableCell>{t("common.name")}</TableCell>
+                  <TableCell>{t("common.address")}</TableCell>
                   <TableCell>&nbsp;</TableCell>
                 </TableRow>
               </TableHead>

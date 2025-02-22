@@ -9,10 +9,10 @@ import { PositionFilterState, PositionSort, UserPosition } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
 import { PositionContext } from "components/swap/index";
 import { useSortedPositions } from "hooks/swap/index";
-import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
+import { useTranslation } from "react-i18next";
 
 interface PositionItemProps {
   position: UserPosition;
@@ -53,6 +53,7 @@ interface YourPositionsProps {
 }
 
 export function YourPositions({ filterState, sort, hiddenNumbers }: YourPositionsProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const principal = useAccountPrincipalString();
 
@@ -94,7 +95,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
           <NoData />
           <Flex fullWidth justify="center">
             <Button size="large" sx={{ width: "240px" }} variant="contained" onClick={handleAddLiquidity}>
-              <Trans>Add Liquidity</Trans>
+              {t("swap.add.liquidity")}
             </Button>
           </Flex>
         </Box>

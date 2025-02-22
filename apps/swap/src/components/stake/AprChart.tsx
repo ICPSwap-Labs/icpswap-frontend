@@ -1,6 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useStakeAprChartData } from "@icpswap/hooks";
 import { Flex, Tooltip as Tip } from "@icpswap/ui";
 import { useMemo, useState } from "react";
@@ -8,6 +7,7 @@ import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import { darken } from "polished";
 import { BigNumber } from "@icpswap/utils";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
 
@@ -16,6 +16,7 @@ export interface FarmAprChartsProps {
 }
 
 export function AprChart({ canisterId }: FarmAprChartsProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [value, setValue] = useState<null | number>(null);
@@ -74,19 +75,9 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
       >
         <Box sx={{ padding: "0 24px" }}>
           <Flex gap="0 6px">
-            <Typography fontSize="16px">
-              <Trans>APR</Trans>
-            </Typography>
+            <Typography fontSize="16px">{t("common.apr")}</Typography>
 
-            <Tip
-              tips={
-                <Trans>
-                  This APR updates every 10 minutes, so it may differ slightly from the real-time APR shown on the
-                  right.
-                </Trans>
-              }
-              iconSize="14px"
-            />
+            <Tip tips={t("stake.apr.chart.descriptions")} iconSize="14px" />
           </Flex>
 
           <Typography

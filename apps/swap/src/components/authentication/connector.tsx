@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useErrorTip } from "hooks/useTips";
 import { Connector, IdentityKitConnector } from "constants/index";
 import { useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { isSafari } from "utils/index";
 import { WalletConnector } from "utils/connector";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -38,6 +38,7 @@ export interface ConnectorProps {
 }
 
 export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();

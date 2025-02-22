@@ -1,12 +1,14 @@
 import Button, { ButtonConnectorProps } from "components/authentication/ButtonConnector";
 import { Override } from "@icpswap/types";
-import { t } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 export interface AddLiquidityButtonProps {
   error: string | undefined | null;
 }
 
 export function AddLiquidityButton(props: Override<ButtonConnectorProps, AddLiquidityButtonProps>) {
+  const { t } = useTranslation();
+
   const { error } = props;
 
   return (
@@ -18,7 +20,7 @@ export function AddLiquidityButton(props: Override<ButtonConnectorProps, AddLiqu
       }}
       {...props}
     >
-      {error ?? t`Confirm`}
+      {error ?? t("common.confirm")}
     </Button>
   );
 }

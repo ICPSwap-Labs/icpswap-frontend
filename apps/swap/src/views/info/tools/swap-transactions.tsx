@@ -4,7 +4,6 @@ import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, Button, CircularProgress, makeStyles, useTheme, Theme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
 import {
   Header,
@@ -23,6 +22,7 @@ import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => {
 const PageSize = 10;
 
 export default function SwapTransactions() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
@@ -94,13 +95,13 @@ export default function SwapTransactions() {
   return (
     <InfoWrapper size="small">
       <BreadcrumbsV1
-        links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>Swap Transactions</Trans> }]}
+        links={[{ label: t("common.tools"), link: "/info-tools" }, { label: t("common.swap.transactions") }]}
       />
 
       <Box sx={{ height: "20px", width: "100%" }} />
 
       <ToolsWrapper
-        title={<Trans>Swap Transactions</Trans>}
+        title={t("common.swap.transactions")}
         action={
           <Box
             sx={{
@@ -132,9 +133,7 @@ export default function SwapTransactions() {
                 onPrincipalChange={handleAddressChange}
               />
               <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
-                <Typography>
-                  <Trans>Select a Pair:</Trans>
-                </Typography>
+                <Typography>{t("common.select.pair.colon")}</Typography>
 
                 <SelectPair
                   value={pair}
@@ -143,11 +142,7 @@ export default function SwapTransactions() {
                   showClean={false}
                   showBackground={false}
                   panelPadding="0px"
-                  defaultPanel={
-                    <Typography color="text.primary">
-                      <Trans>All Pair</Trans>
-                    </Typography>
-                  }
+                  defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
                 />
               </Flex>
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
@@ -160,7 +155,7 @@ export default function SwapTransactions() {
                 ) : (
                   <Image src="/images/download.svg" sx={{ width: "16px", height: "16px", borderRadius: "0px" }} />
                 )}
-                <Trans>Export</Trans>
+                {t("common.export")}
               </Flex>
             </Button>
           </Box>
@@ -172,25 +167,15 @@ export default function SwapTransactions() {
               <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
                 <HeaderCell>#</HeaderCell>
 
-                <HeaderCell field="amountUSD">
-                  <Trans>Total Value</Trans>
-                </HeaderCell>
+                <HeaderCell field="amountUSD">{t("common.total.value")}</HeaderCell>
 
-                <HeaderCell field="amountToken0">
-                  <Trans>Token Amount</Trans>
-                </HeaderCell>
+                <HeaderCell field="amountToken0">{t("common.token.amount")}</HeaderCell>
 
-                <HeaderCell field="amountToken1">
-                  <Trans>Token Amount</Trans>
-                </HeaderCell>
+                <HeaderCell field="amountToken1">{t("common.token.amount")}</HeaderCell>
 
-                <HeaderCell field="sender">
-                  <Trans>Account</Trans>
-                </HeaderCell>
+                <HeaderCell field="sender">{t("common.account")}</HeaderCell>
 
-                <HeaderCell field="timestamp">
-                  <Trans>Time</Trans>
-                </HeaderCell>
+                <HeaderCell field="timestamp">{t("common.time")}</HeaderCell>
               </Header>
 
               {(transactions ?? []).map((transaction, index) => (

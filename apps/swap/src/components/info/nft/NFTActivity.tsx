@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Typography, Grid, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { TradeTransaction } from "@icpswap/types";
 import { Copy, ListLoading } from "components/index";
@@ -8,6 +7,7 @@ import { useNFTTradeTransactions } from "@icpswap/hooks";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { Pagination, PaginationType, NoData } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface NFTActivityProps {
   canisterId: string;
@@ -16,6 +16,7 @@ export interface NFTActivityProps {
 }
 
 export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -44,21 +45,11 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>seller</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>buyer</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>price</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>status</Trans>
-              </TableCell>
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("common.seller")}</TableCell>
+              <TableCell>{t("common.buyer")}</TableCell>
+              <TableCell>{t("common.price")}</TableCell>
+              <TableCell>{t("common.status")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,9 +62,6 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
                     </Grid>
                   </Grid>
                 </TableCell>
-                {/* <TableCell>
-                  <Typography variant="h6">{upperFirst(enumToString(record.txType))}</Typography>
-                </TableCell> */}
                 <TableCell>
                   <Copy content={record.seller}>
                     <Typography>{shorten(record.seller, 6)}</Typography>

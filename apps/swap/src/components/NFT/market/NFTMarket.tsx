@@ -5,8 +5,8 @@ import { getTradeOrders } from "hooks/nft/trade";
 import { isValidAccount, pageArgsFormat } from "@icpswap/utils";
 import { ImageLoading } from "@icpswap/ui";
 import { TradeOrder } from "types/nft";
-import { Trans } from "@lingui/macro";
 import { NoData } from "components/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -67,6 +67,7 @@ export default function NFTMarketOrders({
   sortBy: string | null | undefined;
   canisterId?: string;
 }) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const [data, setData] = useState<TradeOrder[]>([]);
@@ -155,16 +156,6 @@ export default function NFTMarketOrders({
 
       {data && data.length === 0 && !firstLoading ? <NoData /> : null}
 
-      {/* {totalElements && Number(totalElements) !== 0 ? (
-        <Box mt="20px">
-          <Pagination
-            count={Number(totalElements)}
-            onPageChange={handlePageChange}
-            defaultPageSize={pagination.pageSize}
-          />
-        </Box>
-      ) : null} */}
-
       {Number(totalElements) > pageSize && data.length > 0 && data.length !== Number(totalElements) ? (
         <Grid container justifyContent="center" mt="40px">
           <Button
@@ -181,9 +172,7 @@ export default function NFTMarketOrders({
             onClick={handleLoadMore}
           >
             {moreLoading ? <CircularProgress size={18} color="inherit" sx={{ margin: "0 4px 0 0" }} /> : null}
-            <Typography fontWeight={600}>
-              <Trans>View More</Trans>
-            </Typography>
+            <Typography fontWeight={600}>{t("common.view.more")}</Typography>
           </Button>
         </Grid>
       ) : null}

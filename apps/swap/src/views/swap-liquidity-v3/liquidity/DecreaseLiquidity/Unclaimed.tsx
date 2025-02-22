@@ -1,11 +1,9 @@
 import { useMemo } from "react";
-import { Typography, Grid, Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import BigNumber from "bignumber.js";
+import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
-import { toSignificant, numberToString } from "@icpswap/utils";
-import { Theme } from "@mui/material/styles";
+import { toSignificant, numberToString, BigNumber } from "@icpswap/utils";
 import { TokenImage } from "components/index";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -23,6 +21,7 @@ export interface UnclaimedProps {
 }
 
 export default function Unclaimed({ position, feeAmount0, feeAmount1 }: UnclaimedProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { token0, token1 } = position?.pool || {};
@@ -39,7 +38,7 @@ export default function Unclaimed({ position, feeAmount0, feeAmount1 }: Unclaime
 
   return (
     <Box>
-      <Typography color="text.primary">Uncollected fees</Typography>
+      <Typography color="text.primary">{t("common.uncollected.fees")}</Typography>
       <Box mt="12px" className={classes.wrapper}>
         <Grid container alignItems="center">
           <Box sx={{ width: "32px", height: "32px", marginRight: "12px" }}>

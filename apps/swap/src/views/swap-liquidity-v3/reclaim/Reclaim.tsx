@@ -1,9 +1,8 @@
-import { Typography, Box } from "@mui/material";
+import { Typography, Box } from "components/Mui";
 import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
-import { Trans } from "@lingui/macro";
 import { useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
+import { useTranslation } from "react-i18next";
 import { isMobile } from "react-device-detect";
 
 import { ReclaimWithPair } from "./Pair";
@@ -29,6 +28,7 @@ const Tabs = [
 ];
 
 export default function SwapReclaim() {
+  const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
 
@@ -40,17 +40,13 @@ export default function SwapReclaim() {
 
   return (
     <Wrapper sx={{ padding: "16px 0" }}>
-      <Breadcrumbs
-        prevLink="/swap"
-        prevLabel={<Trans>Swap</Trans>}
-        currentLabel={<Trans>View Your Pool Balances</Trans>}
-      />
+      <Breadcrumbs prevLink="/swap" prevLabel={t("common.swap")} currentLabel={t("swap.view.pool.balances")} />
 
       <Box sx={{ display: "flex", justifyContent: "center", margin: "40px 0 0 0" }}>
         <Box sx={{ width: "800px" }}>
           <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
-              <Trans>Check Your Balances in Swap Pool</Trans>
+              {t("swap.check.your.balances")}
             </Typography>
 
             {isMobile ? (
@@ -59,22 +55,8 @@ export default function SwapReclaim() {
                 tips={
                   <>
                     <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      <Trans>
-                        You can check your balance in various Swap pools by selecting a trading pair or a specific
-                        Token, and you can withdraw at any time. If a Swap doesn’t meet your slippage criteria or if
-                        there’s an issue with the pool during withdrawal, your Tokens will automatically be returned to
-                        your balance. This allows you to initiate a new Swap without needing to redeposit or withdraw
-                        directly to your wallet. Additionally, you can keep your swapped Tokens in the Swap pool for
-                        future transactions.
-                      </Trans>
+                      {t("swap.reclaim.descriptions")}
                     </Typography>
-
-                    {/* <Typography sx={{ margin: "20px 0 0 0", color: "#111936", fontSize: "12px", lineHeight: "18px" }}>
-                      <Trans>
-                        When might issues occur: Such as network latency or stutter, page refreshing during the Swap,
-                        excessive slippage, significant token price fluctuations, and so on.
-                      </Trans>
-                    </Typography> */}
                   </>
                 }
               />
@@ -84,13 +66,7 @@ export default function SwapReclaim() {
           {!isMobile ? (
             <>
               <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
-                <Trans>
-                  You can check your balance in various Swap pools by selecting a trading pair or a specific Token, and
-                  you can withdraw at any time. If a Swap doesn’t meet your slippage criteria or if there’s an issue
-                  with the pool during withdrawal, your Tokens will automatically be returned to your balance. This
-                  allows you to initiate a new Swap without needing to redeposit or withdraw directly to your wallet.
-                  Additionally, you can keep your swapped Tokens in the Swap pool for future transactions.
-                </Trans>
+                {t("swap.reclaim.descriptions")}
               </Typography>
             </>
           ) : null}

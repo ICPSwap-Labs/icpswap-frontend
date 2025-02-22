@@ -1,9 +1,9 @@
 import { Typography, Box } from "components/Mui";
 import { useFarmGlobalData } from "hooks/staking-farm";
-import { Trans, t } from "@lingui/macro";
 import { Tooltip, Flex } from "components/index";
 import React from "react";
 import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 interface ItemProps {
   label0: React.ReactNode;
@@ -58,6 +58,7 @@ function Item({ label0, label1, value0, value1, tooltip0, tooltip1 }: ItemProps)
 }
 
 export function GlobalData() {
+  const { t } = useTranslation();
   const globalData = useFarmGlobalData();
 
   return (
@@ -75,7 +76,7 @@ export function GlobalData() {
       }}
     >
       <Item
-        label0={<Trans>Your Available Positions</Trans>}
+        label0={t("farm.available.positions")}
         value0={
           nonNullArgs(globalData.userPositionAmount) && nonNullArgs(globalData.userPositionValue) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
@@ -93,7 +94,7 @@ export function GlobalData() {
           )
         }
         tooltip0={t`The number of positions currently available in your account for staking.`}
-        label1={<Trans>Your Staked Positions</Trans>}
+        label1={t("farm.staked.positions")}
         value1={
           nonNullArgs(globalData.userStakedFarms) && nonNullArgs(globalData.userStakedTvl) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
@@ -113,19 +114,19 @@ export function GlobalData() {
       />
 
       <Item
-        label0={<Trans>TVL</Trans>}
+        label0={t("common.tvl")}
         value0={globalData.stakeTokenTVL ? formatDollarAmount(globalData.stakeTokenTVL) : "--"}
         tooltip0={t`The cumulative value of positions staked across all live farming pools.`}
-        label1={<Trans>Total Rewarded Value</Trans>}
+        label1={t("common.total.rewarded.value")}
         value1={globalData.rewardedTokenTVL ? formatDollarAmount(globalData.rewardedTokenTVL) : "--"}
         tooltip1={t`The total value of rewards distributed by finished farming pools.`}
       />
 
       <Item
-        label0={<Trans>Total Rewarding Value</Trans>}
+        label0={t("common.total.rewarding.value")}
         value0={globalData.rewardTokenTVL ? formatDollarAmount(globalData.rewardTokenTVL) : "--"}
         tooltip0={t`The total value of rewards distributed by live farming pools.`}
-        label1={<Trans>Total Pools</Trans>}
+        label1={t("common.total.pools")}
         value1={globalData.farmAmount?.toString() ?? "--"}
         tooltip1={t`The total number of farming pools, including those that are unstart, live, and finished.`}
       />

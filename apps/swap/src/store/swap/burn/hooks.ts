@@ -7,9 +7,10 @@ import { BURN_FIELD } from "constants/swap";
 import { tryParseAmount, inputNumberCheck } from "utils/swap";
 import { useToken } from "hooks/useCurrency";
 import { usePool } from "hooks/swap/usePools";
-import { t } from "@lingui/macro";
 import { UserPosition } from "types/swap";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useTranslation } from "react-i18next";
+
 import { updateTypedInput, resetBurnState } from "./actions";
 
 export function useBurnState() {
@@ -25,6 +26,7 @@ export function useResetBurnState() {
 }
 
 export function useBurnInfo(position: UserPosition | undefined | null) {
+  const { t } = useTranslation();
   const { result: poolMeta } = useSwapPoolMetadata(position?.id);
 
   const token0Address = poolMeta?.token0.address;
@@ -101,7 +103,7 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
 
   let error: string | undefined;
 
-  if (inputNumberCheck(typedValue) === false) error = error ?? t`Amount exceeds limit`;
+  if (inputNumberCheck(typedValue) === false) error = error ?? t("common.error.exceeds.limit");
 
   if (
     !parsedAmounts[BURN_FIELD.LIQUIDITY_PERCENT] ||
@@ -109,14 +111,14 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
     !parsedAmounts[BURN_FIELD.CURRENCY_B]
   ) {
     if (typedValue && String(typedValue) !== "0") {
-      error = error ?? t`Insufficient balance`;
+      error = error ?? t("common.error.insufficient.balance");
     } else {
-      error = error ?? t`Enter an amount`;
+      error = error ?? t("common.enter.input.amount");
     }
   }
 
   if (typeof available === "boolean" && !available) {
-    error = error ?? t`This pool is not available now`;
+    error = error ?? t("swap.pool.not.available");
   }
 
   return {

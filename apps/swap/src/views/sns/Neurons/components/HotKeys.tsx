@@ -1,4 +1,3 @@
-import { Trans, t } from "@lingui/macro";
 import { Modal } from "@icpswap/ui";
 import { FilledTextField } from "components/index";
 import { Button, Box, Typography } from "components/Mui";
@@ -11,6 +10,7 @@ import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/use
 import { Principal } from "@dfinity/principal";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { X } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 export interface HotKeysProps {
   governance_id: string | undefined;
@@ -22,6 +22,7 @@ export interface HotKeysProps {
 }
 
 export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemoveSuccess, disabled }: HotKeysProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [open, setOpen] = useState(false);
   const [hotKey, setHotKey] = useState<undefined | string>(undefined);
@@ -92,10 +93,10 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
         if (onRemoveSuccess) onRemoveSuccess();
       } else {
         const message = manage_neuron_error.error_message;
-        openTip(message !== "" ? message : t`Failed to remove hotkeys`, TIP_ERROR);
+        openTip(message !== "" ? message : t("nns.failed.remove.hotkeys"), TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to remove hotkeys`, TIP_ERROR);
+      openTip(message ?? t("nns.failed.remove.hotkeys"), TIP_ERROR);
     }
 
     closeFullscreenLoading();
@@ -108,19 +109,17 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
   }, [neuron, principal]);
 
   let error: string | undefined;
-  if (!hotKey) error = t`Enter the hotkey`;
+  if (!hotKey) error = t("nns.hotkey.enter");
   if (hotKey && !isValidPrincipal(hotKey)) error = t`Invalid principal ID`;
 
   return (
     <Box>
       <Typography color="text.primary" fontSize="16px" fontWeight={600}>
-        <Trans>Hotkeys</Trans>
+        {t("common.hotkeys")}
       </Typography>
 
       <Typography fontSize="12px" sx={{ margin: "10px 0 0 0", lineHeight: "16px" }}>
-        <Trans>
-          To vote with this neuron from another dapp, add the principal id you have in the other dapp as a hotkey.
-        </Trans>
+        {t("nns.vote.hotkey")}
       </Typography>
 
       <Box sx={{ margin: "10px 0 0 0", display: "flex", flexDirection: "column", gap: "6px 0" }}>
@@ -154,14 +153,14 @@ export function HotKeys({ neuron, governance_id, neuron_id, onAddSuccess, onRemo
         size="small"
         disabled={disabled}
       >
-        <Trans>Add Hotkey</Trans>
+        {t("nns.hotkey.add")}
       </Button>
 
       <Modal open={open} onClose={() => setOpen(false)} title={t`Add Hotkey`}>
         <FilledTextField placeholder={t`Enter hotkey principal ID`} onChange={handleHotKeyChange} />
         <Box sx={{ margin: "20px 0 0 0" }}>
           <Button fullWidth variant="contained" size="large" disabled={error !== undefined} onClick={handleAddHotKey}>
-            {error === undefined ? <Trans>Confirm</Trans> : error}
+            {error === undefined ? t("common.confirm") : error}
           </Button>
         </Box>
       </Modal>

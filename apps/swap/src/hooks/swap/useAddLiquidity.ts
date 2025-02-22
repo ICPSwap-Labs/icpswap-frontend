@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { updateUserPositionPoolId, getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
-import { t } from "@lingui/macro";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
 import { getAddLiquidityStepDetails } from "components/swap/AddLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -24,6 +23,7 @@ import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import { BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 let SwapPoolId: undefined | string;
 
@@ -51,6 +51,7 @@ interface AddLiquidityCallsArgs {
 function useAddLiquidityCalls() {
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
+  const { t } = useTranslation();
 
   const approve = useSwapApprove();
   const deposit = useSwapDeposit();
@@ -104,7 +105,7 @@ function useAddLiquidityCalls() {
         );
 
         if (data !== "ok") {
-          openErrorTip(message ?? t`Failed to request pcm code`);
+          openErrorTip(message ?? `Failed to request pcm code`);
         }
 
         return data === "ok";
@@ -289,7 +290,7 @@ function useAddLiquidityCalls() {
         });
 
         if (status === "ok") {
-          openSuccessTip(t`Add Liquidity Successfully`);
+          openSuccessTip(t("liquidity.add.success"));
 
           updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
@@ -334,6 +335,7 @@ function useInitialAddLiquiditySteps() {
   const initialStepContent = useStepContentManager();
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
+  const { t } = useTranslation();
 
   const handleReclaim = () => {
     history.push("/swap/withdraw");
@@ -364,7 +366,7 @@ function useInitialAddLiquiditySteps() {
 
       initialStepContent(String(key), {
         content,
-        title: t`Add Liquidity Details`,
+        title: t("swap.add.liquidity.details"),
       });
     },
     [],

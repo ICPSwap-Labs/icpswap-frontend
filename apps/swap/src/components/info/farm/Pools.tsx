@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { Grid, Box, Link, makeStyles } from "components/Mui";
 import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
 import { feeAmountToPercentage } from "utils/swap/index";
@@ -10,6 +9,7 @@ import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@ic
 import { useFarmTvl, useStateColors } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton, Flex } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -29,6 +29,7 @@ interface PoolItemProps {
 }
 
 function PoolItem({ farmId }: PoolItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const { result: farmInfo, loading } = useFarmInfo(farmId);
@@ -116,7 +117,7 @@ function PoolItem({ farmId }: PoolItemProps) {
       </BodyCell>
       <BodyCell>
         <TextButton to={`/info-farm/details/${farmId}`} sx={{ fontSize: "16px" }}>
-          <Trans>Details</Trans>
+          {t("common.details")}
         </TextButton>
       </BodyCell>
     </TableRow>
@@ -124,6 +125,7 @@ function PoolItem({ farmId }: PoolItemProps) {
 }
 
 export function FarmPools() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const { result: allFarms, loading } = useAllFarms();
@@ -149,27 +151,13 @@ export function FarmPools() {
   return (
     <Box sx={{ overflow: "auto" }}>
       <Header className={classes.wrapper}>
-        <HeaderCell>
-          <Trans>Canister ID</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>Pool</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>Start Time</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>End Time</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>Position Amount</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>Reward Amount</Trans>
-        </HeaderCell>
-        <HeaderCell>
-          <Trans>Status</Trans>
-        </HeaderCell>
+        <HeaderCell>{t("common.canister.id")}</HeaderCell>
+        <HeaderCell>{t("common.pool")}</HeaderCell>
+        <HeaderCell>{t("common.start.time")}</HeaderCell>
+        <HeaderCell>{t("common.end.time")}</HeaderCell>
+        <HeaderCell>{t("common.position.amount")}</HeaderCell>
+        <HeaderCell>{t("common.reward.amount")}</HeaderCell>
+        <HeaderCell>{t("common.status")}</HeaderCell>
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 

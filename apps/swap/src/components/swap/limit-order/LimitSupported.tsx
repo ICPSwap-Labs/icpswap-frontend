@@ -1,8 +1,8 @@
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { WaringIcon } from "assets/icons/WaringIcon";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 export interface LimitSupportedProps {
   available: boolean;
@@ -11,6 +11,8 @@ export interface LimitSupportedProps {
 }
 
 export function LimitSupported({ available, noLiquidity, ui = "normal" }: LimitSupportedProps) {
+  const { t } = useTranslation();
+
   return available === false || noLiquidity === true ? (
     <Box
       sx={{
@@ -23,7 +25,7 @@ export function LimitSupported({ available, noLiquidity, ui = "normal" }: LimitS
         <WaringIcon color="#D3625B" />
 
         <Typography color="#D3625B" sx={{ lineHeight: "20px", fontSize: ui === "normal" ? "14px" : "12px" }}>
-          <Trans>Limit order feature isn’t available for this pair yet</Trans>
+          {t("limit.unavailable.description")}
         </Typography>
       </Flex>
     </Box>

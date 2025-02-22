@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
 import { TokenPrice } from "components/swap/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
+
 import { LimitContext } from "./context";
 
 export interface CurrentPricePanelProps {
@@ -15,13 +16,14 @@ export interface CurrentPricePanelProps {
 }
 
 export function CurrentPricePanel({ inputToken, outputToken, currentPrice, fontSize = 14 }: CurrentPricePanelProps) {
+  const { t } = useTranslation();
   const { inverted } = useContext(LimitContext);
 
   return (
     <MainCard level={2} padding="16px" borderRadius="16px" sx={{ "@media(max-width: 640px)": { padding: "12px" } }}>
       <Flex gap="0 8px">
         <Typography className={`fontSize${fontSize}`} sx={{ whiteSpace: "nowrap" }}>
-          <Trans>Current Price</Trans>
+          {t("common.current.price")}
         </Typography>
 
         <TokenPrice

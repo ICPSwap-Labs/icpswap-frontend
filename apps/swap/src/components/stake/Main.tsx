@@ -1,7 +1,6 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, Tooltip } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { t, Trans } from "@lingui/macro";
 import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { Null, StakingPoolInfo } from "@icpswap/types";
@@ -12,6 +11,7 @@ import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalUserPoolInfo } from "hooks/staking-token";
 import { Stake } from "components/stake/Stake";
 import { Harvest, Unstake } from "components/stake/index";
+import { useTranslation } from "react-i18next";
 
 export interface StakeMainProps {
   poolId: string | undefined;
@@ -30,6 +30,7 @@ export function MainContent({
   rewardToken,
   handleRefresh,
 }: StakeMainProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -75,9 +76,7 @@ export function MainContent({
             >
               <Box>
                 <Flex gap="0 4px" align="center">
-                  <Typography>
-                    <Trans>APR</Trans>
-                  </Typography>
+                  <Typography>{t("common.apr")}</Typography>
                   <Tooltip
                     iconSize="14px"
                     tips={t`The APR (Annual Percentage Rate) in a staking pool is calculated based on the number of reward tokens earned per second for each staked token. The potential annual return (APR) depends on the value of the staked tokens and the value of the reward tokens.`}
@@ -90,9 +89,7 @@ export function MainContent({
 
               <Box>
                 <Flex gap="0 4px" align="center">
-                  <Typography>
-                    <Trans>Total Rewards</Trans>
-                  </Typography>
+                  <Typography>{t("common.total.rewards")}</Typography>
                 </Flex>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600, margin: "16px 0 0 0" }}>
                   {stakeStatInfo && rewardToken
@@ -118,9 +115,7 @@ export function MainContent({
               }}
             >
               <Box sx={{ maxWidth: "270px", "@media(max-width: 640px)": { maxWidth: "360px" } }}>
-                <Typography>
-                  <Trans>Your Available to Stake</Trans>
-                </Typography>
+                <Typography>{t("common.your.available.stake")}</Typography>
 
                 <Typography
                   sx={{
@@ -163,9 +158,7 @@ export function MainContent({
               </Box>
 
               <Box sx={{ maxWidth: "194px", "@media(max-width: 640px)": { maxWidth: "360px" } }}>
-                <Typography>
-                  <Trans>Total Staked</Trans>
-                </Typography>
+                <Typography>{t("stake.total.staked")}</Typography>
                 <Typography
                   sx={{
                     fontSize: "20px",
@@ -219,9 +212,7 @@ export function MainContent({
             <Flex justify="space-between" sx={{ padding: "0 16px" }}>
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>
-                    <Trans>Reward Token</Trans>
-                  </Typography>
+                  <Typography>{t("common.reward.token")}</Typography>
                 </Flex>
 
                 <Typography
@@ -293,9 +284,7 @@ export function MainContent({
         <MainCard level={2} padding="16px" borderRadius="0px 0px 16px 16px" sx={{ margin: "2px 0 0 0" }}>
           <Flex justify="space-between">
             <Box>
-              <Typography>
-                <Trans>Your Staked</Trans>
-              </Typography>
+              <Typography>{t("stake.your.staked")}</Typography>
 
               <Typography component="div" sx={{ "@media(max-width: 640px)": { maxWidth: "220px" } }}>
                 <Typography

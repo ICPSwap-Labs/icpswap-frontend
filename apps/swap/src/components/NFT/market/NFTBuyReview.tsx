@@ -1,6 +1,5 @@
 import { Grid, Typography, CircularProgress, useTheme, Box, Theme } from "components/Mui";
 import Modal from "components/modal/index";
-import { t, Trans } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { TradeOrder } from "types/nft";
 import { type NFTTokenMetadata, type ActorIdentity, ResultStatus } from "@icpswap/types";
@@ -19,12 +18,13 @@ import { useICPAmountUSDValue } from "store/global/hooks";
 import { useAccount } from "store/auth/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import LazyImage from "components/LazyImage";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { TextButton, AuthButton } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import FileImage from "../FileImage";
 
@@ -39,6 +39,7 @@ export default function NFTBuyReview({
   onClose: () => void;
   onTradeSuccess?: () => void;
 }) {
+  const { t } = useTranslation();
   const theme = useTheme() as Theme;
 
   const account = useAccount();
@@ -80,7 +81,7 @@ export default function NFTBuyReview({
     if (status === ResultStatus.ERROR) {
       openErrorTip(getLocaleMessage(message) ?? "Transaction failed");
     } else {
-      openSuccessTip(t`Traded successfully`);
+      openSuccessTip(t("nft.trade.success"));
       if (onTradeSuccess) onTradeSuccess();
     }
 
@@ -97,7 +98,7 @@ export default function NFTBuyReview({
   const { result: tradeTokenBalance } = useTokenBalance(NFTTradeTokenCanisterId, account);
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Confirm Buying`} background={theme.palette.background.level2}>
+    <Modal open={open} onClose={onClose} title={t("nft.confirm.buying")} background={theme.palette.background.level2}>
       <Box
         sx={{
           borderRadius: "12px",
@@ -197,17 +198,13 @@ export default function NFTBuyReview({
       <Box mt="30px">
         <Grid container>
           <Grid item xs>
-            <Typography>
-              <Trans>Transaction Fee</Trans>
-            </Typography>
+            <Typography>{t("nft.market.transaction.fee")}</Typography>
           </Grid>
           <Typography color="text.primary">{new BigNumber(NFTTradeFee).multipliedBy(100).toFixed(2)}%</Typography>
         </Grid>
         <Grid container mt="20px">
           <Grid item xs>
-            <Typography>
-              <Trans>Creator Royalty</Trans>
-            </Typography>
+            <Typography>{t("nft.creator.royalty")}</Typography>
           </Grid>
           <Typography color="text.primary">
             {new BigNumber(String(order?.royalties)).dividedBy(100).toFixed(2)}%
@@ -215,9 +212,7 @@ export default function NFTBuyReview({
         </Grid>
         <Grid container mt="20px">
           <Grid item xs>
-            <Typography>
-              <Trans>Transfer Fee</Trans>
-            </Typography>
+            <Typography>{t("common.transfer.fee")}</Typography>
           </Grid>
           <Grid item>
             <WICPPriceFormat price={userTransFee.toFormat()} fontSize="14px" />
@@ -225,9 +220,7 @@ export default function NFTBuyReview({
         </Grid>
         <Grid container mt="20px">
           <Grid item xs>
-            <Typography>
-              <Trans>Pay (All fees included)</Trans>
-            </Typography>
+            <Typography>{t("nft.market.pay")}</Typography>
           </Grid>
           <Grid item>
             <WICPPriceFormat imgSize="18px" price={userPay} />
@@ -245,18 +238,20 @@ export default function NFTBuyReview({
               size="large"
               startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
             >
-              <Trans>Confirm</Trans>
+              {t("common.confirm")}
             </AuthButton>
           )}
         </Identity>
       </Box>
       <Grid container sx={{ position: "relative" }} mt="12px" justifyContent="flex-start">
         <Typography color="text.primary" sx={{ "@media (max-width: 640px)": { fontSize: "12px" } }}>
-          <Trans>Balance:</Trans>{" "}
-          {tradeTokenBalance
-            ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()
-            : 0}{" "}
-          WICP
+          {t("common.balance.colon.amount", {
+            amount: `${
+              tradeTokenBalance
+                ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()
+                : 0
+            } WICP`,
+          })}
         </Typography>
         <Box sx={{ position: "absolute", right: "0", top: "0" }}>
           <TextButton to="/swap/v2/wrap" sx={{ fontWeight: "500", "@media (max-width: 640px)": { fontSize: "12px" } }}>

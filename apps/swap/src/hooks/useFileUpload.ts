@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { nftFile as fileActor } from "@icpswap/actor";
 import { network, NETWORK, host } from "constants/index";
-import { t } from "@lingui/macro";
 import { Identity } from "types/index";
 
 export interface UploadChunkRequest {
@@ -74,7 +73,7 @@ export default function useFileUpload({ canisterId, fileType }: { canisterId: st
 
     const chunkIds = await Promise.all(promises).catch((err) => {
       console.log(err);
-      setFileError(t`Failed to upload, please try again`);
+      setFileError(`Failed to upload, please try again`);
       setUploading(false);
     });
 

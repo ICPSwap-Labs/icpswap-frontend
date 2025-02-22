@@ -3,7 +3,6 @@ import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { usePositionWithPool } from "hooks/swap/index";
 import { LimitOrder, Null } from "@icpswap/types";
-import { Trans, t } from "@lingui/macro";
 import { useState, useCallback, useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
 import {
@@ -23,6 +22,7 @@ import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 import { CancelLimitConfirm } from "./CancelLimitConfirm";
 import { LimitDetails } from "./LimitDetails";
@@ -43,6 +43,7 @@ export function LimitOrderRow({
   onCancelSuccess,
   noBorder = false,
 }: LimitOrderRowProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { userPositionId: positionId, timestamp, token0InAmount, token1InAmount, tickLimit } = limitOrder;
@@ -99,7 +100,7 @@ export function LimitOrderRow({
       limit: limitOrder,
     });
 
-    const loadingKey = openLoadingTip(t`Cancel Limit Order`, {
+    const loadingKey = openLoadingTip(t("limit.cancel.loading.tips"), {
       extraContent: <StepViewButton step={key} />,
     });
 
@@ -162,9 +163,7 @@ export function LimitOrderRow({
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
-            <TextButton onClick={() => setShowLimitDetails(true)}>
-              <Trans>Cancel</Trans>
-            </TextButton>
+            <TextButton onClick={() => setShowLimitDetails(true)}>{t("common.cancel")}</TextButton>
           </BodyCell>
         </TableRow>
       ) : (

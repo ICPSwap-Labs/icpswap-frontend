@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "components/Mui";
 import { FilledTextField, TokenImage } from "components/index";
-import { Trans } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
@@ -15,6 +14,7 @@ import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
+import { useTranslation } from "react-i18next";
 
 interface SearchItemProps {
   tokenInfo: AllTokenOfSwapTokenInfo;
@@ -109,6 +109,7 @@ export interface SearchProps {
 }
 
 export function TokenSearch({ open, onClose }: SearchProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const history = useHistory();
@@ -227,7 +228,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 fullHeight
                 placeholder="Symbol / Name / Canister ID"
                 borderRadius="12px"
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       startAdornment: (
@@ -272,9 +273,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                 }}
               >
                 <HotIcon />
-                <Typography color="text.primary">
-                  <Trans>Hot Tokens:</Trans>
-                </Typography>
+                <Typography color="text.primary">{t("swap.hot.tokens.colon")}</Typography>
               </Box>
 
               <Box
@@ -310,7 +309,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
               <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
                 <NoDataIcon style={{ fontSize: "6rem" }} />
                 <Typography color="text.primary" sx={{ margin: "10px 0 0 0", fontSize: "18px" }}>
-                  <Trans>No result found</Trans>
+                  {t("common.no.result")}
                 </Typography>
               </Box>
             ) : (

@@ -8,9 +8,9 @@ import { useSwapPositionsMultipleFarm, useSortedPositions } from "hooks/swap/ind
 import { PositionContext } from "components/swap/index";
 import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
 import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
-import { Trans } from "@lingui/macro";
 import { useHistory } from "react-router-dom";
 import { TopLiveFarms } from "components/farm/TopLiveFarms";
+import { useTranslation } from "react-i18next";
 
 interface PositionItemProps {
   position: UserPositionForFarm;
@@ -46,6 +46,7 @@ interface StakedPositionsProps {
 }
 
 export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPositionsProps) {
+  const { t } = useTranslation();
   const history = useHistory();
   const principal = useAccountPrincipalString();
 
@@ -88,7 +89,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
 
           <Flex fullWidth justify="center">
             <Button size="large" sx={{ width: "240px" }} variant="contained" onClick={handleAddLiquidity}>
-              <Trans>Farm Your Liquidity</Trans>
+              {t("farm.your.liquidity")}
             </Button>
           </Flex>
 

@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Typography, Avatar, Box } from "@mui/material";
 import { pageArgsFormat, shortenString } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { ProposalInfo, ProjectInfo } from "@icpswap/types";
 import { Pagination, PaginationType, NoData, ImageLoading, MainCard } from "components/index";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
@@ -10,6 +9,8 @@ import { Select } from "components/Select";
 import { useAccount } from "store/auth/hooks";
 import removeMD from "remove-markdown";
 import { useVotingProposals } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
+import i18n from "i18n/index";
 
 export interface VoteItemProps {
   proposal: ProposalInfo;
@@ -52,11 +53,10 @@ export function VoteItem({ proposal, logo }: VoteItemProps) {
 }
 
 export const ProposalStateMens = [
-  { value: "all", label: t`All` },
-  { value: "active", label: t`Active` },
-  { value: "pending", label: t`Pending` },
-  { value: "closed", label: t`Closed` },
-  // { value: "your", label: "Your" },
+  { value: "all", label: i18n.t("common.all") },
+  { value: "active", label: i18n.t("common.active") },
+  { value: "pending", label: i18n.t("common.pending") },
+  { value: "closed", label: i18n.t("common.closed") },
 ];
 
 export const ProposalState: { [key: string]: number } = {
@@ -66,6 +66,7 @@ export const ProposalState: { [key: string]: number } = {
 };
 
 export default function Proposals({ project }: { project: ProjectInfo }) {
+  const { t } = useTranslation();
   const account = useAccount();
   const history = useHistory();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
@@ -103,9 +104,7 @@ export default function Proposals({ project }: { project: ProjectInfo }) {
     <MainCard>
       <Grid container alignItems="center">
         <Grid item xs>
-          <Typography variant="h3">
-            <Trans>Proposals</Trans>
-          </Typography>
+          <Typography variant="h3">{t("common.proposals")}</Typography>
         </Grid>
 
         <Select menus={ProposalStateMens} value={activeFilter} onChange={(value: any) => setActiveFilter(value)} />

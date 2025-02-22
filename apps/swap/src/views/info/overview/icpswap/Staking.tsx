@@ -1,15 +1,16 @@
 import { useContext, useEffect, useMemo } from "react";
-import { t } from "@lingui/macro";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { useStakeIntervalGlobalData } from "@icpswap/hooks";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { useICPPrice } from "store/global/hooks";
 import { Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 import { Item, Card } from "../component";
 import { IcpswapContext } from "./context";
 
 export function Staking() {
+  const { t } = useTranslation();
   const icpPrice = useICPPrice();
   const { setStakeTVL } = useContext(IcpswapContext);
 
@@ -54,26 +55,22 @@ export function Staking() {
         }
       >
         <Flex vertical gap="32px 0" align="flex-start" sx={{ margin: "32px 0 0 0" }}>
+          <Item label={t("common.tvl")} value={tvl ?? "--"} tooltip={t("common.tvl.tips")} />
           <Item
-            label={t`TVL`}
-            value={tvl ?? "--"}
-            tooltip={t`The cumulative value of tokens staked across all live pools.`}
-          />
-          <Item
-            label={t`Total Rewarding Value`}
+            label={t("common.total.rewarding.value")}
             value={rewardingValue ?? "--"}
-            tooltip={t`The total value of rewards distributed by live pools.`}
+            tooltip={t("stake.total.value.rewards.descriptions")}
           />
 
           <Item
-            label={t`Total Rewarded Value`}
+            label={t("common.total.rewarded.value")}
             value={rewardedValue ?? "--"}
             tooltip={t`The total value of rewards distributed by finished pools.`}
           />
           <Item
-            label={t`Total Pools`}
+            label={t("common.total.pools")}
             value={totalPools ?? "--"}
-            tooltip={t`The total number of pools, including those that are unstart, live, and finished.`}
+            tooltip={t("info.stake.total.pools.descriptions")}
           />
         </Flex>
       </Card>

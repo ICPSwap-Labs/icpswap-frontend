@@ -1,10 +1,10 @@
 import { Box } from "components/Mui";
 import { parseTokenAmount } from "@icpswap/utils";
-import { t } from "@lingui/macro";
 import { toFormat } from "utils/index";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
 import { getStepData } from "store/steps/hooks";
+import i18n from "i18n/index";
 
 export interface GetSteps {
   token: Token;
@@ -27,35 +27,33 @@ export function getUnstakeSteps({ token, amount, rewardToken, key }: GetSteps) {
 
   const steps: any[] = [
     {
-      title: t`Unstake ${token.symbol}`,
+      title: i18n.t("stake.unstake.symbol", { symbol: token.symbol }),
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount0Value,
         },
-        { label: t`Canister Id`, value: token.address },
+        { label: i18n.t("common.canister.id"), value: token.address },
       ],
     },
     {
-      title: t`Withdraw ${token.symbol}`,
+      title: i18n.t("common.withdraw.amount", { symbol: token.symbol }),
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: amount0Value,
         },
-        { label: t`Canister Id`, value: token.address },
+        { label: i18n.t("common.canister.id"), value: token.address },
       ],
     },
     {
-      title: t`Withdraw ${rewardToken.symbol}`,
+      title: i18n.t("common.withdraw.amount", { symbol: rewardToken.symbol }),
       children: [
         { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
       ],
       skipError:
-        data && Number(data) < rewardToken.transFee
-          ? t`The amount of withdrawal is less than the transfer fee`
-          : undefined,
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+        data && Number(data) < rewardToken.transFee ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
   ];
 

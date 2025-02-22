@@ -1,11 +1,11 @@
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid } from "components/Mui";
 import { Modal } from "components/index";
-import { t } from "@lingui/macro";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { Identity as CallIdentity } from "types/global";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { ResultStatus } from "@icpswap/types";
 import { deleteVotingProposal } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export default function DeleteProposal({
   open,
@@ -20,6 +20,7 @@ export default function DeleteProposal({
   canisterId: string;
   proposalId: string;
 }) {
+  const { t } = useTranslation();
   const [openTip, closeTip] = useTips();
 
   const handleDeleteProposal = async (identity: CallIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
@@ -48,7 +49,7 @@ export default function DeleteProposal({
         <Modal
           open={open}
           onClose={onClose}
-          title={t`Delete Proposal`}
+          title={t("vote.delete.proposal")}
           onConfirm={submit}
           onCancel={onClose}
           showCancel

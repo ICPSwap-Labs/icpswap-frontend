@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { useCallback, useMemo, useState } from "react";
 import { retrieveBTC, useApprove } from "hooks/ck-btc";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -33,7 +32,7 @@ export function useDissolve() {
       const { status, message } = await approve({ amount: approveAmount });
 
       if (status === ResultStatus.ERROR) {
-        openTip(message ?? t`Failed to approve ckBTC`, MessageTypes.error);
+        openTip(message ?? `Failed to approve ckBTC`, MessageTypes.error);
         setLoading(false);
         return;
       }
@@ -41,9 +40,9 @@ export function useDissolve() {
       const { status: dissolveResult, message: dissolveMessage, data } = await retrieveBTC(address, approveAmount);
 
       if (dissolveResult === ResultStatus.ERROR) {
-        openTip(dissolveMessage ?? t`Failed to dissolve`, MessageTypes.error);
+        openTip(dissolveMessage ?? `Failed to dissolve`, MessageTypes.error);
       } else {
-        openTip(t`Dissolve successfully`, MessageTypes.success);
+        openTip(`Dissolve successfully`, MessageTypes.success);
         if (data?.block_index) {
           updateUserTx(principal, data.block_index, undefined, approveAmount.toString());
         }

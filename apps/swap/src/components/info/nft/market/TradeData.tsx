@@ -1,10 +1,10 @@
 import React from "react";
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography } from "components/Mui";
 import { MainCard } from "@icpswap/ui";
-import { t } from "@lingui/macro";
 import { parseTokenAmount, formatAmount } from "@icpswap/utils";
 import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { useNFTTradeData } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 export function DataItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -25,6 +25,7 @@ export function DataItem({ label, value }: { label: string; value: React.ReactNo
 }
 
 export function TradeData() {
+  const { t } = useTranslation();
   const { result } = useNFTTradeData();
 
   return (
@@ -40,14 +41,14 @@ export function TradeData() {
             />
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
-            <DataItem label={t`Transactions`} value={formatAmount(Number(result?.totalVolume ?? 0))} />
+            <DataItem label={t("common.transactions")} value={formatAmount(Number(result?.totalVolume ?? 0))} />
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <DataItem label={t`Listings`} value={formatAmount(Number(result?.listSize ?? 0))} />
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <DataItem
-              label={t`Average Price`}
+              label={t("common.average.price")}
               value={formatAmount(parseTokenAmount(result?.avgPrice ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber())}
             />
           </Grid>

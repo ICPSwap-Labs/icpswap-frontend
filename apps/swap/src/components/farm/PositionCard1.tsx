@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { Typography } from "components/Mui";
 import { Flex, MainCard } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { getPriceOrderingFromPositionForUI, useInverter, Position } from "@icpswap/swap-sdk";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useTranslation } from "react-i18next";
 
 import PositionRangeState from "./PositionState";
 
@@ -15,6 +15,8 @@ export interface UnStakingModalProps {
 }
 
 export function PositionCard({ position, positionId }: UnStakingModalProps) {
+  const { t } = useTranslation();
+
   const { token0, token1, outOfRange, token0Amount, token1Amount, pool, tickLower, tickUpper } = useMemo(() => {
     const pool = position?.pool;
     const tickUpper = position?.tickUpper;
@@ -88,9 +90,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-end">
-          <Typography>
-            <Trans>{token0 ? token0.symbol : "--"} Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount.with.symbol", { symbol: token0 ? token0.symbol : "--" })}</Typography>
 
           <Typography color="text.primary">
             <>{token0 && token0Amount ? `${token0Amount} ${token0.symbol}` : "--"}</>
@@ -98,9 +98,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-end">
-          <Typography>
-            <Trans>{token1 ? token1.symbol : "--"} Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount.with.symbol", { symbol: token1 ? token1.symbol : "--" })}</Typography>
 
           <Typography color="text.primary">
             <>{token1 && token1Amount ? `${token1Amount} ${token1.symbol}` : "--"}</>
@@ -108,9 +106,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-end">
-          <Typography>
-            <Trans>Current Price</Trans>
-          </Typography>
+          <Typography>{t("common.current.price")}</Typography>
 
           <Typography color="text.primary" textAlign="right">
             {!!token1 && !!token0 && pool
@@ -122,9 +118,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between" align="flex-end">
-          <Typography>
-            <Trans>Price Range</Trans>
-          </Typography>
+          <Typography>{t("common.price.range")}</Typography>
 
           <Typography color="text.primary" textAlign="right">
             {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useImperativeHandle } from "react";
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex, MainCard } from "@icpswap/ui";
 import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
@@ -9,6 +8,7 @@ import { TokenImage } from "components/index";
 import { PriceMutator } from "components/swap/limit-order/PriceMutator";
 import { SwapInput } from "components/swap/index";
 import { priceToClosestUseableTick, inputValueFormat } from "utils/swap/limit-order";
+import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";
 
@@ -46,6 +46,7 @@ export const SwapLimitPrice = forwardRef(
     }: SwapLimitPriceProps,
     ref,
   ) => {
+    const { t } = useTranslation();
     const [inputValue, setInputValue] = useState<string | Null>(null);
     const [minPrice, setMinPrice] = useState<string | Null>(null);
 
@@ -281,9 +282,7 @@ export const SwapLimitPrice = forwardRef(
         <Box sx={{ display: "grid", gap: "16px 0", gridTemplateColumns: "1fr" }}>
           <Flex fullWidth justify="space-between">
             <Flex gap="0 4px">
-              <Typography>
-                <Trans>When</Trans>
-              </Typography>
+              <Typography>{t("common.when")}</Typography>
 
               <Typography color="text.primary" component="div" sx={{ display: "flex", gap: "0 4px" }}>
                 1 <TokenImage size="16px" logo={inputTokenInverted?.logo} tokenId={inputTokenInverted?.address} />{" "}

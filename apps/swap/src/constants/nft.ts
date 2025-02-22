@@ -1,5 +1,6 @@
 import { V3SwapNFTCanisterId } from "constants/canister";
 import V2Ids from "constants/swap-v2-ids.json";
+import i18n from "i18n";
 
 export const OFFICIAL_CANISTER_IDS = [
   "e7xmv-vyaaa-aaaag-qahha-cai",
@@ -74,7 +75,7 @@ export const SOCIAL_LINKS: SOCIAL_LINK_TYPE[] = [
   },
 
   {
-    label: "Other",
+    label: i18n.t("common.other"),
     id: "Other",
     value: "Other",
   },

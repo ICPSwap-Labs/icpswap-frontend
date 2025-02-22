@@ -6,6 +6,7 @@ import { Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
 import { SelectPair } from "components/Select/SelectPair";
 import { useLimitOrders } from "hooks/swap/limit-order/useLimitOrders";
+import { useTranslation } from "react-i18next";
 
 import { LimitOrder } from "./LimitOrder";
 
@@ -15,6 +16,7 @@ export interface LimitOrdersProps {
 }
 
 export function LimitOrders({ pool: __pool }: LimitOrdersProps) {
+  const { t } = useTranslation();
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("LimitOrders");
   const [pair, setPair] = useState<Null | string>(null);
 
@@ -42,7 +44,7 @@ export function LimitOrders({ pool: __pool }: LimitOrdersProps) {
       <Box sx={{ margin: "18px 0 0 0" }}>
         <Flex vertical gap="16px 0" fullWidth align="flex-start">
           <Flex gap="0 4px">
-            <Typography>Select a pair: </Typography>
+            <Typography>{t("common.select.pair.colon")}</Typography>
             <SelectPair
               value={pair}
               panelPadding="0"

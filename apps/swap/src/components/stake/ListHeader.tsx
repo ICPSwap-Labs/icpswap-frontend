@@ -1,7 +1,7 @@
 import { Box } from "components/Mui";
 import { Flex } from "components/index";
-import { Trans } from "@lingui/macro";
 import { HeaderCell } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface PoolListHeaderProps {
   showState: boolean;
@@ -12,6 +12,8 @@ export interface PoolListHeaderProps {
 }
 
 export function PoolListHeader({ id, showState, finished, gridTemplateColumns, your }: PoolListHeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <Box
       id={id}
@@ -29,61 +31,43 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
         },
       }}
     >
-      <HeaderCell className="row-item">
-        <Trans>Staked Token</Trans>
-      </HeaderCell>
-      <HeaderCell className="row-item">
-        <Trans>Reward Token</Trans>
-      </HeaderCell>
+      <HeaderCell className="row-item">{t("stake.token")}</HeaderCell>
+      <HeaderCell className="row-item">{t("common.reward.token")}</HeaderCell>
       <Flex justify="flex-end" className="row-item">
-        <HeaderCell>
-          <Trans>APR</Trans>
-        </HeaderCell>
+        <HeaderCell>{t("common.apr")}</HeaderCell>
       </Flex>
 
       {finished ? null : (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Available to Stake</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("common.your.available.stake")}</HeaderCell>
         </Flex>
       )}
 
       {your || finished ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Staked</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.your.staked")}</HeaderCell>
         </Flex>
       ) : null}
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Rewards</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.your.rewards")}</HeaderCell>
         </Flex>
       ) : finished ? null : (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Total Staked</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.total.staked")}</HeaderCell>
         </Flex>
       )}
 
       {finished ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Total Reward Tokens</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.total.reward.tokens")}</HeaderCell>
         </Flex>
       ) : null}
 
       {showState ? (
         <Flex justify="flex-end">
-          <HeaderCell className="row-item">
-            <Trans>Status</Trans>
-          </HeaderCell>
+          <HeaderCell className="row-item">{t("common.state")}</HeaderCell>
         </Flex>
       ) : null}
     </Box>

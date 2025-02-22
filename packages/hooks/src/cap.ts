@@ -1,20 +1,18 @@
+/* eslint-disable no-param-reassign */
 import { useCallback } from "react";
-import { useCallsData } from "./useCallData";
 import { cap, cap_router } from "@icpswap/actor";
 import { resultFormat, enumToString } from "@icpswap/utils";
-import type { PaginationResult } from "@icpswap/types";
+import type { PaginationResult, TokenTransaction, TokenTransType } from "@icpswap/types";
 import type { GetTokenContractRootBucketResponse } from "@icpswap/candid";
 import { Principal } from "@dfinity/principal";
-import type { TokenTransaction, TokenTransType } from "@icpswap/types";
+import { useCallsData } from "./useCallData";
 
 export async function getCapHistorySize(canisterId: string) {
   return await (await cap(canisterId)).size();
 }
 
 export function useCapHistorySize(canisterId: string) {
-  return useCallsData<bigint>(
-    useCallback(async () => await getCapHistorySize(canisterId), [canisterId])
-  );
+  return useCallsData<bigint>(useCallback(async () => await getCapHistorySize(canisterId), [canisterId]));
 }
 
 function SliceFormat(amount: any) {
@@ -34,8 +32,7 @@ function SliceFormat(amount: any) {
     return value;
   }
 
-  return amount instanceof Array &&
-    !amount.some((value) => typeof value !== "number")
+  return amount instanceof Array && !amount.some((value) => typeof value !== "number")
     ? lebDecode(Uint8Array.from(amount))
     : amount;
 }
@@ -43,42 +40,44 @@ function SliceFormat(amount: any) {
 export function detailValueFormat(detailValue: any) {
   if (detailValue.Principal) {
     return detailValue.Principal.toString() as string;
-  } else if (detailValue.Float) {
+  }
+  if (detailValue.Float) {
     return detailValue.Float;
-  } else if (detailValue.False) {
+  }
+  if (detailValue.False) {
     return detailValue.False;
-  } else if (detailValue.True) {
+  }
+  if (detailValue.True) {
     return detailValue.True;
-  } else if (detailValue.I64) {
+  }
+  if (detailValue.I64) {
     return detailValue.I64;
-  } else if (detailValue.U64) {
+  }
+  if (detailValue.U64) {
     return detailValue.U64;
-  } else if (detailValue.TokenIdU64) {
+  }
+  if (detailValue.TokenIdU64) {
     return String(detailValue.TokenIdU64);
-  } else if (detailValue.Text) {
+  }
+  if (detailValue.Text) {
     return String(detailValue.Text);
-  } else if (detailValue.Slice && detailValue.Slice.length > 0) {
+  }
+  if (detailValue.Slice && detailValue.Slice.length > 0) {
     return SliceFormat(detailValue.Slice);
   }
 }
 
 export function detailsFormatter(details: any): { [key: string]: any } {
-  let obj = {};
+  const obj = {};
   details.forEach((detail) => {
     obj[detail[0]] = detailValueFormat(detail[1]);
   });
   return obj;
 }
 
-export async function getCapTransactions(
-  canisterId: string,
-  witness: boolean,
-  offset: number
-) {
+export async function getCapTransactions(canisterId: string, witness: boolean, offset: number) {
   const totalElements = await getCapHistorySize(canisterId!);
-  const totalPage =
-    parseInt(String(Number(totalElements) / 64)) +
-    (Number(totalElements) % 64 === 0 ? 0 : 1);
+  const totalPage = parseInt(String(Number(totalElements) / 64)) + (Number(totalElements) % 64 === 0 ? 0 : 1);
   const page = parseInt(String(offset / 64)) + 1;
 
   if (totalPage - page < 0 && totalPage !== 0) {
@@ -101,19 +100,19 @@ export async function getCapTransactions(
     const details = detailsFormatter(_data.details);
 
     return {
-      timestamp: details["timestamp"] ?? _data.time * BigInt(1000000),
-      hash: details["hash"] ?? "",
-      fee: details["fee"],
-      from_owner: details["from"] ?? _data.caller.toString() ?? "",
+      timestamp: details.timestamp ?? _data.time * BigInt(1000000),
+      hash: details.hash ?? "",
+      fee: details.fee,
+      from_owner: details.from ?? _data.caller.toString() ?? "",
       from_account: "",
       from_sub: undefined,
-      to_owner: details["to"] ?? "",
+      to_owner: details.to ?? "",
       to_account: "",
       to_sub: undefined,
       transType: enumToString({ [_data.operation]: null } as TokenTransType),
-      amount: details["value"] ?? details["amount"] ?? "",
+      amount: details.value ?? details.amount ?? "",
       index: BigInt(0),
-      memo: details["memo"] ?? [],
+      memo: details.memo ?? [],
       status: "Complete",
     };
   });
@@ -126,16 +125,12 @@ export async function getCapTransactions(
   };
 }
 
-export function useCapTransactions(
-  canisterId: string | undefined,
-  witness: boolean,
-  offset: number
-) {
+export function useCapTransactions(canisterId: string | undefined, witness: boolean, offset: number) {
   return useCallsData<PaginationResult<TokenTransaction>>(
     useCallback(async () => {
       return await getCapTransactions(canisterId!, witness, offset);
     }, [canisterId, offset]),
-    !!canisterId
+    !!canisterId,
   );
 }
 
@@ -143,7 +138,7 @@ export async function getCapUserTransactions(
   canisterId: string,
   principal: Principal,
   witness: boolean,
-  offset: number
+  offset: number,
 ) {
   const default_result = await (
     await cap(canisterId!)
@@ -178,25 +173,25 @@ export async function getCapUserTransactions(
     const details = detailsFormatter(_data.details);
 
     return {
-      timestamp: details["timestamp"] ?? _data.time * BigInt(1000000),
-      hash: details["hash"] ?? "",
-      fee: details["fee"] ?? BigInt(0),
-      from_owner: details["from"] ?? _data.caller.toString() ?? "",
+      timestamp: details.timestamp ?? _data.time * BigInt(1000000),
+      hash: details.hash ?? "",
+      fee: details.fee ?? BigInt(0),
+      from_owner: details.from ?? _data.caller.toString() ?? "",
       from_account: "",
       from_sub: undefined,
-      to_owner: details["to"] ?? "",
+      to_owner: details.to ?? "",
       to_account: "",
       to_sub: undefined,
       transType: enumToString({ [_data.operation]: null } as TokenTransType),
-      amount: details["value"] ?? details["amount"] ?? "",
+      amount: details.value ?? details.amount ?? "",
       index: BigInt(0),
-      memo: details["memo"] ?? [],
+      memo: details.memo ?? [],
       status: "Complete",
     };
   });
 
   return {
-    totalElements: totalElements,
+    totalElements,
     offset,
     limit: 64,
     content: transactions.reverse(),
@@ -207,18 +202,13 @@ export function useCapUserTransactions(
   canisterId: string | undefined,
   principal: Principal | undefined,
   witness: boolean,
-  offset: number
+  offset: number,
 ) {
   return useCallsData<PaginationResult<TokenTransaction>>(
     useCallback(async () => {
-      return await getCapUserTransactions(
-        canisterId!,
-        principal!,
-        witness,
-        offset
-      );
+      return await getCapUserTransactions(canisterId!, principal!, witness, offset);
     }, [canisterId, offset]),
-    !!canisterId && !!principal
+    !!canisterId && !!principal,
   );
 }
 
@@ -229,22 +219,17 @@ export async function getCapRootId(canisterId: string, witness?: boolean) {
     ).get_token_contract_root_bucket({
       canister: Principal.fromText(canisterId),
       witness: witness ?? false,
-    })
+    }),
   ).data;
 
-  return result?.canister && result?.canister[0]
-    ? result?.canister[0]
-    : undefined;
+  return result?.canister && result?.canister[0] ? result?.canister[0] : undefined;
 }
 
-export function useCapRootId(
-  canisterId: string | undefined,
-  witness?: boolean
-) {
+export function useCapRootId(canisterId: string | undefined, witness?: boolean) {
   return useCallsData<Principal>(
     useCallback(async () => {
       return await getCapRootId(canisterId!, witness);
     }, [canisterId, witness]),
-    !!canisterId
+    !!canisterId,
   );
 }

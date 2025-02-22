@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import { Button, Box, CircularProgress, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { t, Trans } from "@lingui/macro";
 import { useTips } from "hooks/useTips";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { Modal } from "components/index";
 import { type FarmInfo, ResultStatus, InitFarmArgs } from "@icpswap/types";
 import { farmUnstake, farmWithdraw } from "@icpswap/hooks";
@@ -11,6 +10,7 @@ import { Position, Token } from "@icpswap/swap-sdk";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useIntervalUserRewardInfo } from "hooks/staking-farm";
+import { useTranslation } from "react-i18next";
 
 import { PositionCard } from "./PositionCard1";
 
@@ -36,6 +36,7 @@ export function Unstake({
   positionId,
   rewardToken,
 }: UnStakingModalProps) {
+  const { t } = useTranslation();
   const [openTip] = useTips();
 
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -61,11 +62,11 @@ export function Unstake({
 
     if (status === ResultStatus.OK) {
       await farmWithdraw(farmId);
-      openTip(getLocaleMessage(message) ?? t`Unstake successfully`, ResultStatus.OK);
+      openTip("Unstake successfully", ResultStatus.OK);
 
       if (resetData) resetData();
     } else {
-      openTip(getLocaleMessage(message) ?? t`Failed to unstake`, ResultStatus.ERROR);
+      openTip(getLocaleMessage(message) ?? message, ResultStatus.ERROR);
     }
 
     setConfirmLoading(false);
@@ -76,9 +77,7 @@ export function Unstake({
   return (
     <Modal open={open} onClose={onClose} title={t`Unstake`} background="level1">
       <Flex>
-        <Typography>
-          <Trans>Reward Token</Trans>
-        </Typography>
+        <Typography>{t("common.reward.token")}</Typography>
       </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", color: "text.primary", fontSize: "20px", fontWeight: 600 }}>

@@ -1,9 +1,9 @@
 import { Box, Typography, Button } from "components/Mui";
 import { BURN_FIELD } from "constants/swap";
-import { Trans } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { toFormat } from "utils/index";
 import { Flex, TokenImage, Modal } from "components/index";
+import { useTranslation } from "react-i18next";
 
 interface DecreaseLiquidityConfirmProps {
   open: boolean;
@@ -22,8 +22,10 @@ export function DecreaseLiquidityConfirm({
   currencyA,
   currencyB,
 }: DecreaseLiquidityConfirmProps) {
+  const { t } = useTranslation();
+
   return (
-    <Modal open={open} onClose={onCancel} title="Remove Liquidity">
+    <Modal open={open} onClose={onCancel} title={t("swap.remove.liquidity")}>
       <Box>
         <Flex fullWidth justify="space-between">
           <Flex gap="0 8px">
@@ -43,7 +45,7 @@ export function DecreaseLiquidityConfirm({
       </Box>
 
       <Button variant="contained" size="large" fullWidth sx={{ marginTop: "40px" }} onClick={onConfirm}>
-        <Trans>Remove</Trans>
+        {t("common.remove")}
       </Button>
     </Modal>
   );

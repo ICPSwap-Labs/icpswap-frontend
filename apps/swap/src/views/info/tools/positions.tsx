@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -9,8 +8,10 @@ import { useHistory, useLocation } from "react-router-dom";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
 import { PositionTable } from "components/liquidity/index";
+import { useTranslation } from "react-i18next";
 
 export default function Positions() {
+  const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
   const { pair: pairFromUrl, principal } = useParsedQueryString() as {
@@ -33,14 +34,12 @@ export default function Positions() {
 
   return (
     <InfoWrapper size="small">
-      <BreadcrumbsV1
-        links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>Positions</Trans> }]}
-      />
+      <BreadcrumbsV1 links={[{ label: t("common.tools"), link: "/info-tools" }, { label: t("common.positions") }]} />
 
       <Box sx={{ height: "20px", width: "100%" }} />
 
       <ToolsWrapper
-        title={<Trans>Positions</Trans>}
+        title={t("common.positions")}
         action={
           <Box
             sx={{
@@ -59,9 +58,7 @@ export default function Positions() {
             />
 
             <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
-              <Typography>
-                <Trans>Select a Pair:</Trans>
-              </Typography>
+              <Typography>{t("common.select.pair.colon")}</Typography>
 
               <SelectPair
                 value={pair}
@@ -70,11 +67,7 @@ export default function Positions() {
                 showClean={false}
                 showBackground={false}
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>Please select</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.please.select")}</Typography>}
               />
             </Flex>
 

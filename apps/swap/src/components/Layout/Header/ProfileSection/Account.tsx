@@ -1,9 +1,11 @@
 import { explorerLink, principalToAccount } from "@icpswap/utils";
-import { t } from "@lingui/macro";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
+
 import { AddressSection } from "./Address";
 
 export function AccountSection() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
 
   return (

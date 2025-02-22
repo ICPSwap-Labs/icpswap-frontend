@@ -10,7 +10,6 @@ import {
   InfoWrapper,
 } from "components/index";
 import { type AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
-import { Trans, t } from "@lingui/macro";
 import { useTokenMintingAccount } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -19,8 +18,10 @@ import { parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { BreadcrumbsV1 } from "@icpswap/ui";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
 import { icrc_standards } from "constants/swap";
+import { useTranslation } from "react-i18next";
 
 export default function Burn() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
@@ -47,13 +48,12 @@ export default function Burn() {
   };
 
   const error = useMemo(() => {
-    if (!tokenId) return t`Select a token`;
-    if (!token || !balance || !mintingAccount) return t`Waiting to fetch data`;
-    if (!amount) return t`Enter the amount`;
-    if (new BigNumber(amount).isEqualTo(0)) return t`Must be greater than 0`;
-
+    if (!tokenId) return t("common.select.a.token");
+    if (!token || !balance || !mintingAccount) return t("common.waiting.fetching");
+    if (!amount) return t("common.enter.input.amount");
+    if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
     if (parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount))
-      return t`Insufficient Balance`;
+      return t("common.error.insufficient.balance");
   }, [amount, balance, token, mintingAccount, tokenId]);
 
   const showMax = useMemo(() => {
@@ -64,20 +64,18 @@ export default function Burn() {
 
   return (
     <InfoWrapper size="small">
-      <BreadcrumbsV1 links={[{ link: "/info-tools", label: <Trans>Tools</Trans> }, { label: <Trans>Burn</Trans> }]} />
+      <BreadcrumbsV1 links={[{ link: "/info-tools", label: t("common.tools") }, { label: t("common.burn") }]} />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Box sx={{ width: "100%", maxWidth: "474px", padding: "28px 0" }}>
             <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
-              <Trans>Confirm Burn</Trans>
+              {t("common.confirm")}
             </Typography>
 
             <Box sx={{ margin: "32px 0 0 0" }}>
               <Box>
-                <Typography sx={{ fontSize: "16px" }}>
-                  <Trans>Token</Trans>
-                </Typography>
+                <Typography sx={{ fontSize: "16px" }}>{t("common.token")}</Typography>
 
                 <Box sx={{ margin: "12px 0 0 0" }}>
                   <Box sx={{ height: "48px" }}>
@@ -96,9 +94,7 @@ export default function Burn() {
               </Box>
 
               <Box sx={{ margin: "24px 0 0 0" }}>
-                <Typography sx={{ fontSize: "16px" }}>
-                  <Trans>Minting Account</Trans>
-                </Typography>
+                <Typography sx={{ fontSize: "16px" }}>{t("tools.minting.account")}</Typography>
 
                 <Box sx={{ margin: "12px 0 0 0" }}>
                   <FilledTextField border="none" disabled value={mintingAccount?.owner} />
@@ -106,9 +102,7 @@ export default function Burn() {
               </Box>
 
               <Box sx={{ margin: "24px 0 0 0" }}>
-                <Typography sx={{ fontSize: "16px" }}>
-                  <Trans>Amount</Trans>
-                </Typography>
+                <Typography sx={{ fontSize: "16px" }}>{t("common.amount")}</Typography>
 
                 <Box sx={{ margin: "12px 0 0 0" }}>
                   <NumberFilledTextField
@@ -127,11 +121,9 @@ export default function Burn() {
 
               <Box sx={{ margin: "20px 0 0 0", display: "flex", gap: "0 8px", alignItems: "center" }}>
                 <Typography>
-                  <Trans>Balance:</Trans>
-                  &nbsp;
-                  <Typography component="span">
-                    {token && balance ? parseTokenAmount(balance, token.decimals).toFormat() : "--"}
-                  </Typography>
+                  {t("common.balance.colon.amount", {
+                    amount: `${token && balance ? parseTokenAmount(balance, token.decimals).toFormat() : "--"}`,
+                  })}
                 </Typography>
                 {showMax ? <MaxButton background="rgba(86, 105, 220, 0.50)" onClick={handleMax} /> : null}
               </Box>
@@ -144,7 +136,7 @@ export default function Burn() {
                   onClick={() => setConfirmModalOpen(true)}
                   disabled={error !== undefined}
                 >
-                  {error ?? <Trans>Burn</Trans>}
+                  {error ?? t("common.burn")}
                 </AuthButton>
               </Box>
             </Box>

@@ -1,11 +1,9 @@
 import React from "react";
-import { Grid, Box, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
 import { NumberTextField, TokenImage } from "components/index";
 import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -48,6 +46,7 @@ export default function DecreaseLiquidityInput({
   onUserInput,
   totalAmount,
 }: DecreaseLiquidityInputProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const decimals = currency?.decimals ?? SAFE_DECIMALS_LENGTH;
@@ -74,8 +73,10 @@ export default function DecreaseLiquidityInput({
               allowNegative: false,
               maxLength: MAX_SWAP_INPUT_LENGTH,
             }}
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               onUserInput(e.target.value);
@@ -85,7 +86,7 @@ export default function DecreaseLiquidityInput({
       </Grid>
       <Box mt={1}>
         <Typography fontSize="12px">
-          <Trans>Total Amount:</Trans> {totalAmount} {currency?.symbol}
+          {t("common.total.amount", { amount: `${totalAmount} ${currency?.symbol}` })}
         </Typography>
       </Box>
     </Box>

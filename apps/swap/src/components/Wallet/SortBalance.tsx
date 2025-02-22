@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { t } from "@lingui/macro";
 import { SortBalanceEnum } from "types/index";
+import i18n from "i18n/index";
 
 const menus: { label: string; value: SortBalanceEnum }[] = [
-  { label: t`All Balance`, value: SortBalanceEnum.ALL },
-  { label: t`Hide <$10 Balance`, value: SortBalanceEnum.TEN },
-  { label: t`Hide <$1 Balance`, value: SortBalanceEnum.ONE },
-  { label: t`Hide $0 Balance`, value: SortBalanceEnum.ZERO },
+  { label: i18n.t("common.all.balance"), value: SortBalanceEnum.ALL },
+  { label: i18n.t("common.hide.$10.balance"), value: SortBalanceEnum.TEN },
+  { label: i18n.t("common.hide.$1.balance"), value: SortBalanceEnum.ONE },
+  { label: i18n.t("common.hide.$0.balance"), value: SortBalanceEnum.ZERO },
 ];
 
 export interface SortBalanceProps {

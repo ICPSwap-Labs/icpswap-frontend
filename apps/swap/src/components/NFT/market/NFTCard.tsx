@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Typography, Button, Box, useTheme, makeStyles, Theme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { TradeOrder } from "types";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
@@ -11,6 +10,7 @@ import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import NFTAvatar from "components/NFT/NFTAvatar";
+import { useTranslation } from "react-i18next";
 
 export const BorderColor = "#2F3C6D";
 
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export default function NFTCard({ order }: { order: TradeOrder }) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const account = useAccount();
@@ -147,7 +148,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
                   borderRadius: "4px",
                 }}
               >
-                <Trans>Buy</Trans>
+                {t("common.buy")}
               </Button>
             )}
           </Grid>

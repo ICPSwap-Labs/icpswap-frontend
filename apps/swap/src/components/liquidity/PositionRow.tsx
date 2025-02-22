@@ -13,7 +13,7 @@ import { useUSDPriceById } from "hooks/useUSDPrice";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Null } from "@icpswap/types";
 import { useIsSneedOwner } from "hooks/index";
-import { Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 enum Bound {
   LOWER = "LOWER",
@@ -37,6 +37,7 @@ export function PositionRow({
   wrapperClassName,
   allLimitOrders,
 }: PositionRowProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -128,7 +129,7 @@ export function PositionRow({
               <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
             </Copy>
 
-            <IsSneedOwner isSneed={isSneed} tooltip={<Trans>The position is locked in Sneed.</Trans>} />
+            <IsSneedOwner isSneed={isSneed} tooltip={t("liquidity.locked.snned")} />
           </BodyCell>
 
           <BodyCell>{totalUSDValue ? `${formatDollarAmount(totalUSDValue)}` : "--"}</BodyCell>
@@ -189,9 +190,7 @@ export function PositionRow({
           {showDetails ? (
             <BodyCell sx={{ flexDirection: "column" }}>
               <Link to={`/liquidity/position/${positionInfo.id}/${pool.id}`}>
-                <Typography color="text.theme-secondary">
-                  <Trans>Details</Trans>
-                </Typography>
+                <Typography color="text.theme-secondary">{t("common.details")}</Typography>
               </Link>
             </BodyCell>
           ) : null}

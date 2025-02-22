@@ -5,7 +5,8 @@ import { MainCard, Breadcrumbs, Wrapper } from "components/index";
 import NFTTransactions from "components/NFT/NFTTransactions";
 import NFTActivity from "components/NFT/NFTActivity";
 import NFTInfo from "components/NFT/Info";
-import { Trans, t } from "@lingui/macro";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 export type Tab = {
   key: string;
@@ -14,11 +15,12 @@ export type Tab = {
 };
 
 const TabList: Tab[] = [
-  { key: "Transactions", value: t`Transactions`, component: NFTTransactions },
-  { key: "Activity", value: t`Activity`, component: NFTActivity },
+  { key: "Transactions", value: i18n.t("common.transactions"), component: NFTTransactions },
+  { key: "Activity", value: i18n.t("common.activity"), component: NFTActivity },
 ];
 
 export default function NFTView({ isWallet = false }: { isWallet?: boolean }) {
+  const { t } = useTranslation();
   const { canisterId, tokenId } = useParams<{ canisterId: string; tokenId: string }>();
 
   const [tab, setTab] = useState<Tab>(TabList[0]);
@@ -38,8 +40,8 @@ export default function NFTView({ isWallet = false }: { isWallet?: boolean }) {
         <Box sx={{ margin: "0 0 20px 0" }}>
           <Breadcrumbs
             prevLink={isWallet ? `/wallet/nft/canister/details/${canisterId}` : "/marketplace/NFT"}
-            prevLabel={isWallet ? "NFT List" : "Marketplace"}
-            currentLabel={<Trans>NFT Details</Trans>}
+            prevLabel={isWallet ? t("nft.list") : t("nft.marketplace")}
+            currentLabel={t("nft.details")}
           />
         </Box>
 

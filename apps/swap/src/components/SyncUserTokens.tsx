@@ -1,14 +1,15 @@
 import { useCallback, useState } from "react";
 import { Typography, CircularProgress } from "components/Mui";
-import { t, Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { getHelperUserTokens } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, nonNullArgs } from "@icpswap/utils";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { useTips, MessageTypes } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 export function SyncUserTokens() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const { updateTaggedTokens, taggedTokens } = useTaggedTokenManager();
   const [openTip] = useTips();
@@ -45,9 +46,7 @@ export function SyncUserTokens() {
 
   return (
     <Flex gap="0 4px" onClick={handleSync} sx={{ cursor: "pointer" }}>
-      <Typography align="center">
-        {loading ? <Trans>Syncing your tokens...</Trans> : <Trans>Sync your tokens here</Trans>}
-      </Typography>
+      <Typography align="center">{loading ? t("wallet.token.sync.loading") : t("wallet.token.sync")}</Typography>
       <Flex
         sx={{
           color: "#ffffff",

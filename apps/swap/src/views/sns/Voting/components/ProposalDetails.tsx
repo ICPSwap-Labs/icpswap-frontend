@@ -1,11 +1,11 @@
-import { Box, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography } from "components/Mui";
 import { useMemo } from "react";
 import type { ProposalData } from "@icpswap/types";
 import { shorten, nowInSeconds, toHexString } from "@icpswap/utils";
 import { useParams } from "react-router-dom";
 import { Copy } from "components/Copy/icon";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 import { convertProposalNumberToText, snsRewardStatus, SnsRewordsText } from "../proposal.utils";
 
@@ -28,6 +28,7 @@ export interface ProposalDetailsProps {
 }
 
 export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
+  const { t } = useTranslation();
   const { proposal_id } = useParams<{ governance_id: string; proposal_id: string }>();
 
   const { isExecuted, proposer } = useMemo(() => {
@@ -53,30 +54,30 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
   return (
     <Box>
       <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "16px" }}>
-        <Trans>Proposal Details</Trans>
+        {t("nns.proposal.details")}
       </Typography>
 
       <Box sx={{ margin: "20px 0 0 0" }}>
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
-          <ProposalDetailItem label={<Trans>Proposal ID</Trans>} value={proposal_id} />
+          <ProposalDetailItem label={t("nns.proposal.id")} value={proposal_id} />
 
           <ProposalDetailItem
-            label={<Trans>Type</Trans>}
+            label={t("common.type")}
             value={proposal_data ? convertProposalNumberToText(proposal_data?.action) : "--"}
           />
 
           <ProposalDetailItem
-            label={<Trans>Status</Trans>}
-            value={<Typography>{isExecuted ? <Trans>Executed</Trans> : <Trans>Open</Trans>}</Typography>}
+            label={t("common.status")}
+            value={<Typography>{isExecuted ? t("common.executed") : t("common.open")}</Typography>}
           />
 
           <ProposalDetailItem
-            label={<Trans>Reward Status</Trans>}
+            label={t("nns.voting.reward.status")}
             value={<Typography>{proposal_data ? SnsRewordsText[snsRewardStatus(proposal_data)] : "--"}</Typography>}
           />
 
           <ProposalDetailItem
-            label={<Trans>Created</Trans>}
+            label={t("common.created")}
             value={
               <Typography>
                 {proposal_data?.proposal_creation_timestamp_seconds
@@ -91,7 +92,7 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
           {isExecuted ? (
             <>
               <ProposalDetailItem
-                label={<Trans>Decided</Trans>}
+                label={t("common.decided")}
                 value={
                   <Typography>
                     {proposal_data?.decided_timestamp_seconds
@@ -104,7 +105,7 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
               />
 
               <ProposalDetailItem
-                label={<Trans>Executed</Trans>}
+                label={t("common.executed")}
                 value={
                   <Typography>
                     {proposal_data?.executed_timestamp_seconds
@@ -119,7 +120,7 @@ export function ProposalDetails({ proposal_data }: ProposalDetailsProps) {
           ) : null}
 
           <ProposalDetailItem
-            label={<Trans>Proposer</Trans>}
+            label={t("nns.voting.proposer")}
             value={
               proposer ? (
                 <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>

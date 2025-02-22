@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Typography, Box, CircularProgress } from "@mui/material";
-import { t, Trans } from "@lingui/macro";
+import { Button, Typography, Box, CircularProgress } from "components/Mui";
 import { Flex, Modal, NumberTextField, StepViewButton, MaxButton } from "components/index";
 import {
   BigNumber,
@@ -14,6 +13,7 @@ import { useUnstakeCall } from "hooks/staking-token/useUnstake";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 export interface ClaimModalProps {
   open: boolean;
@@ -38,6 +38,7 @@ export function UnstakeModal({
   onUnStakeSuccess,
   rewardTokenPrice,
 }: ClaimModalProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openTip] = useTips();
@@ -96,9 +97,9 @@ export function UnstakeModal({
 
   const errorMessage = useMemo(() => {
     if (!stakeToken || !stakeAmount) return t`Confirm`;
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t`Enter an amount`;
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.enter.input.amount");
     if (formatTokenAmount(amount, stakeToken.decimals).isGreaterThan(stakeAmount.toString()))
-      return t`Insufficient balance`;
+      return t("common.error.insufficient.balance");
 
     return undefined;
   }, [amount, stakeToken, stakeAmount]);
@@ -106,9 +107,7 @@ export function UnstakeModal({
   return (
     <Modal open={open} onClose={onClose} title={t`Unstake`} background="level1">
       <Flex gap="0 5px">
-        <Typography>
-          <Trans>Reward Token</Trans>
-        </Typography>
+        <Typography>{t("common.reward.token")}</Typography>
 
         {/* <Tooltip tips={t`You will receive the reward tokens you have earned after harvesting the staked tokens.`} /> */}
       </Flex>
@@ -158,7 +157,9 @@ export function UnstakeModal({
 
       <Flex sx={{ margin: "10px 0 0 0" }} gap="0 5px">
         <Typography>
-          <Trans>Staked</Trans>: {tokenAmount && stakeToken ? `${tokenAmount.toFormat()} ${stakeToken.symbol}` : "--"}{" "}
+          {t("common.stake.amount", {
+            amount: tokenAmount && stakeToken ? `${tokenAmount.toFormat()} ${stakeToken.symbol}` : "--",
+          })}
         </Typography>
 
         <MaxButton onClick={handleMax} background="rgba(86, 105, 220, 0.50)" />

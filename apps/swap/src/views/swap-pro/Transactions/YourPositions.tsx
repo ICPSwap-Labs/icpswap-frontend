@@ -1,6 +1,5 @@
 import { useState, useMemo, useContext } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { useTickAtLimit, useUserLimitOrders } from "@icpswap/hooks";
 import {
   CurrencyAmount,
@@ -22,6 +21,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SwapProContext } from "components/swap/pro";
 import { Null } from "@icpswap/types";
 import { SwapContext } from "components/swap";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -46,6 +46,7 @@ enum Bound {
 }
 
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const { inputToken, outputToken } = useContext(SwapContext);
@@ -201,7 +202,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           }}
         >
           <TextButton to={`/liquidity/position/${positionInfo.index}/${positionInfo.id}`}>
-            <Trans>Details</Trans>
+            {t("common.details")}
           </TextButton>
         </BodyCell>
       </TableRow>
@@ -216,6 +217,7 @@ export interface PoolTransactionsProps {
 }
 
 export function YourPositions({ poolId }: PoolTransactionsProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const principal = useAccountPrincipal();
@@ -245,22 +247,10 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
     <Box sx={{ width: "100%", overflow: "auto" }}>
       <Box sx={{ minWidth: "940px" }}>
         <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-          <HeaderCell field="PositionId">
-            <Trans>Position ID</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="TokenAmount">
-            <Trans>Token Amount</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="priceRange">
-            <Trans>Price Range</Trans>
-          </HeaderCell>
-
-          <HeaderCell field="unclaimedFees">
-            <Trans>Uncollected Fees</Trans>
-          </HeaderCell>
-
+          <HeaderCell field="PositionId">{t("common.position.id")}</HeaderCell>
+          <HeaderCell field="TokenAmount">{t("common.token.amount")}</HeaderCell>
+          <HeaderCell field="priceRange">{t("common.price.range")}</HeaderCell>
+          <HeaderCell field="unclaimedFees">{t("common.uncollected.fees")}</HeaderCell>
           <HeaderCell>&nbsp;</HeaderCell>
         </Header>
 

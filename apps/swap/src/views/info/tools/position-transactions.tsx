@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -6,11 +5,12 @@ import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { ToolsWrapper } from "components/info/tools/index";
-// import { Null } from "@icpswap/types";
 import { PositionTransactionsTable } from "components/info/index";
 import { infoRoutesConfigs } from "routes/info.config";
+import { useTranslation } from "react-i18next";
 
 export default function PositionTransactions() {
+  const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
   const { pair, principal } = useParsedQueryString() as { pair: string | undefined; principal: string | undefined };
@@ -20,21 +20,16 @@ export default function PositionTransactions() {
     history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
   };
 
-  // const handleAddressChange = (principal: string | Null) => {
-  //   const search = locationSearchReplace(location.search, "principal", principal);
-  //   history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
-  // };
-
   return (
     <InfoWrapper size="small">
       <BreadcrumbsV1
-        links={[{ label: <Trans>Tools</Trans>, link: "/info-tools" }, { label: <Trans>Position Transfer</Trans> }]}
+        links={[{ label: t("common.tools"), link: "/info-tools" }, { label: t("common.position.transfer") }]}
       />
 
       <Box sx={{ height: "20px", width: "100%" }} />
 
       <ToolsWrapper
-        title={<Trans>Position Transfer</Trans>}
+        title={t("common.position.transfer")}
         action={
           <Box
             sx={{
@@ -48,9 +43,7 @@ export default function PositionTransactions() {
             }}
           >
             <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
-              <Typography>
-                <Trans>Select a Pair:</Trans>
-              </Typography>
+              <Typography>{t("common.select.pair.colon")}</Typography>
 
               <SelectPair
                 value={pair}
@@ -58,11 +51,7 @@ export default function PositionTransactions() {
                 search
                 showBackground={false}
                 panelPadding="0px"
-                defaultPanel={
-                  <Typography color="text.primary">
-                    <Trans>All Pair</Trans>
-                  </Typography>
-                }
+                defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
               />
             </Flex>
 

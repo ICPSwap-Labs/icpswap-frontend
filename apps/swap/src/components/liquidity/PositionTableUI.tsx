@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { isNullArgs } from "@icpswap/utils";
 import { useMemo } from "react";
@@ -8,6 +7,7 @@ import { PositionRow } from "components/liquidity/PositionRow";
 import { Null } from "@icpswap/types";
 import { useSneedLedger } from "hooks/index";
 import { PositionDetails } from "types/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -43,6 +43,7 @@ export function PositionTableUI({
   pagination,
   allLimitOrders,
 }: PositionTableUIProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const [, pool] = usePoolByPoolId(poolId);
@@ -60,29 +61,17 @@ export function PositionTableUI({
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ minWidth: "1090px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell field="Position ID">
-              <Trans>Position ID</Trans>
-            </HeaderCell>
+            <HeaderCell field="Position ID">{t("common.position.id")}</HeaderCell>
 
-            <HeaderCell field="Pair">
-              <Trans>Owner</Trans>
-            </HeaderCell>
+            <HeaderCell field="Pair">{t("common.owner")}</HeaderCell>
 
-            <HeaderCell field="USDValue">
-              <Trans>Value</Trans>
-            </HeaderCell>
+            <HeaderCell field="USDValue">{t("common.value")}</HeaderCell>
 
-            <HeaderCell field="TokenAmount">
-              <Trans>Token Amount</Trans>
-            </HeaderCell>
+            <HeaderCell field="TokenAmount">{t("common.token.amount")}</HeaderCell>
 
-            <HeaderCell field="PriceRange">
-              <Trans>Price Range</Trans>
-            </HeaderCell>
+            <HeaderCell field="PriceRange">{t("common.price.range")}</HeaderCell>
 
-            <HeaderCell field="UnclaimedFees">
-              <Trans>Uncollected fees</Trans>
-            </HeaderCell>
+            <HeaderCell field="UnclaimedFees">{t("common.uncollected.fees")}</HeaderCell>
 
             <HeaderCell field="None">&nbsp;</HeaderCell>
           </Header>

@@ -6,10 +6,11 @@ import CollectionUserTransactions from "components/NFT/CollectionUserTransaction
 import CanisterHeader from "components/NFT/CanisterHeader";
 import { useCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import { MainCard, Breadcrumbs, Wrapper } from "components/index";
-import { t, Trans } from "@lingui/macro";
 import { useAccount } from "store/auth/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { useEXTManager } from "store/nft/hooks";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 import { ExtNftCollectionDetail } from "./ExtCanisterDetails";
 
@@ -20,11 +21,12 @@ type PageType = {
 };
 
 const Pages: PageType[] = [
-  { key: "NFTs", label: t`NFTs`, component: NFTList },
-  { key: "Transactions", label: t`Transactions`, component: CollectionUserTransactions },
+  { key: "NFTs", label: i18n.t("nfts"), component: NFTList },
+  { key: "Transactions", label: i18n.t("common.transactions"), component: CollectionUserTransactions },
 ];
 
 function ICPSwapNFT() {
+  const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
   const account = useAccount();
   const { result: metadata, loading } = useCanisterMetadata(canisterId);
@@ -41,7 +43,7 @@ function ICPSwapNFT() {
   return (
     <Wrapper>
       <Box>
-        <Breadcrumbs prevLabel={<Trans>Wallet NFTs</Trans>} prevLink="/wallet" currentLabel={<Trans>NFTs</Trans>} />
+        <Breadcrumbs prevLabel={t("nft.wallet.nfts")} prevLink="/wallet" currentLabel={t("nfts")} />
 
         <Box mt={2}>
           <CanisterHeader

@@ -15,8 +15,8 @@ import {
 import { Price, Token } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
-import { t } from "@lingui/macro";
 import { Null } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 import { ZoomLevels } from "./types";
 import { Chart } from "./Chart";
@@ -69,6 +69,7 @@ export interface LiquidityChartRangeInputProps {
   poolPriceUpper: string | number | Null;
 }
 
+// Todo: Duplicate LiquidityChartRangeInput
 export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
@@ -82,6 +83,7 @@ export default function LiquidityChartRangeInput({
   poolPriceLower,
   poolPriceUpper,
 }: LiquidityChartRangeInputProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped);
@@ -153,19 +155,19 @@ export default function LiquidityChartRangeInput({
     <Box style={{ minHeight: "200px" }}>
       {isUninitialized ? (
         <InfoBox
-          message={t`Your position will appear here.`}
+          message={t("liquidity.position.appear")}
           icon={<Inbox size={56} stroke={theme.palette.background.level3} />}
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.palette.background.level3} />} />
       ) : isError ? (
         <InfoBox
-          message={t`Liquidity data not available.`}
+          message={t("liquidity.data.not.available")}
           icon={<CloudOff size={56} stroke={theme.palette.background.level3} />}
         />
       ) : !formattedData || formattedData.length === 0 || !price ? (
         <InfoBox
-          message={t`There is no liquidity data.`}
+          message={t("liquidity.no.data")}
           icon={<BarChart2 size={56} stroke={theme.palette.background.level3} />}
         />
       ) : (

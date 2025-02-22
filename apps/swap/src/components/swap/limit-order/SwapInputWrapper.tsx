@@ -131,7 +131,6 @@ export function SwapInputWrapper({
           currencyState={outputCurrencyState}
           parsedAmount={parsedAmounts[SWAP_FIELD.OUTPUT]}
           background={ui === "pro" ? "level1" : "level3"}
-          disabled
           unusedBalance={outputTokenUnusedBalance}
           subBalance={outputTokenSubBalance}
           poolId={poolId}

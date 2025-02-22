@@ -15,9 +15,6 @@ import Upload, { UploadRef } from "components/NFT/Upload";
 import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useTips, TIP_ERROR } from "hooks/useTips";
 import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
-import { Trans, t } from "@lingui/macro";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
-import { Identity as TypeIdentity } from "types/index";
 import { type NFTControllerInfo } from "@icpswap/types";
 import RequiredMark from "components/RequiredMark";
 import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
@@ -26,9 +23,10 @@ import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
 import BigNumber from "bignumber.js";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { CardContent1120 } from "components/Layout/CardContent1120";
+import { useTranslation } from "react-i18next";
 
 export type Metadata = { label: string; value: string; key: number };
 
@@ -37,6 +35,7 @@ export type MintTokenInfo = { metadata: Metadata[]; [key: string]: any };
 let metadataKey = 0;
 
 export default function NFTMint() {
+  const { t } = useTranslation();
   const history = useHistory();
   const account = useAccount();
   const [mintTokenInfo, setMintTokenInfo] = useState<MintTokenInfo>({} as MintTokenInfo);
@@ -46,6 +45,7 @@ export default function NFTMint() {
   const uploadRef = useRef<UploadRef>(null);
 
   const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { canister: NFTCanisterId } = useParsedQueryString() as { canister: string };
 
@@ -69,17 +69,17 @@ export default function NFTMint() {
 
   const mintNFTCallback = useMintNFTCallback();
 
-  const handleMintNFT = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
+  const handleMintNFT = async () => {
+    setLoading(true);
 
     const { filePath, fileType } = (await uploadRef.current?.uploadCb()) ?? {};
 
-    if (!filePath) {
-      closeLoading();
+    if (!filePath || !account) {
+      setLoading(false);
       return;
     }
 
-    const { status, message, data } = await mintNFTCallback(mintTokenInfo.nftCanister, identity, {
+    const { status, message, data } = await mintNFTCallback(mintTokenInfo.nftCanister, {
       nftType: mintTokenInfo.series ?? "",
       fileType: fileType ?? "",
       artistName: "",
@@ -112,7 +112,7 @@ export default function NFTMint() {
       ],
     });
 
-    closeLoading();
+    setLoading(false);
 
     if (status === "err") {
       openTip(getLocaleMessage(message) ?? t`Failed to mint`, TIP_ERROR);
@@ -176,7 +176,7 @@ export default function NFTMint() {
   };
 
   let errorMsg = "";
-  if (!agree) errorMsg = t`Agree the statement`;
+  if (!agree) errorMsg = t("nft.mint.agree.statement");
   if (fileError) errorMsg = t`File error`;
   if (!file) errorMsg = t`Selected the file`;
   if (!mintTokenInfo.name) errorMsg = t`Enter the name`;
@@ -184,14 +184,12 @@ export default function NFTMint() {
 
   return (
     <CardContent1120>
-      <Breadcrumbs prevLink="/info-tools" prevLabel={<Trans>Tools</Trans>} currentLabel={<Trans>Mint NFT</Trans>} />
+      <Breadcrumbs prevLink="/info-tools" prevLabel={t("common.tools")} currentLabel={t("nft.mint")} />
 
       <MainCard sx={{ margin: "16px 0 0 0" }}>
         <Grid container justifyContent="center">
           <Box sx={{ maxWidth: "474px", margin: "28px 0 0 0" }}>
-            <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>
-              <Trans>Mint NFT</Trans>
-            </Typography>
+            <Typography sx={{ fontSize: "20px", fontWeight: 700, color: "text.primary" }}>{t("nft.mint")}</Typography>
 
             <Grid
               mt="32px"
@@ -201,7 +199,7 @@ export default function NFTMint() {
               <Box className="grid-box">
                 <Box>
                   <FilledTextField
-                    label={<Trans>NFT Canister</Trans>}
+                    label={t("nft.canister")}
                     required
                     select
                     placeholder="Select the NFT canister"
@@ -222,9 +220,7 @@ export default function NFTMint() {
                         }}
                       >
                         <NoData />
-                        <TextButton to="/info-tools/nft/canister/create">
-                          <Trans>Create an NFT canister</Trans>
-                        </TextButton>
+                        <TextButton to="/info-tools/nft/canister/create">{t("nft.create.canister")}</TextButton>
                       </Grid>
                     }
                   />
@@ -233,7 +229,7 @@ export default function NFTMint() {
 
               <Box className="grid-box">
                 <FilledTextField
-                  label={<Trans>NFT Name</Trans>}
+                  label={t("nft.name")}
                   required
                   placeholder="Enter the NFT name"
                   onChange={(value) => handleFieldChange(value, "name")}
@@ -246,11 +242,11 @@ export default function NFTMint() {
                     <Grid item xs>
                       <RequiredMark />
                       <Typography component="span" fontSize="16px" color="text.secondary">
-                        <Trans>Supply</Trans>
+                        {t("common.supply")}
                       </Typography>
                     </Grid>
                     <Typography component="span" fontSize="14px" color="text.primary">
-                      <Trans>Max Supply:</Trans>
+                      {t("common.max.supply.colon")}
                       &nbsp;
                       {new BigNumber(canisterMetadata?.totalSupply ? String(canisterMetadata?.totalSupply) : 0)
                         .minus(canisterMetadata?.mintSupply ? String(canisterMetadata?.mintSupply) : 0)
@@ -262,17 +258,21 @@ export default function NFTMint() {
                       placeholder={t`The number of copies that can be minted`}
                       onChange={(value) => handleFieldChange(value, "supply")}
                       value={mintTokenInfo.supply ?? 1}
-                      InputProps={{
-                        inputComponent: TextFieldNumberComponent,
-                        inputProps: {
-                          thousandSeparator: true,
-                          decimalScale: 0,
-                          allowNegative: false,
-                          format: (formattedValue: string) => {
-                            if (new BigNumber(formattedValue).isGreaterThan(MAX_NFT_MINT_SUPPLY)) {
-                              return String(MAX_NFT_MINT_SUPPLY);
-                            }
-                            return formattedValue;
+                      textFieldProps={{
+                        slotProps: {
+                          input: {
+                            inputComponent: TextFieldNumberComponent,
+                            inputProps: {
+                              thousandSeparator: true,
+                              decimalScale: 0,
+                              allowNegative: false,
+                              format: (formattedValue: string) => {
+                                if (new BigNumber(formattedValue).isGreaterThan(MAX_NFT_MINT_SUPPLY)) {
+                                  return String(MAX_NFT_MINT_SUPPLY);
+                                }
+                                return formattedValue;
+                              },
+                            },
                           },
                         },
                       }}
@@ -284,15 +284,19 @@ export default function NFTMint() {
               <Box className="grid-box">
                 <Box>
                   <FilledTextField
-                    label={<Trans>Description</Trans>}
-                    placeholder={t`Enter the NFT description`}
+                    label={t("common.description")}
+                    placeholder={t("nft.description.input")}
                     multiline
                     rows={5}
                     maxRows={5}
                     onChange={(value) => handleFieldChange(value, "desc")}
-                    InputProps={{
-                      inputProps: {
-                        maxLength: 500,
+                    textFieldProps={{
+                      slotProps: {
+                        input: {
+                          inputProps: {
+                            maxLength: 500,
+                          },
+                        },
                       },
                     }}
                   />
@@ -303,7 +307,7 @@ export default function NFTMint() {
                 <Grid container>
                   <Grid item xs>
                     <Typography component="span" fontSize="16px" color="text.secondary">
-                      <Trans>Metadata</Trans>
+                      {t("common.metadata")}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -321,9 +325,7 @@ export default function NFTMint() {
                       onClick={handleMetadataAdd}
                     >
                       <AddIcon fontSize="small" />
-                      <Typography color="text.primary">
-                        <Trans>Add</Trans>
-                      </Typography>
+                      <Typography color="text.primary">{t("common.add")}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -342,11 +344,15 @@ export default function NFTMint() {
                       <Box mr="10px" sx={{ width: "145px" }}>
                         <FilledTextField
                           fullWidth
-                          placeholder={t`Metadata Key`}
-                          InputProps={{
-                            disableUnderline: true,
-                            inputProps: {
-                              maxLength: 100,
+                          placeholder={t("nft.metadata.key")}
+                          textFieldProps={{
+                            slotProps: {
+                              input: {
+                                disableUnderline: true,
+                                inputProps: {
+                                  maxLength: 100,
+                                },
+                              },
                             },
                           }}
                           onChange={(value: string) => handleMetadataLabelInput(value, index)}
@@ -355,25 +361,29 @@ export default function NFTMint() {
                       <Grid item xs>
                         <FilledTextField
                           fullWidth
-                          placeholder={t`Metadata Value`}
+                          placeholder={t("nft.metadata.value")}
                           onChange={(value: string) => handleMetadataValueInput(value, index)}
-                          InputProps={{
-                            disableUnderline: true,
-                            inputProps: {
-                              maxLength: 100,
+                          textFieldProps={{
+                            slotProps: {
+                              input: {
+                                disableUnderline: true,
+                                inputProps: {
+                                  maxLength: 100,
+                                },
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <HighlightOffIcon
+                                      sx={{
+                                        color: "#8492C4",
+                                        fontSize: "20px",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() => handleMetadataDelete(index)}
+                                    />
+                                  </InputAdornment>
+                                ),
+                              },
                             },
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <HighlightOffIcon
-                                  sx={{
-                                    color: "#8492C4",
-                                    fontSize: "20px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => handleMetadataDelete(index)}
-                                />
-                              </InputAdornment>
-                            ),
                           }}
                         />
                       </Grid>
@@ -387,7 +397,7 @@ export default function NFTMint() {
                   <Box>
                     <RequiredMark />
                     <Typography component="span" fontSize="16px" color="text.secondary">
-                      <Trans>Upload NFT File</Trans>
+                      {t("nft.upload.file")}
                     </Typography>
                   </Box>
                   <Box mt={2}>
@@ -404,29 +414,24 @@ export default function NFTMint() {
                         onFileSelected={handleFileChange}
                         onFileError={handleFileError}
                       />
-                      <Typography sx={{ marginTop: "5px" }}>
-                        <Trans>Support : image / txt / json / pdf / ppt / excel / word Size: ≤200K</Trans>
-                      </Typography>
+                      <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
                     </Box>
                   </Box>
                 </>
               </Box>
             </Grid>
             <Box mt={8}>
-              <Identity onSubmit={handleMintNFT} fullScreenLoading>
-                {({ submit, loading }: CallbackProps) => (
-                  <AuthButton
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    onClick={submit}
-                    disabled={Boolean(errorMsg) || loading}
-                    startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-                  >
-                    {errorMsg || t`Mint`}
-                  </AuthButton>
-                )}
-              </Identity>
+              <AuthButton
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={handleMintNFT}
+                disabled={Boolean(errorMsg) || loading}
+                startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+              >
+                {errorMsg || t`Mint`}
+              </AuthButton>
+
               <Grid container mt="20px">
                 <Box sx={{ marginRight: "8px" }}>
                   <Checkbox
@@ -439,10 +444,7 @@ export default function NFTMint() {
                 </Box>
                 <Grid item xs>
                   <Typography sx={{ cursor: "pointer" }} onClick={() => setAgree(!agree)}>
-                    <Trans>
-                      I declare this is the original artwork and agree I won’t violate the intellectual property and
-                      assume all consequences!
-                    </Trans>
+                    {t("nft.create.agreement")}
                   </Typography>
                 </Grid>
               </Grid>

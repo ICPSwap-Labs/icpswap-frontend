@@ -7,7 +7,6 @@ import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
-import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import {
@@ -21,6 +20,7 @@ import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils"
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
+import { useTranslation } from "react-i18next";
 
 import {
   selectCurrency,
@@ -83,6 +83,7 @@ export interface UseSwapInfoArgs {
 }
 
 export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
@@ -197,12 +198,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const inputError = useMemo(() => {
-    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t`Select a token`;
-    if (!parsedAmount) return t`Enter an amount`;
-    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
+    if (!parsedAmount) return t("common.enter.input.amount");
+    if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
     if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
-    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
-    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
+    if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
 
     return null;

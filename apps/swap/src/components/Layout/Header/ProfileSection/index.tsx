@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Paper, Popper, Box, Typography, useMediaQuery, Fade, Button } from "@mui/material";
 import { useTheme } from "components/Mui";
 import { shorten } from "@icpswap/utils";
-import { Trans } from "@lingui/macro";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnectorType } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
@@ -10,6 +9,7 @@ import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
 import { useHistory } from "react-router-dom";
 import { Connector } from "constants/wallet";
+import { useTranslation } from "react-i18next";
 
 import { AccountSection } from "./Account";
 import Principal from "./Principal";
@@ -17,6 +17,7 @@ import LogOutSection from "../LogOutSection";
 import { BalanceAndValue } from "./BalanceAndValue";
 
 export default function ProfileSection() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -85,7 +86,7 @@ export default function ProfileSection() {
           </Flex>
         ) : (
           <Button variant="contained" sx={{ width: "141px", height: "40px", borderRadius: "48px" }}>
-            <Trans>Connect Wallet</Trans>
+            {t("common.connect.wallet")}
           </Button>
         )}
       </Box>
@@ -147,7 +148,7 @@ export default function ProfileSection() {
                           fontSize: "12px",
                         }}
                       >
-                        <Trans>Copy Account ID for sending from exchanges and Principal ID for lCP network.</Trans>
+                        {t("wallet.copy.descriptions")}
                       </Typography>
 
                       <Box sx={{ margin: "12px 0 0 0" }}>
@@ -175,11 +176,7 @@ export default function ProfileSection() {
                             color: "#B79C4A",
                           }}
                         >
-                          <Trans>
-                            Internet Identity generates unique Principal IDs and Account IDs for each Dapp. This feature
-                            ensures that user identities and account information are isolated across different
-                            applications, enhancing security and privacy protection.
-                          </Trans>
+                          {t("wallet.internet.identity.descriptions")}
                         </Typography>
                       </Box>
                     ) : null}

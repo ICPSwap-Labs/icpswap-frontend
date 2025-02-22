@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { neuronVoteForProposal } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { Neuron, ProposalData } from "@icpswap/types";
 import { ConfirmModal } from "@icpswap/ui";
 import { neuronFormat, votingPowerFormat } from "utils/sns/index";
 import { Vote } from "@icpswap/constants";
+import { useTranslation } from "react-i18next";
 
 export interface VoteConfirmProps {
   onVoteCallEnded?: () => void;
@@ -30,6 +30,7 @@ export function VoteConfirm({
   proposal,
   open,
 }: VoteConfirmProps) {
+  const { t } = useTranslation();
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
@@ -62,13 +63,13 @@ export function VoteConfirm({
               if (status === "ok") {
                 // If neuron is already voted, make it no error tip
                 if (!manage_error || manage_error.error_message === "Neuron already voted on proposal.") {
-                  openTip(t`Neuron ${formattedNeuron.id} Vote successfully`, TIP_SUCCESS);
+                  openTip(t("nns.voting.success", { id: formattedNeuron.id }), TIP_SUCCESS);
                 } else {
                   const message = manage_error.error_message;
-                  openTip(message !== "" ? message : t`Failed to vote neuron ${formattedNeuron.id}`, TIP_ERROR);
+                  openTip(message !== "" ? message : t("nns.voting.error.vote", { id: formattedNeuron.id }), TIP_ERROR);
                 }
               } else {
-                openTip(message ?? t`Failed to vote neuron ${formattedNeuron.id}`, TIP_ERROR);
+                openTip(message ?? t("nns.voting.error.vote", { id: formattedNeuron.id }), TIP_ERROR);
               }
 
               if (vote_called === voteNeurons.length) {
@@ -91,15 +92,11 @@ export function VoteConfirm({
       open={open}
       onConfirm={handleVote}
       onClose={onClose}
-      title={rejected ? t`Reject Proposal` : t`Adopt Proposal`}
+      title={rejected ? t("nns.reject.proposal") : t("nns.adopt.proposal")}
       text={
         rejected
-          ? t`You are about to cast ${votingPowerFormat(
-              votingPowers,
-            )} votes against this proposal, are you sure you want to proceed?`
-          : t`You are about to cast ${votingPowerFormat(
-              votingPowers,
-            )} votes for this proposal, are you sure you want to proceed?`
+          ? t("nns.voting.cast.reject.confirm", { powers: votingPowerFormat(votingPowers) })
+          : t("nns.voting.cast.agree.confirm", { powers: votingPowerFormat(votingPowers) })
       }
     />
   );

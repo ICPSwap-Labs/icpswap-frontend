@@ -1,6 +1,5 @@
-import { Typography, Box, Theme, useTheme } from "components/Mui";
+import { Typography, Box, useTheme } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { Trans } from "@lingui/macro";
 import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
@@ -18,14 +17,16 @@ import {
   useFarmsByState,
 } from "@icpswap/hooks";
 import { STATE } from "types/staking-farm";
+import { useTranslation } from "react-i18next";
 
 interface TopLiveFarmCardProps {
   farmId: string;
 }
 
 function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const history = useHistory();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
@@ -89,21 +90,15 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
       <Flex justify="space-between" gap="0 20px">
         <FarmTokenImages rewardToken={rewardToken} token0={token0} token1={token1} />
         <Typography fontSize={12} textAlign="right" lineHeight="18px">
-          {rewardToken && token0 && token1 ? (
-            <Trans>
-              Stake {token0.symbol}/{token1.symbol} to earn {rewardToken.symbol}
-            </Trans>
-          ) : (
-            "--"
-          )}
+          {rewardToken && token0 && token1
+            ? t("stake.to.earn", { symbol0: `${token0.symbol}/${token1.symbol}`, symbol1: rewardToken.symbol })
+            : "--"}
         </Typography>
       </Flex>
 
       <Flex justify="space-between" sx={{ margin: "12px 0 0 0" }} gap="0 8px">
         <Box sx={{ maxWidth: "123px" }}>
-          <Typography fontSize={12}>
-            <Trans>Farm</Trans>
-          </Typography>
+          <Typography fontSize={12}>{t("common.farm")}</Typography>
 
           <Typography
             sx={{
@@ -123,7 +118,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 
         <Box>
           <Typography fontSize={12} align="right">
-            <Trans>APR</Trans>
+            {t("common.apr")}
           </Typography>
           <Typography
             align="right"
@@ -146,9 +141,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 
       <Flex justify="space-between" sx={{ margin: "16px 0 0 0" }} gap="0 8px">
         <Box sx={{ maxWidth: "150px" }}>
-          <Typography fontSize={12}>
-            <Trans>Your Available to Stake</Trans>
-          </Typography>
+          <Typography fontSize={12}>{t("common.your.available.stake")}</Typography>
           <Flex gap="0 2px" sx={{ margin: "6px 0 0 0" }}>
             <Typography
               sx={{
@@ -182,7 +175,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 
         <Box sx={{ maxWidth: "81px" }}>
           <Typography fontSize={12} align="right">
-            <Trans>Total Staked</Trans>
+            {t("stake.total.staked")}
           </Typography>
           <Typography
             sx={{
@@ -205,6 +198,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 }
 
 function MainContent() {
+  const { t } = useTranslation();
   const { result: allLiveFarms, loading } = useFarmsByState("LIVE");
 
   const topLiveFarms = useMemo(() => {
@@ -216,7 +210,7 @@ function MainContent() {
   return (
     <>
       <Typography color="text.primary" sx={{ fontSize: "18px", fontWeight: 500 }}>
-        <Trans>Top Live Farms</Trans>
+        {t("farm.index.title")}
       </Typography>
 
       <Box mt="24px">

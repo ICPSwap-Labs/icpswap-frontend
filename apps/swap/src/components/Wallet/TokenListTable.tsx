@@ -14,7 +14,6 @@ import {
 import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
 import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
 import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
-import { t } from "@lingui/macro";
 import WalletContext from "components/Wallet/context";
 import { useToken } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -30,6 +29,7 @@ import { useInfoToken } from "@icpswap/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
@@ -74,6 +74,8 @@ const ckTokens: ckTOKEN[] = [
 ];
 
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
+  const { t } = useTranslation();
+
   const history = useHistory();
 
   const handleCKTokenMint = (path: string) => {
@@ -86,8 +88,8 @@ function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
 
   return (
     <>
-      <Button label={t`Mint`} onClick={() => handleCKTokenMint(ckToken.mintPath)} />
-      <Button label={t`Dissolve`} onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)} />
+      <Button label={t("common.mint")} onClick={() => handleCKTokenMint(ckToken.mintPath)} />
+      <Button label={t("common.dissolve")} onClick={() => handleCKTokenDissolve(ckToken.dissolvePath)} />
     </>
   );
 }
@@ -103,6 +105,7 @@ export interface TokenListItemProps {
 }
 
 export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
@@ -343,7 +346,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
           <Button label="Receive" onClick={handleReceive} />
 
           <ImportToNns tokenId={canisterId}>
-            <Button label="Add to NNS" />
+            <Button label={t("common.nns.token.add")} />
           </ImportToNns>
 
           <TransactionButton
@@ -353,7 +356,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
             isBridgeToken={isBridgeToken}
           />
 
-          {token?.address === XTC.address ? <Button label={t`Top-up`} onClick={handleXTCTopUp} /> : null}
+          {token?.address === XTC.address ? <Button label={t("common.topup")} onClick={handleXTCTopUp} /> : null}
 
           {token?.address === WRAPPED_ICP.address ? (
             <>

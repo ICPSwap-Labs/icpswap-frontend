@@ -1,12 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { PoolTransactions, UserTransactions } from "components/info/swap";
 import { Holders } from "components/info/tokens";
 import { LimitOrdersTable, LimitHistoryTable } from "components/swap/limit-order/index";
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { SwapContext } from "components/swap";
+import i18n from "i18n/index";
 
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
@@ -28,30 +28,30 @@ enum Tabs {
 
 const Menus = [
   {
-    label: t`Transactions`,
+    label: i18n.t("common.transactions"),
     value: Tabs.TRANSACTIONS,
     subMenus: [
-      { label: t`All Transactions`, value: Tabs.ALL_TRANSACTIONS },
-      { label: t`Your Transactions`, value: Tabs.YOUR_TRANSACTIONS },
+      { label: i18n.t("common.all.transactions"), value: Tabs.ALL_TRANSACTIONS },
+      { label: i18n.t("common.your.transactions"), value: Tabs.YOUR_TRANSACTIONS },
     ],
   },
   {
-    label: t`Positions`,
+    label: i18n.t("common.positions"),
     value: Tabs.POSITIONS,
     subMenus: [
-      { label: t`Positions`, value: Tabs.POSITIONS },
-      { label: t`Your Positions`, value: Tabs.YOUR_POSITIONS },
+      { label: i18n.t("common.positions"), value: Tabs.POSITIONS },
+      { label: i18n.t("liquidity.your.positions"), value: Tabs.YOUR_POSITIONS },
     ],
   },
   {
-    label: t`Limit`,
+    label: i18n.t("common.limit"),
     value: Tabs.LIMIT,
     subMenus: [
-      { label: t`Pending`, value: Tabs.LIMIT_PENDING },
-      { label: t`History`, value: Tabs.LIMIT_HISTORY },
+      { label: i18n.t("common.pending"), value: Tabs.LIMIT_PENDING },
+      { label: i18n.t("common.history"), value: Tabs.LIMIT_HISTORY },
     ],
   },
-  { label: t`Holders`, value: Tabs.TOKEN_HOLDERS },
+  { label: i18n.t("common.holders"), value: Tabs.TOKEN_HOLDERS },
 ];
 
 let AUTO_REFRESH_COUNTER = 0;

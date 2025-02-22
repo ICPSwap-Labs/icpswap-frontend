@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { dissolveNeuron } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import { ConfirmModal } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface DissolveProps {
   onDissolveSuccess?: () => void;
@@ -13,6 +13,7 @@ export interface DissolveProps {
 }
 
 export function Dissolve({ onDissolveSuccess, governance_id, neuron_id, disabled }: DissolveProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
@@ -48,13 +49,13 @@ export function Dissolve({ onDissolveSuccess, governance_id, neuron_id, disabled
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={disabled}>
-        <Trans>Dissolve</Trans>
+        {t("common.dissolve")}
       </Button>
 
       <ConfirmModal
         open={open}
         onClose={() => setOpen(false)}
-        title={t`Dissolve`}
+        title={t("common.dissolve")}
         onConfirm={handleConfirm}
         text={t`This will cause your neuron to lose its age bonus. Are you sure you wish to continue?`}
       />

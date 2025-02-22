@@ -1,11 +1,11 @@
 import { useContext, useMemo } from "react";
 import { Box, Typography } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { Flex } from "@icpswap/ui";
 import { tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { WaringIcon } from "assets/icons/WaringIcon";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";
 
@@ -25,6 +25,7 @@ export function PriceError({
   orderPriceTick,
   ui = "normal",
 }: PriceErrorProps) {
+  const { t } = useTranslation();
   const { selectedPool, inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
@@ -55,10 +56,7 @@ export function PriceError({
         <WaringIcon color="#D3625B" />
 
         <Typography color="#D3625B" sx={{ lineHeight: "20px", fontSize: ui === "normal" ? "14px" : "12px" }}>
-          <Trans>
-            Your limit price is {inverted ? "higher" : "lower"} than settable limit order price. Adjust your limit price
-            to proceed.
-          </Trans>
+          {t("limit.price.error", { key: inverted ? "higher" : "lower" })}
         </Typography>
       </Flex>
     </Box>

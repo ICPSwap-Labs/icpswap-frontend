@@ -1,7 +1,7 @@
 import { Box, Typography, Grid } from "components/Mui";
-import { t } from "@lingui/macro";
 import { Wrapper, TabPanel } from "components/index";
 import React from "react";
+import i18n from "i18n/index";
 
 function LinkIcon() {
   return (
@@ -39,7 +39,7 @@ function SwapWrapper({ children, buttons }: { children: React.ReactNode; buttons
 
 export function SwapV2Wrapper({ children }: { children: React.ReactNode }) {
   const buttons = [
-    { id: 3, value: t`Wrap`, path: "/swap/v2/wrap", key: "/wrap" },
+    { id: 3, value: i18n.t("common.wrap"), path: "/swap/v2/wrap", key: "/wrap" },
     {
       id: 4,
       key: "swap-v3",

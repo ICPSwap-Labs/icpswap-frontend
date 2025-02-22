@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Grid, Typography, Box, Avatar, makeStyles } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { useNFTs } from "@icpswap/hooks";
 import {
   Header,
@@ -15,6 +14,7 @@ import {
 } from "@icpswap/ui";
 import { shorten, pageArgsFormat } from "@icpswap/utils";
 import { type NFTTokenMetadata } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
   return {
@@ -52,6 +52,7 @@ function NFTAvatar({ nft }: { nft: NFTTokenMetadata }) {
 }
 
 export function NFTs({ canisterId }: { canisterId: string }) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
@@ -68,21 +69,11 @@ export function NFTs({ canisterId }: { canisterId: string }) {
     <>
       <Box sx={{ overflow: "auto" }}>
         <Header className={classes.wrapper}>
-          <HeaderCell>
-            <Trans>NFT</Trans>
-          </HeaderCell>
-          <HeaderCell>
-            <Trans>Canister Name</Trans>
-          </HeaderCell>
-          <HeaderCell>
-            <Trans>NFT ID</Trans>
-          </HeaderCell>
-          <HeaderCell>
-            <Trans>Canister ID</Trans>
-          </HeaderCell>
-          <HeaderCell>
-            <Trans>Owner</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("common.nft")}</HeaderCell>
+          <HeaderCell>{t("common.canister.name")}</HeaderCell>
+          <HeaderCell>{t("nft.id")}</HeaderCell>
+          <HeaderCell>{t("common.canister.id")}</HeaderCell>
+          <HeaderCell>{t("common.owner")}</HeaderCell>
           <BodyCell>&nbsp;</BodyCell>
         </Header>
 
@@ -96,9 +87,7 @@ export function NFTs({ canisterId }: { canisterId: string }) {
             <BodyCell>{nft.cId}</BodyCell>
             <BodyCell>{shorten(nft.owner, 8)}</BodyCell>
             <BodyCell>
-              <TextButton to={`/info-nfts/info/${canisterId}/${nft.tokenId}`}>
-                <Trans>Details</Trans>
-              </TextButton>
+              <TextButton to={`/info-nfts/info/${canisterId}/${nft.tokenId}`}>{t("common.details")}</TextButton>
             </BodyCell>
           </TableRow>
         ))}

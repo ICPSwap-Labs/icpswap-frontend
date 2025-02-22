@@ -58,7 +58,7 @@ export default ({
         <Grid container>
           <Grid container>
             <Grid item xs>
-              <Typography>Canister Name</Typography>
+              <Typography> {t("common.canister.name")}</Typography>
             </Grid>
             <Grid item xs>
               <Typography color="textPrimary" align="right">
@@ -98,7 +98,7 @@ export default ({
           </Grid>
           <Grid item xs>
             <Button variant="contained" size="large" fullWidth onClick={handleMintNFT}>
-              Mint NFT
+              {t("nft.mint")}
             </Button>
           </Grid>
         </Grid>

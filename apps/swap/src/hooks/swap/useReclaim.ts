@@ -3,9 +3,9 @@ import { ResultStatus } from "@icpswap/types";
 import { TokenInfo } from "types/token";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { withdraw, deposit } from "hooks/swap/v3Calls";
-import { t } from "@lingui/macro";
 import { Token } from "@icpswap/swap-sdk";
 import { sleep } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export interface ReclaimArgs {
   poolId: string;
@@ -17,6 +17,7 @@ export interface ReclaimArgs {
 }
 
 export function useReclaim() {
+  const { t } = useTranslation();
   const [openTip] = useTips();
 
   return useCallback(async ({ token, balance, poolId, name, type, refresh }: ReclaimArgs) => {

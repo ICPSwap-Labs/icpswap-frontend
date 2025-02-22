@@ -1,12 +1,12 @@
 import React, { ReactNode, useMemo, useState } from "react";
 import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { useTokenSupply, useTokenAnalysis, useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { ChevronDown, ArrowUpRight } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { PoolAndTokenBaseInfo } from "./PoolAndTokenBaseInfo";
 
@@ -43,6 +43,7 @@ interface TokenInformationProps {
 }
 
 export function TokenInformation({ token, poolId }: TokenInformationProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [moreInformation, setMoreInformation] = useState(false);
 
@@ -84,7 +85,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
 
         <Box sx={{ margin: "20px 0 0 0", display: "flex", flexDirection: "column", gap: "8px 0" }}>
           <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-            <Card title={t`Total Supply`} fontSize="12px">
+            <Card title={t("common.total.supply")} fontSize="12px">
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                 {tokenSupply && token
                   ? formatAmount(parseTokenAmount(tokenSupply.toString(), token.decimals).toNumber())
@@ -92,17 +93,15 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               </Typography>
             </Card>
             <Card
-              title={t`FDV (USD)`}
+              title={t("common.fdv.usd")}
               fontSize="12px"
               tips={
                 <Flex vertical gap="8px 0" align="flex-start">
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>
-                      Fully-diluted Valuation (FDV): The Valuation assuming all possible tokens are in circulation.
-                    </Trans>
+                    {t("common.fdv.tips")}
                   </Typography>
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>FDV = Price x Max Supply.</Trans>
+                    {t("common.fdv.formula")}
                   </Typography>
                 </Flex>
               }
@@ -115,33 +114,21 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
                   : "--"}
               </Typography>
             </Card>
-            <Card
-              title={t`Circulating Supply`}
-              fontSize="12px"
-              tips={
-                <Trans>
-                  The number of coins currently available and circulating in the public market, similar to the floating
-                  shares in stocks.
-                </Trans>
-              }
-            >
+            <Card title={t("common.circulating.supply")} fontSize="12px" tips={t("swap.pro.circulation.tips")}>
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                 {nonNullArgs(tokenAnalysis) ? formatAmount(tokenAnalysis.marketAmount) : "--"}
               </Typography>
             </Card>
             <Card
-              title={t`Market Cap`}
+              title={t("common.market.cap")}
               fontSize="12px"
               tips={
                 <Flex vertical gap="8px 0" align="flex-start">
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>
-                      Market Cap: The total market value of a cryptocurrency's circulating supply, similar to free-float
-                      market cap in stocks.
-                    </Trans>
+                    {t("common.market.cap.tips")}
                   </Typography>
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>Market Cap = Current Price x Circulating Supply.</Trans>
+                    {t("common.market.cap.formula")}
                   </Typography>
                 </Flex>
               }
@@ -156,13 +143,10 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               tips={
                 <Flex vertical gap="8px 0" align="flex-start">
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>
-                      The proportion of a cryptocurrency's total supply that is currently in circulation and available
-                      for trading.
-                    </Trans>
+                    {t("common.circulating.tips")}
                   </Typography>
                   <Typography color="text.tooltip" fontSize={theme.palette.textSize.tooltip} lineHeight="18px">
-                    <Trans>Circulating Supply Percentage = (Circulating Supply / Total Supply) x 100%.</Trans>
+                    {t("common.circulating.formula")}
                   </Typography>
                 </Flex>
               }
@@ -176,12 +160,12 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
                 {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
               </Typography>
             </Card>
-            <Card title={t`Volume 24H`} fontSize="12px">
+            <Card title={t("common.volume24h")} fontSize="12px">
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                 {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
               </Typography>
             </Card>
-            {/* <Card title={t`Volume 7D`} fontSize="12px">
+            {/* <Card title={t("common.volume7d")} fontSize="12px">
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
                 {infoToken ? formatDollarAmount(infoToken.volumeUSD7d) : "--"}
               </Typography>
@@ -191,7 +175,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
                 {token ? token.decimals : "--"}
               </Typography>
             </Card>
-            <Card title={t`Transfer Fee`} fontSize="12px">
+            <Card title={t("common.transfer.fee")} fontSize="12px">
               <Typography
                 color="text.primary"
                 sx={{
@@ -231,7 +215,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
         {tokenListInfo && token && tokenListInfo.introduction ? (
           <Box sx={{ margin: "20px 0 0 0" }}>
             <Typography sx={{ fontWeight: 600 }} color="text.primary">
-              <Trans>Introduction</Trans>
+              {t("common.introduction")}
             </Typography>
 
             <Typography
@@ -269,7 +253,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
           onClick={() => setMoreInformation(!moreInformation)}
         >
           <Typography sx={{ fontSize: "12px", fontWeight: 500, margin: "0 3px 0 0" }}>
-            {moreInformation ? <Trans>less information</Trans> : <Trans>more information </Trans>}
+            {moreInformation ? t("common.less.information") : t("common.more.information")}
           </Typography>
           <ChevronDown style={{ transform: moreInformation ? "rotate(180deg)" : "rotate(0deg)" }} size="16px" />
         </Box>

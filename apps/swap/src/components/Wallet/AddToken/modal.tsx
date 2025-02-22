@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { Box, Typography, InputAdornment, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
 import { useTaggedTokenManager } from "store/wallet/hooks";
-import { t, Trans } from "@lingui/macro";
 import { ImportToken } from "components/ImportToken/index";
 import { Modal, FilledTextField, NoData, Flex } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
@@ -12,6 +11,8 @@ import { Search as SearchIcon } from "react-feather";
 import { TokenListMetadata } from "types/token-list";
 import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import i18n from "i18n/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -66,12 +67,13 @@ function Icon() {
 type Panel = "SNS" | "Others";
 
 const Panels: { value: Panel; label: string }[] = [
-  { value: "SNS", label: t`SNS Tokens` },
-  { value: "Others", label: t`Other Tokens` },
+  { value: "SNS", label: i18n.t("common.sns.tokens") },
+  { value: "Others", label: i18n.t("common.other.tokens") },
 ];
 
 export default function AddTokenModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const classes = useStyles();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [importTokenCanceled, setImportTokenCanceled] = useState<boolean>(false);
@@ -169,7 +171,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
       <Modal
         open={open}
         onClose={onClose}
-        title={t`Add Tokens`}
+        title={t("wallet.add.tokens")}
         dialogProps={{
           sx: {
             "& .MuiPaper-root": {
@@ -193,8 +195,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         >
           <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "8px 0 0 0" }}>
             <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
-              Do your own research before investing. While we've collected known information about tokens on the list,
-              it's essential to conduct your research.
+              {t("common.disclaimer.descriptions")}
             </Typography>
           </Box>
 
@@ -212,7 +213,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (
@@ -245,7 +246,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
                   sx={{ margin: "16px 0 0 0" }}
                   color="text.primary"
                 >
-                  <Trans>This token has been added</Trans>
+                  {t("wallet.token.added")}
                 </Typography>
               </Box>
             ) : null}

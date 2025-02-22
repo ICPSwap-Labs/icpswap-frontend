@@ -2,7 +2,6 @@ import { useState, useCallback, useMemo } from "react";
 import SwapModal from "components/modal/swap";
 import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "components/Mui";
 import { isDarkTheme } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { FilledTextField, NoData } from "components/index";
 import { Search as SearchIcon } from "react-feather";
 import { useDebouncedChangeHandler, useChainKeyMinterInfo } from "@icpswap/hooks";
@@ -11,6 +10,7 @@ import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { ckBTC } from "@icpswap/tokens";
+import { useTranslation } from "react-i18next";
 
 import { SelectorToken } from "./SelectorToken";
 
@@ -21,6 +21,7 @@ export interface SelectorProps {
 }
 
 export function TokensModal({ open, onChange, onClose }: SelectorProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isDark = isDarkTheme(theme);
 
@@ -60,7 +61,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
     <>
       <SwapModal
         open={open}
-        title={t`Select a token`}
+        title={t("common.select.a.token")}
         onClose={onClose}
         dialogProps={{
           sx: {
@@ -94,7 +95,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (
@@ -114,7 +115,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
 
           <Box>
             <Typography sx={{ fontSize: "16px", padding: "0 24px", margin: "0 0 16px 0" }}>
-              <Trans>All networks</Trans>
+              {t("common.networks.all")}
             </Typography>
           </Box>
 

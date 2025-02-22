@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Table, TableHead, TableCell, TableContainer, TableRow, TableBody } from "@mui/material";
 import { pageArgsFormat, enumToString, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ListLoading, PaginationType, AddressFormat } from "components/index";
-import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import { useV3FarmStakeRecords } from "@icpswap/hooks";
 import { type StakingFarmStakeTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { useToken } from "hooks/index";
 import { HeaderCell, BodyCell, NoData, Pagination } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 function PoolItem({
   transactions,
@@ -59,6 +59,7 @@ interface FarmTransactionsProps {
 }
 
 export function FarmTransactions({ id, rewardTokenId }: FarmTransactionsProps) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -75,24 +76,16 @@ export function FarmTransactions({ id, rewardTokenId }: FarmTransactionsProps) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <HeaderCell>
-                <Trans>Time</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.time")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Type</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.type")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Address</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.address")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Reward Amount</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.reward.amount")}</HeaderCell>
             </TableCell>
           </TableRow>
         </TableHead>

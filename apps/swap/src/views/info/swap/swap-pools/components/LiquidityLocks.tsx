@@ -1,16 +1,17 @@
 import { Typography, Box, Popper, ClickAwayListener } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { LiquidityLocks } from "components/LiquidityLocks";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { Flex } from "@icpswap/ui";
 import { Unlock } from "react-feather";
 import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface LiquidityLocksWrapperProps {
   poolId: string;
 }
 
 export function LiquidityLocksWrapper({ poolId }: LiquidityLocksWrapperProps) {
+  const { t } = useTranslation();
   const [popper, setPopper] = useState(false);
 
   const ref = useRef();
@@ -28,9 +29,7 @@ export function LiquidityLocksWrapper({ poolId }: LiquidityLocksWrapperProps) {
   return (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: "pointer" }}>
       <Flex justify="space-between">
-        <Typography>
-          <Trans>Liquidity Locks</Trans>
-        </Typography>
+        <Typography>{t("common.liquidity.locks")}</Typography>
 
         <Unlock size={14} />
       </Flex>

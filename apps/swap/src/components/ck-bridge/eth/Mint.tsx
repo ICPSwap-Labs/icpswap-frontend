@@ -3,7 +3,6 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { t, Trans } from "@lingui/macro";
 import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
@@ -14,6 +13,7 @@ import { useActiveChain } from "hooks/web3/index";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-eth/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
+import { useTranslation } from "react-i18next";
 
 import { MintExtraContent } from "./MintExtra";
 
@@ -24,6 +24,7 @@ export interface EthMintProps {
 }
 
 export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
 
@@ -51,8 +52,8 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return `Please switch to ${chainIdToNetwork[chain]}`;
-    if (!amount || new BigNumber(amount).isEqualTo(0)) return t`Enter the amount`;
-    if (ethBalance && ethBalance.isLessThan(amount)) return t`Insufficient Balance`;
+    if (!amount || new BigNumber(amount).isEqualTo(0)) return t("common.enter.input.amount");
+    if (ethBalance && ethBalance.isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
   }, [chainId, chain, amount, ethBalance]);
@@ -73,9 +74,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
           borderRadius: "16px",
         }}
       >
-        <Typography>
-          <Trans>Your wallet of Metamask</Trans>
-        </Typography>
+        <Typography>{t("ck.wallet.metamask")}</Typography>
 
         <Box sx={{ margin: "10px 0 0 0" }}>
           {account ? (
@@ -103,7 +102,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
         disabled={loading || !account || !!mint_error}
         loading={loading}
       >
-        {mint_error === undefined ? t`Mint ckETH` : mint_error}
+        {mint_error === undefined ? t("common.mint.symbol", { symbol: "ckETH" }) : mint_error}
       </ButtonConnector>
 
       <MintExtraContent token={token} balance={tokenBalance} />

@@ -1,7 +1,9 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Grid, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export default function OnSaleLabel() {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -41,7 +43,7 @@ export default function OnSaleLabel() {
           }}
         >
           <Typography color="text.primary" fontWeight="600">
-            <Trans>Listing</Trans>
+            {t("nft.listing")}
           </Typography>
         </Grid>
       </Box>

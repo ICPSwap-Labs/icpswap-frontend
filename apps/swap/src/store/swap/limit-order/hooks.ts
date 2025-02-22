@@ -6,7 +6,6 @@ import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { t } from "@lingui/macro";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
@@ -16,10 +15,12 @@ import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";
 import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
+import { Token, CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
 import { useSwapState } from "store/swap/hooks";
 import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
 import { useUSDPriceById } from "hooks/index";
+import { useTranslation } from "react-i18next";
+import { SAFE_DECIMALS_LENGTH } from "constants/index";
 
 import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
 
@@ -28,6 +29,7 @@ export interface UseSwapInfoArgs {
 }
 
 export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
 
   const [__orderPrice, setOrderPrice] = useState<string | Null>(null);
@@ -48,6 +50,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const inputCurrencyPrice = useUSDPriceById(inputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
+  const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
   const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputToken, refresh);
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputToken, refresh);
@@ -62,23 +65,46 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
   };
 
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
-  const outputAmount = useMemo(() => {
-    if (nonNullArgs(parsedAmount) && nonNullArgs(orderPrice) && nonNullArgs(outputToken)) {
+  // The input side token amount
+  const independentFieldAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
+
+  const dependentFieldAmount = useMemo(() => {
+    if (
+      nonNullArgs(independentFieldAmount) &&
+      nonNullArgs(orderPrice) &&
+      nonNullArgs(outputToken) &&
+      nonNullArgs(inputToken)
+    ) {
+      if (isExactIn) {
+        return CurrencyAmount.fromRawAmount(
+          outputToken,
+          formatTokenAmount(
+            new BigNumber(independentFieldAmount.toExact()).multipliedBy(orderPrice).toFixed(outputToken.decimals),
+            outputToken.decimals,
+          ).toString(),
+        );
+      }
+
       return CurrencyAmount.fromRawAmount(
-        outputToken,
+        inputToken,
         formatTokenAmount(
-          new BigNumber(parsedAmount.toExact()).multipliedBy(orderPrice).toFixed(outputToken.decimals),
-          outputToken.decimals,
+          new BigNumber(independentFieldAmount.toExact()).dividedBy(orderPrice).toFixed(inputToken.decimals),
+          inputToken.decimals,
         ).toString(),
       );
     }
-  }, [parsedAmount, orderPrice, outputToken]);
 
-  const currencies = {
-    [SWAP_FIELD.INPUT]: inputToken ?? undefined,
-    [SWAP_FIELD.OUTPUT]: outputToken ?? undefined,
-  };
+    return undefined;
+  }, [isExactIn, independentFieldAmount, orderPrice, outputToken]);
+
+  const parsedAmounts = useMemo(
+    () =>
+      ({
+        [independentField]: independentFieldAmount,
+        [dependentField]: dependentFieldAmount,
+      }) as { INPUT: CurrencyAmount<Token> | undefined; OUTPUT: CurrencyAmount<Token> | undefined },
+    [independentField, independentFieldAmount],
+  );
 
   const otherCurrency = (isExactIn ? outputToken : inputToken) ?? undefined;
 
@@ -183,6 +209,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     inputToken,
     orderPrice,
     isInputTokenSorted,
+    inputAmount: parsedAmounts[SWAP_FIELD.INPUT]?.toExact(),
   });
 
   // DIP20 not support subaccount balance
@@ -240,7 +267,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     token: inputToken,
     subAccountBalance: inputTokenSubBalance,
     balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals),
-    formatTokenAmount: formatTokenAmount(typedValue, inputToken?.decimals).toString(),
+    formatTokenAmount: formatTokenAmount(parsedAmounts[SWAP_FIELD.INPUT]?.toExact(), inputToken?.decimals).toString(),
     unusedBalance: inputTokenUnusedBalance,
     allowance,
   });
@@ -260,18 +287,30 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return pool.token1Price.toFixed(inputToken.decimals);
   }, [pool, inputToken, outputToken]);
 
+  const inputSwapAmount =
+    parsedAmounts[SWAP_FIELD.INPUT] && inputToken
+      ? new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]?.toExact()).toFixed(
+          inputToken.decimals > SAFE_DECIMALS_LENGTH ? SAFE_DECIMALS_LENGTH : inputToken.decimals,
+        )
+      : undefined;
+
   const inputError = useMemo(() => {
-    if (!currencies[SWAP_FIELD.INPUT] || !currencies[SWAP_FIELD.OUTPUT] || !inputToken) return t`Select a token`;
-    if (!parsedAmount) return t`Enter an amount`;
-    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
-    if (tickError) return t`Invalid tick for this pool`;
+    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
+    if (!parsedAmounts[SWAP_FIELD.INPUT]) return t("common.enter.input.amount");
+    if (!inputSwapAmount || formatTokenAmount(inputSwapAmount, inputToken.decimals).isLessThan(inputToken.transFee))
+      return t("common.error.amount.large.than.fee");
+    if (tickError) return t("limit.error.invalid.tick");
 
     if (!inputCurrencyPrice) return t`Submit Limit Order`;
 
-    if (new BigNumber(typedValue).multipliedBy(inputCurrencyPrice).isLessThan(MIN_LIMIT_ORDER_VALUE))
-      return t`The minimum limit order must be worth $20`;
-    if (inputNumberCheck(typedValue) === false) return t`Amount exceeds limit`;
-    if (typeof Trade.available === "boolean" && !Trade.available) return t`This pool is not available now`;
+    if (
+      new BigNumber(parsedAmounts[SWAP_FIELD.INPUT].toExact())
+        .multipliedBy(inputCurrencyPrice)
+        .isLessThan(MIN_LIMIT_ORDER_VALUE)
+    )
+      return t("limit.error.amount.minimum");
+    if (inputNumberCheck(inputSwapAmount) === false) return t("common.error.exceeds.limit");
+    if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
     if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
@@ -286,14 +325,14 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       Trade?.noLiquidity === true ||
       isNullArgs(minUseableTick)
     )
-      return t`Submit Limit Order`;
+      return t("limit.submit");
 
     if (isInputTokenSorted && orderPriceTick <= minSettableTick) return t`Adjust your limit price to proceed.`;
     if (!isInputTokenSorted && orderPriceTick >= minSettableTick) return t`Adjust your limit price to proceed.`;
   }, [
-    typedValue,
-    parsedAmount,
-    currencies,
+    parsedAmounts,
+    inputSwapAmount,
+    independentFieldAmount,
     inputTokenSubBalance,
     inputTokenUnusedBalance,
     Trade,
@@ -317,13 +356,12 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   );
 
   return {
-    currencies,
     inputError,
-    parsedAmount,
+    parsedAmounts,
     trade: Trade?.trade,
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
-    tradePoolId: poolId,
+    poolId,
     pool,
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
@@ -353,7 +391,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     setOrderPrice,
     minUseableTick,
     isInputTokenSorted,
-    outputAmount,
     minSettableTick,
     atLimitedTick,
   };

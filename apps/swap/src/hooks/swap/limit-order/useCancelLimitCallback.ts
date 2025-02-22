@@ -5,9 +5,8 @@ import { removeOrder } from "@icpswap/hooks";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCancelLimitSteps } from "components/swap/limit-order/CancelLimitSteps";
 import { useStepContentManager } from "store/steps/hooks";
@@ -17,6 +16,7 @@ import { Principal } from "@dfinity/principal";
 import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 import { LimitOrder } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 import { getLimitTokenAndAmount } from "./useLimitDetails";
 
@@ -30,6 +30,7 @@ type updateStepsArgs = {
 };
 
 function useUpdateStepContent() {
+  const { t } = useTranslation();
   const updateStep = useStepContentManager();
   const handleReclaim = useReclaimCallback();
   const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
@@ -47,7 +48,7 @@ function useUpdateStepContent() {
 
       updateStep(String(key), {
         content,
-        title: t`Cancel Limit Details`,
+        title: t("limit.cancel.details"),
       });
     },
     [keepTokenInPools],
@@ -65,6 +66,7 @@ interface CancelLimitCallsArgs {
 }
 
 function useCancelLimitCalls() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
   const [openSuccessTip] = useSuccessTip();
@@ -180,6 +182,7 @@ export interface CancelLimitCallbackProps {
 }
 
 export function useCancelLimitCallback() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const getCalls = useCancelLimitCalls();
   const getStepCalls = useStepCalls();
@@ -213,7 +216,7 @@ export function useCancelLimitCallback() {
 
       stepContentManage(String(key), {
         content,
-        title: t`Cancel Limit Details`,
+        title: t("limit.cancel.details"),
       });
 
       return { call, reset, retry, key };

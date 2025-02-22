@@ -1,10 +1,10 @@
 import { Typography } from "components/Mui";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
-import { Trans, t } from "@lingui/macro";
 import { Flex, TextButton, TokenImage } from "components/index";
 import { isUseTransfer } from "utils/token/index";
 import { StepContents, StepContent } from "types/step";
+import i18n from "i18n/index";
 
 export interface GetLimitOrderStepsProps {
   position: Position | undefined;
@@ -78,55 +78,49 @@ export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim 
     {
       title: isUseTransfer(inputToken) ? `Transfer ${inputToken.symbol}` : `Approve ${inputToken.symbol}`,
       children: [
-        { label: t`Amount`, value: InputTokenAmount },
-        { label: t`Canister Id`, value: inputToken.address },
+        { label: i18n.t("common.amount"), value: InputTokenAmount },
+        { label: i18n.t("common.canister.id"), value: inputToken.address },
       ],
     },
     {
-      title: t`Deposit ${inputToken.symbol}`,
+      title: i18n.t("common.deposit.amount", { amount: inputToken.symbol }),
       children: [
         {
-          label: t`Amount`,
+          label: i18n.t("common.amount"),
           value: InputTokenAmount,
         },
-        { label: t`Canister Id`, value: inputToken.address },
+        { label: i18n.t("common.canister.id"), value: inputToken.address },
       ],
       errorActions: [
         <>
-          <TextButton onClick={handleReclaim}>
-            <Trans>Reclaim</Trans>
-          </TextButton>
+          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
         </>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
       title: (
         <Typography color="text.primary" fontWeight={500} fontSize="16px">
-          <Trans>Set Limit Order</Trans>
+          {i18n.t("limit.set.order")}
         </Typography>
       ),
       children: [
-        { label: <Trans>Limit Price</Trans>, value: LimitPrice },
-        { label: <Trans>Price Range</Trans>, value: PriceRange },
-        { label: <Trans>You Pay</Trans>, value: InputTokenAmount },
+        { label: i18n.t("common.limit.price"), value: LimitPrice },
+        { label: i18n.t("common.price.range"), value: PriceRange },
+        { label: i18n.t("common.you.pay"), value: InputTokenAmount },
       ],
       errorActions: [
-        <TextButton onClick={handleReclaim}>
-          <Trans>Reclaim</Trans>
-        </TextButton>,
-        <TextButton onClick={retry}>
-          <Trans>Retry</Trans>
-        </TextButton>,
+        <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
+        <TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>,
       ],
-      errorMessage: t`Please check your balance in the Swap Pool to see if tokens have been transferred to the Swap Pool. You can retrieve your limit order tokens on the liquidity page after importing this trading pair.`,
+      errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
-      title: t`Submit Limit Order`,
+      title: i18n.t("limit.submit"),
       children: [
-        { label: <Trans>Limit Price</Trans>, value: LimitPrice },
-        { label: <Trans>You Pay</Trans>, value: InputTokenAmount },
-        { label: <Trans>You Expect to Receive</Trans>, value: OutputTokenAmount },
+        { label: i18n.t("common.limit.price"), value: LimitPrice },
+        { label: i18n.t("common.you.pay"), value: InputTokenAmount },
+        { label: i18n.t("limit.expect.receive"), value: OutputTokenAmount },
       ],
     },
   ];

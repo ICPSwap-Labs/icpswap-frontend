@@ -1,7 +1,7 @@
 import { Box, Typography, makeStyles, Theme } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { getStateColor, PositionState } from "utils/swap/index";
 import { PositionRangeDot } from "components/liquidity/index";
+import { useTranslation } from "react-i18next";
 
 interface UseStyleProps {
   width?: string;
@@ -45,6 +45,7 @@ interface ClosedProps {
 }
 
 function Closed({ width }: ClosedProps) {
+  const { t } = useTranslation();
   const classes = useStyle({ width })();
 
   return (
@@ -52,7 +53,7 @@ function Closed({ width }: ClosedProps) {
       <PositionRangeDot state={PositionState.CLOSED} />
 
       <Typography color="#ffffff" sx={{ marginLeft: "3px" }}>
-        <Trans>Closed</Trans>
+        {t("common.closed")}
       </Typography>
     </Box>
   );
@@ -63,15 +64,14 @@ interface OutOfRangeProps {
 }
 
 function OutOfRange({ width }: OutOfRangeProps) {
+  const { t } = useTranslation();
   const classes = useStyle({ width })();
 
   return (
     <Box className={`${classes.wrapper} outOfRange`}>
       <PositionRangeDot background="#ffffff" state={PositionState.OutOfRange} />
 
-      <Typography>
-        <Trans>Out of range</Trans>
-      </Typography>
+      <Typography>{t("common.out.range")}</Typography>
     </Box>
   );
 }
@@ -81,15 +81,14 @@ interface InRangeProps {
 }
 
 function InRange({ width }: InRangeProps) {
+  const { t } = useTranslation();
   const classes = useStyle({ width })();
 
   return (
     <Box className={`${classes.wrapper} inRange`}>
       <PositionRangeDot state={PositionState.InRange} />
 
-      <Typography color="#ffffff">
-        <Trans>In range</Trans>
-      </Typography>
+      <Typography color="#ffffff">{t("common.in.range")}</Typography>
     </Box>
   );
 }

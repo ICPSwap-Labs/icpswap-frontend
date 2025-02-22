@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 import { Position, Pool } from "@icpswap/swap-sdk";
-import { useSwapPoolMetadata } from "@icpswap/hooks";
-import { usePool, PoolState } from "hooks/swap/usePools";
-import { useToken } from "hooks/useCurrency";
+import { usePoolByPoolId, PoolState } from "hooks/swap/usePools";
 import { nonNullArgs } from "@icpswap/utils";
 
 export interface UsePositionProps {
@@ -13,22 +11,12 @@ export interface UsePositionProps {
 }
 
 export function usePosition(userPosition: UsePositionProps | undefined) {
-  const { result: poolMetadata } = useSwapPoolMetadata(userPosition?.poolId);
-
-  const [, currency0] = useToken(poolMetadata?.token0.address);
-  const [, currency1] = useToken(poolMetadata?.token1.address);
-
-  const [poolState, pool] = usePool(
-    currency0 ?? undefined,
-    currency1 ?? undefined,
-    poolMetadata?.fee ? Number(poolMetadata.fee) : undefined,
-  );
+  const [poolState, pool] = usePoolByPoolId(userPosition?.poolId);
 
   let position: Position | undefined;
 
   if (
     pool &&
-    poolMetadata &&
     userPosition &&
     userPosition.tickLower !== undefined &&
     userPosition.tickUpper !== undefined &&

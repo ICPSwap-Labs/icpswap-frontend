@@ -5,7 +5,6 @@ import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { Trans, t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
 import { Theme } from "@mui/material/styles";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
@@ -18,6 +17,7 @@ import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
 import { standardCheck } from "utils/token/standardCheck";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import { useTranslation } from "react-i18next";
 
 import Config from "./Config";
 
@@ -78,6 +78,7 @@ type ExcelClaimItem = {
 };
 
 export default function CreateTokenClaim() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const principal = useAccountPrincipal();
@@ -247,7 +248,7 @@ export default function CreateTokenClaim() {
 
   let errorMsg = "";
   if (!values.userAmount) errorMsg = t`Enter the claimed token amount`;
-  if (!values.tokenAmount) errorMsg = t`Enter user amount`;
+  if (!values.tokenAmount) errorMsg = t("claim.enter.user.amount");
   if (!values.standard) errorMsg = t`Select the token standard`;
   if (!values.id) errorMsg = t`Enter the token canister id`;
   if (!values.name) errorMsg = t`Enter the claim event name`;
@@ -279,18 +280,22 @@ export default function CreateTokenClaim() {
               />
 
               <FilledTextField
-                placeholder={t`Enter total token claimed amount`}
+                placeholder={t("common.enter.token.claimed")}
                 onChange={(value) => handleFieldChange(value, "tokenAmount")}
                 value={values.tokenAmount}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: token?.decimals ?? 8,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.tokenAmount,
+                textFieldProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: token?.decimals ?? 8,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.tokenAmount,
+                      },
+                    },
                   },
                 }}
               />
@@ -299,7 +304,7 @@ export default function CreateTokenClaim() {
                 placeholder={t`Enter total user amount`}
                 onChange={(value) => handleFieldChange(value, "userAmount")}
                 value={values.userAmount}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -344,7 +349,7 @@ export default function CreateTokenClaim() {
                   onChange={handleFileChange}
                 />
                 <AuthButton variant="outlined" fullWidth size="large" loading={importLoading}>
-                  <Trans>Import Data</Trans>
+                  {t("claim.import.data")}
                 </AuthButton>
                 {!!userClaims.length || !!inValidUserClaims.length ? (
                   <Box mt="4px">

@@ -13,7 +13,6 @@ import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TradePrice } from "components/swap/TradePrice";
-import { Trans, t } from "@lingui/macro";
 import { AuthButton } from "components/index";
 import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
@@ -23,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useTranslation } from "react-i18next";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -33,6 +33,7 @@ export interface SwapWrapperProps {
 }
 
 export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref: Ref<SwapWrapperRef>) => {
+  const { t } = useTranslation();
   const history = useHistory();
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
@@ -211,9 +212,12 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
     const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const loadingKey = openLoadingTip(t`Swap ${amount0} ${inputToken?.symbol} to ${amount1} ${outputToken?.symbol}`, {
-      extraContent: <StepViewButton step={key} />,
-    });
+    const loadingKey = openLoadingTip(
+      t("swap.to", { symbol0: `${amount0} ${inputToken?.symbol}`, symbol1: `${amount1} ${outputToken?.symbol}` }),
+      {
+        extraContent: <StepViewButton step={key} />,
+      },
+    );
 
     setConfirmModalShow(false);
     setSwapLoading(false);
@@ -330,19 +334,17 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         }}
       >
         {swapInputError ||
-          (isLoadingRoute ? (
-            <Trans>Swap</Trans>
-          ) : isNoRouteFound ? (
-            <Trans>Insufficient liquidity for this trade.</Trans>
-          ) : isPoolNotChecked ? (
-            <Trans>Waiting for verifying the pool...</Trans>
-          ) : priceImpactTooHigh ? (
-            <Trans>High Price Impact</Trans>
-          ) : priceImpactSeverity > 2 ? (
-            <Trans>Swap Anyway</Trans>
-          ) : (
-            <Trans>Swap</Trans>
-          ))}
+          (isLoadingRoute
+            ? t("common.swap")
+            : isNoRouteFound
+            ? t("common.insufficient.liquidity")
+            : isPoolNotChecked
+            ? t("swap.waiting.verifying")
+            : priceImpactTooHigh
+            ? t("swap.high.impact")
+            : priceImpactSeverity > 2
+            ? t("swap.anyway")
+            : t("common.swap"))}
       </AuthButton>
 
       {confirmModalShow && trade && (

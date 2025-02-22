@@ -4,8 +4,8 @@ import Toggle from "components/Toggle";
 import { useExpertModeManager, useSlippageManager, useMultipleApproveManager } from "store/swap/cache/hooks";
 import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
 import { Tooltip, NumberTextField, TextButton, Flex } from "components/index";
-import { Trans } from "@lingui/macro";
 import { BigNumber } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -66,6 +66,7 @@ export interface SwapSettingCardProps {
 }
 
 export function SwapSettingCard({ type }: SwapSettingCardProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
 
   const [slippageValue, setSlippageValue] = useState<string>("");
@@ -132,7 +133,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
       </Typography>
       <Box mt={3}>
         <Flex fullWidth gap="0 8px">
-          <Typography color="text.primary">Slippage tolerance</Typography>
+          <Typography color="text.primary">{t("swap.slippage.tolerance")}</Typography>
           <Tooltip
             tips="Your transaction will revert if the price changes unfavorably
                   by more than this percentage."
@@ -147,8 +148,10 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
               allowNegative: false,
               maxLength: 6,
             }}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            slotProps={{
+              input: {
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              },
             }}
             onChange={handleSlippageInput}
             onBlur={handleSlippageBlur}
@@ -181,7 +184,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
       <Box mt={3}>
         <Flex fullWidth>
           <Typography mr={1} color="textPrimary">
-            <Trans>Toggle Expert Mode</Trans>
+            {t("swap.toggle.mode")}
           </Typography>
           <Tooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
         </Flex>
@@ -193,7 +196,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
       <Box mt={3}>
         <Flex fullWidth>
           <Typography mr={1} color="textPrimary">
-            <Trans>Approval Limit Settings</Trans>
+            {t("swap.approval.limit.settings")}
           </Typography>
 
           {/* <Tooltip tips="Allow high price impact trades and skip the confirm screen. Use at your own risk."></Tooltip> */}
@@ -208,15 +211,13 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
             />
           </Box>
 
-          <Typography>
-            <Trans>Multiple of the Swap Amount</Trans>
-          </Typography>
+          <Typography>{t("swap.approval.multiple")}</Typography>
         </Box>
       </Box>
 
       <Box mt={3}>
         <TextButton arrow to="/swap/revoke-approve">
-          <Trans>Revoke Token Approval</Trans>
+          {t("swap.revoke.token.approval")}
         </TextButton>
       </Box>
       {/* <Box mt={3}>

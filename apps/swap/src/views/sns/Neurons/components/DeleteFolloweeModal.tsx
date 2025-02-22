@@ -2,9 +2,9 @@ import { useState } from "react";
 import { toHexString } from "@icpswap/utils";
 import { setNeuronFollows } from "@icpswap/hooks";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { Neuron } from "@icpswap/types";
 import { ConfirmModal } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 export interface DeleteFolloweeProps {
   open: boolean;
@@ -27,6 +27,7 @@ export function DeleteFolloweeModal({
   open,
   onClose,
 }: DeleteFolloweeProps) {
+  const { t } = useTranslation();
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
@@ -85,7 +86,7 @@ export function DeleteFolloweeModal({
       open={open}
       onConfirm={handleDeleteFollowee}
       onClose={onClose}
-      title={t`Delete Followee`}
+      title={t("nns.delete.followee")}
       text={t`Are you sure to delete this followee?`}
     />
   );

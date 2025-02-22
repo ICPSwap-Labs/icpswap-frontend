@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Typography, Box, useTheme, BoxProps } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Proportion } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
@@ -8,6 +7,7 @@ import { usePoolAPR, useAllPoolsTVL } from "@icpswap/hooks";
 import { formatDollarAmount, nonNullArgs, calcPoolFees } from "@icpswap/utils";
 import { useInfoPool } from "hooks/info/useInfoPool";
 import { PoolTvlTooltip } from "components/swap";
+import { useTranslation } from "react-i18next";
 
 export interface InfoPoolProps {
   pool: Pool | undefined | null;
@@ -16,6 +16,7 @@ export interface InfoPoolProps {
 }
 
 export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
@@ -82,9 +83,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
         sx={{ margin: noPoolDetails ? "0" : "16px 0 0 0", "@media(max-width: 640px)": {} }}
       >
         <Flex gap="0 6px">
-          <Typography>
-            <Trans>TVL</Trans>
-          </Typography>
+          <Typography>{t("common.tvl")}</Typography>
 
           <PoolTvlTooltip token0Id={token0.address} token1Id={token1.address} poolId={pool?.id}>
             <Typography
@@ -102,24 +101,18 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
         </Flex>
 
         <Flex gap="0 6px">
-          <Typography>
-            <Trans>APR 24H</Trans>
-          </Typography>
+          <Typography>{t("common.apr24h")}</Typography>
 
           <Proportion value={apr24h ? parseFloat(apr24h) : undefined} showArrow={false} />
         </Flex>
 
         <Flex gap="0 6px">
-          <Typography>
-            <Trans>Fee 24H</Trans>
-          </Typography>
+          <Typography>{t("common.fee24h")}</Typography>
           <Typography color="text.primary">{fee24h ? formatDollarAmount(fee24h) : "--"}</Typography>
         </Flex>
 
         <Flex gap="0 6px">
-          <Typography>
-            <Trans>Volume 24H</Trans>
-          </Typography>
+          <Typography>{t("common.volume24h")}</Typography>
           <Typography color="text.primary">{infoPool ? formatDollarAmount(infoPool.volumeUSD) : "--"}</Typography>
         </Flex>
       </Flex>

@@ -1,5 +1,5 @@
-import { Grid, Box, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Grid, Box, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 function CloseIcon() {
@@ -21,6 +21,7 @@ function CloseIcon() {
 }
 
 export default function V3Event({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const handleToTwitter = () => {
@@ -31,7 +32,7 @@ export default function V3Event({ onClick }: { onClick: () => void }) {
     <Grid container alignItems="center" sx={{ height: "52px", background: "#B79C4A", padding: "0 20px" }}>
       <Grid item xs onClick={handleToTwitter}>
         <Typography sx={{ color: "#ffffff", cursor: "pointer", "@media(max-width: 640px)": { fontSize: "12px" } }}>
-          <Trans>We have launched Swap(MOR) V3. Click to Switch to the Smoother Swap V3 Ver.</Trans>
+          {t("swap.v3.launched")}
         </Typography>
       </Grid>
 

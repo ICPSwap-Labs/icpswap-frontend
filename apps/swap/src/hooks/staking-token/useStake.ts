@@ -4,7 +4,6 @@ import { ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { sleep } from "@icpswap/utils";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import { isUseTransferByStandard } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
@@ -12,6 +11,7 @@ import { getSteps } from "components/stake/StakeStep";
 import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { useTranslation } from "react-i18next";
 
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 
@@ -24,6 +24,7 @@ interface UpdateStepArgs {
 }
 
 function useSteps() {
+  const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
   return useCallback((key: string, { token, amount, standard, rewardToken }: UpdateStepArgs) => {
@@ -37,7 +38,7 @@ function useSteps() {
 
     initialAndUpdateDetails(String(key), {
       content,
-      title: t`Staking Details`,
+      title: t("stake.staking.details"),
     });
   }, []);
 }

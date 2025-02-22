@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, Flex, TabPanel, type Tab } from "components/index";
 import { useToken } from "hooks/useCurrency";
-import { t, Trans } from "@lingui/macro";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
@@ -17,13 +16,15 @@ import {
 import { useIntervalStakingPoolInfo } from "hooks/staking-token";
 import { useRefreshTriggerManager } from "hooks/index";
 import { State } from "components/stake/State";
+import { useTranslation } from "react-i18next";
 
 function ReclaimTab() {
+  const { t } = useTranslation();
   const { reclaimable } = useContext(ReclaimContext);
 
   return (
     <Typography fontSize="inherit" component="div" sx={{ position: "relative" }}>
-      <Trans>Reclaim</Trans>
+      {t("common.reclaim")}
       {reclaimable ? (
         <Box
           sx={{
@@ -50,6 +51,7 @@ const tabs = [
 ];
 
 export default function StakeDetail() {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [reclaimable, setReclaimable] = useState(false);
@@ -121,11 +123,11 @@ export default function StakeDetail() {
 
                   <Box>
                     <Typography color="text.primary" fontSize={20} fontWeight={500} align="right">
-                      <Trans>Earn {rewardToken?.symbol ?? "--"}</Trans>
+                      {t("common.earn.symbol", { symbol: rewardToken?.symbol ?? "--" })}
                     </Typography>
 
                     <Typography align="right" mt="8px">
-                      <Trans>Stake {stakeToken ? `${stakeToken.symbol}` : "--"}</Trans>
+                      {t("stake", { symbol: stakeToken ? `${stakeToken.symbol}` : "--" })}
                     </Typography>
                   </Box>
                 </Flex>

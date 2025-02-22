@@ -5,12 +5,12 @@ import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { TokenToggle } from "components/TokenToggle";
 import { isDarkTheme } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 import PriceRangeChart from "./PriceRangeChart";
 import { FullRangeWarning } from "./FullRangeWarning";
@@ -115,6 +115,7 @@ export const PriceRange = memo(
     getRangeByPercent,
     pool,
   }: PriceRangeProps) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const classes = useSetPriceStyle();
     const { result: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
@@ -215,18 +216,12 @@ export const PriceRange = memo(
         {noLiquidity && (
           <>
             <Typography variant="h4" color="textPrimary">
-              <Trans>Set Starting Price</Trans>
+              {t("liquidity.set.price")}
             </Typography>
             <Box mt={2}>
               <Box className={classes.startPriceDescription}>
                 <Typography color={theme.colors.warningDark} fontSize={12} lineHeight="16px">
-                  <Trans>
-                    Before you can add liquidity, this pool needs to be initialized. Creating a trading pair incurs 1
-                    ICP fee for setting up the Swap pool canister. To begin, select an initial price for the pool,
-                    determine your liquidity price range, and decide on the deposit amount. Please be aware that if the
-                    liquidity pool is being established for the first time, the creation of a new canister might require
-                    some time.
-                  </Trans>
+                  {t("liquidity.set.price.description")}
                 </Typography>
               </Box>
               <Box mt={2}>
@@ -246,7 +241,7 @@ export const PriceRange = memo(
               </Box>
               <Flex sx={{ margin: "16px 0" }} className={classes.startPrice} justify="space-between">
                 <Typography sx={{ marginRight: "8px" }}>
-                  <Trans>Current {baseCurrency?.symbol} Price:</Trans>
+                  {t("liquidity.current.token.price", { symbol: baseCurrency?.symbol })}
                 </Typography>
 
                 <Flex gap="0 4px">
@@ -273,7 +268,7 @@ export const PriceRange = memo(
         <Box>
           <Flex justify="space-between">
             <Typography variant="h4" color="text.primary">
-              <Trans>Set Price Range</Trans>
+              {t("liquidity.set.price.range")}
             </Typography>
             {baseCurrency && quoteCurrency && (
               <Box sx={{ width: "fit-content" }}>
@@ -335,7 +330,7 @@ export const PriceRange = memo(
                 <Flex fullWidth justify="space-between" align="flex-start">
                   <Flex sx={{ width: "48%" }}>
                     <PriceRangeSelector
-                      label={t`Min Price`}
+                      label={t("common.min.price")}
                       value={
                         ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
                       }
@@ -350,7 +345,7 @@ export const PriceRange = memo(
                   </Flex>
                   <Flex sx={{ width: "48%" }}>
                     <PriceRangeSelector
-                      label={t`Max Price`}
+                      label={t("common.max.price")}
                       value={
                         ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
                       }
@@ -376,7 +371,7 @@ export const PriceRange = memo(
                       {!noLiquidity ? (
                         <RangeButton
                           key="FullRange"
-                          text="Full Range"
+                          text={t("common.full.range")}
                           value="FullRange"
                           onClick={handleRange}
                           active={fullRangeWaring ? "FullRange" : undefined}

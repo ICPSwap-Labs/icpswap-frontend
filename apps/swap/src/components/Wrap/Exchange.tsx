@@ -5,7 +5,6 @@ import { SWAP_FIELD, WRAPPED_ICP as WICP } from "constants/index";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import { useDebouncedChangeHandler, useParsedQueryString } from "@icpswap/hooks";
-import { Trans, t } from "@lingui/macro";
 import { CurrencySelectorButton } from "components/CurrencySelector/button";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -14,7 +13,7 @@ import { formatDollarAmount, BigNumber, formatTokenAmount, parseTokenAmount, pri
 import ConfirmModal from "components/Wrap/ConfirmModal";
 import { wrapICP, unwrapICP } from "hooks/useWICPCalls";
 import { tokenTransfer } from "hooks/token/calls";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import Identity, { CallbackProps } from "components/Identity";
 import WrapContext from "components/Wrap/context";
 import { AuthButton } from "components/index";
@@ -24,6 +23,7 @@ import { StatusResult } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
 import { Image } from "@icpswap/ui";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export default function Exchange() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const principal = useAccountPrincipalString();
   const { retryTrigger, setRetryTrigger } = useContext(WrapContext);
@@ -178,11 +179,15 @@ export default function Exchange() {
       debouncedTypeInput("");
 
       const loadingKey = openTip(
-        t`${
-          isWrap
-            ? `Wrapping ${formattedAmounts[SWAP_FIELD.INPUT]} ICP to ${formattedAmounts[SWAP_FIELD.OUTPUT]} WICP`
-            : `Unwrapping ${formattedAmounts[SWAP_FIELD.INPUT]} WICP to ${formattedAmounts[SWAP_FIELD.OUTPUT]} ICP`
-        }`,
+        isWrap
+          ? t("wrap.wrapping", {
+              fromAmount: formattedAmounts[SWAP_FIELD.INPUT],
+              toAmount: formattedAmounts[SWAP_FIELD.OUTPUT],
+            })
+          : t("wrap.unwrapping", {
+              fromAmount: formattedAmounts[SWAP_FIELD.INPUT],
+              toAmount: formattedAmounts[SWAP_FIELD.OUTPUT],
+            }),
         TIP_LOADING,
       );
 
@@ -222,7 +227,7 @@ export default function Exchange() {
       closeTip(loadingKey);
 
       if (status === "ok") {
-        openTip(isWrap ? t`Wrapped successfully` : t`Unwrapped Successfully`, TIP_SUCCESS);
+        openTip(isWrap ? t`Wrapped successfully` : t("unwrap.success"), TIP_SUCCESS);
         debouncedTypeInput("");
         setRetryTrigger(!retryTrigger);
       } else {
@@ -241,7 +246,7 @@ export default function Exchange() {
       parsedAmounts[SWAP_FIELD.INPUT] &&
       new BigNumber(parsedAmounts[SWAP_FIELD.INPUT]).isGreaterThan(inputCurrencyBalance.toExact())
     )
-      errorMessage = `Insufficient ${inputCurrencyBalance.currency.symbol} balance`;
+      errorMessage = t("common.error.insufficient.balance");
     if (
       (inputCurrency.equals(WICP) &&
         parsedAmounts[SWAP_FIELD.INPUT] &&
@@ -250,10 +255,10 @@ export default function Exchange() {
         independentField === SWAP_FIELD.OUTPUT &&
         !new BigNumber(parsedAmounts[SWAP_FIELD.OUTPUT] ?? 0).isGreaterThan(0.0001))
     )
-      errorMessage = t`Amount must be greater than 0.0001`;
+      errorMessage = t("common.error.amount.greater.than", { amount: "0.0001" });
     if (inputCurrency.equals(ICP) && !typedValueMinFee.isGreaterThan(0))
-      errorMessage = t`Amount must be greater than 0.0001`;
-    if (!typedValue) errorMessage = t`Enter an amount`;
+      errorMessage = t("common.error.amount.greater.than", { amount: "0.0001" });
+    if (!typedValue) errorMessage = t("common.enter.input.amount");
 
     return errorMessage;
   }, [
@@ -300,12 +305,14 @@ export default function Exchange() {
           {inputCurrencyBalance ? (
             <Grid container alignItems="center" mt="12px">
               <Typography>
-                <Trans>Balance: {inputCurrencyBalance ? formatCurrencyAmount(inputCurrencyBalance, 4) : "--"}</Trans>
+                {t("common.balance.colon.amount", {
+                  amount: inputCurrencyBalance ? formatCurrencyAmount(inputCurrencyBalance, 4) : "--",
+                })}
               </Typography>
 
               {showMaxButton && (
                 <Typography fontSize="12px" className={classes.maxButton} onClick={handleMaxInput}>
-                  <Trans>MAX</Trans>
+                  {t("common.max")}
                 </Typography>
               )}
 
@@ -359,7 +366,9 @@ export default function Exchange() {
           {outputCurrencyBalance ? (
             <Grid container mt="12px">
               <Typography>
-                <Trans>Balance: {outputCurrencyBalance ? formatCurrencyAmount(outputCurrencyBalance, 4) : "--"}</Trans>
+                {t("common.balance.colon.amount", {
+                  amount: outputCurrencyBalance ? formatCurrencyAmount(outputCurrencyBalance, 4) : "--",
+                })}
               </Typography>
 
               {outputBalanceUSDValue ? (
@@ -380,7 +389,7 @@ export default function Exchange() {
       </Box>
       <Box mt={4}>
         <AuthButton fullWidth variant="contained" size="large" onClick={handleExchange} disabled={!!errorMessage}>
-          {errorMessage || (isWrap ? <Trans>Wrap</Trans> : <Trans>Unwrap</Trans>)}
+          {errorMessage || (isWrap ? t("common.wrap") : t("common.unwrap"))}
         </AuthButton>
       </Box>
       {confirmModalShow && (

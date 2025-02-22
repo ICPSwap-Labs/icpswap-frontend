@@ -12,7 +12,6 @@ import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
-import { Trans, t } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -23,6 +22,7 @@ import { ReclaimTips } from "components/ReclaimTips";
 import { maxAmountFormat } from "utils/swap";
 import { useRefreshTrigger } from "hooks/index";
 import { LoadingRow } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -94,6 +94,7 @@ export function PriceRange({ label, value, currencyA, currencyB }: PriceRangePro
 }
 
 export default function IncreaseLiquidity() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyle();
   const history = useHistory();
@@ -197,11 +198,14 @@ export default function IncreaseLiquidity() {
     const amount1Desired = position.mintAmounts.amount1.toString();
 
     const loadingTipKey = openLoadingTip(
-      t`Add ${toSignificantWithGroupSeparator(parseTokenAmount(amount0Desired, token0.decimals).toString(), 8)} ${
-        token0.symbol
-      } and ${toSignificantWithGroupSeparator(parseTokenAmount(amount1Desired, token1.decimals).toString(), 8)} ${
-        token1.symbol
-      }`,
+      t("liquidity.add.tokens", {
+        token0: `${toSignificantWithGroupSeparator(parseTokenAmount(amount0Desired, token0.decimals).toString(), 8)} ${
+          token0.symbol
+        }`,
+        token1: `${toSignificantWithGroupSeparator(parseTokenAmount(amount1Desired, token1.decimals).toString(), 8)} ${
+          token1.symbol
+        }`,
+      }),
       {
         extraContent: <StepViewButton step={key} />,
       },
@@ -237,7 +241,7 @@ export default function IncreaseLiquidity() {
               {positionLoading === false ? (
                 <>
                   <HeaderTab
-                    title="Increase Liquidity"
+                    title={t("common.increase.liquidity")}
                     showArrow
                     showUserSetting
                     slippageType="mint"
@@ -250,7 +254,7 @@ export default function IncreaseLiquidity() {
 
                   <Box mt={3}>
                     <Typography variant="h5" color="textPrimary">
-                      <Trans>Increase more liquidity</Trans>
+                      {t("liquidity.increase.more")}
                     </Typography>
 
                     <Box mt="12px">

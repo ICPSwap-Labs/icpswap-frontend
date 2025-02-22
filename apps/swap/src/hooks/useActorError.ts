@@ -1,7 +1,6 @@
 import { useErrorTip } from "hooks/useTips";
 import { actor, ActorError } from "@icpswap/actor";
 import { useEffect } from "react";
-import { t } from "@lingui/macro";
 
 const INTERVAL = 30; // 30 seconds
 
@@ -44,7 +43,7 @@ export function useHandleActorError() {
     actor.onError((error: ActorError) => {
       if (isOutOfTimeRange(error.message)) {
         if (isNewMessage("Specified ingress_expiry not within expected range")) {
-          open(t`Specified ingress_expiry not within expected range. Please reset your time on your device.`);
+          open(`Specified ingress_expiry not within expected range. Please reset your time on your device.`);
         }
       }
     });

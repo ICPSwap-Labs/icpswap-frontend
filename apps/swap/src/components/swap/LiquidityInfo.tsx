@@ -5,11 +5,11 @@ import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Trans } from "@lingui/macro";
 import { createTheme } from "@mui/material/styles";
 import { TokenImage } from "components/Image/Token";
 import { PositionRangeState } from "components/swap/index";
 import { usePositionState } from "hooks/liquidity";
+import { useTranslation } from "react-i18next";
 
 export const customizeTheme = createTheme({
   breakpoints: {
@@ -61,6 +61,7 @@ export interface LiquidityInfoProps {
 }
 
 export default function LiquidityInfo({ position }: LiquidityInfoProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};
@@ -152,9 +153,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
 
       <Grid item xs sx={{ margin: "24px 0 0 0" }}>
         <Grid container alignItems="center" className={classes.currentPrice}>
-          <Typography color="text.primary">
-            <Trans>Current Price</Trans>
-          </Typography>
+          <Typography color="text.primary">{t("common.current.price")}</Typography>
           <Grid item xs>
             <Grid container alignItems="center" justifyContent="flex-end">
               <Typography
@@ -184,7 +183,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
           <Grid container alignItems="center">
             <Grid item xs>
               <Typography color="text.primary" fontWeight="700">
-                Price Range
+                {t("common.price.range")}
               </Typography>
             </Grid>
           </Grid>
@@ -194,7 +193,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
               <Box>
                 <Grid container justifyContent="center" alignItems="center" flexDirection="column">
                   <Typography fontSize="12px" fontWeight="500">
-                    Min Price
+                    {t("common.min.price")}
                   </Typography>
                   <Typography fontSize="20px" fontWeight="700" color="text.primary" sx={{ margin: "6px 0" }}>
                     {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
@@ -210,7 +209,7 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
               <Box>
                 <Grid container justifyContent="center" alignItems="center" flexDirection="column">
                   <Typography fontSize="12px" fontWeight="500">
-                    Max Price
+                    {t("common.max.price")}
                   </Typography>
                   <Typography fontSize="20px" fontWeight="700" color="text.primary" sx={{ margin: "6px 0" }}>
                     {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}

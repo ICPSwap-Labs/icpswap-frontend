@@ -1,6 +1,5 @@
 import { useContext, useCallback, useState, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
-import { Trans, t } from "@lingui/macro";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
 import { PositionContext } from "components/swap/index";
@@ -10,12 +9,14 @@ import { useTips, MessageTypes } from "hooks/useTips";
 import { useGlobalContext } from "hooks/index";
 import { ResultStatus } from "@icpswap/types";
 import { useSwapWithdrawByTokenId } from "hooks/swap/index";
+import { useTranslation } from "react-i18next";
 
 export interface UnclaimedFeesProps {
   className?: string;
 }
 
 export function UnclaimedFees({ className }: UnclaimedFeesProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [openTip, closeTip] = useTips();
   const { positionFeesValue, positionFees } = useContext(PositionContext);
@@ -98,9 +99,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
   return (
     <Box sx={{ width: "260px" }}>
       <Flex gap="0 4px">
-        <Typography>
-          <Trans>Uncollected Fees</Trans>
-        </Typography>
+        <Typography>{t("common.uncollected.fees")}</Typography>
         <Tooltip tips={t`Earnings from your liquidity that haven’t been collected.`} />
       </Flex>
 
@@ -115,7 +114,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
           disabled={loading || !positionFeesValue || positionFeesValue.isEqualTo(0)}
           startIcon={loading ? <CircularProgress color="inherit" size={16} /> : null}
         >
-          <Trans>Collect</Trans>
+          {t("common.collect")}
         </Button>
       </Flex>
     </Box>

@@ -1,13 +1,12 @@
 import { useState, useMemo } from "react";
 import { Button, Box, CircularProgress, useTheme } from "components/Mui";
-import { t } from "@lingui/macro";
 import { useTips } from "hooks/useTips";
-import { getLocaleMessage } from "locales/services";
+import { getLocaleMessage } from "i18n/service";
 import { Modal } from "components/index";
 import { type FarmInfo, ResultStatus, InitFarmArgs } from "@icpswap/types";
-import { Theme } from "@mui/material/styles";
 import { approvePosition, farmStake } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
+import { useTranslation } from "react-i18next";
 
 import { PositionCard } from "./PositionCard1";
 
@@ -24,7 +23,8 @@ export interface StakingModalProps {
 }
 
 export function Stake({ open, onClose, resetData, farmId, position, positionId }: StakingModalProps) {
-  const theme = useTheme() as Theme;
+  const { t } = useTranslation();
+  const theme = useTheme();
   const [openTip] = useTips();
 
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -61,7 +61,7 @@ export function Stake({ open, onClose, resetData, farmId, position, positionId }
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={t`Stake`} background={theme.palette.background.level1}>
+    <Modal open={open} onClose={onClose} title={t("common.stake")} background={theme.palette.background.level1}>
       <Box>
         <PositionCard position={position} positionId={positionId} />
       </Box>
@@ -77,7 +77,7 @@ export function Stake({ open, onClose, resetData, farmId, position, positionId }
           size="large"
           startIcon={confirmLoading ? <CircularProgress size={24} color="inherit" /> : null}
         >
-          {t`Confirm`}
+          {t("common.confirm")}
         </Button>
       </Box>
     </Modal>

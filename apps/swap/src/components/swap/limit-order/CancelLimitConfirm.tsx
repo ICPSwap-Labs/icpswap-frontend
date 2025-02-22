@@ -1,6 +1,6 @@
 import { Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
-import { t, Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 export interface CancelLimitConfirmProps {
   open: boolean;
@@ -9,24 +9,22 @@ export interface CancelLimitConfirmProps {
 }
 
 export function CancelLimitConfirm({ open, onConfirm, onClose }: CancelLimitConfirmProps) {
+  const { t } = useTranslation();
+
   return (
     <Modal
       open={open}
-      title={t`Cancel Limit`}
+      title={t("limit.cancel")}
       onClose={onClose}
       onCancel={onClose}
       onConfirm={onConfirm}
       cancelText={t`Nerve mind`}
-      confirmText={t`Proceed`}
+      confirmText={t("common.proceed")}
       showConfirm
       showCancel
       background="level1"
     >
-      <Typography sx={{ lineHeight: "20px" }}>
-        <Trans>
-          Cancel this limit order? The tokens will be withdrawn to your wallet( or your pool balance). Proceed?
-        </Trans>
-      </Typography>
+      <Typography sx={{ lineHeight: "20px" }}>{t("limit.cancel.confirms")}</Typography>
     </Modal>
   );
 }

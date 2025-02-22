@@ -34,7 +34,7 @@ import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/index";
 import dayjs from "dayjs";
 import { FilterState } from "types/staking-farm";
-import { Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 import { PendingPanel } from "./PendingPanel";
 import { State } from "./State";
@@ -51,6 +51,7 @@ interface FarmListCardProps {
 }
 
 export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }: FarmListCardProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -194,13 +195,12 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
             <APRPanel
               value={__apr}
               tooltip={
-                nonNullArgs(rewardToken) && nonNullArgs(totalRewardAmount) ? (
-                  <Trans>
-                    This's the average APR for the pool. The total reward is {formatAmount(totalRewardAmount)}{" "}
-                    {rewardToken.symbol} ({nonNullArgs(totalRewardUSD) ? formatDollarAmount(totalRewardUSD) : "--"}
-                    ).
-                  </Trans>
-                ) : null
+                nonNullArgs(rewardToken) && nonNullArgs(totalRewardAmount)
+                  ? t("farm.apr.descriptions", {
+                      reward: `${formatAmount(totalRewardAmount)} ${rewardToken.symbol}`,
+                      rewardUsd: nonNullArgs(totalRewardUSD) ? formatDollarAmount(totalRewardUSD) : "--",
+                    })
+                  : null
               }
             />
           ) : (
@@ -233,10 +233,10 @@ export function FarmListCard({ farmId, wrapperSx, showState, your, filterState }
 
                 {state === "NOT_STARTED" && userFarmInfo ? (
                   <Tooltip
-                    tips={`
-                   As soon as the Farm goes live on ${dayjs(Number(userFarmInfo.startTime) * 1000).format(
-                     DAYJS_FORMAT0,
-                   )} at ${dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1)}, you can start staking.`}
+                    tips={t("farm.not_start.descriptions", {
+                      liveTime0: dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT0),
+                      liveTime1: dayjs(Number(userFarmInfo.startTime) * 1000).format(DAYJS_FORMAT1),
+                    })}
                     iconSize="14px"
                   />
                 ) : null}

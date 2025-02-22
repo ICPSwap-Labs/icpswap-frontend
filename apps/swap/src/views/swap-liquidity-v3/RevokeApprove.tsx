@@ -3,7 +3,6 @@ import { Typography, Box, Grid, Button, CircularProgress, Avatar, useMediaQuery,
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
-import { Trans } from "@lingui/macro";
 import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { ICP } from "@icpswap/tokens";
@@ -11,6 +10,7 @@ import { useGlobalContext } from "hooks/useGlobalContext";
 import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
 import type { SwapPoolData, AllTokenOfSwapTokenInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useTranslation } from "react-i18next";
 
 export interface RevokeItemProps {
   tokenId: string;
@@ -19,6 +19,7 @@ export interface RevokeItemProps {
 }
 
 export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
   const [openTip, closeTip] = useTips();
@@ -120,7 +121,7 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
               },
             }}
           >
-            <Trans>Approval Limit:</Trans>&nbsp;
+            {t("swap.approve.limit.colon")}&nbsp;
             <Typography
               color="text.primary"
               sx={{
@@ -164,7 +165,7 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
             onClick={handleRevoke}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            <Trans>Revoke</Trans>
+            {t("common.revoke")}
           </Button>
         </Box>
       </Box>
@@ -173,6 +174,7 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
 }
 
 export default function SwapRevokeApprove() {
+  const { t } = useTranslation();
   const [selectedTokenId, setSelectedTokenId] = useState<string>(ICP.address);
 
   const { AllPools } = useGlobalContext();
@@ -197,11 +199,7 @@ export default function SwapRevokeApprove() {
   return (
     <Wrapper>
       <Box sx={{ margin: "10px 0 0 0" }}>
-        <Breadcrumbs
-          prevLink="/swap"
-          prevLabel={<Trans>Swap</Trans>}
-          currentLabel={<Trans>Revoke Token Approval</Trans>}
-        />
+        <Breadcrumbs prevLink="/swap" prevLabel={t("common.swap")} currentLabel={t("swap.revoke.token.approval")} />
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "center", margin: "40px 0 0 0" }}>
@@ -214,19 +212,16 @@ export default function SwapRevokeApprove() {
           }}
         >
           <Typography sx={{ fontSize: "24px", fontWeight: 500 }} color="text.primary">
-            <Trans>Revoke Token Approval</Trans>
+            {t("swap.revoke.token.approval")}
           </Typography>
 
           <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
-            <Trans>
-              ICRC2 standard tokens require an approval step when using swap. You can revoke this approval based on your
-              security needs.
-            </Trans>
+            {t("swap.revoke.approval.description")}
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: "0 20px", margin: "40px 0 0 0" }}>
             <Typography color="text.primary" fontWeight={500}>
-              <Trans>Select Token</Trans>
+              {t("common.select.token")}
             </Typography>
 
             <Box sx={{ minWidth: "160px" }}>

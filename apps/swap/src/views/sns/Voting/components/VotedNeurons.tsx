@@ -1,13 +1,11 @@
-import { useTheme } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import { useMemo, useState } from "react";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten, toHexString } from "@icpswap/utils";
-import { Collapse, Typography, Box } from "components/Mui";
-import { Theme } from "@mui/material/styles";
+import { Collapse, Typography, Box, useTheme } from "components/Mui";
 import { neuronFormat, votingPowerFormat, getVotingPower, getVotingPowers, getVote } from "utils/sns/index";
 import { ChevronDown, ThumbsUp, ThumbsDown } from "react-feather";
 import { Vote } from "@icpswap/constants";
+import { useTranslation } from "react-i18next";
 
 interface VotedNeuronItemProps {
   neuron: Neuron;
@@ -15,7 +13,7 @@ interface VotedNeuronItemProps {
 }
 
 function VotedNeuronItem({ neuron, proposal_data }: VotedNeuronItemProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const YesColor = theme.colors.successDark;
   const NoColor = theme.colors.danger;
 
@@ -51,6 +49,7 @@ export interface VotedNeuronsProps {
 }
 
 export function VotedNeurons({ proposal_data, votedNeurons }: VotedNeuronsProps) {
+  const { t } = useTranslation();
   const [votedOpen, setVotedOpen] = useState(false);
 
   return votedNeurons && proposal_data && votedNeurons.length > 0 ? (
@@ -74,14 +73,12 @@ export function VotedNeurons({ proposal_data, votedNeurons }: VotedNeuronsProps)
           }}
           onClick={() => setVotedOpen(!votedOpen)}
         >
-          <Typography>
-            <Trans>{votedNeurons.length} neurons voted</Trans>
-          </Typography>
+          <Typography>{t("nns.voting.number.voted", { number: votedNeurons.length })}</Typography>
           <ChevronDown size="18px" style={{ transform: votedOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
         </Box>
 
         <Typography>
-          <Trans>Voting Power: {votingPowerFormat(getVotingPowers(votedNeurons, proposal_data))}</Trans>
+          {t("nns.voting.power.amount", { amount: votingPowerFormat(getVotingPowers(votedNeurons, proposal_data)) })}
         </Typography>
       </Box>
 

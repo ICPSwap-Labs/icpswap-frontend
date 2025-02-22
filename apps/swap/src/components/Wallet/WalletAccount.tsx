@@ -1,7 +1,6 @@
 import { useContext, useMemo, useRef } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { formatDollarTokenPrice, formatIcpAmount, principalToAccount } from "@icpswap/utils";
-import { Trans, t } from "@lingui/macro";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
@@ -9,6 +8,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import Copy, { CopyRef } from "components/Copy";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 import { Flex, Tooltip } from "components/index";
+import { useTranslation } from "react-i18next";
 
 import WalletContext from "./context";
 
@@ -77,6 +77,7 @@ export function AddressWrapper({ address, label, tips }: AddressWrapperProps) {
 }
 
 export default function WalletAccount() {
+  const { t } = useTranslation();
   const icpPrice = useICPPrice();
 
   const principal = useAccountPrincipal();
@@ -126,9 +127,7 @@ export default function WalletAccount() {
     >
       <Box>
         <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-          <Typography>
-            <Trans>Estimated Balance</Trans>
-          </Typography>
+          <Typography>{t("wallet.estimated.balance")}</Typography>
 
           <RefreshIcon style={{ cursor: "pointer" }} onClick={handleRefreshBalance} />
         </Box>
@@ -168,7 +167,7 @@ export default function WalletAccount() {
           <AddressWrapper
             address={principal ? principalToAccount(principal?.toString()) : "--"}
             label={t`Account ID`}
-            tips={t`Account ID (AID): Derived from the Principal ID using a subaccount number, used to identify owners of ICP and NFTs. It adds an extra layer of privacy. It supports ICP, EXT standard tokens, and NFT transfers and transactions.`}
+            tips={t("wallet.account.tips")}
           />
         </Box>
         <Box
@@ -181,7 +180,7 @@ export default function WalletAccount() {
         >
           <AddressWrapper
             address={principal ? principal.toString() : "--"}
-            label={t`Principal ID`}
+            label={t("common.principal.id")}
             tips={t`Principal ID (PID): Your unique wallet identifier, similar to an Ethereum wallet address. It supports ICRC and DIP20 standards token transfers and transactions.`}
           />
         </Box>

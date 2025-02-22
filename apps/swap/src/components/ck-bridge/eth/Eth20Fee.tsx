@@ -1,16 +1,17 @@
-import { Trans } from "@lingui/macro";
 import { Box, Typography, useTheme, Button } from "components/Mui";
 import { useCallback } from "react";
 import { Flex } from "@icpswap/ui";
 import { ckETH, ICP } from "@icpswap/tokens";
 import { useChainKeyTransactionPrice, useInfoToken } from "@icpswap/hooks";
-import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function EthFee() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
   const history = useHistory();
@@ -34,20 +35,24 @@ export function EthFee() {
     >
       <Flex vertical align="flex-start" gap="16px 0">
         <Flex justify="space-between" fullWidth>
-          <Typography>
-            <Trans>Gas fees</Trans>
-          </Typography>
+          <Typography>{t("common.gas.fees")}</Typography>
 
           <Typography>
             {transactionPrice && ckETHInfoToken ? (
-              <Trans>
-                Max {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)}&nbsp;
-                {ckETH.symbol} ($
-                {parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
-                  .multipliedBy(ckETHInfoToken.priceUSD)
-                  .toFormat(2)}
-                )
-              </Trans>
+              <>
+                {t("common.max.amount", {
+                  amount: `${parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals).toFormat(6)} ${
+                    ckETH.symbol
+                  } `,
+                })}
+                {t("common.brackets", {
+                  content: `${formatDollarAmount(
+                    parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
+                      .multipliedBy(ckETHInfoToken.priceUSD)
+                      .toString(),
+                  )}`,
+                })}
+              </>
             ) : (
               "--"
             )}
@@ -55,9 +60,7 @@ export function EthFee() {
         </Flex>
 
         <Flex justify="space-between" fullWidth>
-          <Typography>
-            <Trans>ckETH Balance</Trans>
-          </Typography>
+          <Typography>{t("common.balance.symbol", { symbol: "ckETH" })}</Typography>
 
           <Flex gap="0 8px">
             <Typography>
@@ -68,7 +71,7 @@ export function EthFee() {
             </Typography>
 
             <Button variant="outlined" onClick={handleBuy} size="small">
-              <Trans>Buy ckETH</Trans>
+              {t("common.buy.token", { symbol: "ckETH" })}
             </Button>
           </Flex>
         </Flex>

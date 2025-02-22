@@ -3,7 +3,6 @@ import { makeStyles, Grid, Box, Typography, Link, Theme } from "components/Mui";
 import { StakeClaimTransactions, StakeTransactions } from "components/info/stake";
 import { MainCard, InfoWrapper, Copy } from "components/index";
 import { useParams } from "react-router-dom";
-import { Trans, t } from "@lingui/macro";
 import { parseTokenAmount, shorten, explorerLink, cycleValueFormat } from "@icpswap/utils";
 import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "@icpswap/hooks";
 import { BreadcrumbsV1 } from "@icpswap/ui";
@@ -11,6 +10,7 @@ import dayjs from "dayjs";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useToken } from "hooks/index";
 import upperFirst from "lodash/upperFirst";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -44,6 +44,7 @@ export function timeFormatter(dateTime: bigint | undefined) {
 }
 
 export default function PoolsDetails() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
   const { result: pool } = useStakingTokenPool(id);
@@ -58,9 +59,7 @@ export default function PoolsDetails() {
 
   return (
     <InfoWrapper size="small">
-      <BreadcrumbsV1
-        links={[{ label: <Trans>Stake</Trans>, link: "/info-stake" }, { label: <Trans>Stake Details</Trans> }]}
-      />
+      <BreadcrumbsV1 links={[{ label: t("common.stake"), link: "/info-stake" }, { label: t("stake.details") }]} />
 
       <Box
         sx={{
@@ -92,7 +91,7 @@ export default function PoolsDetails() {
           </Box>
           <Box mt="30px" className={classes.details}>
             <PoolDetailItem
-              label={t`Canister ID:`}
+              label={t("common.canister.id.colon")}
               value={
                 <Copy content={id ?? ""}>
                   <Typography color="text.primary">{shorten(id, 8)}</Typography>
@@ -100,7 +99,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Pool Balance:`}
+              label={t("pool.balance.colon")}
               value={
                 poolTokenBalance && pool ? (
                   <Typography component="span" color="text.primary">
@@ -115,7 +114,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Total Rewards:`}
+              label={t("common.total.rewards.colon")}
               value={
                 <Typography component="span" color="text.primary">
                   {parseTokenAmount(pool?.rewardDebt, pool?.rewardTokenDecimals).toFormat()}
@@ -126,7 +125,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Reward Per Second:`}
+              label={t("common.reward.per.second.colon")}
               value={
                 <>
                   {pool && rewardToken
@@ -138,11 +137,11 @@ export default function PoolsDetails() {
                 </>
               }
             />
-            <PoolDetailItem label={t`Start Time:`} value={timeFormatter(pool?.startTime)} />
-            <PoolDetailItem label={t`End Time:`} value={timeFormatter(pool?.bonusEndTime)} />
-            <PoolDetailItem label={t`Last Reward Time:`} value={timeFormatter(pool?.lastRewardTime)} />
+            <PoolDetailItem label={t("common.start.time.colon")} value={timeFormatter(pool?.startTime)} />
+            <PoolDetailItem label={t("common.end.time.colon")} value={timeFormatter(pool?.bonusEndTime)} />
+            <PoolDetailItem label={t("common.last.reward.time.colon")} value={timeFormatter(pool?.lastRewardTime)} />
             <PoolDetailItem
-              label={t`Creator:`}
+              label={t("common.creator.colon")}
               value={
                 pool ? (
                   <Link href={explorerLink(pool.creator.toString())} target="_blank">
@@ -154,7 +153,7 @@ export default function PoolsDetails() {
               }
             />
             <PoolDetailItem
-              label={t`Cycles Left:`}
+              label={t("common.cycles.left.colon")}
               value={cycles?.balance ? cycleValueFormat(cycles?.balance) : "--"}
             />
           </Box>
@@ -173,7 +172,7 @@ export default function PoolsDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Staked Tokens</Trans>
+              {t("stake.tokens")}
             </Typography>
             <Typography
               color={recordType !== "transactions" ? "text.primary" : ""}
@@ -184,7 +183,7 @@ export default function PoolsDetails() {
                 cursor: "pointer",
               }}
             >
-              <Trans>Reward Tokens</Trans>
+              {t("common.reward.tokens")}
             </Typography>
           </Grid>
           <Grid item container justifyContent="center" mt="20px">

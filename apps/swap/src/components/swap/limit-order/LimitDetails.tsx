@@ -10,7 +10,6 @@ import {
 } from "@icpswap/utils";
 import { Modal, Line } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
-import { t, Trans } from "@lingui/macro";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ArrowDown } from "react-feather";
@@ -21,6 +20,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { LimitOrder } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 import { LimitDealRatio } from "./LimitDealRatio";
 
@@ -33,6 +33,7 @@ export interface LimitDetailsProps {
 }
 
 export function LimitDetails({ open, position, order, onClose, onCancelLimit }: LimitDetailsProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -75,7 +76,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
   });
 
   return (
-    <Modal open={open} title={t`Limit Order Details`} onClose={onClose} background="level1">
+    <Modal open={open} title={t("swap.limit.order.details")} onClose={onClose} background="level1">
       <Flex vertical align="flex-start" gap="24px 0" fullWidth>
         <Flex gap="0 12px">
           <Flex>
@@ -90,7 +91,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
 
           <Box>
             <Typography color="text.primary" fontSize="16px">
-              Limit pending
+              {t("limit.pending")}
             </Typography>
 
             <Typography sx={{ fontSize: "12px", margin: "8px 0 0 0" }}>
@@ -131,7 +132,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
                   "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
                 }}
               >
-                <Trans>Filled</Trans>
+                {t("common.filled")}
               </Typography>
             </Flex>
 
@@ -145,9 +146,9 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
                   "@media(max-width: 640px)": { fontSize: "12px", maxWidth: "112px" },
                 }}
               >
-                <Trans>Limit Price</Trans>
+                {t("common.limit.price")}
               </Typography>
-              <Tooltip tips={t`Limit price is the set price for buying or selling your token.`} iconSize="14px" />
+              <Tooltip tips={t("common.limit.price.tips")} iconSize="14px" />
             </Flex>
 
             <Typography
@@ -168,7 +169,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
                   "@media(max-width: 640px)": { fontSize: "12px" },
                 }}
               >
-                <Trans>Current Price</Trans>
+                {t("common.current.price")}
               </Typography>
             </Flex>
 
@@ -190,7 +191,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
                 }}
                 component="div"
               >
-                <Trans>Estimated trading fee earnings</Trans>
+                {t("limit.estimated.earning")}
                 <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
                   <Tooltip
                     iconSize="14px"
@@ -218,12 +219,9 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
                 }}
                 component="div"
               >
-                <Trans>Estimated transfer fee for limit order</Trans>
+                {t("limit.estimated.fee")}
                 <Box sx={{ display: "inline-block", cursor: "pointer", margin: "0 0 0 4px", verticalAlign: "top" }}>
-                  <Tooltip
-                    tips={t`Each order requires the transfer fee, determined by the token's canister.`}
-                    iconSize="14px"
-                  />
+                  <Tooltip tips={t("limit.estimated.fee.tips")} iconSize="14px" />
                 </Box>
               </Typography>
             </Flex>
@@ -241,7 +239,7 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
         </Flex>
 
         <Button variant="contained" className="secondary" size="large" fullWidth onClick={onCancelLimit}>
-          {t`Cancel Limit`}
+          {t("limit.cancel")}
         </Button>
       </Flex>
     </Modal>

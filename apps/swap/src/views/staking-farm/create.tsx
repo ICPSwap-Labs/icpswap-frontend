@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, TextFieldProps, Grid, Box, makeStyles } from "components/Mui";
+import { Typography, TextFieldProps, Grid, Box, makeStyles, Theme } from "components/Mui";
+import { Flex, Select } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
 import { useTips } from "hooks/useTips";
-import { t } from "@lingui/macro";
 import Identity, { CallbackProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import { formatTokenAmount } from "@icpswap/utils";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
@@ -22,6 +21,7 @@ import dayjs from "dayjs";
 import { FarmControllerId } from "constants/canister";
 import { standardCheck } from "utils/token/standardCheck";
 import { Principal } from "@dfinity/principal";
+import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -83,6 +83,7 @@ const DefaultValue = {
 } as Values;
 
 export default function CreateProject() {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const principal = useAccountPrincipal();
@@ -158,12 +159,12 @@ export default function CreateProject() {
   };
 
   let errorMsg = "";
-  if (!values.rewardToken) errorMsg = t`Enter the reward token`;
-  if (!values.rewardStandard) errorMsg = t`Enter the reward standard`;
+  if (!values.rewardToken) errorMsg = t("stake.create.enter.reward.token");
+  if (!values.rewardStandard) errorMsg = t("stake.create.enter.reward.standard");
   if (!rewardToken) errorMsg = t`Invalid reward token`;
   if (!values.pool) errorMsg = t`Enter the pool`;
   if (!values.refunder) errorMsg = t`Enter the refunder`;
-  if (!values.reward) errorMsg = t`Enter the reward`;
+  if (!values.reward) errorMsg = t("farm.create.enter.reward");
   if (!values.token0AmountLimit && values.token0AmountLimit !== 0)
     errorMsg = t`Enter the token0 minimum staking amount `;
   if (!values.token1AmountLimit && values.token1AmountLimit !== 0)
@@ -174,39 +175,36 @@ export default function CreateProject() {
       <MainCard>
         <Grid container justifyContent="center">
           <Box sx={{ maxWidth: "474px", width: "100%" }}>
-            <Grid mt="30px" container className={classes.mintInfoBox}>
+            <Box mt="30px" sx={{ width: "100%" }} className={classes.mintInfoBox}>
               <FilledTextField
-                label="Reward Token"
-                placeholder={t`Enter reward token id`}
+                placeholder={t("stake.enter.reward.id")}
                 onChange={(value) => handleFieldChange(value, "rewardToken")}
                 value={values.rewardToken}
               />
-              <FilledTextField
-                select
+
+              <Select
                 menus={TokenStandards}
-                label="Reward standard"
                 placeholder={t`Select the reward token standard`}
                 onChange={(value) => handleFieldChange(value, "rewardStandard")}
                 value={values.rewardStandard}
+                filled
               />
+
               <FilledTextField
-                label="Pool id"
                 placeholder={t`Enter swap pool id`}
                 onChange={(value) => handleFieldChange(value, "pool")}
                 value={values.pool}
               />
               <FilledTextField
-                label={t`Refunder`}
                 placeholder={t`Enter the refunder`}
                 onChange={(value) => handleFieldChange(value, "refunder")}
                 value={values.refunder}
               />
               <Box>
-                <Typography color="text.secondary">Start/End Time</Typography>
+                <Typography color="text.secondary">{t("common.start.end.time")}</Typography>
                 <Box mt={2}>
-                  <Grid container justifyContent="space-between">
-                    <Grid
-                      item
+                  <Flex fullWidth justify="space-between">
+                    <Box
                       sx={{
                         width: "48%",
                       }}
@@ -218,8 +216,10 @@ export default function CreateProject() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
-                                ...(params?.InputProps ?? {}),
+                              textFieldProps={{
+                                slotProps: {
+                                  ...(params?.slotProps ?? {}),
+                                },
                               }}
                               helperText=""
                             />
@@ -232,9 +232,8 @@ export default function CreateProject() {
                           maxDateTime={values.endDateTime ? dayjs(new Date(values.endDateTime)) : undefined}
                         />
                       </LocalizationProvider>
-                    </Grid>
-                    <Grid
-                      item
+                    </Box>
+                    <Box
                       sx={{
                         width: "48%",
                       }}
@@ -246,7 +245,7 @@ export default function CreateProject() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
+                              textFieldProps={{
                                 ...(params?.InputProps ?? {}),
                               }}
                               helperText=""
@@ -259,14 +258,13 @@ export default function CreateProject() {
                           minDateTime={values.startDateTime ? dayjs(new Date(values.startDateTime)) : dayjs(new Date())}
                         />
                       </LocalizationProvider>
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Flex>
                 </Box>
               </Box>
 
               <NumberFilledTextField
-                label="Reward"
-                placeholder={t`Enter total token claimed amount`}
+                placeholder={t("common.enter.token.claimed")}
                 onChange={(value: number) => handleFieldChange(value, "reward")}
                 value={values.reward}
                 numericProps={{
@@ -278,7 +276,6 @@ export default function CreateProject() {
               />
 
               <NumberFilledTextField
-                label={`Token0 minimum staking amount ${poolToken0?.symbol ? `(${poolToken0?.symbol})` : ""}`}
                 placeholder={t`Enter the token0 minimum staking amount`}
                 onChange={(value: number) => handleFieldChange(value, "token0AmountLimit")}
                 value={values.token0AmountLimit}
@@ -291,7 +288,6 @@ export default function CreateProject() {
               />
 
               <NumberFilledTextField
-                label={`Token1 minimum staking amount ${poolToken1?.symbol ? `(${poolToken1?.symbol})` : ""}`}
                 placeholder={t`Enter the token1 minimum staking amount`}
                 onChange={(value: number) => handleFieldChange(value, "token1AmountLimit")}
                 value={values.token1AmountLimit}
@@ -304,7 +300,6 @@ export default function CreateProject() {
               />
 
               <NumberFilledTextField
-                label="SecondPerCycle"
                 placeholder={t`Enter the secondPerCycle`}
                 onChange={(value: number) => handleFieldChange(value, "secondPerCycle")}
                 value={values.secondPerCycle}
@@ -316,18 +311,17 @@ export default function CreateProject() {
                 }}
               />
 
-              <FilledTextField
-                select
-                label="PriceInsideLimit"
-                placeholder={t`Select the PriceInsideLimit`}
-                onChange={(value) => handleFieldChange(value, "priceInsideLimit")}
-                value={values.priceInsideLimit}
+              <Select
+                filled
                 menus={[
                   { label: "True", value: "true" },
                   { label: "False", value: "false" },
                 ]}
+                placeholder={t("stake.set.price.inside.limit")}
+                onChange={(value) => handleFieldChange(value, "priceInsideLimit")}
+                value={values.priceInsideLimit}
               />
-            </Grid>
+            </Box>
             <Typography sx={{ margin: "10px 0 0 0" }}>FarmControllerId: {FarmControllerId}</Typography>
             <Box mt={4}>
               <Identity onSubmit={handleCreateFarmsEvent}>

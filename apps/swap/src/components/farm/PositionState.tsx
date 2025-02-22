@@ -1,9 +1,7 @@
-import { Box, Typography, SvgIcon } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Trans } from "@lingui/macro";
-import { Theme } from "@mui/material/styles";
+import { Box, Typography, SvgIcon, makeStyles, Theme } from "components/Mui";
 import { AlertCircle } from "react-feather";
 import { Flex } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -36,6 +34,7 @@ function Marker(props: any) {
 }
 
 function Closed() {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   return (
@@ -43,24 +42,25 @@ function Closed() {
       <Marker fontSize="12px" color="#fff" />
 
       <Typography color="#ffffff" sx={{ marginLeft: "3px" }}>
-        <Trans>Closed</Trans>
+        {t("common.closed")}
       </Typography>
     </Box>
   );
 }
 
 function OutOfRange() {
+  const { t } = useTranslation();
+
   return (
     <Flex gap="0 4px">
       <AlertCircle size="12px" color="#FFC107" />
-      <Typography sx={{ color: "#FFC107", fontSize: "12px" }}>
-        <Trans>Out of range</Trans>
-      </Typography>
+      <Typography sx={{ color: "#FFC107", fontSize: "12px" }}>{t("common.out.range")}</Typography>
     </Flex>
   );
 }
 
 function InRange() {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   return (
@@ -69,9 +69,7 @@ function InRange() {
         component="span"
         sx={{ background: "#54C081", width: "8px", height: "8px", borderRadius: "50%", marginRight: "8px" }}
       />
-      <Typography sx={{ fontSize: "12px", color: "#54C081" }}>
-        <Trans>In range</Trans>
-      </Typography>
+      <Typography sx={{ fontSize: "12px", color: "#54C081" }}>{t("common.in.range")}</Typography>
     </Box>
   );
 }

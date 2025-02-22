@@ -2,13 +2,13 @@ import { useState, useMemo } from "react";
 import { Typography, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
 import { encodeTokenIdentifier } from "utils/index";
 import { Copy, ListLoading } from "components/index";
-import { Trans } from "@lingui/macro";
 import { NFTTransaction } from "@icpswap/types";
 import { useNFTTransactions } from "@icpswap/hooks";
 import { Pagination, PaginationType, NoData } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, enumToString, pageArgsFormat, arrayBufferToString } from "@icpswap/utils";
 import type { PaginationResult } from "@icpswap/types";
+import { useTranslation } from "react-i18next";
 
 export interface NFTTransactionProps {
   canisterId: string;
@@ -17,6 +17,7 @@ export interface NFTTransactionProps {
 }
 
 export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset, limit] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -42,21 +43,11 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Trans>Time</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Type</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>From</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>To</Trans>
-              </TableCell>
-              <TableCell>
-                <Trans>Memo</Trans>
-              </TableCell>
+              <TableCell>{t("common.time")}</TableCell>
+              <TableCell>{t("common.type")}</TableCell>
+              <TableCell>{t("common.from")}</TableCell>
+              <TableCell>{t("common.to")}</TableCell>
+              <TableCell>{t("common.memo")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

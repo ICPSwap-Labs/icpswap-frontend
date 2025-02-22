@@ -1,5 +1,4 @@
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { Trans } from "@lingui/macro";
 import { MainCard, NoData, ALink } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
@@ -7,6 +6,7 @@ import { Flex } from "@icpswap/ui";
 import { useUserTxs } from "store/wallet/hooks";
 import { StoredTxValue } from "types/ckBTC";
 import { useFetchUserTxStates } from "hooks/ck-bridge/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -24,6 +24,7 @@ interface TransactionProps {
 }
 
 function Transaction({ transaction }: TransactionProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
 
@@ -38,23 +39,17 @@ function Transaction({ transaction }: TransactionProps) {
     >
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Block Index</Trans>
-          </Typography>
+          <Typography>{t("common.block.index")}</Typography>
           <Typography color="text.primary">{transaction.block_index}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>State</Trans>
-          </Typography>
+          <Typography>{t("common.state")}</Typography>
           <Typography color="text.primary">{transaction.state ?? "--"}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Txid</Trans>
-          </Typography>
+          <Typography>{t("common.txid")}</Typography>
 
           <Typography>
             {transaction.txid ? (
@@ -75,9 +70,7 @@ function Transaction({ transaction }: TransactionProps) {
         </Flex>
 
         <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Amount</Trans>
-          </Typography>
+          <Typography>{t("common.amount")}</Typography>
           <Typography color="text.primary">
             {transaction.value ? parseTokenAmount(transaction.value, 8).toFormat() : "--"}
           </Typography>
@@ -92,6 +85,7 @@ export interface DissolveTransactionProps {
 }
 
 export function DissolveTransactions() {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const transactions = useUserTxs(principal);
 
@@ -99,9 +93,7 @@ export function DissolveTransactions() {
 
   return (
     <MainCard level={1}>
-      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-        <Trans>Retrieved</Trans>
-      </Typography>
+      <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.retrieved")}</Typography>
 
       <Box>
         <>

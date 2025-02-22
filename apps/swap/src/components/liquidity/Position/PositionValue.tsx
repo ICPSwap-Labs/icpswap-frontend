@@ -11,9 +11,9 @@ import {
   formatLiquidityAmount,
 } from "@icpswap/utils";
 import { Position } from "@icpswap/swap-sdk";
-import { Trans } from "@lingui/macro";
 import { useUSDPriceById } from "hooks/index";
 import { usePositionValue } from "hooks/liquidity";
+import { useTranslation } from "react-i18next";
 
 interface PositionValueProps {
   position: Position;
@@ -22,6 +22,7 @@ interface PositionValueProps {
 }
 
 export function PositionValue({ position }: PositionValueProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const positionValue = usePositionValue({ position });
 
@@ -55,7 +56,7 @@ export function PositionValue({ position }: PositionValueProps) {
     <MainCard level={3}>
       <Flex vertical gap="20px 0" align="flex-start">
         <Typography color="text.primary" sx={{ fontWeight: 500 }}>
-          <Trans>Position Value</Trans>
+          {t("liquidity.position.value")}
         </Typography>
 
         <Typography color="text.primary" sx={{ fontWeight: 500, fontSize: "28px" }}>

@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "components/Mui";
 import { Flex } from "components/index";
-import { Trans } from "@lingui/macro";
 import { HeaderCell } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 interface FarmListHeaderProps {
   showState: boolean;
@@ -12,6 +12,8 @@ interface FarmListHeaderProps {
 }
 
 export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <Box
       id={id}
@@ -29,63 +31,45 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
         ...sx,
       }}
     >
-      <HeaderCell className="row-item">
-        <Trans>Staked Position</Trans>
-      </HeaderCell>
-      <HeaderCell className="row-item">
-        <Trans>Reward Token</Trans>
-      </HeaderCell>
+      <HeaderCell className="row-item">{t("farm.staked.position")}</HeaderCell>
+      <HeaderCell className="row-item">{t("common.reward.token")}</HeaderCell>
       <Flex justify="flex-end" className="row-item">
-        <HeaderCell>
-          <Trans>APR</Trans>
-        </HeaderCell>
+        <HeaderCell>{t("common.apr")}</HeaderCell>
       </Flex>
 
       {state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Available to Stake</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("common.your.available.stake")}</HeaderCell>
         </Flex>
       ) : null}
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Rewards</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.your.rewards")}</HeaderCell>
         </Flex>
       ) : null}
 
       {your || state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Your Staked</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.your.staked")}</HeaderCell>
         </Flex>
       ) : null}
 
       {!your && state !== "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Total Staked</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.total.staked")}</HeaderCell>
         </Flex>
       ) : null}
 
       {state === "FINISHED" ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Total Reward Tokens</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("stake.total.reward.tokens")}</HeaderCell>
         </Flex>
       ) : null}
 
       {showState ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>
-            <Trans>Status</Trans>
-          </HeaderCell>
+          <HeaderCell>{t("common.state")}</HeaderCell>
         </Flex>
       ) : null}
     </Box>

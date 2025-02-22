@@ -1,22 +1,19 @@
 import React, { useState, useMemo } from "react";
-import { Grid, InputAdornment, Typography, Box } from "@mui/material";
+import { InputAdornment, Typography, Box } from "components/Mui";
 import { NumberTextField, AuthButton } from "components/index";
-import { cycleValueFormat, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
+import { cycleValueFormat, formatTokenAmount, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useICP2CyclesManager } from "store/global/hooks";
-import { t, Trans } from "@lingui/macro";
 import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
 import { Principal } from "@dfinity/principal";
-import Identity, { Submit } from "components/Identity";
-import { Identity as CallIdentity } from "types/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import MaxButton from "components/MaxButton";
 import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { useTokenBalance } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+import { Flex, MaxButton } from "@icpswap/ui";
+import { useTranslation } from "react-i18next";
 
 import Modal from "./index";
 
@@ -35,6 +32,7 @@ export default function TopUpCanister({
   onClose,
   onTopUpSuccess,
 }: TopUpCanisterProps) {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState<number | string>("");
   const principal = useAccountPrincipal();
   const ICP2Cycles = useICP2CyclesManager();
@@ -47,13 +45,13 @@ export default function TopUpCanister({
     return parseTokenAmount(ICPBalance, ICP_TOKEN_INFO.decimals).toString();
   }, [ICPBalance]);
 
-  const handleTopUpCanister = async (identity: CallIdentity) => {
+  const handleTopUpCanister = async () => {
     openFullscreenLoading();
 
     const TopUpCanisterPrincipal = Principal.fromText(canisterId);
     const CyclesMintingPrincipal = Principal.fromText(CYCLES_MINTING_CANISTER_ID);
 
-    if (identity && !!principal) {
+    if (principal) {
       const to = AccountIdentifier.fromPrincipal({
         principal: CyclesMintingPrincipal,
         subAccount: SubAccount.fromPrincipal(TopUpCanisterPrincipal),
@@ -74,7 +72,7 @@ export default function TopUpCanister({
 
         if (blockHeight) {
           await (
-            await ledgerService(identity)
+            await ledgerService(true)
           ).notify_dfx({
             to_canister: Principal.fromText(CYCLES_MINTING_CANISTER_ID),
             block_height: blockHeight,
@@ -114,15 +112,16 @@ export default function TopUpCanister({
   };
 
   let ErrorMessage = "";
-  if (new BigNumber(amount).minus(balance ?? 0).toNumber() > 0) ErrorMessage = t`Insufficient Balance`;
-  if (!new BigNumber(amount).isGreaterThan(0.0002)) ErrorMessage = t`Amount must be greater than 0.0002`;
-  if (!amount) ErrorMessage = t`Enter an amount`;
+  if (new BigNumber(amount).minus(balance ?? 0).toNumber() > 0) ErrorMessage = t("common.error.insufficient.balance");
+  if (!new BigNumber(amount).isGreaterThan(0.0002))
+    ErrorMessage = t("common.error.amount.greater.than", { amount: "0.0002" });
+  if (!amount) ErrorMessage = t("common.error.");
 
   return (
-    <Modal title={t`Top-up canister`} open={open} onClose={onClose}>
+    <Modal title={t("nft.topUp.canister")} open={open} onClose={onClose}>
       <NumberTextField
         name="amount"
-        label={t`Amount *`}
+        label={t("common.amount")}
         value={amount}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setAmount(event.target.value);
@@ -133,51 +132,44 @@ export default function TopUpCanister({
           allowNegative: false,
           maxLength: 15,
         }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Typography>{`${topUpCycles} T Cycles`}</Typography>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <Typography>{`${topUpCycles} T Cycles`}</Typography>
+              </InputAdornment>
+            ),
+          },
         }}
       />
 
       <Box mt={1}>
-        <Grid container alignItems="center">
+        <Flex fullWidth align="center" gap="0 6px">
           <Typography>Balance: {`${new BigNumber(balance).toFormat()} ICP`}</Typography>
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+          <MaxButton onClick={handleMax} />
+        </Flex>
 
         <Box mt={1}>
           <Typography>
-            <Trans>Canister Available:</Trans>
+            {t("wallet.topUp.canister.available")}
             {`${cycleValueFormat(cyclesBalance)} Cycles`}
           </Typography>
         </Box>
       </Box>
 
       <Box mt={2}>
-        <Identity onSubmit={handleTopUpCanister}>
-          {({ submit }: { submit: Submit }) => (
-            <AuthButton
-              variant="contained"
-              sx={{ my: 3 }}
-              fullWidth
-              color="primary"
-              type="submit"
-              size="large"
-              disabled={!!ErrorMessage}
-              onClick={submit}
-            >
-              {ErrorMessage || <Trans>Top up</Trans>}
-            </AuthButton>
-          )}
-        </Identity>
+        <AuthButton
+          variant="contained"
+          sx={{ my: 3 }}
+          fullWidth
+          color="primary"
+          type="submit"
+          size="large"
+          disabled={!!ErrorMessage}
+          onClick={handleTopUpCanister}
+        >
+          {ErrorMessage || t("common.topUp")}
+        </AuthButton>
       </Box>
     </Modal>
   );

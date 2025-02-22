@@ -1,16 +1,15 @@
-import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "@mui/material";
+import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "components/Mui";
 import { createTheme } from "@mui/material/styles";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
-import { t } from "@lingui/macro";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import ProfileSection from "components/Layout/Header/ProfileSection";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
 import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
-
 import { TokenSearch } from "./TokenSearch";
 
 export const customizeTheme = createTheme({
@@ -22,6 +21,7 @@ export const customizeTheme = createTheme({
 });
 
 export default function Header() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -63,7 +63,7 @@ export default function Header() {
                   fullHeight
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
-                  textFiledProps={{
+                  textFieldProps={{
                     slotProps: {
                       input: {
                         startAdornment: (

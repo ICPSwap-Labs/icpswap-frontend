@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Modal } from "components/index";
 import GreenCircleLoading from "components/Loading/GreenCircle";
-import { Trans } from "@lingui/macro";
 import { StepContents, StepDetailsProps } from "types/step";
 import { Flex } from "@icpswap/ui";
 import { isElement } from "react-is";
+import { useTranslation } from "react-i18next";
 
 import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
 
@@ -64,6 +64,7 @@ export default function _StepDetails({
   errorStep,
   description,
 }: StepDetailsProps) {
+  const { t } = useTranslation();
   const [openedSteps, setOpenedSteps] = useState<number[]>([]);
 
   const theme = useTheme();
@@ -216,9 +217,7 @@ export default function _StepDetails({
                             marginTop: index === 0 ? "0px" : "8px",
                           }}
                         >
-                          <Typography component="div">
-                            <Trans>Error</Trans>
-                          </Typography>
+                          <Typography component="div">{t("common.error")}</Typography>
                           <Typography component="div" color="text.danger" sx={{ maxWidth: "380px" }}>
                             {ele.skipError}
                           </Typography>
@@ -234,9 +233,7 @@ export default function _StepDetails({
                             marginTop: index === 0 ? "0px" : "8px",
                           }}
                         >
-                          <Typography component="div">
-                            <Trans>Error</Trans>
-                          </Typography>
+                          <Typography component="div">{t("common.error")}</Typography>
                           <Typography
                             component="div"
                             color="text.danger"

@@ -1,10 +1,9 @@
 import { useState, useRef } from "react";
-import { Typography, Box, Popper } from "@mui/material";
+import { Typography, Box, Popper, makeStyles } from "components/Mui";
 import { ClickAwayListener } from "@mui/base";
-import { makeStyles } from "@mui/styles";
-import { Trans, t } from "@lingui/macro";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { Modal } from "components/index";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => ({
   dot: {
@@ -20,6 +19,7 @@ export interface TokenListItemProps {
 }
 
 export function RemoveToken({ canisterId }: TokenListItemProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const ref = useRef(null);
 
@@ -89,25 +89,15 @@ export function RemoveToken({ canisterId }: TokenListItemProps) {
             }}
             onClick={handleRemoveToken}
           >
-            {/* <Box
-              sx={{
-                borderBottom: "6px solid #ffffff ",
-                borderLeft: "8px solid transparent",
-                borderRight: "8px solid transparent",
-                position: "absolute",
-                top: "-6px",
-                left: "20px",
-              }}
-            /> */}
             <Typography color="#111936" sx={{ fontSize: "12px" }}>
-              <Trans>Remove Token</Trans>
+              {t("common.remove.token")}
             </Typography>
           </Box>
         </ClickAwayListener>
       </Popper>
 
       <Modal
-        title={t`Remove Token`}
+        title={t("common.remove.token")}
         open={modalOpen}
         showCancel
         showConfirm
@@ -115,12 +105,7 @@ export function RemoveToken({ canisterId }: TokenListItemProps) {
         onCancel={handleCancel}
         onClose={handleCancel}
       >
-        <Typography sx={{ padding: "0 0 30px 0" }}>
-          <Trans>
-            Are you sure you want to remove the token? After you remove the token, you can add it again. Please be
-            assured that the token will not be lost.
-          </Trans>
-        </Typography>
+        <Typography sx={{ padding: "0 0 30px 0" }}>{t("wallet.remove.token.confirms")}</Typography>
       </Modal>
     </Box>
   );

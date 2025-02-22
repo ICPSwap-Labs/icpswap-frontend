@@ -1,16 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Typography, Grid, Box, CircularProgress } from "@mui/material";
-import { t, Trans } from "@lingui/macro";
+import { Button, Typography, Grid, Box, CircularProgress } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import MaxButton from "components/MaxButton";
+import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { Flex, MaxButton } from "@icpswap/ui";
 import { useToken } from "hooks/useCurrency";
 import { Modal, NumberTextField } from "components/index";
 import { isUseTransfer } from "utils/token";
+import { useTranslation } from "react-i18next";
 
 export interface StakingProps {
   token: Token;
@@ -28,6 +27,7 @@ export interface StakingModalProps {
 }
 
 export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }: StakingModalProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | number | undefined>(undefined);
@@ -64,10 +64,11 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
   }, [open]);
 
   let errorMessage = "";
-  if (amount && balance && balance.isLessThan(new BigNumber(amount))) errorMessage = t`Insufficient balance`;
+  if (amount && balance && balance.isLessThan(new BigNumber(amount)))
+    errorMessage = t("common.error.insufficient.balance");
   if (amount && token && !parseTokenAmount(token.transFee, token.decimals).isLessThan(amount))
-    errorMessage = t`Amount must be greater than trans fee`;
-  if (!amount || new BigNumber(amount).isEqualTo(0)) errorMessage = t`Enter an amount`;
+    errorMessage = t("common.error.amount.greater.than.fee");
+  if (!amount || new BigNumber(amount).isEqualTo(0)) errorMessage = t("common.enter.input.amount");
   if (
     amount &&
     balance &&
@@ -75,7 +76,7 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
     isUseTransfer(token) &&
     !formatTokenAmount(amount, token.decimals).isGreaterThan(token.transFee)
   )
-    errorMessage = t`Amount must be greater than trans fee`;
+    errorMessage = t("common.error.amount.greater.than.fee");
 
   const handleMax = () => {
     if (balance && token) {
@@ -104,18 +105,15 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
           }}
         />
 
-        <Grid container alignItems="center" sx={{ margin: "10px 0" }}>
+        <Flex fullWidth align="center" gap="0 6px" sx={{ margin: "10px 0" }}>
           <Typography>
-            <Trans>Balance</Trans>: {balance ? balance.toFormat() : "--"} {pool.stakingTokenSymbol}
+            {t("common.balance.colon.amount", {
+              amount: `${balance ? balance.toFormat() : "--"} ${pool.stakingTokenSymbol}`,
+            })}
           </Typography>
 
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+          <MaxButton onClick={handleMax} />
+        </Flex>
 
         <Box mt={2}>
           <Button

@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { Grid, Typography } from "@mui/material";
-import { t } from "@lingui/macro";
+import { Grid, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
+
 import QRCode from "../qrcode";
 import Modal from "../modal/index";
 import Copy, { CopyRef } from "../Copy";
@@ -19,6 +20,8 @@ export default function AddressClipboard({
   onConfirm: propsConfirm,
   ...props
 }: AddressClipboardProps) {
+  const { t } = useTranslation();
+
   const copy = useRef<CopyRef>(null);
 
   const onConfirm = () => {
@@ -28,7 +31,7 @@ export default function AddressClipboard({
 
   return (
     <Modal
-      title={t`Address`}
+      title={t("common.address")}
       open={open}
       onClose={onClose}
       confirmText={t`Copy Address`}

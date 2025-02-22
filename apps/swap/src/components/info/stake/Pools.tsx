@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Grid, Table, TableHead, TableCell, TableContainer, TableRow, TableBody, Box, Link } from "@mui/material";
-import { Trans } from "@lingui/macro";
 import dayjs from "dayjs";
 import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
 import { pageArgsFormat, explorerLink } from "@icpswap/utils";
@@ -9,8 +8,10 @@ import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { HeaderCell, BodyCell, NoData, Pagination } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
 import { useStateColors } from "hooks/staking-token";
+import { useTranslation } from "react-i18next";
 
 function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
+  const { t } = useTranslation();
   const state = useStakingPoolState(pool);
   const stateColor = useStateColors(state);
 
@@ -59,7 +60,7 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
       </TableCell>
       <TableCell>
         <TextButton to={`/info-stake/details/${pool.canisterId}`} sx={{ fontSize: "16px" }}>
-          <Trans>Details</Trans>
+          {t("common.details")}
         </TextButton>
       </TableCell>
     </TableRow>
@@ -67,6 +68,7 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
 }
 
 export function StakePools() {
+  const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -83,34 +85,22 @@ export function StakePools() {
         <TableHead>
           <TableRow>
             <TableCell>
-              <HeaderCell>
-                <Trans>Canister ID</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.canister.id")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Start Time</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.start.time")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>End Time</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.end.time")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Staking Token</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("info.staking.token")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Reward Token</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.reward.token")}</HeaderCell>
             </TableCell>
             <TableCell>
-              <HeaderCell>
-                <Trans>Status</Trans>
-              </HeaderCell>
+              <HeaderCell>{t("common.status")}</HeaderCell>
             </TableCell>
             <TableCell>&nbsp;</TableCell>
           </TableRow>

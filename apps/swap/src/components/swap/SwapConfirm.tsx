@@ -6,11 +6,11 @@ import { TradePrice } from "components/swap/TradePrice";
 import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
-import { t } from "@lingui/macro";
 import { isElement } from "react-is";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useTranslation } from "react-i18next";
 
 import FormattedPriceImpact from "./FormattedPriceImpact";
 
@@ -105,6 +105,7 @@ export function SwapConfirmModal({
   inputTokenUnusedBalance,
   inputTokenSubBalance,
 }: SwapConfirmModalProps) {
+  const { t } = useTranslation();
   const classes = useStyle();
 
   const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount } = useMemo(() => {
@@ -141,7 +142,7 @@ export function SwapConfirmModal({
   });
 
   return (
-    <SwapModal open={open} title={t`Confirm Swap`} onClose={onClose}>
+    <SwapModal open={open} title={t("swap.confirm")} onClose={onClose}>
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -149,7 +150,7 @@ export function SwapConfirmModal({
               <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
               <Flex gap="8px 0" vertical align="flex-start">
                 <Flex gap="0 4px">
-                  <Typography>You pay</Typography>
+                  <Typography>{t("common.you.pay")}</Typography>
                   <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
                 </Flex>
 
@@ -170,7 +171,7 @@ export function SwapConfirmModal({
             <Flex gap="0 12px">
               <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
               <Flex gap="8px 0" vertical align="flex-start">
-                <Typography>You Receive</Typography>
+                <Typography>{t("common.you.receive")}</Typography>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
                   {trade
                     ? `${trade.outputAmount.toSignificant(6, { groupSeparator: "," })} ${
@@ -200,12 +201,12 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label={t`Liquidity Provider Fee`}
+            label={t("swap.liquidity.provider.fee")}
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
-            tooltip={<Tooltip background="#ffffff" tips={t`For each trade a 0.3% fee is paid.`} />}
+            tooltip={<Tooltip background="#ffffff" tips={t("swap.liquidity.provider.fee.tips")} />}
           />
           <DetailItem
-            label={t`Price Impact`}
+            label={t("swap.price.impact")}
             value={FormattedPriceImpact({ priceImpact })}
             tooltip={
               <Tooltip
@@ -215,7 +216,7 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label={t`Slippage tolerance`}
+            label={t("swap.slippage.tolerance")}
             value={`${slippageTolerance?.toFixed(2)}%`}
             tooltip={
               <Tooltip
@@ -226,7 +227,7 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label="Minimum received"
+            label={t("swap.minimum.received")}
             value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${trade
               ?.outputAmount.currency.symbol}`}
             tooltip={
@@ -237,7 +238,7 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label={t`Estimated transfer fee for the swap`}
+            label={t("swap.estimated.fee")}
             value={
               <Box>
                 <Typography
@@ -281,7 +282,7 @@ export function SwapConfirmModal({
             disabled={loading}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            {loading ? "" : t`Confirm Swap`}
+            {loading ? "" : t("swap.confirm")}
           </Button>
         </Box>
       </>

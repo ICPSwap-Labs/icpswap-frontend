@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
-import { Trans } from "@lingui/macro";
+import { useTranslation } from "react-i18next";
 
 interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];
@@ -23,6 +23,7 @@ interface FarmListCardProps {
 }
 
 export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCardProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const theme = useTheme();
   const history = useHistory();
@@ -114,7 +115,10 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
         {apr ? (
           <APRPanel
             value={apr}
-            tooltip={<Trans>This's the average APR for the pool. The total reward is 100,000 ICS ($3,000).</Trans>}
+            tooltip={t("farm.apr.descriptions", {
+              reward: "100,000 ICS",
+              rewardUsd: "$3,000",
+            })}
           />
         ) : (
           <Typography sx={{ color: "text.apr" }}>--</Typography>

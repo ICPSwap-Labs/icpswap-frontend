@@ -12,7 +12,6 @@ import { BURN_FIELD } from "constants/swap";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { CurrencyAmountFormatDecimals } from "constants/index";
-import { t, Trans } from "@lingui/macro";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
 import { PoolState } from "hooks/swap/usePools";
@@ -22,12 +21,14 @@ import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips, LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
 import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
+import { useTranslation } from "react-i18next";
 
 import Unclaimed from "./Unclaimed";
 import DecreaseLiquidityInput from "./Input";
 import { DecreaseLiquidityConfirm } from "./Confirm";
 
 export default function DecreaseLiquidity() {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const principal = useAccountPrincipal();
@@ -212,7 +213,7 @@ export default function DecreaseLiquidity() {
               </Box>
               <Box mt="22px">
                 <Typography variant="h5" color="textPrimary">
-                  <Trans>Amount</Trans>
+                  {t("common.amount")}
                 </Typography>
                 <Box mt="12px">
                   <DecreaseLiquidityInput
@@ -248,15 +249,7 @@ export default function DecreaseLiquidity() {
               </Box>
 
               <Box mt="24px">
-                <KeepTokenInPool
-                  label={
-                    <Trans>
-                      Keep your tokens in the Swap Pool to easily add liquidity again without the need for repeated
-                      withdrawals and deposits.
-                    </Trans>
-                  }
-                  showRefresh={false}
-                />
+                <KeepTokenInPool label={t("swap.keep.pools.description")} showRefresh={false} />
               </Box>
 
               <Box mt="24px">

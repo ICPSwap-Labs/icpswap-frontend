@@ -1,15 +1,17 @@
-import { Box, Typography } from "@mui/material";
-import { Trans } from "@lingui/macro";
+import { Box, Typography } from "components/Mui";
 import { useMemo } from "react";
 import { MainCard } from "components/index";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 export interface ProposalSummaryProps {
   proposal_data: ProposalData | undefined;
 }
 
 export function ProposalSummary({ proposal_data }: ProposalSummaryProps) {
+  const { t } = useTranslation();
+
   const { title, summary } = useMemo(() => {
     if (!proposal_data) return {};
 
@@ -34,7 +36,7 @@ export function ProposalSummary({ proposal_data }: ProposalSummaryProps) {
     <MainCard level={4} sx={{ margin: "20px 0 0 0" }}>
       <Box>
         <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "16px" }}>
-          <Trans>Proposal Summary</Trans>
+          {t("nns.voting.proposal.summary")}
         </Typography>
 
         <Typography sx={{ margin: "20px 0 0 0" }}>{title}</Typography>

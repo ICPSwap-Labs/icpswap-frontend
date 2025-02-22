@@ -1,4 +1,3 @@
-import { Trans, t } from "@lingui/macro";
 import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
 import { Flex, Modal } from "@icpswap/ui";
 import { Copy } from "components/index";
@@ -8,6 +7,7 @@ import { useCallback, useMemo, useState } from "react";
 import { BigNumber, shorten, toHexString } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { useTranslation } from "react-i18next";
 
 import { AddFolloweeModal } from "./AddFolloweeModal";
 import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
@@ -35,6 +35,7 @@ function FollowNeuron({
   onCheckChange,
   showCheckbox,
 }: FollowNeuronProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const following = useMemo(() => {
@@ -102,9 +103,7 @@ function FollowNeuron({
 
           {following && following.length > 0 ? (
             <Box sx={{ margin: "20px 0 0 0" }}>
-              <Typography>
-                <Trans>Current Following</Trans>
-              </Typography>
+              <Typography>{t("nns.following.current")}</Typography>
 
               <Box sx={{ margin: "10px 0 0 0" }}>
                 {following?.map((follow) => (
@@ -155,6 +154,7 @@ export interface FollowingProps {
 }
 
 export function Followings({ governance_id, neuron_id, disabled }: FollowingProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectAllOpen, setSelectAllOpen] = useState(false);
   const [addFolloweeOpen, setAddFolloweeOpen] = useState(false);
@@ -219,14 +219,11 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
   return (
     <Box>
       <Typography color="text.primary" fontSize="16px" fontWeight={600}>
-        <Trans>Following</Trans>
+        {t("nns.following")}
       </Typography>
 
       <Typography fontSize="12px" sx={{ margin: "10px 0 0 0", lineHeight: "16px" }}>
-        <Trans>
-          Following allows you to delegate your votes to another neuron holder. You still earn rewards if you delegate
-          your voting rights. You can change your following at any time.
-        </Trans>
+        {t("nns.following.description")}
       </Typography>
 
       <Button
@@ -236,20 +233,17 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
         size="small"
         disabled={disabled}
       >
-        <Trans>Following</Trans>
+        {t("nns.following")}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t`Follow neurons`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.follow.neurons")}>
         <Typography fontSize="12px" lineHeight="16px">
-          <Trans>
-            Follow neurons to automate your voting, and receive the maximum voting rewards. You can follow neurons on
-            specific topics or all topics.
-          </Trans>
+          {t("nns.following.topics")}
         </Typography>
 
         <Flex justify="flex-end" sx={{ margin: "20px 0 0 0" }} gap="0 10px">
           <Typography color="text.theme-secondary" sx={{ cursor: "pointer" }} onClick={handleCheckAll}>
-            {selectAllOpen ? <Trans>Cancel</Trans> : <Trans>Select All</Trans>}
+            {selectAllOpen ? t("common.cancel") : t("common.select.all")}
           </Typography>
         </Flex>
 
@@ -288,10 +282,10 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
               onClick={handleDeleteFollowee}
               disabled={disableDeleteFollowee}
             >
-              <Trans>Delete Followee</Trans>
+              {t("nns.delete.followee")}
             </Button>
             <Button fullWidth size="large" sx={{ height: "48px" }} variant="contained" onClick={handleAddFollowee}>
-              <Trans>Add Followee</Trans>
+              t("nns.followee.add")
             </Button>
           </Flex>
         ) : null}
