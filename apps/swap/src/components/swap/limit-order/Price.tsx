@@ -338,7 +338,7 @@ export const SwapLimitPrice = forwardRef(
             </Flex>
 
             <Flex gap="0 8px">
-              <Typography sx={{ color: "text.primary", fontWeight: 500 }}>
+              <Typography sx={{ color: "text.primary", fontWeight: 500 }} component="div">
                 {outputTokenInverted ? (
                   <Flex gap="0 4px">
                     <TokenImage size="16px" logo={outputTokenInverted.logo} tokenId={outputTokenInverted.address} />

@@ -1258,7 +1258,7 @@
   "common.insufficient.liquidity": "Insufficient liquidity for this trade.",
   "t5oysN": "Failed to Trade",
   "tDw+OF": "Enter the refunder",
-  "tJ1GNI": "Nerve mind",
+  "common.nerve.mind": "Nerve mind",
   "tOjDQ7": "Undissolved:",
   "tPBLL9": "The total value of rewards distributed by finished farming pools.",
   "common.address.colon": "Address:",
@@ -1399,5 +1399,10 @@
   "farm.not_start.descriptions": "As soon as the Farm goes live on {{liveTime0}} at {{liveTime1}}, you can start staking.",
   "service.stake.create.storage.canister": "Failed to created storage canister",
   "common.display.only.list": "Display only tokens in Tokenlist",
-  "common.transfer.to": "Transfer to"
+  "common.transfer.to": "Transfer to",
+  "swap.history": "Swap histroy",
+  "swap.help.tooltip0": "ICPSwap's innovative limit order: No 0.3% fee, earn 0.24% instead.",
+  "swap.help.tooltip1": "Your limit order will execute when another swap matches your price. If the swap price hits your limit but the volume isn’t enough, your order may not execute.",
+  "swap.help.tooltip2": "New to limit orders? Learn More Here!",
+  "swap.your.liquidity.positions": "Your liquidity positions"
 }

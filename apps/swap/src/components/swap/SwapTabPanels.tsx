@@ -6,14 +6,12 @@ import i18n from "i18n/index";
 
 export enum TABS {
   SWAP = "Swap",
-  TRANSACTIONS = "Transactions",
   LIMIT = "Limit",
 }
 
 const Tabs = [
   { value: TABS.SWAP, label: i18n.t("common.swap"), path: "/swap" },
   { value: TABS.LIMIT, label: i18n.t("common.limit"), path: "/swap/limit" },
-  { value: TABS.TRANSACTIONS, label: i18n.t("common.transactions"), path: "/swap/transaction" },
 ];
 
 export interface SwapTabPanelsProps {
@@ -33,7 +31,7 @@ export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
 
   return (
     <Flex
-      gap="0 24px"
+      gap="0 16px"
       sx={{
         "@media(max-width: 640px)": {
           gap: "0 12px",

@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { PoolTransactions, UserTransactions } from "components/info/swap";
 import { Holders } from "components/info/tokens";
-import { LimitOrdersTable, LimitHistoryTable } from "components/swap/limit-order/index";
+import { PendingTablePro, HistoryTablePro } from "components/swap/limit-order/index";
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { SwapContext } from "components/swap";
 import i18n from "i18n/index";
@@ -185,8 +185,8 @@ export default function Transactions() {
         {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={poolId} /> : null}
         {activeSubTab === Tabs.POSITIONS ? <Positions poolId={poolId} /> : null}
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
-        {activeSubTab === Tabs.LIMIT_PENDING ? <LimitOrdersTable poolId={poolId} /> : null}
-        {activeSubTab === Tabs.LIMIT_HISTORY ? <LimitHistoryTable poolId={poolId} /> : null}
+        {activeSubTab === Tabs.LIMIT_PENDING ? <PendingTablePro poolId={poolId} /> : null}
+        {activeSubTab === Tabs.LIMIT_HISTORY ? <HistoryTablePro poolId={poolId} /> : null}
       </Box>
     </SwapProCardWrapper>
   );

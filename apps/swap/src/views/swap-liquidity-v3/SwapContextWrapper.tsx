@@ -12,6 +12,7 @@ import {
   SwapProEntry,
   SwapSettings,
   SwapContext,
+  SwapTransactions,
 } from "components/swap/index";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import { SWAP_REFRESH_KEY } from "constants/index";
@@ -43,8 +44,8 @@ export function SwapContextWrapper() {
           <MainCard
             level={1}
             sx={{
-              padding: "24px",
-              paddingBottom: "24px",
+              padding: "16px",
+              paddingBottom: "16px",
               overflow: "visible",
               "@media(max-width: 640px)": {
                 padding: "16px",
@@ -59,6 +60,7 @@ export function SwapContextWrapper() {
                 justifyContent: "space-between",
                 position: "relative",
                 padding: "0",
+                height: "32px",
                 "@media(max-width: 640px)": {
                   padding: "0",
                 },
@@ -67,8 +69,9 @@ export function SwapContextWrapper() {
               <SwapTabPanels currentTab={TABS.SWAP} />
 
               <Flex gap="0 4px">
-                <SwapSettings type="swap" />
+                <SwapTransactions />
                 <SwapProEntry inputToken={inputToken} outputToken={outputToken} />
+                <SwapSettings type="swap" />
               </Flex>
             </Box>
 

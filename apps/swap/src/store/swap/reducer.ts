@@ -8,6 +8,7 @@ import {
   updatePoolCanisterIds,
   updateSwapOutAmount,
   updateDecreaseLiquidityAmount,
+  updateAllSwapPools,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -47,7 +48,12 @@ export default createReducer(initialState, (builder) => {
     })
     // Do not clear the input/output tokens
     .addCase(clearSwapState, (state) => {
-      return { ...initialState, [SWAP_FIELD.INPUT]: state.INPUT, [SWAP_FIELD.OUTPUT]: state.OUTPUT };
+      return {
+        ...initialState,
+        [SWAP_FIELD.INPUT]: state.INPUT,
+        [SWAP_FIELD.OUTPUT]: state.OUTPUT,
+        allSwapPools: state.allSwapPools,
+      };
     })
     .addCase(updatePoolCanisterIds, (state, { payload }) => {
       state.poolCanisterIds[payload.key] = payload.id;
@@ -57,5 +63,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateDecreaseLiquidityAmount, (state, { payload }) => {
       state.decreaseLiquidityAmount[payload.key] = { amount0: payload.amount0, amount1: payload.amount1 };
+    })
+    .addCase(updateAllSwapPools, (state, { payload }) => {
+      state.allSwapPools = payload;
     });
 });

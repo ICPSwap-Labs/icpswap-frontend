@@ -100,7 +100,7 @@ export default {
   darkPrimaryDark: "#5669dc",
   darkPrimary200: "#000001",
   darkPrimary800: "#1565c0",
-  darkPrimary400: "#4F5A84",
+  dark400: "#4F5A84",
 
   // secondary dark
   darkSecondaryLight: "#212946",

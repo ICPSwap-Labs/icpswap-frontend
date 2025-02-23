@@ -1,13 +1,10 @@
-import { useCallback } from "react";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
-import { LimitOrder, Null } from "@icpswap/types";
-import { useRefreshTriggerManager } from "hooks/index";
-import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
+import { LimitTransaction, Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
-import { LimitOrderRow } from "./LimitOrderRow";
+import { HistoryRowPro } from "./HistoryRowPro";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -17,36 +14,30 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 1.5fr 160px",
+      gridTemplateColumns: "180px repeat(3, 1fr) 160px",
     },
   };
 });
 
-export interface PositionTableUIProps {
+export interface HistoryTableProUIProps {
   wrapperClassName?: string;
   poolId: string | Null;
   loading: boolean;
-  limitOrders: LimitOrder[] | Null;
-  setLimitOrdersRefreshTrigger: () => void;
+  limitTransactions: LimitTransaction[] | Null;
+  unusedBalance: { balance0: bigint; balance1: bigint } | Null;
 }
 
-export function LimitOrdersTableUI({
+export function HistoryTableProUI({
   poolId,
   loading,
-  limitOrders,
+  limitTransactions,
+  unusedBalance,
   wrapperClassName,
-  setLimitOrdersRefreshTrigger,
-}: PositionTableUIProps) {
+}: HistoryTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
 
   const [, pool] = usePoolByPoolId(poolId);
-  const [, setRefreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
-
-  const handleCancelSuccess = useCallback(() => {
-    setLimitOrdersRefreshTrigger();
-    setRefreshTrigger();
-  }, [setLimitOrdersRefreshTrigger]);
 
   return (
     <>
@@ -57,24 +48,23 @@ export function LimitOrdersTableUI({
             <HeaderCell>{t("common.you.pay")}</HeaderCell>
             <HeaderCell>{t("common.you.receive")}</HeaderCell>
             <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
-            <HeaderCell align="right">{t("common.filled")}</HeaderCell>
             <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
 
           {!loading
-            ? limitOrders?.map((ele, index) => (
-                <LimitOrderRow
+            ? limitTransactions?.map((ele, index) => (
+                <HistoryRowPro
                   key={index}
-                  limitOrder={ele}
+                  limitTransaction={ele}
                   pool={pool}
                   wrapperClassName={wrapperClassName ?? classes.wrapper}
-                  noBorder={index === limitOrders.length - 1}
-                  onCancelSuccess={handleCancelSuccess}
+                  noBorder={index === limitTransactions.length - 1}
+                  unusedBalance={unusedBalance}
                 />
               ))
             : null}
 
-          {(limitOrders ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(limitTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>

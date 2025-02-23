@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Typography, useTheme, Button } from "components/Mui";
-import { useSwapPools, useParsedQueryString } from "@icpswap/hooks";
+import { useParsedQueryString } from "@icpswap/hooks";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { LoadingRow, Flex, Wrapper } from "components/index";
@@ -8,7 +8,8 @@ import { InfoPools, Positions } from "components/liquidity/index";
 import { useHistory } from "react-router-dom";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { useTranslation } from "react-i18next";
-import i18n from "i18n";
+import { useAllSwapPools } from "store/swap/hooks";
+import i18n from "i18n/index";
 
 enum TabName {
   TopPools = "TopPools",
@@ -16,7 +17,7 @@ enum TabName {
 }
 
 const tabs = [
-  { label: "Your liquidity positions", value: TabName.Positions },
+  { label: i18n.t("swap.your.liquidity.positions"), value: TabName.Positions },
   { label: i18n.t("swap.top.pools"), value: TabName.TopPools },
 ];
 
@@ -71,7 +72,7 @@ export default function Liquidity() {
 
   const [initialTokenStandards, setInitialTokenStandards] = useState(false);
 
-  const { result: pools } = useSwapPools();
+  const allSwapPools = useAllSwapPools();
 
   const updateTokenStandards = useUpdateTokenStandard();
 
@@ -79,9 +80,9 @@ export default function Liquidity() {
 
   useEffect(() => {
     async function call() {
-      if (!pools) return;
+      if (!allSwapPools) return;
 
-      const allStandards = pools.reduce(
+      const allStandards = allSwapPools.reduce(
         (prev, curr) => {
           return prev.concat([
             { canisterId: curr.token0.address, standard: curr.token0.standard as TOKEN_STANDARD },
@@ -95,14 +96,14 @@ export default function Liquidity() {
       setInitialTokenStandards(true);
     }
 
-    if (pools && pools.length > 0 && !initialTokenStandards) {
+    if (allSwapPools && allSwapPools.length > 0 && !initialTokenStandards) {
       call();
     }
 
-    if (pools && pools.length === 0) {
+    if (allSwapPools && allSwapPools.length === 0) {
       setInitialTokenStandards(true);
     }
-  }, [pools, initialTokenStandards]);
+  }, [allSwapPools, initialTokenStandards]);
 
   const handleTab = useCallback(
     (value: TabName) => {

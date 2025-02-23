@@ -2,11 +2,11 @@ import { Box, Typography } from "components/Mui";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
-import { useSwapPools } from "@icpswap/hooks";
 import type { AllTokenOfSwapTokenInfo, Null } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
 import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
+import { useAllSwapPools } from "store/swap/hooks";
 import { useTranslation } from "react-i18next";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
@@ -98,7 +98,7 @@ export function SelectPair({
   const [search, setSearch] = useState<string | undefined>(undefined);
 
   const allTokensOfSwap = useStateSwapAllTokens();
-  const { result: swapPools } = useSwapPools();
+  const swapPools = useAllSwapPools();
 
   useEffect(() => {
     if (poolId) {

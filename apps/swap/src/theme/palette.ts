@@ -14,7 +14,7 @@ export function themePalette(theme: { [key: string]: any }) {
       dark: isDark ? theme.colors.darkPrimaryDark : theme.colors.primaryDark,
       200: isDark ? theme.colors.darkPrimary200 : theme.colors.primary200,
       800: isDark ? theme.colors.darkPrimary800 : theme.colors.primary800,
-      400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
+      400: isDark ? theme.colors.dark400 : theme.colors.primary800,
     },
     secondary: {
       light: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryLight,
@@ -67,7 +67,7 @@ export function themePalette(theme: { [key: string]: any }) {
       danger: theme.colors.danger,
       orangeWarning: theme.colors.warning,
       level1: isDark ? theme.colors.darkLevel1 : theme.colors.primaryLight,
-      400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
+      400: isDark ? theme.colors.dark400 : theme.colors.primary800,
       theme_primary: theme.colors.darkPrimaryMain,
       theme_secondary: theme.colors.darkSecondaryMain,
       "theme-primary": theme.colors.darkPrimaryMain,

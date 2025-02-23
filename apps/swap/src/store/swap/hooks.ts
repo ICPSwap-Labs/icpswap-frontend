@@ -21,6 +21,7 @@ import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";
+import { type SwapPoolData } from "@icpswap/types";
 
 import {
   selectCurrency,
@@ -31,6 +32,7 @@ import {
   PoolCanisterRecord,
   updateSwapOutAmount,
   updateDecreaseLiquidityAmount,
+  updateAllSwapPools,
 } from "./actions";
 
 export function useSwapHandlers() {
@@ -311,4 +313,19 @@ export function useUpdateDecreaseLiquidityAmount() {
     },
     [dispatch],
   );
+}
+
+export function useUpdateAllSwapPools() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (allSwapPools: SwapPoolData[]) => {
+      dispatch(updateAllSwapPools(allSwapPools));
+    },
+    [dispatch],
+  );
+}
+
+export function useAllSwapPools() {
+  return useAppSelector((state) => state.swap.allSwapPools);
 }
