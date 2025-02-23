@@ -134,7 +134,7 @@ export function Transactions({
                     <Typography
                       key={ele.key}
                       sx={{
-                        color: filter === ele.key ? "#ffffff" : theme.colors.darkPrimary400,
+                        color: filter === ele.key ? "#ffffff" : theme.colors.dark400,
                         cursor: "pointer",
                         fontSize: "16px",
                       }}
@@ -145,7 +145,7 @@ export function Transactions({
                   ))}
                 </Box>
               ) : (
-                <Typography sx={{ color: theme.colors.darkPrimary400 }}>#</Typography>
+                <Typography sx={{ color: theme.colors.dark400 }}>#</Typography>
               )}
             </Box>
 

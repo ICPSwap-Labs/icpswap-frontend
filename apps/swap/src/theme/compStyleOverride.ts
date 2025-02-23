@@ -502,9 +502,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     MuiPagination: {
       styleOverrides: {
         root: {
-          // ".Mui-selected": {
-          //   backgroundColor: theme.colors.primaryMain,
-          // },
           ".MuiPaginationItem-previousNext": {
             borderRadius: "50%",
           },

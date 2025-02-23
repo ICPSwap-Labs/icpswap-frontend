@@ -42,10 +42,13 @@ export function SwapSettings({ type, ui, position = "right" }: SwapSettingsProps
             cursor: "pointer",
             padding: "4px 8px",
             borderRadius: "40px",
-            background: ui === "pro" ? theme.palette.background.level1 : theme.palette.background.level3,
+            height: ui === "pro" ? "auto" : "32px",
+            background: ui === "pro" ? theme.palette.background.level1 : theme.palette.background.level2,
           }}
         >
-          <Typography sx={{ fontSize: "12px" }}>{new BigNumber(slippageTolerance).div(1000).toString()}%</Typography>
+          <Typography sx={{ fontSize: "12px", color: "text.primary" }}>
+            {new BigNumber(slippageTolerance).div(1000).toString()}%
+          </Typography>
 
           <img src="/images/setting.svg" alt="" />
         </Flex>

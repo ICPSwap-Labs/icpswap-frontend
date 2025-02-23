@@ -6,7 +6,7 @@ import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useConnectorStateConnected } from "store/auth/hooks";
-import { UserLimitPanel, LimitTransactions, PlaceOrder, GuidePanel } from "components/swap/limit-order";
+import { PlaceOrder, TransactionForSimpleMode, LimitHelpTooltip } from "components/swap/limit-order";
 
 export default function Limit() {
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);
@@ -14,7 +14,6 @@ export default function Limit() {
   const [outputToken, setOutputToken] = useState<Token | Null>(null);
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
-  const [showLimitOrders, setShowLimitOrders] = useState(false);
   const [inverted, setInverted] = useState(false);
 
   const isConnected = useConnectorStateConnected();
@@ -65,8 +64,8 @@ export default function Limit() {
             <MainCard
               level={1}
               sx={{
-                padding: "24px",
-                paddingBottom: "24px",
+                padding: "16px",
+                paddingBottom: "16px",
                 overflow: "visible",
                 "@media(max-width: 640px)": {
                   padding: "16px",
@@ -81,32 +80,31 @@ export default function Limit() {
                   justifyContent: "space-between",
                   position: "relative",
                   padding: "0",
+                  height: "32px",
                   "@media(max-width: 640px)": {
                     padding: "0",
                   },
                 }}
               >
                 <SwapTabPanels currentTab={TABS.LIMIT} />
+
+                <Flex gap="0 4px">
+                  <LimitHelpTooltip />
+                </Flex>
               </Box>
 
               <Box sx={{ margin: "16px 0 0 0" }}>
-                {showLimitOrders ? (
-                  <LimitTransactions pool={selectedPool} onBack={() => setShowLimitOrders(false)} />
-                ) : (
-                  <PlaceOrder />
-                )}
+                <PlaceOrder />
               </Box>
             </MainCard>
-
-            <Box mt="8px" sx={{ width: "100%" }}>
-              <GuidePanel />
-            </Box>
-
-            {isConnected && showLimitOrders === false && noLiquidity === false ? (
-              <UserLimitPanel onClick={() => setShowLimitOrders(true)} />
-            ) : null}
           </Flex>
         </Flex>
+
+        {isConnected && noLiquidity === false ? (
+          <Flex vertical fullWidth justify="center" sx={{ margin: "56px 0 0 0" }}>
+            <TransactionForSimpleMode />
+          </Flex>
+        ) : null}
       </Wrapper>
     </LimitContext.Provider>
   );

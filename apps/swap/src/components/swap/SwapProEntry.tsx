@@ -27,13 +27,15 @@ export function SwapProEntry({ inputToken, outputToken }: SwapProEntryProps) {
     <Flex
       onClick={handleToSwapPro}
       sx={{
+        width: "32px",
+        height: "32px",
         cursor: "pointer",
         padding: "4px 8px",
         borderRadius: "40px",
-        background: theme.palette.background.level3,
+        background: theme.palette.background.level2,
       }}
     >
-      <img width="16px" height="16px" src="/images/chart.svg" alt="" />
+      <img width="16px" height="16px" src="/images/pro-entry.svg" alt="" />
     </Flex>
   );
 }

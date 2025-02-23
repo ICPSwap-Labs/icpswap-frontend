@@ -75,6 +75,7 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
             sx={{
               ...(matchDownSM ? { fontSize: "12px" } : {}),
             }}
+            component="div"
           >
             {value}
           </Typography>

@@ -41,7 +41,7 @@ export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps)
       sx={{
         cursor: "pointer",
         userSelect: "none",
-        color: theme.colors.darkPrimary400,
+        color: theme.colors.dark400,
         display: "flex",
         alignItems: "center",
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",

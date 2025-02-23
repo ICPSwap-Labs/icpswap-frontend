@@ -3,14 +3,14 @@ import { Null } from "@icpswap/types";
 import { useUserLimitTransactions, useUserUnusedBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 
-import { LimitOrdersTableUI } from "./LimitHistoryTableUI";
+import { HistoryTableProUI } from "./HistoryTableProUI";
 
-export interface LimitHistoryTableProps {
+export interface HistoryTableProProps {
   wrapperClassName?: string;
   poolId: string | Null;
 }
 
-export function LimitHistoryTable({ poolId, wrapperClassName }: LimitHistoryTableProps) {
+export function HistoryTablePro({ poolId, wrapperClassName }: HistoryTableProProps) {
   const principal = useAccountPrincipal();
 
   const start_time = useMemo(() => {
@@ -31,7 +31,7 @@ export function LimitHistoryTable({ poolId, wrapperClassName }: LimitHistoryTabl
   }, [limitTransactionsResult]);
 
   return (
-    <LimitOrdersTableUI
+    <HistoryTableProUI
       poolId={poolId}
       wrapperClassName={wrapperClassName}
       loading={loading}

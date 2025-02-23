@@ -1,10 +1,13 @@
+import { useCallback } from "react";
 import { Box, Theme, makeStyles } from "components/Mui";
 import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
-import { LimitTransaction, Null } from "@icpswap/types";
+import { LimitOrder, Null } from "@icpswap/types";
+import { useRefreshTriggerManager } from "hooks/index";
+import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 import { useTranslation } from "react-i18next";
 
-import { LimitHistoryRow } from "./LimitHistoryRow";
+import { PendingRowPro } from "./PendingRowPro";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -14,30 +17,36 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "180px repeat(3, 1fr) 160px",
+      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 1.5fr 160px",
     },
   };
 });
 
-export interface PositionTableUIProps {
+export interface PendingTableProUIProps {
   wrapperClassName?: string;
   poolId: string | Null;
   loading: boolean;
-  limitTransactions: LimitTransaction[] | Null;
-  unusedBalance: { balance0: bigint; balance1: bigint } | Null;
+  limitOrders: LimitOrder[] | Null;
+  setLimitOrdersRefreshTrigger: () => void;
 }
 
-export function LimitOrdersTableUI({
+export function PendingTableProUI({
   poolId,
   loading,
-  limitTransactions,
-  unusedBalance,
+  limitOrders,
   wrapperClassName,
-}: PositionTableUIProps) {
+  setLimitOrdersRefreshTrigger,
+}: PendingTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
 
   const [, pool] = usePoolByPoolId(poolId);
+  const [, setRefreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
+
+  const handleCancelSuccess = useCallback(() => {
+    setLimitOrdersRefreshTrigger();
+    setRefreshTrigger();
+  }, [setLimitOrdersRefreshTrigger]);
 
   return (
     <>
@@ -47,25 +56,25 @@ export function LimitOrdersTableUI({
             <HeaderCell>{t("common.time")}</HeaderCell>
             <HeaderCell>{t("common.you.pay")}</HeaderCell>
             <HeaderCell>{t("common.you.receive")}</HeaderCell>
-            <HeaderCell>{t("common.you.receive")}</HeaderCell>
             <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
+            <HeaderCell align="right">{t("common.filled")}</HeaderCell>
             <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
 
           {!loading
-            ? limitTransactions?.map((ele, index) => (
-                <LimitHistoryRow
+            ? limitOrders?.map((ele, index) => (
+                <PendingRowPro
                   key={index}
-                  limitTransaction={ele}
+                  limitOrder={ele}
                   pool={pool}
                   wrapperClassName={wrapperClassName ?? classes.wrapper}
-                  noBorder={index === limitTransactions.length - 1}
-                  unusedBalance={unusedBalance}
+                  noBorder={index === limitOrders.length - 1}
+                  onCancelSuccess={handleCancelSuccess}
                 />
               ))
             : null}
 
-          {(limitTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(limitOrders ?? []).length === 0 && !loading ? <NoData /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>
