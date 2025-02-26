@@ -10,12 +10,17 @@ import { LimitContext } from "components/swap/limit-order/context";
 import { PendingList } from "./pending";
 import { HistoryList } from "./history";
 
+enum LimitTab {
+  Pending = "Pending",
+  History = "History",
+}
+
 export function TransactionForSimpleMode() {
   const { t } = useTranslation();
   const theme = useTheme();
 
   const { selectedPool } = useContext(LimitContext);
-  const [activeTab, setActiveTab] = useState("Pending");
+  const [activeTab, setActiveTab] = useState(LimitTab.Pending);
 
   const handleTableChange = useCallback((tab: Tab) => {
     setActiveTab(tab.key);
@@ -74,7 +79,6 @@ export function TransactionForSimpleMode() {
           align="flex-end"
           sx={{
             width: "fit-content",
-            display: activeTab === "Pending" ? "flex" : "none",
             "@media(max-width: 640px)": {
               alignItems: "flex-start",
             },
@@ -83,6 +87,7 @@ export function TransactionForSimpleMode() {
           <Flex
             gap="0 4px"
             sx={{
+              display: activeTab === "Pending" ? "flex" : "none",
               minWidth: "240px",
               width: "fit-content",
               "@media(max-width: 640px)": {
@@ -106,12 +111,14 @@ export function TransactionForSimpleMode() {
           {pair === "ALL PAIR" ? (
             <Typography sx={{ fontSize: "12px" }}>Fetching multiple limit orders may take some time.</Typography>
           ) : null}
+
+          {activeTab === LimitTab.History ? <Typography>{t("swap.limit.history.description")}</Typography> : null}
         </Flex>
       </Flex>
 
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ paddingBottom: "4px" }}>
-          {activeTab === "Pending" ? <PendingList pair={pair} /> : <HistoryList />}
+          {activeTab === LimitTab.Pending ? <PendingList pair={pair} /> : <HistoryList />}
         </Box>
       </Box>
     </>

@@ -91,7 +91,7 @@ export function themePalette(theme: { [key: string]: any }) {
       success: theme.colors.success,
     },
     border: {
-      normal: isDark ? "1px solid #313A5A" : `1px solid ${theme.colors.lightGray200BorderColor}`,
+      normal: isDark ? `1px solid ${theme.colors.color0}` : `1px solid ${theme.colors.lightGray200BorderColor}`,
       border0: "1px solid #4F5A84",
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
       1: "#38446C",

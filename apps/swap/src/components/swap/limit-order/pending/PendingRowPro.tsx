@@ -132,7 +132,10 @@ export function PendingRowPro({
           </BodyCell>
 
           {/* Limit Price */}
-          <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
+          <BodyCell
+            sx={{ justifyContent: "flex-end", alignItems: "center", gap: "0 4px" }}
+            onClick={() => setInvertPrice(!invertPrice)}
+          >
             {limitPrice
               ? invertPrice
                 ? `1 ${outputToken.symbol} = ${formatTokenPrice(
@@ -146,10 +149,7 @@ export function PendingRowPro({
             <SyncAltIcon
               sx={{
                 fontSize: "1rem",
-                cursor: "pointer",
                 color: "#ffffff",
-                margin: "0 0 0 4px",
-                verticalAlign: "middle",
               }}
             />
           </BodyCell>

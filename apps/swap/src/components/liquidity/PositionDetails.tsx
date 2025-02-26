@@ -359,7 +359,7 @@ export function PositionDetails({
 
                   <SyncAltIcon
                     sx={{
-                      fontSize: "12px",
+                      fontSize: "1rem",
                       cursor: "pointer",
                       color: theme.palette.text.secondary,
                     }}
