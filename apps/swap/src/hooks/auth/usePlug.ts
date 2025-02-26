@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useCleanLogState, getConnectorType } from "store/auth/hooks";
+import { useCleanLogState, getConnector } from "store/auth/hooks";
 import { Connector } from "constants/wallet";
 
 export function usePlugExternalDisconnect() {
@@ -9,7 +9,7 @@ export function usePlugExternalDisconnect() {
     if (window.ic && window.ic.plug) {
       if (window.ic.plug.onExternalDisconnect) {
         window.ic.plug.onExternalDisconnect(() => {
-          const connector = getConnectorType();
+          const connector = getConnector();
 
           if (connector && connector === Connector.PLUG) {
             // Do not use useUserLogout, logout will exec window.ic.plug.onExternalDisconnect, and case a Loop execution
@@ -20,7 +20,7 @@ export function usePlugExternalDisconnect() {
 
       if (window.ic.plug.onLockStateChange)
         window.ic.plug.onLockStateChange((isLocked) => {
-          const connector = getConnectorType();
+          const connector = getConnector();
           if (connector && connector === Connector.PLUG) {
             if (isLocked) {
               cleanLogState();
