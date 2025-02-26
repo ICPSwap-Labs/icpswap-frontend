@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     width: "100%",
     height: "1px",
-    background: "#313A5A",
+    background: theme.colors.color0,
     opacity: 0.4,
   },
   wrapper: {

@@ -15,6 +15,7 @@ import StepViewButton from "components/Steps/View";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useTranslation } from "react-i18next";
 import { CancelLimitConfirm, LimitDetails, LimitDealRatio } from "components/swap/limit-order/index";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 export interface PendingRowProps {
   onCancelSuccess?: () => void;
@@ -123,14 +124,22 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
         </Flex>
 
         <Flex gap="0 2px" justify="flex-end">
-          <Typography sx={{ color: "text.primary", cursor: "pointer" }} onClick={handleInvert}>
-            {limitPrice
-              ? invertPrice
-                ? `1 ${outputToken.symbol} = ${toSignificantWithGroupSeparator(
-                    new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                  )} ${inputToken.symbol}`
-                : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`
-              : "--"}
+          <Typography
+            sx={{ color: "text.primary", cursor: "pointer", display: "flex", gap: "0 2px", alignItems: "center" }}
+            onClick={handleInvert}
+          >
+            {limitPrice ? (
+              <>
+                {invertPrice
+                  ? `1 ${outputToken.symbol} = ${toSignificantWithGroupSeparator(
+                      new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
+                    )} ${inputToken.symbol}`
+                  : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`}
+                <SyncAltIcon sx={{ fontSize: "1rem" }} />
+              </>
+            ) : (
+              "--"
+            )}
           </Typography>
         </Flex>
 

@@ -121,7 +121,7 @@ export function PoolCurrentPrice({
       {showInverted ? (
         <SyncAltIcon
           sx={{
-            fontSize: "14px",
+            fontSize: "1rem",
             color: theme.palette.text.secondary,
           }}
         />

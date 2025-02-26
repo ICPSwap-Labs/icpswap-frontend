@@ -12,7 +12,7 @@ import { Typography, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
 import { TextButton, Flex } from "components/index";
 import { INFO_URL } from "constants/index";
-import { ReactComponent as SyncAltIcon } from "assets/icons/sync-alt.svg";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useUSDPriceById } from "hooks";
 import { Null } from "@icpswap/types";
 

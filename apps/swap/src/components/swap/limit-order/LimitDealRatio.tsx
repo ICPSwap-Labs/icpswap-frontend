@@ -22,7 +22,7 @@ export function LimitDealRatio({ position, limit }: LimitDealRatioProps) {
           position: "relative",
           width: "100px",
           height: "6px",
-          background: theme.palette.background.level4,
+          background: theme.colors.color0,
           borderRadius: "20px",
         }}
       >

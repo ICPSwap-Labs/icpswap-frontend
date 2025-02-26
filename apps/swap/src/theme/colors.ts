@@ -117,4 +117,5 @@ export default {
   apr: "#54C081",
   success: "#54C081",
   "text.success": "#54C081",
+  color0: "#313A5A",
 };
