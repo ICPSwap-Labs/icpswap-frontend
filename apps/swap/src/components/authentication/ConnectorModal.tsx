@@ -1,7 +1,7 @@
 import { Box, makeStyles, Theme, Typography } from "components/Mui";
 import Modal from "components/modal";
 import { Flex, TextButton } from "components/index";
-import { Connector } from "constants/wallet";
+import { ConnectorConfigs } from "constants/wallet";
 import { useConnectManager } from "store/auth/hooks";
 import { useTranslation, Trans } from "react-i18next";
 
@@ -44,49 +44,6 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-type Wallet = {
-  label: string;
-  value: Connector;
-  logo: any;
-  tips?: string;
-  disabled?: boolean;
-};
-
-const Wallets: Wallet[] = [
-  {
-    label: "Internet Identity",
-    value: Connector.IC,
-    logo: "/images/connect/InternetIdentity.svg",
-  },
-  { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
-  {
-    label: "Stoic Wallet",
-    value: Connector.STOIC,
-    logo: "/images/connect/stoic.svg",
-  },
-  {
-    label: "ICPSwap Wallet",
-    value: Connector.ICPSwap,
-    logo: "/images/connect/icpswap.svg",
-  },
-  { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
-  {
-    label: "Bitfinity Wallet",
-    value: Connector.INFINITY,
-    logo: "/images/connect/Infinity.svg",
-  },
-  {
-    label: "AstroX ME",
-    value: Connector.ME,
-    logo: "/images/connect/AstroX.svg",
-  },
-  {
-    label: "MetaMask",
-    value: Connector.Metamask,
-    logo: "/images/connect/metamask.svg",
-  },
-];
-
 export default function WalletConnector() {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -123,7 +80,7 @@ export default function WalletConnector() {
 
           <Box mt="24px">
             <Box className={classes.walletBox}>
-              {Wallets.map((wallet) => (
+              {ConnectorConfigs.map((wallet) => (
                 <ConnectorComponent
                   key={wallet.value}
                   label={wallet.label}

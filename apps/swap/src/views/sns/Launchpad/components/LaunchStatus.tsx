@@ -6,7 +6,7 @@ import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import dayjs from "dayjs";
 import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { useAccountPrincipal, useConnectorType } from "store/auth/hooks";
+import { useAccountPrincipal, useConnector } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 import { Connector } from "constants/wallet";
 import { Token } from "@icpswap/swap-sdk";
@@ -151,7 +151,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
   }, [swap_derived_state, saleParameters]);
 
   const { result: location_code } = useIpLocationCode();
-  const connector = useConnectorType();
+  const connector = useConnector();
 
   const handleParticipate = async () => {
     setParticipateOpen(true);

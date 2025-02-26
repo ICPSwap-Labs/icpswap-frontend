@@ -11,7 +11,7 @@ import {
   Fade,
 } from "components/Mui";
 import { shorten } from "@icpswap/utils";
-import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnectorType } from "store/auth/hooks";
+import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnector } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
@@ -36,7 +36,7 @@ export default function ProfileSection() {
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
   const history = useHistory();
-  const connectorType = useConnectorType();
+  const connector = useConnector();
 
   const { showConnector, disconnect } = useConnectManager();
 
@@ -168,7 +168,7 @@ export default function ProfileSection() {
                       </Box>
                     </Box>
 
-                    {connectorType === Connector.IC ? (
+                    {connector === Connector.IC ? (
                       <Box
                         sx={{
                           margin: "4px 0 0 0",
