@@ -122,8 +122,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
           <Typography>
             {token
               ? t("common.fee.colon.amount", {
-                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
-                ${token.symbol}`,
+                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()} ${token.symbol}`,
                 })
               : "--"}
           </Typography>
