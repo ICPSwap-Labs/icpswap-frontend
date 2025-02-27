@@ -70,6 +70,7 @@ export function TransactionForSimpleMode() {
             padding0="2px"
             padding1="8px 12px"
             onChange={handleTableChange}
+            fontNormal
           />
         </Box>
 

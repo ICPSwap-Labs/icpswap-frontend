@@ -84,7 +84,6 @@ export function useBestTrade(
       return {
         state: TradeState.INVALID,
         trade: null,
-        tradePoolId: pool?.id,
         pool,
         routes,
         noLiquidity,
@@ -95,7 +94,6 @@ export function useBestTrade(
       return {
         state: TradeState.LOADING,
         trade: null,
-        tradePoolId: pool?.id,
         pool,
         routes,
         noLiquidity,
@@ -133,7 +131,6 @@ export function useBestTrade(
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: null,
-        tradePoolId: pool?.id,
         pool,
         routes,
         noLiquidity,
@@ -149,7 +146,6 @@ export function useBestTrade(
         inputAmount,
         outputAmount: CurrencyAmount.fromRawAmount(outputToken, amountOut.toString()),
       }),
-      tradePoolId: pool?.id,
       pool,
       routes,
       noLiquidity,

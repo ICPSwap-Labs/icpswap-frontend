@@ -105,14 +105,11 @@ export function TabPanel({
               color: theme.themeOption.textSecondary,
               cursor: "pointer",
               borderRadius: borderRadius ?? (size === "small" ? "6px" : "12px"),
-              fontWeight: 400,
+              fontWeight: fontNormal ? 400 : 600,
               "&.active": {
                 color: theme.themeOption.textPrimary,
                 background: bg1 ?? theme.colors.darkLevel3,
                 fontWeight: 600,
-              },
-              "&.fontNormal": {
-                fontWeight: 400,
               },
               "@media (max-width: 640px)": {
                 minWidth: size === "small" ? "auto" : "76px",
