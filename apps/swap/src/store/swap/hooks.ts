@@ -128,7 +128,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
-  const poolId = useMemo(() => Trade?.tradePoolId, [Trade]);
+  const poolId = useMemo(() => Trade?.pool?.id, [Trade]);
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
@@ -193,7 +193,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const maxInputAmount = useAllBalanceMaxSpend({
     token: inputToken,
     balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
-    poolId: Trade?.tradePoolId,
+    poolId: Trade?.pool?.id,
     subBalance: inputTokenSubBalance,
     unusedBalance: inputTokenUnusedBalance,
     allowance,
@@ -217,7 +217,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     trade: Trade?.trade,
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
-    poolId: Trade?.tradePoolId,
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
@@ -234,6 +233,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     inputTokenBalance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals),
     outputTokenBalance: formatTokenAmount(outputCurrencyBalance?.toExact(), outputCurrencyBalance?.currency.decimals),
     maxInputAmount,
+    pool: Trade.pool,
   };
 }
 

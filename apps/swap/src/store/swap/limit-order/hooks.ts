@@ -119,8 +119,13 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
-  const pool = useMemo(() => Trade?.pool, [Trade]);
-  const poolId = useMemo(() => pool?.id, [pool]);
+  const { pool, poolId } = useMemo(
+    () => ({
+      pool: Trade?.pool,
+      poolId: Trade?.pool?.id,
+    }),
+    [Trade],
+  );
 
   const isInputTokenSorted = useMemo(() => {
     if (isNullArgs(pool) || isNullArgs(inputToken)) return null;
@@ -227,6 +232,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     refresh,
   });
 
+  // Make balance is undefined if user logout
   const inputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
     return __inputTokenSubBalance;
@@ -239,9 +245,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
-    if (!poolId || !unusedBalance || !inputToken) return {};
-
-    const pool = Trade.routes[0].pools[0];
+    if (!pool || !unusedBalance || !inputToken) return {};
 
     return {
       inputTokenUnusedBalance:
@@ -249,7 +253,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       outputTokenUnusedBalance:
         pool.token0.address === inputToken.address ? unusedBalance.balance1 : unusedBalance.balance0,
     };
-  }, [Trade, inputToken, unusedBalance]);
+  }, [pool, inputToken, unusedBalance]);
 
   const allowanceTokenId = useMemo(() => {
     if (!inputToken) return undefined;
@@ -275,7 +279,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const maxInputAmount = useAllBalanceMaxSpend({
     token: inputToken,
     balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
-    poolId: Trade?.tradePoolId,
+    poolId,
     subBalance: inputTokenSubBalance,
     unusedBalance: inputTokenUnusedBalance,
     allowance,
