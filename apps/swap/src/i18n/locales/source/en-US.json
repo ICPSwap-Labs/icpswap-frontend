@@ -912,7 +912,7 @@
   "evIkh/": "Must use amount of 1",
   "f090YA": "Failed to split",
   "common.unable.withdraw": "Unable to withdraw {{symbol}}",
-  "fFaOHo": "of cast votes",
+  "nns.voting.of.cast": "of cast votes",
   "common.dead.line": "Deadline",
   "nns.error.neuron.invalid": "Invalid neuron id",
   "common.network.state": "Network state",
