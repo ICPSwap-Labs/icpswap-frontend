@@ -7,12 +7,9 @@ import { getSwapPosition, depositFrom, deposit } from "@icpswap/hooks";
 import { usePoolCanisterIdManager } from "store/swap/hooks";
 import { PositionDetail } from "types/swap";
 import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
-import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useErrorTip } from "hooks/useTips";
 import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
-import { tokenTransfer } from "hooks/token/calls";
 import { OpenExternalTip } from "types/index";
-import { SubAccount } from "@dfinity/ledger-icp";
 
 // Now the amount that user input is the final amount swap/add/increase
 // Amount is the value that the subaccount balance when use transfer, 1 token fees should be added on the amount
@@ -219,39 +216,7 @@ export function useSwapDeposit() {
   }, []);
 }
 
-export function useSwapTransfer() {
-  const [openErrorTip] = useErrorTip();
-
-  const principal = useAccountPrincipal();
-
-  return useCallback(
-    async (token: Token, amount: string, poolId: string, options?: TIP_OPTIONS) => {
-      if (!principal) {
-        openErrorTip(`Failed to transfer: no principal`);
-        return false;
-      }
-
-      const { status, message } = await tokenTransfer({
-        to: poolId,
-        canisterId: token.address,
-        amount: new BigNumber(amount),
-        from: principal?.toString() ?? "",
-        subaccount: [...SubAccount.fromPrincipal(principal).toUint8Array()],
-        fee: token.transFee,
-        decimals: token.decimals,
-      });
-
-      if (status === "err") {
-        openErrorTip(`Failed to transfer ${token.symbol}: ${message}`, options);
-        return false;
-      }
-
-      return true;
-    },
-    [principal],
-  );
-}
-
+export * from "./useSwapTokenTransfer";
 export * from "./useReclaimCallback";
 export * from "./useSwapApprove";
 export * from "./usePositionValue";
