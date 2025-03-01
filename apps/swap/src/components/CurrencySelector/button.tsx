@@ -63,7 +63,7 @@ export function CurrencySelectorButton({ currency, onClick, bgGray = false, load
       sx={{
         padding: "8px",
         height: "40px",
-        background: theme.themeOption.defaultGradient,
+        background: theme.palette.background.level2,
         color: "#ffffff",
         cursor: "pointer",
         borderRadius: "12px",
