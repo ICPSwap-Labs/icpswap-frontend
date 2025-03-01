@@ -1398,7 +1398,7 @@
   "wrap.unwrapping": "Unwrapping {{fromAmount}} WICP to {{toAmount}} ICP",
   "farm.not_start.descriptions": "As soon as the Farm goes live on {{liveTime0}} at {{liveTime1}}, you can start staking.",
   "service.stake.create.storage.canister": "Failed to created storage canister",
-  "common.display.only.list": "Display only tokens in Tokenlist",
+  "common.display.only.list": "Display only tokens in tokenlist",
   "common.transfer.to": "Transfer to",
   "swap.history": "Swap histroy",
   "swap.help.tooltip0": "ICPSwap's innovative limit order: No 0.3% fee, earn 0.24% instead.",
