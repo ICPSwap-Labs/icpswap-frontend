@@ -2,14 +2,13 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
 import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import {
-  FeeAmount,
   ZOOM_LEVEL_INITIAL_MIN_MAX,
   Bound,
   SWAP_CHART_RANGE_AREA_COLOR,
   SWAP_CHART_RANGE_LEFT_COLOR,
   SWAP_CHART_RANGE_RIGHT_COLOR,
 } from "constants/swap";
-import { Token } from "@icpswap/swap-sdk";
+import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import type { Null } from "@icpswap/types";

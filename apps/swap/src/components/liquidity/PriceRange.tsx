@@ -1,7 +1,7 @@
 import { memo, useState, useMemo, useCallback } from "react";
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { Token, Price, Pool } from "@icpswap/swap-sdk";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import { Token, Price, Pool, FeeAmount } from "@icpswap/swap-sdk";
+import { Bound, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { TokenToggle } from "components/TokenToggle";
 import { isDarkTheme } from "utils/index";

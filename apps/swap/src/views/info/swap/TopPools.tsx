@@ -7,6 +7,9 @@ import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
+import { nonNullArgs } from "@icpswap/utils";
+import { swapPoolsFilter } from "utils/index";
+import { FeeAmount } from "@icpswap/swap-sdk";
 
 export default function TopPools() {
   const { t } = useTranslation();
@@ -26,20 +29,18 @@ export default function TopPools() {
 
     const tokenListIds = tokenList.map((token) => token.canisterId).concat(ICP.address);
 
-    return pools
-      .filter((pool) => {
-        if (onlyTokenList) {
-          return tokenListIds.includes(pool.token0Id) && tokenListIds.includes(pool.token1Id);
-        }
-
-        return pool;
-      })
-      .filter((pool) => pool.feeTier === BigInt(3000) && !HIDDEN_POOLS.includes(pool.pool))
-      .filter((pool) => {
-        if (!selectedPair) return true;
-
-        return pool.pool === selectedPair;
+    return pools.filter((pool) => {
+      const nonFilteredTokenList =
+        onlyTokenList && !tokenListIds.includes(pool.token0Id) && !tokenListIds.includes(pool.token1Id);
+      const nonFilteredSelectedPair = nonNullArgs(selectedPair) && selectedPair === pool.pool;
+      const nonFiltered = !swapPoolsFilter({
+        token0Id: pool.token0Id,
+        token1Id: pool.token1Id,
+        fee: Number(pool.feeTier) as FeeAmount,
       });
+
+      return nonFilteredTokenList || nonFilteredSelectedPair || nonFiltered || !HIDDEN_POOLS.includes(pool.pool);
+    });
   }, [pools, onlyTokenList, tokenList, selectedPair]);
 
   const handlePairChange = (pairId: string | undefined) => {

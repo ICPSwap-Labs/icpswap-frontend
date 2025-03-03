@@ -31,6 +31,7 @@ import { Search } from "react-feather";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { PoolTvlTooltip } from "components/swap/index";
 import { useTranslation } from "react-i18next";
+import { swapPoolsInfoFilter } from "utils/index";
 
 import { PoolCharts } from "./PoolCharts";
 
@@ -320,7 +321,7 @@ export function InfoPools() {
     return allSwapPools.filter((pool) => {
       let __boolean = true;
 
-      if (pool.token0Price === 0 || pool.token1Price === 0 || pool.feeTier !== BigInt(3000)) __boolean = false;
+      __boolean = !swapPoolsInfoFilter({ pool });
 
       if (onlyTokenList) {
         if (!tokenListIds.includes(pool.token0Id) || !tokenListIds.includes(pool.token1Id)) {

@@ -1,5 +1,7 @@
-import { FeeAmount, Token } from "@icpswap/swap-sdk";
+import { FeeAmount, Pool, Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
+import { nonNullArgs } from "@icpswap/utils";
+
 import { useAllCurrencyCombinations } from "./useAllCurrencyCombinations";
 import { PoolState, usePools } from "./usePools";
 
@@ -10,7 +12,7 @@ export function useSwapPools(currencyIn: Token | undefined, currencyOut: Token |
     return allCurrencyCombinations.reduce(
       (list, [tokenA, tokenB]) => {
         return list.concat([
-          // [tokenA, tokenB, FeeAmount.LOW],
+          [tokenA, tokenB, FeeAmount.LOW],
           [tokenA, tokenB, FeeAmount.MEDIUM],
           // [tokenA, tokenB, FeeAmount.HIGH],
         ]);
@@ -21,16 +23,18 @@ export function useSwapPools(currencyIn: Token | undefined, currencyOut: Token |
 
   const pools = usePools(allCurrencyCombinationsWithAllFees);
 
+  const availablePools = pools
+    .filter(([poolState, pool]) => {
+      return (poolState === PoolState.EXISTS || poolState === PoolState.NOT_CHECK) && nonNullArgs(pool);
+    })
+    .map(([, pool]) => pool) as Pool[];
+
   return useMemo(() => {
     return {
-      pools: pools
-        .filter((tuple) => {
-          return (tuple[0] === PoolState.EXISTS || tuple[0] === PoolState.NOT_CHECK) && tuple[1] !== null;
-        })
-        .map(([, pool]) => pool),
+      pools: availablePools,
       loading: pools.some(([state]) => state === PoolState.LOADING),
       checked: !pools.some(([state]) => state === PoolState.NOT_CHECK),
-      noLiquidity: !!pools.find((tuple) => tuple[0] === PoolState.NOT_EXISTS),
+      noLiquidity: availablePools.length === 0,
     };
   }, [pools]);
 }

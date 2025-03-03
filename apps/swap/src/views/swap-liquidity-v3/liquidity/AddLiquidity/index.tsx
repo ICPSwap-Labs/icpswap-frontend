@@ -22,7 +22,7 @@ import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIEL
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import { isDarkTheme } from "utils/index";
-import { maxAmountFormat } from "utils/swap";
+import { isStablePairSpec, maxAmountFormat } from "utils/swap";
 import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
@@ -36,7 +36,7 @@ import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
 import { useRefreshTrigger } from "hooks/index";
 import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
-import { Token } from "@icpswap/swap-sdk";
+import { FeeAmount, Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 
 const DISABLED_STYLE = {
@@ -93,7 +93,11 @@ export default function AddLiquidity() {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const refreshTrigger = useRefreshTrigger(ADD_LIQUIDITY_REFRESH_KEY);
 
-  const feeAmount = feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
+  const feeAmount = useMemo(() => {
+    // If is ckUSDC/ckUSDT pair use the 500 FeeAmount
+    if (isStablePairSpec({ token0Id: currencyIdA, token1Id: currencyIdB })) return FeeAmount.LOW;
+    return feeAmountFromUrl ? Number(feeAmountFromUrl) : DEFAULT_FEE;
+  }, [feeAmountFromUrl, currencyIdA, currencyIdB]);
 
   const [useCurrencyALoading, baseCurrency] = useToken(currencyIdA);
   const [useCurrencyBLoading, currencyB] = useToken(currencyIdB);
@@ -125,15 +129,7 @@ export default function AddLiquidity() {
     unusedBalance,
     token0Balance,
     token1Balance,
-  } = useMintInfo(
-    baseCurrency ?? undefined,
-    quoteCurrency ?? undefined,
-    feeAmount,
-    baseCurrency ?? undefined,
-    undefined,
-    undefined,
-    refreshTrigger,
-  );
+  } = useMintInfo(baseCurrency, quoteCurrency, feeAmount, baseCurrency, undefined, undefined, refreshTrigger);
 
   const isValid = !errorMessage && !invalidRange;
 

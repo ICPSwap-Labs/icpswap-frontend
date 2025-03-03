@@ -17,7 +17,7 @@ import {
 import { TokenTransactions, TokenPools } from "components/info/swap";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
-import { swapLink, addLiquidityLink } from "utils/info/link";
+import { swapLink, addLiquidityLinkWithICP } from "utils/info/link";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
 import { TokenInfo } from "types/token";
 import { useState, useEffect, useRef } from "react";
@@ -205,7 +205,7 @@ export default function TokenDetails() {
             </Button>
           </Link>
 
-          <Link to={addLiquidityLink(canisterId)}>
+          <Link to={addLiquidityLinkWithICP(canisterId)}>
             <Button variant="contained" className="secondary">
               {t("swap.add.liquidity")}
             </Button>

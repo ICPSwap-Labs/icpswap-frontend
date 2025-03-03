@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { makeStyles, Typography, Box, Grid } from "components/Mui";
+import { makeStyles, Typography, Box } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { NoData, ImageLoading, TokenImage } from "components/index";
 import { useToken } from "hooks/index";
@@ -12,6 +12,7 @@ import {
   FeeTierPercentLabel,
   OnlyTokenList,
   APRPanel,
+  Flex,
 } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
 import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolAPR } from "@icpswap/hooks";
@@ -20,6 +21,7 @@ import { formatDollarAmount } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
+import { FeeAmount } from "@icpswap/swap-sdk";
 
 const useStyles = makeStyles(() => {
   return {
@@ -94,7 +96,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
-        <Grid container alignItems="center">
+        <Flex fullWidth align="center">
           <TokenImage logo={token0?.logo} tokenId={token0?.address} />
           <TokenImage logo={token1?.logo} tokenId={token1?.address} />
 
@@ -111,7 +113,7 @@ export function PoolItem({ pool, index }: PoolItemProps) {
           </Typography>
 
           <FeeTierPercentLabel feeTier={pool.feeTier} />
-        </Grid>
+        </Flex>
       </BodyCell>
       <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell>{apr ? <APRPanel value={apr} /> : "--"}</BodyCell>
@@ -151,7 +153,7 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
           (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
           pool.token0Price !== 0 &&
           pool.token1Price !== 0 &&
-          pool.feeTier === BigInt(3000) &&
+          (Number(pool.feeTier) as FeeAmount) === FeeAmount.MEDIUM &&
           !HIDDEN_POOLS.includes(pool.pool)
         );
       })

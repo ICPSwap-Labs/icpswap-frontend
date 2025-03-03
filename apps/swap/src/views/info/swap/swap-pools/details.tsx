@@ -7,7 +7,7 @@ import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks"
 import { useInfoPool } from "hooks/info/index";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
 import { PoolTransactions } from "components/info/swap";
-import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
+import { swapLinkOfPool, addLiquidityLinkWithICP } from "utils/info/link";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
@@ -163,7 +163,7 @@ export default function SwapPoolDetails() {
           {token0 && token1 ? (
             <Flex gap="0 10px">
               <Link
-                link={addLiquidityLink(token0.address === ICP_TOKEN_INFO.canisterId ? token1.address : token0.address)}
+                link={addLiquidityLinkWithICP(token0.address === ICP_TOKEN_INFO.canisterId ? token1.address : token0.address)}
               >
                 <Button variant="contained" className="secondary">
                   {t("swap.add.liquidity")}

@@ -1,3 +1,4 @@
+import { FeeAmount } from "@icpswap/swap-sdk";
 import { ICP_TOKEN_INFO, WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
 
 export function swapLink(canisterId: string) {
@@ -6,10 +7,10 @@ export function swapLink(canisterId: string) {
   return `/swap?input=${ICP_TOKEN_INFO.canisterId}&output=${canisterId}`;
 }
 
-export function addLiquidityLink(canisterId: string) {
+export function addLiquidityLinkWithICP(canisterId: string, fee = FeeAmount.MEDIUM) {
   if (canisterId === ICP_TOKEN_INFO.canisterId || canisterId === WRAPPED_ICP_TOKEN_INFO.canisterId)
     return `/liquidity/add/${ICP_TOKEN_INFO.canisterId}/`;
-  return `/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/3000`;
+  return `/liquidity/add/${ICP_TOKEN_INFO.canisterId}/${canisterId}/${fee}`;
 }
 
 export function swapLinkOfPool(token0Id: string, token1Id: string) {
