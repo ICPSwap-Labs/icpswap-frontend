@@ -1,14 +1,23 @@
 import { useState, useMemo } from "react";
-import { Typography, TableContainer, Table, TableBody, TableHead, TableCell, TableRow } from "@mui/material";
 import { encodeTokenIdentifier } from "utils/index";
-import { Copy, ListLoading } from "components/index";
+import { Copy } from "components/index";
 import { NFTTransaction } from "@icpswap/types";
 import { useNFTTransactions } from "@icpswap/hooks";
-import { Pagination, PaginationType, NoData } from "@icpswap/ui";
+import { Pagination, PaginationType, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, enumToString, pageArgsFormat, arrayBufferToString } from "@icpswap/utils";
 import type { PaginationResult } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { makeStyles, Box } from "components/Mui";
+
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "1.5fr 120px 1fr 1fr 120px",
+    },
+  };
+});
 
 export interface NFTTransactionProps {
   canisterId: string;
@@ -18,6 +27,7 @@ export interface NFTTransactionProps {
 
 export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
   const { t } = useTranslation();
+  const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset, limit] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -39,46 +49,35 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
 
   return (
     <>
-      <TableContainer className={loading ? "with-loading" : ""}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t("common.time")}</TableCell>
-              <TableCell>{t("common.type")}</TableCell>
-              <TableCell>{t("common.from")}</TableCell>
-              <TableCell>{t("common.to")}</TableCell>
-              <TableCell>{t("common.memo")}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      <Box sx={{ width: "100%" }}>
+        <>
+          <Header className={classes.wrapper}>
+            <HeaderCell>{t("common.time")}</HeaderCell>
+            <HeaderCell>{t("common.type")}</HeaderCell>
+            <HeaderCell>{t("common.from")}</HeaderCell>
+            <HeaderCell>{t("common.to")}</HeaderCell>
+            <HeaderCell>{t("common.memo")}</HeaderCell>
+          </Header>
+
+          <>
             {list.map((row, index) => (
-              <TableRow key={`${Number(row.tokenId)}_${index}`}>
-                <TableCell>
-                  <Typography>{timestampFormat(row.time)}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>{upperFirst(enumToString(row.txType))}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Copy content={row.from}>
-                    <Typography>{shorten(row.from, 8)}</Typography>
-                  </Copy>
-                </TableCell>
-                <TableCell>
-                  <Copy content={row.to}>
-                    <Typography>{shorten(row.to, 8)}</Typography>
-                  </Copy>
-                </TableCell>
-                <TableCell>
-                  <Typography>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</Typography>
-                </TableCell>
+              <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
+                <BodyCell>{timestampFormat(row.time)}</BodyCell>
+                <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
+                <Copy content={row.from}>
+                  <BodyCell>{shorten(row.from, 8)}</BodyCell>
+                </Copy>
+                <Copy content={row.to}>
+                  <BodyCell>{shorten(row.to, 8)}</BodyCell>
+                </Copy>
+                <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
               </TableRow>
             ))}
-          </TableBody>
-        </Table>
+          </>
+        </>
         {list.length === 0 && !loading ? <NoData /> : null}
-        <ListLoading loading={loading} />
-      </TableContainer>
+        <ImageLoading loading={loading} />
+      </Box>
       {list.length ? (
         <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />
       ) : null}

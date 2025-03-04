@@ -1,5 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import { SWAP_FIELD } from "constants/swap";
+import { type SwapPoolData } from "@icpswap/types";
 
 export const selectCurrency = createAction<{ field: SWAP_FIELD; currencyId: string | undefined }>(
   "swap/selectCurrency",
@@ -22,3 +23,5 @@ export const updateDecreaseLiquidityAmount = createAction<{
   amount0: bigint | undefined;
   amount1: bigint | undefined;
 }>("swap/updateDecreaseLiquidityAmount");
+
+export const updateAllSwapPools = createAction<SwapPoolData[]>("swap/updateAllSwapPools");

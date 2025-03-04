@@ -88,7 +88,7 @@ export default function TopTokens() {
               width="100%"
               fullHeight
               value={search}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     placeholder: `Search the canister ID or token`,

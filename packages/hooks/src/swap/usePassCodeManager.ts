@@ -2,16 +2,19 @@ import { useCallback } from "react";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
+
 import { useCallsData } from "../useCallData";
 
 export function usePCMMetadata() {
   return useCallsData(
     useCallback(async () => {
+      const result = await (await passCodeManager()).metadata();
+
       return resultFormat<{
         passcodePrice: bigint;
         tokenCid: Principal;
         factoryCid: Principal;
-      }>(await (await passCodeManager()).metadata()).data;
+      }>(result).data;
     }, []),
   );
 }

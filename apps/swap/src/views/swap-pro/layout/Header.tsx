@@ -1,5 +1,4 @@
 import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "components/Mui";
-import { createTheme } from "@mui/material/styles";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
@@ -11,14 +10,6 @@ import { useTranslation } from "react-i18next";
 import { ReactComponent as ProLogo } from "./pro-logo.svg";
 import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
 import { TokenSearch } from "./TokenSearch";
-
-export const customizeTheme = createTheme({
-  breakpoints: {
-    values: {
-      md: 960,
-    },
-  },
-});
 
 export default function Header() {
   const { t } = useTranslation();
@@ -63,7 +54,7 @@ export default function Header() {
                   fullHeight
                   placeholder="Symbol / Name / Canister ID"
                   borderRadius="12px"
-                  textFiledProps={{
+                  textFieldProps={{
                     slotProps: {
                       input: {
                         startAdornment: (

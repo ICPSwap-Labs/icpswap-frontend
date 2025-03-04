@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { Connector } from "@web3-react/types";
-import { Button } from "@mui/material";
+import { Button } from "components/Mui";
 import { injectedConnection } from "utils/web3/connection";
 import { DEFAULT_CHAIN_ID } from "constants/web3";
 import { useCallback } from "react";

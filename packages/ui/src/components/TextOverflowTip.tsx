@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Tooltip as MuiToolTip } from "@mui/material";
+
+import { Typography, Tooltip as MuiToolTip } from "./Mui";
 
 export interface TextOverflowTipProps {
   background?: string;

@@ -11,7 +11,7 @@ import { WithdrawTokens } from "components/swap/limit-order/WithdrawTokens";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-export interface LimitHistoryRowProps {
+export interface HistoryRowProProps {
   limitTransaction: LimitTransaction;
   pool: Pool | Null;
   wrapperClassName?: string;
@@ -19,13 +19,13 @@ export interface LimitHistoryRowProps {
   unusedBalance: { balance0: bigint; balance1: bigint } | Null;
 }
 
-export function LimitHistoryRow({
+export function HistoryRowPro({
   limitTransaction: transaction,
   pool,
   wrapperClassName,
   noBorder = false,
   unusedBalance,
-}: LimitHistoryRowProps) {
+}: HistoryRowProProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -95,7 +95,10 @@ export function LimitHistoryRow({
             </BodyCell>
           </BodyCell>
 
-          <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
+          <BodyCell
+            sx={{ justifyContent: "flex-end", alignItems: "center", gap: "0 4px" }}
+            onClick={() => setInvertPrice(!invertPrice)}
+          >
             {limitPrice
               ? invertPrice
                 ? `1 ${outputToken?.symbol} = ${formatTokenPrice(
@@ -105,11 +108,7 @@ export function LimitHistoryRow({
               : "--"}
             <SyncAltIcon
               sx={{
-                fontSize: "1rem",
-                cursor: "pointer",
                 color: "#ffffff",
-                margin: "0 0 0 4px",
-                verticalAlign: "middle",
               }}
             />
           </BodyCell>

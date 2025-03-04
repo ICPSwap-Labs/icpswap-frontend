@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "@mui/material";
+import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "components/Mui";
 import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";

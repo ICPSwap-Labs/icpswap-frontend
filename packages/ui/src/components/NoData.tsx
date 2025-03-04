@@ -1,10 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "./Mui";
 
 export interface NoDataProps {
   tip?: string;
+  noTips?: boolean;
 }
 
-export function NoData({ tip }: NoDataProps) {
+export function NoData({ tip, noTips = false }: NoDataProps) {
   return (
     <Box
       sx={{
@@ -16,7 +17,7 @@ export function NoData({ tip }: NoDataProps) {
     >
       <img src="/images/empty.svg" alt="" width="100px" height="75px" />
 
-      {tip ? (
+      {noTips === true ? null : tip ? (
         <Typography sx={{ maxWidth: "690px" }} color="text.primary" mt="10px" align="center">
           {tip}
         </Typography>

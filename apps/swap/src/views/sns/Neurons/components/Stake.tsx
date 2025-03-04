@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { Button, Typography, Box, InputAdornment } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, formatDollarAmount } from "@icpswap/utils";
+import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
+import { parseTokenAmount, formatTokenAmount, formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { claimOrRefreshNeuron } from "@icpswap/hooks";
 import { tokenTransfer } from "hooks/token/calls";
-import BigNumber from "bignumber.js";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Modal, NumberFilledTextField } from "components/index";
-import MaxButton from "components/MaxButton";
+import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks";
@@ -97,12 +94,16 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
               decimalScale: token?.decimals,
             }}
             autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <MaxButton onClick={handleMax} />
-                </InputAdornment>
-              ),
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MaxButton onClick={handleMax} />
+                    </InputAdornment>
+                  ),
+                },
+              },
             }}
           />
 
@@ -121,8 +122,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
           <Typography>
             {token
               ? t("common.fee.colon.amount", {
-                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()}&nbsp;
-                ${token.symbol}`,
+                  amount: `${parseTokenAmount(token.transFee.toString(), token.decimals).toFormat()} ${token.symbol}`,
                 })
               : "--"}
           </Typography>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Typography, Box, CircularProgress } from "@mui/material";
+import { Button, Typography, Box, CircularProgress } from "components/Mui";
 import { Flex, Modal, NumberTextField, StepViewButton, MaxButton } from "components/index";
 import {
   BigNumber,

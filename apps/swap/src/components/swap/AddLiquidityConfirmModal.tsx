@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Typography, Grid, Button } from "@mui/material";
+import { Typography, Grid, Button } from "components/Mui";
 import SwapModal from "components/modal/swap";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { Bound } from "constants/swap";

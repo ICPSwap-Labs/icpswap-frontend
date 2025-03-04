@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, makeStyles } from "components/Mui";
 import { Wrapper, Breadcrumbs, MainCard, Pagination, PaginationType, ImageLoading, NoData } from "components/index";
-import { Header, HeaderCell, BodyCell, Row } from "components/Table/index";
 import { useUserClaimEventTransactions } from "@icpswap/hooks";
 import { ClaimTransaction } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { HeaderCell, Header, BodyCell, TableRow } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -26,13 +26,13 @@ export function TokenClaimTransaction({ transaction }: { transaction: ClaimTrans
   const [, token] = useToken(transaction.tokenCid);
 
   return (
-    <Row className={classes.wrapper}>
+    <TableRow className={classes.wrapper}>
       <BodyCell>{transaction.claimTime[0] ? timestampFormat(transaction.claimTime[0]) : "--"}</BodyCell>
       <BodyCell>{transaction.claimEventName}</BodyCell>
       <BodyCell>
         {parseTokenAmount(transaction.claimAmount, token?.decimals).toFormat()} {token?.symbol}
       </BodyCell>
-    </Row>
+    </TableRow>
   );
 }
 

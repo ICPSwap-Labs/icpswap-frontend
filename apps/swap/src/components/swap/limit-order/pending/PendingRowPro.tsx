@@ -23,12 +23,9 @@ import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { LimitDetails, CancelLimitConfirm, LimitDealRatio } from "components/swap/limit-order/index";
 
-import { CancelLimitConfirm } from "./CancelLimitConfirm";
-import { LimitDetails } from "./LimitDetails";
-import { LimitDealRatio } from "./LimitDealRatio";
-
-export interface LimitOrderRowProps {
+export interface PendingRowProProps {
   limitOrder: LimitOrder;
   pool: Pool | Null;
   wrapperClassName?: string;
@@ -36,13 +33,13 @@ export interface LimitOrderRowProps {
   noBorder?: boolean;
 }
 
-export function LimitOrderRow({
+export function PendingRowPro({
   limitOrder,
   pool,
   wrapperClassName,
   onCancelSuccess,
   noBorder = false,
-}: LimitOrderRowProps) {
+}: PendingRowProProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -135,7 +132,10 @@ export function LimitOrderRow({
           </BodyCell>
 
           {/* Limit Price */}
-          <BodyCell sx={{ display: "inline-block", textAlign: "right" }} onClick={() => setInvertPrice(!invertPrice)}>
+          <BodyCell
+            sx={{ justifyContent: "flex-end", alignItems: "center", gap: "0 4px" }}
+            onClick={() => setInvertPrice(!invertPrice)}
+          >
             {limitPrice
               ? invertPrice
                 ? `1 ${outputToken.symbol} = ${formatTokenPrice(
@@ -149,10 +149,7 @@ export function LimitOrderRow({
             <SyncAltIcon
               sx={{
                 fontSize: "1rem",
-                cursor: "pointer",
                 color: "#ffffff",
-                margin: "0 0 0 4px",
-                verticalAlign: "middle",
               }}
             />
           </BodyCell>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Typography, Chip, Button, useMediaQuery, Box, makeStyles, useTheme } from "components/Mui";
+import { Typography, Chip, Button, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { Modal, Flex } from "@icpswap/ui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
@@ -23,7 +23,6 @@ import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverte
 import { isDarkTheme } from "utils/index";
 import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Theme } from "@mui/material/styles";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";

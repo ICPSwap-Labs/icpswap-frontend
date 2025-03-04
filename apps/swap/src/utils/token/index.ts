@@ -2,13 +2,13 @@ import { numberToString, BigNumber } from "@icpswap/utils";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Token } from "@icpswap/swap-sdk";
 
-export function isUseTransfer(token: Token | undefined) {
-  if (token === undefined) return false;
-  return token.standard.includes("ICRC1");
-}
-
 export function isUseTransferByStandard(standard: TOKEN_STANDARD) {
   return standard.includes("ICRC1");
+}
+
+export function isUseTransfer(token: Token | undefined) {
+  if (token === undefined) return false;
+  return isUseTransferByStandard(token.standard as TOKEN_STANDARD);
 }
 
 export function actualAmountToPool(token: Token, amount: string) {

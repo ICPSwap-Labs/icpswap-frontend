@@ -1,6 +1,7 @@
 import copyToClipboard from "copy-to-clipboard";
 import React, { forwardRef, useImperativeHandle } from "react";
-import { Box } from "@mui/material";
+
+import { Box } from "./Mui";
 
 export interface CopyProps {
   content: string | undefined;

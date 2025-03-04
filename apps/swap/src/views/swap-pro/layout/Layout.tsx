@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, useTheme } from "@mui/styles";
-import { AppBar, CssBaseline, Grid, Box } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { CssBaseline, Grid, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import Background from "components/Background";
 import { GlobalTips } from "@icpswap/ui";
 
@@ -10,6 +8,7 @@ import Header from "./Header";
 const useStyles = makeStyles((theme: Theme) => {
   return {
     appBar: {
+      position: "fixed",
       backgroundColor: "#0B132F",
     },
     content: {
@@ -57,7 +56,7 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
     <>
       <CssBaseline />
 
-      <AppBar position="fixed" color="inherit" elevation={0} className={classes.appBar}>
+      <Box color="inherit" elevation={0} className={classes.appBar}>
         <Grid
           container
           alignItems="center"
@@ -72,7 +71,7 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
         >
           <Header />
         </Grid>
-      </AppBar>
+      </Box>
 
       <Box className={classes.mainContent}>
         {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}

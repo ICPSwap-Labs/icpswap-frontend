@@ -14,7 +14,7 @@ export function themePalette(theme: { [key: string]: any }) {
       dark: isDark ? theme.colors.darkPrimaryDark : theme.colors.primaryDark,
       200: isDark ? theme.colors.darkPrimary200 : theme.colors.primary200,
       800: isDark ? theme.colors.darkPrimary800 : theme.colors.primary800,
-      400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
+      400: isDark ? theme.colors.dark400 : theme.colors.primary800,
     },
     secondary: {
       light: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryLight,
@@ -67,7 +67,7 @@ export function themePalette(theme: { [key: string]: any }) {
       danger: theme.colors.danger,
       orangeWarning: theme.colors.warning,
       level1: isDark ? theme.colors.darkLevel1 : theme.colors.primaryLight,
-      400: isDark ? theme.colors.darkPrimary400 : theme.colors.primary800,
+      400: isDark ? theme.colors.dark400 : theme.colors.primary800,
       theme_primary: theme.colors.darkPrimaryMain,
       theme_secondary: theme.colors.darkSecondaryMain,
       "theme-primary": theme.colors.darkPrimaryMain,
@@ -91,7 +91,7 @@ export function themePalette(theme: { [key: string]: any }) {
       success: theme.colors.success,
     },
     border: {
-      normal: isDark ? "1px solid #313A5A" : `1px solid ${theme.colors.lightGray200BorderColor}`,
+      normal: isDark ? `1px solid ${theme.colors.color0}` : `1px solid ${theme.colors.lightGray200BorderColor}`,
       border0: "1px solid #4F5A84",
       gray200: isDark ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
       1: "#38446C",

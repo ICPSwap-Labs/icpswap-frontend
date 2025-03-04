@@ -263,15 +263,9 @@ importers:
       '@mui/x-date-pickers':
         specifier: 5.0.13
         version: 5.0.13(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@mui/material@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mui/system@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(date-fns@2.30.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@nfid/core':
-        specifier: ^1.0.2
-        version: 1.0.2(tslib@2.4.0)
       '@nfid/identitykit':
         specifier: 1.0.7
         version: 1.0.7(fwupomt6nf24ozyc3j4x3rroqa)
-      '@nfid/wallet':
-        specifier: ^1.1.0
-        version: 1.1.0
       '@noble/hashes':
         specifier: ^1.6.1
         version: 1.6.1
@@ -664,6 +658,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@emotion/react':
+        specifier: ^11.13.5
+        version: 11.14.0(@types/react@18.2.0)(react@18.2.0)
       '@icpswap/constants':
         specifier: workspace:*
         version: link:../constants
@@ -2893,11 +2890,6 @@ packages:
       moment:
         optional: true
 
-  '@nfid/core@1.0.2':
-    resolution: {integrity: sha512-Utw8R69KSlwnfVcoritY99iW0eF/z/JGj0MKWawTQQdqFZL1xCN7RtFx35Lwupnx9cWzcIvv6lQfzp7wQsPjFg==}
-    peerDependencies:
-      tslib: 2.4.0
-
   '@nfid/identitykit@1.0.7':
     resolution: {integrity: sha512-nO7pFv24CQ4pBxIipjACxCa/jyMS+Ztt2EQhGKJ+Jx1KrsPWnI0SfxHQrP5Fel2tb0YpwsDnMv30ITosMCtnrw==}
     engines: {node: '>=12.7.0'}
@@ -2910,10 +2902,6 @@ packages:
       '@dfinity/principal': 2.1.2
       react: '>=18.3.1'
       react-dom: '>=18.3.1'
-
-  '@nfid/wallet@1.1.0':
-    resolution: {integrity: sha512-vZXhWihuBze7EenT2tTkF5wpiLWWNweuuvKuLxLTqZV0Yljd/ICqSFbJBqxouNmbQemethGhjKzfGvFT8xS/Sw==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
@@ -11501,9 +11489,6 @@ packages:
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  tslib@2.4.0:
-    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -15696,10 +15681,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nfid/core@1.0.2(tslib@2.4.0)':
-    dependencies:
-      tslib: 2.4.0
-
   '@nfid/identitykit@1.0.7(fwupomt6nf24ozyc3j4x3rroqa)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
@@ -15732,11 +15713,6 @@ snapshots:
       - postcss
       - scheduler
       - ts-node
-
-  '@nfid/wallet@1.1.0':
-    dependencies:
-      '@nfid/core': 1.0.2(tslib@2.4.0)
-      tslib: 2.4.0
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
@@ -26650,8 +26626,6 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@1.14.1: {}
-
-  tslib@2.4.0: {}
 
   tslib@2.8.1: {}
 

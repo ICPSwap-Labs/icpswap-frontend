@@ -18,7 +18,7 @@ export function CancelLimitConfirm({ open, onConfirm, onClose }: CancelLimitConf
       onClose={onClose}
       onCancel={onClose}
       onConfirm={onConfirm}
-      cancelText={t`Nerve mind`}
+      cancelText={t("common.nerve.mind")}
       confirmText={t("common.proceed")}
       showConfirm
       showCancel

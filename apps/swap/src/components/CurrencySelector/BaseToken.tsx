@@ -1,6 +1,5 @@
-import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
-import { useTheme } from "components/Mui";
+import { useTheme, Typography } from "components/Mui";
 import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB, ALICE } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";

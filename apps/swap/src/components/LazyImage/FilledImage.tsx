@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid } from "components/Mui";
 
 interface FilledImageProps {
   Icon: any;

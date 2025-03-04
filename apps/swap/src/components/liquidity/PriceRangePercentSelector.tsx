@@ -1,8 +1,8 @@
 import React, { memo, useState, useEffect, useCallback, useMemo } from "react";
 import { Box, Grid, Typography, TextField, Chip, Button, makeStyles, useTheme, Theme } from "components/Mui";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
-import { Token, Price } from "@icpswap/swap-sdk";
-import { Bound, FeeAmount } from "constants/swap";
+import { Token, Price, FeeAmount } from "@icpswap/swap-sdk";
+import { Bound } from "constants/swap";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { TokenToggle } from "components/TokenToggle";
 import { isDarkTheme } from "utils/index";
@@ -129,8 +129,10 @@ export function PriceRangeSelector({
               className={classes.input}
               placeholder="0.0"
               variant="standard"
-              InputProps={{
-                disableUnderline: true,
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
               }}
               onChange={(e) => setLocalValue(e.target.value)}
               onBlur={handleOnBlur}

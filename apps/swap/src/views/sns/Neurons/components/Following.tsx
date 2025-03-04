@@ -285,7 +285,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
               {t("nns.delete.followee")}
             </Button>
             <Button fullWidth size="large" sx={{ height: "48px" }} variant="contained" onClick={handleAddFollowee}>
-              t("nns.followee.add")
+              {t("nns.followee.add")}
             </Button>
           </Flex>
         ) : null}

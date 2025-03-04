@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar, Box } from "@mui/material";
+import { Grid, Typography, Avatar, Box } from "components/Mui";
 import { pageArgsFormat, shortenString } from "@icpswap/utils";
 import { ProposalInfo, ProjectInfo } from "@icpswap/types";
 import { Pagination, PaginationType, NoData, ImageLoading, MainCard } from "components/index";

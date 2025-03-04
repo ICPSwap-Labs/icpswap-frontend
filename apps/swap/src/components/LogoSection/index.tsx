@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ButtonBase } from "@mui/material";
+import { ButtonBase } from "components/Mui";
 import Logo from "components/Logo";
 
 export default function LogoSection() {

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "./Mui";
 
 export function dexScreenerUrl(id: string) {
   return `https://dexscreener.com/icp/${id}?embed=1&theme=dark&trades=0&info=0`;

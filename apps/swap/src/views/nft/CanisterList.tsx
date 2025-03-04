@@ -1,27 +1,15 @@
-import { Pagination, NoData, ListLoading, MainCard, TextButton, Wrapper } from "components/index";
+import { Pagination, NoData, MainCard, TextButton, Wrapper } from "components/index";
 import { useUserCanisterList, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, cycleValueFormat, timestampFormat } from "@icpswap/utils";
 import { useState } from "react";
-import {
-  Grid,
-  Typography,
-  Button,
-  Box,
-  useMediaQuery,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableHead,
-  TableContainer,
-} from "@mui/material";
-import { makeStyles, useTheme, Theme } from "components/Mui";
+import { Grid, Typography, Button, Box, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { useAccount } from "store/auth/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import CanSVG from "assets/images/nft/CanSVG";
 import { useTranslation } from "react-i18next";
+import { TableRow, Header, HeaderCell, BodyCell, ImageLoading } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -38,6 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("md")]: {
       fontSize: "24px",
     },
+  },
+  wrapper: {
+    display: "grid",
+    gridTemplateColumns: "repeat(6,1fr)",
   },
 }));
 
@@ -90,32 +82,23 @@ export function NFTCanisterListItem({
   onDetailsClick: (canister: NFTControllerInfo) => void;
   onMintNFTClick: (canister: NFTControllerInfo) => void;
 }) {
+  const classes = useStyles();
   const { t } = useTranslation();
   const { result: cycles } = useCanisterCycles(canister.cid);
   const account = useAccount();
   const { result: count } = useCanisterUserNFTCount(canister.cid, account);
 
   return (
-    <TableRow>
-      <TableCell>
-        <Typography>{canister.name}</Typography>
-      </TableCell>
-      <TableCell>
-        <Typography>{timestampFormat(canister.createTime)}</Typography>
-      </TableCell>
-      <TableCell>
-        <ExplorerLink label={canister.cid} value={canister.cid} />
-      </TableCell>
-      <TableCell>
-        <Typography>{String(count ?? 0)}</Typography>
-      </TableCell>
-      <TableCell>
-        <Typography>{cycleValueFormat(cycles ?? "")}</Typography>
-      </TableCell>
-      <TableCell>
+    <TableRow className={classes.wrapper}>
+      <BodyCell>{canister.name}</BodyCell>
+      <BodyCell>{timestampFormat(canister.createTime)}</BodyCell>
+      <ExplorerLink label={canister.cid} value={canister.cid} />
+      <BodyCell>{String(count ?? 0)}</BodyCell>
+      <BodyCell>{cycleValueFormat(cycles ?? "")}</BodyCell>
+      <BodyCell>
         <TextButton onClick={() => onDetailsClick(canister)}>{t("common.details")}</TextButton>
         <TextButton onClick={() => onMintNFTClick(canister)}>{t("nft.mint")}</TextButton>
-      </TableCell>
+      </BodyCell>
     </TableRow>
   );
 }
@@ -124,6 +107,7 @@ export default function NFTCanisterList() {
   const { t } = useTranslation();
   const account = useAccount();
   const history = useHistory();
+  const classes = useStyles();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
 
@@ -148,19 +132,18 @@ export default function NFTCanisterList() {
             <Box mb={3}>
               <Typography variant="h3">{t("canister.list")}</Typography>
             </Box>
-            <TableContainer className={loading ? "with-loading" : ""}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t("common.name")}</TableCell>
-                    <TableCell>{t("common.time")}</TableCell>
-                    <TableCell>{t("common.canister.id")}</TableCell>
-                    <TableCell>{t("nft.nfts.count")}</TableCell>
-                    <TableCell>{t("common.cycles")}</TableCell>
-                    <TableCell>&nbsp;</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
+            <Box sx={{ width: "100%", overflow: "auto" }}>
+              <Box sx={{ width: "100%", minWidth: "960px" }}>
+                <Header className={classes.wrapper}>
+                  <HeaderCell>{t("common.name")}</HeaderCell>
+                  <HeaderCell>{t("common.time")}</HeaderCell>
+                  <HeaderCell>{t("common.canister.id")}</HeaderCell>
+                  <HeaderCell>{t("nft.nfts.count")}</HeaderCell>
+                  <HeaderCell>{t("common.cycles")}</HeaderCell>
+                  <HeaderCell>&nbsp;</HeaderCell>
+                </Header>
+
+                <>
                   {content.map((canister) => (
                     <NFTCanisterListItem
                       key={canister.cid}
@@ -169,11 +152,11 @@ export default function NFTCanisterList() {
                       onMintNFTClick={handleLoadMintNFT}
                     />
                   ))}
-                </TableBody>
-              </Table>
+                </>
+              </Box>
               {content.length === 0 && !loading ? <NoData /> : null}
-              <ListLoading loading={loading} />
-            </TableContainer>
+              <ImageLoading loading={loading} />
+            </Box>
 
             {totalElements && Number(totalElements) !== 0 ? (
               <Pagination

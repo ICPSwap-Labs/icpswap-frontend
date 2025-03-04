@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
 import { ReactNode } from "react";
+
+import { Box } from "../Mui";
 
 export interface GridAutoRowsProps {
   gap: string;

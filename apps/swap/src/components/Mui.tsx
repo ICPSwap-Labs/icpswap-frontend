@@ -20,7 +20,7 @@ export { default as InputAdornment } from "@mui/material/InputAdornment";
 export { default as Avatar, type AvatarProps } from "@mui/material/Avatar";
 export { default as Link } from "@mui/material/Link";
 export { default as makeStyles } from "@mui/styles/makeStyles";
-export { default as Tooltip } from "@mui/material/Tooltip";
+export { default as Tooltip, tooltipClasses } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as ButtonBase } from "@mui/material/ButtonBase";
 export { default as Drawer } from "@mui/material/Drawer";
@@ -30,6 +30,19 @@ export { keyframes } from "@emotion/react";
 export { default as Breadcrumbs } from "@mui/material/Breadcrumbs";
 export { default as Input } from "@mui/material/Input";
 export { default as Card } from "@mui/material/Card";
+export { default as Switch, type SwitchProps } from "@mui/material/Switch";
+export { default as Pagination } from "@mui/material/Pagination";
+export { default as CssBaseline } from "@mui/material/CssBaseline";
+export { default as StyledEngineProvider } from "@mui/material/StyledEngineProvider";
+export { default as Dialog } from "@mui/material/Dialog";
+export { default as DialogTitle } from "@mui/material/DialogTitle";
+export { default as DialogContent } from "@mui/material/DialogContent";
+export { default as Slider, type SliderProps } from "@mui/material/Slider";
+export { default as Paper } from "@mui/material/Paper";
+export { default as Backdrop } from "@mui/material/Backdrop";
+
+export { default as styled } from "@mui/styles/styled";
+export { default as ThemeProvider } from "@mui/material/styles/ThemeProvider";
 
 export function useTheme() {
   return useMuiTheme() as Theme;

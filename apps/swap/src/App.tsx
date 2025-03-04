@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
-import { ThemeProvider } from "@mui/material/styles";
-import { CssBaseline, StyledEngineProvider } from "@mui/material";
+import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
 import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { Route } from "react-router-dom";

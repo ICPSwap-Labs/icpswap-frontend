@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography } from "components/Mui";
 
 function CloseIcon() {
   return (

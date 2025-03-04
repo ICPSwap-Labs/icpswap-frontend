@@ -48,7 +48,7 @@ export default function NFTView({ isWallet = false }: { isWallet?: boolean }) {
         <NFTInfo isView canisterId={canisterId} tokenId={Number(tokenId)} />
 
         <Box mt="24px">
-          <MainCard level={2}>
+          <MainCard level={3}>
             <Grid container spacing={3}>
               {TabList.map((item) => (
                 <Grid item key={item.key}>

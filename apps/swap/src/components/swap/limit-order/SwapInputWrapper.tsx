@@ -93,7 +93,6 @@ export function SwapInputWrapper({
           isInput
           maxInputAmount={maxInputAmount}
           poolId={poolId}
-          showUSDChange={false}
         />
 
         <Box
@@ -136,7 +135,6 @@ export function SwapInputWrapper({
           subBalance={outputTokenSubBalance}
           poolId={poolId}
           noLiquidity={noLiquidity}
-          showUSDChange={false}
         />
       </Box>
     </Box>

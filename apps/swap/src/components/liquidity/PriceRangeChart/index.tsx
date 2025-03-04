@@ -6,13 +6,12 @@ import { useDensityChartData } from "hooks/swap/useDensityChartData";
 import { format } from "d3";
 import {
   Bound,
-  FeeAmount,
   ZOOM_LEVEL_INITIAL_MIN_MAX,
   SWAP_CHART_RANGE_LEFT_COLOR,
   SWAP_CHART_RANGE_RIGHT_COLOR,
   SWAP_CHART_RANGE_AREA_COLOR,
 } from "constants/swap";
-import { Price, Token } from "@icpswap/swap-sdk";
+import { Price, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { Null } from "@icpswap/types";

@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Typography, Avatar, Box, Grid, useMediaQuery } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Typography, Avatar, Box, Grid, useMediaQuery, Theme, makeStyles } from "components/Mui";
 import { Wrapper, MainCard } from "components/index";
 import { useVotingProjectDetails } from "@icpswap/hooks";
-import { Theme } from "@mui/material/styles";
 import AuthorityUsers from "components/vote/AuthorityUsers";
 import Proposals from "components/vote/Proposals";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
@@ -79,7 +77,7 @@ export default function VotingProject() {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: matchDown1440 ? "1fr" : "340px 1040px",
+          gridTemplateColumns: matchDown1440 ? "1fr" : "340px 940px",
           gridTemplateRows: matchDown1440 ? "auto 1fr" : "1fr",
           gap: matchDown1440 ? "20px 0" : "0 20px",
         }}

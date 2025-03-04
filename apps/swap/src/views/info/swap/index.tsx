@@ -81,7 +81,7 @@ export default function SwapOverview() {
     <InfoWrapper>
       <GridAutoRows gap="20px">
         <Flex fullWidth>
-          <Typography sx={{ color: theme.colors.darkPrimary400 }} fontSize="16px" fontWeight="500">
+          <Typography sx={{ color: theme.colors.dark400 }} fontSize="16px" fontWeight="500">
             {t("info.swap.overview")}
           </Typography>
         </Flex>

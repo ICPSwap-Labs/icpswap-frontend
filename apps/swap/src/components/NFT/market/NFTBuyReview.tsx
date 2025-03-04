@@ -238,7 +238,7 @@ export default function NFTBuyReview({
               size="large"
               startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
             >
-              t("common.confirm")
+              {t("common.confirm")}
             </AuthButton>
           )}
         </Identity>

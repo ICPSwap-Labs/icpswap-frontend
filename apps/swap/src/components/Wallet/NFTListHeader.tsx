@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import WalletPageToggle from "components/Wallet/PageToggle";
+
 import AddNFTCanister from "./AddNFTCanister";
 import { ImportEXTNft } from "./ImportEXTNFT";
 

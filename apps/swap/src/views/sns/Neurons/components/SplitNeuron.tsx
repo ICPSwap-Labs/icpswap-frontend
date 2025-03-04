@@ -11,8 +11,7 @@ import {
 import { splitNeuron } from "@icpswap/hooks";
 import type { NervousSystemParameters } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Modal, NumberFilledTextField } from "components/index";
-import MaxButton from "components/MaxButton";
+import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import randomBytes from "randombytes";
 import { useUSDPriceById } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
@@ -165,12 +164,20 @@ export function SplitNeuron({
               decimalScale: token?.decimals,
             }}
             autoComplete="off"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <MaxButton onClick={handleMax} />
-                </InputAdornment>
-              ),
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <MaxButton onClick={handleMax} />
+                    </InputAdornment>
+                  ),
+                  disableUnderline: true,
+                  inputProps: {
+                    maxLength: 100,
+                  },
+                },
+              },
             }}
           />
 

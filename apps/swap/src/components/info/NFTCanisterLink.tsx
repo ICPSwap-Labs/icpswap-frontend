@@ -1,4 +1,4 @@
-import { Link } from "@mui/material";
+import { Link } from "components/Mui";
 import { INFO_URL } from "constants/index";
 
 export default function TokenInfo({ canisterId }: { canisterId: string | undefined }) {

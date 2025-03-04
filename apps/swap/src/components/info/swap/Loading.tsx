@@ -1,6 +1,4 @@
-import { Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
+import { Box, useTheme, Theme } from "components/Mui";
 import LoadingImage from "assets/images/loading.png";
 
 export default function SwapAnalyticLoading({ loading }: { loading: boolean }) {

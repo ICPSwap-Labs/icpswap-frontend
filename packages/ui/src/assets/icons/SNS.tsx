@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
+import { SvgIcon, SvgIconProps } from "../../components/Mui";
 
 export function SnsIcon(props: SvgIconProps) {
   return (

@@ -1,4 +1,4 @@
-import { Percent, BigintIsh } from "@icpswap/swap-sdk";
+import { Percent, BigintIsh, FeeAmount } from "@icpswap/swap-sdk";
 
 export enum Bound {
   LOWER = "LOWER",
@@ -10,13 +10,7 @@ export enum FIELD {
   CURRENCY_B = "CURRENCY_B",
 }
 
-export const DEFAULT_FEE = 3000;
-
-export enum FeeAmount {
-  LOW = 500,
-  MEDIUM = 3000,
-  HIGH = 10000,
-}
+export const DEFAULT_FEE = FeeAmount.MEDIUM;
 
 export const TICK_SPACING = {
   [FeeAmount.LOW]: 10,

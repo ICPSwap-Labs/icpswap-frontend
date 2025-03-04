@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import Backdrop from "@mui/material/Backdrop";
-import { makeStyles } from "@mui/styles";
 import { closeLoading } from "store/loadingReducer";
 import LoadingImage from "assets/images/loading.png";
-import { Theme } from "@mui/material/styles";
+import { makeStyles, Theme, Backdrop } from "components/Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

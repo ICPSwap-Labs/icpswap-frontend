@@ -1,5 +1,6 @@
 import { SWAP_FIELD } from "constants/index";
 import { DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
+import { type SwapPoolData } from "@icpswap/types";
 
 export interface SwapState {
   [SWAP_FIELD.INPUT]: string;
@@ -9,6 +10,7 @@ export interface SwapState {
   poolCanisterIds: { [key: string]: string };
   swapOutAmount: { [key: string]: bigint | undefined };
   decreaseLiquidityAmount: { [key: string]: { amount0: bigint | undefined; amount1: bigint | undefined } };
+  allSwapPools: SwapPoolData[];
 }
 
 export const initialState: SwapState = {
@@ -19,4 +21,5 @@ export const initialState: SwapState = {
   poolCanisterIds: {},
   swapOutAmount: {},
   decreaseLiquidityAmount: {},
+  allSwapPools: [],
 };

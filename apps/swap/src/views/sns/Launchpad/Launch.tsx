@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { useSwapSaleParameters, useSNSSwapInitArgs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, TextButton, Wrapper } from "components/index";

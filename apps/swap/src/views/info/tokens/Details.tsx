@@ -31,6 +31,7 @@ import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/toke
 import { useTokenDexScreener } from "hooks/info";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { useTranslation } from "react-i18next";
+import { ICP } from "@icpswap/tokens";
 
 export function TokenDetail() {
   const { t } = useTranslation();
@@ -185,9 +186,17 @@ export function TokenDetail() {
           </Flex>
         </Box>
 
-        <ImportToNns tokenId={canisterId}>
-          <Button variant="contained">{t("common.nns.token.add")}</Button>
-        </ImportToNns>
+        <Flex gap="0 8px">
+          <Link to={`/swap?input=${ICP.address}&output=${token?.address}`}>
+            <Button variant="contained" className="secondary">
+              {t("common.buy.token", { symbol: token?.symbol })}
+            </Button>
+          </Link>
+
+          <ImportToNns tokenId={canisterId}>
+            <Button variant="contained">{t("common.nns.token.add")}</Button>
+          </ImportToNns>
+        </Flex>
       </Flex>
 
       <Flex fullWidth vertical align="flex-start" gap="16px 0" sx={{ margin: "24px 0 0 0" }}>

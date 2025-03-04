@@ -1,4 +1,4 @@
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar } from "components/Mui";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { TextButton } from "components/index";

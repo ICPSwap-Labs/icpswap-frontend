@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "components/Mui";
+
 import Collapse from "../transitions/Collapse";
 import { getSlideDirection, toSnackbarAnchorOrigin, keepSnackbarClassKeys } from "./utils";
 import {

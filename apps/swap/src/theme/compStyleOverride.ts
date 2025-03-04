@@ -1,5 +1,5 @@
 import { isDarkTheme } from "utils/index";
-import { createTheme, keyframes } from "@mui/material";
+import { createTheme, keyframes } from "components/Mui";
 
 import colors from "./colors";
 
@@ -502,9 +502,6 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
     MuiPagination: {
       styleOverrides: {
         root: {
-          // ".Mui-selected": {
-          //   backgroundColor: theme.colors.primaryMain,
-          // },
           ".MuiPaginationItem-previousNext": {
             borderRadius: "50%",
           },

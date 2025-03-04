@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Paper, Popper, Box, Typography, useMediaQuery, Fade, Button } from "@mui/material";
-import { useTheme } from "components/Mui";
+import {
+  useTheme,
+  Popper,
+  Box,
+  Typography,
+  useMediaQuery,
+  Button,
+  ClickAwayListener,
+  Paper,
+  Fade,
+} from "components/Mui";
 import { shorten } from "@icpswap/utils";
-import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, useConnectorType } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";

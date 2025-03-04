@@ -185,7 +185,7 @@ export default function Selector({
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (

@@ -3,10 +3,9 @@ import { Button, Typography, Grid, Box, CircularProgress } from "components/Mui"
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import MaxButton from "components/MaxButton";
+import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { Flex, MaxButton } from "@icpswap/ui";
 import { useToken } from "hooks/useCurrency";
 import { Modal, NumberTextField } from "components/index";
 import { isUseTransfer } from "utils/token";
@@ -106,20 +105,15 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
           }}
         />
 
-        <Grid container alignItems="center" sx={{ margin: "10px 0" }}>
+        <Flex fullWidth align="center" gap="0 6px" sx={{ margin: "10px 0" }}>
           <Typography>
             {t("common.balance.colon.amount", {
               amount: `${balance ? balance.toFormat() : "--"} ${pool.stakingTokenSymbol}`,
             })}
           </Typography>
 
-          <MaxButton
-            sx={{
-              marginLeft: "6px",
-            }}
-            onClick={handleMax}
-          />
-        </Grid>
+          <MaxButton onClick={handleMax} />
+        </Flex>
 
         <Box mt={2}>
           <Button

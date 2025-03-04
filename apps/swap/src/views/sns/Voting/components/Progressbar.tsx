@@ -1,6 +1,4 @@
-import { useTheme } from "@mui/material";
-import { Box } from "components/Mui";
-import { Theme } from "@mui/material/styles";
+import { Box, useTheme } from "components/Mui";
 
 export interface ProgressbarProps {
   yes: number | undefined;
@@ -19,7 +17,7 @@ export function Progressbar({
   immediateMajorityPercent,
   standardMajorityPercent,
 }: ProgressbarProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return (
     <Box sx={{ position: "relative", width: "100%", height: "10px" }}>

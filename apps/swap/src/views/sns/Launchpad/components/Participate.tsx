@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "@mui/material";
+import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "components/Mui";
 import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
 import { useState } from "react";
 import { NumberFilledTextField, Modal, AuthButton } from "components/index";
@@ -151,14 +151,18 @@ export function Participate({
             allowNegative: false,
             maxLength: 100,
           }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">
-                <Typography sx={{ cursor: "pointer" }} color="primary" onClick={handleMAX}>
-                  {t("common.max")}
-                </Typography>
-              </InputAdornment>
-            ),
+          textFieldProps={{
+            slotProps: {
+              input: {
+                endAdornment: (
+                  <InputAdornment position="start">
+                    <Typography sx={{ cursor: "pointer" }} color="primary" onClick={handleMAX}>
+                      {t("common.max")}
+                    </Typography>
+                  </InputAdornment>
+                ),
+              },
+            },
           }}
           onChange={handleAmountChange}
         />

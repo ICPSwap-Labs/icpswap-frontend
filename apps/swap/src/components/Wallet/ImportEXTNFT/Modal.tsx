@@ -4,7 +4,7 @@ import type { EXTCollection } from "@icpswap/types";
 import { NFT_STANDARDS } from "@icpswap/constants";
 import { FilledTextField } from "components/index";
 import { useEXTAllCollections } from "@icpswap/hooks";
-import { Button, Box } from "@mui/material";
+import { Button, Box } from "components/Mui";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useEXTManager } from "store/nft/hooks";
 import { useTranslation } from "react-i18next";

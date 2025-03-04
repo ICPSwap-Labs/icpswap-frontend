@@ -1,14 +1,24 @@
 import { useMemo } from "react";
+import { Box, makeStyles } from "components/Mui";
 import { Flex, LoadingRow, NoData } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Box, Typography } from "components/Mui";
-import { useTranslation } from "react-i18next";
 
-import { LimitTransactionCard } from "./LimitTransaction";
+import { HistoryHeader } from "./HistoryHeader";
+import { HistoryRow } from "./HistoryRow";
 
-export function LimitHistory() {
-  const { t } = useTranslation();
+const useStyles = makeStyles(() => {
+  return {
+    wrapper: {
+      display: "grid",
+      gridTemplateColumns: "repeat(4, 1fr) 80px",
+    },
+  };
+});
+
+export function HistoryList() {
+  const classes = useStyles();
+
   const principal = useAccountPrincipal();
 
   const start_time = useMemo(() => {
@@ -29,10 +39,8 @@ export function LimitHistory() {
 
   return (
     <>
-      <Typography sx={{ margin: "16px 0 0 0" }}>{t("swap.limit.history.description")}</Typography>
-
       {loading ? (
-        <Box>
+        <Box sx={{ padding: "8px" }}>
           <LoadingRow>
             <div />
             <div />
@@ -47,13 +55,18 @@ export function LimitHistory() {
           </LoadingRow>
         </Box>
       ) : !limitTransactions || limitTransactions.length === 0 ? (
-        <NoData />
-      ) : (
-        <Flex vertical align="flex-start" fullWidth gap="6px 0" sx={{ margin: "16px 0 0 0" }}>
-          {limitTransactions.map((transaction, index) => (
-            <LimitTransactionCard key={index} transaction={transaction} />
-          ))}
+        <Flex fullWidth justify="center">
+          <NoData />
         </Flex>
+      ) : (
+        <Box sx={{ width: "100%", minWidth: "1058px" }}>
+          <HistoryHeader wrapperClasses={classes.wrapper} />
+          <Flex vertical align="flex-start" fullWidth gap="8px 0">
+            {limitTransactions.map((transaction, index) => (
+              <HistoryRow key={index} transaction={transaction} wrapperClasses={classes.wrapper} />
+            ))}
+          </Flex>
+        </Box>
       )}
     </>
   );

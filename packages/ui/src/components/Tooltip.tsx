@@ -34,18 +34,16 @@ export function Tooltip({
             "& .MuiTooltip-arrow": {
               color: background,
             },
+            "& .tooltip-typography": {
+              color: "#111936",
+              fontSize: "12px",
+              lineHeight: "18px",
+            },
           },
         },
       }}
       title={
-        <Typography
-          component="div"
-          sx={{
-            color: "#111936",
-            fontSize: "12px",
-            lineHeight: "18px",
-          }}
-        >
+        <Typography component="div" className="tooltip-typography">
           {tips}
         </Typography>
       }

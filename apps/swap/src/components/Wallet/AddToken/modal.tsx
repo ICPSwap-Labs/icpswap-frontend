@@ -213,7 +213,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (

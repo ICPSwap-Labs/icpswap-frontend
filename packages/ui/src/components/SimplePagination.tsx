@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+
+import { Box, Typography } from "./Mui";
 import { LeftArrow, RightArrow } from "./Arrow";
 
 export interface SimplePaginationProps {

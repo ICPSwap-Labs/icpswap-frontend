@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
-import { Box, BoxProps } from "@mui/material";
 import { Override } from "@icpswap/types";
+
+import { Box, BoxProps } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 

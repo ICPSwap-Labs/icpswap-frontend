@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button } from "components/Mui";
 import { disburseNeuronMaturity } from "@icpswap/hooks";
 import { ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";

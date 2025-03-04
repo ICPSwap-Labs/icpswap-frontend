@@ -3,7 +3,8 @@
  */
 import * as React from "react";
 import clsx from "clsx";
-import { ClickAwayListener } from "@mui/base";
+import { ClickAwayListener } from "components/Mui";
+
 import useEventCallback from "../utils/useEventCallback";
 import { CloseReason, SharedProps, SnackbarKey } from "../types";
 import { ComponentClasses } from "../utils/styles";

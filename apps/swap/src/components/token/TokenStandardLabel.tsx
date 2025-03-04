@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { TOKEN_STANDARD } from "constants/tokens";
 
 export const StandardText = {

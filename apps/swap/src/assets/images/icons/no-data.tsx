@@ -1,8 +1,7 @@
-import { SvgIcon, useTheme, SvgIconProps } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { SvgIcon, useTheme, SvgIconProps } from "components/Mui";
 
 export default function NoDataIcon(props: SvgIconProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   return theme.customization.mode === "dark" ? (
     <SvgIcon viewBox="0 0 127 112" {...props}>
