@@ -245,7 +245,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
           })}
         </Typography>
         <Typography>
-          {t("wallet.token.transfer.actually.colon", {
+          {t("wallet.amount.received", {
             amount: `${toSignificantWithGroupSeparator(actualTransferAmount, 18)} ${token.symbol} (${
               tokenUSDPrice && token
                 ? `$${toSignificantWithGroupSeparator(
