@@ -23,7 +23,6 @@ npm login --registry=https://npm.pkg.github.com --scope=@honopu
 
 Then run the following:
 
-- `npm i -g ts-node` to install ts-node.
 - `npm i -g typescript` to install typescript.
 - `pnpm i` to install dependencies.
 - `pnpm run dev` to start the development server

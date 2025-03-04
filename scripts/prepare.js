@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
 const packageJSON = fs.readFileSync(path.resolve(__dirname, "../package.json"), {
   encoding: "utf8",
