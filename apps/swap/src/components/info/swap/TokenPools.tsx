@@ -22,6 +22,7 @@ import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
 import { FeeAmount } from "@icpswap/swap-sdk";
+import { swapPoolsFilter } from "utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -153,7 +154,11 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
           (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
           pool.token0Price !== 0 &&
           pool.token1Price !== 0 &&
-          (Number(pool.feeTier) as FeeAmount) === FeeAmount.MEDIUM &&
+          !swapPoolsFilter({
+            token0Id: pool.token0Id,
+            token1Id: pool.token1Id,
+            fee: Number(pool.feeTier) as FeeAmount,
+          }) &&
           !HIDDEN_POOLS.includes(pool.pool)
         );
       })
