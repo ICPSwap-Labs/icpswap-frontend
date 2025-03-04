@@ -1,6 +1,6 @@
 {
   "name": "@icpswap/frontend",
-  "version": "4.16.9",
+  "version": "4.16.10",
   "description": "Frontend of ICPSwap",
   "scripts": {
     "dev": "ts-node-esm ./scripts/prepare.ts && turbo run dev --concurrency 100",
