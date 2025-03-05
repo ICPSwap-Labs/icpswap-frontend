@@ -92,15 +92,11 @@ export function useLiquidityAllTicks(token0: Token | undefined, token1: Token | 
   return { loading, result: ticks };
 }
 
-export function usePoolActiveLiquidity(
-  currencyA: Token | undefined,
-  currencyB: Token | undefined,
-  feeAmount: FeeAmount,
-) {
-  const isSorted = currencyA && currencyB ? currencyA.sortsBefore(currencyB) : undefined;
-  const token0 = isSorted ? currencyA : currencyB;
-  const token1 = isSorted ? currencyB : currencyA;
-  const [poolState, pool] = usePool(currencyA, currencyB, feeAmount, true);
+export function usePoolActiveLiquidity(tokenA: Token | undefined, tokenB: Token | undefined, feeAmount: FeeAmount) {
+  const isSorted = tokenA && tokenB ? tokenA.sortsBefore(tokenB) : undefined;
+  const token0 = isSorted ? tokenA : tokenB;
+  const token1 = isSorted ? tokenB : tokenA;
+  const [poolState, pool] = usePool(tokenA, tokenB, feeAmount, true);
 
   const tickCurrent = pool?.tickCurrent;
 
@@ -182,5 +178,5 @@ export function usePoolActiveLiquidity(
       data: ticksProcessed,
       isError: ticks === undefined,
     };
-  }, [currencyA, currencyB, activeTick, pool, sortedTicks, isLoading, poolState, ticks]);
+  }, [tokenA, tokenB, activeTick, pool, sortedTicks, isLoading, poolState, ticks]);
 }

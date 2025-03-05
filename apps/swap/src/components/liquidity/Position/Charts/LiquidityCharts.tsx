@@ -116,6 +116,7 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
         ticksAtLimit={ticksAtLimit}
         poolPriceLower={poolPriceLower}
         poolPriceUpper={poolPriceUpper}
+        feeAmount={fee}
       />
 
       <Flex vertical gap="16px 0" align="flex-start" sx={{ margin: "10px" }}>

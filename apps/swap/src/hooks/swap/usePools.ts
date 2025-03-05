@@ -229,14 +229,14 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 }
 
 export function usePool(
-  currencyA: Token | Null,
-  currencyB: Token | Null,
+  tokenA: Token | Null,
+  tokenB: Token | Null,
   feeAmount: FeeAmount | undefined,
   withoutVerify = false,
 ) {
   const poolKeys: [Token | Null, Token | Null, FeeAmount | undefined][] = useMemo(
-    () => [[currencyA, currencyB, feeAmount]],
-    [currencyA, currencyB, feeAmount],
+    () => [[tokenA, tokenB, feeAmount]],
+    [tokenA, tokenB, feeAmount],
   );
 
   return usePools(poolKeys, withoutVerify)[0];
