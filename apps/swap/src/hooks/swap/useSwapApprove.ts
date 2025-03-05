@@ -30,6 +30,8 @@ export function useSwapApprove() {
         spender: poolId,
       });
 
+      console.log("allowedBalance: ", allowedBalance);
+
       const multipleApproveAmount = (BigInt(amount) * BigInt(multipleApprove)).toString();
 
       if (!allowedBalance || allowedBalance === BigInt(0) || BigInt(amount) > allowedBalance) {
