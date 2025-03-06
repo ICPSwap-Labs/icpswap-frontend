@@ -27,9 +27,9 @@ import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
 import { ICP } from "@icpswap/tokens";
-import { DefaultChartView } from "constants/index";
+import { DefaultChartView, TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import i18n from "i18n/index";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 
 import { TokenPrices } from "./components/TokenPrice";
 
@@ -64,8 +64,6 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
 
   return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
 }
-
-const TradingViewDesc = [ChartView.DexScreener, ChartView.PRICE];
 
 export default function TokenDetails() {
   const { t } = useTranslation();
@@ -303,8 +301,10 @@ export default function TokenDetails() {
         <Box
           sx={{
             background:
-              chartView && TradingViewDesc.includes(chartView.value) ? theme.palette.background.level3 : "transparent",
-            borderRadius: chartView && TradingViewDesc.includes(chartView.value) ? "16px" : "none",
+              chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value)
+                ? theme.palette.background.level3
+                : "transparent",
+            borderRadius: chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value) ? "16px" : "none",
           }}
         >
           <TokenCharts
@@ -315,7 +315,7 @@ export default function TokenDetails() {
             dexScreenHeight="486px"
             priceChart={<TokenPriceChart token={token} />}
             wrapperSx={
-              chartView && TradingViewDesc.includes(chartView.value)
+              chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value)
                 ? {
                     borderBottomLeftRadius: "0px",
                     borderBottomRightRadius: "0px",
@@ -326,7 +326,7 @@ export default function TokenDetails() {
             tokenPairWithIcp={tokenPairWithIcp}
           />
 
-          {chartView && TradingViewDesc.includes(chartView.value) ? (
+          {chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value) ? (
             <Typography
               sx={{
                 fontSize: "12px",
@@ -337,17 +337,14 @@ export default function TokenDetails() {
                 borderBottomRightRadius: "16px",
               }}
             >
-              Token price charts powered by TradingView, the charting platform and social network that provides users
-              with valuable information on market events through tools such as the{" "}
-              <TextButton
-                link="https://www.tradingview.com/economic-calendar"
-                sx={{
-                  fontSize: "12px",
+              <Trans
+                components={{
+                  component: (
+                    <TextButton link="https://www.tradingview.com/economic-calendar" sx={{ fontSize: "12px" }} />
+                  ),
                 }}
-              >
-                economic calendar
-              </TextButton>
-              , stock analyser and others
+                i18nKey="swap.tradingview.descriptions"
+              />
             </Typography>
           ) : null}
         </Box>

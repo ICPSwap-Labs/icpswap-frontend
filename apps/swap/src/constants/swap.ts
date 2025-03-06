@@ -1,5 +1,6 @@
 import { ICP, WRAPPED_ICP, ICS } from "@icpswap/tokens";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { ChartView } from "@icpswap/ui";
 
 import { isIC } from "./server";
 
@@ -23,5 +24,7 @@ export const SWAP_CHART_RANGE_RIGHT_COLOR = "#bb8d00";
 export const SWAP_CHART_RANGE_AREA_COLOR = "#0068FC";
 
 export const icrc_standards = [TOKEN_STANDARD.ICRC1, TOKEN_STANDARD.ICRC2];
+
+export const TRADING_VIEW_DESCRIPTIONS = [ChartView.PRICE, ChartView.DexTools, ChartView.DexScreener];
 
 export * from "./mint";
