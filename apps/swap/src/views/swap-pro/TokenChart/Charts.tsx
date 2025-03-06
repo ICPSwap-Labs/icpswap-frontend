@@ -1,11 +1,13 @@
 import { useEffect, useContext, useRef, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { TokenCharts, TokenChartsRef, ChartView, TextButton } from "@icpswap/ui";
+import { TokenCharts, TokenChartsRef, TextButton } from "@icpswap/ui";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Null } from "@icpswap/types";
 import { SwapProContext } from "components/swap/pro";
 import { SwapContext } from "components/swap/index";
+import { Trans } from "react-i18next";
+import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
@@ -57,19 +59,14 @@ export default function TokenChartInfo() {
         onPriceTokenIdChange={setPriceTokenId}
       />
 
-      {chartView && (chartView.value === ChartView.PRICE || chartView.value === ChartView.DexScreener) ? (
+      {chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value) ? (
         <Typography sx={{ fontSize: "12px", padding: "12px", lineHeight: "16px" }}>
-          Token price charts powered by TradingView, the charting platform and social network that provides users with
-          valuable information on market events through tools such as the{" "}
-          <TextButton
-            link="https://www.tradingview.com/economic-calendar"
-            sx={{
-              fontSize: "12px",
+          <Trans
+            components={{
+              component: <TextButton link="https://www.tradingview.com/economic-calendar" sx={{ fontSize: "12px" }} />,
             }}
-          >
-            economic calendar
-          </TextButton>
-          , stock analyser and others
+            i18nKey="swap.tradingview.descriptions"
+          />
         </Typography>
       ) : null}
     </Box>
