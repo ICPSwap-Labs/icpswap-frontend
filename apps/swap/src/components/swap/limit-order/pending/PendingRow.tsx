@@ -115,7 +115,7 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
         </Flex>
 
         <Flex gap="0 6px">
-          <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
+          <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
           <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
             {outputToken && outputAmount
               ? `${toSignificantWithGroupSeparator(outputAmount.toExact())} ${outputToken.symbol}`
