@@ -16,6 +16,7 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 import { MintExtraContent } from "./MintExtra";
 
@@ -75,6 +76,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
     }
   }, [token, tokenBalance, ercTokenBalance, setAmount]);
 
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
+
   return (
     <>
       <Box
@@ -110,7 +113,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
         fullWidth
         size="large"
         onClick={handleMint}
-        disabled={loading || !account || !!mint_error || approveState === ApprovalState.PENDING}
+        disabled={loading || !account || !!mint_error || approveState === ApprovalState.PENDING || oisyButtonDisabled}
         loading={loading || approveState === ApprovalState.PENDING}
       >
         {mint_error === undefined

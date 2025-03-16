@@ -14,6 +14,7 @@ import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-eth/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 import { MintExtraContent } from "./MintExtra";
 
@@ -35,6 +36,8 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
   const ethBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
+
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
   const { loading, mint_call } = useMintCallback({
     minter_address: minterInfo?.deposit_with_subaccount_helper_contract_address[0],
@@ -99,7 +102,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
         fullWidth
         size="large"
         onClick={handleMint}
-        disabled={loading || !account || !!mint_error}
+        disabled={loading || !account || !!mint_error || oisyButtonDisabled}
         loading={loading}
       >
         {mint_error === undefined ? t("common.mint.symbol", { symbol: "ckETH" }) : mint_error}

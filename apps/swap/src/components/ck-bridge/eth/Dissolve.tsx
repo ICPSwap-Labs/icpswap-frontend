@@ -16,6 +16,7 @@ import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { useFetchUserTxStates } from "hooks/ck-eth";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 export interface EthDissolveProps {
   token: Token;
@@ -72,6 +73,8 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
     return undefined;
   }, [amount, token, tokenBalance, address]);
+
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
   const handleMax = useCallback(() => {
     if (!token || !tokenBalance) return;
@@ -157,7 +160,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
         variant="contained"
         fullWidth
         size="large"
-        disabled={nonNullArgs(dissolve_error) || loading}
+        disabled={nonNullArgs(dissolve_error) || loading || oisyButtonDisabled}
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
         onClick={handleDissolve}
       >
