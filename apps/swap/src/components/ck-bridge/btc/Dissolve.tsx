@@ -13,6 +13,7 @@ import { useRefreshTriggerManager } from "hooks/index";
 import { validate } from "bitcoin-address-validation";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 interface BtcBridgeDissolveProps {
   token: Token;
@@ -71,6 +72,8 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
       setAddress("");
     }
   }, [dissolve_call, setRefreshTrigger, amount, address]);
+
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
   return (
     <>
@@ -151,11 +154,11 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
         variant="contained"
         fullWidth
         size="large"
-        disabled={nonNullArgs(dissolve_error) || loading}
+        disabled={nonNullArgs(dissolve_error) || loading || oisyButtonDisabled}
         onClick={handleDissolve}
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
       >
-        {dissolve_error ?? t`Confirm`}
+        {dissolve_error ?? t("common.confirm")}
       </ButtonConnector>
     </>
   );

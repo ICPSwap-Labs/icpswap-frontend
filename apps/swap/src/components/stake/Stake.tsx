@@ -18,6 +18,7 @@ import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import PercentageSlider from "components/PercentageSlider/ui";
 import { useStakingPoolState } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 export interface StakeProps {
   poolId: string | undefined;
@@ -134,6 +135,8 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     return null;
   }, [amount, balance, stakeToken, state]);
 
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "stake" });
+
   return (
     <>
       <MainCard padding="24px 16px" level={4} borderRadius="16px 16px 0 0">
@@ -215,7 +218,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
           variant="contained"
           size="large"
           sx={{ margin: "20px 0 0 0", height: "48px" }}
-          disabled={!!error}
+          disabled={!!error || oisyButtonDisabled}
           onClick={handleStaking}
         >
           {error ?? t("common.stake")}

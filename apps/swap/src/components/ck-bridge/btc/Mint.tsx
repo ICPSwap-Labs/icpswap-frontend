@@ -12,6 +12,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 interface BtcBridgeMintProps {
   token: Token;
@@ -109,6 +110,8 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
       }
     };
   }, [setRefreshTrigger]);
+
+  useOisyDisabledTips({ page: "ck-bridge" });
 
   return (
     <>

@@ -12,6 +12,7 @@ import { Breadcrumbs } from "@icpswap/ui";
 import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
 import { State } from "components/farm/State";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 const tabs = [
   { key: "stake", value: "Stake" },
@@ -40,6 +41,8 @@ export default function Farm() {
   const handleTabChange = (tab: Tab) => {
     setTabKey(tab.key);
   };
+
+  useOisyDisabledTips({ page: "farm" });
 
   return (
     <Flex sx={{ width: "100%", padding: "0 0 24px 0" }} justify="center">

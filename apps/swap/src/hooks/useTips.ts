@@ -24,7 +24,7 @@ export const TIP_LOADING = MessageTypes.loading;
 
 export type TIP_KEY = string | undefined | number;
 
-export type TIP_OPTIONS = { [key: string]: any };
+export type TIP_OPTIONS = { [key: string]: any; autoHideDuration?: number };
 
 export function useTips(): [
   (message: ReactNode, type: MessageTypes | ResultStatus, options?: TIP_OPTIONS) => TIP_KEY,
