@@ -1,5 +1,5 @@
 import Modal from "components/modal/index";
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Grid, Button } from "components/Mui";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { CanisterCreateDetails } from "types/index";
 import { parseTokenAmount } from "@icpswap/utils";

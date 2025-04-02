@@ -13,6 +13,7 @@ import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -66,6 +67,8 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
     return undefined;
   }, [amount, token, address, tokenBalance]);
+
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
   const handleMax = useCallback(() => {
     setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());
@@ -149,7 +152,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         variant="contained"
         fullWidth
         size="large"
-        disabled={nonNullArgs(dissolve_error) || loading}
+        disabled={nonNullArgs(dissolve_error) || loading || oisyButtonDisabled}
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
         onClick={handleDissolve}
       >

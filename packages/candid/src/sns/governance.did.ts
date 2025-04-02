@@ -18,7 +18,17 @@ export const idlFactory = ({ IDL }: any) => {
     response_timestamp_seconds: IDL.Opt(IDL.Nat64),
     requested_timestamp_seconds: IDL.Opt(IDL.Nat64),
   });
+  const Topic = IDL.Variant({
+    DappCanisterManagement: IDL.Null,
+    DaoCommunitySettings: IDL.Null,
+    ApplicationBusinessLogic: IDL.Null,
+    CriticalDappOperations: IDL.Null,
+    TreasuryAssetManagement: IDL.Null,
+    Governance: IDL.Null,
+    SnsFrameworkManagement: IDL.Null,
+  });
   const GenericNervousSystemFunction = IDL.Record({
+    topic: IDL.Opt(Topic),
     validator_canister_id: IDL.Opt(IDL.Principal),
     target_canister_id: IDL.Opt(IDL.Principal),
     validator_method_name: IDL.Opt(IDL.Text),
@@ -225,6 +235,9 @@ export const idlFactory = ({ IDL }: any) => {
     memory_allocation: IDL.Opt(IDL.Nat64),
     compute_allocation: IDL.Opt(IDL.Nat64),
   });
+  const SetTopicsForCustomProposals = IDL.Record({
+    custom_function_id_to_topic: IDL.Vec(IDL.Tuple(IDL.Nat64, Topic)),
+  });
   const RegisterDappCanisters = IDL.Record({
     canister_ids: IDL.Vec(IDL.Principal),
   });
@@ -282,6 +295,7 @@ export const idlFactory = ({ IDL }: any) => {
     AddGenericNervousSystemFunction: NervousSystemFunction,
     ManageDappCanisterSettings: ManageDappCanisterSettings,
     RemoveGenericNervousSystemFunction: IDL.Nat64,
+    SetTopicsForCustomProposals: SetTopicsForCustomProposals,
     UpgradeSnsToNextVersion: IDL.Record({}),
     RegisterDappCanisters: RegisterDappCanisters,
     TransferSnsTreasuryFunds: TransferSnsTreasuryFunds,
@@ -307,6 +321,7 @@ export const idlFactory = ({ IDL }: any) => {
   const ProposalData = IDL.Record({
     id: IDL.Opt(ProposalId),
     payload_text_rendering: IDL.Opt(IDL.Text),
+    topic: IDL.Opt(Topic),
     action: IDL.Nat64,
     failure_reason: IDL.Opt(GovernanceError),
     action_auxiliary: IDL.Opt(ActionAuxiliary),
@@ -593,6 +608,19 @@ export const idlFactory = ({ IDL }: any) => {
     include_ballots_by_caller: IDL.Opt(IDL.Bool),
     proposals: IDL.Vec(ProposalData),
   });
+  const ListTopicsRequest = IDL.Record({});
+  const TopicInfo = IDL.Record({
+    native_functions: IDL.Opt(IDL.Vec(NervousSystemFunction)),
+    topic: IDL.Opt(Topic),
+    is_critical: IDL.Opt(IDL.Bool),
+    name: IDL.Opt(IDL.Text),
+    description: IDL.Opt(IDL.Text),
+    custom_functions: IDL.Opt(IDL.Vec(NervousSystemFunction)),
+  });
+  const ListTopicsResponse = IDL.Record({
+    uncategorized_functions: IDL.Opt(IDL.Vec(NervousSystemFunction)),
+    topics: IDL.Opt(IDL.Vec(TopicInfo)),
+  });
   const StakeMaturity = IDL.Record({
     percentage_to_stake: IDL.Opt(IDL.Nat32),
   });
@@ -667,6 +695,7 @@ export const idlFactory = ({ IDL }: any) => {
     list_nervous_system_functions: IDL.Func([], [ListNervousSystemFunctionsResponse], ["query"]),
     list_neurons: IDL.Func([ListNeurons], [ListNeuronsResponse], ["query"]),
     list_proposals: IDL.Func([ListProposals], [ListProposalsResponse], ["query"]),
+    list_topics: IDL.Func([ListTopicsRequest], [ListTopicsResponse], ["query"]),
     manage_neuron: IDL.Func([ManageNeuron], [ManageNeuronResponse], []),
     reset_timers: IDL.Func([IDL.Record({})], [IDL.Record({})], []),
     set_mode: IDL.Func([SetMode], [IDL.Record({})], []),
@@ -692,7 +721,17 @@ export const init = ({ IDL }) => {
     response_timestamp_seconds: IDL.Opt(IDL.Nat64),
     requested_timestamp_seconds: IDL.Opt(IDL.Nat64),
   });
+  const Topic = IDL.Variant({
+    DappCanisterManagement: IDL.Null,
+    DaoCommunitySettings: IDL.Null,
+    ApplicationBusinessLogic: IDL.Null,
+    CriticalDappOperations: IDL.Null,
+    TreasuryAssetManagement: IDL.Null,
+    Governance: IDL.Null,
+    SnsFrameworkManagement: IDL.Null,
+  });
   const GenericNervousSystemFunction = IDL.Record({
+    topic: IDL.Opt(Topic),
     validator_canister_id: IDL.Opt(IDL.Principal),
     target_canister_id: IDL.Opt(IDL.Principal),
     validator_method_name: IDL.Opt(IDL.Text),
@@ -899,6 +938,9 @@ export const init = ({ IDL }) => {
     memory_allocation: IDL.Opt(IDL.Nat64),
     compute_allocation: IDL.Opt(IDL.Nat64),
   });
+  const SetTopicsForCustomProposals = IDL.Record({
+    custom_function_id_to_topic: IDL.Vec(IDL.Tuple(IDL.Nat64, Topic)),
+  });
   const RegisterDappCanisters = IDL.Record({
     canister_ids: IDL.Vec(IDL.Principal),
   });
@@ -956,6 +998,7 @@ export const init = ({ IDL }) => {
     AddGenericNervousSystemFunction: NervousSystemFunction,
     ManageDappCanisterSettings: ManageDappCanisterSettings,
     RemoveGenericNervousSystemFunction: IDL.Nat64,
+    SetTopicsForCustomProposals: SetTopicsForCustomProposals,
     UpgradeSnsToNextVersion: IDL.Record({}),
     RegisterDappCanisters: RegisterDappCanisters,
     TransferSnsTreasuryFunds: TransferSnsTreasuryFunds,
@@ -981,6 +1024,7 @@ export const init = ({ IDL }) => {
   const ProposalData = IDL.Record({
     id: IDL.Opt(ProposalId),
     payload_text_rendering: IDL.Opt(IDL.Text),
+    topic: IDL.Opt(Topic),
     action: IDL.Nat64,
     failure_reason: IDL.Opt(GovernanceError),
     action_auxiliary: IDL.Opt(ActionAuxiliary),

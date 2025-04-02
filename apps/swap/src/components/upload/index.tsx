@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { useState, useEffect } from "react";
-import { TextField, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { TextField, Grid, Typography, makeStyles } from "components/Mui";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const useStyles = makeStyles(() => {
@@ -68,7 +67,7 @@ export default function Upload({
   const classes = useStyles();
   const [imagePreview, setImagePreview] = useState<string>("");
 
-  const textFiledProps = {
+  const textFieldProps = {
     ...props,
     defaultValue: undefined,
   };
@@ -127,7 +126,7 @@ export default function Upload({
       <TextField
         className={classes.input}
         fullWidth
-        {...textFiledProps}
+        {...textFieldProps}
         type="file"
         inputProps={{
           accept: ".jpeg, .png, .jpg, .gif",

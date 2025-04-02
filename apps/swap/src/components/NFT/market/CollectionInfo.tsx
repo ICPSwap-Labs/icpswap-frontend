@@ -1,6 +1,5 @@
 import { ReactNode, useMemo } from "react";
 import { Typography, Grid, Box, useMediaQuery, Avatar, makeStyles, Theme } from "components/Mui";
-import { createTheme } from "@mui/material/styles";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
 import { useCollectionData } from "hooks/nft/tradeData";
@@ -11,17 +10,6 @@ import { LoadingRow, Breadcrumbs } from "components/index";
 import { useTranslation } from "react-i18next";
 
 import CollectionLinks from "../collectionsIcon/index";
-
-export const customizeTheme = createTheme({
-  breakpoints: {
-    values: {
-      md: 1280,
-      960: 960,
-      780: 780,
-      640: 640,
-    },
-  },
-});
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -36,15 +24,13 @@ const useStyles = makeStyles((theme: Theme) => {
       borderRadius: "12px",
       gap: "70px",
       padding: "27px 64px 18px 64px",
-      [customizeTheme.breakpoints.down("960")]: {
+
+      "@media(max-width: 960px)": {
         gap: "60px",
         padding: "27px 54px 18px 54px",
       },
-      [customizeTheme.breakpoints.down("780")]: {
-        gap: "40px",
-        padding: "20px 34px 13px 34px",
-      },
-      [customizeTheme.breakpoints.down("780")]: {
+
+      "@media(max-width: 780px)": {
         gap: "40px",
         padding: "13px 20px 13px 20px",
       },
@@ -55,11 +41,8 @@ const useStyles = makeStyles((theme: Theme) => {
       fontSize: "28px",
       color: theme.palette.text.primary,
       textAlign: "center",
-      [customizeTheme.breakpoints.down("md")]: {
+      "@media(max-width:1200px": {
         fontSize: "24px",
-      },
-      [customizeTheme.breakpoints.down("md")]: {
-        fontSize: "20px",
       },
     },
   };
@@ -89,8 +72,8 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
 
   const mintSupply = useNFTMintSupply(canister);
 
-  const matchDownMD = useMediaQuery(customizeTheme.breakpoints.down("md"));
-  const matchDown640 = useMediaQuery(customizeTheme.breakpoints.down("640"));
+  const matchDownMD = useMediaQuery("(max-width:1290px)");
+  const matchDown640 = useMediaQuery("(max-width:640px)");
 
   const links = useMemo(() => {
     if (canisterId === "xzcnc-myaaa-aaaak-abk7a-cai") {

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Typography, Box, Checkbox } from "@mui/material";
+import { Typography, Box, Checkbox } from "components/Mui";
 import { NoData, LoadingRow, Tooltip } from "components/index";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";

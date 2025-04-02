@@ -2,7 +2,7 @@
 import { useCallback } from "react";
 import { cap, cap_router } from "@icpswap/actor";
 import { resultFormat, enumToString } from "@icpswap/utils";
-import type { PaginationResult , TokenTransaction, TokenTransType } from "@icpswap/types";
+import type { PaginationResult, TokenTransaction, TokenTransType } from "@icpswap/types";
 import type { GetTokenContractRootBucketResponse } from "@icpswap/candid";
 import { Principal } from "@dfinity/principal";
 import { useCallsData } from "./useCallData";
@@ -40,21 +40,29 @@ function SliceFormat(amount: any) {
 export function detailValueFormat(detailValue: any) {
   if (detailValue.Principal) {
     return detailValue.Principal.toString() as string;
-  } if (detailValue.Float) {
+  }
+  if (detailValue.Float) {
     return detailValue.Float;
-  } if (detailValue.False) {
+  }
+  if (detailValue.False) {
     return detailValue.False;
-  } if (detailValue.True) {
+  }
+  if (detailValue.True) {
     return detailValue.True;
-  } if (detailValue.I64) {
+  }
+  if (detailValue.I64) {
     return detailValue.I64;
-  } if (detailValue.U64) {
+  }
+  if (detailValue.U64) {
     return detailValue.U64;
-  } if (detailValue.TokenIdU64) {
+  }
+  if (detailValue.TokenIdU64) {
     return String(detailValue.TokenIdU64);
-  } if (detailValue.Text) {
+  }
+  if (detailValue.Text) {
     return String(detailValue.Text);
-  } if (detailValue.Slice && detailValue.Slice.length > 0) {
+  }
+  if (detailValue.Slice && detailValue.Slice.length > 0) {
     return SliceFormat(detailValue.Slice);
   }
 }

@@ -1,7 +1,5 @@
-import { Slider, Tooltip, tooltipClasses } from "@mui/material";
-import { styled, makeStyles } from "@mui/styles";
+import { Slider, Tooltip, tooltipClasses, styled, makeStyles, Theme } from "components/Mui";
 import { isDarkTheme } from "utils";
-import { Theme } from "@mui/material/styles";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {

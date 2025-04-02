@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import CheckboxGroupContext from "./context";
 
 function UncheckedIcon() {

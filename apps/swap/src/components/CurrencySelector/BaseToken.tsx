@@ -1,19 +1,30 @@
-import { Typography } from "@mui/material";
 import { Flex, TokenImage } from "components/index";
-import { useTheme } from "components/Mui";
-import { ICP, ICS, ckBTC, ckETH, ckUSDC, ckUSDT, BOB, ALICE } from "@icpswap/tokens";
+import { useTheme, Typography } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
+import { useToken } from "hooks";
 
-const BASE_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH, ckUSDT, BOB, ALICE];
+const BASE_TOKEN_IDS = [
+  "ryjl3-tyaaa-aaaaa-aaaba-cai", // ICP
+  "ca6gz-lqaaa-aaaaq-aacwa-cai", // ICS
+  "xevnm-gaaaa-aaaar-qafnq-cai", // ckUSDC,
+  "mxzaz-hqaaa-aaaar-qaada-cai", // ckBTC,
+  "ss2fx-dyaaa-aaaar-qacoq-cai", // ckETH,
+  "cngnf-vqaaa-aaaar-qag4q-cai", // ckUSDT,
+  "7pail-xaaaa-aaaas-aabmq-cai", // BOB
+  "oj6if-riaaa-aaaaq-aaeha-cai", // ALICE
+  "k45jy-aiaaa-aaaaq-aadcq-cai", // MOTOKO
+];
 
 export interface BaseTokenProps {
-  token: Token;
+  token_id: string;
   onTokenClick: (token: Token) => void;
 }
 
-export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
+export function BaseToken({ token_id, onTokenClick }: BaseTokenProps) {
   const theme = useTheme();
+
+  const [, token] = useToken(token_id);
 
   const handleClick = useCallback(() => {
     if (token) {
@@ -35,7 +46,7 @@ export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
       gap="0 8px"
       onClick={handleClick}
     >
-      <TokenImage logo={token.logo} size="24px" />
+      <TokenImage logo={token?.logo} size="24px" />
       <Typography
         sx={{
           color: "text.primary",
@@ -46,7 +57,7 @@ export function BaseToken({ token, onTokenClick }: BaseTokenProps) {
           },
         }}
       >
-        {token.symbol}
+        {token?.symbol}
       </Typography>
     </Flex>
   );
@@ -70,8 +81,8 @@ export function BaseTokens({ onTokenClick }: BaseTokensProps) {
       gap="12px"
       wrap="wrap"
     >
-      {BASE_TOKENS.map((base_token) => (
-        <BaseToken key={base_token.address} token={base_token} onTokenClick={onTokenClick} />
+      {BASE_TOKEN_IDS.map((base_token_id) => (
+        <BaseToken key={base_token_id} token_id={base_token_id} onTokenClick={onTokenClick} />
       ))}
     </Flex>
   );

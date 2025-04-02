@@ -7,7 +7,7 @@ import { registerTokens } from "@icpswap/token-adapter";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
 import { useGlobalTokenList } from "store/global/hooks";
-import { usePoolCanisterIdManager } from "store/swap/hooks";
+import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
 import { getAllTokenPools } from "hooks/staking-token/index";
 import { getAllClaimEvents } from "hooks/token-claim";
 import { updateCanisters } from "store/allCanisters";
@@ -26,9 +26,8 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
   const [AllPools, setAllPools] = useState<SwapPoolData[] | undefined>(undefined);
 
   const updateTokenStandard = useUpdateTokenStandard();
-
+  const updateAllSwapPools = useUpdateAllSwapPools();
   const globalTokenList = useGlobalTokenList();
-
   const [, updatePoolCanisterId] = usePoolCanisterIdManager();
 
   useEffect(() => {
@@ -76,6 +75,7 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
         registerTokens(__allTokenStandards);
         updateTokenStandard(__allTokenStandards);
+        updateAllSwapPools(allSwapPools);
 
         const allCanisterIds = [
           ...(allSwapPools?.map((ele) => [ele.canisterId.toString(), ele.token0.address, ele.token1.address]) ?? []),

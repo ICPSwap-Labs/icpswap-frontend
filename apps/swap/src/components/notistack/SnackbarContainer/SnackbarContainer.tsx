@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "components/Mui";
+
 import createTransition from "../transitions/createTransition";
 import { ComponentClasses } from "../utils/styles";
 import { breakpoints, originKeyExtractor } from "../utils";

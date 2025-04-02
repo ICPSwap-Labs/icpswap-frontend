@@ -1,13 +1,9 @@
 import React, { Dispatch, SetStateAction, ReactNode } from "react";
 import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from "recharts";
-import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { useTheme } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
-import { GridRowBetween } from "../Grid/Row";
 
-dayjs.extend(utc);
+import { Box, useTheme } from "../Mui";
+import { GridRowBetween } from "../Grid/Row";
 
 const DEFAULT_HEIGHT = 300;
 
@@ -60,7 +56,7 @@ export function BarChartAlt({
   tickFormat = "DD",
   ...rest
 }: BarChartAltProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const parsedValue = value;
 
   const now = dayjs();

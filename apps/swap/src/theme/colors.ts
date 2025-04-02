@@ -100,7 +100,7 @@ export default {
   darkPrimaryDark: "#5669dc",
   darkPrimary200: "#000001",
   darkPrimary800: "#1565c0",
-  darkPrimary400: "#4F5A84",
+  dark400: "#4F5A84",
 
   // secondary dark
   darkSecondaryLight: "#212946",
@@ -117,4 +117,5 @@ export default {
   apr: "#54C081",
   success: "#54C081",
   "text.success": "#54C081",
+  color0: "#313A5A",
 };

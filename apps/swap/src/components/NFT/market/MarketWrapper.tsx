@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Box,
-  Typography,
-  TextField,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-  Theme,
-  makeStyles,
-} from "components/Mui";
+import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery, makeStyles } from "components/Mui";
 import { MainCard, FilledTextField, Wrapper } from "components/index";
 import { IconSearch } from "@tabler/icons";
-import { customizeBreakPoints } from "theme/customizeThemeBreakpoints";
 import debounce from "lodash/debounce";
 import { useParsedQueryString } from "@icpswap/hooks";
 import i18n from "i18n/index";
@@ -34,7 +23,7 @@ const useStyles = makeStyles(() => {
     toolbar3: {
       gridArea: "1 / 2 / auto / auto",
     },
-    [customizeBreakPoints.down("1120")]: {
+    "@media(max-width:1120px)": {
       toolbarWrapper: {
         gridGap: "10px 0",
       },
@@ -103,10 +92,10 @@ export default function MarketWrapper({
 }: MarketWrapperProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const matchDown1120 = useMediaQuery(customizeBreakPoints.down("1120"));
+  const matchDown1120 = useMediaQuery("@media(max-width:1120px)");
 
   const [sortBy, setSortBy] = useState<string | null>("time");
   const [path, setPath] = useState<string>("/marketplace/NFT");
@@ -144,7 +133,7 @@ export default function MarketWrapper({
               <Box
                 sx={{
                   display: "grid",
-                  gridGap: "0 40px",
+                  gap: "0 20px",
                   gridTemplateColumns: "fit-content(200px) fit-content(200px) fit-content(200px)",
                   "& .MuiTypography-root": {
                     cursor: "pointer",
@@ -176,12 +165,14 @@ export default function MarketWrapper({
                       sx={{
                         width: "320px",
                       }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="1rem" />
-                          </InputAdornment>
-                        ),
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <IconSearch stroke={1.5} size="1rem" />
+                            </InputAdornment>
+                          ),
+                        },
                       }}
                       fullWidth
                       size={matchDownSM ? "small" : "small"}

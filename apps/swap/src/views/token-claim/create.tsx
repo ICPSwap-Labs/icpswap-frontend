@@ -1,12 +1,11 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, Grid, Box, Input, makeStyles } from "components/Mui";
+import { Typography, Grid, Box, Input, makeStyles, Theme } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
 import Identity, { CallbackProps } from "components/Identity";
-import { Theme } from "@mui/material/styles";
 import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
 import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
@@ -283,15 +282,19 @@ export default function CreateTokenClaim() {
                 placeholder={t("common.enter.token.claimed")}
                 onChange={(value) => handleFieldChange(value, "tokenAmount")}
                 value={values.tokenAmount}
-                InputProps={{
-                  disableUnderline: true,
-                  inputComponent: TextFieldNumberComponent,
-                  inputProps: {
-                    thousandSeparator: true,
-                    decimalScale: token?.decimals ?? 8,
-                    allowNegative: false,
-                    maxLength: 100,
-                    value: values.tokenAmount,
+                textFieldProps={{
+                  slotProps: {
+                    input: {
+                      disableUnderline: true,
+                      inputComponent: TextFieldNumberComponent,
+                      inputProps: {
+                        thousandSeparator: true,
+                        decimalScale: token?.decimals ?? 8,
+                        allowNegative: false,
+                        maxLength: 100,
+                        value: values.tokenAmount,
+                      },
+                    },
                   },
                 }}
               />
@@ -300,7 +303,7 @@ export default function CreateTokenClaim() {
                 placeholder={t`Enter total user amount`}
                 onChange={(value) => handleFieldChange(value, "userAmount")}
                 value={values.userAmount}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,

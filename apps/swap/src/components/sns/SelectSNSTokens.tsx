@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Select, AvatarImage } from "components/index";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
 

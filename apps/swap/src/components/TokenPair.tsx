@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "components/Mui";
 import { TokenImage } from "components/index";
 
 interface TokenPairProps {

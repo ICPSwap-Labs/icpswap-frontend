@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "components/Mui";
 import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 import { Token } from "@icpswap/swap-sdk";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";

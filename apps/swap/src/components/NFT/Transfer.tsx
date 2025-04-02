@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => {
       color: theme.palette.warning.dark,
     },
     inputBox: {
-      border: `1px solid #313A5A`,
+      border: `1px solid ${theme.colors.color0}`,
       background: theme.palette.background.level4,
       borderRadius: "8px",
       padding: "14px 16px",
@@ -197,8 +197,10 @@ export default function NFTTransfer({
             helperText={addressHelpText}
             fullWidth
             autoComplete="To"
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
         </Grid>
@@ -210,8 +212,10 @@ export default function NFTTransfer({
             onChange={({ target: { value } }) => setMemo(value)}
             fullWidth
             autoComplete="off"
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
         </Grid>

@@ -1,13 +1,10 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
-import { Typography, Box, BoxProps } from "@mui/material";
 import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
 import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
-
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
+import { Typography, Box, BoxProps } from "../Mui";
 
 import { LineChartAlt } from "../LineChart/alt";
 import { BarChartAlt } from "../BarChart/alt";
@@ -20,10 +17,6 @@ import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";
 import { DexTools } from "../DexTools";
 import { Select } from "../Select";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 function priceChartFormat(data: InfoPriceChartData[]) {
   return data

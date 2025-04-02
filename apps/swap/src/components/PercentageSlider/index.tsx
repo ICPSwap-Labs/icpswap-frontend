@@ -1,7 +1,5 @@
-import { Slider, Tooltip, tooltipClasses, SliderProps } from "@mui/material";
-import { styled, makeStyles } from "@mui/styles";
+import { Slider, Tooltip, tooltipClasses, SliderProps, styled, makeStyles, Theme } from "components/Mui";
 import { isDarkTheme } from "utils";
-import { Theme } from "@mui/material/styles";
 
 const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];
 

@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { makeStyles } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Theme } from "@mui/material/styles";
 
-import { TextField, Typography, Box, Menu, Grid, MenuItem } from "../Mui";
+import { TextField, Typography, Box, Menu, Grid, MenuItem, Theme, makeStyles } from "../Mui";
 import { NoData } from "../NoData";
 
 interface UseStylesProps {
@@ -72,7 +70,6 @@ export interface FilledTextFieldProps {
   maxWidth?: number;
   fullHeight?: boolean;
   disabled?: boolean;
-  InputProps?: any;
   contained?: boolean;
   CustomNoData?: React.ReactNode;
   placeholder?: string;
@@ -158,7 +155,6 @@ function UIFilledTextField(
     maxWidth,
     fullHeight,
     disabled,
-    InputProps,
     borderRadius = "8px",
     contained = false,
     CustomNoData,
@@ -255,9 +251,10 @@ function UIFilledTextField(
                   onChange={({ target: { value } }) => onChange && onChange(value)}
                   value={value}
                   multiline={multiline}
-                  InputProps={{
-                    disableUnderline: true,
-                    ...(InputProps || {}),
+                  slotProps={{
+                    input: {
+                      disableUnderline: true,
+                    },
                   }}
                   fullWidth
                   disabled={disabled}

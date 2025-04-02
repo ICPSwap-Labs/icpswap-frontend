@@ -43,15 +43,15 @@ export const TextFieldNumberComponent = forwardRef<NumericFormatProps, InputProp
 export type NumberTextFieldProps = Override<TextFieldProps, { numericProps: NumericProps }>;
 
 export default function NumberTextField(props: NumberTextFieldProps) {
-  const { numericProps, ...textFiledProps } = props;
+  const { numericProps, ...otherProps } = props;
 
   return (
     <TextField
-      {...textFiledProps}
+      {...otherProps}
       type="text"
       slotProps={{
         input: {
-          ...(textFiledProps.InputProps ?? {}),
+          ...(otherProps?.slotProps?.input ?? {}),
           disableUnderline: true,
           inputComponent: TextFieldNumberComponent as any,
           inputProps: {

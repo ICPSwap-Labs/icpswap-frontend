@@ -1,4 +1,4 @@
-import { Avatar, AvatarProps } from "@mui/material";
+import { Avatar, AvatarProps } from "components/Mui";
 
 export default function AvatarImage(props: AvatarProps) {
   return (

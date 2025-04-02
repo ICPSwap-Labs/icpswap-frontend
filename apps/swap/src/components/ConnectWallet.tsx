@@ -14,8 +14,8 @@ export default function ConnectWallet() {
         <Box sx={{ maxWidth: "1400px", width: "100%" }}>
           <MainCard level={3}>
             <Flex fullWidth vertical sx={{ height: "250px" }}>
-              <NoData />
-              <Typography color="text.primary">{t("common.connect.wallet.view")}</Typography>
+              <NoData noTips />
+              <Typography>{t("common.connect.wallet.view")}</Typography>
               <Button
                 variant="contained"
                 onClick={() => showConnector(true)}

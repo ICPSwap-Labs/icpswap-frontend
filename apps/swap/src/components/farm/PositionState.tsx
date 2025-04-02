@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme: Theme) => {
       },
 
       "&.closed": {
-        background: theme.colors.darkPrimary400,
+        background: theme.colors.dark400,
       },
     },
   };

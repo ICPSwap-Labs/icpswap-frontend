@@ -1,4 +1,4 @@
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar } from "components/Mui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { formatTokenAmount, shorten } from "@icpswap/utils";
 import { TextButton } from "components/index";
@@ -53,7 +53,7 @@ export function getCollectFeeSteps({
 
   return [
     {
-      title: `Collect ${tokenA.symbol} and ${tokenB.symbol}`,
+      title: i18n.t("swap.collect.tokens", { symbol0: tokenA.symbol, symbol1: tokenB.symbol }),
       step: 0,
       children: [
         { label: i18n.t("common.position.id"), value: positionId.toString() },

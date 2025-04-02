@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FilledTextField, Modal, TextFieldNumberComponent, MaxButton } from "components/index";
-import { Box, Button, Typography, Grid } from "@mui/material";
+import { Modal, MaxButton, NumberTextField, Flex } from "components/index";
+import { Box, Button, Typography, TextField } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC } from "constants/tokens";
@@ -37,7 +37,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   const [values, setValues] = useState<Values>(defaultValues);
   const [openTip, closeTip] = useTips();
 
-  const onFieldChange = (value: any, field: string) => {
+  const onFieldChange = (value: string, field: string) => {
     setValues((prevState) => ({
       ...prevState,
       [field]: value,
@@ -88,7 +88,7 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
     XTC &&
     new BigNumber(Number(values.amount)).isGreaterThan(parseTokenAmount(balance ?? 0, XTC.decimals))
   )
-    errorMessage = t`t("common.error.insufficient.balance");`;
+    errorMessage = t("common.error.insufficient.balance");
   if (!values.amount) errorMessage = t`Enter top-up XTC amount`;
   if (values.canisterId && !isValidPrincipal(values.canisterId)) errorMessage = t("common.error.invalid.canister.id");
   if (!values.canisterId) errorMessage = t("xtc.enter.canister");
@@ -96,31 +96,31 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
   return (
     <Modal open={open} title={t("wallet.topUp.xtc")} onClose={onClose}>
       <Box>
-        <FilledTextField
+        <TextField
+          fullWidth
           label={t("common.canister.id")}
-          onChange={(value) => onFieldChange(value, "canisterId")}
+          onChange={(event) => onFieldChange(event.target.value, "canisterId")}
           placeholder={t`Enter a canister ID`}
         />
       </Box>
 
       <Box mt="20px">
-        <FilledTextField
+        <NumberTextField
+          fullWidth
           label={t("common.amount")}
           value={values.amount}
-          onChange={(value) => onFieldChange(value, "amount")}
-          InputProps={{
-            inputComponent: TextFieldNumberComponent,
-            inputProps: {
-              allowNegative: false,
-              decimalScale: 4,
-              maxLength: 16,
-            },
+          onChange={(event) => onFieldChange(event.target.value, "amount")}
+          placeholder={t("xtc.topUp.enter.amount")}
+          numericProps={{
+            thousandSeparator: true,
+            allowNegative: false,
+            decimalScale: 4,
+            maxLength: 16,
           }}
-          placeholder={t`Enter top-up amount`}
         />
       </Box>
 
-      <Grid container alignItems="center" mt="12px">
+      <Flex fullWidth align="center" sx={{ margin: "12px 0 0 0" }}>
         <Typography color="text.primary" component="span">
           {t("common.balance.colon")}
         </Typography>
@@ -129,13 +129,13 @@ export default function XTCTopUp({ open, onClose, onTopUpSuccess }: XTCTopUpProp
           {balance ? parseTokenAmount(balance, XTC?.decimals).toFormat() : loading ? "--" : 0}
         </Typography>
         <MaxButton onClick={handleMax} />
-      </Grid>
+      </Flex>
 
-      <Grid container alignItems="center" mt="12px">
+      <Flex fullWidth align="center" sx={{ margin: "12px 0 0 0" }}>
         <Typography color="text.primary" component="span">
           {t("common.fee.colon.amount", { amount: XTC ? parseTokenAmount(XTC.transFee, XTC?.decimals).toFormat() : 0 })}
         </Typography>
-      </Grid>
+      </Flex>
 
       <Box mt="40px">
         <Identity onSubmit={handleTopUp}>

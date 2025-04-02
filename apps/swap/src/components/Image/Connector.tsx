@@ -1,25 +1,20 @@
-import { Connector } from "constants/wallet";
-import { useConnectorType } from "store/auth/hooks";
+import { useMemo } from "react";
+import { ConnectorConfigs } from "constants/wallet";
+import { useConnector } from "store/auth/hooks";
 
 import { Image } from "./Image";
 
-const ConnectorIcon: { [key: string]: string } = {
-  [Connector.IC]: "/images/connect/InternetIdentity.svg",
-  [Connector.ME]: "/images/connect/AstroX.svg",
-  [Connector.ICPSwap]: "/images/connect/icpswap.svg",
-  [Connector.INFINITY]: "/images/connect/Infinity.svg",
-  [Connector.Metamask]: "/images/connect/metamask.svg",
-  [Connector.NFID]: "/images/connect/NFID.svg",
-  [Connector.PLUG]: "/images/connect/Plug.svg",
-  [Connector.STOIC]: "/images/connect/stoic.svg",
-};
-
-export interface AddressSectionProps {
+export interface ConnectorImageProps {
   size?: string;
 }
 
-export function ConnectorImage({ size = "20px" }: AddressSectionProps) {
-  const connector = useConnectorType();
+export function ConnectorImage({ size = "20px" }: ConnectorImageProps) {
+  const connector = useConnector();
 
-  return connector ? <Image sx={{ width: size, height: size }} src={ConnectorIcon[connector]} /> : null;
+  const imageUrl = useMemo(() => {
+    if (!connector) return null;
+    return ConnectorConfigs.find((e) => e.value === connector)?.logo;
+  }, [connector]);
+
+  return connector && imageUrl ? <Image sx={{ width: size, height: size }} src={imageUrl} /> : null;
 }

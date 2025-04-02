@@ -148,8 +148,10 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
               allowNegative: false,
               maxLength: 6,
             }}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            slotProps={{
+              input: {
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              },
             }}
             onChange={handleSlippageInput}
             onBlur={handleSlippageBlur}

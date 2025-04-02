@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Typography, Grid, Box } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Typography, Grid, Box, useTheme, Theme } from "components/Mui";
 import { MainCard } from "@icpswap/ui";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Theme } from "@mui/material/styles";
 
 export default function DetailsToggle({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
   const [detailsShow, setDetailsShow] = useState(true);

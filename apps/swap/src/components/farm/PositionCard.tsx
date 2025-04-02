@@ -8,6 +8,7 @@ import { usePosition } from "hooks/swap/usePosition";
 import { Token } from "@icpswap/swap-sdk";
 import { useFarmState } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 import PositionRangeState from "./PositionState";
 import { Unstake } from "./Unstake";
@@ -95,6 +96,8 @@ export function FarmPositionCard({
       .toString();
   }, [token0Amount, token1Amount, token0Price, token1Price]);
 
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "farm", noTips: true });
+
   const handleClick = useCallback(() => {
     if (unstake) {
       setUnstakeOpen(true);
@@ -134,7 +137,12 @@ export function FarmPositionCard({
               {token1Amount && token1 ? `${formatAmount(token1Amount, { fullNumber: true })} ${token1.symbol}` : "--"}
             </Typography>
           </Flex>
-          <Button variant="contained" sx={{ width: "120px", height: "48px" }} onClick={handleClick} disabled={disabled}>
+          <Button
+            variant="contained"
+            sx={{ width: "120px", height: "48px" }}
+            onClick={handleClick}
+            disabled={disabled || oisyButtonDisabled}
+          >
             {unstake ? t("common.unstake") : t("common.stake")}
           </Button>
         </Flex>

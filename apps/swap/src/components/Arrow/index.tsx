@@ -1,4 +1,4 @@
-import { SvgIconProps } from "@mui/material";
+import { SvgIconProps } from "components/Mui";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 export function DownArrow(props: SvgIconProps) {

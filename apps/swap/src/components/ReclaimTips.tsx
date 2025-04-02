@@ -1,5 +1,5 @@
 import { TextButton } from "components/index";
-import { Typography } from "@mui/material";
+import { Typography } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { useCloseStep } from "hooks/useStepCall";
 
@@ -31,13 +31,13 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
   const msg = message?.includes("please withdraw your unused token") ? (
     <>
       {message.replace("please withdraw your unused token", "")}.&nbsp; Please{" "}
-      <TextButton onClick={handleClick}>check your balance in the Swap Pool</TextButton> to see if tokens have been
-      transferred to the Swap Pool.
+      <TextButton onClick={handleClick}>check your balance in the swap pool</TextButton> to see if tokens have been
+      transferred to the swap pool.
     </>
   ) : (
     <>
-      {message}.&nbsp; Please <TextButton onClick={handleClick}>check your balance in the Swap Pool</TextButton> to see
-      if tokens have been transferred to the Swap Pool.
+      {message}.&nbsp; Please <TextButton onClick={handleClick}>check your balance in the swap pool</TextButton> to see
+      if tokens have been transferred to the swap pool.
     </>
   );
 

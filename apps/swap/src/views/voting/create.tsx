@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
-import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input, useMediaQuery } from "@mui/material";
+import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input, useMediaQuery } from "components/Mui";
 import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
@@ -313,7 +313,7 @@ export default function VotingCreateProposal() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
+                              textFieldProps={{
                                 ...(params?.InputProps ?? {}),
                               }}
                               helperText=""
@@ -336,7 +336,7 @@ export default function VotingCreateProposal() {
                             <FilledTextField
                               fullWidth
                               {...params}
-                              InputProps={{
+                              textFieldProps={{
                                 ...(params?.InputProps ?? {}),
                               }}
                               helperText=""
@@ -397,23 +397,27 @@ export default function VotingCreateProposal() {
                     <FilledTextField
                       value={option}
                       onChange={(value: any) => onOptionChange(value, index)}
-                      InputProps={{
-                        disableUnderline: true,
-                        inputProps: {
-                          maxLength: 100,
+                      textFieldProps={{
+                        slotProps: {
+                          input: {
+                            disableUnderline: true,
+                            inputProps: {
+                              maxLength: 100,
+                            },
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <HighlightOffIcon
+                                  sx={{
+                                    color: "#8492C4",
+                                    fontSize: "20px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => handleOptionDelete(index)}
+                                />
+                              </InputAdornment>
+                            ),
+                          },
                         },
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <HighlightOffIcon
-                              sx={{
-                                color: "#8492C4",
-                                fontSize: "20px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleOptionDelete(index)}
-                            />
-                          </InputAdornment>
-                        ),
                       }}
                     />
                   </Box>

@@ -95,7 +95,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
               placeholderSize="14px"
               fullWidth
               placeholder={t`Search name or canister ID`}
-              textFiledProps={{
+              textFieldProps={{
                 slotProps: {
                   input: {
                     startAdornment: (

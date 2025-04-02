@@ -21,6 +21,7 @@ import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";
+import { type SwapPoolData } from "@icpswap/types";
 
 import {
   selectCurrency,
@@ -31,6 +32,7 @@ import {
   PoolCanisterRecord,
   updateSwapOutAmount,
   updateDecreaseLiquidityAmount,
+  updateAllSwapPools,
 } from "./actions";
 
 export function useSwapHandlers() {
@@ -137,7 +139,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     const inputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token0 : token1) : undefined;
     const outputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token1 : token0) : undefined;
 
-    return { poolId: Trade.tradePoolId, pool, inputToken, outputToken };
+    return { poolId: pool?.id, pool, inputToken, outputToken };
   }, [Trade, __inputToken, __outputToken]);
 
   // DIP20 not support subaccount balance
@@ -201,7 +203,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const maxInputAmount = useAllBalanceMaxSpend({
     token: inputToken,
     balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
-    poolId: Trade?.tradePoolId,
+    poolId: Trade?.pool?.id,
     subBalance: inputTokenSubBalance,
     unusedBalance: inputTokenUnusedBalance,
     allowance,
@@ -210,7 +212,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const inputError = useMemo(() => {
     if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
-    if (!typedValue || typedValue === "0") return t`Amount should large than trans fee`;
+    if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
     if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
@@ -225,7 +227,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     trade: Trade?.trade,
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
-    poolId: Trade?.tradePoolId,
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
@@ -243,6 +244,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     inputTokenBalance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals),
     outputTokenBalance: formatTokenAmount(outputCurrencyBalance?.toExact(), outputCurrencyBalance?.currency.decimals),
     maxInputAmount,
+    pool: Trade.pool,
   };
 }
 
@@ -322,4 +324,19 @@ export function useUpdateDecreaseLiquidityAmount() {
     },
     [dispatch],
   );
+}
+
+export function useUpdateAllSwapPools() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (allSwapPools: SwapPoolData[]) => {
+      dispatch(updateAllSwapPools(allSwapPools));
+    },
+    [dispatch],
+  );
+}
+
+export function useAllSwapPools() {
+  return useAppSelector((state) => state.swap.allSwapPools);
 }

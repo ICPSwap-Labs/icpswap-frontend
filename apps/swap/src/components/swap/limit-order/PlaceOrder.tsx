@@ -49,7 +49,7 @@ export const PlaceOrder = forwardRef(
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
-    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken, setInverted } = useContext(LimitContext);
+    const { setSelectedPool, setNoLiquidity, setInputToken, setOutputToken } = useContext(LimitContext);
     const { setRefreshTriggers } = useGlobalContext();
     const { onUserInput, onSwitchTokens } = useSwapHandlers();
     const clearSwapState = useCleanSwapState();
@@ -231,19 +231,17 @@ export const PlaceOrder = forwardRef(
 
       handleInput("", "input");
       handleInput("", "output");
-      setOrderPrice("");
-      setInverted(false);
 
       const addSuccessful = await call();
 
       if (addSuccessful) {
         setRefreshTriggers(SWAP_LIMIT_REFRESH_KEY);
         setRefreshTriggers(USER_LIMIT_ORDERS_KEY);
+      }
 
-        if (limitPriceRef?.current) {
-          limitPriceRef?.current?.resetInverted();
-          limitPriceRef?.current?.setDefaultPrice();
-        }
+      if (limitPriceRef?.current) {
+        limitPriceRef.current.resetInverted();
+        limitPriceRef.current.setDefaultPrice();
       }
 
       closeLoadingTip(loadingKey);

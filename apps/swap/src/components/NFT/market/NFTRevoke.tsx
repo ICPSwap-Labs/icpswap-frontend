@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button } from "components/Mui";
 import { cancel } from "hooks/nft/trade";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { ResultStatus, Identity as TypeIdentity } from "types/index";

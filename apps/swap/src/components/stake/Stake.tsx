@@ -18,6 +18,7 @@ import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import PercentageSlider from "components/PercentageSlider/ui";
 import { useStakingPoolState } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 export interface StakeProps {
   poolId: string | undefined;
@@ -127,12 +128,14 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     if (!amount) return t("common.enter.input.amount");
     if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.greater.than", { amount: 0 });
     if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount))
-      return t`t("common.error.insufficient.balance");`;
+      return t("common.error.insufficient.balance");
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))
       return t("common.error.amount.greater.than.fee");
 
     return null;
   }, [amount, balance, stakeToken, state]);
+
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "stake" });
 
   return (
     <>
@@ -215,7 +218,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
           variant="contained"
           size="large"
           sx={{ margin: "20px 0 0 0", height: "48px" }}
-          disabled={!!error}
+          disabled={!!error || oisyButtonDisabled}
           onClick={handleStaking}
         >
           {error ?? t("common.stake")}

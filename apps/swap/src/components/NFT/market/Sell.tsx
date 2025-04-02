@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => {
       color: theme.palette.warning.dark,
     },
     inputBox: {
-      border: `1px solid #313A5A`,
+      border: `1px solid ${theme.colors.color0}`,
       background: theme.palette.background.level4,
       borderRadius: "8px",
       padding: "14px 16px",
@@ -219,12 +219,14 @@ export default function NFTSell({
               allowNegative: false,
               maxLength: 20,
             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <img width="18px" src={WICPCurrencyImage} alt="" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <img width="18px" src={WICPCurrencyImage} alt="" />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Grid>

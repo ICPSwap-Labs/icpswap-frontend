@@ -5,19 +5,10 @@ import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { createTheme } from "@mui/material/styles";
 import { TokenImage } from "components/Image/Token";
 import { PositionRangeState } from "components/swap/index";
 import { usePositionState } from "hooks/liquidity";
 import { useTranslation } from "react-i18next";
-
-export const customizeTheme = createTheme({
-  breakpoints: {
-    values: {
-      sm: 680,
-    },
-  },
-});
 
 const useStyle = makeStyles((theme: Theme) => ({
   NFTBox: {
@@ -26,8 +17,7 @@ const useStyle = makeStyles((theme: Theme) => ({
     background: theme.palette.background.level2,
     width: "300px",
     height: "332px",
-
-    [customizeTheme.breakpoints.down("sm")]: {
+    "@media(max-width: 680px)": {
       width: "100%",
       height: "332px",
       marginBottom: "20px",

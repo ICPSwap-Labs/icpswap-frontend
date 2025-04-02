@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "components/Mui";
 import { NoData, ImageLoading as Loading } from "components/index";
 import { EXTCollection, type ExtNft } from "@icpswap/types";
 import { NFTCard } from "./NFTCard";

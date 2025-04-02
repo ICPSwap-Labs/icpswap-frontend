@@ -1,4 +1,4 @@
-import { Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "components/Mui";
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { SelectSortType } from "components/Wallet/SelectSortType";

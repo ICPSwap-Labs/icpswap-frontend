@@ -1,6 +1,6 @@
 import Copy, { CopyRef } from "components/Copy";
 import { shorten } from "@icpswap/utils";
-import { Typography, type TypographyProps } from "@mui/material";
+import { Typography, type TypographyProps } from "components/Mui";
 import { useRef } from "react";
 
 export interface AddressFormatProps {

@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "components/Mui";
 import { isICPSwapOfficial } from "utils/index";
 import VerifyImage from "assets/images/nft/verify.svg";
 import { shorten } from "@icpswap/utils";

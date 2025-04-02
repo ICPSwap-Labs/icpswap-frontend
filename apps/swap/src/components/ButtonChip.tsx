@@ -1,5 +1,4 @@
-import { Chip, ButtonBase, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Chip, ButtonBase, useTheme } from "components/Mui";
 
 export interface ButtonChipProps {
   label: string;
@@ -8,7 +7,7 @@ export interface ButtonChipProps {
 }
 
 export function ButtonChip({ label, onClick, border }: ButtonChipProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const handleClick = () => {
     if (onClick) onClick();

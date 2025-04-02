@@ -220,7 +220,7 @@ export default function NFTCanisterCreate() {
                 onChange={(value: string) => onFieldChange(value, "name")}
                 placeholderSize="16px"
                 fontSize="16px"
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -246,7 +246,7 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the canister description`}
                 onChange={(value: string) => onFieldChange(value, "introduction")}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -270,7 +270,7 @@ export default function NFTCanisterCreate() {
                 placeholderSize="16px"
                 placeholder={t`Enter the creator`}
                 onChange={(value: string) => onFieldChange(value, "minter")}
-                textFiledProps={{
+                textFieldProps={{
                   slotProps: {
                     input: {
                       disableUnderline: true,
@@ -339,7 +339,7 @@ export default function NFTCanisterCreate() {
                         placeholderSize="16px"
                         placeholder={t`Enter your link, e.g. https://yoursite.io`}
                         onChange={(value: string) => handleMediaInput(value, index)}
-                        textFiledProps={{
+                        textFieldProps={{
                           slotProps: {
                             input: {
                               endAdornment: (

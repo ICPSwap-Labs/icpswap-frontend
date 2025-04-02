@@ -1,11 +1,9 @@
 import React from "react";
 import { useAppDispatch } from "store/hooks";
-import { makeStyles, useTheme } from "@mui/styles";
-import { Avatar, Box, ButtonBase } from "@mui/material";
+import { Avatar, Box, ButtonBase, makeStyles, useTheme, Theme } from "components/Mui";
 import Brightness4OutlinedIcon from "@mui/icons-material/Brightness4Outlined";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { changeTheme } from "store/customization/actions";
-import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   navContainer: {

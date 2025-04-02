@@ -27,6 +27,7 @@ export enum Connector {
   INFINITY = "INFINITY",
   ME = "ME",
   Metamask = "Metamask",
+  Oisy = "Oisy",
 }
 
 export function isICConnector(connector: Connector) {
