@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { useSlippageManager, useSwapKeepTokenInPools } from "store/swap/cache/hooks";
 import { useUpdateSwapOutAmount } from "store/swap/hooks";
 import { slippageToPercent } from "constants/index";
-import { depositAndSwap } from "@icpswap/hooks";
+import { depositAndSwap, depositFromAndSwap } from "@icpswap/hooks";
 import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import {
   useSwapApprove,
@@ -179,16 +179,21 @@ export function useSwapCalls() {
             const one_step_for_testing = async () => {
               if (!principal || !actualSwapAmount || !amountOut) return false;
 
-              // const needDepositAmount = new BigNumber(userInputAmount).minus(unusedBalance.toString()).toString();
-
-              const { status, message, data } = await depositAndSwap(poolId, {
-                zeroForOne: tokenIn.address < tokenOut.address,
-                amountIn: actualSwapAmount,
-                amountOutMinimum: amountOut,
-                // amount: BigInt(needDepositAmount),
-                tokenInFee: BigInt(tokenIn.transFee),
-                tokenOutFee: BigInt(tokenOut.transFee),
-              });
+              const { status, message, data } = isUseTransfer(inputToken)
+                ? await depositAndSwap(poolId, {
+                    zeroForOne: tokenIn.address < tokenOut.address,
+                    amountIn: actualSwapAmount,
+                    amountOutMinimum: amountOut,
+                    tokenInFee: BigInt(tokenIn.transFee),
+                    tokenOutFee: BigInt(tokenOut.transFee),
+                  })
+                : await depositFromAndSwap(poolId, {
+                    zeroForOne: tokenIn.address < tokenOut.address,
+                    amountIn: actualSwapAmount,
+                    amountOutMinimum: amountOut,
+                    tokenInFee: BigInt(tokenIn.transFee),
+                    tokenOutFee: BigInt(tokenOut.transFee),
+                  });
 
               if (status === ResultStatus.ERROR) {
                 if (openExternalTip) {

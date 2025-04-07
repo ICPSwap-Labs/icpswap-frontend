@@ -10,9 +10,50 @@ export interface AccountBalance {
   balance0: bigint;
   balance1: bigint;
 }
+export type Action =
+  | { Withdraw: WithdrawInfo }
+  | { RemoveLimitOrder: RemoveLimitOrderInfo }
+  | { AddLiquidity: AddLiquidityInfo }
+  | { OneStepSwap: OneStepSwapInfo }
+  | { Deposit: DepositInfo }
+  | { Refund: RefundInfo }
+  | { Swap: SwapInfo }
+  | { ExecuteLimitOrder: ExecuteLimitOrderInfo }
+  | { TransferPosition: TransferPositionInfo }
+  | { DecreaseLiquidity: DecreaseLiquidityInfo }
+  | { Claim: ClaimInfo }
+  | { AddLimitOrder: AddLimitOrderInfo };
+export interface AddLimitOrderInfo {
+  err: [] | [Error__1];
+  status: AddLimitOrderStatus;
+  positionId: bigint;
+}
+export type AddLimitOrderStatus = { Failed: null } | { Created: null } | { Completed: null };
+export interface AddLiquidityInfo {
+  err: [] | [Error__1];
+  status: AddLiquidityStatus;
+  liquidity: bigint;
+  positionId: bigint;
+  amount0: bigint;
+  amount1: bigint;
+  token0: Principal;
+  token1: Principal;
+}
+export type AddLiquidityStatus = { Failed: null } | { Created: null } | { Completed: null };
+export type Amount = bigint;
 export interface ClaimArgs {
   positionId: bigint;
 }
+export interface ClaimInfo {
+  err: [] | [Error__1];
+  status: ClaimStatus;
+  positionId: bigint;
+  amount0: bigint;
+  amount1: bigint;
+  token0: Principal;
+  token1: Principal;
+}
+export type ClaimStatus = { Failed: null } | { Created: null } | { Completed: null };
 export interface CycleInfo {
   balance: bigint;
   available: bigint;
@@ -21,6 +62,17 @@ export interface DecreaseLiquidityArgs {
   liquidity: string;
   positionId: bigint;
 }
+export interface DecreaseLiquidityInfo {
+  err: [] | [Error__1];
+  status: DecreaseLiquidityStatus;
+  liquidity: bigint;
+  positionId: bigint;
+  amount0: bigint;
+  amount1: bigint;
+  token0: Principal;
+  token1: Principal;
+}
+export type DecreaseLiquidityStatus = { Failed: null } | { Created: null } | { Completed: null };
 export interface DepositAndMintArgs {
   tickUpper: bigint;
   fee0: bigint;
@@ -32,23 +84,40 @@ export interface DepositAndMintArgs {
   amount1Desired: string;
   tickLower: bigint;
 }
-export interface DepositArgs {
-  fee: bigint;
-  token: string;
-  amount: bigint;
-}
-export interface DepositFromAndSwapArgs {
+export interface DepositAndSwapArgs {
   tokenInFee: bigint;
   amountIn: string;
   zeroForOne: boolean;
   amountOutMinimum: string;
   tokenOutFee: bigint;
 }
+export interface DepositArgs {
+  fee: bigint;
+  token: string;
+  amount: bigint;
+}
+export interface DepositInfo {
+  err: [] | [Error__1];
+  status: DepositStatus;
+  transfer: Transfer;
+}
+export type DepositStatus = { Failed: null } | { TransferCompleted: null } | { Created: null } | { Completed: null };
 export type Error =
   | { CommonError: null }
   | { InternalError: string }
   | { UnsupportedToken: string }
   | { InsufficientFunds: null };
+export type Error__1 = string;
+export interface ExecuteLimitOrderInfo {
+  err: [] | [Error__1];
+  status: ExecuteLimitOrderStatus;
+  positionId: bigint;
+}
+export type ExecuteLimitOrderStatus =
+  | { Failed: null }
+  | { ExecuteLimitOrderCompleted: null }
+  | { Created: null }
+  | { Completed: null };
 export interface GetPositionArgs {
   tickUpper: bigint;
   tickLower: bigint;
@@ -99,18 +168,6 @@ export interface Icrc21ErrorInfo {
 export interface Icrc28TrustedOriginsResponse {
   trusted_origins: Array<string>;
 }
-export interface ImmutableSwapTransaction {
-  status: TransactionStatus;
-  withdraw: [] | [Transfer];
-  swap: [] | [Swap];
-  deposit: [] | [Transfer];
-  amountIn: string;
-  zeroForOne: boolean;
-  account: Principal;
-  amountOut: string;
-  index: bigint;
-  refund: [] | [Transfer];
-}
 export interface IncreaseLiquidityArgs {
   positionId: bigint;
   amount0Desired: string;
@@ -147,6 +204,22 @@ export interface MintArgs {
   amount1Desired: string;
   tickLower: bigint;
 }
+export interface OneStepSwapInfo {
+  err: [] | [Error__1];
+  status: OneStepSwapStatus;
+  withdraw: WithdrawInfo;
+  swap: SwapInfo;
+  deposit: DepositInfo;
+}
+export type OneStepSwapStatus =
+  | { SwapCompleted: null }
+  | { Failed: null }
+  | { PreSwapCompleted: null }
+  | { DepositCreditCompleted: null }
+  | { DepositTransferCompleted: null }
+  | { Created: null }
+  | { WithdrawCreditCompleted: null }
+  | { Completed: null };
 export interface Page {
   content: Array<UserPositionInfoWithId>;
   offset: bigint;
@@ -213,6 +286,23 @@ export interface PushError {
   time: bigint;
   message: string;
 }
+export interface RefundInfo {
+  err: [] | [Error__1];
+  status: RefundStatus;
+  failedIndex: bigint;
+  transfer: Transfer;
+}
+export type RefundStatus = { Failed: null } | { CreditCompleted: null } | { Created: null } | { Completed: null };
+export interface RemoveLimitOrderInfo {
+  err: [] | [Error__1];
+  status: RemoveLimitOrderStatus;
+  positionId: bigint;
+}
+export type RemoveLimitOrderStatus =
+  | { Failed: null }
+  | { RemoveLimitOrderCompleted: null }
+  | { Created: null }
+  | { Completed: null };
 export type Result = { ok: bigint } | { err: Error };
 export type Result_1 = { ok: string } | { err: Error };
 export type Result_10 = { ok: Page_1 } | { err: Error };
@@ -227,7 +317,7 @@ export type Result_14 =
       };
     }
   | { err: Error };
-export type Result_15 = { ok: Array<TransferLog> } | { err: Error };
+export type Result_15 = { ok: Array<[bigint, Transaction]> } | { err: Error };
 export type Result_16 =
   | {
       ok: {
@@ -318,42 +408,27 @@ export type Result_6 = { ok: PoolMetadata } | { err: Error };
 export type Result_7 = { ok: { balance0: bigint; balance1: bigint } } | { err: Error };
 export type Result_8 = { ok: Array<UserPositionInfoWithId> } | { err: Error };
 export type Result_9 = { ok: Page } | { err: Error };
-export interface Swap {
-  tokenOutAmount: bigint;
-  tokenInAmount: bigint;
-}
 export interface SwapArgs {
   amountIn: string;
   zeroForOne: boolean;
   amountOutMinimum: string;
 }
+export interface SwapInfo {
+  err: [] | [Error__1];
+  status: SwapStatus;
+  tokenIn: Principal;
+  tokenOut: Principal;
+  amountIn: Amount;
+  amountOut: bigint;
+}
 export interface SwapRecordInfo {
-  to: string;
-  feeAmount: bigint;
-  action: TransactionType;
-  feeAmountTotal: bigint;
-  token0Id: string;
-  token1Id: string;
-  token0AmountTotal: bigint;
-  liquidityTotal: bigint;
-  from: string;
-  tick: bigint;
-  feeTire: bigint;
-  recipient: string;
-  token0ChangeAmount: bigint;
-  token1AmountTotal: bigint;
-  liquidityChange: bigint;
-  token1Standard: string;
-  TVLToken0: bigint;
-  TVLToken1: bigint;
-  token0Fee: bigint;
-  token1Fee: bigint;
-  timestamp: bigint;
-  token1ChangeAmount: bigint;
-  token0Standard: string;
-  price: bigint;
+  currentLiquidity: bigint;
+  currentSqrtPriceX96: bigint;
+  currentTick: bigint;
+  txInfo: Transaction__1;
   poolId: string;
 }
+export type SwapStatus = { Failed: null } | { Created: null } | { Completed: null };
 export interface TickInfoWithId {
   id: string;
   initialized: boolean;
@@ -379,51 +454,37 @@ export interface Token {
   address: string;
   standard: string;
 }
-export type TransactionError = { DepositError: string } | { WithdrawError: string } | { SwapError: string };
-export type TransactionStatus =
-  | { Error: TransactionError }
-  | { Processing: null }
-  | { Created: null }
-  | { Completed: null };
-export type TransactionType =
-  | { decreaseLiquidity: bigint }
-  | {
-      limitOrder: {
-        token0InAmount: bigint;
-        positionId: bigint;
-        tickLimit: bigint;
-        token1InAmount: bigint;
-      };
-    }
-  | { claim: bigint }
-  | { swap: null }
-  | { addLiquidity: bigint }
-  | { transferPosition: bigint }
-  | { increaseLiquidity: bigint };
+export interface Transaction {
+  id: bigint;
+  action: Action;
+  owner: Principal;
+  timestamp: Time;
+  canisterId: Principal;
+}
+export interface Transaction__1 {
+  id: bigint;
+  action: Action;
+  owner: Principal;
+  timestamp: Time;
+  canisterId: Principal;
+}
 export interface Transfer {
   to: Account;
-  fee: [] | [bigint];
-  status: TransferStatus;
-  from: Account;
-  amount: bigint;
-}
-export interface TransferLog {
-  to: Principal;
   fee: bigint;
-  result: string;
-  token: Token;
-  action: string;
-  daysFrom19700101: bigint;
-  owner: Principal;
-  from: Principal;
-  fromSubaccount: [] | [Uint8Array | number[]];
-  timestamp: bigint;
+  token: Principal;
+  from: Account;
+  memo: [] | [Uint8Array | number[]];
   index: bigint;
   amount: bigint;
-  errorMsg: string;
-  toSubaccount: [] | [Uint8Array | number[]];
 }
-export type TransferStatus = { Ok: bigint } | { Err: string } | { Processing: null } | { Created: null };
+export interface TransferPositionInfo {
+  to: Account;
+  err: [] | [Error__1];
+  status: TransferPositionStatus;
+  from: Account;
+  positionId: bigint;
+}
+export type TransferPositionStatus = { Failed: null } | { Created: null } | { Completed: null };
 export interface UserPositionInfo {
   tickUpper: bigint;
   tokensOwed0: bigint;
@@ -461,6 +522,12 @@ export interface WithdrawArgs {
   token: string;
   amount: bigint;
 }
+export interface WithdrawInfo {
+  err: [] | [Error__1];
+  status: WithdrawStatus;
+  transfer: Transfer;
+}
+export type WithdrawStatus = { Failed: null } | { CreditCompleted: null } | { Created: null } | { Completed: null };
 export interface WithdrawToSubaccountArgs {
   fee: bigint;
   token: string;
@@ -476,10 +543,12 @@ export interface _SERVICE {
   checkOwnerOfUserPosition: ActorMethod<[Principal, bigint], Result_2>;
   claim: ActorMethod<[ClaimArgs], Result_29>;
   decreaseLiquidity: ActorMethod<[DecreaseLiquidityArgs], Result_29>;
+  deleteFailedTransaction: ActorMethod<[bigint, boolean], Result_2>;
   deposit: ActorMethod<[DepositArgs], Result>;
   depositAllAndMint: ActorMethod<[DepositAndMintArgs], Result>;
+  depositAndSwap: ActorMethod<[DepositAndSwapArgs], Result>;
   depositFrom: ActorMethod<[DepositArgs], Result>;
-  depositFromAndSwap: ActorMethod<[DepositFromAndSwapArgs], Result>;
+  depositFromAndSwap: ActorMethod<[DepositAndSwapArgs], Result>;
   getAdmins: ActorMethod<[], Array<Principal>>;
   getAvailabilityState: ActorMethod<[], { whiteList: Array<Principal>; available: boolean }>;
   getClaimLog: ActorMethod<[], Array<string>>;
@@ -495,7 +564,6 @@ export interface _SERVICE {
   getPositions: ActorMethod<[bigint, bigint], Result_22>;
   getSortedUserLimitOrders: ActorMethod<[Principal], Result_21>;
   getSwapRecordState: ActorMethod<[], Result_20>;
-  getSwapTransactions: ActorMethod<[], Array<[bigint, ImmutableSwapTransaction]>>;
   getTickBitmaps: ActorMethod<[], Result_19>;
   getTickInfos: ActorMethod<[bigint, bigint], Result_18>;
   getTicks: ActorMethod<[bigint, bigint], Result_17>;
@@ -506,11 +574,11 @@ export interface _SERVICE {
     {
       token0: Array<[string, Value]>;
       token1: Array<[string, Value]>;
-      token0Fee: [] | [bigint];
-      token1Fee: [] | [bigint];
+      token0Fee: bigint;
+      token1Fee: bigint;
     }
   >;
-  getTransferLogs: ActorMethod<[], Result_15>;
+  getTransactions: ActorMethod<[], Result_15>;
   getUserByPositionId: ActorMethod<[bigint], Result_1>;
   getUserLimitOrders: ActorMethod<[Principal], Result_14>;
   getUserPosition: ActorMethod<[bigint], Result_13>;
@@ -531,7 +599,6 @@ export interface _SERVICE {
   quote: ActorMethod<[SwapArgs], Result>;
   quoteForAll: ActorMethod<[SwapArgs], Result>;
   refreshIncome: ActorMethod<[bigint], Result_5>;
-  removeErrorTransferLog: ActorMethod<[bigint, boolean], undefined>;
   removeLimitOrder: ActorMethod<[bigint], Result_2>;
   restartJobs: ActorMethod<[Array<string>], undefined>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;

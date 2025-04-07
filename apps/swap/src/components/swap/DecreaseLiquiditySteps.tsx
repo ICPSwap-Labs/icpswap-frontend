@@ -1,7 +1,7 @@
 import { Box, Avatar } from "components/Mui";
 import { toSignificant, parseTokenAmount, BigNumber, shorten } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import { TextButton } from "components/index";
+// import { TextButton } from "components/index";
 import { BURN_FIELD } from "constants/swap";
 import { toFormat } from "utils/index";
 import { Principal } from "@dfinity/principal";
@@ -92,42 +92,42 @@ export function getDecreaseLiquiditySteps({
               },
             ],
           },
-          !keepTokenInPools
-            ? {
-                title: withdrawAmountALessThanZero
-                  ? i18n.t("common.unable.withdraw", { symbol: currencyA.symbol })
-                  : i18n.t("common.withdraw.amount", { symbol: currencyA.symbol }),
-                step: 1,
-                children: [
-                  {
-                    label: i18n.t("common.amount"),
-                    value: <TokenAmount amount={withdrawAmountA} logo={currencyA.logo} />,
-                  },
-                  { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
-                ],
-                skipError: withdrawAmountALessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
-                errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
-                errorMessage: i18n.t("common.check.balance.tips"),
-              }
-            : null,
-          !keepTokenInPools
-            ? {
-                title: withdrawAmountBLessThanZero
-                  ? i18n.t("common.unable.withdraw", { symbol: currencyB.symbol })
-                  : i18n.t("common.withdraw.amount", { symbol: currencyB.symbol }),
-                step: 2,
-                children: [
-                  {
-                    label: i18n.t("common.amount"),
-                    value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
-                  },
-                  { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
-                ],
-                skipError: withdrawAmountBLessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
-                errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
-                errorMessage: i18n.t("common.check.balance.tips"),
-              }
-            : undefined,
+          // !keepTokenInPools
+          //   ? {
+          //       title: withdrawAmountALessThanZero
+          //         ? i18n.t("common.unable.withdraw", { symbol: currencyA.symbol })
+          //         : i18n.t("common.withdraw.amount", { symbol: currencyA.symbol }),
+          //       step: 1,
+          //       children: [
+          //         {
+          //           label: i18n.t("common.amount"),
+          //           value: <TokenAmount amount={withdrawAmountA} logo={currencyA.logo} />,
+          //         },
+          //         { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
+          //       ],
+          //       skipError: withdrawAmountALessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+          //       errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+          //       errorMessage: i18n.t("common.check.balance.tips"),
+          //     }
+          //   : null,
+          // !keepTokenInPools
+          //   ? {
+          //       title: withdrawAmountBLessThanZero
+          //         ? i18n.t("common.unable.withdraw", { symbol: currencyB.symbol })
+          //         : i18n.t("common.withdraw.amount", { symbol: currencyB.symbol }),
+          //       step: 2,
+          //       children: [
+          //         {
+          //           label: i18n.t("common.amount"),
+          //           value: <TokenAmount amount={withdrawAmountB} logo={currencyB.logo} />,
+          //         },
+          //         { label: i18n.t("common.principal.id"), value: shorten(principal?.toString() ?? "", 6) },
+          //       ],
+          //       skipError: withdrawAmountBLessThanZero ? i18n.t("common.amount.withdrawal.less.than.fee") : undefined,
+          //       errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+          //       errorMessage: i18n.t("common.check.balance.tips"),
+          //     }
+          //   : undefined,
         ]
       : [];
 

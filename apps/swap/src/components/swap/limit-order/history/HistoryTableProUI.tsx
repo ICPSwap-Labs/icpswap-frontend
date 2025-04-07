@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "180px repeat(3, 1fr) 160px",
+      gridTemplateColumns: "180px repeat(3, 1fr)",
     },
   };
 });
@@ -48,7 +48,7 @@ export function HistoryTableProUI({
             <HeaderCell>{t("common.you.pay")}</HeaderCell>
             <HeaderCell>{t("common.you.receive")}</HeaderCell>
             <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
-            <HeaderCell align="right">&nbsp;</HeaderCell>
+            {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
           </Header>
 
           {!loading

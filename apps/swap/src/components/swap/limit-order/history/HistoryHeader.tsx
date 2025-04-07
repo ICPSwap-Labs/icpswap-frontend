@@ -14,7 +14,7 @@ export function HistoryHeader({ wrapperClasses }: HistoryHeaderProps) {
       <HeaderCell>{t("common.you.pay")}</HeaderCell>
       <HeaderCell>{t("common.you.receive")}</HeaderCell>
       <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
-      <HeaderCell align="right">&nbsp;</HeaderCell>
+      {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
     </Flex>
   );
 }

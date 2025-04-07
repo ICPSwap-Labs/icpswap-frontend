@@ -9,7 +9,7 @@ import { useSwapWithdraw, useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { sleep, BigNumber } from "@icpswap/utils";
+// import { sleep, BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
@@ -44,58 +44,58 @@ function useCollectFeeCalls() {
       stepKey,
       refresh,
     }: CollectFeeCallsArgs) => {
-      const __withdraw = async () => {
-        const withdrawCurrencyA = async () => {
-          if (!currencyFeeAmount0 || !pool) return false;
+      // const __withdraw = async () => {
+      //   const withdrawCurrencyA = async () => {
+      //     if (!currencyFeeAmount0 || !pool) return false;
 
-          if (
-            !new BigNumber(currencyFeeAmount0.quotient.toString())
-              .minus(currencyFeeAmount0.currency.transFee)
-              .isGreaterThan(0)
-          )
-            return true;
+      //     if (
+      //       !new BigNumber(currencyFeeAmount0.quotient.toString())
+      //         .minus(currencyFeeAmount0.currency.transFee)
+      //         .isGreaterThan(0)
+      //     )
+      //       return true;
 
-          return await withdraw(
-            currencyFeeAmount0.currency,
-            pool.id,
-            currencyFeeAmount0.quotient.toString(),
-            ({ message }: ExternalTipArgs) => {
-              openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
-            },
-          );
-        };
+      //     return await withdraw(
+      //       currencyFeeAmount0.currency,
+      //       pool.id,
+      //       currencyFeeAmount0.quotient.toString(),
+      //       ({ message }: ExternalTipArgs) => {
+      //         openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
+      //       },
+      //     );
+      //   };
 
-        const withdrawCurrencyB = async () => {
-          if (!currencyFeeAmount1 || !pool) return false;
+      //   const withdrawCurrencyB = async () => {
+      //     if (!currencyFeeAmount1 || !pool) return false;
 
-          if (
-            !new BigNumber(currencyFeeAmount1.quotient.toString())
-              .minus(currencyFeeAmount1.currency.transFee)
-              .isGreaterThan(0)
-          )
-            return true;
+      //     if (
+      //       !new BigNumber(currencyFeeAmount1.quotient.toString())
+      //         .minus(currencyFeeAmount1.currency.transFee)
+      //         .isGreaterThan(0)
+      //     )
+      //       return true;
 
-          const result = await withdraw(
-            currencyFeeAmount1.currency,
-            pool.id,
-            currencyFeeAmount1.quotient.toString(),
-            ({ message }: ExternalTipArgs) => {
-              openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
-            },
-          );
+      //     const result = await withdraw(
+      //       currencyFeeAmount1.currency,
+      //       pool.id,
+      //       currencyFeeAmount1.quotient.toString(),
+      //       ({ message }: ExternalTipArgs) => {
+      //         openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
+      //       },
+      //     );
 
-          return result;
-        };
+      //     return result;
+      //   };
 
-        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]).catch((err) => {
-          console.warn("Claim fees error: ", err);
-          return [false, false];
-        });
+      //   const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]).catch((err) => {
+      //     console.warn("Claim fees error: ", err);
+      //     return [false, false];
+      //   });
 
-        if (refresh) refresh();
+      //   if (refresh) refresh();
 
-        return !result.includes(false);
-      };
+      //   return !result.includes(false);
+      // };
 
       const _collect = async () => {
         if (!positionId || !principal || !pool) return false;
@@ -103,7 +103,8 @@ function useCollectFeeCalls() {
         const { status, message } = await collectPositionFee(pool.id, positionId);
 
         if (status === "ok") {
-          __withdraw();
+          // __withdraw();
+          if (refresh) refresh();
           return true;
         }
 
@@ -111,12 +112,14 @@ function useCollectFeeCalls() {
         return false;
       };
 
-      const step1 = async () => {
-        await sleep(1000);
-        return true;
-      };
+      // const step1 = async () => {
+      //   await sleep(1000);
+      //   return true;
+      // };
 
-      return [_collect, step1];
+      // return [_collect, step1];
+
+      return [_collect];
     },
     [principal],
   );

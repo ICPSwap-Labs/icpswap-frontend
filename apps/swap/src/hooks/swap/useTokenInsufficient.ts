@@ -85,11 +85,7 @@ export function getTokenInsufficient({
 }
 
 export function isApproveByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {
-  return (
-    tokenInsufficient !== TokenInsufficient.NO_APPROVE &&
-    tokenInsufficient !== TokenInsufficient.NEED_TRANSFER_APPROVE &&
-    tokenInsufficient !== TokenInsufficient.NEED_DEPOSIT_FROM_SUB
-  );
+  return tokenInsufficient === TokenInsufficient.NEED_TRANSFER_APPROVE;
 }
 
 export function noApproveByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {

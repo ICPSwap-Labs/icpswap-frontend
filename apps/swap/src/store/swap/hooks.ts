@@ -245,6 +245,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     outputTokenBalance: formatTokenAmount(outputCurrencyBalance?.toExact(), outputCurrencyBalance?.currency.decimals),
     maxInputAmount,
     pool: Trade.pool,
+    poolId,
   };
 }
 

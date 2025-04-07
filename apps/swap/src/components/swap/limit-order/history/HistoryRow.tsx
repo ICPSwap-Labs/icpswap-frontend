@@ -124,20 +124,20 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
           </Typography>
         </Flex>
 
-        <Flex justify="flex-end">
+        {/* <Flex justify="flex-end">
           <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
             {t("common.withdraw")}
           </TextButton>
-        </Flex>
+        </Flex> */}
       </Box>
 
-      {showWithdrawTokens ? (
+      {/* {showWithdrawTokens ? (
         <WithdrawTokens
           open={showWithdrawTokens}
           onClose={() => setShowWithdrawTokens(false)}
           transaction={transaction}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }

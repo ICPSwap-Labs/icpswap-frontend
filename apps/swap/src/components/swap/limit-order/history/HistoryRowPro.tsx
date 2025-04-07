@@ -113,11 +113,11 @@ export function HistoryRowPro({
             />
           </BodyCell>
 
-          <BodyCell sx={{ justifyContent: "flex-end" }}>
+          {/* <BodyCell sx={{ justifyContent: "flex-end" }}>
             <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
               {t("common.withdraw")}
             </TextButton>
-          </BodyCell>
+          </BodyCell> */}
         </TableRow>
       ) : (
         <TableRow>
@@ -130,11 +130,11 @@ export function HistoryRowPro({
         </TableRow>
       )}
 
-      <WithdrawTokens
+      {/* <WithdrawTokens
         open={showWithdrawTokens}
         onClose={() => setShowWithdrawTokens(false)}
         transaction={transaction}
-      />
+      /> */}
     </>
   );
 }

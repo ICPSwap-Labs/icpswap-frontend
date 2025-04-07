@@ -67,7 +67,7 @@ export class Actor {
 
   private beforeSubmit: BeforeSubmitCallback;
 
-  public log = false;
+  public log = true;
 
   public setConnector(connector: Connector) {
     this.connector = connector;

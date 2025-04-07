@@ -260,7 +260,7 @@ export default function DecreaseLiquidity() {
                   size="large"
                   onClick={handleDecreaseLiquidity}
                 >
-                  {isValid ? t`Remove` : error}
+                  {isValid ? t("common.remove") : error}
                 </AuthButton>
               </Box>
             </>

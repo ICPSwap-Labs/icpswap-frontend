@@ -34,7 +34,7 @@ export type {
   TickInfoWithId,
   LimitOrderKey,
   LimitOrderValue,
-  DepositFromAndSwapArgs,
+  DepositAndSwapArgs,
 } from "./SwapPool";
 
 export { idlFactory as TicketInterfaceFactory } from "./Ticket.did";

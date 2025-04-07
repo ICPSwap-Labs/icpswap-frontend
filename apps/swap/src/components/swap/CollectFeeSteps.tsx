@@ -68,32 +68,32 @@ export function getCollectFeeSteps({
       ],
       errorActions: [<TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>],
     },
-    {
-      title:
-        withdrawAmountALessThanZero && withdrawAmountBLessThanZero
-          ? i18n.t("common.unable.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol })
-          : i18n.t("common.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol }),
-      step: 1,
-      children: [
-        {
-          label: i18n.t`Amount0`,
-          value: <TokenAmount amount={withdrawAmountA} logo={tokenA.logo} />,
-        },
-        {
-          label: i18n.t`Amount1`,
-          value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
-        },
-        { label: i18n.t("common.principal.id"), value: principalString },
-      ],
-      errorActions: [
-        <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
-        <TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>,
-      ],
-      errorMessage: i18n.t("common.check.balance.tips"),
-      skipError:
-        withdrawAmountALessThanZero && withdrawAmountBLessThanZero
-          ? i18n.t("common.amount.withdrawal.less.than.fee")
-          : undefined,
-    },
+    // {
+    //   title:
+    //     withdrawAmountALessThanZero && withdrawAmountBLessThanZero
+    //       ? i18n.t("common.unable.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol })
+    //       : i18n.t("common.withdraw.both", { symbol0: tokenA.symbol, symbol1: tokenB.symbol }),
+    //   step: 1,
+    //   children: [
+    //     {
+    //       label: i18n.t`Amount0`,
+    //       value: <TokenAmount amount={withdrawAmountA} logo={tokenA.logo} />,
+    //     },
+    //     {
+    //       label: i18n.t`Amount1`,
+    //       value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
+    //     },
+    //     { label: i18n.t("common.principal.id"), value: principalString },
+    //   ],
+    //   errorActions: [
+    //     <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
+    //     <TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>,
+    //   ],
+    //   errorMessage: i18n.t("common.check.balance.tips"),
+    //   skipError:
+    //     withdrawAmountALessThanZero && withdrawAmountBLessThanZero
+    //       ? i18n.t("common.amount.withdrawal.less.than.fee")
+    //       : undefined,
+    // },
   ];
 }
