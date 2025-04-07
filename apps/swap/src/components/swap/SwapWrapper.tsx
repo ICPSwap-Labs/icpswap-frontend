@@ -181,7 +181,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   }, [usdValueChange]);
 
   const swapCallback = useSwapCallback();
-  const consolidatedSwap = useConsolidatedSwap({ inputToken, poolId });
+  const consolidatedSwap = useConsolidatedSwap({ inputToken, poolId, refresh: refreshTrigger });
 
   const handleSwapConfirm = useCallback(async () => {
     if (

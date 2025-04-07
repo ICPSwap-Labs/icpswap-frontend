@@ -33,9 +33,10 @@ export interface useAllowanceArgs {
   spenderSub?: number[];
   owner: string | Null;
   ownerSub?: number[];
+  refresh?: number;
 }
 
-export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub }: useAllowanceArgs) {
+export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub, refresh }: useAllowanceArgs) {
   return useCallsData(
     useCallback(async () => {
       if (isNullArgs(spender) || isNullArgs(owner) || isNullArgs(canisterId)) return undefined;
@@ -48,5 +49,6 @@ export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub 
         canisterId,
       });
     }, [spender, spenderSub, owner, ownerSub, canisterId]),
+    refresh,
   );
 }

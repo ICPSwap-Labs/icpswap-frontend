@@ -247,9 +247,10 @@ export interface SwapCallbackArgs {
 export interface UseConsolidatedSwapProps {
   inputToken: Token | Null;
   poolId: string | Null;
+  refresh?: number;
 }
 
-export function useConsolidatedSwap({ inputToken, poolId }: UseConsolidatedSwapProps) {
+export function useConsolidatedSwap({ inputToken, poolId, refresh }: UseConsolidatedSwapProps) {
   const createSwapCalls = useSwapCalls();
   const createSwapCall = useStepCalls();
   const initialSteps = useInitialSwapSteps();
@@ -259,6 +260,7 @@ export function useConsolidatedSwap({ inputToken, poolId }: UseConsolidatedSwapP
     canisterId: inputToken?.address,
     spender: poolId,
     owner: principal,
+    refresh,
   });
 
   return useCallback(
