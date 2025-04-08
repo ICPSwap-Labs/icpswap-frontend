@@ -1,15 +1,11 @@
 import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Flex, TextButton } from "@icpswap/ui";
+import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Flex } from "@icpswap/ui";
 import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
-import { useUserUnusedBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { WithdrawTokens } from "components/swap/limit-order/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 
 export interface HistoryRowProps {
@@ -18,14 +14,9 @@ export interface HistoryRowProps {
 }
 
 export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
-  const { t } = useTranslation();
   const theme = useTheme();
-  const principal = useAccountPrincipal();
 
-  const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
   const [invertPrice, setInvertPrice] = useState(false);
-
-  const { result: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal);
 
   const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
@@ -56,18 +47,6 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
   }, [invertPrice, setInvertPrice]);
-
-  const disableWithdraw = useMemo(() => {
-    if (isNullArgs(unusedBalance) || isNullArgs(inputToken) || isNullArgs(outputToken)) return true;
-
-    const token0 = inputToken.sortsBefore(outputToken) ? inputToken : outputToken;
-    const token1 = inputToken.sortsBefore(outputToken) ? outputToken : inputToken;
-
-    return (
-      !new BigNumber(unusedBalance.balance0.toString()).isGreaterThan(token0.transFee) &&
-      !new BigNumber(unusedBalance.balance1.toString()).isGreaterThan(token1.transFee)
-    );
-  }, [unusedBalance, inputToken, outputToken]);
 
   return (
     <>
@@ -123,21 +102,7 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
             )}
           </Typography>
         </Flex>
-
-        {/* <Flex justify="flex-end">
-          <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
-            {t("common.withdraw")}
-          </TextButton>
-        </Flex> */}
       </Box>
-
-      {/* {showWithdrawTokens ? (
-        <WithdrawTokens
-          open={showWithdrawTokens}
-          onClose={() => setShowWithdrawTokens(false)}
-          transaction={transaction}
-        />
-      ) : null} */}
     </>
   );
 }

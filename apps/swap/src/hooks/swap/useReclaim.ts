@@ -31,11 +31,11 @@ export function useReclaim() {
         const result = await deposit(poolId, tokenId, amount, tokenFee);
 
         if (result.status === ResultStatus.OK) {
-          openTip(t`Withdrawal submitted`, MessageTypes.success);
+          openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
 
           await sleep(2000);
 
-          withdraw(poolId, tokenId, tokenFee, amount - tokenFee).then(({ status, message }) => {
+          withdraw(poolId, tokenId, tokenFee, amount).then(({ status, message }) => {
             if (status === ResultStatus.OK) {
               if (refresh) refresh();
             } else {
@@ -48,7 +48,7 @@ export function useReclaim() {
       } else {
         await sleep(2000);
 
-        openTip(t`Withdrawal submitted`, MessageTypes.success);
+        openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
 
         withdraw(poolId, tokenId, tokenFee, amount).then(({ status, message }) => {
           if (status === ResultStatus.OK) {

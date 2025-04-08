@@ -1,15 +1,13 @@
 import { Pool } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
+import { TableRow, BodyCell } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { useState, useMemo } from "react";
 import { useTheme } from "components/Mui";
-import { BigNumber, isNullArgs, formatAmount, formatTokenPrice } from "@icpswap/utils";
+import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
-import { WithdrawTokens } from "components/swap/limit-order/WithdrawTokens";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { useTranslation } from "react-i18next";
 
 export interface HistoryRowProProps {
   limitTransaction: LimitTransaction;
@@ -24,13 +22,10 @@ export function HistoryRowPro({
   pool,
   wrapperClassName,
   noBorder = false,
-  unusedBalance,
 }: HistoryRowProProps) {
-  const { t } = useTranslation();
   const theme = useTheme();
 
   const [invertPrice, setInvertPrice] = useState(false);
-  const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
 
   const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
@@ -57,18 +52,6 @@ export function HistoryRowPro({
     if (!outputToken) return undefined;
     return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
   }, [outputChangeAmount, outputToken, inputAmount]);
-
-  const disableWithdraw = useMemo(() => {
-    if (isNullArgs(unusedBalance) || isNullArgs(inputToken) || isNullArgs(outputToken)) return true;
-
-    const token0 = inputToken.sortsBefore(outputToken) ? inputToken : outputToken;
-    const token1 = inputToken.sortsBefore(outputToken) ? outputToken : inputToken;
-
-    return (
-      !new BigNumber(unusedBalance.balance0.toString()).isGreaterThan(token0.transFee) &&
-      !new BigNumber(unusedBalance.balance1.toString()).isGreaterThan(token1.transFee)
-    );
-  }, [unusedBalance, inputToken, outputToken]);
 
   return (
     <>
@@ -112,12 +95,6 @@ export function HistoryRowPro({
               }}
             />
           </BodyCell>
-
-          {/* <BodyCell sx={{ justifyContent: "flex-end" }}>
-            <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
-              {t("common.withdraw")}
-            </TextButton>
-          </BodyCell> */}
         </TableRow>
       ) : (
         <TableRow>
@@ -129,12 +106,6 @@ export function HistoryRowPro({
           </LoadingRow>
         </TableRow>
       )}
-
-      {/* <WithdrawTokens
-        open={showWithdrawTokens}
-        onClose={() => setShowWithdrawTokens(false)}
-        transaction={transaction}
-      /> */}
     </>
   );
 }

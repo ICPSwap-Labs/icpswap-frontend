@@ -1143,7 +1143,7 @@
   "oe/c2v": "Total number of pools.",
   "oeZOR2": "Create farm",
   "common.your.available.stake": "Your available to stake",
-  "oiq/i0": "Cancellation successful, withdrawal submitted",
+  "swap.limit.cancel.success": "Cancellation successful",
   "olNCtw": "The claiming NFT tokenId does not exist",
   "omX5yT": "Participation is not allowed in your region",
   "common.farm": "Farm",
@@ -1266,7 +1266,8 @@
   "tdD5i1": "Position can not be burned if not cleared",
   "common.all.transactions": "All transactions",
   "tlPZk7": "{0} Position Available For Farming",
-  "tnJl4V": "Withdrawal submitted",
+  "swap.withdrawal.submitted": "Withdrawal submitted",
+  "swap.collect.success": "Collect success",
   "nns.proposal.id": "Proposal ID",
   "common.token.all": "All token",
   "trc3Rz": "Are you sure to delete this followee?",
@@ -1403,5 +1404,6 @@
   "swap.help.tooltip1": "Your limit order will execute when another swap matches your price. If the swap price hits your limit but the volume isn’t enough, your order may not execute.",
   "swap.help.tooltip2": "New to limit orders? Learn More Here!",
   "swap.your.liquidity.positions": "Your liquidity positions",
-  "swap.tradingview.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others"
+  "swap.tradingview.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others",
+  "swap.decrease.liquidity.success": "Decrease liquidity successful"
 }

@@ -1,8 +1,6 @@
 import { Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount } from "@icpswap/utils";
 import { isUseTransfer } from "utils/token/index";
-import { getSwapOutAmount } from "store/swap/hooks";
 import { TokenImage } from "components/index";
 import type { StepContents } from "types/step";
 import i18n from "i18n";
@@ -16,20 +14,12 @@ export interface ConsolidatedSwapStepsProps {
   retry?: () => Promise<boolean>;
 }
 
-export function getConsolidatedSwapStep({
-  inputToken,
-  outputToken,
-  key,
-  amount0,
-  amount1,
-}: ConsolidatedSwapStepsProps) {
+export function getConsolidatedSwapStep({ inputToken, outputToken, amount0, amount1 }: ConsolidatedSwapStepsProps) {
   const symbol0 = inputToken.symbol;
   const symbol1 = outputToken.symbol;
   const address0 = inputToken.wrapped.address;
   const logo0 = inputToken.logo;
   const logo1 = outputToken.logo;
-
-  const outAmount = getSwapOutAmount(key);
 
   const amount0Value = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
@@ -42,13 +32,6 @@ export function getConsolidatedSwapStep({
     <Box sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}>
       <TokenImage size="16px" logo={logo1} tokenId={outputToken.address} />
       {amount1}
-    </Box>
-  );
-
-  const outAmountValue = (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <TokenImage size="16px" logo={logo1} tokenId={outputToken.address} />
-      {outAmount ? parseTokenAmount(outAmount, outputToken.decimals).toFormat() : "--"}
     </Box>
   );
 

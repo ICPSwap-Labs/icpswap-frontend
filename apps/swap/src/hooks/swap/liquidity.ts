@@ -1,20 +1,18 @@
 import { useCallback } from "react";
 import { Position, Token, Percent } from "@icpswap/swap-sdk";
 import { decreaseLiquidity } from "hooks/swap/v3Calls";
-// import { useSwapWithdraw } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getDecreaseLiquiditySteps } from "components/swap/DecreaseLiquiditySteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { ExternalTipArgs, OpenExternalTip } from "types/index";
+import { OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
 import { BURN_FIELD } from "constants/swap";
-import { useUpdateDecreaseLiquidityAmount, getDecreaseLiquidityAmount } from "store/swap/hooks";
+import { useUpdateDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
-// import { sleep } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 type updateStepsArgs = {
@@ -71,7 +69,6 @@ function useDecreaseLiquidityCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
 
-  // const withdraw = useSwapWithdraw();
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
   const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
@@ -85,33 +82,8 @@ function useDecreaseLiquidityCalls() {
       currencyA,
       currencyB,
       formattedAmounts,
-      openExternalTip,
       tipKey,
     }: DecreaseLiquidityCallsArgs) => {
-      // const withdrawCurrencyA = async () => {
-      //   const { amount0 } = getDecreaseLiquidityAmount(tipKey);
-
-      //   if (!currencyA || amount0 === undefined) return false;
-      //   // skip if amount is less than 0 or is 0
-      //   if (amount0 - BigInt(currencyA.transFee) <= BigInt(0)) return "skip";
-
-      //   return await withdraw(currencyA, poolId, amount0.toString(), ({ message }: ExternalTipArgs) => {
-      //     openExternalTip({ message, tipKey, poolId });
-      //   });
-      // };
-
-      // const withdrawCurrencyB = async () => {
-      //   const { amount1 } = getDecreaseLiquidityAmount(tipKey);
-
-      //   if (!currencyB || amount1 === undefined) return false;
-      //   // skip if amount is less than 0 or is 0
-      //   if (amount1 - BigInt(currencyB.transFee) <= BigInt(0)) return true;
-
-      //   return await withdraw(currencyB, poolId, amount1.toString(), ({ message }: ExternalTipArgs) => {
-      //     openExternalTip({ message, tipKey, poolId });
-      //   });
-      // };
-
       const _decreaseLiquidity = async () => {
         if (!position || !liquidityToRemove || !principal) return false;
 
@@ -143,26 +115,10 @@ function useDecreaseLiquidityCalls() {
           key: tipKey,
         });
 
-        // if (!keepTokenInPools) {
-        //   withdrawCurrencyA();
-        //   withdrawCurrencyB();
-        // }
-
         return true;
       };
 
-      // const step1 = async () => {
-      //   await sleep(500);
-      //   return true;
-      // };
-
-      // const step2 = async () => {
-      //   await sleep(1000);
-      //   return true;
-      // };
-
       return [_decreaseLiquidity];
-      // return keepTokenInPools ? [_decreaseLiquidity] : [_decreaseLiquidity, step1, step2];
     },
     [keepTokenInPools],
   );

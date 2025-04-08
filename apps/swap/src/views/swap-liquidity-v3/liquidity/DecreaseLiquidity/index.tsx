@@ -20,7 +20,6 @@ import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { ExternalTipArgs } from "types/index";
 import { ReclaimTips, LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
-import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useTranslation } from "react-i18next";
 
 import Unclaimed from "./Unclaimed";
@@ -179,7 +178,7 @@ export default function DecreaseLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t`Withdrawal submitted`);
+      openSuccessTip(t("swap.decrease.liquidity.success"));
       handleDecreaseSuccess();
     }
 
@@ -246,10 +245,6 @@ export default function DecreaseLiquidity() {
 
               <Box mt="24px">
                 <Unclaimed position={positionSDK} feeAmount0={feeAmount0} feeAmount1={feeAmount1} />
-              </Box>
-
-              <Box mt="24px">
-                <KeepTokenInPool label={t("swap.keep.pools.description")} showRefresh={false} />
               </Box>
 
               <Box mt="24px">

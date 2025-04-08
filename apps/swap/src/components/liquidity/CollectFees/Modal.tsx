@@ -73,7 +73,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
     const result = await call();
 
     if (result === true) {
-      openSuccessTip(t`Withdrawal submitted`);
+      openSuccessTip(t("swap.collect.success"));
     }
 
     closeLoadingTip(loadingTipKey);
