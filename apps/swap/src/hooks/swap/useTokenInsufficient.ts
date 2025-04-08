@@ -3,7 +3,7 @@ import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { isUseTransfer } from "utils/token";
 
-enum TokenInsufficient {
+export enum TokenInsufficient {
   NO_TRANSFER_APPROVE = "NO_TRANSFER_APPROVE",
   NEED_DEPOSIT_FROM_SUB = "NEED_DEPOSIT_FROM_SUB",
   NO_APPROVE = "NO_APPROVE",
@@ -52,36 +52,38 @@ export function getTokenInsufficient({
   if (
     !new BigNumber(unusedBalance.toString())
       .plus(subAccountBalance)
-      .isLessThan(new BigNumber(formatTokenAmount).plus(token.transFee))
+      .isLessThan(new BigNumber(formatTokenAmount).plus(token.transFee)) &&
+    isUseTransfer(token)
   )
     return TokenInsufficient.NEED_DEPOSIT_FROM_SUB;
 
+  const hasEnoughToken = !new BigNumber(unusedBalance.toString())
+    .plus(subAccountBalance)
+    .plus(balance)
+    .isLessThan(
+      new BigNumber(formatTokenAmount).plus(
+        isUseTransfer(token) || !allowance
+          ? token.transFee * 2
+          : // formatTokenAmount is the total amount, includes the unused balance
+          // The approve amount is the user balance
+          !new BigNumber(allowance?.toString()).isLessThan(balance)
+          ? token.transFee
+          : token.transFee * 2,
+      ),
+    );
+
+  if (!hasEnoughToken) return TokenInsufficient.INSUFFICIENT;
+
   // For token use approve
-  if (!isUseTransfer(token) && nonNullArgs(allowance)) {
-    if (new BigNumber(allowance.toString()).isGreaterThan(depositAmount)) {
-      return TokenInsufficient.NO_APPROVE;
+  if (hasEnoughToken) {
+    if (!isUseTransfer(token) && nonNullArgs(allowance)) {
+      if (new BigNumber(allowance.toString()).isGreaterThan(depositAmount)) {
+        return TokenInsufficient.NO_APPROVE;
+      }
     }
   }
 
-  if (
-    !new BigNumber(unusedBalance.toString())
-      .plus(subAccountBalance)
-      .plus(balance)
-      .isLessThan(
-        new BigNumber(formatTokenAmount).plus(
-          isUseTransfer(token) || !allowance
-            ? token.transFee * 2
-            : // formatTokenAmount is the total amount, includes the unused balance
-            // The approve amount is the user balance
-            !new BigNumber(allowance?.toString()).isLessThan(balance)
-            ? token.transFee
-            : token.transFee * 2,
-        ),
-      )
-  )
-    return TokenInsufficient.NEED_TRANSFER_APPROVE;
-
-  return TokenInsufficient.INSUFFICIENT;
+  return TokenInsufficient.NEED_TRANSFER_APPROVE;
 }
 
 export function isApproveByTokenInsufficient(tokenInsufficient: TokenInsufficient | Null) {

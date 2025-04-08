@@ -6,7 +6,7 @@ import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { getTokenInsufficient } from "hooks/swap/index";
+import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
 import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
@@ -320,7 +320,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       return t("limit.error.amount.minimum");
     if (inputNumberCheck(inputSwapAmount) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
-    if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
+    if (tokenInsufficient === TokenInsufficient.INSUFFICIENT) return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
     if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
     if (
