@@ -70,7 +70,7 @@ function useCancelLimitCalls() {
   const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
   const updateStepContent = useUpdateStepContent();
 
-  return useCallback(({ position, poolId, positionId, tipKey, limit }: CancelLimitCallsArgs) => {
+  return useCallback(({ position, poolId, positionId, tipKey, limit, refresh }: CancelLimitCallsArgs) => {
     const __removeOrder = async () => {
       const { status, message } = await removeOrder(poolId, positionId);
 
@@ -106,6 +106,8 @@ function useCancelLimitCalls() {
       });
 
       openSuccessTip(t("swap.limit.cancel.success"));
+
+      if (refresh) refresh();
 
       return true;
     };
