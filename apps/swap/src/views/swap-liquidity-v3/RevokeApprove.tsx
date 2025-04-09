@@ -225,7 +225,13 @@ export default function SwapRevokeApprove() {
             </Typography>
 
             <Box sx={{ minWidth: "160px" }}>
-              <SelectToken value={selectedTokenId} border filter={tokenFilter} onTokenChange={setSelectedTokenId} />
+              <SelectToken
+                search
+                value={selectedTokenId}
+                border
+                filter={tokenFilter}
+                onTokenChange={setSelectedTokenId}
+              />
             </Box>
           </Box>
 
