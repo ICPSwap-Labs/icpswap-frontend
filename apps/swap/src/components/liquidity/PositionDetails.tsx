@@ -83,6 +83,7 @@ export interface PositionDetailsProps {
   farmId?: string;
   staked?: boolean;
   state: PositionState | undefined;
+  isLimit?: boolean;
 }
 
 export function PositionDetails({
@@ -101,6 +102,7 @@ export function PositionDetails({
   farmId,
   staked,
   state,
+  isLimit,
 }: PositionDetailsProps) {
   const { t } = useTranslation();
   const history = useHistory();
@@ -144,10 +146,10 @@ export function PositionDetails({
   }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
-    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true) {
+    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && isLimit) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
-  }, [setPositionFees, positionKey, feeUSDValue, staked]);
+  }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);
 
   const handleTransferSuccess = () => {
     setRefreshTrigger();
