@@ -142,7 +142,7 @@ export function SwapConfirmModal({
   });
 
   return (
-    <SwapModal open={open} title={t("swap.confirm")} onClose={onClose}>
+    <SwapModal open={open} title={t("swap.submit")} onClose={onClose}>
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -282,7 +282,7 @@ export function SwapConfirmModal({
             disabled={loading}
             startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
           >
-            {loading ? "" : t("swap.confirm")}
+            {loading ? "" : t("swap.submit")}
           </Button>
         </Box>
       </>

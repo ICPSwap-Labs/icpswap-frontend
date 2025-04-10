@@ -35,10 +35,7 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
       transferred to the swap pool.
     </>
   ) : (
-    <>
-      {message}.&nbsp; Please <TextButton onClick={handleClick}>check your balance in the swap pool</TextButton> to see
-      if tokens have been transferred to the swap pool.
-    </>
+    <>{message}.</>
   );
 
   return <Typography component="span">{msg}</Typography>;

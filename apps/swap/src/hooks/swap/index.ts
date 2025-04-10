@@ -204,9 +204,7 @@ export function useSwapDeposit() {
       if (openExternalTip) {
         openExternalTip({ message });
       } else {
-        openErrorTip(
-          `Failed to deposit ${token.symbol}: ${message}. Please check your balance in the swap pool to see if tokens have been transferred to the swap pool.`,
-        );
+        openErrorTip(`Failed to deposit ${token.symbol}: ${message}.`);
       }
 
       return false;
