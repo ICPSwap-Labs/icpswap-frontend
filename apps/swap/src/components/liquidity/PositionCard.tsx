@@ -108,7 +108,7 @@ export interface PositionCardProps {
   staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
-  isLimit: boolean;
+  isLimit: boolean | undefined;
 }
 
 export function PositionCard({
@@ -233,7 +233,7 @@ export function PositionCard({
   }, [setRefreshTriggers, positionKey]);
 
   const displayByFilter = useMemo(() => {
-    if (isNullArgs(positionState)) return true;
+    if (isNullArgs(positionState) || isNullArgs(isLimit)) return true;
     if (isLimit) return false;
 
     switch (filterState) {
