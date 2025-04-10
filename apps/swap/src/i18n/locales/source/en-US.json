@@ -941,7 +941,7 @@
   "gHT3lX": "Create token pool",
   "gO1brJ": "The claim seems to have been successful. Please refresh the page and try again.",
   "common.total.amount": "Total amount: {{amount}}",
-  "giqBlx": "Collecting fees from all positions; please wait and retry later if some fail.",
+  "swap.collecting.description": "Collecting fees from all positions; please wait and retry later if some fail.",
   "gkMcI7": "Failed to transfer",
   "gp148V": "Volume is calculated only based on the total value of tokens listed on the Tokenlist.",
   "common.token.risk.agree": "I have read the risk warning carefully and agree to take the risk myself",

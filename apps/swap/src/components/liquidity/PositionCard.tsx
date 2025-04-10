@@ -207,10 +207,10 @@ export function PositionCard({
   }, [currencyFeeAmount0, currencyFeeAmount1, token0USDPrice, token1USDPrice]);
 
   useEffect(() => {
-    if (nonNullArgs(totalUSDValue) && nonNullArgs(positionKey)) {
+    if (nonNullArgs(totalUSDValue) && nonNullArgs(positionKey) && isLimit === false) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
-  }, [totalUSDValue, positionKey, staked]);
+  }, [totalUSDValue, positionKey, staked, isLimit]);
 
   const pairName = useMemo(() => {
     return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
@@ -482,6 +482,7 @@ export function PositionCard({
           onHide={() => setDetailShow(false)}
           staked={staked}
           state={positionState}
+          isLimit={isLimit}
         />
       </Box>
     </Box>

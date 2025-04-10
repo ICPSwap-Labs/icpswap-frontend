@@ -36,10 +36,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
 
     setLoading(true);
 
-    const loading_key = openTip(
-      t`Collecting fees from all positions; please wait and retry later if some fail.`,
-      MessageTypes.loading,
-    );
+    const loading_key = openTip(t("swap.collecting.description"), MessageTypes.loading);
 
     await Promise.all(
       availableFees.map(async (key: string) => {
