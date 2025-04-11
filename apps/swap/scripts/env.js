@@ -1,10 +1,13 @@
 const fs = require("fs");
 const path = require("path");
-const network = process.argv[2] ?? "ic";
+const env = process.argv[2] ?? "dev";
+const network = process.argv[3] ?? "ic";
 
 let content = "";
 
-if (network === "ic") {
+const isPro = env === "pro";
+
+if (network === "ic" && isPro === true) {
   const proEnvConfig = require("./env.config.pro.json");
 
   content = `
