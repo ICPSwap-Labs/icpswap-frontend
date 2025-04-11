@@ -110,3 +110,7 @@ src/locales/**/*.ts
 src/locales/**/*.json
 src/locales/**/en-US.po
 !src/locales/**/services.ts
+
+
+#production env config
+apps/swap/scripts/env.config.pro.json
