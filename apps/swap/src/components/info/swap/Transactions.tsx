@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { enumToString } from "@icpswap/utils";
+import { enumToString, nonNullArgs } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
@@ -186,13 +186,8 @@ export function Transactions({
       </Box>
 
       <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
-        {!loading && !!filteredTransactions?.length ? (
-          <Pagination
-            page={page}
-            maxItems={maxItems}
-            length={filteredTransactions?.length ?? 0}
-            onPageChange={setPage}
-          />
+        {nonNullArgs(filteredTransactions) ? (
+          <Pagination page={page} maxItems={maxItems} length={filteredTransactions.length} onPageChange={setPage} />
         ) : null}
       </Box>
     </>
