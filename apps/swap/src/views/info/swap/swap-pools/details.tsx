@@ -1,7 +1,14 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, cycleValueFormat } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  parseTokenAmount,
+  explorerLink,
+  cycleValueFormat,
+  BigNumber,
+} from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks";
 import { useInfoPool } from "hooks/info/index";
@@ -12,14 +19,41 @@ import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Copy } from "react-feather";
 import copyToClipboard from "copy-to-clipboard";
 import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useUSDPriceById } from "hooks/useUSDPrice";
 import { PositionTable } from "components/liquidity/PositionTable";
 import { useToken } from "hooks/index";
 import { useTranslation } from "react-i18next";
+import { Token } from "@icpswap/swap-sdk";
+import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
 
 import PoolChart from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
+
+interface PoolTokenTvlProps {
+  token: Token | undefined;
+  amount: BigNumber | undefined;
+  tvl: string | undefined;
+}
+
+function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
+  return (
+    <Flex justify="space-between" align="flex-start">
+      <Flex gap="0 8px">
+        <TokenImage logo={token?.logo} tokenId={token?.address} />
+        <Typography fontWeight={500} color="text.primary">
+          {token?.symbol}
+        </Typography>
+      </Flex>
+
+      <Flex vertical gap="4px 0" align="flex-start">
+        <Typography color="text.primary" fontWeight={500}>
+          {amount ? formatAmount(parseTokenAmount(amount, token?.decimals).toNumber()) : ""}
+        </Typography>
+
+        <Typography fontSize="12px">{tvl ? formatDollarAmount(tvl) : ""}</Typography>
+      </Flex>
+    </Flex>
+  );
+}
 
 enum TabValue {
   Transactions = "Transactions",
@@ -38,20 +72,7 @@ export default function SwapPoolDetails() {
   const [, token0] = useToken(pool?.token0Id);
   const [, token1] = useToken(pool?.token1Id);
 
-  const { result: poolTVLToken0 } = useTokenBalance(pool?.token0Id, pool?.pool);
-  const { result: poolTVLToken1 } = useTokenBalance(pool?.token1Id, pool?.pool);
-
-  const token0Price = useUSDPriceById(pool?.token0Id);
-  const token1Price = useUSDPriceById(pool?.token1Id);
-
-  const poolTvlUSD = useMemo(() => {
-    if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return undefined;
-
-    return parseTokenAmount(poolTVLToken1, token1.decimals)
-      .multipliedBy(token1Price)
-      .plus(parseTokenAmount(poolTVLToken0, token0.decimals).multipliedBy(token0Price))
-      .toString();
-  }, [poolTVLToken0, poolTVLToken1, token0Price, token1Price, token0, token1]);
+  const { poolTvlUSD, token0TvlUSD, token1TvlUSD, token0Balance, token1Balance } = usePoolTokenBalanceTvl({ pool });
 
   const { result: latestTVL } = usePoolLatestTVL(canisterId);
 
@@ -195,54 +216,8 @@ export default function SwapPoolDetails() {
             <MainCard level={4}>
               <GridAutoRows gap="12px">
                 <Typography>{t("info.swap.pool.balance")}</Typography>
-
-                <Flex justify="space-between">
-                  <Flex gap="0 8px">
-                    <TokenImage logo={token0?.logo} tokenId={token0?.address} />
-
-                    <Typography
-                      sx={{
-                        fontWeight: 500,
-                      }}
-                      color="text.primary"
-                    >
-                      {token0?.symbol}
-                    </Typography>
-                  </Flex>
-
-                  <Typography
-                    sx={{
-                      fontWeight: 500,
-                    }}
-                    color="text.primary"
-                  >
-                    {formatAmount(parseTokenAmount(poolTVLToken0, token0?.decimals).toNumber())}
-                  </Typography>
-                </Flex>
-
-                <Flex justify="space-between">
-                  <Flex gap="0 8px">
-                    <TokenImage logo={token1?.logo} tokenId={token1?.address} />
-
-                    <Typography
-                      sx={{
-                        fontWeight: 500,
-                      }}
-                      color="text.primary"
-                    >
-                      {token1?.symbol}
-                    </Typography>
-                  </Flex>
-
-                  <Typography
-                    sx={{
-                      fontWeight: 500,
-                    }}
-                    color="text.primary"
-                  >
-                    {formatAmount(parseTokenAmount(poolTVLToken1, token1?.decimals).toNumber())}
-                  </Typography>
-                </Flex>
+                <PoolTokenTvl token={token0} tvl={token0TvlUSD} amount={token0Balance} />
+                <PoolTokenTvl token={token1} tvl={token1TvlUSD} amount={token1Balance} />
               </GridAutoRows>
 
               <Box sx={{ width: "100%", height: "1px", margin: "20px 0 ", background: theme.colors.border1 }} />
