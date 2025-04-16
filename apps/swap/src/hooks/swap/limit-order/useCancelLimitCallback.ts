@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { Position } from "@icpswap/swap-sdk";
 import { removeOrder } from "@icpswap/hooks";
-import { decreaseLiquidity } from "hooks/swap/v3Calls";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { getLocaleMessage } from "i18n/service";
@@ -11,7 +10,6 @@ import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
-import { useUpdateDecreaseLiquidityAmount } from "store/swap/hooks";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 import { LimitOrder } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
@@ -63,14 +61,10 @@ interface CancelLimitCallsArgs {
 
 function useCancelLimitCalls() {
   const { t } = useTranslation();
-  const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
   const [openSuccessTip] = useSuccessTip();
 
-  const updateDecreaseLiquidityAmount = useUpdateDecreaseLiquidityAmount();
-  const updateStepContent = useUpdateStepContent();
-
-  return useCallback(({ position, poolId, positionId, tipKey, limit, refresh }: CancelLimitCallsArgs) => {
+  return useCallback(({ poolId, positionId, refresh }: CancelLimitCallsArgs) => {
     const __removeOrder = async () => {
       const { status, message } = await removeOrder(poolId, positionId);
 
@@ -79,32 +73,6 @@ function useCancelLimitCalls() {
         return false;
       }
 
-      return true;
-    };
-
-    const __decreaseLiquidity = async () => {
-      if (!principal) return false;
-
-      const { status, message, data } = await decreaseLiquidity(poolId, {
-        positionId,
-        liquidity: position.liquidity.toString(),
-      });
-
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
-
-      updateDecreaseLiquidityAmount(tipKey, data?.amount0, data?.amount1);
-
-      updateStepContent({
-        position,
-        positionId,
-        principal,
-        limit,
-        key: tipKey,
-      });
-
       openSuccessTip(t("swap.limit.cancel.success"));
 
       if (refresh) refresh();
@@ -112,7 +80,7 @@ function useCancelLimitCalls() {
       return true;
     };
 
-    return [__removeOrder, __decreaseLiquidity];
+    return [__removeOrder];
   }, []);
 }
 

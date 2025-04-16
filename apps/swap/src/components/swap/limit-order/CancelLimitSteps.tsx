@@ -59,16 +59,6 @@ export function getCancelLimitSteps({ position, limit }: CancelLimitStepsProps) 
         },
       ],
     },
-    {
-      title: i18n.t`Remove the tokens from the limit order`,
-      children: [
-        { label: i18n.t("common.limit.price"), value: LimitPrice },
-        {
-          label: `${inputToken.symbol}`,
-          value: <TokenAmount amount={inputAmount.toExact()} token={inputToken} />,
-        },
-      ],
-    },
   ];
 
   return contents.filter((e) => !!e).map((element, index) => ({ ...element, step: index })) as StepContents[];
