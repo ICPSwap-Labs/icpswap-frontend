@@ -6,7 +6,7 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { isNullArgs } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
 import { useHistory } from "react-router-dom";
-import { FarmListCard, FarmListHeader, GlobalData, TopLiveFarms } from "components/farm/index";
+import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 import { SelectToken } from "components/Select/SelectToken";
 import { SelectPair } from "components/Select/SelectPair";
@@ -318,7 +318,7 @@ function MainContent() {
                 {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? <NoData /> : null}
 
                 {slicedFarms?.map((farmId) => (
-                  <FarmListCard
+                  <FarmRow
                     key={farmId.toString()}
                     farmId={farmId.toString()}
                     wrapperSx={{
@@ -364,17 +364,6 @@ export default function Farms() {
         }}
       >
         <GlobalData />
-      </Box>
-
-      <Box
-        sx={{
-          margin: "58px 0 0 0",
-          "@media(max-width: 640px)": {
-            margin: "40px 0 0 0",
-          },
-        }}
-      >
-        <TopLiveFarms />
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>

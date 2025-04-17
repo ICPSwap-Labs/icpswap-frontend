@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
-import { useInfoAllTokens } from "@icpswap/hooks";
-import { useIntervalFarmTVL } from "hooks/staking-farm/useIntervalFarmTvl";
+import { useInfoAllTokens, useFarmTVL } from "@icpswap/hooks";
 
 export interface UseFarmTvlValueArgs {
   token0: Token | undefined;
@@ -12,7 +11,7 @@ export interface UseFarmTvlValueArgs {
 
 export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs) {
   const infoAllTokens = useInfoAllTokens();
-  const farmTvl = useIntervalFarmTVL(farmId);
+  const { result: farmTvl } = useFarmTVL(farmId);
 
   return useMemo(() => {
     if (!farmTvl || !infoAllTokens || !token0 || !token1) return undefined;
