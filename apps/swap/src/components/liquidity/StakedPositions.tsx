@@ -9,7 +9,6 @@ import { PositionContext } from "components/swap/index";
 import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
 import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
 import { useHistory } from "react-router-dom";
-import { TopLiveFarms } from "components/farm/TopLiveFarms";
 import { useTranslation } from "react-i18next";
 import { getPositionFeeKey } from "utils/swap";
 
@@ -126,10 +125,6 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
               {t("farm.your.liquidity")}
             </Button>
           </Flex>
-
-          <Box sx={{ margin: "32px 0 0 0" }}>
-            <TopLiveFarms noWrapper />
-          </Box>
         </Box>
       ) : null}
       <Box>

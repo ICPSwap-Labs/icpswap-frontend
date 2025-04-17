@@ -1,5 +1,5 @@
 import { isNullArgs } from "@icpswap/utils";
-import { useFarmInfo, useV3UserFarmInfo } from "@icpswap/hooks";
+import { useFarmInfo, useUserFarmInfo } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -12,7 +12,7 @@ interface UseLiquidityIsStakedByOwner {
 export function useLiquidityIsStakedByOwner({ positionId, farmId }: UseLiquidityIsStakedByOwner) {
   const principal = useAccountPrincipalString();
 
-  const { result: userFarmInfo } = useV3UserFarmInfo(farmId, principal);
+  const { result: userFarmInfo } = useUserFarmInfo(farmId, principal);
 
   return useMemo(() => {
     if (isNullArgs(userFarmInfo)) return null;
