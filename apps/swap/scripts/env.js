@@ -8,7 +8,13 @@ let content = "";
 const isPro = env === "pro";
 
 if (network === "ic" && isPro === true) {
-  const proEnvConfig = require("./env.config.pro.json");
+  let proEnvConfig = {};
+
+  try {
+    proEnvConfig = require("./env.config.pro.json");
+  } catch (error) {
+    // Do nothing
+  }
 
   content = `
 EXTEND_ESLINT=true
