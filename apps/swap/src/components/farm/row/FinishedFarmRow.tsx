@@ -2,15 +2,16 @@ import { Box, BoxProps, useTheme } from "components/Mui";
 import { Link, BodyCell, Flex } from "@icpswap/ui";
 import type { FarmInfo, InitFarmArgs, Null } from "@icpswap/types";
 import { FilterState } from "types/staking-farm";
-
-import { TotalStakedCell } from "./TotalStakedCell";
-import { UserStakedCell } from "./UserStakedCell";
-import { UserRewardsCell } from "./UserRewardsCell";
-import { AvgAprCell } from "./AvgAprCell";
-import { PoolCell } from "./PoolCell";
-import { RewardTokenCell } from "./RewardTokenCell";
-import { TotalRewardsCell } from "./TotalRewardsCell";
-import { StateCell } from "./StateCell";
+import {
+  TotalStakedCell,
+  UserStakedCell,
+  UserRewardsCell,
+  AvgAprCell,
+  PoolCell,
+  TotalRewardsCell,
+  StateCell,
+  RewardTokenCell,
+} from "components/farm/row/cell/index";
 
 export interface FinishedFarmRowUIProps {
   farmInfo: FarmInfo;

@@ -1,7 +1,6 @@
 import { Flex, BodyCell } from "@icpswap/ui";
 import type { FarmInfo, Null } from "@icpswap/types";
-
-import { State } from "../State";
+import { State } from "components/farm/State";
 
 export interface StateCellProps {
   farmInfo: FarmInfo | Null;

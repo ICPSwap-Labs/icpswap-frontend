@@ -3,9 +3,9 @@ import { AnonymousPrincipal } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useFarmState, useUserFarmInfo, useFarmInitArgs } from "@icpswap/hooks";
 import { FilterState } from "types/staking-farm";
-
-import { FinishedFarmRowUI } from "./FinishedFarmRow";
-import { LiveFarmRow } from "./LiveFarmRow";
+import { FinishedFarmRowUI } from "components/farm/row/FinishedFarmRow";
+import { LiveFarmRow } from "components/farm/row/LiveFarmRow";
+import { EmptyRow } from "components/farm/row/EmptyRow";
 
 interface FarmRowProps {
   farmId: string;
@@ -45,5 +45,7 @@ export function FarmRow({ farmId, wrapperSx, showState, your, filterState }: Far
         initArgs={farmInitArgs}
       />
     )
-  ) : null;
+  ) : (
+    <EmptyRow farmId={farmId} filterState={filterState} your={your} showState={showState} wrapperSx={wrapperSx} />
+  );
 }
