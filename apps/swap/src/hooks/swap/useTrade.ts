@@ -5,8 +5,8 @@ import { tryParseAmount } from "utils/swap";
 import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
-
-import { useAllRoutes } from "./useAllRoutes";
+import { useAllRoutes } from "hooks/swap/useAllRoutes";
+import { isUseTransfer } from "utils/index";
 
 export enum TradeState {
   LOADING = "LOADING",
@@ -35,7 +35,7 @@ export function useBestTrade(
   }, [routes]);
 
   const params = useMemo(() => {
-    if (!actualSwapValue || zeroForOne === undefined) return undefined;
+    if (!actualSwapValue || zeroForOne === undefined || !pool) return undefined;
 
     const route = routes
       .sort((a, b) => {
@@ -44,12 +44,25 @@ export function useBestTrade(
         return 0;
       })
       .map((route) => {
+        const inputToken = route.input.wrapped;
+        const outputToken = route.output.wrapped;
+
+        const inputTokenInPool = inputToken.address === pool.token0.address ? pool.token0 : pool.token1;
+        const useTransfer = isUseTransfer(inputTokenInPool);
+
+        // A transaction fee need be subtracted if then token use icrc_transfer to deposit token in v3.6
+        const quoteAmount = !actualSwapValue
+          ? "0"
+          : useTransfer
+          ? numberToString(formatTokenAmount(actualSwapValue, inputToken.decimals).minus(inputToken.transFee))
+          : numberToString(formatTokenAmount(actualSwapValue, inputToken.decimals));
+
         return {
-          pool: route.pools[0]?.id,
-          tokenIn: route.input?.wrapped?.address,
-          tokenOut: route.output?.wrapped?.address,
-          amountIn: actualSwapValue ? numberToString(formatTokenAmount(actualSwapValue, route.input?.decimals)) : "0",
-          feeAmount: route.pools[0]?.fee,
+          pool: pool.id,
+          tokenIn: inputToken.address,
+          tokenOut: outputToken.address,
+          amountIn: quoteAmount,
+          feeAmount: pool.fee,
         };
       });
 
@@ -60,7 +73,7 @@ export function useBestTrade(
       amountIn: route[0].amountIn,
       zeroForOne,
     });
-  }, [routes, actualSwapValue]);
+  }, [routes, pool, actualSwapValue]);
 
   const available = useSwapPoolAvailable(pool?.id);
 
