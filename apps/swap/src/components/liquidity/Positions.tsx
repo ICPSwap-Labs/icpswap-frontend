@@ -203,7 +203,7 @@ export function Positions() {
               fontSize: "12px",
             }}
           >
-            {t("liquidity.no.pair")}
+            {t("liquidity.missing.position")}
           </Typography>
           &nbsp;
           <TextButton
