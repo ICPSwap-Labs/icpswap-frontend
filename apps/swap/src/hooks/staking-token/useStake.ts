@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { sleep } from "@icpswap/utils";
+import { BigNumber, sleep } from "@icpswap/utils";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { isUseTransferByStandard } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -128,12 +128,15 @@ function useStakeCalls() {
 
   return useCallback(
     ({ token, amount, poolId, standard, key, rewardToken }: UseStakeCallsArgs) => {
+      const approveAmount = new BigNumber(amount).multipliedBy(1000).toString();
+
       const call0 = async () =>
         await approveOrTransfer({
           token,
           amount,
           to_owner: poolId,
           standard,
+          approve_amount: approveAmount,
         });
 
       const call1 = async () => await deposit({ token, amount, poolId, standard });
