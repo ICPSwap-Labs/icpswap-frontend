@@ -13,12 +13,14 @@ import { FindPositionsModal, Link } from "components/index";
 import { PositionContext } from "components/swap/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarAmount, BigNumber } from "@icpswap/utils";
-import { PositionSort, PositionFilterState, type UserPosition } from "types/swap";
+import { PositionSort, PositionFilterState, UserPositionByList, UserPositionForFarm } from "types/swap";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { Unlock } from "react-feather";
 import { infoRoutesConfigs } from "routes/info.config";
 import { useTranslation } from "react-i18next";
+import i18n from "i18n/index";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -52,12 +54,25 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
+enum TabName {
+  YourPositions = "YourPositions",
+  StakedPositions = "StakedPositions",
+}
+
+const tabs = [
+  { label: i18n.t("liquidity.your.positions"), value: TabName.YourPositions },
+  { label: i18n.t("liquidity.staked.positions"), value: TabName.StakedPositions },
+];
+
 export function Positions() {
   const { t } = useTranslation();
   const classes = useStyles();
   const principalString = useAccountPrincipalString();
+  const history = useHistory();
 
-  const [tab, setTab] = useState<"YOUR" | "STAKED">("YOUR");
+  const { subTab: tab } = useParsedQueryString() as { subTab: TabName | undefined };
+  const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
+
   const [findPosition, setFindPosition] = useState(false);
   const [positionSort, setPositionSort] = useState<PositionSort>(PositionSort.Default);
   const [positionFilterState, setPositionFilterState] = useState<PositionFilterState>(PositionFilterState.Default);
@@ -66,11 +81,9 @@ export function Positions() {
     { [id: string]: BigNumber | undefined } | undefined
   >({});
   const [allPositionFees, setAllPositionFees] = useState<{ [id: string]: BigNumber | undefined } | undefined>({});
-  const [allPositions, setAllPositions] = useState<UserPosition[] | Null>(undefined);
-  const [allStakedPositions, setAllStakedPositions] = useState<UserPosition[] | Null>(undefined);
+  const [allPositions, setAllPositions] = useState<UserPositionByList[] | Null>(undefined);
+  const [allStakedPositions, setAllStakedPositions] = useState<UserPositionForFarm[] | Null>(undefined);
   const [__hiddenNumbers, setHiddenNumbers] = useState<{ [id: string]: boolean }>({});
-
-  const { subTab } = useParsedQueryString() as { subTab: string | undefined };
 
   const hiddenNumbersOfYourPositions = Object.keys(__hiddenNumbers).filter(
     (key) => key.includes("YOUR") && __hiddenNumbers[key] === true,
@@ -140,11 +153,22 @@ export function Positions() {
     setHiddenNumbers({});
   }, [principalString]);
 
+  const activeTab = useMemo(() => {
+    return tab ?? TabName.YourPositions;
+  }, [tab]);
+
   useEffect(() => {
-    if (subTab === "YOUR" || subTab === "STAKED") {
-      setTab(subTab);
+    if (!loadedTabs.includes(activeTab)) {
+      setLoadedTabs([...loadedTabs, activeTab]);
     }
-  }, [subTab]);
+  }, [activeTab, loadedTabs]);
+
+  const handleTab = useCallback(
+    (value: TabName) => {
+      history.push(`/liquidity?tab=Positions&subTab=${value}`);
+    },
+    [history],
+  );
 
   return (
     <PositionContext.Provider
@@ -231,23 +255,27 @@ export function Positions() {
           }}
         >
           <Flex gap="0 28px">
-            <Flex align="center" gap="0 4px">
-              <Typography className={`${classes.tab}${tab === "YOUR" ? " active" : ""}`} onClick={() => setTab("YOUR")}>
-                {t("liquidity.your.positions")}
-              </Typography>
-              <NumberLabel num={allPositions ? allPositions.length - hiddenNumbersOfYourPositions : "--"} />
-            </Flex>
-
-            <Flex align="center" gap="0 4px">
-              <Typography
-                className={`${classes.tab}${tab === "STAKED" ? " active" : ""}`}
-                onClick={() => setTab("STAKED")}
-              >
-                {t("liquidity.staked.positions")}
-              </Typography>
-
-              <NumberLabel num={allStakedPositions?.length ?? "--"} />
-            </Flex>
+            {tabs.map((__tab) => {
+              return (
+                <Flex align="center" gap="0 4px">
+                  <Typography
+                    className={`${classes.tab}${activeTab === __tab.value ? " active" : ""}`}
+                    onClick={() => handleTab(__tab.value)}
+                  >
+                    {__tab.label}
+                  </Typography>
+                  <NumberLabel
+                    num={
+                      __tab.value === TabName.YourPositions
+                        ? allPositions
+                          ? allPositions.length - hiddenNumbersOfYourPositions
+                          : "--"
+                        : allStakedPositions?.length ?? "--"
+                    }
+                  />
+                </Flex>
+              );
+            })}
           </Flex>
 
           <Flex
@@ -300,7 +328,7 @@ export function Positions() {
         </Flex>
 
         <Box mt="26px">
-          <Box sx={{ display: tab === "YOUR" ? "block" : "none" }}>
+          <Box sx={{ display: activeTab === TabName.YourPositions ? "block" : "none" }}>
             <YourPositions
               filterState={positionFilterState}
               sort={positionSort}
@@ -308,7 +336,7 @@ export function Positions() {
             />
           </Box>
 
-          <Box sx={{ display: tab === "STAKED" ? "block" : "none" }}>
+          <Box sx={{ display: activeTab === TabName.StakedPositions ? "block" : "none" }}>
             <StakedPositions
               filterState={positionFilterState}
               sort={positionSort}

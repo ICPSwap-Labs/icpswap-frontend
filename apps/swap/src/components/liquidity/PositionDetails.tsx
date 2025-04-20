@@ -78,7 +78,6 @@ export interface PositionDetailsProps {
   feeUSDValue: string | undefined;
   feeAmount0: CurrencyAmount<Token> | undefined;
   feeAmount1: CurrencyAmount<Token> | undefined;
-  onClaimSuccess: () => void;
   onHide: () => void;
   farmId?: string;
   staked?: boolean;

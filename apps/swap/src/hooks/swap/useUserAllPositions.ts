@@ -1,21 +1,14 @@
-import { getSwapPosition } from "@icpswap/hooks";
+import { getSwapUserPositions } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
-import { UserPosition } from "types/swap";
 import { useStoreUserPositionPools } from "store/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
-
-import { getUserPositionIds } from "./useUserPositionIds";
-
-type UserPositions = {
-  positions: bigint[];
-  poolId: string;
-};
+import { UserPositionByList } from "types/swap";
 
 export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refresh?: number) {
   const [loading, setLoading] = useState(false);
-  const [positions, setPositions] = useState<UserPosition[] | undefined>(undefined);
+  const [positions, setPositions] = useState<UserPositionByList[] | undefined>(undefined);
 
   const principal = useAccountPrincipal();
 
@@ -28,31 +21,23 @@ export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refr
 
       setLoading(true);
 
-      const userPositionsResult = (
-        await Promise.all(
-          poolIds.map(async (poolId: string) => {
-            return await getUserPositionIds(poolId, principal.toString());
-          }),
-        )
-      )
-        .map((positions, index) => (positions ? { positions, poolId: poolIds[index] } : undefined))
-        .filter((ele) => !!ele) as UserPositions[];
+      const allPositions = await Promise.all(
+        poolIds.map(async (poolId: string) => {
+          const positions = await getSwapUserPositions(poolId, principal.toString());
 
-      const positions = await Promise.all(
-        userPositionsResult
-          .reduce(
-            (prev, curr) => {
-              return prev.concat(curr.positions.map((index) => [curr.poolId, index]));
-            },
-            [] as [string, bigint][],
-          )
-          .map(async ([canisterId, index]) => {
-            const position = await getSwapPosition(canisterId, index);
-            return { ...position, id: canisterId, index: Number(index) };
-          }),
+          return {
+            positions: positions ?? [],
+            poolId,
+          };
+        }),
       );
 
-      setPositions(positions.filter((position) => !!position) as UserPosition[]);
+      const positions = allPositions.reduce((prev, curr) => {
+        const __positions = curr.positions.map((position) => ({ position, poolId: curr.poolId }));
+        return prev.concat(__positions);
+      }, [] as UserPositionByList[]);
+
+      setPositions(positions);
       setLoading(false);
     }
 
@@ -68,37 +53,9 @@ export function useUserAllPositions(refresh?: number) {
 }
 
 export function useUserPoolPositions(poolId: string | Null, refresh?: number) {
-  const [loading, setLoading] = useState(false);
-  const [positions, setPositions] = useState<UserPosition[]>([]);
+  const poolIds = useMemo(() => {
+    return poolId ? [poolId] : undefined;
+  }, [poolId]);
 
-  const principal = useAccountPrincipal();
-
-  useEffect(() => {
-    async function call() {
-      if (!!principal && poolId) {
-        setLoading(true);
-
-        const userPositionsResult = await getUserPositionIds(poolId, principal.toString());
-
-        if (userPositionsResult) {
-          const positions = await Promise.all(
-            userPositionsResult.map(async (index) => {
-              const position = await getSwapPosition(poolId, index);
-              return { ...position, id: poolId, index: Number(index) };
-            }),
-          );
-
-          setPositions(positions.filter((position) => !!position) as UserPosition[]);
-        }
-
-        setLoading(false);
-      } else {
-        setPositions([]);
-      }
-    }
-
-    call();
-  }, [principal, refresh, poolId]);
-
-  return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+  return useUserAllPositionsByPoolIds(poolIds, refresh);
 }

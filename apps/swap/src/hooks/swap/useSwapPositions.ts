@@ -74,7 +74,13 @@ export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | Null, ref
           )
           .map(async ([poolId, positionId, farm]) => {
             const position = await getSwapPosition(poolId.toString(), positionId);
-            return { ...position, id: poolId.toString(), index: Number(positionId), farm } as UserPositionForFarm;
+
+            return {
+              position,
+              poolId: poolId.toString(),
+              farm,
+              positionId,
+            };
           }),
       );
 

@@ -1,10 +1,14 @@
 import { useMemo } from "react";
 import { BigNumber } from "@icpswap/utils";
-import { PositionSort, UserPosition, UserPositionForFarm } from "types/swap";
+import { PositionSort, UserPositionByList, UserPositionForFarm } from "types/swap";
+
+function getPositionId(data: UserPositionByList | UserPositionForFarm) {
+  return "farm" in data ? data.positionId.toString() : data.position.id.toString();
+}
 
 export interface UseSortedPositionsProps {
   sort: PositionSort;
-  positions: (UserPosition | UserPositionForFarm)[] | undefined;
+  positions: (UserPositionByList | UserPositionForFarm)[] | undefined;
   feesValue: { [id: string]: BigNumber | undefined } | undefined;
   positionValue: { [id: string]: BigNumber | undefined } | undefined;
 }
@@ -22,9 +26,8 @@ export function useSortedPositions<T>({ positions, sort, feesValue, positionValu
 
       return [...positions].sort((a, b) => {
         const allKeys = Object.keys(feesValue);
-
-        const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));
-        const keyB = allKeys.find((key) => key.includes(b.id) && key.includes(b.index.toString()));
+        const keyA = allKeys.find((key) => key.includes(a.poolId) && key.includes(getPositionId(a)));
+        const keyB = allKeys.find((key) => key.includes(b.poolId) && key.includes(getPositionId(b)));
 
         if (keyA && keyB) {
           const valueA = feesValue[keyA];
@@ -45,9 +48,8 @@ export function useSortedPositions<T>({ positions, sort, feesValue, positionValu
 
       return [...positions].sort((a, b) => {
         const allKeys = Object.keys(positionValue);
-
-        const keyA = allKeys.find((key) => key.includes(a.id) && key.includes(a.index.toString()));
-        const keyB = allKeys.find((key) => key.includes(b.id) && key.includes(b.index.toString()));
+        const keyA = allKeys.find((key) => key.includes(a.poolId) && key.includes(getPositionId(a)));
+        const keyB = allKeys.find((key) => key.includes(b.poolId) && key.includes(getPositionId(b)));
 
         if (keyA && keyB) {
           const valueA = positionValue[keyA];

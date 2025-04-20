@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { BigNumber } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
-import { UserPosition, type PositionKey } from "types/swap";
+import { type PositionKey, UserPositionByList, UserPositionForFarm } from "types/swap";
 
 export interface PositionContextProps {
   allPositionsUSDValue: { [key: PositionKey]: BigNumber | undefined } | undefined;
@@ -11,10 +11,10 @@ export interface PositionContextProps {
   setPositionFees: (id: PositionKey, fees: BigNumber) => void;
   refreshTrigger: number;
   setRefreshTrigger: () => void;
-  allPositions: UserPosition[] | Null;
-  setAllPositions: (positions: UserPosition[] | Null) => void;
-  allStakedPositions: UserPosition[] | Null;
-  setAllStakedPositions: (positions: UserPosition[] | Null) => void;
+  allPositions: UserPositionByList[] | Null;
+  setAllPositions: (positions: UserPositionByList[] | Null) => void;
+  allStakedPositions: UserPositionForFarm[] | Null;
+  setAllStakedPositions: (positions: UserPositionForFarm[] | Null) => void;
   setHiddenNumbers: (key: PositionKey, hidden: boolean) => void;
 }
 
