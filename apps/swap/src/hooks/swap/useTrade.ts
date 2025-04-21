@@ -6,7 +6,6 @@ import { BigNumber } from "bignumber.js";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { useAllRoutes } from "hooks/swap/useAllRoutes";
-import { isUseTransfer } from "utils/index";
 
 export enum TradeState {
   LOADING = "LOADING",
@@ -47,14 +46,9 @@ export function useBestTrade(
         const inputToken = route.input.wrapped;
         const outputToken = route.output.wrapped;
 
-        const inputTokenInPool = inputToken.address === pool.token0.address ? pool.token0 : pool.token1;
-        const useTransfer = isUseTransfer(inputTokenInPool);
-
         // A transaction fee need be subtracted if then token use icrc_transfer to deposit token in v3.6
         const quoteAmount = !actualSwapValue
           ? "0"
-          : useTransfer
-          ? numberToString(formatTokenAmount(actualSwapValue, inputToken.decimals).minus(inputToken.transFee))
           : numberToString(formatTokenAmount(actualSwapValue, inputToken.decimals));
 
         return {

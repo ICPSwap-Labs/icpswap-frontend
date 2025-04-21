@@ -9,7 +9,6 @@ import { getCancelLimitSteps } from "components/swap/limit-order/CancelLimitStep
 import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
-import { Principal } from "@dfinity/principal";
 import { LimitOrder } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
