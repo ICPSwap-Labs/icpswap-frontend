@@ -1,10 +1,21 @@
-import StepDetails from "components/Steps/Details";
+import { StepDetails } from "components/Steps/Details";
 import { useOpenedSteps, useStepDetails } from "store/steps/hooks";
+import { SwapStepDetails } from "components/Steps/SwapDetails";
 
 function StepItem({ step }: { step: string }) {
-  const { activeStep, errorStep, content, onClose, title, description } = useStepDetails(step);
+  const { activeStep, errorStep, content, onClose, title, description, type } = useStepDetails(step);
 
-  return (
+  return type === "swap" ? (
+    <SwapStepDetails
+      title={title}
+      open
+      activeStep={activeStep}
+      errorStep={errorStep}
+      content={content}
+      onClose={onClose}
+      description={description}
+    />
+  ) : (
     <StepDetails
       title={title}
       open

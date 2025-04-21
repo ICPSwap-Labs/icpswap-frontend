@@ -55,15 +55,7 @@ function ActionIcon({ ele, activeStep, showErrorHint }: ActionIconProps) {
   );
 }
 
-export default function _StepDetails({
-  title,
-  onClose,
-  open,
-  content,
-  activeStep,
-  errorStep,
-  description,
-}: StepDetailsProps) {
+export function StepDetails({ title, onClose, open, content, activeStep, errorStep, description }: StepDetailsProps) {
   const { t } = useTranslation();
   const [openedSteps, setOpenedSteps] = useState<number[]>([]);
 

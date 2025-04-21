@@ -10,44 +10,8 @@ import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
 import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { Principal } from "@dfinity/principal";
-import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 import { LimitOrder } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
-
-type updateStepsArgs = {
-  positionId: bigint;
-  retry?: () => Promise<boolean>;
-  principal: Principal | undefined;
-  key: string;
-  position: Position;
-  limit: LimitOrder;
-};
-
-function useUpdateStepContent() {
-  const { t } = useTranslation();
-  const updateStep = useStepContentManager();
-  const handleReclaim = useReclaimCallback();
-  const [keepTokenInPools] = useSwapKeepTokenInPoolsManager();
-
-  return useCallback(
-    ({ position, positionId, principal, limit, key }: updateStepsArgs) => {
-      const content = getCancelLimitSteps({
-        position,
-        positionId,
-        principal,
-        key,
-        handleReclaim,
-        limit,
-      });
-
-      updateStep(String(key), {
-        content,
-        title: t("limit.cancel.details"),
-      });
-    },
-    [keepTokenInPools],
-  );
-}
 
 interface CancelLimitCallsArgs {
   position: Position;
