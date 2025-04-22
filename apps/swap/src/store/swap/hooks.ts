@@ -11,13 +11,13 @@ import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import {
   useParsedQueryString,
-  useUserUnusedBalance,
-  useTokenBalance,
+  // useUserUnusedBalance,
+  // useTokenBalance,
   useDebouncedChangeHandler,
   useDebounce,
 } from "@icpswap/hooks";
-import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { isValidPrincipal, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
+// import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";
@@ -89,9 +89,9 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const principal = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
-  const sub = useMemo(() => {
-    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
-  }, [principal]);
+  // const sub = useMemo(() => {
+  //   return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
+  // }, [principal]);
 
   const {
     independentField,
@@ -144,40 +144,46 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
-  const { result: __inputTokenSubBalance } = useTokenBalance({
-    canisterId: inputToken?.address,
-    address: poolId,
-    sub,
-    refresh,
-  });
-  const { result: __outputTokenSubBalance } = useTokenBalance({
-    canisterId: outputToken?.address,
-    address: poolId,
-    sub,
-    refresh,
-  });
+  // Do not use balance in canister in V3.6
+
+  // const { result: __inputTokenSubBalance } = useTokenBalance({
+  //   canisterId: inputToken?.address,
+  //   address: poolId,
+  //   sub,
+  //   refresh,
+  // });
+  // const { result: __outputTokenSubBalance } = useTokenBalance({
+  //   canisterId: outputToken?.address,
+  //   address: poolId,
+  //   sub,
+  //   refresh,
+  // });
 
   const inputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
-    return __inputTokenSubBalance;
-  }, [__inputTokenSubBalance, principal]);
+    return new BigNumber(0);
+  }, [principal]);
 
   const outputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
-    return __outputTokenSubBalance;
-  }, [__outputTokenSubBalance]);
+    return new BigNumber(0);
+  }, []);
 
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
-  const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
-    if (!poolId || !unusedBalance || !inputToken || !pool) return {};
+  // Do not use balance in canister in V3.6
+  // const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  // const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
+  //   if (!poolId || !unusedBalance || !inputToken || !pool) return {};
 
-    return {
-      inputTokenUnusedBalance:
-        pool.token0.address === inputToken.address ? unusedBalance.balance0 : unusedBalance.balance1,
-      outputTokenUnusedBalance:
-        pool.token0.address === inputToken.address ? unusedBalance.balance1 : unusedBalance.balance0,
-    };
-  }, [Trade, inputToken, unusedBalance, pool]);
+  //   return {
+  //     inputTokenUnusedBalance:
+  //       pool.token0.address === inputToken.address ? unusedBalance.balance0 : unusedBalance.balance1,
+  //     outputTokenUnusedBalance:
+  //       pool.token0.address === inputToken.address ? unusedBalance.balance1 : unusedBalance.balance0,
+  //   };
+  // }, [Trade, inputToken, unusedBalance, pool]);
+
+  const inputTokenUnusedBalance = BigInt(0);
+  const outputTokenUnusedBalance = BigInt(0);
 
   const allowanceTokenId = useMemo(() => {
     if (!inputToken) return undefined;
@@ -203,7 +209,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const maxInputAmount = useAllBalanceMaxSpend({
     token: inputToken,
     balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
-    poolId: Trade?.pool?.id,
+    poolId: pool?.id,
     subBalance: inputTokenSubBalance,
     unusedBalance: inputTokenUnusedBalance,
     allowance,
@@ -236,7 +242,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     outputToken: __outputToken,
     inputTokenState,
     outputTokenState,
-    unusedBalance,
     inputTokenUnusedBalance,
     outputTokenUnusedBalance,
     inputTokenSubBalance,

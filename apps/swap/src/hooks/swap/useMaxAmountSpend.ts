@@ -40,7 +40,7 @@ export function usePoolBalanceMaxSpend({ token, subBalance, unusedBalance }: Use
       token,
       new BigNumber(unusedBalance.toString()).plus(subBalance.toString()).toString(),
     );
-  }, [unusedBalance, subBalance]);
+  }, [token, unusedBalance, subBalance]);
 }
 
 export interface UseMaxBalanceSpendArgs {

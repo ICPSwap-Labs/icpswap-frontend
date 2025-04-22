@@ -65,7 +65,7 @@ export function useInitialSwapSteps() {
     updateStep(String(key), {
       content,
       title: t("swap.details"),
-      description: t("swap.details.descriptions"),
+      // description: t("swap.details.descriptions"),
       type: "swap",
     });
   }, []);

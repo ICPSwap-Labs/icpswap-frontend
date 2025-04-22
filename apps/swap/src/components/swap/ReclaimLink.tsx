@@ -6,7 +6,7 @@ import { useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import type { Null, UserSwapPoolsBalance } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
-import { ArrowUpRight, ChevronDown } from "react-feather";
+import { ArrowUpRight, ChevronDown, RotateCcw } from "react-feather";
 import { isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { DepositModal } from "components/swap/DepositModal";
 import { Pool, Token } from "@icpswap/swap-sdk";
@@ -125,7 +125,6 @@ export interface ReclaimLinkProps {
 
 export function Reclaim({
   pool,
-  keepInPool = true,
   fontSize = "14px",
   ui,
   refreshKey,
@@ -139,7 +138,7 @@ export function Reclaim({
   const classes = useStyles();
   const principal = useAccountPrincipal();
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
@@ -218,18 +217,28 @@ export function Reclaim({
           )}
         </Flex>
 
-        <ChevronDown
-          size={16}
-          style={{
-            transform: open ? "rotate(180deg)" : "rotate(0)",
-            transition: "all 300ms",
-          }}
-        />
+        <Flex gap="0 16px">
+          <RotateCcw
+            size={14}
+            style={{ cursor: "pointer" }}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              handleRefresh();
+            }}
+          />
+
+          <ChevronDown
+            size={16}
+            style={{
+              transform: open ? "rotate(180deg)" : "rotate(0)",
+              transition: "all 300ms",
+            }}
+          />
+        </Flex>
       </Flex>
 
       <Collapse in={open}>
-        {keepInPool ? <KeepTokenInPool ui={ui} refreshKey={refreshKey} /> : null}
-
         <Box sx={{ background: bg1 ?? theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
           <Box className={`${classes.wrapper} ${ui} border`}>
             <Flex justify="space-between">
@@ -250,7 +259,7 @@ export function Reclaim({
                 <DotLoading loading size="3px" color="#ffffff" />
               )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
-                <DepositButton pool={pool} token={token0} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
+                {/* <DepositButton pool={pool} token={token0} onDepositSuccess={handleRefresh} fontSize={__fontSize} /> */}
                 <WithdrawButton
                   pool={pool}
                   token={token0}
@@ -280,7 +289,7 @@ export function Reclaim({
                 <DotLoading loading size="3px" color="#ffffff" />
               )}
               <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
-                <DepositButton pool={pool} token={token1} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
+                {/* <DepositButton pool={pool} token={token1} onDepositSuccess={handleRefresh} fontSize={__fontSize} /> */}
                 <WithdrawButton
                   pool={pool}
                   token={token1}
