@@ -31,6 +31,7 @@ export interface PositionTableUIProps {
   onPaginationChange?: PaginationProps["onPageChange"];
   pagination: PaginationType;
   allLimitOrders?: bigint[] | Null;
+  padding?: string;
 }
 
 export function PositionTableUI({
@@ -42,6 +43,7 @@ export function PositionTableUI({
   onPaginationChange,
   pagination,
   allLimitOrders,
+  padding,
 }: PositionTableUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -60,7 +62,7 @@ export function PositionTableUI({
     <>
       <Box sx={{ width: "100%", overflow: "auto" }}>
         <Box sx={{ minWidth: "1090px" }}>
-          <Header className={wrapperClassName ?? classes.wrapper}>
+          <Header className={wrapperClassName ?? classes.wrapper} padding={padding}>
             <HeaderCell field="Position ID">{t("common.position.id")}</HeaderCell>
 
             <HeaderCell field="Pair">{t("common.owner")}</HeaderCell>
@@ -85,6 +87,7 @@ export function PositionTableUI({
                   wrapperClassName={wrapperClassName ?? classes.wrapper}
                   sneedLedger={sneedLedger}
                   allLimitOrders={allLimitOrders}
+                  padding={padding}
                 />
               ))
             : null}

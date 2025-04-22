@@ -327,7 +327,7 @@ export default function SwapPoolDetails() {
             {tab === TabValue.Transactions ? (
               <PoolTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
             ) : null}
-            {tab === TabValue.Positions ? <PositionTable poolId={canisterId} /> : null}
+            {tab === TabValue.Positions ? <PositionTable poolId={canisterId} padding="24px" /> : null}
           </Box>
         </MainCard>
       </Box>

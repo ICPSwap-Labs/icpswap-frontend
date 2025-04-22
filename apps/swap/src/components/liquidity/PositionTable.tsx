@@ -11,9 +11,10 @@ export interface PositionTableProps {
   wrapperClassName?: string;
   principal?: string;
   poolId: string | Null;
+  padding?: string;
 }
 
-export function PositionTable({ poolId, principal, wrapperClassName }: PositionTableProps) {
+export function PositionTable({ poolId, principal, wrapperClassName, padding }: PositionTableProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -50,6 +51,7 @@ export function PositionTable({ poolId, principal, wrapperClassName }: PositionT
       pagination={pagination}
       totalElements={totalElements}
       allLimitOrders={allLimitOrders}
+      padding={padding}
     />
   );
 }
