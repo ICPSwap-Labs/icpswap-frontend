@@ -27,6 +27,7 @@ export interface PositionRowProps {
   sneedLedger?: string | Null;
   showDetails?: boolean;
   allLimitOrders?: bigint[] | Null;
+  padding?: string;
 }
 
 export function PositionRow({
@@ -36,6 +37,7 @@ export function PositionRow({
   showDetails = true,
   wrapperClassName,
   allLimitOrders,
+  padding,
 }: PositionRowProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -118,7 +120,11 @@ export function PositionRow({
   return (
     <>
       {pool ? (
-        <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
+        <TableRow
+          className={wrapperClassName}
+          borderBottom={`1px solid ${theme.palette.border.level1}`}
+          padding={padding}
+        >
           <BodyCell sx={{ gap: "8px 4px", alignItems: "center" }}>
             {positionInfo.id.toString()}
             {isLimitOrder ? <LimitLabel /> : null}
