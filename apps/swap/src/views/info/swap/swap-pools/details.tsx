@@ -36,15 +36,15 @@ interface PoolTokenTvlProps {
 
 function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
   return (
-    <Flex justify="space-between" align="flex-start">
-      <Flex gap="0 8px" align="flex-start">
+    <Flex justify="space-between">
+      <Flex gap="0 8px">
         <TokenImage logo={token?.logo} tokenId={token?.address} />
         <Typography fontWeight={500} color="text.primary">
           {token?.symbol}
         </Typography>
       </Flex>
 
-      <Flex vertical gap="4px 0" align="flex-start">
+      <Flex vertical gap="4px 0">
         <Typography color="text.primary" fontWeight={500}>
           {amount ? formatAmount(parseTokenAmount(amount, token?.decimals).toNumber()) : ""}
         </Typography>
