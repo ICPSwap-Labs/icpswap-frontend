@@ -1,9 +1,9 @@
-import { Pool } from "@icpswap/swap-sdk";
+import { Pool, tickToPrice } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { useState, useMemo } from "react";
 import { useTheme } from "components/Mui";
-import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
+import { BigNumber, formatAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
@@ -27,7 +27,7 @@ export function HistoryRowPro({
 
   const [invertPrice, setInvertPrice] = useState(false);
 
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
+  const { inputTokenId, outputTokenId, inputAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
       ? transaction.token1Id
       : transaction.token0Id;
@@ -49,9 +49,16 @@ export function HistoryRowPro({
   const [, outputToken] = useToken(outputTokenId);
 
   const limitPrice = useMemo(() => {
-    if (!outputToken) return undefined;
-    return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
-  }, [outputChangeAmount, outputToken, inputAmount]);
+    if (!outputToken || !inputToken) return undefined;
+    const price = tickToPrice(inputToken, outputToken, Number(transaction.tick));
+
+    return price.toSignificant();
+  }, [inputToken, outputToken, transaction]);
+
+  const receiveAmount = useMemo(() => {
+    if (isNullArgs(inputAmount) || isNullArgs(limitPrice)) return undefined;
+    return new BigNumber(inputAmount).multipliedBy(limitPrice).toString();
+  }, [inputAmount, limitPrice]);
 
   return (
     <>
@@ -74,7 +81,7 @@ export function HistoryRowPro({
           <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
             <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
             <BodyCell>
-              {formatAmount(outputChangeAmount)} {outputToken?.symbol}
+              {formatAmount(receiveAmount)} {outputToken?.symbol}
             </BodyCell>
           </BodyCell>
 
