@@ -1,12 +1,12 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import dayjs from "dayjs";
-import { useToken } from "hooks/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
 
 export interface HistoryRowProps {
   transaction: LimitTransaction;
@@ -17,32 +17,7 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
   const theme = useTheme();
 
   const [invertPrice, setInvertPrice] = useState(false);
-
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
-    const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
-      ? transaction.token1Id
-      : transaction.token0Id;
-
-    const outputTokenId = inputTokenId === transaction.token1Id ? transaction.token0Id : transaction.token1Id;
-    const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
-    const outputChangeAmount =
-      inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
-
-    return {
-      inputTokenId,
-      outputTokenId,
-      inputAmount,
-      outputChangeAmount,
-    };
-  }, [transaction]);
-
-  const [, inputToken] = useToken(inputTokenId);
-  const [, outputToken] = useToken(outputTokenId);
-
-  const limitPrice = useMemo(() => {
-    if (!outputToken) return undefined;
-    return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
-  }, [outputChangeAmount, outputToken, inputAmount]);
+  const { inputAmount, inputToken, outputChangeAmount, outputToken, limitPrice } = useLimitHistory({ transaction });
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
