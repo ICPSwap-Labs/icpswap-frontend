@@ -31,7 +31,6 @@ import {
   updatePoolCanisterIds,
   PoolCanisterRecord,
   updateSwapOutAmount,
-  updateDecreaseLiquidityAmount,
   updateAllSwapPools,
 } from "./actions";
 
@@ -312,21 +311,6 @@ export function useUpdateSwapOutAmount() {
   return useCallback(
     (key: string, amount: bigint | undefined) => {
       dispatch(updateSwapOutAmount({ key, value: amount }));
-    },
-    [dispatch],
-  );
-}
-
-export function getDecreaseLiquidityAmount(key: string) {
-  return store.getState().swap.decreaseLiquidityAmount[key];
-}
-
-export function useUpdateDecreaseLiquidityAmount() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (key: string, amount0: bigint | undefined, amount1: bigint | undefined) => {
-      dispatch(updateDecreaseLiquidityAmount({ key, amount0, amount1 }));
     },
     [dispatch],
   );

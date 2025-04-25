@@ -9,8 +9,6 @@ export interface PositionContextProps {
   positionFees: { [id: PositionKey]: BigNumber | undefined } | undefined;
   positionFeesValue: BigNumber | undefined;
   setPositionFees: (id: PositionKey, fees: BigNumber) => void;
-  refreshTrigger: number;
-  setRefreshTrigger: () => void;
   allPositions: UserPosition[] | Null;
   setAllPositions: (positions: UserPosition[] | Null) => void;
   allStakedPositions: UserPosition[] | Null;

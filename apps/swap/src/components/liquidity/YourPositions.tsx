@@ -13,6 +13,8 @@ import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { useTranslation } from "react-i18next";
+import { useRefreshTrigger } from "hooks/index";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 
 interface PositionItemProps {
   position: UserPosition;
@@ -57,7 +59,9 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
   const history = useHistory();
   const principal = useAccountPrincipalString();
 
-  const { refreshTrigger, setAllPositions, allPositionsUSDValue, positionFees } = useContext(PositionContext);
+  const { setAllPositions, allPositionsUSDValue, positionFees } = useContext(PositionContext);
+
+  const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { loading: initialUserPositionPoolsLoading } = useInitialUserPositionPools();
   const { result: positions, loading } = useUserAllPositions(refreshTrigger);

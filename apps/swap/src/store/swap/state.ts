@@ -9,7 +9,6 @@ export interface SwapState {
   independentField: SWAP_FIELD;
   poolCanisterIds: { [key: string]: string };
   swapOutAmount: { [key: string]: bigint | undefined };
-  decreaseLiquidityAmount: { [key: string]: { amount0: bigint | undefined; amount1: bigint | undefined } };
   allSwapPools: SwapPoolData[];
 }
 
@@ -20,6 +19,5 @@ export const initialState: SwapState = {
   independentField: SWAP_FIELD.INPUT,
   poolCanisterIds: {},
   swapOutAmount: {},
-  decreaseLiquidityAmount: {},
   allSwapPools: [],
 };

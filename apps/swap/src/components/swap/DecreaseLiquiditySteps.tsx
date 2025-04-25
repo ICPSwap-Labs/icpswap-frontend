@@ -2,19 +2,15 @@ import { Box, Avatar } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
 import { toFormat } from "utils/index";
-import { Principal } from "@dfinity/principal";
 import { StepContents } from "types/step";
 import i18n from "i18n/index";
+import { Null } from "@icpswap/types";
 
 export interface DecreaseLiquidityStepsProps {
   formattedAmounts: { [key in BURN_FIELD]?: string };
   currencyA: Token | undefined;
   currencyB: Token | undefined;
-  positionId: bigint;
-  principal: Principal | undefined;
-  handleReclaim: () => void;
-  key: string;
-  keepTokenInPools?: boolean;
+  positionId: bigint | Null;
 }
 
 function TokenAmount({ logo, amount }: { logo: string; amount: string | undefined }) {
@@ -35,7 +31,7 @@ export function getDecreaseLiquiditySteps({
   positionId,
 }: DecreaseLiquidityStepsProps) {
   const contents =
-    currencyA && currencyB
+    currencyA && currencyB && positionId
       ? [
           {
             title: `Remove liquidity ${currencyA?.symbol} and ${currencyB.symbol}`,

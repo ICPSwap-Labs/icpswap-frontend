@@ -1404,5 +1404,6 @@
   "swap.help.tooltip2": "New to limit orders? Learn More Here!",
   "swap.your.liquidity.positions": "Your liquidity positions",
   "swap.tradingview.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others",
-  "swap.decrease.liquidity.success": "Decrease liquidity successful"
+  "swap.decrease.liquidity.success": "Decrease liquidity successful",
+  "common.remove.all": "Remove all"
 }

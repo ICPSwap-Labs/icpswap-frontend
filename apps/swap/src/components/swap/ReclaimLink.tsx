@@ -11,7 +11,6 @@ import { isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSepara
 import { DepositModal } from "components/swap/DepositModal";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
-import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useGlobalContext } from "hooks/index";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useTranslation } from "react-i18next";
@@ -32,7 +31,7 @@ interface DepositButtonProps {
   fontSize?: string;
 }
 
-function DepositButton({ token, pool, fontSize, onDepositSuccess }: DepositButtonProps) {
+export function DepositButton({ token, pool, fontSize, onDepositSuccess }: DepositButtonProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 

@@ -18,10 +18,4 @@ export const updatePoolCanisterIds = createAction<PoolCanisterRecord>("swapCache
 
 export const updateSwapOutAmount = createAction<{ key: string; value: bigint | undefined }>("swap/updateSwapOutAmount");
 
-export const updateDecreaseLiquidityAmount = createAction<{
-  key: string;
-  amount0: bigint | undefined;
-  amount1: bigint | undefined;
-}>("swap/updateDecreaseLiquidityAmount");
-
 export const updateAllSwapPools = createAction<SwapPoolData[]>("swap/updateAllSwapPools");

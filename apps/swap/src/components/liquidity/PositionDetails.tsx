@@ -4,7 +4,7 @@ import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
+import { Bound, LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
   BigNumber,
@@ -20,6 +20,8 @@ import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
+import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
+import { useRefreshTriggerManager } from "hooks";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -110,7 +112,9 @@ export function PositionDetails({
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
-  const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
+  const { setPositionFees } = useContext(PositionContext);
+
+  const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { pool, tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -150,10 +154,6 @@ export function PositionDetails({
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);
-
-  const handleTransferSuccess = () => {
-    setRefreshTrigger();
-  };
 
   const { amount0, amount1, value0, value1 } = useMemo(() => {
     if (!position || isNullArgs(token0USDPrice) || isNullArgs(token1USDPrice)) return {};
@@ -419,6 +419,12 @@ export function PositionDetails({
           </Flex>
 
           <Flex gap="17px" wrap="wrap" justify="flex-end">
+            <RemoveAllLiquidity
+              position={position}
+              positionId={positionId}
+              onDecreaseSuccess={() => setRefreshTrigger()}
+            />
+
             {farmId ? (
               <Button
                 variant="contained"
@@ -444,7 +450,7 @@ export function PositionDetails({
           position={position}
           positionId={positionId}
           onClose={() => setTransferShow(false)}
-          onTransferSuccess={handleTransferSuccess}
+          onTransferSuccess={() => setRefreshTrigger()}
         />
       ) : null}
 
