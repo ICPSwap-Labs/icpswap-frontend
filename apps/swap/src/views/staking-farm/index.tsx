@@ -45,7 +45,7 @@ function MainContent() {
   const [page, setPage] = useState(START_PAGE);
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
-  const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
+  const __state = useMemo(() => _state ?? FilterState.LIVE, [_state]);
 
   const state = useMemo(() => {
     switch (__state) {

@@ -33,7 +33,7 @@ function MainContent() {
     state: FilterState | undefined;
   };
 
-  const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
+  const __state = useMemo(() => _state ?? FilterState.LIVE, [_state]);
 
   const state = getStateValueByFilterState(__state);
 
