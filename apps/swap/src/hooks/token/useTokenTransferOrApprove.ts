@@ -92,6 +92,7 @@ export interface UseTokenTransferOrApproveArgs {
   standard: TOKEN_STANDARD;
   options?: TIP_OPTIONS;
   approve_amount?: string;
+  allowance?: bigint;
 }
 
 export function useTokenTransferOrApprove() {
@@ -99,10 +100,20 @@ export function useTokenTransferOrApprove() {
   const transfer = useTokenSubAccountTransfer();
 
   return useCallback(
-    async ({ token, amount, approve_amount, to_owner, options, standard }: UseTokenTransferOrApproveArgs) => {
+    async ({
+      token,
+      amount,
+      approve_amount,
+      to_owner,
+      options,
+      standard,
+      allowance,
+    }: UseTokenTransferOrApproveArgs) => {
       if (isUseTransferByStandard(standard)) {
         return await transfer({ token, amount, address: to_owner, options });
       }
+
+      if (allowance && new BigNumber(allowance.toString()).isGreaterThan(amount)) return true;
 
       return await approve({
         token,
