@@ -503,7 +503,7 @@
   "common.owner": "Owner",
   "common.circulating.formula": "Circulating Supply Percentage = (Circulating Supply / Total Supply) x 100%.",
   "M1TEd7": "Operation failed e2",
-  "nns.dissolve.delay.description": "Dissolve delay is the minimum amount of time you have to wait for the neuron to unlock, and ICS to be available again. Note, that dissolve delay only decreases when the neuron is in a dissolving state. Voting power is given to neurons with a dissolve delay of at least {{seconds}}.",
+  "nns.dissolve.delay.description": "Dissolve delay is the minimum amount of time you have to wait for the neuron to unlock, and {{symbol}} to be available again. Note, that dissolve delay only decreases when the neuron is in a dissolving state. Voting power is given to neurons with a dissolve delay of at least {{seconds}}.",
   "MDL9gG": "Bitcoin network block height:",
   "nns.voting.ineligible.neurons": "{{number}} Ineligible neurons",
   "common.title": "Title",
