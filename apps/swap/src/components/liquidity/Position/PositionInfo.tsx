@@ -144,7 +144,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               <TextButton sx={{ fontWeight: 500 }}>{t("common.transfer.position")}</TextButton>
             </TransferPosition>
 
-            <Link to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
+            <Link to={`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}?pair=${position.pool.id}`}>
               <Flex gap="0 4px" sx={{ cursor: "pointer" }}>
                 <img src="/images/history.svg" alt="" />
                 <Typography color="text.secondary" fontSize="12px">
