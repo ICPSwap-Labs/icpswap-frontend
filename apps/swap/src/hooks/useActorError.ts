@@ -38,7 +38,7 @@ export function isOutOfTimeRange(message: string) {
 }
 
 export function isIISignatureVerificationError(message: string) {
-  return message.includes("Code: 400 () Body: Invalid signature");
+  return message.includes("Invalid signature") && message.includes("Invalid basic signature");
 }
 
 export function useHandleActorError() {
