@@ -145,7 +145,7 @@ export function PositionDetails({
   }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
-    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && isLimit) {
+    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);
