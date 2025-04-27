@@ -10,6 +10,7 @@ import { useGlobalContext } from "hooks/index";
 import { ResultStatus } from "@icpswap/types";
 import { useSwapWithdrawByTokenId } from "hooks/swap/index";
 import { useTranslation } from "react-i18next";
+import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
 
 export interface UnclaimedFeesProps {
   className?: string;
@@ -77,8 +78,6 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
 
             withdrawToken0();
             withdrawToken1();
-
-            setRefreshTriggers(key);
           }
 
           return result;
@@ -87,6 +86,8 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
         return undefined;
       }),
     ).catch((error) => console.error("Collect all position fees error: ", JSON.stringify(error)));
+
+    setRefreshTriggers(POSITIONS_FEES_REFRESH_KEY);
 
     closeTip(loading_key);
 

@@ -39,7 +39,7 @@ export const ConnectorConfigs: ConnectorConfig[] = [
     value: Connector.ICPSwap,
     logo: "/images/connect/icpswap.svg",
   },
-  { label: "NFID", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
+  { label: "Google (via NFID)", value: Connector.NFID, logo: "/images/connect/NFID.svg" },
   {
     label: "Bitfinity Wallet",
     value: Connector.INFINITY,

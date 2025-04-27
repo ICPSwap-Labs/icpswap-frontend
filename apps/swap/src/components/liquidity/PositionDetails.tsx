@@ -78,7 +78,6 @@ export interface PositionDetailsProps {
   feeUSDValue: string | undefined;
   feeAmount0: CurrencyAmount<Token> | undefined;
   feeAmount1: CurrencyAmount<Token> | undefined;
-  onClaimSuccess: () => void;
   onHide: () => void;
   farmId?: string;
   staked?: boolean;
@@ -146,7 +145,7 @@ export function PositionDetails({
   }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
-    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && isLimit) {
+    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);

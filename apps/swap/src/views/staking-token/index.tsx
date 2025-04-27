@@ -4,7 +4,7 @@ import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, SelectToken, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
-import { GlobalData, TopLiveStaking, PoolListCard, PoolListHeader } from "components/stake/index";
+import { GlobalData, StakeRow, PoolListHeader } from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
 import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
@@ -33,7 +33,7 @@ function MainContent() {
     state: FilterState | undefined;
   };
 
-  const __state = useMemo(() => _state ?? FilterState.ALL, [_state]);
+  const __state = useMemo(() => _state ?? FilterState.LIVE, [_state]);
 
   const state = getStateValueByFilterState(__state);
 
@@ -238,7 +238,7 @@ function MainContent() {
               {!pools?.length && !loading && <NoData />}
 
               {pools?.map((pool) => (
-                <PoolListCard
+                <StakeRow
                   key={pool.canisterId.toString()}
                   poolInfo={pool}
                   showState={showState}
@@ -295,17 +295,6 @@ export default function Staking() {
         }}
       >
         <GlobalData />
-      </Box>
-
-      <Box
-        sx={{
-          margin: "44px 0 0 0",
-          "@media(max-width: 640px)": {
-            margin: "28px 0 0 0",
-          },
-        }}
-      >
-        <TopLiveStaking />
       </Box>
 
       <Box sx={{ margin: "20px 0 0 0" }}>

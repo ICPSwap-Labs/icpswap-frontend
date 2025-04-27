@@ -11,7 +11,7 @@ import {
   cycleValueFormat,
 } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { useV3UserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
+import { useUserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import { MainCard, BreadcrumbsV1 } from "@icpswap/ui";
 import { useToken } from "hooks/index";
@@ -62,7 +62,7 @@ export default function FarmDetails() {
   const { t } = useTranslation();
   const classes = useStyles();
   const { id: farmId } = useParams<{ id: string }>();
-  const { result: farmInfo } = useV3UserFarmInfo(farmId, AnonymousPrincipal);
+  const { result: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
   const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useFarmCycles(farmId);
 

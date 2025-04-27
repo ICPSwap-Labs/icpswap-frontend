@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo, useEffect, useContext } from "re
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { usePositionFees } from "hooks/swap/usePositionFees";
 import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
@@ -12,7 +11,6 @@ import { PositionContext, PositionRangeState } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
-import { useGlobalContext } from "hooks/index";
 import { usePositionState } from "hooks/liquidity";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { useTranslation } from "react-i18next";
@@ -109,6 +107,7 @@ export interface PositionCardProps {
   filterState: PositionFilterState;
   sort: PositionSort;
   isLimit: boolean;
+  fee: { fee0: bigint; fee1: bigint } | undefined;
 }
 
 export function PositionCard({
@@ -119,6 +118,7 @@ export function PositionCard({
   staked,
   filterState,
   isLimit,
+  fee,
 }: PositionCardProps) {
   const { t } = useTranslation();
   const classes = useStyle();
@@ -129,7 +129,6 @@ export function PositionCard({
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
   const { setAllPositionsUSDValue, setHiddenNumbers } = useContext(PositionContext);
-  const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
   const handleToggleShow = useCallback(() => {
     if (!position) return;
@@ -175,11 +174,10 @@ export function PositionCard({
     return totalUSD.toString();
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(
-    position?.pool.id,
-    positionId,
-    positionKey ? refreshTriggers[positionKey] : undefined,
-  );
+  const { fee0: feeAmount0, fee1: feeAmount1 } = useMemo(() => {
+    if (!fee) return { fee0: undefined, fee1: undefined };
+    return fee;
+  }, [fee]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
     if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return {};
@@ -225,12 +223,6 @@ export function PositionCard({
     },
     [setManuallyInverted, manuallyInverted],
   );
-
-  const handleClaimSuccess = useCallback(() => {
-    if (positionKey) {
-      setRefreshTriggers(positionKey);
-    }
-  }, [setRefreshTriggers, positionKey]);
 
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState)) return true;
@@ -487,7 +479,6 @@ export function PositionCard({
           feeUSDValue={feeUSDValue}
           feeAmount0={currencyFeeAmount0}
           feeAmount1={currencyFeeAmount1}
-          onClaimSuccess={handleClaimSuccess}
           onHide={() => setDetailShow(false)}
           staked={staked}
           state={positionState}

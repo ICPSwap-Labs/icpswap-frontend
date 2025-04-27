@@ -39,7 +39,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
 
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openTip] = useTips();
-  const getStakeCall = useStakeCall();
+  const getStakeCall = useStakeCall({ token: stakeToken, poolId });
 
   const state = useStakingPoolState(poolInfo);
 

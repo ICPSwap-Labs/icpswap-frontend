@@ -15,14 +15,21 @@ export type PositionDetail = {
   positionId: string;
 };
 
+export type UserPositionByList = {
+  position: UserPositionInfoWithId;
+  poolId: string;
+};
+
+export type UserPositionForFarm = {
+  position: UserPositionInfo;
+  poolId: string;
+  farm: FarmInfoWithId;
+  positionId: bigint;
+};
+
 export type UserPosition = Override<
   UserPositionInfo,
   { index: number; id: string; token0: string; token1: string; fee: string }
->;
-
-export type UserPositionForFarm = Override<
-  UserPositionInfo,
-  { index: number; id: string; token0: string; token1: string; fee: string; farm: FarmInfoWithId }
 >;
 
 export enum PositionFilterState {
