@@ -1,12 +1,14 @@
 import { getPositionsFee } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { getPositionFeeKey } from "utils/swap";
+import { RefreshKey } from "types/index";
 
 export interface UseMultiplePositionsFeeProps {
   data: { poolId: string; positionIds: bigint[] }[] | undefined;
+  refresh?: RefreshKey;
 }
 
-export function useMultiplePositionsFee({ data }: UseMultiplePositionsFeeProps) {
+export function useMultiplePositionsFee({ data, refresh }: UseMultiplePositionsFeeProps) {
   const [positionsFee, setPositionsFee] = useState<{ [key: string]: { fee0: bigint; fee1: bigint } } | undefined>(
     undefined,
   );
@@ -41,7 +43,7 @@ export function useMultiplePositionsFee({ data }: UseMultiplePositionsFeeProps) 
     }
 
     call();
-  }, [JSON.stringify(data)]);
+  }, [JSON.stringify(data), refresh]);
 
   return useMemo(() => positionsFee, [positionsFee]);
 }

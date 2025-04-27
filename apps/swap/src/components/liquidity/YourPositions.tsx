@@ -14,6 +14,8 @@ import { useAvailableFarmsForPool } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { useTranslation } from "react-i18next";
 import { getPositionFeeKey } from "utils/swap";
+import { useRefreshTrigger } from "hooks/index";
+import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
 
 interface PositionItemProps {
   position: UserPositionByList;
@@ -61,6 +63,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
   const principal = useAccountPrincipalString();
 
   const { refreshTrigger, setAllPositions, allPositionsUSDValue, positionFees } = useContext(PositionContext);
+  const positionFeesRefreshTrigger = useRefreshTrigger(POSITIONS_FEES_REFRESH_KEY);
 
   const { loading: initialUserPositionPoolsLoading } = useInitialUserPositionPools();
   const { result: positions, loading } = useUserAllPositions(refreshTrigger);
@@ -89,7 +92,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
     );
   }, [positions]);
 
-  const multiplePositionsFee = useMultiplePositionsFee({ data: positionsFeeArgs });
+  const multiplePositionsFee = useMultiplePositionsFee({ data: positionsFeeArgs, refresh: positionFeesRefreshTrigger });
 
   useEffect(() => {
     setAllPositions(positions);
