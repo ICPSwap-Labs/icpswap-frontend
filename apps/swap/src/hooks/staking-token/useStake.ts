@@ -1,10 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
-import { ResultStatus } from "@icpswap/types";
+import { Null, ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { sleep } from "@icpswap/utils";
+import { BigNumber, isNullArgs, sleep } from "@icpswap/utils";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { isUseTransferByStandard } from "utils/token/index";
+import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getSteps } from "components/stake/StakeStep";
@@ -12,7 +12,7 @@ import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
 import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { useTranslation } from "react-i18next";
-
+import { useAllowance } from "hooks/token";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 
 interface UpdateStepArgs {
@@ -112,31 +112,53 @@ function useStakeCallback() {
 }
 
 interface UseStakeCallsArgs {
-  token: Token;
   amount: string;
-  poolId: string;
   standard: TOKEN_STANDARD;
   key: string;
   rewardToken: Token;
 }
 
-function useStakeCalls() {
+interface UseStakeCallsProps {
+  token: Token | Null;
+  poolId: string | Null;
+}
+
+function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
+  const principal = useAccountPrincipal();
   const approveOrTransfer = useTokenTransferOrApprove();
   const deposit = useStakingTokenDeposit();
   const stake = useStakeCallback();
   const withdraw = useRewardTokenWithdrawCall();
 
+  const allowanceTokenId = useMemo(() => {
+    if (isNullArgs(token)) return undefined;
+    return isUseTransfer(token) ? undefined : token.address;
+  }, [token]);
+
+  const { result: allowance } = useAllowance({
+    canisterId: allowanceTokenId,
+    spender: poolId,
+    owner: principal?.toString(),
+  });
+
   return useCallback(
-    ({ token, amount, poolId, standard, key, rewardToken }: UseStakeCallsArgs) => {
+    ({ amount, standard, key, rewardToken }: UseStakeCallsArgs) => {
+      if (!token || !poolId) return [];
+
+      const approveAmount = new BigNumber(amount).multipliedBy(1000).toString();
+
       const call0 = async () =>
         await approveOrTransfer({
           token,
           amount,
           to_owner: poolId,
           standard,
+          approve_amount: approveAmount,
+          allowance,
         });
 
       const call1 = async () => await deposit({ token, amount, poolId, standard });
+
       const call2 = async () => {
         const stakeResult = await stake({ token, amount, poolId, standard, key, rewardToken });
         if (stakeResult) {
@@ -144,6 +166,7 @@ function useStakeCalls() {
         }
         return stakeResult;
       };
+
       // const call3 = async () => await withdraw({ token: rewardToken, poolId, key });
       const call3 = async () => {
         await sleep(3000);
@@ -152,7 +175,7 @@ function useStakeCalls() {
 
       return [call0, call1, call2, call3];
     },
-    [approveOrTransfer, deposit, stake, withdraw],
+    [approveOrTransfer, allowance, deposit, stake, withdraw],
   );
 }
 
@@ -164,21 +187,28 @@ export interface UseStakeCallArgs {
   rewardToken: Token;
 }
 
-export function useStakeCall() {
+export interface UseStakeCallProps {
+  token: Token | Null;
+  poolId: string | Null;
+}
+
+export function useStakeCall({ token, poolId }: UseStakeCallProps) {
   const updateStep = useSteps();
   const formatCall = useStepCalls();
-  const getCalls = useStakeCalls();
+  const getCalls = useStakeCalls({ token, poolId });
 
   return useCallback(
-    ({ token, amount, poolId, standard, rewardToken }: UseStakeCallArgs) => {
+    ({ amount, standard, rewardToken }: UseStakeCallArgs) => {
       const key = newStepKey();
-      const calls = getCalls({ token, amount, poolId, standard, key, rewardToken });
+      const calls = getCalls({ amount, standard, key, rewardToken });
       const { call, reset, retry } = formatCall(calls, key);
 
-      updateStep(key, { token, amount, poolId, standard, rewardToken });
+      if (token && poolId) {
+        updateStep(key, { token, amount, poolId, standard, rewardToken });
+      }
 
       return { call, reset, retry, key };
     },
-    [getCalls, formatCall, updateStep],
+    [getCalls, formatCall, updateStep, token, poolId],
   );
 }

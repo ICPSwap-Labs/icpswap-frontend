@@ -7,7 +7,7 @@ import { useUSDPriceById } from "hooks/useUSDPrice";
 export interface UseFarmAprArgs {
   farmTvlValue: string | undefined;
   state: FarmState | undefined;
-  farmInitArgs: InitFarmArgs | undefined;
+  farmInitArgs: InitFarmArgs | Null;
   rewardToken: Token | undefined;
   rewardMetadata: FarmRewardMetadata | undefined;
 }

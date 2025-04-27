@@ -1,8 +1,7 @@
-import { useState, useCallback, useMemo, useEffect, useContext } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { usePositionFees } from "hooks/swap/usePositionFees";
 import {
   BigNumber,
   formatDollarAmount,
@@ -16,11 +15,11 @@ import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadat
 import { type FarmInfoWithId } from "@icpswap/types";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { PositionContext, PositionRangeState } from "components/swap/index";
+import { usePositionContext, PositionRangeState } from "components/swap/index";
 import { FarmStateChip } from "components/farm/index";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
-import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
+import { useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
 import { useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr, useFarmTvlValue } from "hooks/staking-farm/index";
 import { usePositionsTotalValue } from "hooks/swap/index";
@@ -118,6 +117,7 @@ export interface PositionCardForFarmProps {
   filterState: PositionFilterState;
   sort: PositionSort;
   farmInfo: FarmInfoWithId;
+  fee: { fee0: bigint; fee1: bigint } | undefined;
 }
 
 export function PositionCardForFarm({
@@ -127,6 +127,7 @@ export function PositionCardForFarm({
   staked,
   filterState,
   farmInfo,
+  fee,
 }: PositionCardForFarmProps) {
   const { t } = useTranslation();
   const classes = useStyle();
@@ -137,8 +138,7 @@ export function PositionCardForFarm({
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
-  const { setAllPositionsUSDValue, setHiddenNumbers } = useContext(PositionContext);
-  const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
+  const { setAllPositionsUSDValue, setHiddenNumbers } = usePositionContext();
 
   const positionKey = useMemo(() => {
     if (!position) return undefined;
@@ -176,11 +176,10 @@ export function PositionCardForFarm({
 
   const totalUSDValue = usePositionValue({ position });
 
-  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(
-    position?.pool.id,
-    positionId,
-    positionKey ? refreshTriggers[positionKey] : undefined,
-  );
+  const { fee0: feeAmount0, fee1: feeAmount1 } = useMemo(() => {
+    if (!fee) return { fee0: undefined, fee1: undefined };
+    return fee;
+  }, [fee]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
     if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return {};
@@ -201,12 +200,6 @@ export function PositionCardForFarm({
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
   }, [totalUSDValue, positionKey, staked]);
-
-  const handleClaimSuccess = useCallback(() => {
-    if (positionKey) {
-      setRefreshTriggers(positionKey);
-    }
-  }, [setRefreshTriggers, positionKey]);
 
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState)) return true;
@@ -495,7 +488,6 @@ export function PositionCardForFarm({
           feeUSDValue={feeUSDValue}
           feeAmount0={currencyFeeAmount0}
           feeAmount1={currencyFeeAmount1}
-          onClaimSuccess={handleClaimSuccess}
           onHide={() => setDetailShow(false)}
           staked={staked}
           state={positionState}

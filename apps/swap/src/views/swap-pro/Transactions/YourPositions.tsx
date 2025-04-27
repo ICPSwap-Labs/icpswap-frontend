@@ -232,10 +232,10 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
 
     return (
       userPositions
-        .filter((e) => e.liquidity !== BigInt(0))
+        .filter((e) => e.position.liquidity !== BigInt(0))
         // Filter the limit order
         .filter((e) => {
-          return !userLimitOrders.find((limit) => limit.userPositionId === BigInt(e.index));
+          return !userLimitOrders.find((limit) => limit.userPositionId === BigInt(e.position.id));
         })
         .slice(maxItems * (page - 1), page * maxItems)
     );
@@ -255,8 +255,12 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
         </Header>
 
         {!loading
-          ? (filteredPositions ?? []).map((position) => (
-              <PositionItem key={`${position.id}_${position.index}`} positionInfo={position} pool={pool} />
+          ? (filteredPositions ?? []).map((element) => (
+              <PositionItem
+                key={`${element.poolId}_${element.position.id.toString()}`}
+                positionInfo={position}
+                pool={pool}
+              />
             ))
           : null}
 

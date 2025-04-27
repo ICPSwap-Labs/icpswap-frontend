@@ -3,8 +3,6 @@ import { useAppSelector } from "store/hooks";
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
 import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
-import { Route } from "react-router-dom";
-import GoogleAnalytics, { initGoogleAnalytics } from "components/GoogleAnalytics";
 import { useConnectManager } from "store/auth/hooks";
 import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
 import RiskStatement from "components/RiskStatement";
@@ -32,8 +30,6 @@ import { theme } from "./theme";
 import Routes from "./routes";
 
 import "utils/dayjs";
-
-initGoogleAnalytics();
 
 export default function App() {
   const customization = useAppSelector((state) => state.customization);
@@ -67,7 +63,6 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <StyledEngineProvider injectFirst>
             <Web3Provider>
-              <Route component={GoogleAnalytics} />
               <TransactionsUpdater />
               <ThemeProvider theme={theme(customization)}>
                 <SnackbarProvider maxSnack={100}>

@@ -188,6 +188,28 @@ export function usePositionFee(
   );
 }
 
+export async function getPositionsFee(canisterId: string, positionIds: bigint[]) {
+  return resultFormat<{
+    tokenIncome: Array<[bigint, { tokensOwed0: bigint; tokensOwed1: bigint }]>;
+    totalTokensOwed0: bigint;
+    totalTokensOwed1: bigint;
+  }>(await (await swapPool(canisterId)).batchRefreshIncome(positionIds)).data;
+}
+
+export function usePositionsFee(
+  canisterId: string | undefined,
+  positionIds: bigint[] | undefined,
+  refresh?: number | boolean,
+) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!canisterId || !positionIds || positionIds.length === 0) return undefined;
+      return await getPositionsFee(canisterId, positionIds);
+    }, [canisterId, positionIds]),
+    refresh,
+  );
+}
+
 export type SwapPoolAllBalance = [Principal, { balance0: bigint; balance1: bigint }];
 
 export async function getSwapPoolAllBalance(canisterId: string, offset: number, limit: number) {

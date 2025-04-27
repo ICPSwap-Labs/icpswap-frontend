@@ -71,7 +71,7 @@ export function updateLockStatus(locked: boolean) {
   store.dispatch(_updateLockStatus(locked));
 }
 
-export function useCleanLogState() {
+export function useLogout() {
   const dispatch = useAppDispatch();
 
   return useCallback(async () => {

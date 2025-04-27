@@ -43,3 +43,5 @@ export enum SortBalanceEnum {
   TEN = "TEN",
   ALL = "ALL",
 }
+
+export type RefreshKey = number | boolean;

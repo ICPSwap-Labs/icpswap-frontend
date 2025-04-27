@@ -1,7 +1,7 @@
 import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
 import { isNullArgs, isValidAccount, isValidPrincipal, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
-import { Flex, TextButton, APRPanel } from "@icpswap/ui";
+import { Flex, TextButton, APRPanel, Link } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { useTranslation } from "react-i18next";
+import { infoRoutesConfigs } from "routes/info.config";
 
 interface PositionInfoProps {
   position: Position;
@@ -130,7 +131,11 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
         </Flex>
 
         {isOwner && isLimit === false ? (
-          <Flex fullWidth>
+          <Flex
+            fullWidth
+            justify="space-between"
+            sx={{ padding: "12px 16px", borderRadius: "12px", border: `1px solid ${theme.palette.background.level4}` }}
+          >
             <TransferPosition
               position={position}
               positionId={BigInt(positionId)}
@@ -138,6 +143,15 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
             >
               <TextButton sx={{ fontWeight: 500 }}>{t("common.transfer.position")}</TextButton>
             </TransferPosition>
+
+            <Link to={`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}?pair=${position.pool.id}`}>
+              <Flex gap="0 4px" sx={{ cursor: "pointer" }}>
+                <img src="/images/history.svg" alt="" />
+                <Typography color="text.secondary" fontSize="12px">
+                  {t("common.history")}
+                </Typography>
+              </Flex>
+            </Link>
           </Flex>
         ) : null}
 

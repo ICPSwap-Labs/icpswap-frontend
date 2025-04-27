@@ -14,8 +14,6 @@ export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
-export const LIQUIDITY_OWNER_REFRESH_KEY = "LIQUIDITY_OWNER_REFRESH_KEY";
-
 export const SWAP_CHART_CURRENT_PRICE_COLOR = "#ffffff";
 export const SWAP_CHART_RANGE_PRICE_COLOR = "#8672FF";
 
@@ -27,6 +25,5 @@ export const icrc_standards = [TOKEN_STANDARD.ICRC1, TOKEN_STANDARD.ICRC2];
 
 export const TRADING_VIEW_DESCRIPTIONS = [ChartView.PRICE, ChartView.DexTools, ChartView.DexScreener];
 
-export const LIQUIDITY_YOUR_POSITIONS_REFRESH_KEY = "YOUR_POSITIONS_REFRESH_KEY";
-
 export * from "./mint";
+export * from "./liquidity";

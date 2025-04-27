@@ -21,6 +21,7 @@ export default function Header({
   defaultSortFiled = "",
   defaultSortDirection = SortDirection.DESC,
   borderBottom,
+  padding,
   ...props
 }: HeaderProps) {
   const [sortField, setSortField] = useState(defaultSortFiled);
@@ -38,7 +39,7 @@ export default function Header({
       <Box
         {...props}
         sx={{
-          padding: "20px 0",
+          padding: padding ? `${padding}!important` : "20px 0",
           borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
           ...(props.sx ?? {}),
         }}

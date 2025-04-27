@@ -35,13 +35,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
   <meta name="referrer" content="origin" />
   <meta http-equiv="Content-Security-Policy" content="
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.google-analytics.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.googletagmanager.com;
     object-src 'none';
     img-src 'self' data: https:;
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
     child-src https: blob:
     "
   >
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_TAG_MANAGER_ID%"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '%REACT_APP_GOOGLE_TAG_MANAGER_ID%');
+  </script>
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

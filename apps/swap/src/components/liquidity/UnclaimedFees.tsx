@@ -1,8 +1,8 @@
-import { useContext, useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
-import { PositionContext } from "components/swap/index";
+import { usePositionContext } from "components/swap/index";
 import { collect } from "@icpswap/hooks";
 import { decodePositionKey } from "utils/swap";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -10,6 +10,7 @@ import { useGlobalContext } from "hooks/index";
 import { ResultStatus } from "@icpswap/types";
 import { useSwapWithdrawByTokenId } from "hooks/swap/index";
 import { useTranslation } from "react-i18next";
+import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
 
 export interface UnclaimedFeesProps {
   className?: string;
@@ -19,7 +20,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [openTip, closeTip] = useTips();
-  const { positionFeesValue, positionFees } = useContext(PositionContext);
+  const { positionFeesValue, positionFees } = usePositionContext();
   const { setRefreshTriggers } = useGlobalContext();
   const withdraw = useSwapWithdrawByTokenId();
 
@@ -77,8 +78,6 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
 
             withdrawToken0();
             withdrawToken1();
-
-            setRefreshTriggers(key);
           }
 
           return result;
@@ -87,6 +86,8 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
         return undefined;
       }),
     ).catch((error) => console.error("Collect all position fees error: ", JSON.stringify(error)));
+
+    setRefreshTriggers(POSITIONS_FEES_REFRESH_KEY);
 
     closeTip(loading_key);
 

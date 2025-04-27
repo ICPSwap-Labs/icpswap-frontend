@@ -8,14 +8,15 @@ export interface RowProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  padding?: string;
 }
 
-export default function Row({ borderBottom, sx, children, className, onClick }: RowProps) {
+export default function Row({ borderBottom, padding, sx, children, className, onClick }: RowProps) {
   return (
     <Box
       className={className}
       sx={{
-        padding: "20px 0",
+        padding: padding ? `${padding}!important` : "20px 0",
         borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
         ...sx,
       }}

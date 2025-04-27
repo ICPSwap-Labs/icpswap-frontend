@@ -67,7 +67,7 @@ export class Actor {
 
   private beforeSubmit: BeforeSubmitCallback;
 
-  public log = true;
+  public log = process.env.REACT_APP_ENV === "development";
 
   public setConnector(connector: Connector) {
     this.connector = connector;

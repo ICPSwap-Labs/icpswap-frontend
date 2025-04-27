@@ -10,9 +10,8 @@ import {
   formatIcpAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
-import { NoData, LoadingRow, TokenImage, TokenStandardLabel } from "components/index";
+import { NoData, LoadingRow, TokenImage } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
-import { TOKEN_STANDARD } from "@icpswap/types";
 import { useTokensFromList, useTokenSupply, useInfoToken, useExplorerTokenDetails } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
 import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";
@@ -57,7 +56,6 @@ function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetada
           <Typography fontSize="16px" color="text.primary">
             {token?.symbol}
           </Typography>
-          <TokenStandardLabel standard={tokenMetadata.standard as TOKEN_STANDARD} />
         </Flex>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell sx={{ width: "100%" }} align="right">

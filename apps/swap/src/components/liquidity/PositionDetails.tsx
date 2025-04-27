@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
@@ -16,7 +16,7 @@ import {
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
-import { PositionContext, TransferPosition } from "components/swap/index";
+import { usePositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
@@ -80,7 +80,6 @@ export interface PositionDetailsProps {
   feeUSDValue: string | undefined;
   feeAmount0: CurrencyAmount<Token> | undefined;
   feeAmount1: CurrencyAmount<Token> | undefined;
-  onClaimSuccess: () => void;
   onHide: () => void;
   farmId?: string;
   staked?: boolean;
@@ -112,7 +111,7 @@ export function PositionDetails({
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
-  const { setPositionFees } = useContext(PositionContext);
+  const { setPositionFees } = usePositionContext();
 
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
@@ -150,7 +149,7 @@ export function PositionDetails({
   }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
-    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && isLimit) {
+    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);

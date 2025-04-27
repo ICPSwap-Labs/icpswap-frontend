@@ -246,6 +246,7 @@ export function SetDissolveDelay({
                 seconds: neuron_minimum_dissolve_seconds
                   ? secondsToDissolveDelayDuration(neuron_minimum_dissolve_seconds)
                   : "--",
+                symbol: token?.symbol,
               })}
             </Typography>
           </Box>
