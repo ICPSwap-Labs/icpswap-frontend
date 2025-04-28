@@ -117,119 +117,127 @@ export function ReclaimTokensInPool({
     return __availableWithdrawTokens;
   }, [token0, token1, token0TotalAmount, token1TotalAmount]);
 
-  return !!pool && availableWithdrawTokens.length > 0 ? (
-    <MainCard padding="16px 24px" level={1}>
-      <Flex align="center" gap="0 8px">
-        <AlertTriangle size={14} color={colors.danger} />
+  return nonNullArgs(pool) ? (
+    <>
+      {availableWithdrawTokens.length > 0 ? (
+        <MainCard padding="16px 24px" level={1}>
+          <Flex align="center" gap="0 8px">
+            <AlertTriangle size={14} color={colors.danger} />
 
-        <Flex align="center">
-          <Flex>
-            <Typography>
-              You have{" "}
-              {toSignificantWithGroupSeparator(
-                parseTokenAmount(
-                  availableWithdrawTokens[0].amount,
-                  availableWithdrawTokens[0].token.decimals,
-                ).toString(),
-              )}{" "}
-              {availableWithdrawTokens[0].token.symbol} to
-            </Typography>
-            &nbsp;
-            <WithdrawButton
-              pool={pool}
-              token={availableWithdrawTokens[0].token}
-              balances={balances}
-              onReclaimSuccess={handleRefresh}
-              fontSize={__fontSize}
-            />
-          </Flex>
-
-          {availableWithdrawTokens.length > 1 ? (
-            <Flex>
-              <Typography>
-                , and{" "}
-                {toSignificantWithGroupSeparator(
-                  parseTokenAmount(
-                    availableWithdrawTokens[1].amount,
-                    availableWithdrawTokens[0].token.decimals,
-                  ).toString(),
-                )}{" "}
-                {availableWithdrawTokens[1].token.symbol} to
-              </Typography>
-              &nbsp;
-              <WithdrawButton
-                pool={pool}
-                token={availableWithdrawTokens[1].token}
-                balances={balances}
-                onReclaimSuccess={handleRefresh}
-                fontSize={__fontSize}
-              />
-            </Flex>
-          ) : null}
-        </Flex>
-      </Flex>
-
-      {reclaim === "true" ? (
-        <Box sx={{ background: bg1 ?? theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
-          <Box className={`${classes.wrapper} ${ui} border`}>
-            <Flex justify="space-between">
-              <Flex gap="0 4px">
-                <CanisterIcon />
-                <Typography
-                  sx={{ fontSize: __fontSize, cursor: "pointer" }}
-                  onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
-                >
-                  {token0?.symbol ?? "--"}:{" "}
-                  {token0TotalAmount && token0
-                    ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
-                    : "--"}
+            <Flex align="center">
+              <Flex>
+                <Typography>
+                  You have{" "}
+                  {toSignificantWithGroupSeparator(
+                    parseTokenAmount(
+                      availableWithdrawTokens[0].amount,
+                      availableWithdrawTokens[0].token.decimals,
+                    ).toString(),
+                  )}{" "}
+                  {availableWithdrawTokens[0].token.symbol} to
                 </Typography>
-              </Flex>
-
-              <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
-                <DepositButton pool={pool} token={token0} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
+                &nbsp;
                 <WithdrawButton
                   pool={pool}
-                  token={token0}
+                  token={availableWithdrawTokens[0].token}
                   balances={balances}
                   onReclaimSuccess={handleRefresh}
                   fontSize={__fontSize}
                 />
               </Flex>
+
+              {availableWithdrawTokens.length > 1 ? (
+                <Flex>
+                  <Typography>
+                    , and{" "}
+                    {toSignificantWithGroupSeparator(
+                      parseTokenAmount(
+                        availableWithdrawTokens[1].amount,
+                        availableWithdrawTokens[0].token.decimals,
+                      ).toString(),
+                    )}{" "}
+                    {availableWithdrawTokens[1].token.symbol} to
+                  </Typography>
+                  &nbsp;
+                  <WithdrawButton
+                    pool={pool}
+                    token={availableWithdrawTokens[1].token}
+                    balances={balances}
+                    onReclaimSuccess={handleRefresh}
+                    fontSize={__fontSize}
+                  />
+                </Flex>
+              ) : null}
             </Flex>
-          </Box>
-          <Box className={`${classes.wrapper} ${ui}`}>
-            <Flex justify="space-between">
-              {pool ? (
+          </Flex>
+        </MainCard>
+      ) : null}
+
+      {reclaim === "true" ? (
+        <MainCard padding="16px 24px" level={1}>
+          <Box sx={{ background: bg1 ?? theme.palette.background.level2, borderRadius: "12px", margin: "14px 0 0 0" }}>
+            <Box className={`${classes.wrapper} ${ui} border`}>
+              <Flex justify="space-between">
                 <Flex gap="0 4px">
                   <CanisterIcon />
                   <Typography
                     sx={{ fontSize: __fontSize, cursor: "pointer" }}
-                    onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
+                    onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
                   >
-                    {token1?.symbol ?? "--"}:{" "}
-                    {token1TotalAmount && token1
-                      ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
+                    {token0?.symbol ?? "--"}:{" "}
+                    {token0TotalAmount && token0
+                      ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
                       : "--"}
                   </Typography>
                 </Flex>
-              ) : (
-                <DotLoading loading size="3px" color="#ffffff" />
-              )}
-              <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
-                <DepositButton pool={pool} token={token1} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
-                <WithdrawButton
-                  pool={pool}
-                  token={token1}
-                  balances={balances}
-                  onReclaimSuccess={handleRefresh}
-                  fontSize={__fontSize}
-                />
+
+                <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
+                  <DepositButton pool={pool} token={token0} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
+                  <WithdrawButton
+                    pool={pool}
+                    token={token0}
+                    balances={balances}
+                    onReclaimSuccess={handleRefresh}
+                    fontSize={__fontSize}
+                  />
+                </Flex>
               </Flex>
-            </Flex>
+            </Box>
+            <Box className={`${classes.wrapper} ${ui}`}>
+              <Flex justify="space-between">
+                {pool ? (
+                  <Flex gap="0 4px">
+                    <CanisterIcon />
+                    <Typography
+                      sx={{ fontSize: __fontSize, cursor: "pointer" }}
+                      onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
+                    >
+                      {token1?.symbol ?? "--"}:{" "}
+                      {token1TotalAmount && token1
+                        ? toSignificantWithGroupSeparator(
+                            parseTokenAmount(token1TotalAmount, token1.decimals).toString(),
+                          )
+                        : "--"}
+                    </Typography>
+                  </Flex>
+                ) : (
+                  <DotLoading loading size="3px" color="#ffffff" />
+                )}
+                <Flex gap={ui === "pro" ? "0 10px" : "0 16px"}>
+                  <DepositButton pool={pool} token={token1} onDepositSuccess={handleRefresh} fontSize={__fontSize} />
+                  <WithdrawButton
+                    pool={pool}
+                    token={token1}
+                    balances={balances}
+                    onReclaimSuccess={handleRefresh}
+                    fontSize={__fontSize}
+                  />
+                </Flex>
+              </Flex>
+            </Box>
           </Box>
-        </Box>
+        </MainCard>
       ) : null}
-    </MainCard>
+    </>
   ) : null;
 }
