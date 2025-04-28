@@ -4,7 +4,6 @@ import { MainCard, Flex } from "components/index";
 import {
   SwapWrapper,
   type SwapWrapperRef,
-  Reclaim,
   SwapUIWrapper,
   CreatePool,
   SwapTabPanels,
@@ -14,9 +13,11 @@ import {
   SwapContext,
   SwapTransactions,
 } from "components/swap/index";
+import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { useConnectorStateConnected } from "store/auth/hooks";
 import { SWAP_REFRESH_KEY } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
+import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 
 export function SwapContextWrapper() {
   const { cachedPool, inputToken, outputToken, noLiquidity } = useContext(SwapContext);
@@ -81,23 +82,22 @@ export function SwapContextWrapper() {
           </MainCard>
 
           {isConnected && noLiquidity === false ? (
-            <Box
-              mt="8px"
+            <Flex
+              vertical
+              gap="8px 0"
               sx={{
-                width: "100%",
-                background: "#111936",
-                padding: "16px",
-                borderRadius: "12px",
+                margin: "8px 0 0 0",
               }}
             >
-              <Reclaim
+              <ReclaimTokensInPool
                 pool={cachedPool}
                 refreshKey={SWAP_REFRESH_KEY}
                 onInputTokenClick={handleInputTokenClick}
                 inputToken={inputToken}
-                fontSize="12px"
               />
-            </Box>
+
+              <ToReclaim />
+            </Flex>
           ) : null}
 
           {isConnected && noLiquidity === true ? (
