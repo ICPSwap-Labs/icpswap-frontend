@@ -132,7 +132,8 @@ export async function depositAndSwap(poolId: string, args: DepositAndSwapArgs) {
 }
 
 export async function depositFromAndSwap(poolId: string, args: DepositAndSwapArgs) {
-  return resultFormat<bigint>(await (await swapPool(poolId, true)).depositFromAndSwap(args));
+  const result = await (await swapPool(poolId, true)).depositFromAndSwap(args);
+  return resultFormat<bigint>(result);
 }
 
 export async function collect(poolId: string, args: ClaimArgs) {

@@ -8,6 +8,7 @@ import {
   updatePoolCanisterIds,
   updateSwapOutAmount,
   updateAllSwapPools,
+  updateSwapFinalMetadata,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -62,5 +63,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateAllSwapPools, (state, { payload }) => {
       state.allSwapPools = payload;
+    })
+    .addCase(updateSwapFinalMetadata, (state, { payload }) => {
+      state.swapFinalMetadata = payload;
     });
 });

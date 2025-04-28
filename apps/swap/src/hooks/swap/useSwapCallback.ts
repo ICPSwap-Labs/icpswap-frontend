@@ -3,7 +3,7 @@ import { Null, ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Trade, Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
 import { useSlippageManager } from "store/swap/cache/hooks";
-import { useUpdateSwapOutAmount } from "store/swap/hooks";
+import { useSwapFinalMetadataManager, useUpdateSwapOutAmount } from "store/swap/hooks";
 import { slippageToPercent } from "constants/index";
 import { depositAndSwap, depositFromAndSwap } from "@icpswap/hooks";
 import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
@@ -21,7 +21,7 @@ import { isUseTransfer } from "utils/token/index";
 import { getSwapSteps } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
-import { isNullArgs, BigNumber } from "@icpswap/utils";
+import { isNullArgs, BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
 
@@ -92,6 +92,7 @@ export function useSwapCalls() {
   const transfer = useSwapTransfer();
 
   const updateSwapOutAmount = useUpdateSwapOutAmount();
+  const { callback: swapFinalMetadataCallback } = useSwapFinalMetadataManager();
 
   const [openTip] = useTips();
 
@@ -128,13 +129,10 @@ export function useSwapCalls() {
           const singleHop = route.pools.length === 1;
 
           if (singleHop) {
-            const tokenIn = route.tokenPath[0];
-            const tokenOut = route.tokenPath[1];
+            const inputToken = route.tokenPath[0];
+            const outputToken = route.tokenPath[1];
             const pool = route.pools[0];
             const poolId = pool.id;
-            const token0 = pool.token0;
-            const token1 = pool.token1;
-            const inputToken = token0.address === tokenIn.address ? token0 : token1;
 
             updateSwapOutAmount(stepKey, undefined);
 
@@ -181,18 +179,18 @@ export function useSwapCalls() {
 
               const { status, message, data } = isUseTransfer(inputToken)
                 ? await depositAndSwap(poolId, {
-                    zeroForOne: tokenIn.address < tokenOut.address,
+                    zeroForOne: inputToken.address < outputToken.address,
                     amountIn: actualSwapAmount,
                     amountOutMinimum: amountOut,
-                    tokenInFee: BigInt(tokenIn.transFee),
-                    tokenOutFee: BigInt(tokenOut.transFee),
+                    tokenInFee: BigInt(inputToken.transFee),
+                    tokenOutFee: BigInt(outputToken.transFee),
                   })
                 : await depositFromAndSwap(poolId, {
-                    zeroForOne: tokenIn.address < tokenOut.address,
+                    zeroForOne: inputToken.address < outputToken.address,
                     amountIn: actualSwapAmount,
                     amountOutMinimum: amountOut,
-                    tokenInFee: BigInt(tokenIn.transFee),
-                    tokenOutFee: BigInt(tokenOut.transFee),
+                    tokenInFee: BigInt(inputToken.transFee),
+                    tokenOutFee: BigInt(outputToken.transFee),
                   });
 
               if (status === ResultStatus.ERROR) {
@@ -207,6 +205,12 @@ export function useSwapCalls() {
                 }
               } else {
                 updateSwapOutAmount(stepKey, data);
+                swapFinalMetadataCallback({
+                  outputAmount: formatTokenAmount(outputAmount.toExact(), outputToken.decimals).toString(),
+                  inputAmount: actualSwapAmount,
+                  inputToken,
+                  outputToken,
+                });
                 initialAndUpdateSwapStep({ trade, key: stepKey });
               }
 

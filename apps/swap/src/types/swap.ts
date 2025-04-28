@@ -1,4 +1,5 @@
 import { FarmInfoWithId, Override, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
+import { Token } from "@icpswap/swap-sdk";
 
 export type PositionDetail = {
   pool: string;
@@ -57,3 +58,10 @@ export enum PoolState {
   INVALID = "INVALID",
   NOT_CHECK = "NOT_CHECK",
 }
+
+export type SwapFinalMetadata = {
+  inputToken: Token;
+  outputToken: Token;
+  outputAmount: string | undefined;
+  inputAmount: string;
+};

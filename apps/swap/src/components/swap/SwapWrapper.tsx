@@ -23,6 +23,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
+import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -48,6 +49,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [impactChecked, setImpactChecked] = useState(false);
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [swapLoading, setSwapLoading] = useState(false);
+  const [swapSuccessModalShow, setSwapSuccessModalShow] = useState(false);
 
   useLoadDefaultParams();
 
@@ -225,7 +227,11 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     handleInput("", "input");
     handleInput("", "output");
 
-    await call();
+    const success = await call();
+
+    if (success) {
+      setSwapSuccessModalShow(true);
+    }
 
     closeLoadingTip(loadingKey);
   }, [
@@ -364,6 +370,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           inputTokenBalance={inputTokenBalance}
         />
       )}
+
+      <SwapSuccessModal open={swapSuccessModalShow} onClose={() => setSwapSuccessModalShow(false)} />
     </Box>
   );
 });

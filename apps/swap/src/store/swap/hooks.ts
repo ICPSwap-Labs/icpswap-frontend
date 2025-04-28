@@ -22,7 +22,7 @@ import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";
 import { type SwapPoolData } from "@icpswap/types";
-
+import { SwapFinalMetadata } from "types/swap";
 import {
   selectCurrency,
   switchCurrencies,
@@ -32,6 +32,7 @@ import {
   PoolCanisterRecord,
   updateSwapOutAmount,
   updateAllSwapPools,
+  updateSwapFinalMetadata,
 } from "./actions";
 
 export function useSwapHandlers() {
@@ -329,4 +330,28 @@ export function useUpdateAllSwapPools() {
 
 export function useAllSwapPools() {
   return useAppSelector((state) => state.swap.allSwapPools);
+}
+
+export function useSwapFinalMetadata() {
+  return useAppSelector((state) => state.swap.swapFinalMetadata);
+}
+
+export function useSwapFinalMetadataManager() {
+  const dispatch = useAppDispatch();
+  const swapFinalMetadata = useSwapFinalMetadata();
+
+  const callback = useCallback(
+    (data: SwapFinalMetadata) => {
+      dispatch(updateSwapFinalMetadata(data));
+    },
+    [dispatch],
+  );
+
+  return useMemo(
+    () => ({
+      swapFinalMetadata,
+      callback,
+    }),
+    [callback, swapFinalMetadata],
+  );
 }
