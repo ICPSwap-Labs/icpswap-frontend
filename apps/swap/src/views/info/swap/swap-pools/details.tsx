@@ -25,7 +25,7 @@ import { useTranslation } from "react-i18next";
 import { Token } from "@icpswap/swap-sdk";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
 
-import PoolChart from "./components/PoolChart";
+import { PoolChart } from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 interface PoolTokenTvlProps {
@@ -302,7 +302,11 @@ export default function SwapPoolDetails() {
           </GridAutoRows>
         </MainCard>
 
-        <PoolChart canisterId={canisterId} token0Price={pool?.token0Price} volume24H={pool?.volumeUSD} />
+        <PoolChart
+          canisterId={canisterId}
+          token0Price={pool ? new BigNumber(pool.token0Price).dividedBy(pool.token1Price).toNumber() : undefined}
+          volume24H={pool?.volumeUSD}
+        />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
