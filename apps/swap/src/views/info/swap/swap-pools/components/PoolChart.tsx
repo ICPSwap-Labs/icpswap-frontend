@@ -36,7 +36,7 @@ export interface PoolChartProps {
   volume24H: number | undefined;
 }
 
-export default function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps) {
+export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps) {
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
   const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
   const [chartView, setChartView] = useState<ChartView>(ChartView.APR);

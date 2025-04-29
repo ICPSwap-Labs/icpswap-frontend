@@ -26,8 +26,7 @@ export function CurrentPriceLabel({ data, chartProps, token0, token1 }: CurrentP
   const entryData = data?.[labelData.index];
 
   if (entryData?.isCurrent) {
-    const { price0 } = entryData;
-    const { price1 } = entryData;
+    const { price0, price1 } = entryData;
 
     return (
       <g>
