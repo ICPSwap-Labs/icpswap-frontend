@@ -1,17 +1,17 @@
 import { Flex, GridRowBetween } from "@icpswap/ui";
-import { Typography, Box, Theme, useTheme } from "components/Mui";
+import { Typography, Box, useTheme } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { toSignificant, formatAmount } from "@icpswap/utils";
 
-interface CustomToolTipProps {
+interface LiquidityChartToolTipProps {
   chartProps: any;
   token0: Token | undefined;
   token1: Token | undefined;
   currentPrice: number | undefined;
 }
 
-export function CustomToolTip({ chartProps, token0, token1, currentPrice }: CustomToolTipProps) {
-  const theme = useTheme() as Theme;
+export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice }: LiquidityChartToolTipProps) {
+  const theme = useTheme();
 
   const price0 = chartProps?.payload?.[0]?.payload.price0;
   const price1 = chartProps?.payload?.[0]?.payload.price1;

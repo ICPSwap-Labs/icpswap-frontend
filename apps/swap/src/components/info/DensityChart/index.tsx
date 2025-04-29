@@ -10,7 +10,7 @@ import { useTicksSurroundingPrice, TickProcessed } from "hooks/swap/useTicksSurr
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import JSBI from "jsbi";
 
-import { CustomToolTip } from "./CustomToolTip";
+import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
 import { ChartEntry } from "./type";
 
@@ -201,7 +201,7 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
           <BarChart width={500} height={300} data={zoomedData}>
             <Tooltip
               content={(props) => (
-                <CustomToolTip chartProps={props} token0={token0} token1={token1} currentPrice={token0Price} />
+                <LiquidityChartToolTip chartProps={props} token0={token0} token1={token1} currentPrice={token0Price} />
               )}
             />
             {/* <XAxis reversed tick={false} /> */}
