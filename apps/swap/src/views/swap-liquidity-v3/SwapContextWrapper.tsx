@@ -96,7 +96,7 @@ export function SwapContextWrapper() {
                 inputToken={inputToken}
               />
 
-              <ToReclaim />
+              {cachedPool ? <ToReclaim poolId={cachedPool.id} /> : null}
             </Flex>
           ) : null}
 
