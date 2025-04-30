@@ -35,7 +35,7 @@ export function useReclaim() {
 
           await sleep(2000);
 
-          withdraw(poolId, tokenId, tokenFee, amount).then(({ status, message }) => {
+          withdraw(poolId, tokenId, tokenFee, amount - tokenFee).then(({ status, message }) => {
             if (status === ResultStatus.OK) {
               if (refresh) refresh();
             } else {
