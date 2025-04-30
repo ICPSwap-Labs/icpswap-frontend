@@ -18,7 +18,22 @@ export function Link({ to, link, color, children, width, height, display }: Link
   return (
     <>
       {to ? (
-        <ReactLink to={to} style={{ width, height, display, textDecoration: "none", userSelect: "none" }}>
+        <ReactLink
+          to={to}
+          style={{
+            width,
+            height,
+            display,
+            textDecoration: "none",
+            userSelect: "none",
+            color:
+              color === "primary"
+                ? theme.colors.primaryMain
+                : color === "secondary"
+                ? theme.colors.secondaryMain
+                : "inherit",
+          }}
+        >
           {children}
         </ReactLink>
       ) : link ? (
