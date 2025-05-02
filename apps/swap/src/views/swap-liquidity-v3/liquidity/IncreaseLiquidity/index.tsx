@@ -7,7 +7,7 @@ import { SwapDepositAmount, Reclaim } from "components/swap/index";
 import { FIELD, INCREASE_LIQUIDITY_REFRESH_KEY, NONE_TOKEN_SYMBOL } from "constants/index";
 import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "store/swap/liquidity/hooks";
 import { usePosition } from "hooks/swap/usePosition";
-import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
+import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
@@ -378,11 +378,12 @@ export default function IncreaseLiquidity() {
         </Grid>
 
         {confirmModalShow && !!position && (
-          <ConfirmAddLiquidity
+          <AddLiquidityConfirmModal
             onConfirm={handleIncreaseLiquidity}
             onCancel={handleCancel}
             open={confirmModalShow}
             position={position}
+            loading={false}
           />
         )}
       </Box>

@@ -19,7 +19,7 @@ import {
 } from "store/swap/liquidity/hooks";
 import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
-import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
+import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import { isDarkTheme } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
@@ -83,6 +83,8 @@ export default function AddLiquidity() {
   const theme = useTheme();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
+
+  const [confirmAddLoading, setConfirmAddLoading] = useState(false);
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
   const { path: backPath } = useParsedQueryString() as { path: string };
@@ -270,6 +272,8 @@ export default function AddLiquidity() {
       })
       .map((e) => e.subnet);
 
+    setConfirmAddLoading(true);
+
     const { call, key } = await getAddLiquidityCall({
       token0Balance,
       token1Balance,
@@ -296,6 +300,7 @@ export default function AddLiquidity() {
     );
 
     setConfirmModalShow(false);
+    setConfirmAddLoading(false);
 
     const result = await call();
 
@@ -615,11 +620,12 @@ export default function AddLiquidity() {
       </Flex>
 
       {confirmModalShow && !!position && (
-        <ConfirmAddLiquidity
+        <AddLiquidityConfirmModal
           onConfirm={handleOnConfirm}
           onCancel={handleOnCancel}
           open={confirmModalShow}
           position={position}
+          loading={confirmAddLoading}
         />
       )}
     </Wrapper>
