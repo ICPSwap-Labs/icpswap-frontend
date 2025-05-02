@@ -232,3 +232,4 @@ export * from "./usePosition";
 export * from "./usePools";
 export * from "./useTokenPairWithIcp";
 export * from "./useMultiplePositionsFee";
+export * from "./swap";

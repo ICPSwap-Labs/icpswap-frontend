@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
+import { useState, useCallback, useMemo, useEffect, forwardRef, Ref, useImperativeHandle } from "react";
 import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import { isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
@@ -16,11 +16,11 @@ import { AuthButton } from "components/index";
 import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
-import { SwapInputWrapper, SwapConfirmModal, SwapContext, Impact } from "components/swap/index";
+import { SwapInputWrapper, SwapConfirmModal, Impact, useSwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
@@ -39,8 +39,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [isExpertMode] = useExpertModeManager();
-  const { setPoolId, setSelectedPool, setCachedPool, setNoLiquidity, usdValueChange, setInputToken, setOutputToken } =
-    useContext(SwapContext);
+  const { setPoolId, setSelectedPool, setCachedPool, usdValueChange, setInputToken, setOutputToken } = useSwapContext();
   const { setRefreshTriggers } = useGlobalContext();
   const { onUserInput } = useSwapHandlers();
   const clearSwapState = useCleanSwapState();
@@ -96,20 +95,23 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const inputTokenPrice = useUSDPrice(inputToken);
   const outputTokenPrice = useUSDPrice(outputToken);
 
+  const { updateNoLiquidity } = useSwapNoLiquidityManager();
+
   // Set pool for Swap context
   useEffect(() => {
     const pool = routes[0]?.pools[0];
     setSelectedPool(pool);
 
     if (pool) {
-      setNoLiquidity(noLiquidity);
       setCachedPool(pool);
     }
+
+    updateNoLiquidity(noLiquidity);
 
     if (pool?.id) {
       setPoolId(pool.id);
     }
-  }, [routes, setSelectedPool, noLiquidity]);
+  }, [routes, setSelectedPool, noLiquidity, updateNoLiquidity]);
 
   // Set token for Swap context
   useEffect(() => {

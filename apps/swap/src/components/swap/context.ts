@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 
@@ -23,3 +23,5 @@ export interface SwapContextProps {
 }
 
 export const SwapContext = createContext<SwapContextProps>({} as SwapContextProps);
+
+export const useSwapContext = () => useContext(SwapContext);
