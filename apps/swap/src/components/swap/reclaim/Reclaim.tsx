@@ -153,7 +153,7 @@ export function ReclaimTokensInPool({
                     {toSignificantWithGroupSeparator(
                       parseTokenAmount(
                         availableWithdrawTokens[1].amount,
-                        availableWithdrawTokens[0].token.decimals,
+                        availableWithdrawTokens[1].token.decimals,
                       ).toString(),
                     )}{" "}
                     {availableWithdrawTokens[1].token.symbol} to
