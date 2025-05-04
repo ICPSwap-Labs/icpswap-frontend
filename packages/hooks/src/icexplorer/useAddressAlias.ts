@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Null } from "@icpswap/types";
-import { fetch_post, isNullArgs } from "@icpswap/utils";
+import { icpswap_fetch_post, isNullArgs } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
@@ -16,7 +16,7 @@ export function useAddressAlias({ principal, account, accountTextual }: UseAddre
       if (isNullArgs(principal) && isNullArgs(account) && isNullArgs(accountTextual)) return undefined;
 
       return (
-        await fetch_post<string>(`https://api.icexplorer.io/api/address/alias`, {
+        await icpswap_fetch_post<string>(`/info/address/alias`, {
           principal,
           accountId: account,
           accountTextual,

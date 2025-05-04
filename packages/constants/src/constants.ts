@@ -11,3 +11,5 @@ export enum ckBridgeChain {
 }
 
 export const NONE_SUB_HEX = "0000000000000000000000000000000000000000000000000000000000000000";
+
+export const ICPSWAP_API = "https://api.icpswap.com";

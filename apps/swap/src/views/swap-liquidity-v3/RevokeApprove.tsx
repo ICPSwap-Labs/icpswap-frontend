@@ -8,7 +8,7 @@ import { useTips, MessageTypes } from "hooks/useTips";
 import { ICP } from "@icpswap/tokens";
 import { useGlobalContext } from "hooks/useGlobalContext";
 import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
-import type { SwapPoolData, AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import type { SwapPoolData, IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -192,7 +192,7 @@ export default function SwapRevokeApprove() {
     return result?.filter((e) => !!e.allowance);
   }, [result]);
 
-  const tokenFilter = (tokenInfo: AllTokenOfSwapTokenInfo) => {
+  const tokenFilter = (tokenInfo: IcpSwapAPITokenInfo) => {
     return tokenInfo.standard !== TOKEN_STANDARD.ICRC2;
   };
 
