@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
-import { TOKEN_STANDARD, ResultStatus, type AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import { TOKEN_STANDARD, ResultStatus, type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -161,7 +161,7 @@ export default function SwapFindMisTransferTokens() {
                 value={selectedTokenId}
                 border
                 onTokenChange={handleTokenChange}
-                filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
+                filter={(tokenInfo: IcpSwapAPITokenInfo) =>
                   tokenInfo.standard !== TOKEN_STANDARD.ICRC1 && tokenInfo.standard !== TOKEN_STANDARD.ICRC2
                 }
               />

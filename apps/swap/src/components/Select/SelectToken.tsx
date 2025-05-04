@@ -4,7 +4,7 @@ import { Select } from "components/Select/ForToken";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import type { AllTokenOfSwapTokenInfo } from "@icpswap/types";
+import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
 import { useTranslation } from "react-i18next";
@@ -12,14 +12,14 @@ import { useTranslation } from "react-i18next";
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
 interface TokenMenuItemProps {
-  tokenInfo: AllTokenOfSwapTokenInfo;
+  tokenInfo: IcpSwapAPITokenInfo;
   symbol?: string;
   search?: string;
   color?: "primary" | "secondary";
   panel?: boolean;
 }
 
-function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
+function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!!search && isValidPrincipal(search) && tokenInfo.ledger_id.toString() !== search) return true;
   if (
     !!search &&
@@ -38,11 +38,7 @@ function TokenMenuItem({ tokenInfo, symbol, search, color, panel }: TokenMenuIte
 
   return hide ? null : (
     <Box sx={{ display: "flex", gap: panel ? "0 4px" : "0 8px", alignItems: "center" }}>
-      <TokenImage
-        logo={generateLogoUrl(tokenInfo.ledger_id.toString())}
-        size="24px"
-        tokenId={tokenInfo.ledger_id.toString()}
-      />
+      <TokenImage logo={generateLogoUrl(tokenInfo.ledgerId)} size="24px" tokenId={tokenInfo.ledgerId} />
       <Typography color={color === "primary" ? "text.primary" : "text.secondary"} component="span">
         {symbol ?? tokenInfo?.symbol ?? "--"}
       </Typography>
@@ -54,7 +50,7 @@ export interface SelectTokenProps {
   border?: boolean;
   value?: string;
   onTokenChange?: (tokenId: string) => void;
-  filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
+  filter?: (tokenInfo: IcpSwapAPITokenInfo) => boolean;
   search?: boolean;
   filled?: boolean;
   fullHeight?: boolean;
@@ -94,7 +90,7 @@ export function SelectToken({
 
     return allTokensOfSwap.map((tokenInfo) => {
       return {
-        value: tokenInfo.ledger_id.toString(),
+        value: tokenInfo.ledgerId,
         label: <TokenMenuItem tokenInfo={tokenInfo} />,
         additional: JSON.stringify(tokenInfo),
       };
@@ -111,7 +107,7 @@ export function SelectToken({
   const handleFilterMenu = (menu: MenuProps) => {
     if (!menu.additional) return false;
 
-    const tokenInfo = JSON.parse(menu.additional) as AllTokenOfSwapTokenInfo;
+    const tokenInfo = JSON.parse(menu.additional) as IcpSwapAPITokenInfo;
 
     return isTokenHide(tokenInfo, search) || (!!filter && filter(tokenInfo));
   };
@@ -142,7 +138,7 @@ export function SelectToken({
         const tokenInfo = {
           ...additional,
           ledger_id: Principal.fromText(additional.ledger_id.__principal__),
-        } as AllTokenOfSwapTokenInfo;
+        } as IcpSwapAPITokenInfo;
 
         return <TokenMenuItem tokenInfo={tokenInfo} color="primary" panel />;
       }}

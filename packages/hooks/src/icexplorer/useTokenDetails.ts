@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import { IcExplorerTokenDetail, Null } from "@icpswap/types";
-import { fetch_post } from "@icpswap/utils";
+import { IcpSwapAPITokenDetail, Null } from "@icpswap/types";
+import { icpswap_fetch_post } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
-export function useExplorerTokenDetails(tokenId: string | Null) {
+export function useTokenDetails(tokenId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (!tokenId) return undefined;
 
-      const result = await fetch_post<IcExplorerTokenDetail>(`https://api.icexplorer.io/api/token/detail`, {
+      const result = await icpswap_fetch_post<IcpSwapAPITokenDetail>(`/info/tokens/detail`, {
         ledgerId: tokenId,
       });
 

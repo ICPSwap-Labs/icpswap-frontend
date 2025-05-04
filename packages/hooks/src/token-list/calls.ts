@@ -1,9 +1,17 @@
 import { tokenList, allTokenOfSwap } from "@icpswap/actor";
-import type { TokenListMetadata, AllTokenOfSwapTokenInfo, PaginationResult } from "@icpswap/types";
+import type {
+  TokenListMetadata,
+  AllTokenOfSwapTokenInfo,
+  PaginationResult,
+  IcpSwapAPIPageResult,
+  IcpSwapAPIResult,
+  IcpSwapAPITokenInfo,
+} from "@icpswap/types";
 import { useCallback } from "react";
-import { resultFormat } from "@icpswap/utils";
+import { fetch_post, resultFormat } from "@icpswap/utils";
+
 import { useCallsData } from "../useCallData";
-import { getLimitedInfinityCall } from "../useLimitedInfinityCall";
+import { getLimitedInfinityCall, getLimitedInfinityCallV1 } from "../useLimitedInfinityCall";
 
 export async function getTokensFromList() {
   return resultFormat<TokenListMetadata[]>(await (await tokenList()).getList()).data;
@@ -33,18 +41,43 @@ export async function getAllTokensOfSwap(offset: number, limit: number) {
   ).data;
 }
 
-export function useAllTokensOfSwap() {
-  const call = async (offset: number, limit: number) => {
-    const result = resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
-      await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
-    ).data;
+// export function useAllTokensOfSwap() {
+//   const call = async (offset: number, limit: number) => {
+//     const result = resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
+//       await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
+//     ).data;
 
+//     return result?.content;
+//   };
+
+//   return useCallsData(
+//     useCallback(async () => {
+//       return getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(call, 1000, 2);
+//     }, []),
+//   );
+// }
+
+export async function getAllSwapTokens(page: number, size: number) {
+  const result = await fetch_post<IcpSwapAPIPageResult<IcpSwapAPITokenInfo>>(
+    "https://api.icpswap.com/info/tokens/find",
+    {
+      page,
+      limit: size,
+    },
+  );
+
+  return result.data;
+}
+
+export function useAllSwapTokens() {
+  const call = async (page: number, size: number) => {
+    const result = await getAllSwapTokens(page, size);
     return result?.content;
   };
 
   return useCallsData(
     useCallback(async () => {
-      return getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(call, 1000, 2);
+      return await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(call, 1000, 2);
     }, []),
   );
 }

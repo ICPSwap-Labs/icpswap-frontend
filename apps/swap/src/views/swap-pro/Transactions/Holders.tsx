@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Box, makeStyles, useTheme } from "components/Mui";
-import { useExplorerTokenHolders, useLiquidityLockIds } from "@icpswap/hooks";
+import { useTokenHolders, useLiquidityLockIds } from "@icpswap/hooks";
 import {
   Header,
   HeaderCell,
@@ -13,7 +13,7 @@ import {
   Image,
 } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
-import { Null, IcExplorerTokenHolderDetail } from "@icpswap/types";
+import { Null, IcpSwapAPITokenHolderDetail } from "@icpswap/types";
 import { useCopySuccess } from "hooks/index";
 import { useTranslation } from "react-i18next";
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => {
 });
 
 interface HolderRowProps {
-  holder: IcExplorerTokenHolderDetail;
+  holder: IcpSwapAPITokenHolderDetail;
   index: number;
   page: number;
   sneedLedger?: string | Null;
@@ -89,7 +89,7 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
 
   const [page, setPage] = useState(1);
 
-  const { result, loading } = useExplorerTokenHolders(tokenId, page, 10);
+  const { result, loading } = useTokenHolders(tokenId, page, 10);
 
   const tokenIds = useMemo(() => {
     return tokenId ? [tokenId] : undefined;
@@ -119,12 +119,12 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
           </Header>
 
           {!loading
-            ? (result?.list ?? []).map((element, index) => (
+            ? (result?.content ?? []).map((element, index) => (
                 <HolderRow key={index} page={page} holder={element} index={index} sneedLedger={sneedLedger} />
               ))
             : null}
 
-          {(result?.list ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(result?.content ?? []).length === 0 && !loading ? <NoData /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>
@@ -144,11 +144,11 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
       </Box>
 
       <Box mt="20px">
-        {!loading && !!result?.list.length ? (
+        {!loading && !!result?.content.length ? (
           <SimplePagination
             page={page}
             maxItems={maxItems}
-            length={result?.total ? Number(result.total) : 0}
+            length={result?.totalElements ? Number(result.totalElements) : 0}
             onPageChange={setPage}
           />
         ) : null}

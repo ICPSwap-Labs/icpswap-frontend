@@ -12,7 +12,7 @@ import {
 import { useToken } from "hooks/index";
 import { NoData, LoadingRow, TokenImage } from "components/index";
 import { TokenListMetadata } from "@icpswap/candid";
-import { useTokensFromList, useTokenSupply, useInfoToken, useExplorerTokenDetails } from "@icpswap/hooks";
+import { useTokensFromList, useTokenSupply, useInfoToken, useTokenDetails } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
 import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -35,7 +35,7 @@ function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetada
 
   const [, token] = useToken(tokenMetadata.canisterId);
   const { result: supply } = useTokenSupply(tokenMetadata.canisterId);
-  const { result: icExplorerTokenDetails } = useExplorerTokenDetails(tokenMetadata.canisterId);
+  const { result: tokenDetails } = useTokenDetails(tokenMetadata.canisterId);
 
   const infoToken = useInfoToken(tokenMetadata.canisterId);
   const icpPrice = useICPPrice();
@@ -90,8 +90,8 @@ function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetada
           </BodyCell>
         </Flex>
         <BodyCell align="right">
-          {nonNullArgs(icExplorerTokenDetails) && nonNullArgs(icExplorerTokenDetails.holderAmount)
-            ? new BigNumber(icExplorerTokenDetails.holderAmount).toFormat()
+          {nonNullArgs(tokenDetails) && nonNullArgs(tokenDetails.holderAmount)
+            ? new BigNumber(tokenDetails.holderAmount).toFormat()
             : "--"}
         </BodyCell>
       </TableRow>

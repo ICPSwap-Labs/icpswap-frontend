@@ -2,7 +2,7 @@ import { Box, Typography } from "components/Mui";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
-import type { AllTokenOfSwapTokenInfo, Null } from "@icpswap/types";
+import type { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
 import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
 
-function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefined) {
+function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!search) return false;
   if (!tokenInfo) return true;
 
@@ -26,15 +26,15 @@ function isTokenHide(tokenInfo: AllTokenOfSwapTokenInfo, search: string | undefi
 
 interface PairItemProps {
   canisterId?: string;
-  token0: AllTokenOfSwapTokenInfo | undefined;
-  token1: AllTokenOfSwapTokenInfo | undefined;
+  token0: IcpSwapAPITokenInfo | undefined;
+  token1: IcpSwapAPITokenInfo | undefined;
   select?: boolean;
   color?: "primary" | "secondary";
 }
 
 function PairMenuItem({ token0, token1, select, color }: PairItemProps) {
-  const token0Logo = useTokenLogo(token0?.ledger_id.toString());
-  const token1Logo = useTokenLogo(token1?.ledger_id.toString());
+  const token0Logo = useTokenLogo(token0?.ledgerId);
+  const token1Logo = useTokenLogo(token1?.ledgerId);
 
   return (
     <Box
@@ -54,8 +54,8 @@ function PairMenuItem({ token0, token1, select, color }: PairItemProps) {
         token1Logo={token1Logo}
         token0Symbol={token0?.symbol}
         token1Symbol={token1?.symbol}
-        token0Id={token0?.ledger_id.toString()}
-        token1Id={token1?.ledger_id.toString()}
+        token0Id={token0?.ledgerId}
+        token1Id={token1?.ledgerId}
         color={color}
       />
     </Box>
@@ -66,7 +66,7 @@ export interface SelectPairProps {
   border?: boolean;
   value?: string | Null;
   onPairChange?: (poolId: string | undefined) => void;
-  filter?: (tokenInfo: AllTokenOfSwapTokenInfo) => boolean;
+  filter?: (tokenInfo: IcpSwapAPITokenInfo) => boolean;
   search?: boolean;
   filled?: boolean;
   fullHeight?: boolean;
@@ -97,7 +97,7 @@ export function SelectPair({
   const [value, setValue] = useState<string | null | undefined>(null);
   const [search, setSearch] = useState<string | undefined>(undefined);
 
-  const allTokensOfSwap = useStateSwapAllTokens();
+  const swapAllTokens = useStateSwapAllTokens();
   const swapPools = useAllSwapPools();
 
   useEffect(() => {
@@ -107,10 +107,10 @@ export function SelectPair({
   }, [poolId]);
 
   const menus = useMemo(() => {
-    if (swapPools && allTokensOfSwap) {
+    if (swapPools && swapAllTokens) {
       const data = swapPools.map((ele) => {
-        const token0 = allTokensOfSwap.find((token) => token.ledger_id.toString() === ele.token0.address);
-        const token1 = allTokensOfSwap.find((token) => token.ledger_id.toString() === ele.token1.address);
+        const token0 = swapAllTokens.find((token) => token.ledgerId === ele.token0.address);
+        const token1 = swapAllTokens.find((token) => token.ledgerId === ele.token1.address);
 
         return {
           poolId: ele.canisterId.toString(),
@@ -143,7 +143,7 @@ export function SelectPair({
     }
 
     return undefined;
-  }, [swapPools, allTokensOfSwap, allPair]);
+  }, [swapPools, swapAllTokens, allPair]);
 
   const handleValueChange = (value: string | undefined) => {
     setValue(value);
@@ -157,8 +157,8 @@ export function SelectPair({
     if (!menu.additional) return false;
 
     const additional = JSON.parse(menu.additional) as {
-      token0: AllTokenOfSwapTokenInfo;
-      token1: AllTokenOfSwapTokenInfo;
+      token0: IcpSwapAPITokenInfo;
+      token1: IcpSwapAPITokenInfo;
     };
 
     return (
@@ -200,12 +200,12 @@ export function SelectPair({
         const token0 = {
           ...additional.token0,
           ledger_id: Principal.fromText(additional.token0.ledger_id.__principal__),
-        } as AllTokenOfSwapTokenInfo;
+        } as IcpSwapAPITokenInfo;
 
         const token1 = {
           ...additional.token1,
           ledger_id: Principal.fromText(additional.token1.ledger_id.__principal__),
-        } as AllTokenOfSwapTokenInfo;
+        } as IcpSwapAPITokenInfo;
 
         return <PairMenuItem token0={token0} token1={token1} select color="primary" />;
       }}

@@ -7,7 +7,7 @@ import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
 import { ReactComponent as NoDataIcon } from "assets/icons/empty.svg";
-import type { AllTokenOfSwapTokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
+import type { IcpSwapAPITokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { useToken } from "hooks/index";
 import { ICP } from "@icpswap/tokens";
@@ -17,9 +17,9 @@ import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 import { useTranslation } from "react-i18next";
 
 interface SearchItemProps {
-  tokenInfo: AllTokenOfSwapTokenInfo;
+  tokenInfo: IcpSwapAPITokenInfo;
   infoAllTokens: PublicTokenOverview[] | Null;
-  onTokenClick?: (token: AllTokenOfSwapTokenInfo) => void;
+  onTokenClick?: (token: IcpSwapAPITokenInfo) => void;
   inTokenList?: boolean;
 }
 
@@ -170,8 +170,8 @@ export function TokenSearch({ open, onClose }: SearchProps) {
   const globalTokenList = useGlobalTokenList();
 
   const { filteredTokenListTokens, filteredNonTokenListTokens } = useMemo(() => {
-    let filteredTokenListTokens: AllTokenOfSwapTokenInfo[] = [];
-    let filteredNonTokenListTokens: AllTokenOfSwapTokenInfo[] = [];
+    let filteredTokenListTokens: IcpSwapAPITokenInfo[] = [];
+    let filteredNonTokenListTokens: IcpSwapAPITokenInfo[] = [];
 
     filteredTokens.forEach((e) => {
       const token = globalTokenList.find((_e) => _e.canisterId === e.ledger_id.toString());

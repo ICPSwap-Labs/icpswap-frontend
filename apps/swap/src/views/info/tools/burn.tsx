@@ -9,7 +9,7 @@ import {
   SelectToken,
   InfoWrapper,
 } from "components/index";
-import { type AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useTokenMintingAccount } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -19,6 +19,7 @@ import { BreadcrumbsV1 } from "@icpswap/ui";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
 import { icrc_standards } from "constants/swap";
 import { useTranslation } from "react-i18next";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export default function Burn() {
   const { t } = useTranslation();
@@ -85,8 +86,8 @@ export default function Burn() {
                       search
                       fullHeight
                       onTokenChange={handleTokenChange}
-                      filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
-                        !icrc_standards.includes(tokenInfo.standard as TOKEN_STANDARD)
+                      filter={(tokenInfo: IcpSwapAPITokenInfo) =>
+                        !icrc_standards.includes(parseTokenStandards(tokenInfo))
                       }
                     />
                   </Box>

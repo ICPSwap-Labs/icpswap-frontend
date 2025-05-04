@@ -1,29 +1,28 @@
-export type IcExplorerPagination<T> = {
-  endRow: string;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  isFirstPage: boolean;
-  isLastPage: boolean;
-  navigateFirstPage: number;
-  navigateLastPage: number;
-  navigatePages: number;
-  nextPage: number;
-  pageNum: number;
-  pageSize: number;
-  pages: number;
-  prePage: number;
-  size: number;
-  startRow: string;
-  total: string;
-  list: T[];
+export interface IcpSwapAPITokenInfo {
+  decimals: number;
+  fee: string;
+  ledgerId: string;
+  mintingAccount: string;
+  name: string;
+  standards: string;
+  symbol: string;
+  totalSupply: string;
+  logo: string;
+}
+
+export type IcpSwapAPIPageResult<T> = {
+  totalElements: number;
+  content: T[];
+  page: number;
+  limit: number;
 };
 
-export type IcExplorerResult<T> = {
+export type IcpSwapAPIResult<T> = {
+  code: number;
   data: T;
-  statusCode: number;
 };
 
-export type IcExplorerTokenHolderDetail = {
+export type IcpSwapAPITokenHolderDetail = {
   accountId: string;
   alias?: string;
   amount: string;
@@ -37,14 +36,14 @@ export type IcExplorerTokenHolderDetail = {
   valueUSD: string;
 };
 
-export type TokenHolerArgs = {
+export type IcpSwapAPITokenHolerArgs = {
   isDesc: boolean;
   ledgerId: string;
   page: number;
   size: number;
 };
 
-export interface IcExplorerTokenDetail {
+export interface IcpSwapAPITokenDetail {
   controllerArray: string[];
   cycleBalance: number;
   description: string | null;
