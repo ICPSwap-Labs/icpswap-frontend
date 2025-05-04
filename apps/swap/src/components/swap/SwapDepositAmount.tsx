@@ -5,13 +5,15 @@ import LockIcon from "assets/images/swap/Lock";
 import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
-import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount } from "@icpswap/utils";
+import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
 import { Null } from "@icpswap/types";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 import { useTranslation } from "react-i18next";
+import { useBalanceMaxSpend } from "hooks";
+import { maxAmountFormat } from "utils/index";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -117,6 +119,7 @@ export interface SwapDepositAmountProps {
   unusedBalance: bigint | Null;
   maxSpentAmount: string | Null;
   noLiquidity?: boolean;
+  poolId: string | Null;
 }
 
 export function SwapDepositAmount({
@@ -132,6 +135,7 @@ export function SwapDepositAmount({
   unusedBalance,
   maxSpentAmount,
   noLiquidity,
+  poolId,
 }: SwapDepositAmountProps) {
   const classes = useStyle();
 
@@ -151,10 +155,16 @@ export function SwapDepositAmount({
     }
   }, [subAccountBalance, unusedBalance, currency]);
 
+  const maxWalletBalanceSpent = useBalanceMaxSpend({
+    token: currency,
+    balance: formatTokenAmount(currencyBalance?.toExact(), currency?.decimals).toString(),
+    poolId,
+  });
+
   const handleWalletBalanceClick = useCallback(() => {
-    if (!currencyBalance) return;
-    onUserInput(currencyBalance.toExact());
-  }, [currencyBalance]);
+    if (isNullArgs(maxWalletBalanceSpent) || isNullArgs(currency)) return;
+    onUserInput(maxAmountFormat(maxWalletBalanceSpent.toExact(), currency.decimals));
+  }, [onUserInput, maxWalletBalanceSpent, currency]);
 
   return (
     <Box sx={{ p: 2 }} className={classes.box}>

@@ -493,6 +493,7 @@ export default function AddLiquidity() {
                     : undefined
                 }
                 maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
+                poolId={pool?.id}
               />
 
               <SwapDepositAmount
@@ -522,6 +523,7 @@ export default function AddLiquidity() {
                     : undefined
                 }
                 maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
+                poolId={pool?.id}
               />
 
               {!noLiquidity ? (
