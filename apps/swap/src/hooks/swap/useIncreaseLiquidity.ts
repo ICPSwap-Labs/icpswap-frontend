@@ -20,10 +20,10 @@ import { isUseTransfer } from "utils/token/index";
 import { useSuccessTip } from "hooks/useTips";
 import { increaseLiquidity } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { useReclaimCallback } from "hooks/swap";
 import { TOKEN_STANDARD } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { useStepsToReclaimCallback } from "hooks/swap/useStepsToReclaimCallback";
 
 export interface IncreaseLiquidityArgs {
   positionId: string;
@@ -214,12 +214,12 @@ function useInitialAddLiquiditySteps() {
   const { t } = useTranslation();
   const stepContentManage = useStepContentManager();
 
-  const handleReclaim = useReclaimCallback();
+  const stepsToReclaimCallback = useStepsToReclaimCallback();
 
   return useCallback((key: string, { position }: InitialAddLiquidityStepsArgs) => {
     const content = getIncreaseLiquiditySteps({
       position,
-      handleReclaim,
+      handleReclaim: stepsToReclaimCallback,
     });
 
     stepContentManage(String(key), {

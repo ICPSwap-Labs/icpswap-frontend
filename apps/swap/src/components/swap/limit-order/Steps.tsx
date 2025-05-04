@@ -9,11 +9,16 @@ import i18n from "i18n/index";
 export interface GetLimitOrderStepsProps {
   position: Position | undefined;
   retry: () => void;
-  handleReclaim: () => void;
+  handleReclaim: (poolId: string) => void;
   inputToken: Token;
 }
 
-export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim }: GetLimitOrderStepsProps) {
+export function getLimitOrderSteps({
+  position,
+  inputToken,
+  retry,
+  handleReclaim: __handleReclaim,
+}: GetLimitOrderStepsProps) {
   if (!position) return [];
 
   const { token0, token1 } = position.pool;
@@ -73,6 +78,10 @@ export function getLimitOrderSteps({ position, inputToken, retry, handleReclaim 
       </Typography>
     </Flex>
   );
+
+  const handleReclaim = () => {
+    __handleReclaim(position.pool.id);
+  };
 
   const originSteps: StepContent[] = [
     {

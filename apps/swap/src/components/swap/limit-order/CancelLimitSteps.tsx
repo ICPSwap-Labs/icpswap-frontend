@@ -13,7 +13,6 @@ export interface CancelLimitStepsProps {
   principal: Principal | undefined;
   position: Position;
   key: string;
-  handleReclaim: () => void;
   limit: LimitOrder;
 }
 

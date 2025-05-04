@@ -27,6 +27,7 @@ import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { useStepsToReclaimCallback } from "./useStepsToReclaimCallback";
 
 let SwapPoolId: undefined | string;
 
@@ -339,11 +340,7 @@ function useInitialAddLiquiditySteps() {
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
   const { t } = useTranslation();
-
-  const handleReclaim = () => {
-    history.push("/swap/withdraw");
-    closeAllSteps();
-  };
+  const stepsToReclaimCallback = useStepsToReclaimCallback();
 
   const handleReclaimPCMBalance = () => {
     history.push("/swap/pcm/reclaim");
@@ -359,7 +356,7 @@ function useInitialAddLiquiditySteps() {
         position,
         noLiquidity,
         retry,
-        handleReclaim,
+        handleReclaim: stepsToReclaimCallback,
         handleReclaimPCMBalance,
         pcmMetadata,
         pcmToken,

@@ -13,7 +13,7 @@ export interface GetAddLiquidityStepDetails {
   noLiquidity: boolean;
   position: Position | undefined;
   retry: () => void;
-  handleReclaim: () => void;
+  handleReclaim: (poolId: string) => void;
   handleReclaimPCMBalance: () => void;
   pcmMetadata: PCMMetadata;
   pcmToken: Token;
@@ -25,7 +25,7 @@ export function getAddLiquidityStepDetails({
   position,
   noLiquidity,
   retry,
-  handleReclaim,
+  handleReclaim: __handleReclaim,
   handleReclaimPCMBalance,
   pcmMetadata,
   pcmToken,
@@ -60,6 +60,10 @@ export function getAddLiquidityStepDetails({
       {amount1}
     </Box>
   );
+
+  const handleReclaim = () => {
+    __handleReclaim(position.pool.id);
+  };
 
   const originSteps: StepContent[] = [
     {

@@ -5,7 +5,6 @@ import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
 import { OpenExternalTip } from "types/index";
@@ -66,8 +65,6 @@ function useCollectFeeSteps() {
   const principal = useAccountPrincipal();
   const stepContentManage = useStepContentManager();
 
-  const handleReclaim = useReclaimCallback();
-
   return useCallback(
     (key: string, { positionId, retry, currencyFeeAmount0, currencyFeeAmount1 }: AddLiquidityStepsArgs) => {
       const content = getCollectFeeSteps({
@@ -76,7 +73,6 @@ function useCollectFeeSteps() {
         currencyFeeAmount1,
         currencyFeeAmount0,
         principal,
-        handleReclaim,
       });
 
       stepContentManage(String(key), {

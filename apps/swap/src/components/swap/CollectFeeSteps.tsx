@@ -10,7 +10,6 @@ export interface CollectStepsProps {
   currencyFeeAmount0: CurrencyAmount<Token>;
   currencyFeeAmount1: CurrencyAmount<Token>;
   principal: Principal | undefined;
-  handleReclaim: () => void;
 }
 
 function TokenAmount({ logo, amount }: { logo: string; amount: string | undefined }) {

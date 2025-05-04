@@ -8,11 +8,11 @@ import i18n from "i18n/index";
 
 export interface IncreaseLiquidityStepsProps {
   position: Position;
-  handleReclaim: () => void;
+  handleReclaim: (poolId: string) => void;
   retry?: () => Promise<boolean>;
 }
 
-export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseLiquidityStepsProps) {
+export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleReclaim }: IncreaseLiquidityStepsProps) {
   const { token0, token1 } = position.pool;
 
   const amount0 = toSignificantWithGroupSeparator(
@@ -48,6 +48,10 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim }: IncreaseL
       {amount1}
     </Box>
   );
+
+  const handleReclaim = () => {
+    __handleReclaim(position.pool.id);
+  };
 
   return [
     {

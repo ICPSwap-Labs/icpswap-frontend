@@ -8,7 +8,6 @@ import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCancelLimitSteps } from "components/swap/limit-order/CancelLimitSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
-import { useReclaimCallback } from "hooks/swap/useReclaimCallback";
 import { LimitOrder } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
@@ -62,7 +61,6 @@ export function useCancelLimitCallback() {
   const getCalls = useCancelLimitCalls();
   const getStepCalls = useStepCalls();
   const stepContentManage = useStepContentManager();
-  const handleReclaim = useReclaimCallback();
 
   return useCallback(
     ({ position, positionId, poolId, openExternalTip, limit, refresh }: CancelLimitCallbackProps) => {
@@ -84,7 +82,6 @@ export function useCancelLimitCallback() {
         position,
         positionId,
         principal,
-        handleReclaim,
         key,
         limit,
       });
