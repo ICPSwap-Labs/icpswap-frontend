@@ -1,17 +1,10 @@
-import { tokenList, allTokenOfSwap } from "@icpswap/actor";
-import type {
-  TokenListMetadata,
-  AllTokenOfSwapTokenInfo,
-  PaginationResult,
-  IcpSwapAPIPageResult,
-  IcpSwapAPIResult,
-  IcpSwapAPITokenInfo,
-} from "@icpswap/types";
+import { tokenList } from "@icpswap/actor";
+import type { TokenListMetadata, IcpSwapAPIPageResult, IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useCallback } from "react";
-import { fetch_post, resultFormat } from "@icpswap/utils";
+import { icpswap_fetch_post, resultFormat } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
-import { getLimitedInfinityCall, getLimitedInfinityCallV1 } from "../useLimitedInfinityCall";
+import { getLimitedInfinityCallV1 } from "../useLimitedInfinityCall";
 
 export async function getTokensFromList() {
   return resultFormat<TokenListMetadata[]>(await (await tokenList()).getList()).data;
@@ -35,36 +28,11 @@ export function useTokenListTokenInfo(canisterId: string | undefined | null) {
   );
 }
 
-export async function getAllTokensOfSwap(offset: number, limit: number) {
-  return resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
-    await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
-  ).data;
-}
-
-// export function useAllTokensOfSwap() {
-//   const call = async (offset: number, limit: number) => {
-//     const result = resultFormat<PaginationResult<AllTokenOfSwapTokenInfo>>(
-//       await (await allTokenOfSwap()).get_token_list(BigInt(offset), BigInt(limit), [true]),
-//     ).data;
-
-//     return result?.content;
-//   };
-
-//   return useCallsData(
-//     useCallback(async () => {
-//       return getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(call, 1000, 2);
-//     }, []),
-//   );
-// }
-
 export async function getAllSwapTokens(page: number, size: number) {
-  const result = await fetch_post<IcpSwapAPIPageResult<IcpSwapAPITokenInfo>>(
-    "https://api.icpswap.com/info/tokens/find",
-    {
-      page,
-      limit: size,
-    },
-  );
+  const result = await icpswap_fetch_post<IcpSwapAPIPageResult<IcpSwapAPITokenInfo>>("/info/tokens/find", {
+    page,
+    limit: size,
+  });
 
   return result.data;
 }
