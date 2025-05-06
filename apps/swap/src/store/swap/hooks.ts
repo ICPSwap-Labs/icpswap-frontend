@@ -129,35 +129,14 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
   );
 
+  const pool = Trade?.pool;
+  const poolId = Trade?.pool?.id;
+
   // Force to use token from pool, the token standard is using from pool metadata
-  const { poolId, pool, inputToken, outputToken } = useMemo(() => {
-    if (!Trade) return {};
-
-    const pool = Trade.routes[0]?.pools[0];
-    const { token0, token1 } = pool ?? {};
-
-    const inputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token0 : token1) : undefined;
-    const outputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token1 : token0) : undefined;
-
-    return { poolId: pool?.id, pool, inputToken, outputToken };
-  }, [Trade, __inputToken, __outputToken]);
-
-  // DIP20 not support subaccount balance
-  // So useTokenBalance is 0 by default if standard is DIP20
-  // Do not use balance in canister in V3.6
-
-  // const { result: __inputTokenSubBalance } = useTokenBalance({
-  //   canisterId: inputToken?.address,
-  //   address: poolId,
-  //   sub,
-  //   refresh,
-  // });
-  // const { result: __outputTokenSubBalance } = useTokenBalance({
-  //   canisterId: outputToken?.address,
-  //   address: poolId,
-  //   sub,
-  //   refresh,
-  // });
+  const inputToken = useMemo(() => {
+    if (isNullArgs(pool) || isNullArgs(__inputToken)) return undefined;
+    return pool.alignToken(__inputToken);
+  }, [pool, __inputToken]);
 
   const inputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
@@ -168,19 +147,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     if (!principal) return undefined;
     return new BigNumber(0);
   }, []);
-
-  // Do not use balance in canister in V3.6
-  // const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
-  // const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
-  //   if (!poolId || !unusedBalance || !inputToken || !pool) return {};
-
-  //   return {
-  //     inputTokenUnusedBalance:
-  //       pool.token0.address === inputToken.address ? unusedBalance.balance0 : unusedBalance.balance1,
-  //     outputTokenUnusedBalance:
-  //       pool.token0.address === inputToken.address ? unusedBalance.balance1 : unusedBalance.balance0,
-  //   };
-  // }, [Trade, inputToken, unusedBalance, pool]);
 
   const inputTokenUnusedBalance = BigInt(0);
   const outputTokenUnusedBalance = BigInt(0);
@@ -216,16 +182,26 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const inputError = useMemo(() => {
-    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
+    if (isNullArgs(__inputToken) || isNullArgs(__outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
-    if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t`Swap`;
+    if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t("common.swap");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
-    if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
+    if (tokenInsufficient === "INSUFFICIENT")
+      return t("common.error.insufficient.balance.symbol", { symbol: __inputToken?.symbol });
 
     return null;
-  }, [typedValue, parsedAmount, inputTokenSubBalance, inputTokenUnusedBalance, Trade, tokenInsufficient]);
+  }, [
+    __inputToken,
+    __outputToken,
+    typedValue,
+    parsedAmount,
+    inputTokenSubBalance,
+    inputTokenUnusedBalance,
+    Trade,
+    tokenInsufficient,
+  ]);
 
   return {
     inputError,
