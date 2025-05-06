@@ -25,3 +25,26 @@ export function useAddressAlias({ principal, account, accountTextual }: UseAddre
     }, [principal, account, accountTextual]),
   );
 }
+
+export interface GetAddressesAliasProps {
+  principals?: string[];
+  accounts?: string[];
+}
+
+export async function getAddressesAlias({ principals, accounts }: GetAddressesAliasProps) {
+  const result = await icpswap_fetch_post<{ [key: string]: string }>("/info/address/alias/query", {
+    pids: principals ?? [],
+    accounts: accounts ?? [],
+  });
+
+  return result.data;
+}
+
+export function useAddressesAlias({ principals, accounts }: GetAddressesAliasProps) {
+  return useCallsData(
+    useCallback(async () => {
+      if (isNullArgs(principals) && isNullArgs(accounts)) return undefined;
+      return await getAddressesAlias({ principals, accounts });
+    }, [principals, accounts]),
+  );
+}

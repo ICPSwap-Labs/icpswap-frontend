@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
 import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount, isNullArgs } from "@icpswap/utils";
-import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
+import { useAddressAlias, useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, Link } from "@icpswap/ui";
 import { LoadingRow, Copy, IsSneedOwner } from "components/index";
@@ -11,7 +12,6 @@ import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Null } from "@icpswap/types";
 import { useIsSneedOwner } from "hooks/index";
 import { useTranslation } from "react-i18next";
 
@@ -117,6 +117,8 @@ export function PositionRow({
     return allLimitOrders.includes(BigInt(positionInfo.id));
   }, [allLimitOrders, positionInfo]);
 
+  const { result: addressAlias } = useAddressAlias({ account: owner });
+
   return (
     <>
       {pool ? (
@@ -132,7 +134,7 @@ export function PositionRow({
 
           <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
-              <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
+              <BodyCell>{addressAlias ?? (owner ? shorten(owner) : "--")}</BodyCell>
             </Copy>
 
             <IsSneedOwner isSneed={isSneed} tooltip={t("liquidity.locked.snned")} />
