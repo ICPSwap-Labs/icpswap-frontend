@@ -11,7 +11,7 @@ import {
 } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination, TextButton } from "@icpswap/ui";
-import type { UserPosition } from "types/swap";
+import { UserPositionByList } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => {
 });
 
 interface PositionItemProps {
-  positionInfo: UserPosition;
+  positionInfo: UserPositionByList;
   pool: Pool | undefined | null;
 }
 
@@ -55,13 +55,13 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
   const position = usePositionWithPool({
-    tickLower: positionInfo.tickLower.toString(),
-    tickUpper: positionInfo.tickUpper.toString(),
-    liquidity: positionInfo.liquidity.toString(),
+    tickLower: positionInfo.position.tickLower.toString(),
+    tickUpper: positionInfo.position.tickUpper.toString(),
+    liquidity: positionInfo.position.liquidity.toString(),
     pool,
   });
 
-  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.id, BigInt(positionInfo.index));
+  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.poolId, positionInfo.position.id);
 
   const { token0, token1, fee, tickLower, tickUpper } = useMemo(
     () => ({
@@ -133,7 +133,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       }}
     >
       <TableRow className={classes.wrapper} borderBottom="none">
-        <BodyCell>{positionInfo.index}</BodyCell>
+        <BodyCell>{positionInfo.position.id.toString()}</BodyCell>
 
         <BodyCell sx={{ flexDirection: "column", gap: "12px" }}>
           <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${token0?.symbol}` : "--"}</BodyCell>
@@ -201,7 +201,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             },
           }}
         >
-          <TextButton to={`/liquidity/position/${positionInfo.index}/${positionInfo.id}`}>
+          <TextButton to={`/liquidity/position/${positionInfo.position.id}/${positionInfo.poolId}`}>
             {t("common.details")}
           </TextButton>
         </BodyCell>
@@ -258,7 +258,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
           ? (filteredPositions ?? []).map((element) => (
               <PositionItem
                 key={`${element.poolId}_${element.position.id.toString()}`}
-                positionInfo={position}
+                positionInfo={element}
                 pool={pool}
               />
             ))
