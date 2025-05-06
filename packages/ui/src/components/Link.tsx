@@ -15,10 +15,16 @@ export interface LinkProps {
 export function Link({ to, link, color, children, width, height, display }: LinkProps) {
   const theme = useTheme();
 
+  const __color =
+    color === "primary" ? theme.colors.primaryMain : color === "secondary" ? theme.colors.secondaryMain : "inherit";
+
   return (
     <>
       {to ? (
-        <ReactLink to={to} style={{ width, height, display, textDecoration: "none", userSelect: "none" }}>
+        <ReactLink
+          to={to}
+          style={{ width, height, display, textDecoration: "none", userSelect: "none", color: __color }}
+        >
           {children}
         </ReactLink>
       ) : link ? (
@@ -31,12 +37,7 @@ export function Link({ to, link, color, children, width, height, display }: Link
             height,
             display,
             textDecoration: "none",
-            color:
-              color === "primary"
-                ? theme.colors.primaryMain
-                : color === "secondary"
-                ? theme.colors.secondaryMain
-                : "inherit",
+            color: __color,
           }}
         >
           {children}
