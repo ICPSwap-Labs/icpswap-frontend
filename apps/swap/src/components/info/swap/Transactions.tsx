@@ -175,7 +175,7 @@ export function Transactions({
               key={`${String(transaction.timestamp)}_${index}`}
               className={classes.wrapper}
               transaction={transaction}
-              onAddressClick={handleCopy}
+              onCopy={handleCopy}
             />
           ))}
 

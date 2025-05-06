@@ -1,10 +1,12 @@
 import { formatDollarAmount, formatAmount, enumToString, shorten } from "@icpswap/utils";
 import type { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
+import { Copy } from "react-feather";
 
 import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
+import { Link } from "../Link";
 
 export function ActionTypeFormat(transaction: PoolStorageTransaction) {
   const type = enumToString(transaction.action);
@@ -37,10 +39,10 @@ interface TransactionRowProps {
   transaction: PoolStorageTransaction;
   wrapperSx?: BoxProps["sx"];
   className?: BoxProps["className"];
-  onAddressClick?: (address: string) => void;
+  onCopy?: (address: string) => void;
 }
 
-export function TransactionRow({ transaction, className, onAddressClick }: TransactionRowProps) {
+export function TransactionRow({ transaction, className, onCopy }: TransactionRowProps) {
   const theme = useTheme();
 
   return (
@@ -76,8 +78,12 @@ export function TransactionRow({ transaction, className, onAddressClick }: Trans
       </BodyCell>
 
       <BodyCell>
-        <BodyCell color="primary.main" onClick={() => onAddressClick(transaction.recipient)}>
-          {shorten(transaction.recipient, 6)}
+        <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
+          <Link link={`http://icexplorer.io/address/detail/${transaction.recipient}`} color="primary">
+            {shorten(transaction.recipient, 6)}
+          </Link>
+
+          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.recipient)} />
         </BodyCell>
       </BodyCell>
 

@@ -183,7 +183,7 @@ export default function SwapTransactions() {
                   key={`${String(transaction.timestamp)}_${index}`}
                   transaction={transaction}
                   className={classes.wrapper}
-                  onAddressClick={handleCopy}
+                  onCopy={handleCopy}
                 />
               ))}
 
