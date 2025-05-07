@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { Modal } from "components/index";
 import GreenCircleLoading from "components/Loading/GreenCircle";
 import { StepContents, StepDetailsProps } from "types/step";
-import { Flex } from "@icpswap/ui";
+import { Flex, Modal } from "@icpswap/ui";
 import { isElement } from "react-is";
 
 interface ActionIconProps {
@@ -70,7 +69,7 @@ export function SwapStepDetails({
   };
 
   return (
-    <Modal open={open} title={title} onClose={onClose} contentPadding="18px 24px 24px 24px">
+    <Modal open={open} title={title} onClose={onClose} dialogWidth="450px">
       {description ? <Typography lineHeight="20px">{description}</Typography> : null}
 
       <Box sx={{ width: "100%", height: "32px" }} />

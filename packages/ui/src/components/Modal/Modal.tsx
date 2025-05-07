@@ -84,6 +84,7 @@ export interface ModalProps {
   confirmDisabled?: boolean;
   fullWidth?: boolean;
   maxWidth?: string;
+  dialogWidth?: string;
   dialogProps?: any;
   type?: string;
   background?: string;
@@ -108,6 +109,7 @@ export function Modal({
   type,
   background,
   dialogProps,
+  dialogWidth = "570px",
 }: ModalProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
@@ -138,6 +140,7 @@ export function Modal({
         },
         ...{
           "& .MuiPaper-root": {
+            width: dialogWidth,
             ...(background
               ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
               : { backgroundColor: theme.palette.background.level2 }),

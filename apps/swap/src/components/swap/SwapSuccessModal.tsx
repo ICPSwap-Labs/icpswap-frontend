@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Box, Button, Typography } from "components/Mui";
-import { Modal, TokenImage } from "components/index";
-import { Flex, Link } from "@icpswap/ui";
+import { TokenImage } from "components/index";
+import { Flex, Link, Modal } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "react-feather";
 import { useSwapFinalMetadataManager } from "store/hooks";
@@ -42,12 +42,12 @@ export function SwapSuccessModal({ onClose, open }: SwapSuccessModalProps) {
   }, [inputToken, outputToken, inputAmount, outputAmount]);
 
   return (
-    <Modal open={open} title={t("swap.details")} onClose={onClose} contentPadding="32px 24px 24px 24px">
+    <Modal open={open} title={t("swap.details")} onClose={onClose} dialogWidth="450px">
       <Typography fontSize="20px" fontWeight={500} color="text.primary" textAlign="center">
         {t("swap.successful")}
       </Typography>
 
-      <Flex sx={{ margin: "12px 0 0 0" }} justify="center" gap="0 4px">
+      <Flex sx={{ margin: "24px 0 0 0" }} justify="center" gap="0 4px">
         <Flex gap="0 4px">
           <TokenImage size="20px" tokenId={inputToken?.address} logo={inputToken?.logo} />
           <Typography fontSize="16px" color="text.primary">
