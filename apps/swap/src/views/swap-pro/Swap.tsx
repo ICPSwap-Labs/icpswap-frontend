@@ -1,7 +1,7 @@
 import { useContext, useCallback, useRef, useState, useEffect } from "react";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef } from "components/swap/index";
+import { SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef, CreatePool } from "components/swap/index";
 import { SWAP_REFRESH_KEY } from "constants/index";
 import { Flex } from "@icpswap/ui";
 import { LimitWrapper } from "components/swap/limit-order";
@@ -27,7 +27,8 @@ export default function Swap() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
   const { setActiveTab: setContextActiveTab } = useContext(SwapProContext);
-  const { setPoolId, selectedPool, inputToken, setInputToken, setOutputToken, noLiquidity } = useContext(SwapContext);
+  const { setPoolId, selectedPool, inputToken, outputToken, setInputToken, setOutputToken, noLiquidity } =
+    useContext(SwapContext);
   const { tab: tabFromUrl } = useParsedQueryString() as { tab: Tab | Null };
 
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
@@ -104,6 +105,10 @@ export default function Swap() {
 
               {selectedPool ? <ToReclaim poolId={selectedPool.id} ui="pro" fontSize="12px" /> : null}
             </>
+          ) : null}
+
+          {isConnected && noLiquidity === true ? (
+            <CreatePool inputToken={inputToken} outputToken={outputToken} ui="pro" />
           ) : null}
         </Flex>
       </SwapProCardWrapper>

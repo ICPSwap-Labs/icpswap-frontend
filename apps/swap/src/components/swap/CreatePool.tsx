@@ -44,14 +44,19 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
         borderRadius: "16px",
       }}
     >
-      <Flex fullWidth align="center" justify="space-between" gap="0 20px">
-        <Typography sx={{ fontSize: __fontSize, maxWidth: "280px", lineHeight: "20px" }}>
-          {t("liquidity.no.liquidity.descriptions")}
-        </Typography>
+      <Flex fullWidth align="center" justify="space-between" gap="0 10px">
+        <Flex vertical gap="4px 0" align="flex-start">
+          <Typography sx={{ fontSize: __fontSize, lineHeight: "16px" }}>
+            {t("liquidity.no.liquidity.available")}
+          </Typography>
+          <Typography sx={{ fontSize: __fontSize, lineHeight: "16px" }}>{t("liquidity.no.liquidity.add")}</Typography>
+        </Flex>
 
-        <Button variant="contained" size="small" onClick={handleCreatePool}>
-          {t("swap.add.liquidity")}
-        </Button>
+        <Box sx={{ minWidth: "103px" }}>
+          <Button variant="contained" size="small" onClick={handleCreatePool}>
+            {t("swap.add.liquidity")}
+          </Button>
+        </Box>
       </Flex>
     </Box>
   );
