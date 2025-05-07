@@ -315,7 +315,9 @@ function MainContent() {
               </Box>
             ) : (
               <>
-                {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? <NoData /> : null}
+                {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? (
+                  <NoData tip={t("farm.stake.empty")} />
+                ) : null}
 
                 {slicedFarms?.map((farmId) => (
                   <FarmRow

@@ -39,7 +39,7 @@ export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
 
   return (
     <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect} disabled={isMobile}>
-      {isMobile ? "Not supported on mobile" : "Connect to Metamask"}
+      {isMobile ? "Not supported on mobile" : "Connect to MetaMask"}
     </Button>
   );
 }

@@ -13,6 +13,7 @@ import {
   FeeTierPercentLabel,
   APRPanel,
   NoData,
+  Flex,
 } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
 import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
@@ -100,7 +101,7 @@ function PoolItem({ pool, index, align }: PoolItemProps) {
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
-        <Grid container alignItems="center" gap="0 8px">
+        <Flex fullWidth align="center" gap="0 8px">
           <Box sx={{ display: "flex" }}>
             <TokenImage logo={token0?.logo} tokenId={token0?.address} />
             <TokenImage logo={token1?.logo} tokenId={token1?.address} />
@@ -111,7 +112,7 @@ function PoolItem({ pool, index, align }: PoolItemProps) {
           </BodyCell>
 
           <FeeTierPercentLabel feeTier={pool.feeTier} />
-        </Grid>
+        </Flex>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell align={align}>{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>

@@ -100,7 +100,7 @@ export function EthDissolveTransactions() {
               <Transaction transaction={transaction} />
             </Box>
           ))}
-          {transactions?.length === 0 || !transactions ? <NoData /> : null}
+          {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
         </>
       </Box>
     </MainCard>
