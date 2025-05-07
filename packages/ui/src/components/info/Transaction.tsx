@@ -79,7 +79,7 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
 
       <BodyCell>
         <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
-          <Link link={`http://icexplorer.io/address/detail/${transaction.recipient}`} color="primary">
+          <Link link={`https://www.icexplorer.io/address/details/${transaction.recipient}`} color="primary">
             {shorten(transaction.recipient, 6)}
           </Link>
 
