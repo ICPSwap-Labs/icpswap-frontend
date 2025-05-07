@@ -219,7 +219,7 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
                 <Transaction transaction={transaction} address={btc_address} block={block} />
               </Box>
             ))}
-            {transactions?.length === 0 || !transactions ? <NoData /> : null}
+            {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
           </>
         )}
       </Box>

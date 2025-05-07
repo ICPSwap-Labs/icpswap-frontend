@@ -228,7 +228,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             >
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>{t("common.reward.token")}</Typography>
+                  <Typography>{t("common.reward.earned")}</Typography>
 
                   <Tooltip
                     tips={t`You will receive the reward tokens you have earned after unstaking the staked positions.`}

@@ -52,7 +52,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
-    if (!amount) return t("common.enter.input.amount");
+    if (!amount) return t("ck.enter.transfer.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
 
     if (!token || !tokenBalance) return t("common.waiting.fetching");

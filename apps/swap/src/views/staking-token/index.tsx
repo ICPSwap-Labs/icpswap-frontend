@@ -235,7 +235,7 @@ function MainContent() {
             </Box>
           ) : (
             <>
-              {!pools?.length && !loading && <NoData />}
+              {!pools?.length && !loading && <NoData tip={t("farm.stake.empty")} />}
 
               {pools?.map((pool) => (
                 <StakeRow

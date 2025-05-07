@@ -26,7 +26,7 @@ export enum Connector {
   NFID = "NFID",
   INFINITY = "INFINITY",
   ME = "ME",
-  Metamask = "Metamask",
+  Metamask = "MetaMask",
   Oisy = "Oisy",
 }
 
