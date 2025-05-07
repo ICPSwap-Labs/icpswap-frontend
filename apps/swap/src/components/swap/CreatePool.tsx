@@ -40,7 +40,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
       sx={{
         width: "100%",
         background: "#111936",
-        padding: "16px",
+        padding: ui === "pro" ? "12px" : "16px",
         borderRadius: "16px",
       }}
     >
@@ -49,7 +49,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
           {t("liquidity.no.liquidity.descriptions")}
         </Typography>
 
-        <Button sx={{ minWidth: "98px" }} variant="contained" size="small" onClick={handleCreatePool}>
+        <Button variant="contained" size="small" onClick={handleCreatePool}>
           {t("swap.add.liquidity")}
         </Button>
       </Flex>

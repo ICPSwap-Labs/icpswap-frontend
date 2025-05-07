@@ -120,35 +120,34 @@ export function ReclaimTokensInPool({
   return nonNullArgs(pool) ? (
     <>
       {availableWithdrawTokens.length > 0 ? (
-        <MainCard padding="16px 24px" level={1}>
-          <Flex align="center" gap="0 8px">
-            <AlertTriangle size={14} color={colors.danger} />
+        <MainCard padding={ui === "pro" ? "10px" : "16px 24px"} borderRadius={ui === "pro" ? "12px" : "16px"} level={1}>
+          <Flex fullWidth gap="0 8px">
+            <Flex>
+              <AlertTriangle size={14} color={colors.danger} />
+            </Flex>
 
-            <Flex align="center">
-              <Flex>
-                <Typography>
-                  You have{" "}
-                  {toSignificantWithGroupSeparator(
-                    parseTokenAmount(
-                      availableWithdrawTokens[0].amount,
-                      availableWithdrawTokens[0].token.decimals,
-                    ).toString(),
-                  )}{" "}
-                  {availableWithdrawTokens[0].token.symbol} to
-                </Typography>
-                &nbsp;
-                <WithdrawButton
-                  pool={pool}
-                  token={availableWithdrawTokens[0].token}
-                  balances={balances}
-                  onReclaimSuccess={handleRefresh}
-                  fontSize={__fontSize}
-                />
-              </Flex>
-
+            <Flex wrap="wrap">
+              <Typography fontSize={__fontSize}>
+                You have{" "}
+                {toSignificantWithGroupSeparator(
+                  parseTokenAmount(
+                    availableWithdrawTokens[0].amount,
+                    availableWithdrawTokens[0].token.decimals,
+                  ).toString(),
+                )}{" "}
+                {availableWithdrawTokens[0].token.symbol} to
+              </Typography>
+              &nbsp;
+              <WithdrawButton
+                pool={pool}
+                token={availableWithdrawTokens[0].token}
+                balances={balances}
+                onReclaimSuccess={handleRefresh}
+                fontSize={__fontSize}
+              />
               {availableWithdrawTokens.length > 1 ? (
-                <Flex>
-                  <Typography>
+                <>
+                  <Typography fontSize={__fontSize}>
                     , and{" "}
                     {toSignificantWithGroupSeparator(
                       parseTokenAmount(
@@ -166,7 +165,7 @@ export function ReclaimTokensInPool({
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
                   />
-                </Flex>
+                </>
               ) : null}
             </Flex>
           </Flex>
