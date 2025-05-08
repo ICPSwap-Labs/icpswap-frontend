@@ -230,9 +230,6 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
                 lineHeight: "16px",
               }}
             >
-              <Typography component="span" sx={{ margin: "0 5px 0 0", color: "text.theme-secondary", fontWeight: 600 }}>
-                {token?.symbol}
-              </Typography>
               {tokenListInfo.introduction}
             </Typography>
           </Box>
