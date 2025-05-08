@@ -5,23 +5,27 @@ import { useHistory } from "react-router-dom";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { nonNullArgs } from "@icpswap/utils";
+import { Tab } from "constants/index";
 
 export interface SwapProEntryProps {
   inputToken: Token | Null;
   outputToken: Token | Null;
+  limit?: boolean;
 }
 
-export function SwapProEntry({ inputToken, outputToken }: SwapProEntryProps) {
+export function SwapProEntry({ inputToken, outputToken, limit }: SwapProEntryProps) {
   const theme = useTheme();
   const history = useHistory();
 
   const handleToSwapPro = useCallback(() => {
     if (nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
-      history.push(`/swap/pro?input=${inputToken.address}&output=${outputToken.address}`);
+      history.push(
+        `/swap/pro?input=${inputToken.address}&output=${outputToken.address}${limit ? `&tab=${Tab.Limit}` : ""}`,
+      );
     } else {
-      history.push(`/swap/pro`);
+      history.push(`/swap/pro${limit ? `tab=${Tab.Limit}` : ""}`);
     }
-  }, [history, inputToken, outputToken]);
+  }, [history, inputToken, outputToken, limit]);
 
   return (
     <Flex

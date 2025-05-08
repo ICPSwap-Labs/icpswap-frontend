@@ -3,17 +3,12 @@ import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { Reclaim, SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef } from "components/swap/index";
 import { MainCard } from "components/index";
-import { SWAP_REFRESH_KEY } from "constants/index";
+import { SWAP_REFRESH_KEY, Tab } from "constants/index";
 import { Flex } from "@icpswap/ui";
 import { LimitWrapper } from "components/swap/limit-order";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
-
-enum Tab {
-  Swap = "Swap",
-  Limit = "Limit",
-}
 
 const tabs = [
   { value: Tab.Swap, label: Tab.Swap },
