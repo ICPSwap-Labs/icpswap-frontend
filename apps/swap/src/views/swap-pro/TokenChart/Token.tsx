@@ -118,7 +118,9 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: "0 5px", alignItems: "center" }}>
-            <Typography color="text.theme-secondary">{tokenId}</Typography>
+            <Link to={`/info-swap/token/details/${tokenId}`}>
+              <Typography color="text.theme-secondary">{tokenId}</Typography>
+            </Link>
             <Copy content={tokenId} />
           </Box>
         </Box>

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "components/Mui";
+import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { Override, PublicPoolOverView } from "@icpswap/types";
 import { ImageLoading, TokenImage } from "components/index";
