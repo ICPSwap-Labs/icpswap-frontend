@@ -27,4 +27,9 @@ export const icrc_standards = [TOKEN_STANDARD.ICRC1, TOKEN_STANDARD.ICRC2];
 
 export const TRADING_VIEW_DESCRIPTIONS = [ChartView.PRICE, ChartView.DexTools, ChartView.DexScreener];
 
+export enum Tab {
+  Swap = "Swap",
+  Limit = "Limit",
+}
+
 export * from "./mint";
