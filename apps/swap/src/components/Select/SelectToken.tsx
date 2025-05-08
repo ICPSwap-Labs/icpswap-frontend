@@ -9,7 +9,7 @@ import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
 import { useTranslation } from "react-i18next";
 
-import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
+import type { MenuProps } from "./types";
 
 interface TokenMenuItemProps {
   tokenInfo: IcpSwapAPITokenInfo;
@@ -20,7 +20,7 @@ interface TokenMenuItemProps {
 }
 
 function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
-  if (!!search && isValidPrincipal(search) && tokenInfo.ledger_id.toString() !== search) return true;
+  if (!!search && isValidPrincipal(search) && tokenInfo.ledgerId.toString() !== search) return true;
   if (
     !!search &&
     !!tokenInfo &&
@@ -133,11 +133,11 @@ export function SelectToken({
         if (!menu) return defaultPanel;
         if (!menu.additional) return null;
 
-        const additional = JSON.parse(menu.additional) as StringifyAllTokenOfSwapTokenInfo;
+        const additional = JSON.parse(menu.additional) as IcpSwapAPITokenInfo;
 
         const tokenInfo = {
           ...additional,
-          ledger_id: Principal.fromText(additional.ledger_id.__principal__),
+          ledger_id: Principal.fromText(additional.ledgerId),
         } as IcpSwapAPITokenInfo;
 
         return <TokenMenuItem tokenInfo={tokenInfo} color="primary" panel />;
