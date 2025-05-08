@@ -27,15 +27,15 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
   const history = useHistory();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const [, token] = useToken(tokenInfo.ledger_id.toString());
+  const [, token] = useToken(tokenInfo.ledgerId);
 
   const info = useMemo(() => {
-    return infoAllTokens?.find((e) => e.address === tokenInfo.ledger_id.toString());
+    return infoAllTokens?.find((e) => e.address === tokenInfo.ledgerId);
   }, [infoAllTokens]);
 
   const handleTokenClick = () => {
     if (onTokenClick) onTokenClick(tokenInfo);
-    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.ledger_id.toString()}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.ledgerId}`);
   };
 
   return (
@@ -137,7 +137,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
 
   const filteredTokens = useMemo(() => {
     if (!allTokens || !search) return [];
-    if (isValidPrincipal(search)) return allTokens.filter((e) => e.ledger_id.toString() === search);
+    if (isValidPrincipal(search)) return allTokens.filter((e) => e.ledgerId === search);
     return allTokens
       .filter((e) => e.symbol !== "ICP" && e.symbol !== "WICP")
       .filter(
@@ -174,7 +174,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
     let filteredNonTokenListTokens: IcpSwapAPITokenInfo[] = [];
 
     filteredTokens.forEach((e) => {
-      const token = globalTokenList.find((_e) => _e.canisterId === e.ledger_id.toString());
+      const token = globalTokenList.find((_e) => _e.canisterId === e.ledgerId);
 
       if (nonNullArgs(token)) {
         filteredTokenListTokens = filteredTokenListTokens.concat([e]);
@@ -319,7 +319,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                     <Typography fontSize="12px">Token List</Typography>
                     {filteredTokenListTokens?.map((e) => (
                       <SearchItem
-                        key={e.ledger_id.toString()}
+                        key={e.ledgerId}
                         infoAllTokens={infoAllTokens}
                         tokenInfo={e}
                         onTokenClick={handleClose}
@@ -334,7 +334,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                     <Typography fontSize="12px">Non-Token List</Typography>
                     {filteredNonTokenListTokens?.map((e) => (
                       <SearchItem
-                        key={e.ledger_id.toString()}
+                        key={e.ledgerId}
                         infoAllTokens={infoAllTokens}
                         tokenInfo={e}
                         onTokenClick={handleClose}
