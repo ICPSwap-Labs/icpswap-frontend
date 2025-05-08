@@ -8,6 +8,7 @@ import { getPromisesAwait } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 
 import { getTokenInfo } from "./calls";
+import { generateLogoUrl } from "./useTokenLogo";
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
@@ -94,7 +95,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           ...prevState,
           [tokenId]: {
             name: storageInfo.name,
-            logo: storageInfo.logo,
+            logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
