@@ -165,7 +165,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
         <Box sx={{ display: "flex", gap: "0 10px" }}>
           {!matchDownSM ? <TokenChartsViewSelector /> : null}
 
-          <Link to={`/liquidity/add/${ICP.address}/${tokenId}?path=${window.btoa("/swap/pro")}`}>
+          <Link link={`/liquidity/add/${ICP.address}/${tokenId}`}>
             <Button className="secondary" variant="contained">
               {t("swap.add.liquidity")}
             </Button>

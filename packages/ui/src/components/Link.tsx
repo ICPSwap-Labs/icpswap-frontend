@@ -1,4 +1,5 @@
 import { Link as ReactLink } from "react-router-dom";
+import { ReactNode } from "react";
 
 import { useTheme } from "./Mui";
 
@@ -6,7 +7,7 @@ export interface LinkProps {
   to?: string;
   link?: string;
   color?: "secondary" | "primary";
-  children: React.ReactNode;
+  children: ReactNode;
   width?: string;
   height?: string;
   display?: "flex" | "block" | "inline-block" | "inline";
