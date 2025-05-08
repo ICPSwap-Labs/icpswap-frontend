@@ -9,7 +9,7 @@ import { useStateSwapAllTokens } from "store/global/hooks";
 import { useAllSwapPools } from "store/swap/hooks";
 import { useTranslation } from "react-i18next";
 
-import type { MenuProps, StringifyAllTokenOfSwapTokenInfo } from "./types";
+import type { MenuProps } from "./types";
 
 function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!search) return false;
@@ -191,20 +191,20 @@ export function SelectPair({
         if (customPanel) return customPanel(menu);
 
         const additional = JSON.parse(menu.additional) as {
-          token0: StringifyAllTokenOfSwapTokenInfo;
-          token1: StringifyAllTokenOfSwapTokenInfo;
+          token0: IcpSwapAPITokenInfo;
+          token1: IcpSwapAPITokenInfo;
         };
 
         if (!additional.token0 || !additional.token1) return menu.label;
 
         const token0 = {
           ...additional.token0,
-          ledger_id: Principal.fromText(additional.token0.ledger_id.__principal__),
+          ledger_id: Principal.fromText(additional.token0.ledgerId),
         } as IcpSwapAPITokenInfo;
 
         const token1 = {
           ...additional.token1,
-          ledger_id: Principal.fromText(additional.token1.ledger_id.__principal__),
+          ledger_id: Principal.fromText(additional.token1.ledgerId),
         } as IcpSwapAPITokenInfo;
 
         return <PairMenuItem token0={token0} token1={token1} select color="primary" />;
