@@ -106,11 +106,11 @@ export function ReclaimTokensInPool({
 
     const __availableWithdrawTokens: Array<{ token: Token; amount: string }> = [];
 
-    if (token0TotalAmount && new BigNumber(token0TotalAmount).isGreaterThan(0)) {
+    if (token0TotalAmount && new BigNumber(token0TotalAmount).isGreaterThan(token0.transFee)) {
       __availableWithdrawTokens.push({ token: token0, amount: token0TotalAmount });
     }
 
-    if (token1TotalAmount && new BigNumber(token1TotalAmount).isGreaterThan(0)) {
+    if (token1TotalAmount && new BigNumber(token1TotalAmount).isGreaterThan(token1.transFee)) {
       __availableWithdrawTokens.push({ token: token1, amount: token1TotalAmount });
     }
 
