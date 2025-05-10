@@ -33,6 +33,8 @@ export interface ReclaimLinkProps {
   bg1?: string;
   onInputTokenClick?: (amount: string) => void;
   inputToken?: Token | Null;
+  background?: "level1" | "level2" | "level3";
+  borderRadius?: "12px" | "16px";
 }
 
 export function ReclaimTokensInPool({
@@ -43,6 +45,8 @@ export function ReclaimTokensInPool({
   bg1,
   onInputTokenClick,
   inputToken,
+  background = "level1",
+  borderRadius = "16px",
 }: ReclaimLinkProps) {
   const theme = useTheme();
   const classes = useStyles();
@@ -120,7 +124,11 @@ export function ReclaimTokensInPool({
   return nonNullArgs(pool) ? (
     <>
       {availableWithdrawTokens.length > 0 ? (
-        <MainCard padding={ui === "pro" ? "10px" : "16px 24px"} borderRadius={ui === "pro" ? "12px" : "16px"} level={1}>
+        <MainCard
+          padding={ui === "pro" ? "10px" : "16px 24px"}
+          borderRadius={ui === "pro" ? "12px" : borderRadius}
+          level={background === "level1" ? 1 : background === "level2" ? 2 : 3}
+        >
           <Flex fullWidth gap="0 8px">
             <Flex>
               <AlertTriangle size={14} color={colors.danger} />

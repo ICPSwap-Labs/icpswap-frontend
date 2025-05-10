@@ -6,13 +6,19 @@ export interface ToReclaimProps {
   fontSize?: "12px" | "14px";
   poolId: string;
   ui?: "pro";
+  background?: number;
+  borderRadius?: "12px" | "16px";
 }
 
-export function ToReclaim({ poolId, fontSize = "14px", ui }: ToReclaimProps) {
+export function ToReclaim({ poolId, fontSize = "14px", ui, borderRadius = "16px", background = 1 }: ToReclaimProps) {
   const { t } = useTranslation();
 
   return (
-    <MainCard padding={ui === "pro" ? "10px" : "16px 24px"} borderRadius={ui === "pro" ? "12px" : "16px"} level={1}>
+    <MainCard
+      padding={ui === "pro" ? "10px" : "16px 24px"}
+      borderRadius={ui === "pro" ? "12px" : borderRadius}
+      level={background}
+    >
       <Flex fullWidth>
         <Flex sx={{ fontSize: fontSize ?? "14px" }}>
           <Typography sx={{ fontSize: fontSize ?? "14px" }}>{t("swap.missing.tokens")}&nbsp;</Typography>

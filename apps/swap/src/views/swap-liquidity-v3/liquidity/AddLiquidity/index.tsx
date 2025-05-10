@@ -1,12 +1,11 @@
 /* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme, useTheme } from "components/Mui";
+import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import {
   FeeSelector,
   CurrencySelector,
   SwapDepositAmount,
-  Reclaim,
   AddLiquidityButton,
   BuyTokenButton,
 } from "components/swap/index";
@@ -38,6 +37,8 @@ import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
+import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -80,7 +81,6 @@ export default function AddLiquidity() {
   const classes = useStyle();
   const history = useHistory();
   const principal = useAccountPrincipal();
-  const theme = useTheme();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
@@ -526,23 +526,16 @@ export default function AddLiquidity() {
                 poolId={pool?.id}
               />
 
-              {!noLiquidity ? (
-                <Box
-                  sx={{
-                    padding: "16px",
-                    background: theme.palette.background.level3,
-                    borderRadius: "12px",
-                    width: "100%",
-                  }}
-                >
-                  <Reclaim
-                    fontSize="12px"
+              {!noLiquidity && pool ? (
+                <Flex vertical align="flex-start" gap="8px 0" fullWidth>
+                  <ReclaimTokensInPool
                     pool={pool}
-                    bg1={theme.palette.background.level2}
-                    keepInPool={false}
                     refreshKey={ADD_LIQUIDITY_REFRESH_KEY}
+                    background="level3"
+                    borderRadius="12px"
                   />
-                </Box>
+                  <ToReclaim background={3} poolId={pool.id} borderRadius="12px" />
+                </Flex>
               ) : null}
 
               {nonNullArgs(baseCurrency) && nonNullArgs(quoteCurrency) && !noLiquidity ? (

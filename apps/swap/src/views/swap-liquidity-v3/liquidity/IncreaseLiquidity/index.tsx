@@ -1,9 +1,9 @@
 import { ReactNode, useCallback, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Grid, Typography, Box, makeStyles, Theme, useTheme } from "components/Mui";
+import { Grid, Typography, Box, makeStyles, Theme } from "components/Mui";
 import { MainCard, Wrapper, AuthButton } from "components/index";
 import HeaderTab from "components/swap/Header";
-import { SwapDepositAmount, Reclaim } from "components/swap/index";
+import { SwapDepositAmount } from "components/swap/index";
 import { FIELD, INCREASE_LIQUIDITY_REFRESH_KEY, NONE_TOKEN_SYMBOL } from "constants/index";
 import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "store/swap/liquidity/hooks";
 import { usePosition } from "hooks/swap/usePosition";
@@ -21,8 +21,10 @@ import { ExternalTipArgs } from "types/index";
 import { ReclaimTips } from "components/ReclaimTips";
 import { maxAmountFormat } from "utils/swap";
 import { useRefreshTrigger } from "hooks/index";
-import { LoadingRow } from "@icpswap/ui";
+import { Flex, LoadingRow } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
+import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
+import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -95,7 +97,6 @@ export function PriceRange({ label, value, currencyA, currencyB }: PriceRangePro
 
 export default function IncreaseLiquidity() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const classes = useStyle();
   const history = useHistory();
 
@@ -286,6 +287,7 @@ export default function IncreaseLiquidity() {
                             : undefined
                         }
                         maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
+                        poolId={pool?.id}
                       />
                       <Box mt="16px">
                         <SwapDepositAmount
@@ -316,26 +318,24 @@ export default function IncreaseLiquidity() {
                               : undefined
                           }
                           maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
+                          poolId={pool?.id}
                         />
                       </Box>
                     </Box>
                   </Box>
 
-                  <Box
-                    sx={{
-                      margin: "12px 0 0 0",
-                      background: theme.palette.background.level3,
-                      borderRadius: "12px",
-                      padding: "16px",
-                    }}
-                  >
-                    <Reclaim
-                      pool={pool}
-                      keepInPool={false}
-                      fontSize="12px"
-                      refreshKey={INCREASE_LIQUIDITY_REFRESH_KEY}
-                    />
-                  </Box>
+                  {pool ? (
+                    <Flex vertical gap="12px 0" sx={{ margin: "12px 0 0 0" }}>
+                      <ReclaimTokensInPool
+                        pool={pool}
+                        refreshKey={INCREASE_LIQUIDITY_REFRESH_KEY}
+                        background="level3"
+                        borderRadius="12px"
+                      />
+
+                      <ToReclaim poolId={pool.id} background={3} borderRadius="12px" />
+                    </Flex>
+                  ) : null}
 
                   <Box sx={{ margin: "20px 0 0 0" }}>
                     <AuthButton
