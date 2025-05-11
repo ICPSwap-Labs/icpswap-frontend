@@ -18,7 +18,7 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
     <Box>
       <Typography color="text.primary" fontWeight={600}>
         {t("common.token.name")}
-        <Link to={`/info-swap/token/details/${token?.address}`}>
+        <Link to={`/info-tokens/details/${token.address}`}>
           <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
             {token?.name}
           </Typography>
