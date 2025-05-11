@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Box, makeStyles } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "@icpswap/ui";
+import { Flex, LoadingRow } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useLimitOrders } from "hooks/swap/limit-order/useLimitOrders";
@@ -8,6 +8,7 @@ import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 
 import { PendingHeader } from "./PendingHeader";
 import { PendingRow } from "./PendingRow";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles(() => {
   return {
@@ -51,7 +52,7 @@ export function PendingList({ pair }: PendingListProps) {
         </Box>
       ) : !userLimitOrders || userLimitOrders.length === 0 ? (
         <Flex fullWidth justify="center">
-          <NoData />
+          <LimitTransactionsEmpty />
         </Flex>
       ) : (
         <Box sx={{ width: "100%", minWidth: "1058px" }}>

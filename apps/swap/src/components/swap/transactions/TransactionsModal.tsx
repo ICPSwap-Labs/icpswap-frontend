@@ -2,7 +2,7 @@ import { Typography, Box, useTheme } from "components/Mui";
 import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { enumToString, BigNumber } from "@icpswap/utils";
-import { LoadingRow, NoData, TokenImage } from "components/index";
+import { LoadingRow, TokenImage } from "components/index";
 import type { UserStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT } from "constants/index";
@@ -11,6 +11,7 @@ import { ArrowUpRight } from "react-feather";
 import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import i18n from "i18n";
+import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 
 export const RECORD_TYPE: { [key: string]: string } = {
   swap: i18n.t("common.swap"),
@@ -100,7 +101,7 @@ export function SwapTransactionsModal({ open, onClose }: SwapTransactionsModalPr
     <Modal open={open} onClose={onClose} title={t("swap.history")}>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
         {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
-        {(transactions?.length === 0 || !transactions) && !loading ? <NoData /> : null}
+        {(transactions?.length === 0 || !transactions) && !loading ? <UserTransactionsEmpty onClick={onClose} /> : null}
 
         {loading ? (
           <LoadingRow>

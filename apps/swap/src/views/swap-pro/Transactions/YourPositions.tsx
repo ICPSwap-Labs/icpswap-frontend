@@ -10,7 +10,7 @@ import {
   formatTickPrice,
 } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination, TextButton } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, SimplePagination, TextButton } from "@icpswap/ui";
 import { UserPositionByList } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
@@ -22,6 +22,7 @@ import { SwapProContext } from "components/swap/pro";
 import { Null } from "@icpswap/types";
 import { SwapContext } from "components/swap";
 import { useTranslation } from "react-i18next";
+import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
 
 const useStyles = makeStyles(() => {
   return {
@@ -264,7 +265,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
             ))
           : null}
 
-        {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
+        {(filteredPositions ?? []).length === 0 && !loading ? <UserLiquidityEmpty /> : null}
 
         {loading ? (
           <Box sx={{ padding: "24px" }}>

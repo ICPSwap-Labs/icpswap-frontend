@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Box, Theme, makeStyles } from "components/Mui";
-import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
+import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitOrder, Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
@@ -8,6 +8,7 @@ import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 import { useTranslation } from "react-i18next";
 
 import { PendingRowPro } from "./PendingRowPro";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -74,7 +75,7 @@ export function PendingTableProUI({
               ))
             : null}
 
-          {(limitOrders ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>

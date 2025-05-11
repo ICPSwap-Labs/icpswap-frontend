@@ -10,6 +10,7 @@ import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
 import i18n from "i18n/index";
 import { useTranslation } from "react-i18next";
+import { YourPoolsEmpty } from "components/stake/Empty";
 
 const Tabs = [
   { label: i18n.t("common.pools.all"), state: FilterState.ALL },
@@ -235,7 +236,9 @@ function MainContent() {
             </Box>
           ) : (
             <>
-              {!pools?.length && !loading && <NoData tip={t("farm.stake.empty")} />}
+              {!pools?.length &&
+                !loading &&
+                (__state === FilterState.YOUR ? <YourPoolsEmpty /> : <NoData tip={t("farm.stake.empty")} />)}
 
               {pools?.map((pool) => (
                 <StakeRow

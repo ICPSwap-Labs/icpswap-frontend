@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, ReactNode } from "react";
 import { enumToString, nonNullArgs } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
@@ -36,6 +36,7 @@ export interface TransactionsProps {
   hasFilter?: boolean;
   showedTokens?: string[];
   styleProps?: StyleProps;
+  CustomNoData?: ReactNode;
 }
 
 type Filter = "all" | "swaps" | "adds" | "removes";
@@ -47,6 +48,7 @@ export function Transactions({
   loading,
   hasFilter,
   showedTokens,
+  CustomNoData,
 }: TransactionsProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -179,7 +181,7 @@ export function Transactions({
             />
           ))}
 
-          {(sortedTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(sortedTransactions ?? []).length === 0 && !loading ? CustomNoData ?? <NoData /> : null}
 
           {loading && !sortedTransactions ? <ImageLoading loading={loading} /> : null}
         </Box>

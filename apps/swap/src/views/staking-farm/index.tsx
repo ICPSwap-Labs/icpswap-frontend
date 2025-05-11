@@ -15,8 +15,8 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useTranslation } from "react-i18next";
 import i18n from "i18n/index";
-
-import FarmContext from "./context";
+import FarmContext from "views/staking-farm/context";
+import { YourFarmEmpty } from "components/farm/Empty";
 
 const Tabs = [
   { label: i18n.t("farm.tabs.all"), state: FilterState.ALL },
@@ -316,7 +316,11 @@ function MainContent() {
             ) : (
               <>
                 {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? (
-                  <NoData tip={t("farm.stake.empty")} />
+                  your ? (
+                    <YourFarmEmpty />
+                  ) : (
+                    <NoData tip={t("farm.stake.empty")} />
+                  )
                 ) : null}
 
                 {slicedFarms?.map((farmId) => (

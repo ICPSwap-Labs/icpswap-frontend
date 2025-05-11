@@ -1,10 +1,11 @@
 import { Box, Theme, makeStyles } from "components/Mui";
-import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
+import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
 import { HistoryRowPro } from "./HistoryRowPro";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -64,7 +65,7 @@ export function HistoryTableProUI({
               ))
             : null}
 
-          {(limitTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(limitTransactions ?? []).length === 0 && !loading ? <LimitTransactionsEmpty /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>
