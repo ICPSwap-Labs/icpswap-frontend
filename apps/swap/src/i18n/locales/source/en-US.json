@@ -402,7 +402,7 @@
   "swap.revoke.token.approval": "Revoke token approval",
   "H91gd/": "StartTime must be before end time",
   "limit.error.invalid.tick": "Invalid tick for this pool",
-  "ck.wallet.of.ic": "Your Internet Computer Principal",
+  "ck.wallet.of.ic": "Your Internet Computer principal",
   "HK7Zj+": "You will receive the reward tokens you have earned after unstaking the staked positions.",
   "liquidity.position.info": "Position info",
   "HNXP5r": "Failed to disburse maturity",
