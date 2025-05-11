@@ -1403,5 +1403,10 @@
   "swap.your.liquidity.positions": "Your liquidity positions",
   "swap.tradingview.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others",
   "farm.stake.empty": "No active pools. Come back soon!",
-  "swap.gas.fee": "Gas fee"
+  "swap.gas.fee": "Gas fee",
+  "liquidity.transactions.empty": "No liquidity positions. <highlight>Add liquidity</highlight>",
+  "swap.transactions.empty": "No Swap history, <highlight>Begin Swap</highlight>",
+  "limit.transactions.empty": "No limit orders. <highlight>Place order</highlight>",
+  "farm.your.empty": "No farming positions. <highlight>Start farming</highlight>",
+  "stake.your.empty": "No staked tokens. <highlight>Stake now</highlight>"
 }

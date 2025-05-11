@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { Box, makeStyles } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "@icpswap/ui";
+import { Flex, LoadingRow } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { HistoryHeader } from "./HistoryHeader";
 import { HistoryRow } from "./HistoryRow";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles(() => {
   return {
@@ -56,7 +57,7 @@ export function HistoryList() {
         </Box>
       ) : !limitTransactions || limitTransactions.length === 0 ? (
         <Flex fullWidth justify="center">
-          <NoData />
+          <LimitTransactionsEmpty />
         </Flex>
       ) : (
         <Box sx={{ width: "100%", minWidth: "1058px" }}>

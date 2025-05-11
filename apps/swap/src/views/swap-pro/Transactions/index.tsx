@@ -7,6 +7,7 @@ import { PendingTablePro, HistoryTablePro } from "components/swap/limit-order/in
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { SwapContext } from "components/swap";
 import i18n from "i18n/index";
+import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
@@ -181,7 +182,9 @@ export default function Transactions() {
 
       <Box>
         {activeSubTab === Tabs.ALL_TRANSACTIONS ? <PoolTransactions canisterId={poolId} refresh={autoRefresh} /> : null}
-        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions poolId={poolId} /> : null}
+        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? (
+          <UserTransactions poolId={poolId} CustomNoData={<UserTransactionsEmpty />} />
+        ) : null}
         {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={poolId} /> : null}
         {activeSubTab === Tabs.POSITIONS ? <Positions poolId={poolId} /> : null}
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
