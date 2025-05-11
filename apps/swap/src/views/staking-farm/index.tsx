@@ -8,8 +8,8 @@ import { LoadingRow } from "@icpswap/ui";
 import { useHistory } from "react-router-dom";
 import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
-import { SelectToken } from "components/Select/SelectToken";
-import { SelectPair } from "components/Select/SelectPair";
+// import { SelectToken } from "components/Select/SelectToken";
+// import { SelectPair } from "components/Select/SelectPair";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -40,8 +40,8 @@ function MainContent() {
     state: FilterState | undefined;
   };
 
-  const [filterPair, setFilterPair] = useState<string | Null>(null);
-  const [filterToken, setFilterToken] = useState<string | Null>(null);
+  const [filterPair] = useState<string | Null>(null);
+  const [filterToken] = useState<string | Null>(null);
   const [page, setPage] = useState(START_PAGE);
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
@@ -125,13 +125,13 @@ function MainContent() {
     };
   }, [state, matchDownSM, __state]);
 
-  const handlePairChange = (pairId: string | undefined) => {
-    setFilterPair(pairId);
-  };
+  // const handlePairChange = (pairId: string | undefined) => {
+  //   setFilterPair(pairId);
+  // };
 
-  const handleTokenChange = (tokenId: string | undefined) => {
-    setFilterToken(tokenId);
-  };
+  // const handleTokenChange = (tokenId: string | undefined) => {
+  //   setFilterToken(tokenId);
+  // };
 
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
@@ -231,7 +231,7 @@ function MainContent() {
             ))}
           </Box>
 
-          <Flex
+          {/* <Flex
             justify="flex-end"
             sx={{
               flex: 1,
@@ -266,7 +266,7 @@ function MainContent() {
                 onTokenChange={handleTokenChange}
               />
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
