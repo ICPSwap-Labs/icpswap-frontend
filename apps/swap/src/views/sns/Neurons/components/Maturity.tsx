@@ -4,11 +4,12 @@ import { Flex, ConfirmModal } from "@icpswap/ui";
 import { Neuron } from "@icpswap/types";
 import { useMemo, useState } from "react";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { secondsToDuration } from "@dfinity/utils";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useUSDPrice } from "hooks/useUSDPrice";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
@@ -30,6 +31,8 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const tokenUSDPrice = useUSDPrice(token);
 
   const { auto_stake_maturity, staked_maturity, available_maturity } = useMemo(() => {
     return {
@@ -168,10 +171,15 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
                 finalize_disbursement_timestamp_seconds -
                 BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
 
-              return token ? (
+              const amount = token ? parseTokenAmount(e.amount_e8s, token.decimals).toString() : undefined;
+
+              return token && amount ? (
                 <Typography key={index} sx={{ fontSize: "12px" }}>
-                  {parseTokenAmount(e.amount_e8s, token.decimals).toString()} {token?.symbol} remaining{" "}
-                  {secondsToDuration({ seconds })}
+                  {amount}
+                  {tokenUSDPrice
+                    ? ` (${formatDollarAmount(new BigNumber(tokenUSDPrice).multipliedBy(amount).toString())})`
+                    : ""}{" "}
+                  {token.symbol} remaining {secondsToDuration({ seconds })}
                 </Typography>
               ) : null;
             })}
