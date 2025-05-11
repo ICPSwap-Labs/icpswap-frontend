@@ -8,7 +8,7 @@ export interface NoDataProps {
   tipColor?: string;
 }
 
-export function NoData({ tip, tipColor = "text.primary", noTips = false }: NoDataProps) {
+export function NoData({ tip, tipColor = "text.secondary", noTips = false }: NoDataProps) {
   return (
     <Box
       sx={{
