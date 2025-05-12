@@ -197,7 +197,7 @@ export default function TokenDetails() {
             </Button>
           </ImportToNns>
 
-          <Link to={`/info-tokens/details/${canisterId}`}>
+          <Link link={`/info-tokens/details/${canisterId}`}>
             <Button variant="contained" className="secondary">
               {t("common.token.details")}
             </Button>
