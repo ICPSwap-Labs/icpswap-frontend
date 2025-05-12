@@ -257,7 +257,7 @@ export function Positions() {
           <Flex gap="0 28px">
             {tabs.map((__tab) => {
               return (
-                <Flex align="center" gap="0 4px">
+                <Flex align="center" gap="0 4px" key={__tab.value}>
                   <Typography
                     className={`${classes.tab}${activeTab === __tab.value ? " active" : ""}`}
                     onClick={() => handleTab(__tab.value)}
