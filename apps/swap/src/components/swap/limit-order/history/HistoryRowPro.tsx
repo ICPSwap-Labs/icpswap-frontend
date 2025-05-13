@@ -1,5 +1,5 @@
 import { Pool } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
+import { TableRow, BodyCell, TextButton, Flex } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { useState, useMemo } from "react";
 import { useTheme } from "components/Mui";
@@ -32,7 +32,7 @@ export function HistoryRowPro({
   const [invertPrice, setInvertPrice] = useState(false);
   const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
 
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
+  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount, inputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
       ? transaction.token1Id
       : transaction.token0Id;
@@ -41,12 +41,15 @@ export function HistoryRowPro({
     const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
     const outputChangeAmount =
       inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
+    const inputChangeAmount =
+      inputTokenId === transaction.token1Id ? transaction.token1ChangeAmount : transaction.token0ChangeAmount;
 
     return {
       inputTokenId,
       outputTokenId,
       inputAmount,
       outputChangeAmount,
+      inputChangeAmount,
     };
   }, [transaction]);
 
@@ -88,11 +91,27 @@ export function HistoryRowPro({
           </BodyCell>
 
           {/* You receive */}
-          <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>
-            <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
-            <BodyCell>
-              {formatAmount(outputChangeAmount)} {outputToken?.symbol}
-            </BodyCell>
+          <BodyCell
+            sx={{
+              flexDirection: "column",
+              gap: "6px 0",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <Flex gap="0 6px">
+              <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
+              <BodyCell>
+                {formatAmount(outputChangeAmount)} {outputToken?.symbol}
+              </BodyCell>
+            </Flex>
+            <Flex gap="0 6px">
+              <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
+              <BodyCell>
+                {formatAmount(inputChangeAmount)} {inputToken?.symbol}
+              </BodyCell>
+            </Flex>
           </BodyCell>
 
           <BodyCell

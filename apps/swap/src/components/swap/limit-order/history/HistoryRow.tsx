@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex, TextButton } from "@icpswap/ui";
 import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -27,7 +27,7 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
 
   const { result: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal);
 
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
+  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount, inputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
       ? transaction.token1Id
       : transaction.token0Id;
@@ -36,12 +36,15 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
     const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
     const outputChangeAmount =
       inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
+    const inputChangeAmount =
+      inputTokenId === transaction.token1Id ? transaction.token1ChangeAmount : transaction.token0ChangeAmount;
 
     return {
       inputTokenId,
       outputTokenId,
       inputAmount,
       outputChangeAmount,
+      inputChangeAmount,
     };
   }, [transaction]);
 
@@ -92,15 +95,23 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
         <Flex gap="0 6px">
           <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
           <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
-            {toSignificantWithGroupSeparator(inputAmount)} {inputToken?.symbol}
+            {formatAmount(inputAmount)} {inputToken?.symbol}
           </Typography>
         </Flex>
 
-        <Flex gap="0 6px">
-          <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
-          <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
-            {toSignificantWithGroupSeparator(outputChangeAmount)} {outputToken?.symbol}
-          </Typography>
+        <Flex gap="6px 0" vertical align="flex-start">
+          <Flex gap="0 6px">
+            <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
+            <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
+              {formatAmount(outputChangeAmount)} {outputToken?.symbol}
+            </Typography>
+          </Flex>
+          <Flex gap="0 6px">
+            <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
+            <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
+              {formatAmount(inputChangeAmount)} {inputToken?.symbol}
+            </Typography>
+          </Flex>
         </Flex>
 
         <Flex gap="0 2px" justify="flex-end">

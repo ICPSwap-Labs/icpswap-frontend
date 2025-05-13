@@ -46,8 +46,8 @@ export function HistoryTableProUI({
         <Box sx={{ minWidth: "1096px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
             <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.you.pay")}</HeaderCell>
-            <HeaderCell>{t("common.you.receive")}</HeaderCell>
+            <HeaderCell>{t("common.you.paid")}</HeaderCell>
+            <HeaderCell>{t("common.you.received")}</HeaderCell>
             <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
             <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>
