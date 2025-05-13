@@ -667,7 +667,8 @@ export function useRangeCallbacks(
     (value: string | number) => {
       if (isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
 
-      const basePrice = pool.priceOf(baseToken).toFixed();
+      const basePrice = pool.priceOf(baseToken).toFixed(baseToken.decimals);
+
       const range: [string, string] = [
         new BigNumber(basePrice).minus(new BigNumber(basePrice).multipliedBy(value).dividedBy(100)).toFixed(5),
         new BigNumber(basePrice).multipliedBy(value).dividedBy(100).plus(basePrice).toFixed(5),
