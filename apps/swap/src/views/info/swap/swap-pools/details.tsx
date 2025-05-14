@@ -304,7 +304,7 @@ export default function SwapPoolDetails() {
 
         <PoolChart
           canisterId={canisterId}
-          token0Price={pool ? new BigNumber(pool.token0Price).dividedBy(pool.token1Price).toNumber() : undefined}
+          token0Price={pool ? new BigNumber(pool.token1Price).dividedBy(pool.token0Price).toNumber() : undefined}
           volume24H={pool?.volumeUSD}
         />
       </Box>
