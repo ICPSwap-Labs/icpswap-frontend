@@ -21,7 +21,7 @@ import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
 import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
-import { isDarkTheme } from "utils/index";
+import { isDarkTheme, parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
 import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -154,7 +154,7 @@ export default function AddLiquidity() {
 
     if (backPath) {
       try {
-        const path = window.atob(backPath);
+        const path = parseBackPath(backPath);
         history.push(path);
       } catch (error) {
         console.warn(error);

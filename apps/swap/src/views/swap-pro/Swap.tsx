@@ -1,4 +1,4 @@
-import { useContext, useCallback, useRef, useState, useEffect } from "react";
+import { useContext, useCallback, useRef, useEffect } from "react";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { Reclaim, SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef } from "components/swap/index";
@@ -9,6 +9,7 @@ import { LimitWrapper } from "components/swap/limit-order";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
+import { useHistory } from "react-router-dom";
 
 const tabs = [
   { value: Tab.Swap, label: Tab.Swap },
@@ -17,13 +18,12 @@ const tabs = [
 
 export default function Swap() {
   const theme = useTheme();
+  const history = useHistory();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
-  const { setActiveTab: setContextActiveTab } = useContext(SwapProContext);
+  const { activeTab, setActiveTab } = useContext(SwapProContext);
   const { setPoolId, selectedPool, inputToken, setInputToken, setOutputToken, noLiquidity } = useContext(SwapContext);
   const { tab: tabFromUrl } = useParsedQueryString() as { tab: Tab | Null };
-
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
 
   const handleInputTokenClick = useCallback(
     (tokenAmount: string) => {
@@ -34,14 +34,15 @@ export default function Swap() {
   );
 
   useEffect(() => {
-    if (tabFromUrl) {
-      setActiveTab(tabFromUrl);
-    }
+    setActiveTab((tabFromUrl ?? Tab.Swap) as Tab);
   }, [tabFromUrl]);
 
-  useEffect(() => {
-    setContextActiveTab(activeTab === Tab.Swap ? "SWAP" : "LIMIT");
-  }, [activeTab]);
+  const handleTab = useCallback(
+    (tab: Tab) => {
+      history.push(`/swap/pro?tab=${tab}`);
+    },
+    [history],
+  );
 
   return (
     <>
@@ -57,7 +58,7 @@ export default function Swap() {
                   fontWeight: activeTab === tab.value ? 600 : 400,
                   cursor: "pointer",
                 }}
-                onClick={() => setActiveTab(tab.value)}
+                onClick={() => handleTab(tab.value)}
               >
                 {tab.label}
               </Typography>

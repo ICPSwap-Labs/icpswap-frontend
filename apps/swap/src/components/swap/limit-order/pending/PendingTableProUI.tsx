@@ -6,6 +6,9 @@ import { LimitOrder, Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
 import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 import { useTranslation } from "react-i18next";
+import { useScrollToTop } from "hooks/useScrollToTop";
+import { useHistory } from "react-router-dom";
+import { Tab } from "constants/index";
 
 import { PendingRowPro } from "./PendingRowPro";
 import { LimitTransactionsEmpty } from "../Empty";
@@ -40,6 +43,7 @@ export function PendingTableProUI({
 }: PendingTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
+  const history = useHistory();
 
   const [, pool] = usePoolByPoolId(poolId);
   const [, setRefreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
@@ -48,6 +52,13 @@ export function PendingTableProUI({
     setLimitOrdersRefreshTrigger();
     setRefreshTrigger();
   }, [setLimitOrdersRefreshTrigger]);
+
+  const scrollToTop = useScrollToTop();
+
+  const handleToLimit = useCallback(() => {
+    scrollToTop();
+    history.push(`/swap/pro?tab=${Tab.Limit}`);
+  }, [scrollToTop, history]);
 
   return (
     <>
@@ -75,7 +86,7 @@ export function PendingTableProUI({
               ))
             : null}
 
-          {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty /> : null}
+          {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>

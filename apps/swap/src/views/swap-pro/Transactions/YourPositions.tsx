@@ -265,7 +265,17 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
             ))
           : null}
 
-        {(filteredPositions ?? []).length === 0 && !loading ? <UserLiquidityEmpty /> : null}
+        {(filteredPositions ?? []).length === 0 && !loading ? (
+          <UserLiquidityEmpty
+            token0Address={inputToken?.address}
+            token1Address={outputToken?.address}
+            backPath={
+              inputToken && outputToken
+                ? `/swap/pro?input=${inputToken.address}&output=${outputToken.address}`
+                : "/swap/pro"
+            }
+          />
+        ) : null}
 
         {loading ? (
           <Box sx={{ padding: "24px" }}>
