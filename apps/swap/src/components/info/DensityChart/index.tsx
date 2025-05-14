@@ -63,7 +63,7 @@ type TickChartData = {
   tvlToken1: number;
 };
 
-export function DensityChart({ address, token0Price }: DensityChartProps) {
+export function DensityChart({ address }: DensityChartProps) {
   const theme = useTheme();
 
   const { result: __pool } = useSwapPoolMetadata(address);
@@ -78,6 +78,7 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
   const [zoomState] = useState<ZoomStateProps>(initialState);
 
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>();
+  const [activeToken0Price, setActiveToken0Price] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     async function formatData() {
@@ -135,6 +136,10 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
 
               const amount0 = token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0;
               const amount1 = token1Amount ? parseFloat(token1Amount.toExact()) : 0;
+
+              if (active) {
+                setActiveToken0Price(parseFloat(t.price0));
+              }
 
               return {
                 index: i,
@@ -200,9 +205,17 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart width={500} height={300} data={zoomedData}>
             <Tooltip
-              content={(props) => (
-                <LiquidityChartToolTip chartProps={props} token0={token0} token1={token1} currentPrice={token0Price} />
-              )}
+              content={(props) => {
+                return (
+                  <LiquidityChartToolTip
+                    chartProps={props}
+                    token0={token0}
+                    token1={token1}
+                    currentPrice={activeToken0Price}
+                    data={zoomedData}
+                  />
+                );
+              }}
             />
             {/* <XAxis reversed tick={false} /> */}
             <Bar

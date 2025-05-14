@@ -1410,5 +1410,6 @@
   "swap.transactions.empty": "No Swap history, <highlight>Begin Swap</highlight>",
   "limit.transactions.empty": "No limit orders. <highlight>Place order</highlight>",
   "farm.your.empty": "No farming positions. <highlight>Start farming</highlight>",
-  "stake.your.empty": "No staked tokens. <highlight>Stake now</highlight>"
+  "stake.your.empty": "No staked tokens. <highlight>Stake now</highlight>",
+  "swap.price.deviation": "Price Deviation:"
 }
