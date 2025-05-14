@@ -5,6 +5,7 @@ import { Null } from "@icpswap/types";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useLimitOrders } from "hooks/swap/limit-order/useLimitOrders";
 import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
+import { useScrollToTop } from "hooks/useScrollToTop";
 
 import { PendingHeader } from "./PendingHeader";
 import { PendingRow } from "./PendingRow";
@@ -33,6 +34,8 @@ export function PendingList({ pair }: PendingListProps) {
     setRefreshTrigger();
   }, [setRefreshTrigger]);
 
+  const scrollToTop = useScrollToTop();
+
   return (
     <>
       {loading ? (
@@ -52,7 +55,7 @@ export function PendingList({ pair }: PendingListProps) {
         </Box>
       ) : !userLimitOrders || userLimitOrders.length === 0 ? (
         <Flex fullWidth justify="center">
-          <LimitTransactionsEmpty />
+          <LimitTransactionsEmpty onClick={scrollToTop} />
         </Flex>
       ) : (
         <Box sx={{ width: "100%", minWidth: "1058px" }}>

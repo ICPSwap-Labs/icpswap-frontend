@@ -5,7 +5,7 @@ import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
 import { ChartButton } from "@icpswap/ui";
 import { SwapProContext, PoolTokensInformation } from "components/swap/pro";
-import { DefaultChartView } from "constants/index";
+import { DefaultChartView, Tab } from "constants/index";
 
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
@@ -21,7 +21,7 @@ export function SwapProContextWrapper() {
 
   const { inputToken, outputToken, poolId } = useContext(SwapContext);
 
-  const [activeTab, setActiveTab] = useState<"SWAP" | "LIMIT">("SWAP");
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
   const [chartView, setChartView] = useState<ChartButton | null>(DefaultChartView);
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
