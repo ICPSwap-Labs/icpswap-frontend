@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, toSignificantWithGroupSeparator, nanosecond2Millisecond } from "@icpswap/utils";
+import { BigNumber, nanosecond2Millisecond, formatTokenPrice, formatAmount } from "@icpswap/utils";
 import { Flex, TextButton } from "@icpswap/ui";
 import { LimitOrder as LimitOrderType } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -108,18 +108,14 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
         <Flex gap="0 6px">
           <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="20px" />
           <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
-            {inputToken && inputAmount
-              ? `${toSignificantWithGroupSeparator(inputAmount.toExact())} ${inputToken.symbol}`
-              : "--"}
+            {inputToken && inputAmount ? `${formatAmount(inputAmount.toExact())} ${inputToken.symbol}` : "--"}
           </Typography>
         </Flex>
 
         <Flex gap="0 6px">
           <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="20px" />
           <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
-            {outputToken && outputAmount
-              ? `${toSignificantWithGroupSeparator(outputAmount.toExact())} ${outputToken.symbol}`
-              : "--"}
+            {outputToken && outputAmount ? `${formatAmount(outputAmount.toExact())} ${outputToken.symbol}` : "--"}
           </Typography>
         </Flex>
 
@@ -131,10 +127,12 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
             {limitPrice ? (
               <>
                 {invertPrice
-                  ? `1 ${outputToken.symbol} = ${toSignificantWithGroupSeparator(
+                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
                       new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
                     )} ${inputToken.symbol}`
-                  : `1 ${inputToken.symbol} = ${limitPrice.toFixed(inputToken.decimals)} ${outputToken.symbol}`}
+                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
+                      outputToken.symbol
+                    }`}
                 <SyncAltIcon sx={{ fontSize: "1rem" }} />
               </>
             ) : (

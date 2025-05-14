@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatAmount, isNullArgs, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { BigNumber, formatAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
 import { Flex, TextButton } from "@icpswap/ui";
 import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -123,10 +123,10 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
             {limitPrice ? (
               <>
                 {invertPrice
-                  ? `1 ${outputToken?.symbol} = ${toSignificantWithGroupSeparator(
+                  ? `1 ${outputToken?.symbol} = ${formatTokenPrice(
                       new BigNumber(1).dividedBy(limitPrice).toString(),
                     )} ${inputToken?.symbol}`
-                  : `1 ${inputToken?.symbol} = ${limitPrice} ${outputToken?.symbol}`}
+                  : `1 ${inputToken?.symbol} = ${formatTokenPrice(limitPrice)} ${outputToken?.symbol}`}
                 <SyncAltIcon sx={{ fontSize: "1rem" }} />
               </>
             ) : (
