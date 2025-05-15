@@ -133,7 +133,7 @@ export default function UserPoolBalance() {
             }}
           >
             <PrincipalSearcher
-              placeholder={t('tools.search.for.pool.balance')}
+              placeholder={t("tools.search.for.pool.balance")}
               onPrincipalChange={handleAddressChange}
             />
 
@@ -159,7 +159,7 @@ export default function UserPoolBalance() {
               <ClaimItem key={`${ele.token0.address}_${ele.token1.address}_${ele.type}`} claim={ele} />
             ))}
 
-            {allClaims.length === 0 && !loading ? <NoData /> : null}
+            {allClaims.length === 0 && !loading ? <NoData tip={t("info.tools.pool.balances.empty")} /> : null}
 
             {loading ? (
               <Box sx={{ padding: "16px" }}>

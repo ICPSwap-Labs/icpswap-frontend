@@ -10,9 +10,15 @@ export interface PositionTransactionsTableProps {
   wrapperClassName?: string;
   principal?: string;
   poolId: string | Null;
+  empty?: string;
 }
 
-export function PositionTransactionsTable({ poolId, principal, wrapperClassName }: PositionTransactionsTableProps) {
+export function PositionTransactionsTable({
+  poolId,
+  principal,
+  wrapperClassName,
+  empty,
+}: PositionTransactionsTableProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -40,6 +46,7 @@ export function PositionTransactionsTable({ poolId, principal, wrapperClassName 
       onPaginationChange={handlePageChange}
       pagination={pagination}
       totalElements={totalElements}
+      empty={empty}
     />
   );
 }

@@ -51,7 +51,7 @@ export default function PositionTransactions() {
                 search
                 showBackground={false}
                 panelPadding="0px"
-                defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
+             w   defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
               />
             </Flex>
 
@@ -59,7 +59,11 @@ export default function PositionTransactions() {
           </Box>
         }
       >
-        <PositionTransactionsTable poolId={pair} principal={principal} />
+        <PositionTransactionsTable
+          poolId={pair}
+          principal={principal}
+          empty={t("This account has no position transfer history.")}
+        />
       </ToolsWrapper>
     </InfoWrapper>
   );
