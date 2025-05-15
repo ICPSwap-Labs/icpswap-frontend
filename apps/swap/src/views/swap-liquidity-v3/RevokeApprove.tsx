@@ -11,6 +11,7 @@ import { useRevokeApprove, revoke } from "hooks/swap/useRevokeApprove";
 import type { SwapPoolData, IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export interface RevokeItemProps {
   tokenId: string;
@@ -193,7 +194,7 @@ export default function SwapRevokeApprove() {
   }, [result]);
 
   const tokenFilter = (tokenInfo: IcpSwapAPITokenInfo) => {
-    return tokenInfo.standard !== TOKEN_STANDARD.ICRC2;
+    return parseTokenStandards(tokenInfo) !== TOKEN_STANDARD.ICRC2;
   };
 
   return (
