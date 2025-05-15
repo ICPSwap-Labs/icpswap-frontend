@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import { Typography, Grid, Button } from "components/Mui";
-import SwapModal from "components/modal/swap";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { Bound } from "constants/swap";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
 import { useTranslation } from "react-i18next";
+import { Modal } from "@icpswap/ui";
 
 export interface AddLiquidityConfirmModalProps {
   open: boolean;
@@ -72,7 +72,7 @@ export default function AddLiquidityConfirmModal({
   };
 
   return (
-    <SwapModal open={open} onClose={onCancel} title={t("swap.add.liquidity")}>
+    <Modal open={open} onClose={onCancel} title={t("swap.add.liquidity")} background="level1">
       <>
         <Grid container flexDirection="column" spacing={3}>
           <Grid item container>
@@ -119,6 +119,6 @@ export default function AddLiquidityConfirmModal({
           {t("common.add")}
         </Button>
       </>
-    </SwapModal>
+    </Modal>
   );
 }

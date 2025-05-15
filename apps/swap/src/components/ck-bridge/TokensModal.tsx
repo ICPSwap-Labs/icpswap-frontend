@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react";
-import SwapModal from "components/modal/swap";
 import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "components/Mui";
 import { isDarkTheme } from "utils/index";
 import { FilledTextField, NoData } from "components/index";
@@ -11,6 +10,7 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { ckBTC } from "@icpswap/tokens";
 import { useTranslation } from "react-i18next";
+import { Modal } from "@icpswap/ui";
 
 import { SelectorToken } from "./SelectorToken";
 
@@ -59,7 +59,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
 
   return (
     <>
-      <SwapModal
+      <Modal
         open={open}
         title={t("common.select.a.token")}
         onClose={onClose}
@@ -147,7 +147,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
             </Box>
           </Box>
         </Box>
-      </SwapModal>
+      </Modal>
     </>
   );
 }

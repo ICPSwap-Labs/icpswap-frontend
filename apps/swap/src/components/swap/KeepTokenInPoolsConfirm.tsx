@@ -1,7 +1,6 @@
 import { Typography, Button, Box } from "components/Mui";
-import SwapModal from "components/modal/swap";
 import { AlertTriangle } from "react-feather";
-import { Flex } from "@icpswap/ui";
+import { Flex, Modal } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 
 export interface KeepTokenInPoolsConfirmModalProps {
@@ -14,7 +13,7 @@ export function KeepTokenInPoolsConfirmModal({ open, onCancel, onConfirm }: Keep
   const { t } = useTranslation();
 
   return (
-    <SwapModal open={open} onClose={onCancel} title="Note">
+    <Modal open={open} onClose={onCancel} title="Note">
       <Box
         sx={{
           padding: "14px 16px",
@@ -36,6 +35,6 @@ export function KeepTokenInPoolsConfirmModal({ open, onCancel, onConfirm }: Keep
       <Button variant="contained" size="large" fullWidth sx={{ marginTop: "16px" }} onClick={onConfirm}>
         {t("common.confirm")}
       </Button>
-    </SwapModal>
+    </Modal>
   );
 }
