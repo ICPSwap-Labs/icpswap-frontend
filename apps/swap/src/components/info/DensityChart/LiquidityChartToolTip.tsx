@@ -25,6 +25,7 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
   const tvlToken0 = chartProps?.payload?.[0]?.payload.tvlToken0;
   const tvlToken1 = chartProps?.payload?.[0]?.payload.tvlToken1;
   const index = chartProps?.payload?.[0]?.payload.index;
+  const isCurrent = chartProps?.payload?.[0]?.payload.isCurrent;
 
   const token0USDPrice = useUSDPrice(token0);
   const token1USDPrice = useUSDPrice(token1);
@@ -95,7 +96,7 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
             <Typography color="text.primary" fontSize="12px">
               {price0
                 ? `1 ${token0?.symbol} = ${formatTokenPrice(price0)} ${token1?.symbol}${
-                    token0USDPrice ? ` = ${formatDollarTokenPrice(token0USDPrice)}` : ""
+                    token0USDPrice && isCurrent ? ` = ${formatDollarTokenPrice(token0USDPrice)}` : ""
                   }`
                 : ""}
             </Typography>
@@ -103,7 +104,7 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
             <Typography color="text.primary" fontSize="12px">
               {price1
                 ? `1 ${token1?.symbol} = ${formatTokenPrice(price1)} ${token0?.symbol}${
-                    token1USDPrice ? ` = ${formatDollarTokenPrice(token1USDPrice)}` : ""
+                    token1USDPrice && isCurrent ? ` = ${formatDollarTokenPrice(token1USDPrice)}` : ""
                   }`
                 : ""}
             </Typography>
