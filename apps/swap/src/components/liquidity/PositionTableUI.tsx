@@ -32,6 +32,7 @@ export interface PositionTableUIProps {
   pagination: PaginationType;
   allLimitOrders?: bigint[] | Null;
   padding?: string;
+  empty?: string;
 }
 
 export function PositionTableUI({
@@ -44,6 +45,7 @@ export function PositionTableUI({
   pagination,
   allLimitOrders,
   padding,
+  empty,
 }: PositionTableUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -77,7 +79,6 @@ export function PositionTableUI({
 
             <HeaderCell field="None">&nbsp;</HeaderCell>
           </Header>
-
           {!loading
             ? positions?.map((ele, index) => (
                 <PositionRow
@@ -91,9 +92,7 @@ export function PositionTableUI({
                 />
               ))
             : null}
-
-          {(positions ?? []).length === 0 && !loading ? <NoData /> : null}
-
+          {(positions ?? []).length === 0 && !loading ? <NoData tip={empty} /> : null}
           {loading ? (
             <Box sx={{ padding: "24px" }}>
               <LoadingRow>

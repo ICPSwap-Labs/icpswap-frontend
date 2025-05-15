@@ -338,7 +338,7 @@ export default function SwapScanValuation() {
                 </LoadingRow>
               </Box>
             ) : !address || sortedUserTokenBalances.filter((e) => e.balance !== BigInt(0)).length === 0 ? (
-              <NoData />
+              <NoData tip={t("info.tools.user.wallet.value.empty")} />
             ) : (
               sortedUserTokenBalances
                 .filter((e) => e.balance !== BigInt(0))

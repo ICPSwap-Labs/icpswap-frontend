@@ -75,7 +75,7 @@ export default function Positions() {
           </Box>
         }
       >
-        <PositionTable poolId={pair} principal={principal} />
+        <PositionTable poolId={pair} principal={principal} empty={t("info.tools.positions.empty")} />
       </ToolsWrapper>
     </InfoWrapper>
   );

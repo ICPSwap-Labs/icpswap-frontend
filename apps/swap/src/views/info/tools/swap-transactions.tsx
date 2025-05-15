@@ -187,7 +187,9 @@ export default function SwapTransactions() {
                 />
               ))}
 
-              {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
+              {(transactions ?? []).length === 0 && !loading ? (
+                <NoData tip={principal ? t("info.tools.swap.transactions.empty") : "No result found"} />
+              ) : null}
 
               {loading ? (
                 <Box sx={{ padding: "16px" }}>

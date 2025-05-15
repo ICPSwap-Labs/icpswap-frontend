@@ -6,12 +6,14 @@ import { Null } from "@icpswap/types";
 import { PositionTableUI } from "components/liquidity/index";
 import { useSwapUserPositions } from "@icpswap/hooks";
 import { PositionDetails } from "types/swap";
+import { useTranslation } from "react-i18next";
 
 interface SneedLockedPositionsProps {
   poolId: string | Null;
 }
 
 export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
+  const { t } = useTranslation();
   const [, pool] = usePoolByPoolId(poolId);
 
   const tokenIds = useMemo(() => {
@@ -36,6 +38,7 @@ export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
       poolId={poolId}
       totalElements={0}
       pagination={{ pageNum: 1, pageSize: 10 }}
+      empty={t("info.tools.black.hole.empty")}
     />
   );
 }
