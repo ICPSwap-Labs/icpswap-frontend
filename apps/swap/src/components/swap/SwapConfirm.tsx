@@ -1,5 +1,4 @@
 import { ReactNode, useMemo } from "react";
-import SwapModal from "components/modal/swap";
 import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePrice } from "components/swap/TradePrice";
@@ -14,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
 import { feeAmountPercent } from "utils/swap/feeAmountPercent";
 import colors from "theme/colors";
+import { Modal } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -145,7 +145,7 @@ export function SwapConfirmModal({
   });
 
   return (
-    <SwapModal open={open} title={t("swap.confirm")} onClose={onClose}>
+    <Modal open={open} title={t("swap.confirm")} onClose={onClose} background="level1">
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -291,6 +291,6 @@ export function SwapConfirmModal({
           </Button>
         </Box>
       </>
-    </SwapModal>
+    </Modal>
   );
 }

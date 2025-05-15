@@ -25,10 +25,10 @@ import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";
-import SwapModal from "components/modal/swap";
 import { Principal } from "@dfinity/principal";
 import { PositionRangeState } from "components/swap/index";
 import { useTranslation } from "react-i18next";
+import { Modal } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -420,7 +420,7 @@ export function TransferPosition({
   if (!principal) error = "Enter the principal ID";
 
   return (
-    <SwapModal open={open} title={t`Transfer position`} onClose={onClose}>
+    <Modal open={open} title={t`Transfer position`} onClose={onClose} background="level1">
       <Grid className={classes.positionContainer} container>
         {!position && <Loading loading={!position} circularSize={28} />}
 
@@ -486,6 +486,6 @@ export function TransferPosition({
           {error || t("common.transfer")}
         </Button>
       </Box>
-    </SwapModal>
+    </Modal>
   );
 }

@@ -1,10 +1,10 @@
-import SwapModal from "components/modal/swap";
 import { Typography, Box, Grid, Button, CircularProgress, makeStyles, Theme } from "components/Mui";
 import { ArrowRightAlt } from "@mui/icons-material";
 import { SWAP_FIELD } from "constants/swap";
 import { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
 import { useTranslation } from "react-i18next";
+import { Flex, Modal } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -77,28 +77,28 @@ export default function ConfirmModal({
   const classes = useStyle();
 
   return (
-    <SwapModal open={open} title={isWrap ? t("wrap.confirm") : t("unwrap.confirm")} onClose={onClose}>
+    <Modal open={open} title={isWrap ? t("wrap.confirm") : t("unwrap.confirm")} onClose={onClose} background="level1">
       <Box>
         <Box className={classes.transferBox}>
           <SwapCurrency currency={inputCurrency} currencyAmount={formattedAmounts?.[SWAP_FIELD.INPUT]} />
-          <Grid container alignItems="center">
+          <Flex fullWidth>
             <ArrowRightAlt className={classes.arrowDown} sx={{ color: "#C4C4C4" }} />
-          </Grid>
+          </Flex>
           <SwapCurrency currency={outputCurrency} currencyAmount={formattedAmounts?.[SWAP_FIELD.OUTPUT]} />
         </Box>
       </Box>
-      <Grid mt={4}>
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          onClick={onConfirm}
-          disabled={loading}
-          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-        >
-          {loading ? "" : isWrap ? t("wrap.confirm") : t("unwrap.confirm")}
-        </Button>
-      </Grid>
-    </SwapModal>
+
+      <Button
+        mt={4}
+        variant="contained"
+        size="large"
+        fullWidth
+        onClick={onConfirm}
+        disabled={loading}
+        startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+      >
+        {loading ? "" : isWrap ? t("wrap.confirm") : t("unwrap.confirm")}
+      </Button>
+    </Modal>
   );
 }

@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
-import SwapModal from "components/modal/swap";
 import { Typography, Button, Box } from "components/Mui";
 import { MaxButton, NumberTextField } from "components/index";
 import { BigNumber, isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Token, Pool } from "@icpswap/swap-sdk";
-import { Flex } from "@icpswap/ui";
+import { Flex, Modal } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider/ui";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -121,7 +120,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   }, [amount, balance, token, maxDepositAmount]);
 
   return (
-    <SwapModal open={open} title={t`Deposit`} onClose={onClose}>
+    <Modal open={open} title={t`Deposit`} onClose={onClose} background="level1">
       <NumberTextField
         fullWidth
         placeholder={t("common.enter.input.amount")}
@@ -155,6 +154,6 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
       >
         {error ?? t`Confirm`}
       </Button>
-    </SwapModal>
+    </Modal>
   );
 }
