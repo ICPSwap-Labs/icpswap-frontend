@@ -15,6 +15,7 @@ import {
 } from "hooks/swap/useUserMisTransferredTokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 interface BalanceItemProps {
   pool: string;
@@ -161,9 +162,10 @@ export default function SwapFindMisTransferTokens() {
                 value={selectedTokenId}
                 border
                 onTokenChange={handleTokenChange}
-                filter={(tokenInfo: IcpSwapAPITokenInfo) =>
-                  tokenInfo.standard !== TOKEN_STANDARD.ICRC1 && tokenInfo.standard !== TOKEN_STANDARD.ICRC2
-                }
+                filter={(tokenInfo: IcpSwapAPITokenInfo) => {
+                  const standard = parseTokenStandards(tokenInfo);
+                  return standard !== TOKEN_STANDARD.ICRC1 && standard !== TOKEN_STANDARD.ICRC2;
+                }}
               />
             </Box>
           </Box>
