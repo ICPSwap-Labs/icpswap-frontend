@@ -1412,9 +1412,10 @@
   "farm.your.empty": "No farming positions. <highlight>Start farming</highlight>",
   "stake.your.empty": "No staked tokens. <highlight>Stake now</highlight>",
   "swap.price.deviation": "Price Deviation:",
-  "info.tools.swap.transactions.empty": "This account has no swap history yet.",
-  "info.tools.positions.empty": "This account has no liquidity positions yet.",
-  "info.tools.pool.balances.empty": "This account has no pool balance.",
-  "info.tools.user.wallet.value.empty": "This account holds no tokens.",
+  "info.tools.swap.transactions.empty": "No swap history yet.",
+  "info.tools.positions.empty": "No liquidity positions yet.",
+  "info.tools.pool.balances.empty": "No pool balance.",
+  "info.tools.user.wallet.value.empty": "Holds no tokens.",
+  "info.tools.position.transactions.empty": "No position transfer history",
   "info.tools.black.hole.empty": "Select a trading pair to check for Black Hole or Sneedlocked holdings."
 }
