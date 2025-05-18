@@ -18,7 +18,7 @@ export function NoData({ tip, tipColor = "text.secondary", noTips = false }: NoD
         padding: "20px 0",
       }}
     >
-      <img src="/images/empty.svg" alt="" width="100px" height="75px" />
+      <img src="/images/empty.svg" alt="" width="90px" height="68px" />
 
       {noTips === true ? null : tip ? (
         <Typography sx={{ maxWidth: "690px" }} color={tipColor} mt="10px" align="center">
