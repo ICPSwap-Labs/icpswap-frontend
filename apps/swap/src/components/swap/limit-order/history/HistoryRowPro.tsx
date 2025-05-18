@@ -127,6 +127,7 @@ export function HistoryRowPro({
               : "--"}
             <SyncAltIcon
               sx={{
+                fontSize: "1rem",
                 color: "#ffffff",
               }}
             />
