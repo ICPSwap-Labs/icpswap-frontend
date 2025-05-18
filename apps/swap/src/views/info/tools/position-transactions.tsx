@@ -51,7 +51,6 @@ export default function PositionTransactions() {
                 search
                 showBackground={false}
                 panelPadding="0px"
-                w
                 defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
               />
             </Flex>
