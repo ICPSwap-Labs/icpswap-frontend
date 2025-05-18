@@ -116,7 +116,14 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
 
         <Flex gap="0 2px" justify="flex-end">
           <Typography
-            sx={{ color: "text.primary", cursor: "pointer", display: "flex", gap: "0 2px", alignItems: "center" }}
+            sx={{
+              color: "text.primary",
+              fontSize: "16px",
+              cursor: "pointer",
+              display: "flex",
+              gap: "0 2px",
+              alignItems: "center",
+            }}
             component="div"
             onClick={handleInvert}
           >

@@ -6,9 +6,8 @@ import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
-import { ReactComponent as NoDataIcon } from "assets/icons/empty.svg";
 import type { IcpSwapAPITokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
-import { Proportion } from "@icpswap/ui";
+import { NoData, Proportion } from "@icpswap/ui";
 import { useToken } from "hooks/index";
 import { ICP } from "@icpswap/tokens";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
@@ -307,10 +306,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
           <Box sx={{ margin: "20px 0 0 0" }}>
             {filteredTokens?.length === 0 && search ? (
               <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-                <NoDataIcon style={{ fontSize: "6rem" }} />
-                <Typography color="text.primary" sx={{ margin: "10px 0 0 0", fontSize: "18px" }}>
-                  {t("common.no.result")}
-                </Typography>
+                <NoData />
               </Box>
             ) : (
               <Box sx={{ maxHeight: "220px", overflow: "hidden auto" }}>
