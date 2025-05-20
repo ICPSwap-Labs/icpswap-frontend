@@ -306,7 +306,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
           <Box sx={{ margin: "20px 0 0 0" }}>
             {filteredTokens?.length === 0 && search ? (
               <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-                <NoData />
+                <NoData tip={t("swap.token.search.empty")} />
               </Box>
             ) : (
               <Box sx={{ maxHeight: "220px", overflow: "hidden auto" }}>
