@@ -1417,5 +1417,6 @@
   "info.tools.pool.balances.empty": "No pool balance.",
   "info.tools.user.wallet.value.empty": "Holds no tokens.",
   "info.tools.position.transactions.empty": "No position transfer history",
-  "info.tools.black.hole.empty": "Select a trading pair to check for Black Hole or Sneedlocked holdings."
+  "info.tools.black.hole.empty": "Select a trading pair to check for Black Hole or Sneedlocked holdings.",
+  "swap.token.search.empty": "No tokens matched your search"
 }
