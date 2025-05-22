@@ -3,7 +3,7 @@ import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
 import { useState } from "react";
 import { NumberFilledTextField, Modal, AuthButton } from "components/index";
 import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
-import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount } from "@icpswap/utils";
+import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { useTokenBalance } from "hooks/token/index";
@@ -99,14 +99,18 @@ export function Participate({
 
   const handleMAX = () => {
     if (!balance) return;
-    setAmount(parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).toString());
+    setAmount(parseTokenAmount(new BigNumber(balance).minus(ICP.transFee), ICP.decimals).toString());
   };
 
   let error: boolean | string = false;
 
   if (!risk) error = t("launch.participate.error.risk");
   if (!amount) error = t("common.enter.input.amount");
-  if (!!balance && !!amount && parseTokenAmount(balance.minus(ICP.transFee), ICP.decimals).isLessThan(amount))
+  if (
+    !!balance &&
+    !!amount &&
+    parseTokenAmount(new BigNumber(balance).minus(ICP.transFee), ICP.decimals).isLessThan(amount)
+  )
     error = t("common.error.insufficient.balance");
   if (!!amount && !formatTokenAmount(amount, ICP.decimals).isGreaterThan(ICP.transFee))
     error = t("common.error.amount.greater.than", { amount: "0.0001 ICP" });

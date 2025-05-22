@@ -10,7 +10,7 @@ import {
   getLimitedInfinityCallV1,
   getAllSwapTokens,
 } from "@icpswap/hooks";
-import { IcpSwapAPITokenInfo } from "@icpswap/types";
+import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { parseTokenStandards } from "utils/parseTokenStandards";
@@ -22,6 +22,7 @@ import {
   updateAllSwapTokens,
   updateWalletConnector,
   updateBridgeTokens,
+  updateTokenBalance,
 } from "./actions";
 
 export function useGlobalTokenList() {
@@ -227,4 +228,25 @@ export function useFetchBridgeTokens() {
 
 export function useBridgeTokens() {
   return useAppSelector((state) => state.global.bridgeTokens);
+}
+
+export function useStateTokenBalance(tokenKey: string | Null) {
+  const allBalances = useAppSelector((state) => state.global.tokenBalances);
+  return tokenKey ? allBalances[tokenKey] : undefined;
+}
+
+export function useStateTokenBalanceManager(
+  tokenKey: string | Null,
+): [string | undefined, (key: string, balance: string) => void] {
+  const stateBalance = useStateTokenBalance(tokenKey);
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (tokenKey: string, balance: string) => {
+      dispatch(updateTokenBalance({ canisterId: tokenKey, balance }));
+    },
+    [dispatch],
+  );
+
+  return [stateBalance, callback];
 }

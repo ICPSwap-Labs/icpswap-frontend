@@ -4,7 +4,7 @@ import { pageArgsFormat, sleep } from "@icpswap/utils";
 
 export type Call<T> = () => Promise<ApiResult<T>>;
 
-export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean): CallResult<T> {
+export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean | null): CallResult<T> {
   const result = useRef<T | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
