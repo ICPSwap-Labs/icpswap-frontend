@@ -40,6 +40,10 @@ export function SwapTransactionPriceTip({ price, symbol, symbolSx }: SwapTransac
           textDecorationLine: "underline",
           textDecorationStyle: "dotted",
           textDecorationColor: theme.palette.text.secondary,
+          maxWidth: "84px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
           ...symbolSx,
         }}
         component="span"

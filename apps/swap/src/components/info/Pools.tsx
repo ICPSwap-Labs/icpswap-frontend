@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "components/Mui";
+import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { Override, PublicPoolOverView } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -14,6 +14,7 @@ import {
   APRPanel,
   NoData,
   ImageLoading,
+  Flex,
 } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
 import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
@@ -101,18 +102,40 @@ export function PoolItem({ pool, index, align }: PoolItemProps) {
     <TableRow className={classes.wrapper} onClick={handlePoolClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
-        <Grid container alignItems="center" gap="0 8px">
+        <Flex fullWidth gap="0 8px">
           <Box sx={{ display: "flex" }}>
             <TokenImage logo={token0?.logo} tokenId={token0?.address} />
             <TokenImage logo={token1?.logo} tokenId={token1?.address} />
           </Box>
 
           <BodyCell>
-            {pool.token0Symbol} / {pool.token1Symbol}
+            <BodyCell
+              sx={{
+                display: "block",
+                maxWidth: "90px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {pool.token0Symbol}
+            </BodyCell>{" "}
+            /{" "}
+            <BodyCell
+              sx={{
+                display: "block",
+                maxWidth: "90px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {pool.token1Symbol}
+            </BodyCell>
           </BodyCell>
 
           <FeeTierPercentLabel feeTier={pool.feeTier} />
-        </Grid>
+        </Flex>
       </BodyCell>
       <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
       <BodyCell align={align}>{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>

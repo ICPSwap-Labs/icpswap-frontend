@@ -1,12 +1,22 @@
 import { useState, useMemo } from "react";
-import { Box, Grid, useMediaQuery, makeStyles, useTheme } from "components/Mui";
+import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { Override, PublicTokenOverview } from "@icpswap/types";
 import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import Pagination from "components/pagination/cus";
 import { useToken } from "hooks/index";
-import { Header, HeaderCell, BodyCell, TableRow, SortDirection, Proportion, NoData, ImageLoading } from "@icpswap/ui";
+import {
+  Header,
+  HeaderCell,
+  BodyCell,
+  TableRow,
+  SortDirection,
+  Proportion,
+  NoData,
+  ImageLoading,
+  Flex,
+} from "@icpswap/ui";
 import { useAllTokensTVL } from "@icpswap/hooks";
 import i18n from "i18n/index";
 import { useTranslation } from "react-i18next";
@@ -53,11 +63,34 @@ export function TokenItem({
     <TableRow className={classes.wrapper} onClick={handleTokenClick}>
       <BodyCell>{index}</BodyCell>
       <BodyCell>
-        <Grid container alignItems="center" gap="0 8px">
+        <Flex fullWidth gap="0 8px" sx={{ maxWidth: "352px" }}>
           <TokenImage logo={token?.logo} tokenId={token?.address} size="24px" />
-          <BodyCell>{infoToken.symbol}</BodyCell>
-          {token ? <BodyCell sub>({token.name})</BodyCell> : null}
-        </Grid>
+          <BodyCell
+            sx={{
+              display: "block",
+              maxWidth: "160px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {infoToken.symbol}
+          </BodyCell>
+          {token ? (
+            <BodyCell
+              sx={{
+                display: "block",
+                maxWidth: "160px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              sub
+            >
+              ({token.name})
+            </BodyCell>
+          ) : null}
+        </Flex>
       </BodyCell>
       <BodyCell color="text.primary" align={align}>
         {formatDollarTokenPrice(infoToken.priceUSD)}
