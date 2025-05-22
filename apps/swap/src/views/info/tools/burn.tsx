@@ -40,7 +40,7 @@ export default function Burn() {
   const handleMax = () => {
     if (!balance || !token) return;
 
-    setAmount(parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).toString());
+    setAmount(parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).toString());
   };
 
   const handleBurnSuccess = () => {
@@ -53,13 +53,13 @@ export default function Burn() {
     if (!token || !balance || !mintingAccount) return t("common.waiting.fetching");
     if (!amount) return t("common.enter.input.amount");
     if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
-    if (parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount))
+    if (parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
   }, [amount, balance, token, mintingAccount, tokenId]);
 
   const showMax = useMemo(() => {
     if (!balance || !token) return false;
-    if (!balance.isGreaterThan(token.transFee.toString())) return false;
+    if (!new BigNumber(balance).isGreaterThan(token.transFee.toString())) return false;
     return true;
   }, [balance, token]);
 

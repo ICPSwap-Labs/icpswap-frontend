@@ -14,6 +14,7 @@ export interface GlobalState {
   allSwapTokens: IcpSwapAPITokenInfo[];
   walletConnector: boolean;
   bridgeTokens: string[];
+  tokenBalances: { [key: string]: string };
 }
 
 export const initialState: GlobalState = {
@@ -27,4 +28,5 @@ export const initialState: GlobalState = {
   allSwapTokens: [],
   walletConnector: false,
   bridgeTokens: [],
+  tokenBalances: {},
 };

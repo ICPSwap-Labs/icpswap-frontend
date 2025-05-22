@@ -32,9 +32,8 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
 
   const maxDepositAmount = useMemo(() => {
     if (!balance || !token) return undefined;
-    if (balance.isEqualTo(0)) return undefined;
-
-    return parseTokenAmount(balance.minus(token.transFee), token.decimals).toString();
+    if (new BigNumber(balance).isEqualTo(0)) return undefined;
+    return parseTokenAmount(new BigNumber(balance).minus(token.transFee), token.decimals).toString();
   }, [balance, token]);
 
   const handleMax = useCallback(() => {
@@ -49,9 +48,9 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
       setPercent(value);
 
       if (balance && token) {
-        if (balance.isLessThan(token.transFee)) return;
+        if (new BigNumber(balance).isLessThan(token.transFee)) return;
 
-        const amount = parseTokenAmount(balance.minus(token.transFee), token.decimals)
+        const amount = parseTokenAmount(new BigNumber(balance).minus(token.transFee), token.decimals)
           .multipliedBy(value)
           .dividedBy(100);
 
@@ -112,7 +111,8 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
 
   const error = useMemo(() => {
     if (amount === "") return t("common.enter.input.amount");
-    if (nonNullArgs(balance) && balance.isLessThan(amount)) return t("common.error.insufficient.balance");
+    if (nonNullArgs(balance) && new BigNumber(balance).isLessThan(amount))
+      return t("common.error.insufficient.balance");
     if (isNullArgs(balance) || !token || isNullArgs(maxDepositAmount)) return t`Confirm`;
     if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t("common.error.insufficient.balance");
 

@@ -3,6 +3,7 @@ import { isPrincipal, isValidPrincipal } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
 import BigNumber from "bignumber.js";
+
 import { useLatestDataCall } from "../useCallData";
 
 export interface GetTokenBalanceArgs {

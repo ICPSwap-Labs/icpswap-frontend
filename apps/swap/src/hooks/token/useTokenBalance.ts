@@ -15,8 +15,10 @@ import {
 } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useLatestDataCall } from "@icpswap/hooks";
+import { useCallsData } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
+import { useStateTokenBalanceManager } from "store/global/hooks";
+import { getTokenBalanceKey } from "utils";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -89,16 +91,31 @@ export function useTokenBalance(
   canisterId: string | undefined,
   account: string | Principal | Null,
   refresh?: number | boolean | Null,
-  subAccount?: Uint8Array,
+  sub?: Uint8Array,
 ) {
-  return useLatestDataCall(
+  const tokenKey = getTokenBalanceKey(canisterId, account?.toString(), sub);
+  const [stateBalance, updateStateBalance] = useStateTokenBalanceManager(tokenKey);
+
+  const { result: balance, loading } = useCallsData(
     useCallback(async () => {
       if (!account || !canisterId) return undefined;
-      const result = await getTokenBalance(canisterId, account, subAccount);
-      return result && nonNullArgs(result.data) ? new BigNumber(result.data.toString()) : undefined;
-    }, [account, canisterId, subAccount]),
+      const result = await getTokenBalance(canisterId, account, sub);
+      const balance = result && nonNullArgs(result.data) ? new BigNumber(result.data.toString()) : undefined;
+      const tokenKey = getTokenBalanceKey(canisterId, account.toString(), sub);
+
+      if (tokenKey && nonNullArgs(balance)) updateStateBalance(tokenKey, balance.toString());
+
+      return balance;
+    }, [account, canisterId, sub, updateStateBalance]),
     refresh,
   );
+
+  return useMemo(() => {
+    return {
+      loading: isNullArgs(stateBalance) ? loading : false,
+      result: nonNullArgs(balance) ? balance.toString() : stateBalance,
+    };
+  }, [loading, balance, stateBalance]);
 }
 
 export type Balances = {
@@ -172,7 +189,7 @@ export function useCurrencyBalance(
 
     return {
       loading,
-      result: CurrencyAmount.fromRawAmount(currency, result.toNumber()),
+      result: CurrencyAmount.fromRawAmount(currency, result),
     };
   }, [loading, result, currency]);
 }
@@ -182,7 +199,7 @@ export function useCurrencyBalanceV1(
   currency: Token | undefined,
   refresh?: boolean | number,
 ) {
-  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
+  const [storeResult, setStoreResult] = useState<string | undefined>(undefined);
 
   const { loading, result } = useTokenBalance(currency?.address, account, refresh);
 
@@ -193,49 +210,15 @@ export function useCurrencyBalanceV1(
   }, [result]);
 
   return useMemo(() => {
-    if (!currency || isNullArgs(storeResult) || loading || isNaN(storeResult.toNumber()))
+    if (!currency || isNullArgs(storeResult) || loading)
       return {
         loading,
-        result: storeResult && currency ? CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()) : undefined,
+        result: storeResult && currency ? CurrencyAmount.fromRawAmount(currency, storeResult) : undefined,
       };
 
     return {
       loading,
-      result: CurrencyAmount.fromRawAmount(currency, storeResult.toNumber()),
+      result: CurrencyAmount.fromRawAmount(currency, storeResult),
     };
   }, [loading, storeResult, currency]);
-}
-
-export function useStoreTokenBalance(
-  tokenId: string | undefined,
-  address: string | Principal | undefined,
-  refresh?: boolean | number,
-) {
-  const [storeResult, setStoreResult] = useState<BigNumber | undefined>(undefined);
-
-  const { loading, result } = useTokenBalance(tokenId, address, refresh);
-
-  useEffect(() => {
-    if (nonNullArgs(result)) {
-      if (!address) {
-        setStoreResult(undefined);
-      } else {
-        setStoreResult(result);
-      }
-    }
-  }, [result, address]);
-
-  return useMemo(() => {
-    if (!tokenId || isNullArgs(storeResult) || loading || isNaN(storeResult.toNumber())) {
-      return {
-        loading,
-        result: storeResult && tokenId ? storeResult : undefined,
-      };
-    }
-
-    return {
-      loading,
-      result: storeResult,
-    };
-  }, [loading, storeResult, tokenId]);
 }

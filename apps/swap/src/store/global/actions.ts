@@ -17,3 +17,5 @@ export const updateAllSwapTokens = createAction<IcpSwapAPITokenInfo[]>("global/u
 export const updateWalletConnector = createAction<boolean>("global/updateWalletConnector");
 
 export const updateBridgeTokens = createAction<string[]>("global/updateBridgeTokens");
+
+export const updateTokenBalance = createAction<{ canisterId: string; balance: string }>("global/updateTokenBalance");

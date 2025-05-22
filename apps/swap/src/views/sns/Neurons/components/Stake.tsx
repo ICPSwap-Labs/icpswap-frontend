@@ -62,7 +62,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
   const handleMax = (event: React.MouseEvent<HTMLParagraphElement>) => {
     event.stopPropagation();
     if (!token || !balance) return;
-    setAmount(parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).toString());
+    setAmount(parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).toString());
   };
 
   let error: string | undefined;
@@ -72,7 +72,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
     amount &&
     token &&
     balance &&
-    parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount)
+    parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).isLessThan(amount)
   )
     error = t("common.error.insufficient.balance");
 
