@@ -8,31 +8,69 @@ import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
 import { Link } from "../Link";
 
+function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
+  return (
+    <BodyCell
+      sx={{
+        display: "block",
+        maxWidth: "90px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {symbol}
+    </BodyCell>
+  );
+}
+
 export function ActionTypeFormat(transaction: PoolStorageTransaction) {
   const type = enumToString(transaction.action);
 
-  let swapDesc = "";
-
   switch (type) {
     case "swap":
-      swapDesc = `Swap ${transaction.token0Symbol} for ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Swap&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;for&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
+
     case "increaseLiquidity":
     case "addLiquidity":
     case "mint":
-      swapDesc = `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Add&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
     case "decreaseLiquidity":
-      swapDesc = `Remove ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Remove&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
     case "claim":
-      swapDesc = `Collect ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    default:
-      break;
-  }
+      return (
+        <BodyCell>
+          Collect&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
 
-  return swapDesc;
+    default:
+      return null;
+  }
 }
 
 interface TransactionRowProps {

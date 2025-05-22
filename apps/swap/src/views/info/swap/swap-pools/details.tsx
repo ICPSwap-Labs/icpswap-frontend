@@ -36,10 +36,19 @@ interface PoolTokenTvlProps {
 
 function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
   return (
-    <Flex justify="space-between">
+    <Flex justify="space-between" gap="0 12px">
       <Flex gap="0 8px">
         <TokenImage logo={token?.logo} tokenId={token?.address} />
-        <Typography fontWeight={500} color="text.primary">
+        <Typography
+          sx={{
+            color: "text.primary",
+            fontWeight: 500,
+            maxWidth: "106px",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
+        >
           {token?.symbol}
         </Typography>
       </Flex>
