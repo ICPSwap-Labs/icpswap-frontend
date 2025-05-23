@@ -93,7 +93,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
 
     const key = openTip(
       t("common.deposit.amount", {
-        amount: `${toSignificantWithGroupSeparator(amount, token.decimals)} ${token.symbol}`,
+        amount: `${toSignificantWithGroupSeparator(amount)} ${token.symbol}`,
       }),
       MessageTypes.loading,
     );
