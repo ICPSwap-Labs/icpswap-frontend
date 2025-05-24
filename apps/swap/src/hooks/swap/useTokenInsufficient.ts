@@ -5,9 +5,9 @@ import { isUseTransfer } from "utils/token";
 
 export interface GetTokenInsufficientProps {
   token: Token | undefined;
-  subAccountBalance: BigNumber | undefined;
+  subAccountBalance: string | undefined;
   unusedBalance: bigint | undefined;
-  balance: BigNumber | undefined;
+  balance: string | undefined;
   formatTokenAmount: string | undefined;
   allowance?: bigint | Null;
 }
