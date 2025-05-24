@@ -35,8 +35,8 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
       unusedBalance: unusedBalance ?? { balance0: BigInt(0), balance1: BigInt(0) },
       token0Balance,
       token1Balance,
-      token0SubAccountBalance: token0SubAccountBalance ?? new BigNumber(0),
-      token1SubAccountBalance: token1SubAccountBalance ?? new BigNumber(0),
+      token0SubAccountBalance: token0SubAccountBalance ?? "0",
+      token1SubAccountBalance: token1SubAccountBalance ?? "0",
       token0AllBalance:
         nonNullArgs(token0Balance) && nonNullArgs(token0SubAccountBalance) && nonNullArgs(unusedBalance)
           ? new BigNumber(token0Balance).plus(token0SubAccountBalance).plus(unusedBalance.balance0.toString())

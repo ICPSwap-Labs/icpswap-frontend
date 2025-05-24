@@ -11,7 +11,7 @@ let MouseDownX: number | null = null;
 
 interface getBalancePercentProps {
   unusedBalance: bigint;
-  subAccountBalance: BigNumber;
+  subAccountBalance: string;
   balance: string;
   token: Token;
 }
@@ -36,7 +36,7 @@ interface Args {
   x: number;
   width: number;
   unusedBalance: bigint;
-  subAccountBalance: BigNumber;
+  subAccountBalance: string;
   balance: string;
   token: Token;
   maxSpentAmount: string;
@@ -77,7 +77,7 @@ function onXChange({ x, width, unusedBalance, balance, subAccountBalance, token,
 
 export interface SwapBalancesSliderProps {
   balance: string | Null;
-  subAccountBalance: BigNumber | Null;
+  subAccountBalance: string | Null;
   unusedBalance: bigint | Null;
   token: Token | Null;
   amount: string | number | Null;

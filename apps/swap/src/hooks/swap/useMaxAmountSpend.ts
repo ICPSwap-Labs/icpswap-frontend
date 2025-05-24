@@ -8,7 +8,7 @@ import { isUseTransfer } from "utils/token";
 
 export interface UseMaxPoolBalanceSpendProps {
   token: Token | Null;
-  subBalance: BigNumber | Null;
+  subBalance: string | Null;
   unusedBalance: bigint | Null;
 }
 
@@ -24,7 +24,7 @@ export function usePoolBalanceMaxSpend({ token, subBalance, unusedBalance }: Use
     // 1 token fee is needed  for deposit
     if (isUseTransfer(token)) {
       // No token fee needed
-      if (subBalance.isEqualTo(0)) {
+      if (new BigNumber(subBalance).isEqualTo(0)) {
         return CurrencyAmount.fromRawAmount(token, unusedBalance.toString());
       }
 
@@ -93,7 +93,7 @@ export interface UseMaxAmountSpendArgs {
   token: Token | Null;
   balance: string | Null;
   poolId?: string | Null;
-  subBalance: BigNumber | Null;
+  subBalance: string | Null;
   unusedBalance: bigint | Null;
   allowance?: bigint | Null;
 }

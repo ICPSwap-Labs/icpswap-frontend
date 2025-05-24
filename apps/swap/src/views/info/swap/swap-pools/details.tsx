@@ -30,7 +30,7 @@ import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 interface PoolTokenTvlProps {
   token: Token | undefined;
-  amount: BigNumber | undefined;
+  amount: string | undefined;
   tvl: string | undefined;
 }
 
