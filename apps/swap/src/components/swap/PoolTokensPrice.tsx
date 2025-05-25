@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { nonNullArgs, formatDollarTokenPrice } from "@icpswap/utils";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { uesTokenPairWithIcp, useUSDPriceById } from "hooks/index";
+import { Pool } from "@icpswap/swap-sdk";
+import { useUSDPriceById } from "hooks/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Null, PublicPoolOverView } from "@icpswap/types";
+import { Null } from "@icpswap/types";
 
 interface PoolTokensPriceProps {
   pool: Pool | Null;
