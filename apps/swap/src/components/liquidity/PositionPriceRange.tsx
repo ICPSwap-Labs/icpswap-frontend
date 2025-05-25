@@ -1,19 +1,32 @@
 import { useState, useMemo } from "react";
-import { Typography, useTheme } from "components/Mui";
+import { Box, BoxProps, Typography, useTheme } from "components/Mui";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { Flex } from "@icpswap/ui";
+import { tokenSymbolEllipsis } from "components/TokenSymbol";
 
 export interface PositionPriceRangeProps {
   position: Position | undefined;
   fontSize?: string;
+  smallFontSize?: string;
   nameColor?: string;
+  arrowColor?: "primary" | "secondary";
+  arrow?: boolean;
+  color?: "text.primary" | "text.secondary" | "inherit";
+  wrapperSx?: BoxProps["sx"];
 }
 
-export function PositionPriceRange({ position, nameColor, fontSize = "14px" }: PositionPriceRangeProps) {
+export function PositionPriceRange({
+  position,
+  fontSize = "14px",
+  smallFontSize = "12px",
+  arrowColor,
+  arrow = true,
+  color = "text.primary",
+  wrapperSx,
+}: PositionPriceRangeProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -47,53 +60,38 @@ export function PositionPriceRange({ position, nameColor, fontSize = "14px" }: P
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
 
-  const pairName = useMemo(() => {
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
-
   return (
-    <Flex
-      gap="0 8px"
-      sx={{
-        cursor: "pointer",
-        "@media(max-width: 640px)": {
-          gap: "0 4px",
-        },
-      }}
-      justify="flex-end"
-      onClick={() => setManuallyInverted(!manuallyInverted)}
-    >
+    <Box sx={{ cursor: "pointer", ...wrapperSx }} onClick={() => setManuallyInverted(!manuallyInverted)}>
       <Typography
         sx={{
           fontSize,
-          color: "text.primary",
+          color,
           "@media(max-width: 640px)": {
-            fontSize: "12px",
+            fontSize: smallFontSize,
           },
         }}
-        component="div"
+        component="span"
       >
-        {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -{formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}{" "}
-        <Typography
-          sx={{
-            fontSize,
-            color: nameColor ?? "text.primary",
-            "@media(max-width: 640px)": {
-              fontSize: "12px",
-            },
-          }}
-          component="span"
-        >
-          {pairName}
-        </Typography>
+        {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
+          priceUpper,
+          tickAtLimit,
+          Bound.UPPER,
+        )} ${tokenSymbolEllipsis({ symbol: currencyQuote?.symbol })} per ${tokenSymbolEllipsis({
+          symbol: currencyBase?.symbol,
+        })}`}
       </Typography>
 
-      <SyncAltIcon
-        sx={{
-          fontSize: "14px",
-          color: theme.palette.text.secondary,
-        }}
-      />
-    </Flex>
+      {arrow ? (
+        <SyncAltIcon
+          sx={{
+            fontSize: fontSize === "inherit" ? 14 : parseInt(fontSize),
+            cursor: "pointer",
+            color: arrowColor === "primary" ? theme.palette.text.primary : theme.palette.text.secondary,
+            margin: "0 0 0 4px",
+            verticalAlign: "middle",
+          }}
+        />
+      ) : null}
+    </Box>
   );
 }

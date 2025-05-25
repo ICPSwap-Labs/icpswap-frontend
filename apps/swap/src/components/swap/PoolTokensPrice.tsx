@@ -2,16 +2,17 @@ import { useState } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { nonNullArgs, formatDollarTokenPrice } from "@icpswap/utils";
-import { Pool } from "@icpswap/swap-sdk";
-import { useUSDPriceById } from "hooks/index";
+import { Pool, Token } from "@icpswap/swap-sdk";
+import { uesTokenPairWithIcp, useUSDPriceById } from "hooks/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Null } from "@icpswap/types";
+import { Null, PublicPoolOverView } from "@icpswap/types";
 
 interface PoolTokensPriceProps {
   pool: Pool | Null;
+  width?: string;
 }
 
-export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
+export function PoolTokensPrice({ pool, width }: PoolTokensPriceProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -27,7 +28,7 @@ export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
       onClick={() => setManuallyInverted(!manuallyInverted)}
     >
       <Flex gap="0 4px">
-        <Typography color="text.primary">
+        <Typography color="text.primary" className="text-overflow-ellipsis" sx={{ maxWidth: width }}>
           {nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(pool)
             ? manuallyInverted
               ? `1 ${token1.symbol} = ${pool.priceOf(token1).toSignificant(6)} ${token0.symbol}${

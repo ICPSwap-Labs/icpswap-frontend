@@ -1,12 +1,13 @@
 import { Typography, Box, useTheme } from "components/Mui";
 import { toSignificant, BigNumber } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { usePoolIdWithICP } from "hooks/usePoolIdWithICP";
 import { useInfoPool } from "hooks/info/swap";
 import { useMemo } from "react";
 import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
+import { uesTokenPairWithIcp } from "hooks/swap/useTokenPairWithIcp";
+import { tokenSymbolEllipsis } from "components/TokenSymbol";
 
 export interface TokenPriceProps {
   token0: Token | Null;
@@ -29,16 +30,17 @@ export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
     >
       <TokenImage size="18px" sx={{ margin: "0 6px 0 0" }} logo={token0.logo} tokenId={token0.address} />
       <Typography color="text.primary" fontWeight={500}>
-        1 {token0?.symbol} = {toSignificant(price, 4)} {token1Symbol}
+        1 {tokenSymbolEllipsis({ symbol: token0?.symbol })} = {toSignificant(price, 4)}{" "}
+        {tokenSymbolEllipsis({ symbol: token1Symbol })}
       </Typography>
     </Box>
   ) : null;
 }
 
-export function TokenPrices({ tokenInfo }: { tokenInfo: Token | undefined }) {
+export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined }) {
   const theme = useTheme();
 
-  const poolId = usePoolIdWithICP(tokenInfo?.address);
+  const poolId = uesTokenPairWithIcp({ tokenId: tokenInfo?.address });
   const { result: pool } = useInfoPool(poolId);
 
   const icpPrice = useMemo(() => {

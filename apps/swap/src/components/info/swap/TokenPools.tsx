@@ -1,25 +1,14 @@
 import { useState, useMemo } from "react";
-import { makeStyles, Typography, Box, Grid } from "components/Mui";
-import { useHistory } from "react-router-dom";
-import { NoData, ImageLoading, TokenImage } from "components/index";
-import { useToken } from "hooks/index";
-import {
-  Header,
-  HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  FeeTierPercentLabel,
-  OnlyTokenList,
-  APRPanel,
-} from "@icpswap/ui";
+import { makeStyles, Typography, Box } from "components/Mui";
+import { NoData, ImageLoading } from "components/index";
+import { Header, HeaderCell, SortDirection, OnlyTokenList } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, usePoolAPR } from "@icpswap/hooks";
+import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount } from "@icpswap/utils";
 import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
+import { PoolRow } from "components/info/swap/pool";
 
 const useStyles = makeStyles(() => {
   return {
@@ -72,56 +61,6 @@ function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeade
   );
 }
 
-export interface PoolItemProps {
-  pool: InfoPublicPoolWithTvl;
-  index: number;
-}
-
-export function PoolItem({ pool, index }: PoolItemProps) {
-  const classes = useStyles();
-  const history = useHistory();
-
-  const [, token0] = useToken(pool.token0Id);
-  const [, token1] = useToken(pool.token1Id);
-
-  const handlePoolClick = () => {
-    history.push(`/info-swap/pool/details/${pool.pool}`);
-  };
-
-  const apr = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });
-
-  return (
-    <TableRow className={classes.wrapper} onClick={handlePoolClick}>
-      <BodyCell>{index}</BodyCell>
-      <BodyCell>
-        <Grid container alignItems="center">
-          <TokenImage logo={token0?.logo} tokenId={token0?.address} />
-          <TokenImage logo={token1?.logo} tokenId={token1?.address} />
-
-          <Typography
-            sx={{
-              margin: "0 8px 0 8px",
-              "@media screen and (max-width: 500px)": {
-                fontSize: "12px",
-              },
-            }}
-            color="text.primary"
-          >
-            {pool.token0Symbol} / {pool.token1Symbol}
-          </Typography>
-
-          <FeeTierPercentLabel feeTier={pool.feeTier} />
-        </Grid>
-      </BodyCell>
-      <BodyCell>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell>{apr ? <APRPanel value={apr} /> : "--"}</BodyCell>
-      <BodyCell>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
-      <BodyCell>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
-      <BodyCell>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
-    </TableRow>
-  );
-}
-
 const PAGE_SIZE = 10;
 
 export interface TokenPoolsProps {
@@ -133,6 +72,7 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
   const [checked, setChecked] = useState(true);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
+  const classes = useStyles();
 
   const [page, setPage] = useState(1);
 
@@ -213,9 +153,20 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
         {slicedPoolsOfToken && slicedPoolsOfToken.length > 0 ? (
           <>
             <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
-            {(slicedPoolsOfToken ?? []).map((pool, index) => (
-              <PoolItem key={pool.pool} index={(page - 1) * PAGE_SIZE + index + 1} pool={pool} />
-            ))}
+            {(slicedPoolsOfToken ?? []).map((pool, index) => {
+              const __tvlUSD = allPoolsTVL?.find((poolTVL) => poolTVL[0] === pool.pool);
+              const tvlUSD = __tvlUSD ? __tvlUSD[1] : undefined;
+
+              return (
+                <PoolRow
+                  key={pool.pool}
+                  index={(page - 1) * PAGE_SIZE + index + 1}
+                  poolInfo={pool}
+                  tvlUSD={tvlUSD}
+                  wrapperClass={classes.wrapper}
+                />
+              );
+            })}
           </>
         ) : loading ? (
           <ImageLoading loading={loading} />

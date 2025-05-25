@@ -24,6 +24,7 @@ import { useToken } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { Token } from "@icpswap/swap-sdk";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
+import { TokenSymbol } from "components/TokenSymbol";
 
 import { PoolChart } from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
@@ -43,17 +44,13 @@ function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
           sx={{
             color: "text.primary",
             fontWeight: 500,
-            maxWidth: "106px",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
           }}
         >
-          {token?.symbol}
+          <TokenSymbol symbol={token?.symbol} typographyStyle="inherit" width={106} />
         </Typography>
       </Flex>
 
-      <Flex vertical gap="4px 0">
+      <Flex vertical gap="4px 0" align="flex-end">
         <Typography color="text.primary" fontWeight={500}>
           {amount ? formatAmount(parseTokenAmount(amount, token?.decimals).toNumber()) : ""}
         </Typography>

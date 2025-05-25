@@ -104,7 +104,9 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
         <Flex justify="space-between" fullWidth>
           <Flex gap="0 6px">
             <TokenImage size="20px" logo={token0?.logo} tokenId={token0?.address} />
-            <Typography>{token0?.symbol}</Typography>
+            <Typography sx={{ maxWidth: "187px" }} className="text-overflow-ellipsis">
+              {token0?.symbol}
+            </Typography>
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end" justify="flex-end">
@@ -120,7 +122,9 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
         <Flex justify="space-between" fullWidth>
           <Flex gap="0 6px">
             <TokenImage size="20px" logo={token1?.logo} tokenId={token1?.address} />
-            <Typography>{token1?.symbol}</Typography>
+            <Typography sx={{ maxWidth: "187px" }} className="text-overflow-ellipsis">
+              {token1?.symbol}
+            </Typography>
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end" justify="flex-end">

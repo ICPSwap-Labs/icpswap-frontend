@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Button, ButtonProps } from "components/Mui";
+import { Button, ButtonProps, Typography } from "components/Mui";
 import { ICP, ICS } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -37,7 +37,9 @@ export function BuyTokenButton({ token, variant = "outlined" }: BuyTokenButtonPr
 
   return (
     <Button className="secondary" variant={variant} fullWidth onClick={handleByToken} sx={{ height: "44px" }}>
-      {t("common.buy.token", { symbol: token?.symbol })}
+      <Typography color="text.primary" className="text-overflow-ellipsis" sx={{ maxWidth: "132px" }}>
+        {t("common.buy.token", { symbol: token?.symbol })}
+      </Typography>
     </Button>
   );
 }

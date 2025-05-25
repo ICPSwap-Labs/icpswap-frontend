@@ -1,7 +1,8 @@
-import { Typography, Box, useTheme, BoxProps } from "components/Mui";
+import { Typography, Box, useTheme, BoxProps, useMediaQuery } from "components/Mui";
 import { formatAmount, BigNumber, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
+import { tokenSymbolEllipsis } from "components/TokenSymbol";
 
 export interface TokenPoolPriceProps {
   tokenA: Token | undefined;
@@ -26,6 +27,7 @@ export function TokenPoolPrice({
   onClick,
 }: TokenPoolPriceProps) {
   const theme = useTheme();
+  const matchDownSM = useMediaQuery("(max-width: 640px)");
 
   return priceA && priceB ? (
     <Box
@@ -41,7 +43,9 @@ export function TokenPoolPrice({
       <TokenImage logo={tokenA?.logo} tokenId={tokenA?.address} size="18px" sx={{ margin: "0 6px 0 0" }} />
 
       <Typography color="text.primary" fontSize={fontSize}>
-        1 {tokenA?.symbol} = {formatAmount(new BigNumber(priceA).dividedBy(priceB).toNumber())} {tokenB?.symbol}
+        1 {matchDownSM ? tokenSymbolEllipsis({ symbol: tokenA?.symbol }) : tokenA?.symbol} ={" "}
+        {formatAmount(new BigNumber(priceA).dividedBy(priceB).toNumber())}{" "}
+        {matchDownSM ? tokenSymbolEllipsis({ symbol: tokenB?.symbol }) : tokenB?.symbol}
       </Typography>
       <Typography color="text.primary" fontSize={fontSize}>
         &nbsp;= {formatDollarTokenPrice(priceA)}
