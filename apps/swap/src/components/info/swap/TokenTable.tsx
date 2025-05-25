@@ -42,15 +42,13 @@ export type HeaderType = {
   end?: boolean;
 };
 
-export function TokenItem({
-  token: infoToken,
-  index,
-  align,
-}: {
+interface TokenItemProps {
   token: TokenData;
   index: number;
   align: "left" | "right";
-}) {
+}
+
+export function TokenItem({ token: infoToken, index, align }: TokenItemProps) {
   const classes = useStyles();
   const history = useHistory();
   const [, token] = useToken(infoToken.address);
@@ -72,6 +70,9 @@ export function TokenItem({
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
+              "@media(max-width: 640px)": {
+                maxWidth: "80px",
+              },
             }}
           >
             {infoToken.symbol}
@@ -84,6 +85,9 @@ export function TokenItem({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
+                "@media(max-width: 640px)": {
+                  maxWidth: "80px",
+                },
               }}
               sub
             >

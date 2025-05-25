@@ -1,14 +1,7 @@
 import { useState, useMemo, useContext } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { useTickAtLimit, useUserLimitOrders } from "@icpswap/hooks";
-import {
-  CurrencyAmount,
-  FeeAmount,
-  Pool,
-  useInverter,
-  getPriceOrderingFromPositionForUI,
-  formatTickPrice,
-} from "@icpswap/swap-sdk";
+import { useUserLimitOrders } from "@icpswap/hooks";
+import { CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
 import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, SimplePagination, TextButton } from "@icpswap/ui";
 import { UserPositionByList } from "types/swap";
@@ -16,13 +9,13 @@ import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { BigNumber, formatDollarAmount, formatAmount, isNullArgs } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SwapProContext } from "components/swap/pro";
 import { Null } from "@icpswap/types";
 import { SwapContext } from "components/swap";
 import { useTranslation } from "react-i18next";
 import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { PositionPriceRange } from "components/liquidity";
 
 const useStyles = makeStyles(() => {
   return {
@@ -41,19 +34,12 @@ interface PositionItemProps {
   pool: Pool | undefined | null;
 }
 
-enum Bound {
-  LOWER = "LOWER",
-  UPPER = "UPPER",
-}
-
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
   const { inputToken, outputToken } = useContext(SwapContext);
   const { inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
-
-  const [manuallyInverted, setManuallyInverted] = useState(false);
 
   const position = usePositionWithPool({
     tickLower: positionInfo.position.tickLower.toString(),
@@ -64,7 +50,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
 
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.poolId, positionInfo.position.id);
 
-  const { token0, token1, fee, tickLower, tickUpper } = useMemo(
+  const { token0, token1 } = useMemo(
     () => ({
       token0: pool?.token0,
       token1: pool?.token1,
@@ -74,36 +60,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     }),
     [position, pool],
   );
-
-  const nonInvertedTicksAtLimit = useTickAtLimit(fee, tickLower, tickUpper);
-  const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
-
-  // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition?.priceLower,
-    priceUpper: pricesFromPosition?.priceUpper,
-    quote: pricesFromPosition?.quote,
-    base: pricesFromPosition?.base,
-    invert: manuallyInverted,
-  });
-
-  const inverted = token1 ? base?.equals(token1) : undefined;
-  const currencyQuote = inverted ? token0 : token1;
-  const currencyBase = inverted ? token1 : token0;
-
-  const tickAtLimit = useMemo(() => {
-    if (!inverted) return nonInvertedTicksAtLimit;
-
-    return {
-      [Bound.LOWER]: nonInvertedTicksAtLimit[Bound.UPPER] ? true : undefined,
-      [Bound.UPPER]: nonInvertedTicksAtLimit[Bound.LOWER] ? true : undefined,
-    };
-  }, [nonInvertedTicksAtLimit, inverted]);
-
-  const pairName = useMemo(() => {
-    if (!currencyQuote || !currencyBase) return undefined;
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
     if (!token0 || feeAmount0 === undefined || !token1 || feeAmount1 === undefined)
@@ -141,16 +97,8 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
           <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${token1?.symbol}` : "--"}</BodyCell>
         </BodyCell>
 
-        <BodyCell sx={{ display: "inline-block" }} onClick={() => setManuallyInverted(!manuallyInverted)}>
-          {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
-            priceUpper,
-            tickAtLimit,
-            Bound.UPPER,
-          )} ${pairName}`}
-
-          <SyncAltIcon
-            sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff", margin: "0 0 0 4px", verticalAlign: "middle" }}
-          />
+        <BodyCell>
+          <PositionPriceRange position={position} fontSize="inherit" color="inherit" arrowColor="primary" />
         </BodyCell>
 
         <BodyCell

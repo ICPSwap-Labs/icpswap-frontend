@@ -34,3 +34,9 @@ body iframe {
 a {
   text-decoration-color: #5669dc;
 }
+
+.text-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

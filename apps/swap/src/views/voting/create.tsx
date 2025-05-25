@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
-import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input, useMediaQuery } from "components/Mui";
+import { Grid, Button, Typography, Box, InputAdornment, CircularProgress, Input } from "components/Mui";
 import { useParams, useHistory } from "react-router-dom";
 import { isValidAccount, isValidPrincipal, writeFileOneSheet, millisecond2Nanosecond } from "@icpswap/utils";
 import { Wrapper, MainCard, Breadcrumbs, TextButton, FilledTextField, NumberFilledTextField } from "components/index";
@@ -22,6 +22,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery640 } from "hooks/theme";
 
 export type ExcelPower = {
   "Address(Account ID or Principal ID)": string;
@@ -226,7 +227,7 @@ export default function VotingCreateProposal() {
   if (!values.options || values.options.length < 2 || hasEmptyOption) errorMessage = t`Invalid options`;
   if (!values.powers || values.powers.length < 1) errorMessage = t("vote.create.error.powers");
 
-  const down640 = useMediaQuery("(max-width:640px)");
+  const down640 = useMediaQuery640();
 
   const handleDownloadTemplate = () => {
     const json = [

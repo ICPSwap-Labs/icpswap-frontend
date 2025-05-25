@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from "react";
-import { Typography, Grid, Box, useMediaQuery, Avatar, makeStyles, Theme } from "components/Mui";
+import { Typography, Grid, Box, Avatar, makeStyles, Theme } from "components/Mui";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
 import { useCollectionData } from "hooks/nft/tradeData";
@@ -8,8 +8,8 @@ import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import { formatAmount } from "@icpswap/utils";
 import { LoadingRow, Breadcrumbs } from "components/index";
 import { useTranslation } from "react-i18next";
-
-import CollectionLinks from "../collectionsIcon/index";
+import CollectionLinks from "components/NFT/collectionsIcon/index";
+import { useMediaQuery640, useMediaQuery1290 } from "hooks/theme";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -72,8 +72,8 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
 
   const mintSupply = useNFTMintSupply(canister);
 
-  const matchDownMD = useMediaQuery("(max-width:1290px)");
-  const matchDown640 = useMediaQuery("(max-width:640px)");
+  const down1290 = useMediaQuery1290();
+  const down640 = useMediaQuery640();
 
   const links = useMemo(() => {
     if (canisterId === "xzcnc-myaaa-aaaak-abk7a-cai") {
@@ -95,7 +95,7 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
         />
       </Box>
 
-      <Grid container flexDirection={matchDownMD ? "column" : "row"}>
+      <Grid container flexDirection={down1290 ? "column" : "row"}>
         <Box sx={{ minWidth: "390px" }}>
           {loading ? (
             <LoadingRow>
@@ -132,10 +132,10 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
           )}
         </Box>
 
-        <Grid item xs mt={matchDownMD ? "20px" : "0"}>
-          <Grid container justifyContent={matchDownMD ? "flex-start" : "flex-end"}>
+        <Grid item xs mt={down1290 ? "20px" : "0"}>
+          <Grid container justifyContent={down1290 ? "flex-start" : "flex-end"}>
             <Box className={classes.infoBox}>
-              {matchDown640 ? (
+              {down640 ? (
                 <>
                   <Box>
                     <CollectionDataItem

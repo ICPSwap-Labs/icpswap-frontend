@@ -6,13 +6,21 @@ import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
 import { formatDollarAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
+import { tokenSymbolEllipsis } from "components/TokenSymbol";
 
 export interface PoolCurrentPriceProps {
   pool: Pool | Null;
   token?: Token | Null;
-  showInverted?: boolean;
   fontSize?: string;
   sx?: BoxProps["sx"];
+  usdValueColor?: string;
+  usdValueSize?: string;
+  symbolColor?: string;
+  symbolSize?: string;
+  priceColor?: string;
+  priceSize?: string;
+  showUsdValue?: boolean;
+  showInverted?: boolean;
   onInverted?: (inverted: boolean) => void;
 }
 
@@ -23,6 +31,13 @@ export function PoolCurrentPrice({
   fontSize = "12px",
   sx,
   onInverted,
+  usdValueColor = "text.secondary",
+  usdValueSize,
+  priceColor = "text.primary",
+  priceSize,
+  symbolColor = "text.secondary",
+  symbolSize,
+  showUsdValue = true,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -60,8 +75,12 @@ export function PoolCurrentPrice({
     if (isNullArgs(baseToken) || isNullArgs(quoteToken)) return undefined;
 
     return manuallyInverted
-      ? `${baseToken.symbol} per ${quoteToken.symbol}`
-      : `${quoteToken.symbol} per ${baseToken.symbol}`;
+      ? `${tokenSymbolEllipsis({
+          symbol: baseToken.symbol,
+        })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
+      : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+          symbol: baseToken.symbol,
+        })}`;
   }, [baseToken, quoteToken, manuallyInverted]);
 
   return (
@@ -71,7 +90,10 @@ export function PoolCurrentPrice({
         cursor: showInverted ? "pointer" : "default",
         ...sx,
       }}
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation();
+        event.nativeEvent.stopImmediatePropagation();
+
         if (showInverted) {
           setManuallyInverted(!manuallyInverted);
           if (onInverted) onInverted(!manuallyInverted);
@@ -82,8 +104,8 @@ export function PoolCurrentPrice({
         <>
           <Typography
             sx={{
-              color: "text.primary",
-              fontSize,
+              color: priceColor,
+              fontSize: priceSize ?? fontSize,
             }}
           >
             {formatTokenPrice(price)}
@@ -91,7 +113,8 @@ export function PoolCurrentPrice({
 
           <Typography
             sx={{
-              fontSize,
+              fontSize: symbolSize ?? fontSize,
+              color: symbolColor,
             }}
           >
             {label}
@@ -108,10 +131,11 @@ export function PoolCurrentPrice({
         </Typography>
       )}
 
-      {baseTokenUSDPrice && quoteTokenUSDPrice ? (
+      {baseTokenUSDPrice && quoteTokenUSDPrice && showUsdValue ? (
         <Typography
           sx={{
-            fontSize,
+            fontSize: usdValueSize ?? fontSize,
+            color: usdValueColor,
           }}
         >
           ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})

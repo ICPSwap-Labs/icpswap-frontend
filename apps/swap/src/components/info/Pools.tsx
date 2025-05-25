@@ -1,26 +1,12 @@
 import { useState, useMemo } from "react";
 import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { useHistory } from "react-router-dom";
-import { Override, PublicPoolOverView } from "@icpswap/types";
-import { TokenImage } from "components/index";
-import { useToken } from "hooks/index";
-import {
-  Header,
-  HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  FeeTierPercentLabel,
-  APRPanel,
-  NoData,
-  ImageLoading,
-  Flex,
-} from "@icpswap/ui";
+import { PublicPoolOverView } from "@icpswap/types";
+import { Header, HeaderCell, SortDirection, NoData, ImageLoading } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
-import { useAllPoolsTVL, usePoolAPR } from "@icpswap/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
+import { useAllPoolsTVL } from "@icpswap/hooks";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
+import { PoolRow } from "components/info/swap/pool";
 
 const useStyles = makeStyles(() => {
   return {
@@ -79,75 +65,6 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: 
   );
 }
 
-interface PoolItemProps {
-  pool: PoolData;
-  index: number;
-  align: "right" | "left";
-}
-
-export function PoolItem({ pool, index, align }: PoolItemProps) {
-  const classes = useStyles();
-  const history = useHistory();
-
-  const [, token0] = useToken(pool.token0Id);
-  const [, token1] = useToken(pool.token1Id);
-
-  const handlePoolClick = () => {
-    history.push(`/info-swap/pool/details/${pool.pool}`);
-  };
-
-  const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD: pool.tvlUSD });
-
-  return (
-    <TableRow className={classes.wrapper} onClick={handlePoolClick}>
-      <BodyCell>{index}</BodyCell>
-      <BodyCell>
-        <Flex fullWidth gap="0 8px">
-          <Box sx={{ display: "flex" }}>
-            <TokenImage logo={token0?.logo} tokenId={token0?.address} />
-            <TokenImage logo={token1?.logo} tokenId={token1?.address} />
-          </Box>
-
-          <BodyCell>
-            <BodyCell
-              sx={{
-                display: "block",
-                maxWidth: "90px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {pool.token0Symbol}
-            </BodyCell>{" "}
-            /{" "}
-            <BodyCell
-              sx={{
-                display: "block",
-                maxWidth: "90px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {pool.token1Symbol}
-            </BodyCell>
-          </BodyCell>
-
-          <FeeTierPercentLabel feeTier={pool.feeTier} />
-        </Flex>
-      </BodyCell>
-      <BodyCell align={align}>{formatDollarAmount(pool.tvlUSD)}</BodyCell>
-      <BodyCell align={align}>{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>
-      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD)}</BodyCell>
-      <BodyCell align={align}>{formatDollarAmount(pool.volumeUSD7d)}</BodyCell>
-      <BodyCell align={align}>{formatDollarAmount(pool.totalVolumeUSD)}</BodyCell>
-    </TableRow>
-  );
-}
-
-type PoolData = Override<PublicPoolOverView, { tvlUSD: number }>;
-
 export interface PoolsProps {
   pools: PublicPoolOverView[] | undefined | null;
   maxItems?: number;
@@ -161,24 +78,18 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
+  const classes = useStyles();
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
 
-  const pools: PoolData[] = useMemo(() => {
+  const pools = useMemo(() => {
     if (!_pools || !allPoolsTVL) return [];
 
     setPage(1);
 
-    return _pools
-      .slice()
-      .filter((pool) => {
-        return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
-      })
-      .map((pool) => {
-        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-
-        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 };
-      });
+    return _pools.slice().filter((pool) => {
+      return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
+    });
   }, [_pools, allPoolsTVL]);
 
   const sortedPools = useMemo(() => {
@@ -214,9 +125,21 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     <>
       <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" align={align} />
 
-      {(sortedPools ?? []).map((pool, index) => (
-        <PoolItem key={pool.pool} index={(page - 1) * maxItems + index + 1} pool={pool} align={align} />
-      ))}
+      {(sortedPools ?? []).map((pool, index) => {
+        const __tvlUSD = allPoolsTVL?.find((poolTVL) => poolTVL[0] === pool.pool);
+        const tvlUSD = __tvlUSD ? __tvlUSD[1] : undefined;
+
+        return (
+          <PoolRow
+            key={pool.pool}
+            wrapperClass={classes.wrapper}
+            index={(page - 1) * maxItems + index + 1}
+            poolInfo={pool}
+            align={align}
+            tvlUSD={tvlUSD}
+          />
+        );
+      })}
 
       {sortedPools?.length === 0 && !loading ? <NoData tip={t("info.swap.pool.empty")} /> : null}
 

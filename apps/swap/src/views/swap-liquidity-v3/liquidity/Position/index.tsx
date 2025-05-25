@@ -3,7 +3,7 @@ import { LoadingRow, Flex, FeeTierPercentLabel } from "@icpswap/ui";
 import { principalToAccount } from "@icpswap/utils";
 import { useSwapPositionOwner } from "@icpswap/hooks";
 import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
-import { Typography, Box } from "components/Mui";
+import { Box } from "components/Mui";
 import { Wrapper, Breadcrumbs, TokenImage, AuthButton } from "components/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -16,6 +16,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
+import { TokenPairName } from "components/TokenPairName";
 
 export default function PositionDetails() {
   const { t } = useTranslation();
@@ -78,14 +79,16 @@ export default function PositionDetails() {
                   <TokenImage logo={token1?.logo} tokenId={token1?.address} size="32px" />
                 </Flex>
 
-                <Typography color="text.primary" fontSize="18px">
-                  {token0?.symbol} / {token1?.symbol}
-                </Typography>
+                <TokenPairName
+                  symbol0={token0?.symbol}
+                  symbol1={token1?.symbol}
+                  sx={{ color: "text.primary", fontSize: "18px" }}
+                />
 
                 <FeeTierPercentLabel feeTier={pool?.fee} />
               </Flex>
 
-              <PoolTokensPrice pool={pool} />
+              <PoolTokensPrice pool={pool} width="228px" />
             </Flex>
 
             <Flex
@@ -144,7 +147,7 @@ export default function PositionDetails() {
             gap="0 16px"
             sx={{
               margin: "20px 0 0 0",
-              "@media(max-width: 640px)": {
+              "@media(max-width: 920px)": {
                 flexDirection: "column",
                 gap: "16px 0",
               },
@@ -153,7 +156,7 @@ export default function PositionDetails() {
             <Box
               sx={{
                 flex: "50%",
-                "@media(max-width: 640px)": {
+                "@media(max-width: 920px)": {
                   width: "100%",
                 },
               }}
@@ -174,7 +177,7 @@ export default function PositionDetails() {
             <Box
               sx={{
                 flex: "50%",
-                "@media(max-width: 640px)": {
+                "@media(max-width: 920px)": {
                   width: "100%",
                 },
               }}

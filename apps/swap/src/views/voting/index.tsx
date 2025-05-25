@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, Avatar, Box, useMediaQuery, useTheme } from "components/Mui";
+import { Grid, Typography, Avatar, Box, useTheme } from "components/Mui";
 import { pageArgsFormat } from "@icpswap/utils";
 import { Wrapper, MainCard, Pagination, PaginationType, NoData, ImageLoading } from "components/index";
 import { ProjectInfo } from "@icpswap/types";
 import { useVotingProjects } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery1160, useMediaQuery640, useMediaQuery760 } from "hooks/theme";
 
 export interface VoteItemProps {
   project: ProjectInfo;
@@ -68,9 +69,9 @@ export default function Voting() {
   const { result, loading } = useVotingProjects(offset, pagination.pageSize);
   const { content: list, totalElements } = result ?? { content: [] as ProjectInfo[], totalElements: BigInt(0) };
 
-  const matchDown1160 = useMediaQuery("(max-width:1160px)");
-  const matchDown760 = useMediaQuery("(max-width:760px)");
-  const matchDown640 = useMediaQuery("(max-width:640px)");
+  const down1160 = useMediaQuery1160();
+  const down760 = useMediaQuery760();
+  const down640 = useMediaQuery640();
 
   return (
     <Wrapper>
@@ -85,11 +86,11 @@ export default function Voting() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: matchDown640
+              gridTemplateColumns: down640
                 ? "1fr"
-                : matchDown760
+                : down760
                 ? "repeat(2, 1fr)"
-                : matchDown1160
+                : down1160
                 ? "repeat(3, 1fr)"
                 : "repeat(4, 1fr)",
               gap: "20px 20px",

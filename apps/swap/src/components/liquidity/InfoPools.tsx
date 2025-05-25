@@ -220,7 +220,7 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
             >
               <Typography
                 sx={{
-                  maxWidth: "140px",
+                  maxWidth: "120px",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",

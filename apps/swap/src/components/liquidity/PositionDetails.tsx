@@ -2,9 +2,6 @@ import React, { useState, useCallback, useMemo, useEffect, useContext } from "re
 import { useHistory } from "react-router-dom";
 import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
   BigNumber,
@@ -20,6 +17,7 @@ import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
+import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -37,7 +35,17 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
       <Typography
         {...(matchDownSM ? { fontSize: "12px" } : {})}
         component="div"
-        sx={{ width: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", lineHeight: "14px" }}
+        sx={{
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          lineHeight: "14px",
+          width: "140px",
+          "@media(max-width: 640px)": {
+            width: "fit-content",
+            maxWidth: "140px",
+          },
+        }}
       >
         {label}
       </Typography>
@@ -89,7 +97,6 @@ export function PositionDetails({
   position,
   positionId,
   manuallyInverted,
-  setManuallyInverted,
   show,
   token0USDPrice,
   token1USDPrice,
@@ -111,14 +118,12 @@ export function PositionDetails({
 
   const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
 
-  const { pool, tickLower, tickUpper } = position || {};
-  const { token0, token1, fee: feeAmount } = pool || {};
+  const { token0, token1 } = position?.pool || {};
 
-  const _tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper);
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
+  const { base } = useInverter({
     priceLower: pricesFromPosition?.priceLower,
     priceUpper: pricesFromPosition?.priceUpper,
     quote: pricesFromPosition?.quote,
@@ -128,21 +133,8 @@ export function PositionDetails({
 
   const inverted = token1 ? base?.equals(token1) : undefined;
 
-  const tickAtLimit = useMemo(() => {
-    if (!inverted) return _tickAtLimit;
-
-    return {
-      [Bound.LOWER]: _tickAtLimit[Bound.UPPER] ? true : undefined,
-      [Bound.UPPER]: _tickAtLimit[Bound.LOWER] ? true : undefined,
-    };
-  }, [_tickAtLimit, inverted]);
-
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
-
-  const pairName = useMemo(() => {
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
     if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
@@ -239,41 +231,24 @@ export function PositionDetails({
                 </Flex>
               }
               value={
-                inverted ? (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary" align="right">
-                      {formatLiquidityAmount(amount0)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px" }} align="right">
-                      {value0 ? formatDollarAmount(value0) : "--"}
-                    </Typography>
-                  </Flex>
-                ) : (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
-                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
-                  </Flex>
-                )
+                <Flex
+                  gap="8px"
+                  sx={{
+                    flex: 1,
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
+                  <Typography color="text.primary" align="right">
+                    {formatLiquidityAmount(amount0)}
+                  </Typography>
+                  <Typography sx={{ fontSize: "12px" }} align="right">
+                    {value0 ? formatDollarAmount(value0) : "--"}
+                  </Typography>
+                </Flex>
               }
             />
 
@@ -302,72 +277,24 @@ export function PositionDetails({
                 </Flex>
               }
               value={
-                inverted ? (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
-                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
-                  </Flex>
-                ) : (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary" align="right">
-                      {formatLiquidityAmount(amount0)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px" }} align="right">
-                      {value0 ? formatDollarAmount(value0) : "--"}
-                    </Typography>
-                  </Flex>
-                )
-              }
-            />
-
-            <PositionDetailItem
-              label={t("common.price.range")}
-              value={
-                <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
-                  <Typography
-                    sx={{
-                      color: "text.primary",
-                      textAlign: "right",
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                    component="div"
-                  >
-                    {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
-                    {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} {pairName}
-                  </Typography>
-
-                  <SyncAltIcon
-                    sx={{
-                      fontSize: "1rem",
-                      cursor: "pointer",
-                      color: theme.palette.text.secondary,
-                    }}
-                  />
+                <Flex
+                  gap="8px"
+                  sx={{
+                    flex: 1,
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
+                  <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
+                  <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                 </Flex>
               }
             />
+
+            <PositionDetailItem label={t("common.price.range")} value={<PositionPriceRange position={position} />} />
 
             <PositionDetailItem
               label={t("common.uncollected.fees")}
