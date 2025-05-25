@@ -491,7 +491,7 @@ export function InfoPools() {
               <FilledTextField
                 width="100%"
                 fullHeight
-                placeholder={t`Search token`}
+                placeholder={t("common.search.by.token")}
                 onChange={handleSearchInput}
                 background="level1"
                 placeholderSize="14px"
