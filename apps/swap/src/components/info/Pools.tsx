@@ -126,8 +126,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
       <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" align={align} />
 
       {(sortedPools ?? []).map((pool, index) => {
-        const __tvlUSD = allPoolsTVL?.find((poolTVL) => poolTVL[0] === pool.pool);
-        const tvlUSD = __tvlUSD ? __tvlUSD[1] : undefined;
+        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1];
 
         return (
           <PoolRow

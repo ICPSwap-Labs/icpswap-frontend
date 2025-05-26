@@ -3,8 +3,10 @@ import { Typography, Box } from "components/Mui";
 import { InfoWrapper, MainCard } from "components/index";
 import { useNodeInfoAllPools } from "@icpswap/hooks";
 import { Pools } from "components/info/swap";
+import { useTranslation } from "react-i18next";
 
 export default function SwapPools() {
+  const { t } = useTranslation();
   const { result: pools, loading } = useNodeInfoAllPools();
 
   const _pools = useMemo(() => {
