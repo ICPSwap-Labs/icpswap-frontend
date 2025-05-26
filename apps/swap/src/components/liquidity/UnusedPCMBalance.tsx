@@ -65,7 +65,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   return (
     <Box sx={{ width: "260px" }}>
       <Flex gap="0 4px">
-        <Typography>{t("swap.unused.token", { symbol: pcmToken ? pcmToken.symbol : "--" })}</Typography>
+        <Typography>{t("common.withdrawable.token", { symbol: pcmToken ? pcmToken.symbol : "--" })}</Typography>
         <Tooltip tips={t`ICP fee wasn't used because of the failed pool creation.`} />
       </Flex>
 
