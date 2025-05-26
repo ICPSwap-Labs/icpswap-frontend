@@ -464,8 +464,8 @@ export function useMintInfo(
   });
 
   const error = useMemo(() => {
-    if (!token0 || !token1) return t("common.swap");
-    if (hasPairWithBaseToken !== true) return t("swap.error.pair.with.icp");
+    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(hasPairWithBaseToken)) return t("common.swap");
+    if (hasPairWithBaseToken === false) return t("swap.error.pair.with.icp");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (poolState === PoolState.INVALID) return t("swap.error.pair.invalid");
     if (invalidPrice) return t("swap.error.price.invalid");
