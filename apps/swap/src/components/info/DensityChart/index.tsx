@@ -9,6 +9,7 @@ import LoadingImage from "assets/images/loading.png";
 import { useTicksSurroundingPrice, TickProcessed } from "hooks/swap/useTicksSurroundingPrice";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import JSBI from "jsbi";
+import { Null } from "@icpswap/types";
 
 import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
@@ -17,8 +18,8 @@ import { ChartEntry } from "./type";
 const MAX_UINT128 = new BigNumber(340282366920938463463374607431768211455);
 
 interface DensityChartProps {
-  address: string;
-  token0Price: number | undefined;
+  address: string | Null;
+  token0Price: number | string | undefined;
 }
 
 interface ZoomStateProps {
@@ -82,7 +83,7 @@ export function DensityChart({ address }: DensityChartProps) {
 
   useEffect(() => {
     async function formatData() {
-      if (poolTickData && __pool && token0 && token1 && feeTier) {
+      if (poolTickData && __pool && token0 && token1 && feeTier && address) {
         const newData = (
           await Promise.all(
             poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
