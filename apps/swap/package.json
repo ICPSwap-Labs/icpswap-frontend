@@ -118,6 +118,7 @@
     "react-device-detect": "^1.17.0",
     "react-feather": "^2.0.10",
     "react-ga": "^2.7.0",
+    "react-helmet": "^6.1.0",
     "react-horizontal-scrolling-menu": "^3.2.5",
     "react-i18next": "14.1.0",
     "react-infinite-scroll-component": "^6.1.0",
