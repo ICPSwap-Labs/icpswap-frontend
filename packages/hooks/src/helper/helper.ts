@@ -1,8 +1,6 @@
 import { useCallback } from "react";
-import { isNullArgs, resultFormat } from "@icpswap/utils";
-import { userTokenHelper } from "@icpswap/actor";
-import type { Null, HelperUserTokenBalance } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { icpswap_fetch_post, isNullArgs } from "@icpswap/utils";
+import type { Null } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";
 
@@ -10,9 +8,15 @@ export interface GetHelperUserTokensProps {
   principal: string;
 }
 
-export async function getHelperUserTokens({ principal }: GetHelperUserTokensProps) {
-  return resultFormat<HelperUserTokenBalance>(
-    await (await userTokenHelper()).getUserTokens(Principal.fromText(principal)),
+export async function getUserTokens({ principal }: GetHelperUserTokensProps) {
+  return (
+    await icpswap_fetch_post<{
+      user: string;
+      totalBalance: number;
+      tokens: Array<{ token: string; balance: number }>;
+    }>("/info/wallet/user/all", {
+      pid: principal,
+    })
   ).data;
 }
 
@@ -21,11 +25,11 @@ export interface UseHelperUserTokensProps {
   refresh?: number;
 }
 
-export function useHelperUserTokens({ principal, refresh }: UseHelperUserTokensProps) {
+export function useUserTokens({ principal, refresh }: UseHelperUserTokensProps) {
   return useCallsData(
     useCallback(async () => {
       if (isNullArgs(principal)) return undefined;
-      return await getHelperUserTokens({ principal });
+      return await getUserTokens({ principal });
     }, [principal]),
     refresh,
   );
