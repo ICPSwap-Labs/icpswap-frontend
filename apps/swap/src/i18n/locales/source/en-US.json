@@ -1419,5 +1419,9 @@
   "info.tools.user.wallet.value.empty": "Holds no tokens.",
   "info.tools.position.transactions.empty": "No position transfer history",
   "info.tools.black.hole.empty": "Select a trading pair to check for Black Hole or Sneedlocked holdings.",
-  "swap.token.search.empty": "No tokens matched your search"
+  "swap.token.search.empty": "No tokens matched your search",
+  "title.swap": "Simple swap",
+  "title.swap.pro": "Pro swap",
+  "title.liquidity": "Liquidity",
+  "title.limit": "Limit order"
 }
