@@ -668,7 +668,6 @@
   "swap.revoke.approval.description": "ICRC2 standard tokens require an approval step when using swap. You can revoke this approval based on your security needs.",
   "nns.voting.error.vote": "Failed to vote neuron {{id}}",
   "limit.submit.loading": "Submit a limit order of {{amount}} for the {{pair}} trading pair",
-  "TsO8h6": "Add {amount0} {0} and 0 {1}",
   "swap.error.pair.with.icp": "No pair with icp",
   "common.settings": "Settings",
   "U02Dpz": "Invalid price",
