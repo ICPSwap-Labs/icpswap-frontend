@@ -86,16 +86,14 @@ export function useUserUnDepositBalance(
         calls[calls.length - 1].push(async () => await _fetch(pool, new_index));
       }
 
-      let allResult: (UserSwapPoolsBalance | undefined)[] = [];
-
       for (let i = 0; i < calls.length; i++) {
         const _calls = calls[i].map(async (call) => await call());
         const result = await Promise.all(_calls);
-        allResult = allResult.concat(result);
+
+        setBalances((prevState) => [...prevState, ...result]);
       }
 
       if (new_index === un_deposit_fetch_index) {
-        setBalances(allResult);
         setLoading(false);
       }
     };
