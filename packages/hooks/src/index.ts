@@ -34,3 +34,4 @@ export * from "./useTransactionExplorerLink";
 export * from "./helper";
 export * from "./icpswap-api";
 export * from "./ic";
+export * from "./useParsedUrlPath";

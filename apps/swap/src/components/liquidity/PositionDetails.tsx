@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useMemo, useEffect, useContext } from "react";
 import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { CurrencyAmountFormatDecimals } from "constants/index";
@@ -9,13 +8,14 @@ import {
   isNullArgs,
   toSignificantWithGroupSeparator,
   formatLiquidityAmount,
+  urlStringFormat,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
 import { PositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
-import { Flex } from "@icpswap/ui";
+import { Flex, Link } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
@@ -111,7 +111,6 @@ export function PositionDetails({
   isLimit,
 }: PositionDetailsProps) {
   const { t } = useTranslation();
-  const history = useHistory();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
@@ -163,16 +162,6 @@ export function PositionDetails({
     };
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const handleStake = useCallback(() => {
-    if (!farmId) return;
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
-
-  const handleDetails = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`);
-  }, [position, history, farmId]);
-
   return (
     <>
       <Box
@@ -196,7 +185,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              width: "65%",
+              width: "60%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -346,19 +335,38 @@ export function PositionDetails({
 
           <Flex gap="17px" wrap="wrap" justify="flex-end">
             {farmId ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "medium" : "large"}
-                onClick={handleStake}
-              >
-                {staked ? t("unstake.farm") : t("stake.farm")}
-              </Button>
+              <Link to={`/farm/details/${farmId}`}>
+                <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
+                  {staked ? t("unstake.farm") : t("stake.farm")}
+                </Button>
+              </Link>
             ) : null}
 
-            <Button variant="contained" size={matchDownSM ? "medium" : "large"} onClick={handleDetails}>
-              {t("liquidity.details")}
-            </Button>
+            <Link
+              to={
+                position
+                  ? `/liquidity/increase/${String(positionId)}/${position.pool.id}?path=${urlStringFormat(
+                      "/liquidity?tab=Positions",
+                    )}`
+                  : ""
+              }
+            >
+              <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
+                {t("liquidity.add.more")}
+              </Button>
+            </Link>
+
+            <Link
+              to={
+                position
+                  ? `/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`
+                  : ""
+              }
+            >
+              <Button variant="contained" size={matchDownSM ? "medium" : "large"}>
+                {t("liquidity.details")}
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Box>
