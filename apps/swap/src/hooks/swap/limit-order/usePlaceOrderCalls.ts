@@ -24,10 +24,10 @@ interface PlaceOrderCallsArgs {
   position: Position;
   openExternalTip: OpenExternalTip;
   stepKey: string;
-  token0Balance: BigNumber;
-  token1Balance: BigNumber;
-  token0SubAccountBalance: BigNumber;
-  token1SubAccountBalance: BigNumber;
+  token0Balance: string;
+  token1Balance: string;
+  token0SubAccountBalance: string;
+  token1SubAccountBalance: string;
   unusedBalance: {
     balance0: bigint;
     balance1: bigint;
