@@ -4,7 +4,7 @@ import type { Null, UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
 import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
-import { useAllPoolsTVL } from "../info";
+import { useNodeInfoAllPools } from "../info";
 
 interface UseUserSwapPoolBalancesProps {
   principal: string | Null;
@@ -15,24 +15,25 @@ interface UseUserSwapPoolBalancesProps {
 
 export function useUserSwapPoolBalances({ principal, tokenId, reload, poolId }: UseUserSwapPoolBalancesProps) {
   const { result: allSwapPools } = useSwapPools();
-  const { result: allPoolsTvl, loading: tvlLoading } = useAllPoolsTVL();
+  const { result: infoPools, loading: allPoolsLoading } = useNodeInfoAllPools();
 
   const targetSwapPools = useMemo(() => {
-    if (!allPoolsTvl || !allSwapPools) return [];
+    if (!infoPools || !allSwapPools) return [];
     if (poolId) return allSwapPools.filter((e) => e.canisterId.toString() === poolId);
 
     const __allSwapPools = allSwapPools.map((pool) => {
-      const tvlUSD = allPoolsTvl.find(([poolId]) => pool.canisterId.toString() === poolId)?.[1];
-
-      return { ...pool, tvlUSD: tvlUSD ?? 0 };
+      const volumeUSD = infoPools.find((infoPool) => pool.canisterId.toString() === infoPool.pool)?.volumeUSD7d;
+      return { ...pool, volumeUSD: volumeUSD ?? 0 };
     });
 
-    return __allSwapPools.sort((a, b) => {
-      if (a.tvlUSD > b.tvlUSD) return -1;
-      if (a.tvlUSD < b.tvlUSD) return 1;
+    const sortedPools = __allSwapPools.sort((a, b) => {
+      if (a.volumeUSD > b.volumeUSD) return -1;
+      if (a.volumeUSD < b.volumeUSD) return 1;
       return 0;
     }) as SwapPoolData[];
-  }, [allSwapPools, allPoolsTvl, poolId]);
+
+    return sortedPools;
+  }, [allSwapPools, infoPools, poolId]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal,
@@ -49,10 +50,10 @@ export function useUserSwapPoolBalances({ principal, tokenId, reload, poolId }: 
 
   return useMemo(
     () => ({
-      loading: unUsedBalanceLoading || unDepositBalanceLoading || tvlLoading,
+      loading: unUsedBalanceLoading || unDepositBalanceLoading || targetSwapPools.length === 0,
       allSwapPools,
       balances: unUsedBalances.concat(unDepositBalances).filter((balances) => !!balances) as UserSwapPoolsBalance[],
     }),
-    [allSwapPools, tvlLoading, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
+    [allSwapPools, targetSwapPools, unUsedBalanceLoading, unUsedBalances, unDepositBalanceLoading, unDepositBalances],
   );
 }
