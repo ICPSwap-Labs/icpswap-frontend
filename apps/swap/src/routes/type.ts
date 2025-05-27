@@ -12,5 +12,5 @@ export interface RouteDefinition {
   getTitle?: (path?: string) => string;
   getDescription?: (path?: string) => string;
   enabled?: (args: RouterConfig) => boolean;
-  getElement: (args: RouterConfig) => ReactNode;
+  getElement: (args?: RouterConfig) => ReactNode;
 }

@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Loadable from "components/Loading/Loadable";
+import i18n from "i18n";
 
 import { infoRoutes } from "./info.config";
 import { nnsRoutes } from "./nns.config";
@@ -10,6 +11,10 @@ import { stakeRoutes } from "./stake.config";
 import { votingRoutes } from "./voting.config";
 import { claimRoutes } from "./claim.config";
 import { RouteDefinition } from "./type";
+
+const StaticTitlesAndDescriptions = {
+  CkBridge: i18n.t("title.ck-bridge"),
+};
 
 const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
@@ -22,7 +27,7 @@ export const routeConfigs: RouteDefinition[] = [
   { path: "/info-tools/nft/canister/create", getElement: () => <NFTCanisterCreate /> },
   { path: "/info-tools/nft/mint", getElement: () => <NFTMint /> },
   { path: "/info-tools/nft/canister/list", getElement: () => <NFTCanisterList /> },
-  { path: "/ck-bridge", getElement: () => <CkBridge /> },
+  { path: "/ck-bridge", getElement: () => <CkBridge />, getTitle: () => StaticTitlesAndDescriptions.CkBridge },
 
   ...infoRoutes,
   ...stakeRoutes,

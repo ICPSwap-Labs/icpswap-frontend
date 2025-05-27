@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import Loadable from "components/Loading/Loadable";
+import i18n from "i18n";
+import { RouteDefinition } from "./type";
 
 const Overview = Loadable(lazy(() => import("../views/info/overview")));
 const Swap = Loadable(lazy(() => import("../views/info/swap")));
@@ -28,6 +30,10 @@ const ToolsPositions = Loadable(lazy(() => import("../views/info/tools/positions
 const ToolsUserBalances = Loadable(lazy(() => import("../views/info/tools/user-balances")));
 const ToolsLockedPositions = Loadable(lazy(() => import("../views/info/tools/locked-positions")));
 const ToolsPositionTransactions = Loadable(lazy(() => import("../views/info/tools/position-transactions")));
+
+const StaticTitlesAndDescriptions = {
+  Info: i18n.t("title.info"),
+};
 
 export const infoRoutesConfigs = {
   INFO_OVERVIEW: "/info-overview",
@@ -59,32 +65,116 @@ export const infoRoutesConfigs = {
   INFO_TOOLS_POSITION_TRANSACTIONS: "/info-tools/position-transactions",
 };
 
-export const infoRoutes = [
-  { path: infoRoutesConfigs.INFO_OVERVIEW, getElement: () => <Overview /> },
-  { path: infoRoutesConfigs.INFO_SWAP, getElement: () => <Swap /> },
-  { path: infoRoutesConfigs.INFO_SWAP_POOLS, getElement: () => <SwapPools /> },
-  { path: "/info-swap/pool/details/:id", getElement: () => <SwapPoolDetails /> },
-  { path: "/info-swap/token/details/:id", getElement: () => <SwapTokenDetails /> },
-  { path: infoRoutesConfigs.INFO_TOKENS, getElement: () => <Tokens /> },
-  { path: "/info-tokens/details/:id", getElement: () => <TokenDetails /> },
-  { path: "/info-tokens/holders/:id", getElement: () => <TokenHolders /> },
-  { path: infoRoutesConfigs.INFO_STAKE, getElement: () => <Stake /> },
-  { path: "/info-stake/details/:id", getElement: () => <StakeDetails /> },
-  { path: infoRoutesConfigs.INFO_FARM, getElement: () => <Farm /> },
-  { path: "/info-farm/details/:id", getElement: () => <FarmDetails /> },
-  { path: infoRoutesConfigs.INFO_WRAP, getElement: () => <Wrap /> },
-  { path: infoRoutesConfigs.INFO_CLAIM, getElement: () => <TokenClaim /> },
-  { path: "/info-claim/transactions/:id", getElement: () => <TokenClaimTransactions /> },
-  { path: infoRoutesConfigs.INFO_NFTS, getElement: () => <NFTs /> },
-  { path: "/info-nfts/canister/:id", getElement: () => <NFTDetails /> },
-  { path: "/info-nfts/info/:canisterId/:id", getElement: () => <NFTInfo /> },
-  { path: infoRoutesConfigs.INFO_MARKETPLACE, getElement: () => <MarketPlace /> },
-  { path: infoRoutesConfigs.INFO_TOOLS, getElement: () => <Tools /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_BURN, getElement: () => <ToolsBurn /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_VALUATION, getElement: () => <ToolsValuation /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_SWAP_TRANSACTIONS, getElement: () => <ToolsSwapTransactions /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_POSITIONS, getElement: () => <ToolsPositions /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_USER_BALANCES, getElement: () => <ToolsUserBalances /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_LOCKED_POSITIONS, getElement: () => <ToolsLockedPositions /> },
-  { path: infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS, getElement: () => <ToolsPositionTransactions /> },
+export const infoRoutes: RouteDefinition[] = [
+  {
+    path: infoRoutesConfigs.INFO_OVERVIEW,
+    getElement: () => <Overview />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_SWAP, getElement: () => <Swap />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: infoRoutesConfigs.INFO_SWAP_POOLS,
+    getElement: () => <SwapPools />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-swap/pool/details/:id",
+    getElement: () => <SwapPoolDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-swap/token/details/:id",
+    getElement: () => <SwapTokenDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOKENS,
+    getElement: () => <Tokens />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-tokens/details/:id",
+    getElement: () => <TokenDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-tokens/holders/:id",
+    getElement: () => <TokenHolders />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_STAKE, getElement: () => <Stake />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: "/info-stake/details/:id",
+    getElement: () => <StakeDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_FARM, getElement: () => <Farm />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: "/info-farm/details/:id",
+    getElement: () => <FarmDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_WRAP, getElement: () => <Wrap />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: infoRoutesConfigs.INFO_CLAIM,
+    getElement: () => <TokenClaim />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-claim/transactions/:id",
+    getElement: () => <TokenClaimTransactions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_NFTS, getElement: () => <NFTs />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: "/info-nfts/canister/:id",
+    getElement: () => <NFTDetails />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: "/info-nfts/info/:canisterId/:id",
+    getElement: () => <NFTInfo />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_MARKETPLACE,
+    getElement: () => <MarketPlace />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  { path: infoRoutesConfigs.INFO_TOOLS, getElement: () => <Tools />, getTitle: () => StaticTitlesAndDescriptions.Info },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_BURN,
+    getElement: () => <ToolsBurn />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_VALUATION,
+    getElement: () => <ToolsValuation />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_SWAP_TRANSACTIONS,
+    getElement: () => <ToolsSwapTransactions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_POSITIONS,
+    getElement: () => <ToolsPositions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_USER_BALANCES,
+    getElement: () => <ToolsUserBalances />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_LOCKED_POSITIONS,
+    getElement: () => <ToolsLockedPositions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS,
+    getElement: () => <ToolsPositionTransactions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
 ];

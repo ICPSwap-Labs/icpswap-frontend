@@ -1419,8 +1419,16 @@
   "info.tools.position.transactions.empty": "No position transfer history",
   "info.tools.black.hole.empty": "Select a trading pair to check for Black Hole or Sneedlocked holdings.",
   "swap.token.search.empty": "No tokens matched your search",
-  "title.swap": "Simple swap",
-  "title.swap.pro": "Pro swap",
-  "title.liquidity": "Liquidity",
-  "title.limit": "Limit order"
+  "title.swap": "ICPSwap - Simple Swap",
+  "title.swap.pro": "ICPSwap - Pro Swap",
+  "title.liquidity": "ICPSwap - Liquidity",
+  "title.limit": "ICPSwap - Limit Order",
+  "title.info": "ICPSwap - Info",
+  "title.farm": "ICPSwap - Farm Pool",
+  "title.stake": "ICPSwap - Staking Pool",
+  "title.voting": "ICPSwap - Voting",
+  "title.ck-bridge": "ICPSwap - ck-Bridge",
+  "title.claim": "ICPSwap - Claim",
+  "title.nft": "ICPSwap - NFT",
+  "title.sns": "ICPSwap - SNS"
 }
