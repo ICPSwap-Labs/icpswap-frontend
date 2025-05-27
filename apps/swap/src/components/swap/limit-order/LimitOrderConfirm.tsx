@@ -89,9 +89,9 @@ export interface LimitOrderConfirmProps {
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
-  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenSubBalance: string | undefined;
   inputTokenUnusedBalance: bigint | undefined;
-  inputTokenBalance: BigNumber | undefined;
+  inputTokenBalance: string | undefined;
   orderPrice: string | Null;
   currentPrice: string | Null;
   inputToken: Token | Null;
