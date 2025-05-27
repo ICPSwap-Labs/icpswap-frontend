@@ -19,9 +19,16 @@ const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMRec
 const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/Position")));
 const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
+const StaticTitlesAndDescriptions = {
+  Swap: i18n.t("title.swap"),
+  Limit: i18n.t("title.limit"),
+  Liquidity: i18n.t("title.liquidity"),
+  Swap_pro: i18n.t("title.swap.pro"),
+};
+
 export const swapRoutesConfigs = {
   SWAP: "/swap",
-  LIMIT: "/swap/limit",
+  SWAP_LIMIT: "/swap/limit",
   SWAP_TRANSACTIONS: "/swap/transaction",
   SWAP_RECLAIM: "/swap/withdraw",
   SWAP_REVOKE: "/swap/revoke-approve",
@@ -38,19 +45,67 @@ export const swapRoutesConfigs = {
 };
 
 export const swapRoutes: RouteDefinition[] = [
-  { path: "/", getElement: () => <Swap />, getTitle: () => i18n.t("title.swap") },
-  { path: swapRoutesConfigs.SWAP, getElement: () => <Swap />, getTitle: () => i18n.t("title.swap") },
-  { path: swapRoutesConfigs.LIMIT, getElement: () => <SwapLimit />, getTitle: () => i18n.t("title.limit") },
-  { path: swapRoutesConfigs.SWAP_TRANSACTIONS, getElement: () => <SwapTransaction /> },
-  { path: swapRoutesConfigs.SWAP_RECLAIM, getElement: () => <SwapReclaim /> },
-  { path: swapRoutesConfigs.SWAP_MIS_TRANSFER, getElement: () => <SwapFindMisTransferToken /> },
-  { path: swapRoutesConfigs.SWAP_REVOKE, getElement: () => <SwapRevokeApprove /> },
-  { path: swapRoutesConfigs.SWAP_PCM_RECLAIM, getElement: () => <PCMReclaim /> },
-  { path: swapRoutesConfigs.SWAP_PRO, getElement: () => <SwapPro />, getTitle: () => i18n.t("title.swap.pro") },
-  { path: swapRoutesConfigs.SWAP_WRAP, getElement: () => <Wrap /> },
-  { path: swapRoutesConfigs.LIQUIDITY, getElement: () => <Liquidity />, getTitle: () => i18n.t("title.liquidity") },
-  { path: swapRoutesConfigs.LIQUIDITY_ADD, getElement: () => <AddLiquidity /> },
-  { path: swapRoutesConfigs.LIQUIDITY_DECREASE, getElement: () => <DecreaseLiquidity /> },
-  { path: swapRoutesConfigs.LIQUIDITY_INCREASE, getElement: () => <IncreaseLiquidity /> },
-  { path: swapRoutesConfigs.LIQUIDITY_POSITION, getElement: () => <Position /> },
+  { path: "/", getElement: () => <Swap />, getTitle: () => StaticTitlesAndDescriptions.Swap },
+  { path: swapRoutesConfigs.SWAP, getElement: () => <Swap />, getTitle: () => StaticTitlesAndDescriptions.Swap },
+  {
+    path: swapRoutesConfigs.SWAP_LIMIT,
+    getElement: () => <SwapLimit />,
+    getTitle: () => StaticTitlesAndDescriptions.Limit,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_TRANSACTIONS,
+    getElement: () => <SwapTransaction />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_RECLAIM,
+    getElement: () => <SwapReclaim />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_MIS_TRANSFER,
+    getElement: () => <SwapFindMisTransferToken />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_REVOKE,
+    getElement: () => <SwapRevokeApprove />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_PCM_RECLAIM,
+    getElement: () => <PCMReclaim />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap,
+  },
+  {
+    path: swapRoutesConfigs.SWAP_PRO,
+    getElement: () => <SwapPro />,
+    getTitle: () => StaticTitlesAndDescriptions.Swap_pro,
+  },
+  { path: swapRoutesConfigs.SWAP_WRAP, getElement: () => <Wrap />, getTitle: () => StaticTitlesAndDescriptions.Swap },
+  {
+    path: swapRoutesConfigs.LIQUIDITY,
+    getElement: () => <Liquidity />,
+    getTitle: () => StaticTitlesAndDescriptions.Liquidity,
+  },
+  {
+    path: swapRoutesConfigs.LIQUIDITY_ADD,
+    getElement: () => <AddLiquidity />,
+    getTitle: () => StaticTitlesAndDescriptions.Liquidity,
+  },
+  {
+    path: swapRoutesConfigs.LIQUIDITY_DECREASE,
+    getElement: () => <DecreaseLiquidity />,
+    getTitle: () => StaticTitlesAndDescriptions.Liquidity,
+  },
+  {
+    path: swapRoutesConfigs.LIQUIDITY_INCREASE,
+    getElement: () => <IncreaseLiquidity />,
+    getTitle: () => StaticTitlesAndDescriptions.Liquidity,
+  },
+  {
+    path: swapRoutesConfigs.LIQUIDITY_POSITION,
+    getElement: () => <Position />,
+    getTitle: () => StaticTitlesAndDescriptions.Liquidity,
+  },
 ];

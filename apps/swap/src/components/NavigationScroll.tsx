@@ -7,7 +7,8 @@ export interface NavigationScrollProps extends RouteComponentProps {
   children: ReactNode;
 }
 
-export default withRouter(({ children, location: { pathname } }: NavigationScrollProps) => {
+export default withRouter(({ children, location }: NavigationScrollProps) => {
+  const { pathname } = location;
   const route = findRouteByPath(pathname);
   const staticTitle = (route?.getTitle && route?.getTitle(pathname)) ?? "ICPSwap";
 
