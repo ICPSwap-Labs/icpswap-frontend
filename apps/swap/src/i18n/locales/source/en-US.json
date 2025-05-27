@@ -1300,6 +1300,7 @@
   "v9zUKw": "Failed to make proposal: {__type}, {__message}",
   "info.swap.tokens": "Swap tokens",
   "common.swap": "Swap",
+  "error.liquidity.loading": "Liquidity loading...",
   "vHvY9U": "Reward per second",
   "vLkC/o": "Requested amount is too small",
   "common.hide": "Hide",
