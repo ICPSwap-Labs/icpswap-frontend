@@ -9,7 +9,7 @@ import { DefaultChartView, Tab } from "constants/index";
 
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
-import TokenUI from "./Token";
+import TokenTvlAndLiquidityLocks from "./Token";
 import TokenChartWrapper from "./TokenChart";
 import Transactions from "./Transactions";
 import { SearchWrapper } from "./layout/SearchWrapper";
@@ -100,7 +100,7 @@ export function SwapProContextWrapper() {
 
               {matchDownSM ? <TokenChartInfo infoToken={infoToken} tokenListInfo={tokenListInfo} /> : null}
 
-              <TokenUI />
+              <TokenTvlAndLiquidityLocks />
 
               <PoolTokensInformation />
             </Box>

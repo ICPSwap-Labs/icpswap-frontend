@@ -123,7 +123,7 @@ export default function TokenUI() {
       <Box sx={{ padding: "16px" }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
           {token0 && token1 ? (
-            <Card title={t("common.current.price")} fontSize="12px">
+            <Card title={t("common.last.price")} fontSize="12px">
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0", padding: "0 0 0 4px" }}>
                 <TokenPoolPrice
                   tokenA={token0}
