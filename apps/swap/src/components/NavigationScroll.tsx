@@ -1,4 +1,4 @@
-import { useEffect, ReactNode, useState } from "react";
+import { useEffect, ReactNode } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { findRouteByPath } from "routes/RouteDefinition";
@@ -8,7 +8,8 @@ export interface NavigationScrollProps extends RouteComponentProps {
 }
 
 export default withRouter(({ children, location: { pathname } }: NavigationScrollProps) => {
-  const [title, setTitle] = useState<string>("");
+  const route = findRouteByPath(pathname);
+  const staticTitle = (route?.getTitle && route?.getTitle(pathname)) ?? "ICPSwap";
 
   useEffect(() => {
     window.scrollTo({
@@ -16,17 +17,13 @@ export default withRouter(({ children, location: { pathname } }: NavigationScrol
       left: 0,
       behavior: "smooth",
     });
-
-    const route = findRouteByPath(pathname);
-    const staticTitle = (route?.getTitle && route?.getTitle(pathname)) ?? "ICPSwap";
-    setTitle(staticTitle);
   }, [pathname]);
 
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{title}</title>
+        <title>{staticTitle}</title>
       </Helmet>
       {children}
     </>
