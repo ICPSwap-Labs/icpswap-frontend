@@ -179,10 +179,6 @@ export function ReclaimAll() {
               <div />
               <div />
               <div />
-              <div />
-              <div />
-              <div />
-              <div />
             </LoadingRow>
           </Box>
         ) : null}
