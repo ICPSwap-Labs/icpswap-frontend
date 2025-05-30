@@ -1,16 +1,16 @@
 import { Typography, Box } from "components/Mui";
 import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Modal, MainCard } from "@icpswap/ui";
-import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { PoolCharts as InfoPoolCharts } from "components/info/PoolCharts";
 import { useTranslation } from "react-i18next";
+import { PoolInfoWithApr } from "types/info";
 
 export interface PoolChartsProps {
   showOnlyTokenList?: boolean;
   open: boolean;
   onClose: () => void;
-  pool: InfoPublicPoolWithTvl;
+  pool: PoolInfoWithApr;
 }
 
 export function PoolCharts({ open, onClose, pool }: PoolChartsProps) {

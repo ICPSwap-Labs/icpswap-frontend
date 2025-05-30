@@ -1,24 +1,20 @@
 import { Box } from "components/Mui";
-import { Null, PublicPoolOverView } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useToken } from "hooks/index";
 import { BodyCell, TableRow, FeeTierPercentLabel, APRPanel, Flex, Link } from "@icpswap/ui";
-import { usePoolAPR } from "@icpswap/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
+import { PoolInfoWithApr } from "types/info";
 
 interface PoolRowProps {
-  poolInfo: PublicPoolOverView;
-  tvlUSD: string | number | Null;
+  poolInfo: PoolInfoWithApr;
   index: number;
   align?: "right" | "left";
   wrapperClass?: string;
 }
 
-export function PoolRow({ poolInfo, tvlUSD, index, wrapperClass, align = "left" }: PoolRowProps) {
+export function PoolRow({ poolInfo, index, wrapperClass, align = "left" }: PoolRowProps) {
   const [, token0] = useToken(poolInfo.token0Id);
   const [, token1] = useToken(poolInfo.token1Id);
-
-  const apr24h = usePoolAPR({ volumeUSD: poolInfo.volumeUSD, tvlUSD });
 
   return (
     <Link to={`/info-swap/pool/details/${poolInfo.pool}`}>
@@ -44,8 +40,8 @@ export function PoolRow({ poolInfo, tvlUSD, index, wrapperClass, align = "left" 
             <FeeTierPercentLabel feeTier={poolInfo.feeTier} />
           </Flex>
         </BodyCell>
-        <BodyCell align={align}>{tvlUSD ? formatDollarAmount(tvlUSD) : "--"}</BodyCell>
-        <BodyCell align={align}>{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>
+        <BodyCell align={align}>{nonNullArgs(poolInfo.tvlUSD) ? formatDollarAmount(poolInfo.tvlUSD) : "--"}</BodyCell>
+        <BodyCell align={align}>{nonNullArgs(poolInfo.apr24h) ? <APRPanel value={poolInfo.apr24h} /> : "--"}</BodyCell>
         <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD)}</BodyCell>
         <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD7d)}</BodyCell>
         <BodyCell align={align}>{formatDollarAmount(poolInfo.totalVolumeUSD)}</BodyCell>

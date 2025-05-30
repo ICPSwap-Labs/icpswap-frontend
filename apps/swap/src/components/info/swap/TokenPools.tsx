@@ -3,12 +3,13 @@ import { makeStyles, Typography, Box } from "components/Mui";
 import { NoData, ImageLoading } from "components/index";
 import { Header, HeaderCell, SortDirection, OnlyTokenList } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools } from "@icpswap/hooks";
+import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, getPoolAPR } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import type { InfoPublicPoolWithTvl } from "@icpswap/types";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
 import { PoolRow } from "components/info/swap/pool";
+import { PoolInfoWithApr } from "types/info";
+import { percentToNum } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -44,7 +45,7 @@ function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeade
     { label: "#", key: "#", sort: false },
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
-    { label: t`APR(24H)`, key: "apr", sort: false },
+    { label: t`APR(24H)`, key: "apr", sort: true },
     { label: t("common.volume24h"), key: "volumeUSD", sort: true },
     { label: t("common.volume7d"), key: "volumeUSD7d", sort: true },
     { label: t("common.total.volume"), key: "totalVolumeUSD", sort: true },
@@ -106,13 +107,15 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
 
     return allPoolsOfToken
       .map((pool) => {
-        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as InfoPublicPoolWithTvl;
+        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
+        const apr24h = getPoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD });
+
+        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
           const bool =
-            a[sortField as keyof InfoPublicPoolWithTvl] > b[sortField as keyof InfoPublicPoolWithTvl]
+            a[sortField as keyof PoolInfoWithApr] > b[sortField as keyof PoolInfoWithApr]
               ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
               : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
@@ -154,15 +157,11 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
           <>
             <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
             {(slicedPoolsOfToken ?? []).map((pool, index) => {
-              const __tvlUSD = allPoolsTVL?.find((poolTVL) => poolTVL[0] === pool.pool);
-              const tvlUSD = __tvlUSD ? __tvlUSD[1] : undefined;
-
               return (
                 <PoolRow
                   key={pool.pool}
                   index={(page - 1) * PAGE_SIZE + index + 1}
                   poolInfo={pool}
-                  tvlUSD={tvlUSD}
                   wrapperClass={classes.wrapper}
                 />
               );

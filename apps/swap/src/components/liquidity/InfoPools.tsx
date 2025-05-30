@@ -21,19 +21,18 @@ import {
   useTokensFromList,
   useNodeInfoAllPools,
   useDebouncedChangeHandler,
-  usePoolAPR,
+  getPoolAPR,
 } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, isNullArgs, urlStringFormat } from "@icpswap/utils";
-import type { InfoPublicPoolWithTvl } from "@icpswap/types";
+import { formatDollarAmount, isNullArgs, percentToNum, urlStringFormat } from "@icpswap/utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { PoolTvlTooltip } from "components/swap/index";
 import { useTranslation } from "react-i18next";
-
-import { PoolCharts } from "./PoolCharts";
+import { PoolCharts } from "components/liquidity/PoolCharts";
+import { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -104,7 +103,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
         {
           label: timeBase === "24H" ? t("common.apr24h") : t("common.apr.7d"),
           key: "apr",
-          sort: false,
+          sort: true,
           align: "right",
         },
         {
@@ -142,7 +141,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
 }
 
 export interface PoolItemProps {
-  pool: InfoPublicPoolWithTvl;
+  pool: PoolInfoWithApr;
   index: number;
   timeBase?: "24H" | "7D";
 }
@@ -163,12 +162,6 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
 
     return (pool.volumeUSD7d * 3) / 1000;
   }, [timeBase, pool]);
-
-  const apr = usePoolAPR({
-    tvlUSD: pool?.tvlUSD,
-    volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
-    timeBase,
-  });
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token1Id });
 
@@ -283,7 +276,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
             </PoolTvlTooltip>
           </BodyCell>
           <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-            {apr ? <APRPanel value={apr} /> : null}
+            {pool.apr24h ? <APRPanel value={pool.apr24h} /> : "--"}
           </BodyCell>
           <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
             {formatDollarAmount(fees)}
@@ -373,15 +366,21 @@ export function InfoPools() {
 
     return allPools
       .map((pool) => {
-        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as InfoPublicPoolWithTvl;
+        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
+        const apr24h = getPoolAPR({
+          volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
+          tvlUSD,
+          timeBase,
+        });
+
+        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
           const __sortField = sortField === "volumeUSD" && timeBase === "7D" ? "volumeUSD7d" : sortField;
 
           const bool =
-            a[__sortField as keyof InfoPublicPoolWithTvl] > b[__sortField as keyof InfoPublicPoolWithTvl]
+            a[__sortField as keyof PoolInfoWithApr] > b[__sortField as keyof PoolInfoWithApr]
               ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
               : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 

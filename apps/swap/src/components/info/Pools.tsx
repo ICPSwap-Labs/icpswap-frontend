@@ -3,10 +3,12 @@ import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { PublicPoolOverView } from "@icpswap/types";
 import { Header, HeaderCell, SortDirection, NoData, ImageLoading } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
-import { useAllPoolsTVL } from "@icpswap/hooks";
+import { getPoolAPR, useAllPoolsTVL } from "@icpswap/hooks";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
 import { PoolRow } from "components/info/swap/pool";
+import { PoolInfoWithApr } from "types/info";
+import { percentToNum } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -43,7 +45,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", align }: 
     { label: "#", key: "#", sort: false },
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
-    { label: t`APR(24H)`, key: "apr", sort: false },
+    { label: t`APR(24H)`, key: "apr", sort: true },
     { label: t("common.volume24h"), key: "volumeUSD", sort: true },
     { label: t("common.volume7d"), key: "volumeUSD7d", sort: true },
     { label: t("common.total.volume"), key: "totalVolumeUSD", sort: true },
@@ -87,9 +89,17 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
 
     setPage(1);
 
-    return _pools.slice().filter((pool) => {
-      return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
-    });
+    return _pools
+      .slice()
+      .filter((pool) => {
+        return pool.token0Price !== 0 && pool.token1Price !== 0 && !HIDDEN_POOLS.includes(pool.pool);
+      })
+      .map((pool) => {
+        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
+        const apr24h = getPoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD });
+
+        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
+      });
   }, [_pools, allPoolsTVL]);
 
   const sortedPools = useMemo(() => {
@@ -126,8 +136,6 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
       <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" align={align} />
 
       {(sortedPools ?? []).map((pool, index) => {
-        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1];
-
         return (
           <PoolRow
             key={pool.pool}
@@ -135,7 +143,6 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
             index={(page - 1) * maxItems + index + 1}
             poolInfo={pool}
             align={align}
-            tvlUSD={tvlUSD}
           />
         );
       })}
