@@ -11,9 +11,15 @@ export interface ChartViewSelectorProps {
   chartsViews?: ChartButton[];
   chartView: ChartButton | Null;
   onChartsViewChange: (val: ChartButton) => void;
+  maxHeight?: string;
 }
 
-export const ChartViewSelector = ({ chartView, chartsViews, onChartsViewChange }: ChartViewSelectorProps) => {
+export const ChartViewSelector = ({
+  chartView,
+  chartsViews,
+  onChartsViewChange,
+  maxHeight = "240px",
+}: ChartViewSelectorProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleChartViewChange = useCallback(
@@ -47,7 +53,7 @@ export const ChartViewSelector = ({ chartView, chartsViews, onChartsViewChange }
           value: element.tokenId ? `${element.value}_${element.tokenId}` : element.value,
         }))}
         minMenuWidth="140px"
-        menuMaxHeight="240px"
+        menuMaxHeight={maxHeight}
         onChange={(value: any) => {
           const chart = chartsViews.find(
             (element) => (element.tokenId ? `${element.value}_${element.tokenId}` : element.value) === value,

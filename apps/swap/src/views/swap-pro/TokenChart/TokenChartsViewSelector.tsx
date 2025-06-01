@@ -17,5 +17,12 @@ export function TokenChartsViewSelector() {
     { label: "Liquidity", value: ChartView.LIQUIDITY },
   ];
 
-  return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
+  return (
+    <ChartViewSelector
+      chartsViews={ChartsViewButtons}
+      chartView={chartView}
+      onChartsViewChange={setChartView}
+      maxHeight="400px"
+    />
+  );
 }
