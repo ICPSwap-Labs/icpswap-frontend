@@ -124,7 +124,7 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
           />
         </GridRowBetween>
 
-        {currentPrice && price0 && currentPrice > price0 ? (
+        {currentPrice && price0 && currentPrice < price0 ? (
           <>
             <GridRowBetween>
               <Typography color="text.primary" fontSize="12px">
