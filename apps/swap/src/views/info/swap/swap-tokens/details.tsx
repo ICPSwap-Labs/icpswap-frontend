@@ -31,7 +31,7 @@ import { DefaultChartView, TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import i18n from "i18n/index";
 import { useTranslation, Trans } from "react-i18next";
 import { useMediaQuery640 } from "hooks/theme";
-import { tokenSymbolEllipsis } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
 
 enum TabValue {

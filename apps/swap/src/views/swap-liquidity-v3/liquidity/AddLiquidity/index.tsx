@@ -38,6 +38,7 @@ import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery640 } from "hooks/theme";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -83,6 +84,7 @@ export default function AddLiquidity() {
   const theme = useTheme();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
+  const down640 = useMediaQuery640();
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
   const { path: backPath } = useParsedQueryString() as { path: string };
@@ -412,23 +414,25 @@ export default function AddLiquidity() {
               </Typography>
 
               <Flex gap="0 12px" sx={{ margin: "12px 0 0 0" }}>
-                <Flex sx={{ flex: "50%" }}>
+                <Flex sx={{ width: "50%" }}>
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdA}
                       onChange={(token: Token) => handleTokenChange(token, true)}
                       loading={useCurrencyALoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
+                      maxWidth={down640 ? "85px" : "120px"}
                     />
                   </Box>
                 </Flex>
-                <Flex sx={{ flex: "50%" }}>
+                <Flex sx={{ width: "50%" }}>
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdB}
                       onChange={(token: Token) => handleTokenChange(token, false)}
                       loading={useCurrencyBLoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
+                      maxWidth={down640 ? "85px" : "120px"}
                     />
                   </Box>
                 </Flex>

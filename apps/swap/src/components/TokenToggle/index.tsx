@@ -1,6 +1,8 @@
 import { ButtonBase, Grid, makeStyles, Theme } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils";
+import { Flex } from "@icpswap/ui";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useStyle = makeStyles((theme: Theme) => ({
   container: {
@@ -33,13 +35,17 @@ export function TokenToggle({ currencyA, currencyB, handleToggle }: TokenToggleP
   const isSorted = currencyA && currencyB && currencyA.sortsBefore(currencyB);
 
   return currencyA && currencyB ? (
-    <Grid container className={classes.container} onClick={handleToggle}>
+    <Flex fullWidth className={classes.container} onClick={handleToggle}>
       <Grid className={`${classes.item}${isSorted ? " active" : ""}`}>
-        <ButtonBase className={classes.buttonBase}>{isSorted ? currencyA.symbol : currencyB.symbol}</ButtonBase>
+        <ButtonBase className={classes.buttonBase}>
+          {tokenSymbolEllipsis({ symbol: isSorted ? currencyA.symbol : currencyB.symbol })}
+        </ButtonBase>
       </Grid>
       <Grid className={`${classes.item}${!isSorted ? " active" : ""}`}>
-        <ButtonBase className={classes.buttonBase}>{isSorted ? currencyB.symbol : currencyA.symbol}</ButtonBase>
+        <ButtonBase className={classes.buttonBase}>
+          {tokenSymbolEllipsis({ symbol: isSorted ? currencyB.symbol : currencyA.symbol })}
+        </ButtonBase>
       </Grid>
-    </Grid>
+    </Flex>
   ) : null;
 }

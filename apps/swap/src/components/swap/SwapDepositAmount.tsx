@@ -12,6 +12,7 @@ import { Null } from "@icpswap/types";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 import { useTranslation } from "react-i18next";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -167,7 +168,7 @@ export function SwapDepositAmount({
               fontSize: "16px",
             }}
           >
-            {currency?.symbol}
+            {tokenSymbolEllipsis({ symbol: currency?.symbol })}
           </Typography>
         </Flex>
 

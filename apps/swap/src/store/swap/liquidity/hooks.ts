@@ -29,6 +29,7 @@ import { useAllowance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { PoolState } from "types/swap";
 import { useTranslation } from "react-i18next";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 import {
   updateFiled,
@@ -480,9 +481,9 @@ export function useMintInfo(
     if (typeof available === "boolean" && !available) return t("swap.pool.not.available");
     if (poolState === PoolState.NOT_CHECK) return t("swap.waiting.verify");
     if (token0Insufficient === "INSUFFICIENT")
-      return t("common.error.insufficient.balance.symbol", { symbol: token0.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: tokenSymbolEllipsis({ symbol: token0.symbol }) });
     if (token1Insufficient === "INSUFFICIENT")
-      return t("common.error.insufficient.balance.symbol", { symbol: token1.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: tokenSymbolEllipsis({ symbol: token1.symbol }) });
 
     if (
       tokenA &&
@@ -490,7 +491,7 @@ export function useMintInfo(
       !depositADisabled &&
       !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
     ) {
-      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenA?.symbol });
+      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenSymbolEllipsis({ symbol: tokenA?.symbol }) });
     }
 
     if (

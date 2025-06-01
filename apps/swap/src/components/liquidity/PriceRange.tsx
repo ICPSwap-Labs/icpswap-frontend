@@ -11,14 +11,14 @@ import { BigNumber, isNullArgs } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
-
-import PriceRangeChart from "./PriceRangeChart";
-import { FullRangeWarning } from "./FullRangeWarning";
-import { PriceRangeSelector } from "./PriceRangeSelector";
-import { RangeButton } from "./RangeButton";
-import { PriceRangeChartTimeButtons } from "./PriceRangeChartTimeButtons";
-import { PriceRangeLabel } from "./PriceRangeLabel";
-import { CurrentPriceLabelForChart } from "./CurrentPriceLabelForChart";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
+import PriceRangeChart from "components/liquidity/PriceRangeChart";
+import { FullRangeWarning } from "components/liquidity/FullRangeWarning";
+import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
+import { RangeButton } from "components/liquidity/RangeButton";
+import { PriceRangeChartTimeButtons } from "components/liquidity/PriceRangeChartTimeButtons";
+import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
+import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 
 const useSetPriceStyle = makeStyles((theme: Theme) => {
   return {
@@ -241,7 +241,9 @@ export const PriceRange = memo(
               </Box>
               <Flex sx={{ margin: "16px 0" }} className={classes.startPrice} justify="space-between">
                 <Typography sx={{ marginRight: "8px" }}>
-                  {t("liquidity.current.token.price", { symbol: baseCurrency?.symbol })}
+                  {t("liquidity.current.token.price", {
+                    symbol: tokenSymbolEllipsis({ symbol: baseCurrency?.symbol }),
+                  })}
                 </Typography>
 
                 <Flex gap="0 4px">
@@ -258,7 +260,7 @@ export const PriceRange = memo(
                     {startPrice ? `${startPrice}` : "- "}
                   </Typography>
                   <Typography fontWeight={600} color="text.primary">
-                    {quoteCurrency?.symbol}
+                    {tokenSymbolEllipsis({ symbol: quoteCurrency?.symbol })}
                   </Typography>
                 </Flex>
               </Flex>

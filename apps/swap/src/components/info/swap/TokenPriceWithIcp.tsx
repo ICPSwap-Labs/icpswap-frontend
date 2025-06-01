@@ -7,7 +7,7 @@ import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { uesTokenPairWithIcp } from "hooks/swap/useTokenPairWithIcp";
-import { tokenSymbolEllipsis } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface TokenPriceProps {
   token0: Token | Null;
