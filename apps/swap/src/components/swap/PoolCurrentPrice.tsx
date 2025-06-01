@@ -6,7 +6,7 @@ import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
 import { formatDollarAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
-import { tokenSymbolEllipsis } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PoolCurrentPriceProps {
   pool: Pool | Null;

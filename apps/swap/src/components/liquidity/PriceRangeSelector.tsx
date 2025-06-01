@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Grid, Typography, TextField, Chip, makeStyles, Theme } from "components/Mui";
+import { Typography, TextField, Chip, makeStyles, Theme, useTheme } from "components/Mui";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { Token } from "@icpswap/swap-sdk";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils/index";
-import { NumberTextField } from "components/index";
+import { Flex, NumberTextField } from "components/index";
 import i18n from "i18n/index";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
   return {
@@ -69,6 +70,7 @@ export function PriceRangeSelector({
   baseCurrency,
   quoteCurrency,
 }: PriceRangeSelectorProps) {
+  const theme = useTheme();
   const classes = usePriceRangeInputStyle();
 
   const [localValue, setLocalValue] = useState("");
@@ -102,18 +104,30 @@ export function PriceRangeSelector({
   }, [decrement, onRangeInput]);
 
   return (
-    <Grid className={classes.inputContainer} container alignItems="center" justifyContent="center" sx={{ p: 2 }}>
+    <Flex
+      fullWidth
+      justify="center"
+      align="center"
+      sx={{
+        border: theme.palette.border.gray200,
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+      vertical
+      gap="12px 0"
+    >
       <Typography align="center" fontSize={12}>
         {label}
       </Typography>
-      <Grid container mt="12px" mb="12px">
+
+      <Flex fullWidth gap="0 5px">
         <Chip
           className={classes.chip}
           icon={<RemoveIcon />}
           onClick={handleDecreasePrice}
           disabled={decrementDisabled}
         />
-        <Grid item xs ml="5px" mr="5px">
+        <Flex sx={{ flex: 1 }}>
           {isUpperFullRange ? (
             <TextField
               fullWidth
@@ -148,17 +162,22 @@ export function PriceRangeSelector({
               onFocus={handleOnFocus}
             />
           )}
-        </Grid>
+        </Flex>
         <Chip className={classes.chip} icon={<AddIcon />} onClick={handleIncreasePrice} disabled={incrementDisabled} />
-      </Grid>
+      </Flex>
+
       <Typography
         align="center"
         sx={{
           fontSize: "12px",
         }}
       >
-        {baseCurrency && quoteCurrency ? `${quoteCurrency?.symbol} per ${baseCurrency?.symbol}` : ""}
+        {baseCurrency && quoteCurrency
+          ? `${tokenSymbolEllipsis({ symbol: quoteCurrency?.symbol })} per ${tokenSymbolEllipsis({
+              symbol: baseCurrency?.symbol,
+            })}`
+          : ""}
       </Typography>
-    </Grid>
+    </Flex>
   );
 }

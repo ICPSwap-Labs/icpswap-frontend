@@ -5,7 +5,7 @@ import { formatTickPrice } from "utils/swap/formatTickPrice";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { Bound } from "constants/swap";
 import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { tokenSymbolEllipsis } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PositionPriceRangeProps {
   position: Position | undefined;

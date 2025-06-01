@@ -12,7 +12,8 @@ import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useIsSneedOwner } from "hooks/index";
 import { useTranslation } from "react-i18next";
-import { TokenSymbol, tokenSymbolEllipsis } from "components/TokenSymbol";
+import { TokenSymbol } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
 export interface PositionRowProps {

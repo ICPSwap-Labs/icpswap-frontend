@@ -2,7 +2,7 @@ import { Typography, Box, useTheme, BoxProps, useMediaQuery } from "components/M
 import { formatAmount, BigNumber, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
-import { tokenSymbolEllipsis } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface TokenPoolPriceProps {
   tokenA: Token | undefined;

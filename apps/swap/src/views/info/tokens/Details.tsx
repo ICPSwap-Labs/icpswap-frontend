@@ -31,7 +31,7 @@ import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/toke
 import { useTokenDexScreener } from "hooks/info";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { useTranslation } from "react-i18next";
-import { ICP } from "@icpswap/tokens";
+import { BuyTokenButton } from "components/swap";
 
 export function TokenDetail() {
   const { t } = useTranslation();
@@ -164,10 +164,30 @@ export function TokenDetail() {
         <Box>
           <Flex gap="0 8px">
             <TokenImage logo={token?.logo} size="32px" />
-            <Typography color="text.primary" fontWeight={500} fontSize="24px">
+            <Typography
+              color="text.primary"
+              fontWeight={500}
+              fontSize="24px"
+              className="text-overflow-ellipsis"
+              sx={{
+                "@media(max-width: 640px)": {
+                  maxWidth: "148px",
+                },
+              }}
+            >
               {token?.symbol}
             </Typography>
-            <Typography fontSize="20px">({token?.name})</Typography>
+            <Typography
+              fontSize="20px"
+              className="text-overflow-ellipsis"
+              sx={{
+                "@media(max-width: 640px)": {
+                  maxWidth: "148px",
+                },
+              }}
+            >
+              ({token?.name})
+            </Typography>
           </Flex>
 
           <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
@@ -187,15 +207,15 @@ export function TokenDetail() {
         </Box>
 
         <Flex gap="0 8px">
-          <Link to={`/swap?input=${ICP.address}&output=${token?.address}`}>
-            <Button variant="contained" className="secondary">
-              {t("common.buy.token", { symbol: token?.symbol })}
-            </Button>
-          </Link>
+          <Box>
+            <BuyTokenButton token={token} variant="contained" />
+          </Box>
 
-          <ImportToNns tokenId={canisterId}>
-            <Button variant="contained">{t("common.nns.token.add")}</Button>
-          </ImportToNns>
+          <Box>
+            <ImportToNns tokenId={canisterId}>
+              <Button variant="contained">{t("common.nns.token.add")}</Button>
+            </ImportToNns>
+          </Box>
         </Flex>
       </Flex>
 
