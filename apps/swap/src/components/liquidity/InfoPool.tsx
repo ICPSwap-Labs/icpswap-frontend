@@ -8,6 +8,8 @@ import { formatDollarAmount, nonNullArgs, calcPoolFees } from "@icpswap/utils";
 import { useInfoPool } from "hooks/info/useInfoPool";
 import { PoolTvlTooltip } from "components/swap";
 import { useTranslation } from "react-i18next";
+import { TokenPairName } from "components/TokenPairName";
+import { useMediaQuery640 } from "hooks/theme";
 
 export interface InfoPoolProps {
   pool: Pool | undefined | null;
@@ -18,6 +20,7 @@ export interface InfoPoolProps {
 export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const down640 = useMediaQuery640();
 
   const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: infoPool } = useInfoPool(pool?.id);
@@ -61,16 +64,16 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
             <TokenImage tokenId={token0?.address} logo={token0?.logo} size="24px" />
             <TokenImage tokenId={token1?.address} logo={token1?.logo} size="24px" />
           </Flex>
-          <Flex>
-            <Typography
-              sx={{
-                fontSize: "16px",
-                color: "text.primary",
-              }}
-            >
-              {token0.symbol}/{token1.symbol}
-            </Typography>
-          </Flex>
+
+          <TokenPairName
+            symbol0={token0.symbol}
+            symbol1={token1.symbol}
+            sx={{
+              fontSize: "16px",
+              color: "text.primary",
+            }}
+            width={down640 ? "180px" : "220px"}
+          />
           <Flex>
             <FeeTierPercentLabel feeTier={fee} />
           </Flex>

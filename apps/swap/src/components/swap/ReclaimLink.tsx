@@ -15,6 +15,7 @@ import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
 import { useGlobalContext } from "hooks/index";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useTranslation } from "react-i18next";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -209,7 +210,11 @@ export function Reclaim({
           ) : (
             <>
               <Typography sx={{ fontSize: __fontSize }}>
-                {t("swap.balance.in.pool", { pair: `${token0?.symbol ?? "--"}/${token1?.symbol ?? "--"}` })}
+                {t("swap.balance.in.pool", {
+                  pair: `${token0?.symbol ? tokenSymbolEllipsis({ symbol: token0.symbol }) : "--"}/${
+                    token1?.symbol ? tokenSymbolEllipsis({ symbol: token1.symbol }) : "--"
+                  }`,
+                })}
               </Typography>
               <Tooltip
                 tips={t`Pre-depositing tokens into the swap pool lets you initiate swap anytime, reducing the risk of sandwich attacks by bots. You can keep swapped tokens in the pool for future use. This process removes deposit wait times and may lower transfer fees. You can manage your balance anytime, with options to deposit or withdraw as needed.`}
@@ -240,7 +245,7 @@ export function Reclaim({
                     sx={{ fontSize: __fontSize, cursor: "pointer" }}
                     onClick={() => handleTokenClick(pool.token0, token0TotalAmount)}
                   >
-                    {token0?.symbol ?? "--"}:{" "}
+                    {token0?.symbol ? tokenSymbolEllipsis({ symbol: token0.symbol }) : "--"}:{" "}
                     {token0TotalAmount && token0
                       ? toSignificantWithGroupSeparator(parseTokenAmount(token0TotalAmount, token0.decimals).toString())
                       : "--"}
@@ -270,7 +275,7 @@ export function Reclaim({
                     sx={{ fontSize: __fontSize, cursor: "pointer" }}
                     onClick={() => handleTokenClick(pool.token1, token1TotalAmount)}
                   >
-                    {token1?.symbol ?? "--"}:{" "}
+                    {token1?.symbol ? tokenSymbolEllipsis({ symbol: token1.symbol }) : "--"}:{" "}
                     {token1TotalAmount && token1
                       ? toSignificantWithGroupSeparator(parseTokenAmount(token1TotalAmount, token1.decimals).toString())
                       : "--"}
