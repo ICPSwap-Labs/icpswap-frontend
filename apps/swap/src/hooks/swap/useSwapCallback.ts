@@ -86,8 +86,8 @@ export interface SwapCallsCallbackArgs {
   trade: Trade<Token, Token, TradeType> | Trade<Token, Token, TradeType>[] | undefined | null;
   stepKey: string | number;
   openExternalTip: OpenExternalTip;
-  subAccountBalance: BigNumber;
-  balance: BigNumber;
+  subAccountBalance: string;
+  balance: string;
   unusedBalance: bigint;
   refresh: () => void;
 }
@@ -300,8 +300,8 @@ export interface SwapCallbackArgs {
   trade: Trade<Token, Token, TradeType> | undefined | null;
   openExternalTip: OpenExternalTip;
   unusedBalance: bigint;
-  subAccountBalance: BigNumber;
-  balance: BigNumber;
+  subAccountBalance: string;
+  balance: string;
   refresh: () => void;
 }
 

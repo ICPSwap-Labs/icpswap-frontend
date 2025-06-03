@@ -35,8 +35,8 @@ export interface SwapInputWrapperProps {
   ui?: "pro" | "normal";
   inputTokenUnusedBalance: bigint | Null;
   outputTokenUnusedBalance: bigint | Null;
-  inputTokenSubBalance: BigNumber | Null;
-  outputTokenSubBalance: BigNumber | Null;
+  inputTokenSubBalance: string | Null;
+  outputTokenSubBalance: string | Null;
   maxInputAmount: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
 }

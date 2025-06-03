@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { principalToAccount, isPrincipal, isNullArgs, sleep } from "@icpswap/utils";
+import { principalToAccount, isPrincipal } from "@icpswap/utils";
 import { ic_host } from "@icpswap/constants";
 import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
 import { Principal } from "@dfinity/principal";
@@ -181,7 +181,7 @@ export function useIdentityKitInitialConnect() {
 
   const { user } = useAuth();
   const agent = useAgent({ host: ic_host });
-  const disconnect = useDisconnect();
+  // const disconnect = useDisconnect();
 
   const [loading, setLoading] = useState(true);
 

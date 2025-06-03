@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePrice } from "components/swap/TradePrice";
-import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
 import { isElement } from "react-is";
@@ -91,9 +91,9 @@ export interface SwapConfirmModalProps {
   onClose: () => void;
   slippageTolerance: Percent | null;
   trade: Trade<Token, Token, TradeType> | null;
-  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenSubBalance: string | undefined;
   inputTokenUnusedBalance: bigint | undefined;
-  inputTokenBalance: BigNumber | undefined;
+  inputTokenBalance: string | undefined;
 }
 
 export function SwapConfirmModal({
