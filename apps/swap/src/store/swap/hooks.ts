@@ -102,10 +102,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputToken, refresh);
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputToken, refresh);
 
-  const currencyBalances = {
-    [SWAP_FIELD.INPUT]: inputCurrencyBalance,
-    [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
-  };
+  const currencyBalances = useMemo(() => {
+    return {
+      ...(inputToken ? { [inputToken.address]: inputCurrencyBalance } : {}),
+      ...(outputToken ? { [outputToken.address]: outputCurrencyBalance } : {}),
+    };
+  }, [inputToken, outputToken, inputCurrencyBalance, outputCurrencyBalance]);
 
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputToken : outputToken) ?? undefined);
 

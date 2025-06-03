@@ -94,16 +94,17 @@ export function useTokenBalance(
   sub?: Uint8Array,
 ) {
   const tokenKey = getTokenBalanceKey(canisterId, account?.toString(), sub);
+
   const [stateBalance, updateStateBalance] = useStateTokenBalanceManager(tokenKey);
 
   const { result: balance, loading } = useCallsData(
     useCallback(async () => {
       if (!account || !canisterId) return undefined;
       const result = await getTokenBalance(canisterId, account, sub);
-      const balance = result && nonNullArgs(result.data) ? new BigNumber(result.data.toString()) : undefined;
+      const balance = result && nonNullArgs(result.data) ? result.data.toString() : undefined;
       const tokenKey = getTokenBalanceKey(canisterId, account.toString(), sub);
 
-      if (tokenKey && nonNullArgs(balance)) updateStateBalance(tokenKey, balance.toString());
+      if (tokenKey && nonNullArgs(balance)) updateStateBalance(tokenKey, balance);
 
       return balance;
     }, [account, canisterId, sub, updateStateBalance]),
@@ -115,7 +116,7 @@ export function useTokenBalance(
       loading: isNullArgs(stateBalance) ? loading : false,
       result: nonNullArgs(balance) ? balance.toString() : stateBalance,
     };
-  }, [loading, balance, stateBalance]);
+  }, [loading, balance, stateBalance, canisterId]);
 }
 
 export type Balances = {
@@ -134,9 +135,9 @@ export function useCurrencyBalances(
     if (account && currencies && currencies.length) {
       setLoading(true);
 
-      const queryPromise = currencies.map((currency) => {
-        if (currency) {
-          return getTokenBalance(currency.address, account).then(
+      const queryPromise = currencies.map((token) => {
+        if (token) {
+          return getTokenBalance(token.address, account).then(
             (result) => new BigNumber(result ? result.toString() : "0"),
           );
         }
@@ -148,13 +149,10 @@ export function useCurrencyBalances(
         const balances = {} as Balances;
 
         result.forEach((balance: BigNumber, index: number) => {
-          const currency = currencies[index];
+          const token = currencies[index];
 
-          if (currency) {
-            balances[currency.address] = CurrencyAmount.fromRawAmount<Token>(
-              currency,
-              balance ? balance.toString() : 0,
-            );
+          if (token) {
+            balances[token.address] = CurrencyAmount.fromRawAmount<Token>(token, balance ? balance.toString() : 0);
           }
         });
 
@@ -175,13 +173,13 @@ export function useCurrencyBalances(
 
 export function useCurrencyBalance(
   account: string | Principal | undefined,
-  currency: Token | undefined,
+  token: Token | undefined,
   refresh?: boolean | number,
 ) {
-  const { loading, result } = useTokenBalance(currency?.address, account, refresh);
+  const { loading, result } = useTokenBalance(token?.address, account, refresh);
 
   return useMemo(() => {
-    if (isNullArgs(result) || loading || !currency)
+    if (isNullArgs(result) || loading || !token)
       return {
         loading,
         result: undefined,
@@ -189,19 +187,19 @@ export function useCurrencyBalance(
 
     return {
       loading,
-      result: CurrencyAmount.fromRawAmount(currency, result),
+      result: CurrencyAmount.fromRawAmount(token, result),
     };
-  }, [loading, result, currency]);
+  }, [loading, result, token]);
 }
 
 export function useCurrencyBalanceV1(
   account: string | Principal | undefined,
-  currency: Token | undefined,
+  token: Token | undefined,
   refresh?: boolean | number,
 ) {
   const [storeResult, setStoreResult] = useState<string | undefined>(undefined);
 
-  const { loading, result } = useTokenBalance(currency?.address, account, refresh);
+  const { loading, result } = useTokenBalance(token?.address, account, refresh);
 
   useEffect(() => {
     if (nonNullArgs(result)) {
@@ -210,15 +208,15 @@ export function useCurrencyBalanceV1(
   }, [result]);
 
   return useMemo(() => {
-    if (!currency || isNullArgs(storeResult) || loading)
+    if (!token || isNullArgs(storeResult) || loading)
       return {
         loading,
-        result: storeResult && currency ? CurrencyAmount.fromRawAmount(currency, storeResult) : undefined,
+        result: storeResult && token ? CurrencyAmount.fromRawAmount(token, storeResult) : undefined,
       };
 
     return {
       loading,
-      result: CurrencyAmount.fromRawAmount(currency, storeResult),
+      result: CurrencyAmount.fromRawAmount(token, storeResult),
     };
-  }, [loading, storeResult, currency]);
+  }, [loading, storeResult, token]);
 }

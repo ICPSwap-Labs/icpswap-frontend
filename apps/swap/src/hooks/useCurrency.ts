@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
-import { TOKEN_STANDARD, WRAPPED_ICP } from "constants/index";
+import { TOKEN_STANDARD } from "constants/index";
 import { TokenInfo } from "types/token";
 import { useTokenInfo, useTokensInfo } from "hooks/token/useTokenInfo";
 import { getTokenStandard } from "store/token/cache/hooks";
-import { ICP } from "@icpswap/tokens";
 import { Null } from "@icpswap/types";
 
 export enum UseCurrencyState {
@@ -18,8 +17,6 @@ export function useToken(tokenId: string | Null): [UseCurrencyState, Token | und
 
   return useMemo(() => {
     if (!tokenId) return [UseCurrencyState.INVALID, undefined];
-    if (tokenId === ICP.address) return [UseCurrencyState.VALID, ICP];
-    if (tokenId === WRAPPED_ICP.address) return [UseCurrencyState.VALID, WRAPPED_ICP];
     if (!tokenInfo) return [UseCurrencyState.INVALID, undefined];
     if (queryLoading) return [UseCurrencyState.LOADING, undefined];
 
