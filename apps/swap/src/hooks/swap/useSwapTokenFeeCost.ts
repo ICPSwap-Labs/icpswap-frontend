@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import { getTokenInsufficient } from "hooks/swap/index";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { isNullArgs } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 
 export interface useSwapTokenFeeCostProps {
-  tokenBalance: BigNumber | undefined;
-  subAccountBalance: BigNumber | undefined;
+  tokenBalance: string | undefined;
+  subAccountBalance: string | undefined;
   unusedBalance: bigint | undefined;
   token: Token | Null;
   amount: string | undefined;

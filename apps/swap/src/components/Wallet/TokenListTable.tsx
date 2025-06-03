@@ -12,7 +12,7 @@ import {
   formatAmount,
 } from "@icpswap/utils";
 import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
-import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
 import WalletContext from "components/Wallet/context";
 import { useToken } from "hooks/index";
@@ -129,11 +129,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
   const infoToken = useInfoToken(infoTokenAddress);
   const [, token] = useToken(canisterId);
-  const { result: tokenBalance, loading: tokenBalanceLoading } = useStoreTokenBalance(
-    canisterId,
-    principal,
-    refreshNumber,
-  );
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.priceUSD;
   }, [infoToken]);
@@ -252,7 +248,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
     if (isNullArgs(tokenBalance)) return false;
 
     if (nonNullArgs(token)) {
-      if (tokenBalance.isEqualTo(0)) {
+      if (new BigNumber(tokenBalance).isEqualTo(0)) {
         hiddenBySmallBalance = sortBalance !== SortBalanceEnum.ALL;
       } else if (nonNullArgs(tokenUSDPrice)) {
         const tokenUSDValue = parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenUSDPrice);

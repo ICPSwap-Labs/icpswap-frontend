@@ -25,6 +25,7 @@ import { Flex, LoadingRow } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
+import { useParsedUrlPath } from "@icpswap/hooks";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -103,6 +104,7 @@ export default function IncreaseLiquidity() {
   const refreshTrigger = useRefreshTrigger(INCREASE_LIQUIDITY_REFRESH_KEY);
 
   const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
+  const { path } = useParsedUrlPath();
 
   const { result: _position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
   const { position: existingPosition, loading: usePositionLoading } = usePosition({
@@ -160,8 +162,13 @@ export default function IncreaseLiquidity() {
 
   const loadLiquidityPage = useCallback(() => {
     resetMintState();
-    history.goBack();
-  }, [history, resetMintState]);
+
+    if (path) {
+      history.push(path);
+    } else {
+      history.goBack();
+    }
+  }, [history, resetMintState, path]);
 
   const increaseLiquidityCall = useIncreaseLiquidityCall();
 

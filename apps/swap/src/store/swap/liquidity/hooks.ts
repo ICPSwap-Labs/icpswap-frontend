@@ -29,6 +29,7 @@ import { useAllowance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { PoolState } from "types/swap";
 import { useTranslation } from "react-i18next";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 import {
   updateFiled,
@@ -464,8 +465,9 @@ export function useMintInfo(
   });
 
   const error = useMemo(() => {
-    if (!token0 || !token1) return t("common.swap");
-    if (hasPairWithBaseToken !== true) return t("swap.error.pair.with.icp");
+    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(hasPairWithBaseToken))
+      return t("error.liquidity.loading");
+    if (hasPairWithBaseToken === false) return t("swap.error.pair.with.icp");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (poolState === PoolState.INVALID) return t("swap.error.pair.invalid");
     if (invalidPrice) return t("swap.error.price.invalid");
@@ -479,9 +481,9 @@ export function useMintInfo(
     if (typeof available === "boolean" && !available) return t("swap.pool.not.available");
     if (poolState === PoolState.NOT_CHECK) return t("swap.waiting.verify");
     if (token0Insufficient === "INSUFFICIENT")
-      return t("common.error.insufficient.balance.symbol", { symbol: token0.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: tokenSymbolEllipsis({ symbol: token0.symbol }) });
     if (token1Insufficient === "INSUFFICIENT")
-      return t("common.error.insufficient.balance.symbol", { symbol: token1.symbol });
+      return t("common.error.insufficient.balance.symbol", { symbol: tokenSymbolEllipsis({ symbol: token1.symbol }) });
 
     if (
       tokenA &&
@@ -489,7 +491,7 @@ export function useMintInfo(
       !depositADisabled &&
       !currencyAAmount.greaterThan(CurrencyAmount.fromRawAmount(tokenA, tokenA.transFee))
     ) {
-      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenA?.symbol });
+      return t("swap.error.token.amount.greater.than.fee", { symbol: tokenSymbolEllipsis({ symbol: tokenA?.symbol }) });
     }
 
     if (
@@ -667,7 +669,8 @@ export function useRangeCallbacks(
     (value: string | number) => {
       if (isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
 
-      const basePrice = pool.priceOf(baseToken).toFixed();
+      const basePrice = pool.priceOf(baseToken).toFixed(baseToken.decimals);
+
       const range: [string, string] = [
         new BigNumber(basePrice).minus(new BigNumber(basePrice).multipliedBy(value).dividedBy(100)).toFixed(5),
         new BigNumber(basePrice).multipliedBy(value).dividedBy(100).plus(basePrice).toFixed(5),

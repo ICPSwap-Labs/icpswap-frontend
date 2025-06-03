@@ -4,6 +4,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { Box, Typography } from "components/Mui";
 import { Copy } from "components/Copy/icon";
 import { useTranslation } from "react-i18next";
+import { Link } from "@icpswap/ui";
 
 interface PoolAndTokenBaseInfoProps {
   token: Token;
@@ -17,9 +18,11 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
     <Box>
       <Typography color="text.primary" fontWeight={600}>
         {t("common.token.name")}
-        <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
-          {token?.name}
-        </Typography>
+        <Link to={`/info-tokens/details/${token.address}`}>
+          <Typography component="span" color="text.theme-secondary" fontWeight={600} sx={{ margin: "0 0 0 3px" }}>
+            {token?.name}
+          </Typography>
+        </Link>
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", margin: "12px 0 0 0" }}>
@@ -30,9 +33,11 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
           sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
         >
           {t("common.token")}
-          <Typography component="span" color="text.theme-secondary" fontSize="12px">
-            {token ? shorten(token.address, 5) : "--"}
-          </Typography>
+          <Link to={`/info-swap/token/details/${token?.address}`}>
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
+              {token ? shorten(token.address, 5) : "--"}
+            </Typography>
+          </Link>
           <Copy content={token.address} />
         </Typography>
 
@@ -43,9 +48,11 @@ export function PoolAndTokenBaseInfo({ token, poolId }: PoolAndTokenBaseInfoProp
           sx={{ display: "flex", alignItems: "center", gap: "0 4px" }}
         >
           {t("common.pool")}
-          <Typography component="span" color="text.theme-secondary" fontSize="12px">
-            {poolId ? shorten(poolId) : "--"}
-          </Typography>
+          <Link to={`/info-swap/pool/details/${poolId}`}>
+            <Typography component="span" color="text.theme-secondary" fontSize="12px">
+              {poolId ? shorten(poolId) : "--"}
+            </Typography>
+          </Link>
           <Copy content={poolId} />
         </Typography>
       </Box>

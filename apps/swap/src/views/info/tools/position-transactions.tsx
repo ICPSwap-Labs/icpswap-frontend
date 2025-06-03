@@ -59,7 +59,11 @@ export default function PositionTransactions() {
           </Box>
         }
       >
-        <PositionTransactionsTable poolId={pair} principal={principal} />
+        <PositionTransactionsTable
+          poolId={pair}
+          principal={principal}
+          empty={t("info.tools.position.transactions.empty")}
+        />
       </ToolsWrapper>
     </InfoWrapper>
   );

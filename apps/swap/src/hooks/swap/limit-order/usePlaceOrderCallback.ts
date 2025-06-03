@@ -2,17 +2,16 @@ import { Token, Position } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { OpenExternalTip } from "types/index";
-import { BigNumber } from "@icpswap/utils";
 import { useStepManager } from "hooks/swap/limit-order/useStepManager";
 import { usePlaceOrderCalls } from "hooks/swap/limit-order/usePlaceOrderCalls";
 
 export interface PlaceOrderCallbackArgs {
   position: Position;
   openExternalTip: OpenExternalTip;
-  token0Balance: BigNumber;
-  token1Balance: BigNumber;
-  token0SubAccountBalance: BigNumber;
-  token1SubAccountBalance: BigNumber;
+  token0Balance: string;
+  token1Balance: string;
+  token0SubAccountBalance: string;
+  token1SubAccountBalance: string;
   unusedBalance: {
     balance0: bigint;
     balance1: bigint;

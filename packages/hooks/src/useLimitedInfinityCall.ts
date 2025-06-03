@@ -81,3 +81,50 @@ export async function getLimitedInfinityCall<T>(
 
   return data;
 }
+
+/**
+ * @description getLimitedInfinityCall
+ * @param callback The call to fetch the data
+ * @param size The data length in each call
+ * @param call_rounds Number of call
+ */
+export async function getLimitedInfinityCallV1<T>(
+  callback: (page: number, size: number) => Promise<T[] | undefined>,
+  size: number,
+  call_rounds = 10,
+  start_page?: number,
+) {
+  let data: T[] = [];
+  let fetch_index = 0;
+  let fetch_done = false;
+
+  const fetch = async (index: number) => {
+    fetch_index += 1;
+
+    await Promise.all(
+      Array.from({ length: call_rounds }, (_, i) => i).map(async (call_index: number) => {
+        const page = (start_page ?? 1) + call_index + index * call_rounds;
+        const result = await fetch_data(page, size, callback);
+
+        if (!result) {
+          return undefined;
+        }
+        data = data.concat(result);
+
+        if (result.length < size) {
+          fetch_done = true;
+        }
+
+        return undefined;
+      }),
+    );
+
+    if (!fetch_done) {
+      await fetch(fetch_index);
+    }
+  };
+
+  await fetch(fetch_index);
+
+  return data;
+}

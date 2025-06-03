@@ -1,7 +1,6 @@
 import { Box, useTheme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { useSwapState } from "store/swap/hooks";
-import { BigNumber } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { UseCurrencyState } from "hooks/useCurrency";
 import { Image } from "@icpswap/ui";
@@ -32,8 +31,8 @@ export interface SwapInputWrapperProps {
   ui?: "pro" | "normal";
   inputTokenUnusedBalance: bigint | Null;
   outputTokenUnusedBalance: bigint | Null;
-  inputTokenSubBalance: BigNumber | Null;
-  outputTokenSubBalance: BigNumber | Null;
+  inputTokenSubBalance: string | Null;
+  outputTokenSubBalance: string | Null;
   maxInputAmount: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
   onSwitchTokens: () => void;

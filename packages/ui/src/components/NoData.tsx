@@ -1,11 +1,14 @@
+import { ReactNode } from "react";
+
 import { Box, Typography } from "./Mui";
 
 export interface NoDataProps {
-  tip?: string;
+  tip?: ReactNode;
   noTips?: boolean;
+  tipColor?: string;
 }
 
-export function NoData({ tip, noTips = false }: NoDataProps) {
+export function NoData({ tip, tipColor = "text.secondary", noTips = false }: NoDataProps) {
   return (
     <Box
       sx={{
@@ -15,10 +18,10 @@ export function NoData({ tip, noTips = false }: NoDataProps) {
         padding: "20px 0",
       }}
     >
-      <img src="/images/empty.svg" alt="" width="100px" height="75px" />
+      <img src="/images/empty.svg" alt="" width="90px" height="68px" />
 
       {noTips === true ? null : tip ? (
-        <Typography sx={{ maxWidth: "690px" }} color="text.primary" mt="10px" align="center">
+        <Typography sx={{ maxWidth: "690px" }} color={tipColor} mt="10px" align="center">
           {tip}
         </Typography>
       ) : (

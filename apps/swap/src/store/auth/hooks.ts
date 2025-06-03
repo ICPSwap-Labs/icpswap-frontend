@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { principalToAccount, isPrincipal, isNullArgs } from "@icpswap/utils";
+import { principalToAccount, isPrincipal } from "@icpswap/utils";
 import { ic_host } from "@icpswap/constants";
 import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
 import { Principal } from "@dfinity/principal";
@@ -181,7 +181,7 @@ export function useIdentityKitInitialConnect() {
 
   const { user } = useAuth();
   const agent = useAgent({ host: ic_host });
-  const disconnect = useDisconnect();
+  // const disconnect = useDisconnect();
 
   const [loading, setLoading] = useState(true);
 
@@ -196,11 +196,15 @@ export function useIdentityKitInitialConnect() {
       }
 
       if (IdentityKitConnector.includes(connector)) {
-        if (isInitializing === false && isNullArgs(user)) {
-          await disconnect();
-          setLoading(false);
-          return;
-        }
+        // TODO:
+        // The returned user is undefined is initializing, so disable disconnect for now.
+        // Do something when IdentityKit is out session
+
+        // if (isInitializing === false && isNullArgs(user)) {
+        //   await disconnect();
+        //   setLoading(false);
+        //   return;
+        // }
 
         if (user && user.principal) {
           updateAuth({ walletType: connector, principal: user.principal.toString() });

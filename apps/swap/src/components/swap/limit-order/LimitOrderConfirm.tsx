@@ -1,5 +1,4 @@
 import { ReactNode, useCallback, useMemo, useState } from "react";
-import SwapModal from "components/modal/swap";
 import { Typography, Box, Button, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
 import {
@@ -17,6 +16,7 @@ import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { Modal } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -89,9 +89,9 @@ export interface LimitOrderConfirmProps {
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
-  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenSubBalance: string | undefined;
   inputTokenUnusedBalance: bigint | undefined;
-  inputTokenBalance: BigNumber | undefined;
+  inputTokenBalance: string | undefined;
   orderPrice: string | Null;
   currentPrice: string | Null;
   inputToken: Token | Null;
@@ -142,7 +142,7 @@ export function LimitOrderConfirm({
   );
 
   return (
-    <SwapModal open={open} title={t("limit.submit")} onClose={onClose}>
+    <Modal open={open} title={t("limit.submit")} onClose={onClose} background="level1">
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -291,6 +291,6 @@ export function LimitOrderConfirm({
           </Button>
         </Box>
       </>
-    </SwapModal>
+    </Modal>
   );
 }

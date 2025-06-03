@@ -1,22 +1,21 @@
-import { useEffect, useCallback, useMemo } from "react";
-import { Box, Button } from "components/Mui";
+import { useEffect, useMemo } from "react";
+import { Box } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
-import { NoData, LoadingRow, Flex } from "components/index";
+import { LoadingRow } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPositionByList } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
 import { usePositionContext } from "components/swap/index";
 import { useMultiplePositionsFee, useSortedPositions } from "hooks/swap/index";
-import { useHistory } from "react-router-dom";
 import { useAvailableFarmsForPool } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
-import { useTranslation } from "react-i18next";
+import { getPositionFeeKey } from "utils/swap";
 import { useRefreshTrigger } from "hooks/index";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
-import { getPositionFeeKey } from "utils/swap";
 import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
+import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
 
 interface PositionItemProps {
   position: UserPositionByList;
@@ -59,8 +58,6 @@ interface YourPositionsProps {
 }
 
 export function YourPositions({ filterState, sort, hiddenNumbers }: YourPositionsProps) {
-  const { t } = useTranslation();
-  const history = useHistory();
   const principal = useAccountPrincipalString();
 
   const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
@@ -107,10 +104,6 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
     sort,
   });
 
-  const handleAddLiquidity = useCallback(() => {
-    return history.push(`/liquidity/add?path=${window.btoa(`/liquidity?tab=Positions`)}`);
-  }, [history]);
-
   return (loading || initialUserPositionPoolsLoading) && !!principal ? (
     <LoadingRow>
       <div />
@@ -126,12 +119,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
     <>
       {sortedPositions.length === 0 || hiddenNumbers === sortedPositions.length ? (
         <Box mt={2}>
-          <NoData />
-          <Flex fullWidth justify="center">
-            <Button size="large" sx={{ width: "240px" }} variant="contained" onClick={handleAddLiquidity}>
-              {t("swap.add.liquidity")}
-            </Button>
-          </Flex>
+          <UserLiquidityEmpty backPath="/liquidity?tab=Positions" />
         </Box>
       ) : null}
 

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Typography } from "components/Mui";
-import { Flex, MainCard } from "@icpswap/ui";
+import { Flex, MainCard, Tooltip } from "@icpswap/ui";
 import { TokenPrice } from "components/swap/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -22,9 +22,12 @@ export function CurrentPricePanel({ inputToken, outputToken, currentPrice, fontS
   return (
     <MainCard level={2} padding="16px" borderRadius="16px" sx={{ "@media(max-width: 640px)": { padding: "12px" } }}>
       <Flex gap="0 8px">
-        <Typography className={`fontSize${fontSize}`} sx={{ whiteSpace: "nowrap" }}>
-          {t("common.current.price")}
-        </Typography>
+        <Flex gap="0 4px">
+          <Typography className={`fontSize${fontSize}`} sx={{ whiteSpace: "nowrap" }}>
+            {t("limit.swap.rate")}
+          </Typography>
+          <Tooltip tips={t("limit.swap.rate.tips")} iconSize={`${fontSize}px`} />
+        </Flex>
 
         <TokenPrice
           inverted={inverted}

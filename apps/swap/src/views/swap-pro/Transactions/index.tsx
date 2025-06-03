@@ -7,6 +7,9 @@ import { PendingTablePro, HistoryTablePro } from "components/swap/limit-order/in
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { SwapContext } from "components/swap";
 import i18n from "i18n/index";
+import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
+import { useScrollToTop } from "hooks/useScrollToTop";
+import { Tab } from "constants/index";
 
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
@@ -87,12 +90,14 @@ export default function Transactions() {
   }, []);
 
   useEffect(() => {
-    if (contextActiveTab === "SWAP") {
+    if (contextActiveTab === Tab.Swap) {
       handleTabClick(Tabs.TRANSACTIONS);
     } else {
       handleTabClick(Tabs.LIMIT);
     }
   }, [contextActiveTab, handleTabClick]);
+
+  const scrollToTop = useScrollToTop();
 
   return (
     <SwapProCardWrapper padding="20px 0px 0px 0px">
@@ -181,7 +186,9 @@ export default function Transactions() {
 
       <Box>
         {activeSubTab === Tabs.ALL_TRANSACTIONS ? <PoolTransactions canisterId={poolId} refresh={autoRefresh} /> : null}
-        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? <UserTransactions poolId={poolId} /> : null}
+        {activeSubTab === Tabs.YOUR_TRANSACTIONS ? (
+          <UserTransactions poolId={poolId} CustomNoData={<UserTransactionsEmpty onClick={scrollToTop} />} />
+        ) : null}
         {activeSubTab === Tabs.YOUR_POSITIONS ? <YourPositions poolId={poolId} /> : null}
         {activeSubTab === Tabs.POSITIONS ? <Positions poolId={poolId} /> : null}
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}

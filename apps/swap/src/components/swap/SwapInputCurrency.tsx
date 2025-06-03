@@ -37,7 +37,7 @@ export interface SwapInputCurrencyProps {
   background?: "level3" | "level1";
   disabled?: boolean;
   unusedBalance: bigint | Null;
-  subBalance: BigNumber | Null;
+  subBalance: string | Null;
   isInput?: boolean;
   maxInputAmount?: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;

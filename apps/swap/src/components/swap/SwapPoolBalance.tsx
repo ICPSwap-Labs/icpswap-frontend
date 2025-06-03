@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export interface SwapPoolBalanceProps {
   token: Token | Null;
-  subAccountBalance: BigNumber | Null;
+  subAccountBalance: string | Null;
   unusedBalance: bigint | Null;
   onClick?: () => void;
 }

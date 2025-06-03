@@ -138,6 +138,7 @@ export interface TokenChartsProps {
   dexScreenHeight?: string;
   dexScreenId?: string | Null;
   priceChart?: ReactNode;
+  LiquidityChart?: ReactNode;
   onPriceTokenIdChange?: (tokenId: string | Null) => void;
   wrapperSx?: BoxProps["sx"];
   tokenPairWithIcp?: string | Null;
@@ -159,6 +160,7 @@ export const TokenCharts = forwardRef(
       onPriceTokenIdChange,
       wrapperSx,
       tokenPairWithIcp,
+      LiquidityChart,
     }: TokenChartsProps,
     ref: Ref<TokenChartsRef>,
   ) => {
@@ -449,6 +451,8 @@ export const TokenCharts = forwardRef(
             <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : chartView === ChartView.DexTools ? (
             <DexTools id={tokenPairWithIcp ?? canisterId} height={dexScreenHeight ?? "420px"} />
+          ) : chartView === ChartView.LIQUIDITY ? (
+            LiquidityChart
           ) : null}
         </Box>
       </MainCard>

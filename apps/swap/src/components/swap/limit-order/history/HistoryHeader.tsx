@@ -11,8 +11,8 @@ export function HistoryHeader({ wrapperClasses }: HistoryHeaderProps) {
   return (
     <Flex className={wrapperClasses} sx={{ padding: "16px" }}>
       <HeaderCell>{t("common.time")}</HeaderCell>
-      <HeaderCell>{t("common.you.pay")}</HeaderCell>
-      <HeaderCell>{t("common.you.receive")}</HeaderCell>
+      <HeaderCell>{t("common.you.paid")}</HeaderCell>
+      <HeaderCell>{t("common.you.received")}</HeaderCell>
       <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
       {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
     </Flex>

@@ -27,3 +27,24 @@ export function usePoolAPR({ volumeUSD, tvlUSD, timeBase = "24H" }: UsePoolAPRPr
       .toFixed(2)}%`;
   }, [allFees, tvlUSD, timeBase]);
 }
+
+interface GetPoolAPRProps {
+  volumeUSD: string | number | bigint;
+  tvlUSD: string | number | bigint;
+  timeBase?: "24H" | "7D";
+}
+
+export function getPoolAPR({ volumeUSD, tvlUSD, timeBase }: GetPoolAPRProps): string | null {
+  const allFees = new BigNumber(volumeUSD.toString()).multipliedBy(3).dividedBy(1000);
+
+  if (new BigNumber(tvlUSD.toString()).isEqualTo(0) || new BigNumber(allFees.toString()).isEqualTo(0)) {
+    return null;
+  }
+
+  return `${new BigNumber(allFees)
+    .multipliedBy(0.8)
+    .dividedBy(tvlUSD.toString())
+    .multipliedBy(timeBase === "7D" ? new BigNumber(360).dividedBy(7) : 360)
+    .multipliedBy(100)
+    .toFixed(2)}%`;
+}

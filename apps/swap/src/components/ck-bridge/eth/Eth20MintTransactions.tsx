@@ -138,7 +138,7 @@ export function EthMintTransactions() {
       <Box>
         <>
           {transactions?.map((transaction, index) => <Transaction key={index} transaction={transaction} />)}
-          {transactions?.length === 0 || !transactions ? <NoData /> : null}
+          {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
         </>
       </Box>
     </MainCard>

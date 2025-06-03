@@ -1,17 +1,19 @@
 import { useMemo } from "react";
 import { Box, makeStyles } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "@icpswap/ui";
+import { Flex, LoadingRow } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useScrollToTop } from "hooks/useScrollToTop";
 
 import { HistoryHeader } from "./HistoryHeader";
 import { HistoryRow } from "./HistoryRow";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
+      gridTemplateColumns: "repeat(4, 1fr) 120px",
     },
   };
 });
@@ -37,6 +39,8 @@ export function HistoryList() {
     return limitTransactionsResult?.records;
   }, [limitTransactionsResult]);
 
+  const scrollToTop = useScrollToTop();
+
   return (
     <>
       {loading ? (
@@ -56,7 +60,7 @@ export function HistoryList() {
         </Box>
       ) : !limitTransactions || limitTransactions.length === 0 ? (
         <Flex fullWidth justify="center">
-          <NoData />
+          <LimitTransactionsEmpty onClick={scrollToTop} />
         </Flex>
       ) : (
         <Box sx={{ width: "100%", minWidth: "1058px" }}>

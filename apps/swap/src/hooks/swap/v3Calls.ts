@@ -3,7 +3,6 @@ import { getSwapTokenArgs } from "hooks/token/index";
 import { userStorage, swapPool } from "@icpswap/actor";
 import {
   useCallsData,
-  useInfoUserStorageIds,
   getInfoUserStorageIds,
   quote,
   getSwapPoolMetadata,
@@ -256,13 +255,6 @@ export function usePoolTokenAmountsFromKey(key: Key | undefined) {
 }
 
 export function useUserSwapTransactions(principal: string | undefined, offset: number, limit: number) {
-  const { result: storageIds } = useInfoUserStorageIds(principal);
-
-  const storageId = useMemo(() => {
-    if (!storageIds) return undefined;
-    return storageIds[storageIds.length - 1];
-  }, [storageIds]);
-
   return useCallsData(
     useCallback(async () => {
       if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
@@ -276,7 +268,7 @@ export function useUserSwapTransactions(principal: string | undefined, offset: n
       return resultFormat<PaginationResult<UserStorageTransaction>>(
         await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), []),
       ).data;
-    }, [principal, offset, limit, storageId]),
+    }, [principal, offset, limit]),
   );
 }
 

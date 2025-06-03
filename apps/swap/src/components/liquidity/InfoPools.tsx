@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme } from "components/Mui";
+import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme, BoxProps } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { NoData, TokenImage, TabPanel, type Tab, ObserverWrapper, ScrollTop } from "components/index";
 import {
@@ -14,25 +14,25 @@ import {
   LoadingRow,
   FilledTextField,
   APRPanel,
+  Link,
 } from "@icpswap/ui";
 import {
   useAllPoolsTVL,
   useTokensFromList,
   useNodeInfoAllPools,
   useDebouncedChangeHandler,
-  usePoolAPR,
+  getPoolAPR,
 } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
-import type { InfoPublicPoolWithTvl } from "@icpswap/types";
+import { formatDollarAmount, isNullArgs, percentToNum, urlStringFormat } from "@icpswap/utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { PoolTvlTooltip } from "components/swap/index";
 import { useTranslation } from "react-i18next";
-
-import { PoolCharts } from "./PoolCharts";
+import { PoolCharts } from "components/liquidity/PoolCharts";
+import { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -93,17 +93,17 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
 
   const headers: HeaderType[] = matchDownSM
     ? [
-        { label: t`Pairs`, key: "pool", sort: false },
-        { label: t`Action`, key: "", sort: false, align: "right" },
+        { label: t("common.pools"), key: "pool", sort: false },
+        { label: t("common.manage"), key: "", sort: false, align: "right" },
       ]
     : [
         { label: "#", key: "#", sort: false },
-        { label: t`Pairs`, key: "pool", sort: false },
-        { label: t("common.tvl"), key: "tvlUSD", sort: true, align: "right" },
+        { label: t("common.pools"), key: "pool", sort: false },
+        { label: t("common.tvl.dollar"), key: "tvlUSD", sort: true, align: "right" },
         {
           label: timeBase === "24H" ? t("common.apr24h") : t("common.apr.7d"),
           key: "apr",
-          sort: false,
+          sort: true,
           align: "right",
         },
         {
@@ -118,7 +118,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
           sort: true,
           align: "right",
         },
-        { label: t`Action`, key: "", sort: false, align: "right" },
+        { label: t("common.manage"), key: "", sort: false, align: "right" },
       ];
 
   return (
@@ -141,12 +141,12 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
 }
 
 export interface PoolItemProps {
-  pool: InfoPublicPoolWithTvl;
+  pool: PoolInfoWithApr;
   index: number;
   timeBase?: "24H" | "7D";
 }
 
-export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
+export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
@@ -163,128 +163,146 @@ export function PoolItem({ pool, index, timeBase }: PoolItemProps) {
     return (pool.volumeUSD7d * 3) / 1000;
   }, [timeBase, pool]);
 
-  const apr = usePoolAPR({
-    tvlUSD: pool?.tvlUSD,
-    volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
-    timeBase,
-  });
-
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token1Id });
 
-  const handleAdd = useCallback(() => {
-    loadAddLiquidity();
-  }, [loadAddLiquidity]);
+  const handleAdd: BoxProps["onClick"] = useCallback(
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
+      loadAddLiquidity();
+    },
+    [loadAddLiquidity],
+  );
 
-  const handleSwap = useCallback(() => {
-    history.push(`/swap?&input=${pool.token0Id}&output=${pool.token1Id}`);
-  }, [history, pool]);
+  const handleSwap: BoxProps["onClick"] = useCallback(
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
+      history.push(`/swap?&input=${pool.token0Id}&output=${pool.token1Id}`);
+    },
+    [history, pool],
+  );
 
-  const handleChart = useCallback(() => {
-    setPoolChartOpen(true);
-  }, [setPoolChartOpen]);
+  const handleChart: BoxProps["onClick"] = useCallback(
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
+      setPoolChartOpen(true);
+    },
+    [setPoolChartOpen],
+  );
 
   return (
     <>
-      <TableRow
-        className={`${classes.wrapper} body`}
-        sx={{
-          padding: matchDownSM ? "12px 16px" : "20px 24px",
-        }}
-        borderBottom={`1px solid ${theme.palette.background.level1}`}
+      <Link
+        to={`/info-swap/pool/details/${pool.pool}?path=${urlStringFormat(
+          "/liquidity?tab=TopPools",
+        )}&label=${urlStringFormat(t("common.liquidity"))}`}
       >
-        <BodyCell sx={{ "@media(max-width: 640px)": { display: "none" } }}>{index}</BodyCell>
-        <BodyCell>
-          <Flex
-            align="center"
-            gap="0 8px"
-            sx={{
-              "@media(max-width: 640px)": {
-                gap: "0 4px",
-              },
-            }}
-          >
-            <Flex align="center">
-              <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} size="24px" />
-              <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} size="24px" />
-            </Flex>
-
+        <TableRow
+          className={`${classes.wrapper} body`}
+          sx={{
+            padding: matchDownSM ? "12px 16px" : "20px 24px",
+          }}
+          borderBottom={`1px solid ${theme.palette.background.level1}`}
+        >
+          <BodyCell sx={{ "@media(max-width: 640px)": { display: "none" } }}>{index}</BodyCell>
+          <BodyCell>
             <Flex
+              align="center"
               gap="0 8px"
               sx={{
                 "@media(max-width: 640px)": {
-                  flexDirection: "column",
-                  gap: "4px 0",
-                  alignItems: "flex-start",
+                  gap: "0 4px",
                 },
               }}
             >
-              <Typography
+              <Flex align="center">
+                <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} size="24px" />
+                <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} size="24px" />
+              </Flex>
+
+              <Flex
+                gap="0 8px"
                 sx={{
-                  maxWidth: "140px",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  "@media screen and (max-width: 640px)": {
-                    fontSize: "12px",
+                  "@media(max-width: 640px)": {
+                    flexDirection: "column",
+                    gap: "4px 0",
+                    alignItems: "flex-start",
                   },
                 }}
-                color="text.primary"
-                title={`${pool.token0Symbol} / ${pool.token1Symbol}`}
               >
-                {pool.token0Symbol} / {pool.token1Symbol}
-              </Typography>
+                <Typography
+                  sx={{
+                    maxWidth: "120px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    "@media screen and (max-width: 640px)": {
+                      fontSize: "12px",
+                    },
+                  }}
+                  color="text.primary"
+                  title={`${pool.token0Symbol} / ${pool.token1Symbol}`}
+                >
+                  {pool.token0Symbol} / {pool.token1Symbol}
+                </Typography>
 
-              <FeeTierPercentLabel feeTier={pool.feeTier} />
+                <FeeTierPercentLabel feeTier={pool.feeTier} />
+              </Flex>
             </Flex>
-          </Flex>
-        </BodyCell>
-        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          <PoolTvlTooltip token0Id={pool.token0Id} token1Id={pool.token1Id} poolId={pool.pool}>
-            <Typography
-              align="right"
-              sx={{
-                textDecoration: "underline",
-                textDecorationStyle: "dashed",
-                textDecorationColor: theme.colors.darkTextSecondary,
-                fontSize: "16px",
-                cursor: "pointer",
-                color: "text.primary",
-                "@media screen and (max-width: 600px)": {
-                  fontSize: "14px",
-                },
-              }}
-            >
-              {formatDollarAmount(pool.tvlUSD)}
-            </Typography>
-          </PoolTvlTooltip>
-        </BodyCell>
-        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          {apr ? <APRPanel value={apr} /> : null}
-        </BodyCell>
-        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          {formatDollarAmount(fees)}
-        </BodyCell>
-        <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-          {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}
-        </BodyCell>
-        <BodyCell>
-          <Flex fullWidth gap="0 5px" justify="flex-end">
-            <Box className={`${classes.button} outlined`} onClick={handleChart}>
-              {t("common.chart")}
-            </Box>
-            <Box
-              className={`${classes.button} outlined`}
-              onClick={handleSwap}
-              sx={{ "@media(max-width: 640px)": { display: "none" } }}
-            >
-              {t("common.swap")}
-            </Box>
-            <Box className={`${classes.button} primary`} onClick={handleAdd}>
-              {t("common.add")}
-            </Box>
-          </Flex>
-        </BodyCell>
-      </TableRow>
+          </BodyCell>
+          <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+            <PoolTvlTooltip token0Id={pool.token0Id} token1Id={pool.token1Id} poolId={pool.pool}>
+              <Typography
+                align="right"
+                sx={{
+                  textDecoration: "underline",
+                  textDecorationStyle: "dashed",
+                  textDecorationColor: theme.colors.darkTextSecondary,
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  color: "text.primary",
+                  "@media screen and (max-width: 600px)": {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {formatDollarAmount(pool.tvlUSD)}
+              </Typography>
+            </PoolTvlTooltip>
+          </BodyCell>
+          <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+            {pool.apr24h ? <APRPanel value={pool.apr24h} /> : "--"}
+          </BodyCell>
+          <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+            {formatDollarAmount(fees)}
+          </BodyCell>
+          <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
+            {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}
+          </BodyCell>
+          <BodyCell>
+            <Flex fullWidth gap="0 5px" justify="flex-end">
+              <Box className={`${classes.button} outlined`} onClick={handleChart}>
+                {t("common.chart")}
+              </Box>
+              <Box
+                className={`${classes.button} outlined`}
+                onClick={handleSwap}
+                sx={{ "@media(max-width: 640px)": { display: "none" } }}
+              >
+                {t("common.swap")}
+              </Box>
+              <Box className={`${classes.button} primary`} onClick={handleAdd}>
+                {t("common.add")}
+              </Box>
+            </Flex>
+          </BodyCell>
+        </TableRow>
+      </Link>
 
       {poolChartOpen ? <PoolCharts open={poolChartOpen} onClose={() => setPoolChartOpen(false)} pool={pool} /> : null}
     </>
@@ -348,15 +366,21 @@ export function InfoPools() {
 
     return allPools
       .map((pool) => {
-        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
-        return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 } as InfoPublicPoolWithTvl;
+        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
+        const apr24h = getPoolAPR({
+          volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
+          tvlUSD,
+          timeBase,
+        });
+
+        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
           const __sortField = sortField === "volumeUSD" && timeBase === "7D" ? "volumeUSD7d" : sortField;
 
           const bool =
-            a[__sortField as keyof InfoPublicPoolWithTvl] > b[__sortField as keyof InfoPublicPoolWithTvl]
+            a[__sortField as keyof PoolInfoWithApr] > b[__sortField as keyof PoolInfoWithApr]
               ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
               : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
@@ -466,7 +490,7 @@ export function InfoPools() {
               <FilledTextField
                 width="100%"
                 fullHeight
-                placeholder={t`Search token`}
+                placeholder={t("common.search.by.token")}
                 onChange={handleSearchInput}
                 background="level1"
                 placeholderSize="14px"
@@ -522,7 +546,7 @@ export function InfoPools() {
                   </ObserverWrapper>
 
                   {(slicedPools ?? []).map((pool, index) => (
-                    <PoolItem key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
+                    <PoolRow key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
                   ))}
                 </>
               ) : isNullArgs(slicedPools) ? (

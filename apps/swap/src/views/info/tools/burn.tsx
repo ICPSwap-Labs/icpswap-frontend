@@ -9,7 +9,7 @@ import {
   SelectToken,
   InfoWrapper,
 } from "components/index";
-import { type AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useTokenMintingAccount } from "@icpswap/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -19,6 +19,7 @@ import { BreadcrumbsV1 } from "@icpswap/ui";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
 import { icrc_standards } from "constants/swap";
 import { useTranslation } from "react-i18next";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export default function Burn() {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ export default function Burn() {
   const handleMax = () => {
     if (!balance || !token) return;
 
-    setAmount(parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).toString());
+    setAmount(parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).toString());
   };
 
   const handleBurnSuccess = () => {
@@ -52,13 +53,13 @@ export default function Burn() {
     if (!token || !balance || !mintingAccount) return t("common.waiting.fetching");
     if (!amount) return t("common.enter.input.amount");
     if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
-    if (parseTokenAmount(balance.minus(token.transFee.toString()), token.decimals).isLessThan(amount))
+    if (parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
   }, [amount, balance, token, mintingAccount, tokenId]);
 
   const showMax = useMemo(() => {
     if (!balance || !token) return false;
-    if (!balance.isGreaterThan(token.transFee.toString())) return false;
+    if (!new BigNumber(balance).isGreaterThan(token.transFee.toString())) return false;
     return true;
   }, [balance, token]);
 
@@ -85,8 +86,8 @@ export default function Burn() {
                       search
                       fullHeight
                       onTokenChange={handleTokenChange}
-                      filter={(tokenInfo: AllTokenOfSwapTokenInfo) =>
-                        !icrc_standards.includes(tokenInfo.standard as TOKEN_STANDARD)
+                      filter={(tokenInfo: IcpSwapAPITokenInfo) =>
+                        !icrc_standards.includes(parseTokenStandards(tokenInfo))
                       }
                     />
                   </Box>

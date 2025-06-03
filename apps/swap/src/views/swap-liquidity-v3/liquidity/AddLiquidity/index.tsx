@@ -20,7 +20,7 @@ import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
 import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
-import { isDarkTheme } from "utils/index";
+import { isDarkTheme, parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
 import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -39,6 +39,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
+import { useMediaQuery640 } from "hooks/theme";
 
 const DISABLED_STYLE = {
   opacity: 0.2,
@@ -83,6 +84,7 @@ export default function AddLiquidity() {
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
+  const down640 = useMediaQuery640();
 
   const [confirmAddLoading, setConfirmAddLoading] = useState(false);
 
@@ -156,7 +158,7 @@ export default function AddLiquidity() {
 
     if (backPath) {
       try {
-        const path = window.atob(backPath);
+        const path = parseBackPath(backPath);
         history.push(path);
       } catch (error) {
         console.warn(error);
@@ -417,23 +419,25 @@ export default function AddLiquidity() {
               </Typography>
 
               <Flex gap="0 12px" sx={{ margin: "12px 0 0 0" }}>
-                <Flex sx={{ flex: "50%" }}>
+                <Flex sx={{ width: "50%" }}>
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdA}
                       onChange={(token: Token) => handleTokenChange(token, true)}
                       loading={useCurrencyALoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(baseCurrency ? [baseCurrency] : [])]}
+                      maxWidth={down640 ? "85px" : "120px"}
                     />
                   </Box>
                 </Flex>
-                <Flex sx={{ flex: "50%" }}>
+                <Flex sx={{ width: "50%" }}>
                   <Box sx={{ width: "100%" }}>
                     <CurrencySelector
                       currencyId={currencyIdB}
                       onChange={(token: Token) => handleTokenChange(token, false)}
                       loading={useCurrencyBLoading === UseCurrencyState.LOADING}
                       disabledCurrency={[...(quoteCurrency ? [quoteCurrency] : [])]}
+                      maxWidth={down640 ? "85px" : "120px"}
                     />
                   </Box>
                 </Flex>

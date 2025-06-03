@@ -13,6 +13,7 @@ export interface CurrencySelectorProps {
   loading?: boolean;
   disabled?: boolean;
   activeCurrencies?: Token[];
+  maxWidth?: string;
 }
 
 export function CurrencySelector({
@@ -23,6 +24,7 @@ export function CurrencySelector({
   bgGray = false,
   loading,
   disabled = false,
+  maxWidth,
 }: CurrencySelectorProps) {
   const [selectorShow, setSelectorShow] = useState(false);
 
@@ -58,6 +60,7 @@ export function CurrencySelector({
         bgGray={bgGray}
         loading={loading}
         disabled={disabled}
+        maxWidth={maxWidth}
       />
 
       {selectorShow && (

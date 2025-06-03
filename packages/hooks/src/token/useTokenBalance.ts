@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { isPrincipal, isValidPrincipal } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
-import BigNumber from "bignumber.js";
-import { useLatestDataCall } from "../useCallData";
+
+import { useCallsData } from "../useCallData";
 
 export interface GetTokenBalanceArgs {
   canisterId: string;
@@ -38,14 +38,14 @@ export interface UserTokenBalanceArgs {
 }
 
 export function useTokenBalance({ canisterId, address, sub, refresh }: UserTokenBalanceArgs): {
-  result: BigNumber | undefined;
+  result: string | undefined;
   loading: boolean;
 } {
-  return useLatestDataCall<BigNumber | undefined>(
+  return useCallsData<string | undefined>(
     useCallback(async () => {
       if (!address || !canisterId) return undefined;
       const balance = await getTokenBalance({ canisterId, sub, address });
-      return balance === undefined ? undefined : new BigNumber(balance.toString());
+      return balance === undefined ? undefined : balance.toString();
     }, [address, canisterId, sub]),
     refresh,
   );

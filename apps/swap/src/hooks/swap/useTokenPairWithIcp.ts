@@ -1,26 +1,32 @@
-import { useMemo } from "react";
-import { useNodeInfoAllPools } from "@icpswap/hooks";
+import { useEffect, useMemo, useState } from "react";
 import { Null } from "@icpswap/types";
-import { ICP } from "@icpswap/tokens";
+import { icpswap_fetch_post } from "@icpswap/utils";
 
 interface UesTokenPairWithIcpProps {
   tokenId: string | Null;
 }
 
 export function uesTokenPairWithIcp({ tokenId }: UesTokenPairWithIcpProps) {
-  const { result: infoAllPools } = useNodeInfoAllPools();
+  const [poolId, setPoolId] = useState<string | undefined>();
+
+  useEffect(() => {
+    async function call() {
+      if (tokenId) {
+        const result = await icpswap_fetch_post<{ poolId: string; token0Id: string; token1Id: string }>(
+          "/info/pool/get",
+          { ledgerId: tokenId },
+        );
+
+        const pairId = result?.data?.poolId;
+
+        setPoolId(pairId);
+      }
+    }
+
+    call();
+  }, [tokenId]);
 
   return useMemo(() => {
-    if (!tokenId || !infoAllPools) return null;
-
-    const infoPool = infoAllPools.find((element) =>
-      element.token0Id === tokenId || element.token0Id === tokenId
-        ? element.token0Id === tokenId
-          ? element.token1Id === ICP.address
-          : element.token0Id === ICP.address
-        : false,
-    );
-
-    return infoPool?.pool;
-  }, [tokenId, infoAllPools]);
+    return poolId;
+  }, [poolId]);
 }

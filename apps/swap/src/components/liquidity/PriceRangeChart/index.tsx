@@ -158,14 +158,14 @@ export default function LiquidityChartRangeInput({
           message={t("liquidity.position.appear")}
           icon={<Inbox size={56} stroke={theme.palette.background.level3} />}
         />
-      ) : isLoading ? (
+      ) : isLoading || !price ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.palette.background.level3} />} />
       ) : isError ? (
         <InfoBox
           message={t("liquidity.data.not.available")}
           icon={<CloudOff size={56} stroke={theme.palette.background.level3} />}
         />
-      ) : !formattedData || formattedData.length === 0 || !price ? (
+      ) : !formattedData || formattedData.length === 0 ? (
         <InfoBox
           message={t("liquidity.no.data")}
           icon={<BarChart2 size={56} stroke={theme.palette.background.level3} />}

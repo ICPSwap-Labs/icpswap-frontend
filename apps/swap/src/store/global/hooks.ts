@@ -7,12 +7,13 @@ import {
   use100ICPPriceInfo,
   useXDR2USD,
   useTokensFromList,
-  getLimitedInfinityCall,
-  getAllTokensOfSwap,
+  getLimitedInfinityCallV1,
+  getAllSwapTokens,
 } from "@icpswap/hooks";
-import { AllTokenOfSwapTokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 import {
   updateXDR2USD,
@@ -21,6 +22,7 @@ import {
   updateAllSwapTokens,
   updateWalletConnector,
   updateBridgeTokens,
+  updateTokenBalance,
 } from "./actions";
 
 export function useGlobalTokenList() {
@@ -156,7 +158,7 @@ export function useFetchAllSwapTokens() {
 
   useEffect(() => {
     const fetch = async (offset: number, limit: number) => {
-      const result = await getAllTokensOfSwap(offset, limit);
+      const result = await getAllSwapTokens(offset, limit);
       return result?.content;
     };
 
@@ -164,17 +166,14 @@ export function useFetchAllSwapTokens() {
       if (allSwapTokens.length > 0 || loading) return;
 
       setLoading(true);
-      const data = await getLimitedInfinityCall<AllTokenOfSwapTokenInfo>(fetch, 1000, 2);
+      const data = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
 
       const swapTokens = data.map((e) => {
+        const standard = parseTokenStandards(e);
+
         return {
           ...e,
-          standard:
-            e.standard === "ICRC-1"
-              ? TOKEN_STANDARD.ICRC1
-              : e.standard === "ICRC-2"
-              ? TOKEN_STANDARD.ICRC2
-              : e.standard,
+          standard,
         };
       });
 
@@ -185,11 +184,11 @@ export function useFetchAllSwapTokens() {
           decimals: Number(token.decimals),
           name: token.name,
           symbol: token.symbol,
-          canisterId: token.ledger_id.toString(),
-          logo: token.logo[0] ?? "",
+          canisterId: token.ledgerId,
+          logo: token.logo,
           totalSupply: "0",
           transFee: token.fee.toString(),
-          standardType: token.standard as TOKEN_STANDARD,
+          standardType: token.standard,
         });
       });
 
@@ -229,4 +228,25 @@ export function useFetchBridgeTokens() {
 
 export function useBridgeTokens() {
   return useAppSelector((state) => state.global.bridgeTokens);
+}
+
+export function useStateTokenBalance(tokenKey: string | Null) {
+  const allBalances = useAppSelector((state) => state.global.tokenBalances);
+  return tokenKey ? allBalances[tokenKey] : undefined;
+}
+
+export function useStateTokenBalanceManager(
+  tokenKey: string | Null,
+): [string | undefined, (key: string, balance: string) => void] {
+  const stateBalance = useStateTokenBalance(tokenKey);
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (tokenKey: string, balance: string) => {
+      dispatch(updateTokenBalance({ canisterId: tokenKey, balance }));
+    },
+    [dispatch],
+  );
+
+  return [stateBalance, callback];
 }

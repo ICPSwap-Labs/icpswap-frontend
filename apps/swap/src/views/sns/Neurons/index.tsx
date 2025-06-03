@@ -1,16 +1,23 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
-import { LoadingRow, Copy, Wrapper } from "components/index";
+import { LoadingRow, Copy, Wrapper, Flex } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
 import { SelectSns } from "components/sns/SelectSNSTokens";
 import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns/neurons";
-import { parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isNullArgs,
+  parseTokenAmount,
+  shorten,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { Lock, Clock } from "react-feather";
-import { useToken } from "hooks/index";
+import { useToken, useUSDPrice } from "hooks/index";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import { Token } from "@icpswap/swap-sdk";
@@ -60,6 +67,14 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
     refreshTrigger();
   };
 
+  const tokenUSDPrice = useUSDPrice(token);
+
+  const tokenAmount = useMemo(() => {
+    if (isNullArgs(token)) return undefined;
+
+    return parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, token.decimals).toString();
+  }, [token, formatted_neuron]);
+
   return formatted_neuron.dissolve_state === NeuronState.Spawning ? null : (
     <>
       <Box
@@ -95,15 +110,16 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", margin: "20px 0 0 0" }}>
+        <Flex vertical gap="4px 0" align="flex-start" sx={{ margin: "20px 0 0 0" }}>
           <Typography color="text.primary" fontWeight={500} fontSize="24px">
-            {token
-              ? `${toSignificantWithGroupSeparator(
-                  parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, token.decimals).toString(),
-                )} ${token.symbol}`
+            {tokenAmount && token ? `${toSignificantWithGroupSeparator(tokenAmount)} ${token.symbol}` : "--"}
+          </Typography>
+          <Typography>
+            {tokenAmount && tokenUSDPrice
+              ? `≈${formatDollarAmount(new BigNumber(tokenAmount).multipliedBy(tokenUSDPrice).toString())}`
               : "--"}
           </Typography>
-        </Box>
+        </Flex>
 
         <Box sx={{ margin: "20px 0 0 0" }}>
           <Typography>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>

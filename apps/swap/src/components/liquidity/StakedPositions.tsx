@@ -1,18 +1,17 @@
-import { useEffect, useCallback, useMemo } from "react";
-import { Box, Button } from "components/Mui";
+import { useEffect, useMemo } from "react";
+import { Box } from "components/Mui";
 import { PositionCardForFarm } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
-import { NoData, LoadingRow, Flex } from "components/index";
+import { LoadingRow } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useSwapPositionsMultipleFarm, useSortedPositions, useMultiplePositionsFee } from "hooks/swap/index";
 import { usePositionContext } from "components/swap/index";
 import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
 import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { getPositionFeeKey } from "utils/swap";
 import { useRefreshTrigger } from "hooks";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/liquidity";
+import { YourFarmEmpty } from "components/farm/Empty";
 
 interface PositionItemProps {
   position: UserPositionForFarm;
@@ -55,8 +54,6 @@ interface StakedPositionsProps {
 }
 
 export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPositionsProps) {
-  const { t } = useTranslation();
-  const history = useHistory();
   const principal = useAccountPrincipalString();
 
   const { setAllStakedPositions, positionFees, allPositionsUSDValue } = usePositionContext();
@@ -102,10 +99,6 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
     sort,
   });
 
-  const handleAddLiquidity = useCallback(() => {
-    return history.push("/farm");
-  }, [history]);
-
   return (loading || farmsLoading) && !!principal ? (
     <LoadingRow>
       <div />
@@ -121,13 +114,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
     <>
       {sortedPositions.length === 0 || hiddenNumbers === sortedPositions.length ? (
         <Box mt={2}>
-          <NoData />
-
-          <Flex fullWidth justify="center">
-            <Button size="large" sx={{ width: "240px" }} variant="contained" onClick={handleAddLiquidity}>
-              {t("farm.your.liquidity")}
-            </Button>
-          </Flex>
+          <YourFarmEmpty />
         </Box>
       ) : null}
       <Box>

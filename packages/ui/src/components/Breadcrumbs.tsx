@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { useHistory } from "react-router-dom";
 import { ChevronRight } from "react-feather";
+import { useParsedQueryString } from "@icpswap/hooks";
+import { urlStringParse } from "@icpswap/utils";
 
 import { Link } from "./Link";
 import { Typography, Box } from "./Mui";
@@ -15,12 +17,22 @@ export interface BreadcrumbsProps {
 
 export function Breadcrumbs({ prevLabel, currentLabel, prevLink, fontSize = "12px" }: BreadcrumbsProps) {
   const history = useHistory();
+  const { path, label: labelFromUrl } = useParsedQueryString() as {
+    path: string | undefined;
+    label: string | undefined;
+  };
 
   const handleClick = () => {
     if (prevLink === "back") {
       history.goBack();
       return;
     }
+
+    if (path) {
+      history.push(urlStringParse(path));
+      return;
+    }
+
     history.push(prevLink);
   };
 
@@ -44,7 +56,7 @@ export function Breadcrumbs({ prevLabel, currentLabel, prevLink, fontSize = "12p
         }}
         onClick={handleClick}
       >
-        {prevLabel}
+        {labelFromUrl ? urlStringParse(labelFromUrl) : prevLabel}
       </Typography>
 
       <ChevronRight size="18px" />

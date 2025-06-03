@@ -28,6 +28,7 @@ export interface PositionTransactionsTableUIProps {
   totalElements: number | Null;
   onPaginationChange?: PaginationProps["onPageChange"];
   pagination: PaginationType;
+  empty?: string;
 }
 
 export function PositionTransactionsTableUI({
@@ -37,6 +38,7 @@ export function PositionTransactionsTableUI({
   wrapperClassName,
   onPaginationChange,
   pagination,
+  empty,
 }: PositionTransactionsTableUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -64,7 +66,7 @@ export function PositionTransactionsTableUI({
               ))
             : null}
 
-          {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(transactions ?? []).length === 0 && !loading ? <NoData tip={empty} /> : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>

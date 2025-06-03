@@ -150,20 +150,9 @@ export function ReclaimAll() {
       ) : null}
 
       <Box sx={{ margin: "20px 0 0 0" }}>
-        {loading ? (
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
-        ) : no_data ? (
-          <NoData />
-        ) : (
+        {no_data && loading === false ? <NoData /> : null}
+
+        {filteredBalances.length > 0 ? (
           <Box
             sx={{
               overflow: "auto",
@@ -181,7 +170,18 @@ export function ReclaimAll() {
               />
             ))}
           </Box>
-        )}
+        ) : null}
+
+        {loading ? (
+          <Box sx={{ margin: filteredBalances.length > 0 ? "20px 0 0 0" : "0px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : null}
       </Box>
     </>
   );

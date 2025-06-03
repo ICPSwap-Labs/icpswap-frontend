@@ -35,7 +35,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
     if (!validate(address)) return t`Invalid bitcoin address`;
-    if (!amount) return t("common.enter.input.amount");
+    if (!amount) return t("ck.enter.transfer.amount");
     if (!new BigNumber(amount).isGreaterThan(0.001)) return t`Min amount is 0.001 ckBTC`;
     if (parseTokenAmount(tokenBalance, token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");

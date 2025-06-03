@@ -1,27 +1,21 @@
 import { useState, useMemo, useContext } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { useTickAtLimit, useUserLimitOrders } from "@icpswap/hooks";
-import {
-  CurrencyAmount,
-  FeeAmount,
-  Pool,
-  useInverter,
-  getPriceOrderingFromPositionForUI,
-  formatTickPrice,
-} from "@icpswap/swap-sdk";
+import { useUserLimitOrders } from "@icpswap/hooks";
+import { CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, SimplePagination, TextButton } from "@icpswap/ui";
-import type { UserPosition } from "types/swap";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, SimplePagination, TextButton } from "@icpswap/ui";
+import { UserPositionByList } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
 import { BigNumber, formatDollarAmount, formatAmount, isNullArgs } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SwapProContext } from "components/swap/pro";
 import { Null } from "@icpswap/types";
 import { SwapContext } from "components/swap";
 import { useTranslation } from "react-i18next";
+import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { PositionPriceRange } from "components/liquidity";
 
 const useStyles = makeStyles(() => {
   return {
@@ -36,13 +30,8 @@ const useStyles = makeStyles(() => {
 });
 
 interface PositionItemProps {
-  positionInfo: UserPosition;
+  positionInfo: UserPositionByList;
   pool: Pool | undefined | null;
-}
-
-enum Bound {
-  LOWER = "LOWER",
-  UPPER = "UPPER",
 }
 
 function PositionItem({ positionInfo, pool }: PositionItemProps) {
@@ -52,18 +41,16 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const { inputToken, outputToken } = useContext(SwapContext);
   const { inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
 
-  const [manuallyInverted, setManuallyInverted] = useState(false);
-
   const position = usePositionWithPool({
-    tickLower: positionInfo.tickLower.toString(),
-    tickUpper: positionInfo.tickUpper.toString(),
-    liquidity: positionInfo.liquidity.toString(),
+    tickLower: positionInfo.position.tickLower.toString(),
+    tickUpper: positionInfo.position.tickUpper.toString(),
+    liquidity: positionInfo.position.liquidity.toString(),
     pool,
   });
 
-  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.id, BigInt(positionInfo.index));
+  const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionInfo.poolId, positionInfo.position.id);
 
-  const { token0, token1, fee, tickLower, tickUpper } = useMemo(
+  const { token0, token1 } = useMemo(
     () => ({
       token0: pool?.token0,
       token1: pool?.token1,
@@ -73,36 +60,6 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
     }),
     [position, pool],
   );
-
-  const nonInvertedTicksAtLimit = useTickAtLimit(fee, tickLower, tickUpper);
-  const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
-
-  // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition?.priceLower,
-    priceUpper: pricesFromPosition?.priceUpper,
-    quote: pricesFromPosition?.quote,
-    base: pricesFromPosition?.base,
-    invert: manuallyInverted,
-  });
-
-  const inverted = token1 ? base?.equals(token1) : undefined;
-  const currencyQuote = inverted ? token0 : token1;
-  const currencyBase = inverted ? token1 : token0;
-
-  const tickAtLimit = useMemo(() => {
-    if (!inverted) return nonInvertedTicksAtLimit;
-
-    return {
-      [Bound.LOWER]: nonInvertedTicksAtLimit[Bound.UPPER] ? true : undefined,
-      [Bound.UPPER]: nonInvertedTicksAtLimit[Bound.LOWER] ? true : undefined,
-    };
-  }, [nonInvertedTicksAtLimit, inverted]);
-
-  const pairName = useMemo(() => {
-    if (!currencyQuote || !currencyBase) return undefined;
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
     if (!token0 || feeAmount0 === undefined || !token1 || feeAmount1 === undefined)
@@ -133,23 +90,15 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       }}
     >
       <TableRow className={classes.wrapper} borderBottom="none">
-        <BodyCell>{positionInfo.index}</BodyCell>
+        <BodyCell>{positionInfo.position.id.toString()}</BodyCell>
 
         <BodyCell sx={{ flexDirection: "column", gap: "12px" }}>
           <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${token0?.symbol}` : "--"}</BodyCell>
           <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${token1?.symbol}` : "--"}</BodyCell>
         </BodyCell>
 
-        <BodyCell sx={{ display: "inline-block" }} onClick={() => setManuallyInverted(!manuallyInverted)}>
-          {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
-            priceUpper,
-            tickAtLimit,
-            Bound.UPPER,
-          )} ${pairName}`}
-
-          <SyncAltIcon
-            sx={{ fontSize: "1rem", cursor: "pointer", color: "#ffffff", margin: "0 0 0 4px", verticalAlign: "middle" }}
-          />
+        <BodyCell>
+          <PositionPriceRange position={position} fontSize="inherit" color="inherit" arrowColor="primary" />
         </BodyCell>
 
         <BodyCell
@@ -201,7 +150,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
             },
           }}
         >
-          <TextButton to={`/liquidity/position/${positionInfo.index}/${positionInfo.id}`}>
+          <TextButton to={`/liquidity/position/${positionInfo.position.id}/${positionInfo.poolId}`}>
             {t("common.details")}
           </TextButton>
         </BodyCell>
@@ -258,13 +207,23 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
           ? (filteredPositions ?? []).map((element) => (
               <PositionItem
                 key={`${element.poolId}_${element.position.id.toString()}`}
-                positionInfo={position}
+                positionInfo={element}
                 pool={pool}
               />
             ))
           : null}
 
-        {(filteredPositions ?? []).length === 0 && !loading ? <NoData /> : null}
+        {(filteredPositions ?? []).length === 0 && !loading ? (
+          <UserLiquidityEmpty
+            token0Address={inputToken?.address}
+            token1Address={outputToken?.address}
+            backPath={
+              inputToken && outputToken
+                ? `/swap/pro?input=${inputToken.address}&output=${outputToken.address}`
+                : "/swap/pro"
+            }
+          />
+        ) : null}
 
         {loading ? (
           <Box sx={{ padding: "24px" }}>

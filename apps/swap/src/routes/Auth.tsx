@@ -2,6 +2,7 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import { Layout } from "components/Layout/index";
 import PageNotFound from "components/404";
 import { Maintenance } from "components/Maintenance";
+import React from "react";
 
 import { routeConfigs } from "./config";
 
@@ -10,15 +11,23 @@ const maintenancePages: string[] = [];
 export default function MainRoutes() {
   const location = useLocation();
 
-  const allPath = Object.keys(routeConfigs);
+  const allPaths = routeConfigs.map((element) => element.path);
 
   return (
-    <Route path={allPath}>
+    <Route path={allPaths}>
       <Layout info={location.pathname.includes("info")}>
         <Switch location={location} key={location.pathname}>
-          {allPath.map((pathName) => {
-            const component = maintenancePages.includes(pathName) ? Maintenance : routeConfigs[pathName];
-            return <Route key={pathName} exact path={pathName} component={component} />;
+          {routeConfigs.map(({ path, getElement }) => {
+            const GetComponent = (props: React.PropsWithChildren) => {
+              const __component = maintenancePages.includes(path)
+                ? Maintenance
+                : () => {
+                    return <>{getElement()}</>;
+                  };
+              return React.createElement(__component, null, props.children);
+            };
+
+            return <Route key={path} exact path={path} component={GetComponent} />;
           })}
 
           <Route path="*" component={PageNotFound} />

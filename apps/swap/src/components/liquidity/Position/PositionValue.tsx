@@ -66,7 +66,9 @@ export function PositionValue({ position }: PositionValueProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Flex gap="0 6px">
             <TokenImage size="20px" logo={token0.logo} tokenId={token0.address} />
-            <Typography>{token0.symbol}</Typography>
+            <Typography sx={{ maxWidth: "187px" }} className="text-overflow-ellipsis">
+              {token0.symbol}
+            </Typography>
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
@@ -80,7 +82,9 @@ export function PositionValue({ position }: PositionValueProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Flex gap="0 6px">
             <TokenImage size="20px" logo={token1.logo} tokenId={token1.address} />
-            <Typography>{token1.symbol}</Typography>
+            <Typography sx={{ maxWidth: "187px" }} className="text-overflow-ellipsis">
+              {token1.symbol}
+            </Typography>
           </Flex>
 
           <Flex vertical gap="6px 0" align="flex-end">
@@ -95,12 +99,14 @@ export function PositionValue({ position }: PositionValueProps) {
       <Flex vertical gap="26px 0" align="flex-start" sx={{ margin: "26px 0 0 0" }} fullWidth>
         {nonNullArgs(token0Percent) && nonNullArgs(token1Percent) ? (
           <Box sx={{ width: "100%" }}>
-            <Flex fullWidth justify="space-between">
+            <Flex fullWidth justify="space-between" gap="0 12px">
               <Flex gap="0 8px">
                 <Typography color="text.primary">{numToPercent(token0Percent, 2)}</Typography>
                 <Flex gap="0 6px">
                   <TokenImage size="16px" logo={token0.logo} tokenId={token0.address} />
-                  <Typography color="text.primary">{token0.symbol}</Typography>
+                  <Typography color="text.primary" sx={{ maxWidth: "90px" }} className="text-overflow-ellipsis">
+                    {token0.symbol}
+                  </Typography>
                 </Flex>
               </Flex>
 
@@ -108,7 +114,9 @@ export function PositionValue({ position }: PositionValueProps) {
                 <Typography color="text.primary">{numToPercent(token1Percent, 2)}</Typography>
                 <Flex gap="0 6px">
                   <TokenImage size="16px" logo={token1.logo} tokenId={token1.address} />
-                  <Typography color="text.primary">{token1.symbol}</Typography>
+                  <Typography color="text.primary" sx={{ maxWidth: "90px" }} className="text-overflow-ellipsis">
+                    {token1.symbol}
+                  </Typography>
                 </Flex>
               </Flex>
             </Flex>

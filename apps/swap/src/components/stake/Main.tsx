@@ -212,7 +212,7 @@ export function MainContent({
             <Flex justify="space-between" sx={{ padding: "0 16px" }}>
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>{t("common.reward.token")}</Typography>
+                  <Typography>{t("common.reward.earned")}</Typography>
                 </Flex>
 
                 <Typography

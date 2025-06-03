@@ -13,9 +13,16 @@ export interface CurrencySelectorButtonProps {
   bgGray?: boolean;
   loading?: boolean;
   disabled?: boolean;
+  maxWidth?: string;
 }
 
-export function CurrencySelectorButton({ currency, onClick, bgGray = false, loading }: CurrencySelectorButtonProps) {
+export function CurrencySelectorButton({
+  currency,
+  onClick,
+  bgGray = false,
+  loading,
+  maxWidth,
+}: CurrencySelectorButtonProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -48,7 +55,9 @@ export function CurrencySelectorButton({ currency, onClick, bgGray = false, load
             color: "text.primary",
             fontSize: "18px",
             fontWeight: 500,
+            maxWidth,
           }}
+          className="text-overflow-ellipsis"
         >
           {currency.symbol}
         </Typography>

@@ -197,7 +197,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
     const { call, key } = swapCallback({
       trade,
-      subAccountBalance: inputTokenSubBalance as BigNumber,
+      subAccountBalance: inputTokenSubBalance,
       unusedBalance: inputTokenUnusedBalance as bigint,
       balance: inputTokenBalance,
       openExternalTip: ({ message, tipKey, poolId, tokenId }: ExternalTipArgs) => {

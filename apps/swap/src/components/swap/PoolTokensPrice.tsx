@@ -9,9 +9,10 @@ import { Null } from "@icpswap/types";
 
 interface PoolTokensPriceProps {
   pool: Pool | Null;
+  width?: string;
 }
 
-export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
+export function PoolTokensPrice({ pool, width }: PoolTokensPriceProps) {
   const theme = useTheme();
 
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -27,7 +28,7 @@ export function PoolTokensPrice({ pool }: PoolTokensPriceProps) {
       onClick={() => setManuallyInverted(!manuallyInverted)}
     >
       <Flex gap="0 4px">
-        <Typography color="text.primary">
+        <Typography color="text.primary" className="text-overflow-ellipsis" sx={{ maxWidth: width }}>
           {nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(pool)
             ? manuallyInverted
               ? `1 ${token1.symbol} = ${pool.priceOf(token1).toSignificant(6)} ${token0.symbol}${

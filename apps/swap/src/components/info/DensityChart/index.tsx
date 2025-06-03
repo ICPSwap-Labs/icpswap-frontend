@@ -9,16 +9,17 @@ import LoadingImage from "assets/images/loading.png";
 import { useTicksSurroundingPrice, TickProcessed } from "hooks/swap/useTicksSurroundingPrice";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
 import JSBI from "jsbi";
+import { Null } from "@icpswap/types";
 
-import { CustomToolTip } from "./CustomToolTip";
+import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
 import { ChartEntry } from "./type";
 
 const MAX_UINT128 = new BigNumber(340282366920938463463374607431768211455);
 
 interface DensityChartProps {
-  address: string;
-  token0Price: number | undefined;
+  address: string | Null;
+  token0Price: number | string | undefined;
 }
 
 interface ZoomStateProps {
@@ -63,7 +64,7 @@ type TickChartData = {
   tvlToken1: number;
 };
 
-export function DensityChart({ address, token0Price }: DensityChartProps) {
+export function DensityChart({ address }: DensityChartProps) {
   const theme = useTheme();
 
   const { result: __pool } = useSwapPoolMetadata(address);
@@ -78,10 +79,11 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
   const [zoomState] = useState<ZoomStateProps>(initialState);
 
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>();
+  const [activeToken0Price, setActiveToken0Price] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     async function formatData() {
-      if (poolTickData && __pool && token0 && token1 && feeTier) {
+      if (poolTickData && __pool && token0 && token1 && feeTier && address) {
         const newData = (
           await Promise.all(
             poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
@@ -135,6 +137,10 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
 
               const amount0 = token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0;
               const amount1 = token1Amount ? parseFloat(token1Amount.toExact()) : 0;
+
+              if (active) {
+                setActiveToken0Price(parseFloat(t.price0));
+              }
 
               return {
                 index: i,
@@ -200,9 +206,17 @@ export function DensityChart({ address, token0Price }: DensityChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart width={500} height={300} data={zoomedData}>
             <Tooltip
-              content={(props) => (
-                <CustomToolTip chartProps={props} token0={token0} token1={token1} currentPrice={token0Price} />
-              )}
+              content={(props) => {
+                return (
+                  <LiquidityChartToolTip
+                    chartProps={props}
+                    token0={token0}
+                    token1={token1}
+                    currentPrice={activeToken0Price}
+                    data={zoomedData}
+                  />
+                );
+              }}
             />
             {/* <XAxis reversed tick={false} /> */}
             <Bar

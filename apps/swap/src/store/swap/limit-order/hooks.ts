@@ -5,10 +5,10 @@ import { useToken } from "hooks/useCurrency";
 import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useCurrencyBalance } from "hooks/token/useTokenBalance";
 import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
+import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
 import store from "store/index";
-import { useUserUnusedBalance, useTokenBalance, useDebounce } from "@icpswap/hooks";
+import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
 import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
@@ -224,18 +224,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
-  const { result: __inputTokenSubBalance } = useTokenBalance({
-    canisterId: inputToken?.address,
-    address: poolId,
-    sub,
-    refresh,
-  });
-  const { result: __outputTokenSubBalance } = useTokenBalance({
-    canisterId: outputToken?.address,
-    address: poolId,
-    sub,
-    refresh,
-  });
+  const { result: __inputTokenSubBalance } = useTokenBalance(inputToken?.address, poolId, refresh, sub);
+  const { result: __outputTokenSubBalance } = useTokenBalance(outputToken?.address, poolId, refresh, sub);
 
   // Make balance is undefined if user logout
   const inputTokenSubBalance = useMemo(() => {
@@ -275,7 +265,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const tokenInsufficient = getTokenInsufficient({
     token: inputToken,
     subAccountBalance: inputTokenSubBalance,
-    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals),
+    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
     formatTokenAmount: formatTokenAmount(parsedAmounts[SWAP_FIELD.INPUT]?.toExact(), inputToken?.decimals).toString(),
     unusedBalance: inputTokenUnusedBalance,
     allowance,
@@ -358,11 +348,14 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     inputCurrencyPrice,
   ]);
 
-  const inputTokenBalance = formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals);
+  const inputTokenBalance = formatTokenAmount(
+    inputCurrencyBalance?.toExact(),
+    inputCurrencyBalance?.currency.decimals,
+  ).toString();
   const outputTokenBalance = formatTokenAmount(
     outputCurrencyBalance?.toExact(),
     outputCurrencyBalance?.currency.decimals,
-  );
+  ).toString();
 
   return {
     inputError,

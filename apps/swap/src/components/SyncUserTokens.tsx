@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { Typography, CircularProgress } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { getHelperUserTokens } from "@icpswap/hooks";
+import { getUserTokens } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, nonNullArgs } from "@icpswap/utils";
 import { useTaggedTokenManager } from "store/wallet/hooks";
@@ -21,7 +21,7 @@ export function SyncUserTokens() {
 
     setLoading(true);
 
-    const result = await getHelperUserTokens({ principal: principal.toString() });
+    const result = await getUserTokens({ principal: principal.toString() });
 
     if (result) {
       const allUserTokens = result.tokens

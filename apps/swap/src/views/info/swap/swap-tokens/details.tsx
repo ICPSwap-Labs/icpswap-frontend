@@ -30,8 +30,9 @@ import { ICP } from "@icpswap/tokens";
 import { DefaultChartView, TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import i18n from "i18n/index";
 import { useTranslation, Trans } from "react-i18next";
-
-import { TokenPrices } from "./components/TokenPrice";
+import { useMediaQuery640 } from "hooks/theme";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
+import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
 
 enum TabValue {
   Transactions = "Transactions",
@@ -108,6 +109,8 @@ export default function TokenDetails() {
 
   const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
 
+  const down640 = useMediaQuery640();
+
   return (
     <InfoWrapper>
       <Breadcrumbs
@@ -126,12 +129,12 @@ export default function TokenDetails() {
             <Flex gap="0 10px">
               <TokenImage logo={token?.logo} size="24px" tokenId={token?.address} />
               <Typography fontSize="20px" fontWeight="500" color="text.primary">
-                {token?.name}
+                {token?.name && down640 ? tokenSymbolEllipsis({ symbol: token.name }) : token?.name}
               </Typography>
             </Flex>
 
             <Typography fontSize="20px" fontWeight="500">
-              ({infoToken?.symbol})
+              ({infoToken?.symbol && down640 ? tokenSymbolEllipsis({ symbol: token?.symbol }) : token?.symbol})
             </Typography>
           </Flex>
 
@@ -197,13 +200,13 @@ export default function TokenDetails() {
             </Button>
           </ImportToNns>
 
-          <Link to={`/info-tokens/details/${canisterId}`}>
+          <Link link={`/info-tokens/details/${canisterId}`}>
             <Button variant="contained" className="secondary">
               {t("common.token.details")}
             </Button>
           </Link>
 
-          <Link to={addLiquidityLink(canisterId)}>
+          <Link link={addLiquidityLink(canisterId)}>
             <Button variant="contained" className="secondary">
               {t("swap.add.liquidity")}
             </Button>
@@ -288,7 +291,7 @@ export default function TokenDetails() {
           </GridAutoRows>
 
           <Box sx={{ margin: "40px 0 0 0" }}>
-            <TokenPrices tokenInfo={token} />
+            <InfoTokenPrices tokenInfo={token} />
           </Box>
         </MainCard>
 

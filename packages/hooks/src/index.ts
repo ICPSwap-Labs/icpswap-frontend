@@ -32,5 +32,6 @@ export * from "./useInterval";
 export * from "./liquidityLocks";
 export * from "./useTransactionExplorerLink";
 export * from "./helper";
-export * from "./icexplorer";
+export * from "./icpswap-api";
 export * from "./ic";
+export * from "./useParsedUrlPath";

@@ -9,7 +9,7 @@ import {
   nonNullArgs,
   formatDollarTokenPrice,
 } from "@icpswap/utils";
-import { useInfoToken, useTokenAnalysis, useTokenSupply, useExplorerTokenBurned } from "@icpswap/hooks";
+import { useInfoToken, useTokenAnalysis, useTokenSupply, useTokenBurned } from "@icpswap/hooks";
 import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
 import { useTranslation } from "react-i18next";
@@ -24,7 +24,7 @@ export function Ics() {
   const icpInfoToken = useInfoToken(ICP.address);
   const { result: tokenSupply } = useTokenSupply(ICS.address);
   const { result: tokenAnalysis } = useTokenAnalysis(ICS.address);
-  const { result: tokenBurned } = useExplorerTokenBurned(ICS.address);
+  const { result: tokenBurned } = useTokenBurned(ICS.address);
 
   const marketCap = useMemo(() => {
     if (nonNullArgs(tokenAnalysis) && nonNullArgs(infoToken)) {

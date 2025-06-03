@@ -1,19 +1,20 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { BigNumber, formatDollarAmount, formatTokenPrice, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { usePositionContext, PositionRangeState } from "components/swap/index";
+import { usePositionContext, PositionRangeState, PoolCurrentPrice } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
 import { usePositionState } from "hooks/liquidity";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { useTranslation } from "react-i18next";
+import { TokenPairName } from "components/TokenPairName";
 
 import { PositionDetails } from "./PositionDetails";
 
@@ -212,18 +213,6 @@ export function PositionCard({
     }
   }, [totalUSDValue, positionKey, staked, isLimit]);
 
-  const pairName = useMemo(() => {
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
-
-  const handleConvert = useCallback(
-    (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-      event.stopPropagation();
-      setManuallyInverted(!manuallyInverted);
-    },
-    [setManuallyInverted, manuallyInverted],
-  );
-
   const displayByFilter = useMemo(() => {
     if (isNullArgs(positionState) || isNullArgs(isLimit)) return true;
     if (isLimit) return false;
@@ -286,9 +275,15 @@ export function PositionCard({
             size="28px"
           />
 
-          <Typography color="textPrimary" fontSize="18px">
-            {currencyBase?.symbol}/{currencyQuote?.symbol}
-          </Typography>
+          <TokenPairName
+            symbol0={currencyBase?.symbol}
+            symbol1={currencyQuote?.symbol}
+            width="178px"
+            sx={{
+              fontSize: "18px",
+              color: "text.primary",
+            }}
+          />
 
           <FeeTierPercentLabel feeTier={feeAmount} />
 
@@ -331,19 +326,14 @@ export function PositionCard({
                 "@media(max-width: 640px)": { width: "fit-content" },
               }}
             >
-              <Typography color="text.primary">
-                {!!token1 && !!token0 && pool
-                  ? inverted
-                    ? pool.priceOf(token1)
-                      ? `${formatTokenPrice(pool.priceOf(token1).toSignificant(token1.decimals))} ${pairName}`
-                      : "--"
-                    : pool.priceOf(token0)
-                    ? `${formatTokenPrice(pool.priceOf(token0).toFixed(token0.decimals))} ${pairName}`
-                    : "--"
-                  : "--"}
-              </Typography>
-
-              <SyncAltIcon sx={{ fontSize: "1rem", marginLeft: "6px", cursor: "pointer" }} onClick={handleConvert} />
+              <PoolCurrentPrice
+                pool={pool}
+                showInverted
+                fontSize="14px"
+                usdValueColor="text.primary"
+                symbolColor="text.primary"
+                showUsdValue={false}
+              />
             </Flex>
           </Flex>
 

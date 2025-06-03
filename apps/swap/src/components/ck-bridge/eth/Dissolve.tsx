@@ -57,7 +57,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
-    if (!amount) return t("common.enter.input.amount");
+    if (!amount) return t("ck.enter.transfer.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
     if (formatTokenAmount(amount, ckETH.decimals).isLessThan(MIN_WITHDRAW_AMOUNT))
       return `Min amount is ${toSignificantWithGroupSeparator(

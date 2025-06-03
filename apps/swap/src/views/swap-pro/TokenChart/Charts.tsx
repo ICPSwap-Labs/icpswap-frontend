@@ -8,12 +8,13 @@ import { SwapProContext } from "components/swap/pro";
 import { SwapContext } from "components/swap/index";
 import { Trans } from "react-i18next";
 import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
+import { DensityChart } from "components/info/DensityChart";
 
 export default function TokenChartInfo() {
   const theme = useTheme();
   const [priceTokenId, setPriceTokenId] = useState<string | Null>(null);
   const { token, chartView } = useContext(SwapProContext);
-  const { poolId } = useContext(SwapContext);
+  const { poolId, selectedPool } = useContext(SwapContext);
 
   const tokenChartsRef = useRef<TokenChartsRef>(null);
 
@@ -57,6 +58,9 @@ export default function TokenChartInfo() {
         tokenPairWithIcp={tokenPairWithIcp}
         priceChart={<TokenPriceChart token={priceToken} />}
         onPriceTokenIdChange={setPriceTokenId}
+        LiquidityChart={
+          <DensityChart address={poolId} token0Price={selectedPool ? selectedPool.token0Price.toFixed() : undefined} />
+        }
       />
 
       {chartView && TRADING_VIEW_DESCRIPTIONS.includes(chartView.value) ? (

@@ -3,11 +3,12 @@ import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import type { TokenInfo, StorageTokenInfo, Null } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
-import { IdbStorage } from "@icpswap/utils";
+import { BigNumber, IdbStorage } from "@icpswap/utils";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 
 import { getTokenInfo } from "./calls";
+import { generateLogoUrl } from "./useTokenLogo";
 
 const storage = new IdbStorage(DB_NAME, DB_VERSION, "tokens");
 
@@ -94,13 +95,13 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
           ...prevState,
           [tokenId]: {
             name: storageInfo.name,
-            logo: storageInfo.logo,
+            logo: generateLogoUrl(storageInfo.canisterId),
             symbol: storageInfo.symbol,
             canisterId: storageInfo.canisterId,
             totalSupply: BigInt(0),
             transFee: storageInfo.transFee.includes("bigint:")
               ? BigInt(storageInfo.transFee.replace(/\D/g, ""))
-              : BigInt(storageInfo.transFee.toString()),
+              : BigInt(new BigNumber(storageInfo.transFee).toString()),
             decimals: Number(storageInfo.decimals),
             standardType: storageInfo.standardType,
           },

@@ -17,7 +17,7 @@ enum TabName {
 }
 
 const tabs = [
-  { label: i18n.t("swap.your.liquidity.positions"), value: TabName.Positions },
+  { label: i18n.t("liquidity.your.positions"), value: TabName.Positions },
   { label: i18n.t("swap.top.pools"), value: TabName.TopPools },
 ];
 

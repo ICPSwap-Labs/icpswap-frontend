@@ -24,27 +24,33 @@ import { useToken } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { Token } from "@icpswap/swap-sdk";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
+import { TokenSymbol } from "components/TokenSymbol";
 
-import PoolChart from "./components/PoolChart";
+import { PoolChart } from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
 
 interface PoolTokenTvlProps {
   token: Token | undefined;
-  amount: BigNumber | undefined;
+  amount: string | undefined;
   tvl: string | undefined;
 }
 
 function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
   return (
-    <Flex justify="space-between">
+    <Flex justify="space-between" gap="0 12px">
       <Flex gap="0 8px">
         <TokenImage logo={token?.logo} tokenId={token?.address} />
-        <Typography fontWeight={500} color="text.primary">
-          {token?.symbol}
+        <Typography
+          sx={{
+            color: "text.primary",
+            fontWeight: 500,
+          }}
+        >
+          <TokenSymbol symbol={token?.symbol} typographyStyle="inherit" width={106} />
         </Typography>
       </Flex>
 
-      <Flex vertical gap="4px 0">
+      <Flex vertical gap="4px 0" align="flex-end">
         <Typography color="text.primary" fontWeight={500}>
           {amount ? formatAmount(parseTokenAmount(amount, token?.decimals).toNumber()) : ""}
         </Typography>
@@ -302,7 +308,11 @@ export default function SwapPoolDetails() {
           </GridAutoRows>
         </MainCard>
 
-        <PoolChart canisterId={canisterId} token0Price={pool?.token0Price} volume24H={pool?.volumeUSD} />
+        <PoolChart
+          canisterId={canisterId}
+          token0Price={pool ? new BigNumber(pool.token1Price).dividedBy(pool.token0Price).toNumber() : undefined}
+          volume24H={pool?.volumeUSD}
+        />
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>

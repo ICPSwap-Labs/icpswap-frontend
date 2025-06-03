@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, SelectToken, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
+import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { FilterState } from "types/staking-token";
 import { GlobalData, StakeRow, PoolListHeader } from "components/stake/index";
@@ -10,6 +10,7 @@ import { getStateValueByFilterState } from "utils/stake/index";
 import { usePools } from "hooks/staking-token/index";
 import i18n from "i18n/index";
 import { useTranslation } from "react-i18next";
+import { YourPoolsEmpty } from "components/stake/Empty";
 
 const Tabs = [
   { label: i18n.t("common.pools.all"), state: FilterState.ALL },
@@ -26,8 +27,8 @@ function MainContent() {
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
-  const [stakeTokenId, setStakeTokenId] = useState<string | undefined | null>(null);
-  const [rewardTokenId, setRewardTokenId] = useState<string | undefined | null>(null);
+  const [stakeTokenId] = useState<string | undefined | null>(null);
+  const [rewardTokenId] = useState<string | undefined | null>(null);
 
   const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;
@@ -67,19 +68,19 @@ function MainContent() {
     };
   }, [state, matchDownSM, __state]);
 
-  const handleStakeTokenChange = useCallback(
-    (tokenId: string | undefined) => {
-      setStakeTokenId(tokenId);
-    },
-    [setStakeTokenId],
-  );
+  // const handleStakeTokenChange = useCallback(
+  //   (tokenId: string | undefined) => {
+  //     setStakeTokenId(tokenId);
+  //   },
+  //   [setStakeTokenId],
+  // );
 
-  const handleRewardTokenChange = useCallback(
-    (tokenId: string | undefined) => {
-      setRewardTokenId(tokenId);
-    },
-    [setRewardTokenId],
-  );
+  // const handleRewardTokenChange = useCallback(
+  //   (tokenId: string | undefined) => {
+  //     setRewardTokenId(tokenId);
+  //   },
+  //   [setRewardTokenId],
+  // );
 
   const [headerScrollOutOnTop, setHeaderScrollOutOnTop] = useState(false);
   useEffect(() => {
@@ -171,7 +172,7 @@ function MainContent() {
             ))}
           </Box>
 
-          <Flex
+          {/* <Flex
             gap="10px 20px"
             sx={{
               "@media(max-width: 640px)": {
@@ -201,7 +202,7 @@ function MainContent() {
                 onTokenChange={handleRewardTokenChange}
               />
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
@@ -235,7 +236,9 @@ function MainContent() {
             </Box>
           ) : (
             <>
-              {!pools?.length && !loading && <NoData />}
+              {!pools?.length &&
+                !loading &&
+                (__state === FilterState.YOUR ? <YourPoolsEmpty /> : <NoData tip={t("farm.stake.empty")} />)}
 
               {pools?.map((pool) => (
                 <StakeRow

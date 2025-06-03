@@ -1,10 +1,7 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useMemo, useEffect } from "react";
 import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound, LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
   BigNumber,
@@ -12,16 +9,18 @@ import {
   isNullArgs,
   toSignificantWithGroupSeparator,
   formatLiquidityAmount,
+  urlStringFormat,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
 import { usePositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
-import { Flex } from "@icpswap/ui";
+import { Flex, Link } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
 import { useRefreshTriggerManager } from "hooks";
+import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -39,7 +38,17 @@ function PositionDetailItem({ label, value, convert, onConvertClick }: PositionD
       <Typography
         {...(matchDownSM ? { fontSize: "12px" } : {})}
         component="div"
-        sx={{ width: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap", lineHeight: "14px" }}
+        sx={{
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          lineHeight: "14px",
+          width: "140px",
+          "@media(max-width: 640px)": {
+            width: "fit-content",
+            maxWidth: "140px",
+          },
+        }}
       >
         {label}
       </Typography>
@@ -91,7 +100,6 @@ export function PositionDetails({
   position,
   positionId,
   manuallyInverted,
-  setManuallyInverted,
   show,
   token0USDPrice,
   token1USDPrice,
@@ -106,7 +114,6 @@ export function PositionDetails({
   isLimit,
 }: PositionDetailsProps) {
   const { t } = useTranslation();
-  const history = useHistory();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
@@ -115,14 +122,12 @@ export function PositionDetails({
 
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
-  const { pool, tickLower, tickUpper } = position || {};
-  const { token0, token1, fee: feeAmount } = pool || {};
+  const { token0, token1 } = position?.pool || {};
 
-  const _tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper);
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
+  const { base } = useInverter({
     priceLower: pricesFromPosition?.priceLower,
     priceUpper: pricesFromPosition?.priceUpper,
     quote: pricesFromPosition?.quote,
@@ -132,21 +137,8 @@ export function PositionDetails({
 
   const inverted = token1 ? base?.equals(token1) : undefined;
 
-  const tickAtLimit = useMemo(() => {
-    if (!inverted) return _tickAtLimit;
-
-    return {
-      [Bound.LOWER]: _tickAtLimit[Bound.UPPER] ? true : undefined,
-      [Bound.UPPER]: _tickAtLimit[Bound.LOWER] ? true : undefined,
-    };
-  }, [_tickAtLimit, inverted]);
-
   const currencyQuote = inverted ? token0 : token1;
   const currencyBase = inverted ? token1 : token0;
-
-  const pairName = useMemo(() => {
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
 
   useEffect(() => {
     if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
@@ -171,16 +163,6 @@ export function PositionDetails({
     };
   }, [position, token0USDPrice, token1USDPrice]);
 
-  const handleStake = useCallback(() => {
-    if (!farmId) return;
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
-
-  const handleDetails = useCallback(() => {
-    if (!position) return;
-    history.push(`/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`);
-  }, [position, history, farmId]);
-
   return (
     <>
       <Box
@@ -204,7 +186,7 @@ export function PositionDetails({
         >
           <Flex
             sx={{
-              width: "65%",
+              width: "60%",
               "@media(max-width: 640px)": {
                 width: "100%",
               },
@@ -239,41 +221,24 @@ export function PositionDetails({
                 </Flex>
               }
               value={
-                inverted ? (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary" align="right">
-                      {formatLiquidityAmount(amount0)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px" }} align="right">
-                      {value0 ? formatDollarAmount(value0) : "--"}
-                    </Typography>
-                  </Flex>
-                ) : (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
-                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
-                  </Flex>
-                )
+                <Flex
+                  gap="8px"
+                  sx={{
+                    flex: 1,
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
+                  <Typography color="text.primary" align="right">
+                    {formatLiquidityAmount(amount0)}
+                  </Typography>
+                  <Typography sx={{ fontSize: "12px" }} align="right">
+                    {value0 ? formatDollarAmount(value0) : "--"}
+                  </Typography>
+                </Flex>
               }
             />
 
@@ -302,72 +267,24 @@ export function PositionDetails({
                 </Flex>
               }
               value={
-                inverted ? (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
-                    <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
-                  </Flex>
-                ) : (
-                  <Flex
-                    gap="8px"
-                    sx={{
-                      flex: 1,
-                      "@media(max-width: 640px)": {
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-start",
-                      },
-                    }}
-                  >
-                    <Typography color="text.primary" align="right">
-                      {formatLiquidityAmount(amount0)}
-                    </Typography>
-                    <Typography sx={{ fontSize: "12px" }} align="right">
-                      {value0 ? formatDollarAmount(value0) : "--"}
-                    </Typography>
-                  </Flex>
-                )
-              }
-            />
-
-            <PositionDetailItem
-              label={t("common.price.range")}
-              value={
-                <Flex gap="0 4px" onClick={() => setManuallyInverted(!manuallyInverted)}>
-                  <Typography
-                    sx={{
-                      color: "text.primary",
-                      textAlign: "right",
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                    component="div"
-                  >
-                    {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
-                    {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} {pairName}
-                  </Typography>
-
-                  <SyncAltIcon
-                    sx={{
-                      fontSize: "1rem",
-                      cursor: "pointer",
-                      color: theme.palette.text.secondary,
-                    }}
-                  />
+                <Flex
+                  gap="8px"
+                  sx={{
+                    flex: 1,
+                    "@media(max-width: 640px)": {
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      justifyContent: "flex-start",
+                    },
+                  }}
+                >
+                  <Typography color="text.primary">{formatLiquidityAmount(amount1)}</Typography>
+                  <Typography sx={{ fontSize: "12px" }}>{value1 ? formatDollarAmount(value1) : "--"}</Typography>
                 </Flex>
               }
             />
+
+            <PositionDetailItem label={t("common.price.range")} value={<PositionPriceRange position={position} />} />
 
             <PositionDetailItem
               label={t("common.uncollected.fees")}
@@ -425,19 +342,38 @@ export function PositionDetails({
             />
 
             {farmId ? (
-              <Button
-                variant="contained"
-                className="secondary"
-                size={matchDownSM ? "medium" : "large"}
-                onClick={handleStake}
-              >
-                {staked ? t("unstake.farm") : t("stake.farm")}
-              </Button>
+              <Link to={`/farm/details/${farmId}`}>
+                <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
+                  {staked ? t("unstake.farm") : t("stake.farm")}
+                </Button>
+              </Link>
             ) : null}
 
-            <Button variant="contained" size={matchDownSM ? "medium" : "large"} onClick={handleDetails}>
-              {t("liquidity.details")}
-            </Button>
+            <Link
+              to={
+                position
+                  ? `/liquidity/increase/${String(positionId)}/${position.pool.id}?path=${urlStringFormat(
+                      "/liquidity?tab=Positions",
+                    )}`
+                  : ""
+              }
+            >
+              <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
+                {t("liquidity.add.more")}
+              </Button>
+            </Link>
+
+            <Link
+              to={
+                position
+                  ? `/liquidity/position/${String(positionId)}/${position.pool.id}${farmId ? `?farmId=${farmId}` : ""}`
+                  : ""
+              }
+            >
+              <Button variant="contained" size={matchDownSM ? "medium" : "large"}>
+                {t("liquidity.details")}
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Box>

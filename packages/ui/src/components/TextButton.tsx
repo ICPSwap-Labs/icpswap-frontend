@@ -104,6 +104,11 @@ export function TextButton({
   const handleClick = useCallback(() => {
     if (disabled) return;
 
+    if (onClick) {
+      onClick();
+      return;
+    }
+
     if (link) {
       mockALinkAndOpen(link, "text-button-open-new-window");
       return;
@@ -111,10 +116,7 @@ export function TextButton({
 
     if (to) {
       history.push(to);
-      return;
     }
-
-    if (onClick) onClick();
   }, [link, to, onClick, disabled]);
 
   return (

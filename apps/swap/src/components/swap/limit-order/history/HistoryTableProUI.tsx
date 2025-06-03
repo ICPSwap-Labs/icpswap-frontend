@@ -1,10 +1,15 @@
 import { Box, Theme, makeStyles } from "components/Mui";
-import { Header, HeaderCell, LoadingRow, NoData } from "@icpswap/ui";
+import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { useScrollToTop } from "hooks/useScrollToTop";
+import { useCallback } from "react";
+import { Tab } from "constants/index";
 
 import { HistoryRowPro } from "./HistoryRowPro";
+import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -36,8 +41,16 @@ export function HistoryTableProUI({
 }: HistoryTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
+  const history = useHistory();
 
   const [, pool] = usePoolByPoolId(poolId);
+
+  const scrollToTop = useScrollToTop();
+
+  const handleToLimit = useCallback(() => {
+    scrollToTop();
+    history.push(`/swap/pro?tab=${Tab.Limit}`);
+  }, [scrollToTop, history]);
 
   return (
     <>
@@ -45,8 +58,8 @@ export function HistoryTableProUI({
         <Box sx={{ minWidth: "1096px" }}>
           <Header className={wrapperClassName ?? classes.wrapper}>
             <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.you.pay")}</HeaderCell>
-            <HeaderCell>{t("common.you.receive")}</HeaderCell>
+            <HeaderCell>{t("common.you.paid")}</HeaderCell>
+            <HeaderCell>{t("common.you.received")}</HeaderCell>
             <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
             {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
           </Header>
@@ -64,7 +77,9 @@ export function HistoryTableProUI({
               ))
             : null}
 
-          {(limitTransactions ?? []).length === 0 && !loading ? <NoData /> : null}
+          {(limitTransactions ?? []).length === 0 && !loading ? (
+            <LimitTransactionsEmpty onClick={handleToLimit} />
+          ) : null}
 
           {loading ? (
             <Box sx={{ padding: "24px" }}>

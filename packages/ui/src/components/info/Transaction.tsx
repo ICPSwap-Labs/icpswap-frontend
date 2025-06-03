@@ -1,46 +1,86 @@
 import { formatDollarAmount, formatAmount, enumToString, shorten } from "@icpswap/utils";
 import type { PoolStorageTransaction } from "@icpswap/types";
 import dayjs from "dayjs";
+import { Copy } from "react-feather";
 
 import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
+import { Link } from "../Link";
+
+function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
+  return (
+    <BodyCell
+      sx={{
+        display: "block",
+        maxWidth: "90px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {symbol}
+    </BodyCell>
+  );
+}
 
 export function ActionTypeFormat(transaction: PoolStorageTransaction) {
   const type = enumToString(transaction.action);
 
-  let swapDesc = "";
-
   switch (type) {
     case "swap":
-      swapDesc = `Swap ${transaction.token0Symbol} for ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Swap&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;for&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
+
     case "increaseLiquidity":
     case "addLiquidity":
     case "mint":
-      swapDesc = `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Add&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
     case "decreaseLiquidity":
-      swapDesc = `Remove ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
+      return (
+        <BodyCell>
+          Remove&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
     case "claim":
-      swapDesc = `Collect ${transaction.token0Symbol} and  ${transaction.token1Symbol}`;
-      break;
-    default:
-      break;
-  }
+      return (
+        <BodyCell>
+          Collect&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
+          &nbsp;and&nbsp;
+          <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
+        </BodyCell>
+      );
 
-  return swapDesc;
+    default:
+      return null;
+  }
 }
 
 interface TransactionRowProps {
   transaction: PoolStorageTransaction;
   wrapperSx?: BoxProps["sx"];
   className?: BoxProps["className"];
-  onAddressClick?: (address: string) => void;
+  onCopy?: (address: string) => void;
 }
 
-export function TransactionRow({ transaction, className, onAddressClick }: TransactionRowProps) {
+export function TransactionRow({ transaction, className, onCopy }: TransactionRowProps) {
   const theme = useTheme();
 
   return (
@@ -76,8 +116,12 @@ export function TransactionRow({ transaction, className, onAddressClick }: Trans
       </BodyCell>
 
       <BodyCell>
-        <BodyCell color="primary.main" onClick={() => onAddressClick(transaction.recipient)}>
-          {shorten(transaction.recipient, 6)}
+        <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
+          <Link link={`https://www.icexplorer.io/address/details/${transaction.recipient}`} color="primary">
+            {shorten(transaction.recipient, 6)}
+          </Link>
+
+          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.recipient)} />
         </BodyCell>
       </BodyCell>
 

@@ -1,9 +1,8 @@
-import { useMemo } from "react";
-import SwapModal from "components/modal/swap";
+import { ReactNode, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
 import { TradePrice } from "components/swap/TradePrice";
-import { BigNumber, formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
 import { TradeType } from "@icpswap/constants";
 import { isElement } from "react-is";
@@ -11,8 +10,10 @@ import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useTranslation } from "react-i18next";
-
-import FormattedPriceImpact from "./FormattedPriceImpact";
+import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
+import { feeAmountPercent } from "utils/swap/feeAmountPercent";
+import colors from "theme/colors";
+import { Modal } from "@icpswap/ui";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -34,11 +35,12 @@ const useStyle = makeStyles((theme: Theme) => {
 
 export interface DetailItemProps {
   label: string;
-  value: React.ReactChild;
-  tooltip?: React.ReactChild;
+  value: ReactNode;
+  tooltip?: ReactNode;
+  valueColor?: string;
 }
 
-export function DetailItem({ label, value, tooltip }: DetailItemProps) {
+export function DetailItem({ label, value, tooltip, valueColor = "text.primary" }: DetailItemProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -63,12 +65,12 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
         </Typography>
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Flex justify="flex-end" align="flex-start">
         {isElement(value) ? (
           value
         ) : (
           <Typography
-            color="textPrimary"
+            color={valueColor}
             align="right"
             sx={{
               ...(matchDownSM ? { fontSize: "12px" } : {}),
@@ -77,7 +79,7 @@ export function DetailItem({ label, value, tooltip }: DetailItemProps) {
             {value}
           </Typography>
         )}
-      </Box>
+      </Flex>
     </Box>
   );
 }
@@ -89,9 +91,9 @@ export interface SwapConfirmModalProps {
   onClose: () => void;
   slippageTolerance: Percent | null;
   trade: Trade<Token, Token, TradeType> | null;
-  inputTokenSubBalance: BigNumber | undefined;
+  inputTokenSubBalance: string | undefined;
   inputTokenUnusedBalance: bigint | undefined;
-  inputTokenBalance: BigNumber | undefined;
+  inputTokenBalance: string | undefined;
 }
 
 export function SwapConfirmModal({
@@ -108,7 +110,7 @@ export function SwapConfirmModal({
   const { t } = useTranslation();
   const classes = useStyle();
 
-  const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount } = useMemo(() => {
+  const { realizedLPFee, priceImpact, inputToken, outputToken, inputAmount, pool } = useMemo(() => {
     if (!trade) return {};
 
     const feeAmount = CurrencyAmount.fromRawAmount(
@@ -127,6 +129,7 @@ export function SwapConfirmModal({
       inputToken: trade.inputAmount.currency,
       outputToken: trade.outputAmount.currency,
       inputAmount: trade.inputAmount.toExact(),
+      pool: trade.swaps[0].route.pools[0],
     };
   }, [trade]);
 
@@ -142,7 +145,7 @@ export function SwapConfirmModal({
   });
 
   return (
-    <SwapModal open={open} title={t("swap.submit")} onClose={onClose}>
+    <Modal open={open} title={t("swap.submit")} onClose={onClose} background="level1">
       <>
         <Box className={classes.box}>
           <Box className={classes.wrapper}>
@@ -201,7 +204,7 @@ export function SwapConfirmModal({
             }
           />
           <DetailItem
-            label={t("swap.liquidity.provider.fee")}
+            label={t("swap.liquidity.provider.fee", { value: pool ? feeAmountPercent(pool.fee) : "--" })}
             value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
             tooltip={<Tooltip background="#ffffff" tips={t("swap.liquidity.provider.fee.tips")} />}
           />
@@ -236,6 +239,7 @@ export function SwapConfirmModal({
                 tips="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
               />
             }
+            valueColor={colors.warningDark}
           />
           <DetailItem
             label={t("swap.estimated.fee")}
@@ -271,6 +275,7 @@ export function SwapConfirmModal({
             }
             tooltip={<Tooltip background="#ffffff" tips={t`Swapping a too small amount might lead to failure!`} />}
           />
+          <DetailItem label={t("swap.gas.fee")} value="0 (forever)" />
         </Box>
 
         <Box sx={{ margin: "24px 0 0 0" }}>
@@ -286,6 +291,6 @@ export function SwapConfirmModal({
           </Button>
         </Box>
       </>
-    </SwapModal>
+    </Modal>
   );
 }

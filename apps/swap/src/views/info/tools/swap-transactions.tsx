@@ -183,11 +183,13 @@ export default function SwapTransactions() {
                   key={`${String(transaction.timestamp)}_${index}`}
                   transaction={transaction}
                   className={classes.wrapper}
-                  onAddressClick={handleCopy}
+                  onCopy={handleCopy}
                 />
               ))}
 
-              {(transactions ?? []).length === 0 && !loading ? <NoData /> : null}
+              {(transactions ?? []).length === 0 && !loading ? (
+                <NoData tip={t("info.tools.swap.transactions.empty")} />
+              ) : null}
 
               {loading ? (
                 <Box sx={{ padding: "16px" }}>

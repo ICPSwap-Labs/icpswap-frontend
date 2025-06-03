@@ -14,6 +14,7 @@ import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 import { useTranslation } from "react-i18next";
 import { useBalanceMaxSpend } from "hooks";
 import { maxAmountFormat } from "utils/index";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -115,7 +116,7 @@ export interface SwapDepositAmountProps {
   showMaxButton?: boolean;
   onMax?: () => void;
   currencyBalance: CurrencyAmount<Token> | undefined;
-  subAccountBalance: BigNumber | Null;
+  subAccountBalance: string | Null;
   unusedBalance: bigint | Null;
   maxSpentAmount: string | Null;
   noLiquidity?: boolean;
@@ -144,12 +145,12 @@ export function SwapDepositAmount({
   const handleCanisterBalanceClick = useCallback(() => {
     if (!subAccountBalance || !unusedBalance || !currency) return;
 
-    if (subAccountBalance.isEqualTo(0)) {
+    if (new BigNumber(subAccountBalance).isEqualTo(0)) {
       onUserInput(parseTokenAmount(unusedBalance, currency.decimals).toString());
     } else {
       onUserInput(
         parseTokenAmount(unusedBalance, currency.decimals)
-          .plus(parseTokenAmount(subAccountBalance.minus(currency.transFee), currency.decimals))
+          .plus(parseTokenAmount(new BigNumber(subAccountBalance).minus(currency.transFee), currency.decimals))
           .toString(),
       );
     }
@@ -177,7 +178,7 @@ export function SwapDepositAmount({
               fontSize: "16px",
             }}
           >
-            {currency?.symbol}
+            {tokenSymbolEllipsis({ symbol: currency?.symbol })}
           </Typography>
         </Flex>
 

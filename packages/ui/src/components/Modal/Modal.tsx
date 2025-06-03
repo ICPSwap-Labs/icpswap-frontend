@@ -112,7 +112,7 @@ export function Modal({
   dialogWidth = "570px",
 }: ModalProps) {
   const classes = useStyles();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
   const down760 = useMediaQuery("(max-width:760px)");

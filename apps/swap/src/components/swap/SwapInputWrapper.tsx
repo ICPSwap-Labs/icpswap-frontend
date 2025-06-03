@@ -9,8 +9,7 @@ import { SwapContext } from "components/swap/index";
 import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useHistory } from "react-router-dom";
-
-import { SwapInputCurrency } from "./SwapInputCurrency";
+import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -25,8 +24,7 @@ export interface SwapInputWrapperProps {
   };
   poolId: string | undefined;
   currencyBalances: {
-    INPUT: CurrencyAmount<Token> | undefined;
-    OUTPUT: CurrencyAmount<Token> | undefined;
+    [key: string]: CurrencyAmount<Token> | undefined;
   };
   inputToken: Token | undefined;
   outputToken: Token | undefined;
@@ -35,8 +33,8 @@ export interface SwapInputWrapperProps {
   ui?: "pro" | "normal";
   inputTokenUnusedBalance: bigint | Null;
   outputTokenUnusedBalance: bigint | Null;
-  inputTokenSubBalance: BigNumber | Null;
-  outputTokenSubBalance: BigNumber | Null;
+  inputTokenSubBalance: string | Null;
+  outputTokenSubBalance: string | Null;
   maxInputAmount: CurrencyAmount<Token> | undefined;
   noLiquidity?: boolean;
 }
@@ -121,7 +119,7 @@ export function SwapInputWrapper({
           token={inputToken}
           currencyPrice={inputTokenPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.INPUT]}
-          currencyBalance={currencyBalances[SWAP_FIELD.INPUT]}
+          currencyBalance={inputToken ? currencyBalances[inputToken.address] : undefined}
           onMax={onMaxInput}
           onInput={(value: string) => onInput(value, "input")}
           onTokenChange={onTokenAChange}
@@ -165,7 +163,7 @@ export function SwapInputWrapper({
           token={outputToken}
           currencyPrice={outputTokenPrice}
           formattedAmount={formattedAmounts[SWAP_FIELD.OUTPUT]}
-          currencyBalance={currencyBalances[SWAP_FIELD.OUTPUT]}
+          currencyBalance={outputToken ? currencyBalances[outputToken.address] : undefined}
           onInput={(value: string) => onInput(value, "output")}
           onTokenChange={onTokenBChange}
           currencyState={outputTokenState}

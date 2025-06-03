@@ -1,24 +1,20 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
 import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount, isNullArgs } from "@icpswap/utils";
-import { useSwapPositionOwner, useTickAtLimit } from "@icpswap/hooks";
-import { Pool, getPriceOrderingFromPositionForUI, useInverter, CurrencyAmount } from "@icpswap/swap-sdk";
+import { useAddressAlias, useSwapPositionOwner } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
+import { Pool, CurrencyAmount } from "@icpswap/swap-sdk";
 import { TableRow, BodyCell, Link } from "@icpswap/ui";
 import { LoadingRow, Copy, IsSneedOwner } from "components/index";
 import { LimitLabel } from "components/swap/limit-order";
 import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Null } from "@icpswap/types";
 import { useIsSneedOwner } from "hooks/index";
 import { useTranslation } from "react-i18next";
-
-enum Bound {
-  LOWER = "LOWER",
-  UPPER = "UPPER",
-}
+import { TokenSymbol } from "components/TokenSymbol";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
+import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
 export interface PositionRowProps {
   positionInfo: PositionDetails;
@@ -42,8 +38,6 @@ export function PositionRow({
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [manuallyInverted, setManuallyInverted] = useState(false);
-
   const position = usePositionWithPool({
     pool,
     tickLower: positionInfo.tickLower.toString(),
@@ -51,37 +45,7 @@ export function PositionRow({
     liquidity: positionInfo.liquidity.toString(),
   });
 
-  const { tickLower, tickUpper } = position || {};
-  const { token0, token1, fee: feeAmount } = pool || {};
-
-  const _tickAtLimit = useTickAtLimit(feeAmount, tickLower, tickUpper);
-  const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
-
-  // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition?.priceLower,
-    priceUpper: pricesFromPosition?.priceUpper,
-    quote: pricesFromPosition?.quote,
-    base: pricesFromPosition?.base,
-    invert: manuallyInverted,
-  });
-
-  const inverted = token1 ? base?.equals(token1) : undefined;
-  const currencyQuote = inverted ? token0 : token1;
-  const currencyBase = inverted ? token1 : token0;
-
-  const tickAtLimit = useMemo(() => {
-    if (!inverted) return _tickAtLimit;
-
-    return {
-      [Bound.LOWER]: _tickAtLimit[Bound.UPPER] ? true : undefined,
-      [Bound.UPPER]: _tickAtLimit[Bound.LOWER] ? true : undefined,
-    };
-  }, [_tickAtLimit, inverted]);
-
-  const pairName = useMemo(() => {
-    return `${currencyQuote?.symbol} per ${currencyBase?.symbol}`;
-  }, [currencyQuote, currencyBase]);
+  const { token0, token1 } = pool || {};
 
   const token0USDPrice = useUSDPriceById(position?.pool.token0.address);
   const token1USDPrice = useUSDPriceById(position?.pool.token1.address);
@@ -117,6 +81,8 @@ export function PositionRow({
     return allLimitOrders.includes(BigInt(positionInfo.id));
   }, [allLimitOrders, positionInfo]);
 
+  const { result: addressAlias } = useAddressAlias({ account: owner });
+
   return (
     <>
       {pool ? (
@@ -132,7 +98,7 @@ export function PositionRow({
 
           <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
             <Copy content={owner ?? ""}>
-              <BodyCell>{owner ? shorten(owner) : "--"}</BodyCell>
+              <BodyCell>{addressAlias ?? (owner ? shorten(owner) : "--")}</BodyCell>
             </Copy>
 
             <IsSneedOwner isSneed={isSneed} tooltip={t("liquidity.locked.snned")} />
@@ -141,36 +107,41 @@ export function PositionRow({
           <BodyCell>{totalUSDValue ? `${formatDollarAmount(totalUSDValue)}` : "--"}</BodyCell>
 
           <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
-            <BodyCell>{position ? `${formatAmount(position.amount0.toExact())} ${pool.token0.symbol}` : "--"}</BodyCell>
-            <BodyCell>{position ? `${formatAmount(position.amount1.toExact())} ${pool.token1.symbol}` : "--"}</BodyCell>
+            <BodyCell>
+              {position ? (
+                <>
+                  {formatAmount(position.amount0.toExact())}&nbsp;
+                  <TokenSymbol symbol={pool.token0.symbol} typographyStyle="inherit" />
+                </>
+              ) : (
+                "--"
+              )}
+            </BodyCell>
+
+            <BodyCell>
+              {position ? (
+                <>
+                  {formatAmount(position.amount1.toExact())}&nbsp;
+                  <TokenSymbol symbol={pool.token1.symbol} typographyStyle="inherit" />
+                </>
+              ) : (
+                "--"
+              )}
+            </BodyCell>
           </BodyCell>
 
-          <BodyCell sx={{ display: "inline-block" }} onClick={() => setManuallyInverted(!manuallyInverted)}>
-            {`${formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} - ${formatTickPrice(
-              priceUpper,
-              tickAtLimit,
-              Bound.UPPER,
-            )} ${pairName}`}
-
-            <SyncAltIcon
-              sx={{
-                fontSize: "1rem",
-                cursor: "pointer",
-                color: "#ffffff",
-                margin: "0 0 0 4px",
-                verticalAlign: "middle",
-              }}
-            />
+          <BodyCell>
+            <PositionPriceRange position={position} color="inherit" fontSize="inherit" arrow={false} />
           </BodyCell>
 
           <BodyCell sx={{ flexDirection: "column", gap: "10px" }}>
             <BodyCell>
               {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                ? `${formatAmount(
-                    currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0,
-                  )} ${token0?.symbol} and ${formatAmount(
-                    currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0,
-                  )} ${token1?.symbol}`
+                ? `${formatAmount(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)} ${tokenSymbolEllipsis({
+                    symbol: token0?.symbol,
+                  })} and ${formatAmount(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0)} ${tokenSymbolEllipsis({
+                    symbol: token1?.symbol,
+                  })}`
                 : "--"}
             </BodyCell>
 

@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react";
-import SwapModal from "components/modal/swap";
 import { InputAdornment, useTheme, Typography, Box, useMediaQuery, makeStyles } from "components/Mui";
 import { useGlobalTokenList } from "store/global/hooks";
 import { isDarkTheme } from "utils/index";
@@ -14,6 +13,7 @@ import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { Modal } from "@icpswap/ui";
 
 import { TokenItem } from "./TokenItem";
 import { BaseTokens } from "./BaseToken";
@@ -143,7 +143,7 @@ export default function Selector({
 
   return (
     <>
-      <SwapModal
+      <Modal
         open={open}
         title={t("common.select.a.token")}
         onClose={onClose}
@@ -290,7 +290,7 @@ export default function Selector({
             </Box>
           </Box>
         </Box>
-      </SwapModal>
+      </Modal>
     </>
   );
 }

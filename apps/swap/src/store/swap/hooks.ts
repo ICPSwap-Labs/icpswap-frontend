@@ -5,19 +5,13 @@ import { useToken } from "hooks/useCurrency";
 import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useCurrencyBalance } from "hooks/token/useTokenBalance";
+import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
-import {
-  useParsedQueryString,
-  // useUserUnusedBalance,
-  // useTokenBalance,
-  useDebouncedChangeHandler,
-  useDebounce,
-} from "@icpswap/hooks";
-import { isValidPrincipal, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
-// import { SubAccount } from "@dfinity/ledger-icp";
+import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { useParsedQueryString, useDebouncedChangeHandler, useDebounce } from "@icpswap/hooks";
+import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";
@@ -89,9 +83,9 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const principal = useAccountPrincipal();
   const userSlippageTolerance = useSlippageToleranceToPercent("swap");
 
-  // const sub = useMemo(() => {
-  //   return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
-  // }, [principal]);
+  const sub = useMemo(() => {
+    return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
+  }, [principal]);
 
   const {
     independentField,
@@ -109,10 +103,12 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const { result: inputCurrencyBalance } = useCurrencyBalance(principal, __inputToken, refresh);
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, __outputToken, refresh);
 
-  const currencyBalances = {
-    [SWAP_FIELD.INPUT]: inputCurrencyBalance,
-    [SWAP_FIELD.OUTPUT]: outputCurrencyBalance,
-  };
+  const currencyBalances = useMemo(() => {
+    return {
+      ...(__inputToken ? { [__inputToken.address]: inputCurrencyBalance } : {}),
+      ...(__outputToken ? { [__outputToken.address]: outputCurrencyBalance } : {}),
+    };
+  }, [__inputToken, __outputToken, inputCurrencyBalance, outputCurrencyBalance]);
 
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? __inputToken : __outputToken) ?? undefined);
 
@@ -138,15 +134,8 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     return pool.alignToken(__inputToken);
   }, [pool, __inputToken]);
 
-  const inputTokenSubBalance = useMemo(() => {
-    if (!principal) return undefined;
-    return new BigNumber(0);
-  }, [principal]);
-
-  const outputTokenSubBalance = useMemo(() => {
-    if (!principal) return undefined;
-    return new BigNumber(0);
-  }, []);
+  const { result: inputTokenSubBalance } = useTokenBalance(inputToken?.address, poolId, refresh, sub);
+  const { result: outputTokenSubBalance } = useTokenBalance(__outputToken?.address, poolId, refresh, sub);
 
   const inputTokenUnusedBalance = BigInt(0);
   const outputTokenUnusedBalance = BigInt(0);
@@ -166,7 +155,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   const tokenInsufficient = getTokenInsufficient({
     token: inputToken,
     subAccountBalance: inputTokenSubBalance,
-    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals),
+    balance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputToken?.decimals).toString(),
     formatTokenAmount: formatTokenAmount(typedValue, inputToken?.decimals).toString(),
     unusedBalance: inputTokenUnusedBalance,
     allowance,
@@ -222,8 +211,14 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     outputTokenUnusedBalance,
     inputTokenSubBalance,
     outputTokenSubBalance,
-    inputTokenBalance: formatTokenAmount(inputCurrencyBalance?.toExact(), inputCurrencyBalance?.currency.decimals),
-    outputTokenBalance: formatTokenAmount(outputCurrencyBalance?.toExact(), outputCurrencyBalance?.currency.decimals),
+    inputTokenBalance: formatTokenAmount(
+      inputCurrencyBalance?.toExact(),
+      inputCurrencyBalance?.currency.decimals,
+    ).toString(),
+    outputTokenBalance: formatTokenAmount(
+      outputCurrencyBalance?.toExact(),
+      outputCurrencyBalance?.currency.decimals,
+    ).toString(),
     maxInputAmount,
     pool: Trade.pool,
     poolId,

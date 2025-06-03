@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { useStoreTokenBalance } from "hooks/token/useTokenBalance";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useERC20Balance, useETHBalance } from "hooks/web3/index";
 import { ckBridgeChain } from "@icpswap/constants";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { ckETH } from "@icpswap/tokens";
+import { BigNumber } from "@icpswap/utils";
 
 export interface UseTokenBalanceProps {
   token: Token | Null;
@@ -29,11 +30,11 @@ export function useBridgeTokenBalance({ token, minterInfo, chain, refresh }: Use
 
   const { result: ethBalance } = useETHBalance();
   const { result: erc20TokenBalance } = useERC20Balance(ChainKeyETHMinterInfo?.erc20_contract_address, refresh);
-  const { result: tokenBalance } = useStoreTokenBalance(token?.address, principal?.toString(), refresh);
+  const { result: tokenBalance } = useTokenBalance(token?.address, principal?.toString(), refresh);
 
   return useMemo(() => {
     if (!token) return undefined;
-    if (chain === ckBridgeChain.icp) return tokenBalance;
+    if (chain === ckBridgeChain.icp) return tokenBalance ? new BigNumber(tokenBalance) : undefined;
     if (chain === ckBridgeChain.eth && token.address === ckETH.address) return ethBalance;
     if (chain === ckBridgeChain.eth) return erc20TokenBalance;
     return undefined;

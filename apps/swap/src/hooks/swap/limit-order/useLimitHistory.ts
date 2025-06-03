@@ -9,7 +9,7 @@ export interface UseLimitHistoryProps {
 }
 
 export function useLimitHistory({ transaction }: UseLimitHistoryProps) {
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount } = useMemo(() => {
+  const { inputTokenId, outputTokenId, inputAmount, inputChangeAmount, outputChangeAmount } = useMemo(() => {
     const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
       ? transaction.token1Id
       : transaction.token0Id;
@@ -18,12 +18,15 @@ export function useLimitHistory({ transaction }: UseLimitHistoryProps) {
     const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
     const outputChangeAmount =
       inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
+    const inputChangeAmount =
+      inputTokenId === transaction.token1Id ? transaction.token1ChangeAmount : transaction.token0ChangeAmount;
 
     return {
       inputTokenId,
       outputTokenId,
       inputAmount,
       outputChangeAmount,
+      inputChangeAmount,
     };
   }, [transaction]);
 
@@ -50,7 +53,8 @@ export function useLimitHistory({ transaction }: UseLimitHistoryProps) {
       outputToken,
       inputAmount,
       outputChangeAmount,
+      inputChangeAmount,
     }),
-    [limitPrice, receiveAmount, inputAmount, inputToken, outputToken, outputChangeAmount],
+    [limitPrice, receiveAmount, inputAmount, inputToken, outputToken, inputChangeAmount, outputChangeAmount],
   );
 }
