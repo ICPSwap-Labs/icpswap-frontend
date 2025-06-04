@@ -6,7 +6,6 @@ import { RouteDefinition } from "./type";
 
 const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
 const SwapLimit = Loadable(lazy(() => import("../views/swap-liquidity-v3/limit")));
-const SwapTransaction = Loadable(lazy(() => import("../views/swap-liquidity-v3/transaction")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));
 const AddLiquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/AddLiquidity")));
@@ -29,7 +28,6 @@ const StaticTitlesAndDescriptions = {
 export const swapRoutesConfigs = {
   SWAP: "/swap",
   SWAP_LIMIT: "/swap/limit",
-  SWAP_TRANSACTIONS: "/swap/transaction",
   SWAP_RECLAIM: "/swap/withdraw",
   SWAP_REVOKE: "/swap/revoke-approve",
   SWAP_PRO: "/swap/pro",
@@ -51,11 +49,6 @@ export const swapRoutes: RouteDefinition[] = [
     path: swapRoutesConfigs.SWAP_LIMIT,
     getElement: () => <SwapLimit />,
     getTitle: () => StaticTitlesAndDescriptions.Limit,
-  },
-  {
-    path: swapRoutesConfigs.SWAP_TRANSACTIONS,
-    getElement: () => <SwapTransaction />,
-    getTitle: () => StaticTitlesAndDescriptions.Swap,
   },
   {
     path: swapRoutesConfigs.SWAP_RECLAIM,

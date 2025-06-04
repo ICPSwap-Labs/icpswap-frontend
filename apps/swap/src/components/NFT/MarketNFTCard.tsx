@@ -27,7 +27,10 @@ const useStyles = makeStyles((theme: Theme) => {
       height: "40px",
       marginTop: "10px",
       lineHeight: "20px",
-      ...theme.mixins.overflowEllipsis2,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "-webkit-box",
+      "-webkit-box-orient": "vertical",
       "-webkit-line-clamp": 2,
     },
   };
@@ -72,7 +75,7 @@ export default function MarketNFTCard({
           <Typography variant="h4" color="text.primary">
             Marvel
           </Typography>
-          <Typography fontSize="12px" className={classes.description}>
+          <Typography fontSize="12px" className={`${classes.description} text-overflow-ellipsis2`}>
             Meme is an experimental protocol mashing up some of the most exciting innovations in DeFi and crypto
             collectibles. Put your $MEME to work by farming exclusive NFT memes. Stake LP tokens for access to our batch
             of legendary cards.

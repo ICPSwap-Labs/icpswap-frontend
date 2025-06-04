@@ -4,6 +4,7 @@ import { Typography, Box, Grid, Button, makeStyles, Theme } from "components/Mui
 import CheckCircleIcon from "@mui/icons-material/CheckCircleOutline";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import { CanisterCreateDetails } from "types/nft";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkCircle: {
@@ -12,17 +13,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default ({
-  open,
-  onClose,
-  details,
-  canisterId,
-}: {
+interface CanisterCreateSuccessProps {
   open: boolean;
   onClose: () => void;
   details: CanisterCreateDetails;
   canisterId: string;
-}) => {
+}
+
+export default function CanisterCreateSuccess({ open, onClose, details, canisterId }: CanisterCreateSuccessProps) {
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
 
@@ -65,17 +64,6 @@ export default ({
             </Grid>
           </Grid>
 
-          {/* <Grid container mt={3}>
-            <Grid item xs>
-              <Typography>Canister Size</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography color="textPrimary" align="right">
-                {details.name}
-              </Typography>
-            </Grid>
-          </Grid> */}
-
           <Grid container mt={3}>
             <Grid item xs>
               <Typography>Canister ID</Typography>
@@ -103,4 +91,4 @@ export default ({
       </Box>
     </Modal>
   );
-};
+}

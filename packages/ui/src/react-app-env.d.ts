@@ -47,9 +47,7 @@ declare module "*.webp" {
 declare module "*.svg" {
   import * as React from "react";
 
-  export const ReactComponent: React.FunctionComponent<
-    React.SVGProps<SVGSVGElement> & { title?: string }
-  >;
+  export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>;
 
   const src: string;
   export default src;
@@ -69,10 +67,6 @@ declare module "@mui/material/styles" {
   interface Theme {
     direction: string;
     palette: any;
-    mixins: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography: any;
     components: any;
     themeOption: any;
@@ -90,10 +84,6 @@ declare module "@mui/material/styles" {
   interface ThemeOptions {
     direction?: string;
     palette?: any;
-    mixins?: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography?: any;
     components?: any;
     themeOption?: any;

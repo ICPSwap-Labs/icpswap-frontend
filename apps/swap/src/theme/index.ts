@@ -77,21 +77,8 @@ export function theme(customization: DynamicObject) {
   return createTheme({
     direction: customization.rtlLayout ? "rtl" : "ltr",
     palette: themePalette(themeOption),
-    mixins: {
-      overflowEllipsis: {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      },
-      overflowEllipsis2: {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        display: "-webkit-box",
-        "-webkit-box-orient": "vertical",
-        "-webkit-line-clamp": 2,
-      },
-    },
     typography: themeTypography(themeOption),
+    // @ts-ignore
     components: componentStyleOverrides(themeOption),
     themeOption,
     colors,

@@ -39,7 +39,10 @@ const useStyles = makeStyles((theme: Theme) => {
       height: "40px",
       marginTop: "10px",
       lineHeight: "20px",
-      ...theme.mixins.overflowEllipsis2,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "-webkit-box",
+      "-webkit-box-orient": "vertical",
       "-webkit-line-clamp": 2,
     },
   };
@@ -87,13 +90,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
         </Box>
 
         <Box sx={{ padding: "0 12px 24px 12px" }}>
-          <Typography
-            color="text.primary"
-            fontWeight="600"
-            sx={{
-              ...theme.mixins.overflowEllipsis,
-            }}
-          >
+          <Typography className="text-overflow-ellipsis" color="text.primary" fontWeight="600">
             {order?.name}
           </Typography>
 

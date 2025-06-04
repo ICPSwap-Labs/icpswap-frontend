@@ -88,17 +88,18 @@ export default function ConfirmModal({
         </Box>
       </Box>
 
-      <Button
-        mt={4}
-        variant="contained"
-        size="large"
-        fullWidth
-        onClick={onConfirm}
-        disabled={loading}
-        startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-      >
-        {loading ? "" : isWrap ? t("wrap.confirm") : t("unwrap.confirm")}
-      </Button>
+      <Box mt={4} sx={{ width: "100%" }}>
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={onConfirm}
+          disabled={loading}
+          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+        >
+          {loading ? "" : isWrap ? t("wrap.confirm") : t("unwrap.confirm")}
+        </Button>
+      </Box>
     </Modal>
   );
 }
