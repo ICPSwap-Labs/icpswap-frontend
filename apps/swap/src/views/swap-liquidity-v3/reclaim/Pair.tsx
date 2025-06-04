@@ -125,12 +125,6 @@ export function ReclaimWithPair() {
             },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "0 8px" }}>
-            <Typography color="text.primary">{t("common.select.a.pair")}</Typography>
-
-            {isMobile ? <Tooltip tips={t("swap.reclaim.select.pair")} /> : null}
-          </Box>
-
           <Box sx={{ minWidth: "200px" }}>
             <SelectPair search value={poolId} border onPairChange={handlePairChange} />
           </Box>
@@ -162,12 +156,6 @@ export function ReclaimWithPair() {
         </Box>
       </Box>
 
-      {!isMobile ? (
-        <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography>{t("swap.reclaim.select.pair")}</Typography>
-        </Box>
-      ) : null}
-
       <Box sx={{ margin: "20px 0 0 0" }}>
         {loading ? (
           <LoadingRow>
@@ -181,7 +169,7 @@ export function ReclaimWithPair() {
             <div />
           </LoadingRow>
         ) : no_data ? (
-          <NoData />
+          <NoData tip="No withdrawable tokens found" />
         ) : (
           <Box
             sx={{

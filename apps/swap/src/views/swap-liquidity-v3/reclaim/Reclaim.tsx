@@ -13,17 +13,17 @@ const Tabs = [
   {
     key: "pair",
     path: "/swap/withdraw?type=pair",
-    value: "Trading Pair",
+    value: "Swap Pairs",
   },
   {
     key: "token",
     path: "/swap/withdraw?type=token",
-    value: "Token",
+    value: "Tokens",
   },
   {
     key: "all",
     path: "/swap/withdraw?type=all",
-    value: "All",
+    value: "All Pools",
   },
 ];
 
@@ -55,7 +55,15 @@ export default function SwapReclaim() {
                 tips={
                   <>
                     <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions")}
+                      {t("swap.reclaim.descriptions0")}
+                    </Typography>
+
+                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
+                      {t("swap.reclaim.descriptions1")}
+                    </Typography>
+
+                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
+                      {t("swap.reclaim.descriptions2")}
                     </Typography>
                   </>
                 }
@@ -66,7 +74,13 @@ export default function SwapReclaim() {
           {!isMobile ? (
             <>
               <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
-                {t("swap.reclaim.descriptions")}
+                {t("swap.reclaim.descriptions0")}
+              </Typography>
+              <Typography sx={{ margin: "5px 0 0 0", lineHeight: "18px" }}>
+                {t("swap.reclaim.descriptions1")}
+              </Typography>
+              <Typography sx={{ margin: "5px 0 0 0", lineHeight: "18px" }}>
+                {t("swap.reclaim.descriptions2")}
               </Typography>
             </>
           ) : null}
