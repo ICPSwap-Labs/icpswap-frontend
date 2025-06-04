@@ -114,10 +114,6 @@ declare module "@mui/material/styles" {
   interface Theme {
     direction: string;
     palette: any;
-    mixins: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography: any;
     components: any;
     themeOption: any;
@@ -135,10 +131,6 @@ declare module "@mui/material/styles" {
   interface ThemeOptions {
     direction?: string;
     palette?: any;
-    mixins?: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography?: any;
     components?: any;
     themeOption?: any;

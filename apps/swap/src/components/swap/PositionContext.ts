@@ -14,6 +14,8 @@ export interface PositionContextProps {
   allStakedPositions: UserPositionForFarm[] | Null;
   setAllStakedPositions: (positions: UserPositionForFarm[] | Null) => void;
   setHiddenNumbers: (key: PositionKey, hidden: boolean) => void;
+  refreshTrigger: number;
+  setRefreshTrigger: () => void;
 }
 
 export const PositionContext = createContext<PositionContextProps>({} as PositionContextProps);

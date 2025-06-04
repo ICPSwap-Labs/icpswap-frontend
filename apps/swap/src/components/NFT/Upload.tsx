@@ -13,7 +13,11 @@ const useStyles = makeStyles((theme: Theme) => {
   return {
     fileName: {
       padding: "0 40px",
-      ...theme.mixins.overflowEllipsis2,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "-webkit-box",
+      "-webkit-box-orient": "vertical",
+      "-webkit-line-clamp": 2,
     },
   };
 });
