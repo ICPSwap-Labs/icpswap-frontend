@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, Tooltip } from "components/index";
+import { NoData, LoadingRow } from "components/index";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
-import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
