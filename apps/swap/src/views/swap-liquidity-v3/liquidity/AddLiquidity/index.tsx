@@ -549,9 +549,13 @@ export default function AddLiquidity() {
                     gap: "0 16px",
                   }}
                 >
-                  <BuyTokenButton token={baseCurrency} />
+                  <Box sx={{ flex: "50%" }}>
+                    <BuyTokenButton token={baseCurrency} />
+                  </Box>
 
-                  <BuyTokenButton token={quoteCurrency} />
+                  <Box sx={{ flex: "50%" }}>
+                    <BuyTokenButton token={quoteCurrency} />
+                  </Box>
                 </Flex>
               ) : null}
 
