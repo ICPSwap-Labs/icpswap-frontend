@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, Box, makeStyles, Theme } from "components/Mui";
-import { Flex, TextButtonV1, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
+import { Flex, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
 import {
   YourPositions,
   StakedPositions,
@@ -17,7 +17,6 @@ import { PositionSort, PositionFilterState, UserPositionByList, UserPositionForF
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { Unlock } from "react-feather";
-import { infoRoutesConfigs } from "routes/info.config";
 import { useTranslation } from "react-i18next";
 import i18n from "i18n/index";
 import { useHistory } from "react-router-dom";
@@ -216,10 +215,6 @@ export function Positions() {
       </Box>
 
       <Flex fullWidth justify="flex-end" wrap="wrap" sx={{ margin: "32px 0 0 0" }} gap="8px 32px">
-        <TextButtonV1 arrow sx={{ fontSize: "12px" }} to={infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}>
-          {t("liquidity.check.position.transactions")}
-        </TextButtonV1>
-
         <Flex>
           <Typography
             sx={{
