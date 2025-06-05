@@ -17,7 +17,6 @@ import {
   ApproveRequest,
   AllowanceRequest,
   MetadataRequest,
-  SetLogoRequest,
   ActualReceivedByTransferRequest,
   BaseTokenResult,
 } from "./BaseTokenAdapter";
@@ -109,30 +108,6 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
   }
 
   public async transactions({ canisterId, params }: TransactionRequest) {
-    let cap_id = params.capId;
-
-    if (!cap_id) {
-      const extensions = await this.extensions({ canisterId });
-
-      if (extensions.includes("@ext/cap")) {
-        cap_id = (await params.getCapRootId(canisterId))?.toString();
-      }
-    }
-
-    if (cap_id) {
-      if (!params.offset && params.offset !== 0) throw Error("no cap offset");
-
-      if (params.user?.principal) {
-        return resultFormat<PaginationResult<Transaction>>(
-          await params.getCapUserTransactions(cap_id, params.user?.principal, params.witness ?? false, params.offset),
-        );
-      }
-
-      return resultFormat<PaginationResult<Transaction>>(
-        await params.getCapTransactions(cap_id, params.witness ?? false, params.offset),
-      );
-    }
-
     return resultFormat<PaginationResult<Transaction>>(
       await (
         await this.actor(canisterId)
