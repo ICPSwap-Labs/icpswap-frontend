@@ -88,7 +88,7 @@ export default function PositionDetails() {
                 <FeeTierPercentLabel feeTier={pool?.fee} />
               </Flex>
 
-              <PoolTokensPrice pool={pool} width="228px" />
+              <PoolTokensPrice pool={pool} width="288px" />
             </Flex>
 
             <Flex
