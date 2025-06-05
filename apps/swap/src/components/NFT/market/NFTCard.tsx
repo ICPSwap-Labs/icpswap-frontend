@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 export const BorderColor = "#2F3C6D";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     imgBox: {
       width: "100%",

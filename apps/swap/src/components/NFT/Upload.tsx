@@ -9,7 +9,7 @@ import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
 
 import CloudUploadIcon from "./UploadCloudIcon";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     fileName: {
       padding: "0 40px",
