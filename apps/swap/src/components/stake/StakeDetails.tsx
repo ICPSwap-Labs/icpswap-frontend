@@ -20,25 +20,17 @@ import { StakingPoolInfo, StakingState } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
 import { useTranslation } from "react-i18next";
 
-const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+function CountdownBox({ startTime, endTime }: { startTime: number; endTime: number }) {
   const { t } = useTranslation();
-
   const nowTime = parseInt(String(Date.now() / 1000));
-  let expand = false;
-  let date = startTime;
-  if (nowTime > endTime) {
-    expand = true;
-  }
-  if (nowTime < startTime) {
-    date = startTime * 1000;
-  } else if (nowTime > startTime && nowTime < endTime) {
-    date = endTime * 1000;
-  } else {
-    date = 0;
-  }
+  const isEnded = nowTime > endTime;
 
-  return expand ? <Typography color="text.primary">{t("common.end")}</Typography> : <Countdown date={date} />;
-};
+  if (isEnded) return <Typography color="text.primary">{t("common.end")}</Typography>;
+
+  const countDownDate = nowTime < startTime ? startTime * 1000 : endTime * 1000;
+
+  return <Countdown date={countDownDate} />;
+}
 
 export interface StakeDetailsProps {
   poolId: string | undefined;
