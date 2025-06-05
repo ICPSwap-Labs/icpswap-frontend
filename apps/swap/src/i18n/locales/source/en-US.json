@@ -1433,5 +1433,8 @@
   "title.claim": "ICPSwap - Claim",
   "title.nft": "ICPSwap - NFT",
   "title.sns": "ICPSwap - SNS",
-  "common.last.price": "Last price"
+  "common.last.price": "Last price",
+  "stake.reclaim.empty": "No tokens to reclaim",
+  "claim.transactions.empty": "No claim history yet",
+  "claim.empty": "No airdrops available to claim"
 }

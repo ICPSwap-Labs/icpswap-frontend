@@ -74,7 +74,9 @@ export default function TokenClaimTransactions() {
               <TokenClaimTransaction key={`${String(transaction.claimEventId)}_${index}`} transaction={transaction} />
             ))}
 
-            {!loading && (userClaimTransaction?.content ?? []).length === 0 ? <NoData /> : null}
+            {!loading && (userClaimTransaction?.content ?? []).length === 0 ? (
+              <NoData tip={t("claim.transactions.empty")} />
+            ) : null}
 
             {loading ? (
               <Box
