@@ -300,7 +300,7 @@ export default function Staking() {
         <GlobalData />
       </Box>
 
-      <Box sx={{ margin: "20px 0 0 0" }}>
+      <Box sx={{ margin: "40px 0 0 0" }}>
         <MainContent />
       </Box>
     </Wrapper>
