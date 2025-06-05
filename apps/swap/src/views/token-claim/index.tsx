@@ -162,7 +162,7 @@ export default function TokenClaim() {
             })
           )}
 
-          {!loading && userClaimEvents.length === 0 ? <NoData /> : null}
+          {!loading && userClaimEvents.length === 0 ? <NoData tip={t("claim.empty")} /> : null}
 
           {!loading && Number(_userClaimEvents?.totalElements ?? 0) !== userClaimEvents.length ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
