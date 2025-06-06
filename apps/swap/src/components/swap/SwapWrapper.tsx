@@ -340,7 +340,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         variant="contained"
         size="large"
         onClick={handleSwap}
-        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked)}
+        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked) || !trade}
         sx={{
           borderRadius: "16px",
         }}
