@@ -950,11 +950,7 @@
   "common.token.risk.agree": "I have read the risk warning carefully and agree to take the risk myself",
   "swap.high.impact": "High price impact",
   "voting.cast.vote": "Cast your vote",
-  "swap.reclaim.descriptions0": "View/withdraw your pool balances across swap pools by selecting a trading pair or token.",
-  "swap.reclaim.descriptions1": "If a swap fails due to slippage or network, tokens are automatically returned to your wallet balance.",
-  "swap.reclaim.descriptions2": "However, since the ICRC-1 standard uses a deposit model, the tokens might remain in your pool balance and require you to manually withdraw them.",
-  "h4Oohn": "Claim your tokens",
-  "h4hoWE": "Enter the description",
+  "swap.reclaim.descriptions": "View/withdraw your pool balances across swap pools by selecting a trading pair or token. If a swap fails due to slippage or network, tokens are automatically returned to your wallet balance. However, since the ICRC-1 standard uses a deposit model, the tokens might remain in your pool balance and require you to manually withdraw them.",
   "farm.your.total.staked": "Your total value staked",
   "hG2g/b": "Aborted",
   "hGjyZZ": "Enter the staking token",
@@ -1443,5 +1439,6 @@
   "title.claim": "ICPSwap - Claim",
   "title.nft": "ICPSwap - NFT",
   "title.sns": "ICPSwap - SNS",
-  "common.last.price": "Last price"
+  "common.last.price": "Last price",
+  "swap.reclaim.empty": "No withdrawable tokens found"
 }

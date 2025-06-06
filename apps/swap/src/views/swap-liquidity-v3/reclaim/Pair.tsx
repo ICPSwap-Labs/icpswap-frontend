@@ -168,7 +168,7 @@ export function ReclaimWithPair() {
             <div />
           </LoadingRow>
         ) : no_data ? (
-          <NoData tip="No withdrawable tokens found" />
+          <NoData tip={t("swap.reclaim.empty")} />
         ) : (
           <Box
             sx={{

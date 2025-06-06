@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, SelectToken, Tooltip } from "components/index";
+import { NoData, LoadingRow, SelectToken } from "components/index";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -131,12 +131,6 @@ export function ReclaimWithToken() {
             },
           }}
         >
-          <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-            <Typography color="text.primary">{t("common.select.token")}</Typography>
-
-            {isMobile && tokenId === ICP.address ? <Tooltip tips={t("reclaim.select.token.description")} /> : null}
-          </Box>
-
           <Box sx={{ minWidth: "200px" }}>
             <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} />
           </Box>
@@ -187,7 +181,7 @@ export function ReclaimWithToken() {
             <div />
           </LoadingRow>
         ) : no_data ? (
-          <NoData />
+          <NoData tip={t("swap.reclaim.empty")} />
         ) : (
           <Box
             sx={{

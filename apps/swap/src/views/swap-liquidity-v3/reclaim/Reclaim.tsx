@@ -55,15 +55,7 @@ export default function SwapReclaim() {
                 tips={
                   <>
                     <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions0")}
-                    </Typography>
-
-                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions1")}
-                    </Typography>
-
-                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions2")}
+                      {t("swap.reclaim.descriptions")}
                     </Typography>
                   </>
                 }
@@ -72,17 +64,7 @@ export default function SwapReclaim() {
           </Box>
 
           {!isMobile ? (
-            <>
-              <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
-                {t("swap.reclaim.descriptions0")}
-              </Typography>
-              <Typography sx={{ margin: "5px 0 0 0", lineHeight: "18px" }}>
-                {t("swap.reclaim.descriptions1")}
-              </Typography>
-              <Typography sx={{ margin: "5px 0 0 0", lineHeight: "18px" }}>
-                {t("swap.reclaim.descriptions2")}
-              </Typography>
-            </>
+            <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>{t("swap.reclaim.descriptions")}</Typography>
           ) : null}
 
           <Box
