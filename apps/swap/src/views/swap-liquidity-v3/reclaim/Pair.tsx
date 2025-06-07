@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
 import { NoData, LoadingRow } from "components/index";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
@@ -23,7 +23,10 @@ export function ReclaimWithPair() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const history = useHistory();
-  const { poolId } = useParsedQueryString() as { poolId: string };
+  const { poolId: poolIdFromUrl } = useParsedQueryString() as { poolId: string | undefined };
+
+  const [poolId, setPoolId] = useState<string | undefined>();
+
   const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, poolId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -96,6 +99,12 @@ export function ReclaimWithPair() {
       history.push(`/swap/withdraw?type=pair`);
     }
   };
+
+  useEffect(() => {
+    if (poolIdFromUrl) {
+      setPoolId(poolIdFromUrl);
+    }
+  }, [poolIdFromUrl]);
 
   return (
     <>

@@ -24,7 +24,10 @@ export function ReclaimWithToken() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const history = useHistory();
-  const { tokenId } = useParsedQueryString() as { tokenId: string };
+  const { tokenId: tokenIdFromUrl } = useParsedQueryString() as { tokenId: string };
+
+  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
+
   const { loading, balances } = useUserSwapPoolBalances({ principal, tokenId });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -99,10 +102,8 @@ export function ReclaimWithToken() {
   };
 
   useEffect(() => {
-    if (!tokenId) {
-      history.push(`/swap/withdraw?type=token&tokenId=${ICP.address}`);
-    }
-  }, [tokenId]);
+    setTokenId(tokenIdFromUrl ?? ICP.address);
+  }, [tokenIdFromUrl]);
 
   return (
     <>
@@ -132,7 +133,7 @@ export function ReclaimWithToken() {
           }}
         >
           <Box sx={{ minWidth: "200px" }}>
-            <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} />
+            <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} showClean={false} />
           </Box>
         </Box>
 
