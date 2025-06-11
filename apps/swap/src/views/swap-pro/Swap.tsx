@@ -53,59 +53,61 @@ export default function Swap() {
   return (
     <>
       <SwapProCardWrapper overflow="visible">
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Flex gap="0 16px">
-            {tabs.map((tab) => (
-              <Typography
-                key={tab.value}
-                sx={{
-                  color: activeTab === tab.value ? "text.primary" : "text.secondary",
-                  fontSize: "16px",
-                  fontWeight: activeTab === tab.value ? 600 : 400,
-                  cursor: "pointer",
-                }}
-                onClick={() => handleTab(tab.value)}
-              >
-                {tab.label}
-              </Typography>
-            ))}
+        <Flex vertical gap="10px" align="flex-start">
+          <Flex fullWidth justify="space-between" align="flex-start">
+            <Flex gap="0 16px">
+              {tabs.map((tab) => (
+                <Typography
+                  key={tab.value}
+                  sx={{
+                    color: activeTab === tab.value ? "text.primary" : "text.secondary",
+                    fontSize: "16px",
+                    fontWeight: activeTab === tab.value ? 600 : 400,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleTab(tab.value)}
+                >
+                  {tab.label}
+                </Typography>
+              ))}
+            </Flex>
+
+            {activeTab === Tab.Swap ? (
+              <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+            ) : null}
           </Flex>
 
-          {activeTab === Tab.Swap ? (
-            <SwapSettings ui="pro" type="swap" position={matchDownSM ? "right" : "left"} />
+          <Box>
+            {activeTab === Tab.Swap ? <SwapWrapper ref={swapWrapperRef} ui="pro" /> : null}
+
+            {activeTab === Tab.Limit ? (
+              <LimitWrapper
+                ui="pro"
+                onOutputTokenChange={setOutputToken}
+                onTradePoolIdChange={setPoolId}
+                onInputTokenChange={setInputToken}
+              />
+            ) : null}
+          </Box>
+
+          {isConnected && noLiquidity === false && activeTab === Tab.Swap ? (
+            <>
+              <ReclaimTokensInPool
+                pool={selectedPool}
+                refreshKey={SWAP_REFRESH_KEY}
+                onInputTokenClick={handleInputTokenClick}
+                inputToken={inputToken}
+                ui="pro"
+              />
+
+              {selectedPool ? <ToReclaim poolId={selectedPool.id} ui="pro" fontSize="12px" /> : null}
+            </>
           ) : null}
-        </Box>
 
-        <Box sx={{ margin: "10px 0 0 0" }}>
-          {activeTab === Tab.Swap ? <SwapWrapper ref={swapWrapperRef} ui="pro" /> : null}
-
-          {activeTab === Tab.Limit ? (
-            <LimitWrapper
-              ui="pro"
-              onOutputTokenChange={setOutputToken}
-              onTradePoolIdChange={setPoolId}
-              onInputTokenChange={setInputToken}
-            />
+          {isConnected && noLiquidity === true ? (
+            <CreatePool inputToken={inputToken} outputToken={outputToken} ui="pro" />
           ) : null}
-        </Box>
-
-        {isConnected && noLiquidity === false && activeTab === Tab.Swap ? (
-          <>
-            <ReclaimTokensInPool
-              pool={selectedPool}
-              refreshKey={SWAP_REFRESH_KEY}
-              onInputTokenClick={handleInputTokenClick}
-              inputToken={inputToken}
-              ui="pro"
-            />
-
-            {selectedPool ? <ToReclaim poolId={selectedPool.id} ui="pro" fontSize="12px" /> : null}
-          </>
-        ) : null}
-
-        {isConnected && noLiquidity === true ? (
-          <CreatePool inputToken={inputToken} outputToken={outputToken} ui="pro" />
-        ) : null}
+        </Flex>
       </SwapProCardWrapper>
     </>
   );
