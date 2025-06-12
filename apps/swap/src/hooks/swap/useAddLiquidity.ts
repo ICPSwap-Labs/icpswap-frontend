@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { updateUserPositionPoolId, getPassCode, requestPassCode } from "@icpswap/hooks";
+import { getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
@@ -295,8 +295,6 @@ function useAddLiquidityCalls() {
 
         if (status === "ok") {
           openSuccessTip(t("liquidity.add.success"));
-
-          updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
 
           return true;

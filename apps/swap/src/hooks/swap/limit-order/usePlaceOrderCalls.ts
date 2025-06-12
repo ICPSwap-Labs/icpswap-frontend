@@ -1,6 +1,6 @@
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { Position } from "@icpswap/swap-sdk";
-import { updateUserPositionPoolId, placeOrder as __placeOrder } from "@icpswap/hooks";
+import { placeOrder as __placeOrder } from "@icpswap/hooks";
 import { useCallback } from "react";
 import {
   useSwapApprove,
@@ -201,7 +201,6 @@ export function usePlaceOrderCalls() {
         });
 
         if (status === ResultStatus.OK) {
-          updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
           updatePlaceOrderPositionId(data);
 
