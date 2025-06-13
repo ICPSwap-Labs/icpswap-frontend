@@ -246,6 +246,8 @@ export default function AddLiquidity() {
   const getAddLiquidityCall = useAddLiquidityCall();
 
   const handleOnConfirm = useCallback(async () => {
+    await window.icConnector.signerAgent?.signer.openChannel();
+
     // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
     // So set the value is 0 by default
     // TODO: Fix this?

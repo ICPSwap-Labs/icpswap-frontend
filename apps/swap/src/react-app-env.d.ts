@@ -107,6 +107,11 @@ interface Window {
     createActor: <T>({ canisterId, interfaceFactory }: CreateActorArgs) => Promise<ActorSubclass<T>>;
     isConnected: () => Promise<boolean>;
     disconnect: () => Promise<void>;
+    signerAgent?: {
+      signer: {
+        openChannel: () => Promise<void>;
+      };
+    };
   };
 }
 
