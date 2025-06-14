@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
 import { VolumeWindow, Null, InfoPoolDataResponse } from "@icpswap/types";
 import { useTransformedVolumeData } from "@icpswap/hooks";
 
@@ -83,14 +81,6 @@ export function PoolVolumeChart({
 }: PoolChartProps) {
   const [label, setLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
-
-  // const chartData = useMemo(() => {
-  //   return chartsData.sort((a, b) => {
-  //     if (a.beginTime < b.beginTime) return -1;
-  //     if (a.beginTime > b.beginTime) return 1;
-  //     return 0;
-  //   });
-  // }, [chartsData]);
 
   const volumeData = useMemo(() => {
     return volumeDataFormatter(chartsData).map((data) => {

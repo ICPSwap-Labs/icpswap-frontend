@@ -21,8 +21,8 @@ export function PoolCharts({ open, onClose, pool }: PoolChartsProps) {
       <>
         <Flex gap="0 8px">
           <Flex>
-            <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} />
-            <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} />
+            <TokenImage logo={generateLogoUrl(pool.token0LedgerId)} tokenId={pool.token0LedgerId} />
+            <TokenImage logo={generateLogoUrl(pool.token1LedgerId)} tokenId={pool.token1LedgerId} />
           </Flex>
 
           <Typography
@@ -36,12 +36,16 @@ export function PoolCharts({ open, onClose, pool }: PoolChartsProps) {
             {pool.token0Symbol} / {pool.token1Symbol}
           </Typography>
 
-          <FeeTierPercentLabel feeTier={pool.feeTier} />
+          <FeeTierPercentLabel feeTier={pool.poolFee} />
         </Flex>
 
         <Box mt="16px">
           <MainCard level={2} padding="20px">
-            <InfoPoolCharts canisterId={pool.pool} token0Price={pool.token0Price} volume24H={pool.volumeUSD} />
+            <InfoPoolCharts
+              canisterId={pool.poolId}
+              token0Price={Number(pool.token0Price)}
+              volume24H={Number(pool.volumeUSD24H)}
+            />
           </MainCard>
         </Box>
       </>

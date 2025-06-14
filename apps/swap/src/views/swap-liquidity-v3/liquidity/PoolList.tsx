@@ -109,10 +109,10 @@ export default function PoolList() {
         }
         return 1;
       })
-      .filter((pool) => pool.feeTier === BigInt(3000))
+      .filter((pool) => pool.poolFee === 3000)
       .slice(0, 4)
       .map((pool) => {
-        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.pool);
+        const tvlUSD = allPoolsTVL.find((poolTVL) => poolTVL[0] === pool.poolId);
         return { ...pool, tvlUSD: tvlUSD ? tvlUSD[1] : 0 };
       });
   }, [pools, allPoolsTVL]);
@@ -133,9 +133,9 @@ export default function PoolList() {
       {poolList.map((pool, index) => (
         <Box className={classes.listWrapper} key={index}>
           <PoolCard
-            token0={pool.token0Id}
-            token1={pool.token1Id}
-            fee={pool.feeTier}
+            token0={pool.token0LedgerId}
+            token1={pool.token1LedgerId}
+            fee={BigInt(pool.poolFee)}
             token0Symbol={pool.token0Symbol}
             token1Symbol={pool.token1Symbol}
             tvlUSD={pool.tvlUSD}

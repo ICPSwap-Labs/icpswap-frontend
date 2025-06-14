@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { InfoToken } from "@icpswap/types";
+import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import Pagination from "components/pagination/cus";
@@ -44,7 +44,7 @@ export type HeaderType = {
 };
 
 interface TokenItemProps {
-  token: InfoToken;
+  token: InfoTokenRealTimeDataResponse;
   index: number;
   align: "left" | "right";
 }
@@ -111,7 +111,7 @@ export function TokenItem({ token: infoToken, index, align }: TokenItemProps) {
 }
 
 export interface TokenTableProps {
-  tokens: InfoToken[] | undefined | null;
+  tokens: InfoTokenRealTimeDataResponse[] | undefined | null;
   maxItems?: number;
   loading?: boolean;
 }
@@ -149,7 +149,9 @@ export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTab
           .slice()
           .sort((a, b) => {
             if (a && b && !!sortField) {
-              const bool = new BigNumber(a[sortField as keyof InfoToken]).isGreaterThan(b[sortField as keyof InfoToken])
+              const bool = new BigNumber(a[sortField as keyof InfoTokenRealTimeDataResponse]).isGreaterThan(
+                b[sortField as keyof InfoTokenRealTimeDataResponse],
+              )
                 ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
                 : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 

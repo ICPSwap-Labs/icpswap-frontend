@@ -46,7 +46,7 @@ interface UseSwapTransactionsProps {
   page: number;
   limit: number;
   principal?: string;
-  poolId?: string;
+  poolId?: string | Null;
   tokenId?: string;
 }
 
