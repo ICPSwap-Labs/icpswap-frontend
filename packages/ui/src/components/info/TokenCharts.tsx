@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
 import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
-import { useTransformedVolumeData, useTokenTvlChart, useTokenVolChart, useTokenPriceChart } from "@icpswap/hooks";
-import type { PublicTokenChartDayData, InfoPriceChartData, Null } from "@icpswap/types";
+import { useTransformedVolumeData, useTokenCharts } from "@icpswap/hooks";
+import type { Null, InfoTokenDataResponse } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
 import dayjs from "dayjs";
-import { Typography, Box, BoxProps } from "../Mui";
 
+import { Typography, Box, BoxProps } from "../Mui";
 import { LineChartAlt } from "../LineChart/alt";
 import { BarChartAlt } from "../BarChart/alt";
 import { CandleChart } from "../CandleChart/index";
@@ -18,19 +18,19 @@ import { DexScreener } from "../DexScreener";
 import { DexTools } from "../DexTools";
 import { Select } from "../Select";
 
-function priceChartFormat(data: InfoPriceChartData[]) {
+function priceChartFormat(data: InfoTokenDataResponse[]) {
   return data
     .filter((d) => {
       // ICVC
-      if (d.id === "m6xut-mqaaa-aaaaq-aadua-cai") {
+      if (d.tokenLedgerId === "m6xut-mqaaa-aaaaq-aadua-cai") {
         const time = new Date("2024-08-28").getTime();
-        return new BigNumber(d.time).multipliedBy(1000).isGreaterThan(time);
+        return new BigNumber(d.beginTime).multipliedBy(1000).isGreaterThan(time);
       }
 
       // SNS1
-      if (d.id === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
+      if (d.tokenLedgerId === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
         const time = new Date("2024-03-12").getTime();
-        return !new BigNumber(d.time).multipliedBy(1000).isLessThan(time);
+        return !new BigNumber(d.beginTime).multipliedBy(1000).isLessThan(time);
       }
 
       return true;
@@ -38,17 +38,17 @@ function priceChartFormat(data: InfoPriceChartData[]) {
     .map((d, index) => {
       return {
         ...d,
-        open: d.timestamp.toString() === "1686787200" ? data[index - 1].close : d.open,
+        open: d.beginTime.toString() === "1686787200" ? data[index - 1].close : d.open,
         close:
-          d.timestamp.toString() === "1686787200" || d.timestamp.toString() === "1686873600"
+          d.beginTime.toString() === "1686787200" || d.beginTime.toString() === "1686873600"
             ? data[index + 1]?.open ?? d.close
             : d.close,
         low:
-          d.timestamp.toString() === "1686787200"
+          d.beginTime.toString() === "1686787200"
             ? data[index - 1].close > (data[index + 1]?.open ?? 0)
               ? data[index + 1]?.open ?? data[index - 1]?.close ?? 0
               : data[index - 1].close
-            : d.timestamp.toString() === "1686873600"
+            : d.beginTime.toString() === "1686873600"
             ? data[index - 2].close > (data[index + 1]?.open ?? 0)
               ? data[index + 1]?.open ?? 0
               : data[index - 2]?.close ?? 0
@@ -64,11 +64,16 @@ export interface ChartButton {
   tokenId?: string | undefined;
 }
 
-function volumeDataFormatter(data: PublicTokenChartDayData[]) {
-  const oldData = [...data];
-  const newData: PublicTokenChartDayData[] = [];
+type VolumeData = {
+  volumeUSD: number;
+  timestamp: number;
+};
 
-  if (data.length === 0) return [] as PublicTokenChartDayData[];
+function volumeDataFormatter(data: InfoTokenDataResponse[]) {
+  const oldData = [...data];
+  const newData: Array<VolumeData> = [];
+
+  if (data.length === 0) return [] as Array<VolumeData>;
 
   // Fill the empty data between origin data
   for (let i = 0; i < oldData.length; i++) {
@@ -76,40 +81,36 @@ function volumeDataFormatter(data: PublicTokenChartDayData[]) {
     const next = oldData[i + 1];
 
     if (next) {
-      const diff = next.timestamp - curr.timestamp;
-      const days = parseInt((Number(diff) / (3600 * 24)).toString());
+      const diff = next.beginTime - curr.beginTime;
+      const days = parseInt((Number(diff) / (3600 * 24 * 1000)).toString());
 
       if (days === 1) {
-        newData.push(curr);
+        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
       } else {
         // push curr data
-        newData.push(curr);
+        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
 
         for (let i = 1; i < days; i++) {
           newData.push({
-            id: BigInt(0),
             volumeUSD: 0,
-            timestamp: BigInt(Number(curr.timestamp) + 24 * 3600 * i),
-            txCount: BigInt(0),
+            timestamp: Number(curr.beginTime) + 24 * 3600 * 1000 * i,
           });
         }
       }
     } else {
-      newData.push(curr);
+      newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
     }
   }
 
   const now = new Date().getTime();
-  const endTime = oldData[oldData.length - 1].timestamp;
+  const endTime = oldData[oldData.length - 1].beginTime;
   const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString());
 
   // Fill the latest data to today
   for (let i = 1; i <= days; i++) {
     newData.push({
-      id: BigInt(0),
       volumeUSD: 0,
-      timestamp: BigInt(Number(endTime) + 24 * 3600 * i),
-      txCount: BigInt(0),
+      timestamp: Number(endTime) + 24 * 3600 * 1000 * i,
     });
   }
 
@@ -129,7 +130,7 @@ export interface TokenChartsRef {
 
 export interface TokenChartsProps {
   canisterId: string | undefined;
-  volume?: number;
+  volume?: number | string;
   background?: number;
   borderRadius?: string;
   showPrice?: boolean;
@@ -166,60 +167,54 @@ export const TokenCharts = forwardRef(
   ) => {
     const [priceChartTokenId, setPriceChartTokenId] = useState<string | undefined>(undefined);
 
-    const { result: chartData } = useTokenVolChart(canisterId);
-
     const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
     const [valueLabel, setValueLabel] = useState<string | undefined>();
     const [latestValue, setLatestValue] = useState<number | undefined>();
     const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
     const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-    const { priceChartData: __priceChartData, loading: priceChartLoading } = useTokenPriceChart(
-      priceChartTokenId ?? canisterId,
-    );
+    const { result: tokenChartsResult, loading } = useTokenCharts({
+      tokenId: canisterId,
+      level: "d1",
+      page: 1,
+      limit: 500,
+    });
+
+    const tokenCharts = useMemo(() => {
+      // TODO: maybe the data is sorted by the backend
+      return (tokenChartsResult?.content ?? []).sort((a, b) => {
+        if (new BigNumber(a.beginTime).isLessThan(b.beginTime)) return -1;
+        if (new BigNumber(a.beginTime).isGreaterThan(b.beginTime)) return 1;
+        return 0;
+      });
+    }, [tokenChartsResult]);
 
     const priceChartData = useMemo(() => {
-      if (!__priceChartData) return undefined;
+      if (!tokenCharts) return undefined;
 
-      return priceChartFormat(__priceChartData);
-    }, [__priceChartData]);
-
-    const { result: tvlChartData } = useTokenTvlChart(canisterId);
+      return priceChartFormat(tokenCharts);
+    }, [tokenCharts]);
 
     const formattedTvlData = useMemo(() => {
-      if (tvlChartData) {
-        return tvlChartData.map((data) => {
-          return {
-            time: dayjs(Number(data.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-            value: data.tvlUSD,
-          };
-        });
-      }
-      return [];
-    }, [tvlChartData]);
+      return tokenCharts.map((data) => {
+        return {
+          time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+          value: data.tvlUSD,
+        };
+      });
+    }, [tokenCharts]);
 
     const volumeData = useMemo(() => {
-      if (chartData) {
-        return volumeDataFormatter(chartData.filter((ele) => ele.timestamp !== BigInt(0))).map((data) => {
-          return {
-            date: Number(data.timestamp),
-            volumeUSD: data.volumeUSD,
-          };
-        });
-      }
-      return [];
-    }, [chartData]);
+      return volumeDataFormatter(tokenCharts);
+    }, [tokenCharts]);
 
     const dailyVolumeData = useMemo(() => {
-      if (chartData) {
-        return volumeData.map((ele) => {
-          return {
-            time: dayjs(ele.date * 1000).format("YYYY-MM-DD HH:mm:ss"),
-            value: ele.volumeUSD,
-          };
-        });
-      }
-      return [];
+      return volumeData.map((ele) => {
+        return {
+          time: dayjs(ele.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+          value: ele.volumeUSD,
+        };
+      });
     }, [volumeData]);
 
     const handlePriceHoverChange = (data: any) => {
@@ -269,7 +264,7 @@ export const TokenCharts = forwardRef(
         }}
         padding="0"
       >
-        <SwapAnalyticLoading loading={priceChartLoading} />
+        <SwapAnalyticLoading loading={loading} />
 
         <Flex
           fullWidth

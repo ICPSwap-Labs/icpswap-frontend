@@ -3,9 +3,8 @@ import { Typography, Box, useTheme, BoxProps } from "components/Mui";
 import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Proportion } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
-import { usePoolAPR, useAllPoolsTVL } from "@icpswap/hooks";
+import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
 import { formatDollarAmount, nonUndefinedOrNull, calcPoolFees } from "@icpswap/utils";
-import { useInfoPool } from "hooks/info/useInfoPool";
 import { PoolTvlTooltip } from "components/swap";
 import { useTranslation } from "react-i18next";
 import { TokenPairName } from "components/TokenPairName";
@@ -22,7 +21,6 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
   const theme = useTheme();
   const down640 = useMediaQuery640();
 
-  const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: infoPool } = useInfoPool(pool?.id);
 
   const { token0, token1, fee } = useMemo(() => {
@@ -39,15 +37,9 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
     };
   }, [pool]);
 
-  const poolTvlUSD = useMemo(() => {
-    if (!allPoolsTVL || !pool) return undefined;
+  const fee24h = calcPoolFees(infoPool?.volumeUSD24H);
 
-    return allPoolsTVL.find((e) => e[0] === pool.id)?.[1];
-  }, [allPoolsTVL, pool]);
-
-  const fee24h = calcPoolFees(infoPool?.volumeUSD);
-
-  const apr24h = usePoolAPR({ volumeUSD: infoPool?.volumeUSD, tvlUSD: poolTvlUSD });
+  const apr24h = usePoolAPR({ volumeUSD: infoPool?.volumeUSD24H, tvlUSD: infoPool?.tvlUSD });
 
   return nonUndefinedOrNull(token0) && nonUndefinedOrNull(token1) && nonUndefinedOrNull(fee) ? (
     <Box
@@ -98,7 +90,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
                 textDecorationStyle: "dashed",
               }}
             >
-              {poolTvlUSD ? formatDollarAmount(poolTvlUSD) : "--"}
+              {infoPool?.tvlUSD ? formatDollarAmount(infoPool.tvlUSD) : "--"}
             </Typography>
           </PoolTvlTooltip>
         </Flex>
@@ -116,7 +108,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
 
         <Flex gap="0 6px">
           <Typography>{t("common.volume24h")}</Typography>
-          <Typography color="text.primary">{infoPool ? formatDollarAmount(infoPool.volumeUSD) : "--"}</Typography>
+          <Typography color="text.primary">{infoPool ? formatDollarAmount(infoPool.volumeUSD24H) : "--"}</Typography>
         </Flex>
       </Flex>
     </Box>

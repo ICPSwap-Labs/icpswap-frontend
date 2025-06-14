@@ -2,22 +2,25 @@ import { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { VolumeWindow, PublicPoolChartDayData, Null } from "@icpswap/types";
-import { useTransformedVolumeData, usePoolAllChartData } from "@icpswap/hooks";
+import { VolumeWindow, Null, InfoPoolDataResponse } from "@icpswap/types";
+import { useTransformedVolumeData } from "@icpswap/hooks";
 
-import { formatDollarAmount } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { BarChartAlt } from "../BarChart/alt";
 import { ImageLoading } from "../Loading";
 import { Box, Typography } from "../Mui";
 
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
+type VolumeData = {
+  timestamp: number;
+  volumeUSD: number;
+};
 
-function volumeDataFormatter(data: PublicPoolChartDayData[]) {
+function volumeDataFormatter(data: InfoPoolDataResponse[]) {
   const oldData = [...data];
 
-  const newData: PublicPoolChartDayData[] = [];
+  const newData: VolumeData[] = [];
+
+  if (data.length === 0) return [];
 
   // Fill the empty data between origin data
   for (let i = 0; i < oldData.length; i++) {
@@ -25,40 +28,36 @@ function volumeDataFormatter(data: PublicPoolChartDayData[]) {
     const next = oldData[i + 1];
 
     if (next) {
-      const diff = next.timestamp - curr.timestamp;
+      const diff = next.beginTime - curr.beginTime;
       const days = parseInt((Number(diff) / (3600 * 24)).toString());
 
       if (days === 1) {
-        newData.push(curr);
+        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
       } else {
         // push curr data
-        newData.push(curr);
+        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
 
         for (let i = 1; i < days; i++) {
           newData.push({
-            id: BigInt(0),
             volumeUSD: 0,
-            timestamp: BigInt(Number(curr.timestamp) + 24 * 3600 * i),
-            txCount: BigInt(0),
+            timestamp: Number(curr.beginTime) + 24 * 3600 * i * 1000,
           });
         }
       }
     } else {
-      newData.push(curr);
+      newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
     }
   }
 
   const now = new Date().getTime();
-  const endTime = oldData[oldData.length - 1].timestamp;
+  const endTime = oldData[oldData.length - 1].beginTime;
   const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString());
 
   // Fill the latest data to today
   for (let i = 1; i <= days; i++) {
     newData.push({
-      id: BigInt(0),
       volumeUSD: 0,
-      timestamp: BigInt(Number(endTime) + 24 * 3600 * i),
-      txCount: BigInt(0),
+      timestamp: Number(endTime) + 24 * 3600 * i,
     });
   }
 
@@ -66,58 +65,50 @@ function volumeDataFormatter(data: PublicPoolChartDayData[]) {
 }
 
 export interface PoolChartProps {
-  canisterId: string;
+  chartsData: Array<InfoPoolDataResponse>;
+  loading: boolean;
   volumeWindow?: VolumeWindow;
   noData?: React.ReactNode;
   height?: string;
   defaultValue?: string | number | Null;
 }
 
-export function PoolVolumeChart({ noData, volumeWindow, canisterId, height = "340px", defaultValue }: PoolChartProps) {
+export function PoolVolumeChart({
+  chartsData,
+  loading,
+  noData,
+  volumeWindow,
+  height = "340px",
+  defaultValue,
+}: PoolChartProps) {
   const [label, setLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: allChartsData, loading } = usePoolAllChartData(canisterId);
-
-  const chartData = useMemo(() => {
-    return allChartsData
-      ?.filter((data) => data.timestamp !== BigInt(0))
-      .sort((a, b) => {
-        if (a.timestamp < b.timestamp) return -1;
-        if (a.timestamp > b.timestamp) return 1;
-        return 0;
-      });
-  }, [allChartsData]);
+  // const chartData = useMemo(() => {
+  //   return chartsData.sort((a, b) => {
+  //     if (a.beginTime < b.beginTime) return -1;
+  //     if (a.beginTime > b.beginTime) return 1;
+  //     return 0;
+  //   });
+  // }, [chartsData]);
 
   const volumeData = useMemo(() => {
-    if (chartData) {
-      return volumeDataFormatter(chartData)
-        .filter((data) => Number(data.timestamp) !== 0)
-        .map((data) => {
-          return {
-            date: Number(data.timestamp),
-            volumeUSD: data.volumeUSD,
-          };
-        });
-    }
-
-    return [];
-  }, [chartData]);
+    return volumeDataFormatter(chartsData).map((data) => {
+      return {
+        timestamp: data.timestamp,
+        volumeUSD: data.volumeUSD,
+      };
+    });
+  }, [chartsData]);
 
   const dailyVolumeData = useMemo(() => {
-    if (chartData) {
-      return volumeDataFormatter(chartData)
-        .filter((data) => Number(data.timestamp) !== 0)
-        .map((data) => {
-          return {
-            time: dayjs(Number(Number(data.timestamp) * 1000)).format("YYYY-MM-DD HH:mm:ss"),
-            value: data.volumeUSD,
-          };
-        });
-    }
-
-    return [];
-  }, [chartData]);
+    return volumeData.map((data) => {
+      return {
+        time: dayjs(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+        value: data.volumeUSD,
+      };
+    });
+  }, [volumeData]);
 
   const weeklyVolumeData = useTransformedVolumeData(volumeData, "week");
   const monthlyVolumeData = useTransformedVolumeData(volumeData, "month");

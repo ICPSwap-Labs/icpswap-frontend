@@ -3,21 +3,21 @@ import { parseTokenAmount } from "@icpswap/utils";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useToken } from "hooks/index";
-import { PublicPoolOverView } from "@icpswap/types";
+import { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 
 export interface UsePoolTokenBalanceTvlProps {
-  pool: PublicPoolOverView | undefined;
+  pool: InfoPoolRealTimeDataResponse | undefined;
 }
 
 export function usePoolTokenBalanceTvl({ pool }: UsePoolTokenBalanceTvlProps) {
-  const [, token0] = useToken(pool?.token0Id);
-  const [, token1] = useToken(pool?.token1Id);
+  const [, token0] = useToken(pool?.token0LedgerId);
+  const [, token1] = useToken(pool?.token1LedgerId);
 
-  const { result: poolTVLToken0 } = useTokenBalance(pool?.token0Id, pool?.pool);
-  const { result: poolTVLToken1 } = useTokenBalance(pool?.token1Id, pool?.pool);
+  const { result: poolTVLToken0 } = useTokenBalance(pool?.token0LedgerId, pool?.poolId);
+  const { result: poolTVLToken1 } = useTokenBalance(pool?.token1LedgerId, pool?.poolId);
 
-  const token0Price = useUSDPriceById(pool?.token0Id);
-  const token1Price = useUSDPriceById(pool?.token1Id);
+  const token0Price = useUSDPriceById(pool?.token0LedgerId);
+  const token1Price = useUSDPriceById(pool?.token1LedgerId);
 
   return useMemo(() => {
     if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return {};

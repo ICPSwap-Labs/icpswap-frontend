@@ -1,10 +1,9 @@
-import { useSwapTransactions } from "hooks/info/swap/useScanSwapTransactions";
-import { useParsedQueryString } from "@icpswap/hooks";
+import { useParsedQueryString, useSwapTransactions } from "@icpswap/hooks";
 import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, Button, CircularProgress, makeStyles, useTheme, Theme } from "components/Mui";
-import { pageArgsFormat, locationSearchReplace } from "@icpswap/utils";
+import { locationSearchReplace } from "@icpswap/utils";
 import {
   Header,
   HeaderCell,
@@ -56,12 +55,11 @@ export default function SwapTransactions() {
   const { download, loading: downloadLoading } = useSwapScanTransactionDownload({ pair, principal });
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
   const { result, loading } = useSwapTransactions({
     principal,
-    pair,
-    offset,
+    poolId: pair,
+    page: pagination.pageNum,
     limit: PageSize,
   });
 
@@ -180,7 +178,7 @@ export default function SwapTransactions() {
 
               {(transactions ?? []).map((transaction, index) => (
                 <TransactionRow
-                  key={`${String(transaction.timestamp)}_${index}`}
+                  key={`${String(transaction.txTime)}_${index}`}
                   transaction={transaction}
                   className={classes.wrapper}
                   onCopy={handleCopy}

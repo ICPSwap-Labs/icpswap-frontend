@@ -55,8 +55,8 @@ export function useUserStakedPositions() {
       const token0 = tokens.find((e) => e[1]?.address === token0Address)?.[1];
       const token1 = tokens.find((e) => e[1]?.address === token1Address)?.[1];
 
-      const token0USDPrice = infoAllTokens.find((info) => info.address === token0Address)?.priceUSD;
-      const token1USDPrice = infoAllTokens.find((info) => info.address === token1Address)?.priceUSD;
+      const token0USDPrice = infoAllTokens.find((info) => info.tokenLedgerId === token0Address)?.price;
+      const token1USDPrice = infoAllTokens.find((info) => info.tokenLedgerId === token1Address)?.price;
 
       if (
         nonUndefinedOrNull(token0USDPrice) &&

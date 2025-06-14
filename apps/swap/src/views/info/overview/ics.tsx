@@ -28,13 +28,13 @@ export function Ics() {
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {
-      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.priceUSD).toString();
+      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.price).toString();
     }
   }, [tokenAnalysis, infoToken]);
 
   const fdv = useMemo(() => {
     if (nonUndefinedOrNull(tokenSupply) && nonUndefinedOrNull(infoToken)) {
-      return parseTokenAmount(tokenSupply, ICS.decimals).multipliedBy(infoToken.priceUSD).toString();
+      return parseTokenAmount(tokenSupply, ICS.decimals).multipliedBy(infoToken.price).toString();
     }
   }, [tokenSupply, infoToken]);
 
@@ -87,7 +87,7 @@ export function Ics() {
 
           {infoToken && icpInfoToken ? (
             <Typography>
-              1 ICS = {new BigNumber(infoToken.priceUSD).dividedBy(icpInfoToken.priceUSD).toFormat(5)} ICP
+              1 ICS = {new BigNumber(infoToken.price).dividedBy(icpInfoToken.price).toFormat(5)} ICP
             </Typography>
           ) : null}
         </Flex>
@@ -95,10 +95,10 @@ export function Ics() {
         <Flex justify="space-between" fullWidth sx={{ margin: "16px 0 0 0" }}>
           <Flex gap="0 8px" align="flex-end">
             <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-              {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
+              {infoToken ? formatDollarTokenPrice(infoToken.price) : "--"}
             </Typography>
 
-            <Proportion value={infoToken?.priceUSDChange} />
+            <Proportion value={infoToken?.priceChange24H} />
           </Flex>
         </Flex>
 
@@ -150,7 +150,7 @@ export function Ics() {
             <Typography fontSize="16px">
               ~
               {tokenBurned && infoToken
-                ? formatDollarAmount(new BigNumber(tokenBurned).multipliedBy(infoToken.priceUSD).toString())
+                ? formatDollarAmount(new BigNumber(tokenBurned).multipliedBy(infoToken.price).toString())
                 : "--"}
             </Typography>
           </Flex>

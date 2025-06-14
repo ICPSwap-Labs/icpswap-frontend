@@ -3,8 +3,7 @@ import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui
 import { useParams } from "react-router-dom";
 import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, BigNumber } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
-import { usePoolLatestTVL, usePoolAPR } from "@icpswap/hooks";
-import { useInfoPool } from "hooks/info/index";
+import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
 import { PoolTransactions } from "components/info/swap";
 import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
@@ -18,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { Token } from "@icpswap/swap-sdk";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
 import { TokenSymbol } from "components/TokenSymbol";
+import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
 
 import { PoolChart } from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
@@ -68,12 +68,10 @@ export default function SwapPoolDetails() {
   const [tab, setTab] = useState<TabValue>(TabValue.Transactions);
 
   const { result: pool } = useInfoPool(canisterId);
-  const [, token0] = useToken(pool?.token0Id);
-  const [, token1] = useToken(pool?.token1Id);
+  const [, token0] = useToken(pool?.token0LedgerId);
+  const [, token1] = useToken(pool?.token1LedgerId);
 
   const { poolTvlUSD, token0TvlUSD, token1TvlUSD, token0Balance, token1Balance } = usePoolTokenBalanceTvl({ pool });
-
-  const { result: latestTVL } = usePoolLatestTVL(canisterId);
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -82,7 +80,7 @@ export default function SwapPoolDetails() {
     openTips("Copy Successfully", TIP_SUCCESS);
   };
 
-  const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD, tvlUSD: poolTvlUSD });
+  const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD24H, tvlUSD: poolTvlUSD });
 
   return (
     <InfoWrapper>
@@ -104,7 +102,7 @@ export default function SwapPoolDetails() {
               <Typography color="text.primary" sx={{ margin: "0 8px 0 8px" }} fontWeight={500}>
                 {pool?.token0Symbol} / {pool?.token1Symbol}
               </Typography>
-              <FeeTierPercentLabel feeTier={pool?.feeTier} />
+              <FeeTierPercentLabel feeTier={pool?.poolFee} />
             </Flex>
           </Box>
 
@@ -233,7 +231,7 @@ export default function SwapPoolDetails() {
                   {poolTvlUSD ? formatDollarAmount(poolTvlUSD) : "--"}
                 </Typography>
 
-                <Proportion value={latestTVL?.tvlUSDChange} />
+                <Proportion value={pool?.tvlUSDChange24H} />
               </GridAutoRows>
 
               <GridAutoRows gap="4px">
@@ -245,7 +243,7 @@ export default function SwapPoolDetails() {
                     fontSize: "24px",
                   }}
                 >
-                  {formatDollarAmount(pool?.volumeUSD)}
+                  {formatDollarAmount(pool?.volumeUSD24H)}
                 </Typography>
               </GridAutoRows>
 
@@ -258,7 +256,7 @@ export default function SwapPoolDetails() {
                     fontSize: "24px",
                   }}
                 >
-                  {formatDollarAmount(pool?.volumeUSD7d)}
+                  {formatDollarAmount(pool?.volumeUSD7D)}
                 </Typography>
               </GridAutoRows>
 
@@ -271,7 +269,7 @@ export default function SwapPoolDetails() {
                     fontSize: "24px",
                   }}
                 >
-                  {pool?.volumeUSD ? formatDollarAmount((pool.volumeUSD * 3) / 1000) : "--"}
+                  {pool?.volumeUSD24H ? formatDollarAmount(getFee24HFromVolume24H(pool.volumeUSD24H)) : "--"}
                 </Typography>
               </GridAutoRows>
 
@@ -294,7 +292,7 @@ export default function SwapPoolDetails() {
         <PoolChart
           canisterId={canisterId}
           token0Price={pool ? new BigNumber(pool.token1Price).dividedBy(pool.token0Price).toNumber() : undefined}
-          volume24H={pool?.volumeUSD}
+          volume24H={pool?.volumeUSD24H}
         />
       </Box>
 

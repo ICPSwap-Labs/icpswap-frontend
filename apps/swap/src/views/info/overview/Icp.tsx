@@ -27,14 +27,14 @@ export function Icp() {
     if (isUndefinedOrNull(icpTotalSupply) || isUndefinedOrNull(icpTokenInfo)) return null;
 
     return formatDollarAmount(
-      parseTokenAmount(icpTotalSupply, ICP.decimals).multipliedBy(icpTokenInfo.priceUSD).toString(),
+      parseTokenAmount(icpTotalSupply, ICP.decimals).multipliedBy(icpTokenInfo.price).toString(),
     );
   }, [icpTotalSupply, icpTokenInfo]);
 
   const marketCap = useMemo(() => {
     if (isUndefinedOrNull(tokenAnalysis) || isUndefinedOrNull(icpTokenInfo)) return null;
 
-    return formatDollarAmount(new BigNumber(tokenAnalysis.marketAmount).multipliedBy(icpTokenInfo.priceUSD).toString());
+    return formatDollarAmount(new BigNumber(tokenAnalysis.marketAmount).multipliedBy(icpTokenInfo.price).toString());
   }, [tokenAnalysis, icpTokenInfo]);
 
   return (
@@ -88,10 +88,10 @@ export function Icp() {
             <Typography>{t("common.price")}</Typography>
             <Flex gap="0 4px" align="flex-end">
               <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
-                {icpTokenInfo ? formatDollarAmount(icpTokenInfo.priceUSD) : "--"}
+                {icpTokenInfo ? formatDollarAmount(icpTokenInfo.price) : "--"}
               </Typography>
 
-              <Proportion value={icpTokenInfo?.priceUSDChange} fontSize="16px" />
+              <Proportion value={icpTokenInfo?.priceChange24H} fontSize="16px" />
             </Flex>
           </Box>
 

@@ -5,8 +5,8 @@ import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarTokenPrice, nonUndefinedOrNull, shortenString } from "@icpswap/utils";
-import type { IcpSwapAPITokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
+import { isValidPrincipal, formatDollarTokenPrice, nonUndefinedOrNull, shortenString, BigNumber } from "@icpswap/utils";
+import type { IcpSwapAPITokenInfo, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
 import { NoData, Proportion } from "@icpswap/ui";
 import { useToken } from "hooks/index";
 import { ICP } from "@icpswap/tokens";
@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 
 interface SearchItemProps {
   tokenInfo: IcpSwapAPITokenInfo;
-  infoAllTokens: PublicTokenOverview[] | Null;
+  infoAllTokens: InfoTokenRealTimeDataResponse[] | Null;
   onTokenClick?: (token: IcpSwapAPITokenInfo) => void;
   inTokenList?: boolean;
 }
@@ -29,7 +29,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
   const [, token] = useToken(tokenInfo.ledgerId);
 
   const info = useMemo(() => {
-    return infoAllTokens?.find((e) => e.address === tokenInfo.ledgerId);
+    return infoAllTokens?.find((e) => e.tokenLedgerId === tokenInfo.ledgerId);
   }, [infoAllTokens]);
 
   const handleTokenClick = () => {
@@ -90,11 +90,11 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
           },
         }}
       >
-        {info ? formatDollarTokenPrice(info.priceUSD, { min: 0.0001 }) : "--"}
+        {info ? formatDollarTokenPrice(info.price, { min: 0.0001 }) : "--"}
       </Typography>
 
       {matchDownSM ? null : info ? (
-        <Proportion value={info.priceUSDChange} align="right" />
+        <Proportion value={info.priceChange24H} align="right" />
       ) : (
         <Typography align="right">--</Typography>
       )}
@@ -119,10 +119,10 @@ export function TokenSearch({ open, onClose }: SearchProps) {
 
   const hotTokens = useMemo(() => {
     return infoAllTokens
-      ?.filter((e) => e.symbol !== "ICP")
+      ?.filter((e) => e.tokenSymbol !== "ICP")
       .sort((a, b) => {
-        if (a.volumeUSD < b.volumeUSD) return 1;
-        if (a.volumeUSD > b.volumeUSD) return -1;
+        if (new BigNumber(a.volumeUSD24H).isLessThan(b.volumeUSD24H)) return 1;
+        if (new BigNumber(a.volumeUSD24H).isGreaterThan(b.volumeUSD24H)) return -1;
         return 0;
       })
       .slice(0, 5);
@@ -151,9 +151,9 @@ export function TokenSearch({ open, onClose }: SearchProps) {
     onClose();
   };
 
-  const handleHotTokenClick = (token: PublicTokenOverview) => {
+  const handleHotTokenClick = (token: InfoTokenRealTimeDataResponse) => {
     handleClose();
-    history.push(`/swap/pro?input=${ICP.address}&output=${token.address}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${token.tokenLedgerId}`);
   };
 
   const handleStopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -288,15 +288,15 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                   },
                 }}
               >
-                {hotTokens?.map((e) => (
+                {hotTokens?.map((token) => (
                   <Typography
-                    key={e.address}
+                    key={token.tokenLedgerId}
                     color="text.primary"
                     fontWeight={600}
                     sx={{ cursor: "pointer" }}
-                    onClick={() => handleHotTokenClick(e)}
+                    onClick={() => handleHotTokenClick(token)}
                   >
-                    {e.symbol}
+                    {token.tokenSymbol}
                   </Typography>
                 ))}
               </Box>

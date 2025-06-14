@@ -13,11 +13,11 @@ interface PoolRowProps {
 }
 
 export function PoolRow({ poolInfo, index, wrapperClass, align = "left" }: PoolRowProps) {
-  const [, token0] = useToken(poolInfo.token0Id);
-  const [, token1] = useToken(poolInfo.token1Id);
+  const [, token0] = useToken(poolInfo.token0LedgerId);
+  const [, token1] = useToken(poolInfo.token1LedgerId);
 
   return (
-    <Link to={`/info-swap/pool/details/${poolInfo.pool}`}>
+    <Link to={`/info-swap/pool/details/${poolInfo.poolId}`}>
       <TableRow className={wrapperClass}>
         <BodyCell>{index}</BodyCell>
         <BodyCell>
@@ -37,7 +37,7 @@ export function PoolRow({ poolInfo, index, wrapperClass, align = "left" }: PoolR
               </BodyCell>
             </BodyCell>
 
-            <FeeTierPercentLabel feeTier={poolInfo.feeTier} />
+            <FeeTierPercentLabel feeTier={poolInfo.poolFee} />
           </Flex>
         </BodyCell>
         <BodyCell align={align}>
@@ -46,8 +46,8 @@ export function PoolRow({ poolInfo, index, wrapperClass, align = "left" }: PoolR
         <BodyCell align={align}>
           {nonUndefinedOrNull(poolInfo.apr24h) ? <APRPanel value={poolInfo.apr24h} /> : "--"}
         </BodyCell>
-        <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD)}</BodyCell>
-        <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD7d)}</BodyCell>
+        <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD24H)}</BodyCell>
+        <BodyCell align={align}>{formatDollarAmount(poolInfo.volumeUSD7D)}</BodyCell>
         <BodyCell align={align}>{formatDollarAmount(poolInfo.totalVolumeUSD)}</BodyCell>
       </TableRow>
     </Link>

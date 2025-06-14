@@ -1,6 +1,6 @@
 import { Typography, Box, useTheme } from "components/Mui";
 import { FilledTextField } from "components/index";
-import { useNodeInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
+import { useTokensFromList, useNodeInfoAllTokens } from "@icpswap/hooks";
 import { TokenTable } from "components/info/swap";
 import { useState, useMemo, useEffect } from "react";
 import { isValidPrincipal } from "@icpswap/utils";
@@ -29,16 +29,20 @@ export default function TopTokens() {
 
     return allTokens
       .filter((token) => {
-        if (onlyTokenList) return tokenListIds.includes(token.address);
+        if (onlyTokenList) return tokenListIds.includes(token.tokenLedgerId);
         return token;
       })
       .filter((token) => {
         if (!search) return true;
 
         if (isValidPrincipal(search)) {
-          return token.address === search;
+          return token.tokenLedgerId === search;
         }
-        return token.symbol.toLocaleUpperCase().includes(search.toLocaleUpperCase());
+
+        return (
+          token.tokenName?.toLocaleUpperCase().includes(search.toLocaleUpperCase()) ||
+          token.tokenSymbol?.toLocaleUpperCase().includes(search.toLocaleUpperCase())
+        );
       });
   }, [allTokens, onlyTokenList, tokenList, search]);
 

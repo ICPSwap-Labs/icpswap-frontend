@@ -3,7 +3,7 @@ import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui
 import { TokenImage, Link } from "components/index";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
-import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
+import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/types";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { ICP } from "@icpswap/tokens";
@@ -49,7 +49,7 @@ function Medias({ mediaLinks }: MediasProps) {
 }
 
 export interface TokenChartInfoProps {
-  infoToken: PublicTokenOverview | undefined;
+  infoToken: InfoTokenRealTimeDataResponse | undefined;
   tokenListInfo: TokenListMetadata | undefined;
 }
 
@@ -146,11 +146,11 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
       >
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <Typography color="text.primary" sx={{ fontSize: "30px", fontWeight: 500 }}>
-            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.price) : "--"}
           </Typography>
           {infoToken ? (
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              (<Proportion value={infoToken.priceUSDChange} />)
+              (<Proportion value={infoToken.priceChange24H} />)
             </Box>
           ) : null}
         </Box>

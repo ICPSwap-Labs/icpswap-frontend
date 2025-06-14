@@ -59,29 +59,29 @@ function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetada
         </Flex>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell sx={{ width: "100%" }} align="right">
-            {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
+            {infoToken ? formatDollarTokenPrice(infoToken.price) : "--"}
           </BodyCell>
           <BodyCell sub sx={{ width: "100%" }} align="right">
             {infoToken && icpPrice
-              ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toNumber())} ICP`
+              ? `${formatIcpAmount(new BigNumber(infoToken.price).dividedBy(icpPrice).toNumber())} ICP`
               : "--"}
           </BodyCell>
         </Flex>
         <BodyCell align="right">
-          <Proportion value={infoToken?.priceUSDChange} fontWeight={400} />
+          <Proportion value={infoToken?.priceChange24H} fontWeight={400} />
         </BodyCell>
         <Flex vertical gap="6px 0" align="flex-start">
           <BodyCell align="right" sx={{ width: "100%" }}>
             {infoToken && icpPrice && supply && token
               ? formatDollarAmount(
-                  new BigNumber(infoToken.priceUSD).multipliedBy(parseTokenAmount(supply, token.decimals)).toNumber(),
+                  new BigNumber(infoToken.price).multipliedBy(parseTokenAmount(supply, token.decimals)).toNumber(),
                 )
               : "--"}
           </BodyCell>
           <BodyCell sub align="right" sx={{ width: "100%" }}>
             {infoToken && icpPrice && supply && token
               ? `${formatIcpAmount(
-                  new BigNumber(infoToken.priceUSD)
+                  new BigNumber(infoToken.price)
                     .multipliedBy(parseTokenAmount(supply, token.decimals))
                     .dividedBy(icpPrice)
                     .toNumber(),

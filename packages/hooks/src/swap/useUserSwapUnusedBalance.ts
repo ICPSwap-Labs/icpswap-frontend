@@ -15,14 +15,14 @@ interface UseUserSwapPoolBalancesProps {
 
 export function useUserSwapPoolBalances({ principal, tokenId, reload, poolId }: UseUserSwapPoolBalancesProps) {
   const { result: allSwapPools } = useSwapPools();
-  const { result: infoPools, loading: allPoolsLoading } = useNodeInfoAllPools();
+  const { result: infoPools } = useNodeInfoAllPools();
 
   const targetSwapPools = useMemo(() => {
     if (!infoPools || !allSwapPools) return [];
     if (poolId) return allSwapPools.filter((e) => e.canisterId.toString() === poolId);
 
     const __allSwapPools = allSwapPools.map((pool) => {
-      const volumeUSD = infoPools.find((infoPool) => pool.canisterId.toString() === infoPool.pool)?.volumeUSD7d;
+      const volumeUSD = infoPools.find((infoPool) => pool.canisterId.toString() === infoPool.poolId)?.volumeUSD7D;
       return { ...pool, volumeUSD: volumeUSD ?? 0 };
     });
 

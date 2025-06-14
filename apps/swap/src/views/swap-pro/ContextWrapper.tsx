@@ -29,8 +29,8 @@ export function SwapProContextWrapper() {
 
   const { inputTokenPrice, outputTokenPrice } = useMemo(() => {
     return {
-      inputTokenPrice: inputTokenInfo?.priceUSD,
-      outputTokenPrice: outputTokenInfo?.priceUSD,
+      inputTokenPrice: inputTokenInfo?.price ? Number(inputTokenInfo.price) : undefined,
+      outputTokenPrice: outputTokenInfo?.price ? Number(outputTokenInfo.price) : undefined,
     };
   }, [inputTokenInfo, outputTokenInfo]);
 

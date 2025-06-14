@@ -83,10 +83,10 @@ export function GlobalData() {
     if (!userStakedTokens || !infoAllTokens) return undefined;
 
     const value = userStakedTokens.reduce((prev, curr) => {
-      const infoToken = infoAllTokens.find((e) => e.address === curr.ledgerId.toString());
+      const infoToken = infoAllTokens.find((e) => e.tokenLedgerId === curr.ledgerId.toString());
 
       if (curr.amount && infoToken) {
-        return prev.plus(new BigNumber(curr.amount).multipliedBy(infoToken.priceUSD));
+        return prev.plus(new BigNumber(curr.amount).multipliedBy(infoToken.price));
       }
 
       return prev;

@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
 import { enumToString, nonUndefinedOrNull } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
-import { PoolStorageTransaction } from "@icpswap/types";
+import { InfoTransactionResponse, Null, PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
@@ -30,7 +30,7 @@ const useStyles = (styleProps?: StyleProps) =>
   });
 
 export interface TransactionsProps {
-  transactions: PoolStorageTransaction[] | undefined | null;
+  transactions: InfoTransactionResponse[] | Null;
   loading?: boolean;
   maxItems?: number;
   hasFilter?: boolean;
@@ -65,7 +65,7 @@ export function Transactions({
       ? transactions
           .slice()
           .filter((ele) => {
-            const type = enumToString(ele.action);
+            const type = enumToString(ele.actionType);
             if (filter === "swaps") return type === "swap";
             if (filter === "adds") return type === "increaseLiquidity" || type === "addLiquidity" || type === "mint";
             if (filter === "removes") return type === "decreaseLiquidity";
@@ -73,7 +73,7 @@ export function Transactions({
           })
           .filter((ele) => {
             if (!showedTokens) return true;
-            return showedTokens?.includes(ele.token0Id) && showedTokens?.includes(ele.token1Id);
+            return showedTokens?.includes(ele.token0LedgerId) && showedTokens?.includes(ele.token1LedgerId);
           })
       : null;
   }, [transactions, filter, showedTokens]);
@@ -174,7 +174,7 @@ export function Transactions({
 
           {(sortedTransactions ?? []).map((transaction, index) => (
             <TransactionRow
-              key={`${String(transaction.timestamp)}_${index}`}
+              key={`${String(transaction.txTime)}_${index}`}
               className={classes.wrapper}
               transaction={transaction}
               onCopy={handleCopy}

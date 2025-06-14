@@ -36,14 +36,14 @@ export function usePoolTVLValue({ pool }: UsePoolTVLValueProps): string | undefi
     )
       return undefined;
 
-    const infoToken0 = infoAllTokens.find((e) => e.address === token0.address);
-    const infoToken1 = infoAllTokens.find((e) => e.address === token1.address);
+    const infoToken0 = infoAllTokens.find((e) => e.tokenLedgerId === token0.address);
+    const infoToken1 = infoAllTokens.find((e) => e.tokenLedgerId === token1.address);
 
     if (isUndefinedOrNull(infoToken0) || isUndefinedOrNull(infoToken1)) return undefined;
 
     return parseTokenAmount(token0Balance, token0.decimals)
-      .multipliedBy(infoToken0.priceUSD)
-      .plus(parseTokenAmount(token1Balance, token1.decimals).multipliedBy(infoToken1.priceUSD))
+      .multipliedBy(infoToken0.price)
+      .plus(parseTokenAmount(token1Balance, token1.decimals).multipliedBy(infoToken1.price))
       .toString();
   }, [infoAllTokens, token0Balance, token1Balance, token0, token1]);
 }

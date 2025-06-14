@@ -5,3 +5,5 @@ export * from "./Transactions";
 export * from "./PoolTransactions";
 export * from "./Pools";
 export * from "./UserTransactions";
+export * from "./TVLChartsWrapper";
+export * from "./VolumeChartsWrapper";
