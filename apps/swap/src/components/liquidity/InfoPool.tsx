@@ -90,7 +90,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
                 textDecorationStyle: "dashed",
               }}
             >
-              {infoPool?.tvlUSD ? formatDollarAmount(infoPool.tvlUSD) : "--"}
+              {infoPool ? formatDollarAmount(infoPool.tvlUSD) : "--"}
             </Typography>
           </PoolTvlTooltip>
         </Flex>

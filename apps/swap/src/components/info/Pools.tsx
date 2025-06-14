@@ -113,8 +113,8 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
           .slice()
           .sort((a, b) => {
             if (a && b && !!sortField) {
-              const bool = new BigNumber(a[sortField as keyof InfoPoolRealTimeDataResponse]).isGreaterThan(
-                b[sortField as keyof InfoPoolRealTimeDataResponse],
+              const bool = new BigNumber(a[sortField as keyof InfoPoolRealTimeDataResponse] ?? 0).isGreaterThan(
+                b[sortField as keyof InfoPoolRealTimeDataResponse] ?? 0,
               )
                 ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
                 : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;

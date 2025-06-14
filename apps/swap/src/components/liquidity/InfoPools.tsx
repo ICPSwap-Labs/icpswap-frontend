@@ -306,12 +306,14 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
 const PAGE_SIZE = 10;
 const START_PAGE = 2;
 
+const DEFAULT_SORT_FILED = "volumeUSD24H";
+
 export function InfoPools() {
   const { t } = useTranslation();
   const classes = useStyles();
   const [searchToken, setSearchToken] = useState<string | undefined>("");
   const [onlyTokenList, setOnlyTokenList] = useState(true);
-  const [sortField, setSortField] = useState<string>("volumeUSD");
+  const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FILED);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const theme = useTheme();
 
@@ -374,12 +376,13 @@ export function InfoPools() {
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
-          const __sortField = sortField === "volumeUSD" && timeBase === "7D" ? "volumeUSD7d" : sortField;
+          const __sortField = sortField === "volumeUSD24H" && timeBase === "7D" ? "volumeUSD7D" : sortField;
 
-          const bool =
-            a[__sortField as keyof PoolInfoWithApr] > b[__sortField as keyof PoolInfoWithApr]
-              ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
-              : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
+          const bool = new BigNumber(a[__sortField as keyof PoolInfoWithApr]).isGreaterThan(
+            b[__sortField as keyof PoolInfoWithApr],
+          )
+            ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+            : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
           return bool;
         }
