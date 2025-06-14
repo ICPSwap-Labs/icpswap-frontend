@@ -10,6 +10,7 @@ import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useHistory } from "react-router-dom";
 import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
+import { useParsedQueryString } from "@icpswap/hooks";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -71,6 +72,7 @@ export function SwapInputWrapper({
   } = useSwapState();
   const { setUSDValueChange } = useContext(SwapContext);
   const { onSwitchTokens } = useSwapHandlers();
+  const { tab: swapProTab } = useParsedQueryString() as { tab: string };
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
@@ -107,9 +109,13 @@ export function SwapInputWrapper({
 
   const handleSwitchTokens = useCallback(() => {
     const prePath = ui === "pro" ? "/swap/pro" : "/swap";
-    history.push(`${prePath}?input=${outputTokenId}&output=${inputTokenId}`);
+    history.push(
+      `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
+        ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
+      }`,
+    );
     onSwitchTokens();
-  }, [onSwitchTokens, inputTokenId, outputTokenId]);
+  }, [onSwitchTokens, inputTokenId, outputTokenId, swapProTab]);
 
   return (
     <Box>
