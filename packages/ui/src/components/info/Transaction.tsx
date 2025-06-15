@@ -84,11 +84,21 @@ interface TransactionRowProps {
 export function TransactionRow({ transaction, className, onCopy }: TransactionRowProps) {
   const theme = useTheme();
 
-  const amountUSD = useMemo(() => {
-    return nonNullArgs(transaction.token0AmountIn)
-      ? new BigNumber(transaction.token0AmountIn).multipliedBy(transaction.token0Price).toString()
-      : new BigNumber(transaction.token1AmountIn).multipliedBy(transaction.token1Price).toString();
+  const token0Amount = useMemo(() => {
+    return new BigNumber(transaction.token0AmountIn).isEqualTo(0)
+      ? transaction.token0AmountOut
+      : transaction.token0AmountIn;
   }, [transaction]);
+
+  const token1Amount = useMemo(() => {
+    return new BigNumber(transaction.token1AmountIn).isEqualTo(0)
+      ? transaction.token1AmountOut
+      : transaction.token1AmountIn;
+  }, [transaction]);
+
+  const amountUSD = useMemo(() => {
+    return new BigNumber(token0Amount).multipliedBy(transaction.token0Price).toString();
+  }, [token0Amount]);
 
   return (
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
@@ -97,9 +107,7 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
       <BodyCell>{formatDollarAmount(amountUSD)}</BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(
-          nonNullArgs(transaction.token0AmountIn) ? transaction.token0AmountIn : transaction.token0AmountOut,
-        )}
+        {formatAmount(token0Amount)}
         <SwapTransactionPriceTip
           symbol={transaction.token0Symbol}
           price={transaction.token0Price}
@@ -112,9 +120,7 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
       </BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(
-          nonNullArgs(transaction.token1AmountIn) ? transaction.token1AmountIn : transaction.token1AmountOut,
-        )}
+        {formatAmount(token1Amount)}
         <SwapTransactionPriceTip
           symbol={transaction.token1Symbol}
           price={transaction.token1Price}
