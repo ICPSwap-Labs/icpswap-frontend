@@ -2,6 +2,7 @@ import type { Principal } from "@dfinity/principal";
 import type { ActorMethod } from "@dfinity/agent";
 import type { IDL } from "@dfinity/candid";
 
+export type Extension = { none: null };
 export interface LimitOrder {
   to: string;
   token0Id: string;
@@ -26,6 +27,8 @@ export interface LimitOrder {
   token0Symbol: string;
   price: bigint;
   token0Decimals: number;
+  extension: Extension;
+  tickLimit: bigint;
   token1Symbol: string;
   poolId: string;
   token1InAmount: number;
@@ -36,14 +39,24 @@ export interface QueryResult {
   records: Array<LimitOrder>;
   storages: Array<[bigint, Principal]>;
 }
+export interface RecordPage {
+  content: Array<LimitOrder>;
+  offset: bigint;
+  limit: bigint;
+  totalElements: bigint;
+}
 export interface _SERVICE {
   addOwner: ActorMethod<[Principal], undefined>;
   batchInsert: ActorMethod<[Array<LimitOrder>], undefined>;
+  count: ActorMethod<[], Array<[string, bigint]>>;
   cycleAvailable: ActorMethod<[], NatResult>;
   cycleBalance: ActorMethod<[], NatResult>;
   get: ActorMethod<[string, bigint, bigint, bigint], QueryResult>;
   getControllers: ActorMethod<[], Array<Principal>>;
   getOwners: ActorMethod<[], Array<Principal>>;
+  getTx: ActorMethod<[bigint, bigint, bigint], RecordPage>;
+  limitOrderStorageMapping: ActorMethod<[], Array<[bigint, Principal]>>;
+  limitOrderStorages: ActorMethod<[], Array<string>>;
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

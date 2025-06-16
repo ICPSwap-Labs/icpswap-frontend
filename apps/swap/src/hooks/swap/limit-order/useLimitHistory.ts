@@ -35,7 +35,7 @@ export function useLimitHistory({ transaction }: UseLimitHistoryProps) {
 
   const limitPrice = useMemo(() => {
     if (!outputToken || !inputToken) return undefined;
-    const price = tickToPrice(inputToken, outputToken, Number(transaction.tick));
+    const price = tickToPrice(inputToken, outputToken, Number(transaction.tickLimit));
 
     return price.toSignificant();
   }, [inputToken, outputToken, transaction]);

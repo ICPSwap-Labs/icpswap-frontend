@@ -1,4 +1,5 @@
 export const idlFactory = ({ IDL }: any) => {
+  const Extension = IDL.Variant({ none: IDL.Null });
   const LimitOrder = IDL.Record({
     to: IDL.Text,
     token0Id: IDL.Text,
@@ -23,6 +24,8 @@ export const idlFactory = ({ IDL }: any) => {
     token0Symbol: IDL.Text,
     price: IDL.Nat,
     token0Decimals: IDL.Float64,
+    extension: Extension,
+    tickLimit: IDL.Int,
     token1Symbol: IDL.Text,
     poolId: IDL.Text,
     token1InAmount: IDL.Float64,
@@ -33,13 +36,23 @@ export const idlFactory = ({ IDL }: any) => {
     records: IDL.Vec(LimitOrder),
     storages: IDL.Vec(IDL.Tuple(IDL.Int, IDL.Principal)),
   });
+  const RecordPage = IDL.Record({
+    content: IDL.Vec(LimitOrder),
+    offset: IDL.Nat,
+    limit: IDL.Nat,
+    totalElements: IDL.Nat,
+  });
   return IDL.Service({
     addOwner: IDL.Func([IDL.Principal], [], []),
     batchInsert: IDL.Func([IDL.Vec(LimitOrder)], [], []),
+    count: IDL.Func([], [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Nat))], ["query"]),
     cycleAvailable: IDL.Func([], [NatResult], []),
     cycleBalance: IDL.Func([], [NatResult], ["query"]),
     get: IDL.Func([IDL.Text, IDL.Int, IDL.Nat, IDL.Nat], [QueryResult], ["query"]),
     getControllers: IDL.Func([], [IDL.Vec(IDL.Principal)], ["query"]),
     getOwners: IDL.Func([], [IDL.Vec(IDL.Principal)], ["query"]),
+    getTx: IDL.Func([IDL.Int, IDL.Nat, IDL.Nat], [RecordPage], ["query"]),
+    limitOrderStorageMapping: IDL.Func([], [IDL.Vec(IDL.Tuple(IDL.Int, IDL.Principal))], ["query"]),
+    limitOrderStorages: IDL.Func([], [IDL.Vec(IDL.Text)], ["query"]),
   });
 };
