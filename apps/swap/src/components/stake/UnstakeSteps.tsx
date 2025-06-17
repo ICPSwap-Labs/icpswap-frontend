@@ -37,7 +37,7 @@ export function getUnstakeSteps({ token, amount, rewardToken, key }: GetSteps) {
       ],
     },
     {
-      title: i18n.t("common.withdraw.amount", { symbol: token.symbol }),
+      title: i18n.t("stake.withdraw.staked.amount", { symbol: token.symbol }),
       children: [
         {
           label: i18n.t("common.amount"),
@@ -47,7 +47,7 @@ export function getUnstakeSteps({ token, amount, rewardToken, key }: GetSteps) {
       ],
     },
     {
-      title: i18n.t("common.withdraw.amount", { symbol: rewardToken.symbol }),
+      title: i18n.t("stake.withdraw.earned.amount", { symbol: rewardToken.symbol }),
       children: [
         { label: rewardToken.symbol, value: data ? parseTokenAmount(data, rewardToken.decimals).toFormat() : "--" },
       ],
