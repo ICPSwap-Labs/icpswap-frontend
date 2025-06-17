@@ -129,7 +129,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     if (state !== StakingState.LIVE) return t("common.stake");
     if (!stakeToken || !balance) return t("common.stake");
     if (!amount) return t("common.enter.input.amount");
-    if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.greater.than", { amount: 0 });
+    if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.above", { amount: 0 });
     if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))

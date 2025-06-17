@@ -89,7 +89,7 @@ export function MainContent({
 
               <Box>
                 <Flex gap="0 4px" align="center">
-                  <Typography>{t("common.total.rewards")}</Typography>
+                  <Typography>{t("common.pool.rewards")}</Typography>
                 </Flex>
                 <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600, margin: "16px 0 0 0" }}>
                   {stakeStatInfo && rewardToken
@@ -212,7 +212,7 @@ export function MainContent({
             <Flex justify="space-between" sx={{ padding: "0 16px" }}>
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>{t("common.reward.earned")}</Typography>
+                  <Typography>{t("common.your.rewards")}</Typography>
                 </Flex>
 
                 <Typography

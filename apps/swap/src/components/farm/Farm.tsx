@@ -151,10 +151,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
           <Box sx={{ padding: "0 16px" }}>
             <Flex gap="0 4px" align="center">
               <Typography>{t("common.apr")}</Typography>
-              <Tooltip
-                iconSize="14px"
-                tips={t`The current APR is calculated as an average based on the latest distribution rewards data. The actual returns from staked positions depend on the concentration of the selected price range, the staking duration, and the number of tokens staked.`}
-              />
+              <Tooltip iconSize="14px" tips={t("farm.apr.tips")} />
             </Flex>
             <Typography sx={{ color: "text.apr", fontSize: "20px", fontWeight: 600, margin: "16px 0 0 0" }}>
               {apr ?? "--"}
@@ -228,7 +225,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
             >
               <Box>
                 <Flex gap="0 4px">
-                  <Typography>{t("common.reward.earned")}</Typography>
+                  <Typography>{t("common.your.rewards")}</Typography>
 
                   <Tooltip
                     tips={t`You will receive the reward tokens you have earned after unstaking the staked positions.`}
@@ -286,7 +283,7 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
                 tips={t("farm.minimum.stake", {
                   amount: `${toSignificantWithGroupSeparator(
                     parseTokenAmount(farmInitArgs.token0AmountLimit.toString(), token0.decimals).toString(),
-                  )} ${token0.symbol} / ${toSignificantWithGroupSeparator(
+                  )} ${token0.symbol} + ${toSignificantWithGroupSeparator(
                     parseTokenAmount(farmInitArgs.token1AmountLimit.toString(), token1.decimals).toString(),
                   )} ${token1.symbol}`,
                 })}
