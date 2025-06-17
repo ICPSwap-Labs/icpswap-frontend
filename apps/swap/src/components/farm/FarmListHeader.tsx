@@ -45,7 +45,7 @@ export function FarmListHeader({ id, your, state, showState, sx }: FarmListHeade
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>{t("stake.your.rewards")}</HeaderCell>
+          <HeaderCell>{t("common.your.rewards")}</HeaderCell>
         </Flex>
       ) : null}
 

@@ -25,7 +25,7 @@ export interface StakeProps {
   poolInfo: StakingPoolInfo | undefined;
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
-  balance: BigNumber | undefined;
+  balance: string | undefined;
   onStakeSuccess?: () => void;
 }
 
@@ -45,8 +45,11 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
 
   const handleMax = useCallback(() => {
     if (balance && stakeToken) {
-      if (!balance.isLessThan(stakeToken.transFee)) {
-        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals).toString();
+      if (!new BigNumber(balance).isLessThan(stakeToken.transFee)) {
+        const amount = parseTokenAmount(
+          new BigNumber(balance).minus(stakeToken.transFee),
+          stakeToken.decimals,
+        ).toString();
 
         setAmount(amount);
         setPercent(100);
@@ -83,9 +86,9 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
       setPercent(value);
 
       if (balance && stakeToken) {
-        if (balance.isLessThan(stakeToken.transFee)) return;
+        if (new BigNumber(balance).isLessThan(stakeToken.transFee)) return;
 
-        const amount = parseTokenAmount(balance.minus(stakeToken.transFee), stakeToken.decimals)
+        const amount = parseTokenAmount(new BigNumber(balance).minus(stakeToken.transFee), stakeToken.decimals)
           .multipliedBy(value)
           .dividedBy(100);
 
@@ -126,7 +129,7 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     if (state !== StakingState.LIVE) return t("common.stake");
     if (!stakeToken || !balance) return t("common.stake");
     if (!amount) return t("common.enter.input.amount");
-    if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.greater.than", { amount: 0 });
+    if (new BigNumber(amount).isEqualTo(0)) return t("common.error.amount.above", { amount: 0 });
     if (parseTokenAmount(balance, stakeToken.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
     if (!parseTokenAmount(stakeToken.transFee, stakeToken.decimals).isLessThan(amount))
