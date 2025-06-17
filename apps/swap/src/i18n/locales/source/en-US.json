@@ -849,6 +849,8 @@
   "cPcTW+": "Insufficient funds",
   "common.end.time.colon": "End time:",
   "stake.total.value.rewards.descriptions": "The total value of rewards distributed by live pools.",
+  "stake.withdraw.staked.amount": "Withdraw staked {{symbol}}",
+  "stake.withdraw.earned.amount": "Withdraw earned {{symbol}}",
   "cS0z6r": "Trading was stopped",
   "cb1Nej": "Bonus multiplier",
   "swap.fees.7d": "Fees 7D",
