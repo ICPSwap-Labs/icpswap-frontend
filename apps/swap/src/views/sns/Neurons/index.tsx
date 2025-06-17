@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
+import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy, Wrapper, Flex } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
@@ -21,6 +21,8 @@ import { useToken, useUSDPrice } from "hooks/index";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import { Token } from "@icpswap/swap-sdk";
+import { DEFAULT_ROOT_ID } from "constants/nns";
+import { useHistory } from "react-router-dom";
 
 import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
@@ -212,21 +214,26 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
 
 export default function Neurons() {
   const principal = useAccountPrincipalString();
+  const history = useHistory();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
-  const [selectedNeuron, setSelectedNeuron] = useState<string | null>("csyra-haaaa-aaaaq-aacva-cai");
+  const { root_id: __root_id } = useParsedQueryString() as { root_id: string };
+
+  const root_id = useMemo(() => {
+    return __root_id ?? DEFAULT_ROOT_ID;
+  }, [__root_id]);
 
   const { result: listedSNS } = useListDeployedSNSs();
 
   const sns = useMemo(() => {
-    if (!selectedNeuron || !listedSNS) return undefined;
+    if (!root_id || !listedSNS) return undefined;
 
-    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === selectedNeuron);
+    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === root_id);
 
     if (!instance) return undefined;
 
     return instance;
-  }, [listedSNS, selectedNeuron]);
+  }, [listedSNS, root_id]);
 
   const { governance_id, ledger_id } = useMemo(() => {
     if (!sns) return { governance_id: undefined, ledger_id: undefined };
@@ -253,6 +260,10 @@ export default function Neurons() {
 
   const [, token] = useToken(ledger_id);
 
+  const handleSelectNeuronChange = (id: string) => {
+    history.push(`/sns/neurons?root_id=${id}`);
+  };
+
   return (
     <Wrapper>
       <Tabs />
@@ -272,7 +283,7 @@ export default function Neurons() {
           },
         }}
       >
-        <SelectSns value={selectedNeuron} onChange={setSelectedNeuron} />
+        <SelectSns value={root_id} onChange={handleSelectNeuronChange} />
         <Box>
           <StakeToCreateNeuron
             onStakeSuccess={handleRefresh}
@@ -304,7 +315,7 @@ export default function Neurons() {
                 key={index}
                 neuron={neuron}
                 ledger_id={ledger_id}
-                root_id={selectedNeuron}
+                root_id={root_id}
                 governance_id={governance_id}
                 neuronSystemParameters={neuronSystemParameters}
                 refreshTrigger={handleRefresh}
