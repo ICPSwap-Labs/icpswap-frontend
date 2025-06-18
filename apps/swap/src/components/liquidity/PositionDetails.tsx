@@ -310,11 +310,13 @@ export function PositionDetails({
           </Flex>
 
           <Flex gap="17px" wrap="wrap" justify="flex-end">
-            <RemoveAllLiquidity
-              position={position}
-              positionId={positionId}
-              onDecreaseSuccess={() => setRefreshTrigger()}
-            />
+            {staked === true ? null : (
+              <RemoveAllLiquidity
+                position={position}
+                positionId={positionId}
+                onDecreaseSuccess={() => setRefreshTrigger()}
+              />
+            )}
 
             {farmId ? (
               <Link to={`/farm/details/${farmId}`}>
@@ -324,19 +326,21 @@ export function PositionDetails({
               </Link>
             ) : null}
 
-            <Link
-              to={
-                position
-                  ? `/liquidity/increase/${String(positionId)}/${position.pool.id}?path=${urlStringFormat(
-                      "/liquidity?tab=Positions",
-                    )}`
-                  : ""
-              }
-            >
-              <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
-                {t("liquidity.add.more")}
-              </Button>
-            </Link>
+            {staked === true ? null : (
+              <Link
+                to={
+                  position
+                    ? `/liquidity/increase/${String(positionId)}/${position.pool.id}?path=${urlStringFormat(
+                        "/liquidity?tab=Positions",
+                      )}`
+                    : ""
+                }
+              >
+                <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
+                  {t("liquidity.add.more")}
+                </Button>
+              </Link>
+            )}
 
             <Link
               to={
